@@ -18,6 +18,7 @@ async function editAutocomplete(el, value) {
 }
 
 class ResPartner extends mailModels.ResPartner {
+    additional_identifiers = fields.Json();
     state_id = fields.Many2one({ relation: "res.country.state" });
     _views = {
         form: `
@@ -35,6 +36,29 @@ class ResPartner extends mailModels.ResPartner {
                 <field name="zip"/>
                 <field name="country_id"/>
                 <field name="vat" widget="field_partner_autocomplete"/>
+                <field name="additional_identifiers" invisible="1"/>
+            </form>
+        `,
+    };
+}
+
+class ResCompany extends mailModels.ResCompany {
+    additional_identifiers = fields.Json();
+    ape = fields.Char();
+    city = fields.Char();
+    country_id = fields.Many2one({ relation: "res.country" });
+    street = fields.Char();
+    zip = fields.Char();
+    _views = {
+        form: `
+            <form>
+                <field name="name" widget="field_partner_autocomplete"/>
+                <field name="street"/>
+                <field name="city"/>
+                <field name="zip"/>
+                <field name="country_id"/>
+                <field name="ape"/>
+                <field name="additional_identifiers" invisible="1"/>
             </form>
         `,
     };
@@ -62,7 +86,7 @@ class ResCountryState extends models.Model {
     ];
 }
 
-defineModels({ ...mailModels, ResPartner, ResCountry, ResCountryState });
+defineModels({ ...mailModels, ResCompany, ResPartner, ResCountry, ResCountryState });
 
 const iapSuggestions = [
     {
@@ -212,6 +236,88 @@ test("Partner autocomplete : VAT search", async () => {
             message: `${fieldName} should be filled`,
         });
     }
+});
+
+test("Partner autocomplete: enrich by registration number", async () => {
+    onRpc("res.partner", "autocomplete_by_field", () => [
+        {
+            name: "ETABLISSEMENTS ADRIEN RIQUIER",
+            enrichment_type: "vat",
+            enrichment_query: "005520325",
+            city: "Dargnies",
+            country_id: { id: 1, name: "France" },
+        },
+    ]);
+    onRpc("res.partner", "enrich_by_vat", ({ args }) => {
+        expect.step(args[0]);
+        return {
+            name: "ETABLISSEMENTS ADRIEN RIQUIER",
+            street: "12 RUE HENRI BARBUSSE",
+            city: "Dargnies",
+            zip: "80570",
+            ape: "4674B",
+            additional_identifiers: {
+                FR_SIREN: "005520325",
+                FR_SIRET: "00552032500019",
+            },
+        };
+    });
+    onRpc("res.partner", "web_save", ({ args }) => {
+        expect(args[1].ape).toBe(undefined);
+        expect(args[1].additional_identifiers).toEqual({
+            FR_SIREN: "005520325",
+            FR_SIRET: "00552032500019",
+        });
+    });
+    await mountView({
+        resModel: "res.partner",
+        type: "form",
+    });
+
+    await editAutocomplete("[name='name'] .dropdown input", "005520325");
+    await contains("[name='name'] .o-autocomplete ul li").click();
+
+    expect.verifySteps(["005520325"]);
+    expect("[name='street'] input").toHaveValue("12 RUE HENRI BARBUSSE");
+});
+
+test("Partner autocomplete: fill INPI data on a company", async () => {
+    onRpc("res.partner", "autocomplete_by_field", () => [
+        {
+            name: "ETABLISSEMENTS ADRIEN RIQUIER",
+            enrichment_type: "vat",
+            enrichment_query: "005520325",
+            city: "Dargnies",
+            country_id: { id: 1, name: "France" },
+        },
+    ]);
+    onRpc("res.partner", "enrich_by_vat", () => ({
+        name: "ETABLISSEMENTS ADRIEN RIQUIER",
+        street: "12 RUE HENRI BARBUSSE",
+        city: "Dargnies",
+        zip: "80570",
+        ape: "4674B",
+        additional_identifiers: {
+            FR_SIREN: "005520325",
+            FR_SIRET: "00552032500019",
+        },
+    }));
+    onRpc("res.company", "web_save", ({ args }) => {
+        expect(args[1].ape).toBe("4674B");
+        expect(args[1].additional_identifiers).toEqual({
+            FR_SIREN: "005520325",
+            FR_SIRET: "00552032500019",
+        });
+    });
+    await mountView({
+        resModel: "res.company",
+        type: "form",
+    });
+
+    await editAutocomplete("[name='name'] .dropdown input", "riquier");
+    await contains("[name='name'] .o-autocomplete ul li").click();
+    expect("[name='ape'] input").toHaveValue("4674B");
+    await contains(".o_form_button_save").click();
 });
 
 test.tags("desktop");

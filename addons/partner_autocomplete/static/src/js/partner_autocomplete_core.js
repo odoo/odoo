@@ -93,7 +93,10 @@ export function usePartnerAutocomplete() {
         if (isGSTNumber(company.query)) {
             return orm.call("res.partner", "enrich_by_gst", [company.query]);
         }
-        return orm.call("res.partner", "enrich_by_duns", [company.duns], { context: context });
+        if (company.enrichment_type === "vat") {
+            return orm.call("res.partner", "enrich_by_vat", [company.enrichment_query], { context });
+        }
+        return orm.call("res.partner", "enrich_by_duns", [company.duns], { context });
     }
 
     function removeUselessFields(company, fieldsToKeep) {

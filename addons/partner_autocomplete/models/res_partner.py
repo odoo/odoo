@@ -86,6 +86,16 @@ class ResPartner(models.Model):
 
     @api.model
     def autocomplete_by_field(self, fieldName, query, query_country_id, timeout=15):
+        # SIREN and SIRET do not carry a country prefix, so always search them in France.
+        if (
+            self.env['ir.module.module']._get('l10n_fr').state == 'installed'
+            and (
+                fieldName in ('FR_SIREN', 'FR_SIRET')
+                or (fieldName == 'name' and query.isdigit() and len(query) in (9, 14))
+            )
+        ):
+            return self.autocomplete_by_vat(query, self.env.ref('base.fr').id)
+
         match fieldName:
             case "name":
                 return self.autocomplete_by_name(query, query_country_id)
@@ -95,6 +105,13 @@ class ResPartner(models.Model):
                 return self.autocomplete_by_vat(query, query_country_id)
 
     @api.model
+    def _get_supported_enrichment_types(self):
+        enrichment_types = ['duns']
+        if self.env['ir.module.module']._get('l10n_fr').state == 'installed':
+            enrichment_types.append('vat')
+        return enrichment_types
+
+    @api.model
     def autocomplete_by_name(self, query, query_country_id, timeout=15):
         if query_country_id is False:  # If it's 0, we purposely do not want to filter on the country
             query_country_id = self.env.company.country_id.id
@@ -102,6 +119,7 @@ class ResPartner(models.Model):
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_name', {
             'query': query,
             'query_country_code': query_country_code,
+            'supported_enrichment_types': self._get_supported_enrichment_types(),
         }, timeout=timeout)
         if response and not response.get("error"):
             results = []
@@ -118,6 +136,7 @@ class ResPartner(models.Model):
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_vat', {
             'query': vat,
             'query_country_code': query_country_code,
+            'supported_enrichment_types': self._get_supported_enrichment_types(),
         }, timeout=timeout)
         if response and not response.get("error"):
             results = []
