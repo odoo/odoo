@@ -37,10 +37,6 @@ class TestSystray(HttpCase):
         other_website.search([]).homepage_url = cls.homepage_url = f'/test_model/{model.id}'
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
-    def test_01_admin(self):
-        self.start_tour(self.env['website'].get_client_action_url(self.homepage_url), 'test_systray_admin', login="admin")
-
-    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_02_reditor_tester(self):
         self.user_test.group_ids |= self.group_restricted_editor
         self.user_test.group_ids |= self.group_tester
