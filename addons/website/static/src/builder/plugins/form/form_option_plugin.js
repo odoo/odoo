@@ -1568,36 +1568,56 @@ export class SetDescriptionAction extends BuilderAction {
         // This action is used for two scenarios:
         // 1. The target field is a checkbox: The field description will be set
         // with the position specified in the `value`.
-        // 2. Otherwise, the field description will be simply toggled.
-        const toggleMode = !value || value === "none" || !field.description;
-        field.formatInfo.textPosition = value;
-        if (toggleMode) {
+        // 2. Otherwise, the field description will be visibly toggled
+        // Non-visible descriptions will be removed on save
+        let descriptionEl = fieldEl.querySelector(".s_website_form_field_description");
+        const isCheckbox = getFieldType(fieldEl) === "boolean";
+
+        if (!descriptionEl) {
             // If enabled, the field description will be changed to the
             // default one in qweb.
+            field.formatInfo.textPosition = value;
             field.description = !field.description;
-        }
-        this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
-        const description = fieldEl.querySelector(".s_website_form_field_description")
-            ?.childNodes[0];
-        if (description) {
-            if (!isPreviewing) {
-                this.editable.focus();
+            this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+            descriptionEl = fieldEl.querySelector(".s_website_form_field_description");
+        } else {
+            if (isCheckbox && value && value !== "none") {
+                field.formatInfo.textPosition = value;
+                this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
+                descriptionEl = fieldEl.querySelector(".s_website_form_field_description");
+                descriptionEl.classList.remove("d-none");
+            } else {
+                // For standard toggles, ONLY toggle the d-none class.
+                // This prevents replaceField from destroying custom user text.
+                descriptionEl.classList.toggle("d-none");
             }
-            // Select the field description text in the editor.
-            this.dependencies.selection.setSelection({
-                anchorNode: description,
-                anchorOffset: 0,
-                focusNode: description,
-                focusOffset: nodeSize(description),
-            });
+        }
+
+        // Only focus and select the text if the description is currently visible
+        if (descriptionEl && !descriptionEl.classList.contains("d-none")) {
+            const description = descriptionEl?.childNodes[0];
+            if (description) {
+                if (!isPreviewing) {
+                    this.editable.focus();
+                }
+                // Select the field description text in the editor.
+                this.dependencies.selection.setSelection({
+                    anchorNode: description,
+                    anchorOffset: 0,
+                    focusNode: description,
+                    focusOffset: nodeSize(description),
+                });
+            }
         }
     }
     isApplied({ editingElement: fieldEl, value }) {
-        const description = fieldEl.querySelector(".s_website_form_field_description");
+        const descriptionEl = fieldEl.querySelector(".s_website_form_field_description");
+        const isVisible = !!descriptionEl && !descriptionEl.classList.contains("d-none");
+
         if (getFieldType(fieldEl) !== "boolean") {
-            return !!description;
+            return isVisible;
         } else {
-            return getDescriptionPosition(fieldEl) === value;
+            return isVisible ? getDescriptionPosition(fieldEl) === value : isVisible;
         }
     }
 }
