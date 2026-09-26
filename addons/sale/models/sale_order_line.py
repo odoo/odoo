@@ -9,7 +9,7 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
-from odoo.tools import float_compare, float_is_zero, format_date, groupby
+from odoo.tools import float_compare, float_is_zero, format_date
 from odoo.tools.translate import _
 
 
@@ -435,25 +435,30 @@ class SaleOrderLine(models.Model):
         custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
         multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == 'multi').sorted()
 
-        # display the no_variant attributes, except those that are also
-        # displayed by a custom (avoid duplicate description)
-        for ptav in (no_variant_ptavs - multi_ptavs - custom_ptavs):
-            name += "\n" + ptav.display_name
-
-        # display the selected values per attribute on a single for a multi checkbox
-        for pta, ptavs in groupby(multi_ptavs, lambda ptav: ptav.attribute_id):
-            name += "\n" + _(
-                "%(attribute)s: %(values)s",
-                attribute=pta.name,
-                values=", ".join(ptav.name for ptav in ptavs)
-            )
-
-        # Sort the values according to _order settings, because it doesn't work for virtual records in onchange
-        sorted_custom_ptav = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id.sorted()
-        for patv in sorted_custom_ptav:
-            pacv = self.product_custom_attribute_value_ids.filtered(lambda pcav: pcav.custom_product_template_attribute_value_id == patv)
-            name += "\n" + pacv.display_name
-
+        # Walk attributes grouped by their attribute line, in the order configured on
+        # the product, so free-text/multi attributes render in their configured
+        # position instead of always being pushed to the bottom.
+        all_ptavs = no_variant_ptavs | custom_ptavs
+        attribute_lines = all_ptavs.attribute_line_id.sorted(key=lambda line: line.sequence)
+        for pta_line in attribute_lines:
+            line_ptavs = all_ptavs.filtered(lambda ptav: ptav.attribute_line_id == pta_line)
+            multi = line_ptavs & multi_ptavs
+            if multi:
+                # display the selected values per attribute on a single line for a multi checkbox
+                name += "\n%s" % _(
+                    "%(attribute)s: %(values)s",
+                    attribute=pta_line.attribute_id.name,
+                    values=", ".join(ptav.name for ptav in multi),
+                )
+                continue
+            for ptav in line_ptavs:
+                if ptav in custom_ptavs:
+                    pacv = self.product_custom_attribute_value_ids.filtered(
+                        lambda pcav: pcav.custom_product_template_attribute_value_id == ptav
+                    )
+                    name += "\n" + pacv.display_name
+                else:
+                    name += "\n" + ptav.display_name
         return name
 
     def _get_downpayment_description(self):
