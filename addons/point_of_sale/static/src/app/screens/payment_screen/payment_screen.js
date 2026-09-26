@@ -388,6 +388,15 @@ export class PaymentScreen extends Component {
             this.pos.canOpenCashdrawer
         );
     }
+
+    hasPaymentForCurrency(paymentMethod, currency) {
+        return (
+            this.currentOrder.orderCurrency === currency &&
+            this.currentOrder.payment_ids.some(
+                (payment) => payment.payment_method_id === paymentMethod
+            )
+        );
+    }
 }
 
 registry.category("pos_pages").add("PaymentScreen", {
