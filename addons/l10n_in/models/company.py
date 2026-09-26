@@ -112,8 +112,8 @@ class ResCompany(models.Model):
         for company in self:
             gst_group_refs = self._get_gst_group_refs()
             self._activate_l10n_in_taxes(gst_group_refs, company, False)
+            self._activate_l10n_in_taxes(gst_group_refs, company, True)
             if company.l10n_in_gst_registration_type:
-                self._activate_l10n_in_taxes(gst_group_refs, company, True)
                 # Set sale and purchase tax accounts when user registered under GST.
                 ChartTemplate = self.env['account.chart.template'].with_company(company)
                 if company.l10n_in_gst_registration_type == 'regular':
@@ -155,7 +155,7 @@ class ResCompany(models.Model):
                 ('active', '!=', active),
             ]
             is_gst_group = bool(set(self._get_gst_group_refs()).intersection(group_refs))
-            if active and company.l10n_in_gst_registration_type and is_gst_group:
+            if active and is_gst_group:
                 composition_tax_ids = self.env['ir.model.data'].search([
                     ('model', '=', 'account.tax'),
                     ('module', '=', 'account'),
@@ -169,6 +169,14 @@ class ResCompany(models.Model):
                         ('type_tax_use', '=', 'purchase'),
                         ('l10n_in_reverse_charge', '=', True),
                         ('id', 'in', composition_tax_ids),
+                        ('l10n_in_tax_type', 'in', ['nil_rated', 'exempt', 'non_gst']),
+                    ]
+                else:
+                    domain += [
+                        '|',
+                        ('id', 'in', composition_tax_ids),
+                        '&',
+                        ('type_tax_use', '=', 'purchase'),
                         ('l10n_in_tax_type', 'in', ['nil_rated', 'exempt', 'non_gst']),
                     ]
             taxes = self.env['account.tax'].with_company(company).with_context(active_test=False).search(domain)

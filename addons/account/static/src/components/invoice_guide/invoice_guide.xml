@@ -16,7 +16,7 @@
                     </a>
                 </div>
             </div>
-            <div class="separator_wrapper d-flex justify-content-center flex-shrink-1">
+            <div t-if="this.kanbanDashboard.onboarding_action_data" class="separator_wrapper d-flex justify-content-center flex-shrink-1">
                 <div class="word-separator d-flex flex-column align-items-center">
                     <div class="vertical-line border-start flex-grow-1 mt-2"/>
                     <div class="m-2">
@@ -25,7 +25,7 @@
                     <div class="vertical-line border-start flex-grow-1 mb-2"/>
                 </div>
             </div>
-            <div class="bill_guide_right d-flex flex-column align-items-center justify-content-center py-3">
+            <div t-if="this.kanbanDashboard.onboarding_action_data" class="bill_guide_right d-flex flex-column align-items-center justify-content-center py-3">
                 <div class="text-center">
                     <img src="/web/static/img/e-invoicing.svg" alt="e-invoicing"/>
                 </div>
