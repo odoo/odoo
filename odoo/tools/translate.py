@@ -1140,6 +1140,19 @@ def extract_formula_terms(formula):
                 yield t3.string[1:][:-1] # strip leading and trailing quotes
 
 
+def extract_list_header_terms(formula):
+    """Extract plain-string custom headers from ODOO.LIST.HEADER formulas.
+
+    Headers wrapped in _t() are already handled by extract_formula_terms.
+    This covers the case: =ODOO.LIST.HEADER(1, "city", "City")
+    """
+    for match in re.finditer(
+        r'ODOO\.LIST\.HEADER\s*\(\s*[^,]+,\s*[^,]+,\s*"((?:\\.|[^"\\])*)"\s*\)',
+        formula,
+    ):
+        yield match.group(1).encode('utf-8').decode('unicode_escape')
+
+
 def extract_spreadsheet_terms(fileobj, keywords, comment_tags, options):
     """Babel message extractor for spreadsheet data files.
 
@@ -1160,31 +1173,69 @@ def extract_spreadsheet_terms(fileobj, keywords, comment_tags, options):
             content = cell if isinstance(cell, str) else cell.get('content', '')
             if content.startswith('='):
                 terms.update(extract_formula_terms(content))
+                terms.update(extract_list_header_terms(content))
             else:
                 markdown_link = re.fullmatch(r'\[(.+)\]\(.+\)', content)
                 if markdown_link:
                     terms.add(markdown_link[1])
         for figure in sheet['figures']:
             if figure['tag'] == 'chart':
-                title = figure['data']['title']
-                if isinstance(title, str):
-                    terms.add(title)
-                elif 'text' in title:
-                    terms.add(title['text'])
-                if 'axesDesign' in figure['data']:
-                    terms.update(
-                        axes.get('title', {}).get('text', '') for axes in figure['data']['axesDesign'].values()
-                    )
-                if 'text' in (baselineDescr := figure['data'].get('baselineDescr', {})):
-                    terms.add(baselineDescr['text'])
-                if 'text' in (keyDescr := figure['data'].get('keyDescr', {})):
-                    terms.add(keyDescr['text'])
+                terms.update(_extract_spreadsheet_chart_terms(figure['data']))
+            elif figure['tag'] == 'carousel':
+                terms.update(_extract_spreadsheet_carousel_terms(figure['data']))
     terms.update(global_filter['label'] for global_filter in data.get('globalFilters', []))
+    # Pivot names appear as the top-left column header of =PIVOT(...) tables in dashboards.
+    # Measure userDefinedName values appear as measure column headers.
+    for pivot in data.get('pivots', {}).values():
+        if name := pivot.get('name'):
+            terms.add(name)
+        for measure in pivot.get('measures', []):
+            if user_defined_name := measure.get('userDefinedName'):
+                terms.add(user_defined_name)
     return (
         (0, None, term, [])
         for term in terms
         if any(x.isalpha() for x in term)
     )
+
+
+def _extract_spreadsheet_chart_terms(chart_data):
+    """Extract translatable terms from a chart figure definition."""
+    terms = set()
+    title = chart_data.get('title')
+    if isinstance(title, str):
+        terms.add(title)
+    elif isinstance(title, dict) and 'text' in title:
+        terms.add(title['text'])
+    if 'axesDesign' in chart_data:
+        terms.update(
+            axes.get('title', {}).get('text', '') for axes in chart_data['axesDesign'].values()
+        )
+    if 'text' in (baselineDescr := chart_data.get('baselineDescr', {})):
+        terms.add(baselineDescr['text'])
+    if 'text' in (keyDescr := chart_data.get('keyDescr', {})):
+        terms.add(keyDescr['text'])
+    return terms
+
+
+def _extract_spreadsheet_carousel_terms(carousel_data):
+    """Extract translatable terms from a carousel figure definition.
+
+    Carousel titles and tab titles are displayed in dashboard mode and must be
+    extracted so they can be translated at runtime via dynamicTranslate.
+    """
+    terms = set()
+    title = carousel_data.get('title', {})
+    if isinstance(title, str):
+        terms.add(title)
+    elif isinstance(title, dict) and 'text' in title:
+        terms.add(title['text'])
+    for item in carousel_data.get('items', []):
+        if item.get('title'):
+            terms.add(item['title'])
+    for chart_data in carousel_data.get('chartDefinitions', {}).values():
+        terms.update(_extract_spreadsheet_chart_terms(chart_data))
+    return terms
 
 ImdInfo = namedtuple('ExternalId', ['name', 'model', 'res_id', 'module'])
 
