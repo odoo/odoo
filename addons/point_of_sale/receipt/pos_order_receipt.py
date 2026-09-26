@@ -465,6 +465,7 @@ class PosOrderReceipt(models.AbstractModel):
                     "general_customer_note": _get_str_notes(change.get("general_customer_note")) or False,
                     "employee_name": self.user_id.name,  # PoS HR not needed, this will only be used by self order.
                     "preset_time": self._order_receipt_preset_datetime(),
+                    "customer": self._get_preset_customer_info() if self.preset_id else False,
                 },
                 "conditions": {
                     "module_pos_restaurant": self.config_id.module_pos_restaurant,
@@ -472,6 +473,16 @@ class PosOrderReceipt(models.AbstractModel):
             })
 
         return receipts
+
+    def _get_preset_customer_info(self):
+        partner = self.partner_id
+        address = ", ".join(filter(None, [partner.street, partner.street2, partner.city, partner.zip])) or False
+        info = {
+            "email": self.email or False,
+            "phone": self.mobile or False,
+            "address": address,
+        }
+        return info if any(info.values()) else False
 
     def _generate_preparation_output_data(self, line, quantity):
         product = line.product_id

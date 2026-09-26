@@ -165,13 +165,23 @@ export class PresetInfoPopup extends Component {
                 if (this.handleValidationErrors(result)) {
                     return;
                 }
+                // Server returns only the partner id to the self frontend.
+                result["res.partner"] = result["res.partner"].map((partner) => ({
+                    ...partner,
+                    name: this.state.name,
+                    email: this.state.email,
+                    phone: this.getFullPhone(),
+                    street: this.state.street,
+                    city: this.state.city,
+                    zip: this.state.zip,
+                    country_id: this.state.countryId,
+                    state_id: this.state.stateId,
+                }));
                 const connectedData = this.selfOrder.models.connectNewData(result);
                 this.selfOrder.data.synchronizeServerDataInIndexedDB(result);
-                this.setPartnerAndOrderName(connectedData["res.partner"][0]);
                 this.selfOrder.currentOrder.partner_id = connectedData["res.partner"][0];
-            } else {
-                this.selfOrder.currentOrder.floating_order_name = this.state.name;
             }
+            this.selfOrder.currentOrder.floating_order_name = this.state.name;
 
             this.props.getPayload({ ...this.state, phone: this.getFullPhone() });
             this.props.close();
@@ -186,15 +196,6 @@ export class PresetInfoPopup extends Component {
             return true;
         }
         return false;
-    }
-
-    setPartnerAndOrderName(partner) {
-        if (this.preset.needsPartner) {
-            this.selfOrder.currentOrder.floating_order_name = `${this.preset.name} - ${this.state.name}`;
-        } else {
-            this.selfOrder.currentOrder.floating_order_name = this.state.name;
-        }
-        this.selfOrder.currentOrder.partner_id = partner;
     }
 
     makeAddressRecord() {

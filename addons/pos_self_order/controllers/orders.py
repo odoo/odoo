@@ -60,9 +60,11 @@ class PosSelfOrderController(http.Controller):
     def _generate_return_values(self, order, config):
         orders = self.env['pos.order']._load_pos_self_data_read(order, config)
 
-        for o in orders:
-            del o['email']
-            del o['mobile']
+        if config.self_ordering_mode != 'kiosk':
+            # Kiosk needs this data to print the preparation receipt
+            for o in orders:
+                del o['email']
+                del o['mobile']
 
         result = {
             'pos.order': orders,

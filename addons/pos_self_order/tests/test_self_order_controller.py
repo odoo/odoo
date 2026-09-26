@@ -350,6 +350,65 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.assertIn('error', data)
         self.assertEqual(data['error']['type'], 'delivery')
 
+    def test_validate_partner_only_returns_id(self):
+        """The pos_self_order frontend is public and unauthenticated: this endpoint must
+        never echo back partner data (name/address/email/...), only the id, otherwise a
+        client-supplied partner_id could be used to read any partner's personal data
+        (existing partner branch), and unrelated fields (e.g. property_product_pricelist)
+        would leak even for a partner the requester just created themselves."""
+        self.pos_config.self_ordering_mode = 'kiosk'
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        params = {
+            'access_token': self.pos_config.access_token,
+            'preset_id': self.delivery_preset.id,
+            'name': 'New Customer',
+            'phone': '+32444444444',
+            'street': 'New St 1',
+            'zip': '1000',
+            'city': 'Test City',
+            'country_id': self.env.ref('base.be').id,
+            'state_id': False,
+            'email': 'new.customer@example.com',
+        }
+
+        data = self.make_request_to_controller('/pos-self-order/validate-partner', params)
+        partner_data = data['res.partner'][0]
+        self.assertEqual(set(partner_data.keys()), {'id'})
+
+        # Existing partner branch must not leak data either.
+        params['partner_id'] = partner_data['id']
+        data = self.make_request_to_controller('/pos-self-order/validate-partner', params)
+        partner_data = data['res.partner'][0]
+        self.assertEqual(set(partner_data.keys()), {'id'})
+
+    def test_process_order_email_and_mobile_kept_only_in_kiosk(self):
+        """Kiosk generates its preparation ticket client-side from the order data returned
+        by process-order, so email/mobile must not be stripped there. Mobile still has them
+        stripped: several devices can share the same order there, and shouldn't see each
+        other's contact info."""
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        self.pos_config.self_ordering_mode = 'kiosk'
+        order_data = self._create_order_data(
+            state='draft', product=self.cola, qty=1, price_unit=1.0, price_subtotal_incl=1.0,
+            device_type='kiosk', email='kiosk.customer@example.com', mobile='+32444444444',
+        )
+        data = self.make_request_to_controller('/pos-self-order/process-order/kiosk', order_data)
+        self.assertEqual(data['pos.order'][0]['email'], 'kiosk.customer@example.com')
+        self.assertEqual(data['pos.order'][0]['mobile'], '+32444444444')
+
+        self.pos_config.self_ordering_mode = 'mobile'
+        order_data = self._create_order_data(
+            state='draft', product=self.cola, qty=1, price_unit=1.0, price_subtotal_incl=1.0,
+            device_type='mobile', email='mobile.customer@example.com', mobile='+32444444445',
+        )
+        data = self.make_request_to_controller('/pos-self-order/process-order/mobile', order_data)
+        self.assertNotIn('email', data['pos.order'][0])
+        self.assertNotIn('mobile', data['pos.order'][0])
+
     def test_free_delivery_threshold_edge_cases(self):
         """Test free delivery threshold at exactly the minimum, below, and above"""
         self.pos_config.self_ordering_mode = 'mobile'
