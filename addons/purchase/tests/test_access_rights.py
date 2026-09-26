@@ -101,6 +101,83 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         vendor_bill_user1 = Form(vendor_bill_user2.with_user(self.purchase_user))
         vendor_bill_user1 = vendor_bill_user1.save()
 
+    def test_access_bank_account_on_vendor_bill(self):
+        """A purchase user can read the vendor bank account shown on a vendor
+        bill they can read (res.partner.bank document rule)."""
+
+        purchase_only_user = self.env['res.users'].create({
+            'name': 'Pure purchase user',
+            'login': 'purchaseUserPure',
+            'group_ids': [Command.set([
+                self.env.ref('base.group_user').id,
+                self.env.ref('purchase.group_purchase_user').id,
+            ])],
+        })
+
+        vendor_bank = self.env['res.partner.bank'].create({
+            'account_number': 'PU-VEND-0001',
+            'partner_id': self.vendor.id,
+        })
+
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.vendor.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'Line',
+                'quantity': 1,
+                'price_unit': 100.0,
+            })],
+        })
+        self.assertEqual(bill.partner_bank_id, vendor_bank)
+
+        # The purchase user can read the bill and, through it, the vendor bank.
+        self.assertTrue(bill.with_user(purchase_only_user).has_access('read'))
+        self.assertTrue(vendor_bank.with_user(purchase_only_user).has_access('read'))
+
+        # An unrelated vendor's bank (on no move the purchase user can read) stays out of reach.
+        other_bank = self.env['res.partner.bank'].create({
+            'account_number': 'PU-OTHER-0001',
+            'partner_id': self.env['res.partner'].create({
+                'name': 'Unrelated vendor',
+            }).id,
+        })
+        self.assertFalse(other_bank.with_user(purchase_only_user).has_access('read'))
+
+    def test_create_invoice_from_po_sets_vendor_bank(self):
+        """A pure purchase user creating a bill from a Purchase Order must get the vendor
+        bank copied onto the (not-yet-existing) bill. There is no move to grant
+        the bank read and the vendor is not the user's company, so _prepare_invoice
+        needs a sudo; without it the x2many read is empty and the bank
+        silently drops."""
+        purchase_only_user = self.env['res.users'].create({
+            'name': 'Pure purchase user 2',
+            'login': 'purchaseUserPure2',
+            'group_ids': [Command.set([
+                self.env.ref('base.group_user').id,
+                self.env.ref('purchase.group_purchase_user').id,
+            ])],
+        })
+        vendor_bank = self.env['res.partner.bank'].create({
+            'account_number': 'PU-VEND-PO-01',
+            'partner_id': self.vendor.id,
+        })
+        order = self.env['purchase.order'].with_user(purchase_only_user).create({
+            'partner_id': self.vendor.id,
+            'order_line': [Command.create({
+                'name': self.product.name,
+                'product_id': self.product.id,
+                'product_qty': 1,
+                'price_unit': 100.0,
+            })],
+        })
+        order.button_confirm()
+        order.order_line.qty_received = 1
+        order.action_create_invoice()
+        bill = order.invoice_ids
+        self.assertEqual(
+            bill.partner_bank_id, vendor_bank,
+            "The vendor bank must be copied onto a bill created from a purchase order by a pure purchase user")
+
     def test_double_validation(self):
         """Only purchase managers can approve a purchase order when double
         validation is enabled"""

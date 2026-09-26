@@ -168,3 +168,54 @@ class TestResPartnerBankForm(TransactionCase):
             self.env['res.partner.bank'].with_context(default_partner_id=self.env.user.partner_id.id))
         bank_account_form.account_number = '11234'
         bank_account_form.save()
+
+
+@tagged('post_install', '-at_install')
+class TestResPartnerBankCompanyAccess(TransactionCase):
+    """A plain internal user may read their own company's bank accounts
+    (res_partner_bank_company_rule), but not the bank accounts of an ordinary
+    (non-company) partner."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # A plain internal user: only base.group_user, scoped to the test company.
+        cls.plain_user = cls.env['res.users'].create({
+            'name': 'Plain Internal User',
+            'login': 'plain_internal_bank_access',
+            'company_id': cls.env.company.id,
+            'company_ids': [(6, 0, cls.env.company.ids)],
+            'group_ids': [(6, 0, [cls.env.ref('base.group_user').id])],
+        })
+        # A bank owned by the user's own company (its partner is a company).
+        cls.company_bank = cls.env['res.partner.bank'].sudo().create({
+            'account_number': 'COMPANY-OWNED-0001',
+            'partner_id': cls.env.company.partner_id.id,
+        })
+        # A bank of an ordinary (non-company) partner.
+        ordinary_partner = cls.env['res.partner'].sudo().create({
+            'name': 'Ordinary Partner',
+            'is_company': False,
+        })
+        cls.ordinary_bank = cls.env['res.partner.bank'].sudo().create({
+            'account_number': 'ORDINARY-0001',
+            'partner_id': ordinary_partner.id,
+        })
+        # A bank owned by another company the user is NOT a member of.
+        other_company = cls.env['res.company'].create({'name': 'Other Company'})
+        cls.other_company_bank = cls.env['res.partner.bank'].sudo().create({
+            'account_number': 'OTHER-COMPANY-0001',
+            'partner_id': other_company.partner_id.id,
+        })
+
+    def test_read_company_bank_account_allowed(self):
+        bank = self.company_bank.with_user(self.plain_user)
+        self.assertEqual(bank.account_number, 'COMPANY-OWNED-0001')
+
+    def test_read_ordinary_bank_account_denied(self):
+        bank = self.ordinary_bank.with_user(self.plain_user)
+        self.assertFalse(bank.has_access('read'))
+
+    def test_read_other_company_bank_account_denied(self):
+        bank = self.other_company_bank.with_user(self.plain_user)
+        self.assertFalse(bank.has_access('read'))
