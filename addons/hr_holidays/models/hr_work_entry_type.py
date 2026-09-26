@@ -460,31 +460,6 @@ been taken for this time off type. Changing it now would affect existing employe
     # ------------------------------------------------------------
 
     @api.model
-    def has_accrual_allocation(self):
-        employee = self.env['hr.employee']._get_contextual_employee()
-        if not employee:
-            return False
-        return bool(self.env['hr.leave.allocation'].search_count([
-            ('employee_id', '=', employee.id),
-            ('state', '=', 'validate'),
-            ('accrual_plan_id', '!=', False),
-            '|',
-            ('date_to', '>', date.today()),
-            ('date_to', '=', False),
-        ], limit=1))
-
-    @api.model
-    def has_future_allocation(self):
-        employee = self.env['hr.employee']._get_contextual_employee()
-        if not employee:
-            return False
-        return bool(self.env['hr.leave.allocation'].search_count([
-            ('employee_id', '=', employee.id),
-            ('state', '=', 'validate'),
-            ('date_from', '>', date.today()),
-        ], limit=1))
-
-    @api.model
     def get_allocation_data_request(self, target_date=None, hidden_allocations=True, same_year_only=False):
         employee = self.env["hr.employee"]._get_contextual_employee()
         if not employee:

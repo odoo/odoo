@@ -11,12 +11,12 @@ import { user } from "@web/core/user";
 describe.current.tags("desktop");
 defineHrHolidaysModels();
 
-test("Test request creator buttons", async() => {
+test("Test request creator buttons", async () => {
     mockDate("2024-01-03 12:00:00", 0);
     patchWithCleanup(user, { userId: 100 });
 
     HrLeave._views = {
-         "form,hr_leave_view_form_dashboard_new_time_off": `
+        "form,hr_leave_view_form_dashboard_new_time_off": `
             <form>
                 <field name="state"/>
                 <field name="work_entry_type_id"/>
@@ -29,32 +29,41 @@ test("Test request creator buttons", async() => {
 
     HrLeave._records = [
         {
-            'id': 1, 'state': 'confirm', 'work_entry_type_id': 55, 'employee_id': 100,
-            'user_id': 100, 'date_from': '2024-01-09 09:00:00', 'date_to': '2024-01-09 18:00:00'
+            id: 1,
+            state: "confirm",
+            work_entry_type_id: 55,
+            employee_id: 100,
+            user_id: 100,
+            date_from: "2024-01-09 09:00:00",
+            date_to: "2024-01-09 18:00:00",
         },
         {
-            'id': 2, 'state': 'validate1', 'work_entry_type_id': 55, 'employee_id': 100,
-            'can_cancel': true, 'user_id': 100, 'date_from': '2024-01-10 09:00:00', 'date_to': '2024-01-10 18:00:00'
+            id: 2,
+            state: "validate1",
+            work_entry_type_id: 55,
+            employee_id: 100,
+            can_cancel: true,
+            user_id: 100,
+            date_from: "2024-01-10 09:00:00",
+            date_to: "2024-01-10 18:00:00",
         },
-    ]
+    ];
 
-    ResUsers._records = [
-        ...ResUsers._records,
-        { 'id': 100, 'name': "User 1", 'employee_id': 100 },
-    ]
+    ResUsers._records = [...ResUsers._records, { id: 100, name: "User 1", employee_id: 100 }];
 
     onRpc("get_mandatory_days", () => ({}));
     onRpc("get_unusual_days", () => ({}));
     onRpc("get_allocation_data_request", () => ({}));
-    onRpc("get_special_days_data", () => ({bankHolidays: [], mandatoryDays: []}));
-    onRpc("hr.employee", "get_time_off_dashboard_data", () => (
-        {has_accrual_allocation: true, allocation_data: {}, allocations_number: ""}
-    ));
+    onRpc("get_special_days_data", () => ({ bankHolidays: [], mandatoryDays: [] }));
+    onRpc("hr.employee", "get_time_off_dashboard_data", () => ({
+        allocation_data: {},
+        allocations_number: "",
+    }));
 
     await mountView({
-            type: "calendar",
-            resModel: "hr.leave",
-            arch: `
+        type: "calendar",
+        resModel: "hr.leave",
+        arch: `
             <calendar js_class="time_off_calendar_dashboard"
                     string="Time Off Request"
                     form_view_id="hr_leave_view_form_dashboard_new_time_off"
@@ -72,8 +81,8 @@ test("Test request creator buttons", async() => {
                 <field name="is_hatched" invisible="1" />
                 <field name="is_striked" invisible="1"/>
             </calendar>`,
-            context: user.context
-        });
+        context: user.context,
+    });
     await clickDate("2024-01-09");
     await click(".o_cw_popover_link");
     await waitFor("button:contains(Delete Time Off)");
@@ -81,5 +90,4 @@ test("Test request creator buttons", async() => {
     await clickDate("2024-01-10");
     await click(".o_cw_popover_link");
     await waitFor("button:contains(Cancel Time Off)");
-})
-
+});
