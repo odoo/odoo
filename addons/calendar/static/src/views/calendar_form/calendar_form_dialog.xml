@@ -3,8 +3,8 @@
     <t t-name="calendar.CalendarFormDialogButtons" t-inherit="web.FormViewDialog.ToOne.buttons">
         <xpath expr="//button[hasclass('o_form_button_remove')]" position="replace">
             <button t-if="this.props.removeRecord"
-                class="btn btn-danger oi h-100 p-2 ms-auto o_form_button_remove"
-                t-on-click="this.props.removeRecord" data-icon="delete"
+                class="btn btn-secondary oi h-100 p-2 ms-auto o_form_button_remove"
+                t-on-click="this.props.removeRecord" t-att-data-icon="this.props.resModel === 'calendar.calendar' ? 'delete' : 'logout'"
                 data-hotkey="x"/>
         </xpath>
     </t>

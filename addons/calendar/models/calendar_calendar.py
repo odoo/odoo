@@ -7,13 +7,16 @@ class CalendarCalendar(models.Model):
     _description = 'User Calendar'
 
     def _default_calendar_user_ids(self):
-        return [Command.create({
-            'user_id': self.env.user.id,
+        return [Command.create(self._get_default_calendar_user_values(self.env.user))]
+
+    def _get_default_calendar_user_values(self, user):
+        return {
+            'user_id': user.id,
             'access_role': 'owner',
             'is_filter_active': True,
             'is_filter_checked': True,
             'name': _('Calendar')
-        })]
+        }
 
     name = fields.Char(string='Name')
     event_ids = fields.One2many('calendar.event', 'calendar_id', 'Events')
@@ -29,11 +32,11 @@ class CalendarCalendar(models.Model):
     )
 
     # All user membership records of this calendar
-    calendar_user_ids = fields.One2many('calendar.user', inverse_name='calendar_id', string='Users', default=_default_calendar_user_ids)
+    calendar_user_ids = fields.One2many('calendar.user', inverse_name='calendar_id', string='Users', default=lambda self: self._default_calendar_user_ids())
     # Because we support importing shared calendars through sync, we can have calendars without an owner_id.
     owner_id = fields.Many2one('res.users', compute='_compute_owner_id')
     share_user_ids = fields.Many2many('res.users', string='Shared with', compute='_compute_share_user_ids',
-        inverse='_inverse_share_user_ids', domain="[('id', '!=', owner_id), ('share', '=', False)]")
+        inverse='_inverse_share_user_ids', domain="[('id', 'not in', [owner_id, uid]), ('share', '=', False)]")
     # The current user's membership record of this calendar, if any
     calendar_user_id = fields.Many2one(
         'calendar.user',

@@ -196,7 +196,7 @@ class CalendarEvent(models.Model):
         [('public', 'Public'),
          ('private', 'Private'),
          ('confidential', 'Only internal users'),
-         ('members_only', 'Shared Calendar Members Only')], 'Privacy',
+         ('members_only', 'Calendar Members Only')], 'Privacy',
         help="People to whom this event will be visible.")
     privacy_placeholder = fields.Char(compute='_compute_privacy_placeholder')
     effective_privacy = fields.Selection(
@@ -402,7 +402,8 @@ class CalendarEvent(models.Model):
     @api.depends_context('uid')
     def _compute_user_can_edit(self):
         for event in self:
-            if event.calendar_id and event.calendar_id.id in self.env.user.writable_calendar_ids.ids:
+            if (event.calendar_id and event.calendar_id.owner_id == self.env.user or
+                    (event.calendar_id.id in self.env.user.writable_calendar_ids.ids and event.privacy != 'private')):
                 event.user_can_edit = True
                 continue
             # By default, only current attendees, the organizer and the creator can edit the event.
