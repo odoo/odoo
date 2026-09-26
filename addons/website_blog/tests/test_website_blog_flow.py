@@ -119,6 +119,20 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
 
         self.assertEqual(self.test_blog_post.teaser, "Test Content...")
 
+    def test_website_blog_teaser_translations(self):
+        """ Ensure that we don't use fallback language for teaser and fallback
+            on ellipsed content instead. """
+        self.env['res.lang']._activate_lang('fr_FR')
+        en_post = self.test_blog_post
+        fr_post = en_post.with_context(lang='fr_FR')
+        en_post.content = 'EN'
+        en_post.update_field_translations('content', {
+            'fr_FR': {'EN': 'FR'},
+        })
+        en_post.teaser_manual = 'E'
+        self.assertEqual(fr_post.teaser, 'FR...')
+        self.assertEqual(en_post.teaser, 'E')
+
 
 @tagged('-at_install', 'post_install')
 class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
