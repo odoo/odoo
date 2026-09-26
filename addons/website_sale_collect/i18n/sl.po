@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-22 17:43+0000\n"
-"PO-Revision-Date: 2026-07-22 17:09+0000\n"
+"PO-Revision-Date: 2026-09-22 15:53+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/"
 "website_sale_collect/sl/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
@@ -30,11 +30,13 @@ msgid ""
 "<i>Your order has been confirmed.</i><br>Please come to the store to pay for "
 "your products."
 msgstr ""
+"<i>Vaše naročilo je bilo potrjeno.</i><br>Prosimo, pridite v trgovino in "
+"plačajte svoje izdelke."
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (In-store pickup)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> (Prevzem v trgovini)</span>"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -57,7 +59,7 @@ msgstr "Uredi nastavitve"
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.res_config_settings_form
 msgid "Configure Pickup Locations"
-msgstr ""
+msgstr "Nastavi prevzemne lokacije"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_payment_provider__custom_mode
@@ -73,7 +75,7 @@ msgstr "Načini dostave"
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__in_store_dm_id
 msgid "In-store Delivery Method"
-msgstr ""
+msgstr "Način dostave v trgovini"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -108,7 +110,7 @@ msgstr "Ni na zalogi"
 #. module: website_sale_collect
 #: model:payment.provider,name:website_sale_collect.payment_provider_on_site
 msgid "Pay on Site"
-msgstr ""
+msgstr "Plačilo na kraju samem"
 
 #. module: website_sale_collect
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__payment_provider__custom_mode__on_site
@@ -133,13 +135,13 @@ msgstr "Plačilna transakcija"
 #: model:ir.model.fields.selection,name:website_sale_collect.selection__delivery_carrier__delivery_type__in_store
 #: model:product.template,name:website_sale_collect.product_pick_up_in_store_product_template
 msgid "Pick up in store"
-msgstr ""
+msgstr "Prevzem v trgovini"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/main.py:0
 msgid "Please choose a store to collect your order."
-msgstr ""
+msgstr "Prosimo, izberite trgovino, kjer boste prevzeli svoje naročilo."
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_product_template
@@ -169,14 +171,14 @@ msgstr "Metode odpreme"
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
 msgid "Some of the products are not available at"
-msgstr ""
+msgstr "Nekateri izdelki niso na voljo na"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/controllers/main.py:0
 #: code:addons/website_sale_collect/models/sale_order.py:0
 msgid "Some products are not available in the selected store."
-msgstr ""
+msgstr "Nekateri izdelki niso na voljo v izbrani trgovini."
 
 #. module: website_sale_collect
 #. odoo-python
@@ -188,19 +190,19 @@ msgstr "Žal vašega naročila nismo mogli odpremiti."
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__warehouse_ids
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.delivery_carrier_form
 msgid "Stores"
-msgstr ""
+msgstr "Trgovine"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method and a warehouse must share the same company"
-msgstr ""
+msgstr "Način dostave in skladišče morata biti v istem podjetju"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method must have at least one warehouse to be published."
-msgstr ""
+msgstr "Način dostave mora imeti vsaj eno skladišče, da ga je mogoče objaviti."
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_stock_picking
@@ -223,6 +225,8 @@ msgstr "Spletna stran"
 msgid ""
 "You can only pay on site when selecting the pick up in store delivery method."
 msgstr ""
+"Plačate lahko na lokaciji samo, če izberete način dostave »prevzem v trgovini"
+"«."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site
@@ -250,4 +254,4 @@ msgstr "Razpoložljivo"
 #. odoo-python
 #: code:addons/website_sale_collect/models/payment_provider.py:0
 msgid "no in-store delivery methods available"
-msgstr ""
+msgstr "na voljo ni nobenega načina dostave v trgovini"

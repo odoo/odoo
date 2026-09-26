@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-07-26 17:14+0000\n"
+"PO-Revision-Date: 2026-09-26 17:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-18/"
 "stock_delivery/sk/>\n"
@@ -21,50 +21,50 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
 "n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/sale_order.py:0
 msgid "%(name)s (Estimated Cost: %(cost)s)"
-msgstr ""
+msgstr "%(name)s (Odhadované náklady: %(cost)s)"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_quant_package_weight_form
 msgid "(computed:"
-msgstr ""
+msgstr "(vypočítané:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight (estimated): </span>"
-msgstr ""
+msgstr "<span> - Hmotnosť (odhad): </span>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_stock_report_delivery_no_package_section_line
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight: </span>"
-msgstr ""
+msgstr "<span> - Hmotnosť: </span>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "<span>Shipping Weight: </span>"
-msgstr ""
+msgstr "<span>Hmotnosť zásielky: </span>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
-msgstr ""
+msgstr "<strong>Prepravca</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Shipping Method:</strong>"
-msgstr ""
+msgstr "<strong>Spôsob doručenia:</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
 msgid "<strong>Shipping Weight: </strong>"
-msgstr ""
+msgstr "<strong>Hmotnosť zásielky: </strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
@@ -72,21 +72,23 @@ msgid ""
 "<strong>Shipping Weight:</strong>\n"
 "                    <br/>"
 msgstr ""
+"<strong>Hmotnosť zásielky:</strong>\n"
+"                    <br/>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Total Weight</strong>"
-msgstr ""
+msgstr "<strong>Celková hmotnosť</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>Sledovacie číslo</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_delivery
 msgid "<strong>Weight: </strong>"
-msgstr ""
+msgstr "<strong>Hmotnosť: </strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
@@ -96,7 +98,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
 msgid "Applicable on Shipping Methods"
-msgstr ""
+msgstr "Platí pre spôsoby doručenia"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -108,6 +110,7 @@ msgstr "Zrušené"
 msgid ""
 "Cancelling a delivery may not be undoable. Are you sure you want to continue?"
 msgstr ""
+"Zrušiť doručenie nemusí byť možné vrátiť späť. Naozaj chcete pokračovať?"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__carrier_id
@@ -120,12 +123,12 @@ msgstr "Prepravca"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__shipper_package_code
 msgid "Carrier Code"
-msgstr ""
+msgstr "Kód prepravcu"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier name"
-msgstr ""
+msgstr "Názov prepravcu"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__company_id
@@ -136,7 +139,7 @@ msgstr "Spoločnost"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Cost: %(price).2f %(currency)s"
-msgstr ""
+msgstr "Cena: %(price).2f %(currency)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__create_uid
@@ -151,7 +154,7 @@ msgstr "Vytvorené"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr ""
+msgstr "Sprievodca výberom prepravcu"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
@@ -192,7 +195,7 @@ msgstr "Zobrazovaný Názov"
 #. module: stock_delivery
 #: model:ir.actions.act_window,name:stock_delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr ""
+msgstr "Zobraziť sledovacie odkazy"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_delivery_carrier__invoice_policy
@@ -202,18 +205,22 @@ msgid ""
 "Real Cost: the customer will be invoiced the real cost of the shipping, the "
 "cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"Odhadované náklady: zákazníkovi budú fakturované odhadované náklady na "
+"dopravu.\n"
+"Skutočné náklady: zákazníkovi budú fakturované skutočné náklady na dopravu; "
+"náklady na dopravu budú aktualizované v objednávkovom doklade po doručení."
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Exception occurred with respect to carrier on the transfer"
-msgstr ""
+msgstr "Na skladovom presune došlo k výnimke týkajúcej sa dopravcu"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Exception:"
-msgstr ""
+msgstr "Výnimka:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
@@ -246,7 +253,7 @@ msgstr "Postup fakturácie"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__is_return_picking
 msgid "Is Return Picking"
-msgstr ""
+msgstr "Je to spätný skladový presun"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__write_uid
@@ -262,12 +269,12 @@ msgstr "Naposledy upravované"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Manual actions might be needed."
-msgstr ""
+msgstr "Môže byť potrebný ručný zásah."
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
-msgstr ""
+msgstr "Žiadna integrácia prepravcu"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
@@ -278,7 +285,7 @@ msgstr "OK"
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,field_description:stock_delivery.field_product_template__country_of_origin
 msgid "Origin of Goods"
-msgstr ""
+msgstr "Pôvod tovaru"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
@@ -295,7 +302,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_delivery/wizard/choose_delivery_package.py:0
 msgid "Package too heavy!"
-msgstr ""
+msgstr "Balík je príliš ťažký!"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_quant_package
@@ -311,7 +318,7 @@ msgstr "Vyberanie"
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
-msgstr ""
+msgstr "Vytlačiť vratný štítok"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_template
@@ -331,12 +338,12 @@ msgstr "Poskytovateľ"
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__delivery_carrier__invoice_policy__real
 msgid "Real cost"
-msgstr ""
+msgstr "Skutočné náklady"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__return_label_ids
 msgid "Return Label"
-msgstr ""
+msgstr "Vratný štítok"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_return_picking
@@ -358,6 +365,9 @@ msgid ""
 "As such, the ‘origin’ is the 'economic nationality' of goods traded in "
 "commerce."
 msgstr ""
+"Pravidlá pôvodu určujú, odkiaľ tovar pochádza, t. j. nie odkiaľ bol "
+"odoslaný, ale kde bol vyrobený alebo vykonaná výroba.\n"
+"Ako taký je „pôvod“ „ekonomickou národnosťou“ tovaru obchodovaného v obchode."
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__sale_price
@@ -391,6 +401,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number %"
 "(ref)s"
 msgstr ""
+"Zásielka bola odoslaná prepravcovi %(carrier_name)s na doručenie so "
+"sledovacím číslom %(ref)s"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_price
@@ -423,6 +435,7 @@ msgstr "Hmotnosť dodávky:"
 #: model:ir.model.fields,help:stock_delivery.field_product_template__hs_code
 msgid "Standardized code for international shipping and goods declaration."
 msgstr ""
+"Štandardizovaný kód pre medzinárodnú prepravu a colné vyhlásenie tovaru."
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move
@@ -437,12 +450,13 @@ msgstr "Typ skladového balenia"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_rounding
 msgid "Technical field indicating weight's number of decimal places"
-msgstr ""
+msgstr "Technická oblasť označujúca počet desatinných miest hmotnosti"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
 msgstr ""
+"Technické pole označujúce, či je jednotkou hmotnosti kg alebo nie (napr. lb)"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_move_line__destination_country_code
@@ -461,12 +475,14 @@ msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
 msgstr ""
+"Balík nie je možné vytvoriť, pretože celková hmotnosť produktov v zozname na "
+"skladovom presune je 0,0 %s"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/wizard/choose_delivery_carrier.py:0
 msgid "The shipping price will be set once the delivery is done."
-msgstr ""
+msgstr "Cena za dopravu bude stanovená po doručení zásielky."
 
 #. module: stock_delivery
 #. odoo-python
@@ -475,27 +491,29 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
+"Hmotnosť vašej zásielky presahuje maximálnu povolenú hmotnosť pre tento typ "
+"balenia. Vyberte si prosím iný typ balíka."
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/delivery_carrier.py:0
 msgid "There is no matching delivery rule."
-msgstr ""
+msgstr "Neexistuje žiadne zodpovedajúce pravidlo doručenia."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__weight
 msgid "Total weight of all the products contained in the package."
-msgstr ""
+msgstr "Celková hmotnosť všetkých produktov obsiahnutých v balíku."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight
 msgid "Total weight of the products in the picking."
-msgstr ""
+msgstr "Celková hmotnosť produktov v skladovém presunu."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr ""
+msgstr "Sledovacie URL"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -516,7 +534,7 @@ msgstr "Tracking URL"
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Tracking links for shipment:"
-msgstr ""
+msgstr "Sledovacie odkazy zásielky:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale
@@ -539,7 +557,7 @@ msgstr "Hmotnosť"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
 msgid "Weight for shipping"
-msgstr ""
+msgstr "Hmotnosť pre prepravu"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__weight_uom_name
@@ -551,7 +569,7 @@ msgstr "Označenie mernej jednotky váhy"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
 msgid "Weight:"
-msgstr ""
+msgstr "Hmotnosť:"
 
 #. module: stock_delivery
 #. odoo-python
@@ -561,11 +579,16 @@ msgid ""
 "carriers (i.e. check that all of their transfers have a carrier assigned and "
 "are using the same carrier)."
 msgstr ""
+"Produkty s rôznymi prepravcami nemôžete zabaliť do jedného balíka (t. j. "
+"skontrolujte, či majú všetky ich prepravy priradeného prepravcu a či "
+"používajú toho istého prepravcu)."
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
+"Máte viacero odkazov na sledovacích odkazov, ktoré sú k dispozícii v "
+"chatteri."
 
 #. module: stock_delivery
 #. odoo-python
@@ -580,22 +603,22 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr ""
+msgstr "Predpona PSČ"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDShipping Weight:"
-msgstr ""
+msgstr "^A0N,44,33^FDHmotnosť zásielky:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^A0N,44,33^FDWeight:"
-msgstr ""
+msgstr "^A0N,44,33^FDHmotnosť:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^FO310,200"
-msgstr ""
+msgstr "^FO310 200"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery

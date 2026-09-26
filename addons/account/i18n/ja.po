@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-09-15 04:32+0000\n"
+"PO-Revision-Date: 2026-09-23 01:38+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/account/"
 "ja/>\n"
@@ -2265,8 +2265,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
-"%(date)s: %(accrual_entry)sに作成された未収計上。                およびその逆"
-"仕訳: %(reverse_entry)s。"
+"%(date)sに作成された経過勘定仕訳: %(accrual_entry)s。                その逆仕"
+"訳: %(reverse_entry)s。"
 
 #. module: account
 #. odoo-python
@@ -4066,7 +4066,7 @@ msgstr "売上仕訳帳以外で売上文書を作成することができない
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Cannot create an accrual entry with orders in different currencies."
-msgstr "異なる通貨のオーダを含む未収計上は作成できません。"
+msgstr "通貨の異なるオーダを含む経過勘定仕訳は作成できません。"
 
 #. module: account
 #. odoo-python
@@ -7071,7 +7071,7 @@ msgstr "必要なEpd"
 #: model:ir.model.fields.selection,name:account.selection__account_account__internal_group__equity
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Equity"
-msgstr "資本"
+msgstr "純資産"
 
 #. module: account
 #. odoo-python
@@ -10372,7 +10372,7 @@ msgstr "突合番号"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__matching_order
 msgid "Matching Order"
-msgstr "オーダの突合"
+msgstr "照合順序"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
@@ -10396,7 +10396,7 @@ msgstr "一致する取引先"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Matching rules"
-msgstr "突合規則"
+msgstr "照合ルール"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -16342,8 +16342,8 @@ msgid ""
 "There doesn't appear to be anything to invoice for the selected order. "
 "However, you can use the amount field to force an accrual entry."
 msgstr ""
-"選択された注文に請求項目はないようです。しかし、「金額」フィールドを使用する"
-"ことで、強制的に未収計上仕訳を行えます。"
+"選択したオーダには請求対象がないようです。ただし、「金額」フィールドを使用し"
+"て、経過勘定仕訳を強制的に作成できます。"
 
 #. module: account
 #. odoo-python
