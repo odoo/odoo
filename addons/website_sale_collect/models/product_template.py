@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import Command, models
 from odoo.http import request
 
 from odoo.addons.website_sale_collect import utils
@@ -48,21 +48,19 @@ class ProductTemplate(models.Model):
             ("website_published", "=", True),
             ("delivery_type", "!=", "in_store"),
         ])
-        # Filter delivery methods by tags and country
-        country_id = order_sudo.partner_shipping_id.country_id
-        if not country_id and not self.env.user._is_public():
-            country_id = self.env.user.partner_id.country_id
-        if not country_id:
-            geoip_country_code = website._get_geoip_country_code()
-            if geoip_country_code:
-                country_id = self.env["res.country"].search(
-                    [("code", "=", geoip_country_code)], limit=1
-                )
-        valid_delivery_methods = available_delivery_methods_sudo.filtered(
-            lambda dm: (
-                not (dm.excluded_tag_ids & product_or_template.all_product_tag_ids)
-                and (not dm.country_ids or country_id in dm.country_ids)
-            )
+        # Filter delivery methods using the same availability rules as at checkout.
+        partner_sudo = order_sudo.partner_shipping_id
+        if not partner_sudo.country_id:
+            country_sudo = website._get_and_cache_current_country()
+            if country_sudo:
+                partner_sudo = self.env["res.partner"].new({"country_id": country_sudo.id})
+        virtual_order_sudo = self.env["sale.order"].new({
+            "order_line": [
+                Command.create({"product_id": product_sudo.id, "product_uom_qty": quantity})
+            ]
+        })
+        valid_delivery_methods = available_delivery_methods_sudo.available_carriers(
+            partner_sudo, virtual_order_sudo
         )
         if valid_delivery_methods:
             # Suggest the fastest delivery method.
@@ -85,8 +83,8 @@ class ProductTemplate(models.Model):
                 fastest_estimated_dates[0] if fastest_estimated_dates else "",
             )
 
-        # If C&C not excluded via tags, prepare the in-store stock data.
-        if not (in_store_dm.excluded_tag_ids & product_or_template.all_product_tag_ids):
+        # If Click & Collect is available for this product, prepare the in-store stock data.
+        if in_store_dm.available_carriers(partner_sudo, virtual_order_sudo):
             if (
                 order_sudo
                 and order_sudo.carrier_id.delivery_type == "in_store"
