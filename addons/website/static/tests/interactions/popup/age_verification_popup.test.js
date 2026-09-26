@@ -55,7 +55,7 @@ function getAgeVerificationTemplate({ confirmationType = "yes_or_no", minAge = 1
     };
 
     return `
-        <div class="s_popup s_age_verification_popup o_snippet_invisible" data-vcss="001" id="sAgeVerificationPopup" data-invisible="1">
+        <div class="s_popup s_age_verification_popup" data-vcss="001" id="sAgeVerificationPopup">
             <div class="modal fade s_popup_middle" tabindex="-1" role="dialog"
                 data-bs-focus="false" data-bs-backdrop="false" data-bs-keyboard="false"
                 data-min-age="${minAge}" data-blur-background="true" data-show-after="0" data-display="afterDelay" data-consents-duration="30">
