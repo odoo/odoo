@@ -1,0 +1,81 @@
+// = Apps Sidebar
+// ============================================================================
+// The sidebar is out of the flow (it is displayed below the navbar, along the
+// action manager): the webclient reserves the space it takes.
+.o_web_client:has(> .o_apps_sidebar) {
+    --o-apps-sidebar-width: #{$o-apps-sidebar-width};
+
+    &:has(> .o_apps_sidebar_expanded) {
+        --o-apps-sidebar-width: #{$o-apps-sidebar-width-expanded};
+    }
+
+    > .o_action_manager {
+        margin-left: var(--o-apps-sidebar-width);
+    }
+}
+
+.o_apps_sidebar {
+    position: fixed;
+    top: $o-navbar-height;
+    bottom: 0;
+    left: 0;
+    width: var(--o-apps-sidebar-width, #{$o-apps-sidebar-width});
+    background-color: $o-view-background-color;
+    border-right: 1px solid $border-color;
+    transition: width 0.2s ease;
+
+    .o_apps_sidebar_app,
+    .o_apps_sidebar_btn {
+        height: $o-apps-sidebar-entry-height;
+        padding: 0;
+        border: 0;
+        border-left: 3px solid transparent;
+        background-color: transparent;
+        color: $body-color;
+        white-space: nowrap;
+
+        &:hover, &:focus-visible {
+            background-color: $dropdown-link-hover-bg;
+
+            .o_apps_sidebar_app_icon {
+                transform: scale(1.15);
+            }
+        }
+    }
+
+    .o_apps_sidebar_app_active {
+        border-left-color: $o-brand-primary;
+        background-color: $dropdown-link-hover-bg;
+        font-weight: $font-weight-bold;
+    }
+
+    .o_apps_sidebar_app_icon {
+        width: calc(#{$o-apps-sidebar-width} - 3px); // border-left
+        transition: transform 0.2s ease;
+
+        img {
+            width: 1.7rem;
+            height: 1.7rem;
+            object-fit: contain;
+        }
+    }
+
+    // App names are only displayed when the sidebar is expanded, they are
+    // available as a tooltip otherwise.
+    .o_apps_sidebar_app_name {
+        display: none;
+        padding-right: map-get($spacers, 2);
+    }
+
+    &.o_apps_sidebar_expanded .o_apps_sidebar_app_name {
+        display: block;
+    }
+
+    .o_apps_sidebar_footer {
+        border-top: 1px solid $border-color;
+    }
+}
+
+.o_apps_sidebar_pin_menu .o_apps_sidebar_pin_item {
+    cursor: pointer;
+}
