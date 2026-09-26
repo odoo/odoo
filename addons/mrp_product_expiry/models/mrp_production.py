@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import Command, _, models
 
 
 class MrpProduction(models.Model):
@@ -18,8 +18,8 @@ class MrpProduction(models.Model):
         # user already confirmed the wizard about using expired lots.
         if self.env.context.get('skip_expired'):
             return False
-        expired_lot_ids = self.move_raw_ids.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert).lot_id.ids
-        if expired_lot_ids:
+        expired_move_line_ids = self.move_raw_ids.move_line_ids.filtered(lambda ml: ml.lot_id.product_expiry_alert).ids
+        if expired_move_line_ids:
             return {
                 'name': _('Confirmation'),
                 'type': 'ir.actions.act_window',
@@ -27,13 +27,13 @@ class MrpProduction(models.Model):
                 'view_mode': 'form',
                 'views': [(False, 'form')],
                 'target': 'new',
-                'context': self._get_expired_context(expired_lot_ids),
+                'context': self._get_expired_context(expired_move_line_ids),
             }
 
-    def _get_expired_context(self, expired_lot_ids):
+    def _get_expired_context(self, expired_move_line_ids):
         context = dict(self.env.context)
         context.update({
-            'default_lot_ids': [(6, 0, expired_lot_ids)],
+            'default_move_line_ids': [Command.set(expired_move_line_ids)],
             'default_production_ids': self.ids,
         })
         return context
