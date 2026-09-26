@@ -73,13 +73,13 @@ registry.category("web_tour.tours").add("test_product_configurator_price", {
             Dialog.confirm(),
             ProductScreen.totalAmountIs("15.40"),
             ProductScreen.clickPriceList("Pricelist 2"),
-            ProductScreen.totalAmountIs("22.00"),
+            ProductScreen.totalAmountIs("26.40"),
             ProductScreen.clickDisplayedProduct("Configurable Product"),
-            ProductConfigurator.priceIs("22.00"), // 20 (pricelist 2) + 2 (10% tax)
+            ProductConfigurator.priceIs("24.20"), // 20 (pricelist 2) + 2 (Red) + 2.2 (10% tax)
             ProductConfigurator.pickRadio("Blue"),
-            ProductConfigurator.priceIs("22.00"), // 20 (pricelist 2) + 2 (10% tax)
+            ProductConfigurator.priceIs("25.30"), // 20 (pricelist 2) + 3 (Blue) + 2.3 (10% tax)
             Dialog.confirm(),
-            ProductScreen.totalAmountIs("44.00"),
+            ProductScreen.totalAmountIs("51.70"),
             Chrome.createFloatingOrder(),
             ProductScreen.clickFiscalPosition("Include to Exclude"),
             ProductScreen.clickDisplayedProduct("Configurable Product"),

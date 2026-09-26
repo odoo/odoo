@@ -316,9 +316,11 @@ registry.category("web_tour.tours").add("test_pricelist_should_not_be_changed_fr
                 const order = posmodel.currentOrder;
                 const amountTotal = order.displayPrice;
 
-                if (amountTotal !== 0) {
+                // Fixed price is 0 + 13.29 (attribute extra price) = 13.29
+                const difference = amountTotal - 13.29;
+                if (difference !== 0) {
                     throw new Error(
-                        `The total price should be 0 with free pricelist, but it is ${amountTotal}`
+                        `The total price excluding extra price should be 0 with free pricelist, but it is ${difference}`
                     );
                 }
 

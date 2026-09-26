@@ -382,3 +382,19 @@ class ProductTemplate(models.Model):
         :return: A dict containing additional data about the specified product.
         """
         return {}
+
+    def _get_ptav_show_extra_price(self, ptav, combination, pricelist, quantity=1, date=None):
+        """Whether `ptav`'s extra price should be shown, i.e. it isn't already priced into
+        a fixed-price rule dedicated to the variant it would produce."""
+        self.ensure_one()
+        if not pricelist or ptav.attribute_id.create_variant == 'no_variant':
+            return True
+        variant = self._get_variant_for_combination(
+            (combination - ptav.attribute_line_id.product_template_value_ids) + ptav
+        )
+        if not variant:
+            return True
+        rule = self.env['product.pricelist.item'].browse(pricelist._get_product_rule(
+            variant, quantity=quantity, date=date or fields.Datetime.now()
+        ))
+        return not (rule.compute_price == 'fixed' and rule.applied_on == '0_product_variant')

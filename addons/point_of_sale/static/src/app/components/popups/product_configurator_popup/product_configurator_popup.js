@@ -14,7 +14,7 @@ export const BaseProductAttributeProps = {
     customValue: t.string(),
     setCustomValue: t.function(),
     allSelectedValues: t.array(t.instanceOf(ProductTemplateAttributeValue)),
-    showExtraPrice: t.boolean(),
+    showExtraPrice: t.function(),
 };
 
 export class BaseProductAttribute extends Component {
@@ -295,21 +295,29 @@ export class ProductConfiguratorPopup extends Component {
             .reduce((acc, val) => acc + val.price_extra, 0);
     }
 
-    get showExtraPrice() {
+    showExtraPrice = (value) => {
         // Combo items add their extras on top of the combo price, always.
-        if (this.props.comboItem) {
+        if (this.props.comboItem || value.attribute_id.create_variant === "no_variant") {
             return true;
         }
-        // A fixed pricelist rule replaces the whole price of the product, attribute
-        // extra prices included, so those extras must not be advertised either.
-        const template = this.props.productTemplate;
         const pricelist = this.pos.getOrder()?.pricelist_id;
-        const variant = this.product || false;
-        return (
-            template.getPrice(pricelist, 1, 1, false, variant) !==
-            template.getPrice(pricelist, 1, 0, false, variant)
+        const selectedIds = this.selectedValues
+            .filter((val) => val.attribute_line_id.id !== value.attribute_line_id.id)
+            .map(({ id }) => id);
+        selectedIds.push(value.id);
+        const variant = this.props.productTemplate.product_variant_ids.find(
+            (product) =>
+                product.product_template_variant_value_ids?.length > 0 &&
+                product.product_template_variant_value_ids.every(({ id }) =>
+                    selectedIds.includes(id)
+                )
         );
-    }
+        if (!pricelist || !variant) {
+            return true;
+        }
+        const rule = pricelist.findBestRule(pricelist.getRulesByProductId(variant.id), 1);
+        return !(rule && rule.compute_price === "fixed");
+    };
 
     confirm() {
         this.props.getPayload(this.computePayload());
