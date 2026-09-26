@@ -5,6 +5,7 @@ from freezegun import freeze_time
 from datetime import timedelta
 
 from odoo.addons.gamification.tests.common import TransactionCaseGamification
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCase
 from odoo.exceptions import UserError
 from odoo.tools import mute_logger
 
@@ -279,7 +280,7 @@ class test_challenge(TestGamificationCommon):
             )
 
 
-class test_badge_wizard(TestGamificationCommon):
+class test_badge_wizard(TestGamificationCommon, MailCase):
 
     def test_grant_badge(self):
         wiz = self.env['gamification.badge.user.wizard'].create({
@@ -292,3 +293,40 @@ class test_badge_wizard(TestGamificationCommon):
         self.assertTrue(wiz.action_grant_badge(), "Could not grant badge")
 
         self.assertEqual(self.badge_good_job.stat_this_month, 1)
+
+    def test_grant_badge_mail_lang(self):
+        test_user = mail_new_test_user(
+            self.env, login='test',
+            name='Test User', email='test@example.com',
+        )
+        self.env['res.lang']._activate_lang('fr_BE')
+        self.user_demo.lang = 'fr_BE'
+
+        badge = self.env['gamification.badge'].create({
+            'name': 'New Badge',
+        })
+        template = self.env.ref('gamification.email_template_badge_received')
+        template.body_html = '<div>mail in EN</div>'
+        template.with_context(lang='fr_BE').body_html = '<div>email en FR</div>'
+
+        wiz = self.env['gamification.badge.user.wizard'].create([{
+            'user_id': test_user.id,
+            'badge_id': badge.id,
+        }, {
+            'user_id': self.user_demo.id,
+            'badge_id': self.badge_good_job.id,
+        }])
+        with self.mock_mail_gateway():
+            wiz.action_grant_badge()
+
+        self.assertEqual(len(self._mails), 2)
+        mails_by_email = {
+            mail['email_to'][0]: mail
+            for mail in self._mails
+            if len(mail['email_to']) == 1
+        }
+        self.assertIn(test_user.email_formatted, mails_by_email)
+        self.assertIn(self.user_demo.email_formatted, mails_by_email)
+
+        self.assertIn('mail in EN', mails_by_email[test_user.email_formatted]['body'])
+        self.assertIn('email en FR', mails_by_email[self.user_demo.email_formatted]['body'])
