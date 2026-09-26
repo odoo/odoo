@@ -514,7 +514,13 @@ class ProjectProject(models.Model):
         """ copy and map tasks from old to new project """
         project = self.browse(new_project_id)
         # We want to copy archived task, but do not propagate an active_test context key
-        tasks = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id), ('parent_id', '=', False)])
+        tasks = self.env['project.task'].with_context(
+            active_test=False,
+            render_task_templates=True
+            ).search([
+                ('project_id', '=', self.id),
+                ('parent_id', '=', False)
+                ])
         if self.allow_task_dependencies and 'task_mapping' not in self.env.context:
             self = self.with_context(task_mapping=dict())
         # preserve task name and stage, normally altered during copy

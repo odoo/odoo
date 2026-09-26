@@ -147,6 +147,25 @@ class ProjectTask(models.Model):
         return stages.browse(stage_ids)
 
     @api.model
+    def _search(self, domain, *args, **kwargs):
+        """ Task templates should not show up in searches from other models. The exceptions are
+        when we're creating from project templates, looking at templates themselves, or checking
+        access to a specific task. """
+        if (
+            self
+            or self.env.context.get('render_task_templates')
+            or self.env.context.get('template_id')
+            or self.env.context.get('copy_from_template')
+        ):
+            return super()._search(domain, *args, **kwargs)
+
+        template_fields = ('has_template_ancestor', 'is_template')
+        domain = Domain(domain)
+        if not any(cond.field_expr in template_fields for cond in domain.iter_conditions()):
+            domain = Domain('is_template', '=', False) & domain
+        return super()._search(domain, *args, **kwargs)
+
+    @api.model
     def _read_group_personal_stage_type_ids(self, stages, domain):
         return stages.search(['|', ('id', 'in', stages.ids), ('user_id', '=', self.env.user.id)])
 
