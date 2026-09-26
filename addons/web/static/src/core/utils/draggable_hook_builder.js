@@ -848,8 +848,14 @@ export function makeDraggableHook(hookParams) {
                     current.containerRect.y += iframeOffsetY;
                 }
                 // Adjust container rect according to its overflowing size
+                const isContainerRTL = getComputedStyle(container).direction === "rtl";
+                const containerBoxLeft = current.containerRect.x;
+                const containerBoxRight = current.containerRect.x + current.containerRect.width;
                 current.containerRect.width = container.scrollWidth;
                 current.containerRect.height = container.scrollHeight;
+                if (isContainerRTL) {
+                    current.containerRect.x = containerBoxRight - container.scrollWidth;
+                }
                 // ScrollParent rect
                 current.scrollParentXRect = null;
                 current.scrollParentYRect = null;
@@ -859,10 +865,10 @@ export function makeDraggableHook(hookParams) {
                         current.scrollParentXRect = dom.getRect(scrollParentX, { adjust: true });
                         current.scrollParentXRect.x += iframeOffsetX;
                         current.scrollParentXRect.y += iframeOffsetY;
-                        const right = Math.min(
-                            current.containerRect.left + container.scrollWidth,
-                            current.scrollParentXRect.right
-                        );
+                        const containerRight = isContainerRTL
+                            ? containerBoxRight
+                            : containerBoxLeft + container.scrollWidth;
+                        const right = Math.min(containerRight, current.scrollParentXRect.right);
                         current.containerRect.x = Math.max(
                             current.containerRect.x,
                             current.scrollParentXRect.x
