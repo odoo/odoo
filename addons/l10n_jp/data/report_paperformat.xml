@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- The Japanese Business layout prints the date, the title, the
+             recipient and the sender in the body instead of the page header, so
+             the page has to start near the top edge rather than below the tall
+             header band the default A4 format reserves. -->
+        <record id="paperformat_jp" model="report.paperformat">
+            <field name="name">A4 for Japanese Business</field>
+            <field name="default" eval="False"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">20</field>
+            <field name="margin_bottom">32</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">20</field>
+            <field name="dpi">90</field>
+            <field name="css_margins" eval="True"/>
+        </record>
+    </data>
+</odoo>
