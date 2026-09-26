@@ -162,7 +162,21 @@ class AccountMove(models.Model):
 
     def _inverse_delivery_date(self):
         super()._inverse_delivery_date()
-        self._conditional_add_to_compute('invoice_currency_rate', lambda m: m.country_code == 'HU')
+
+        for move in self:
+            if (
+                move.country_code == 'HU'
+                and move.is_invoice(include_receipts=True)
+                and move.delivery_date
+                and move.expected_currency_rate != move.invoice_currency_rate
+            ):
+                date = move.invoice_date or fields.Date.context_today(self)
+                expected_rate_from_invoice_date = move._get_expected_currency_rate_at(date)
+
+                # If invoice_currency_rate is as expected based on invoice_date, update it to reflect new delivery date.
+                # If invoice_currency_rate is not as expected based on invoice_date, it was likely edited manually, so don't update it.
+                if expected_rate_from_invoice_date == move.invoice_currency_rate:
+                    move.invoice_currency_rate = move.expected_currency_rate
 
     # === Overrides === #
 
