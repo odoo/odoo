@@ -439,9 +439,12 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
             return { record, uiState };
         }
 
-        _connectRecords(record, data) {
+        _connectRecords(record, data, opts = {}) {
             // Connect related records
-            this._update(record, data.updateFields, { silent: true });
+            this._update(record, data.updateFields, {
+                silent: true,
+                skipStoreUpdate: opts.skipStoreUpdate ?? false,
+            });
 
             // Make sure RAW contains all the ids (some records may not be already loaded)
             // Must be done after connecting related records to ensure correct disconnection from previous records
@@ -453,7 +456,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
 
         _update(record, vals, opts = {}) {
             const ownFields = getFields(this.name);
-            let reIndexRecord = false;
+            let indexedOldValues = null;
             const aggregatedUpdates = new AggregatedUpdates();
 
             for (const name in vals) {
@@ -474,9 +477,17 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 if (field.dummy) {
                     throw new Error(`The field '${field.name}' cannot be updated`);
                 }
-                if (this[STORE_SYMBOL].hasIndex(this.name, field.name)) {
-                    reIndexRecord = true;
+                const isIndexed = this[STORE_SYMBOL].hasIndex(this.name, field.name);
+
+                // Save the old value before updating indexed fields.
+                if (isIndexed) {
+                    if (!indexedOldValues) {
+                        indexedOldValues = {};
+                    }
+                    const oldValue = record[RAW_SYMBOL][name];
+                    indexedOldValues[name] = oldValue instanceof Set ? new Set(oldValue) : oldValue;
                 }
+
                 if (coModel) {
                     if (X2MANY_TYPES.has(field.type)) {
                         const commands = convertToX2ManyCommands(vals[name], opts.strict);
@@ -545,9 +556,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 }
             }
 
-            if (reIndexRecord) {
-                this[STORE_SYMBOL].remove(record);
-                this[STORE_SYMBOL].add(record);
+            if (indexedOldValues && !opts.skipStoreUpdate) {
+                this[STORE_SYMBOL].update(record, indexedOldValues);
             }
 
             aggregatedUpdates.fireEventAndDirty({
@@ -752,13 +762,16 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                                 existingRecord,
                             });
 
-                            // Remove olds references (id string -> id number)
-                            recordStore.remove(existingRecord);
+                            const oldRawData = existingRecord[RAW_SYMBOL];
                             existingRecord[RAW_SYMBOL] = rawData;
-                            recordStore.add(existingRecord);
+
                             if (dataToConnect) {
-                                modelInstance._connectRecords(existingRecord, dataToConnect);
+                                modelInstance._connectRecords(existingRecord, dataToConnect, {
+                                    skipStoreUpdate: true,
+                                });
                             }
+
+                            recordStore.update(existingRecord, oldRawData);
                             record = existingRecord;
                             uiState = newUiState;
                             isUpdate = true;

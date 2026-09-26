@@ -80,6 +80,65 @@ export class RecordStore {
     }
 
     /**
+     * Synchronizes index entries after a record update
+     * without changing the record's Map insertion order.
+     *
+     * @param {Base} record - Record with updated RAW_SYMBOL.
+     * @param {object} oldValues - Previous indexed values.
+     */
+    update(record, oldValues) {
+        if (!(record instanceof Base)) {
+            throw new Error("Only instances of Base are supported");
+        }
+        const model = record.model.name;
+        this.indexes[model].forEach((index) => {
+            if (!(index in oldValues)) {
+                return;
+            }
+
+            const oldValue = oldValues[index];
+            const newValue = record[RAW_SYMBOL][index];
+            const isEqual =
+                oldValue instanceof Set && newValue instanceof Set
+                    ? oldValue.size === newValue.size && oldValue.isSubsetOf(newValue)
+                    : oldValue === newValue;
+            if (isEqual) {
+                return;
+            }
+
+            const indexMap = this.getRecordsMap(model, index);
+            if (oldValue instanceof Set || newValue instanceof Set) {
+                const oldSet = oldValue instanceof Set ? oldValue : new Set();
+                const newSet = newValue instanceof Set ? newValue : new Set();
+
+                for (const value of oldSet.difference(newSet)) {
+                    indexMap.get(value)?.delete(record.id);
+                }
+
+                for (const value of newSet.difference(oldSet)) {
+                    if (!indexMap.has(value)) {
+                        indexMap.set(value, new Map([[record.id, record]]));
+                    } else {
+                        indexMap.get(value).set(record.id, record);
+                    }
+                }
+
+                return;
+            }
+
+            if (oldValue != null) {
+                indexMap.delete(oldValue);
+            }
+
+            if (newValue != null) {
+                indexMap.set(newValue, record);
+            }
+        });
+        // Trigger reactivity on the id Map without changing insertion order
+        this.getRecordsMap(model, "id").set(record.id, record);
+    }
+
+    /**
      * Retrieves a record by model name, index key, and value.
      * @param {string} model - The name of the model.
      * @param {string} index - The name of the index
