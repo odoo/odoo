@@ -32,7 +32,7 @@
             t-att-style="props.style"
             t-att-min="!props.composable and props.min"
             t-att-max="!props.composable and props.max"
-            t-att-step="!props.composable and props.step"
+            t-att-step="!props.composable and (props.step or 'any')"
         />
         <t t-slot="default"/>
     </div>
