@@ -4242,27 +4242,29 @@ class MailThread(models.AbstractModel):
                     question=started_poll.poll_question,
                 )
             elif message.attachment_ids:
-                total_attachments = len(message.attachment_ids)
-                # sudo: ir.attachment - access voice_ids linked to an attachment, if present.
-                attachments = message.attachment_ids.sudo()
-
-                def get_attachment_label(attachment):
-                    return self.env._("Voice Message") if attachment.voice_ids else attachment.name
-
+                attachments = message.attachment_ids
+                total_attachments = len(attachments)
+                symbol, first_name = attachments[0]._get_preview_symbol_and_name()
                 if total_attachments == 1:
-                    body = get_attachment_label(attachments[0])
+                    label = first_name
                 elif total_attachments == 2:
-                    body = self.env._(
-                        "%(file1)s and %(file2)s",
-                        file1=get_attachment_label(attachments[0]),
-                        file2=get_attachment_label(attachments[1]),
+                    _, second_name = attachments[1]._get_preview_symbol_and_name()
+                    label = self.env._(
+                        "%(first_attachment)s and %(second_attachment)s",
+                        first_attachment=first_name,
+                        second_attachment=second_name,
                     )
                 else:
-                    body = self.env._(
-                        "%(file1)s and %(count)d other attachments",
-                        file1=get_attachment_label(attachments[0]),
+                    label = self.env._(
+                        "%(first_attachment)s and %(count)d other attachments",
                         count=total_attachments - 1,
+                        first_attachment=first_name,
                     )
+                body = self.env._(
+                    "%(symbol)s\N{NO-BREAK SPACE} %(label)s",
+                    label=label,
+                    symbol=symbol,
+                )
 
         return {
             'title': title,
