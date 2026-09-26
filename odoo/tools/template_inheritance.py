@@ -161,6 +161,8 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                 mode = spec.get('mode', 'outer')
                 if mode == "outer":
                     for loc in spec.xpath(".//*[text()='$0']"):
+                        if len(loc):
+                            continue
                         loc.text = ''
                         copied_node = copy.deepcopy(node)
                         # TODO: Remove 'inherit_branding' logic if possible;
