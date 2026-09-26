@@ -1,5 +1,346 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<template id="report_saleorder_document_table">
+    <!-- Hide the prices from Planning Setting. -->
+    <t t-set="hide_prices" t-value="False"/>
+    <!-- Is there a discount on at least one line? -->
+    <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
+    <t t-set="display_discount" t-value="any(l.discount > 0 for l in lines_to_report) and not hide_prices"/>
+    <!-- Hide taxes AND show taxed amounts on lines -->
+    <t t-set="hide_taxes_details" t-value="False"/>
+    <t t-set="display_taxes" t-value="not hide_taxes_details and any(l._has_taxes() for l in lines_to_report) and not hide_prices"/>
+
+    <t t-if="doc.company_id.show_sol_numbers" t-set="line_counter" t-value="1"/>
+    <table class="o_has_total_table table o_main_table table-borderless">
+        <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+        <thead style="display: table-row-group">
+            <!-- Initialize the dynamic column counter -->
+            <t t-set="colspan_count" t-value="0"/>
+            <tr>
+                <th
+                    t-if="line_counter"
+                    name="th_line_no"
+                    class="text-start"
+                    style="width: 1%; white-space: nowrap;"
+                >#</th>
+                <th name="th_description" class="text-start" aria-label="Description">
+                    <t t-set="colspan_count" t-value="colspan_count + 1"/>
+                </th>
+                <th name="th_quantity" class="text-end text-nowrap" aria-label="Quantity">
+                    <t t-set="colspan_count" t-value="colspan_count + 1"/>
+                </th>
+                <th name="th_priceunit" t-if="not hide_prices" class="text-end text-nowrap">
+                    <t t-set="colspan_count" t-value="colspan_count + 1"/>
+                    Unit Price
+                </th>
+                <th name="th_discount" t-if="display_discount" class="text-end">
+                    <t t-set="colspan_count" t-value="colspan_count + 1"/>
+                    <span>Disc.%</span>
+                </th>
+                <th name="th_taxes" t-if="display_taxes" class="text-end">
+                    <t t-set="colspan_count" t-value="colspan_count + 1"/>
+                    <span>Taxes</span>
+                </th>
+                <th name="th_subtotal" t-if="not hide_prices" class="text-end">
+                    <span>Amount</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="sale_tbody">
+
+            <t t-set="current_section" t-value="None"/>
+            <t t-set="current_subsection" t-value="None"/>
+            <t t-set="price_field" t-value="'price_total' if (hide_taxes_details or doc.company_price_include == 'tax_included') else 'price_subtotal'"/>
+            <t t-set="default_section_uom" t-value="doc.env.ref('uom.product_uom_unit')"/>
+
+            <t t-foreach="lines_to_report" t-as="line">
+
+                <t t-set="is_note" t-value="line.display_type == 'line_note'"/>
+                <t t-set="is_section" t-value="line.display_type == 'line_section'"/>
+                <t t-set="is_subsection" t-value="line.display_type == 'line_subsection'"/>
+                <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
+
+                <t t-if="is_section">
+                    <t t-set="current_section" t-value="line"/>
+                    <t t-set="current_subsection" t-value="None"/>
+                    <t t-set="line_padding" t-value="1"/>
+                    <t t-set="collapse_prices" t-value="line.collapse_prices"/>
+                </t>
+                <t t-elif="is_subsection">
+                    <t t-set="current_subsection" t-value="line"/>
+                    <t t-set="line_padding" t-value="2"/>
+                    <t t-set="collapse_prices" t-value="collapse_prices or line.collapse_prices"/>
+                </t>
+                <t t-else="">
+                    <t
+                        t-set="line_padding"
+                        t-value="3 if current_subsection else (2 if current_section else 0)"
+                    />
+                </t>
+
+                <t t-if="line.combo_item_id">
+                    <t t-set="line_padding" t-value="line_padding + 1"/>
+                </t>
+
+                <t t-set="padding_style" t-value="line_padding and ('padding-left:' + str(line_padding * 8) + 'px') or ''"/>
+                <t t-set="show_section_total" t-value="(is_section or not line.parent_id.collapse_prices) and not hide_prices"/>
+
+                <t t-if="not line.collapse_composition">
+                    <tr
+                        t-if="is_section or is_subsection"
+                        name="tr_section"
+                        t-attf-class="fw-bold {{'o_line_section' if is_section else 'o_line_subsection'}}"
+                    >
+                        <t
+                            t-set="show_section_total"
+                            t-value="(
+                                (
+                                    is_section
+                                    or not line.parent_id.collapse_prices
+                                )
+                                and not line.is_downpayment
+                                and not hide_prices
+                            )"
+                        />
+                        <t
+                            t-set="section_name_colspan"
+                            t-value="colspan_count"
+                        />
+                        <t t-if="not show_section_total">
+                            <t t-set="section_name_colspan" t-value="99"/>
+                        </t>
+                        <t
+                            t-set="show_section_qty_uom"
+                            t-value="line.section_qty != 1 or line.section_uom_id != default_section_uom"
+                        />
+
+                        <td
+                            t-if="line_counter"
+                            name="td_section_line_no"
+                            class="text-start"
+                        >
+                            <span t-out="line_counter"/>
+                            <t t-set="line_counter" t-value="line_counter + 1"/>
+                        </td>
+                        <td
+                            name="td_section_name"
+                            t-att-colspan="section_name_colspan"
+                            class="border-end-0"
+                            t-att-style="padding_style"
+                        >
+                            <span t-field="line.label">A section title</span>
+                            <span
+                                t-if="show_section_qty_uom"
+                                class="text-muted fw-normal ms-1"
+                            >(<span
+                                    t-field="line.section_qty"
+                                    t-options="{'widget': 'float', 'min_precision': 0}"
+                                /> <span t-field="line.section_uom_id"/>)</span>
+                        </td>
+                        <td t-if="show_section_total" name="td_section_price" class="text-end o_price_total">
+                            <span
+                                t-out="line._get_section_totals(price_field)"
+                                class="text-nowrap"
+                                t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"
+                            >
+                                27.00
+                            </span>
+                        </td>
+                    </tr>
+                    <tr t-elif="is_note" name="tr_note" class="fst-italic o_line_note">
+                        <td
+                            t-if="line_counter"
+                            name="td_note_line_no"
+                            class="text-start fst-normal"
+                        >
+                            <span t-out="line_counter"/>
+                            <t t-set="line_counter" t-value="line_counter + 1"/>
+                        </td>
+                        <td
+                            name="td_note_name"
+                            colspan="99"
+                            t-att-style="padding_style"
+                        >
+                            <span t-field="line.label">
+                                A note, whose content usually applies to the section or product above.
+                            </span>
+                        </td>
+                    </tr>
+                    <tr t-elif="is_combo" name="tr_combo" class="o_line_combo fw-bold">
+                        <td
+                            t-if="line_counter"
+                            name="td_combo_line_no"
+                            class="text-start"
+                        >
+                            <span t-out="line_counter"/>
+                            <t t-set="line_counter" t-value="line_counter + 1"/>
+                        </td>
+                        <td
+                            name="td_combo_name"
+                            t-att-style="padding_style"
+                        >
+                            <span t-field="line.label">Combo Product</span>
+                        </td>
+                        <td name="td_combo_quantity" class="text-end">
+                            <span t-field="line.product_uom_qty"/>
+                            <span t-field="line.product_uom_id"/>
+                        </td>
+                        <td
+                            name="td_combo_price"
+                            t-if="not hide_prices"
+                            t-att-colspan="colspan_count - 1"
+                            class="text-end o_price_total"
+                        >
+                            <span
+                                t-if="not collapse_prices"
+                                name="price_subtotal_combo"
+                                t-out="line._get_combo_totals(price_field)"
+                                class="text-nowrap"
+                                t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"
+                            >
+                                27.00
+                            </span>
+                        </td>
+                    </tr>
+                    <tr t-else="" name="tr_product">
+                        <td
+                            t-if="line_counter"
+                            name="td_product_line_no"
+                            class="text-start"
+                        >
+                            <span t-out="line_counter"/>
+                            <t t-set="line_counter" t-value="line_counter + 1"/>
+                        </td>
+                        <td
+                            name="td_product_name"
+                            class="w-100"
+                            t-att-style="padding_style"
+                        >
+                            <div class="d-flex align-items-start">
+                                <img
+                                    t-if="doc.company_id.display_product_images_on_so and line.product_id.image_128"
+                                    t-att-src="image_data_uri(line.product_id.image_128)"
+                                    t-att-alt="line.product_id.display_name"
+                                    class="o_sale_report_product_image flex-shrink-0 me-2 rounded object-fit-cover align-top"
+                                />
+                                <div class="o_product_name_cell flex-grow-1 text-break align-top w-100">
+                                    <span class="d-inline-block w-100 lh-sm" t-field="line.label">Bacon Burger</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td name="td_product_quantity" class="o_td_quantity text-end">
+                            <span t-field="line.product_uom_qty" class="text-nowrap">3</span>
+                            <span t-field="line.product_uom_id">units</span>
+                            <span
+                                t-if="line.product_id and line.product_uom_id != line.product_id.uom_id"
+                                class="text-muted small"
+                            >
+                                <t t-set="quantity_in_product_uom" t-value="line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)"/>
+                                <br/><span t-out="quantity_in_product_uom" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}"/> <span t-field="line.product_id.uom_id"/>
+                            </span>
+                        </td>
+                        <td name="td_product_priceunit" t-if="not hide_prices" class="text-end text-nowrap">
+                            <span
+                                t-if="not collapse_prices and line.discount &lt; 0"
+                                t-out="(1 - line.discount / 100.0) * line.price_unit"
+                                t-options='{"widget": "float", "decimal_precision": "Product Price"}'
+                            />
+                            <span
+                                t-elif="not collapse_prices"
+                                t-field="line.price_unit"
+                            >
+                                25.00
+                            </span>
+                        </td>
+                        <td t-if="display_discount" name="td_product_discount" class="text-end">
+                            <t t-if="not collapse_prices">
+                                <!-- ! Always check collapse_prices separately; keep discount condition below for XPath -->
+                                <span t-if="line.discount > 0" t-field="line.discount">-</span>
+                            </t>
+                        </td>
+                        <t t-set="taxes" t-value="', '.join(tax.tax_label for tax in line.tax_ids if tax.tax_label)"/>
+                        <td t-if="display_taxes" name="td_product_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 12 else '' }}">
+                            <span t-out="taxes">Tax 15%</span>
+                        </td>
+                        <td name="td_product_subtotal" t-if="not hide_prices" class="text-end o_price_total">
+                            <t t-if="not line.is_downpayment and not collapse_prices">
+                                <span
+                                    t-if="price_field == 'price_subtotal'"
+                                    t-field="line.price_subtotal"
+                                >
+                                    27.00
+                                </span>
+                                <span t-else="" t-field="line.price_total">
+                                    27.00
+                                </span>
+                            </t>
+                        </td>
+                    </tr>
+                </t>
+                <t t-else="">
+                    <!-- Displaying the section inner content, grouped by taxes -->
+                    <tr
+                        t-foreach="line._get_grouped_section_summary(display_taxes)"
+                        t-as="section_line"
+                        name="tr_section_group"
+                    >
+                        <td
+                            t-if="line_counter"
+                            name="td_section_line_no"
+                            class="text-start"
+                        >
+                            <span t-out="line_counter"/>
+                            <t t-set="line_counter" t-value="line_counter + 1"/>
+                        </td>
+                        <td name="td_section_group_name" t-att-style="padding_style">
+                            <span t-field="line.label">
+                                Section Summary
+                            </span>
+                        </td>
+                        <td name="td_section_group_quantity" class="text-end text-nowrap">
+                            <span t-field="line.section_qty"/>
+                            <span t-field="line.section_uom_id"/>
+                        </td>
+                        <td name="td_section_group_priceunit" t-if="not hide_prices" class="text-end text-nowrap">
+                            <span
+                                t-if="show_section_total"
+                                name="price_subtotal_section_grouped"
+                                t-out="section_line['price_subtotal']/line.section_qty"
+                                t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"
+                            >
+                                25.00
+                            </span>
+                        </td>
+                        <td t-if="display_discount" name="td_section_group_discount">
+                            <!-- NOTE: not computed atm, but at least provides the API for it if needed in the future -->
+                            <t t-set="aggregated_discount" t-value="section_line.get('discount', 0)"/>
+                            <span t-if="aggregated_discount" t-out="aggregated_discount">-</span>
+                        </td>
+                        <td
+                            t-if="display_taxes"
+                            name="td_section_group_taxes"
+                            t-attf-class="text-end {{ 'text-nowrap' if len(section_line['tax_labels']) &lt; 10 else '' }}"
+                        >
+                            <span t-out="', '.join(section_line['tax_labels'])">
+                                Tax 15%
+                            </span>
+                        </td>
+                        <td name="td_section_group_total" t-if="not hide_prices" class="text-end o_price_total">
+                            <span
+                                t-if="show_section_total"
+                                t-out="section_line[price_field]"
+                                t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"
+                            >
+                                30.00
+                            </span>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </tbody>
+    </table>
+</template>
+
 <template id="report_saleorder_document">
     <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
     <t t-set="address">
@@ -94,341 +435,10 @@
                 </div>
             </div>
 
-            <!-- Is there a discount on at least one line? -->
-            <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
-            <t t-set="display_discount" t-value="any(l.discount > 0 for l in lines_to_report)"/>
-            <!-- Hide taxes AND show taxed amounts on lines -->
-            <t t-set="hide_taxes_details" t-value="False"/>
-            <t t-set="display_taxes" t-value="not hide_taxes_details and any(l._has_taxes() for l in lines_to_report)"/>
-
             <div class="oe_structure"></div>
-            <t t-if="doc.company_id.show_sol_numbers" t-set="line_counter" t-value="1"/>
-            <table class="o_has_total_table table o_main_table table-borderless">
-                <!-- In case we want to repeat the header, remove "display: table-row-group" -->
-                <thead style="display: table-row-group">
-                    <!-- Initialize the dynamic column counter -->
-                    <t t-set="colspan_count" t-value="0"/>
-                    <tr>
-                        <th
-                            t-if="line_counter"
-                            name="th_line_no"
-                            class="text-start"
-                            style="width: 1%; white-space: nowrap;"
-                        >#</th>
-                        <th name="th_description" class="text-start" aria-label="Description">
-                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
-                        </th>
-                        <th name="th_quantity" class="text-end text-nowrap" aria-label="Quantity">
-                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
-                        </th>
-                        <th name="th_priceunit" class="text-end text-nowrap">
-                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
-                            Unit Price
-                        </th>
-                        <th name="th_discount" t-if="display_discount" class="text-end">
-                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
-                            <span>Disc.%</span>
-                        </th>
-                        <th name="th_taxes" t-if="display_taxes" class="text-end">
-                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
-                            <span>Taxes</span>
-                        </th>
-                        <th name="th_subtotal" class="text-end">
-                            <span>Amount</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="sale_tbody">
 
-                    <t t-set="current_section" t-value="None"/>
-                    <t t-set="current_subsection" t-value="None"/>
-                    <t t-set="price_field" t-value="'price_total' if (hide_taxes_details or doc.company_price_include == 'tax_included') else 'price_subtotal'"/>
-                    <t t-set="default_section_uom" t-value="doc.env.ref('uom.product_uom_unit')"/>
+            <t t-call="sale.report_saleorder_document_table"/>
 
-                    <t t-foreach="lines_to_report" t-as="line">
-
-                        <t t-set="is_note" t-value="line.display_type == 'line_note'"/>
-                        <t t-set="is_section" t-value="line.display_type == 'line_section'"/>
-                        <t t-set="is_subsection" t-value="line.display_type == 'line_subsection'"/>
-                        <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
-
-                        <t t-if="is_section">
-                            <t t-set="current_section" t-value="line"/>
-                            <t t-set="current_subsection" t-value="None"/>
-                            <t t-set="line_padding" t-value="1"/>
-                            <t t-set="collapse_prices" t-value="line.collapse_prices"/>
-                        </t>
-                        <t t-elif="is_subsection">
-                            <t t-set="current_subsection" t-value="line"/>
-                            <t t-set="line_padding" t-value="2"/>
-                            <t t-set="collapse_prices" t-value="collapse_prices or line.collapse_prices"/>
-                        </t>
-                        <t t-else="">
-                            <t
-                                t-set="line_padding"
-                                t-value="3 if current_subsection else (2 if current_section else 0)"
-                            />
-                        </t>
-
-                        <t t-if="line.combo_item_id">
-                            <t t-set="line_padding" t-value="line_padding + 1"/>
-                        </t>
-
-                        <t t-set="padding_style" t-value="line_padding and ('padding-left:' + str(line_padding * 8) + 'px') or ''"/>
-                        <t t-set="show_section_total" t-value="is_section or not line.parent_id.collapse_prices"/>
-
-                        <t t-if="not line.collapse_composition">
-                            <tr
-                                t-if="is_section or is_subsection"
-                                name="tr_section"
-                                t-attf-class="fw-bold {{'o_line_section' if is_section else 'o_line_subsection'}}"
-                            >
-                                <t
-                                    t-set="show_section_total"
-                                    t-value="(
-                                        (
-                                            is_section
-                                            or not line.parent_id.collapse_prices
-                                        )
-                                        and not line.is_downpayment
-                                    )"
-                                />
-                                <t
-                                    t-set="section_name_colspan"
-                                    t-value="colspan_count"
-                                />
-                                <t t-if="not show_section_total">
-                                    <t t-set="section_name_colspan" t-value="99"/>
-                                </t>
-                                <t
-                                    t-set="show_section_qty_uom"
-                                    t-value="line.section_qty != 1 or line.section_uom_id != default_section_uom"
-                                />
-
-                                <td
-                                    t-if="line_counter"
-                                    name="td_section_line_no"
-                                    class="text-start"
-                                >
-                                    <span t-out="line_counter"/>
-                                    <t t-set="line_counter" t-value="line_counter + 1"/>
-                                </td>
-                                <td
-                                    name="td_section_name"
-                                    t-att-colspan="section_name_colspan"
-                                    class="border-end-0"
-                                    t-att-style="padding_style"
-                                >
-                                    <span t-field="line.label">A section title</span>
-                                    <span
-                                        t-if="show_section_qty_uom"
-                                        class="text-muted fw-normal ms-1"
-                                    >(<span
-                                            t-field="line.section_qty"
-                                            t-options="{'widget': 'float', 'min_precision': 0}"
-                                        /> <span t-field="line.section_uom_id"/>)</span>
-                                </td>
-                                <td t-if="show_section_total" name="td_section_price" class="text-end o_price_total">
-                                    <span
-                                        t-out="line._get_section_totals(price_field)"
-                                        class="text-nowrap"
-                                        t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"
-                                    >
-                                        27.00
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr t-elif="is_note" name="tr_note" class="fst-italic o_line_note">
-                                <td
-                                    t-if="line_counter"
-                                    name="td_note_line_no"
-                                    class="text-start fst-normal"
-                                >
-                                    <span t-out="line_counter"/>
-                                    <t t-set="line_counter" t-value="line_counter + 1"/>
-                                </td>
-                                <td
-                                    name="td_note_name"
-                                    colspan="99"
-                                    t-att-style="padding_style"
-                                >
-                                    <span t-field="line.label">
-                                        A note, whose content usually applies to the section or product above.
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr t-elif="is_combo" name="tr_combo" class="o_line_combo fw-bold">
-                                <td
-                                    t-if="line_counter"
-                                    name="td_combo_line_no"
-                                    class="text-start"
-                                >
-                                    <span t-out="line_counter"/>
-                                    <t t-set="line_counter" t-value="line_counter + 1"/>
-                                </td>
-                                <td
-                                    name="td_combo_name"
-                                    t-att-style="padding_style"
-                                >
-                                    <span t-field="line.label">Combo Product</span>
-                                </td>
-                                <td name="td_combo_quantity" class="text-end">
-                                    <span t-field="line.product_uom_qty"/>
-                                    <span t-field="line.product_uom_id"/>
-                                </td>
-                                <td
-                                    name="td_combo_price"
-                                    t-att-colspan="colspan_count - 1"
-                                    class="text-end o_price_total"
-                                >
-                                    <span
-                                        t-if="not collapse_prices"
-                                        name="price_subtotal_combo"
-                                        t-out="line._get_combo_totals(price_field)"
-                                        class="text-nowrap"
-                                        t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"
-                                    >
-                                        27.00
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr t-else="" name="tr_product">
-                                <td
-                                    t-if="line_counter"
-                                    name="td_product_line_no"
-                                    class="text-start"
-                                >
-                                    <span t-out="line_counter"/>
-                                    <t t-set="line_counter" t-value="line_counter + 1"/>
-                                </td>
-                                <td
-                                    name="td_product_name"
-                                    class="w-100"
-                                    t-att-style="padding_style"
-                                >
-                                    <div class="d-flex align-items-start">
-                                        <img
-                                            t-if="doc.company_id.display_product_images_on_so and line.product_id.image_128"
-                                            t-att-src="image_data_uri(line.product_id.image_128)"
-                                            t-att-alt="line.product_id.display_name"
-                                            class="o_sale_report_product_image flex-shrink-0 me-2 rounded object-fit-cover align-top"
-                                        />
-                                        <div class="o_product_name_cell flex-grow-1 text-break align-top w-100">
-                                            <span class="d-inline-block w-100 lh-sm" t-field="line.label">Bacon Burger</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td name="td_product_quantity" class="o_td_quantity text-end">
-                                    <span t-field="line.product_uom_qty" class="text-nowrap">3</span>
-                                    <span t-field="line.product_uom_id">units</span>
-                                    <span
-                                        t-if="line.product_id and line.product_uom_id != line.product_id.uom_id"
-                                        class="text-muted small"
-                                    >
-                                        <t t-set="quantity_in_product_uom" t-value="line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)"/>
-                                        <br/><span t-out="quantity_in_product_uom" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit'}"/> <span t-field="line.product_id.uom_id"/>
-                                    </span>
-                                </td>
-                                <td name="td_product_priceunit" class="text-end text-nowrap">
-                                    <span
-                                        t-if="not collapse_prices and line.discount &lt; 0"
-                                        t-out="(1 - line.discount / 100.0) * line.price_unit"
-                                        t-options='{"widget": "float", "decimal_precision": "Product Price"}'
-                                    />
-                                    <span
-                                        t-elif="not collapse_prices"
-                                        t-field="line.price_unit"
-                                    >
-                                        25.00
-                                    </span>
-                                </td>
-                                <td t-if="display_discount" name="td_product_discount" class="text-end">
-                                    <t t-if="not collapse_prices">
-                                        <!-- ! Always check collapse_prices separately; keep discount condition below for XPath -->
-                                        <span t-if="line.discount > 0" t-field="line.discount">-</span>
-                                    </t>
-                                </td>
-                                <t t-set="taxes" t-value="', '.join(tax.tax_label for tax in line.tax_ids if tax.tax_label)"/>
-                                <td t-if="display_taxes" name="td_product_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 12 else '' }}">
-                                    <span t-out="taxes">Tax 15%</span>
-                                </td>
-                                <td name="td_product_subtotal" class="text-end o_price_total">
-                                    <t t-if="not line.is_downpayment and not collapse_prices">
-                                        <span
-                                            t-if="price_field == 'price_subtotal'"
-                                            t-field="line.price_subtotal"
-                                        >
-                                            27.00
-                                        </span>
-                                        <span t-else="" t-field="line.price_total">
-                                            27.00
-                                        </span>
-                                    </t>
-                                </td>
-                            </tr>
-                        </t>
-                        <t t-else="">
-                            <!-- Displaying the section inner content, grouped by taxes -->
-                            <tr
-                                t-foreach="line._get_grouped_section_summary(display_taxes)"
-                                t-as="section_line"
-                                name="tr_section_group"
-                            >
-                                <td
-                                    t-if="line_counter"
-                                    name="td_section_line_no"
-                                    class="text-start"
-                                >
-                                    <span t-out="line_counter"/>
-                                    <t t-set="line_counter" t-value="line_counter + 1"/>
-                                </td>
-                                <td name="td_section_group_name" t-att-style="padding_style">
-                                    <span t-field="line.label">
-                                        Section Summary
-                                    </span>
-                                </td>
-                                <td name="td_section_group_quantity" class="text-end text-nowrap">
-                                    <span t-field="line.section_qty"/>
-                                    <span t-field="line.section_uom_id"/>
-                                </td>
-                                <td name="td_section_group_priceunit" class="text-end text-nowrap">
-                                    <span
-                                        t-if="show_section_total"
-                                        name="price_subtotal_section_grouped"
-                                        t-out="section_line['price_subtotal']/line.section_qty"
-                                        t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"
-                                    >
-                                        25.00
-                                    </span>
-                                </td>
-                                <td t-if="display_discount" name="td_section_group_discount">
-                                    <!-- NOTE: not computed atm, but at least provides the API for it if needed in the future -->
-                                    <t t-set="aggregated_discount" t-value="section_line.get('discount', 0)"/>
-                                    <span t-if="aggregated_discount" t-out="aggregated_discount">-</span>
-                                </td>
-                                <td
-                                    t-if="display_taxes"
-                                    name="td_section_group_taxes"
-                                    t-attf-class="text-end {{ 'text-nowrap' if len(section_line['tax_labels']) &lt; 10 else '' }}"
-                                >
-                                    <span t-out="', '.join(section_line['tax_labels'])">
-                                        Tax 15%
-                                    </span>
-                                </td>
-                                <td name="td_section_group_total" class="text-end o_price_total">
-                                    <span
-                                        t-if="show_section_total"
-                                        t-out="section_line[price_field]"
-                                        t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"
-                                    >
-                                        30.00
-                                    </span>
-                                </td>
-                            </tr>
-                        </t>
-                    </t>
-                </tbody>
-            </table>
             <div class="clearfix" name="so_total_summary">
                 <div id="total" class="row mt-n3" name="total">
                     <div>

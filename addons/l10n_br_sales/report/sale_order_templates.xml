@@ -11,13 +11,19 @@
     </template>
 
     <template id="report_saleorder_document_brazil" inherit_id="sale.report_saleorder_document" primary="True">
+        <xpath expr="//t[@t-call='sale.document_tax_totals']" position="replace">
+            <t t-call="l10n_br_sales.document_tax_totals_brazil"
+            tax_totals="doc.tax_totals"
+            currency="doc.currency_id"/>
+        </xpath>
+        <xpath expr="//t[@t-call='sale.report_saleorder_document_table']" position="attributes">
+            <attribute name="t-call">l10n_br_sales.report_saleorder_document_table</attribute>
+        </xpath>
+    </template>
+
+    <template id="report_saleorder_document_table" inherit_id="sale.report_saleorder_document_table" primary="True">
         <t t-set="hide_taxes_details" position="attributes">
             <attribute name="t-value">True</attribute>
         </t>
-        <xpath expr="//t[@t-call='sale.document_tax_totals']" position="replace">
-            <t t-call="l10n_br_sales.document_tax_totals_brazil"
-                tax_totals="doc.tax_totals"
-                currency="doc.currency_id"/>
-        </xpath>
     </template>
 </odoo>
