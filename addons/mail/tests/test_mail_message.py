@@ -3,6 +3,7 @@
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.models import mail_message as mail_message_module
 from odoo.addons.mail.tests import common
+from odoo.exceptions import UserError
 from odoo.tests import HttpCase, new_test_user, tagged, users
 
 from unittest.mock import patch
@@ -73,6 +74,26 @@ class TestMailMessage(common.MailCommon, HttpCase):
         ):
             self.assertEqual(messages.search(domain, limit=100), accessible)
             self.assertGreaterEqual(search_func.call_count, 4)
+
+    def test_mail_message_read_access_read_group_with_limit(self):
+        ids = []
+        ids += self._add_messages(self.company_2, "Inccessible notes", count=5, subject="Subject 1").ids
+        ids += self._add_messages(self.env.company, "Accessible notes", count=5, subject="Subject 2").ids
+        messages = (self.env["mail.message"]
+            .with_user(self.user_employee)
+            .with_context(allowed_company_ids=[self.env.company.id])
+        ).browse(ids)
+        accessible = messages._filtered_access('read')
+        self.assertEqual(len(accessible), 5)
+
+        with patch.object(mail_message_module, 'MAX_SEARCH_LIMIT', 5):
+            with self.assertRaises(UserError):
+                messages._read_group(
+                    [("id", "in", ids)],
+                    ["subject"],
+                    ["id:count"],
+                    limit=100,
+                )
 
     @users("employee")
     def test_unlink_failure_message_notify_author(self):
