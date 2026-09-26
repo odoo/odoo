@@ -176,6 +176,10 @@ class AccountEdiXmlCII(models.AbstractModel):
         else:
             seller_siret = invoice.company_id.company_registry
 
+        seller_extra_tax_registrations = []
+        if invoice.company_id._has_l10n_de_stnr():
+            seller_extra_tax_registrations.append({'scheme': 'FC', 'value': invoice.company_id.get_l10n_de_stnr_national()})
+
         buyer_siret = invoice.commercial_partner_id.company_registry
         if 'siret' in invoice.commercial_partner_id._fields and invoice.commercial_partner_id.siret:
             buyer_siret = invoice.commercial_partner_id.siret
@@ -199,6 +203,7 @@ class AccountEdiXmlCII(models.AbstractModel):
                 and invoice.purchase_order_reference else invoice.ref or invoice.name,
             'contract_reference': invoice.contract_reference if 'contract_reference' in invoice._fields and invoice.contract_reference else '',
             'document_context_id': "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended",
+            'seller_extra_tax_registrations': seller_extra_tax_registrations,
         }
 
         # data used for IncludedSupplyChainTradeLineItem / SpecifiedLineTradeSettlement
