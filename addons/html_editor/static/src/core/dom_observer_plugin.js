@@ -417,14 +417,16 @@ export class DomObserverPlugin extends Plugin {
         }
         const currentMutationsCount = this.mutations.length;
         if (currentMutationsCount) {
-            // Normalize the mutated nodes. Note: this can cause other commits
-            // to be written.
-            const commitRoot = this.getMutationsCommonAncestor(this.mutations) || this.editable;
-            this.processThrough("normalize_processors", commitRoot);
             if (!hasRelatedCommit) {
+                // Normalize the mutated nodes. Note: this can cause other commits
+                // to be written. The state restored by reverting a commit is
+                // already normalized, so normalization is skipped if there is
+                // a related commit.
+                const commitRoot = this.getMutationsCommonAncestor(this.mutations) || this.editable;
+                this.processThrough("normalize_processors", commitRoot);
                 this.trigger("on_pending_mutations_normalized_handlers");
+                this.flush();
             }
-            this.flush();
             if (currentMutationsCount === this.mutations.length) {
                 // If there was no added staged mutation during the
                 // normalization commit, force the trigger of a content_updated
