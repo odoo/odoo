@@ -202,6 +202,43 @@ class TestPurchaseStockValuation(PurchaseTestCommon):
         self.assertEqual(move_in_2.remaining_value, avg_cost * 2)
         self.assertEqual(move_in_3.remaining_value, avg_cost)
 
+    def test_avco_standard_price_with_several_companies_in_env(self):
+        """ Posting a vendor bill recomputes the AVCO cost; with several companies
+        active it must only consider the bill company's stock, both for the product
+        cost and the per-lot cost of a lot-valuated product. """
+        company, branch = self.company, self.branch
+
+        lot_product = self.env['product.product'].create({
+            'name': 'Avco Lot Product', 'is_storable': True,
+            'categ_id': self.category_avco.id, 'tracking': 'lot', 'lot_valuated': True,
+        })
+        lot = self.env['stock.lot'].create({'product_id': lot_product.id, 'name': 'LOT-1'})
+
+        for product, valued, lot_ids in [
+            (self.product_avco, self.product_avco, None),
+            (lot_product, lot, lot),
+        ]:
+            move_kw = {'lot_ids': lot_ids} if lot_ids else {}
+            with freeze_time('2025-01-01'):
+                self._make_in_move(product, 5000, unit_cost=10, company=branch, **move_kw)
+                self._make_in_move(product, 100, unit_cost=10, **move_kw)
+            with freeze_time('2025-02-01'):
+                valued.with_company(company).standard_price = 12
+            with freeze_time('2025-03-01'):
+                po = self._create_purchase(product, 100, price_unit=2)
+                picking = po.picking_ids
+                picking.move_ids.quantity = 100
+                if lot_ids:
+                    picking.move_ids.move_line_ids.lot_id = lot_ids
+                picking.move_ids.picked = True
+                picking.with_context(skip_backorder=True).button_validate()
+                bill = self._create_bill(purchase_order=po, quantity=100, price_unit=2, post=False)
+                # post with both companies active; the branch's 5000 units must not leak in
+                bill.with_context(allowed_company_ids=(company + branch).ids).action_post()
+
+            # AVCO = (100 * 12 + 100 * 2) / 200 = 7
+            self.assertAlmostEqual(valued.with_company(company).standard_price, 7.0, places=2)
+
     def test_move_fifo(self):
         """This test is similar to test_move_avco since all the move under
          a same purchase order share the value as an average flow. The FIFO
