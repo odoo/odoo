@@ -90,6 +90,7 @@ class StockPicking(models.Model):
         'stock.location', "Source Location",
         compute="_compute_location_id", store=True, precompute=True, readonly=False,
         check_company=True, required=True)
+    location_usage = fields.Selection(string="Source Location Type", related='location_id.usage')
     location_dest_id = fields.Many2one(
         'stock.location', "Destination Location",
         compute="_compute_location_dest_id", store=True, precompute=True, readonly=False, domain="[('usage','!=','view')]",
