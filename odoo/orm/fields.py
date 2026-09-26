@@ -1241,14 +1241,26 @@ class Field[T]:
 
         column = columns.get(self.name)
 
-        # create/update the column, initialize it and not null constraint.
-        # The index will be managed by registry.check_indexes().
-        self.update_db_column(model, column)
-
         # initialization of values and null handling
         has_notnull = column and column['is_nullable'] == 'NO'
+        initialize_column = (
+            (not column or (self.required and not has_notnull))
+            and (self.init_storage or self.default or self.compute)
+            and model.env.execute_query(SQL('SELECT 1 FROM %s LIMIT 1', SQL.identifier(model._table)))
+        )
 
-        if not column or (self.required and not has_notnull):
+        init_value = None
+        if initialize_column and not column and not self.init_storage and self.default:
+            value = self.default(model)
+            value = self.convert_to_write(value, model)
+            init_value = self.convert_to_column_insert(value, model)
+            initialize_column = init_value is None
+
+        # create/update the column, initialize it and not null constraint.
+        # The index will be managed by registry.check_indexes().
+        self.update_db_column(model, column, init_value)
+
+        if initialize_column:
             # either we have a new column or it becomes required
             self._init_column_data(model)
 
@@ -1278,15 +1290,28 @@ class Field[T]:
         elif not self.required and has_notnull:
             sql.drop_not_null(model.env.cr, model._table, self.name)
 
-    def update_db_column(self, model: BaseModel, column: dict[str, typing.Any]):
+    def update_db_column(
+        self,
+        model: BaseModel,
+        column: dict[str, typing.Any] | None,
+        init_value: typing.Any = None,
+    ) -> None:
         """ Create/update the column corresponding to ``self``.
 
             :param model: an instance of the field's model
             :param column: the column's configuration (dict) if it exists, or ``None``
+            :param init_value: the value used to initialize existing rows when adding the column
         """
         if not column:
             # the column does not exist, create it
-            sql.create_column(model.env.cr, model._table, self.name, self.stored_sql_column_type, self.string)
+            sql.create_column(
+                model.env.cr,
+                model._table,
+                self.name,
+                self.stored_sql_column_type,
+                init_value,
+                self.string,
+            )
             return
         if column['udt_name'] == self.column_type[0]:
             return
@@ -1299,13 +1324,6 @@ class Field[T]:
     def _init_column_data(self, model: BaseModel) -> None:
         """ Initialize null values in the column. """
         assert self.column_type and model._name == self.model_name
-        # skip the initialization when there is nothing to initialize: this
-        # method only fills in NULL values, and does nothing without
-        # init_storage, default or compute; skip empty tables as well
-        if not (self.init_storage or self.default or self.compute):
-            return
-        if not model.env.execute_query(SQL('SELECT 1 FROM %s LIMIT 1', SQL.identifier(model._table))):
-            return
         # Check if we have a custom init function
         if self.init_storage:
             _logger.debug("Table '%s': call %s for column %s", model._table, self.init_storage, self.name)
