@@ -405,6 +405,13 @@ class TestSanitizer(BaseCase):
         self.assertNotIn('<title>404 - Not Found</title>', html)
         self.assertIn('<h1>404 - Not Found</h1>', html)
 
+    def test_safe_attrs_data_tooltip(self):
+        """`data-tooltip` is how any element opts into the web client's hover tooltip
+        (see `web/static/src/core/tooltip/tooltip_service.js`): a message body relying on
+        it, e.g. an icon carrying one, must have it survive sanitization."""
+        html = html_sanitize('<i class="oi" data-icon="movie" data-tooltip="Recording available"></i>')
+        self.assertIn('data-tooltip="Recording available"', html)
+
     def test_cid_with_at(self):
         img_tag = '<img src="@">'
         sanitized = html_sanitize(img_tag, sanitize_tags=False, strip_classes=True)

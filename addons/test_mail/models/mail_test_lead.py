@@ -9,6 +9,7 @@ class MailTestTLead(models.Model):
     _inherit = [
         'mail.thread.blacklist',
         'mail.activity.mixin',
+        'discuss.call.log.mixin',
     ]
     _mail_defaults_to_email = True
     _primary_email = 'email_from'

@@ -94,6 +94,22 @@ class TestDiscussMeetings(TransactionCase):
             "the meeting shows in the Discuss meetings tab of every member",
         )
 
+    def test_attendee_without_a_user_still_becomes_a_member(self):
+        """A customer invited to a meeting has no user to log into Discuss with, but is
+        still expected on the call: they must be a member of its channel all the same,
+        and show up as invited until they join."""
+        customer = self.env["res.partner"].sudo().create({"name": "Customer"})
+        meeting = self._create_meeting(
+            "Product Demo", datetime(2024, 5, 20, 14, 0),
+            partner_ids=[(4, self.organizer.partner_id.id), (4, customer.id)],
+        )
+        channel = meeting.videocall_channel_id
+        self.assertIn(customer, channel.channel_member_ids.partner_id)
+        self.assertIn(
+            customer, channel.invited_member_ids.partner_id,
+            "not having joined the call yet, the customer is invited to it",
+        )
+
     def test_only_upcoming_meetings_with_a_discuss_videocall_get_a_channel(self):
         upcoming = self._create_meeting("Product Demo", datetime(2024, 5, 20, 14, 0))
         over = self._create_meeting("Yesterday Retrospective", datetime(2024, 5, 19, 14, 0))
