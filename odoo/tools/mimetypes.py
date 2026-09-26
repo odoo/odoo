@@ -4,6 +4,7 @@ import mimetypes
 import re
 import typing
 import zipfile
+from collections.abc import Buffer
 
 try:
     import magic
@@ -32,7 +33,8 @@ class _Signature(typing.NamedTuple):
     offset: int = 0
 
 
-def _odoo_guess_mimetype(bin_data, default='application/octet-stream'):
+def _odoo_guess_mimetype(bin_data: Buffer, default: str = 'application/octet-stream') -> str:
+    bin_data = bytes(bin_data)
     for supported_mimetype in SUPPORTED_MIMETYPES:
         if supported_mimetype.match(bin_data):
             return supported_mimetype.mimetype
@@ -40,7 +42,7 @@ def _odoo_guess_mimetype(bin_data, default='application/octet-stream'):
     return default
 
 
-def _magic_guess_mimetype(bin_data):
+def _magic_guess_mimetype(bin_data: Buffer) -> str:
     magic_data = bytes(bin_data)
     mimetype = magic.from_buffer(magic_data, mime=True)
 
@@ -69,7 +71,7 @@ def _magic_guess_mimetype(bin_data):
     return mimetype
 
 
-def guess_mimetype(bin_data, default='application/octet-stream'):
+def guess_mimetype(bin_data: Buffer, default: str = 'application/octet-stream') -> str:
     if magic:
         return _magic_guess_mimetype(bin_data)
 
@@ -96,19 +98,16 @@ def guess_file_mimetype(path, default='application/octet-stream'):
     return _odoo_guess_file_mimetype(path, default)
 
 
-def _match_magic_number(bin_data, *, match_all=(), match_any=()):
-    for signature in match_all:
-        if not bin_data.startswith(signature.magic_number, signature.offset):
-            return False
-
-    if not match_any:
-        return True
-
-    for signature in match_any:
-        if bin_data.startswith(signature.magic_number, signature.offset):
-            return True
-
-    return False
+def _match_magic_number(bin_data: bytes, *, match_all=(), match_any=()):
+    return all(
+        bin_data.startswith(signature.magic_number, signature.offset)
+        for signature in match_all
+    ) and (
+        not match_any or any(
+            bin_data.startswith(signature.magic_number, signature.offset)
+            for signature in match_any
+        )
+    )
 
 
 def _match_office_open_xml(bin_data, *, dirname):
