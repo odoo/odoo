@@ -82,7 +82,8 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'peppol_eas': '0225',
             'peppol_endpoint': '968515759_96851575905823',
         })
-        cls.partner_b.write({
+        cls.belgian_partner = cls.partner_b
+        cls.belgian_partner.write({
             'name': 'SUPER BELGIAN PARTNER',
             'street': 'Rue du Paradis, 10',
             'zip': '6870',
