@@ -157,6 +157,17 @@
         </field>
     </record>
 
+    <record id="view_sale_project_task_inherit_kanban" model="ir.ui.view">
+        <field name="name">project.task.kanban.view.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="invisible">not allow_billable</attribute>
+            </field>
+        </field>
+    </record>
+    
     <record id="view_sale_project_inherit_form" model="ir.ui.view">
         <field name="name">project.task.view.inherit</field>
         <field name="model">project.task</field>
