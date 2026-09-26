@@ -120,9 +120,13 @@
         z-index: 2;
     }
 
-    .o_select_menu-choices > * {
-        &:first-child, &:last-child {
-            margin: 0;
+    .o_select_menu-choices {
+        padding: 0 !important;
+
+        & > * {
+            &:first-child, &:last-child {
+                margin: 0;
+            }
         }
     }
 
