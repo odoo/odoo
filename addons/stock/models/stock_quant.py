@@ -249,11 +249,14 @@ class StockQuant(models.Model):
     @api.depends('lot_id')
     def _compute_sn_duplicated(self):
         self.sn_duplicated = False
-        domain = [('tracking', '=', 'serial'), ('lot_id', 'in', self.lot_id.ids), ('quantity', '>', 0), ('location_id.usage', 'in', ['internal', 'transit'])]
+        lot_ids = self.lot_id.ids
+        if not lot_ids:
+            return
+        domain = [('tracking', '=', 'serial'), ('lot_id', 'in', lot_ids), ('quantity', '>', 0), ('location_id.usage', 'in', ['internal', 'transit'])]
         results = self._read_group(domain, ['lot_id'], having=[('__count', '>', 1)])
-        duplicated_sn_ids = [lot.id for [lot] in results]
-        quants_with_duplicated_sn = self.env['stock.quant'].search([('lot_id', 'in', duplicated_sn_ids)])
-        quants_with_duplicated_sn.sn_duplicated = True
+        duplicated_sn_ids = {lot.id for [lot] in results}
+        if duplicated_sn_ids:
+            self.filtered(lambda q: q.lot_id.id in duplicated_sn_ids).sn_duplicated = True
 
     def _set_inventory_quantity(self):
         """ Inverse method to create stock move when `inventory_quantity` is set
