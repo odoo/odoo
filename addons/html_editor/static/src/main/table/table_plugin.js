@@ -357,27 +357,6 @@ export class TablePlugin extends Plugin {
     normalizeTable(root) {
         const tables = root.querySelectorAll("table");
         for (const table of tables) {
-            const firstRow = table.rows[0];
-            let colgroup;
-            for (const cell of firstRow?.children || []) {
-                const width = cell.style.width;
-                if (!width) {
-                    continue;
-                }
-                if (!colgroup) {
-                    colgroup = this.document.createElement("colgroup");
-                }
-                // Apply width to col
-                const col = this.document.createElement("col");
-                col.style.width = width;
-                colgroup.appendChild(col);
-                // Remove the inline width from the cell
-                cell.style.removeProperty("width");
-            }
-            if (colgroup) {
-                table.prepend(colgroup);
-            }
-
             // --- Normalize table colors ---
             const tableColor = table.style.color;
             const tableBgColor = table.style.backgroundColor;
@@ -391,6 +370,62 @@ export class TablePlugin extends Plugin {
                 }
                 table.style.color = "";
                 table.style.backgroundColor = "";
+            }
+
+            // --- Normalize colgroup ---
+            // Only one colgroup allowed, drop any extras.
+            table.querySelectorAll(":scope > colgroup ~ colgroup").forEach((el) => el.remove());
+            const cells = [...(table.rows[0]?.cells ?? [])];
+            let colgroup = table.querySelector(":scope > colgroup");
+            const hasInlineWidth = cells.some((cell) => cell.style.width);
+            if (!colgroup && !hasInlineWidth) {
+                continue;
+            }
+            if (!colgroup) {
+                colgroup = this.document.createElement("colgroup");
+                table.prepend(colgroup);
+            }
+            const colCount = cells.reduce((count, cell) => count + cell.colSpan, 0);
+            while (colgroup.children.length < colCount) {
+                colgroup.append(this.document.createElement("col"));
+            }
+            if (!hasInlineWidth) {
+                continue;
+            }
+            const cols = colgroup.children;
+            let index = 0;
+            for (const cell of cells) {
+                const width = cell.style.width;
+                const end = index + cell.colSpan;
+                if (width) {
+                    let knownWidth = 0;
+                    const unresolvedCols = [];
+                    for (let i = index; i < end; i++) {
+                        const colWidth = cols[i].style.width;
+                        if (colWidth) {
+                            knownWidth += parseFloat(colWidth) || 0;
+                        } else {
+                            unresolvedCols.push(cols[i]);
+                        }
+                    }
+                    if (cell.colSpan === 1 && unresolvedCols.length) {
+                        // Copied as is to keep the widths that can't be split,
+                        // such as calc() ones.
+                        unresolvedCols[0].style.width = width;
+                    } else if (unresolvedCols.length) {
+                        const share = (parseFloat(width) - knownWidth) / unresolvedCols.length;
+                        // A share that isn't positive means that the cols already
+                        // cover the cell's width, so they win over it.
+                        if (share > 0) {
+                            const unit = width.replace(/^[\d.]+/, "");
+                            for (const col of unresolvedCols) {
+                                col.style.width = `${share}${unit}`;
+                            }
+                        }
+                    }
+                    cell.style.removeProperty("width");
+                }
+                index = end;
             }
         }
     }
