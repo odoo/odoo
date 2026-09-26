@@ -293,7 +293,7 @@ class HrVersion(models.Model):
             rc_leave = including_holiday_rcleaves[0]
         if rc_leave:
             return self._get_leave_work_entry_type_dates(rc_leave, interval_start, interval_stop, self.employee_id)
-        return self.env.ref('hr_work_entry.generic_work_entry_type_leave')
+        return self._get_default_leave_work_entry_type()
 
     def _get_sub_leave_domain(self):
         # see https://github.com/odoo/enterprise/pull/15091
