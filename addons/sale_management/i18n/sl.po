@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-07-20 15:17+0000\n"
+"PO-Revision-Date: 2026-09-20 17:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/"
 "sale_management/sl/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -32,7 +32,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "<span invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span invisible=\"not require_payment\">od</span>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -133,7 +133,7 @@ msgstr "Ustvarite standardizirane ponudbe s privzetimi izdelki"
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid "Create your quotation template"
-msgstr ""
+msgstr "Ustvarite predlogo ponudbe"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__create_uid
@@ -216,6 +216,8 @@ msgstr ""
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
+"Izdelek, količina in merska enota niso dovoljeni v neobračunski vrstici "
+"prodajne ponudbe"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -225,7 +227,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
-msgstr ""
+msgstr "Določa vrstni red pri prikazovanju seznama vrstic prodajnih ponudb."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -246,6 +248,8 @@ msgid ""
 "If set, SO with this template will invoice in this journal; otherwise the "
 "sales journal with the lowest sequence is used."
 msgstr ""
+"Če je nastavljeno, bo SO s to predlogo ustvaril račun v tem dnevniku; v "
+"nasprotnem primeru se uporabi prodajni dnevnik z najnižjim zaporedjem."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
@@ -253,6 +257,8 @@ msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
 msgstr ""
+"Če je polje neoznačeno, bo omogočilo skrivanje predloge ponudbe, ne da bi jo "
+"odstranili."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
@@ -262,7 +268,7 @@ msgstr "Dnevnik fakturiranja"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
-msgstr ""
+msgstr "Kpi Vse prodaje Skupna vrednost"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__write_uid
@@ -305,7 +311,7 @@ msgstr "Opomba"
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr ""
+msgstr "Število dni za izračun datuma veljavnosti ponudbe"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
@@ -344,7 +350,7 @@ msgstr "Predplačilo v odstotkih"
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
+msgstr "Odstotek predplačila mora biti veljaven odstotek."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
@@ -388,7 +394,7 @@ msgstr "Predloga ponudbe"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "Vrstica predloge ponudbe"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -418,7 +424,7 @@ msgstr "Predloge ponudb"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Quotation Validity"
-msgstr ""
+msgstr "Veljavnost ponudbe"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -494,6 +500,9 @@ msgid ""
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
 msgstr ""
+"Prodajate isti izdelek v različnih velikostih ali barvah? Preizkusite mrežo "
+"izdelkov in svoja naročila izpolnite z več količinami vsake različice. Ta "
+"funkcija je na voljo tudi v aplikaciji Nabava."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -509,6 +518,10 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
+"Se spopadate z zapletenim katalogom izdelkov? Preizkusite konfigurator "
+"izdelkov, ki prodaji pomaga konfigurirati izdelek z različnimi možnostmi: "
+"barvami, velikostjo, zmogljivostjo itd. Poenostavite vnos prodajnih naročil "
+"in preprečite napake."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -541,6 +554,8 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
+"Ta e-poštna predloga bo poslana ob potrditvi. Pustite prazno, da ne pošljete "
+"ničesar."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
@@ -553,13 +568,13 @@ msgstr ""
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
 msgid "Tip: Odoo supports configurable products"
-msgstr ""
+msgstr "Namig: Odoo podpira konfigurabilne izdelke"
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale_management_1
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
 msgid "Tip: Sell or buy products in bulk with matrixes"
-msgstr ""
+msgstr "Nasvet: Prodajajte ali kupujte izdelke na veliko z matrikami"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -593,6 +608,12 @@ msgid ""
 "online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
+"                Uporabite predloge za ustvarjanje dovršenih, profesionalnih "
+"ponudb v nekaj minutah.\n"
+"                Pošljite te ponudbe po e-pošti in svojim strankam omogočite, "
+"da jih podpišejo prek spleta.\n"
+"                Uporabite navzkrižno prodajo in popuste za spodbujanje in "
+"povečanje prodaje."
 
 #. module: sale_management
 #. odoo-python
@@ -619,6 +640,10 @@ msgid ""
 " Please change the company of your quotation or remove the products from "
 "other companies (%(bad_products)s)."
 msgstr ""
+"Vaša ponudba vsebuje izdelke podjetja %(product_company)s, medtem ko vaša "
+"ponudba pripada podjetju %(quote_company)s. \n"
+"Spremenite podjetje svoje ponudbe ali odstranite izdelke iz drugih podjetij "
+"(%(bad_products)s)."
 
 #. module: sale_management
 #. odoo-python
@@ -630,6 +655,10 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Vaša predloga pripada podjetju %(template_company)s, vendar vsebuje izdelke "
+"podjetja (%(product_company)s), ki podjetju %(template_company)s niso "
+"dostopni.\n"
+"Spremenite podjetje svoje predloge ali odstranite izdelke iz drugih podjetij."
 
 #. module: sale_management
 #. odoo-python
@@ -641,6 +670,10 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Vaša predloga pripada podjetju %(template_company)s, vendar vsebuje izdelke "
+"iz drugih podjetij (%(product_company)s), ki podjetju %(template_company)s "
+"niso dostopni.\n"
+"Spremenite podjetje svoje predloge ali odstranite izdelke iz drugih podjetij."
 
 #. module: sale_management
 #. odoo-python
@@ -650,6 +683,8 @@ msgid ""
 "between companies. Please restrict the template access, or remove those "
 "products."
 msgstr ""
+"Vaša predloga ne sme vsebovati izdelkov določenih podjetij, če je v skupni "
+"rabi med podjetji. Omejite dostop do predloge ali odstranite te izdelke."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -659,4 +694,4 @@ msgstr "dni"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
-msgstr ""
+msgstr "npr. Standardni paket svetovanja"

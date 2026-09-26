@@ -30,7 +30,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-07-15 00:18+0000\n"
+"PO-Revision-Date: 2026-09-24 17:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-18/event/"
 "lt/>\n"
@@ -41,7 +41,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
 "11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
 ": n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
@@ -3960,7 +3960,7 @@ msgstr "Automatiškai siunčiamas dalyviams, jei renginiui nustatytas priminimas
 #. module: event
 #: model:mail.template,description:event.event_registration_mail_template_badge
 msgid "Sent automatically to someone after they registered to an event"
-msgstr ""
+msgstr "Siunčiama automatiškai asmeniui, kai jis užsiregistruoja į renginį"
 
 #. module: event
 #: model:mail.template,description:event.event_subscription
@@ -4108,7 +4108,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Successfully registered!"
-msgstr ""
+msgstr "Sėkmingai užsiregistruota!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__value_answer_id
@@ -4287,6 +4287,7 @@ msgstr "Ši informacija bus atspausdinta bilietuose."
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "This is the <b>name</b> your guests will see when registering."
 msgstr ""
+"Tai yra „ <b>“ pavadinimas</b>, kurį jūsų svečiai matys registruodamiesi."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -4488,6 +4489,11 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
+"Nepatvirtinta: registracijos, kurių būsena yra „laukiama“, kol bus imtasi "
+"veiksmų (konkretus atvejis, ypač kai nurodytas pardavimo statusas)\n"
+"Užregistruota: registracijos, laikomos kliento patvirtintomis\n"
+"Dalyvavo: registracijos, kurių dalyvis dalyvavo renginyje\n"
+"Atšaukta: registracijos, atšauktos rankiniu būdu"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail

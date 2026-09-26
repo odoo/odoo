@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:38+0000\n"
-"PO-Revision-Date: 2026-06-24 08:23+0000\n"
+"PO-Revision-Date: 2026-09-23 16:35+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/"
 "pos_restaurant/sl/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -32,18 +32,20 @@ msgid ""
 "%(amount)s is more than 25% of the order's total amount. Are you sure of "
 "this tip amount?"
 msgstr ""
+"%(amount)s je več kot 25 % skupnega zneska naročila. Ali ste prepričani o "
+"tem znesku napitnine?"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.js:0
 msgid "%(original)s + %(tip)s tip = %(overall)s"
-msgstr ""
+msgstr "%(original)s + %(tip)s napitnina = %(overall)s"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/payment_screen/payment_screen.xml:0
 msgid "/ Guest"
-msgstr ""
+msgstr "Gost"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -57,6 +59,8 @@ msgid ""
 "200G Irish Black Angus beef, 9-month matured cheddar cheese, shredded "
 "iceberg lettuce, caramelised onions, crushed tomatoes and Chef’s sauce."
 msgstr ""
+"200 g irske govedine Black Angus, 9 mesecev zorjen sir cheddar, natrgana "
+"ledenka, karamelizirana čebula, zdrobljen paradižnik in šefova omaka."
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_bacon_product_template
@@ -65,16 +69,19 @@ msgid ""
 "iceberg salad, red onions, grilled bacon, tomato sauce, pickles, barbecue "
 "sauce"
 msgstr ""
+"200 g irske govedine Black Angus, karamelizirana čebula s papriko, "
+"sesekljana ledenka, rdeča čebula, pečena slanina, paradižnikova omaka, kisle "
+"kumarice, omaka za žar"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Floor Name: </strong>"
-msgstr ""
+msgstr "<strong>Ime nadstropja: </strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Point of Sales:</strong>"
-msgstr ""
+msgstr "<strong>Prodajna mesta:</strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -83,6 +90,9 @@ msgid ""
 "where you can\n"
 "                define and position the tables."
 msgstr ""
+"Tloris restavracije predstavlja prostor, kjer so stranke postrežene; tukaj "
+"lahko\n"
+"                določite in postavite mize."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__active
@@ -94,30 +104,30 @@ msgstr "Aktivno"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Add Floor"
-msgstr ""
+msgstr "Dodaj nadstropje"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Add Table"
-msgstr ""
+msgstr "Dodaj mizo"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Add a new floor to get started."
-msgstr ""
+msgstr "Dodajte novo nadstropje za začetek."
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid "Add a new restaurant floor"
-msgstr ""
+msgstr "Dodaj novo nadstropje restavracije"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Add a new table to get started."
-msgstr ""
+msgstr "Dodajte novo mizo za začetek."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -128,13 +138,13 @@ msgstr "Dodaj napitnino"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add tip after payment"
-msgstr ""
+msgstr "Dodaj napitnino po plačilu"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/payment_screen/payment_screen_payment_lines/payment_screen_payment_lines.xml:0
 msgid "Adjust Amount"
-msgstr ""
+msgstr "Prilagodi znesek"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__set_tip_after_payment
@@ -142,6 +152,8 @@ msgid ""
 "Adjust the amount authorized by payment terminals to add a tip after the "
 "customers left or at the end of the day."
 msgstr ""
+"Prilagodite znesek, ki so ga avtorizirali plačilni terminali, da dodate "
+"napitnino po odhodu strank ali ob koncu dneva."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -153,7 +165,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow Bill Splitting"
-msgstr ""
+msgstr "Dovoli razdelitev računa"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__takeaway
@@ -164,7 +176,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow to print receipt before payment"
-msgstr ""
+msgstr "Dovoli tiskanje računa pred plačilom"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
@@ -181,12 +193,12 @@ msgstr ""
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_anchovy
 msgid "Anchovy"
-msgstr ""
+msgstr "Inčun"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_aperol_spritz_product_template
 msgid "Aperol Spritz"
-msgstr ""
+msgstr "Aperol Spritz"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
@@ -204,7 +216,7 @@ msgstr "Arhivirano"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.js:0
 msgid "Are you sure?"
-msgstr ""
+msgstr "Ste prepričani?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -230,7 +242,7 @@ msgstr "Burger s slanino"
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_fries
 msgid "Belgian fresh homemade fries"
-msgstr ""
+msgstr "Belgijski sveži domači ocvrti krompirček"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -255,23 +267,23 @@ msgstr "Razdelitev računa"
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_black_olives
 msgid "Black olives"
-msgstr ""
+msgstr "Črne olive"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/product_screen/order_summary/order_summary.xml:0
 msgid "Book table"
-msgstr ""
+msgstr "Rezerviraj mizo"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_old_fashioned_product_template
 msgid "Bourbon, bitters, sugar, and a twist of citrus zest."
-msgstr ""
+msgstr "Bourbon, grenčice, sladkor in zvitek citrusne lupinice."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.burger_drink_combo_product_template
 msgid "Burger Menu Combo"
-msgstr ""
+msgstr "Kombinirani meni z burgerjem"
 
 #. module: pos_restaurant
 #: model:pos.payment.method,name:pos_restaurant.payment_method
@@ -288,13 +300,13 @@ msgstr "Košarica"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Change Floor Background"
-msgstr ""
+msgstr "Spremeni ozadje tal"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Change table number?"
-msgstr ""
+msgstr "Spremeniti številko mize?"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
@@ -304,7 +316,7 @@ msgstr "Sirni burger"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_chicken_product_template
 msgid "Chicken Curry Sandwich"
-msgstr ""
+msgstr "Sendvič s piščančjim karijem"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -316,12 +328,12 @@ msgstr "Kloniraj"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/payment_screen/payment_screen.xml:0
 msgid "Close Tab"
-msgstr ""
+msgstr "Zapri zavihek"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_club_product_template
 msgid "Club Sandwich"
-msgstr ""
+msgstr "Klubski sendvič"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.coke_product_template
@@ -331,7 +343,7 @@ msgstr "Coca-Cola"
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.pos_category_cocktails
 msgid "Cocktails"
-msgstr ""
+msgstr "Koktajli"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__color
@@ -352,12 +364,12 @@ msgstr "Naprej"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_cosmopolitan_product_template
 msgid "Cosmopolitan"
-msgstr ""
+msgstr "Cosmopolitan"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_cosmopolitan_product_template
 msgid "Cranberry Jus, lime jus, vodka and Cointreau"
-msgstr ""
+msgstr "Brusnični sok, limetin sok, vodka in Cointreau"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
@@ -381,12 +393,12 @@ msgstr "Izbriši"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Delete Error"
-msgstr ""
+msgstr "Napaka pri brisanju"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Design floors and assign orders to tables"
-msgstr ""
+msgstr "Oblikujte tlorise in dodelite naročila mizam"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -408,7 +420,7 @@ msgstr "Pijače"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Early Receipt Printing"
-msgstr ""
+msgstr "Predčasno tiskanje računov"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -420,18 +432,18 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.js:0
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Edit Order Name"
-msgstr ""
+msgstr "Uredi ime naročila"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Edit Plan"
-msgstr ""
+msgstr "Uredi načrt"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
 msgid "Enables Bill Splitting in the Point of Sale."
-msgstr ""
+msgstr "Omogoča delitev računa v prodajnem mestu."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -444,18 +456,18 @@ msgstr "Pri nalaganju slike je prišlo do napake. Poskusite znova."
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.js:0
 msgid "Enter a table number"
-msgstr ""
+msgstr "Vnesite številko mize"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.espresso_product_template
 msgid "Espresso"
-msgstr ""
+msgstr "Espresso"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_extra_cheese
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_extra_cheese_pasta
 msgid "Extra cheese"
-msgstr ""
+msgstr "Dodatni sir"
 
 #. module: pos_restaurant
 #: model:product.attribute,name:pos_restaurant.product_extra_pasta
@@ -466,7 +478,7 @@ msgstr "Dodatki"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.fanta_product_template
 msgid "Fanta"
-msgstr ""
+msgstr "Fanta"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -492,52 +504,52 @@ msgstr "Tla"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__floor_background_image
 msgid "Floor Background Image"
-msgstr ""
+msgstr "Slika ozadja nadstropja"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__name
 msgid "Floor Name"
-msgstr ""
+msgstr "Ime nadstropja"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Floor Name ?"
-msgstr ""
+msgstr "Ime nadstropja ?"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Floor Plan"
-msgstr ""
+msgstr "Tloris"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_floor_all
 msgid "Floor Plans"
-msgstr ""
+msgstr "Tlorisi"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Floor name"
-msgstr ""
+msgstr "Ime nadstropja"
 
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid "Floor: %(floor)s - PoS Config: %(config)s \n"
-msgstr ""
+msgstr "Nadstropje: %(floor)s - Konfiguracija PoS: %(config)s"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors"
-msgstr ""
+msgstr "Nadstropja"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors & Tables Map"
-msgstr ""
+msgstr "Zemljevid nadstropij in miz"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
@@ -548,27 +560,27 @@ msgstr "Prehrambena"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/receipt_screen/order_receipt/order_receipt.xml:0
 msgid "For convenience, we are providing the following gratuity calculations:"
-msgstr ""
+msgstr "Za lažjo uporabo so na voljo naslednji izračuni napitnine:"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
 msgid "Funghi"
-msgstr ""
+msgstr "Gobe"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_negroni_product_template
 msgid "Gin, vermouth rosso, Campari, and an orange peel."
-msgstr ""
+msgstr "Gin, rdeči vermut, Campari in pomarančna lupinica."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.green_tea_product_template
 msgid "Green Tea"
-msgstr ""
+msgstr "Zeleni čaj"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_grilled_vegetables
 msgid "Grilled vegetables"
-msgstr ""
+msgstr "Zelenjava z žara"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -602,7 +614,7 @@ msgstr "ID"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.ice_tea_product_template
 msgid "Ice Tea"
-msgstr ""
+msgstr "Ledeni čaj"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
@@ -610,6 +622,7 @@ msgid ""
 "If false, the table is deactivated and will not be available in the point of "
 "sale"
 msgstr ""
+"Če ni potrjeno, je miza deaktivirana in ne bo na voljo na prodajnem mestu"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -621,7 +634,7 @@ msgstr "Skoči"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/payment_screen/payment_screen.xml:0
 msgid "Keep Open"
-msgstr ""
+msgstr "Obdrži odprto"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__write_uid
@@ -639,13 +652,13 @@ msgstr "Zadnjič posodobljeno"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Link Table"
-msgstr ""
+msgstr "Poveži mizo"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Link Table %(sourceTable)s with %(destinationTable)s"
-msgstr ""
+msgstr "Poveži mizo %(sourceTable)s z %(destinationTable)s"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -657,7 +670,7 @@ msgstr "Nalaganje"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Loading Image Error"
-msgstr ""
+msgstr "Napaka pri nalaganju slike"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_maki_product_template
@@ -677,24 +690,24 @@ msgstr "Mešanica Temaki za kosilo 3 kosi"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_mai_tai_product_template
 msgid "Mai Tai"
-msgstr ""
+msgstr "Mai Tai"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Make Round"
-msgstr ""
+msgstr "Zaokroži"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Make Square"
-msgstr ""
+msgstr "Naredi kvadrat"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_margarita_product_template
 msgid "Margarita"
-msgstr ""
+msgstr "Margarita"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -705,50 +718,50 @@ msgstr "Sporočilo"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.milkshake_banana_product_template
 msgid "Milkshake Banana"
-msgstr ""
+msgstr "Bananin mlečni napitek"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.minute_maid_product_template
 msgid "Minute Maid"
-msgstr ""
+msgstr "Minute Maid"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_mojito_product_template
 msgid "Mojito"
-msgstr ""
+msgstr "Mojito"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_moscow_mule_product_template
 msgid "Moscow Mule"
-msgstr ""
+msgstr "Moskovska mula"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_mozza_product_template
 msgid "Mozzarella Sandwich"
-msgstr ""
+msgstr "Sendvič z mocarelo"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_mushroom
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_mushroom_pasta
 msgid "Mushroom"
-msgstr ""
+msgstr "Goba"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_negroni_product_template
 msgid "Negroni"
-msgstr ""
+msgstr "Negroni"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "New Floor"
-msgstr ""
+msgstr "Novo nadstropje"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.xml:0
 msgid "No Tip"
-msgstr ""
+msgstr "Brez napitnine"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -760,12 +773,12 @@ msgstr "Opomba"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Number of Seats?"
-msgstr ""
+msgstr "Število sedežev?"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_old_fashioned_product_template
 msgid "Old Fashioned"
-msgstr ""
+msgstr "Staromodni koktajl"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -777,18 +790,20 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported."
 msgstr ""
+"Podprti so samo s spletom združljivi slikovni formati, kot sta .png ali "
+".jpeg."
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Oops! No floors available."
-msgstr ""
+msgstr "Ups! Na voljo ni nobenega nadstropja."
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.xml:0
 msgid "Oops! No tables available."
-msgstr ""
+msgstr "Ups! Na voljo ni nobene mize."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -812,17 +827,17 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_id
 msgid "Parent Table"
-msgstr ""
+msgstr "Nadrejena miza"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template
 msgid "Pasta 4 Formaggi"
-msgstr ""
+msgstr "Testenine s štirimi siri"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_bolo_product_template
 msgid "Pasta Bolognese"
-msgstr ""
+msgstr "Bolonjske testenine"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -840,12 +855,12 @@ msgstr "Plačilo"
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_4formaggi_product_template
 msgid "Pepe, latte, gorgonzola dolce, taleggio, parmigiano reggiano"
-msgstr ""
+msgstr "Poper, mleko, gorgonzola dolce, taleggio, parmigiano reggiano"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_peperoni
 msgid "Pepperoni"
-msgstr ""
+msgstr "Pepperoni"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -856,7 +871,7 @@ msgstr "Slika"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_pina_colada_product_template
 msgid "Pina colada"
-msgstr ""
+msgstr "Pina colada"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_margherita_product_template
@@ -897,7 +912,7 @@ msgstr "Naročila POS"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "Plačila na prodajnem mestu"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_session
@@ -912,22 +927,22 @@ msgstr "Prodajna točka"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
-msgstr ""
+msgstr "Vmesnik POS za tiskanje računov"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
 msgid "Pos Iface Splitbill"
-msgstr ""
+msgstr "Vmesnik POS za razdelitev računa"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
 msgid "Pos Set Tip After Payment"
-msgstr ""
+msgstr "Nastavi napitnino na POS-u po plačilu"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_potato_thyme
 msgid "Potatoes with thyme"
-msgstr ""
+msgstr "Krompir s timijanom"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -938,31 +953,33 @@ msgstr "Tiskanje"
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_aperol_spritz_product_template
 msgid "Prosecco, aperol, soda"
-msgstr ""
+msgstr "Prosecco, aperol, soda"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/product_screen/order_summary/order_summary.xml:0
 msgid "Release Order"
-msgstr ""
+msgstr "Sprosti naročilo"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/product_screen/order_summary/order_summary.xml:0
 msgid "Release table"
-msgstr ""
+msgstr "Sprosti mizo"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Removing a floor cannot be undone. Do you still want to remove %s?"
 msgstr ""
+"Odstranitve nadstropja ni mogoče razveljaviti. Ali še vedno želite "
+"odstraniti %s?"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "Removing a table cannot be undone"
-msgstr ""
+msgstr "Odstranitve mize ni mogoče razveljaviti"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -974,7 +991,7 @@ msgstr "Preimenuj"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.xml:0
 msgid "Reprint receipts"
-msgstr ""
+msgstr "Ponovno natisni račune"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -986,20 +1003,20 @@ msgstr "Restavracija"
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Restaurant Floor"
-msgstr ""
+msgstr "Restavracijsko nadstropje"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__floor_ids
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_floor_ids
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_tree
 msgid "Restaurant Floors"
-msgstr ""
+msgstr "Nadstropja restavracije"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
 msgid "Restaurant Table"
-msgstr ""
+msgstr "Restavracijska miza"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1011,7 +1028,7 @@ msgstr "Obrnjen"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/payment_screen/payment_screen_payment_lines/payment_screen_payment_lines.xml:0
 msgid "Reverse Payment"
-msgstr ""
+msgstr "Razveljavi plačilo"
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__shape__round
@@ -1027,7 +1044,7 @@ msgstr "Okrogla oblika"
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_mai_tai_product_template
 msgid "Rum, lime juice, orgeat syrup, and orange liqueur."
-msgstr ""
+msgstr "Rum, limetin sok, orgeatov sirup in pomarančni liker."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_chirashi_product_template
@@ -1048,7 +1065,7 @@ msgstr "Shranite to stran in se vrnite za nastavitev funkcije."
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.schweppes_product_template
 msgid "Schweppes"
-msgstr ""
+msgstr "Schweppes"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1061,7 +1078,7 @@ msgstr "Sedeži"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Select table to transfer order"
-msgstr ""
+msgstr "Izberite mizo, na katero želite prenesti naročilo"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
@@ -1071,14 +1088,14 @@ msgstr "Zaporedje"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__set_tip_after_payment
 msgid "Set Tip After Payment"
-msgstr ""
+msgstr "Nastavi napitnino na POS-u po plačilu"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.xml:0
 #: code:addons/pos_restaurant/static/src/overrides/components/ticket_screen/ticket_screen.xml:0
 msgid "Settle"
-msgstr ""
+msgstr "Poravnaj"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__shape
@@ -1088,7 +1105,7 @@ msgstr "Oblika"
 #. module: pos_restaurant
 #: model:product.attribute,name:pos_restaurant.product_sides_buns_pizza
 msgid "Sides"
-msgstr ""
+msgstr "Priloge"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1099,17 +1116,17 @@ msgstr "Podpis"
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_value_smashed_sweet_potatoes
 msgid "Smashed sweet potatoes"
-msgstr ""
+msgstr "Pretlačen sladki krompir"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.pos_category_soft_drinks
 msgid "Soft drinks"
-msgstr ""
+msgstr "Brezalkoholne pijače"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
 msgid "Spicy Tuna Sandwich"
-msgstr ""
+msgstr "Pikanten tunin sendvič"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1121,12 +1138,12 @@ msgstr "Razdeli"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/split_bill_screen/split_bill_screen.xml:0
 msgid "Split Order"
-msgstr ""
+msgstr "Razdeli naročilo"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Split total or order lines"
-msgstr ""
+msgstr "Razdeli skupni znesek ali vrstice naročila"
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__shape__square
@@ -1148,13 +1165,13 @@ msgstr "Vmesni seštevek"
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.product_attribute_sweet_potato
 msgid "Sweet potato fries"
-msgstr ""
+msgstr "Pomfri iz sladkega krompirja"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/navbar/navbar.xml:0
 msgid "Switch Floor View"
-msgstr ""
+msgstr "Preklopi pogled nadstropja"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1188,7 +1205,7 @@ msgstr "Miza %(number)s"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/receipt_header_patch.js:0
 msgid "Table %(number)s, Guests: %(count)s"
-msgstr ""
+msgstr "Miza %(number)s, Gostje: %(count)s"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__module_pos_restaurant_appointment
@@ -1200,7 +1217,7 @@ msgstr "Rezervacija miz"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__table_number
 msgid "Table Number"
-msgstr ""
+msgstr "Številka mize"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1240,53 +1257,53 @@ msgstr ""
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_margarita_product_template
 msgid "Tequila Jose Cuervo, lime jus, sugar cane Cointreau"
-msgstr ""
+msgstr "Tequila Jose Cuervo, limetin sok, trsni sladkor Cointreau"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__customer_count
 msgid "The amount of customers that have been served by this order."
-msgstr ""
+msgstr "Število strank, ki jim je bilo postreženo s tem naročilom."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
 msgid "The background color of the floor in a html-compatible format"
-msgstr ""
+msgstr "Barva ozadja tal v formatu, združljivem s HTML"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
 msgid "The default number of customer served at this table."
-msgstr ""
+msgstr "Privzeto število strank, postreženih pri tej mizi."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__table_number
 msgid "The number of the table as displayed on the floor plan"
-msgstr ""
+msgstr "Številka mize, kot je prikazana na tlorisu"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__parent_id
 msgid "The parent table if this table is part of a group of tables"
-msgstr ""
+msgstr "Nadrejena miza, če je ta miza del skupine miz"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
 #: model:ir.model.fields,help:pos_restaurant.field_res_config_settings__pos_floor_ids
 msgid "The restaurant floors served by this point of sale."
-msgstr ""
+msgstr "Restavracijska nadstropja, ki jih pokriva to prodajno mesto."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
 msgid "The table where this order was served"
-msgstr ""
+msgstr "Miza, za katero je bilo to naročilo postreženo"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
 msgid "The table's color, expressed as a valid 'background' CSS property value"
-msgstr ""
+msgstr "Barva mize, izražena kot veljavna vrednost lastnosti CSS 'background'"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__height
 msgid "The table's height in pixels"
-msgstr ""
+msgstr "Višina mize v slikovnih pikah"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_h
@@ -1294,17 +1311,18 @@ msgid ""
 "The table's horizontal position from the left side to the table's center, in "
 "pixels"
 msgstr ""
+"Vodoravni položaj mize od leve strani do središča mize, v slikovnih pikah"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_v
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
-msgstr ""
+msgstr "Navpični položaj mize od vrha do središča mize, v slikovnih pikah"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__width
 msgid "The table's width in pixels"
-msgstr ""
+msgstr "Širina mize v slikovnih pikah"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__takeaway_fp_id
@@ -1313,6 +1331,8 @@ msgid ""
 "This is useful for restaurants with onsite and take-away services that imply "
 "specific tax rates."
 msgstr ""
+"To je uporabno za restavracije s storitvami na lokaciji in za s seboj, ki "
+"vključujejo posebne davčne stopnje."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1328,30 +1348,30 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/ticket_screen/ticket_screen.xml:0
 msgid "Tip"
-msgstr ""
+msgstr "Napojnica"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/tip_screen/tip_screen.xml:0
 msgid "Tip Amount"
-msgstr ""
+msgstr "Znesek napitnine"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/tip_receipt/tip_receipt.xml:0
 msgid "Tip:"
-msgstr ""
+msgstr "Napojnica"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/ticket_screen/ticket_screen.js:0
 msgid "Tipping"
-msgstr ""
+msgstr "Napitnina"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_margherita_product_template
 msgid "Tomato sauce, Agerola mozzarella \"fior di latte\", fresh basil"
-msgstr ""
+msgstr "Paradižnikova omaka, mocarela Agerola \"fior di latte\", sveža bazilika"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1363,7 +1383,7 @@ msgstr "Skupaj:"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/control_buttons/control_buttons.xml:0
 msgid "Transfer / Merge"
-msgstr ""
+msgstr "Prenos / Združitev"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1391,7 +1411,7 @@ msgstr "Navpični položaj"
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_moscow_mule_product_template
 msgid "Vodka 42 Below, lime, sugar, ginger beer"
-msgstr ""
+msgstr "Vodka 42 Below, limeta, sladkor, ingverjevo pivo"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.water_product_template
@@ -1401,22 +1421,22 @@ msgstr "Voda"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_whiskey_sour_product_template
 msgid "Whiskey Sour"
-msgstr ""
+msgstr "Whiskey Sour"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_whiskey_sour_product_template
 msgid "Whiskey, lemon juice, sugar, and a dash of egg white."
-msgstr ""
+msgstr "Viski, limonin sok, sladkor in kanček beljaka."
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_pina_colada_product_template
 msgid "White rhum, Malibu, Batida de coco, coconut liqueur, pineapple juice"
-msgstr ""
+msgstr "Beli rum, Malibu, Batida de coco, kokosov liker, ananasov sok"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_mojito_product_template
 msgid "White rum, sugar, lime juice, soda water, and mint."
-msgstr ""
+msgstr "Beli rum, sladkor, limetin sok, soda voda in meta."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__width
@@ -1429,25 +1449,29 @@ msgstr "Širina"
 msgid ""
 "You cannot delete a floor when orders are still in draft for this floor."
 msgstr ""
+"Nadstropja ni mogoče izbrisati, dokler so naročila za to nadstropje še v "
+"osnutku."
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "You cannot delete a floor with orders still in draft for this floor."
 msgstr ""
+"Nadstropja ni mogoče izbrisati, dokler so naročila za to nadstropje še v "
+"osnutku."
 
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
 "You cannot delete a table when orders are still in draft for this table."
-msgstr ""
+msgstr "Mize ni mogoče izbrisati, dokler so naročila za to mizo še v osnutku."
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 msgid "You cannot delete a table with orders still in draft for this table."
-msgstr ""
+msgstr "Mize ni mogoče izbrisati, dokler so naročila za to mizo še v osnutku."
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1456,6 +1480,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
+"Nadstropja, ki se uporablja v seji PoS, ni mogoče odstraniti; najprej "
+"zaprite sejo/seje: "
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1464,6 +1490,8 @@ msgid ""
 "You cannot remove a table that is used in a PoS session, close the "
 "session(s) first."
 msgstr ""
+"Tabele, ki se uporablja v seji PoS, ni mogoče odstraniti; najprej zaprite "
+"sejo/seje."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1475,7 +1503,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/overrides/components/product_screen/product_screen.xml:0
 msgid "items"
-msgstr ""
+msgstr "Artikli"
 
 #. module: pos_restaurant
 #. odoo-javascript
