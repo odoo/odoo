@@ -405,7 +405,7 @@ class ProductProduct(models.Model):
         std_price_by_product_id = {}
         value_by_product_id = {}
         quantity_by_product_id = {}
-        date_by_product_id = {}
+        std_price_at_date_by_product_id = {}
 
         if not at_date and not force_recompute:
             std_price_by_product_id = {p.id: p.standard_price for p in self}
@@ -427,26 +427,8 @@ class ProductProduct(models.Model):
             ])
 
         last_manual_value_by_product = self._get_last_product_value(at_date, lot=lot)
-        oldest_manual_value = min(pv.date for pv in last_manual_value_by_product.values()) if last_manual_value_by_product else False
-        if oldest_manual_value and self.env['product.product'].concat(*last_manual_value_by_product.keys()) == self:
-            moves_domain &= Domain([('date', '>=', oldest_manual_value)])
-
-        product_ids_by_manual_value_date = defaultdict(list)
-        if not lot:
-            for manual_value in last_manual_value_by_product.values():
-                product_ids_by_manual_value_date[manual_value.date].append(manual_value.product_id.id)
-
         for manual_value in last_manual_value_by_product.values():
-            product = manual_value.product_id
-            if lot:
-                quantity = lot.with_context(to_date=manual_value.date, skip_in_progress=True).product_qty
-            else:
-                quantity = product.with_prefetch(product_ids_by_manual_value_date[manual_value.date]).with_context(to_date=manual_value.date).qty_available
-
-            std_price_by_product_id[product.id] = manual_value.value
-            quantity_by_product_id[product.id] = quantity
-            value_by_product_id[product.id] = manual_value.value * quantity
-            date_by_product_id[product.id] = manual_value.date
+            std_price_at_date_by_product_id[manual_value.product_id.id] = (manual_value.value, manual_value.date)
 
         self.env['product.value'].invalidate_model()  # Avoid keeping too many records in cache
 
@@ -457,38 +439,56 @@ class ProductProduct(models.Model):
         )
 
         # PERF avoid memoryerror
-        move_fields = ['date', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
-        move_line_fields = ['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom']
+        move_fields = ['date', 'is_in', 'is_out', 'value', 'product_id']
+        move_line_fields = ['move_id', 'company_id', 'location_id', 'location_dest_id', 'owner_id', 'picked', 'quantity_product_uom']
+        if lot:
+            move_line_fields.append('lot_id')
+        location_fields = ['usage', 'company_id']
 
-        product, valuation_from_date = False, False
+        product_id, value_at_date, valuation_from_date = False, False, False
+        locations = self.env['stock.location']
         batch_size = 50000
 
-        product_move_ids = []
         # Limit the memory usage since it's possible to have millions of stock.move
         for moves_batch in split_every(batch_size, moves.ids):
             moves_batch = self.env['stock.move'].browse(moves_batch)
-            moves_batch.fetch(['product_id', 'date'])
-
-            for move in moves_batch:
-                if move.product_id != product:
-                    product = move.product_id
-                    valuation_from_date = date_by_product_id.get(product.id)
-                if valuation_from_date and move.date <= valuation_from_date:
-                    continue
-                product_move_ids.append(move.id)
-
-            self.env['stock.move'].invalidate_model()
-
-        for moves_batch in split_every(batch_size, product_move_ids):
-            moves_batch = self.env['stock.move'].browse(moves_batch)
             moves_batch.fetch(move_fields)
-            moves_batch.move_line_ids.fetch(move_line_fields)
+            # Manually fetch and insert move_line_ids to query stock_move_line once
+            move_lines_by_move = self.env['stock.move.line'].search_fetch([('move_id', 'in', moves_batch.ids)], field_names=move_line_fields, order='id').grouped(lambda ml: ml.move_id.id)
+            moves_batch._fields['move_line_ids']._insert_cache(
+                self.env['stock.move'].browse(move_lines_by_move),
+                [mls.ids for mls in move_lines_by_move.values()]
+            )
+            locations = (moves_batch.move_line_ids.location_id + moves_batch.move_line_ids.location_dest_id) - locations
+            locations.fetch(location_fields)
+            locations._fields['is_valued_internal'].compute_value(locations)
+            self.env['stock.location'].invalidate_model(location_fields)
             for move in moves_batch:
-                quantity = quantity_by_product_id.get(move.product_id.id, 0.0)
-                average_cost = std_price_by_product_id.get(move.product_id.id, move.value / move._get_valued_qty() if move._get_valued_qty() else 0)
-                value = value_by_product_id.get(move.product_id.id, 0.0)
+                if move.product_id.id != product_id:
+                    product_id = move.product_id.id
+                    value_at_date, valuation_from_date = std_price_at_date_by_product_id.get(product_id, (False, False))
+                valued_qty = move._get_valued_qty()
+                quantity = quantity_by_product_id.get(product_id, 0.0)
+                if valuation_from_date:
+                    if move.date > valuation_from_date:
+                        average_cost = value_at_date
+                        value = value_at_date * quantity
+                        valuation_from_date = False
+                        del std_price_at_date_by_product_id[product_id]
+                    else:  # Only count quantity for moves before manual value
+                        if lot:
+                            valued_qty = move._get_valued_qty(lot)
+                        if move.is_in:
+                            quantity += valued_qty
+                        elif move.is_out:
+                            quantity -= valued_qty
+                        quantity_by_product_id[product_id] = quantity
+                        continue
+                else:
+                    average_cost = std_price_by_product_id.get(product_id, move.value / valued_qty if valued_qty else 0)
+                    value = value_by_product_id.get(product_id, 0.0)
                 if move.is_in:
-                    in_qty = move._get_valued_qty()
+                    in_qty = valued_qty
                     in_value = move.value
                     if lot:
                         lot_qty = move._get_valued_qty(lot)
@@ -504,8 +504,8 @@ class ProductProduct(models.Model):
                     elif previous_qty <= 0:
                         average_cost = in_value / in_qty if in_qty else average_cost
                         value = average_cost * quantity
-                if move.is_out:
-                    out_qty = move._get_valued_qty()
+                elif move.is_out:
+                    out_qty = valued_qty
                     out_value = out_qty * average_cost
                     if lot:
                         lot_qty = move._get_valued_qty(lot)
@@ -514,12 +514,17 @@ class ProductProduct(models.Model):
                     value -= out_value
                     quantity -= out_qty
 
-                quantity_by_product_id[move.product_id.id] = quantity
-                std_price_by_product_id[move.product_id.id] = average_cost
-                value_by_product_id[move.product_id.id] = value
+                quantity_by_product_id[product_id] = quantity
+                std_price_by_product_id[product_id] = average_cost
+                value_by_product_id[product_id] = value
 
             self.env['stock.move'].invalidate_model()  # Avoid keeping too many records in cache
             self.env['stock.move.line'].invalidate_model()
+
+        # Remaining manual values are past all moves, apply them
+        for product_id, (value_at_date, _) in std_price_at_date_by_product_id.items():
+            std_price_by_product_id[product_id] = value_at_date
+            value_by_product_id[product_id] = value_at_date * quantity_by_product_id.get(product_id, 0.0)
 
         return std_price_by_product_id, value_by_product_id
 
