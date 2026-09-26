@@ -23,13 +23,6 @@ export class RtcSession extends Record {
     /** @type {Map<number, PromiseWithResolvers<import("models").RtcSession|undefined>>} */
     static awaitedRecords = new Map();
 
-    static _insert() {
-        /** @type {import("models").RtcSession} */
-        const session = super._insert(...arguments);
-        session.channel?.rtc_session_ids.add(session);
-        return session;
-    }
-
     /** @returns {Promise<import("models").RtcSession>} */
     static async getWhenReady(id) {
         const session = this.get(id);
@@ -60,6 +53,20 @@ export class RtcSession extends Record {
 
     setup() {
         super.setup(...arguments);
+        this.onChange(
+            () => [this.channel_member_id],
+            (channel_member_id) => {
+                if (!channel_member_id) {
+                    this.delete();
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+        this.onChange(
+            () => [this.channel],
+            (channel) => channel.rtc_session_ids.add(this),
+            { diff: true, immediate: true }
+        );
         this.onChange(
             () => [this.is_screen_sharing_on],
             function onChangeIsScreenSharingOn(is_screen_sharing_on) {

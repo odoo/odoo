@@ -219,8 +219,8 @@ export class RecordInternal {
             }
             if (untrack(isUpdateInProgress)) {
                 // Hold while a write is being applied: the relations this
-                // reads are written one by one. onAdd and onDelete run
-                // between writes, at depth 0, so they read fresh values.
+                // reads are written one by one. An immediate onChange runs
+                // between writes, at depth 0, so it reads fresh values.
                 // Subscribe only while held, so the release computes once.
                 void isUpdateInProgress();
                 return heldValue;
