@@ -140,11 +140,42 @@ class TestUser(MailCommon):
                 self.assertEqual(user.role, role)
                 self.assertEqual(regular_group in user.all_group_ids, role == 'regular_user')
                 for notification_type in ('inbox', 'email'):
-                    user.with_user(user).write({'notification_type': notification_type})
+                    # light users have no access to the preference, an admin sets it for them
+                    writer = self.user_admin if role == 'light_user' else user
+                    user.with_user(writer).write({'notification_type': notification_type})
                     self.assertEqual(user.notification_type, notification_type)
                     self.assertEqual(user.role, role)
                     self.assertEqual(inbox_group in user.group_ids, notification_type == 'inbox')
                     self.assertEqual(regular_group in user.all_group_ids, role == 'regular_user')
+
+    def test_notification_type_not_editable_by_light_user(self):
+        """ The notification preference is not exposed to light users: they cannot
+        switch it themselves, while a user administrator still can. """
+        # MailCommon grants template editing to all internal users, which implies regular access.
+        self.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', True)
+        light_user = mail_new_test_user(
+            self.env,
+            login='notification_light_readonly',
+            groups='base.group_user',
+            notification_type='email',
+        )
+        self.assertEqual(light_user.role, 'light_user')
+
+        with self.assertRaises(
+            AccessError, msg='A light user cannot change its own notification preference',
+        ):
+            light_user.with_user(light_user).write({'notification_type': 'inbox'})
+        self.assertEqual(light_user.notification_type, 'email')
+
+        # the rule hiding the field is declared on the preferences form
+        view_id = self.env.ref('base.view_users_form_simple_modif').id
+        arch = self.env['res.users'].get_view(view_id, 'form')['arch']
+        self.assertIn('role == \'light_user\'', arch)
+
+        # a user administrator may still set it on their behalf
+        light_user.with_user(self.user_admin).write({'notification_type': 'inbox'})
+        self.assertEqual(light_user.notification_type, 'inbox')
+        self.assertEqual(light_user.role, 'light_user', 'the preference must not promote the user')
 
     @freeze_time("2025-06-18 08:45:12")
     def test_out_of_office(self):
@@ -219,6 +250,8 @@ class TestUserTours(HttpCase):
             self.env,
             login="employee",
             password="employee",
+            # the notification preference is not available to light users
+            groups="base.group_user,base.group_user_regular",
             notification_type="email",
             tz="Europe/Brussels",
         )
