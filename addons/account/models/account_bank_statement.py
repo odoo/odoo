@@ -251,7 +251,7 @@ class AccountBankStatement(models.Model):
                   LEFT JOIN account_journal j ON st.journal_id = j.id
                   LEFT JOIN res_currency currency ON COALESCE(j.currency_id, co.currency_id) = currency.id
                       WHERE st.first_line_index IS NOT NULL
-                      {"" if all_statements else "AND st.journal_id IN %(journal_ids)s"}
+                      {"" if all_statements or not self.journal_id else "AND st.journal_id IN %(journal_ids)s"}
                   )
            SELECT id
              FROM statements
