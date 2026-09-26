@@ -27,6 +27,10 @@
     }
 }
 
+.o_form_renderer:has(.o-mail-Form-chatter.o-aside) {
+    max-width: none;
+}
+
 // Reduce horizontal spacing if the next sibling is an aside chatter
 .o_form_sheet_bg:has(+ .o-mail-Form-chatter.o-aside) {
     @media screen and (max-width: 1920px) {

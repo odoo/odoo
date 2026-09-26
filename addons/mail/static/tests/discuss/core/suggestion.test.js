@@ -310,9 +310,9 @@ test("mention suggestion displays OdooBot before archived partners", async () =>
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion", { count: 3 });
-    await contains(".o-mail-Composer-suggestion:has(:text('OdooBot'))", {
+    await contains(".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))", {
         before: [
-            ".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))",
+            ".o-mail-Composer-suggestion:has(:text('OdooBot'))",
             {
                 before: [".o-mail-Composer-suggestion:has(:text('Jane'))"],
             },
