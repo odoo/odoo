@@ -7,6 +7,7 @@ from odoo.tools import html_escape
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
 
+from odoo.addons.portal.controllers.thread import PortalWebClientController
 from odoo.addons.website.tools import images_from_html, text_from_html
 
 
@@ -208,6 +209,16 @@ class BlogPost(models.Model):
     write_uid = fields.Many2one('res.users', 'Last Contributor', readonly=True)
     visits = fields.Integer('No of Views', copy=False, default=0, readonly=True)
     website_id = fields.Many2one(related='blog_id.website_id', readonly=True, store=True)
+    comment_count = fields.Integer("Comment count", compute='_compute_comment_count')
+
+    def _compute_comment_count(self):
+        count_comments = dict(self.env['mail.message']._read_group(
+            domain=PortalWebClientController._get_portal_message_fetch_domain(self),
+            groupby=["res_id"],
+            aggregates=['__count'],
+        ))
+        for post in self:
+            post.comment_count = count_comments.get(post.id, 0)
 
     @api.depends('content', 'teaser_manual')
     def _compute_teaser(self):

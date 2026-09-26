@@ -172,9 +172,9 @@
 <template id="blog_post_comment_count" name="Blog Post Comment Count">
     <a id="o_wblog_post_comment_count" href="#discussion" class="o_not_editable">
         <i class="oi oi-filled me-1" data-icon="chat_bubble"/>
-        <t t-out="len(blog_post.message_ids)"/>
+        <t t-out="blog_post.comment_count"/>
         <span t-attf-class="#{hideText and 'd-md-none'}">
-            <t t-if="len(blog_post.message_ids) > 1">Comments</t>
+            <t t-if="blog_post.comment_count > 1">Comments</t>
             <t t-else="">Comment</t>
         </span>
     </a>
