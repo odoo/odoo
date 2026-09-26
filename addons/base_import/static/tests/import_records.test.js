@@ -56,6 +56,7 @@ test(`import in cog menu dropdown in list`, async () => {
     await toggleActionMenu();
     expect(`.o-dropdown--menu`).toHaveCount(1);
     expect(`.o_import_menu`).toHaveCount(1);
+    expect(`.o_import_menu [data-icon='upload']`).toHaveCount(1);
 
     await contains(`.o_import_menu`).click();
     expect.verifySteps(["import"]);
