@@ -115,7 +115,7 @@ class ProductProduct(models.Model):
         return super()._get_backend_root_menu_ids() + [self.env.ref('purchase.menu_purchase_root').id]
 
     def _update_uom(self, to_uom_id):
-        for uom, product, po_lines in self.env['purchase.order.line']._read_group(
+        for uom, product, po_lines in self.env['purchase.order.line'].sudo()._read_group(
             [('product_id', 'in', self.ids)],
             ['product_uom_id', 'product_id'],
             ['id:recordset'],
@@ -126,7 +126,7 @@ class ProductProduct(models.Model):
                     'than %(uom)s have already been used for this product, the change of unit of measure can not be done.'
                     'If you want to change it, please archive the product and create a new one.',
                     problem_uom=uom.display_name, uom=product.product_tmpl_id.uom_id.display_name))
-            po_lines.product_uom_id = to_uom_id
+            po_lines.sudo().product_uom_id = to_uom_id
             po_lines.flush_recordset()
 
         return super()._update_uom(to_uom_id)
