@@ -82,6 +82,7 @@ $o-btn-border-colors: () !default;
 $o-btn-flat-defaults: () !default;
 $o-btn-outline-defaults: () !default;
 $o-btn-outline-border-width-defaults: () !default;
+$o-btn-gradient-defaults: () !default;
 @each $color, $value in $theme-colors {
     .btn-#{$color} {
         @if index($o-btn-outline-defaults, $color) {
@@ -92,6 +93,8 @@ $o-btn-outline-border-width-defaults: () !default;
             @if index($o-btn-flat-defaults, $color) {
                 // TODO In master: move definition to web_editor
                 @extend .btn.flat !optional;
+            } @else if index($o-btn-gradient-defaults, $color) {
+                background-image: var(--gradient);
             }
         }
     }
