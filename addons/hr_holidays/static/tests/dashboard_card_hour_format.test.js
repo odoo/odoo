@@ -44,7 +44,7 @@ describe('Test if card of "hour" unit is well formatted in TimeOffCard', () => {
 		const props = getHourProps(floatHour)
 		await mountWithCleanup(TimeOffCard, { props });
 		await animationFrame();
-		expect("span.o_timeoff_duration span").toHaveText("13:56");
+		expect("span.o_timeoff_duration span").toHaveText("13h56m");
 	});
 
 	test("Hour with need of zero padding", async () => {
@@ -53,7 +53,7 @@ describe('Test if card of "hour" unit is well formatted in TimeOffCard', () => {
 		await mountWithCleanup(TimeOffCard, { props });
 		await animationFrame();
 		// no need for zeroes for hour since the hour can be any positive number
-		expect("span.o_timeoff_duration span").toHaveText("1:05");
+		expect("span.o_timeoff_duration span").toHaveText("1h5m");
 	});
 
 	test("Hour of value 0", async () => {
@@ -61,6 +61,6 @@ describe('Test if card of "hour" unit is well formatted in TimeOffCard', () => {
 		const props = getHourProps(floatHour)
 		await mountWithCleanup(TimeOffCard, { props });
 		await animationFrame();
-		expect("span.o_timeoff_duration span").toHaveText("0:00");
+		expect("span.o_timeoff_duration span").toHaveText("0h");
 	});
 });
