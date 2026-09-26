@@ -316,6 +316,26 @@ class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
         # Both finished_moves moves must carry the same, correct unit cost.
         self.assertEqual(finished_moves.mapped('price_unit'), [17.50, 17.50])
 
+    def test_finished_product_cannot_be_own_byproduct(self):
+        """ A duplicate stock move for the MO's own finished product on `move_finished_ids`
+        must not crash the MO Overview report: it must still compute a unit cost.
+        """
+        mo = self._create_mo(self.bom_1, 1)
+        mo.button_mark_done()
+        mo.action_toggle_is_locked()
+        self.assertEqual(mo.state, 'done')
+        self.env['stock.move'].create({
+            'product_id': mo.product_id.id,
+            'product_uom': mo.product_id.uom_id.id,
+            'quantity': 1.0,
+            'location_id': mo.production_location_id.id,
+            'location_dest_id': mo.location_dest_id.id,
+            'production_id': mo.id,
+        })
+        self.assertEqual(len(mo.move_finished_ids.filtered(lambda m: m.product_id == mo.product_id)), 2)
+        overview = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(overview['data']['summary']['unit_cost'], 718.75)
+
 
 class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
 
