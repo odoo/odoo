@@ -1589,6 +1589,27 @@ Please change the quantity done or the rounding precision in your settings.""",
                     'warning': {'title': _('Warning'), 'message': _('Unavailable Serial numbers. Please correct the serial numbers encoded: %(serial_numbers_to_locations)s', serial_numbers_to_locations=sn_to_location)}
             }
 
+    @api.onchange('quantity', 'uom_id')
+    def _onchange_quantity_warning(self):
+        if self.product_id.tracking != 'serial':
+            return
+        product_uom = self.product_id.uom_id
+        quantity = self.uom_id._compute_quantity(self.quantity, product_uom)
+        rounded_quantity = float_round(quantity, precision_digits=0, rounding_method='UP')
+        if not product_uom.compare(quantity, rounded_quantity):
+            return
+        self.quantity = product_uom._compute_quantity(
+            rounded_quantity, self.uom_id, rounding_method='UP')
+        # Although we can't provide fractional amounts, we opt to round up the quantities
+        # to make sure the minimum required amount is provided.
+        return {
+            'warning': {
+                'title': self.env._("Fractional quantity"),
+                'message': self.env._("Products tracked by serial numbers cannot be transferred in fractional amounts."
+                                      " The quantity has been rounded up."),
+            }
+        }
+
     def _key_assign_picking(self):
         self.ensure_one()
         keys = (self.reference_ids, self.location_id, self.location_dest_id, self.picking_type_id, self.priority)

@@ -12,7 +12,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.models import TableSQL
-from odoo.tools import SQL
+from odoo.tools import SQL, float_round
 
 _logger = logging.getLogger(__name__)
 
@@ -897,10 +897,12 @@ class StockQuant(models.Model):
         if not strict and uom_id and product_id.uom_id != uom_id:
             quantity_move_uom = product_id.uom_id._compute_quantity(quantity, uom_id, rounding_method='DOWN')
             quantity = uom_id._compute_quantity(quantity_move_uom, product_id.uom_id, rounding_method='HALF-UP')
-
+        # Products tracked with serial numbers cannot be reserved in fractional amounts. Rounding is necessary.
+        # If the reserved quantity is insufficient, we round down to provide all we have at hand as floor(reserved_quantity).
+        # Otherwise, we round up to make sure we can provide enough to cover the desired fractional amount.
         if product_id.tracking == 'serial':
-            if product_id.uom_id.compare(quantity, int(quantity)) != 0:
-                quantity = 0
+            quantity = min(float_round(quantity, precision_digits=0, rounding_method='UP'),
+                           float_round(available_quantity, precision_digits=0, rounding_method='DOWN'))
 
         reserved_quants = []
 
