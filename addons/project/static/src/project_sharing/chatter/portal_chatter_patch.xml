@@ -14,6 +14,28 @@
                 </button>
             </div>
         </xpath>
+        <xpath expr="//Composer" position="before">
+            <div t-if="this.composer() and this.thread()?.id" class="py-1">
+                <div class="d-flex align-items-center">
+                    <span class="flex-shrink-0 text-end fw-bold" style="width:55px">To: </span>
+                    <RecipientsInput
+                        thread="this.thread()"
+                        recipientType="'to'"
+                        placeholder.translate="Followers only"
+                    />
+                    <button class="btn btn-sm" t-if="!this.state.showCcField"
+                        t-on-click="() => (this.state.showCcField = true)">Cc</button>
+                </div>
+                <div t-if="this.state.showCcField" class="d-flex align-items-center mt-1">
+                    <span class="flex-shrink-0 text-end fw-bold" style="width:55px">Cc: </span>
+                    <RecipientsInput
+                        thread="this.thread()"
+                        recipientType="'cc'"
+                        placeholder.translate="Cc recipients"
+                    />
+                </div>
+            </div>
+        </xpath>
     </t>
 
 </templates>

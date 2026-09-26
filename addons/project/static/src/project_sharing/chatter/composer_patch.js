@@ -32,6 +32,20 @@ patch(Composer.prototype, {
         return extraData;
     },
 
+    get postData() {
+        const postData = super.postData;
+        if (this.projectSharingPlugin?.projectSharingId()) {
+            const recipients = [
+                ...(this.thread?.suggestedRecipients || []),
+                ...(this.thread?.additionalRecipients || []),
+            ];
+            postData.isCcEnabled = recipients.some(
+                (recipient) => recipient.recipient_type === "cc"
+            );
+        }
+        return postData;
+    },
+
     get isSendButtonDisabled() {
         if (this.thread && !this.thread.id) {
             return true;
