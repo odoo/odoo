@@ -2,19 +2,21 @@
 <templates xml:space="preserve">
     <t t-name="hr_attendance.AttendanceCalendarOverview">
         <div class="o_attendance_info_bar px-3">
-            <div class="d-flex flex-row py-2 gap-3 overflow-x-auto">
+            <div class="d-flex py-2 gap-3 overflow-x-auto">
                 <t t-foreach="this.state.entries" t-as="entry" t-key="entry_index">
-                    <div class="o_attendance_entry_card d-inline-flex flex-row align-items-center justify-content-center bg-gradient-lg rounded px-4 py-2"
+                    <div class="o_attendance_entry_card d-inline-flex align-items-center justify-content-center bg-gradient-lg rounded px-4 py-2"
                          t-attf-class="bg-color-{{entry.color + 1}}-light">
-                        <div class="d-flex flex-row align-items-baseline gap-1">
-                            <span class="o_attendance_entry_duration font-monospace">
-                                <t t-out="this.formatHours(entry.worked_hours)"/>
-                            </span>
-                            <span t-if="this.formatMins(entry.worked_hours)"
-                                  class="o_attendance_entry_mins font-monospace">
-                                <t t-out="this.formatMins(entry.worked_hours)"/>
-                            </span>
-                            <span class="o_attendance_entry_name ms-1"><t t-out="entry.name"/></span>
+                        <div class="d-flex flex-wrap justify-content-center align-items-baseline gap-2">
+                            <div class="d-flex align-items-baseline gap-1">
+                                <span class="o_attendance_entry_duration font-monospace">
+                                    <t t-out="this.formatHours(entry.worked_hours)"/>
+                                </span>
+                                <span t-if="this.formatMins(entry.worked_hours)"
+                                      class="o_attendance_entry_mins font-monospace">
+                                    <t t-out="this.formatMins(entry.worked_hours)"/>
+                                </span>
+                            </div>
+                            <span class="o_attendance_entry_name text-nowrap"><t t-out="entry.name"/></span>
                         </div>
                     </div>
                 </t>
