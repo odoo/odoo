@@ -249,7 +249,7 @@ class AccountSecureEntries(models.TransientModel):
     def action_show_draft_moves_in_hashed_period(self):
         self.ensure_one()
         return {
-            'view_mode': 'list',
+            'view_mode': 'list,form',
             'name': _('Draft Entries'),
             'res_model': 'account.move',
             'type': 'ir.actions.act_window',
