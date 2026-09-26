@@ -67,7 +67,7 @@
         <field name="arch" type="xml">
              <field name="order_reference" position="after">
                 <field name="website_id" optional="hide"/>
-                <field name="public_categ_ids" optional="hide"/>
+                <field name="public_categ_ids" optional="hide" widget="many2many_tags"/>
             </field>
         </field>
     </record>
