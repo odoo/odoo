@@ -3,6 +3,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from collections import defaultdict
+from odoo.tools.float_utils import float_compare, float_round
 
 
 class PurchaseRequisition(models.Model):
@@ -187,15 +188,34 @@ class PurchaseRequisitionLine(models.Model):
         line_found = defaultdict(set)
         for line in self:
             total = 0.0
+            currency = line.requisition_id.currency_id
             for po in line.requisition_id.purchase_ids.filtered(lambda purchase_order: purchase_order.state in ['purchase', 'done']):
                 for po_line in po.order_line.filtered(lambda order_line: order_line.product_id == line.product_id):
+                    po_line_price_unit = po_line.price_unit
+                    if po_line.product_uom != line.product_uom_id:
+                        po_line_price_unit = po_line.product_uom._compute_price(po_line.price_unit, line.product_uom_id)
+                    if float_compare(po_line_price_unit, line.price_unit, precision_rounding=currency.rounding) != 0:
+                        continue
+                    if line.product_description_variants:
+                        if not po_line.name.endswith(line.product_description_variants):
+                            continue
+                    else:
+                        other_descs = {
+                            l.product_description_variants
+                            for l in line.requisition_id.line_ids
+                            if l.product_id == line.product_id and l.product_description_variants
+                        }
+                        if any(po_line.name.endswith(desc) for desc in other_descs):
+                            continue
                     if po_line.product_uom != line.product_uom_id:
                         total += po_line.product_uom._compute_quantity(po_line.product_qty, line.product_uom_id)
                     else:
                         total += po_line.product_qty
-            if line.product_id not in line_found[line.requisition_id]:
+            price_key = float_round(line.price_unit, precision_rounding=currency.rounding)
+            line_key = (line.product_id.id, price_key, line.product_description_variants)
+            if line_key not in line_found[line.requisition_id]:
                 line.qty_ordered = total
-                line_found[line.requisition_id].add(line.product_id)
+                line_found[line.requisition_id].add(line_key)
             else:
                 line.qty_ordered = 0
 
