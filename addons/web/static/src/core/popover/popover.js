@@ -33,8 +33,15 @@ function useClickAway(callback) {
         }
     };
 
+    const clickHandler = (ev) => {
+        if (ev.detail === 0) {
+            callback(ev.composedPath()[0]);
+        }
+    };
+
     useEarlyExternalListener(window, "pointerdown", pointerDownHandler, { capture: true });
     useEarlyExternalListener(window, "blur", blurHandler, { capture: true });
+    useEarlyExternalListener(window, "click", clickHandler, { capture: true });
 }
 
 const POPOVERS = new WeakMap();
