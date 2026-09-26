@@ -2,6 +2,7 @@
 import pytz
 from datetime import datetime
 
+from odoo.fields import Command
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
@@ -105,6 +106,46 @@ class TestResourceCalendar(TransactionCase):
             '2019-05-31': False,
         }
         self.assertEqual(days, expected_res)
+
+    def test_company_leave_applies_to_resource_without_company(self):
+        """ A time off set on no resource blocks resources that have no company. """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Tennis Courts',
+            'company_id': False,
+            'tz': 'UTC',
+            'attendance_ids': [Command.clear()] + [
+                Command.create({
+                    'name': 'Day %s' % weekday,
+                    'dayofweek': str(weekday),
+                    'hour_from': 8,
+                    'hour_to': 18,
+                })
+                for weekday in range(5)
+            ],
+        })
+        resource = self.env['resource.resource'].create({
+            'name': 'Court 1',
+            'company_id': False,
+            'calendar_id': calendar.id,
+            'tz': 'UTC',
+        })
+        # Wednesday 10:00 -> 12:00, inside the working hours of the calendar
+        date_from = datetime(2019, 5, 29, 10, 0, 0).astimezone(pytz.UTC)
+        date_to = datetime(2019, 5, 29, 12, 0, 0).astimezone(pytz.UTC)
+
+        work_intervals = calendar._work_intervals_batch(date_from, date_to, resource)
+        self.assertTrue(work_intervals[resource.id], "the resource should work before any time off is created")
+
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Closed for holidays',
+            'calendar_id': calendar.id,
+            'date_from': datetime(2019, 5, 29, 8, 0, 0),
+            'date_to': datetime(2019, 5, 29, 18, 0, 0),
+        })
+        self.assertEqual(leave.company_id, self.env.company, "a time off on a calendar without company falls back on the current company")
+
+        work_intervals = calendar._work_intervals_batch(date_from, date_to, resource)
+        self.assertFalse(work_intervals[resource.id], "the resource should be off, its lack of company should not discard the time off")
 
     def test_resource_calendar_form_view(self):
         calendar = self.env['resource.calendar'].create({
