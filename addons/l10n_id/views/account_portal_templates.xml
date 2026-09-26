@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_invoice_page" name="Invoice/Bill: QRIS payment status" inherit_id="account.portal_invoice_page">
+        <xpath expr="//div[@id='invoice_content']" position="attributes">
+            <attribute name="t-att-data-l10n-id-qris-invoice-id">invoice.id if invoice.country_code == 'ID' and invoice.display_qr_code and invoice.payment_state == 'not_paid' else None</attribute>
+            <attribute name="t-att-data-access-token">access_token</attribute>
+        </xpath>
+    </template>
+</odoo>
