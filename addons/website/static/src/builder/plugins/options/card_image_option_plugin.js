@@ -138,8 +138,17 @@ export class CoverImagePositionOverlayAction extends BuilderAction {
     static dependencies = ["overlayButtons", "history", "cardImageOption"];
     setup() {
         this.withLoadingEffect = false;
+        this.overlayOpen = false;
+        this.closeRequested = false;
+    }
+    isApplied() {
+        return this.overlayOpen;
     }
     async load({ editingElement }) {
+        if (this.closeRequested) {
+            this.closeRequested = false;
+            return;
+        }
         const imageEl = editingElement.querySelector(".o_card_img");
         await onceAllImagesLoaded(imageEl);
         this.dependencies.overlayButtons.hideOverlayButtonsUi();
@@ -158,12 +167,25 @@ export class CoverImagePositionOverlayAction extends BuilderAction {
                     getDelta: () => this.dependencies.cardImageOption.getDelta(imageEl),
                     getPosition: () => getComputedStyle(imageEl).objectPosition,
                     editable: this.editable,
+                    onDiscard: (ev) => {
+                        if (ev.target.closest("[data-action-id='coverImagePositionOverlay']")) {
+                            this.closeRequested = true;
+                        }
+                    },
                     history: {
                         makeSavePoint: this.dependencies.history.makeSavePoint,
                     },
                 },
-                { onRemove: () => this.dependencies.overlayButtons.showOverlayButtonsUi() }
+                {
+                    onRemove: () => {
+                        this.overlayOpen = false;
+                        this.dependencies.overlayButtons.showOverlayButtonsUi();
+                        this.trigger("on_dom_updated_handlers");
+                    },
+                }
             );
+            this.overlayOpen = true;
+            this.trigger("on_dom_updated_handlers");
         });
     }
     apply({ editingElement, loadResult }) {

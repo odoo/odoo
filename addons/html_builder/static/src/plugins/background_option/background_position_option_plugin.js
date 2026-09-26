@@ -119,8 +119,17 @@ export class BackgroundPositionOverlayAction extends BuilderAction {
     static dependencies = ["overlayButtons", "history", "backgroundPositionOption"];
     setup() {
         this.withLoadingEffect = false;
+        this.overlayOpen = false;
+        this.closeRequested = false;
+    }
+    isApplied() {
+        return this.overlayOpen;
     }
     async load({ editingElement }) {
+        if (this.closeRequested) {
+            this.closeRequested = false;
+            return;
+        }
         const imageEl = await loadImage(getBgImageURLFromEl(editingElement));
         // If there is a Scroll Effect, a span.s_parallax_bg inside the section
         // contains the background. Otherwise it's the section itself.
@@ -151,13 +160,26 @@ export class BackgroundPositionOverlayAction extends BuilderAction {
                             imageEl
                         ),
                     getPosition: () => getComputedStyle(editingElement).backgroundPosition,
+                    onDiscard: (ev) => {
+                        if (ev.target.closest("[data-action-id='backgroundPositionOverlay']")) {
+                            this.closeRequested = true;
+                        }
+                    },
                     editable: this.editable,
                     history: {
                         makeSavePoint: this.dependencies.history.makeSavePoint,
                     },
                 },
-                { onRemove: () => this.dependencies.overlayButtons.showOverlayButtonsUi() }
+                {
+                    onRemove: () => {
+                        this.overlayOpen = false;
+                        this.dependencies.overlayButtons.showOverlayButtonsUi();
+                        this.trigger("on_dom_updated_handlers");
+                    },
+                }
             );
+            this.overlayOpen = true;
+            this.trigger("on_dom_updated_handlers");
         });
     }
     apply({ editingElement, loadResult: bgPosition }) {

@@ -591,9 +591,18 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
     ];
     setup() {
         this.withLoadingEffect = false;
+        this.overlayOpen = false;
+        this.closeRequested = false;
         this.canTimeout = false;
     }
+    isApplied() {
+        return this.overlayOpen;
+    }
     async apply({ editingElement }) {
+        if (this.closeRequested) {
+            this.closeRequested = false;
+            return;
+        }
         const imageEl = await loadImage(getBgImageURLFromEl(editingElement));
         const clearInlinePosition = () => {
             // Remove inline position used for preview once value is stored in
@@ -620,9 +629,22 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
                 getDelta: () =>
                     this.dependencies.backgroundPositionOption.getDelta(editingElement, imageEl),
                 getPosition: () => getComputedStyle(editingElement).backgroundPosition,
+                onDiscard: (ev) => {
+                    if (ev.target.closest("[data-action-id='bodyBgPositionOverlay']")) {
+                        this.closeRequested = true;
+                    }
+                },
                 editable: this.editable,
                 scrollToElement: false,
+            },
+            {
+                onRemove: () => {
+                    this.overlayOpen = false;
+                    this.trigger("on_dom_updated_handlers");
+                },
             });
+            this.overlayOpen = true;
+            this.trigger("on_dom_updated_handlers");
         });
         if (bgPosition) {
             const currentPosition =
