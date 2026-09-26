@@ -135,6 +135,26 @@ class AccountMove(models.Model):
         if not self._context.get('force_delete') and any(m.l10n_es_tbai_chain_index for m in self):
             raise UserError(_('You cannot delete a move that has a TicketBAI chain id.'))
 
+    def _set_reversed_entry(self, credit_note):
+        """The core implementation uses the 'in' operator on sale_line_ids, which
+        fails when the credit note consolidates sale lines coming from several
+        orders, even though it reverses a single invoice. As a fallback, use a
+        subset comparison to find and link the original consolidated invoice.
+        """
+        super()._set_reversed_entry(credit_note)
+        if (
+            len(credit_note) != 1
+            or credit_note.reversed_entry_id
+            or credit_note.move_type != 'out_refund'
+        ):
+            return
+        original_invoice = self.filtered(
+            lambda inv: inv.move_type == 'out_invoice'
+            and credit_note.invoice_line_ids.sale_line_ids <= inv.invoice_line_ids.sale_line_ids
+        )
+        if len(original_invoice) == 1 and original_invoice._refunds_origin_required():
+            credit_note.reversed_entry_id = original_invoice.id
+
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
