@@ -4428,13 +4428,14 @@ class TestMrpOrder(TestMrpCommon):
         # Check with multiple kits with different UOMs
         with Form(self.bom_3) as main_bom:
             with main_bom.bom_line_ids.new() as bom_line:
-                bom_line.product_id = self.product_5
+                bom_line.product_id = self.product_3
                 bom_line.product_qty = 1
                 bom_line.product_uom_id = self.uom_dozen
         mo.action_update_bom()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 60, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
-            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 45, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 12, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 9, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+            {'product_id': self.product_3.id, 'product_uom_qty': 1, 'product_uom': self.product_3.uom_id.id},
         ])
 
     def test_update_mo_from_bom_with_kit_variants(self):
