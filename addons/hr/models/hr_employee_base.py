@@ -51,7 +51,7 @@ class HrEmployeeBase(models.AbstractModel):
     hr_presence_state = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
-        ('to_define', 'To Define')], compute='_compute_presence_state', default='to_define')
+        ('to_define', 'To Define')], compute='_compute_presence_state', default='to_define', compute_sudo=True)
     last_activity = fields.Date(compute="_compute_last_activity")
     last_activity_time = fields.Char(compute="_compute_last_activity")
     hr_icon_display = fields.Selection([
@@ -59,8 +59,8 @@ class HrEmployeeBase(models.AbstractModel):
         ('presence_absent_active', 'Present but not active'),
         ('presence_absent', 'Absent'),
         ('presence_to_define', 'To define'),
-        ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
-    show_hr_icon_display = fields.Boolean(compute='_compute_presence_icon')
+        ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon', compute_sudo=True)
+    show_hr_icon_display = fields.Boolean(compute='_compute_presence_icon', compute_sudo=True)
     employee_type = fields.Selection([
         ('employee', 'Employee'),
         ('student', 'Student'),
