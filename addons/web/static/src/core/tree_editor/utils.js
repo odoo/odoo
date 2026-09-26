@@ -25,6 +25,9 @@ export function isId(value) {
 
 export function getResModel(fieldDef) {
     if (fieldDef) {
+        if (fieldDef.name === "id") {
+            return fieldDef.model;
+        }
         return fieldDef.is_property ? fieldDef.comodel : fieldDef.relation;
     }
     return null;
