@@ -25,6 +25,28 @@ class DeliveryCarrier(models.Model):
     delivery_estimate_range_days = fields.Integer()
     delivery_calendar_id = fields.Many2one(comodel_name="resource.calendar", check_company=True)
 
+    def write(self, vals):
+        """Reset estimated delivery settings if delivery type is incompatible."""
+        if (
+            "delivery_type" in vals
+            and vals["delivery_type"] not in self._get_delivery_estimate_supported_types()
+        ):
+            vals.update({
+                "enable_delivery_estimate": False,
+                "delivery_estimate_lead_days": 0,
+                "delivery_estimate_range_days": 0,
+                "delivery_calendar_id": None,
+            })
+        return super().write(vals)
+
+    def _get_delivery_estimate_supported_types(self):
+        """Return the delivery types on which an estimated delivery date can be configured.
+
+        :returns: The supported delivery types.
+        :rtype: list[str]
+        """
+        return ["fixed", "base_on_rule"]
+
     def _get_estimate_delivery_days(self):
         """Return the available days defined on the estimated delivery field based on the calendar.
 
