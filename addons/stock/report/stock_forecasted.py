@@ -234,7 +234,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
         return ['id', 'date']
 
     def _get_quant_domain(self, location_ids, products):
-        return [('location_id', 'in', location_ids), ('quantity', '>', 0), ('product_id', 'in', products.ids)]
+        return [('location_id', 'in', location_ids), ('product_id', 'in', products.ids)]
 
     def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
 
