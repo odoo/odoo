@@ -3566,6 +3566,14 @@ class AccountTax(models.Model):
                 'total_included': tax_data_to_remove['tax_amount'],
                 'taxes_data': [],
             }
+            if self.env.company.currency_id.compare_amounts(tax_data_to_remove['raw_tax_amount'], tax_data_to_remove['tax_amount']) != 0:
+                # rounded raw tax amount doesn't equal tax amount, this means the tax amount was manually edited (via accounting firm mode)
+                second_tax_details.update({
+                    'raw_total_excluded_currency': tax_data_to_remove['tax_amount_currency'],
+                    'raw_total_excluded': tax_data_to_remove['tax_amount'],
+                    'raw_total_included_currency': tax_data_to_remove['tax_amount_currency'],
+                    'raw_total_included': tax_data_to_remove['tax_amount'],
+                })
 
             target_factors = [
                 {
