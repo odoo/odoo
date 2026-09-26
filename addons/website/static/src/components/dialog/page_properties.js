@@ -22,6 +22,7 @@ import { FormController, formControllerProps } from "@web/views/form/form_contro
 import { registry } from "@web/core/registry";
 import { addLoadingEffect } from "@web/core/utils/ui";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
+import wUtils from "@website/js/utils";
 
 export const pageDependenciesProps = {
     resIds: t.array(),
@@ -320,6 +321,7 @@ export class PagePropertiesDialog extends FormViewDialog {
             resIds: pageIds,
             resModel: "website.page",
             onDelete: async () => {
+                wUtils.invalidateRecentlyUsedUrl(window.location.pathname);
                 await this.orm.unlink("website.page", pageIds);
                 this.website.goToWebsite({ path: "/" });
                 this.props.close();

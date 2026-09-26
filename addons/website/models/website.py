@@ -1999,12 +1999,14 @@ class Website(models.CachedModel):
 
     def get_suggested_controllers(self):
         """
-            Returns a tuple (name, url, icon).
-            Where icon can be a module name, or a path
+            Returns a list of tuples (name, url) for internal pages that should
+            be suggested to the user when choosing a URL (e.g. in the link
+            dialog or the URL picker). Each addon can extend this list to add
+            its own controller URLs.
         """
         suggested_controllers = [
-            (_('Homepage'), self.env['ir.http']._url_for('/'), 'website'),
-            (_('Contact Us'), self.env['ir.http']._url_for('/contactus'), 'website_crm'),
+            (_('Homepage'), self.env['ir.http']._url_for('/')),
+            (_('Contact Us'), self.env['ir.http']._url_for('/contactus')),
         ]
         return suggested_controllers
 
