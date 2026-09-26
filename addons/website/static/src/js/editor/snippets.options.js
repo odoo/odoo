@@ -1152,13 +1152,13 @@ options.Class.include({
         const keysToEnable = value.split(/\s*,\s*/);
         const enableDataKeys = allDataKeys.filter(value => keysToEnable.includes(value));
         const disableDataKeys = allDataKeys.filter(value => !enableDataKeys.includes(value));
-        const resetViewArch = !!params.resetViewArch;
 
         return rpc('/website/theme_customize_data', {
             'is_view_data': isViewData,
             'enable': enableDataKeys,
             'disable': disableDataKeys,
-            'reset_view_arch': resetViewArch,
+            // TODO: Adapt the option XML in master
+            'reset_view_arch': false,
         });
     },
     /**
