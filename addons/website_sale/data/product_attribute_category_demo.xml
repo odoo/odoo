@@ -79,4 +79,13 @@
         <value eval="{'barcode': '6016478556509'}"/>
     </function>
 
+    <record id="website_sale_extra_field_barcode" model="website.sale.extra.field">
+        <field name="category_id" ref="product_attribute_category_general_features"/>
+        <field
+            name="field_id"
+            search="[('model', '=', 'product.template'), ('name', '=', 'barcode')]"
+        />
+        <field name="website_id" ref="base.default_website"/>
+    </record>
+
 </odoo>

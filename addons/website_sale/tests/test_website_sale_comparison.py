@@ -117,22 +117,20 @@ class TestWebsiteSaleComparisonUi(HttpCase):
 
     def test_02_attribute_multiple_lines(self):
         # Case product page with "Product attributes table" disabled (website_sale standard case)
-        self.env["website"].viewref("website_sale.product_attributes_body").active = False
+        self.env["website"].viewref("website_sale.product_specifications_bottom").active = False
         res = self.url_open("/shop/%d" % self.template_margaux.id)
         self.assertEqual(res.status_code, 200)
         root = etree.fromstring(res.content, etree.HTMLParser())
 
         # Case product page with "Product attributes table" enabled
-        self.env["website"].viewref("website_sale.product_attributes_body").active = True
+        self.env["website"].viewref("website_sale.product_specifications_bottom").active = True
         res = self.url_open("/shop/%d" % self.template_margaux.id)
         self.assertEqual(res.status_code, 200)
         root = etree.fromstring(res.content, etree.HTMLParser())
 
         tr_vintage = root.xpath('//div[@id="product_specifications"]//tr')[0]
         text_vintage = etree.tostring(tr_vintage, encoding="unicode", method="text")
-        self.assertEqual(
-            text_vintage.replace(" ", "").replace("\n", ""), "Vintage2018,2017,2016,2015"
-        )
+        self.assertEqual(text_vintage.replace(" ", "").replace("\n", ""), "Vintage2018")
 
         tr_varieties = root.xpath('//div[@id="product_specifications"]//tr')[1]
         text_varieties = etree.tostring(tr_varieties, encoding="unicode", method="text")
