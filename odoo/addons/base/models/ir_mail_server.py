@@ -726,15 +726,13 @@ class IrMail_Server(models.Model):
         elif x_msg_add_to := message['X-Msg-To-Add']:
             to = message['To'] or ''
             to_normalized = tools.mail.email_normalize_all(to)
+            other_recipients = ', '.join(
+                address for address in tools.mail.email_split_and_format(x_msg_add_to)
+                if tools.mail.email_normalize(address, strict=False) not in to_normalized
+                )
             message.replace_header(
-                'To', ', '.join([
-                    to,
-                    ', '.join(
-                        address for address in tools.mail.email_split_and_format(x_msg_add_to)
-                        if tools.mail.email_normalize(address, strict=False) not in to_normalized
-                    ),
-                ]
-                ))
+                'To', ', '.join(part for part in [to, other_recipients] if part)
+            )
 
         if message['From'] != smtp_from:
             message.replace_header('From', smtp_from)
