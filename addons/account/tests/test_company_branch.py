@@ -367,3 +367,27 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         })
 
         self.assertTrue(statement_line)
+
+    def test_user_can_create_product_in_branch(self):
+        """A Branch User with product create powers needs to be able to create a product
+        in the branch company even without having permission to access the main company"""
+
+        only_branch_user = self.env['res.users'].create({
+            'name': 'Only Branch user',
+            'login': 'only_branch_user',
+            'company_id': self.branch_a.id,
+            'company_ids': [Command.set([self.branch_a.id])],
+            'groups_id': [Command.set([
+                self.env.ref('base.group_user').id,
+                self.env.ref('account.group_account_manager').id,
+            ])],
+        })
+
+        self.env.invalidate_all()  # a parent company left in cache would skip the access rules
+
+        with Form(self.env['product.template'].with_user(only_branch_user)) as product_form:
+            product_form.name = "Branch product"
+        product = product_form.record
+
+        self.assertFalse(product.company_id, "The product should be shared by all the companies")
+        self.assertEqual(product.taxes_id, self.root_company.account_sale_tax_id, "The taxes should be taken from the parent company")
