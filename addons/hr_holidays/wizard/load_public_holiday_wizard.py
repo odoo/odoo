@@ -15,26 +15,32 @@ class LoadPublicHolidaysWizard(models.TransientModel):
     _description = 'Public Holiday Preview Wizard'
 
     year = fields.Integer(required=True, default=lambda self: fields.Date.context_today(self).year)
-    warning_message = fields.Html(compute='_compute_warning_message')
+    warning_message = fields.Html(compute='_compute_display_message')
+    info_message = fields.Html(compute='_compute_display_message')
     line_ids = fields.One2many(
         'load.public.holiday.wizard.line', 'wizard_id',
         string="Public Holidays", compute='_compute_line_ids', store=True, readonly=False,
     )
 
     @api.depends('year')
-    def _compute_warning_message(self):
+    def _compute_display_message(self):
         for wizard in self:
+            wizard.info_message = False
             wizard.warning_message = False
+
             if wizard.year and wizard.year > 0:
                 start_date = date(wizard.year, 1, 1)
                 end_date = date(wizard.year, 12, 31)
-                prepared_public_holidays = self.env['resource.calendar.leaves']._prepare_public_holidays_data(start_date, end_date)
+                prepared_public_holidays = self.env['resource.calendar.leaves']._prepare_public_holidays_data(
+                    start_date, end_date)
+
+                info_messages = wizard._get_info_messages(prepared_public_holidays)
                 warning_messages = wizard._get_warning_messages(prepared_public_holidays)
+
+                if info_messages:
+                    wizard.info_message = wizard._format_messages_to_html(info_messages)
                 if warning_messages:
-                    wizard.warning_message = Markup('<ul class="mb-0">%s</ul>') % Markup('').join(
-                        Markup('<li>%s</li>') % escape(warning_message)
-                        for warning_message in warning_messages
-                    )
+                    wizard.warning_message = wizard._format_messages_to_html(warning_messages)
 
     @api.depends('year')
     def _compute_line_ids(self):
@@ -99,6 +105,25 @@ class LoadPublicHolidaysWizard(models.TransientModel):
                 'next': next_action,
             },
         }
+
+    def _format_messages_to_html(self, messages):
+        if not messages:
+            return False
+        return Markup('<ul class="mb-0">%s</ul>') % Markup('').join(
+            Markup('<li>%s</li>') % escape(msg) for msg in messages
+        )
+
+    def _get_info_messages(self, prepared_public_holidays):
+        self.ensure_one()
+        info_messages = []
+        if prepared_public_holidays['companies_with_partially_existing_holidays']:
+            info_messages.append(self.env._(
+                "Some public holidays for %(year)s are already present in the system and have been excluded from the list below for: %(companies)s.",
+                year=self.year,
+                companies=', '.join(
+                    prepared_public_holidays['companies_with_partially_existing_holidays'].mapped('name')),
+            ))
+        return info_messages
 
     def _get_warning_messages(self, prepared_public_holidays):
         self.ensure_one()
