@@ -18,7 +18,7 @@ from .fields_reference import Many2oneReference
 from .identifiers import NewId
 from .models import BaseModel
 from .query import FieldSQL, Query, TableSQL
-from .utils import COLLECTION_TYPES, Prefetch, SQL_OPERATORS, check_pg_name
+from .utils import COLLECTION_TYPES, Prefetch, check_pg_name
 
 if typing.TYPE_CHECKING:
     from odoo.tools.misc import Collector
@@ -939,6 +939,10 @@ class One2many(_RelationalMulti):
                 field.setup(comodel)
             except KeyError:
                 raise ValueError(f"{self.inverse_name!r} declared in {self!r} does not exist on {comodel._name!r}.")
+            # if the inverse is not SQLable, consider this non-stored
+            if self.store and not (field.store or field.compute_sql):
+                _logger.error("Invalid one2many %s linking to %s", self, field)
+                self.store = False
 
     def setup_inverses(self, registry, inverses):
         if self.inverse_name:
@@ -1199,28 +1203,8 @@ class One2many(_RelationalMulti):
 
     def _condition_to_sql_relational(self, table: TableSQL, exists: bool, coquery: Query) -> SQL:
         assert not coquery.is_empty()
-        model = table._model
-        comodel = model.env[self.comodel_name].sudo()
-        inverse_field = comodel._fields[self.inverse_name]
-        if not (inverse_field.store or inverse_field.compute_sql):
-            # determine ids1 in model related to ids2
-            # TODO should we support this in the future?
-            recs = comodel.browse(coquery).with_context(prefetch_fields=False)
-            if inverse_field.relational:
-                inverses = inverse_field.__get__(recs)
-            else:
-                # int values, map them
-                inverses = model.browse(inverse_field.__get__(rec) for rec in recs)
-            subselect = inverses._as_query(ordered=False).subselect()
-            return SQL(
-                "%s%s%s",
-                table.id,
-                SQL_OPERATORS['in' if exists else 'not in'],
-                subselect,
-            )
-
         subselect = coquery.subselect(
-            SQL("%s AS __inverse", coquery.table[inverse_field.name]),
+            SQL("%s AS __inverse", coquery.table[self.inverse_name]),
         )
         return SQL(
             "%sEXISTS(SELECT FROM %s AS __sub WHERE __inverse = %s)",

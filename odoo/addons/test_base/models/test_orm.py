@@ -2196,7 +2196,7 @@ class TestOrmUnsearchableO2m(models.Model):
     name = fields.Char('Name')
     stored_parent_id = fields.Many2one('test_orm.unsearchable.o2m', store=True)
     parent_id = fields.Many2one('test_orm.unsearchable.o2m', store=False, compute="_compute_parent_id")
-    child_ids = fields.One2many('test_orm.unsearchable.o2m', 'parent_id')
+    child_ids = fields.One2many('test_orm.unsearchable.o2m', 'parent_id', store=False)
 
     @api.depends('stored_parent_id')
     def _compute_parent_id(self):

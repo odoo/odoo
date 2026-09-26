@@ -22,6 +22,8 @@ class AccountCodeMapping(models.Model):
         string="Account",
         compute='_compute_account_id',
         search='_search_account_id',
+        compute_sql='_compute_sql_account_id',
+        compute_sudo=True,
     )
     company_id = fields.Many2one(
         comodel_name='res.company',
@@ -74,6 +76,9 @@ class AccountCodeMapping(models.Model):
     def _compute_account_id(self):
         for record in self:
             record.account_id = record._origin.id // COMPANY_OFFSET
+
+    def _compute_sql_account_id(self, table):
+        return SQL("DIV(%s, %s)", table.id, COMPANY_OFFSET)
 
     def _compute_company_id(self):
         for record in self:
