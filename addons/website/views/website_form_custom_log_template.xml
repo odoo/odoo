@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website_form_custom_log" name="Website Form Custom Log">
+        <div class="w-100">
+            <t t-if="custom">
+                <h6 class="fw-bold d-inline-block border-bottom border-secondary pb-1 mb-2">
+                    <t t-out="custom_label"/>
+                </h6>
+                <div style="white-space: pre-wrap;" class="text-break mb-0"><t t-out="custom"/></div>
+            </t>
+            <t t-if="meta">
+                <h6 class="fw-bold text-muted d-inline-block border-bottom border-secondary pb-1 mt-4 mb-2">
+                    <t t-out="meta_label"/>
+                </h6>
+                <div style="white-space: pre-wrap;" class="text-muted small text-break mb-0"><t t-out="meta"/></div>
+            </t>
+        </div>
+    </template>
+</odoo>
