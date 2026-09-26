@@ -1202,7 +1202,7 @@ registry.category("web_tour.tours").add("test_combo_synchronisation", {
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("5"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("A"),
+            ProductScreen.clickCustomer("A", { searchMore: false }),
             Chrome.clickPlanButton(),
             FloorScreen.hasTable("5"),
             FloorScreen.clickTable("5"),
