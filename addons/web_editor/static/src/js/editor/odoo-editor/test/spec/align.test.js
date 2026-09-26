@@ -317,4 +317,38 @@ describe('Align', () => {
             });
         });
     });
+    describe("override !important class", () => {
+        it("should align start even if a class sets text-align with !important", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p class="text-center">a[]b</p>',
+                styleContent: ".text-center { text-align: center !important; }",
+                stepFunction: justifyLeft,
+                contentAfter: '<p class="text-center" style="text-align: left !important;">a[]b</p>',
+            });
+        });
+        it("should align center even if a class sets text-align with !important", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p class="text-start">a[]b</p>',
+                styleContent: ".text-start { text-align: start !important; }",
+                stepFunction: justifyCenter,
+                contentAfter: '<p class="text-start" style="text-align: center !important;">a[]b</p>',
+            });
+        });
+        it("should align end even if a class sets text-align with !important", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p class="text-center">a[]b</p>',
+                styleContent: ".text-center { text-align: center !important; }",
+                stepFunction: justifyRight,
+                contentAfter: '<p class="text-center" style="text-align: right !important;">a[]b</p>',
+            });
+        });
+        it("should justify even if a class sets text-align with !important", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p class="text-center">a[]b</p>',
+                styleContent: ".text-center { text-align: center !important; }",
+                stepFunction: justifyFull,
+                contentAfter: '<p class="text-center" style="text-align: justify !important;">a[]b</p>',
+            });
+        });
+    });
 });
