@@ -19,6 +19,7 @@ export function useCarousel(carouselRef, timeIntervalSec = 5) {
     let timeoutId;
 
     const _clearTimeout = () => {
+        clearTimeout(carousel?.touchTimeout); // FIXME: OXP fix, carousel.js should be fixed instead.
         if (timeoutId) {
             clearTimeout(timeoutId);
             timeoutId = null;
