@@ -263,6 +263,7 @@ class StockQuant(models.Model):
         quants = self.env['stock.quant']
         is_inventory_mode = self._is_inventory_mode()
         allowed_fields = self._get_inventory_fields_create()
+        quants_to_apply = self.env['stock.quant']
         for vals in vals_list:
             if is_inventory_mode and any(f in vals for f in ['inventory_quantity', 'inventory_quantity_auto_apply']):
                 if any(field for field in vals if not field.startswith('x_') and field not in allowed_fields):
@@ -294,8 +295,10 @@ class StockQuant(models.Model):
                 else:
                     quant = self.sudo().create(vals)
                     _add_to_cache(quant)
-                if auto_apply:
-                    quant.write({'inventory_quantity_auto_apply': inventory_quantity})
+                # mimicking the behavior in `_set_inventory_quantity` to prevent empty moves from being generated
+                if auto_apply and quant.quantity != inventory_quantity:
+                    quant.inventory_quantity = inventory_quantity
+                    quants_to_apply |= quant
                 else:
                     # Set the `inventory_quantity` field to create the necessary move.
                     quant.inventory_quantity = inventory_quantity
@@ -310,6 +313,8 @@ class StockQuant(models.Model):
                 quants |= quant
                 if self._is_inventory_mode() and quant.company_id:
                     quant._check_company()
+        if quants_to_apply:
+            quants_to_apply.filtered(lambda q: not q.is_outdated).action_apply_inventory()
         return quants
 
     def _load_records_create(self, values):
