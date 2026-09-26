@@ -23,7 +23,8 @@ export class ActivityMenu extends Component {
         this.employee = false;
         this.state = useState({
             checkedIn: false,
-            isDisplayed: false
+            isDisplayed: false,
+            gettingPosition: false,
         });
         this.date_formatter = registry.category("formatters").get("float_time")
         this.dropdown = useDropdownState();
@@ -84,7 +85,7 @@ export class ActivityMenu extends Component {
                 throw error;
             }
         } finally {
-            this._attendanceInProgress = false;
+            this.state.gettingPosition = false;
         }
     };
 
@@ -99,10 +100,18 @@ export class ActivityMenu extends Component {
 
     async signInOut() {
         this.dropdown.close();
+<<<<<<< 61820b37b6ed039868060717e93b89c74bcf5a09
         if (this._attendanceInProgress) {
+||||||| 00ae9ca642fd0b9621a0b1d9e55363477800ac99
+
+        if (this._attendanceInProgress) {
+=======
+
+        if (this.state.gettingPosition) {
+>>>>>>> 6278ead84b767c2cbcd8f222804e81be857d1cc1
             return;
         }
-        this._attendanceInProgress = true;
+        this.state.gettingPosition = true;
 
         const trackingEnabled = this.employee && this.employee.device_tracking_enabled;
         if (trackingEnabled && navigator.geolocation && navigator.onLine) {
