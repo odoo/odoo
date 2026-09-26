@@ -264,7 +264,7 @@
                 <field
                     name="image_128"
                     widget="image"
-                    options="{'size': [25, 25], 'img_class': 'rounded-2'}"
+                    options="{'size': [25, 25], 'img_class': 'rounded'}"
                     nolabel="1"
                     width="40"
                 />
@@ -284,7 +284,7 @@
                 <field name="module_state"/>
                 <field name="module_to_buy"/>
                 <templates>
-                    <t t-name="card" class="flex-row">
+                    <t t-name="card" class="o_card_payment_provider_record flex-row">
                         <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
                         <t t-set="to_buy" t-value="record.module_to_buy.raw_value === true"/>
                         <t t-set="is_published" t-value="record.is_published.raw_value === true"/>
@@ -294,7 +294,7 @@
                             <field type="open"
                                  name="image_128" widget="image"
                                  class="mb-0 o_image_64_max"
-                                 options="{'img_class': 'p-2 border rounded'}"
+                                 options="{'img_class': 'p-2 border rounded-3'}"
                                  alt="provider"/>
                         </aside>
                         <main class="ms-2">
