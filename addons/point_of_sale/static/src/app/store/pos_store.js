@@ -401,16 +401,40 @@ export class PosStore extends Reactive {
         }
 
         if (productIds.size > 0) {
-            const missingVariants = await this.data.searchRead("product.product", [
-                "&",
-                ["id", "not in", [...productIds]],
-                ["product_tmpl_id", "in", [...productTmplIds]],
-            ]);
-            for (const product of missingVariants.filter(
-                (p) =>
-                    !productIds.has(p.id) && p.raw?.product_template_variant_value_ids?.length > 0
-            )) {
-                productByTmplId[product.raw.product_tmpl_id].push(product);
+            for (const product of this.models["product.product"].getAll()) {
+                const tmplId = product.raw?.product_tmpl_id;
+                if (
+                    !productIds.has(product.id) &&
+                    productTmplIds.has(tmplId) &&
+                    product.raw?.product_template_variant_value_ids?.length > 0
+                ) {
+                    productIds.add(product.id);
+                    productByTmplId[tmplId].push(product);
+                }
+            }
+            this.siblingVariantsLoadedTmplIds ??= new Set();
+            const tmplIdsToFetch = [...productTmplIds].filter(
+                (id) => !this.siblingVariantsLoadedTmplIds.has(id)
+            );
+            if (tmplIdsToFetch.length > 0) {
+                const loadedIds = tmplIdsToFetch.flatMap((id) =>
+                    productByTmplId[id].map((p) => p.id)
+                );
+                // Only the sibling ids are needed; bin_size keeps the images out.
+                const missingVariants = await this.data.searchRead(
+                    "product.product",
+                    ["&", ["id", "not in", loadedIds], ["product_tmpl_id", "in", tmplIdsToFetch]],
+                    [],
+                    { context: { bin_size: true } }
+                );
+                for (const product of missingVariants.filter(
+                    (p) =>
+                        !productIds.has(p.id) &&
+                        p.raw?.product_template_variant_value_ids?.length > 0
+                )) {
+                    productByTmplId[product.raw.product_tmpl_id].push(product);
+                }
+                tmplIdsToFetch.forEach((id) => this.siblingVariantsLoadedTmplIds.add(id));
             }
         }
 
