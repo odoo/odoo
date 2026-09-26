@@ -1448,7 +1448,7 @@ class StockMoveLine(models.Model):
            or (self.picking_id.state != 'assigned' or self.uom_id.is_zero(self.quantity)) and not self.env.context.get('skip_auto_waveable')  \
            or self.batch_id.is_wave \
            or not self.picking_type_id._is_auto_wave_grouped() \
-           or (self.picking_type_id.wave_group_by_category and self.product_id.categ_id not in self.picking_type_id.wave_category_ids):  # noqa: SIM103
+           or (self.picking_type_id.wave_group_by_category and not self._find_best_wave_product_category(self.picking_type_id)):  # noqa: SIM103
             return False
         return True
 
@@ -1501,6 +1501,12 @@ class StockMoveLine(models.Model):
     def _is_new_potential_line_extra(self, potential_line, picking_type):
         """Extend extra conditions here"""
         return True
+
+    def _find_best_wave_product_category(self, picking_type):
+        """Find the wave product category that matches self product category the best"""
+        self.ensure_one()
+        wave_category = sorted([category for category in picking_type.wave_category_ids if self.product_id.categ_id._child_of(category)], key=lambda c: c._depth())
+        return wave_category[-1] if wave_category else False
 
     def _auto_wave_lines_into_existing_waves(self, nearest_parent_locations=False):
         """ Try to add move lines to existing waves if possible,
@@ -1559,6 +1565,12 @@ class StockMoveLine(models.Model):
 
                 for line in lines:
                     wave_found = False
+                    if picking_type.wave_group_by_category:
+                        line_category = line._find_best_wave_product_category(picking_type)
+                        # We sort the potential waves from most general category (e.g. Goods) to most precise (e.g. Goods/Foods/Snacks). Doing so,
+                        # we avoid adding adding a product with a category (e.g. Goods) inside a wave with products of child categories (e.g. Goods/Foods)
+                        # while a more general is available.
+                        potential_waves = potential_waves.sorted(key=lambda wave: min([c._depth() for c in wave.move_line_ids.product_id.mapped('categ_id')], default=0))
                     for wave in potential_waves:
                         if line.company_id != wave.company_id \
                         or (picking_type.batch_group_by_partner and line.move_id.partner_id != wave.picking_ids.partner_id) \
@@ -1566,7 +1578,7 @@ class StockMoveLine(models.Model):
                         or (picking_type.batch_group_by_src_loc and line.location_id != wave.picking_ids.location_id) \
                         or (picking_type.batch_group_by_dest_loc and line.location_dest_id != wave.picking_ids.location_dest_id) \
                         or (picking_type.wave_group_by_product and line.product_id != wave.move_line_ids.product_id) \
-                        or (picking_type.wave_group_by_category and line.product_id.categ_id != wave.move_line_ids.product_id.categ_id) \
+                        or (picking_type.wave_group_by_category and not all(c._child_of(line_category) for c in wave.move_line_ids.product_id.mapped('categ_id'))) \
                         or (picking_type.wave_group_by_location and waves_nearest_parent_locations[wave] != nearest_parent_locations[line].id) \
                         or (picking_type.wave_group_by_date and not picking_type._validate_line_date_for_wave(line, wave)) \
                         or not line._is_potential_existing_wave_extra(wave):
@@ -1627,7 +1639,7 @@ class StockMoveLine(models.Model):
             if picking_type.wave_group_by_product:
                 domains.append(Domain('product_id', 'in', lines.product_id.ids))
             if picking_type.wave_group_by_category:
-                domains.append(Domain('product_id.categ_id', 'in', lines.product_id.categ_id.ids))
+                domains.append(Domain('product_id.categ_id', 'child_of', lines.product_id.categ_id.ids))
             if picking_type.wave_group_by_location:
                 domains.append(Domain('location_id', 'child_of', picking_type.wave_location_ids.ids))
             domains = lines._get_potential_new_waves_extra_domain(domains, picking_type)
@@ -1648,6 +1660,8 @@ class StockMoveLine(models.Model):
                 lines_found = False
                 if line.id in matched_lines:
                     continue
+                if picking_type.wave_group_by_category:
+                    wave_category = line._find_best_wave_product_category(picking_type)
                 for potential_line in potential_lines:
                     if line.id == potential_line.id \
                     or line.company_id != potential_line.company_id \
@@ -1656,7 +1670,7 @@ class StockMoveLine(models.Model):
                     or (picking_type.batch_group_by_src_loc and line.location_id != potential_line.location_id) \
                     or (picking_type.batch_group_by_dest_loc and line.location_dest_id != potential_line.location_dest_id) \
                     or (picking_type.wave_group_by_product and line.product_id != potential_line.product_id) \
-                    or (picking_type.wave_group_by_category and line.product_id.categ_id != potential_line.product_id.categ_id) \
+                    or (picking_type.wave_group_by_category and not potential_line.product_id.categ_id._child_of(wave_category)) \
                     or (picking_type.wave_group_by_location and lines_nearest_parent_locations[potential_line] != nearest_parent_locations[line].id)  \
                     or (picking_type.wave_group_by_date and not picking_type._validate_line_date_for_wave(line, potential_line)) \
                     or not line._is_new_potential_line_extra(potential_line, picking_type):
@@ -1727,7 +1741,7 @@ class StockMoveLine(models.Model):
         if self.picking_type_id.wave_group_by_product:
             description_items.append(self.product_id.display_name)
         if self.picking_type_id.wave_group_by_category:
-            description_items.append(self.product_id.categ_id.complete_name)
+            description_items.append(self._find_best_wave_product_category(self.picking_type_id).complete_name)
         if self.picking_type_id.wave_group_by_location:
             description_items.append(nearest_parent_location.complete_name)
         if self.picking_type_id.wave_group_by_date:
