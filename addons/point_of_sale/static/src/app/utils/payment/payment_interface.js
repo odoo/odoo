@@ -111,8 +111,8 @@ export class PaymentInterface {
      * @param {string} method - The action to call on `pos.payment.method`
      * @param {any[]} params - The action params to send
      */
-    async callPaymentMethod(method, params) {
-        return await this.env.services.orm.silent.call("pos.payment.method", method, params);
+    async callPaymentMethod(method, params, extra={}) {
+        return await this.env.services.orm.silent.call("pos.payment.method", method, params, extra);
     }
 
     /**
