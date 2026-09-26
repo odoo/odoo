@@ -19,7 +19,7 @@ class AccountMove(models.Model):
         super()._l10n_vn_edi_add_buyer_information(json_values)
 
         # For Walk-In Customer, there is no address and buyerNotGetInvoice should be set to 1
-        if self.partner_id == self.env.ref('l10n_vn_edi_viettel_pos.partner_walk_in_customer', raise_if_not_found=False):
+        if self.partner_id == self.env.ref('l10n_vn_edi_viettel_pos.partner_walk_in_customer'):
             del json_values['buyerInfo']['buyerAddressLine']
             json_values['buyerInfo']['buyerNotGetInvoice'] = 1
 
