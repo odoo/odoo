@@ -19,6 +19,22 @@ class AccountMove(models.Model):
             ).ids))
         return result
 
+    @api.depends('reversed_entry_id', 'debit_origin_id')
+    def _compute_invoice_currency_rate(self):
+        # In Peru, credit and debit notes use the currency rate of the document they modify.
+        super()._compute_invoice_currency_rate()
+
+    @api.depends('reversed_entry_id', 'debit_origin_id')
+    def _compute_expected_currency_rate(self):
+        super()._compute_expected_currency_rate()
+
+    def _get_invoice_currency_rate_date(self):
+        self.ensure_one()
+        origin_move = self.reversed_entry_id or self.debit_origin_id
+        if self.country_code == 'PE' and origin_move.invoice_date:
+            return origin_move._get_invoice_currency_rate_date()
+        return super()._get_invoice_currency_rate_date()
+
     @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number', 'partner_id')
     def _inverse_l10n_latam_document_number(self):
         """Inherit to complete the l10n_latam_document_number with the expected 8 characters after that a '-'
