@@ -2,15 +2,39 @@
 import base64
 import io
 import json
+import logging
 import math
 from io import BytesIO
 
 import qrcode
+from markupsafe import Markup
 from PIL import Image
 
 from odoo import _, api, fields, models, modules
 from odoo.tools.image import image_data_uri
 from odoo.tools.misc import format_datetime, format_time
+
+_logger = logging.getLogger(__name__)
+
+PAPER_SIZE_STYLES = {
+    '58': {'width': 360, 'font_size': 22},
+    '80': {'width': 512, 'font_size': 22},
+    'tm_u22_76': {'width': 200, 'font_size': 12},
+    'tm_u22_70': {'width': 180, 'font_size': 12},
+    'tm_u22_58': {'width': 150, 'font_size': 12},
+    'tm_u33_76': {'width': 400, 'font_size': 22},
+    'tm_u33_70': {'width': 380, 'font_size': 22},
+    'tm_p60_60': {'width': 375, 'font_size': 22},
+    'tm_l100_40': {'width': 240, 'font_size': 14},
+}
+LINE_HEIGHT_RATIO = 1.4
+TEXT_CLASS_RATIOS = {
+    'text-small': 0.8,
+    'text-normal': 1.0,
+    'text-large': 1.4,
+    'text-huge': 2.0,
+    'text-insane': 2.3,
+}
 
 
 def _get_str_notes(note):
@@ -239,19 +263,81 @@ class PosOrderReceipt(models.AbstractModel):
             },
         }
 
-    def order_receipt_generate_html(self, basic_receipt=False):
+    def order_receipt_generate_html(self, basic_receipt=False, printer_style=False):
         last_order = self.env['pos.order'].search([], order='id desc', limit=1)
         report_name = 'point_of_sale.pos_order_receipt'
-        return last_order.env['ir.qweb']._render(report_name, values=self.order_receipt_generate_data(basic_receipt))
+        html = last_order.env['ir.qweb']._render(report_name, values=self.order_receipt_generate_data(basic_receipt))
+        if printer_style:
+            html = html.replace(Markup('</head>'), printer_style + Markup('</head>'))
+        return html
 
-    def order_receipt_generate_image(self, basic_receipt=False, width=500, height=0):
-        content = self.order_receipt_generate_html(basic_receipt)
+    def order_receipt_generate_image(self, basic_receipt=False, width=500, height=0, printer_style=False):
+        content = self.order_receipt_generate_html(basic_receipt, printer_style)
         return self.env['ir.actions.report']._run_image_engine(
             'wkhtmltopdf',
             [content],
             width,
             height,
         )[0]
+
+    def _order_receipt_paper_style(self, paper_size):
+        return PAPER_SIZE_STYLES.get(paper_size) or PAPER_SIZE_STYLES['80']
+
+    def _order_receipt_paper_style_css(self, paper_size):
+        """Return the style making the receipt fit the given paper size.
+
+        The receipt template is designed for 80mm paper, smaller printers need
+        their own width and font sizes. Mirror method of the JS
+        setIframeSizeFromPrinter in pos_ticket_printer_service.js
+        """
+        style = self._order_receipt_paper_style(paper_size)
+        font_size = style['font_size']
+        rules = [f"#pos-receipt {{ width: {style['width']}px !important; font-size: {font_size}px !important; }}"]
+        for text_class, ratio in TEXT_CLASS_RATIOS.items():
+            size = font_size * ratio
+            rules.append(
+                f"#pos-receipt .{text_class} {{ font-size: {size}px !important; "
+                f"line-height: {size * LINE_HEIGHT_RATIO}px !important; }}"
+            )
+        return Markup("<style>%s</style>") % "\n".join(rules)
+
+    def _order_receipt_generate_paper_image(self, paper_size='80'):
+        """Render this receipt as an image fitting the given paper size."""
+        return self.order_receipt_generate_image(
+            width=self._order_receipt_paper_style(paper_size)['width'],
+            printer_style=self._order_receipt_paper_style_css(paper_size),
+        )
+
+    def _order_receipt_generate_for_format(self, receipt_format, paper_size='80'):
+        """Render this receipt in the format a printer expects.
+
+        See ``_get_backend_receipt_format`` on ``pos.printer`` for the formats.
+        """
+        self.ensure_one()
+        if receipt_format == 'image':
+            return self.order_receipt_generate_base64_image(paper_size)
+        return self.order_receipt_generate_epos(paper_size)
+
+    def order_receipt_generate_epos(self, paper_size='80'):
+        """Render this receipt as an ePOS document, ready to be sent to an Epson printer."""
+        self.ensure_one()
+        image = self._order_receipt_generate_paper_image(paper_size)
+        if not image and not modules.module.current_test:
+            _logger.warning("Could not render the receipt image of order %s.", self.id)
+            return False
+        return self._image_to_epos_raster_xml(image)
+
+    def order_receipt_generate_base64_image(self, paper_size='80'):
+        """Render this receipt as a base64 image, ready to be sent to an IoT box."""
+        self.ensure_one()
+        image = self._order_receipt_generate_paper_image(paper_size)
+        if not image:
+            # Wkhtmltoimage doesn't work in tests, see _run_wkhtmltoimage in ir.actions.report
+            if not modules.module.current_test:
+                _logger.warning("Could not render the receipt image of order %s.", self.id)
+                return False
+            image = b'test receipt'
+        return base64.b64encode(image).decode()
 
     # Order changes receipt generation
     def _generate_preparation_changes_by_printer(self):
