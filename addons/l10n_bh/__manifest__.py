@@ -23,6 +23,7 @@ Activates:
     'data': [
         'data/tax_report_full.xml',
         'data/tax_report_simplified.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
