@@ -4,11 +4,11 @@ from datetime import timedelta
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
-from odoo.tests import Form, tagged
+from odoo.tests import Form, HttpCase, tagged
 from odoo import Command, fields
 
 
-class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
+class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):
@@ -1440,3 +1440,41 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         bill_matches.action_match_lines()
         self.assertEqual(po.invoice_ids, bill_1)
         self.assertEqual(po.order_line.product_id, bill_1.invoice_line_ids.product_id)
+
+    def test_purchase_order_section_duplicate(self):
+        """
+        Duplicating a section should copy all products and their date_planned.
+        """
+        order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': 'Section 1',
+                    'display_type': 'line_section',
+                    'product_qty': 0.0,
+                }),
+                Command.create({
+                    'name': 'Product 1',
+                    'product_id': self.product_order.id,
+                    'product_qty': 1.0,
+                }),
+            ]
+        })
+
+        admin = self.env.ref('base.user_admin')
+        admin.write({
+            'company_ids': [Command.link(order.company_id.id)],
+            'company_id': order.company_id.id,
+        })
+        self.start_tour(
+            f"/odoo/action-purchase.purchase_rfq/{order.id}",
+            'purchase_order_section_duplicate_tour',
+            login='admin',
+        )
+
+        sections = order.order_line.filtered(lambda l: l.display_type == 'line_section')
+        products = order.order_line.filtered(lambda l: not l.display_type)
+
+        self.assertEqual(len(sections), 2)
+        self.assertEqual(len(products), 2)
+        self.assertEqual(products[0].date_planned, products[1].date_planned)
