@@ -1,9 +1,7 @@
 """ Implementation of "INVENTORY VALUATION TESTS" spreadsheet. """
 
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
-from odoo.exceptions import ValidationError
-from odoo.tests import Form, tagged
+from odoo.tests import tagged
 from odoo import Command
 
 
@@ -43,14 +41,7 @@ class TestStockValuationStandard(TestStockValuationCommon):
         move1 = self._make_in_move(self.product, 10)
         self._make_in_move(self.product, 10)
         self._make_out_move(self.product, 15)
-        self.env['stock.move.line'].create({
-            'move_id': move1.id,
-            'product_id': move1.product_id.id,
-            'quantity': 5,
-            'product_uom_id': move1.product_uom.id,
-            'location_id': move1.location_id.id,
-            'location_dest_id': move1.location_dest_id.id,
-        })
+        self._add_move_line(move1, quantity=5)
 
         self.assertEqual(self.product.total_value, 100)
         self.assertEqual(self.product.qty_available, 10)
@@ -86,14 +77,7 @@ class TestStockValuationStandard(TestStockValuationCommon):
     def test_negative_1(self):
         move1 = self._make_in_move(self.product, 10)
         self._make_out_move(self.product, 15)
-        self.env['stock.move.line'].create({
-            'move_id': move1.id,
-            'product_id': move1.product_id.id,
-            'quantity': 10,
-            'product_uom_id': move1.product_uom.id,
-            'location_id': move1.location_id.id,
-            'location_dest_id': move1.location_dest_id.id,
-        })
+        self._add_move_line(move1, quantity=10)
 
         self.assertEqual(self.product.total_value, 50)
         self.assertEqual(self.product.qty_available, 5)
@@ -157,10 +141,8 @@ class TestStockValuationStandard(TestStockValuationCommon):
             'symbol': 'O',
             'rounding': 1,
         })
-        new_company = self.env['res.company'].create({
-            'name': 'Super Company',
-            'currency_id': currency.id,
-        })
+        new_company = self.other_company
+        new_company.currency_id = currency
 
         old_company = self.env.user.company_id
         try:
@@ -221,24 +203,18 @@ class TestStockValuationStandard(TestStockValuationCommon):
         self.assertEqual(product_both.total_value, 10150)
 
     def test_change_qty_and_locations_of_done_sml(self):
-        sub_stock_loc = self.env['stock.location'].create({
-            'name': 'shelf1',
-            'usage': 'internal',
-            'location_id': self.stock_location.id,
-        })
-
         move_in = self._make_in_move(self.product, 25)
         self.assertEqual(self.product.total_value, 250)
         self.assertEqual(self.product.qty_available, 25)
 
         move_in.move_line_ids.write({
-            'location_dest_id': sub_stock_loc.id,
+            'location_dest_id': self.shelf1.id,
             'quantity': 30,
         })
         self.assertEqual(self.product.total_value, 300)
         self.assertEqual(self.product.qty_available, 30)
 
-        sub_loc_quant = self.product.stock_quant_ids.filtered(lambda q: q.location_id == sub_stock_loc)
+        sub_loc_quant = self.product.stock_quant_ids.filtered(lambda q: q.location_id == self.shelf1)
         self.assertEqual(sub_loc_quant.quantity, 30)
 
 
@@ -347,7 +323,7 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product.standard_price, 15)
 
         self._make_return(move2, 1)
-        move2.quantity = 0
+        self._set_quantity(move2, 0)
         self.assertEqual(self.product.qty_available, 2)
         self.assertEqual(self.product.total_value, 30.0)
 
@@ -673,10 +649,8 @@ class TestStockValuationFIFO(TestStockValuationCommon):
             'symbol': 'O',
             'rounding': 1,
         })
-        new_company = self.env['res.company'].create({
-            'name': 'Super Company',
-            'currency_id': currency.id,
-        })
+        new_company = self.other_company
+        new_company.currency_id = currency
 
         old_company = self.env.user.company_id
         try:
@@ -733,9 +707,8 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(product_both.total_value, 5150)
 
     def test_fifo_consignment_valuation(self):
-        owner = self.env['res.partner'].create({'name': 'External Owner'})
         self._make_in_move(self.product, 5, 10)
-        self._make_in_move(self.product, 5, 20, owner_id=owner.id)
+        self._make_in_move(self.product, 5, 20, owner_id=self.owner.id)
         self.assertEqual(self.product.total_value, 50.0)
         self._make_out_move(self.product, 5)
         self.assertEqual(self.product.total_value, 0.0)
@@ -767,8 +740,7 @@ class TestStockValuationChangeCostMethod(TestStockValuationCommon):
         self._make_in_move(self.product, 10)
         self._make_out_move(self.product, 1)
 
-        cat2 = self.env['product.category'].create({'name': 'fifo', 'property_cost_method': 'fifo'})
-        self.product.product_tmpl_id.categ_id = cat2
+        self.product.product_tmpl_id.categ_id = self.category_fifo
         self.assertEqual(self.product.total_value, 190)
         self.assertEqual(self.product.qty_available, 19)
 
@@ -863,7 +835,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(self.product.total_value, 100)
         self.assertEqual(self.product.qty_available, 10)
 
-        account_move_line = self.env['account.move'].browse(self.env.company.action_close_stock_valuation()['res_id']).line_ids
+        account_move_line = self._close().line_ids
         self.assertEqual(len(account_move_line), 2)
 
     def test_standard_manual_to_auto_2(self):
@@ -881,7 +853,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(self.product.total_value, 100)
         self.assertEqual(self.product.qty_available, 10)
 
-        account_move_line = self.env['account.move'].browse(self.env.company.action_close_stock_valuation()['res_id']).line_ids
+        account_move_line = self._close().line_ids
         self.assertEqual(len(account_move_line), 2)
 
     def test_standard_auto_to_manual_1(self):
@@ -898,7 +870,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(self.product.qty_available, 10)
 
         # An accounting entry should only be created for the emptying now that the category is manual.
-        account_move_line = self.env['account.move'].browse(self.env.company.action_close_stock_valuation()['res_id']).line_ids
+        account_move_line = self._close().line_ids
         self.assertEqual(len(account_move_line), 2)
 
     def test_standard_auto_to_manual_2(self):
@@ -914,8 +886,8 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(self.product.total_value, 100)
         self.assertEqual(self.product.qty_available, 10)
 
-        # account_move_line = self.env['account.move'].browse(self.env.company.action_close_stock_valuation()['res_id']).line_ids
-        # self.assertEqual(len(account_move_line), 2)
+        account_move_line = self._close().line_ids
+        self.assertEqual(len(account_move_line), 2)
 
     def test_return_delivery_fifo(self):
         self.product = self.product_fifo
@@ -948,15 +920,7 @@ class TestAngloSaxonAccounting(TestStockValuationCommon):
         self._make_in_move(self.product, 2, unit_cost=20)
         # self.assertEqual(self.product.standard_price, 15)
 
-        refund_wizard = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice.ids).create({
-            'journal_id': invoice.journal_id.id,
-        })
-        action = refund_wizard.refund_moves()
-        reverse_invoice = self.env['account.move'].browse(action['res_id'])
-        with Form(reverse_invoice) as reverse_invoice_form:
-            with reverse_invoice_form.invoice_line_ids.edit(0) as line:
-                line.quantity = 1
-        reverse_invoice.action_post()
+        reverse_invoice = self._refund(move_to_refund=invoice, quantity=1)
 
         anglo_lines = reverse_invoice.line_ids.filtered(lambda l: l.display_type == 'cogs')
         self.assertEqual(len(anglo_lines), 2)

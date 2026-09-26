@@ -1,23 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo import Command
 from odoo.tests import tagged, Form
+from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
 
 @tagged('post_install', '-at_install')
-class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
+class TestStockLandedCostsMrp(TestStockValuationCommon):
 
     @classmethod
     def setUpClass(cls):
         super(TestStockLandedCostsMrp, cls).setUpClass()
-        # References
-        cls.supplier_id = cls.env['res.partner'].create({'name': 'My Test Supplier'}).id
-        cls.customer_id = cls.env['res.partner'].create({'name': 'My Test Customer'}).id
-        cls.picking_type_in_id = cls.env.ref('stock.picking_type_in')
-        cls.picking_type_out_id = cls.env.ref('stock.picking_type_out')
-        cls.supplier_location_id = cls.env.ref('stock.stock_location_suppliers')
-        cls.stock_location_id = cls.company_data['default_warehouse'].lot_stock_id
-        cls.customer_location_id = cls.env.ref('stock.stock_location_customers')
         # Create product refrigerator & oven
         cls.product_component1 = cls.env['product.product'].create({
             'name': 'Component1',
@@ -32,13 +25,12 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         cls.product_refrigerator = cls.env['product.product'].create({
             'name': 'Refrigerator',
             'is_storable': True,
-            'categ_id': cls.env.ref('product.product_category_goods').id,
+            'categ_id': cls.category_fifo_auto.id,
         })
-        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.bom_refri = cls.env['mrp.bom'].create({
             'product_id': cls.product_refrigerator.id,
             'product_tmpl_id': cls.product_refrigerator.product_tmpl_id.id,
-            'product_uom_id': cls.uom_unit.id,
+            'product_uom_id': cls.uom.id,
             'product_qty': 1.0,
             'type': 'normal',
         })
@@ -53,14 +45,7 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
             'product_qty': 1,
         })
         # Warehouses
-        cls.warehouse_1 = cls.env['stock.warehouse'].create({
-            'name': 'Base Warehouse',
-            'reception_steps': 'one_step',
-            'delivery_steps': 'ship_only',
-            'code': 'BWH'})
-
-        cls.product_refrigerator.categ_id.property_cost_method = 'fifo'
-        cls.product_refrigerator.categ_id.property_valuation = 'real_time'
+        cls.warehouse_1 = cls.warehouse
 
         # Create service type product 1.Labour 2.Brokerage 3.Transportation 4.Packaging
         cls.landed_cost = cls.env['product.product'].create({
@@ -68,12 +53,12 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
             'type': 'service',
             'categ_id': cls.env.ref('product.product_category_services').id,
         })
-        cls.allow_user = cls.env['res.users'].with_context({'no_reset_password': True}).create({
-            'name': "Adviser",
-            'login': "fm",
-            'email': "accountmanager@yourcompany.com",
-            'group_ids': [(6, 0, [cls.env.ref('account.group_account_manager').id, cls.env.ref('mrp.group_mrp_user').id, cls.env.ref('stock.group_stock_manager').id])]
-        })
+        cls.allow_user = cls._create_new_internal_user(
+            name='Adviser',
+            login='fm',
+            email='accountmanager@yourcompany.com',
+            groups='account.group_account_manager,mrp.group_mrp_user,stock.group_stock_manager',
+        )
 
     def test_landed_cost_on_mrp(self):
         # Initial inventory
@@ -138,13 +123,6 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
             Test that a user who has manager access to stock can create and validate a landed cost linked
             to a Manufacturing order without the need for MRP access
         """
-        # Create a user with only manager access to stock
-        stock_manager = self.env['res.users'].with_context({'no_reset_password': True}).create({
-            'name': "Stock Manager",
-            'login': "test",
-            'email': "test@test.com",
-            'group_ids': [(6, 0, [self.env.ref('stock.group_stock_manager').id])]
-        })
         # Make some stock and reserve
         self.env['stock.quant']._update_available_quantity(self.product_component1, self.warehouse_1.lot_stock_id, 10)
         self.env['stock.quant']._update_available_quantity(self.product_component2, self.warehouse_1.lot_stock_id, 10)
@@ -163,6 +141,12 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
         man_order_form.qty_producing = 1
         man_order_form.save()
         man_order.button_mark_done()
+
+        # Create a user with only manager access to stock
+        self.allow_user.write({
+            'group_ids': [Command.set([self.env.ref('stock.group_stock_manager').id])],
+        })
+        stock_manager = self.allow_user
 
         # Create the landed cost with the stock_manager user
         landed_cost = Form(self.env['stock.landed.cost'].with_user(stock_manager)).save()

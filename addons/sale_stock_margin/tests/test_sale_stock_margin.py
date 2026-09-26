@@ -19,29 +19,27 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'company_id': False,
         })
         cls.env['res.currency.rate'].search([]).unlink()
-        cls.customer = cls.env['res.partner'].create({
-            'name': 'Customer',
-        })
 
     #########
     # UTILS #
     #########
 
-    def _create_sale_order(self):
+    def _create_sale_order(self, partner=None):
         return self.env['sale.order'].create({
             'name': 'Sale order',
-            'partner_id': self.customer.id,
-            'partner_invoice_id': self.customer.id,
+            'partner_id': (partner or self.vendor).id,
+            'partner_invoice_id': (partner or self.vendor).id,
             'pricelist_id': self.pricelist.id,
         })
 
-    def _create_sale_order_line(self, sale_order, product, quantity, price_unit=0):
+    def _create_sale_order_line(self, sale_order, product, quantity, price_unit=0, product_uom=None):
         return self.env['sale.order.line'].create({
             'name': 'Sale order',
             'order_id': sale_order.id,
             'price_unit': price_unit,
             'product_id': product.id,
             'product_uom_qty': quantity,
+            'product_uom_id': (product_uom or self.uom).id,
         })
 
     def _create_product(self):
@@ -52,17 +50,6 @@ class TestSaleStockMargin(TestStockValuationCommon):
         })
         product_template.categ_id.property_cost_method = 'fifo'
         return product_template.product_variant_ids
-
-    def _setup_multicurrency(self):
-        usd = self.env.ref('base.USD')
-        self.company_currency = self.env.company.currency_id
-        self.other_currency = self.env.ref('base.EUR') if self.company_currency == usd else usd
-        date = fields.Date.today()
-        self.env['res.currency.rate'].create([
-            {'currency_id': self.company_currency.id, 'rate': 1, 'name': date},
-            {'currency_id': self.other_currency.id, 'rate': 2, 'name': date},
-        ])
-        return self.company_currency, self.other_currency
 
     #########
     # TESTS #
@@ -216,12 +203,11 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertEqual(order_line_2.purchase_price, 40, "Sales order line cost should be 40.00")
 
     def test_so_and_multicurrency(self):
-        _company_currency, other_currency = self._setup_multicurrency()
+        self._use_multi_currencies(rates=[(fields.Date.today(), 2)])
+        other_currency = self.other_currency
         so = self._create_sale_order()
-        so.pricelist_id = self.env['product.pricelist'].create({
-            'name': 'Super Pricelist',
-            'currency_id': other_currency.id,
-        })
+        self.pricelist.currency_id = other_currency
+        so.pricelist_id = self.pricelist
 
         product = self._create_product()
         product.standard_price = 100
@@ -286,13 +272,8 @@ class TestSaleStockMargin(TestStockValuationCommon):
         picking.action_confirm()
         picking.button_validate()
         self.pricelist.currency_id = new_company_currency.id
-        partner = self.env['res.partner'].create({'name': 'Super Partner'})
-        so = self.env['sale.order'].create({
-            'name': 'Sale order',
-            'partner_id': partner.id,
-            'partner_invoice_id': partner.id,
-            'pricelist_id': self.pricelist.id,
-        })
+        self.vendor.company_id = False
+        so = self._create_sale_order(partner=self.vendor)
         sol = self._create_sale_order_line(so, product, 1, price_unit=200)
 
         self.env.user.company_id = main_company.id
@@ -302,7 +283,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertEqual(sol.margin, 100)
 
     def test_purchase_price_changes(self):
-        self._setup_multicurrency()
+        self._use_multi_currencies(rates=[(fields.Date.today(), 2)])
         so = self._create_sale_order()
         product = self._create_product()
         product.categ_id.property_cost_method = 'standard'
@@ -368,16 +349,12 @@ class TestSaleStockMargin(TestStockValuationCommon):
         """ test that if product with standard cost method is added in delivery, the cost is computed."""
         product = self.product_standard
         product.write({
-                'standard_price': 20,
-                'list_price': 25,
-                'invoice_policy': 'order',
-            })
-        product2 = self.env['product.product'].create({
-            'name': 'product2',
-            'type': 'consu',
-            'is_storable': True,
-            'standard_price': 10,
-            'list_price': 20,
+            'standard_price': 20,
+            'list_price': 25,
+            'invoice_policy': 'order',
+        })
+        product2 = self.product
+        product2.write({
             'invoice_policy': 'order',
         })
         sale_order = self._create_sale_order()
@@ -412,7 +389,8 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'standard_price': 10,
             'list_price': 20,
             'invoice_policy': 'order',
-        })
+         })
+
         sale_order = self._create_sale_order()
         self._create_sale_order_line(sale_order, self.product, 10, self.product.list_price)
         sale_order.action_confirm()
@@ -451,12 +429,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
         second_delivery.move_ids.quantity = 1
         second_delivery.button_validate()
         self.assertEqual(second_delivery.move_ids.sale_line_id, sale_order.order_line - sale_order_line)
-        stock_picking_return = self.env['stock.return.picking'].create({
-            'picking_id': second_delivery.id,
-        })
-        stock_picking_return.product_return_moves.quantity = 1
-        return_picking = stock_picking_return._create_return()
-        return_picking.move_ids.quantity = 1
+        return_picking = self._make_return(second_delivery.move_ids, 1).picking_id
         return_picking.button_validate()
         self.assertEqual(return_picking.state, 'done')
 
@@ -466,20 +439,15 @@ class TestSaleStockMargin(TestStockValuationCommon):
         self.assertEqual(sale_order_line.purchase_price, 10)
 
     def test_avco_different_uom(self):
-        pack_of_6 = self.ref('uom.product_uom_pack_6')
+        pack_of_6 = self.uom_pack_of_6
         self.product_avco.write({
-                'standard_price': 1,
-                'list_price': 3,
-                'uom_ids': [pack_of_6],
-            })
-        sale_order = self._create_sale_order()
-        sale_order_line = self.env['sale.order.line'].create({
-            'name': 'Sale order',
-            'order_id': sale_order.id,
-            'product_id': self.product_avco.id,
-            'product_uom_qty': 1,
-            'product_uom_id': pack_of_6,
+            'standard_price': 1,
+            'list_price': 3,
+            'uom_ids': [Command.link(pack_of_6.id)],
         })
+        sale_order = self._create_sale_order()
+        sale_order_line = self._create_sale_order_line(sale_order, self.product_avco, 1, product_uom=pack_of_6)
+        sale_order_line.product_uom_id = pack_of_6
         sale_order.action_confirm()
         self.assertEqual(sale_order_line.margin, 12.0)
 
@@ -572,11 +540,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
             self._make_in_move(self.product_avco_auto, 2, 5)
             self.assertEqual(self.product_avco_auto.standard_price, 30, "standard_price for avco = (5 * 40 + 2 * 5) / (5 + 2) = 30: 1 delivered, 5 remaining + 2 added to stock")
             freeze.tick(delta=datetime.timedelta(seconds=2))
-            stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(active_id=delivery.id, active_model='stock.picking'))
-            stock_return_picking = stock_return_picking_form.save()
-            stock_return_picking.product_return_moves.quantity = 3.0
-            stock_return_picking_action = stock_return_picking.action_create_returns()
-            return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+            return_pick = self._make_return(move, 3).picking_id
             return_pick.button_validate()
             self.assertEqual(sol.product_uom_qty, 1)
             self.assertEqual(sol.qty_delivered, -2)
@@ -645,14 +609,10 @@ class TestSaleStockMargin(TestStockValuationCommon):
             'route_ids': [Command.link(dropship_route.id)]
         })
         # create and confirm SO and PO
-        so = self.env['sale.order'].create({
-            'partner_id': self.customer.id,
-            'order_line': [Command.create({
-                'product_id': self.product_fifo_auto.id,
-                'product_uom_qty': 1.0,
-            })],
-        })
+        so = self._create_sale_order()
+        sol = self._create_sale_order_line(so, self.product_fifo_auto, 1)
         so.action_confirm()
+
         po = self.env['purchase.order'].search([
             ('origin', '=', so.name),
             ('partner_id', '=', self.vendor.id),
@@ -661,9 +621,9 @@ class TestSaleStockMargin(TestStockValuationCommon):
 
         # untill dropship validation, purchase price of the sale order line is the product's standard price
         self.assertEqual(self.product_fifo_auto.standard_price, 10)
-        self.assertEqual(so.order_line.purchase_price, 10)
+        self.assertEqual(sol.purchase_price, 10)
 
         # after dropship validation, purchase price of the sale order line is the PO's unit cost
         so.picking_ids.button_validate()
         self.assertEqual(po.order_line.price_unit, 20)
-        self.assertEqual(so.order_line.purchase_price, 20)
+        self.assertEqual(sol.purchase_price, 20)
