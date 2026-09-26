@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="sale_stock_product_expiry_report_invoice_document" inherit_id="stock_account.stock_account_report_invoice_document">
+        <xpath expr="//table[@name='invoice_snln_table']//tbody//tr" position="replace">
+            <t groups="stock_account.group_lot_on_invoice">
+                <t t-set="lot_values" t-value="o._get_invoiced_lot_values()"/>
+                    <tr t-foreach="lot_values" t-as="snln_line">
+                        <td><t t-out="snln_line['product_name']">Bacon</t></td>
+                        <td class="text-end">
+                            <t t-out="snln_line['quantity']">6.00</t> <t t-out="snln_line['uom_name']" groups="uom.group_uom">units</t>
+                        </td>
+                        <td t-if="snln_line['lot_expiration_date'] and env.user.has_group('sale_stock_product_expiry.group_exp_date_on_invoice')" class="text-end">
+                            <span><t t-out="snln_line['lot_name']"/> - <t t-out="snln_line['lot_expiration_date']" t-options='{"widget": "date"}'/></span>
+                        </td>
+                        <td t-else="" class="text-end"><t t-out="snln_line['lot_name']"/></td>
+                    </tr>
+            </t>
+        </xpath>
+    </template>
+</odoo>
