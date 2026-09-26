@@ -1071,3 +1071,112 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         reversal_move.action_post()
         self.assertEqual(reversal_move.move_type, 'out_refund')
         self.assertIn('ref', so_dp_line.name)
+
+    def test_downpayment_discount_no_negative_vat(self):
+        """ Test that swapping the regular downpayment line with a "manually"
+            created one won't cause negative VAT/total on the final invoice.
+        """
+        tax_21 = self.create_tax(21)
+        downpayment_product = self.env['product.product'].create({
+            'name': 'Down Payment',
+            'type': 'service',
+            'invoice_policy': 'order',
+            'taxes_id': [Command.clear()],
+        })
+
+        main_product = self.company_data['product_service_delivery']
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': main_product.id,
+                'product_uom_qty': 50,
+                'price_unit': 2,
+                'tax_id': [Command.set(tax_21.ids)],
+            })],
+        })
+        so.action_confirm()
+
+        self.env['sale.advance.payment.inv'].create({
+            'advance_payment_method': 'percentage',
+            'amount': 75,
+            'sale_order_ids': [Command.link(so.id)],
+        }).create_invoices()
+        so.invoice_ids.action_post()
+
+        # Deliver first half
+        delivery_sol = so.order_line.filtered(lambda l: l.product_id == main_product)
+        delivery_sol.qty_delivered = 25
+
+        # Add a manual down payment line: qty=-1, price=50, tax=21%
+        self.env['sale.order.line'].create({
+            'order_id': so.id,
+            'product_id': downpayment_product.id,
+            'product_uom_qty': -1,
+            'price_unit': 50,
+            'tax_id': [Command.set(tax_21.ids)],
+        })
+
+        # Set 66.67% discount on the regular downpayment line
+        downpayment_sol = so.order_line.filtered(
+            lambda l: l.is_downpayment and not l.display_type
+        )
+        downpayment_sol.discount = 66.67
+
+        # On the regular invoice remove the regular down payment deduction then confirm
+        invoice = so._create_invoices(final=True)
+        downpayment_lines = invoice.line_ids.filtered(
+            lambda l: l.sale_line_ids.filtered('is_downpayment')
+        )
+        self.assertTrue(downpayment_lines)
+        downpayment_lines.unlink()
+        invoice.action_post()
+
+        # Deliver remaining half and invoice
+        delivery_sol.qty_delivered = 50
+        invoice_2 = so._create_invoices(final=True)
+        self.assertEqual(invoice_2.amount_tax, 5.25, "VAT amount should not be negative")
+        self.assertEqual(invoice_2.amount_total, 30.25, "invoice total should not be negative")
+
+    def test_downpayment_discount_before_invoicing(self):
+        """ Test a down payment discounted before it is invoiced keeps matching
+            discounts on the SO line and on its invoice line
+        """
+        tax_21 = self.create_tax(21)
+
+        main_product = self.company_data['product_service_delivery']
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': main_product.id,
+                'product_uom_qty': 50,
+                'price_unit': 2,
+                'tax_id': [Command.set(tax_21.ids)],
+            })],
+        })
+        so.action_confirm()
+
+        self.env['sale.advance.payment.inv'].create({
+            'advance_payment_method': 'percentage',
+            'amount': 75,
+            'sale_order_ids': [Command.link(so.id)],
+        }).create_invoices()
+
+        downpayment_sol = so.order_line.filtered(
+            lambda l: l.is_downpayment and not l.display_type
+        )
+        downpayment_sol.discount = 66.67
+        down_payment_invoice = so.invoice_ids
+        down_payment_invoice.invoice_line_ids.filtered('is_downpayment').discount = 66.67
+        down_payment_invoice.action_post()
+
+        delivery_sol = so.order_line.filtered(lambda l: l.product_id == main_product)
+        delivery_sol.qty_delivered = 25
+        invoice = so._create_invoices(final=True)
+        invoice.action_post()
+        self.assertEqual(invoice.amount_tax, 5.25)
+        self.assertEqual(invoice.amount_total, 30.25)
+
+        delivery_sol.qty_delivered = 50
+        invoice_2 = so._create_invoices(final=True)
+        self.assertEqual(invoice_2.amount_tax, 10.5)
+        self.assertEqual(invoice_2.amount_total, 60.5)
