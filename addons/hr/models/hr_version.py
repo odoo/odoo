@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import date
+from datetime import date, datetime, time, timedelta
 from dateutil.relativedelta import relativedelta
 from babel.dates import format_date, get_date_format
 from zoneinfo import ZoneInfo
@@ -723,7 +723,7 @@ class HrVersion(models.Model):
             for tz, versions in version_per_tz.items()
         }
 
-    def _get_field_block_start_date(self, field_name):
+    def _get_field_block_start_date(self, field_name, seniority_lost_period_months=None, seniority_lost_period_days=None):
         """
         Return the contract_date_start of the earliest contiguous version
         that shares the same value for `field_name` as the current version.
@@ -751,9 +751,69 @@ class HrVersion(models.Model):
             prev = versions[j]
             if prev[field_name] != current_value:
                 break
+            if prev._is_gap_too_long(
+                prev.contract_date_end,
+                start_version.contract_date_start,
+                seniority_lost_period_months=seniority_lost_period_months,
+                seniority_lost_period_days=seniority_lost_period_days,
+            ):
+                break
             start_version = prev
 
         return start_version.contract_date_start
+
+    def _is_gap_too_long(self, date_from, date_to, seniority_lost_period_months=None, seniority_lost_period_days=None):
+        """
+        Returns True if the gap between `date_from` (a contract end date) and
+        `date_to` (the next contract start date) exceeds the configured
+        tolerance, i.e. continuity is broken.
+
+        - `seniority_lost_period_days`: max tolerated *working* days between
+        the two contracts (e.g. CP302).
+        - `seniority_lost_period_months`: max tolerated calendar months
+        between the two contracts (e.g. CP200).
+        If neither is provided, any gap at all breaks continuity.
+        """
+        if not date_from or not date_to or date_to <= date_from:
+            return False
+
+        if seniority_lost_period_days is not None:
+            return self._get_working_days_gap(date_from, date_to) > seniority_lost_period_days
+
+        if seniority_lost_period_months is not None:
+            gap = relativedelta(date_to, date_from)
+            gap_months = gap.years * 12 + gap.months
+            return gap_months > seniority_lost_period_months or (
+                gap_months == seniority_lost_period_months and gap.days > 0
+            )
+
+        return True
+
+    def _get_working_days_gap(self, date_from, date_to):
+        """
+        Returns the number of working days strictly between `date_from`
+        (exclusive) and `date_to` (exclusive), based on the working schedule.
+
+        Used to measure how many working days separate two consecutive
+        contracts, so that gap can be compared against a configurable
+        tolerance (e.g. l10n_be_seniority_lost_period).
+        """
+        if not date_from or not date_to or date_to - date_from <= timedelta(days=1):
+            return 0
+
+        calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+        if not calendar:
+            return (date_to - date_from).days - 1
+
+        working_days = 0
+        current = date_from + timedelta(days=1)
+        while current < date_to:
+            day_start = datetime.combine(current, time.min)
+            day_end = datetime.combine(current + timedelta(days=1), time.min)
+            if calendar.get_work_hours_count(day_start, day_end) > 0:
+                working_days += 1
+            current += timedelta(days=1)
+        return working_days
 
     def action_open_version(self):
         self.ensure_one()

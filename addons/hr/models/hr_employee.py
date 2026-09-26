@@ -614,7 +614,7 @@ class HrEmployee(models.Model):
         self.ensure_one()
         return self.version_ids.filtered(lambda c: c.date_start <= date_limit)
 
-    def _get_last_consecutive_versions(self, date_limit=date.max):
+    def _get_last_consecutive_versions(self, date_limit=date.max, seniority_lost_period_months=None, seniority_lost_period_days=None):
         """
         Returns the latest range of consecutive versions of self that is before
         the passed `date_limit` date.
@@ -623,6 +623,12 @@ class HrEmployee(models.Model):
             - 3 consecutive versions from 01/01/2025 to 31/07/2025
             - 2 consecutive versions from 01/08/2025 to 20/11/2025
             Then this function returns the two last versions
+
+        By default two versions are consecutive when no work hours separate them,
+        i.e. the slightest interruption breaks the range. When a tolerated
+        interruption is given (`seniority_lost_period_months` or
+        `seniority_lost_period_days`, see `hr.version._is_gap_too_long`), only an
+        interruption longer than that one breaks the range.
         """
         self.ensure_one()
         if not self.env.su and not self.env.user.has_group("hr.group_hr_user"):
@@ -637,18 +643,28 @@ class HrEmployee(models.Model):
             calendar_id = version_from.resource_calendar_id
             if not calendar_id:
                 return False
-            elif version_from.date_end and version_from.date_end + relativedelta(days=1) == version_to.date_start:
+            if version_from.date_end and version_from.date_end + relativedelta(days=1) == version_to.date_start:
                 # fast path: back-to-back versions cannot have work hours between them.
                 # We can bypass the expensive calendar lookup
                 return False
             return bool(calendar_id.get_work_hours_count(date_from, date_to, compute_leaves=False))
+
+        def is_interrupted(version_from, version_to):
+            if seniority_lost_period_months is not None or seniority_lost_period_days is not None:
+                return version_from._is_gap_too_long(
+                    version_from.date_end,
+                    version_to.date_start,
+                    seniority_lost_period_months=seniority_lost_period_months,
+                    seniority_lost_period_days=seniority_lost_period_days,
+                )
+            return has_work_hours_between_versions(version_from, version_to)
 
         versions = self._get_first_versions(date_limit).sorted('date_start')
         # index of the earliest consecutive version
         first_version_index = len(versions) - 1
 
         while first_version_index > 0:
-            if has_work_hours_between_versions(versions[first_version_index - 1], versions[first_version_index]):
+            if is_interrupted(versions[first_version_index - 1], versions[first_version_index]):
                 break  # version_before is not consecutive with first_version
             first_version_index -= 1
         return versions[first_version_index:]
@@ -657,8 +673,12 @@ class HrEmployee(models.Model):
         versions = self._get_last_consecutive_versions(date_limit)
         return min(versions.mapped('date_start')) if versions else False
 
-    def _get_first_contract_date(self, date_limit=date.max):
-        versions = self._get_last_consecutive_versions(date_limit).filtered(lambda x: x.contract_date_start)
+    def _get_first_contract_date(self, date_limit=date.max, seniority_lost_period_months=None, seniority_lost_period_days=None):
+        versions = self._get_last_consecutive_versions(
+            date_limit,
+            seniority_lost_period_months=seniority_lost_period_months,
+            seniority_lost_period_days=seniority_lost_period_days,
+        ).filtered(lambda x: x.contract_date_start)
         return min(versions.mapped('contract_date_start')) if versions else False
 
     @api.depends('name')

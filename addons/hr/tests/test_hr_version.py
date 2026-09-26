@@ -891,3 +891,72 @@ class TestHrVersion(TestHrCommon):
         self.assertEqual(versions, v1)
         versions = self.env['hr.version'].search([('employee_id', '=', employee.id), ('date_end', '>', '2026-06-01')])
         self.assertEqual(versions, v2)
+
+
+@tagged('post_install', '-at_install')
+class TestHrVersionSeniorityGap(TestHrCommon):
+    """ Tests for the contract interruption tolerance used to decide whether
+    seniority is kept between two contracts (see `_is_gap_too_long`). """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.job = cls.env['hr.job'].create({'name': 'Developer'})
+        cls.gap_employee = cls.env['hr.employee'].create({
+            'name': 'Gap Employee',
+            'date_version': '2026-01-01',
+            'contract_date_start': '2026-01-01',
+            'contract_date_end': '2026-01-31',
+            'job_id': cls.job.id,
+        })
+
+    def test_is_gap_too_long_months(self):
+        """ CP200 like configuration: up to one month of interruption is tolerated. """
+        version = self.gap_employee.version_id
+        # 2 weeks
+        self.assertFalse(version._is_gap_too_long(
+            date(2026, 1, 31), date(2026, 2, 15), seniority_lost_period_months=1))
+        # exactly one month
+        self.assertFalse(version._is_gap_too_long(
+            date(2026, 1, 31), date(2026, 2, 28), seniority_lost_period_months=1))
+        # one month and one day
+        self.assertTrue(version._is_gap_too_long(
+            date(2026, 1, 31), date(2026, 3, 1), seniority_lost_period_months=1))
+        # three months
+        self.assertTrue(version._is_gap_too_long(
+            date(2026, 1, 31), date(2026, 4, 30), seniority_lost_period_months=1))
+
+    def test_is_gap_too_long_working_days(self):
+        """ CP302 like configuration: no working day of interruption is tolerated. """
+        version = self.gap_employee.version_id
+        # 2026-01-30 is a Friday, 2026-02-02 a Monday: only the week end in between
+        self.assertFalse(version._is_gap_too_long(
+            date(2026, 1, 30), date(2026, 2, 2), seniority_lost_period_days=0),
+            "A week end between two contracts holds no working day.")
+        # one full week in between
+        self.assertTrue(version._is_gap_too_long(
+            date(2026, 1, 30), date(2026, 2, 9), seniority_lost_period_days=0))
+
+    def test_field_block_start_date_broken_by_gap(self):
+        """ The block of versions sharing a field value stops at a too long interruption. """
+        # 3 months of interruption, then 2 weeks
+        self.gap_employee.create_version({
+            'date_version': '2026-05-01',
+            'contract_date_start': '2026-05-01',
+            'contract_date_end': '2026-05-31',
+            'job_id': self.job.id,
+        })
+        last_version = self.gap_employee.create_version({
+            'date_version': '2026-06-15',
+            'contract_date_start': '2026-06-15',
+            'job_id': self.job.id,
+        })
+
+        self.assertEqual(
+            last_version._get_field_block_start_date('job_id', seniority_lost_period_months=1),
+            date(2026, 5, 1),
+            "The 3 months interruption resets the block, the 2 weeks one does not.")
+        self.assertEqual(
+            last_version._get_field_block_start_date('job_id', seniority_lost_period_months=12),
+            date(2026, 1, 1),
+            "With a large tolerance the whole history is a single block.")
