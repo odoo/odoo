@@ -117,6 +117,7 @@ class AccountMove(models.Model):
         }
 
     def button_request_cancel(self):
+        res = super().button_request_cancel()
         if self._l10n_in_edi_need_cancel_request():
             if self.l10n_in_edi_cancel_remarks and self.l10n_in_edi_cancel_reason:
                 return self._l10n_in_edi_cancel_invoice()
@@ -136,7 +137,7 @@ class AccountMove(models.Model):
                 'l10n_in_edi_error': False,
             })
             return True
-        return super().button_request_cancel()
+        return res
 
     def action_l10n_in_edi_force_cancel(self):
         self.with_context(l10n_in_edi_force_cancel=True).button_request_cancel()
