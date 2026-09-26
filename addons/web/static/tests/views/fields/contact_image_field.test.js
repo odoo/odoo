@@ -16,6 +16,7 @@ defineModels([Partner]);
 
 test("ContactImageField renders a placeholder when no value is present", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,

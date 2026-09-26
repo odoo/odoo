@@ -170,6 +170,7 @@ test("Set size (width and height) in node option", async () => {
     onRpc("/web/sign/get_fonts/", () => ({}));
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,

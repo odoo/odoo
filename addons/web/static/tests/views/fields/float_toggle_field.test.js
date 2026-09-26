@@ -34,6 +34,7 @@ test("basic flow in form view", async () => {
         expect.step(args[1].float_field.toString());
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -76,6 +77,7 @@ test("basic flow in form view", async () => {
 
 test("kanban view (readonly) with option force_button", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -101,6 +103,7 @@ test("kanban view (readonly) with option force_button", async () => {
 
 test("with 'hide_trailing_zeros' option", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,

@@ -100,6 +100,7 @@ beforeEach(() => {
 test.tags("desktop");
 test("change setting on nav bar click in base settings on desktop", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.config.settings",
         arch: /* xml */ `
@@ -236,6 +237,7 @@ test("change setting on nav bar click in base settings on desktop", async () => 
 
 test("Search setting on multiple apps", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.config.settings",
         arch: /* xml */ `
@@ -280,6 +282,7 @@ test("Search setting on multiple apps", async () => {
 test.tags("mobile");
 test("change setting on nav bar click in base settings on mobile", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.config.settings",
         arch: /* xml */ `
@@ -595,6 +598,7 @@ test("don't show noContentHelper if no search is done", async () => {
 
 test("hide / show setting tips properly", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.config.settings",
         arch: /* xml */ `
@@ -892,6 +896,7 @@ test("Auto save: don't save on closing tab/browser", async () => {
 test("Auto save: don't save on visibility change", async () => {
     onRpc("web_save", () => expect.step("should not call web_save"));
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.config.settings",
         arch: /* xml */ `
@@ -922,6 +927,7 @@ test("Auto save: don't save on visibility change", async () => {
 
 test("correctly copy attributes to compiled labels", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.config.settings",
         arch: /* xml */ `
@@ -1979,6 +1985,7 @@ test("standalone field labels with string inside a settings page", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.config.settings",
         arch: /* xml */ `
@@ -2017,6 +2024,7 @@ test("settings form doesn't autofocus", async () => {
     getFixture().addEventListener("focusin", onFocusIn);
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.config.settings",
         arch: /* xml */ `
@@ -2404,6 +2412,7 @@ test("Don't cache settings data", async () => {
 
 test("settings search is accent-insensitive", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.config.settings",
         arch: /* xml */ `
@@ -2433,6 +2442,7 @@ test("settings search is accent-insensitive", async () => {
 
 test("settings search does not highlight escaped characters when highlighting the searched text", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "res.config.settings",
         arch: /* xml */ `

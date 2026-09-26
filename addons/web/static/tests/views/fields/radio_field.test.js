@@ -58,6 +58,7 @@ defineModels([Partner, Product]);
 
 test("radio field on a many2one in a new record", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `<form><field name="product_id" widget="radio"/></form>`,
@@ -73,6 +74,7 @@ test("[Offline] radio field on a many2one", async () => {
     Partner._records[0].product_id = 37;
     onRpc("product", "web_search_read", () => new Response("", { status: 502 }));
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -108,6 +110,7 @@ test("radio field change value by onchange", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -132,6 +135,7 @@ test("radio field change value by onchange", async () => {
 
 test("radio field on a selection in a new record", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `<form><field name="color" widget="radio"/></form>`,
@@ -158,6 +162,7 @@ test("two radio field with same selection", async () => {
     Partner._records[0].color_2 = "black";
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -189,6 +194,7 @@ test("radio field has o_horizontal or o_vertical class", async () => {
     Partner._fields.color2 = Partner._fields.color;
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -229,6 +235,7 @@ test("radio field with numerical keys encoded as strings", async () => {
     onRpc("partner", "web_save", ({ args }) => expect.step(args[1].selection));
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -249,6 +256,7 @@ test("radio field with numerical keys encoded as strings", async () => {
 
 test("radio field is empty", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,

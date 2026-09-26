@@ -21,6 +21,7 @@ onRpc("has_group", () => true);
 test("in form view", async () => {
     Contact._records = [{ id: 1, email: "john.doe@odoo.com" }];
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "contact",
         resId: 1,
@@ -40,6 +41,7 @@ test("in editable list view", async () => {
         { id: 2, email: "jane.doe@odoo.com" },
     ];
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "contact",
         arch: '<list editable="bottom"><field name="email" widget="email"/></list>',
@@ -68,6 +70,7 @@ test("in editable list view", async () => {
 
 test("with empty value", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "contact",
         arch: `<form><field name="email" widget="email" placeholder="Placeholder"/></form>`,
@@ -77,6 +80,7 @@ test("with empty value", async () => {
 
 test("with placeholder", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "contact",
         arch: `<form><field name="email" widget="email" placeholder="Placeholder"/></form>`,
@@ -89,6 +93,7 @@ test("placeholder_field shows as placeholder", async () => {
         default: "My Placeholder",
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "contact",
         arch: `<form>
@@ -101,6 +106,7 @@ test("placeholder_field shows as placeholder", async () => {
 
 test("trim user value", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "contact",
         arch: '<form><field name="email" widget="email"/></form>',
@@ -119,6 +125,7 @@ test("onchange scenario with readonly", async () => {
     });
     Contact._records = [{ id: 1, email: "default@domain.ext" }];
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "contact",
         resId: 1,

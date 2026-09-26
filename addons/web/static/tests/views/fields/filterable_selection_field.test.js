@@ -32,6 +32,7 @@ defineModels([Program]);
 
 test(`FilterableSelectionField test whitelist`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "program",
         type: "form",
         arch: `
@@ -48,6 +49,7 @@ test(`FilterableSelectionField test whitelist`, async () => {
 
 test(`FilterableSelectionField test blacklist`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "program",
         type: "form",
         arch: `
@@ -65,6 +67,7 @@ test(`FilterableSelectionField test blacklist`, async () => {
 test(`FilterableSelectionField test with invalid value`, async () => {
     // The field should still display the current value in the list
     await mountView({
+        noMainContainer: true,
         resModel: "program",
         type: "form",
         arch: `
@@ -85,6 +88,7 @@ test(`FilterableSelectionField test with invalid value`, async () => {
 
 test(`FilterableSelectionField test whitelist_fname`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "program",
         type: "form",
         arch: `

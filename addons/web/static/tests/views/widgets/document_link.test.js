@@ -17,6 +17,7 @@ defineModels([Partner]);
 
 test("documentation_link: default label and icon", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -32,6 +33,7 @@ test("documentation_link: default label and icon", async () => {
 
 test("documentationLink: add alert-link class", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -55,6 +57,7 @@ test("DocumentationLink Component: add alert-link class", async () => {
 
 test("documentation_link: given label", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -69,6 +72,7 @@ test("documentation_link: given label", async () => {
 
 test("documentation_link: given icon", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -83,6 +87,7 @@ test("documentation_link: given icon", async () => {
 
 test("documentation_link: given label and icon", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -97,6 +102,7 @@ test("documentation_link: given label and icon", async () => {
 
 test("documentation_link: relative path", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -113,6 +119,7 @@ test("documentation_link: relative path", async () => {
 
 test("documentation_link: absolute path (http)", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -126,6 +133,7 @@ test("documentation_link: absolute path (http)", async () => {
 
 test("documentation_link: absolute path (https)", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `

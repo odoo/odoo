@@ -56,6 +56,7 @@ test("ProgressBarField: max_value should update", async () => {
         );
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -86,6 +87,7 @@ test("ProgressBarField: value should update in edit mode when typing in input", 
         expect(args[1].int_field).toBe(69);
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -124,6 +126,7 @@ test("ProgressBarField: value should update in edit mode when typing in input wi
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -156,6 +159,7 @@ test("ProgressBarField: Standard readonly mode is readonly", async () => {
 
     onRpc(({ method }) => expect.step(method));
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -182,6 +186,7 @@ test("ProgressBarField: Standard readonly mode is readonly", async () => {
 test("ProgressBarField: clicking progress bar focuses input when editable", async () => {
     Partner._records[0].int_field = 50;
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -212,6 +217,7 @@ test("ProgressBarField: force readonly in kanban", async (assert) => {
         throw new Error("Not supposed to write");
     });
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: /* xml */ `
@@ -241,6 +247,7 @@ test("ProgressBarField: write float instead of int works, in locale", async () =
         expect(args[1].int_field).toBe(1037);
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -271,6 +278,7 @@ test("ProgressBarField: write gibberish instead of int throws warning", async ()
     Partner._records[0].int_field = 99;
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -301,6 +309,7 @@ test("ProgressBarField: write gibberish instead of int throws warning", async ()
 test("ProgressBarField: color is correctly set when value > max value", async () => {
     Partner._records[0].float_field = 101;
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -317,6 +326,7 @@ test("ProgressBarField: color is correctly set when value > max value", async ()
 test("ProgressBarField: decoration-success applies green when condition is true", async () => {
     Partner._records[0].float_field = 80;
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -333,6 +343,7 @@ test("ProgressBarField: decoration-success applies green when condition is true"
 test("ProgressBarField: decoration-danger applies red when condition is true", async () => {
     Partner._records[0].float_field = 25;
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -349,6 +360,7 @@ test("ProgressBarField: decoration-danger applies red when condition is true", a
 test("ProgressBarField: decoration-warning applies warning color", async () => {
     Partner._records[0].float_field = 55;
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -365,6 +377,7 @@ test("ProgressBarField: decoration-warning applies warning color", async () => {
 test("ProgressBarField: multiple decorations - first matching wins", async () => {
     Partner._records[0].float_field = 90;
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -384,6 +397,7 @@ test("ProgressBarField: multiple decorations - first matching wins", async () =>
 test("ProgressBarField: no decoration applied when no condition matches", async () => {
     Partner._records[0].float_field = 60;
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -403,6 +417,7 @@ test("ProgressBarField: decoration with field comparison", async () => {
     Partner._records[0].float_field = 75;
     Partner._records[0].int_field = 50;
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `

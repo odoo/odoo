@@ -21,6 +21,7 @@ defineModels([Partner]);
 
 test("PercentPieField in form view with value < 50%", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -52,6 +53,7 @@ test("PercentPieField in form view with value < 50%", async () => {
 
 test("PercentPieField in form view with value > 50%", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -82,6 +84,7 @@ test("PercentPieField in form view with value > 50%", async () => {
 
 test("PercentPieField in form view with float value", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -113,6 +116,7 @@ test("PercentPieField in form view with float value", async () => {
 
 test("hide the string when the PercentPieField widget is used in the view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -133,6 +137,7 @@ test("hide the string when the PercentPieField widget is used in the view", asyn
 test.tags("desktop");
 test("show the string when the PercentPieField widget is used in a button with the class oe_stat_button", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `

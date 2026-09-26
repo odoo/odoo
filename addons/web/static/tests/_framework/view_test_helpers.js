@@ -33,6 +33,7 @@ import { isSmall } from "./ui_test_helpers";
  *  archs?: Record<string, string>
  *  config?: Config;
  *  env?: import("@web/env").OdooEnv;
+ *  noMainContainer?: boolean;
  *  resId?: number;
  *  [key: string]: any;
  * }} MountViewParams
@@ -239,6 +240,7 @@ export async function mountView(params) {
     getFixture().appendChild(actionManagerEl);
     return mountWithCleanup(View, {
         componentEnv: { config: params.config },
+        noMainContainer: params.noMainContainer,
         props: parseViewProps(params),
         target: actionManagerEl,
     });

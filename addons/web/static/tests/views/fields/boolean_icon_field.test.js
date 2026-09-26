@@ -14,6 +14,7 @@ defineModels([Partner]);
 
 test("BooleanIcon field in form view", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         resId: 1,
         type: "form",

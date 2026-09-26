@@ -32,6 +32,7 @@ defineModels([Partner, User]);
 
 test("FavoriteField in kanban view", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         domain: [["id", "=", 1]],
         type: "kanban",
@@ -73,6 +74,7 @@ test("FavoriteField saves changes by default", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         domain: [["id", "=", 1]],
         type: "kanban",
@@ -102,6 +104,7 @@ test("FavoriteField saves changes by default", async () => {
 
 test("FavoriteField in form view", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         resId: 1,
         type: "form",
@@ -141,6 +144,7 @@ test("FavoriteField in editable list view without label", async () => {
     onRpc("has_group", () => true);
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "list",
         arch: `
@@ -186,6 +190,7 @@ test("FavoriteField in list has a fixed width if no label", async () => {
     Partner._fields.char = fields.Char();
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "list",
         arch: `
@@ -209,6 +214,7 @@ test("FavoriteField in kanban view with readonly attribute", async () => {
         expect.step("should not save");
     });
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         domain: [["id", "=", 1]],
         type: "kanban",

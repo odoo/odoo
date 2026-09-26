@@ -618,6 +618,7 @@ test("save on closing tab/browser (not dirty)", async () => {
     onRpc("partner", "web_save", () => expect.step("save"));
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -640,6 +641,7 @@ test("save on closing tab/browser (new record, not dirty)", async () => {
     onRpc("partner", "web_save", () => expect.step("save"));
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -667,6 +669,7 @@ test("save on closing tab/browser (not dirty but trailing spaces)", async () => 
     onRpc(({ method }) => expect.step(method));
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `<form><field name="expertise"/></form>`,

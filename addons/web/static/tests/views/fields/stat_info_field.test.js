@@ -18,6 +18,7 @@ test("StatInfoField formats decimal precision", async () => {
     // when asked to round a number to 2 decimals, as such is the behaviour of floats.
     // we check that even in that eventuality, only two decimals are displayed
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -44,6 +45,7 @@ test("StatInfoField formats decimal precision", async () => {
 
 test("StatInfoField with 'hide_trailing_zeros' option", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -63,6 +65,7 @@ test("StatInfoField with 'hide_trailing_zeros' option", async () => {
 
 test("StatInfoField widget on a chart fields", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -81,6 +84,7 @@ test("StatInfoField widget on a chart fields", async () => {
 test("StatInfoField widget on a char field (unset value)", async () => {
     Partner._records = [{ id: 1, foo: "" }];
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -100,6 +104,7 @@ test("StatInfoField widget on a one2many field (one record)", async () => {
     Partner._fields.child_ids = fields.One2many({ string: "one2many field", relation: "partner" });
     Partner._records.push({ id: 2, foo: "plop", child_ids: [1] });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,
@@ -121,6 +126,7 @@ test("StatInfoField widget on a one2many field (multiple records)", async () => 
     Partner._records.push({ id: 4, foo: "plop4" });
     Partner._records.push({ id: 2, foo: "plop", child_ids: [1, 3, 4] });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,
@@ -142,6 +148,7 @@ test("StatInfoField widget on a many2one field", async () => {
     Partner._records[0].name = "Parent";
     Partner._records.push({ id: 2, name: "child", parent_id: 1 });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,
@@ -160,6 +167,7 @@ test("StatInfoField widget on a many2one field", async () => {
 test.tags("desktop");
 test("StatInfoField in form view on desktop", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -188,6 +196,7 @@ test("StatInfoField in form view on desktop", async () => {
 test.tags("mobile");
 test("StatInfoField in form view on mobile", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -217,6 +226,7 @@ test("StatInfoField in form view on mobile", async () => {
 test.tags("desktop");
 test("StatInfoField in form view with specific label_field on desktop", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -250,6 +260,7 @@ test("StatInfoField in form view with specific label_field on desktop", async ()
 test.tags("mobile");
 test("StatInfoField in form view with specific label_field on mobile", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -284,6 +295,7 @@ test("StatInfoField in form view with specific label_field on mobile", async () 
 test.tags("desktop");
 test("StatInfoField in form view with no label on desktop", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -313,6 +325,7 @@ test("StatInfoField in form view with no label on desktop", async () => {
 test.tags("mobile");
 test("StatInfoField in form view with no label on mobile", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,

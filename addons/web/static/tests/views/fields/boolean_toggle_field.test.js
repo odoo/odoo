@@ -13,6 +13,7 @@ defineModels([Partner]);
 
 test("use BooleanToggleField in form view", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         resId: 1,
         type: "form",
@@ -30,6 +31,7 @@ test("use BooleanToggleField in form view", async () => {
 
 test("BooleanToggleField is disabled with a readonly attribute", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         resId: 1,
         type: "form",
@@ -44,6 +46,7 @@ test("BooleanToggleField is disabled if readonly in editable list", async () => 
 
     onRpc("has_group", () => true);
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "list",
         arch: `

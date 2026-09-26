@@ -451,6 +451,7 @@ test("many2ones in form views with show_address", async () => {
         }
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -1164,6 +1165,7 @@ test("many2one in edit mode", async () => {
 
 test("many2one in non edit mode (with value)", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -1842,6 +1844,7 @@ test("list in form: create with one2many with many2one", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -1958,6 +1961,7 @@ test("list in form: read with unique ids (default_get)", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -1987,6 +1991,7 @@ test("list in form: show name of many2one fields in multi-page (default_get)", a
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -2253,6 +2258,7 @@ test("list in form: default_get with x2many create and onchange", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `

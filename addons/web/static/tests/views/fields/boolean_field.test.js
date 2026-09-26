@@ -26,6 +26,7 @@ defineModels([Partner]);
 
 test("boolean field in form view", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         resId: 1,
         type: "form",
@@ -82,6 +83,7 @@ test("boolean field in editable list view", async () => {
     onRpc("has_group", () => true);
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "list",
         arch: `<list editable="bottom"><field name="bar"/></list>`,
@@ -132,6 +134,7 @@ test("boolean field in editable list view", async () => {
 
 test("readonly boolean field", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         resId: 1,
         type: "form",
@@ -152,6 +155,7 @@ test("onchange return value before toggle checkbox", async () => {
     };
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         resId: 1,
         type: "form",
@@ -168,6 +172,7 @@ test("onchange return value before toggle checkbox", async () => {
 test.tags("desktop");
 test("Should not display as boolean toggle on desktop", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         resId: 1,
         type: "form",
@@ -179,6 +184,7 @@ test("Should not display as boolean toggle on desktop", async () => {
 test.tags("mobile");
 test("Display as boolean toggle on mobile", async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         resId: 1,
         type: "form",
