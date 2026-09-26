@@ -3,6 +3,8 @@ access_pos_printer_manager,pos.printer.manager,pos.printer,point_of_sale.group_p
 access_pos_printer,pos.printer.user,pos.printer,point_of_sale.group_pos_user,r,
 access_pos_order,pos.order,pos.order,point_of_sale.group_pos_user,crud,
 rule_pos_multi_company,Point Of Sale Order,pos.order,,crud,"[('company_id', 'in', company_ids)]"
+pos_order_rule_portal,Portal Personal POS Orders,pos.order,base.group_portal,r,"[('partner_id','child_of',[user.commercial_partner_id.id])]"
+pos_order_line_rule_portal,Portal POS Orders Line,pos.order.line,base.group_portal,r,"[('order_id', 'access', 'read')]"
 access_pos_order_line,pos.order.line,pos.order.line,point_of_sale.group_pos_user,crud,
 rule_pos_order_line_multi_company,Point Of Sale Order Line,pos.order.line,,crud,"[('company_id', 'in', company_ids)]"
 access_report_pos_order,report.pos.order,report.pos.order,point_of_sale.group_pos_user,r,
