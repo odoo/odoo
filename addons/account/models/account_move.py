@@ -4323,6 +4323,11 @@ class AccountMove(models.Model):
             values.update({'invoice_date_due': values['date'] + (self.invoice_date_due - self.date)})
         return values
 
+    def _get_vals_to_copy_to_next_move(self):
+        """Return a dict containing value to copy to the next move created from a subscription."""
+        # TO OVERRIDE
+        return {}
+
     # -------------------------------------------------------------------------
     # EDI
     # -------------------------------------------------------------------------
