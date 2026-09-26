@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 SCRIPT_EXTENSIONS = ('js',)
-STYLE_EXTENSIONS = ('css', 'scss', 'sass', 'less')
+STYLE_EXTENSIONS = ('css', 'scss', 'sass')
 TEMPLATE_EXTENSIONS = ('xml',)
 FONT_EXTENSIONS = ('woff', 'woff2')
 BINARY_EXTENSIONS = FONT_EXTENSIONS
