@@ -143,6 +143,11 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             content: "check if is Bar Manager group",
         },
         {
+            trigger: 'button[name="user_ids"]',
+            content: "open the Users tab",
+            run: "click",
+        },
+        {
             trigger: '.o_field_many2many[name="user_ids"] .o_data_cell:contains("Marc Demo")',
             content: "check if demo user has this group",
         },

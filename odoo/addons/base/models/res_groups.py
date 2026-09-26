@@ -31,8 +31,20 @@ class ResGroups(models.Model):
     access_count = fields.Integer(
         compute="_compute_access_count"
     )
+    all_access_count = fields.Integer(
+        help='Number of access rules of this group and all the groups it implies',
+        compute="_compute_all_access_count",
+    )
     menu_access = fields.Many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', string='Access Menu')
+    all_menu_count = fields.Integer(
+        help='Number of menus accessible to this group and all the groups it implies',
+        compute='_compute_all_menu_count',
+    )
     view_access = fields.Many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', string='Views')
+    all_view_count = fields.Integer(
+        help='Number of views accessible to this group and all the groups it implies',
+        compute='_compute_all_view_count',
+    )
     comment = fields.Text(string='Notes', translate=True)
     full_name = fields.Char(compute='_compute_full_name', string='Group Name', search='_search_full_name')
     share = fields.Boolean(string='Share Group',
@@ -79,6 +91,10 @@ class ResGroups(models.Model):
     all_implied_ids = fields.Many2many('res.groups', string='Transitively Implied Groups', recursive=True,
         compute='_compute_all_implied_ids', compute_sudo=True, search='_search_all_implied_ids',
         help="The group itself with all its implied groups.")
+    all_implied_count = fields.Integer(
+        help='Number of groups implied by this group, directly or indirectly',
+        compute='_compute_all_implied_count',
+    )
     implied_by_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'hid', 'gid',
         string='Implying Groups', help="Users in implying groups are implicitly part of the current group")
     implied_by_count = fields.Integer(compute="_compute_implied_by_count")
@@ -353,6 +369,11 @@ class ResGroups(models.Model):
         ids = [*value, *group_definitions.get_subset_ids(value)]
         return [('id', operator, ids)]
 
+    @api.depends('all_implied_ids')
+    def _compute_all_implied_count(self):
+        for group in self:
+            group.all_implied_count = len(group.all_implied_ids - group)
+
     @api.depends('implied_by_ids')
     def _compute_implied_by_count(self):
         for group in self:
@@ -584,6 +605,21 @@ class ResGroups(models.Model):
         for group in self:
             group.access_count = len(group.access_ids)
 
+    @api.depends('all_implied_ids.access_ids')
+    def _compute_all_access_count(self):
+        for group in self:
+            group.all_access_count = len(group.all_implied_ids.access_ids)
+
+    @api.depends('all_implied_ids.menu_access')
+    def _compute_all_menu_count(self):
+        for group in self:
+            group.all_menu_count = len(group.all_implied_ids.menu_access)
+
+    @api.depends('all_implied_ids.view_access')
+    def _compute_all_view_count(self):
+        for group in self:
+            group.all_view_count = len(group.all_implied_ids.view_access)
+
     def action_show_all_users(self):
         self.ensure_one()
         return {
@@ -624,4 +660,44 @@ class ResGroups(models.Model):
             'res_model': 'ir.access',
             'views': [[False, 'list'], [False, 'kanban'], [False, 'form']],
             'domain': [('group_id', 'in', self.ids)],
+        }
+
+    def action_view_all_implied_ids(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Implied Groups"),
+            'res_model': 'res.groups',
+            'views': [[False, 'list'], [False, 'form']],
+            'domain': [('id', 'in', (self.all_implied_ids - self).ids)],
+        }
+
+    def action_view_all_access_ids(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Implied Access Rules"),
+            'res_model': 'ir.access',
+            'views': [[False, 'list'], [False, 'kanban'], [False, 'form']],
+            'domain': [('group_id', 'in', self.all_implied_ids.ids)],
+        }
+
+    def action_view_all_menu_access(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Implied Menus"),
+            'res_model': 'ir.ui.menu',
+            'views': [[False, 'list'], [False, 'form']],
+            'domain': [('group_ids', 'in', self.all_implied_ids.ids)],
+        }
+
+    def action_view_all_view_access(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Implied Views"),
+            'res_model': 'ir.ui.view',
+            'views': [[False, 'list'], [False, 'form']],
+            'domain': [('group_ids', 'in', self.all_implied_ids.ids)],
         }
