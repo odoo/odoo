@@ -242,7 +242,7 @@ class PosOrder(models.Model):
             'amount_return': order.get('amount_return'),
             'company_id': company.id,
             'pricelist_id': pricelist_id.id if pricelist_id else False,
-            'partner_id': order.get('partner_id'),
+            'partner_id': partner.id if partner else False,
             'sequence_number': order.get('sequence_number'),
             'session_id': pos_config.current_session_id.id,
             'fiscal_position_id': fiscal_position_id.id if fiscal_position_id else False,
