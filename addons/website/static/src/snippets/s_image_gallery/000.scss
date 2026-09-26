@@ -149,6 +149,12 @@
     .carousel-inner .item img {
         max-width: none;
     }
+
+    @include media-breakpoint-down(md) {
+        .row {
+            height: auto !important;
+        }
+    }
 }
 
 // Note: the o_image_lightbox is always using the right dom and classes of the
