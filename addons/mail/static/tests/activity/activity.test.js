@@ -232,19 +232,20 @@ test("call activity displays phone actions", async () => {
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
         can_write: true,
-        phone: "+1 202 555 0182",
+        phone: "+1 202-555-0182",
         res_id: partnerId,
         res_model: "res.partner",
     });
     await start();
     await openFormView("res.partner", partnerId);
 
-    await contains(".o-mail-Activity-phoneNumber", { text: "+1 202 555 0182" });
+    await contains(".o-mail-Activity-phoneNumber", { text: "+1 202-555-0182" });
     expect(".o-mail-Activity-phoneNumber > a").toHaveCount(0);
     expect(".o-mail-Activity-phoneNumber > span.user-select-all").toHaveCount(0);
     expect(".o-mail-Activity-phoneNumber .o-mail-Activity-call").toHaveCount(0);
     expect(".o-mail-Activity-call + .o-mail-Activity-markDone").toHaveCount(1);
     expect(".o-mail-Activity-call").not.toHaveClass("text-action");
+    expect(".o-mail-Activity-call").toHaveAttribute("href", "tel:+12025550182");
     expect(".o-mail-Activity-copy > span:last-child").toHaveStyle({
         height: "1px",
         overflow: "hidden",
@@ -257,7 +258,7 @@ test("call activity displays phone actions", async () => {
     await focus(".o-mail-Activity-copy");
     expect(".o-mail-Activity-copy").toHaveStyle({ opacity: "1" });
     await click(".o-mail-Activity-copy");
-    expect.verifySteps(["copied: +1 202 555 0182"]);
+    expect.verifySteps(["copied: +1 202-555-0182"]);
 });
 
 test("call action remains available on a read-only activity", async () => {
@@ -273,7 +274,7 @@ test("call action remains available on a read-only activity", async () => {
     await start();
     await openFormView("res.partner", partnerId);
 
-    await contains(".o-mail-Activity-call");
+    await contains(".o-mail-Activity-call[href='tel:+12025550182']");
     expect(".o-mail-Activity-markDone, .o-mail-Activity-edit").toHaveCount(0);
 });
 
