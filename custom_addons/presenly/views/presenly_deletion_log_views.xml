@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_presenly_deletion_log_list" model="ir.ui.view">
+        <field name="name">presenly.deletion.log.list</field>
+        <field name="model">presenly.deletion.log</field>
+        <field name="arch" type="xml">
+            <list string="Deletion Log" create="0" edit="0" delete="0" duplicate="false">
+                <field name="deletion_date"/>
+                <field name="deleted_by_id" widget="many2one_avatar_user"/>
+                <field name="res_model" string="Record Model"/>
+                <field name="res_name" string="Record"/>
+                <field name="res_id" string="Record ID" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="reason" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_presenly_deletion_log_search" model="ir.ui.view">
+        <field name="name">presenly.deletion.log.search</field>
+        <field name="model">presenly.deletion.log</field>
+        <field name="arch" type="xml">
+            <search string="Deletion Log">
+                <field name="res_model"/>
+                <field name="res_name"/>
+                <field name="deleted_by_id"/>
+                <field name="deletion_date"/>
+                <separator/>
+                <filter name="group_model" string="Model" context="{'group_by': 'res_model'}"/>
+                <filter name="group_user" string="Deleted By" context="{'group_by': 'deleted_by_id'}"/>
+                <filter name="group_company" string="Company" context="{'group_by': 'company_id'}"
+                        groups="base.group_multi_company"/>
+                <filter name="group_day" string="Deletion Day" context="{'group_by': 'deletion_date:day'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_presenly_deletion_log" model="ir.actions.act_window">
+        <field name="name">Deletion Log</field>
+        <field name="res_model">presenly.deletion.log</field>
+        <field name="view_mode">list</field>
+        <field name="search_view_id" ref="view_presenly_deletion_log_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No deletions recorded yet</p>
+            <p>Every deletion of Presenly attendance, evidence, permission, overtime, and time-off records is logged here (append-only).</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_presenly_deletion_log" name="Deletion Log"
+              parent="hr_attendance.menu_hr_attendance_reporting"
+              action="action_presenly_deletion_log" sequence="60"
+              groups="presenly.group_presenly_manager"/>
+</odoo>

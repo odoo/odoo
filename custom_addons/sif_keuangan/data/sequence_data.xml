@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_sif_jurnal_number" model="ir.sequence">
+            <field name="name">Nomor Bukti Jurnal</field>
+            <field name="code">sif.jurnal.number</field>
+            <field name="prefix">J%(y)s%(month)s</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

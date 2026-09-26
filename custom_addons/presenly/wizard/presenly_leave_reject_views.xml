@@ -1,0 +1,18 @@
+<odoo>
+    <record id="view_presenly_leave_reject_wizard" model="ir.ui.view">
+        <field name="name">presenly.leave.reject.wizard.form</field>
+        <field name="model">presenly.leave.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reject Leave Request">
+                <group>
+                    <field name="leave_id"/>
+                    <field name="reason" placeholder="Explain why this request is rejected..."/>
+                </group>
+                <footer>
+                    <button name="action_reject" type="object" string="Reject" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

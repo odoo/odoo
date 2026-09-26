@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_presenly_work_location_schedule_list" model="ir.ui.view">
+        <field name="name">presenly.work.location.schedule.list</field>
+        <field name="model">presenly.work.location.schedule</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" multi_edit="1"
+                  decoration-muted="not active"
+                  decoration-success="calendar_sync_state in ('valid', 'flexible')"
+                  decoration-danger="calendar_sync_state in ('outside', 'no_calendar')">
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="calendar_two_weeks" column_invisible="True"/>
+                <field name="schedule_type"/>
+                <field name="weekday" invisible="schedule_type != 'weekly'"/>
+                <field name="week_type" string="Calendar Week" optional="hide"
+                       invisible="schedule_type != 'weekly'"/>
+                <field name="schedule_date" invisible="schedule_type != 'date'"/>
+                <field name="hour_from" widget="float_time"/>
+                <field name="hour_to" widget="float_time"/>
+                <field name="work_location_id"
+                       domain="[('active', '=', True), ('company_id', '=', company_id)]"
+                       options="{'no_create_edit': True}"/>
+                <field name="calendar_sync_state" widget="badge"
+                       decoration-success="calendar_sync_state in ('valid', 'flexible')"
+                       decoration-danger="calendar_sync_state in ('outside', 'no_calendar')"/>
+                <field name="calendar_sync_message" optional="hide"/>
+                <field name="check_in_tolerance_minutes" optional="hide"/>
+                <field name="date_start" optional="hide" invisible="schedule_type != 'weekly'"/>
+                <field name="date_end" optional="hide" invisible="schedule_type != 'weekly'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_presenly_work_location_schedule_form" model="ir.ui.view">
+        <field name="name">presenly.work.location.schedule.form</field>
+        <field name="model">presenly.work.location.schedule</field>
+        <field name="arch" type="xml">
+            <form string="Work Location Schedule">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name" string="Location Slot"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Employee and Location">
+                            <field name="employee_id" widget="many2one_avatar_employee"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="calendar_two_weeks" invisible="1"/>
+                            <field name="calendar_id" readonly="1"/>
+                            <field name="work_location_id"
+                                   domain="[('active', '=', True), ('company_id', '=', company_id)]"
+                                   options="{'no_create_edit': True}"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="When">
+                            <field name="schedule_type" widget="radio"
+                                   options="{'horizontal': true}"/>
+                            <field name="weekday" invisible="schedule_type != 'weekly'"/>
+                            <field name="week_type"
+                                   invisible="schedule_type != 'weekly' or not calendar_two_weeks"
+                                   required="schedule_type == 'weekly' and calendar_two_weeks"/>
+                            <field name="schedule_date" invisible="schedule_type != 'date'"
+                                   required="schedule_type == 'date'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Time Slot">
+                            <field name="hour_from" widget="float_time"/>
+                            <field name="hour_to" widget="float_time"/>
+                            <field name="check_in_tolerance_minutes"/>
+                        </group>
+                        <group string="Weekly Validity" invisible="schedule_type != 'weekly'">
+                            <field name="date_start" widget="daterange"
+                                   options="{'end_date_field': 'date_end'}"/>
+                            <field name="date_end" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Working Hours Integration">
+                        <field name="calendar_sync_state" widget="badge"
+                               decoration-success="calendar_sync_state in ('valid', 'flexible')"
+                               decoration-danger="calendar_sync_state in ('outside', 'no_calendar')"/>
+                        <field name="calendar_sync_message" readonly="1" nolabel="1"/>
+                    </group>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="calendar_sync_state not in ('outside', 'no_calendar')">
+                        This location slot cannot be used by attendance until it fits the Employee Working Hours.
+                    </div>
+                    <div class="alert alert-info" role="alert">
+                        Specific Date slots replace Weekly slots for that date. Working Hours controls when the employee works; this slot assigns the physical Work Location within that time.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_presenly_work_location_schedule_search" model="ir.ui.view">
+        <field name="name">presenly.work.location.schedule.search</field>
+        <field name="model">presenly.work.location.schedule</field>
+        <field name="arch" type="xml">
+            <search string="Work Location Schedules">
+                <field name="employee_id"/>
+                <field name="work_location_id"/>
+                <field name="calendar_id"/>
+                <field name="schedule_date"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter name="weekly" string="Weekly" domain="[('schedule_type', '=', 'weekly')]"/>
+                <filter name="specific_date" string="Specific Date" domain="[('schedule_type', '=', 'date')]"/>
+                <separator/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                <filter name="group_location" string="Work Location" context="{'group_by': 'work_location_id'}"/>
+                <filter name="group_weekday" string="Weekday" context="{'group_by': 'weekday'}"/>
+                <filter name="group_company" string="Company" context="{'group_by': 'company_id'}"
+                        groups="base.group_multi_company"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_presenly_work_location_schedule" model="ir.actions.act_window">
+        <field name="name">Work Location Schedules</field>
+        <field name="res_model">presenly.work.location.schedule</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_presenly_work_location_schedule_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Assign locations from Employee Working Hours</p>
+            <p>Open an Employee and use Generate from Working Hours to create synchronized location slots quickly.</p>
+        </field>
+    </record>
+</odoo>
