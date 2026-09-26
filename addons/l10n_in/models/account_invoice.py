@@ -365,7 +365,7 @@ class AccountMove(models.Model):
 
     def _compute_l10n_in_total_withholding_amount(self):
         for move in self:
-            if self.env.company.l10n_in_tds_feature:
+            if move.company_id.l10n_in_tds_feature:
                 move.l10n_in_total_withholding_amount = sum(
                     move.l10n_in_withhold_move_ids.filtered(
                         lambda m: m.state == 'posted'
