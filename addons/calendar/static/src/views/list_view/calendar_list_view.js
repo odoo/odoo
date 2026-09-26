@@ -14,8 +14,7 @@ export class CalendarListModel extends listView.Model {
      */
     async load(params = {}) {
         const filters = params?.context?.calendar_filters;
-        const emptyDomain = Array.isArray(params?.domain) && params.domain.length == 0;
-        if (filters && emptyDomain) {
+        if (filters) {
             const selectedPartnerIds = await this.orm.call(
                 "res.users",
                 "get_selected_calendars_partner_ids",
