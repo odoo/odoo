@@ -1,0 +1,33 @@
+name: CI - Validar Entorno Docker Compose
+
+on:
+  push:
+    branches: ["19.0", "feature/**"]
+  pull_request:
+    branches: ["19.0"]
+
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v3
+
+      - name: Levantar contenedores con Docker Compose
+        working-directory: ./docker-config
+        run: docker compose up -d
+
+      - name: Esperar que Odoo arranque
+        run: sleep 30
+
+      - name: Verificar que los contenedores están corriendo
+        working-directory: ./docker-config
+        run: docker compose ps
+
+      - name: Verificar que Odoo responde en el puerto 8069
+        run: curl --retry 5 --retry-delay 10 -f http://localhost:8069
+
+      - name: Apagar contenedores
+        working-directory: ./docker-config
+        run: docker compose down
