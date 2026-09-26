@@ -243,7 +243,7 @@ export const MENU_ACTIVE_IDS = Object.fromEntries(
 );
 
 /** @param {number|MenuTabId} [activeIdOrTabId] */
-export async function openDiscuss(activeIdOrTabId, { target } = {}) {
+export async function openDiscuss(activeIdOrTabId, { target, invitationToken } = {}) {
     let tabId;
     if (typeof activeIdOrTabId === "string" && activeIdOrTabId?.startsWith("discuss.tab_")) {
         tabId = activeIdOrTabId.slice("discuss.tab_".length);
@@ -255,6 +255,7 @@ export async function openDiscuss(activeIdOrTabId, { target } = {}) {
         id: DISCUSS_ACTION_ID,
         tag: "mail.action_discuss",
         type: "ir.actions.client",
+        params: invitationToken ? { invitation_token: invitationToken } : undefined,
     });
     if (tabId) {
         await click(`.o-mail-Discuss .o-mail-MessagingMenu-tab[data-id=${tabId}]`);
