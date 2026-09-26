@@ -143,3 +143,40 @@ class CiiImportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
                 },
             ],
         )
+
+    def test_import_invoice_line_gross_price_more_decimals_than_currency(self):
+        # gross_price = 5.3280
+        # allowance_on_gross = 2.3070
+        # net_price = 3.0210
+        # billed_qty = 10368
+        # line_total_amount = 3.0210 * 10368 = 31321.728 -> 31321.73
+        # discount_percentage = (allowance_on_gross / gross_price) * 100 = 43.2995...
+        tax_5_5 = self.percent_tax(5.5, type_tax_use='purchase')
+
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_invoice_line_gross_price_more_decimals_than_currency',
+        )
+
+        # A single line, no extra 'Rounding' line to compensate the untaxed total.
+        self.assertRecordValues(
+            invoice.invoice_line_ids,
+            [
+                {
+                    'quantity': 10368.0,
+                    'tax_ids': tax_5_5.ids,
+                    'price_subtotal': 31321.73,
+                },
+            ],
+        )
+        self.assertAlmostEqual(invoice.invoice_line_ids.price_unit, 5.328)
+
+        self.assertRecordValues(
+            invoice,
+            [
+                {
+                    'amount_untaxed': 31321.73,
+                    'amount_tax': 1722.70,
+                    'amount_total': 33044.43,
+                },
+            ],
+        )
