@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="populate.blueprint" id="payment_providers_blueprint">
+        <field name="name">Payment: Payment providers with payment methods</field>
+        <field name="definition_xml" type="xml">
+            <!-- Create providers with a single primary payment method each -->
+            <create
+                id="providers_with_methods"
+                model="payment.provider"
+                count="20"
+                parallel="False"
+            >
+                <value name="counter" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Benchmark Payment Provider {counter}'"/>
+                <field name="code" eval="'none'"/>
+                <field name="company_id" eval="env.company.id"/>
+                <field
+                    name="module_id"
+                    domain="[('name', '=', 'payment'), ('state', '=', 'installed')]"
+                />
+                <value name="method_image" generator="binary.image" width="16" height="16"/>
+                <field
+                    name="payment_method_ids"
+                    eval="[Command.create({
+                        'name': f'Benchmark Primary Method {counter}',
+                        'code': f'benchmark_primary_{counter}',
+                        'image': method_image,
+                    })]"
+                />
+            </create>
+
+            <!-- Create brands spread randomly across the primary payment methods -->
+            <create model="payment.method" count="40" parallel="False">
+                <value name="counter" generator="misc.counter" start="1"/>
+                <field name="name" eval="f'Benchmark Brand {counter}'"/>
+                <field name="code" eval="f'benchmark_brand_{counter}'"/>
+                <field
+                    name="primary_payment_method_id"
+                    ref="providers_with_methods.payment_method_ids"
+                />
+                <field
+                    name="provider_id"
+                    eval="model.browse(primary_payment_method_id).provider_id.id"
+                />
+                <field name="image" generator="binary.image" width="16" height="16"/>
+            </create>
+        </field>
+    </record>
+</odoo>
