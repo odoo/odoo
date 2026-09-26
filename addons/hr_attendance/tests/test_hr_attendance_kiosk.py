@@ -39,11 +39,14 @@ class TestHrAttendanceKiosk(HttpCase):
     def _create_checked_out_attendance(self, employee=None):
         employee = employee or self.employee_A
         now = fields.Datetime.now()
-        return self.env['hr.attendance'].create({
+        return self._kiosk_attendance_env().create({
             'employee_id': employee.id,
             'check_in': now - timedelta(hours=2),
             'check_out': now - timedelta(hours=1),
         })
+
+    def _kiosk_attendance_env(self):
+        return self.env['hr.attendance'].with_user(self.env.ref('base.public_user')).sudo()
 
     def _update_break(self, **params):
         return self.make_jsonrpc_request('/hr_attendance/update_break_duration', {
@@ -119,7 +122,7 @@ class TestHrAttendanceKiosk(HttpCase):
     def test_update_break_duration_only_updates_last_closed_attendance(self):
         previous_attendance = self._create_checked_out_attendance()
         now = fields.Datetime.now()
-        latest_attendance = self.env['hr.attendance'].create({
+        latest_attendance = self._kiosk_attendance_env().create({
             'employee_id': self.employee_A.id,
             'check_in': now - timedelta(minutes=30),
         })
