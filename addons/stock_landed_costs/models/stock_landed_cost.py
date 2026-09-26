@@ -121,7 +121,10 @@ class StockLandedCost(models.Model):
 
         for cost in self:
             cost = cost.with_company(cost.company_id)
-            move = self.env['account.move']
+            # `account.move._post()` has a hard requirement for `group_account_invoice` and will categorically
+            # refuse calls from all other users, making `sudo()` unavoidable for landed cost validation (with
+            # real-time valuation) for stock/MRP/purchase managers.
+            move = self.env['account.move'].sudo()
             move_vals = {
                 'journal_id': cost.account_journal_id.id,
                 'date': cost.date,
