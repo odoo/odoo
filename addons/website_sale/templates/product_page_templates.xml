@@ -193,6 +193,8 @@
                     t-att-data-attribute-id="attribute.id"
                     t-att-data-attribute-name="attribute.name"
                     t-att-data-attribute-display-type="attribute.display_type"
+                    t-att-data-attribute-create-variant="attribute.create_variant"
+                    t-att-data-attribute-is-thumbnail-visible="attribute.is_thumbnail_visible"
                     t-attf-class="variant_attribute #{
                         'd-none' if single
                         and not ptavs[0].is_custom
@@ -218,6 +220,7 @@
                     <t t-if="attribute.is_thumbnail_visible">
                         <ul
                             t-att-data-attribute-id="attribute.id"
+                            t-att-data-name="attribute.name"
                             t-attf-class="list-inline o_wsale_product_attribute #{'d-none' if single_and_custom else ''}"
                         >
                             <li t-foreach="ptavs" t-as="ptav" class="list-inline-item me-2 mb-2">
@@ -251,6 +254,7 @@
                     <t t-elif="attribute.display_type == 'select'">
                         <select
                             t-att-data-attribute-id="attribute.id"
+                            t-att-data-name="attribute.name"
                             t-attf-class="form-select css_attribute_select o_wsale_product_attribute js_variant_change #{attribute.create_variant} #{'d-none' if single_and_custom else ''}"
                             t-att-name="'ptal-%s' % ptal.id">
                             <t t-foreach="ptavs" t-as="ptav">
@@ -272,6 +276,7 @@
                     <t t-elif="attribute.display_type in ('radio', 'multi')">
                         <ul
                             t-att-data-attribute-id="attribute.id"
+                            t-att-data-name="attribute.name"
                             t-attf-class="o_wsale_product_attribute d-flex flex-wrap gap-3 list-unstyled #{'d-none' if single_and_custom else ''}"
                         >
                             <t t-foreach="ptavs" t-as="ptav">
@@ -305,6 +310,7 @@
                     <t t-elif="attribute.display_type in ('pills', 'range')">
                         <ul
                             t-att-data-attribute-id="attribute.id"
+                            t-att-data-name="attribute.name"
                             t-attf-class="o_wsale_product_attribute d-flex flex-wrap list-unstyled gap-2 #{'d-none' if single_and_custom else ''}"
                             data-bs-toggle="buttons"
                         >
@@ -336,6 +342,7 @@
                     <t t-elif="attribute.display_type == 'color'">
                         <ul
                             t-att-data-attribute-id="attribute.id"
+                            t-att-data-name="attribute.name"
                             t-attf-class="o_wsale_product_attribute d-flex flex-wrap gap-2 list-unstyled #{'d-none' if single_and_custom else ''}"
                         >
                             <li t-foreach="ptavs" t-as="ptav">
@@ -371,6 +378,7 @@
                     <t t-elif="attribute.display_type == 'image'">
                         <ul
                             t-att-data-attribute-id="attribute.id"
+                            t-att-data-name="attribute.name"
                             t-attf-class="list-inline o_wsale_product_attribute #{'d-none' if single_and_custom else ''}"
                         >
                             <li t-foreach="ptavs" t-as="ptav" class="list-inline-item me-2 mb-2">

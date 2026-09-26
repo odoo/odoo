@@ -1950,9 +1950,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not self.env.user.has_group("website.group_website_restricted_editor"):
             raise NotFound
 
-        attribute = self.env["product.attribute"].browse(attribute_id)
-        if "display_type" in options:
-            attribute.write({"display_type": options["display_type"]})
+        display_fields = {"display_type", "is_thumbnail_visible"}
+        if display_vals := {field: options[field] for field in options.keys() & display_fields}:
+            self.env["product.attribute"].browse(attribute_id).write(display_vals)
             self.env.transaction.invalidate_ormcache("templates")
 
     @route(["/shop/config/website"], type="jsonrpc", auth="user", website=True)
