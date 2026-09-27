@@ -208,13 +208,19 @@ export default class OrderPaymentValidation {
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
-        await this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
-            orderDone: true,
-        });
+        if (this.shouldSendOrderInPreparation()) {
+            await this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
+                orderDone: true,
+            });
+        }
 
         if (this.canPrintReceipt) {
             this.pos.ticketPrinter.printOrderReceipt({ order: this.order });
         }
+    }
+
+    shouldSendOrderInPreparation() {
+        return true;
     }
 
     /**
