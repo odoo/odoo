@@ -12,7 +12,7 @@ class SnailmailLetterMissingRequiredFields(models.TransientModel):
     street2 = fields.Char('Street2')
     zip = fields.Char('Zip')
     city = fields.Char('City')
-    state_id = fields.Many2one("res.country.state", string='State')
+    state_id = fields.Many2one("res.country.state", string='State', domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one('res.country', string='Country')
 
     @api.model
@@ -30,6 +30,16 @@ class SnailmailLetterMissingRequiredFields(models.TransientModel):
                 'country_id': letter.country_id.id,
             })
         return defaults
+
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        if self.country_id and self.country_id != self.state_id.country_id:
+            self.state_id = False
+
+    @api.onchange('state_id')
+    def _onchange_state(self):
+        if self.state_id.country_id and self.country_id != self.state_id.country_id:
+            self.country_id = self.state_id.country_id
 
     def update_address_cancel(self):
         self.letter_id.cancel()
