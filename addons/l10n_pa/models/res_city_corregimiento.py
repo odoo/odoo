@@ -19,6 +19,10 @@ class L10n_PaResCityCorregimiento(models.Model):
         required=True,
         help='This code will help with the identification of each corregimiento in Panama.',
     )
+    boundary = fields.Text(
+        help='GeoJSON geometry ({"type": ..., "coordinates": ...}) of the corregimiento '
+             'boundary, used to resolve a Panama postal code to its corregimiento.',
+    )
 
     _name_city_uniq = models.Constraint(
         'unique(city_id, name)',
