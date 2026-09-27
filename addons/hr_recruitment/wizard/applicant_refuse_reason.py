@@ -140,10 +140,11 @@ class ApplicantGetRefuseReason(models.TransientModel):
                 }
             )
         refused_applications.write({'refuse_reason_id': self.refuse_reason_id.id, 'refuse_date': datetime.now()})
-        refused_applications.action_archive()
 
         if self.send_mail:
             self._prepare_send_refusal_mails()
+
+        refused_applications.action_archive()
 
         return {'type': 'ir.actions.act_window_close'}
 
