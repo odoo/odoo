@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.SignatureViewer">
+        <t t-if="this.props.url">
+            <img class="o_signature img img-fluid" t-att-class="{ o_signature_editable: !this.props.readonly }" alt="Binary file" t-att-src="this.src" t-att-name="this.props.name" t-att-style="this.sizeStyle" t-on-click="this.onClickSignature" t-on-error.stop="this.onLoadFailed"/>
+        </t>
+        <t t-else="">
+            <div class="o_signature o_signature_empty" t-att-class="{ o_signature_editable: !this.props.readonly }" t-att-style="this.sizeStyle" t-on-click="this.onClickSignature">
+                <svg t-on-error.stop="this.onLoadFailed"/>
+                <p>SIGNATURE</p>
+            </div>
+        </t>
+    </t>
+
+</templates>

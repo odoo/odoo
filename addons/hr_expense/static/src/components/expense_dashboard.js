@@ -1,0 +1,73 @@
+import { Component, onWillStart, proxy, usePlugin } from "@odoo/owl";
+import { DebugModePlugin } from '@web/core/debug_mode_plugin';
+import { Domain } from "@web/core/domain";
+import { useBus, useService } from '@web/core/utils/hooks';
+import { formatMonetary } from "@web/views/fields/formatters";
+
+export class ExpenseDashboard extends Component {
+    static template = "hr_expense.ExpenseDashboard";
+
+    debugMode = usePlugin(DebugModePlugin);
+
+    setup() {
+        super.setup();
+        this.orm = useService('orm');
+        this.actionService = useService("action");
+        this.state = proxy({ expenses: {} });
+        useBus(this.env.searchModel, "update", async () => { await this.fetchExpenseDashboardData(); });
+
+        onWillStart(this.fetchExpenseDashboardData);
+    }
+
+    renderMonetaryField(value, currency_id) {
+        return formatMonetary(value, { currencyId: currency_id});
+    }
+
+    async fetchExpenseDashboardData() {
+        const domain = this.env.searchModel?.domain ?? [];
+        const expense_states = await this.orm
+            .cache({
+                type: "disk",
+                update: "always",
+                callback: (freshData, hasChanged) => {
+                    if (hasChanged) {
+                        this.state.expenses = freshData;
+                    }
+                },
+            })
+            .call("hr.expense", 'get_expense_dashboard', [domain]);
+
+        this.state.expenses = expense_states;
+    }
+
+    async applyFilter(filterName) {
+        const searchModel = this.env.searchModel;
+
+        // Search for active filters implying an expense state
+        const stateActiveFilters = searchModel.query.filter(item => {
+            const filters = searchModel.searchItems[item.searchItemId];
+
+            if (!filters || !filters.domain) {
+                return false;
+            }
+            try {
+                const domain = new Domain(filters.domain).toList();
+                return domain.some(tuple => tuple[0] === "state");
+            } catch {
+                return false;
+            }
+        });
+
+        // Deactivate the filters implying an expense state
+        if (stateActiveFilters) {
+            stateActiveFilters.forEach(item => {
+                searchModel.toggleSearchItem(item.searchItemId);
+            });
+        }
+        // Toggle the filter corresponding to the current state
+        const searchItem = Object.values(searchModel.searchItems).find(
+            (searchItem) => searchItem.name === filterName
+        );
+        searchModel.toggleSearchItem(searchItem.id);
+    }
+}

@@ -1,0 +1,25 @@
+.o_templates_kanban_renderer {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: .8rem;
+
+    .o_templates_kanban_record {
+        width: 300px;
+        max-width: 300px;
+        padding: 0;
+        height: 440px;
+
+        .o_mailing_template_info {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+    }
+
+    .o_kanban_title {
+        max-width: 250px !important;
+    }
+}
+
+.o_content:has(.o_mass_mailing_template_kanban_iframe_container) {
+    overflow: hidden !important;
+}

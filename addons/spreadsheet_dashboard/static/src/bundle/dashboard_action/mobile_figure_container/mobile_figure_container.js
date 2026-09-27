@@ -1,0 +1,124 @@
+import * as spreadsheet from "@odoo/o-spreadsheet";
+import { Component, onMounted, onWillUnmount, signal, t, useProps } from "@odoo/owl";
+import { render, useSubEnv } from "@web/owl2/utils";
+
+const { registries, stores, constants, helpers } = spreadsheet;
+const { figureRegistry } = registries;
+const { ModelStore, useStoreProvider } = stores;
+const { isMobileOS } = helpers;
+
+const EMPTY_FIGURE = { tag: "empty" };
+const { DARK_MODE_FILTER_STRING } = constants;
+
+export class MobileFigureContainer extends Component {
+    static template = "documents_spreadsheet.MobileFigureContainer";
+    props = useProps({
+        spreadsheetModel: t.object(),
+    });
+
+    figureContainer = signal.ref();
+    containerWidth = signal(0);
+
+    setup() {
+        const stores = useStoreProvider();
+        stores.inject(ModelStore, this.props.spreadsheetModel);
+        const onUpdate = () => render(this, true);
+        const resizeObserver = new ResizeObserver(() => {
+            this.containerWidth.set(this.figureContainer()?.offsetWidth || 0);
+        });
+        onMounted(() => {
+            resizeObserver.observe(this.figureContainer());
+            stores.on("store-updated", this, onUpdate);
+        });
+        onWillUnmount(() => {
+            resizeObserver.disconnect();
+            stores.off("store-updated", this, onUpdate);
+        });
+
+        useSubEnv({
+            model: this.props.spreadsheetModel,
+            isDashboard: () => this.props.spreadsheetModel.getters.isDashboard(),
+            openSidePanel: () => {},
+            isMobile: isMobileOS,
+        });
+    }
+
+    get style() {
+        return `--os-dark-mode-filter: ${DARK_MODE_FILTER_STRING};
+        color-scheme: ${this.props.spreadsheetModel.getters.isDarkMode() ? "dark" : "light"};`;
+    }
+
+    get figureRows() {
+        const sheetId = this.props.spreadsheetModel.getters.getActiveSheetId();
+        const sortedFigures = this.props.spreadsheetModel.getters
+            .getFigures(sheetId)
+            .sort((f1, f2) => (this.isBefore(f1, f2) ? -1 : 1));
+
+        if (!this.containerWidth()) {
+            return [];
+        }
+
+        const figureRows = [];
+        for (let i = 0; i < sortedFigures.length; i++) {
+            const figure = sortedFigures[i];
+            const nextFigure = sortedFigures[i + 1];
+            if (this.isScorecard(figure) && nextFigure && this.isScorecard(nextFigure)) {
+                figureRows.push([figure, nextFigure]);
+                i++;
+            } else if (this.isScorecard(figure)) {
+                figureRows.push([figure, EMPTY_FIGURE]);
+            } else {
+                figureRows.push([figure]);
+            }
+        }
+
+        const updateFigureSizeInRow = (figureRow) => {
+            const ratio = figureRow.length === 2 ? 0.5 : 3 / 4;
+            const margins = figureRow.length * 8;
+            const figureWidth = (this.containerWidth() - margins) / figureRow.length;
+            const height = figureWidth * ratio;
+            return figureRow.map((figure) => ({ ...figure, height, width: figureWidth }));
+        };
+
+        return figureRows.map(updateFigureSizeInRow);
+    }
+
+    getFigureStyle(figure) {
+        return `width: ${figure.width}px; height: ${figure.height}px;`;
+    }
+
+    getFigureComponent(figure) {
+        return figureRegistry.get(figure.tag).Component;
+    }
+
+    getFigureClass(figure) {
+        const registryItem = figureRegistry.get(figure.tag);
+        const getters = this.props.spreadsheetModel.getters;
+
+        const classes = [];
+        if (registryItem.hasShadow(getters)) {
+            classes.push("o-figure-shadow");
+        }
+        if (registryItem.isRounded(getters)) {
+            classes.push("o-figure-rounded");
+        }
+
+        return classes.join(" ");
+    }
+
+    isBefore(f1, f2) {
+        const sheetId = this.props.spreadsheetModel.getters.getActiveSheetId();
+        const fig1 = this.props.spreadsheetModel.getters.getFigureUI(sheetId, f1);
+        const fig2 = this.props.spreadsheetModel.getters.getFigureUI(sheetId, f2);
+        return fig1.x < fig2.x ? fig1.y < fig2.y : fig1.y < fig2.y;
+    }
+
+    isScorecard(figure) {
+        if (figure.tag !== "chart") {
+            return false;
+        }
+        const chartId = this.props.spreadsheetModel.getters.getChartIdFromFigureId(figure.id);
+        const definition = this.props.spreadsheetModel.getters.getChartDefinition(chartId);
+        return definition.type === "scorecard";
+    }
+}

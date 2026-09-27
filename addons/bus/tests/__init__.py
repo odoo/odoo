@@ -1,0 +1,16 @@
+from . import (
+    common,
+    test_assetsbundle,
+    test_bus_gc,
+    test_close_websocket_after_tour,
+    test_health,
+    test_ir_model,
+    test_ir_websocket,
+    test_notify,
+    test_websocket_caryall,
+    test_websocket_check_session,
+    test_websocket_controller,
+    test_websocket_dispatching,
+    test_websocket_rate_limiting,
+    test_websocket_timeouts,
+)

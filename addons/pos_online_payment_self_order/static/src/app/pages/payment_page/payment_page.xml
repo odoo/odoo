@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_online_payment_self_order.PaymentPage" t-inherit="pos_self_order.PaymentPage" t-inherit-mode="extension">
+        <xpath expr="//t[@name='external_qr']" position="inside">
+            <h3 class="position-absolute"
+                style="top: 110%"
+                t-if="this.selectedPaymentIsOnline and this.selfOrder.config.self_ordering_mode === 'kiosk' and this.selfOrder.onlinePaymentStatus === 'progress'">
+                Payment in progress
+            </h3>
+        </xpath>
+    </t>
+</templates>

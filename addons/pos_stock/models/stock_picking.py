@@ -1,0 +1,203 @@
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_is_zero
+
+
+class StockPicking(models.Model):
+    _inherit = 'stock.picking'
+
+    pos_session_id = fields.Many2one('pos.session', index=True)
+    pos_order_id = fields.Many2one('pos.order', index=True)
+
+    def _prepare_picking_vals(self, partner, picking_type, location_id, location_dest_id):
+        return {
+            'partner_id': partner.id if partner else False,
+            'user_id': False,
+            'picking_type_id': picking_type.id,
+            'move_type': 'direct',
+            'location_id': location_id,
+            'location_dest_id': location_dest_id,
+            'state': 'draft',
+        }
+
+    @api.model
+    def _create_picking_from_pos_order_lines(self, location_dest_id, lines, picking_type, partner=False):
+        """We'll create some picking based on order_lines"""
+
+        pickings = self.env['stock.picking']
+        stockable_lines = lines.filtered(
+            lambda l: l.product_id.type == 'consu'
+            and not l.product_id.uom_id.is_zero(l._get_qty_to_move())
+        )
+        if not stockable_lines:
+            return pickings
+        positive_lines = stockable_lines.filtered(lambda l: l._get_qty_to_move() > 0)
+        negative_lines = stockable_lines - positive_lines
+
+        if positive_lines:
+            location_id = picking_type.default_location_src_id.id
+            positive_picking = self.env['stock.picking'].create(
+                self._prepare_picking_vals(partner, picking_type, location_id, location_dest_id)
+            )
+
+            positive_picking._create_move_from_pos_order_lines(positive_lines)
+            try:
+                with self.env.cr.savepoint():
+                    positive_picking._action_done()
+            except (UserError, ValidationError):
+                pass
+
+            pickings |= positive_picking
+        if negative_lines:
+            refunded_order = negative_lines.mapped('refunded_orderline_id.order_id')
+            if len(refunded_order) == 1:
+                refundable_lines = refunded_order.lines.filtered(
+                    lambda l: l.product_id.type == 'consu' and not l.product_uom_id.is_zero(l.qty)
+                )
+                is_full_refund = all(
+                    float_is_zero(
+                        line.qty - line.refunded_qty,
+                        precision_rounding=line.currency_id.rounding,
+                    )
+                    for line in refundable_lines
+                )
+                pickings_to_cancel = refunded_order.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
+                has_done_pickings = refunded_order.picking_ids.filtered(lambda p: p.state == 'done')
+
+                if is_full_refund and pickings_to_cancel and not has_done_pickings:
+                    # Full refund before delivery: cancel the picking
+                    pickings_to_cancel.action_cancel()
+                    return pickings
+                elif not is_full_refund and pickings_to_cancel and not has_done_pickings:
+                    # Partial refund before delivery: reduce the picking quantities
+                    moves_to_reassign = self.env['stock.move']
+                    for negative_line in negative_lines:
+                        refunded_line = negative_line.refunded_orderline_id
+                        moves = pickings_to_cancel.move_ids.filtered(
+                            lambda m: m.product_id == refunded_line.product_id
+                            and m.never_product_template_attribute_value_ids.ids == refunded_line.attribute_value_ids.ids
+                        )
+                        cancel_qty = abs(negative_line.qty)
+                        for move in moves:
+                            new_qty = max(0, move.product_uom_qty - cancel_qty)
+                            if float_is_zero(new_qty, precision_rounding=negative_line.currency_id.rounding):
+                                move._action_cancel()
+                                move.unlink()
+                            else:
+                                move.product_uom_qty = new_qty
+                                moves_to_reassign |= move
+                    # Lowering the demand unreserves the move (chained moves then fall
+                    # back to 'waiting'); re-reserve so the picking stays 'ready'.
+                    moves_to_reassign._action_assign()
+                    self.env.flush_all()
+                    # Skip creating a return picking since nothing was delivered
+                    return pickings
+            if picking_type.return_picking_type_id:
+                return_picking_type = picking_type.return_picking_type_id
+                return_location_id = return_picking_type.default_location_dest_id.id
+            else:
+                return_picking_type = picking_type
+                return_location_id = picking_type.default_location_src_id.id
+
+            negative_picking = self.env['stock.picking'].create(
+                self._prepare_picking_vals(partner, return_picking_type, location_dest_id, return_location_id)
+            )
+            negative_picking._create_move_from_pos_order_lines(negative_lines)
+            try:
+                with self.env.cr.savepoint():
+                    negative_picking._action_done()
+            except (UserError, ValidationError):
+                pass
+            pickings |= negative_picking
+        return pickings
+
+    def _prepare_stock_move_vals(self, first_line, order_lines):
+        return {
+            'uom_id': first_line.product_id.uom_id.id,
+            'picking_id': self.id,
+            'picking_type_id': self.picking_type_id.id,
+            'product_id': first_line.product_id.id,
+            'product_uom_qty': abs(sum(line._get_qty_to_move() for line in order_lines)),
+            'location_id': self.location_id.id,
+            'location_dest_id': self.location_dest_id.id,
+            'company_id': self.company_id.id,
+            'never_product_template_attribute_value_ids': first_line.attribute_value_ids.filtered(lambda a: a.attribute_id.create_variant == 'no_variant'),
+        }
+
+    def _create_move_from_pos_order_lines(self, lines):
+        self.ensure_one()
+
+        def get_grouping_key(line):
+            return (line.product_id.id, tuple(sorted(line.attribute_value_ids.ids)))
+
+        move_vals = [
+            self._prepare_stock_move_vals(order_lines[0], order_lines)
+            for order_lines in lines.grouped(get_grouping_key).values()
+        ]
+        moves = self.env['stock.move'].create(move_vals)
+        confirmed_moves = moves._action_confirm()
+        confirmed_moves._add_mls_related_to_order(lines, are_qties_done=True)
+        confirmed_moves.picked = True
+        self._link_owner_on_return_picking(lines)
+
+    def _link_owner_on_return_picking(self, lines):
+        """This method tries to retrieve the owner of the returned product"""
+        if lines and lines[0].order_id.refunded_order_id.picking_ids:
+            returned_lines_picking = lines[0].order_id.refunded_order_id.picking_ids
+            returnable_qty_by_product = {}
+            for move_line in returned_lines_picking.move_line_ids:
+                returnable_qty_by_product[(move_line.product_id.id, move_line.owner_id.id or 0)] = move_line.quantity  # noqa: RUF031
+            for move in self.move_line_ids:
+                for keys in returnable_qty_by_product:  # noqa: PLC0206
+                    if move.product_id.id == keys[0] and keys[1] and returnable_qty_by_product[keys] > 0:
+                        move.write({'owner_id': keys[1]})
+                        returnable_qty_by_product[keys] -= move.quantity
+
+    def _send_confirmation_email(self):
+        # Avoid sending Mail/SMS for POS deliveries
+        pickings = self.filtered(lambda p: p.picking_type_id != p.picking_type_id.warehouse_id.pos_type_id)
+        return super(StockPicking, pickings)._send_confirmation_email()
+
+
+class StockPickingType(models.Model):
+    _name = 'stock.picking.type'
+    _inherit = ['stock.picking.type', 'pos.load.mixin']
+
+    has_stock_reports_to_print = fields.Boolean(compute='_compute_has_stock_reports_to_print')
+
+    def _compute_has_stock_reports_to_print(self):
+        for record in self:
+            record.has_stock_reports_to_print = (
+                record.auto_print_delivery_slip
+                or record.auto_print_return_slip
+                or record.auto_print_reception_report
+                or record.auto_print_reception_report_labels
+                or record.auto_print_product_labels
+                or record.auto_print_lot_labels
+                or record.auto_print_packages
+                or (record._fields.get('auto_print_cmr_report') and record.auto_print_cmr_report)
+            )
+
+    @api.depends('warehouse_id')
+    def _compute_hide_reservation_method(self):
+        super()._compute_hide_reservation_method()
+        for picking_type in self:
+            if picking_type == picking_type.warehouse_id.pos_type_id:
+                picking_type.hide_reservation_method = True
+
+    @api.constrains('active')
+    def _check_active(self):
+        for picking_type in self:
+            if picking_type.active:
+                continue
+            pos_config = self.env['pos.config'].sudo().search([('picking_type_id', '=', picking_type.id)], limit=1)
+            if pos_config:
+                raise ValidationError(_("You cannot archive '%(picking_type)s' as it is used by POS configuration '%(config)s'.", picking_type=picking_type.name, config=pos_config.name))
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return [('id', '=', data['pos.config'].picking_type_id.id)]
+
+    @api.model
+    def _load_pos_data_fields(self, config):
+        return ["id", "use_create_lots", "use_existing_lots", "has_stock_reports_to_print"]

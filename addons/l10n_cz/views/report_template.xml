@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="registry_vat_external_layout">
+        <li t-if="company.partner_id._get_additional_identifier('CZ_EN') and company.account_fiscal_country_id.code == 'CZ'">
+            Company ID: <span t-out="company.partner_id._get_additional_identifier('CZ_EN')"/>
+        </li>
+    </template>
+
+    <template id="l10n_cz_external_layout_standard" inherit_id="web.company_address_list">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="not hide_registry_vat" t-call="l10n_cz.registry_vat_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_cz_external_layout_folder" inherit_id="web.external_layout_folder">
+        <xpath expr="//t[@t-call='web.company_address_list']" position="before">
+            <t t-set="hide_registry_vat" t-value="True"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_folder_company_info')]" position="after">
+            <div t-if="company.partner_id._get_additional_identifier('CZ_EN') and company.account_fiscal_country_id.code == 'CZ'">
+                Company ID: <span t-out="company.partner_id._get_additional_identifier('CZ_EN')"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

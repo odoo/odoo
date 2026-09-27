@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="providers" inherit_id="web.login_oauth" name="OAuth Providers">
+        <xpath expr="//t[@t-set='auth_btns']" position="after">
+            <t t-set="auth_btns" t-value="providers + auth_btns"/>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ServicesPackOption">
+    <BuilderRow label.translate="Services" applyTo="':scope > :has(.row.s_nb_column_fixed)'">
+        <BuilderButton action="'addItem'" actionParam="'.s_services_pack_item:last-of-type'" preview="false" type="'success'">Add Item</BuilderButton>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Spacing" applyTo="'.row.s_nb_column_fixed'" level="1">
+        <BuilderRange action="'setClassRange'"
+                      actionParam="['row-gap-0','row-gap-1','row-gap-2','row-gap-3','row-gap-4','row-gap-5']"
+                      max="5"/>
+    </BuilderRow>
+</t>
+
+<t t-name="website.ServicesPackItemOption">
+    <BuilderRow label.translate="Alignment" applyTo="':scope > .row'">
+        <!-- Don't use the standard Vert. Alignement option to not suggest Equal Height, which is useless for this snippet. -->
+        <BuilderButtonGroup>
+            <BuilderButton title.translate="Align Top" classAction="'align-items-start'" iconImg="'/html_builder/static/img/snippets_options/align_top.svg'"/>
+            <BuilderButton title.translate="Align Middle" classAction="'align-items-center'" iconImg="'/html_builder/static/img/snippets_options/align_middle.svg'"/>
+            <BuilderButton title.translate="Align Bottom" classAction="'align-items-end'" iconImg="'/html_builder/static/img/snippets_options/align_bottom.svg'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <services_pack_option template="website.ServicesPackOption" selector=".s_services_pack"/>
+        <services_pack_item_option template="website.ServicesPackItemOption" selector=".s_services_pack_item"/>
+    </xpath>
+</t>
+
+</templates>

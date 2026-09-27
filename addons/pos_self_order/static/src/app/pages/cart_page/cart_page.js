@@ -1,0 +1,700 @@
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, proxy, signal } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
+import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
+import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
+import { useScrollShadow } from "../../utils/scroll_shadow_hook";
+import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
+import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
+import { NumberPopup } from "@pos_self_order/app/components/number_popup/number_popup";
+import { _t } from "@web/core/l10n/translation";
+import { formatProductName } from "../../utils";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { PillsSelectionPopup } from "@pos_self_order/app/components/pills_selection_popup/pills_selection_popup";
+import { ChooseComboPopup } from "@pos_self_order/app/components/choose_combo_popup/choose_combo_popup";
+import { getOrderLineValues } from "@pos_self_order/app/services/card_utils";
+import { formatCurrency } from "@web/core/currency";
+
+const { DateTime } = luxon;
+
+export class CartPage extends Component {
+    static template = "pos_self_order.CartPage";
+    static components = { OrderWidget };
+
+    scrollContainerRef = signal.ref();
+
+    setup() {
+        this.selfOrder = useSelfOrder();
+        this.dialog = useService("dialog");
+        this.router = useService("router");
+        this.ui = useService("ui");
+        this.state = proxy({
+            orderNoteValue: "",
+            skipComboSuggestion: false,
+        });
+
+        this.scrollShadow = useScrollShadow(this.scrollContainerRef);
+        useLayoutEffect(
+            () => this.selfOrder.ensureDeliveryLine(),
+            () => {
+                const order = this.selfOrder.currentOrder;
+                const nonDeliveryTotal = order.lines
+                    .filter((l) => !l.isDeliveryLine && !l.isTipLine())
+                    .reduce((sum, l) => sum + (l.qty || 0) * (l.price_unit || 0), 0);
+                return [order.preset_id?.id, nonDeliveryTotal];
+            }
+        );
+        useLayoutEffect(
+            () => this.selfOrder.currentOrder.recomputeServiceFees(),
+            () => {
+                const order = this.selfOrder.currentOrder;
+                const serviceFeeProductId = order.preset_id?.service_fee_product_id?.id;
+                const applicableTotal = order.lines
+                    .filter((l) => l.product_id?.id !== serviceFeeProductId && !l.isTipLine())
+                    .reduce((sum, l) => sum + (l.qty || 0) * (l.price_unit || 0), 0);
+                return [order.preset_id?.id, applicableTotal];
+            }
+        );
+        this.isCheckout =
+            !history.state?.fromLanding || this.selfOrder.config.self_ordering_pay_after === "each";
+    }
+
+    onClickBack() {
+        if (this.selfOrder.currentOrder.unsentLines.length) {
+            this.router.navigate("product_list");
+        } else {
+            this.router.back();
+        }
+    }
+
+    get presetButton() {
+        const payAfter = this.selfOrder.config.self_ordering_pay_after;
+        const order = this.selfOrder.currentOrder;
+        if (
+            this.selfOrder.hasPresets() &&
+            order.preset_id &&
+            order.unsentLines.length &&
+            !(payAfter === "meal" && Object.keys(order.uiState.lineChanges).length) // No preset change after first order (pay-after-meal)
+        ) {
+            return {
+                label: order.preset_id.name,
+                onClick: () =>
+                    this.router.navigate("location", {}, { redirectPage: this.router.activeSlot }),
+            };
+        }
+        return null;
+    }
+
+    get payButton() {
+        const payAfter = this.selfOrder.config.self_ordering_pay_after;
+        const order = this.selfOrder.currentOrder;
+
+        const hasChanges = Object.keys(order.changes).length > 0;
+        const hasPayment = this.selfOrder.hasPaymentMethod();
+
+        if (payAfter === "meal") {
+            if (this.isCheckout && hasChanges) {
+                return { label: _t("Order"), disabled: order.lines.length === 0 };
+            } else if (hasPayment) {
+                return { label: _t("Pay"), disabled: hasChanges };
+            }
+            return null;
+        }
+
+        if (hasPayment && this.selfOrder.currentOrder.priceIncl > 0) {
+            return { label: _t("Pay") };
+        } else if (order.unsentLines.length) {
+            return { label: _t("Order") };
+        }
+        return null;
+    }
+
+    get showCancelButton() {
+        return (
+            this.selfOrder.config.self_ordering_mode === "mobile" &&
+            this.selfOrder.config.self_ordering_pay_after === "each" &&
+            this.selfOrder.currentOrder.isSynced
+        );
+    }
+
+    get orderNote() {
+        return this.selfOrder?.currentOrder?.general_customer_note || this.state?.orderNoteValue;
+    }
+
+    get lines() {
+        const order = this.selfOrder.currentOrder;
+        const payAfter = this.selfOrder.config.self_ordering_pay_after;
+        let lines = [];
+        if (this.isCheckout) {
+            const sourceLines = payAfter === "each" ? order.lines : order.unsentLines;
+            lines = sourceLines.filter((line) => !line.combo_parent_id && !line.isTipLine());
+        } else {
+            lines = order.lines.filter(
+                (l) => order.uiState.lineChanges[l.uuid] && !l.combo_parent_id && !l.isTipLine()
+            );
+        }
+
+        const regularLines = [];
+        const serviceFeeLines = [];
+        for (const line of lines) {
+            (line.isServiceFeeLine() ? serviceFeeLines : regularLines).push(line);
+        }
+
+        return [...regularLines, ...serviceFeeLines];
+    }
+
+    getLineDisplayQty(line) {
+        if (this.isCheckout) {
+            return this.getLineChangeQty(line) || line.qty;
+        }
+        const change = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
+        return change ? change.qty : line.qty;
+    }
+
+    get totalPriceAndTax() {
+        const { amountTaxes, priceIncl, lines } = this.selfOrder.currentOrder;
+        const { priceWithTax, tax, count } = this.isCheckout
+            ? this.selfOrder.orderLineNotSend
+            : this.selfOrder.orderLineSent;
+
+        // Tip lines are excluded from orderLineSent/orderLineNotSend.
+        const tipLine = lines.find((line) => line.isTipLine());
+        const tipPrice = tipLine?.getPriceDetailsWithQty(1);
+
+        return {
+            priceWithTax: count > 0 ? priceWithTax + (tipPrice?.total_included ?? 0) : priceIncl,
+            tax:
+                count > 0
+                    ? tax +
+                      (tipPrice?.taxes_data.reduce((sum, tax) => sum + tax.tax_amount, 0) ?? 0)
+                    : amountTaxes,
+        };
+    }
+
+    /**
+     * Opens the combo suggestion popup before checkout when profitable combos are available.
+     *
+     * Suggestions are applied inside the popup so the popup can keep its current position and
+     * refresh its remaining rows instead of closing and reopening after each conversion.
+     * If the customer declines remaining suggestions after applying at least one combo, the next
+     * Pay click skips suggestions once so checkout can continue. That skip is consumed by the
+     * checkout attempt, so returning to the cart allows suggestions to appear again.
+     * Returns true when the current checkout action must stop because the cart changed or the
+     * customer was redirected away from the cart.
+     */
+    getBestPotentialCombos() {
+        return this.selfOrder.comboSuggestion
+            .getPotentialCombos(this.selfOrder.currentOrder)
+            .filter((combo) => combo.totalComboPrice < combo.totalSplitedComboLinePrice);
+    }
+
+    async applyBestComboSuggestion(hasAppliedCombo = false) {
+        const bestPotentialCombos = this.getBestPotentialCombos();
+
+        if (!bestPotentialCombos.length) {
+            return hasAppliedCombo;
+        }
+        const comboToApply = await makeAwaitable(this.dialog, ChooseComboPopup, {
+            potentialCombos: bestPotentialCombos,
+            applyCombo: (combo) => this.convertComboSuggestion(combo),
+        });
+        if (!comboToApply) {
+            if (this.selfOrder.pendingComboConversion) {
+                this.selfOrder.pendingComboConversion = null;
+            }
+            this.state.skipComboSuggestion = hasAppliedCombo;
+            return hasAppliedCombo;
+        }
+        if (comboToApply.applied) {
+            // The popup already converted at least one suggestion. Keep the customer on the cart,
+            // then let the next Pay click continue without showing the declined suggestions again.
+            this.state.skipComboSuggestion = true;
+            return true;
+        }
+        const result = await this.convertComboSuggestion(comboToApply);
+        return result.potentialCombos?.length ? this.applyBestComboSuggestion(true) : true;
+    }
+
+    async convertComboSuggestion(comboToApply) {
+        const getConcernedLinesQty = (combinations) => {
+            const concernedLinesQty = {};
+            combinations.forEach((items) => {
+                for (const combo of Object.values(items)) {
+                    for (const [uuid, comboLine] of Object.entries(combo)) {
+                        if (!comboLine || typeof comboLine !== "object") {
+                            continue;
+                        }
+                        concernedLinesQty[uuid] = (concernedLinesQty[uuid] || 0) + comboLine.qty;
+                    }
+                }
+            });
+            return concernedLinesQty;
+        };
+
+        // Persist the source-line consumption so both the direct add flow and the combo selection
+        // page can finalize the conversion after the combo parent line is created.
+        this.selfOrder.pendingComboConversion = {
+            concernedLinesQty: getConcernedLinesQty(comboToApply.combinations),
+        };
+
+        const addComboToCart = async (comboValuesByCombination) => {
+            for (const comboValues of comboValuesByCombination) {
+                await this.selfOrder.addToCart(
+                    comboToApply.product.product_tmpl_id,
+                    1,
+                    "",
+                    {},
+                    {},
+                    comboValues
+                );
+            }
+            this.selfOrder.applyPendingComboConversion();
+        };
+
+        if (!comboToApply.upsell) {
+            await addComboToCart(
+                comboToApply.combinations.map((combination) =>
+                    this.selfOrder.comboSuggestion.getComboValuesFromCombination(combination)
+                )
+            );
+            return { applied: true, potentialCombos: this.getBestPotentialCombos() };
+        }
+
+        const preselectedCombos = comboToApply.combinations[0]
+            ? this.selfOrder.comboSuggestion.getComboValuesFromCombination(
+                  comboToApply.combinations[0]
+              )
+            : [];
+        const { show, selectedCombos } = comboToApply.product.showComboSelectionPage();
+        if (show) {
+            this.router.navigate(
+                "combo_selection",
+                {
+                    id: comboToApply.product.product_tmpl_id.id,
+                },
+                {
+                    redirectPage: "cart",
+                    selectedCombos: preselectedCombos.map((combo) => ({
+                        ...combo,
+                        combo_item_id: combo.combo_item_id.id,
+                    })),
+                }
+            );
+            return { applied: true, potentialCombos: [] };
+        }
+        await addComboToCart(comboToApply.combinations.map(() => selectedCombos));
+        return { applied: true, potentialCombos: this.getBestPotentialCombos() };
+    }
+    get optionalProducts() {
+        const optionalProducts =
+            this.selfOrder.currentOrder.lines.flatMap(
+                (line) => line.product_id.product_tmpl_id.pos_optional_product_ids
+            ) || [];
+        return optionalProducts;
+    }
+
+    getAttributes(line) {
+        return [...(line.attribute_value_ids || [])];
+    }
+
+    async openNotePopup() {
+        const note = await makeAwaitable(this.dialog, TextInputPopup, {
+            title: _t("Add an order note"),
+            startingValue: this.orderNote,
+            placeholder: _t(
+                "Specify which utensils, napkins, straws, and condiments you want to be included or any special instructions that you want the restaurant to be aware of"
+            ),
+            rows: 4,
+        });
+        if (note !== undefined) {
+            this.state.orderNoteValue = note;
+        }
+    }
+
+    get tipPercentages() {
+        return [15, 20, 25];
+    }
+
+    tipAmountForPercent(percentage) {
+        const subtotal = this.selfOrder.currentOrder.lines
+            .filter((l) => !l.isTipLine() && !l.isDeliveryLine && !l.isServiceFeeLine())
+            .reduce((sum, l) => sum + l.prices.total_included, 0);
+        return this.selfOrder.currency.round((subtotal * percentage) / 100);
+    }
+
+    get tipAmount() {
+        return this.selfOrder.currentOrder.tip_amount || 0;
+    }
+
+    get tipUiState() {
+        return this.selfOrder.currentOrder.uiState.tip;
+    }
+
+    get isCustomTip() {
+        if (!this.selfOrder.currentOrder.is_tipped) {
+            return false;
+        }
+        return this.tipPercentages.every(
+            (percentage) => this.tipAmountForPercent(percentage) !== this.tipAmount
+        );
+    }
+
+    get showTipSection() {
+        return (
+            this.selfOrder.config.tip_product_id &&
+            this.selfOrder.hasPaymentMethod() &&
+            this.totalPriceAndTax.priceWithTax > 0 &&
+            this.lines.length > 0 &&
+            !(
+                this.selfOrder.config.self_ordering_pay_after === "meal" &&
+                Object.keys(this.selfOrder.currentOrder.changes).length > 0
+            )
+        );
+    }
+
+    setTip(amount, type = "fixed", value = false) {
+        const order = this.selfOrder.currentOrder;
+        const tipProduct = this.selfOrder.config.tip_product_id;
+        if (!order || !tipProduct) {
+            return;
+        }
+
+        const tipLine = order.lines.find((l) => l.isTipLine());
+        const tip = amount || 0;
+
+        if (!tip) {
+            this.selfOrder.resetTip();
+            return;
+        }
+
+        if (tipLine) {
+            tipLine.qty = 1;
+            tipLine.setUnitPrice(tip);
+        } else {
+            const lineValues = getOrderLineValues(
+                this.selfOrder,
+                tipProduct.product_tmpl_id,
+                1,
+                ""
+            );
+            const line = this.selfOrder.models["pos.order.line"].create(lineValues);
+            line.price_type = "manual";
+            line.setUnitPrice(tip);
+        }
+        order.setTip(tip, type, value || tip);
+    }
+
+    selectTipPercent(percentage) {
+        if (this.tipAmountForPercent(percentage) === this.tipAmount) {
+            this.setTip(false);
+        } else {
+            this.setTip(this.tipAmountForPercent(percentage), "percent", percentage);
+        }
+    }
+
+    async openTipNumpad() {
+        const payload = await makeAwaitable(this.dialog, NumberPopup, {
+            title: _t("Add a Tip"),
+            startingValue: this.isCustomTip ? this.tipUiState.value || "" : "",
+            formatDisplayedValue: (value) =>
+                formatCurrency(parseFloat(value) || 0, this.selfOrder.currency.id),
+        });
+        if (!payload) {
+            return;
+        }
+
+        const amount = this.selfOrder.currency.round(parseFloat(payload.value) || 0);
+        if (!amount) {
+            await this.setTip(false);
+            return;
+        }
+
+        await this.setTip(amount);
+    }
+
+    async cancelOrder() {
+        this.dialog.add(CancelPopup, {
+            title: _t("Cancel order"),
+            confirm: async () => {
+                this.selfOrder.cancelBackendOrder();
+            },
+        });
+    }
+
+    getLineChangeQty(line) {
+        const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
+        return !lastChange ? line.qty : line.getPendingQtyDelta();
+    }
+
+    async pay() {
+        const presets = this.selfOrder.models["pos.preset"].getAll();
+        const config = this.selfOrder.config;
+        const type = config.self_ordering_mode;
+        const orderingMode =
+            config.use_presets && presets.length > 1
+                ? this.selfOrder.currentOrder.preset_id?.service_at
+                : config.self_ordering_service_mode;
+        const isTableService = orderingMode === "table" || orderingMode === "dynamic_qr";
+        const useTiming =
+            config.use_presets &&
+            presets.length > 0 &&
+            this.selfOrder.currentOrder.preset_id?.use_timing;
+
+        if (this.selfOrder.rpcLoading || !this.selfOrder.verifyCart()) {
+            return;
+        }
+
+        const canProceed = await this.selfOrder.canProceedToPay();
+        if (!canProceed) {
+            return;
+        }
+
+        const skipSuggestion = this.state.skipComboSuggestion;
+        this.state.skipComboSuggestion = false;
+
+        if (!skipSuggestion && (await this.applyBestComboSuggestion())) {
+            return;
+        }
+
+        const order = this.selfOrder.currentOrder;
+        const partner = order.partner_id || {};
+        const time = order.preset_time ? order.preset_time.toSQL() : null;
+        const isValidRequiredInfo = this.selfOrder.isValidSelection(time, {
+            id: parseInt(partner.id),
+            name: partner.name || order.floating_order_name,
+            email: partner.email || order.email,
+            phone: partner.phone || order.mobile,
+            street: partner.street,
+            city: partner.city,
+            country_id: partner.country_id,
+            state_id: partner.state_id,
+            zip: partner.zip,
+        });
+
+        if (!isValidRequiredInfo && !isTableService) {
+            let result = null;
+
+            // Show timing selection popup only if preset uses timing
+            if (useTiming) {
+                result = await makeAwaitable(this.dialog, PillsSelectionPopup, {
+                    options: this.presetTimingOptions,
+                    title: _t("Select a hour"),
+                    subtitle: _t("Please choose a time slot for your order."),
+                    selectionType: "time",
+                });
+                if (!result) {
+                    return;
+                }
+                this.selfOrder.currentOrder.preset_time = DateTime.fromSQL(result);
+            }
+
+            // Always show preset info popup when requirements aren't filled
+            const infos = await makeAwaitable(this.dialog, PresetInfoPopup, {});
+            if (!infos) {
+                return;
+            }
+
+            const email = this.selfOrder.currentOrder.partner_id?.email || infos.email;
+            const mobile = this.selfOrder.currentOrder.mobile || infos.phone;
+            this.selfOrder.currentOrder.email = email;
+            this.selfOrder.currentOrder.mobile = mobile;
+        }
+
+        if (
+            type === "mobile" &&
+            orderingMode === "table" &&
+            !this.selfOrder.currentTable &&
+            this.selfOrder.config.module_pos_restaurant
+        ) {
+            const table = await makeAwaitable(this.dialog, PillsSelectionPopup, {
+                options: this.tableOptions,
+                title: _t("Select a table"),
+                subtitle: _t("Please choose a table for your order."),
+                selectionType: "table",
+            });
+            if (!table) {
+                return;
+            }
+
+            const tableRecord = this.selfOrder.models["restaurant.table"].get(table);
+            this.selectTableDependingOnMode(tableRecord);
+            this.router.addTableIdentifier(tableRecord);
+        } else if (this.selfOrder.currentTable) {
+            this.selectTableDependingOnMode(this.selfOrder.currentTable);
+        }
+        const noteText = this.state.orderNoteValue.trim();
+        if (noteText) {
+            this.selfOrder.currentOrder.general_customer_note = noteText;
+        }
+        this.selfOrder.rpcLoading = true;
+        await this.selfOrder.confirmOrder();
+        this.selfOrder.rpcLoading = false;
+    }
+
+    get presetTimingOptions() {
+        return this.selfOrder.getTimingOptions(this.selfOrder.currentOrder.preset_id);
+    }
+
+    get tableOptions() {
+        const options = {
+            categories: {},
+        };
+
+        for (const table of this.selfOrder.models["restaurant.table"].getAll()) {
+            if (!options.categories[table.floor_id.id]) {
+                options.categories[table.floor_id.id] = {
+                    id: table.floor_id.id,
+                    name: table.floor_id.name,
+                    subCategories: {
+                        table: {
+                            id: table.floor_id.id + "odd",
+                            name: false,
+                            options: [],
+                        },
+                    },
+                };
+            }
+
+            options.categories[table.floor_id.id].subCategories.table.options.push({
+                id: table.id,
+                name: table.table_number,
+            });
+        }
+
+        return options;
+    }
+
+    selectTableDependingOnMode(table) {
+        if (this.selfOrder.config.self_ordering_pay_after === "each") {
+            this.selfOrder.currentOrder.floating_order_name = _t(
+                "Self-Order T %s",
+                table.table_number
+            );
+        } else {
+            this.selfOrder.currentOrder.self_ordering_table_id = table;
+        }
+    }
+
+    selectTable(table) {
+        if (table) {
+            this.selectTableDependingOnMode(table);
+            this.router.addTableIdentifier(table);
+            this.pay();
+        }
+
+        this.state.selectTable = false;
+    }
+
+    getPrice(line) {
+        const childLines = line.combo_line_ids;
+        const qty = this.getLineDisplayQty(line);
+        if (childLines.length === 0) {
+            return line.getDisplayPriceWithQty(qty);
+        } else {
+            let price = 0;
+            for (const child of childLines) {
+                price += child.getDisplayPriceWithQty(this.getLineDisplayQty(child));
+            }
+            return price;
+        }
+    }
+
+    canChangeQuantity(line) {
+        const order = this.selfOrder.currentOrder;
+        const lastChange = order.uiState.lineChanges[line.uuid];
+        if (!lastChange) {
+            return true;
+        }
+        return lastChange.qty < line.qty;
+    }
+
+    canDeleteLine(line) {
+        const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
+        return !lastChange ? true : lastChange.qty !== line.qty;
+    }
+
+    removeLine(line, event) {
+        if (!this.canDeleteLine(line)) {
+            return;
+        }
+        const lastChange = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
+        if (lastChange) {
+            line.qty = lastChange.qty;
+            return;
+        }
+        const doRemoveLine = () => {
+            this.setTip(false);
+            this.selfOrder.removeLine(line);
+            if (this.lines.length === 0) {
+                this.router.navigate("product_list");
+            }
+        };
+        const card = event?.target.closest(".product-cart-item");
+        if (!card) {
+            doRemoveLine();
+            return;
+        }
+        const onAnimationEnd = () => {
+            card.removeEventListener("animationend", onAnimationEnd);
+            doRemoveLine();
+        };
+        card.addEventListener("animationend", onAnimationEnd);
+        card.classList.add("delete-fade-out");
+    }
+
+    changeQuantity(line, increase) {
+        if (!increase && !this.canChangeQuantity(line)) {
+            return;
+        }
+        this.setTip(false);
+        // Update combo first
+        for (const cline of line.combo_line_ids) {
+            this.changeQuantity(cline, increase);
+        }
+
+        increase ? line.qty++ : line.qty--;
+
+        if (line.qty <= 0) {
+            this.removeLine(line);
+        }
+    }
+
+    getCustomValue(line, attr) {
+        return (
+            attr.is_custom &&
+            line.custom_attribute_value_ids.find(
+                (c) => c.custom_product_template_attribute_value_id === attr
+            )?.custom_value
+        );
+    }
+    get displayTaxes() {
+        return !this.selfOrder.isTaxesIncludedInPrice();
+    }
+
+    formatProductName(product) {
+        return formatProductName(product);
+    }
+
+    /*
+    //TODO editable line
+        clickOnLine(line) {
+        const order = this.selfOrder.currentOrder;
+        this.selfOrder.editedLine = line;
+
+        if (order.state === "draft" && !order.lastChangesSent[line.uuid]) {
+            this.selfOrder.selectedOrderUuid = order.uuid;
+
+            if (line.combo_line_ids.length > 0) {
+                this.router.navigate("combo_selection", { id: line.product_id });
+            } else {
+                this.router.navigate("product", { id: line.product_id });
+            }
+        } else {
+            this.selfOrder.notification.add(_t("You cannot edit a posted orderline !"), {
+                type: "danger",
+            });
+        }
+    }
+*/
+}

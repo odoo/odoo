@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="pos_discount.pos_order_receipt" inherit_id="point_of_sale.pos_order_receipt">
+            <xpath expr="//t[@t-call='point_of_sale.pos_orderline_receipt']" position="attributes">
+                <attribute name="t-if">not (line['product_id'] == config['discount_product_id'] and conditions['basic_receipt'])</attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,175 @@
+$o-account-dashboard-kpi-card-min-width: 13rem;
+$o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
+
+@mixin show-account-dashboard-kpi-at-capacity(
+    $capacity,
+    $card-id,
+    $fallback-card-id: null,
+    $card-min-width: $o-account-dashboard-kpi-card-min-width
+) {
+    $cards-width: $card-min-width * $capacity;
+    $gaps-width: $o-account-dashboard-kpi-card-gap * ($capacity - 1);
+
+    @container (min-width: calc(#{$cards-width} + #{$gaps-width})) {
+        .o_account_dashboard_kpis {
+            > [data-kpi-id="#{$card-id}"] {
+                display: flex;
+            }
+
+            @if $fallback-card-id {
+                &:not(:has(> [data-kpi-id="invoice_layout"]))
+                    > [data-kpi-id="#{$fallback-card-id}"] {
+                    display: flex;
+                }
+            }
+        }
+    }
+}
+
+.o_account_dashboard_kpis_wrapper {
+    display: grid;
+    gap: map-get($spacers, 2);
+    align-items: start;
+    flex: 0 0 100%;
+    max-width: 100%;
+    container-type: inline-size;
+
+    @include media-breakpoint-down(md) {
+        margin: 0 0 (1px + $border-width); // 1px offsets .o_kanban_record:first-of-type's hardcoded margin-top
+    }
+}
+
+.o_account_dashboard_kpis {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax($o-account-dashboard-kpi-card-min-width, 1fr)
+    );
+    grid-auto-rows: 1fr;
+    gap: $o-account-dashboard-kpi-card-gap;
+    width: 100%;
+    min-width: 0;
+    overflow: scroll hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    > .o_account_dashboard_kpi_card {
+        display: none;
+    }
+
+    > [data-kpi-id="invoice_layout"],
+    &:not(:has(> [data-kpi-id="invoice_layout"])) > [data-kpi-id="invoices"] {
+        display: flex;
+    }
+}
+
+// Keep the highest-priority cards that fit on one row.
+@include show-account-dashboard-kpi-at-capacity(2, "invoices", "expenses");
+@include show-account-dashboard-kpi-at-capacity(3, "expenses", "receivable");
+@include show-account-dashboard-kpi-at-capacity(4, "receivable", "payable");
+@include show-account-dashboard-kpi-at-capacity(5, "payable", "cash");
+@include show-account-dashboard-kpi-at-capacity(6, "cash");
+
+@include media-breakpoint-down(sm) {
+    $mobile-card-min-width: 12rem;
+
+    .o_account_dashboard_kpis {
+        grid-template-columns: repeat(
+            auto-fit,
+            minmax($mobile-card-min-width, 1fr)
+        );
+
+        > [data-kpi-id="invoice_layout"] {
+            display: none;
+        }
+    }
+
+    // Shift priorities because Invoice Layout is unavailable on mobile.
+    @include show-account-dashboard-kpi-at-capacity(
+        1, "invoices", null, $mobile-card-min-width
+    );
+    @include show-account-dashboard-kpi-at-capacity(
+        2, "expenses", null, $mobile-card-min-width
+    );
+    @include show-account-dashboard-kpi-at-capacity(
+        3, "receivable", null, $mobile-card-min-width
+    );
+    @include show-account-dashboard-kpi-at-capacity(
+        4, "payable", null, $mobile-card-min-width
+    );
+    @include show-account-dashboard-kpi-at-capacity(
+        5, "cash", null, $mobile-card-min-width
+    );
+}
+
+.o_account_dashboard_kpi_card {
+    display: flex;
+    flex-direction: column;
+    min-height: 4.5rem;
+    padding: map-get($spacers, 2) map-get($spacers, 3);
+    border: $border-width solid $border-color;
+    border-radius: $border-radius-lg;
+    background-color: $o-view-background-color;
+    scroll-snap-align: start;
+
+    &:not(:disabled):hover {
+        border-color: $o-brand-primary;
+        background-color: mix($o-brand-primary, $o-view-background-color, 5%);
+    }
+
+    &:disabled {
+        opacity: .65;
+        cursor: default;
+    }
+}
+
+.o_account_dashboard_kpi_invoice_layout_card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: map-get($spacers, 3);
+    border: 2px dashed #8C96A0;
+    background-color: #EAECEE;
+    .o_account_dashboard_kpi_header {
+        color: #2C3E50;
+    }
+}
+
+.o_account_dashboard_kpi_content {
+    display: flex;
+    flex-direction: column;
+}
+
+.o_account_dashboard_kpi_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: map-get($spacers, 2);
+    font-size: 1.125rem;
+    font-weight: $font-weight-semibold;
+    color: $text-muted;
+}
+
+.o_account_dashboard_kpi_image {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+}
+
+.o_account_dashboard_kpi_name {
+    min-width: 0;
+}
+
+.o_account_dashboard_kpi_value {
+    margin-top: map-get($spacers, 1);
+    font-size: $h4-font-size;
+    font-weight: $font-weight-semibold;
+    line-height: 1.15;
+    color: $headings-color;
+}

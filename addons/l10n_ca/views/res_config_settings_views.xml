@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_ca</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="sepa_payments" position="after">
+                <setting id="cpa005_vendor_payments"
+                         string="Canadian CPA005 Payments"
+                         title="If you check this box, you will be able to register payments using Canadian CPA005 (EFT and PAD)."
+                         help="This will enable both Vendor Payments and Customer Payments using Canadian CPA005 EFT (Electronic Funds Transfer) and PAD (Pre-Authorized Debit)."
+                         invisible="country_code != 'CA'">
+                    <field name="module_l10n_ca_payment_cpa005" widget="upgrade_boolean"/>
+                </setting>
+            </setting>
+            <setting id="collect_customer_payment" position="after">
+                <setting id="cpa005_customer_payments"
+                         string="Canadian CPA005 Payments"
+                         title="If you check this box, you will be able to register payments using Canadian CPA005 (EFT and PAD)."
+                         help="This will enable both Vendor Payments and Customer Payments using Canadian CPA005 EFT (Electronic Funds Transfer) and PAD (Pre-Authorized Debit)."
+                         invisible="country_code != 'CA'">
+                    <field name="module_l10n_ca_payment_cpa005" widget="upgrade_boolean"/>
+                </setting>
+            </setting>
+        </field>
+    </record>
+</odoo>

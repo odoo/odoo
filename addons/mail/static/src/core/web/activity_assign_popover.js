@@ -1,0 +1,74 @@
+import { propSignal } from "@mail/utils/common/hooks";
+
+import { imageUrl } from "@web/core/utils/urls";
+import { Component, signal, t, useProps } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+
+export class ActivityAssignPopover extends Component {
+    static template = "mail.ActivityAssignPopover";
+    static components = { Many2XAutocomplete };
+
+    setup() {
+        super.setup();
+        this.store = useService("mail.store");
+        this.orm = useService("orm");
+        this.responsibleLabel = _t("Responsible");
+        this.activity = propSignal("activity", t.instanceOf(this.store["mail.activity"]));
+        this.close = useProps.static("close", t.function([t.instanceOf(MouseEvent)]).optional());
+        this.hasHeader = useProps.static("hasHeader", t.boolean().optional(false));
+        this.onActivityChanged = useProps.static(
+            "onActivityChanged",
+            t.function([t.instanceOf(this.store["mail.thread"])])
+        );
+        this.userId = signal(this.activity().user_id?.id || false);
+        this.userName = signal(this.activity().user_id?.name || "");
+        this.disableAssignButton = signal(false);
+    }
+
+    getAvatarUrl(userId) {
+        if (!userId) {
+            return undefined;
+        }
+        return (
+            this.store["res.users"].get(userId)?.avatarUrl ??
+            imageUrl("res.users", userId, "avatar_128")
+        );
+    }
+
+    getDomain() {
+        return [["share", "=", false]];
+    }
+
+    onSelect(records) {
+        if (!records) {
+            this.userId.set(false);
+            this.userName.set("");
+            return;
+        }
+        const record = records[0];
+        this.userId.set(record?.id || false);
+        this.userName.set(record?.display_name || record?.name || "");
+    }
+
+    async onClickAssign() {
+        if (this.disableAssignButton()) {
+            return;
+        }
+        const thread = this.activity().thread;
+        this.disableAssignButton.set(true);
+        try {
+            await this.orm.write("mail.activity", [this.activity().id], {
+                user_id: this.userId() || false,
+            });
+            this.onActivityChanged(thread);
+            await thread.fetchNewMessages();
+        } finally {
+            this.disableAssignButton.set(false);
+        }
+        if (this.close) {
+            this.close();
+        }
+    }
+}

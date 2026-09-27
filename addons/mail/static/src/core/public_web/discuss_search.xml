@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="mail.DiscussSearch">
+    <div class="o-mail-DiscussSearch align-self-stretch d-flex align-items-center gap-1" t-attf-class="{{ this.class }}">
+        <SearchInput
+            search="this.search"
+            classNames="'o-mail-DiscussSearch-inputContainer'"
+            inputRef="this.searchInput"
+            placeholder.translate="Search Conversation"
+            onClear.bind="this.onClearSearch"
+            onKeydown.bind="this.onKeydownSearch"
+        />
+    </div>
+</t>
+</templates>

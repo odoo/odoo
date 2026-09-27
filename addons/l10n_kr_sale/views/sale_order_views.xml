@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_l10n_kr" model="ir.ui.view">
+        <field name="name">sale.order.form.l10n_kr</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <group name="sale_info" position="inside">
+                <field name="l10n_kr_issuance_type" invisible="country_code != 'KR'"/>
+            </group>
+        </field>
+    </record>
+</odoo>

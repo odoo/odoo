@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderDateTimePicker">
+    <BuilderComponent>
+        <div t-ref="this.rootRef" class="w-100 d-flex gap-1">
+            <BuilderTextInputBase
+                    t-props="this.textInputBaseProps"
+                    disabled="this.textInputBaseProps.disabled || this.isToday"
+                    commit="this.commit"
+                    preview="this.preview"
+                    onFocus.bind="this.onFocus"
+                    value="this.displayValue"
+            />
+            <button t-if="this.props.allowRelativeDate"
+                    t-attf-class="btn btn-secondary {{ this.isToday ? 'active' : '' }}"
+                    title="Set today as a relative date"
+                    aria-label="Set today as a relative date"
+                    t-on-click="this.toggleToday"
+                    t-att-disabled="this.textInputBaseProps.disabled">
+                <i class="oi" data-icon="today" role="img"/>
+            </button>
+        </div>
+    </BuilderComponent>
+</t>
+
+</templates>

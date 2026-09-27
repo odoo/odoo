@@ -1,0 +1,817 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.exceptions import AccessError
+from odoo.fields import Command, Domain
+from odoo.tests import Form, tagged, new_test_user
+from odoo.tools import mute_logger
+
+from .test_project_base import TestProjectCommon
+
+
+class TestProjectSharingCommon(TestProjectCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        project_sharing_stages_vals_list = [
+            (0, 0, {'name': 'To Do', 'sequence': 1}),
+            (0, 0, {'name': 'Done', 'sequence': 10, 'fold': True, 'rating_template_id': cls.env.ref('project.rating_project_request_email_template').id}),
+        ]
+
+        cls.partner_portal = cls.env['res.partner'].create({
+            'name': 'Chell Gladys',
+            'email': 'chell@gladys.portal',
+            'company_id': False,
+            'user_ids': [Command.link(cls.user_portal.id)]})
+
+        cls.project_cows = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Cows',
+            'privacy_visibility': 'portal',
+            'alias_name': 'project+cows',
+            'type_ids': project_sharing_stages_vals_list,
+        })
+        cls.project_portal = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Portal',
+            'privacy_visibility': 'portal',
+            'alias_name': 'project+portal',
+            'partner_id': cls.user_portal.partner_id.id,
+            'type_ids': project_sharing_stages_vals_list,
+        })
+        cls.project_portal.message_subscribe(partner_ids=[cls.partner_portal.id])
+
+        cls.project_no_collabo = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': 'No Collabo',
+            'privacy_visibility': 'followers',
+            'alias_name': 'project+nocollabo',
+        })
+
+        cls.task_cow = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Cow UserTask',
+            'user_ids': cls.user_projectuser,
+            'project_id': cls.project_cows.id,
+        })
+        cls.task_portal = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Portal UserTask',
+            'user_ids': cls.user_projectuser,
+            'project_id': cls.project_portal.id,
+        })
+        cls.task_no_collabo = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'No Collabo Task',
+            'project_id': cls.project_no_collabo.id,
+        })
+
+        cls.task_tag = cls.env['project.tags'].create({'name': 'Foo'})
+
+        cls.project_sharing_form_view_xml_id = 'project.project_sharing_project_task_view_form'
+
+    def get_project_sharing_form_view(self, record, with_user=None):
+        return Form(
+            record.with_user(with_user or self.env.user),
+            view=self.project_sharing_form_view_xml_id
+        )
+
+    def get_project_share_link(self):
+        return self.get_project_share_link_partner(self.user_portal.partner_id)
+
+    def get_project_share_link_partner(self, partner):
+        self.env['project.share.wizard'].create({
+            'res_model': 'project.project',
+            'res_id': self.project_no_collabo.id,
+            'collaborator_ids': [
+                Command.create({'partner_id': partner.id, 'access_mode': 'advanced_edit'}),
+            ],
+        }).action_send_mail()
+        return self.env['mail.message'].search([
+            ('partner_ids', 'in', partner.id),
+        ])
+
+
+@tagged('project_sharing')
+@tagged('-post_install', 'at_install')  # test_create_task_in_project_sharing breaks post install with AccessError
+class TestProjectSharing(TestProjectSharingCommon):
+
+    def test_project_share_wizard(self):
+        """ Test Project Share Wizard
+
+            Test Cases:
+            ==========
+            1) Create the wizard record
+            2) Check if no access rights are given to a portal user
+            3) Add 'advanced_edit' access rights to a portal user
+            4) Verify the wizard reloads correctly
+        """
+        self.project_portal.message_unsubscribe(partner_ids=self.user_portal.partner_id.ids)
+        project_share_form = Form(self.env['project.share.wizard'].with_context(active_model='project.project', active_id=self.project_portal.id))
+        self.assertFalse(project_share_form.collaborator_ids, 'No collaborator should be in the wizard.')
+        with self.assertRaises(AccessError, msg='The public user should not have any access to project sharing feature of the portal project.'):
+            self.project_portal.with_user(self.user_portal)._check_project_sharing_access()
+        with project_share_form.collaborator_ids.new() as collaborator_form:
+            collaborator_form.partner_id = self.user_portal.partner_id
+            collaborator_form.access_mode = 'advanced_edit'
+        project_share_wizard = project_share_form.save()
+        project_share_wizard.action_send_mail()
+        self.assertEqual(len(self.project_portal.collaborator_ids), 1, 'The access right added in project share wizard should be added in the project when the user confirm the access in the wizard.')
+        self.assertDictEqual({
+            'partner_id': self.project_portal.collaborator_ids.partner_id,
+            'project_id': self.project_portal.collaborator_ids.project_id,
+            'access_mode': self.project_portal.collaborator_ids.access_mode,
+        }, {
+            'partner_id': self.user_portal.partner_id,
+            'project_id': self.project_portal,
+            'access_mode': 'advanced_edit',
+        }, 'The access rights added should be advanced edit access for the portal project.')
+        self.assertTrue(self.project_portal.with_user(self.user_portal)._check_project_sharing_access(), 'The portal user should have access to the portal project with project sharing feature.')
+        project_share_wizard = self.env['project.share.wizard'].with_context(active_model="project.project", active_id=self.project_portal.id).new({})
+        self.assertEqual(len(project_share_wizard.collaborator_ids), 1, 'The access right added in project share wizard should be added in the project when the user confirm the access in the wizard.')
+        self.assertDictEqual({
+            'partner_id': project_share_wizard.collaborator_ids.partner_id,
+            'access_mode': project_share_wizard.collaborator_ids.access_mode,
+        }, {
+            'partner_id': self.user_portal.partner_id,
+            'access_mode': 'advanced_edit',
+        })
+
+    def test_project_share_wizard_add_collaborator_with_limited_access(self):
+        ProjectShare = self.env['project.share.wizard'].with_context(active_model="project.project", active_id=self.project_portal.id)
+        self.project_portal.write({
+            'collaborator_ids': [
+                Command.create({'partner_id': self.partner_1.id, 'access_mode': 'advanced_edit'}),
+            ],
+        })
+        self.project_portal.message_unsubscribe(partner_ids=[self.user_portal.partner_id.id])
+        project_share_form = Form(ProjectShare)
+        self.assertEqual(len(project_share_form.collaborator_ids), 1)
+        with project_share_form.collaborator_ids.new() as collaborator_form:
+            collaborator_form.partner_id = self.user_portal.partner_id
+            collaborator_form.access_mode = 'edit'
+        project_share_wizard = project_share_form.save()
+        project_share_wizard.action_send_mail()
+        self.assertEqual(len(self.project_portal.collaborator_ids), 2, 'The access right added in project share wizard should be added in the project when the user confirm the access in the wizard.')
+        self.assertEqual(self.project_portal.collaborator_ids.partner_id, self.user_portal.partner_id + self.partner_1)
+        for collaborator in self.project_portal.collaborator_ids:
+            collaborator_vals = {
+                'partner_id': collaborator.partner_id,
+                'project_id': collaborator.project_id,
+                'access_mode': collaborator.access_mode,
+            }
+            if collaborator.partner_id == self.user_portal.partner_id:
+                self.assertDictEqual(collaborator_vals, {
+                    'partner_id': self.user_portal.partner_id,
+                    'project_id': self.project_portal,
+                    'access_mode': 'edit',
+                })
+            else:
+                self.assertDictEqual(collaborator_vals, {
+                    'partner_id': self.partner_1,
+                    'project_id': self.project_portal,
+                    'access_mode': 'advanced_edit',
+                })
+        self.assertTrue(self.project_portal.with_user(self.user_portal)._check_project_sharing_access(), 'The portal user should have read access to the portal project with project sharing feature.')
+
+        project_share_wizard = ProjectShare.new({})
+        self.assertEqual(len(project_share_wizard.collaborator_ids), 2, 'The access right added in project share wizard should be added in the project when the user confirm the access in the wizard.')
+        for collaborator in project_share_wizard.collaborator_ids:
+            collaborator_vals = {
+                'partner_id': collaborator.partner_id,
+                'access_mode': collaborator.access_mode,
+            }
+            if collaborator.partner_id == self.user_portal.partner_id:
+                self.assertDictEqual(collaborator_vals, {
+                    'partner_id': self.user_portal.partner_id,
+                    'access_mode': 'edit',
+                })
+            else:
+                self.assertDictEqual(collaborator_vals, {
+                    'partner_id': self.partner_1,
+                    'access_mode': 'advanced_edit',
+                })
+
+    def test_project_share_wizard_remove_collaborators(self):
+        PortalShare = self.env['project.share.wizard'].with_context(active_model="project.project", active_id=self.project_portal.id)
+        self.project_portal.collaborator_ids.filtered(
+            lambda c: c.partner_id == self.user_portal.partner_id
+        ).write({'access_mode': 'advanced_edit'})
+        self.project_portal.write({
+            'collaborator_ids': [
+                Command.create({'partner_id': self.partner_1.id, 'access_mode': 'edit'}),
+            ],
+        })
+
+        self.project_portal.message_subscribe(partner_ids=[self.partner_2.id, self.user_portal.partner_id.id])
+
+        initial_followers = self.project_portal.message_partner_ids
+
+        with Form(PortalShare) as project_share_form:
+            self.assertEqual(len(project_share_form.collaborator_ids), 2, "Only the 2 external collaborators should be loaded into the wizard.")
+
+            while len(project_share_form.collaborator_ids) > 0:
+                project_share_form.collaborator_ids.remove(0)
+
+        project_share_wizard = project_share_form.save()
+        project_share_wizard.action_send_mail()
+
+        self.assertFalse(self.project_portal.collaborator_ids, "There should be no collaborators left on the project.")
+
+        self.assertEqual(
+            self.project_portal.message_partner_ids,
+            initial_followers,
+            "Followers should remain completely untouched when collaborators are added or removed."
+        )
+        self.assertIn(self.partner_2, self.project_portal.message_partner_ids, "partner_2 should still be subscribed.")
+        self.assertIn(self.user_portal.partner_id, self.project_portal.message_partner_ids, "user_portal should still be subscribed despite being removed as a collaborator.")
+
+    def test_project_share_wizard_alter_access_mode_collaborators(self):
+        ProjectShare = self.env['project.share.wizard'].with_context(active_model="project.project", active_id=self.project_portal.id)
+
+        # SETUP: 2 Collaborators (project-level), 1 Follower (task-level)
+        self.project_portal.write({
+            'collaborator_ids': [
+                Command.create({'partner_id': self.partner_1.id, 'access_mode': 'advanced_edit'}),
+            ],
+            'message_partner_ids': [
+                Command.link(self.partner_2.id),
+            ],
+        })
+
+        with Form(ProjectShare) as project_share_form:
+            for index in range(len(project_share_form.collaborator_ids)):
+                with project_share_form.collaborator_ids.edit(index) as collaborator_form:
+                    if collaborator_form.partner_id == self.user_portal.partner_id:
+                        collaborator_form.access_mode = 'edit'
+
+            with project_share_form.collaborator_ids.new() as collaborator_form:
+                collaborator_form.partner_id = self.partner_2
+                collaborator_form.access_mode = 'advanced_edit'
+
+        project_share_form.save()
+        self.assertEqual(len(self.project_portal.collaborator_ids), 3, "3 collaborators should be found for that project.")
+        self.assertEqual(
+            self.project_portal.collaborator_ids.partner_id,
+            self.user_portal.partner_id + self.partner_1 + self.partner_2,
+            "The collaborators should be the portal user, Valid Lelitre and Valid Poilvache.",
+        )
+        self.assertEqual(
+            self.project_portal.collaborator_ids.filtered(lambda c: c.access_mode == 'advanced_edit').partner_id,
+            self.partner_1 + self.partner_2,
+            "Valid Lelitre and Valid Poilvache should have 'advanced_edit' access.",
+        )
+        self.assertEqual(
+            self.project_portal.collaborator_ids.filtered(lambda c: c.access_mode == 'edit').partner_id,
+            self.user_portal.partner_id,
+            "The portal user should have 'edit' access.",
+        )
+
+    def test_project_sharing_access(self):
+        """ Check if the different user types can access to project sharing feature as expected. """
+
+        with self.assertRaises(AccessError, msg='The public user should not have any access to project sharing feature of the portal project.'):
+            self.project_portal.with_user(self.user_public)._check_project_sharing_access()
+        self.assertTrue(self.project_portal.with_user(self.user_projectuser)._check_project_sharing_access(), 'The internal user should have all accesses to project sharing feature of the portal project.')
+        self.assertTrue(self.project_portal.with_user(self.user_portal)._check_project_sharing_access(), 'The portal user can access to project sharing feature of the portal project.')
+        self.project_portal.collaborator_ids.filtered(lambda c: c.partner_id == self.user_portal.partner_id).unlink()
+        with self.assertRaises(AccessError, msg='The portal user should not have any access to project sharing feature after their collaborator record is removed.'):
+            self.project_portal.with_user(self.user_portal)._check_project_sharing_access()
+
+    @mute_logger('odoo.addons.base.models.ir_access')
+    def test_create_task_in_project_sharing(self):
+        """ Test when portal user creates a task in project sharing views.
+
+            Test Cases:
+            ==========
+            1) Give the 'view' access mode to a portal user in a project and try to create task with this user.
+            2) Give the 'comment' access mode to a portal user in a project and try to create task with this user.
+            3) Give the 'edit' access mode to a portal user in a project and try to create task with this user.
+            3.1) Try to change the project of the new task with this user.
+        """
+        Task = self.env['project.task'].with_context({'default_project_id': self.project_portal.id, 'default_user_ids': [(4, self.user_portal.id)]})
+        # 1) Give the 'view' access mode to a portal user in a project and try to create task with this user.
+        with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
+            with self.get_project_sharing_form_view(Task, self.user_portal) as form:
+                form.name = 'Test'
+                task = form.save()
+
+        collaborator = self.project_portal.collaborator_ids.filtered(lambda c: c.partner_id == self.user_portal.partner_id)
+        collaborator.write({'access_mode': 'edit'})
+        with self.get_project_sharing_form_view(Task, self.user_portal) as form:
+            form.name = 'Test'
+            with form.child_ids.new() as subtask_form:
+                subtask_form.name = 'Test Subtask'
+            task = form.save()
+            self.assertEqual(task.name, 'Test')
+            self.assertEqual(task.project_id, self.project_portal)
+            self.assertFalse(task.portal_user_names)
+            self.assertTrue(task.stage_id)
+
+            # Check creating a sub-task while creating the parent task works as expected.
+            self.assertEqual(task.child_ids.name, 'Test Subtask')
+            self.assertEqual(task.child_ids.project_id, self.project_portal)
+            self.assertFalse(task.child_ids.portal_user_names, 'by default no user should be assigned to a subtask created by the portal user.')
+            self.assertFalse(task.child_ids.user_ids, 'No user should be assigned to the new subtask.')
+
+            # 3.1) Try to change the project of the new task with this user.
+            with self.assertRaises(AssertionError, msg="Should not accept the portal user changes the project of the task."):
+                form.project_id = self.project_cows
+                task = form.save()
+
+        Task = Task.with_user(self.user_portal)
+
+        # Allow to set as parent a task he has access to
+        task = Task.create({'name': 'foo', 'parent_id': self.task_portal.id})
+        self.assertEqual(task.parent_id, self.task_portal)
+        # Disallow to set as parent a task he doesn't have access to
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to set a parent task he doesn't have access to."):
+            Task.create({'name': 'foo', 'parent_id': self.task_no_collabo.id})
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to set a parent task he doesn't have access to."):
+            task = Task.with_context(default_parent_id=self.task_no_collabo.id).create({'name': 'foo'})
+
+        # Create/Update a forbidden task through child_ids
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
+            Task.create({'name': 'foo', 'child_ids': [Command.update(self.task_no_collabo.id, {'name': 'Foo'})]})
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
+            Task.create({'name': 'foo', 'child_ids': [Command.delete(self.task_no_collabo.id)]})
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
+            Task.create({'name': 'foo', 'child_ids': [Command.unlink(self.task_no_collabo.id)]})
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
+            Task.create({'name': 'foo', 'child_ids': [Command.link(self.task_no_collabo.id)]})
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
+            Task.create({'name': 'foo', 'child_ids': [Command.set([self.task_no_collabo.id])]})
+
+        # Same thing but using context defaults
+        # However, cache is updated, but nothing is written.
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
+            Task.with_context(default_child_ids=[Command.update(self.task_no_collabo.id, {'name': 'Foo'})]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to delete"):
+            task = Task.with_context(default_child_ids=[Command.delete(self.task_no_collabo.id)]).create({'name': 'foo'})
+            task.env.invalidate_all()
+            self.assertTrue(self.task_no_collabo.exists(), "Task should still be there, no delete is sent")
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
+            self.task_no_collabo.parent_id = self.task_no_collabo.create({'name': 'parent collabo'})
+            task = Task.with_context(default_child_ids=[Command.unlink(self.task_no_collabo.id)]).create({'name': 'foo'})
+            task.env.invalidate_all()
+            self.assertTrue(self.task_no_collabo.parent_id, "Task should still be there, no delete is sent")
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
+            task = Task.with_context(default_child_ids=[Command.link(self.task_no_collabo.id)]).create({'name': 'foo'})
+            task.env.invalidate_all()
+            self.assertFalse(task.child_ids)
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
+            task = Task.with_context(default_child_ids=[Command.set([self.task_no_collabo.id])]).create({'name': 'foo'})
+            task.env.invalidate_all()
+            self.assertFalse(task.child_ids)
+
+        # Create/update a tag through tag_ids
+        with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tag'"):
+            Task.create({'name': 'foo', 'tag_ids': [Command.create({'name': 'Bar'})]})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tag'"):
+            Task.create({'name': 'foo', 'tag_ids': [Command.update(self.task_tag.id, {'name': 'Bar'})]})
+        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tag'"):
+            Task.create({'name': 'foo', 'tag_ids': [Command.delete(self.task_tag.id)]})
+
+        # Same thing but using context defaults
+        with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tag'"):
+            Task.with_context(default_tag_ids=[Command.create({'name': 'Bar'})]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tag'"):
+            task = Task.with_context(default_tag_ids=[Command.update(self.task_tag.id, {'name': 'Bar'})]).create({'name': 'foo'})
+            task.env.invalidate_all()
+            self.assertNotEqual(self.task_tag.name, 'Bar')
+        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tag'"):
+            Task.with_context(default_tag_ids=[Command.delete(self.task_tag.id)]).create({'name': 'foo'})
+            task.env.invalidate_all()
+            self.assertTrue(self.task_tag.exists())
+
+        task = Task.create({'name': 'foo', 'color': 1, 'tag_ids': [Command.link(self.task_tag.id)]})
+        self.assertEqual(task.color, 1)
+        self.assertEqual(task.tag_ids, self.task_tag)
+
+        task = Task.create({'name': 'foo', 'color': 4, 'tag_ids': [Command.set([self.task_tag.id])]})
+        self.assertEqual(task.color, 4)
+        self.assertEqual(task.tag_ids, self.task_tag)
+
+    @mute_logger('odoo.addons.base.models.ir_access')
+    def test_edit_task_in_project_sharing(self):
+        """ Test when portal user creates a task in project sharing views.
+
+            Test Cases:
+            ==========
+            1) Give the 'view' access mode to a portal user in a project and try to edit task with this user.
+            2) Give the 'comment' access mode to a portal user in a project and try to edit task with this user.
+            3) Give the 'edit' access mode to a portal user in a project and try to create task with this user.
+            3.1) Try to change the project of the new task with this user.
+            3.2) Create a sub-task
+            3.3) Create a second sub-task
+            4.1) Restrict to edit with limited access and try to edit a task with and without following it
+            4.2) Restrict to read and check he can no longer edit the tasks, even if he is within the followers
+        """
+        # 1) Give the 'view' access mode to a portal user in a project and try to create task with this user.
+        wizard = self.env['project.share.wizard'].with_context(active_model='project.project', active_id=self.project_cows.id).create({
+            'collaborator_ids': [
+                Command.clear(),
+                Command.create({'partner_id': self.user_portal.partner_id.id, 'access_mode': 'view'}),
+            ],
+        })
+        wizard.action_send_mail()
+
+        with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
+            with self.get_project_sharing_form_view(self.task_cow.with_context({'default_project_id': self.project_cows.id}), self.user_portal) as form:
+                form.name = 'Test'
+                task = form.save()
+
+        # 3) Give the 'advanced_edit' access mode
+        wizard = self.env['project.share.wizard'].with_context(active_model='project.project', active_id=self.project_cows.id).create({
+            'collaborator_ids': [
+                Command.clear(),
+                Command.create({'partner_id': self.user_portal.partner_id.id, 'access_mode': 'advanced_edit'}),
+            ],
+        })
+        wizard.action_send_mail()
+
+        # Prove the portal user does not need to be a follower to access the task in project sharing.
+        # Being a project collaborator with 'advanced_edit' grants full access to the task natively.
+        self.task_cow.sudo().message_unsubscribe(partner_ids=self.user_portal.partner_id.ids)
+        self.assertNotIn(self.user_portal.partner_id, self.task_cow.message_partner_ids, "User should not be a follower.")
+
+        with self.get_project_sharing_form_view(self.task_cow.with_context({'default_project_id': self.project_cows.id, 'uid': self.user_portal.id}), self.user_portal) as form:
+            form.name = 'Test'
+            task = form.save()
+            self.assertEqual(task.name, 'Test')
+            self.assertEqual(task.project_id, self.project_cows)
+
+        # 3.1) Try to change the project of the new task with this user.
+        with self.assertRaises(AssertionError, msg="Should not accept the portal user changes the project of the task."):
+            with self.get_project_sharing_form_view(task, self.user_portal) as form:
+                form.project_id = self.project_portal
+
+        # 3.2) Create a sub-task
+        with self.get_project_sharing_form_view(task, self.user_portal) as form:
+            with form.child_ids.new() as subtask_form:
+                subtask_form.name = 'Test Subtask'
+                with self.assertRaises(AssertionError, msg="Should not accept the portal user changes the project of the task."):
+                    subtask_form.project_id = self.project_portal
+        self.assertEqual(task.child_ids.name, 'Test Subtask')
+        self.assertEqual(task.child_ids.project_id, self.project_cows)
+        self.assertFalse(task.child_ids.portal_user_names, 'by default no user should be assigned to a subtask created by the portal user.')
+        self.assertFalse(task.child_ids.user_ids, 'No user should be assigned to the new subtask.')
+
+        task2 = self.env['project.task'] \
+            .with_context({
+                'default_project_id': self.project_cows.id,
+                'default_user_ids': [Command.set(self.user_portal.ids)],
+            }) \
+            .with_user(self.user_portal) \
+            .create({'name': 'Test'})
+        self.assertFalse(task2.portal_user_names, 'the portal user should not be assigned when the portal user creates a task into the project shared.')
+
+        # 3.3) Create a second sub-task
+        with self.get_project_sharing_form_view(task, self.user_portal) as form:
+            with form.child_ids.new() as subtask_form:
+                subtask_form.name = 'Test Subtask'
+        self.assertEqual(len(task.child_ids), 2, 'Check 2 subtasks has correctly been created by the user portal.')
+
+        # Allow to set as parent a task he has access to
+        task.write({'parent_id': self.task_portal.id})
+        self.assertEqual(task.parent_id, self.task_portal)
+        # Disallow to set as parent a task he doesn't have access to
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to set a parent task he doesn't have access to."):
+            task.write({'parent_id': self.task_no_collabo.id})
+
+        # Create/Update a forbidden task through child_ids
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
+            task.write({'child_ids': [Command.update(self.task_no_collabo.id, {'name': 'Foo'})]})
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
+            task.write({'child_ids': [Command.delete(self.task_no_collabo.id)]})
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
+            task.write({'child_ids': [Command.unlink(self.task_no_collabo.id)]})
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
+            task.write({'child_ids': [Command.link(self.task_no_collabo.id)]})
+        with self.assertRaisesRegex(AccessError, "top-secret records"):
+            task.write({'child_ids': [Command.set([self.task_no_collabo.id])]})
+
+        # Create/update a tag through tag_ids
+        with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tag'"):
+            task.write({'tag_ids': [Command.create({'name': 'Bar'})]})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tag'"):
+            task.write({'tag_ids': [Command.update(self.task_tag.id, {'name': 'Bar'})]})
+        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tag'"):
+            task.write({'tag_ids': [Command.delete(self.task_tag.id)]})
+
+        task.write({'tag_ids': [Command.link(self.task_tag.id)]})
+        self.assertEqual(task.tag_ids, self.task_tag)
+
+        task.write({'tag_ids': [Command.unlink(self.task_tag.id)]})
+        self.assertFalse(task.tag_ids)
+
+        task.write({'tag_ids': [Command.link(self.task_tag.id)]})
+        task.write({'tag_ids': [Command.clear()]})
+        self.assertFalse(task.tag_ids, [])
+
+        task.write({'tag_ids': [Command.set([self.task_tag.id])]})
+        self.assertEqual(task.tag_ids, self.task_tag)
+
+        # 4.1) Restrict the collaborator access to edit with limited access(only update writable fields except priority and stage)
+        wizard = self.env['project.share.wizard'].with_context(active_model='project.project', active_id=self.project_cows.id).create({
+            'collaborator_ids': [
+                Command.clear(),
+                Command.create({'partner_id': self.user_portal.partner_id.id, 'access_mode': 'edit'}),
+            ],
+        })
+        wizard.action_send_mail()
+
+        self.assertEqual(
+            self.project_cows.collaborator_ids.filtered(lambda c: c.partner_id == self.user_portal.partner_id).access_mode,
+            'edit',
+            "The collaborator should be granted 'edit' access mode."
+        )
+
+        # Removing the collaborator from the followers doens't impact his access to the task
+        task.sudo().message_partner_ids -= self.user_portal.partner_id
+        task.write({'name': 'foo'})
+        self.assertEqual(task.name, 'foo')
+
+        with self.assertRaises(AccessError, msg="Standard Edit users cannot change stages"):
+            task.write({'stage_id': self.project_cows.type_ids[0].id})
+
+        with self.assertRaises(AccessError, msg="Standard Edit users cannot change priority"):
+            task.write({'priority': '1'})
+        task.sudo().message_partner_ids += self.user_portal.partner_id
+
+        # 4.2) Restrict the access to read and check he can no longer edit the tasks, even if he is within the followers
+        wizard = self.env['project.share.wizard'].with_context(active_model='project.project', active_id=self.project_cows.id).create({
+            'collaborator_ids': [
+                Command.clear(),
+                Command.create({'partner_id': self.user_portal.partner_id.id, 'access_mode': 'view'}),
+                # Create a second collaborator with edit just so that the project sharing record rules
+                # do not get automatically disabled when removing the last remaining edit collaborator
+                Command.create({'partner_id': self.env['res.partner'].create({'name': 'Alain'}).id, 'access_mode': 'advanced_edit'}),
+            ],
+        })
+        wizard.action_send_mail()
+        # Sanity check: Assert the project sharing record rule is still active
+        self.assertTrue(self.env.ref('project.project_task_rule_portal_project_sharing').active)
+
+        # Assert the collaborator can no longer write on the task despite he is still in the followers of the task
+        self.assertIn(self.user_portal.partner_id, task.sudo().message_partner_ids)
+        with self.assertRaises(AccessError):
+            task.write({'name': 'foo'})
+
+    def test_portal_user_cannot_see_all_assignees(self):
+        """ Test when the portal sees a task he cannot see all the assignees.
+
+            Because of a ir.rule in res.partner filters the assignees, the portal
+            can only see the assignees in the same company than him.
+
+            Test Cases:
+            ==========
+            1) add many assignees in a task
+            2) check the portal user can read no assignee in this task. Should have an AccessError exception
+        """
+        self.task_cow.write({'user_ids': [Command.link(self.user_projectmanager.id)]})
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to access to a task he does not follow it and its project."):
+            self.task_cow.with_user(self.user_portal).read(['portal_user_names'])
+        self.assertEqual(len(self.task_cow.user_ids), 2, '2 users should be assigned in this task.')
+
+        project_share_wizard = self.env['project.share.wizard'].create({
+            'res_model': 'project.project',
+            'res_id': self.project_cows.id,
+            'collaborator_ids': [
+                Command.create({'partner_id': self.user_portal.partner_id.id, 'access_mode': 'advanced_edit'}),
+            ],
+        })
+        project_share_wizard.action_send_mail()
+        # subscribe the portal user to give him read access to the task.
+        self.task_cow.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
+        self.assertFalse(self.task_cow.with_user(self.user_portal).user_ids, 'the portal user should see no assigness in the task.')
+        task_portal_read = self.task_cow.with_user(self.user_portal).read(['portal_user_names'])
+        self.assertEqual(self.task_cow.portal_user_names, task_portal_read[0]['portal_user_names'], 'the portal user should see assignees name in the task via the `portal_user_names` field.')
+
+    def test_portal_user_can_change_stage_with_rating(self):
+        """ Test portal user can change the stage of task to a stage with rating template email
+            1) Check that a user with 'edit' access mode is correctly blocked from changing the stage.
+            2) Upgrade user to 'advanced_edit' and check they can successfully change the stage.
+        """
+        self.project_portal.collaborator_ids.filtered(
+            lambda c: c.partner_id == self.user_portal.partner_id
+        ).write({'access_mode': 'edit'})
+
+        stage = self.project_portal.type_ids[-1]
+        stage.write({
+            'rating_active': True,
+            'rating_status': 'stage',
+        })
+
+        with self.assertRaises(AccessError, msg="Standard Edit users should not be able to change stages"):
+            self.task_portal.with_user(self.user_portal).write({'stage_id': stage.id})
+
+        self.project_portal.collaborator_ids.filtered(
+            lambda c: c.partner_id == self.user_portal.partner_id
+        ).write({'access_mode': 'advanced_edit'})
+
+        self.task_portal.with_user(self.user_portal).write({'stage_id': stage.id})
+        self.assertEqual(self.task_portal.stage_id, stage, "The stage should be successfully updated with advanced_edit access.")
+
+    def test_orm_method_with_true_false_domain(self):
+        """ Test orm method overriden in project for project sharing works
+
+            Test Case
+            =========
+            1) Share a project in edit mode for portal user
+            2) Search the portal task contained in the project shared by using a TRUE domain
+            3) Check the task is found with the `search` method
+            4) Search the task with `FALSE` and check no task is found with `search` method
+            5) Call `read_group` method with `TRUE` in the domain and check if the task is found
+            6) Call `read_group` method with `FALSE` in the domain and check if no task is found
+        """
+        domain = Domain('id', '=', self.task_portal.id)
+        task = self.env['project.task'].with_user(self.user_portal).search(domain)
+        self.assertTrue(task, 'The task should be found.')
+        task = self.env['project.task'].with_user(self.user_portal).search(Domain.FALSE)
+        self.assertFalse(task, 'No task should be found since the domain contained a falsy tuple.')
+
+        task_read_group = self.env['project.task'].formatted_read_group(
+            domain,
+            aggregates=['id:min', '__count'],
+        )
+        self.assertEqual(task_read_group[0]['__count'], 1, 'The task should be found with the formatted_read_group method containing a truly tuple.')
+        self.assertEqual(task_read_group[0]['id:min'], self.task_portal.id, 'The task should be found with the formatted_read_group method containing a truly tuple.')
+
+        task_read_group = self.env['project.task'].formatted_read_group(
+            Domain.FALSE,
+            aggregates=['__count'],
+        )
+        self.assertFalse(task_read_group[0]['__count'], 'No result should found with the formatted_read_group since the domain is falsy.')
+
+    def test_milestone_read_access_right(self):
+        """ This test ensures that a portal user has read access on the milestone of the project that was shared with him """
+
+        project_milestone = self.env['project.milestone'].create({
+            'name': 'Test Project Milestone',
+            'project_id': self.project_portal.id,
+        })
+        project_milestone.with_user(self.user_portal).read(['name'])
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to update a milestone."):
+            project_milestone.with_user(self.user_portal).write({'name': 'test_milestone'})
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to delete a milestone."):
+            project_milestone.with_user(self.user_portal).unlink()
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to create a milestone."):
+            self.env['project.milestone'].with_user(self.user_portal).create({
+                'name': 'Test Project new Milestone',
+                'project_id': self.project_portal.id,
+            })
+
+        self.project_portal.collaborator_ids.filtered(lambda c: c.partner_id == self.user_portal.partner_id).unlink()
+
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to access to a milestone if he's not a collaborator of its project."):
+            project_milestone.with_user(self.user_portal).read(['name'])
+
+    def test_add_followers_from_share_edit_wizard(self):
+        """
+            This test ensures that when a project is shared in edit mode, the partners are correctly set as follower in the project and their respective tasks.
+        """
+        company_partner = self.env.company.partner_id
+        partners = partner_a, partner_b, partner_d = self.env['res.partner'].create([
+            {'name': "Solanum", 'parent_id': company_partner.id},
+            {'name': "Zana", 'parent_id': company_partner.id},
+            {'name': "Thresh"},
+        ])
+        partners |= company_partner
+        project_to_share = self.env['project.project'].create({'name': "project to share"})
+        task_with_partner_1, task_with_partner_2, task_with_parent_partner, task_without_partner = self.env['project.task'].create([{
+            'name': "Task with partner 1",
+            'partner_id': partner_a.id,
+            'project_id': project_to_share.id,
+        }, {
+            'name': "Task with partner 2",
+            'partner_id': partner_b.id,
+            'project_id': project_to_share.id,
+        }, {
+            'name': "Task with company",
+            'partner_id': company_partner.id,
+            'project_id': project_to_share.id,
+        }, {
+            'name': "Task with no partner",
+            'project_id': project_to_share.id,
+        }])
+        project_to_share._add_followers(partners)
+
+        self.assertEqual(partners, project_to_share.message_partner_ids, "All the partner should be set as a new follower of the project")
+        self.assertEqual(partner_a, task_with_partner_1.message_partner_ids, "Only the first partner should be set as a new follower for the task 1")
+        self.assertEqual(partner_b, task_with_partner_2.message_partner_ids, "Only the second partner should be set as a new follower for the task 2")
+        self.assertEqual(partners - partner_d, task_with_parent_partner.message_partner_ids,
+                         "The first, second, and the company partner should be set as new followers for the task 3 because the partner of this task is the parent of the other 2")
+        self.assertFalse(task_without_partner.message_partner_ids, "Since this task has no partner, no follower should be added")
+
+    def test_project_manager_remains_follower_after_sharing(self):
+        """
+        Test that the project manager remains a follower when collaborators are added
+        """
+        project = self.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': 'project',
+            'privacy_visibility': 'followers',
+            'user_id': self.user_projectmanager.id,
+        })
+        self.assertIn(self.user_projectmanager.partner_id, project.message_partner_ids, "Project manager should be a follower of the project")
+        project_share_wizard = self.env['project.share.wizard'].create({
+            'res_model': 'project.project',
+            'res_id': project.id,
+            'collaborator_ids': [
+                Command.create({'partner_id': self.user_portal.partner_id.id, 'access_mode': 'view'}),
+            ],
+        })
+        project_share_wizard.action_send_mail()
+        self.assertIn(self.user_projectmanager.partner_id, project.message_partner_ids, "Project manager should still be a follower after sharing the project")
+        self.assertEqual(len(project.message_follower_ids), 1, "number of followers should be 1 (adding/removing collaborators doesn't impact followers)")
+
+    def test_task_sharing_default_values(self):
+        self.task = self.env['project.task'].create({
+            'name': 'Test Share Task',
+        })
+        portal_user = new_test_user(self.env, login='portal-user', groups='base.group_portal')
+        self.wizard_ctx = {
+            "active_id": self.task.id,
+            "active_model": "project.task",
+        }
+        wizard = self.env['task.share.wizard'].with_context(self.wizard_ctx).create({
+            "partner_ids": [Command.set([portal_user.partner_id.id])]
+        })
+        self.assertEqual(wizard.res_id, self.task.id, "res_id should be set from context")
+        self.assertEqual(wizard.res_model, "project.task", "res_model should be set from context")
+        self.assertEqual(
+            wizard.task_id.id, self.task.id,
+            "task_id default must match active_id"
+        )
+
+    def test_portal_user_with_edit_rights_can_close_recurring_task(self):
+        """
+            Test that a portal user with edit rights can close a recurrent task.
+
+            Test Case:
+            ==========
+            1) Create a project with a recurrent task.
+            2) Create a portal user and give them edit rights on the project.
+            3) Ensure the portal user can close the recurrent task.
+        """
+        portal_user = self.env['res.users'].create({
+            'name': 'Portal User',
+            'login': 'portaluser',
+            'email': 'portaluser@odoo.com',
+            'group_ids': [(6, 0, [self.env.ref('base.group_portal').id])],
+        })
+        project = self.env['project.project'].create({
+            'name': 'Project with Portal User',
+        })
+        project.task_ids = [Command.create({
+            'name': 'Recurrent Task',
+            'recurring_task': True,
+            'repeat_type': 'forever',
+        })]
+        self.env['project.share.wizard'].create({
+            'res_model': 'project.project',
+            'res_id': project.id,
+            'collaborator_ids': [
+                Command.create({'partner_id': portal_user.partner_id.id, 'access_mode': 'advanced_edit'}),
+            ],
+        })
+        task = project.task_ids[0]
+        self.env.invalidate_all()
+        task.with_user(portal_user).write({'state': '1_done'})
+        self.assertEqual(task.state, '1_done', "The portal user with edit rights should be able to mark the task as done.")
+        next_task = task.recurrence_id.task_ids.filtered(lambda t: t != task)
+        self.assertTrue(next_task, "The next occurrence of the recurrent task should be created.")
+
+    def test_portal_collaborator_cannot_transfer_task_between_shared_projects(self):
+        """ Test external collaborator cannot transfer an existing task from one shared
+            project to the other.
+
+            Test Cases:
+            ==========
+            1) Share `project_cows` and `project_portal` in edit mode with the portal user.
+            2) Check the portal user can create a task in each of the two projects.
+            3) Check the portal user cannot write `project_id` on a task to move it
+               to the other shared project.
+            4) Check the portal user cannot set `project_id` directly in the vals of
+               a `create` call either.
+        """
+        self.project_portal.collaborator_ids.filtered(
+            lambda c: c.partner_id == self.user_portal.partner_id
+        ).write({'access_mode': 'edit'})
+
+        self.project_cows.write({
+            'collaborator_ids': [Command.create({
+                'partner_id': self.user_portal.partner_id.id,
+                'access_mode': 'edit'
+            })]
+        })
+
+        Task = self.env['project.task'].with_user(self.user_portal)
+
+        task_in_cows = Task.with_context(default_project_id=self.project_cows.id).create({'name': 'Task in Cows'})
+        self.assertEqual(task_in_cows.project_id, self.project_cows, "The portal user should be able to create a task in the Cows project.")
+
+        task_in_portal = Task.with_context(default_project_id=self.project_portal.id).create({'name': 'Task in Portal'})
+        self.assertEqual(task_in_portal.project_id, self.project_portal, "The portal user should be able to create a task in the Portal project.")
+
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to transfer a task from one project to another."):
+            task_in_cows.with_context(project_sharing_create=True).write({'project_id': self.project_portal.id})
+        self.assertEqual(task_in_cows.project_id, self.project_cows, "The task should still belong to its original project.")
+
+        with self.assertRaises(AccessError, msg="Should not accept the portal user to set project_id directly through create vals."):
+            Task.with_context(project_sharing_create=True).create({'name': 'foo', 'project_id': self.project_portal.id})

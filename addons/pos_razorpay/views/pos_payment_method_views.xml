@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pos_razorpay" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.razorpay</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook invisible="payment_provider != 'razorpay'">
+                    <page name="settings" string="Razorpay">
+                        <group>
+                            <field name="razorpay_username" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
+                            <field name="razorpay_tid" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
+                            <field name="razorpay_api_key" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
+                            <field name="razorpay_test_mode" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
+                            <field name="razorpay_allowed_payment_modes" invisible="payment_provider != 'razorpay'" required="payment_provider == 'razorpay'"/>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

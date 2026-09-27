@@ -1,0 +1,264 @@
+import logging
+import re
+import requests
+
+from urllib import parse
+
+from odoo import Command, api, fields, models
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools.partner_identifiers import normalize_identifier
+
+from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_INVOICE_IDENTIFIER
+from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
+
+_logger = logging.getLogger(__name__)
+
+siren_siret_re = re.compile(r'(?:\d{9}|\d{14})(?:_.*)?', flags=re.ASCII)
+
+
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+
+    invoice_edi_format = fields.Selection(selection_add=[('ubl_21_fr', "France E-Invoicing (UBL 2.1)")])
+    l10n_fr_is_pdp = fields.Boolean(compute='_compute_l10n_fr_is_pdp')
+    pdp_verification_display_state = fields.Selection(
+        selection=[
+            ('not_verified', 'Not verified yet'),
+            ('pdp_not_valid', 'Partner is not in the annuaire'),
+            ('pdp_not_valid_format', 'Partner cannot receive format'),
+            ('pdp_valid', 'Partner is in the annuaire'),
+            ('peppol_not_valid', 'Partner is not on Peppol'),  # does not exist on Peppol at all
+            ('peppol_not_valid_format', 'Partner cannot receive format'),  # registered on Peppol but cannot receive the selected document type
+            ('peppol_valid', 'Partner is on Peppol'),
+        ],
+        string='E-Invoicing State',
+        compute="_compute_pdp_verification_display_state",
+    )
+
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        # Extend to rename the `peppol` option in the `invoice_sending_method` selection
+        fields = super().fields_get(allfields, attributes)
+        company = self.env.company
+        if not self.env.context.get("studio") and (company.country_code == 'FR' or company.sudo().pdp_identifier) and 'invoice_sending_method' in fields:
+            field = fields['invoice_sending_method']
+            if 'selection' in field:
+                field['selection'] = [('peppol', self.env._('by Approved Platform')) if option[0] == 'peppol' else option for option in field['selection']]
+        return fields
+
+    # -------------------------------------------------------------------------
+    # COMPUTE METHODS
+    # -------------------------------------------------------------------------
+
+    @api.depends('routing_scheme')
+    @api.depends_context('company')
+    def _compute_l10n_fr_is_pdp(self):
+        for partner in self:
+            partner.l10n_fr_is_pdp = self.env.company._get_peppol_proxy_type() == 'pdp' and partner.routing_scheme == '0225'
+
+    @api.depends('peppol_verification_state', 'routing_scheme', 'routing_endpoint')
+    @api.depends_context('company')
+    def _compute_pdp_verification_display_state(self):
+        for partner in self:
+            partner.pdp_verification_display_state = partner._get_pdp_display_verification_state(partner.peppol_verification_state)
+
+    # -------------------------------------------------------------------------
+    # CONSTRAINT
+    # -------------------------------------------------------------------------
+
+    @api.constrains('invoice_edi_format', 'invoice_sending_method')
+    def _check_pdp_send_ubl_21_fr(self):
+        if self.filtered(
+            lambda partner: (
+                partner.invoice_sending_method == "peppol"
+                and partner.l10n_fr_is_pdp
+                and partner.invoice_edi_format != "ubl_21_fr"
+            )
+        ):
+            ubl_21_fr_string = self.env._("France E-Invoicing (UBL 2.1)")
+            raise ValidationError(self.env._("For French regulated invoices, only %(format_name)s is supported.", format_name=ubl_21_fr_string))
+
+    # -------------------------------------------------------------------------
+    # OVERRIDE AND HELPERS
+    # -------------------------------------------------------------------------
+
+    def _validate_identifier(self, key, value, validation=False):
+        # EXTENDS 'base' - bypass validation for specific **test** PDP identifiers
+        edi_mode = self.env.company._get_peppol_edi_mode()
+        if edi_mode in ('test', 'demo') and key in ('FR_SIRET', 'FR_SIREN', 'FR_CTC'):
+            value = normalize_identifier(value)
+            return {'valid': True, 'value': value, 'key': key}
+        return super()._validate_identifier(key, value, validation)
+
+    def _get_preferred_routing_identifier_vals(self, force_recompute=False):
+        # EXTENDS 'account_edi_ubl_cii'
+        # If FR_CTC is not already there, we suggest the SIREN (even if the SIRET is filled in).
+        # "Everyone" will probably have registered the SIREN on annuaire. (Even if they have a SIRET.)
+        self.ensure_one()
+        if (not force_recompute and self.routing_scheme and self.routing_endpoint) or self.country_code != 'FR':
+            return super()._get_preferred_routing_identifier_vals(force_recompute=force_recompute)
+        if self.env.company._get_peppol_proxy_type() == 'pdp':
+            if ctc_value := self._get_additional_identifier('FR_CTC') or self._l10n_fr_pdp_get_siren():
+                return {'scheme': '0225', 'value': ctc_value, 'key': 'FR_CTC'}
+            return {}  # we preferer suggesting no routing identifier than anything else than 0225 if the PDP is in use.
+        return super()._get_preferred_routing_identifier_vals(force_recompute=force_recompute)
+
+    def _l10n_fr_pdp_is_b2c(self):
+        self.ensure_one()
+        return not self._l10n_fr_pdp_get_siren()
+
+    def _l10n_fr_pdp_get_siren(self):
+        self.ensure_one()
+        all_identifiers = self._get_all_identifiers(enrich=True)
+        return all_identifiers.get('FR_SIREN')  # will be deduced by enrich=True if SIRET was set.
+
+    def _l10n_fr_pdp_get_siret(self):
+        self.ensure_one()
+        all_identifiers = self._get_all_identifiers(enrich=True)
+        return all_identifiers.get('FR_SIRET')
+
+    def _get_edi_builder(self, invoice_edi_format):
+        # EXTENDS 'account_edi_ubl_cii'
+        if invoice_edi_format == 'ubl_21_fr':
+            return self.env['account.edi.xml.ubl_21_fr']
+        return super()._get_edi_builder(invoice_edi_format)
+
+    def _get_ubl_cii_formats_info(self):
+        # EXTENDS 'account_edi_ubl_cii'
+        formats_info = super()._get_ubl_cii_formats_info()
+        formats_info['ubl_21_fr'] = {'countries': ['FR'], 'on_peppol': self.env.company._get_peppol_proxy_type() == 'pdp', 'sequence': 300}
+        return formats_info
+
+    def _get_suggested_invoice_edi_format(self):
+        # EXTENDS 'account'
+        if self.country_code == 'FR':
+            if self.pdp_verification_display_state == 'peppol_valid':
+                return 'ubl_bis3'
+            elif self.pdp_verification_display_state == 'pdp_valid':
+                return 'ubl_21_fr'
+        return super()._get_suggested_invoice_edi_format()
+
+    def _get_pdp_display_verification_state(self, state=None):
+        self.ensure_one()
+        state = state if state is not None else self.peppol_verification_state
+        if not state or state == 'not_verified':
+            return state
+        elif self.l10n_fr_is_pdp:
+            return f'pdp_{state}'
+        else:
+            return f'peppol_{state}'
+
+    def _log_verification_state_update(self, old_value, new_value):
+        self.ensure_one()
+        if not self.l10n_fr_is_pdp:
+            super()._log_verification_state_update(old_value, new_value)
+            return
+
+        self._track_add(
+            initial_values={self.id: {'pdp_verification_display_state': self._get_pdp_display_verification_state(old_value)}},
+            end_values={self.id: {'pdp_verification_display_state': self._get_pdp_display_verification_state(new_value)}},
+        )
+
+    def _get_suggested_peppol_edi_format(self):
+        # EXTENDS 'account_edi_ubl_cidd`
+        self.ensure_one()
+        if self.l10n_fr_is_pdp:
+            return 'ubl_21_fr'
+        return super()._get_suggested_peppol_edi_format()
+
+    @api.model
+    @handle_demo
+    def _get_peppol_verification_state(self, routing_identifier, invoice_edi_format, process_type='billing', partner=None):
+        # EXTENDS 'account_peppol': French PDP participants (EAS 0225) are verified against the
+        # PDP annuaire (the official French directory) instead of the Peppol SML.
+        scheme, _sep, _endpoint = routing_identifier.lower().partition(":")
+        if scheme != '0225':
+            return super()._get_peppol_verification_state(routing_identifier, invoice_edi_format, process_type=process_type, partner=partner)
+        return self._get_pdp_annuaire_verification_state(routing_identifier, invoice_edi_format, partner=partner)
+
+    @api.model
+    def _get_pdp_annuaire_verification_state(self, edi_identification, invoice_edi_format, partner=None):
+        if not edi_identification:
+            return 'not_verified'
+        if invoice_edi_format != 'ubl_21_fr':
+            return 'not_valid_format'
+        participant_info = self._pdp_annuaire_lookup_participant(edi_identification) or {}
+        if participant_info.get('in_annuaire'):
+            if partner and participant_info.get('b2g'):
+                # This is a bit of a hack to avoid having to add a field to signify the partner is behind Chorus Pro.
+                # The users that are associated with Chorus Pro (9999) on the annuaire are not on Peppol.
+                # They just communicate with Chorus Pro which communicates with the other platforms (not via Peppol).
+                # So the `peppol_supported_documents` would be empty for them otherwise.
+                # The CPRO_INVOICE_IDENTIFIER acts as a general placeholder and does not indicate the actually
+                # supported documents (i.e. credit notes and CDAR lifecycles are possible too ofc.).
+                partner.peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]
+            return 'valid'
+
+        return 'not_valid'
+
+    @api.model
+    @handle_demo
+    def _pdp_annuaire_lookup_participant(self, edi_identification):
+        eas, _colon, pdp_identifier = edi_identification.partition(":")
+        if eas != '0225':
+            return None
+
+        edi_mode = self.env.company._get_peppol_edi_mode()
+        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
+        query = parse.urlencode({'pdp_identifier': pdp_identifier})  # Note: the annuaire lookup is case-sensitive
+        endpoint = f'{origin}/api/pdp/1/annuaire_lookup?{query}'
+
+        try:
+            response = requests.get(endpoint, timeout=10)
+        except requests.exceptions.RequestException as e:
+            _logger.debug("failed to query annuaire for identifier %s: %s", edi_identification, e)
+            return None
+
+        try:
+            decoded_response = response.json()
+        except ValueError:
+            _logger.error('invalid JSON response %s when querying annuaire for identifier %s', response.status_code, edi_identification)
+            return None
+
+        if error := decoded_response.get('error'):
+            _logger.error('error when querying annuaire for identifier %s: %s', edi_identification, error.get('message', 'unknown error'))
+            return None
+
+        if not response.ok:
+            _logger.error('unsuccessful response %s when querying annuaire for identifier %s', response.status_code, edi_identification)
+            return None
+
+        return decoded_response.get('result')
+
+    def action_pdp_annuaire_lookup(self):
+        self.ensure_one()
+        if not self.routing_endpoint:
+            raise UserError(self.env._("Set up your routing endpoint to enable the lookup"))
+
+        if not siren_siret_re.fullmatch(self.routing_endpoint):
+            raise UserError(self.env._("endpoint must begin with a 9 or 14 digits number to enable the lookup (ie: siren, siret), followed by an optional suffix starting with an underscore (ie: 123456789_ABC)"))
+
+        edi_mode = self.env.company._get_peppol_edi_mode()
+        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
+        endpoint = f'{origin}/api/pdp/1/pdp_annuaire_lookup'
+
+        response = requests.get(
+            url=endpoint,
+            params={
+                'pdp_endpoint': self.routing_endpoint[:9],  # We only want to take the first 9 char (for the siren)
+            },
+            timeout=10,
+        )
+        response.raise_for_status()
+        data = response.json()
+        if not data.get('annuaire_lines'):
+            raise UserError(self.env._("No annuaire lines found for that identifier"))
+
+        wizard = self.env['l10n_fr_pdp.partner.lookup'].create({
+            'available_annuaire_line_ids': [
+                Command.create(line)
+                for line in data['annuaire_lines']
+            ],
+            'partner_id': self.id,
+        })
+        return wizard._get_records_action(target='new')

@@ -1,0 +1,44 @@
+import { waitForChannels } from "@bus/../tests/bus_test_helpers";
+import {
+    click,
+    contains,
+    defineMailModels,
+    insertText,
+    openDiscuss,
+    start,
+    startServer,
+    MENU_ACTIVE_IDS,
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
+import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
+
+describe.current.tags("desktop");
+defineMailModels();
+
+test("unknown channel can be displayed and interacted with", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: partnerId })],
+        channel_type: "channel",
+        name: "Not So Secret",
+    });
+    await start();
+    getService("bus_service").subscribe("discuss.channel/new_message", () =>
+        expect.step("discuss.channel/new_message")
+    );
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await contains(".o-mail-MessagingMenuItem", { count: 0 });
+    await openDiscuss(channelId);
+    await waitForChannels([`discuss.channel_${channelId}`]);
+    await contains(".o-mail-NotificationItem.o-active:has(:text('Not So Secret'))");
+    await insertText(".o-mail-Composer-input", "Hello", { replace: true });
+    await press("Enter");
+    await contains(".o-mail-Message:has(:text('Hello'))");
+    await expect.waitForSteps(["discuss.channel/new_message"]);
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:text(Hide)");
+    await contains(".o-mail-MessagingMenuItem", { count: 0 });
+});

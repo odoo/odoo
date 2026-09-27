@@ -1,0 +1,118 @@
+import { onMounted, onWillUnmount, signal } from "@odoo/owl";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { useDomState } from "@html_builder/core/utils";
+import { getCSSVariableValue } from "@html_editor/utils/formatting";
+import { _t } from "@web/core/l10n/translation";
+import { ThemeColorsPreviewDialog } from "./theme_colors_preview_dialog";
+
+export class ThemeColorsOption extends BaseOptionComponent {
+    static template = "website.ThemeColorsOption";
+    static dependencies = ["themeTab"];
+    isThemeColorsPreviewOpen = signal(false);
+
+    setup() {
+        super.setup();
+        this.palettes = this.getPalettes();
+        this.colorPresetToShow = this.env.colorPresetToShow;
+        this.grays = this.dependencies.themeTab.getGrays();
+        this.state = useDomState(() => ({
+            presets: this.getPresets(),
+        }));
+        this.closeThemeColorsPreviewDialog = null;
+        onMounted(() => {
+            this.iframeDocument = document.querySelector("iframe").contentWindow.document;
+            this.state.presets = this.getPresets();
+            this.colorPresetToShow = null;
+        });
+        onWillUnmount(() => this.closeThemeColorsPreviewDialog?.());
+    }
+
+    getPalettes() {
+        const palettes = [];
+        const style = window.getComputedStyle(document.documentElement);
+        const allPaletteNames = getCSSVariableValue("palette-names", style)
+            .split(", ")
+            .map((name) => name.replace(/'/g, ""));
+        for (const paletteName of allPaletteNames) {
+            const colors = Array.from({ length: 5 }, (_, index) =>
+                getCSSVariableValue(`o-palette-${paletteName}-o-color-${index + 1}`, style)
+            );
+            const isDark =
+                getCSSVariableValue(`o-palette-${paletteName}-is-dark`, style) === "true";
+            palettes.push({
+                name: paletteName,
+                swatchColors: colors.slice(0, 2),
+                backgroundColor: isDark ? colors[3] : colors[2],
+                textColor: colors[4],
+            });
+        }
+        return palettes;
+    }
+
+    getGrayTitle(grayCode) {
+        return _t("Gray %(grayCode)s", { grayCode });
+    }
+
+    getPresets() {
+        const presets = [];
+        const unquote = (string) => string.substring(1, string.length - 1);
+        for (let i = 1; i <= 5; i++) {
+            const preset = {
+                id: i,
+                background: this.getColor(`o-cc${i}-bg`),
+                backgroundGradient: unquote(this.getColor(`o-cc${i}-bg-gradient`)),
+                text: this.getColor(`o-cc${i}-text`),
+                headings: this.getColor(`o-cc${i}-headings`),
+                primaryBtn: this.getColor(`o-cc${i}-btn-primary`),
+                primaryBtnText: this.getColor(`o-cc${i}-btn-primary-text`),
+                primaryBtnBorder: this.getColor(`o-cc${i}-btn-primary-border`),
+                secondaryBtn: this.getColor(`o-cc${i}-btn-secondary`),
+                secondaryBtnText: this.getColor(`o-cc${i}-btn-secondary-text`),
+                secondaryBtnBorder: this.getColor(`o-cc${i}-btn-secondary-border`),
+            };
+
+            // TODO: check if this is necessary
+            if (preset.backgroundGradient) {
+                preset.backgroundGradient += ", url('/web/static/img/transparent.png')";
+            }
+            presets.push(preset);
+        }
+        return presets;
+    }
+
+    getColor(color) {
+        if (!this.iframeDocument) {
+            return "";
+        }
+        if (!this.iframeStyle) {
+            this.iframeStyle = this.iframeDocument.defaultView.getComputedStyle(
+                this.iframeDocument.documentElement
+            );
+        }
+        return getCSSVariableValue(color, this.iframeStyle);
+    }
+
+    toggleThemeColorsPreview() {
+        if (this.closeThemeColorsPreviewDialog) {
+            this.closeThemeColorsPreviewDialog();
+            return;
+        }
+
+        this.closeThemeColorsPreviewDialog = this.services.dialog.add(
+            ThemeColorsPreviewDialog,
+            {
+                onIframeLoad: (previewDocument) => {
+                    this.config.extraPreviewDocument = previewDocument;
+                },
+            },
+            {
+                onClose: () => {
+                    this.closeThemeColorsPreviewDialog = null;
+                    this.config.extraPreviewDocument = null;
+                    this.isThemeColorsPreviewOpen.set(false);
+                },
+            }
+        );
+        this.isThemeColorsPreviewOpen.set(true);
+    }
+}

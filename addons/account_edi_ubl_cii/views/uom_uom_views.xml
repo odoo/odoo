@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="uom_uom_view_form_inherit" model="ir.ui.view">
+            <field name="name">uom_uom_view_form_inherit</field>
+            <field name="model">uom.uom</field>
+            <field name="inherit_id" ref="uom.uom_uom_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="unece_code" invisible="not is_unece_code_supported"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

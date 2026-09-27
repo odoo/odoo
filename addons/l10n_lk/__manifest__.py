@@ -1,0 +1,45 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+{
+    "name": "Sri Lanka - Accounting",
+    "icon": "/account/static/description/l10n.png",
+    "countries": ["lk"],
+    "summary": "Provides accounting localizations for Sri Lanka.",
+    "description": """
+Sri Lankan Accounting module
+============================
+- Chart of Accounts
+- Fiscal Position
+- Taxes & Tax Groups
+
+Forms
+=====
+- VAT001
+- WHT001
+
+Tax Invoice
+===========
+- Custom tax invoice sequence format: YYMMM_QQQQ_XXXXX
+- Tax Invoice / Supply Date / Mode of Payment in PDF report
+- VAT registration tracking for companies and partners
+    """,
+    "author": "Odoo S.A.",
+    "category": "Accounting/Localizations/Account Charts",
+    "website": "https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html",
+    "depends": [
+        "account",
+        "l10n_account_withholding_tax",
+    ],
+    "auto_install": ["account"],
+    "data": [
+        "data/account.account.tag.csv",
+        "data/form_vat001.xml",
+        "data/form_wht001.xml",
+        "views/report_invoice.xml",
+        "views/res_partner_views.xml",
+        "views/res_company_views.xml",
+    ],
+    "demo": [
+        "demo/demo_company.xml",
+    ],
+    "license": "LGPL-3",
+}

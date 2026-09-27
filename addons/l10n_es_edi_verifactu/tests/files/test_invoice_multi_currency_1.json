@@ -1,0 +1,77 @@
+{
+    "Cabecera": {
+        "ObligadoEmision": {
+            "NombreRazon": "company_1_data",
+            "NIF": "A39200019"
+        },
+        "RemisionVoluntaria": {
+            "Incidencia": "N"
+        }
+    },
+    "RegistroFactura": [{
+        "RegistroAlta": {
+            "IDVersion": "1.0",
+            "IDFactura": {
+                "IDEmisorFactura": "A39200019",
+                "NumSerieFactura": "INV/2019/00001",
+                "FechaExpedicionFactura": "30-01-2019"
+            },
+            "NombreRazonEmisor": "company_1_data",
+            "Subsanacion": "N",
+            "TipoFactura": "F1",
+            "DescripcionOperacion": "manual",
+            "Destinatarios": {
+                "IDDestinatario": [{
+                    "NombreRazon": "partner_a",
+                    "IDOtro": {
+                        "IDType": "02",
+                        "ID": "BE0477472701"
+                    }
+                }]
+            },
+            "Desglose": {
+                "DetalleDesglose": [
+                    {
+                        "Impuesto": "01",
+                        "ClaveRegimen": "01",
+                        "CalificacionOperacion": "S1",
+                        "TipoImpositivo": "21.00",
+                        "BaseImponibleOimporteNoSujeto": "150.00",
+                        "CuotaRepercutida": "31.50"
+                    },
+                    {
+                        "Impuesto": "01",
+                        "ClaveRegimen": "01",
+                        "CalificacionOperacion": "S1",
+                        "TipoImpositivo": "10.00",
+                        "BaseImponibleOimporteNoSujeto": "500.00",
+                        "CuotaRepercutida": "50.00"
+                    }
+                ]
+            },
+            "CuotaTotal": "81.50",
+            "ImporteTotal": "731.50",
+            "Encadenamiento": {
+                "PrimerRegistro": "S"
+            },
+            "SistemaInformatico": {
+                "NombreRazon": "Odoo SA",
+                "IDOtro": {
+                    "CodigoPais": "BE",
+                    "IDType": "02",
+                    "ID": "BE0477472701"
+                },
+                "NombreSistemaInformatico": "Odoo",
+                "IdSistemaInformatico": "00",
+                "Version": "17.0+e",
+                "NumeroInstalacion": "7244834601315494189",
+                "TipoUsoPosibleSoloVerifactu": "S",
+                "TipoUsoPosibleMultiOT": "S",
+                "IndicadorMultiplesOT": "S"
+            },
+            "FechaHoraHusoGenRegistro": "2024-12-05T01:00:00+01:00",
+            "TipoHuella": "01",
+            "Huella": "D8DD9C5561F2E5C25908942795443C6F2E1FBE9879A67F2CEB199F76D0FBBFC5"
+        }
+    }]
+}

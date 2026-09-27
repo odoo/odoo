@@ -1,0 +1,392 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from datetime import datetime, timedelta
+from unittest import skip
+from unittest.mock import patch
+
+from freezegun import freeze_time
+from psycopg2 import IntegrityError
+
+from odoo import Command
+from odoo.exceptions import AccessError
+from odoo.tests import HttpCase, RecordCapturer, tagged, users
+from odoo.tools import mute_logger
+
+from odoo.addons.base.models.res_users import NO_GROUP_CHANGE_LOG, ResUsersPatchedInTest
+from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
+
+
+@tagged('mail_tools', 'res_users')
+class TestNotifySecurityUpdate(MailCommon):
+
+    @users('employee')
+    def test_security_update_email(self):
+        """ User should be notified on old email address when the email changes """
+        with self.mock_mail_gateway():
+            self.env.user.write({'email': 'new@example.com'})
+
+        self.assertSentEmail(
+            '"YourTestCompany" <your.company@example.com>',
+            ['e.e@example.com'],
+            subject='Security Update: Email Changed',
+        )
+
+    @users('employee')
+    def test_security_update_login(self):
+        with self.mock_mail_gateway():
+            self.env.user.write({'login': 'newlogin'})
+
+        self.assertSentEmail(
+            '"YourTestCompany" <your.company@example.com>',
+            [self.env.user.email_formatted],
+            subject='Security Update: Login Changed',
+        )
+
+    @users('employee')
+    def test_security_update_password(self):
+        with self.mock_mail_gateway():
+            self.env.user.write({'password': 'newpassword'})
+
+        self.assertSentEmail(
+            '"YourTestCompany" <your.company@example.com>',
+            [self.env.user.email_formatted],
+            subject='Security Update: Password Changed',
+        )
+
+
+@tagged('mail_tools', 'res_users')
+class TestUser(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.portal_user = cls._create_portal_user()
+
+    @mute_logger('odoo.sql_db')
+    def test_notification_type_constraint(self):
+        with self.assertRaises(IntegrityError, msg='Portal user can not receive notification in Odoo'):
+            mail_new_test_user(
+                self.env,
+                login='user_test_constraint_2',
+                name='Test User 2',
+                email='user_test_constraint_2@test.example.com',
+                notification_type='inbox',
+                groups='base.group_portal',
+            )
+
+    def test_notification_type_convert_internal_inbox_to_portal(self):
+        """Tests an internal user using inbox notifications converted to portal
+        is automatically set to email notifications"""
+        user = mail_new_test_user(
+            self.env,
+            login='user_test_constraint_3',
+            name='Test User 3',
+            email='user_test_constraint_3@test.example.com',
+            notification_type='inbox',
+            groups='base.group_user',
+        )
+
+        # Ensure the internal user has well the inbox notification type
+        self.assertEqual(user.notification_type, 'inbox')
+        self.assertIn(self.env.ref('mail.group_mail_notification_type_inbox'), user.group_ids)
+
+        # Change the internal user to portal, and make sure it automatically converts from inbox to email notifications
+        user.write({'group_ids': [
+            (3, self.env.ref('base.group_user').id),
+            (4, self.env.ref('base.group_portal').id),
+        ]})
+        self.assertEqual(user.notification_type, 'email')
+        self.assertNotIn(self.env.ref('mail.group_mail_notification_type_inbox'), user.group_ids)
+
+        admin = mail_new_test_user(
+            self.env,
+            login="user_test_constraint_4",
+            name="Test User 4",
+            email="user_test_constraint_3@test.example.com",
+            notification_type='inbox',
+            groups='base.group_erp_manager',
+        )
+        # Re-check that no error occurs when we have overlapping writes on admin user
+        admin.write({
+            'notification_type': 'email',
+            'group_ids': [
+                (3, self.env.ref('base.group_user').id),
+                (3, self.env.ref('base.group_erp_manager').id),
+                (4, self.env.ref('base.group_portal').id),
+            ],
+        })
+        self.assertFalse(admin._is_admin())
+        self.assertTrue(admin._is_portal())
+        self.assertEqual(admin.notification_type, 'email')
+        self.assertNotIn(self.env.ref('mail.group_mail_notification_type_inbox'), admin.group_ids)
+
+    def test_notification_type_preserves_user_role(self):
+        # MailCommon grants template editing to all internal users, which implies regular access.
+        self.env['ir.config_parameter'].set_bool('mail.restrict.template.rendering', True)
+        inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
+        regular_group = self.env.ref('base.group_user_regular')
+        for role, groups in [
+            ('light_user', 'base.group_user'),
+            ('regular_user', 'base.group_user,base.group_user_regular'),
+        ]:
+            with self.subTest(role=role):
+                user = mail_new_test_user(
+                    self.env,
+                    login=f'notification_{role}',
+                    groups=groups,
+                    notification_type='email',
+                )
+                self.assertEqual(user.role, role)
+                self.assertEqual(regular_group in user.all_group_ids, role == 'regular_user')
+                for notification_type in ('inbox', 'email'):
+                    user.with_user(user).write({'notification_type': notification_type})
+                    self.assertEqual(user.notification_type, notification_type)
+                    self.assertEqual(user.role, role)
+                    self.assertEqual(inbox_group in user.group_ids, notification_type == 'inbox')
+                    self.assertEqual(regular_group in user.all_group_ids, role == 'regular_user')
+
+    @freeze_time("2025-06-18 08:45:12")
+    def test_out_of_office(self):
+        """ Test Out-of-Office computation, defined on user itself. """
+        test_user = self.user_employee.with_user(self.user_employee)
+        portal_user = self.portal_user
+        now = datetime(2025, 6, 8, 8, 45, 12)
+        for ooo_from, ooo_to, exp_ooo in [
+            (False, False, False),
+            (now - timedelta(hours=1), False, True),  # only a from is ok
+            (False, now + timedelta(hours=1), False),  # invalid interval
+            (now - timedelta(hours=1), now + timedelta(hours=1), True),
+            (now, now, True),
+            (now - timedelta(hours=4), now - timedelta(hours=2), False),  # past
+            (now + timedelta(hours=2), now + timedelta(hours=4), False),  # future
+            (now + timedelta(hours=2), False, False),  # future, from only
+        ]:
+            with self.subTest(ooo_from=ooo_from, ooo_to=ooo_to):
+                with self.mock_datetime_and_now(now):  # also mock cr.now()
+                    test_user.write({
+                        'out_of_office_from': ooo_from,
+                        'out_of_office_to': ooo_to,
+                    })
+                    self.assertEqual(test_user.is_out_of_office, exp_ooo)
+
+                    portal_user.write({
+                        'out_of_office_from': ooo_from,
+                        'out_of_office_to': ooo_to,
+                    })
+                    self.assertFalse(portal_user.is_out_of_office, 'Portal users are never OOO')
+
+    def test_web_create_users(self):
+        src = [
+            'POILUCHETTE@test.example.com',
+            '"Jean Poilvache" <POILVACHE@test.example.com>',
+        ]
+        with self.mock_mail_gateway(), \
+             RecordCapturer(self.env['res.users']) as capture:
+            self.env['res.users'].web_create_users(src)
+
+        exp_emails = ['poiluchette@test.example.com', 'poilvache@test.example.com']
+        # check reset password are effectively sent
+        for user_email in exp_emails:
+            # do not use assertMailMailWEmails as mails are removed whatever we
+            # try to do, code is using a savepoint to avoid storing mail.mail
+            # in DB
+            self.assertSentEmail(
+                self.env.company.partner_id.email_formatted,
+                [user_email],
+                email_from=self.env.company.partner_id.email_formatted,
+            )
+
+        # order does not seem guaranteed
+        self.assertEqual(len(capture.records), 2, 'Should create one user / entry')
+        self.assertEqual(
+            sorted(capture.records.mapped('name')),
+            sorted(('poiluchette@test.example.com', 'Jean Poilvache'))
+        )
+        self.assertEqual(
+            sorted(capture.records.mapped('email')),
+            sorted(exp_emails)
+        )
+
+
+@tagged('res_users')
+class TestUserTours(HttpCase):
+
+    def test_user_modify_own_profile(self):
+        """ A user should be able to modify their own profile.
+        Even if that user does not have access rights to write on the res.users model."""
+        test_user = mail_new_test_user(
+            self.env,
+            login="employee",
+            password="employee",
+            notification_type="email",
+            tz="Europe/Brussels",
+        )
+        if 'hr.employee' in self.env and not test_user.employee_id:
+            self.env['hr.employee'].create({
+                'name': test_user.name,
+                'user_id': test_user.id,
+            })
+            test_user.group_ids += self.env.ref('hr.group_hr_user')
+
+        # avoid 'reload_context' action in the middle of the tour to ease steps and form save checks
+        with patch.object(ResUsersPatchedInTest, 'preference_save', lambda self: True):
+            self.start_tour(
+                "/odoo",
+                "mail/static/tests/tours/user_modify_own_profile_tour.js",
+                login=test_user.login,
+            )
+        self.assertEqual(test_user.notification_type, "inbox")
+
+
+class TestUserSettings(MailCommon):
+
+    @skip('Crashes in post_install, probably because other modules force creation through inverse (e.g. voip)')
+    def test_create_portal_user(self):
+        portal_group = self.env.ref('base.group_portal')
+        user = self.env.user.create({
+            'name': 'A portal user',
+            'login': 'portal_test',
+            'group_ids': [(6, 0, [portal_group.id])],
+        })
+        self.assertFalse(user.res_users_settings_ids, 'Portal users should not have settings by default')
+
+    def test_create_internal_user(self):
+        user = self.env.user.create({
+            'name': 'A internal user',
+            'login': 'test_user',
+        })
+        self.assertTrue(user.res_users_settings_ids, 'Internal users should have settings by default')
+
+    @users('employee')
+    def test_find_or_create_for_user_should_create_record_if_not_existing(self):
+        self.user_employee.res_users_settings_ids.unlink()  # pre autocreate or a portal user switching to internal user
+        settings = self.user_employee.res_users_settings_ids
+        self.assertFalse(settings, "no records should exist")
+
+        self.env['res.users.settings']._find_or_create_for_user(self.user_employee)
+        settings = self.user_employee.res_users_settings_ids
+        self.assertTrue(settings, "a record should be created after _find_or_create_for_user is called")
+
+    @users('employee')
+    def test_find_or_create_for_user_should_return_correct_res_users_settings(self):
+        self.user_employee.res_users_settings_ids.unlink()
+        settings = self.env['res.users.settings'].create({
+            'user_id': self.user_employee.id,
+        })
+        result = self.env['res.users.settings']._find_or_create_for_user(self.user_employee)
+        self.assertEqual(result, settings, "Correct mail user settings should be returned")
+
+    @users('employee')
+    def test_set_res_users_settings_should_send_notification_on_bus(self):
+        settings = self.user_employee.res_users_settings_id
+        settings.channel_notifications = False
+        with self.assertBus(
+            BusResult(
+                self.user_employee,
+                "mail.record/insert",
+                {
+                    "res.users.settings": [
+                        {"channel_notifications": "no_notif", "id": settings.id}
+                    ],
+                },
+            ),
+        ):
+            settings.set_res_users_settings({"channel_notifications": "no_notif"})
+
+    @users('employee')
+    def test_set_res_users_settings_should_set_settings_properly(self):
+        settings = self.user_employee.res_users_settings_id
+        settings.set_res_users_settings({'channel_notifications': "no_notif"})
+        self.assertEqual(
+            settings.channel_notifications,
+            "no_notif",
+            "channel_notifications state should be updated correctly"
+        )
+
+
+@tagged('mail_tools', 'res_users')
+class TestUserGroupChangeLog(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.normal_user = mail_new_test_user(
+            cls.env,
+            login='test_internal_user',
+            name='Internal User',
+        )
+        cls.second_user = mail_new_test_user(
+            cls.env,
+            login='test_internal_user_2',
+            name='Second Internal User',
+        )
+
+    def test_add_group_log(self):
+        group = self.env.ref('base.group_partner_manager')
+        users = self.normal_user | self.second_user
+        with self.mock_mail_app():
+            users.write({'group_ids': [Command.link(group.id)]})
+            self.assertEqual(len(self._new_msgs), 2)
+            for user in users:
+                self.assertMessageFields(user.message_ids[0], {'body_content': 'Added groups'})
+                self.assertMessageFields(user.message_ids[0], {'body_content': group.display_name})
+
+    def test_group_add_members(self):
+        group = self.env.ref('base.group_partner_manager')
+        users = self.normal_user | self.second_user
+        with self.mock_mail_app():
+            group.write({'user_ids': [Command.link(user.id) for user in users]})
+            self.assertEqual(len(self._new_msgs), 2)
+            for user in users:
+                self.assertMessageFields(user.message_ids[0], {'body_content': 'Added groups'})
+                self.assertMessageFields(user.message_ids[0], {'body_content': group.display_name})
+
+    def test_group_remove_members(self):
+        group = self.env.ref('base.group_partner_manager')
+        users = self.normal_user | self.second_user
+        group.write({'user_ids': [Command.link(user.id) for user in users]})
+        with self.mock_mail_app():
+            group.write({'user_ids': [Command.unlink(user.id) for user in users]})
+            self.assertEqual(len(self._new_msgs), 2)
+            for user in users:
+                self.assertMessageFields(user.message_ids[0], {'body_content': 'Removed groups'})
+
+    def test_no_group_change_log(self):
+        group = self.env.ref('base.group_partner_manager')
+        users = self.normal_user | self.second_user
+        with self.mock_mail_app():
+            users.with_context(no_group_change_log=NO_GROUP_CHANGE_LOG).write(
+                {'group_ids': [Command.link(group.id)]}
+            )
+            self.assertEqual(len(self._new_msgs), 0)
+
+    def test_no_log_existing_groups(self):
+        group = self.env.ref('base.group_partner_manager')
+        users = self.normal_user | self.second_user
+        users.write({'group_ids': [Command.link(group.id)]})
+        with self.mock_mail_app():
+            users.write({'group_ids': [Command.link(group.id)]})
+            self.assertEqual(len(self._new_msgs), 0)
+
+    def test_no_logs_upon_access_error(self):
+        group = self.env.ref('base.group_partner_manager')
+        portal_user = self._create_portal_user()
+        users = self.normal_user | self.second_user
+        with self.mock_mail_app():
+            with self.assertRaises(AccessError):
+                users.with_user(portal_user).write(
+                    {'group_ids': [Command.link(group.id)]}
+                )
+        self.assertEqual(len(self._new_msgs), 0)
+
+    def test_remove_group_log(self):
+        group = self.env.ref('base.group_partner_manager')
+        users = self.normal_user | self.second_user
+        users.write({'group_ids': [Command.link(group.id)]})
+        with self.mock_mail_app():
+            users.write({'group_ids': [Command.unlink(group.id)]})
+            self.assertEqual(len(self._new_msgs), 2)
+            for user in users:
+                self.assertMessageFields(user.message_ids[0], {'body_content': 'Removed groups'})
+                self.assertMessageFields(user.message_ids[0], {'body_content': group.display_name})

@@ -1,0 +1,36 @@
+.o_mail_snippet_general .s_mail_alert [class^="col-md"]{
+    padding-left: 0!important;
+    padding-right: 0!important;
+}
+
+.s_mail_alert {
+    div:has(> .s_alert_icon) {
+        float: left;
+    }
+    .s_alert {
+        margin: auto;
+        border-width: $alert-border-width;
+        border-style: solid;
+        border-radius: $alert-border-radius;
+        p, ul, ol {
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+    &.s_alert_sm {
+        padding: $grid-gutter-width/3;
+        font-size: $font-size-sm;
+    }
+    &.s_alert_md {
+        padding: $grid-gutter-width/2;
+        font-size: $font-size-base;
+    }
+    &.s_alert_lg {
+        padding: $grid-gutter-width;
+        font-size: $font-size-lg;
+    }
+    .s_alert_content {
+        overflow: hidden;
+    }
+}

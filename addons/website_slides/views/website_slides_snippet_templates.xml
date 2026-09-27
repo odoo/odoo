@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="dynamic_filter_template_slide_channel_card" name="Card Layout" data-extra-classes="g-3"
+        data-column-classes="col-12 col-sm-6 col-lg-4 col-xxl-3">
+        <div t-foreach="records" t-as="data" class="w-100 h-100">
+            <t t-set="record" t-value="data['_record']"/>
+            <a t-att-href="data['call_to_action_url']" t-attf-title="View #{record.name}" class="text-decoration-none text-reset card h-100">
+                <div t-field="record.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512', 'style': 'object-fit: cover;'}" class="o_wslides_background_image ratio ratio-16x9"/>
+                <div class="card-body">
+                    <h5 class="o_line_clamp o_line_clamp_1 card-title" t-field="record.name"/>
+                    <div class="o_line_clamp o_line_clamp_3 small text-muted" t-field="record.description_short"/>
+                </div>
+                <div class="card-footer d-flex align-items-center">
+                    <span t-if="record.total_time" t-out="record.total_time" class="small" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute', 'format': 'narrow'}"/>
+                    <span class="small ms-auto"><t t-out="record.total_slides"/> steps</span>
+                </div>
+            </a>
+        </div>
+    </template>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_resequence_inherit_l10n_es_edi_verifactu" model="ir.ui.view">
+            <field name="name">account.resequence.form.inherit.l10n_es_edi_verifactu</field>
+            <field name="model">account.resequence.wizard</field>
+            <field name="inherit_id" ref="account.account_resequence_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='sequence_number_reset']" position="after">
+                    <div class="alert alert-danger" role="alert" invisible="not l10n_es_edi_verifactu_required_in_prod">
+                        Al usar Veri*factu, el número de factura no puede modificarse sin alterar la integridad e
+                        inalterabilidad exigidas por los artículos 8 y 13 del RD 007/2023. Existe un alto riesgo de que
+                        la factura quede invalidada a efectos fiscales.
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

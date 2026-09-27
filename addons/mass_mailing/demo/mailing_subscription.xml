@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Subscription to 'mailing_list_data' -->
+       <record id="mailing_list_data_sub_contact_1" model="mailing.subscription">
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_1"/>
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
+        </record>
+        <record id="mailing_list_data_sub_contact_2" model="mailing.subscription">
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_2"/>
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
+        </record>
+        <record id="mailing_list_data_sub_contact_3" model="mailing.subscription">
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_3"/>
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
+        </record>
+        <record id="mailing_list_data_sub_contact_4" model="mailing.subscription">
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_4"/>
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
+            <field name="opt_out">True</field>
+            <field name="opt_out_reason_id" ref="mass_mailing.mailing_subscription_optout_data_1"/>
+        </record>
+        <record id="mailing_list_data_sub_contact_5" model="mailing.subscription">
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_5"/>
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
+        </record>
+        <record id="mailing_list_data_sub_contact_6" model="mailing.subscription">
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_6"/>
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
+            <field name="opt_out">True</field>
+            <field name="opt_out_reason_id" ref="mass_mailing.mailing_subscription_optout_data_3"/>
+        </record>
+        <record id="mailing_list_data_sub_contact_7" model="mailing.subscription">
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_7"/>
+            <field name="list_id" ref="mass_mailing.mailing_list_data"/>
+            <field name="opt_out">True</field>
+            <field name="opt_out_reason_id" ref="mass_mailing.mailing_subscription_optout_data_3"/>
+        </record>
+        <!-- Subscription to 'mailing_list_1' -->
+        <record id="mailing_list_1_sub_contact_3" model="mailing.subscription">
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_3"/>
+            <field name="list_id" ref="mass_mailing.mailing_list_1"/>
+        </record>
+        <record id="mailing_list_1_sub_contact_6" model="mailing.subscription">
+            <field name="contact_id" ref="mass_mailing.mass_mail_contact_6"/>
+            <field name="list_id" ref="mass_mailing.mailing_list_1"/>
+        </record>
+
+        <!-- Create Blacklist Records -->
+        <record id="mail_blacklist_demo_1" model="mail.blacklist">
+            <field name="email">elsa.ericson@example.com</field>
+        </record>
+    </data>
+</odoo>

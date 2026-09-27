@@ -1,0 +1,217 @@
+import { useSubEnv } from "@web/owl2/utils";
+import { formView } from "@web/views/form/form_view";
+import { registry } from "@web/core/registry";
+import { EventBus, t, useOnChange, useProps } from "@odoo/owl";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { formControllerProps } from "@web/views/form/form_controller";
+import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+import { useX2ManyCrud } from "@web/views/fields/relational_utils";
+import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
+
+export class MailComposerFormController extends formView.Controller {
+    props = useProps({
+        ...formControllerProps,
+        fullComposerBus: t.instanceOf(EventBus).optional(new EventBus()),
+    });
+    setup() {
+        super.setup();
+        this.env.dialogData.model = this.props.resModel;
+        useSubEnv({
+            fullComposerBus: this.props.fullComposerBus,
+        });
+        if (this.props.context.default_message_id) {
+            this.dialogService = useService("dialog");
+            this.stopEditingConfirmation();
+        }
+    }
+
+    stopEditingConfirmation() {
+        const dialogData = this.env.dialogData;
+        const close = dialogData.close;
+        dialogData.close = async (params) => {
+            if (params?.dismiss && !(await this.askStopEditingConfirmation())) {
+                return;
+            }
+            return close(params);
+        };
+    }
+
+    /** @returns {Promise<boolean>} whether the message edition should be stopped */
+    askStopEditingConfirmation() {
+        return new Promise((resolve) => {
+            this.dialogService.add(ConfirmationDialog, {
+                body: _t("Leaving will stop editing this message."),
+                cancel: () => resolve(false),
+                cancelLabel: _t("Keep editing"),
+                confirm: () => resolve(true),
+                confirmLabel: _t("Stop editing"),
+                title: _t("Stop editing"),
+            });
+        });
+    }
+}
+
+export class MailComposerFormRenderer extends formView.Renderer {
+    setup() {
+        super.setup();
+        this.orm = useService("orm");
+        // Autofocus the visible editor in edition mode.
+        useOnChange(
+            () => [this.props.record.isInEdition, this.rootRef(), this.props.record.resId],
+            (isInEdition, el) => {
+                if (
+                    el &&
+                    isInEdition &&
+                    this.props.record.data.composition_comment_option !== "forward"
+                ) {
+                    const element = el.querySelector(".note-editable[contenteditable]");
+                    if (element) {
+                        element.focus();
+                        document.dispatchEvent(new Event("selectionchange", {}));
+                    }
+                }
+            }
+        );
+
+        const getActiveMailThreads = () => {
+            let resIds;
+            if (this.props.record.resModel === "mail.scheduled.message") {
+                resIds = [this.props.record.data.res_id.resId];
+            } else {
+                // composer does not store res_ids past a certain limit, assume active_ids is used
+                resIds = this.props.record.data.res_ids
+                    ? JSON.parse(this.props.record.data.res_ids)
+                    : this.props.record.context.active_ids;
+            }
+            return resIds.map((resId) => {
+                const thread = this.mailStore["mail.thread"].insert({
+                    model: this.props.record.data.model,
+                    id: resId,
+                });
+                return thread;
+            });
+        };
+
+        // Add file dropzone on full mail composer:
+        this.attachmentUploadService = useService("mail.attachment_upload");
+        this.operations = useX2ManyCrud(() => this.props.record.data["attachment_ids"], true);
+
+        useCustomDropzone(this.rootRef, MailAttachmentDropzone, {
+            /** @param {Event} event */
+            onDrop: async (event) => {
+                for (const thread of getActiveMailThreads()) {
+                    // Use an isolated composer object instead of thread.composer to
+                    // avoid pushing into the main thread's composer.attachments list,
+                    // which is observed by the chatter.
+                    const composer =
+                        this.props.record.resModel === "mail.scheduled.message"
+                            ? { attachments: [] }
+                            : thread.composer;
+                    for (const file of event.dataTransfer.files) {
+                        const attachment = await this.attachmentUploadService.upload(
+                            thread,
+                            composer,
+                            file
+                        );
+                        await this.operations.saveRecord([attachment.id]);
+                    }
+                }
+            },
+        });
+
+        /** @param {function} */
+        const onCloseWizardModal = (callback) => {
+            this.env.dialogData.dismiss = callback;
+        };
+
+        onCloseWizardModal(async () => {
+            if (
+                this.props.record.resModel === "mail.scheduled.message" ||
+                this.props.record.data.subtype_is_log
+            ) {
+                // otherwise will remove all suggested recipients since there are no recipients
+                return;
+            }
+            const partnerCcIds = this.props.record.data.partner_cc_ids.currentIds;
+            const selectedPartnerIds =
+                this.props.record.data.partner_ids.currentIds.concat(partnerCcIds);
+            const selectedPartners = await this.orm.searchRead(
+                "res.partner",
+                [["id", "in", selectedPartnerIds]],
+                ["email", "id", "lang", "name", "display_name"]
+            );
+
+            /**
+             * @param {SuggestedRecipient} recipient
+             * @returns {SuggestedRecipient}
+             */
+            const updateRecipientWithCorrespondingPartner = (recipient) => {
+                const partner = selectedPartners.find(
+                    (partner) => partner.id === recipient.id || partner.email === recipient.email
+                );
+                if (partner) {
+                    return {
+                        ...recipient,
+                        email: partner.email,
+                        lang: partner.lang,
+                        name: partner.name,
+                        partner_id: partner.id,
+                        recipient_type: partnerCcIds.includes(partner.id) ? "cc" : "to",
+                    };
+                }
+                return recipient;
+            };
+
+            /**
+             * @param {SuggestedRecipient} recipient
+             * @returns {boolean}
+             */
+            const isRecipientSelectedFromFullMailComposer = (recipient) =>
+                selectedPartnerIds.includes(recipient.partner_id);
+
+            for (const thread of getActiveMailThreads()) {
+                // Update the recipient lists:
+                thread.suggestedRecipients = thread.suggestedRecipients.map(
+                    updateRecipientWithCorrespondingPartner
+                );
+                thread.additionalRecipients = thread.additionalRecipients.map(
+                    updateRecipientWithCorrespondingPartner
+                );
+
+                // Remove the recipients that got removed from the composer:
+                thread.suggestedRecipients = thread.suggestedRecipients.filter(
+                    isRecipientSelectedFromFullMailComposer
+                );
+                thread.additionalRecipients = thread.additionalRecipients.filter(
+                    isRecipientSelectedFromFullMailComposer
+                );
+
+                // Add the recipients that got added to the composer:
+                for (const partner of selectedPartners) {
+                    const allRecipients = [
+                        ...thread.suggestedRecipients,
+                        ...thread.additionalRecipients,
+                    ];
+                    if (!allRecipients.some((recipient) => recipient.partner_id === partner.id)) {
+                        thread.additionalRecipients.push({
+                            display_name: partner.display_name,
+                            email: partner.email,
+                            lang: partner.lang,
+                            name: partner.name,
+                            partner_id: partner.id,
+                            recipient_type: partnerCcIds.includes(partner.id) ? "cc" : "to",
+                        });
+                    }
+                }
+            }
+        });
+    }
+}
+
+registry.category("views").add("mail_composer_form", {
+    ...formView,
+    Controller: MailComposerFormController,
+    Renderer: MailComposerFormRenderer,
+});

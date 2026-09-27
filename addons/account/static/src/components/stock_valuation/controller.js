@@ -1,0 +1,89 @@
+import { proxy } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { serializeDate } from "@web/core/l10n/dates";
+const { DateTime } = luxon;
+
+
+export class StockValuationReportController {
+    constructor(action) {
+        this.action = action;
+        this.actionService = useService("action");
+        this.dialog = useService("dialog");
+        this.orm = useService("orm");
+        this.state = proxy({
+            date: this.action.params?.date_to
+                ? DateTime.fromISO(this.action.params.date_to)
+                : DateTime.now()
+        });
+    }
+
+    async load() {
+        await this.loadReportData();
+        this.currencyId = this.data.currency_id;
+        this.companyId = this.data.company_id;
+    }
+
+    async loadReportData() {
+        const kwargs = {
+            date: this.state.date.toISODate() || false,
+        };
+        const res = await this.orm.call(
+            "account.stock.valuation.report",
+            "get_report_values",
+            [],
+            kwargs
+        );
+        this.data = res.data;
+        // Prepare the "Inventory Loss" lines.
+        if (this.data.inventory_loss) {
+            for (const line of this.data.inventory_loss.lines) {
+                line.account = this.data.accounts_by_id[line.account_id];
+            }
+        }
+        // Prepare "Stock Variation" lines.
+        for (const line of this.data.stock_variation.lines) {
+            line.account = this.data.accounts_by_id[line.account_id];
+        }
+        // Prepare the "Initial Balance" lines.
+        this.data.initial_balance.lines = [];
+        for (let [accountId, data] of Object.entries(this.data.initial_balance.lines_by_account_id)) {
+            const account = this.data.accounts_by_id[accountId];
+            this.data.initial_balance.lines.push({
+                label: account?.display_name,
+                value: data.value,
+                account_id: accountId,
+            });
+        }
+        // Prepare the "Ending Stock" lines.
+        this.data.ending_stock.lines = [];
+        for (let [accountId, data] of Object.entries(this.data.ending_stock.lines_by_account_id)) {
+            const account = this.data.accounts_by_id[accountId];
+            this.data.ending_stock.lines.push({
+                label: account?.display_name,
+                value: data.value,
+                account_id: accountId,
+            });
+        }
+    }
+
+    async setDate(date) {
+        this.state.date = date;
+        this.dateAsString = serializeDate(date);
+        await this.loadReportData();
+    }
+
+    // Actions -----------------------------------------------------------------
+    async actionGenerateEntries() {
+        const kwargs = { include_accruals: true };
+        const date = this.state.date.toISODate() || false;
+        if (date && date != DateTime.now().toISODate()) {
+            kwargs.at_date = date;
+        }
+        const action = await this.orm.call(
+            "res.company", "action_close_stock_valuation", [[this.companyId]], kwargs
+        );
+        if (action) {
+            this.actionService.doAction(action);
+        }
+    }
+}

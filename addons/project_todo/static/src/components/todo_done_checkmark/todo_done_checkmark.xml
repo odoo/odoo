@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="project_todo.TodoDoneCheckmark">
+        <t t-if="!this.uiService.isSmall">
+            <a t-att-title="this.stateDone.isDone ? 'Mark as to-do' : 'Mark as done'"
+               t-on-click.stop="this.onDoneToggled"
+               t-on-mouseleave="this.actualizeDoneState"
+               t-on-mouseover="this.freezeDoneState"
+               class="o_todo_done_button oi oi-lg"
+               t-att-class="{'oi-filled done_button_enabled': this.stateDone.isDone}"
+               data-icon="check_circle"/>
+        </t>
+        <t t-else="">
+            <a t-att-title="this.stateDone.isDone ? 'Mark as to-do' : 'Mark as done'"
+               t-on-click.stop="this.onDoneToggled"
+               class="o_todo_done_button_mobile oi oi-lg"
+               t-att-class="{'oi-filled done_button_enabled': this.stateDone.isDone}"
+               data-icon="check_circle"/>
+        </t>
+    </t>
+
+</templates>

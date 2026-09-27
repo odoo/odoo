@@ -1,0 +1,59 @@
+.o-mail-DiscussContent {
+    .o-mail-Thread {
+        flex-grow: 1;
+    }
+}
+
+.o-mail-DiscussContent-headerCountry {
+    width: 24px;
+}
+
+.o-mail-DiscussContent-headerImStatus {
+    bottom: -2px;
+    right: -2px;
+}
+
+.o-mail-DiscussContent-headerBox,
+.o-mail-DiscussContent-panelContainer {
+    background-color: $o-view-background-color;
+}
+
+.o-mail-DiscussContent-selfAvatar {
+    height: 30px;
+    width: 30px;
+}
+
+.o-mail-DiscussContent-threadAvatar {
+    img {
+        height: ($btn-font-size * $btn-line-height) + $btn-padding-y;
+        aspect-ratio: 1;
+    }
+
+    a {
+        i {
+            transform: translate(-50%, -50%);
+            opacity: 0;
+        }
+
+        &:hover {
+            background-color: rgba($black, 0.5);
+            i {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+.o-mail-DiscussContent-threadDescription:not(:focus) {
+    color: $text-muted;
+}
+
+.o-mail-DiscussContent-headerInfo {
+    // headerBox can't be the reference for the width below. Its own width depends on the
+    // name's size, which would be circular.
+    container-type: inline-size;
+}
+
+.o-mail-DiscussContent-threadNameBox {
+    max-width: 75cqi;
+}

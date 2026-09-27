@@ -1,0 +1,76 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import babel
+import requests
+
+from odoo.addons.mail.tools.discuss import mail_route
+from odoo.http import request, Controller
+
+
+class GoogleTranslateController(Controller):
+    @mail_route("/mail/message/translate", type="jsonrpc", auth="public")
+    def translate(self, message_id):
+        # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
+        ir_config = request.env["ir.config_parameter"].sudo()
+        if not ir_config.get_bool("mail.use_google_translate_api"):
+            return
+        message = request.env["mail.message"].search([("id", "=", message_id)])
+        if not message:
+            raise request.not_found()
+        if request.env.user._is_public():
+            # avoid translating messages sent by the current public user/guest author,
+            # as the translation would be costly and unnecessary since created by the user himself
+            if message.is_current_user_or_guest_author:
+                return
+            request_lang = request.cookies.get("frontend_lang")
+        else:
+            request_lang = request.env.user.lang
+        if not request_lang:
+            return
+        target_lang = request_lang.split("_")[0]
+        domain = [("message_id", "=", message.id), ("target_lang", "=", target_lang)]
+        # sudo: mail.message.translation - searching translations of a message that can be read with standard ACL
+        translation = request.env["mail.message.translation"].sudo().search(domain)
+        if not translation:
+            try:
+                source_lang = self._detect_source_lang(message)
+                if source_lang == target_lang:
+                    return
+                # sudo: mail.message.translation - create translation of a message that can be read with standard ACL
+                vals = {
+                    "body": self._get_translation(str(message.body), source_lang, target_lang),
+                    "message_id": message.id,
+                    "source_lang": source_lang,
+                    "target_lang": target_lang,
+                }
+                translation = request.env["mail.message.translation"].sudo().create(vals)
+            except requests.exceptions.HTTPError as err:
+                return {"error": err.response.json()["error"]["message"]}
+        try:
+            lang_name = babel.Locale(translation.source_lang).get_display_name(request.env.user.lang)
+        except babel.UnknownLocaleError:
+            lang_name = translation.source_lang
+        return {
+            "body": translation.body,
+            "lang_name": lang_name,
+        }
+
+    def _detect_source_lang(self, message):
+        # sudo: mail.message.translation - searching translations of a message that can be read with standard ACL
+        translation = request.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)], limit=1)
+        if translation:
+            return translation.source_lang
+        response = self._post(endpoint="detect", data={"q": str(message.body)})
+        return response.json()["data"]["detections"][0][0]["language"]
+
+    def _get_translation(self, body, source_lang, target_lang):
+        response = self._post(data={"q": body, "target": target_lang, "source": source_lang})
+        return response.json()["data"]["translations"][0]["translatedText"]
+
+    def _post(self, endpoint="", data=None):
+        # sudo: ir.config_parameter - reading google translate api key, using it to make the request
+        api_key = request.env["ir.config_parameter"].sudo().get_str("mail.google_translate_api_key")
+        url = f"https://translation.googleapis.com/language/translate/v2/{endpoint}?key={api_key}"
+        response = requests.post(url, data=data, timeout=3)
+        response.raise_for_status()
+        return response

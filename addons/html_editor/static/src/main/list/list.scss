@@ -1,0 +1,55 @@
+[contenteditable="true"] {
+    li p {
+        margin-bottom: 0;
+    }
+
+    // Invalidate `--heading-color` when under colored element in editable
+    :where([style*="color:"]) {
+        --heading-color: none;
+    }
+}
+
+.odoo-editor-editable {
+    li {
+        &[style*="color"],
+        &[class*="text-"] {
+            font[class*="bg-"]:not([class*="text-"]):not([style*="color"]) {
+                color: inherit !important;
+            }
+        }
+    }
+}
+
+#wrapwrap, // avoid duplicating in portal
+.o_mass_mailing_value, // avoid duplicating in mass_mailing
+.o_field_html {
+    .o-float-start-parent {
+        & ~ ul, & ~ ol {
+            display: flow-root;
+        }
+        .o_we_hint::after {
+            display: none;
+        }
+    }
+
+    .o-float-end-parent {
+        & ~ ul, & ~ ol {
+            &[dir] {
+                display: flow-root;
+            }
+        }
+        .o_we_hint::after {
+            display: none;
+        }
+    }
+
+    li .float-start {
+        float: unset !important;
+    }
+
+    ul, ol {
+        &[dir] li .float-end {
+            float: unset !important;
+        }
+    }
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.CallPermissionDeniedDialog">
+        <PermissionPromptDialog title="''" size="'md'" close="this.props.close" illustrationPosition="'left'" contentClass="'o-discuss-CallPermissionDeniedDialog'">
+            <t t-set-slot="illustration">
+                <t t-call="discuss.CallPermissionDeniedDialog.illustrationAnimated"/>
+            </t>
+            <t t-set-slot="instructions">
+                <h2 t-out="this.title" />
+                <ol class="ps-3 fs-6 d-flex flex-column gap-2 text-muted">
+                    <li t-out="this.stepOneText"/>
+                    <li t-out="this.stepTwoText"/>
+                </ol>
+            </t>
+        </PermissionPromptDialog>
+    </t>
+
+    <t t-name="discuss.CallPermissionDeniedDialog.illustrationAnimated">
+        <t t-call="web.PermissionIllustration" viewBoxHeight="250">
+            <g>
+                <rect x="27" y="119" width="20" height="17" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M53 122V134L47 131V125L53 122Z" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round"/>
+            </g>
+            <g>
+                <rect class="o-discuss-CallPermissionDeniedDialog-illustrationAnimated-camera-toggleRect" x="94" y="116" width="45" height="24" rx="12" fill="var(--gray-300)"/>
+                <circle class="o-discuss-CallPermissionDeniedDialog-illustrationAnimated-camera-toggleCircle" cx="106" cy="128" r="10" fill="#ffffff"/>
+            </g>
+            <g>
+                <path d="M39.6367 164C42.1763 164 44.2422 166.069 44.2422 168.631V177.976C44.2421 180.537 42.1762 182.606 39.6367 182.606C37.0971 182.606 35.0304 180.537 35.0303 177.976V168.631C35.0303 166.069 37.097 164 39.6367 164Z" stroke="var(--primary)" stroke-width="2"/>
+                <path d="M39.6364 186.561C34.8666 186.561 31 182.626 31 177.773M39.6364 186.561C44.4061 186.561 48.2727 182.626 48.2727 177.773M39.6364 186.561V193" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <g>
+                <rect class="o-discuss-CallPermissionDeniedDialog-illustrationAnimated-mic-toggleRect" x="94" y="164" width="45" height="24" rx="12" fill="var(--gray-300)"/>
+                <circle class="o-discuss-CallPermissionDeniedDialog-illustrationAnimated-mic-toggleCircle" cx="106" cy="176" r="10" fill="#ffffff"/>
+            </g>
+        </t>
+    </t>
+</templates>

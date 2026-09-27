@@ -1,0 +1,20 @@
+
+$s-google-map-desc-bg: map-get($theme-colors, 'primary') !default;
+$s-google-map-desc-alpha: 0.80 !default;
+
+.s_google_map {
+    position: relative;
+    height: clamp(100px, var(--GoogleMap-height), 90svh);
+
+    .map_container {
+        @include o-position-absolute(0, 0, 0, 0);
+    }
+    .description {
+        @include o-position-absolute(auto, 0, 0, 0);
+        z-index: 99;
+        padding: 0 1em;
+        background: rgba($s-google-map-desc-bg, $s-google-map-desc-alpha);
+        color: color-contrast(rgba($s-google-map-desc-bg, $s-google-map-desc-alpha));
+        margin-bottom: 0;
+    }
+}

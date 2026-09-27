@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.UserMenu" t-inherit-mode="extension">
+        <xpath expr="//img[hasclass('o_user_avatar')]" position="replace">
+            <DiscussAvatar t-if="this.store.self_user" record="this.store.self_user" size="26"/>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

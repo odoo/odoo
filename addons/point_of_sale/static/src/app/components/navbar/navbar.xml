@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.Navbar">
+        <div class="pos-topheader position-relative d-flex align-items-center justify-content-between gap-1 p-2 m-0 bg-view border-bottom">
+            <div class="pos-leftheader d-flex align-items-center flex-grow-1 overflow-auto min-w-0" t-att-class="{'d-none': this.ui.isSmall and this.state.searchBarOpen, 'mw-100': this.pos.getOrder()}">
+                <div class="d-flex flex-shrink-0 align-items-center gap-2 gap-lg-3 position-relative pe-2 min-w-0" t-att-class="{ 'w-100': !this.ui.isSmall }">
+                    <div class="navbar-menu btn-group" role="group" aria-label="Navigation Menu">
+                        <button class="register-label btn btn-outline-secondary btn-lg lh-lg" t-att-class="{'active': this.mainButton === 'register'}" t-on-click="() => this.onClickRegister()">
+                            <span t-if="!this.ui.isSmall">Register</span>
+                            <i t-else="" class="oi oi-fw oi-filled" data-icon="edit" t-att-class="{'oi-lg' : !this.ui.isSmall}"/>
+                        </button>
+                        <button class="orders-button btn btn-outline-secondary btn-lg lh-lg" t-att-class="{'active': this.mainButton === 'order'}" t-on-click="() => this.onTicketButtonClick()">
+                            <t t-if="!this.ui.isSmall">
+                                <span>Orders</span>
+                            </t>
+                            <i t-else="" class="oi oi-fw" data-icon="book" t-att-class="{'oi-lg' : !this.ui.isSmall}"/>
+                        </button>
+                    </div>
+                    <OrderTabs orders="this.getOrderTabs()" class="'h-50'"/>
+                    <button class="btn btn-secondary d-flex align-items-center gap-1 h-100 ms-2 p-2 preset-time-btn" t-on-click="this.openPresetTiming" t-if="this.shouldDisplayPresetTime">
+                        <i class="oi" data-icon="schedule" aria-hidden="true"/>
+                        <span class="fw-bolder lh-1" t-out="this.pos.getOrder()?.presetTime || '--:--'" />
+                    </button>
+                </div>
+            </div>
+            <div t-if="!this.pos.getOrder()" class="pos-centerheader d-none d-xl-flex position-absolute start-50 translate-middle-x">
+                <div class="pos-logo mw-100" />
+            </div>
+            <div class="pos-rightheader flex-shrink-0">
+                <div class="status-buttons d-flex align-items-center justify-content-end gap-1">
+                    <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status px-3">
+                        <span t-if="this.pos.data.network.unsyncData.length > 0" t-out="this.pos.data.network.unsyncData.length" />
+                        <div t-if="this.pos.data.network.offline" class="oi oi-fw text-danger" data-icon="link_off"/>
+                        <div t-else="" class="oi oi-fw oi-spin text-warning" data-icon="autorenew"/>
+                    </div>
+                    <Input tModel="[this.pos, 'searchProductWord']"
+                    class="this.ui.isSmall ? 'p-0' : 'w-100 w-xl-50 me-0 me-lg-2'"
+                    isSmall="this.ui.isSmall"
+                    placeholder.translate="Search products..."
+                    icon="'search'"
+                    iconClass="'oi-lg oi-fw'"
+                    debounceMillis="500"
+                    getRef="(ref) => this.inputRef = ref"
+                    t-if="this.pos.showSearchButton()"
+                    isOpenCallback="(isOpen) => this.state.searchBarOpen = isOpen" />
+                    <OrderTrackerDropdown t-if="this.showOderTrackerDropdown"/>
+                    <button class="btn btn-light btn-lg lh-lg" t-if="this.isBarcodeScannerSupported() and ['ProductScreen', 'TicketScreen'].includes(this.pos.router.currentScreen()) and !this.pos.config.module_pos_restaurant" t-on-click="this.onClickScan">
+                        <i class="oi oi-fw oi-lg" data-icon="barcode"/><span t-if="this.pos.scanning" class="ms-1">Stop</span>
+                    </button>
+                    <!-- No need to show the cashier name on small screens -->
+                    <CashierName t-if="!this.ui.isSmall"/>
+                    <button class="btn btn-light btn-lg lh-lg" t-on-click="this.openBurgerMenu" aria-label="Open Menu">
+                        <i class="oi oi-fw" data-icon="menu" aria-hidden="true"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

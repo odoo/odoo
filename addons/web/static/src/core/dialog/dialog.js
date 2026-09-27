@@ -1,0 +1,165 @@
+import { useSubEnv } from "@web/owl2/utils";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useActiveElement } from "../ui/ui_plugin";
+import { useBackButton, useService } from "@web/core/utils/hooks";
+import { Component, onWillDestroy, proxy, signal, t, useListener, useProps } from "@odoo/owl";
+import { throttleForAnimation } from "@web/core/utils/timing";
+import { makeDraggableHook } from "../utils/draggable_hook_builder_owl";
+import { hasTouch } from "@web/core/browser/feature_detection";
+
+const useDialogDraggable = makeDraggableHook({
+    name: "useDialogDraggable",
+    onDragStart() {
+        document.documentElement.style.cursor = "grabbing";
+    },
+    onDragEnd() {
+        document.documentElement.style.cursor = "";
+    },
+    onWillStartDrag({ ctx, addCleanup, addStyle, getRect }) {
+        const { height, width } = getRect(ctx.current.element);
+        ctx.current.container = document.createElement("div");
+        addStyle(ctx.current.container, {
+            position: "fixed",
+            top: "0",
+            bottom: `${70 - height}px`,
+            left: `${70 - width}px`,
+            right: `${70 - width}px`,
+        });
+        ctx.current.element.after(ctx.current.container);
+        addCleanup(() => ctx.current.container.remove());
+    },
+    onDrop({ ctx, getRect }) {
+        const { top, left } = getRect(ctx.current.element);
+        return {
+            left: left - ctx.current.elementRect.left,
+            top: top - ctx.current.elementRect.top,
+        };
+    },
+});
+
+export const dialogProps = {
+    contentClass: t.string().optional(""),
+    bodyClass: t.string().optional(""),
+    fullscreen: t.boolean().optional(false),
+    footer: t.boolean().optional(true),
+    header: t.boolean().optional(true),
+    size: t.selection(["sm", "md", "lg", "xl", "fs", "fullscreen"]).optional("lg"),
+    technical: t.boolean().optional(true),
+    title: t.string().optional("Odoo"),
+    slots: t.object({
+        default: t.object(), // Content is not optional
+        header: t.object().optional(),
+        footer: t.object().optional(),
+    }),
+    withBodyPadding: t.boolean().optional(true),
+    onExpand: t.function().optional(),
+};
+
+export class Dialog extends Component {
+    static template = "web.Dialog";
+    /**
+     * /!\ DO NOT DO THIS: PROPS SHOULD NOT BE OVERRIDDEN BY CHILD COMPONENTS
+     * This is a temporary measure as converting each dialog extension is tedious
+     */
+    static propsSchema = dialogProps;
+    props = useProps(this.constructor.propsSchema);
+    // Ref on the modal element, either owned by the parent (`modalRef` prop) or local.
+    modalRef = useProps.static(
+        "modalRef",
+        t.signal(t.ref()).optional(() => signal.ref())
+    );
+
+    setup() {
+        this.uiService = useService("ui");
+        useActiveElement(this.modalRef);
+        this.data = proxy(this.env.dialogData);
+        useHotkey("escape", () => this.onEscape());
+        useHotkey(
+            "control+enter",
+            () => {
+                const btns = document.querySelectorAll(
+                    ".o_dialog:not(.o_inactive_modal) .modal-footer button"
+                );
+                const firstVisibleBtn = Array.from(btns).find((btn) => {
+                    const styles = getComputedStyle(btn);
+                    return styles.display !== "none";
+                });
+                if (firstVisibleBtn) {
+                    // Allows the active element to be blurred before triggering the click on the button
+                    firstVisibleBtn.focus();
+                    firstVisibleBtn.click();
+                }
+            },
+            { bypassEditableProtection: true }
+        );
+        this.id = `dialog_${this.data.id}`;
+        this.dialogSize = signal(undefined);
+        useSubEnv({
+            inDialog: true,
+            dialogId: this.id,
+            // Allows content rendered inside the dialog (e.g. a View reading a `dialog_size` arch
+            // attribute) to override the size it was given through props.
+            setDialogSize: (size) => this.dialogSize.set(size),
+        });
+        this.isMovable = this.props.header;
+        if (this.isMovable) {
+            this.position = proxy({ left: 0, top: 0 });
+            useDialogDraggable({
+                enable: () => !this.uiService.isSmall,
+                ref: this.modalRef,
+                elements: ".modal-content",
+                handle: ".modal-header",
+                ignore: "button, input",
+                edgeScrolling: { enabled: false },
+                onDrop: ({ top, left }) => {
+                    this.position.left += left;
+                    this.position.top += top;
+                },
+            });
+            const throttledResize = throttleForAnimation(this.onResize.bind(this));
+            useListener(window, "resize", throttledResize);
+        }
+        onWillDestroy(() => {
+            if (this.uiService.isSmall) {
+                this.data.scrollToOrigin();
+            }
+        });
+        this.bodyTabIndex = hasTouch() ? "0" : undefined;
+        useBackButton(() => this.dismiss());
+    }
+
+    get size() {
+        return this.dialogSize() ?? this.props.size;
+    }
+
+    get isFullscreen() {
+        return this.props.fullscreen || (this.uiService.isSmall && this.design !== "minimal");
+    }
+
+    get design() {
+        return ["sm", "md"].includes(this.size) ? "minimal" : "default";
+    }
+
+    get contentStyle() {
+        if (this.isMovable) {
+            return `top: ${this.position.top}px; left: ${this.position.left}px;`;
+        }
+        return "";
+    }
+
+    onResize() {
+        this.position.left = 0;
+        this.position.top = 0;
+    }
+
+    onEscape() {
+        return this.dismiss();
+    }
+
+    async dismiss() {
+        if (this.data.dismiss) {
+            await this.data.dismiss();
+        }
+        return this.data.close({ dismiss: true });
+    }
+}

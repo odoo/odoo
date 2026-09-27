@@ -1,0 +1,49 @@
+.o-html-field.odoo-editor-editable {
+    .o_text_columns {
+        overflow-x: auto !important;
+
+        > .row {
+            margin: 0 !important;
+            flex-wrap: nowrap !important;
+
+            > [class*="col-"] {
+                box-sizing: border-box;
+                // Invisible left/right resize handle placeholders
+                box-shadow: inset 2px 0 0 transparent, inset -2px 0 0 transparent;
+
+                // Wider left edge for first column
+                &:first-child {
+                    box-shadow: inset 4px 0 0 transparent, inset -2px 0 0 transparent;
+                }
+
+                // Wider right edge for last column
+                &:last-child {
+                    box-shadow: inset 2px 0 0 transparent, inset -4px 0 0 transparent;
+                }
+
+                // Hovered column: show both edges
+                &.o_resize_handle {
+                    box-shadow: inset 2px 0 0 $o-gray-300, inset -2px 0 0 $o-gray-300 !important;
+
+                    &:first-child {
+                        box-shadow: inset 4px 0 0 $o-gray-300, inset -2px 0 0 $o-gray-300 !important;
+                    }
+
+                    &:last-child {
+                        box-shadow: inset 2px 0 0 $o-gray-300, inset -4px 0 0 $o-gray-300 !important;
+                    }
+
+                    // Next column: show left edge to continue hovered col's right border
+                    + [class*="col-"] {
+                        box-shadow: inset 2px 0 0 $o-gray-300, inset -2px 0 0 transparent !important;
+                    }
+                }
+
+                // Previous column: show right edge to continue hovered col's left border
+                &:has(+ .o_resize_handle) {
+                    box-shadow: inset 2px 0 0 transparent, inset -2px 0 0 $o-gray-300 !important;
+                }
+            }
+        }
+    }
+}

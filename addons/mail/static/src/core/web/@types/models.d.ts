@@ -1,0 +1,39 @@
+declare module "models" {
+    export interface Activity {
+        dateCreateFormatted: Readonly<string>;
+        dateDeadlineFormatted: Readonly<string>;
+        dateDoneFormatted: Readonly<string>;
+        edit: () => Promise<void>;
+        isNoteEmpty: boolean;
+        markAsDone: (attachmentIds: number[]) => Promise<void>;
+        markAsDoneAndScheduleNext: () => Promise<import("@web/webclient/actions/action_plugin").ActionDescription>;
+        remove: (param0: { broadcast: boolean }) => void;
+    }
+    export interface Message {
+        canForward: Readonly<boolean>;
+        canReplyAll: Readonly<boolean>;
+    }
+    export interface Store {
+        _onActivityBroadcastChannelMessage: (param0: { data: { type: "INSERT"|"DELETE"|"RELOAD_CHATTER", payload: Partial<Activity> } }) => void;
+        activities_to_assign_count: undefined;
+        activity_counter_bus_id: number;
+        activity_groups: Object[];
+        activityBroadcastChannel: BroadcastChannel|null;
+        activityCounter: number;
+        activityGroups: Readonly<unknown[]>;
+        markNeedactionMessagesAsRead: () => Promise<void>;
+        messagingMenuSystrayState: MessagingMenuUIState;
+        onLinkFollowed: (fromThread: Thread) => void;
+        onUpdateActivityGroups: () => void;
+        removeAllBookmarks: () => Promise<void>;
+        scheduleActivity: (resModel: string, resIds: number[], defaultActivityTypeId: number|undefined) => Promise<void>;
+        updateAppBadge: () => void;
+    }
+    export interface Thread {
+        follow: () => Promise<void>;
+        loadMoreFollowers: () => Promise<void>;
+        loadMoreRecipients: () => Promise<void>;
+        openRecordActionRequest: Readonly<object>;
+        recipientsFullyLoaded: Readonly<boolean>;
+    }
+}

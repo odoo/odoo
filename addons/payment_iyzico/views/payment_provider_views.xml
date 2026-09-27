@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Iyzico Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position="inside">
+                <field
+                    string="API Key"
+                    name="iyzico_key_id"
+                    invisible="code != 'iyzico'"
+                    required="is_live"
+                />
+                <field
+                    string="Secret Key"
+                    name="iyzico_key_secret"
+                    invisible="code != 'iyzico'"
+                    required="is_live"
+                    widget="password"
+                />
+            </group>
+        </field>
+    </record>
+
+</odoo>

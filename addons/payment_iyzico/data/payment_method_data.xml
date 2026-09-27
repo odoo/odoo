@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_bank_transfer" model="payment.method">
+        <field name="name">Bank Transfer</field>
+        <field name="code">bank_transfer</field>
+        <field name="provider_id" ref="payment.payment_provider_iyzico"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+    </record>
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_iyzico"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+
+    <record id="payment_method_amex" model="payment.method">
+        <field name="name">American Express</field>
+        <field name="code">amex</field>
+        <field name="primary_payment_method_id" eval="ref('payment_iyzico.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_iyzico"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_iyzico.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_iyzico"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_troy" model="payment.method">
+        <field name="name">Troy</field>
+        <field name="code">troy</field>
+        <field name="primary_payment_method_id" eval="ref('payment_iyzico.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_iyzico"/>
+        <field name="image" type="bytes" file="payment/static/img/troy.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_iyzico.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_iyzico"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>

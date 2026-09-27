@@ -1,0 +1,100 @@
+.o_website_page_templates_dialog {
+    max-height: $modal-lg !important;
+
+    .modal-body {
+        display: flex;
+        padding: 0;
+
+        .list-group {
+            --list-group-active-bg: #{$o-brand-primary};
+            --list-group-active-border-color: #{$o-brand-primary};
+            --list-group-active-color: #{color-contrast($o-brand-primary)};
+
+            @include media-breakpoint-up(md) {
+                min-width: 200px;
+                max-width: 250px;
+            }
+
+            .list-group-item:focus-visible {
+                box-shadow: inset 0 0 0 2px $o-we-handles-accent-color;
+                border-color: $o-we-handles-accent-color;
+                outline: none;
+            }
+        }
+    }
+
+    .o_website_page_templates_pane.active {
+        // Avoid using "display: [none/block]" to trigger the tabs behavior
+        // because doing so would recalculate iframes' height.
+        z-index: 1;
+    }
+
+    .o_page_template {
+        $-iframe-width: 1024;
+        $-preview-width-lg: 408; // Empirically obtained
+        box-shadow: 0 0 1rem rgba(0, 0, 0, 0.16);
+
+        @include media-breakpoint-between(md, lg) {
+            width: #{$-preview-width-lg}px;
+        }
+
+        .o_page_template_preview {
+            // Resize iframe:
+            height: 450px;
+            min-height: 100px;
+            padding: 0;
+            overflow: hidden;
+
+            iframe {
+                // Width is fixed; the actual scale is set inline by
+                // adjustHeight() so the iframe fits the live column width
+                // (the bootstrap col class controls the column width).
+                width: #{$-iframe-width}px;
+                transform-origin: 0 0;
+            }
+
+            &, iframe {
+                opacity: 0;
+                transition: height 300ms ease-in, opacity 300ms ease 300ms;
+            }
+        }
+
+        .placeholder {
+            transition: opacity 1s ease;
+        }
+
+        .o_button_area {
+            opacity: 0;
+            outline: $border-width * 2 solid $o-we-handles-accent-color;
+            outline-offset: $border-width * -1;
+            box-shadow: none;
+        }
+
+        &:empty {
+            opacity: 0; // Hide empty column filler
+        }
+
+        &.o_loading {
+            cursor: wait;
+        }
+
+        &.o_ready {
+            .placeholder {
+                animation: none;
+                opacity: 0;
+            }
+
+            .o_page_template_preview, iframe {
+                opacity: 1;
+            }
+
+            &:hover, &:focus-within {
+                box-shadow: 0 .5rem 2rem rgba(0, 0, 0, 0.2);
+
+                .o_button_area {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,310 @@
+import {
+    click,
+    contains,
+    defineMailModels,
+    listenStoreFetch,
+    openFormView,
+    start,
+    startServer,
+    waitStoreFetch,
+} from "@mail/../tests/mail_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import { advanceTime } from "@odoo/hoot-mock";
+
+import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal_project/chatter";
+
+describe.current.tags("desktop");
+defineMailModels();
+
+test("base rendering", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Chatter-topbar");
+    await contains("button:text('Send message')");
+    await contains("button:text('Log note')");
+    await contains("button:text('Activity')");
+    await contains("button[aria-label='Attach files']");
+    await contains(".o-mail-Followers");
+});
+
+test("rendering with multiple partner followers", async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
+        { name: "Eden Hazard" },
+        { name: "Jean Michang" },
+        {},
+    ]);
+    pyEnv["mail.followers"].create([
+        {
+            partner_id: partnerId_2,
+            res_id: partnerId_3,
+            res_model: "res.partner",
+        },
+        {
+            partner_id: partnerId_1,
+            res_id: partnerId_3,
+            res_model: "res.partner",
+        },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId_3);
+    await contains(".o-mail-Followers");
+    await contains(".o-mail-Followers-button");
+    await click(".o-mail-Followers-button");
+    await contains(".o-mail-Followers-dropdown");
+    await contains(".o-mail-Follower", { count: 2 });
+    await contains(".o-mail-Follower:eq(0):text('Jean Michang')");
+    await contains(".o-mail-Follower:eq(1):text('Eden Hazard')");
+});
+
+test("log note toggling", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains("button:not(.active):text('Log note')");
+    await contains(".o-mail-Composer", { count: 0 });
+    await click("button:text('Log note')");
+    await contains("button.active:text('Log note')");
+    await contains(".o-mail-Composer .o-mail-Composer-input[placeholder='Log an internal note…']");
+    await click("button:text('Log note')");
+    await contains("button:not(.active):text('Log note')");
+    await contains(".o-mail-Composer", { count: 0 });
+});
+
+test("send message toggling", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains("button:not(.active):text('Send message')");
+    await contains(".o-mail-Composer", { count: 0 });
+    await click("button:text('Send message')");
+    await contains("button.active:text('Send message')");
+    await contains(
+        ".o-mail-Composer-input[placeholder='Send a message to all followers and selected contacts…']"
+    );
+    await click("button:text('Send message')");
+    await contains("button:not(.active):text('Send message')");
+    await contains(".o-mail-Composer", { count: 0 });
+});
+
+test("log note/send message switching", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains("button:not(.active):text('Send message')");
+    await contains("button:not(.active):text('Log note')");
+    await contains(".o-mail-Composer", { count: 0 });
+    await click("button:text('Send message')");
+    await contains("button.active:text('Send message')");
+    await contains("button:not(.active):text('Log note')");
+    await contains(
+        ".o-mail-Composer-input[placeholder='Send a message to all followers and selected contacts…']"
+    );
+    await click("button:text('Log note')");
+    await contains("button:not(.active):text('Send message')");
+    await contains("button.active:text('Log note')");
+    await contains(".o-mail-Composer-input[placeholder='Log an internal note…']");
+});
+
+test("attachment counter without attachments", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains("button[aria-label='Attach files']");
+    await contains("button[aria-label='Attach files']:text('0')", { count: 0 });
+});
+
+test("attachment counter with attachments", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["ir.attachment"].create([
+        {
+            mimetype: "text/plain",
+            name: "Blah.txt",
+            res_id: partnerId,
+            res_model: "res.partner",
+        },
+        {
+            mimetype: "text/plain",
+            name: "Blu.txt",
+            res_id: partnerId,
+            res_model: "res.partner",
+        },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains("button[aria-label='Attach files']:text('2')");
+});
+
+test("attachment counter while loading attachments", async () => {
+    const { promise, resolve } = Promise.withResolvers();
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    listenStoreFetch("mail.thread", {
+        async onRpc() {
+            expect.step("before mail.thread");
+            await promise;
+        },
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains("button[aria-label='Attach files']");
+    await advanceTime(DELAY_FOR_SPINNER);
+    await contains("button[aria-label='Attach files'] .oi-spin");
+    await contains("button[aria-label='Attach files']:text('0')", { count: 0 });
+    await expect.waitForSteps(["before mail.thread"]);
+    resolve();
+    await waitStoreFetch("mail.thread");
+});
+
+test("attachment counter transition when attachments become loaded", async () => {
+    const { promise, resolve } = Promise.withResolvers();
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    listenStoreFetch("mail.thread", {
+        async onRpc() {
+            expect.step("before mail.thread");
+            await promise;
+        },
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains("button[aria-label='Attach files']");
+    await advanceTime(DELAY_FOR_SPINNER);
+    await contains("button[aria-label='Attach files'] .oi-spin");
+    await expect.waitForSteps(["before mail.thread"]);
+    resolve();
+    await waitStoreFetch("mail.thread");
+    await contains("button[aria-label='Attach files'] .oi-spin", { count: 0 });
+});
+
+test("attachment icon open directly the file uploader if there is no attachment yet", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Chatter-fileUploader");
+    await contains(".o-mail-AttachmentBox", { count: 0 });
+});
+
+test("attachment icon open the attachment box when there is at least 1 attachment", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["ir.attachment"].create([
+        {
+            mimetype: "text/plain",
+            name: "Blah.txt",
+            res_id: partnerId,
+            res_model: "res.partner",
+        },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains("button[aria-label='Attach files']");
+    await contains(".o-mail-AttachmentBox", { count: 0 });
+    await contains(".o-mail-Chatter-fileUploader", { count: 0 });
+    await click("button[aria-label='Attach files']");
+    await contains(".o-mail-AttachmentBox");
+    await contains(".o-mail-Chatter-fileUploader");
+});
+
+test("composer state conserved when clicking on another topbar button", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Chatter-topbar");
+    await contains("button:text('Send message')");
+    await contains("button:text('Log note')");
+    await contains("button[aria-label='Attach files']");
+    await click("button:text('Log note')");
+    await contains("button.active:text('Log note')");
+    await contains("button:not(.active):text('Send message')");
+    await click(".o-mail-Chatter-topbar button[aria-label='Attach files']");
+    await contains("button.active:text('Log note')");
+    await contains("button:not(.active):text('Send message')");
+});
+
+test("full message composer dialog size expand/collapse", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("button:text('Log note')");
+    await click("button[aria-label='Open Full Composer']");
+    await contains("div.modal-lg");
+    await click("button[title='Expand']");
+    await contains("div.modal-fs");
+    await click("button[title='Compress']");
+    await contains("div.modal-lg");
+});
+
+test("Send message displays the number of notified followers inside a badge", async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2, partnerId_3, partnerId_4] = pyEnv["res.partner"].create([
+        { name: "Eden Hazard" },
+        { name: "Jean Michang" },
+        { name: "Francesco Totti" },
+        {},
+    ]);
+    const [mtCommentId] = pyEnv["mail.message.subtype"].search([
+        ["subtype_xmlid", "=", "mail.mt_comment"],
+    ]);
+    pyEnv["mail.followers"].create([
+        {
+            partner_id: partnerId_2,
+            res_id: partnerId_4,
+            res_model: "res.partner",
+            subtype_ids: [mtCommentId],
+        },
+        {
+            partner_id: partnerId_1,
+            res_id: partnerId_4,
+            res_model: "res.partner",
+            subtype_ids: [mtCommentId],
+        },
+        {
+            partner_id: partnerId_3,
+            res_id: partnerId_4,
+            res_model: "res.partner",
+            subtype_ids: [],
+        },
+    ]);
+    await start();
+    await openFormView("res.partner", partnerId_4);
+    await click("button:text('Send message')");
+    await contains(".o-mail-RecipientsInput .badge:text('2 Followers')");
+});
+
+test("Attach files and Pinned Messages panels are mutually exclusive", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
+    pyEnv["mail.message"].create({
+        body: "Pinned message",
+        model: "res.partner",
+        pinned_at: "2025-01-01 00:00:00",
+        res_id: partnerId,
+    });
+    pyEnv["ir.attachment"].create({
+        mimetype: "text/plain",
+        name: "A.txt",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("button[title='Attach files']:text('1')");
+    await contains(".o-mail-AttachmentBox");
+    await click("button[title='Pinned Messages']");
+    await contains(".o-mail-pinnedMessages");
+    await contains(".o-mail-AttachmentBox", { count: 0 });
+    await click("button[title='Attach files']:text('1')");
+    await contains(".o-mail-AttachmentBox");
+    await contains(".o-mail-pinnedMessages", { count: 0 });
+});

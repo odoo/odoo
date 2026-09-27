@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_l10n_cn_balance_deduction_list" model="ir.ui.view">
+            <field name="name">l10n_cn.balance.deduction.list</field>
+            <field name="model">l10n_cn.balance.deduction</field>
+            <field name="arch" type="xml">
+                <list string="Balance Deductions" create="false" delete="false" edit="false">
+                    <field name="output_vat_offset_move_id" widget="many2one"/>
+                    <field name="voucher_type"/>
+                    <field name="voucher_total"/>
+                    <field name="deduct_amount"/>
+                    <field name="e_fapiao_number"/>
+                    <field name="receipt_code"/>
+                    <field name="voucher_number"/>
+                    <field name="issue_date"/>
+                    <field name="accounting_date"/>
+                    <field name="invoice_number"/>
+                    <field name="vat_differential_taxation"/>
+                    <field name="product_id"/>
+                    <field name="fapiao_number"/>
+                    <field name="expense_account_id" optional="hide"/>
+                    <field name="tax_inclusive_amount" optional="hide"/>
+                    <field name="receipt_number" optional="hide"/>
+                    <field name="remarks" optional="hide"/>
+                    <field name="invoice_date" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_l10n_cn_balance_deduction_search" model="ir.ui.view">
+            <field name="name">l10n_cn.balance.deduction.search</field>
+            <field name="model">l10n_cn.balance.deduction</field>
+            <field name="arch" type="xml">
+                <search>
+                    <filter string="Full Amount Fapiao" name="full_amount_fapiao" domain="[('move_line_id.l10n_cn_differential_taxation_method', '=', '01')]"/>
+                    <filter string="Net Amount Fapiao" name="net_amount_fapiao" domain="[('move_line_id.l10n_cn_differential_taxation_method', '=', '02')]"/>
+                    <filter string="Customer Invoice" name="customer_invoice" domain="[('move_type', '=', 'out_invoice')]"/>
+                    <filter string="Customer Credit Note" name="customer_credit_note" domain="[('move_type', '=', 'out_refund')]"/>
+                    <group>
+                        <filter
+                            name="group_by_accounting_date"
+                            string="Accounting Date"
+                            context="{'group_by': 'accounting_date'}"
+                        />
+                        <filter
+                            name="group_by_move_type"
+                            string="Type"
+                            context="{'group_by': 'move_type'}"
+                        />
+                        <filter
+                            name="group_by_invoice_number"
+                            string="Invoice Number"
+                            context="{'group_by': 'invoice_number'}"
+                        />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_l10n_cn_balance_deduction_pivot" model="ir.ui.view">
+            <field name="name">l10n_cn.balance.deduction.pivot</field>
+            <field name="model">l10n_cn.balance.deduction</field>
+            <field name="arch" type="xml">
+                <pivot string="Balance Deductions">
+                    <field name="accounting_date" type="row"/>
+                    <field name="move_type" type="col"/>
+                    <field name="deduct_amount" type="measure"/>
+                    <field name="voucher_total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="action_l10n_cn_balance_deduction" model="ir.actions.act_window">
+            <field name="name">Balance Deductions</field>
+            <field name="res_model">l10n_cn.balance.deduction</field>
+            <field name="view_mode">list,pivot</field>
+            <field name="view_id" ref="view_l10n_cn_balance_deduction_list"/>
+            <field name="context">
+                {'search_default_group_by_accounting_date': 1,
+                'search_default_group_by_invoice_number': 1,
+                'search_default_group_by_move_type': 1}
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_l10n_cn_balance_deduction"
+            parent="account.account_reports_management_menu"
+            name="Balance Deductions"
+            action="action_l10n_cn_balance_deduction"
+            groups="account.group_account_basic"/>
+    </data>
+</odoo>

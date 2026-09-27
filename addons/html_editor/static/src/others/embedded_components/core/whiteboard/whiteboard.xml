@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="html_editor.EmbeddedWhiteboard">
+        <div class="position-relative placeholder-glow mx-auto transition-base o_ready">
+            <div class="border border-white bg-white rounded shadow">
+                <t t-if="this.props.type === 'miro' and this.props.previewUrl.startsWith('https://miro.com/')">
+                    <!-- https://miro.com/app/board/uXjVHamXCxE=/?share_link_id=439880743147 -->
+                    <iframe width="768" height="432" t-att-src="this.props.previewUrl" frameborder="0" scrolling="no" allow="fullscreen; clipboard-read; clipboard-write" allowfullscreen="allowfullscreen"></iframe>
+                </t>
+                <t t-elif="this.props.type === 'google' and this.props.previewUrl.startsWith('https://docs.google.com/')">
+                    <!-- https://docs.google.com/drawings/d/13fozsH-4OfN8hQ5e-gZbedvMcGbOBkiIB0D2eISHEwk/edit?usp=sharing -->
+                    <iframe width="768" height="432" t-att-src="this.props.previewUrl" frameborder="0" scrolling="no" allow="fullscreen; clipboard-read; clipboard-write" allowfullscreen="allowfullscreen"></iframe>
+                    <t t-set="showPreviewLink" t-value="true"/>
+                    <t t-set="showEditLink" t-value="true"/>
+                </t>
+                <t t-elif="this.props.type === 'figma' and this.props.previewUrl.startsWith('https://embed.figma.com/')">
+                    <!-- https://www.figma.com/design/LrOEaQg6rZofN0ijYqwTOC/3D-Cool-Shapes-Community-?node-id=0-1&t=jlUmSvBBPmm4uPGp-0 -->
+                    <iframe width="768" height="432" t-att-src="this.props.previewUrl" frameborder="0" scrolling="no" allow="fullscreen; clipboard-read; clipboard-write" allowfullscreen="allowfullscreen"></iframe>
+                    <t t-set="showEditLink" t-value="true"/>
+                </t>
+                <t t-elif="this.props.type === 'canva' and this.props.url.startsWith('https://www.canva.com/')">
+                    <!-- https://www.canva.com/design/DAHI5iL0ues/o634riBS0uztYOVFplZyeA/view?embed -->
+                    <iframe width="768" height="432" t-att-src="this.props.embedUrl" frameborder="0" scrolling="no" allow="fullscreen; clipboard-read; clipboard-write" allowfullscreen="allowfullscreen"></iframe>
+                    <t t-set="showPreviewLink" t-value="true"/>
+                </t>
+                <t t-else="">
+                    <div>
+                        Sorry, the <a t-att-href="this.props.url">URL</a> you used is not recognized by this embedding feature.
+                        <br/>
+                        You can try to insert an image and link it to that URL.
+                    </div>
+                </t>
+                <div class="o_whiteboard_buttons position-absolute top-0 h-100 d-flex align-items-start justify-content-end pe-none">
+                    <a role="button" target="_blank" class="m-2 btn btn-primary pe-auto"
+                        t-if="showPreviewLink"
+                        t-att-href="this.props.previewUrl"
+                    >Full preview</a>
+                    <a role="button" target="_blank" class="m-2 btn btn-primary pe-auto"
+                        t-if="showEditLink"
+                        t-att-href="this.props.url"
+                    >Edit</a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

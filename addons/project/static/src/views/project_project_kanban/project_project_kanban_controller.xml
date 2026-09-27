@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="project.ProjectKanbanView.Buttons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary">
+        <button class="btn btn-primary o-kanban-button-new" position="replace">
+            <ProjectTemplateDropdown t-if="!this.env.inDialog and this.canCreate"
+                onCreate="() => this.createRecord()"
+                newButtonClasses="'btn btn-primary o-kanban-button-new'"
+                context="this.props.context"
+                isDisabled="this.isNewButtonDisabled"
+            />
+        </button>
+    </t>
+</templates>

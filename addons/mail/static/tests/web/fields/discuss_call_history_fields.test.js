@@ -1,0 +1,63 @@
+import {
+    contains,
+    defineMailModels,
+    openFormView,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
+
+import { describe, test } from "@odoo/hoot";
+
+describe.current.tags("desktop", "discuss_call_history");
+defineMailModels();
+
+test("duration omits an empty hour component", async () => {
+    const pyEnv = await startServer();
+    const historyId = pyEnv["discuss.call.history"].create({ duration_hour: 109 / 3600 });
+    await start();
+    await openFormView("discuss.call.history", historyId, {
+        arch: `
+            <form>
+                <field name="duration_hour" widget="discuss_call_history_duration"/>
+            </form>
+        `,
+    });
+    await contains(".o_field_discuss_call_history_duration time", { text: "1m 49s" });
+});
+
+test("recording indicators prefer video over audio", async () => {
+    const pyEnv = await startServer();
+    const historyId = pyEnv["discuss.call.history"].create({
+        has_audio: true,
+        has_recording: true,
+        has_video: true,
+    });
+    await start();
+    await openFormView("discuss.call.history", historyId, {
+        arch: `
+            <form>
+                <field name="has_recording" widget="discuss_call_history_indicators"/>
+            </form>
+        `,
+    });
+    await contains("[data-icon='movie']");
+    await contains("[data-icon='volume_up']", { count: 0 });
+});
+
+test("recording indicators show audio when there is no video", async () => {
+    const pyEnv = await startServer();
+    const historyId = pyEnv["discuss.call.history"].create({
+        has_audio: true,
+        has_recording: true,
+    });
+    await start();
+    await openFormView("discuss.call.history", historyId, {
+        arch: `
+            <form>
+                <field name="has_recording" widget="discuss_call_history_indicators"/>
+            </form>
+        `,
+    });
+    await contains("[data-icon='volume_up']");
+    await contains("[data-icon='movie']", { count: 0 });
+});

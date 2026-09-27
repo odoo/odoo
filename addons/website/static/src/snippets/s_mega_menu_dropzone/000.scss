@@ -1,0 +1,10 @@
+.s_mega_menu_dropzone {
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+}
+
+@include media-breakpoint-up(lg) {
+    header .navbar .dropdown-menu:has(> .s_mega_menu_dropzone) {
+        max-height: 75vh;
+    }
+}

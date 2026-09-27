@@ -1,0 +1,237 @@
+// Part of Odoo. See LICENSE file for full copyright and licensing details.
+import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
+import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
+import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as EventTourUtils from "@pos_event/../tests/tours/utils/event_tour_utils";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
+import { registry } from "@web/core/registry";
+
+registry.category("web_tour.tours").add("SellingEventInPosWithChoiceAnswers", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            // Confirm popup - There isn't enough tickets available
+            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.is({ title: "Tickets" }),
+            Dialog.confirm("Confirm"),
+            Dialog.is({ title: "Oh snap !" }),
+            Dialog.confirm("Ok"),
+
+            // Buy a VIP Ticket
+            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.is({ title: "Tickets" }),
+            Dialog.confirm("Confirm"),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            {
+                content: `confirm button is disabled`,
+                trigger: `.modal-footer .btn-primary:disabled`,
+            },
+            EventTourUtils.answerGlobalSelectQuestion("Question3", "Q3-Answer1"),
+            Dialog.is({ title: "Tickets" }),
+            {
+                content: `confirm button is enabled`,
+                trigger: `.modal-footer .btn-primary:not(:disabled)`,
+            },
+            Dialog.confirm("Confirm"),
+            ProductScreen.totalAmountIs("200.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.printTicket("Full Page"),
+            FeedbackScreen.printTicket("Badge"),
+            FeedbackScreen.clickNextOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("SellingEventInPosWithTextAnswers", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            // Buy a VIP Ticket
+            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            EventTourUtils.answerGlobalTextQuestion("Text Box 1", "TB1-Answer"),
+            EventTourUtils.answerTicketQuestion("1", "Text Box 2", "T1-TB2-Answer"),
+            EventTourUtils.answerTicketQuestion("2", "Text Box 2", "T2-TB2-Answer"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("400.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("CheckEventTicketPrice", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("200.00"),
+            ProductScreen.clickPriceList("Special Pricelist"),
+            ProductScreen.totalAmountIs("120.00"),
+            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("240.00"),
+            ProductScreen.clickPriceList("Test Pricelist"),
+            ProductScreen.totalAmountIs("400.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_selling_multiple_ticket_saved", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Event regitration not mandatory"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketQuestion("1", "Name", "SHAG"),
+            EventTourUtils.answerTicketQuestion("1", "Email", "demo@test.com"),
+            Dialog.confirm(),
+            ProductScreen.longPressOrderline("Event Ticket"),
+            EventTourUtils.answerTicketQuestion("1", "Name", "DEMO"),
+            Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerTicketSelectQuestion("2", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            Dialog.confirm(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.printTicket("Full Page"),
+            FeedbackScreen.printTicket("Badge"),
+            FeedbackScreen.clickNextOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_orderline_price_remain_same_as_ticket_price", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            Dialog.confirm(),
+            ProductScreen.longPressOrderline("Event Ticket"),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer2"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer2"),
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("200.00"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.totalAmountIs("200.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.printTicket("Full Page"),
+            FeedbackScreen.printTicket("Badge"),
+            FeedbackScreen.clickNextOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_pos_event_registration_not_mandatory", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // No customer, all information filled
+            ProductScreen.clickDisplayedProduct("Event regitration not mandatory"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            Dialog.confirm(),
+            {
+                trigger: ".ticket_question",
+            },
+            EventTourUtils.answerGlobalTextQuestion("Name", "Name 1"),
+            EventTourUtils.answerGlobalTextQuestion("Email", "1@test.com"),
+            EventTourUtils.answerGlobalTextQuestion("Phone", "1234567890"),
+            Dialog.confirm(),
+            ProductScreen.longPressOrderline("Event Ticket"),
+            EventTourUtils.answerGlobalTextQuestion("Name", "TEST"),
+            EventTourUtils.answerGlobalTextQuestion("Email", "2@test.com"),
+            Dialog.confirm(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.clickNextOrder(),
+
+            // Customer given, all information filled
+            ProductScreen.clickDisplayedProduct("Event regitration not mandatory"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            Dialog.confirm(),
+            {
+                trigger: ".ticket_question",
+            },
+            EventTourUtils.answerGlobalTextQuestion("Name", "Name 2"),
+            EventTourUtils.answerGlobalTextQuestion("Email", "2@test.com"),
+            EventTourUtils.answerGlobalTextQuestion("Phone", "+99999999"),
+            Dialog.confirm(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Event Parter"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.clickNextOrder(),
+
+            // Customer given, partial information filled
+            ProductScreen.clickDisplayedProduct("Event regitration not mandatory"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            Dialog.confirm(),
+            {
+                trigger: ".ticket_question",
+            },
+            EventTourUtils.answerGlobalTextQuestion("Name", "Name 3"),
+            Dialog.confirm(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Event Parter"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.clickNextOrder(),
+
+            // Customer given, partial information filled
+            ProductScreen.clickDisplayedProduct("Event regitration not mandatory"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            Dialog.confirm(),
+            {
+                trigger: ".ticket_question",
+            },
+            Dialog.confirm(),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Event Parter"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.clickNextOrder(),
+        ].flat(),
+});

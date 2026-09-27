@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="upload_rfq_cog_menu.QuotationRequestUploader">
+        <DropdownItem>
+            <FileUploader
+                fileUploadClass="'document_file_uploader'"
+                multiUpload="true"
+                onUploaded.bind="this.onFileUploaded"
+                onUploadComplete.bind="this.onUploadComplete"
+            >
+                <t t-set-slot="toggler">
+                    <span>Upload Request For Quotation</span>
+                </t>
+            </FileUploader>
+        </DropdownItem>
+    </t>
+</templates>

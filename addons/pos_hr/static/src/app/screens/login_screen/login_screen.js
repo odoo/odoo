@@ -1,0 +1,97 @@
+import { _t } from "@web/core/l10n/translation";
+import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_screen";
+import { patch } from "@web/core/utils/patch";
+import { useAutofocus } from "@web/core/utils/hooks";
+import { onWillUnmount, proxy, signal, useListener } from "@odoo/owl";
+
+patch(LoginScreen.prototype, {
+    setup() {
+        super.setup(...arguments);
+
+        this.state = proxy({
+            pin: "",
+        });
+
+        if (this.pos.config.module_pos_hr) {
+            this.autofocusRef = signal.ref();
+            useAutofocus({ ref: this.autofocusRef });
+            useListener(window, "keypress", async (ev) => {
+                if (this.pos.login && ev.key === "Enter" && this.state.pin) {
+                    await this.pos.selectCashier(this.state.pin, true);
+                }
+            });
+
+            this.pos.barcodeReader?.register(
+                {
+                    cashier: this.barcodeCashierAction.bind(this),
+                },
+                // exclusive
+                this.pos.router.currentScreen() === "LoginScreen"
+            );
+        }
+
+        onWillUnmount(() => {
+            this.state.pin = "";
+            this.pos.login = false;
+        });
+    },
+    async barcodeCashierAction(code) {
+        if (!this.pos.config.module_pos_hr) {
+            return;
+        }
+        const employee = this.pos.accessRight.getEmployeeByBarcode(code.code);
+        if (
+            employee &&
+            employee !== this.loggedCashier &&
+            (!employee._pin || (await this.pos.accessRight.checkPin(employee)))
+        ) {
+            this.pos.setCashier(employee);
+            this.cashierLogIn();
+        }
+        return employee;
+    },
+    openRegister() {
+        if (this.pos.config.module_pos_hr) {
+            this.pos.login = true;
+        } else {
+            super.openRegister();
+        }
+    },
+    async clickBack() {
+        if (!this.pos.config.module_pos_hr) {
+            super.clickBack();
+            return;
+        }
+
+        if (this.pos.login) {
+            this.state.pin = "";
+            this.pos.login = false;
+        } else {
+            const employee = await this.pos.selectCashier();
+            if (employee && employee.user_id?.id === this.pos.user.id) {
+                super.clickBack();
+                return;
+            } else if (employee) {
+                this.pos.notification.add(
+                    _t(
+                        "Only the cashier linked to the logged-in user (%s) can proceed to the Backend.",
+                        this.pos.user.name
+                    ),
+                    { type: "danger" }
+                );
+            }
+        }
+    },
+    get backBtnName() {
+        return this.pos.login && this.pos.config.module_pos_hr ? _t("Discard") : super.backBtnName;
+    },
+    maskedInput(ev) {
+        ev.preventDefault();
+        const input = ev.target;
+        const pin = this.state.pin || "";
+        const maskedLen = input.value.length;
+        this.state.pin = maskedLen < pin.length ? pin.slice(0, maskedLen) : pin + (ev.data || "");
+
+        input.value = "•".repeat(this.state.pin.length);
+    },
+});

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_survey_print" model="ir.actions.server">
+        <field name="name">Print Survey</field>
+        <field name="model_id" ref="survey.model_survey_survey"/>
+        <field name="binding_model_id" ref="survey.model_survey_survey" />
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+if record:
+    action = record.action_print_survey()
+        </field>
+    </record>
+</odoo>

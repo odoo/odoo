@@ -1,0 +1,65 @@
+import { ActionHelper } from "@web/views/action_helper";
+import { user } from "@web/core/user";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+
+class OnboardingIconCard extends Component {
+    static template = "hr.OnboardingIconCard";
+
+    props = useProps({
+        label: t.string(),
+        iconPath: t.string(),
+    });
+}
+
+class OnboardingHelperBlocks extends Component {
+    static template = "hr.OnboardingHelperBlocks";
+    static components = { OnboardingIconCard };
+}
+
+export class HrEmployeeActionHelper extends ActionHelper {
+    static template = "hr.EmployeeActionHelper";
+    static components = { OnboardingHelperBlocks };
+
+    setup() {
+        super.setup();
+        this.orm = useService("orm");
+        this.action = useService("action");
+        this.uiService = useService("ui");
+        this.state = proxy({ isOnboarding: null });
+        onWillStart(() => {
+            this.orm
+                .call("hr.employee", "is_onboarding", [
+                    user.activeCompanies.map((company) => company.id),
+                ])
+                .then((res) => (this.state.isOnboarding = res));
+        });
+    }
+
+    get showDefaultHelper() {
+        return !this.showOnboardingHelper && super.showDefaultHelper;
+    }
+
+    get showOnboardingHelper() {
+        // If on mobile and that the user hasn't the employee rights, then keep the same behavior as
+        // the ActionHelper (because no onboarding helper really suit this case)
+        return this.state.isOnboarding && !this.uiService.isSmall;
+    }
+
+    async loadDemoData() {
+        await this.orm.call("hr.employee", "load_demo_data", []);
+        await this.env.model.load();
+    }
+
+    loadNewEmployeeForm() {
+        this.action.doAction({
+            name: _t("Employees"),
+            res_model: "hr.employee",
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+            view_mode: "form",
+            target: "current",
+        });
+    }
+}

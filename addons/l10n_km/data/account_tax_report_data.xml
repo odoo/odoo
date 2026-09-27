@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tax_report_km" model="account.report">
+        <field name="name">VAT Report</field>
+        <field name="name@fr">Déclaration TVA</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.km"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="account_tax_report_km_balance" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="name@fr">Base</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="account_tax_report_km_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="name@fr">Taxe</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_km_operations" model="account.report.line">
+                <field name="name">Operations</field>
+                <field name="name@fr">Opérations</field>
+                <field name="code">KM_OPERATIONS</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_km_sales_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KM_25.base + KM_10.base + KM_7_5.base + KM_5.base + KM_3.base + KM_EXEMPT.base + KM_EXPORT.base</field>
+                    </record>
+                    <record id="account_tax_report_line_km_sales_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KM_25.tax + KM_10.tax + KM_7_5.tax + KM_5.tax + KM_3.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_km_operations_25" model="account.report.line">
+                        <field name="name">Taxable at 25%</field>
+                        <field name="name@fr">Taxable à 25%</field>
+                        <field name="code">KM_25</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_km_operations_25_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-base_25</field>
+                            </record>
+                            <record id="account_tax_report_line_km_operations_25_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-tax_25</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_km_operations_10" model="account.report.line">
+                        <field name="name">Taxable at 10%</field>
+                        <field name="name@fr">Taxable à 10%</field>
+                        <field name="code">KM_10</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_km_operations_10_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-base_10</field>
+                            </record>
+                            <record id="account_tax_report_line_km_operations_10_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-tax_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_km_operations_7_5" model="account.report.line">
+                        <field name="name">Taxable at 7.5%</field>
+                        <field name="name@fr">Taxable à 7.5%</field>
+                        <field name="code">KM_7_5</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_km_operations_7_5_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-base_7_5</field>
+                            </record>
+                            <record id="account_tax_report_line_km_operations_7_5_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-tax_7_5</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_km_operations_5" model="account.report.line">
+                        <field name="name">Taxable at 5%</field>
+                        <field name="name@fr">Taxable à 5%</field>
+                        <field name="code">KM_5</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_km_operations_5_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-base_5</field>
+                            </record>
+                            <record id="account_tax_report_line_km_operations_5_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-tax_5</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_km_operations_3" model="account.report.line">
+                        <field name="name">Taxable at 3%</field>
+                        <field name="name@fr">Taxable à 3%</field>
+                        <field name="code">KM_3</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_km_operations_3_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-base_3</field>
+                            </record>
+                            <record id="account_tax_report_line_km_operations_3_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-tax_3</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_km_operations_exempt" model="account.report.line">
+                        <field name="name">Exempt</field>
+                        <field name="name@fr">Exonéré</field>
+                        <field name="code">KM_EXEMPT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_km_operations_exempt_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-km_exempt</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_km_operations_export" model="account.report.line">
+                        <field name="name">Export</field>
+                        <field name="name@fr">Exportations</field>
+                        <field name="code">KM_EXPORT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_km_operations_export_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-km_export</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_km_prepayment" model="account.report.line">
+                <field name="name">Prepayments made</field>
+                <field name="name@fr">Avances réalisées</field>
+                <field name="code">KM_PREPAYMENTS</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_km_prepayment_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">km_prepayments</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_km_credit_reported" model="account.report.line">
+                <field name="name">Credit balance from previous return</field>
+                <field name="name@fr">Crédit reporté de la déclaration précédente</field>
+                <field name="code">KM_CREDIT_REPORTED</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_km_credit_reported_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KM_CREDIT_REPORTED._applied_carryover_tax</field>
+                    </record>
+                    <record id="account_tax_report_line_km_credit_reported_tax_carryover" model="account.report.expression">
+                        <field name="label">_applied_carryover_tax</field>
+                        <field name="engine">external</field>
+                        <field name="formula">most_recent</field>
+                        <field name="date_scope">previous_return_period</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_km_due" model="account.report.line">
+                <field name="name">Due tax for the month</field>
+                <field name="name@fr">Taxe due pour le mois</field>
+                <field name="code">KM_DUE</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_km_due_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KM_OPERATIONS.tax - KM_PREPAYMENTS.tax - KM_CREDIT_REPORTED.tax</field>
+                        <field name="subformula">if_above(KMF(0))</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_km_credit_to_report" model="account.report.line">
+                <field name="name">Credit balance to report for the next return</field>
+                <field name="name@fr">Credit à reporter pour la prochaine déclaration</field>
+                <field name="code">KM_TO_REPORT</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_km_credit_to_report_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KM_PREPAYMENTS.tax + KM_CREDIT_REPORTED.tax - KM_OPERATIONS.tax</field>
+                        <field name="subformula">if_above(KMF(0))</field>
+                        <field name="carryover_target" eval="False"/>
+                    </record>
+                    <record id="account_tax_report_line_km_credit_to_report_carryover" model="account.report.expression">
+                        <field name="label">_carryover_tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">KM_TO_REPORT.tax</field>
+                        <field name="carryover_target">KM_CREDIT_REPORTED._applied_carryover_tax</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="website_sale.header_cart_link" name="Header Cart Link">
+        <t
+            t-set="website_sale_cart_quantity"
+            t-value="(
+                request.session['website_sale_cart_quantity']
+                if 'website_sale_cart_quantity' in request.session
+                else request.cart.cart_quantity
+            ) or 0"
+        />
+        <t t-set="show_cart" t-value="website.has_ecommerce_access()"/>
+        <li t-attf-class="#{_item_class} divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
+        <li t-attf-class="o_wsale_my_cart #{not show_cart and 'd-none'} #{_item_class}">
+            <a href="/shop/cart" t-attf-class="#{_link_class}" aria-label="eCommerce cart">
+                <div t-attf-class="#{_icon_wrap_class}">
+                    <i t-if="_icon" class="oi oi-stack" data-icon="shopping_cart"/>
+                    <sup t-attf-class="my_cart_quantity badge bg-primary #{_badge_class} #{'d-none' if (website_sale_cart_quantity == 0) else ''}" t-out="website_sale_cart_quantity" t-att-data-order-id="request.session.get('sale_order_id', None) if website_sale_cart_quantity else None"/>
+                </div>
+                <span t-if="_text" t-attf-class="#{_text_class}">My Cart</span>
+            </a>
+        </li>
+    </template>
+
+    <template
+        id="website_sale.header_hide_empty_cart_link"
+        inherit_id="website_sale.header_cart_link"
+        name="Header Hide Empty Cart link"
+        active="False"
+    >
+        <xpath expr="//t[@t-set='show_cart']" position="after">
+            <t t-set="show_cart" t-value="website_sale_cart_quantity" />
+        </xpath>
+    </template>
+
+    <template id="website_sale.header_wishlist_link" name="Header Wishlist Link">
+        <t t-set="wishcount" t-value="len(env['product.wishlist'].current())"/>
+        <t t-set="show_wishes" t-value="website.has_ecommerce_access()"/>
+        <li t-attf-class="o_wsale_my_wish #{not show_wishes and 'd-none'} #{_item_class}">
+            <a href="/shop/wishlist" t-attf-class="#{_link_class}">
+                <div t-attf-class="#{_icon_wrap_class}">
+                    <i t-if="_icon" class="oi oi-1x oi-filled oi-stack" data-icon="favorite"/>
+                    <sup
+                        t-out="wishcount"
+                        t-attf-class="my_wish_quantity o_animate_blink badge bg-primary #{_badge_class} #{'d-none' if (wishcount == 0) else ''}"
+                    />
+                </div>
+                <span t-if="_text" t-attf-class="#{_text_class}">Wishlist</span>
+            </a>
+        </li>
+    </template>
+
+    <template id="website_sale.header_hide_empty_wishlist_link" inherit_id="website_sale.header_wishlist_link">
+        <xpath expr="//t[@t-set='show_wishes']" position="after">
+            <t t-set="show_wishes" t-value="show_wishes and wishcount > 0"/>
+        </xpath>
+        <xpath expr="//li[contains(@t-attf-class, 'o_wsale_my_wish')]" position="attributes">
+            <attribute name="t-attf-class" add="o_wsale_my_wish_hide_empty" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="website_sale.website_sale_layout" inherit_id="website.layout" priority="1">
+        <body position="before">
+            <t
+                t-set="product_image_ratio_classes"
+                t-value="website._get_product_image_ratio_classes()"
+            />
+            <t
+                t-if="product_image_ratio_classes"
+                t-set="body_classname"
+                t-value="product_image_ratio_classes + (' ' + body_classname if body_classname else '')"
+            />
+        </body>
+    </template>
+
+    <template
+        id="website_sale.template_footer_website_sale"
+        name="eCommerce Footer"
+        inherit_id="website.layout"
+        active="False"
+    >
+        <div id="footer" position="replace">
+            <div
+                t-if="not no_footer"
+                id="footer"
+                class="oe_structure oe_structure_solo"
+                t-ignore="true"
+            >
+                <section class="s_text_block pt48" data-snippet="s_text_block" data-name="Container">
+                    <div class="container s_allow_columns">
+                        <div class="row">
+                            <!-- Column 1: Products -->
+                            <div class="col-lg-3 pb32">
+                                <h5>Products</h5>
+                                <div class="s_hr pb8" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto"/>
+                                </div>
+                                <ul class="list-unstyled">
+                                    <t t-set="ecommerce_categories" t-value="[]"/>
+                                    <li t-foreach="ecommerce_categories" t-as="category">
+                                        <a
+                                            t-att-href="'/shop/category/' + str(category['id'])"
+                                            t-out="category['name']"
+                                        />
+                                    </li>
+                                    <t t-if="not ecommerce_categories">
+                                        <li><a href="#">Accessories</a></li>
+                                        <li><a href="#">Apparel</a></li>
+                                        <li><a href="#">Beauty</a></li>
+                                        <li><a href="#">Essentials</a></li>
+                                        <li><a href="#">Fitness</a></li>
+                                        <li><a href="#">Gadgets</a></li>
+                                    </t>
+                                </ul>
+                                <div class="s_hr pb8" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto"/>
+                                </div>
+                                <a href="/shop"><i class="oi" data-icon="east"/> All Products</a>
+                                <div class="s_hr pt8 pb8" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto"/>
+                                </div>
+                            </div>
+
+                            <!-- Column 2: Customer Care -->
+                            <div class="col-lg-3 pb32">
+                                <h5>Customer Care</h5>
+                                <div class="s_hr pb8" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto"/>
+                                </div>
+                                <ul class="list-unstyled">
+                                    <li><a href="#">Help Center</a></li>
+                                    <li><a href="#">Returns</a></li>
+                                    <li><a href="#">Delivery</a></li>
+                                    <li><a href="#">Shipping</a></li>
+                                    <li><a href="/contactus">Contact us</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Column 3: Badges, Social, Payments -->
+                            <div class="col-lg-5 offset-lg-1 pb48">
+                                <!-- Payment Icons -->
+                                <h5>Our payment methods</h5>
+                                <div class="s_hr pb8" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto"/>
+                                </div>
+                                <div
+                                    class="s_supported_payment_methods o_not_editable"
+                                    data-snippet="s_supported_payment_methods"
+                                    data-name="Supported Payment Methods"
+                                    data-limit="8"
+                                    data-height="32px"
+                                    data-alignment="start"
+                                    data-oe-protected="true"
+                                />
+                                <div class="s_hr pt8 pb24" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto"/>
+                                </div>
+                                <!-- Service Badges -->
+                                <span
+                                    class="s_badge badge text-bg-primary o_animable"
+                                    data-name="Badge"
+                                >
+                                    <i class="oi oi-fw o_not-animable" data-icon="attach_money"/> Low Prices
+                                </span>
+                                <span
+                                    class="s_badge badge text-bg-primary o_animable"
+                                    data-name="Badge"
+                                >
+                                    <i class="oi oi-fw o_not-animable" data-icon="shopping_basket"/>
+                                    Easy Returns
+                                </span>
+                                <span
+                                    class="s_badge badge text-bg-primary o_animable"
+                                    data-name="Badge"
+                                >
+                                    <i class="oi oi-fw o_not-animable" data-icon="local_shipping"/> Fast Shipping
+                                </span>
+                                <div class="s_hr pt8 pb8" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-100 mx-auto" style="border-top-color: rgba(255, 255, 255, 0);"/>
+                                </div>
+                                <!-- Social Media -->
+                                <div
+                                    class="s_social_media text-start o_not_editable"
+                                    data-snippet="s_social_media"
+                                    data-name="Social Media"
+                                    contenteditable="false"
+                                >
+                                    <h5 class="s_social_media_title d-none">
+                                        Follow us
+                                    </h5>
+                                    <a
+                                        href="#"
+                                        class="s_social_media_instagram"
+                                        target="_blank"
+                                        aria-label="Instagram"
+                                    >
+                                        <i class="oi o_editable_media rounded shadow-sm" data-icon="oi_instagram"/>
+                                    </a>
+                                    <a
+                                        href="#"
+                                        class="s_social_media_youtube"
+                                        target="_blank"
+                                        aria-label="YouTube"
+                                    >
+                                        <i class="oi o_editable_media rounded shadow-sm" data-icon="oi_youtube-play"/>
+                                    </a>
+                                    <a
+                                        href="#"
+                                        class="s_social_media_tiktok"
+                                        target="_blank"
+                                        aria-label="TikTok"
+                                    >
+                                        <i class="oi o_editable_media rounded shadow-sm" data-icon="oi_tiktok"/>
+                                    </a>
+                                    <a
+                                        href="#"
+                                        class="s_social_media_twitter"
+                                        aria-label="Twitter"
+                                    >
+                                        <i class="oi o_editable_media rounded shadow-sm" data-icon="oi_x"/>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <xpath expr="//span[hasclass('o_footer_copyright_name')]" position="replace">
+            <span class="small">
+                &amp;copy;
+                <span class="o_footer_copyright_name align-baseline">Company name</span>
+                 - <a href="#">Terms &amp; Conditions</a>
+                 - <a href="#">Privacy Policy</a>
+            </span>
+        </xpath>
+    </template>
+
+    <template id="website_sale.template_header_mobile" inherit_id="website.template_header_mobile">
+        <xpath expr="//ul[hasclass('o_header_mobile_buttons_wrap')]" position="inside">
+            <t t-call="website_sale.header_cart_link"
+                _icon="True"
+                _link_class.f="o_navlink_background_hover btn position-relative rounded-circle border-0 p-1 text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _icon="True"
+                _link_class.f="o_navlink_background_hover btn position-relative rounded-circle border-0 p-1 text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1"/>
+        </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _div_classes.f="dropup"
+                _btn_class.f="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center w-100"
+                _dropdown_menu_class.f="w-100"
+                _txt_class.f="me-auto small"
+            />
+        </t>
+    </template>
+
+    <template id="website_sale.template_header_default" inherit_id="website.template_header_default">
+        <xpath expr="//t[@t-call='website.placeholder_header_search_box']" position="before">
+            <t t-call="website_sale.header_cart_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-center text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-center text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+        </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _btn_class="_additional_btn_color or 'nav-link'"
+                _dropdown_menu_class.f="dropdown-menu-end"
+            />
+        </t>
+    </template>
+
+    <template id="website_sale.template_header_hamburger" inherit_id="website.template_header_hamburger">
+        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+            <t t-call="website_sale.header_cart_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-pill p-1 text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-pill p-1 text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded"/>
+        </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _div_classes.f="dropup"
+                _btn_class.f="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center w-100"
+                _dropdown_menu_class.f="w-100"
+                _txt_class.f="me-auto small"
+            />
+        </t>
+    </template>
+
+    <template id="website_sale.template_header_stretch" inherit_id="website.template_header_stretch">
+        <xpath expr="//t[@t-call='website.placeholder_header_social_links']" position="before">
+            <t t-call="website_sale.header_cart_link"
+                _icon="True"
+                _item_class.f="border-start o_border_contrast"
+                _link_class.f="o_navlink_background_hover btn position-relative d-flex align-items-center h-100 rounded-0 p-2 text-reset"
+                _badge_class.f="rounded"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _icon="True"
+                _item_class.f="border-start o_border_contrast"
+                _link_class.f="o_navlink_background_hover btn position-relative d-flex align-items-center h-100 rounded-0 p-2 text-reset"
+                _badge_class.f="rounded"/>
+        </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _div_classes.f="h-100 border-start o_border_contrast"
+                _btn_class.f="o_navlink_background_hover btn h-100 rounded-0 text-reset"
+                _dropdown_menu_class.f="dropdown-menu-end"
+                _txt_class.f="small"
+            />
+        </t>
+    </template>
+
+    <template id="website_sale.template_header_vertical" inherit_id="website.template_header_vertical">
+        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+            <t t-call="website_sale.header_cart_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+        </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _btn_class.f="o_navlink_background btn text-reset"
+                _dropdown_menu_class.f="dropdown-menu-end"
+            />
+        </t>
+    </template>
+
+    <template id="website_sale.template_header_search" inherit_id="website.template_header_search">
+        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+            <t t-call="website_sale.header_cart_link"
+                _text="True"
+                _item_class.f="border-start o_border_contrast"
+                _link_class.f="o_navlink_background_hover btn btn-sm d-flex align-items-center gap-1 h-100 rounded-0 p-2 text-reset"
+                _badge_class.f="rounded"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _text="True"
+                _item_class.f="border-start o_border_contrast"
+                _link_class.f="o_navlink_background_hover btn btn-sm d-flex align-items-center gap-1 h-100 rounded-0 p-2 text-reset"
+                _badge_class.f="rounded"/>
+        </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _div_classes.f="h-100 border-end o_border_contrast"
+                _btn_class.f="o_navlink_background_hover btn btn-sm d-flex align-items-center h-100 rounded-0 p-2 text-reset"
+            />
+        </t>
+    </template>
+
+    <template id="website_sale.template_header_sales_one" inherit_id="website.template_header_sales_one">
+        <xpath expr="//t[@t-call='portal.user_dropdown']" position="before">
+            <t t-call="website_sale.header_cart_link"
+                _icon="True"
+                _link_class.f="btn position-relative rounded-circle p-1 text-reset o_navlink_background"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+        </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _btn_class.f="btn rounded-circle text-reset o_navlink_background"
+                _dropdown_menu_class.f="dropdown-menu-end"
+                _txt_class.f="small"
+            />
+        </t>
+    </template>
+
+    <template id="website_sale.template_header_sales_two" inherit_id="website.template_header_sales_two">
+        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+            <t t-call="website_sale.header_cart_link"
+                _icon="True"
+                _text="True"
+                _icon_wrap_class.f="o_navlink_background position-relative me-2 rounded-circle p-2 transition-base"
+                _link_class.f="o_navlink_trigger_hover btn d-flex align-items-center fw-bold text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"
+                _text_class.f="small"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _icon="True"
+                _text="True"
+                _icon_wrap_class.f="o_navlink_background position-relative me-2 rounded-circle p-2 transition-base"
+                _link_class.f="o_navlink_trigger_hover btn d-flex align-items-center fw-bold text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"
+                _text_class.f="small"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_header_sales_two_top')]" position="attributes">
+            <attribute name="t-if" add="is_view_active('website_sale.header_pricelist_selector')" separator="or"/>
+        </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="replace">
+            <li class="d-flex align-items-center">
+                <ul class="navbar-nav flex-row align-items-center gap-2">
+                    <t>$0</t>
+                    <t
+                        t-call="website_sale.placeholder_header_pricelist_selector"
+                        _div_classes.f="d-flex align-items-center h-100"
+                        _btn_class.f="btn btn-sm btn-outline-secondary border-0"
+                    />
+                </ul>
+            </li>
+        </t>
+        <!-- We replaced the language selector by an always visible `<li>` element,
+             making the dedicated spacer redundant. -->
+        <xpath expr="//li[hasclass('o_header_sales_two_lang_selector_placeholder')]" position="replace"/>
+    </template>
+
+    <template id="website_sale.template_header_sales_three" inherit_id="website.template_header_sales_three">
+        <xpath expr="//t[@t-call='website.placeholder_header_language_selector']" position="before">
+            <t t-call="website_sale.header_cart_link"
+                _text="True"
+                _item_class.f="position-relative"
+                _link_class.f="nav-link d-flex flex-row-reverse align-items-center text-uppercase fw-bold"
+                _icon_wrap_class.f="d-contains"
+                _badge_class.f="top-0 d-block ms-2"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _text="True"
+                _item_class.f="position-relative"
+                _link_class.f="nav-link d-flex flex-row-reverse align-items-center text-uppercase fw-bold"
+                _icon_wrap_class.f="d-contains"
+                _badge_class.f="top-0 d-block ms-2"/>
+        </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _item_class.f="position-relative"
+                _btn_class.f="nav-link d-flex align-items-center fw-bold text-uppercase o_nav-link_secondary"
+                _dropdown_menu_class.f="dropdown-menu-end"
+            />
+        </t>
+    </template>
+
+    <template id="website_sale.template_header_sales_four" inherit_id="website.template_header_sales_four">
+        <xpath expr="//t[@t-call='website.placeholder_header_call_to_action']" position="before">
+            <t t-call="website_sale.header_cart_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-pill p-1 text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-pill p-1 text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+        </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _item_class.f="position-relative"
+                _btn_class.f="nav-link"
+                _dropdown_menu_class.f="dropdown-menu-end"
+                _txt_class.f="small"
+            />
+        </t>
+    </template>
+
+    <template id="website_sale.template_header_sidebar" inherit_id="website.template_header_sidebar">
+        <xpath expr="//t[@t-call='website.placeholder_header_brand']" position="after">
+            <ul class="list-unstyled d-flex gap-1 ms-auto mb-0">
+                <t t-call="website_sale.header_cart_link"
+                    _icon="True"
+                    _link_class.f="o_navlink_background btn position-relative p-1 rounded-circle text-reset"
+                    _badge_class.f="position-absolute top-0 end-0 rounded-pill mt-n1 me-n1"/>
+                <t t-call="website_sale.header_wishlist_link"
+                    _icon="True"
+                    _link_class.f="o_navlink_background btn position-relative p-1 rounded-circle text-reset"
+                    _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+            </ul>
+        </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _div_classes.f="dropup"
+                _btn_class.f="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center w-100"
+                _dropdown_menu_class.f="w-100"
+                _txt_class.f="me-auto small"
+            />
+        </t>
+    </template>
+
+    <template id="website_sale.template_header_boxed" inherit_id="website.template_header_boxed">
+        <xpath expr="//t[@t-call='website.placeholder_header_search_box']" position="before">
+            <t t-call="website_sale.header_cart_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-center text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+            <t t-call="website_sale.header_wishlist_link"
+                _icon="True"
+                _link_class.f="o_navlink_background btn position-relative rounded-circle p-1 text-center text-reset"
+                _badge_class.f="position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill"/>
+        </xpath>
+        <t t-call="website.placeholder_header_language_selector" position="after">
+            <t
+                t-call="website_sale.placeholder_header_pricelist_selector"
+                _btn_class.f="{{_additional_btn_color or 'nav-link'}} d-flex align-items-center gap-1 border-0 rounded-pill px-3"
+                _dropdown_menu_class.f="dropdown-menu-end"
+                _txt_class.f="small"
+            />
+        </t>
+    </template>
+
+    <template id="website_sale.brand_promotion" inherit_id="website.brand_promotion">
+        <xpath expr="//t[@t-call='web.brand_promotion_message']" position="replace">
+            <t t-set="_message">
+                    The #1 <a target="_blank" href="http://www.odoo.com/app/ecommerce?utm_source=db&amp;utm_medium=website">Open Source eCommerce</a>
+            </t>
+            <t t-call="web.brand_promotion_message" _message="_message" _utm_medium.f="website"/>
+        </xpath>
+    </template>
+
+    <template id="website_sale.search_result_items" inherit_id="website.search_result_items">
+        <xpath expr="//div[hasclass('o_search_result_description')]" position="inside">
+            <p t-if="result.get('description_sale')"
+                class="o_line_clamp o_line_clamp_1 mb-0 small"
+                t-out="result['description_sale']"/>
+        </xpath>
+    </template>
+
+    <template id="robots" inherit_id="website.robots">
+        <xpath expr="//t[@id='robots_module_rules']" position="inside">
+<t t-translation="off">
+Disallow: /shop/cart
+Disallow: /*/shop/cart
+Disallow: /shop/checkout
+Disallow: /*/shop/checkout
+Disallow: /shop/payment
+Disallow: /*/shop/payment
+Disallow: /shop/confirmation
+Disallow: /*/shop/confirmation
+</t>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.placeholder_header_pricelist_selector"
+        name="Placeholder Header Pricelist Selector"
+    />
+
+    <template
+        id="website_sale.header_pricelist_selector"
+        inherit_id="website_sale.placeholder_header_pricelist_selector"
+        name="Header Pricelist Selector"
+    >
+        <xpath expr="." position="inside">
+            <li
+                t-if="
+                    not hide_pricelist_selector
+                    and website_sale_pricelists
+                    and len(website_sale_pricelists) &gt; 1
+                "
+                name="header_pricelist_selector"
+                t-attf-class="o_header_pricelist_selector #{_item_class}"
+            >
+                <t t-call="website_sale.pricelist_selector" _div_classes.f="#{_div_classes} dropdown"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.footer_pricelist_selector"
+        inherit_id="portal.frontend_layout"
+        name="Footer Pricelist Selector"
+        priority="10"
+    >
+        <xpath expr="//span[hasclass('o_footer_copyright_name')]" position="replace">
+            <div class="d-flex flex-column-reverse flex-md-row align-items-center gap-2">
+                <div class="flex-md-shrink-0">$0</div>
+                <div class="d-flex align-items-center gap-2 min-w-0 mw-100">
+                    <t
+                        t-call="website_sale.pricelist_selector"
+                        _div_classes.f="dropup flex-grow-1 min-w-0"
+                        _btn_class.f="d-inline-flex align-items-center btn btn-secondary btn-sm border-0 min-w-0 w-100"
+                    />
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template
+        id="website_sale.footer_pricelist_selector_with_language_selector"
+        inherit_id="website_sale.footer_pricelist_selector"
+        active="False"
+    >
+        <t t-call="website_sale.pricelist_selector" position="before">
+            <t id="language_selector_hook" position="move"/>
+        </t>
+    </template>
+
+    <template id="website_sale.pricelist_selector" name="Pricelist Selector">
+        <div
+            t-if="
+                not hide_pricelist_selector
+                and website_sale_pricelists
+                and len(website_sale_pricelists) &gt; 1
+            "
+            name="pricelist_selector"
+            t-attf-class="#{_div_classes or 'dropdown'} o_typeahead d-print-none"
+        >
+            <t t-set="active_pricelist" t-value="website.pricelist_id"/>
+            <button
+                t-attf-class="dropdown-toggle #{_btn_class or 'btn btn-sm btn-secondary border-0'}"
+                type="button"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="true"
+                aria-haspopup="true"
+                aria-expanded="false"
+                t-attf-aria-label="Pricelist: #{active_pricelist.name}"
+            >
+                <span t-attf-class="text-truncate #{_txt_class}" t-out="active_pricelist.name"/>
+            </button>
+            <div t-attf-class="dropdown-menu #{_dropdown_menu_class}">
+                <a
+                    t-foreach="website_sale_pricelists"
+                    t-as="pricelist"
+                    t-attf-class="dropdown-item {{pricelist == active_pricelist and 'active'}}"
+                    t-att-aria-current="pricelist == active_pricelist and 'true'"
+                    t-attf-href="/shop/change_pricelist/#{pricelist.id}"
+                >
+                    <span t-att-class="_txt_class" t-out="pricelist.name"/>
+                </a>
+            </div>
+        </div>
+    </template>
+
+    <template id="website_sale.typeahead_language_selector" inherit_id="portal.language_selector">
+        <xpath expr="//div[contains(@t-attf-class, 'js_language_selector')]" position="attributes">
+            <attribute name="t-attf-class" add="o_typeahead" separator=" "/>
+        </xpath>
+        <xpath expr="//a[hasclass('dropdown-item')]" position="attributes">
+            <attribute name="t-att-data-value">lg.name.split('/').pop()</attribute>
+        </xpath>
+    </template>
+
+</odoo>

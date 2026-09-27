@@ -1,0 +1,410 @@
+import { onWillRender, render } from "@web/owl2/utils";
+import { Component, signal, t, onMounted, onPatched, useListener, useProps } from "@odoo/owl";
+import { useCommand } from "@web/core/commands/command_hook";
+import { Domain } from "@web/core/domain";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
+import { getFieldDomain } from "@web/model/relational_model/utils";
+import { useSpecialData } from "@web/views/fields/relational_utils";
+import { standardFieldProps } from "../standard_field_props";
+import { ConnectionLostError } from "@web/core/network/rpc";
+import { useService } from "@web/core/utils/hooks";
+
+/**
+ * @typedef {import("../standard_field_props").StandardFieldProps & {
+ *  domain?: [Array, Function];
+ *  foldField?: string;
+ *  isDisabled?: boolean;
+ *  visibleSelection?: string[];
+ *  withCommand?: boolean;
+ * }} StatusBarFieldProps
+ *
+ * @typedef StatusBarItem
+ * @property {number} value
+ * @property {string} label
+ * @property {boolean} isFolded
+ * @property {boolean} isSelected
+ *
+ * @typedef StatusBarList
+ * @property {string} label
+ * @property {StatusBarItem[]} items
+ */
+
+/**
+ * @param {...HTMLElement} els
+ */
+const hide = (...els) => els.forEach((el) => el.classList.add("d-none"));
+
+/**
+ * @param {...HTMLElement} els
+ */
+const show = (...els) => els.forEach((el) => el.classList.remove("d-none"));
+
+/** @extends {Component<StatusBarFieldProps>} */
+export class StatusBarField extends Component {
+    static template = "web.StatusBarField";
+    static components = {
+        Dropdown,
+        DropdownItem,
+    };
+    props = useProps({
+        ...standardFieldProps,
+        domain: t.or([t.array(), t.function()]).optional(),
+        foldField: t.string().optional(),
+        isDisabled: t.boolean().optional(),
+        visibleSelection: t.array(t.string()).optional(),
+        withCommand: t.boolean().optional(),
+        context: t.object().optional(),
+    });
+
+    beforeRef = signal.ref();
+    rootRef = signal.ref();
+    afterRef = signal.ref();
+    dropdownRef = signal.ref();
+
+    setup() {
+        // Properties
+        this.items = {};
+        this.uiService = useService("ui");
+
+        // Resize listeners
+        let status = "idle";
+        const adjust = () => {
+            status = "adjusting";
+            this.adjustVisibleItems();
+            render(this);
+        };
+
+        const adjustIfNeeded = () => {
+            if (status === "shouldAdjust") {
+                adjust();
+            }
+        };
+        onMounted(adjustIfNeeded);
+        onPatched(adjustIfNeeded);
+
+        let forceRecomputeItems = false;
+        onWillRender(() => {
+            if (status !== "adjusting" || forceRecomputeItems) {
+                Object.assign(this.items, this.getSortedItems());
+                status = "shouldAdjust";
+            } else {
+                status = "idle";
+            }
+            forceRecomputeItems = false;
+        });
+
+        const throttledRenderAndAdapt = useThrottleForAnimation(() => {
+            if (this.rootRef()) {
+                adjust();
+            }
+        });
+        useListener(window, "resize", throttledRenderAndAdapt);
+
+        // Special data
+        if (this.field.type === "many2one") {
+            this.specialData = useSpecialData(async (orm, props) => {
+                const { foldField, name: fieldName, record, context } = props;
+                const { relation } = record.fields[fieldName];
+                const fieldNames = this.getFieldNames(props);
+                if (foldField) {
+                    fieldNames.push(foldField);
+                }
+                let domain = getFieldDomain(record, fieldName, props.domain);
+                domain = Domain.and([this.getDomain(props), domain]).toList();
+                const res = await orm
+                    .searchRead(relation, domain, fieldNames, { context })
+                    .catch((error) => {
+                        if (error instanceof ConnectionLostError) {
+                            if (this.props.record.data[this.props.name]) {
+                                return [this.props.record.data[this.props.name]];
+                            }
+                            return [];
+                        }
+                        throw error;
+                    });
+                forceRecomputeItems = true;
+                return res;
+            });
+        }
+
+        // Command palette
+        if (this.props.withCommand) {
+            const moveToCommandName = _t("Move to %s...", this.field.string);
+            useCommand(
+                moveToCommandName,
+                () => ({
+                    placeholder: moveToCommandName,
+                    providers: [
+                        {
+                            provide: () =>
+                                this.getAllItems().map((item) => ({
+                                    name: item.label,
+                                    action: () => this.selectItem(item),
+                                })),
+                        },
+                    ],
+                }),
+                {
+                    category: "smart_action",
+                    hotkey: "alt+shift+x",
+                    isAvailable: () => !this.props.isDisabled,
+                }
+            );
+            useCommand(
+                _t("Move to next %s", this.field.string),
+                () => {
+                    const items = this.getAllItems();
+                    const nextIndex = items.findIndex((item) => item.isSelected) + 1;
+                    this.selectItem(items[nextIndex]);
+                },
+                {
+                    category: "smart_action",
+                    hotkey: "alt+x",
+                    isAvailable: () => {
+                        if (this.props.isDisabled) {
+                            return false;
+                        }
+                        const items = this.getAllItems();
+                        return items.length && !items.at(-1).isSelected;
+                    },
+                }
+            );
+        }
+    }
+
+    /**
+     * @returns {{ selection?: [string, string][], string: string, type: "many2one" | "selection" }}
+     */
+    get field() {
+        return this.props.record.fields[this.props.name];
+    }
+
+    /**
+     * Override this to force a dynamic domain on the records
+     */
+    getDomain(props) {
+        return [];
+    }
+
+    /**
+     * Override this to change the fields to fetch
+     */
+    getFieldNames(props) {
+        return ["display_name"];
+    }
+
+    /**
+     * Determines what items must be visible and how they must be displayed.
+     * There are 4 main scenarios:
+     *
+     * 1. All items can be displayed inline, no modification in the UI;
+     *
+     * The following scenarios imply that the viewport is too small to display
+     * all items in one line. Adjustments are made incrementally:
+     *
+     * 2. Items up to 1 before the currently selected item are combined in a dropdown;
+     *
+     * 3. Items up to 1 after the currently selected item are combined in a dropdown,
+     * along with the initially folded items;
+     *
+     * 4. If that still doesn't suffice: all items are combined in a single dropdown.
+     */
+    adjustVisibleItems() {
+        // Get all visible buttons
+        const itemEls = [
+            ...this.rootRef().querySelectorAll(".o_arrow_button_wrap"),
+        ];
+        const selectedIndex = itemEls.findIndex((el) =>
+            el.querySelector(".o_arrow_button_current")
+        );
+        const itemsBefore = itemEls.slice(selectedIndex + 2).reverse();
+        const itemsAfter = itemEls.slice(0, Math.max(selectedIndex - 1, 0)).reverse();
+
+        // Reset hidden elements
+        show(...itemEls);
+        hide(this.dropdownRef(), this.beforeRef());
+        if (this.items.folded.length) {
+            show(this.afterRef());
+            itemEls.forEach((el) => el.querySelector(".o_arrow_button").classList.remove("o_first"));
+        } else {
+            hide(this.afterRef());
+            itemEls[0]?.querySelector(".o_arrow_button").classList.add("o_first");
+        }
+
+        // Reset items variables
+        this.items.before = [];
+        this.items.after = [...this.items.folded];
+        const itemsToAssign = this.getAllItems().filter((item) => !item.isFolded);
+
+        if (this.uiService.isSmall && this.items.inline.length) {
+            // Small screen case: only a single dropdown
+            show(this.dropdownRef());
+            hide(this.beforeRef(), this.afterRef(), ...itemEls);
+            return;
+        }
+
+        while (this.areItemsWrapping()) {
+            if (itemsBefore.length) {
+                // Case 1: elements before can be hidden
+                show(this.beforeRef());
+                hide(itemsBefore.shift());
+                this.items.before.push(itemsToAssign.shift());
+            } else if (itemsAfter.length) {
+                // Case 2: elements before are hidden, elements after can be hidden
+                show(this.afterRef());
+                hide(itemsAfter.pop());
+                this.items.after.unshift(itemsToAssign.pop());
+            } else {
+                // Last resort: no elements can be hidden => fallback to single dropdown
+                show(this.dropdownRef());
+                hide(this.beforeRef(), this.afterRef(), ...itemEls);
+                break;
+            }
+        }
+    }
+
+    areItemsWrapping() {
+        const root = this.rootRef();
+        const firstItem = root.querySelector(":scope > :not(.d-none)");
+        if (!firstItem) {
+            return false;
+        }
+        const style = getComputedStyle(root);
+        const verticalOffset =
+            parseFloat(style.paddingTop) + parseFloat(style.paddingBottom) +
+            parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+        const { height: currentHeight } = root.getBoundingClientRect();
+        const { height: targetHeight } = firstItem.getBoundingClientRect();
+        // Add 1 pixel to tolerate sub-pixel measurement noise at some zoom/DPI ratios.
+        return currentHeight > targetHeight + verticalOffset + 1;
+    }
+
+    /**
+     * @returns {StatusBarItem[]}
+     */
+    getAllItems() {
+        const { foldField, name, record } = this.props;
+        const currentValue = record.data[name];
+        if (this.field.type === "many2one") {
+            // Many2one
+            const items = this.specialData.data.map((option) => ({
+                value: option.id,
+                label: option.display_name,
+                isFolded: option[foldField],
+                isSelected: Boolean(currentValue && option.id === currentValue.id),
+            }));
+
+            if (currentValue && !items.find((item) => item.value === currentValue.id)) {
+                items.unshift({
+                    value: currentValue.id,
+                    label: currentValue.display_name,
+                    isFolded: false,
+                    isSelected: true,
+                });
+            }
+            return items;
+        } else {
+            // Selection
+            let { selection } = this.field;
+            const { visibleSelection } = this.props;
+            if (visibleSelection?.length) {
+                selection = selection.filter(
+                    ([value]) => value === currentValue || visibleSelection.includes(value)
+                );
+            }
+            return selection.map(([value, label]) => ({
+                value,
+                label,
+                isFolded: false,
+                isSelected: value === currentValue,
+            }));
+        }
+    }
+
+    getCurrentLabel() {
+        return this.getAllItems().find((item) => item.isSelected)?.label || _t("More");
+    }
+
+    /**
+     * @param {StatusBarItem} item
+     */
+    getDropdownItemClassNames(item) {
+        const classNames = [];
+        if (item.isSelected) {
+            classNames.push("active");
+        }
+        if (item.isSelected || this.props.isDisabled) {
+            classNames.push("disabled");
+        }
+        return classNames.join(" ");
+    }
+
+    getSortedItems() {
+        const before = [];
+        const after = [];
+        const { true: inline = [], false: folded = [] } = Object.groupBy(
+            this.getAllItems(),
+            (item) => item.isSelected || !item.isFolded
+        );
+        inline.reverse(); // CSS rules account for this list to be reversed
+        after.push(...folded);
+        return { inline, before, after, folded };
+    }
+
+    /**
+     * @param {StatusBarItem} item
+     */
+    async selectItem(item) {
+        const { name, record } = this.props;
+        const value =
+            this.field.type === "many2one"
+                ? { id: item.value, display_name: item.label }
+                : item.value;
+        await record.update({ [name]: value });
+    }
+
+    /**
+     * @param {CustomEvent<{ payload: StatusBarItem }>} ev
+     */
+    onDropdownItemSelected(ev) {
+        this.selectItem(ev.detail.payload);
+    }
+}
+
+export const statusBarField = {
+    component: StatusBarField,
+    displayName: _t("Status"),
+    supportedOptions: [
+        {
+            label: _t("Clickable"),
+            name: "clickable",
+            type: "boolean",
+            default: true,
+        },
+        {
+            label: _t("Fold field"),
+            name: "fold_field",
+            type: "field",
+            availableTypes: ["boolean"],
+            help: _t(
+                "Boolean field from the model used in the relation, which indicates whether the state is folded or not."
+            ),
+        },
+    ],
+    supportedTypes: ["many2one", "selection"],
+    isEmpty: (record, fieldName) => !record.data[fieldName],
+    extractProps: ({ attrs, options, viewType }, dynamicInfo) => ({
+        isDisabled: !options.clickable || dynamicInfo.readonly,
+        visibleSelection: attrs.statusbar_visible?.trim().split(/\s*,\s*/g),
+        withCommand: viewType === "form",
+        foldField: options.fold_field,
+        domain: dynamicInfo.domain,
+        context: dynamicInfo.context,
+    }),
+};
+
+registry.category("fields").add("statusbar", statusBarField);

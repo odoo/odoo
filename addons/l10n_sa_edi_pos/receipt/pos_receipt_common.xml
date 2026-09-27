@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="l10n_sa_edi_pos.company_info_receipt" inherit_id="point_of_sale.company_info_receipt">
+            <tbody name="company_info" position="inside">
+                <tr t-if="company['l10n_sa_edi_building_number']">
+                    <td class="text-start">Building:</td>
+                    <td class="text-end" t-out="company['l10n_sa_edi_building_number']" />
+                </tr>
+                <tr t-if="company['l10n_sa_edi_plot_identification']">
+                    <td class="text-start">Plot:</td>
+                    <td class="text-end" t-out="company['l10n_sa_edi_plot_identification']" />
+                </tr>
+                <tr t-if="company['l10n_sa_edi_additional_identification_number']">
+                    <td class="text-start">
+                        <t t-if="company['l10n_sa_edi_additional_identification_scheme']" t-out="company['l10n_sa_edi_additional_identification_scheme'] + ':'"/>
+                    </td>
+                    <td class="text-end" t-out="company['l10n_sa_edi_additional_identification_number']" />
+                </tr>
+            </tbody>
+        </template>
+    </data>
+</odoo>

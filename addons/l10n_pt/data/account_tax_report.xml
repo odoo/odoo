@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report_pt" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="name@pt">Declaração Periódica de IVA</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.pt"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@pt">Balanço</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="trp_base" model="account.report.line">
+                <field name="name">Base</field>
+                <field name="name@pt">Base tributável</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="trp_base_section_1" model="account.report.line">
+                        <field name="name">1 - Transmissions of goods and services on which you paid tax</field>
+                        <field name="name@pt">1 - Transmissões de bens e prestações de serviço em que liquidou imposto</field>
+                        <field name="children_ids">
+                            <record id="trp_base_1" model="account.report.line">
+                                <field name="name">[1] Reduced rate</field>
+                                <field name="name@pt">[1] Taxa reduzida</field>
+                                <field name="code">trp_base_1</field>
+                                <field name="expression_ids">
+                                    <record id="trp_base_1_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-trp_base_1</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_base_5" model="account.report.line">
+                                <field name="name">[5] Intermediate rate</field>
+                                <field name="name@pt">[5] Taxa intermédia</field>
+                                <field name="code">trp_base_5</field>
+                                <field name="expression_ids">
+                                    <record id="trp_base_5_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-trp_base_5</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_base_3" model="account.report.line">
+                                <field name="name">[3] Normal rate</field>
+                                <field name="name@pt">[3] Taxa normal</field>
+                                <field name="code">trp_base_3</field>
+                                <field name="expression_ids">
+                                    <record id="trp_base_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-trp_base_3</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_base_7" model="account.report.line">
+                                <field name="name">[7] Exempt or non-taxed - Intra-community transfers of goods and supplies of services mentioned in the recapitulative statements</field>
+                                <field name="name@pt">[7] Isentas ou não tributadas - Transmissões intracomunitárias de bens e prestações de serviços mencionadas nas declarações recapitulativas</field>
+                                <field name="code">trp_base_7</field>
+                                <field name="expression_ids">
+                                    <record id="trp_base_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-trp_base_7</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_base_8" model="account.report.line">
+                                <field name="name">[8] Exempt or non-taxed - Entitled to deduction</field>
+                                <field name="name@pt">[8] Isentas ou não tributadas - Que conferem direito à dedução</field>
+                                <field name="code">trp_base_8</field>
+                                <field name="expression_ids">
+                                    <record id="trp_base_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-trp_base_8</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_base_9" model="account.report.line">
+                                <field name="name">[9] Exempt or non-taxed - Not entitled to deduction</field>
+                                <field name="name@pt">[9] Isentas ou não tributadas - Que não conferem direito à dedução</field>
+                                <field name="code">trp_base_9</field>
+                                <field name="expression_ids">
+                                    <record id="trp_base_9_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_base_9</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_base_10" model="account.report.line">
+                        <field name="name">2 - [10] Intra-community acquisitions of goods and assimilated operations</field>
+                        <field name="name@pt">2 - [10] Acquisições intracomunitátiras de bens et operações assimiladas</field>
+                        <field name="code">trp_base_10</field>
+                        <field name="aggregation_formula">trp_base_12.balance + trp_base_14.balance + trp_base_15.balance</field>
+                        <field name="children_ids">
+                            <record id="trp_base_12" model="account.report.line">
+                                <field name="name">[12] Whose tax was assessed by the declarant</field>
+                                <field name="name@pt">[12] Cujo imposto foi liquidado pelo declarante</field>
+                                <field name="code">trp_base_12</field>
+                                <field name="expression_ids">
+                                    <record id="trp_base_12_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_base_12</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_base_14" model="account.report.line">
+                                <field name="name">[14] Covered by the articles 15.° of the CIVA or the RITI</field>
+                                <field name="name@pt">[14] Abrangidas pelos artigos 15.° do CIVA ou do RITI</field>
+                                <field name="code">trp_base_14</field>
+                                <field name="expression_ids">
+                                    <record id="trp_base_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_base_14</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_base_15" model="account.report.line">
+                                <field name="name">[15] Covered by the n.°s 3, 4 e 5 of the article 22.° of the RITI</field>
+                                <field name="name@pt">[15] Abrangidas pelos n.°s 3, 4 e 5 do artigo 22.° do RITI</field>
+                                <field name="code">trp_base_15</field>
+                                <field name="expression_ids">
+                                    <record id="trp_base_15_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_base_15</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_base_16" model="account.report.line">
+                        <field name="name">3 - [16] Services rendered by taxable persons from other Member States, for which the tax was paid by the declarant</field>
+                        <field name="name@pt">3 - [16] Prestações de serviços efetuadas por sujeitos passivos de outrus Estados Membros, cujo imposto foi liquidado pelo declarante</field>
+                        <field name="code">trp_base_16</field>
+                        <field name="expression_ids">
+                            <record id="trp_base_16_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">trp_base_16</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_base_18" model="account.report.line">
+                        <field name="name">4 - [18] Imports of goods for which the tax was assessed by the declarant (No. 8 of Article 27 of CIVA)</field>
+                        <field name="name@pt">4 - [18] Importações de bens cujo imposto foi liquidado pelo declarante (n°8 do artigo 27.° do CIVA)</field>
+                        <field name="code">trp_base_18</field>
+                        <field name="expression_ids">
+                            <record id="trp_base_18_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">trp_base_18</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_base_total_90" model="account.report.line">
+                        <field name="name">[90] BASE TOTAL</field>
+                        <field name="name@pt">[90] TOTAL DA BASE TRIBUTÁVEL</field>
+                        <field name="aggregation_formula">trp_base_1.balance + trp_base_5.balance + trp_base_3.balance + trp_base_7.balance + trp_base_8.balance + trp_base_9.balance + trp_base_10.balance + trp_base_16.balance + trp_base_18.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="trp_tax_favor_company" model="account.report.line">
+                <field name="name">Tax in favor of the taxable entity</field>
+                <field name="name@pt">Imposto a favor do sujeito passivo</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="trp_tax_favor_company5" model="account.report.line">
+                        <field name="name">5 - Tax deductible</field>
+                        <field name="name@pt">5 - Imposto dedutível</field>
+                        <field name="children_ids">
+                            <record id="trp_tax_favor_company_20" model="account.report.line">
+                                <field name="name">[20] Non-current assets (fixed assets)</field>
+                                <field name="name@pt">[20] Ativos não correntes (imobilizado)</field>
+                                <field name="code">trp_tax_favor_company_20</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_company_20_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_tax_favor_company_20</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_tax_favor_company_21" model="account.report.line">
+                                <field name="name">[21] Inventories at reduced rate</field>
+                                <field name="name@pt">[21] Inventários à taxa reduzida</field>
+                                <field name="code">trp_tax_favor_company_21</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_company_21_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_tax_favor_company_21</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_tax_favor_company_23" model="account.report.line">
+                                <field name="name">[23] Inventories at the intermediate rate</field>
+                                <field name="name@pt">[23] Inventários à taxa intermédia</field>
+                                <field name="code">trp_tax_favor_company_23</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_company_23_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_tax_favor_company_23</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_tax_favor_company_22" model="account.report.line">
+                                <field name="name">[22] Inventories at the normal rate</field>
+                                <field name="name@pt">[22] Inventários à taxa normal</field>
+                                <field name="code">trp_tax_favor_company_22</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_company_22_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_tax_favor_company_22</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_tax_favor_company_24" model="account.report.line">
+                                <field name="name">[24] Other goods and services</field>
+                                <field name="name@pt">[24] Outros bens e serviços</field>
+                                <field name="code">trp_tax_favor_company_24</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_company_24_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_tax_favor_company_24</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_company_40" model="account.report.line">
+                        <field name="name">6 - [40] Monthly, quarterly and yearly regularizations</field>
+                        <field name="name@pt">6 - [40] Regularizações mensais, trimestrais e anuais</field>
+                        <field name="code">trp_tax_favor_company_40</field>
+                        <field name="expression_ids">
+                            <record id="trp_tax_favor_company_40_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">trp_tax_favor_company_40</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_company_61" model="account.report.line">
+                        <field name="name">7 - [61] Excess to carry forward from the previous period (Field 96 dof previous declaration - n.°4 of article 22.°)</field>
+                        <field name="name@pt">7 - [61] Excesso a reportar do período anterior (Campo 96 da declaração anterior - n.°4 do artigo 22.°)</field>
+                        <field name="code">trp_tax_favor_company_61</field>
+                        <field name="expression_ids">
+                            <record id="trp_tax_favor_company_61_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">trp_tax_favor_company_61</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_company_65" model="account.report.line">
+                        <field name="name">8 - [65] Attachment - (see Table 03)</field>
+                        <field name="name@pt">8 - [65] Anexo - (ver Quadro 03)</field>
+                        <field name="code">trp_tax_favor_company_65</field>
+                        <field name="expression_ids">
+                            <record id="trp_tax_favor_company_65_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">trp_tax_favor_company_65</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_company_67" model="account.report.line">
+                        <field name="name">9 - [67] Attachment - (see Table 03)</field>
+                        <field name="name@pt">9 - [67] Anexo - (ver Quadro 03)</field>
+                        <field name="code">trp_tax_favor_company_67</field>
+                        <field name="expression_ids">
+                            <record id="trp_tax_favor_company_67_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">trp_tax_favor_company_67</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_company_total_91" model="account.report.line">
+                        <field name="name">[91] TOTAL TAX IN FAVOR OF THE TAXABLE ENTITY</field>
+                        <field name="name@pt">[91] TOTAL DO IMPOSTO A FAVOR DO SUJEITO PASSIVO</field>
+                        <field name="code">trp_tax_favor_company_total_91</field>
+                        <field name="aggregation_formula">trp_tax_favor_company_20.balance + trp_tax_favor_company_21.balance + trp_tax_favor_company_23.balance + trp_tax_favor_company_22.balance + trp_tax_favor_company_24.balance + trp_tax_favor_company_40.balance + trp_tax_favor_company_61.balance + trp_tax_favor_company_65.balance + trp_tax_favor_company_67.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="trp_tax_favor_state" model="account.report.line">
+                <field name="name">Tax in favor of the State</field>
+                <field name="name@pt">Imposto a favor do Estado</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="trp_tax_favor_state_1" model="account.report.line">
+                        <field name="name">1 - Transmissions of goods and services on which you paid tax</field>
+                        <field name="name@pt">1 - Transmissões de bens e prestações de serviço em que liquidou imposto</field>
+                        <field name="children_ids">
+                            <record id="trp_tax_favor_state_2" model="account.report.line">
+                                <field name="name">[2] Reduced rate</field>
+                                <field name="name@pt">[2] Taxa reduzida</field>
+                                <field name="code">trp_tax_favor_state_2</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_state_2_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-trp_tax_favor_state_2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_tax_favor_state_6" model="account.report.line">
+                                <field name="name">[6] Intermediate rate</field>
+                                <field name="name@pt">[6] Taxa intermédia</field>
+                                <field name="code">trp_tax_favor_state_6</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_state_6_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-trp_tax_favor_state_6</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_tax_favor_state_4" model="account.report.line">
+                                <field name="name">[4] Normal rate</field>
+                                <field name="name@pt">[4] Taxa normal</field>
+                                <field name="code">trp_tax_favor_state_4</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_state_4_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-trp_tax_favor_state_4</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_state_11" model="account.report.line">
+                        <field name="name">2 - [11] Intra-community acquisitions of goods and assimilated operations</field>
+                        <field name="name@pt">2 - [11] Acquisições intracomunitátiras de bens et operações assimiladas</field>
+                        <field name="code">trp_tax_favor_state_11</field>
+                        <field name="aggregation_formula">trp_tax_favor_state_13.balance</field>
+                        <field name="children_ids">
+                            <record id="trp_tax_favor_state_13" model="account.report.line">
+                                <field name="name">[13] Whose tax was assessed by the declarant</field>
+                                <field name="name@pt">[13] Cujo imposto foi liquidado pelo declarante</field>
+                                <field name="code">trp_tax_favor_state_13</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_state_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-trp_tax_favor_state_13</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_state_17" model="account.report.line">
+                        <field name="name">3 - [17] Services rendered by taxable persons from other Member States, for which the tax was paid by the declarant</field>
+                        <field name="name@pt">3 - [17] Prestações de serviços efetuadas por sujeitos passivos de outrus Estados Membros, cujo imposto foi liquidado pelo declarante</field>
+                        <field name="code">trp_tax_favor_state_17</field>
+                        <field name="expression_ids">
+                            <record id="trp_tax_favor_state_17_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-trp_tax_favor_state_17</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_state_19" model="account.report.line">
+                        <field name="name">4 - [19] Imports of goods on which tax has been assessed by the declarant (n°8 of article 27.° of the CIVA)</field>
+                        <field name="name@pt">4 - [19] Importações de bens cujo imposto foi liquidado pelo declarante (n°8 do artigo 27.° do CIVA)</field>
+                        <field name="code">trp_tax_favor_state_19</field>
+                        <field name="expression_ids">
+                            <record id="trp_tax_favor_state_19_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">trp_tax_favor_state_19</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_state_41" model="account.report.line">
+                        <field name="name">6 - [41] Monthly, quarterly and yearly regularizations</field>
+                        <field name="name@pt">6 - [41] Regularizações mensais, trimestrais e anuais</field>
+                        <field name="code">trp_tax_favor_state_41</field>
+                        <field name="expression_ids">
+                            <record id="trp_tax_favor_state_41_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">trp_tax_favor_state_41</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_state_66" model="account.report.line">
+                        <field name="name">8 - [66] Attachment - (see Table 03)</field>
+                        <field name="name@pt">8 - [66] Anexo - (ver Quadro 03)</field>
+                        <field name="code">trp_tax_favor_state_66</field>
+                        <field name="expression_ids">
+                            <record id="trp_tax_favor_state_66_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">trp_tax_favor_state_66</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_state_68" model="account.report.line">
+                        <field name="name">9 - [68] Attachment - (see Table 03)</field>
+                        <field name="name@pt">9 - [68] Anexo - (ver Quadro 03)</field>
+                        <field name="code">trp_tax_favor_state_68</field>
+                        <field name="expression_ids">
+                            <record id="trp_tax_favor_state_68_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">trp_tax_favor_state_68</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_state_total_92" model="account.report.line">
+                        <field name="name">[92] TOTAL TAX TO THE STATE</field>
+                        <field name="name@pt">[92] TOTAL DO IMPOSTO A FAVOR DO ESTADO</field>
+                        <field name="code">trp_tax_favor_state_total_92</field>
+                        <field name="aggregation_formula">trp_tax_favor_state_2.balance + trp_tax_favor_state_6.balance + trp_tax_favor_state_4.balance + trp_tax_favor_state_11.balance + trp_tax_favor_state_17.balance + trp_tax_favor_state_19.balance + trp_tax_favor_state_41.balance + trp_tax_favor_state_66.balance + trp_tax_favor_state_68.balance</field>
+                    </record>
+                </field>
+            </record>
+            <record id="trp_totais" model="account.report.line">
+                <field name="name">Totals</field>
+                <field name="name@pt">Totais</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="trp_tax_favor_state_total_93" model="account.report.line">
+                        <field name="name">[93] Tax to be paid to the State</field>
+                        <field name="name@pt">[93] Imposto a entragar ao Estado</field>
+                        <field name="expression_ids">
+                            <record id="trp_tax_favor_state_total_93_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">trp_tax_favor_state_total_92.balance - trp_tax_favor_company_total_91.balance</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_state_total_94" model="account.report.line">
+                        <field name="name">[94] Credit to be recovered</field>
+                        <field name="name@pt">[94] Crédito a recuperar</field>
+                        <field name="expression_ids">
+                            <record id="trp_tax_favor_state_total_94_formula" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">trp_tax_favor_company_total_91.balance - trp_tax_favor_state_total_92.balance</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="trp_quadro_06A" model="account.report.line">
+                <field name="name">Table 06A</field>
+                <field name="name@pt">Quadro 06A</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="trp_quadro_06A_A" model="account.report.line">
+                        <field name="name">A - Operations located in Portugal where, as the acquirer, you have paid the VAT due</field>
+                        <field name="name@pt">A - Operações localizadas em Portugal em que, na qualidade de adquirente, liquidou o IVA devido</field>
+                        <field name="children_ids">
+                            <record id="trp_tax_favor_state_97" model="account.report.line">
+                                <field name="name">[97] Made by entities resident in EU countries (does not include the operations mentioned in field 16)</field>
+                                <field name="name@pt">[97] Efetuadas por entidades residentes em países comunitários (não inclui as operações mencionadas no campo 16)</field>
+                                <field name="code">trp_tax_favor_state_97</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_state_97_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_tax_favor_state_97</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_tax_favor_state_98" model="account.report.line">
+                                <field name="name">[98] Made by entities resident in third countries or territories</field>
+                                <field name="name@pt">[98] Efetuadas por entidades residentes em países ou territórios terceiros</field>
+                                <field name="code">trp_tax_favor_state_98</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_state_98_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_tax_favor_state_98</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_quadro_06A_B" model="account.report.line">
+                        <field name="name">B - Transactions in which you assessed the VAT due by applying the reverse charge rule</field>
+                        <field name="name@pt">B - Operações em que liquidou o IVA devido por aplicação da regra de inversão do sujeito passivo</field>
+                        <field name="children_ids">
+                            <record id="trp_tax_favor_state_99" model="account.report.line">
+                                <field name="name">[99] Gold (Decree-Law 362/99)</field>
+                                <field name="name@pt">[99] Ouro (Decreto-Lei 362/99)</field>
+                                <field name="code">trp_tax_favor_state_99</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_state_99_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_tax_favor_state_99</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_tax_favor_state_100" model="account.report.line">
+                                <field name="name">[100] Property acquisition with waiver of the exemption (Decree-Law 21/2007)</field>
+                                <field name="name@pt">[100] Aquiosoção de imóveis com renúncia à isenção (Decreto-Lei 21/2007)</field>
+                                <field name="code">trp_tax_favor_state_100</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_state_100_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_tax_favor_state_100</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_tax_favor_state_101" model="account.report.line">
+                                <field name="name">[101] Metal [Subparagraph i) of n.°1 of the article 2.° of the CIVA]</field>
+                                <field name="name@pt">[101] Sucatas [Alínea i) do n.°1 do artigo 2.° do CIVA]</field>
+                                <field name="code">trp_tax_favor_state_101</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_state_101_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_tax_favor_state_101</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_tax_favor_state_102" model="account.report.line">
+                                <field name="name">[102] Construction services[Subparagraph j) of n.°1 of the article 2.° of the CIVA]</field>
+                                <field name="name@pt">[102] Serviços de construção civil [Alínea j) do n.°1 do artigo 2.° do CIVA]</field>
+                                <field name="code">trp_tax_favor_state_102</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_state_102_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_tax_favor_state_102</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_tax_favor_state_105" model="account.report.line">
+                                <field name="name">[105] Greenhouse gas emissions [Subparagraph l) of n.°1 of the article 2.° of the CIVA]</field>
+                                <field name="name@pt">[105] Emissão de gases com efeito de estufa [Alínea l) do n.°1 do artigo 2.° do CIVA]</field>
+                                <field name="code">trp_tax_favor_state_105</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_state_105_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_tax_favor_state_105</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="trp_tax_favor_state_107" model="account.report.line">
+                                <field name="name">[107] Acquisition of cork and other forestry products [Subparagraph m) of n.°1 of the article 2.° of the CIVA</field>
+                                <field name="name@pt">[107] Aquisição de cortiça e outros produtos de origem silvícola [Alínea m) do n.°1 do artigo 2.° do CIVA]</field>
+                                <field name="code">trp_tax_favor_state_107</field>
+                                <field name="expression_ids">
+                                    <record id="trp_tax_favor_state_107_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">trp_tax_favor_state_107</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_state_103" model="account.report.line">
+                        <field name="name">C - [103] Operations referred to in subparagraphs f) and g) of N.°3 of the article 3.°E subparagraph a) and b) of N.°2 of the article 4.° of the CIVA</field>
+                        <field name="name@pt">C - [103] Operações referidas nas alíneas f) et g) do N.°3 do artigo 3.°E alíneas a) e b) do N.°2 do artigo 4.° do CIVA</field>
+                        <field name="code">trp_tax_favor_state_103</field>
+                        <field name="expression_ids">
+                            <record id="trp_tax_favor_state_103_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">trp_tax_favor_state_103</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_state_104" model="account.report.line">
+                        <field name="name">D - [104] Operations referred to in subparagraphs a), b) and c) of the article 42.° of the CIVA</field>
+                        <field name="name@pt">D - [104] Operações referidas nas alíneas a), b) e c) do artigo 42.° do CIVA</field>
+                        <field name="code">trp_tax_favor_state_104</field>
+                        <field name="expression_ids">
+                            <record id="trp_tax_favor_state_104_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">trp_tax_favor_state_104</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="trp_tax_favor_state_total_106" model="account.report.line">
+                        <field name="name">[106] Sum of the table 06A</field>
+                        <field name="name@pt">[106] Soma do quadro 06A</field>
+                        <field name="aggregation_formula">trp_tax_favor_state_97.balance + trp_tax_favor_state_98.balance + trp_tax_favor_state_99.balance + trp_tax_favor_state_100.balance + trp_tax_favor_state_101.balance + trp_tax_favor_state_102.balance + trp_tax_favor_state_105.balance + trp_tax_favor_state_107.balance + trp_tax_favor_state_103.balance + trp_tax_favor_state_104.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

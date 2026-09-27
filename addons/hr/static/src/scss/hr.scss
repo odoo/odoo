@@ -1,0 +1,126 @@
+.o_hr_department_kanban .o_kanban_renderer {
+    --KanbanRecord-width: 450px;
+    --KanbanRecord-width-small: 350px;
+}
+
+.o_icon_employee_absent {
+    color: $warning;
+}
+
+.o_hr_employee_form_view .o_form_renderer {
+    .o_statusbar_buttons {
+        flex-grow: 1 !important;
+        padding-right: 0.25rem;
+    }
+    .o_form_sheet_bg {
+        max-width: unset;
+    }
+    .oe_title {
+        flex: 1;
+    }
+    .o_to_review_wrapper{
+        flex: 3;
+    }
+    .o_employee_user_status_wrapper{
+        flex: 3;
+    }
+}
+
+.hr_tags {
+    margin-right: 20%;
+}
+
+.o_hr_narrow_field {
+    width: 8rem!important;
+    max-width: 8rem!important;
+    * {
+        max-width: 100%;
+    }
+}
+.o_hr_medium_field {
+    width: 25rem !important;
+    max-width: 25rem !important;
+    * {
+        max-width: 100%;
+    }
+}
+
+.o_hr_narrow_field_fit {
+    width: fit-content!important;
+    max-width: fit-content!important;
+    * {
+        max-width: 100%;
+    }
+}
+
+.o_hr_percentage_narrow_field input {
+    max-width: 8rem !important;
+    width: 8rem !important;
+    * {
+        max-width: 100%;
+    }
+}
+
+@for $size from 1 through 15 {
+    .o_hr_narrow_field-#{$size} {
+        width: #{$size}rem!important;
+        max-width: #{$size}rem!important;
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .o_hr_column {
+        padding: 0 calc(var(--gutter-x) * 1)!important;
+
+        &:first-child {
+            padding-left: calc(var(--gutter-x) * .5)!important;
+        }
+        &:last-child {
+            padding-right: calc(var(--gutter-x) * .5)!important;
+        }
+    }
+}
+
+.o_hr_version_list_view th[data-name="date_version"] {
+    width: 8rem !important;
+}
+
+.button-on {
+    color: $o-success;
+}
+
+.o_hr_address .o_address_city span {
+    margin-right: 0 !important;
+}
+
+// The presence badge overlaps the top-right corner of the employee picture.
+// Scoped to `.o_employee_avatar` on purpose: the same widget is rendered inline
+// in the kanban and hierarchy cards, where it must stay in the text flow.
+.o_employee_avatar {
+    position: relative;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .o_field_hr_presence_status, .o_field_hr_presence_status_private {
+        --o-hr-presence-badge-size: #{$spacer};
+
+        @include o-position-absolute($top: 0, $right: 0);
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translate(50%, -50%);
+        width: var(--o-hr-presence-badge-size);
+        height: var(--o-hr-presence-badge-size);
+        border-radius: 50%;
+        background-color: $o-view-background-color;
+
+        span {
+            width: var(--o-hr-presence-badge-size);
+            height: var(--o-hr-presence-badge-size);
+            line-height: var(--o-hr-presence-badge-size);
+        }
+    }
+}

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="hr_employee_search_view" model="ir.ui.view">
+        <field name="name">hr.employee.search.view</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+    </record>
+
+    <record id="view_employee_form_inherit_hr_attendance" model="ir.ui.view">
+        <field name="name">hr.employee</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="priority">110</field>
+        <field name="arch" type="xml">
+            <field name="resource_calendar_id" position="after">
+                <field name="attendance_based"/>
+            </field>
+            <button name="action_open_versions" position="before">
+                <field name="attendance_state" invisible="1"/>
+                <field name="hours_last_month" groups="hr_attendance.group_hr_attendance_officer" invisible="1"/>
+                <field name="display_attendances" invisible="1"/>
+                <field name="hours_last_month_display" invisible="1"/>
+                <button name="action_open_last_month_attendances"
+                        class="oe_stat_button"
+                        icon="schedule"
+                        type="object"
+                        invisible="not display_attendances"
+                        help="Worked hours this month">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="hours_last_month_display"/>
+                        </span>
+                    </div>
+                </button>
+            </button>
+            <xpath expr="//group[@name='managers']" position="inside">
+                <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user" groups="hr_attendance.group_hr_attendance_user"/>
+            </xpath>
+            <xpath expr="//field[@name='barcode']" position="attributes">
+                <attribute name="string">RFID/Badge Number</attribute>
+            </xpath>
+            <xpath expr="//button[@name='generate_random_barcode']" position="after">
+                <button name="open_barcode_scanner" string="Read a badge" type="object" class="btn btn-link" invisible="barcode"/>
+            </xpath>
+            <!-- identification_group -->
+        </field>
+    </record>
+
+    <!-- employee kanban view specifically for hr_attendance (to check in/out) -->
+    <record id="hr_employees_view_kanban" model="ir.ui.view">
+        <field name="name">hr.employee.kanban</field>
+        <field name="model">hr.employee</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <kanban create="false">
+                <field name="attendance_state"/>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <aside>
+                            <field name="avatar_128" widget="image" alt="Employee" class="mb-0"/>
+                        </aside>
+                        <main class="w-100 ms-2">
+                            <div>
+                                <div class="float-end" t-if="record.attendance_state.raw_value == 'checked_in'">
+                                    <span class="oi oi-filled text-success me-1" data-icon="circle" role="img" aria-label="Available" title="Available"></span>
+                                </div>
+                                <div class="float-end" t-if="record.attendance_state.raw_value == 'checked_out'">
+                                    <span class="oi oi-filled text-warning me-1" data-icon="circle" role="img" aria-label="Not available" title="Not available">
+                                    </span>
+                                </div>
+                                <field class="fw-bolder" name="name"/>
+                            </div>
+                            <field t-if="record.job_id.raw_value" name="job_id"/>
+                            <field t-if="record.work_location_id.raw_value" name="work_location_id"/>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="hr_employee_attendance_action_kanban" model="ir.actions.act_window">
+        <field name="name">Employees</field>
+        <field name="res_model">hr.employee.public</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="hr_employees_view_kanban"/>
+        <field name="target">fullscreen</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new employee
+            </p><p>
+                Add a few employees to be able to select an employee here and perform his check in / check out.
+                To create employees go to the Employees menu.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_hr_attendance_employee" name="Employees" parent="hr_attendance.menu_hr_attendance_view_attendances_management" action="hr_employee_attendance_action_kanban" groups="hr_attendance.group_hr_attendance_officer" sequence="2"/>
+
+    <record id="view_employee_tree_inherit_leave" model="ir.ui.view">
+        <field name="name">hr.employee.list.leave</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_location_id']" position="after">
+                <field name="attendance_manager_id" optional="hide" widget="many2one_avatar_user" groups="hr_attendance.group_hr_attendance_user"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_attendance_employee_calendar_view" model="ir.ui.view">
+        <field name="name">hr.attendance.employee.calendar.view</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <calendar string="Attendances"
+                js_class="attendance_calendar_view"
+                date_start="check_in"
+                date_stop="check_out"
+                show_unusual_days="True"
+                quick_create_view_id="%(hr_attendance.hr_attendance_create_view_form)d"
+                mode="month"
+                color="wet_color">
+                <field name="wet_color" invisible="1"/>
+                <field name="work_entry_type_id" filters="1" color="color"/>
+                <field name="worked_hours" widget="float_time"/>
+                <popover>
+                    <templates>
+                        <t t-name="popover-body" class="gap-3">
+                            <div class="d-flex align-items-baseline gap-2" invisible="not work_entry_type_id">
+                                <i class="oi oi-fw text-400" data-icon="label" aria-hidden="true" title="Time Type"/>
+                                <field name="work_entry_type_id"/>
+                            </div>
+                            <div class="d-flex align-items-baseline gap-2" invisible="not worked_hours">
+                                <i class="oi oi-fw text-400" data-icon="schedule" aria-hidden="true" title="Worked Hours"/>
+                                <field name="worked_hours" widget="float_time"/>
+                            </div>
+                        </t>
+                    </templates>
+                </popover>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="hr_attendance_employee_simple_form_view" model="ir.ui.view">
+        <field name="name">hr.attendance.form</field>
+        <field name="model">hr.attendance</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@id='employee_no_manager']" position="replace"/>
+            <xpath expr="//field[@id='employee_manager']" position="replace"/>
+            <xpath expr="//field[@id='employee_no_officer']" position="attributes">
+                <attribute name="groups"/>
+            </xpath>
+            <field name="check_in" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+            <field name="check_out" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+            <field name="break_duration" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>

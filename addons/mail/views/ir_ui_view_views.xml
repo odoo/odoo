@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="ir_ui_view_view_search_mail" model="ir.ui.view">
+            <field name="model">ir.ui.view</field>
+            <field name="name">ir.ui.view.view.search.mail</field>
+            <field name="priority">64</field>
+            <field name="arch" type="xml">
+                <search string="Views">
+                    <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('model_data_id','ilike',self)]" string="View"/>
+                    <field name="key"/>
+                    <field name="inherit_id"/>
+                    <field name="type"/>
+                    <field name="technical_usage" string="Usage"/>
+                    <field name="arch_db" string="View Architecture"/>
+                    <separator/>
+                    <filter string="Active" name="filter_active" domain="[('active', '=',True)]"/>
+                    <filter string="Inactive" name="filter_inactive" domain="[('active', '=',False)]"/>
+                    <group>
+                        <filter string="Inherit" name="group_by_inherit_id" domain="[]" context="{'group_by':'inherit_id'}"/>
+                        <filter string="Technical Usage" name="group_by_technical_usage" domain="[]" context="{'group_by': 'technical_usage'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="ir_ui_view_action_usage_mail_post" model="ir.actions.act_window">
+            <field name="context">{'search_default_technical_usage': 'mail_post_source'}</field>
+            <field name="help" type="html"><p>System Notifications are templates used when generating emails</p></field>
+            <field name="name">System Notifications</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="search_view_id" ref="mail.ir_ui_view_view_search_mail"/>
+            <field name="view_mode">list,form</field>
+        </record>
+    </data>
+</odoo>

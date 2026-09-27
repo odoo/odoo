@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_account_unreconcile" model="ir.actions.server">
+            <field name="name">Unreconcile</field>
+            <field name="group_ids" eval="[(4, ref('account.group_account_user'))]"/>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="binding_model_id" ref="account.model_account_move_line"/>
+            <field name="state">code</field>
+            <field name="code">model.action_unreconcile_match_entries()</field>
+        </record>
+
+    </data>
+</odoo>

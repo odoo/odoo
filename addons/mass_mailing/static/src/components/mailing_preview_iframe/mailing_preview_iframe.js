@@ -1,0 +1,116 @@
+import { loadIframe } from "@mail/convert_inline/iframe_utils";
+import { Component, onMounted, proxy, signal, status, useProps } from "@odoo/owl";
+import { isBrowserSafari } from "@web/core/browser/feature_detection";
+import { registry } from "@web/core/registry";
+import { useBus, useService } from "@web/core/utils/hooks";
+import { renderToFragment } from "@web/core/utils/render";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { MailingPreviewDisplayModeToggle } from "../mailing_preview_mode_toggle/mailing_preview_mode_toggle";
+import { MassMailingPreviewRecordField } from "./mass_mailing_preview_record_field";
+
+export class MailingPreviewIframe extends Component {
+    static template = "mass_mailing.MailingPreviewIframe";
+    static components = {
+        MassMailingPreviewRecordField,
+        MailingPreviewDisplayModeToggle,
+    };
+
+    props = useProps(standardFieldProps);
+
+    iframeRef = signal.ref();
+
+    setup() {
+        this.state = proxy(this.env.displayState);
+        this.action = useService("action");
+        this.ui = useService("ui");
+        this.iframeLoaded = Promise.withResolvers();
+
+        onMounted(() => {
+            loadIframe(this.iframeRef(), (iframe) => {
+                iframe.contentDocument.head.appendChild(this.renderHeadContent());
+                iframe.contentDocument.body.appendChild(this.renderBodyContent());
+                this.iframeLoaded.resolve();
+            });
+        });
+
+        useLayoutEffect(
+            () => {
+                this.iframeLoaded.promise.then(() => {
+                    this.iframeRef()?.contentDocument.body.replaceChildren(
+                        this.renderBodyContent()
+                    );
+                });
+            },
+            () => [this.props.record.data.preview_record_ref]
+        );
+
+        useLayoutEffect(
+            () => {
+                this.iframeLoaded.promise.then(() => {
+                    this.throttledResize();
+                });
+            },
+            () => [this.state.isMobileMode]
+        );
+
+        useBus(this.ui.bus, "resize", () => {
+            this.iframeLoaded.promise.then(() => {
+                this.throttledResize();
+            });
+        });
+
+        const updateIframeSize = () => {
+            const iframe = this.iframeRef();
+            if (this.state.isMobileMode) {
+                // same styling for mobile as we have in 'mass_mailing_iframe'
+                iframe.style.width = "367px";
+                iframe.style.height = "668px";
+                iframe.style.transform = "";
+                iframe.style.backgroundColor = "white";
+                iframe.contentDocument.body.scrollTop = 0;
+            } else {
+                iframe.style.width = "140%";
+                iframe.style.height = "140%";
+                iframe.style.transform = `scale(${10 / 14})`;
+                iframe.style.transformOrigin = "top left";
+                iframe.style.backgroundColor = "white";
+            }
+        };
+
+        this.throttledResize = useThrottleForAnimation(() => {
+            if (status(this) === "destroyed") {
+                return;
+            }
+            updateIframeSize();
+        });
+    }
+
+    renderHeadContent() {
+        return renderToFragment("mass_mailing.IframeHead", this);
+    }
+
+    renderBodyContent() {
+        return renderToFragment("mass_mailing.MailingPreviewIframeBody", this);
+    }
+
+    get isBrowserSafari() {
+        return isBrowserSafari();
+    }
+
+    onCloseButtonClick() {
+        this.action.doAction({ type: "ir.actions.act_window_close" });
+    }
+}
+
+export const mailingPreviewIframe = {
+    component: MailingPreviewIframe,
+    supportedTypes: ["html"],
+};
+
+/**
+ * Note: This field does not support switching to another record (e.g. navigation in a standard form view).
+ * It is designed for use in wizards where the record remains constant.
+ */
+registry.category("fields").add("mailing_preview_iframe", mailingPreviewIframe);

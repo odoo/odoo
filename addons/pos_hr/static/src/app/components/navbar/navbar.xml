@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_hr.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//CashierName" position="after">
+            <button t-if="this.pos.config.module_pos_hr and !this.ui.isSmall" class="lock-screen btn btn-light btn-lg lh-lg" title="Lock" t-on-click="() => this.pos.showLoginScreen()">
+                <i class="oi oi-fw" data-icon="lock_open" aria-hidden="true"/>
+            </button>
+        </xpath>
+    </t>
+
+    <t t-name="pos_hr.BurgerMenuDialog" t-inherit="point_of_sale.BurgerMenuDialog" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_pos_burger_menu_buttons')]//t[@t-name='close_register']" position="before">
+            <t t-if="this.pos.config.module_pos_hr and this.ui.isSmall"
+                t-call="point_of_sale.BurgerDialogMenuButton"
+                dataIcon="'lock'"
+                onClick="() => this.pos.showLoginScreen()"
+                btnLabel.translate="Lock"
+            />
+        </xpath>
+    </t>
+
+</templates>

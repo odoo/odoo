@@ -1,0 +1,66 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+
+from odoo.addons.payment.tests.common import PaymentCommon
+
+
+class RazorpayCommon(PaymentCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.provider = cls._prepare_provider(
+            "razorpay",
+            update_values={
+                "razorpay_key_id": "rzp_123",
+                "razorpay_key_secret": "Y63AyP9eL91",
+                "razorpay_webhook_secret": "coincoin_motherducker",
+                "allow_tokenization": True,
+            },
+        )
+
+        cls.customer_id = "cust_123"
+        cls.token_id = "token_404"
+        cls.payment_id = "pay_123"
+        cls.refund_id = "rfd_456"
+        cls.order_id = "order_789"
+        cls.redirect_payment_data_signature = (
+            "437b72e4e87362a39951b44487cf698410b074afdbed19ec44fffd32d2f863f3"
+        )
+        cls.redirect_payment_data = {
+            "reference": cls.reference,
+            "razorpay_payment_id": cls.payment_id,
+            "razorpay_order_id": cls.order_id,
+            "razorpay_signature": cls.redirect_payment_data_signature,
+        }
+        cls.payment_method_id = cls.provider.payment_method_ids[:1].id
+        cls.payment_data = {
+            "id": cls.payment_id,
+            "description": cls.reference,
+            "status": "captured",
+            "method": "upi",
+        }
+        cls.payment_fail_data = {
+            "id": "pay_987",
+            "description": cls.reference,
+            "status": "failed",
+            "method": "netbanking",
+        }
+        cls.tokenize_payment_data = {
+            **cls.payment_data,
+            "customer_id": cls.customer_id,
+            "token_id": cls.token_id,
+        }
+        cls.payment_pending_data = {
+            "id": cls.payment_id,
+            "description": cls.reference,
+            "status": "pending",
+        }
+        cls.refund_data = {"id": cls.refund_id, "payment_id": cls.payment_id, "amount": cls.amount}
+        cls.webhook_payment_data_signature = (
+            "2a7e2f1f346e5fa1d907a387e77d3cab644ede98cf478b502ad0b100647e2cd7"
+        )
+        cls.webhook_payment_data = {
+            "event": "payment.captured",
+            "payload": {"payment": {"entity": cls.payment_data}},
+        }

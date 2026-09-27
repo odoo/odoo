@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_journal_form_inherit_l10n_vn_edi_viettel" model="ir.ui.view">
+            <field name="name">account.journal.form.inherit.l10n_vn_edi_viettel</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='advanced_settings']/group" position="inside">
+                    <group string="E-Invoice" invisible="type != 'sale' or country_code != 'VN'">
+                        <field name="l10n_vn_edi_default_symbol_id" string="Default SInvoice Symbol" options="{'no_create': True}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

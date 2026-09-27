@@ -1,0 +1,14 @@
+import { Component } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+
+export class DiscussNotificationSettings extends Component {
+    static template = "mail.DiscussNotificationSettings";
+
+    setup() {
+        this.store = useService("mail.store");
+    }
+
+    onChangeMessageSound() {
+        this.store.settings.messageSound = !this.store.settings.messageSound;
+    }
+}

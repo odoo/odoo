@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.SearchbarOption">
+    <BuilderRow label.translate="Search within">
+        <BuilderSelect action="'setSearchType'" dataAttributeAction="'searchType'" id="'scope_opt'" preview="false">
+            <t t-foreach="this.searchScopes" t-as="scope" t-key="scope.search_type">
+                <BuilderSelectItem
+                    dataAttributeActionValue="scope.search_type"
+                    actionValue="scope.url"
+                    id="'search_' + scope.search_type + '_opt'"
+                    t-out="scope.label"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Order by">
+        <BuilderSelect id="'order_opt'" dataAttributeAction="'orderBy'" action="'setOrderBy'">
+            <t t-foreach="this.orderByItems" t-as="item" t-key="item_index">
+                <BuilderSelectItem t-if="!item.dependency or this.isActiveItem(item.dependency)"
+                    actionValue="item.orderBy"
+                    dataAttributeActionValue="item.orderBy"
+                    id="item.id"
+                    t-out="item.label"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Suggestions">
+        <BuilderNumberInput id="'limit_opt'" dataAttributeAction="'limit'" min="0"/>
+        <span class="flex-grow-1 w-100">results</span>
+    </BuilderRow>
+</t>
+
+<t t-name="website.SearchbarStyleOption">
+    <BuilderRow label.translate="Style">
+        <BuilderSelect action="'setSearchbarStyle'">
+            <BuilderSelectItem actionParam="'default'">Default Input Style</BuilderSelectItem>
+            <BuilderSelectItem actionParam="'light'">Light</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <searchbar_option
+            selector=".s_searchbar_input"
+            exclude=".o_header_searchbar"
+            applyTo=".search-query"/>
+        <searchbar_style_option
+            template="website.SearchbarStyleOption"
+            selector=".s_searchbar_input"
+            exclude=".o_header_searchbar"
+            applyTo=".search-query"/>
+        <searchbar_option
+            selector=".o_header_searchbar"
+            applyTo=".search-query"
+            editableOnly="false"
+            groups='["website.group_website_designer"]'/>
+    </xpath>
+</t>
+
+</templates>

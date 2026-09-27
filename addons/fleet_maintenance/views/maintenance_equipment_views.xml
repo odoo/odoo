@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="maintenance_equipment_view_form_inherit_fleet" model="ir.ui.view">
+        <field name="name">maintenance.equipment.view.form.inherit.fleet</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='equipment_assign_to']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='equipment_assign_to']" position="after">
+                <field name="vehicle_id" string="Vehicle"
+                    invisible="equipment_assign_to != 'vehicle' and equipment_assign_to != 'other'"/>
+            </xpath>
+            <xpath expr="//field[@name='owner_user_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_equipment_view_search_inherit_fleet" model='ir.ui.view'>
+        <field name="name">maintenance.equipment.view.search.inherit.fleet</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='owner_user_id']" position="after">
+                <field name="vehicle_id"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Vehicle" name="vehicle" context="{'group_by': 'vehicle_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_equipment_view_kanban_inherit_fleet" model="ir.ui.view">
+        <field name="name">maintenance.equipment.view.kanban.inherit.fleet</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='owner_user_id']" position='attributes'>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@id='unassigned']" position='attributes'>
+                <attribute name="invisible">is_assigned</attribute>
+            </xpath>
+            <xpath expr="//field[@name='serial_no']" position='after'>
+                <field name="vehicle_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="maintenance_equipment_view_tree_inherit_fleet" model="ir.ui.view">
+        <field name="name">maintenance.equipment.view.list.inherit.fleet</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='owner_user_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='owner_user_id']" position="after">
+                <field name="vehicle_id" string="Vehicle"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

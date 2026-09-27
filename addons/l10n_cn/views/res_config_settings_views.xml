@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.cn</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block name="default_taxes_setting_container" position="inside">
+                <setting id="vat_differential_taxation" string="VAT Differential Taxation" company_dependent="1"
+                    invisible="country_code != 'CN'" help="Enable balance deduction and output VAT offset entry automation">
+                    <field name="l10n_cn_vat_differential_taxation"/>
+                    <div class="content-group">
+                        <div class="row mt8" invisible="not l10n_cn_vat_differential_taxation">
+                            <label for="l10n_cn_output_vat_offset_journal_id" class="col-lg-5 o_light_label" string="Journal"/>
+                            <field name="l10n_cn_output_vat_offset_journal_id"/>
+                            <label for="l10n_cn_output_vat_offset_account_id" class="col-lg-5 o_light_label" string="Offset Account"/>
+                            <field name="l10n_cn_output_vat_offset_account_id"/>
+                        </div>
+                    </div>
+                </setting>
+            </block>
+        </field>
+    </record>
+</odoo>

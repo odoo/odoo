@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_token_form" model="ir.ui.view">
+        <field name="name">Authorize.Net Token Form</field>
+        <field name="model">payment.token</field>
+        <field name="inherit_id" ref="payment.payment_token_form"/>
+        <field name="arch" type="xml">
+            <field name="provider_ref" position="after">
+                <label
+                    for="authorize_profile"
+                    string="Authorize.Net Profile ID"
+                    class="text-nowrap"
+                    invisible="provider_code != 'authorize'"
+                />
+                <field
+                    name="authorize_profile"
+                    nolabel="1"
+                    invisible="provider_code != 'authorize'"
+                />
+            </field>
+        </field>
+    </record>
+
+</odoo>

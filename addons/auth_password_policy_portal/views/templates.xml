@@ -1,0 +1,12 @@
+<odoo>
+    <template id="portal_my_security" inherit_id="portal.portal_my_security"
+              name="Password policy data for portal">
+        <!-- only put meter on first "new password" field since both must be identical -->
+        <xpath expr="//label[@for='new']" position="after">
+            <owl-component name="password_meter" props='{"selector": "input[name=new1]"}'/>
+        </xpath>
+        <xpath expr="//input[@name='new1']" position="attributes">
+            <attribute name="t-att-minlength">password_minimum_length</attribute>
+        </xpath>
+    </template>
+</odoo>

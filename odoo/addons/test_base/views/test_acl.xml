@@ -1,0 +1,18 @@
+<odoo>
+    <data>
+        <record id="acl_form" model="ir.ui.view">
+            <field name="name">acl form view</field>
+            <field name="model">test_orm.acl</field>
+            <field name="arch" type="xml">
+                <form string="Acl">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="many2one_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

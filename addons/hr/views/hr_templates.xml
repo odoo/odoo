@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="hr_employee_plan_activity_summary">
+        <div class="d-flex flex-column flex-grow">
+            <t t-foreach="activity_ids" t-as="activity">
+                <span><i class="oi" t-att-data-icon="activity.icon"/> <t t-out="activity.summary"/> (<t t-if="activity.user_id" t-out="activity.user_id.name"/>)</span>
+                <span><i class="oi" data-icon="schedule"/> <span t-field="activity.date_deadline"/></span>
+            </t>
+        </div>
+    </template>
+</odoo>

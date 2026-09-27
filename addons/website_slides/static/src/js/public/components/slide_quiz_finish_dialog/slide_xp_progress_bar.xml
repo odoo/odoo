@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website_slides.SlideXPProgressBar" owl="1">
+        <div class="progress">
+            <div class="progress-bar" t-att-class="{'level-up': this.props.levelUp}" role="progressbar"
+                 t-att-aria-valuenow="this.props.previousRank.progress" aria-valuemin="0" aria-valuemax="100" aria-label="Progress bar"
+                 t-attf-style="width: #{this.state.rankProgressPercentage}%"/>
+        </div>
+        <small class="float-start text-primary fw-bold" t-att-class="{'d-none': this.state.hideRankBounds}"
+               t-out="this.state.rankLowerBound"/>
+        <small t-if="this.state.rankUpperBound" class="float-end fw-bold"
+               t-att-class="{'d-none': this.state.hideRankBounds}" t-out="this.state.rankUpperBound"/>
+        <div class="o_wlides_xp_progressbar_tooltip tooltip fade show bs-tooltip-top position-relative" t-att-class="{'level-up': this.props.levelUp}" role="tooltip"
+             t-attf-style="left: #{this.state.rankProgressPercentage}%">
+            <div class="tooltip-arrow"/>
+            <div class="tooltip-inner d-flex justify-content-center w-100" t-out="this.state.userKarma"/>
+        </div>
+    </t>
+
+</templates>

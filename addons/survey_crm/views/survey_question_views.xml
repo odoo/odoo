@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<data>
+
+    <record id="survey_question_view_form" model="ir.ui.view">
+        <field name="name">survey.question.form.inherit.survey.crm</field>
+        <field name="model">survey.question</field>
+        <field name="inherit_id" ref="survey.survey_question_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='value']" position="after">
+                <field name="generate_lead" string="Create Leads" column_invisible="parent.survey_type not in ['survey', 'live_session', 'custom']"/>
+            </xpath>
+        </field>
+    </record>
+
+</data>
+</odoo>

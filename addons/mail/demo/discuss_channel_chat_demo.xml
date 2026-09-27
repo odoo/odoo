@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Direct message (chat) between the current user and Marc Demo -->
+        <record model="discuss.channel" id="mail.channel_chat_admin_demo">
+            <field name="name">Mitchell Admin, Marc Demo</field>
+            <field name="channel_type">chat</field>
+            <field name="channel_member_ids" eval="[
+                Command.create({'partner_id': ref('base.partner_admin')}),
+                Command.create({'partner_id': ref('base.partner_demo')}),
+            ]"/>
+        </record>
+        <record model="mail.message" id="mail.mail_message_chat_admin_demo_0">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="mail.channel_chat_admin_demo"/>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="body"><![CDATA[<p>Hi! Did you get a chance to review the latest quotation?</p>]]></field>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=2)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record model="mail.message" id="mail.mail_message_chat_admin_demo_1">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="mail.channel_chat_admin_demo"/>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="body"><![CDATA[<p>Not yet, I'll take a look this afternoon and get back to you.</p>]]></field>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+    </data>
+</odoo>

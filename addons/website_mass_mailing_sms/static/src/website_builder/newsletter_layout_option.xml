@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-inherit="website_mass_mailing.NewsletterLayoutOption" t-inherit-mode="extension">
+    <xpath expr="//BuilderSelect[@action=&quot;'selectNewsletterTemplate'&quot;]/BuilderSelectItem[@id=&quot;'form_opt'&quot;]" position="before">
+        <BuilderSelectItem
+            title.translate="SMS Subscription"
+            actionParam="{
+                view: `website_mass_mailing_sms.s_newsletter_block_sms_template`,
+                attribute: `sms`,
+            }">
+            SMS Subscription
+        </BuilderSelectItem>
+    </xpath>
+</t>
+
+</templates>

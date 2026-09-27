@@ -1,0 +1,49 @@
+.js_follow[data-follow='on'] .js_follow_btn, .js_follow[data-follow='on'] .follow_btn,
+.js_follow[data-follow='off'] .js_unfollow_btn {
+    display: none;
+}
+
+.js_follow[data-follow='on'] .js_unfollow_btn {
+    opacity: 1 !important;
+}
+
+.js_follow_icons_container {
+    .js_follow_btn, .js_unfollow_btn, .follow_btn {
+        animation: js_follow_fade 1s ease forwards;
+        opacity: 0;
+
+        small {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        &:hover, &:focus {
+            small {
+                transition-duration: 1s;
+                opacity: 1;
+            }
+        }
+    }
+
+    .oi:before {
+        content: "notifications";
+    }
+
+    .js_follow_btn:hover .oi:before {
+        color: $body-color;
+    }
+
+    .js_unfollow_btn .oi:before {
+        color: $success;
+        content: "notifications_f";
+    }
+
+    .js_unfollow_btn:hover .oi:before {
+        content: "notifications_off";
+        color: $danger;
+    }
+}
+
+@keyframes js_follow_fade {
+    to { opacity: 1; }
+}

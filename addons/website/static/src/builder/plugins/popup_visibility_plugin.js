@@ -1,0 +1,145 @@
+import { usePlugin } from "@odoo/owl";
+import { Plugin } from "@html_editor/plugin";
+import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
+import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
+
+/**
+ * @typedef { Object } PopupVisibilityShared
+ * @property { PopupVisibilityPlugin['onTargetHide'] } onTargetHide
+ * @property { PopupVisibilityPlugin['onTargetShow'] } onTargetShow
+ */
+
+export class PopupVisibilityPlugin extends Plugin {
+    static id = "popupVisibilityPlugin";
+    static dependencies = ["visibility", "domObserver", "domReferenceMap"];
+    static shared = ["onTargetShow", "onTargetHide"];
+
+    /** @type {import("plugins").WebsiteResources} */
+    resources = {
+        on_target_shown_handlers: this.onTargetShow.bind(this),
+        on_target_hidden_handlers: this.onTargetHide.bind(this),
+        clean_for_save_processors: this.cleanForSave.bind(this),
+        on_will_restore_containers_handlers: this.hidePopupsWithoutTarget.bind(this),
+        on_target_revealed_handlers: this.hidePopupsWithoutTarget.bind(this),
+        attributes_mutation_value_processors: (value, { mutation }) => {
+            const { nodeId, attributeName } = mutation;
+            // On hide/show of the popup, the `style` attribute of the modal in
+            // the popup is changed. This also happens with the option
+            // "Backdrop" on the popup. When reverting/re-applying commits that
+            // are supposed to change the option, we do not want to also change
+            // whether the popup is hidden of not. Here, we keep the `display`
+            // property in the `style` attribute unchanged when the history
+            // revert/re-apply a commit that modified it.
+            if (attributeName === "style") {
+                const target = this.dependencies.domReferenceMap.getNodeById(nodeId);
+                if (target.matches(".s_popup > .modal")) {
+                    const re = /display: .*?;/;
+                    const currentDisplay = target.attributes.style?.value.match(re)?.[0] ?? "";
+                    return re.test(value)
+                        ? value.replace(re, currentDisplay)
+                        : value + currentDisplay;
+                }
+            }
+            return value;
+        },
+    };
+
+    setup() {
+        this.bootstrap = usePlugin(BootstrapInstance);
+        this.addDomListener(this.editable, "click", (ev) => {
+            // Note: links are excluded here so that internal modal buttons do
+            // not close the popup as we want to allow edition of those buttons.
+            if (ev.target.matches(".s_popup .js_close_popup:not(a, .btn)")) {
+                ev.stopPropagation();
+                const popupEl = ev.target.closest(".s_popup");
+                this.dependencies.visibility.hideElement(popupEl);
+            }
+        });
+        const domObserver = this.dependencies.domObserver;
+        this.unpatchModal = this.window.Modal // null in tests without loadAssetsFrontendJS
+            ? patch(this.window.Modal.prototype, {
+                  _hideModal() {
+                      return domObserver.ignore(() => super._hideModal());
+                  },
+                  show() {
+                      return domObserver.ignore(() => super.show());
+                  },
+                  hide() {
+                      return domObserver.ignore(() => super.hide());
+                  },
+              })
+            : () => {};
+    }
+
+    destroy() {
+        super.destroy();
+        this.unpatchModal();
+    }
+
+    onTargetShow(targetEl) {
+        // Check if the popup is within the editable, because it is cloned on
+        // save (see save plugin) and Bootstrap moves it if it is not within the
+        // document (see Bootstrap Modal's _showElement).
+        if (targetEl.matches(".s_popup") && this.editable.contains(targetEl)) {
+            this.toggleModal(targetEl, true);
+        }
+    }
+
+    onTargetHide(targetEl, isCleaning) {
+        // Do not use Bootstrap to close the popup, as we are cleaning a
+        // clone of it. Instead, hide it manually (see `cleanForSave`).
+        if (targetEl.matches(".s_popup") && !isCleaning) {
+            this.toggleModal(targetEl, false);
+        }
+    }
+
+    toggleModal(targetEl, show) {
+        const modalEl = targetEl.querySelector(".modal");
+        const modalInstance = this.bootstrap.getOrCreateInstance(this.window.Modal, modalEl);
+        modalEl.dispatchEvent(new Event("transitionend"));
+        // Ensures Bootstrap events are triggered even if the popup is
+        // still transitioning.
+        modalInstance._isTransitioning = false;
+        if (show) {
+            modalInstance.show();
+        } else {
+            modalInstance.hide();
+        }
+    }
+
+    cleanForSave(rootEl) {
+        // Hide the popups manually, as we cannot rely on the `onTargetHide`
+        // flow since the cleaned popup is a clone and is not in the DOM.
+        for (const modalEl of rootEl.querySelectorAll(".s_popup .modal.show")) {
+            modalEl.parentElement.dataset.invisible = "1";
+            // Do not call `.hide()`, because it is queued (parts of its effects
+            // happens asynchronously and delayed).
+            modalEl.classList.remove("show");
+            this.bootstrap.getOrCreateInstance(this.window.Modal, modalEl)._hideModal();
+        }
+        return rootEl;
+    }
+
+    /**
+     * Hides all the open popups that do not contain the given target element.
+     *
+     * @param {HTMLElement} targetEl the element
+     */
+    hidePopupsWithoutTarget(targetEl) {
+        const openPopupEls = this.editable.querySelectorAll(".s_popup:not([data-invisible='1'])");
+        if (!openPopupEls.length) {
+            return;
+        }
+
+        for (const popupEl of openPopupEls) {
+            if (!popupEl.contains(targetEl)) {
+                this.dependencies.visibility.toggleTargetVisibility(popupEl, false);
+            }
+        }
+        this.config.updateInvisibleElementsPanel();
+    }
+}
+
+registry.category("website-plugins").add(PopupVisibilityPlugin.id, PopupVisibilityPlugin);
+registry.category("translation-plugins").add(PopupVisibilityPlugin.id, PopupVisibilityPlugin);

@@ -1,0 +1,154 @@
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+import { parseFloat } from "@web/views/fields/parsers";
+import { Component, onWillStart, proxy, useProps, t } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { CashMoveListPopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup";
+import { Dialog } from "@web/core/dialog/dialog";
+import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
+import { CashInput } from "@point_of_sale/app/components/inputs/input/cash_input/cash_input";
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+
+const { DateTime } = luxon;
+
+export class CashMovePopup extends Component {
+    static template = "point_of_sale.CashMovePopup";
+    static components = { Dialog, CashInput };
+    props = useProps({
+        confirmKey: t.string().optional(),
+        close: t.function(),
+        getPayLoad: t.function().optional(),
+    });
+    setup() {
+        super.setup();
+        this.notification = useService("notification");
+        this.pos = usePos();
+        this.dialog = useService("dialog");
+        this.state = proxy({
+            /** @type {'in'|'out'} */
+            type: "out",
+            amount: "",
+            reason: "",
+            cashMoves: [],
+        });
+        this.confirm = useAsyncLockedMethod(this.confirm.bind(this));
+        this.ui = useService("ui");
+        onWillStart(() => {
+            this.loadCashMoves();
+        });
+    }
+
+    get partnerId() {
+        return this.pos.user.partner_id.id;
+    }
+
+    async loadCashMoves() {
+        try {
+            this.state.cashMoves = await this.pos.data.call("pos.session", "get_cash_in_out_list", [
+                this.pos.session.id,
+            ]);
+        } catch (e) {
+            logPosMessage(e);
+        }
+    }
+
+    async confirm() {
+        const amount = parseFloat(this.state.amount);
+        const formattedAmount = this.pos.formatCurrency(amount);
+        if (!amount) {
+            this.notification.add(_t("Cash in/out of %s is ignored.", formattedAmount));
+            return this.props.close();
+        }
+
+        const type = this.state.type;
+        const translatedType = _t(type);
+        const reason = this.state.reason.trim();
+
+        await this.pos.data.call(
+            "pos.session",
+            "try_cash_in_out",
+            this._prepareTryCashInOutPayload(type, amount, reason, this.partnerId),
+            this._getCashInOutExtraParams(),
+            true
+        );
+        await this.pos.logEmployeeMessage(
+            `${_t("Cash")} ${translatedType} - ${_t("Amount")}: ${formattedAmount}`,
+            "CASH_DRAWER_ACTION"
+        );
+        const order = this.pos.models["pos.order"].create({
+            session_id: this.pos.session,
+            company_id: this.pos.company,
+            config_id: this.pos.config,
+            user_id: this.pos.user,
+            ticket_code: "",
+            tracking_number: "",
+            sequence_number: 0,
+            pos_reference: "",
+            state: "cancel", // transient receipt-only order, must never reach IndexedDB
+        });
+        await this.pos.ticketPrinter.printCashMoveReceipt({
+            reason,
+            translatedType,
+            order: order,
+            formattedAmount,
+        });
+        this.pos.models["pos.order"].delete(order);
+
+        this.props.close();
+        this.notification.add(
+            _t("Successfully made a cash %s of %s.", type, formattedAmount),
+            3000
+        );
+    }
+    onClickButton(type) {
+        this.state.type = type;
+        this.inputRef?.()?.focus();
+    }
+    format(value) {
+        return this.pos.isValidFloat(value) ? this.pos.formatCurrency(parseFloat(value)) : "";
+    }
+    _prepareTryCashInOutPayload(type, amount, reason, partnerId) {
+        return [[this.pos.session.id], type, amount, reason, partnerId];
+    }
+    _getCashInOutExtraParams() {
+        return {};
+    }
+    isValidCashMove() {
+        return this.pos.isValidFloat(this.state.amount) && this.state.reason.trim() !== "";
+    }
+    async openDetails() {
+        this.dialog.add(CashMoveListPopup, {
+            cashMoves: this.state.cashMoves.map((m) => ({
+                ...m,
+                date: DateTime.fromSQL(m.date, { zone: "UTC" }).setZone("local"),
+            })),
+            partnerId: this.partnerId,
+            onDelete: (id) => {
+                this.state.cashMoves = this.state.cashMoves.filter((cm) => cm.id !== id);
+            },
+        });
+    }
+    async openNumpadDialog() {
+        if (!this.ui.isSmall) {
+            return;
+        }
+
+        const result = await makeAwaitable(this.dialog, NumberPopup, {
+            title: _t("Amount"),
+            startingValue: this.state.amount,
+        });
+
+        if (result) {
+            this.state.amount = result;
+        }
+    }
+    handleAmountBlur() {
+        this.state.amount = this.pos.formatCurrency(
+            parseFloat(this.state.amount),
+            this.pos.config.currency_id.id,
+            { noSymbol: true }
+        );
+    }
+}

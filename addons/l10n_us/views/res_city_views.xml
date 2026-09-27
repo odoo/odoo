@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_city_view_list_inherit_l10n_us" model="ir.ui.view">
+        <field name="name">res.city.view.list.inherit.l10n.us</field>
+        <field name="model">res.city</field>
+        <field name="inherit_id" ref="base_address_extended.view_city_tree"/>
+        <field name="arch" type="xml">
+            <field name="state_id" position="after">
+                <field name="l10n_us_county_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="res_city_view_form_inherit_l10n_us" model="ir.ui.view">
+        <field name="name">res.city.view.form.inherit.l10n.us</field>
+        <field name="model">res.city</field>
+        <field name="inherit_id" ref="base_address_extended.res_city_view_form"/>
+        <field name="arch" type="xml">
+            <field name="state_id" position="after">
+                <field name="l10n_us_county_id" invisible="country_code != 'US'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

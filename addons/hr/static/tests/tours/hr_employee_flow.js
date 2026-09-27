@@ -1,0 +1,73 @@
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_utils";
+
+registry.category("web_tour.tours").add("hr_employee_tour", {
+    steps: () => [
+        stepUtils.showAppsMenuItem(),
+        {
+            content: "Open Employees app",
+            trigger: ".o_app[data-menu-xmlid='hr.menu_hr_root']",
+            run: "click",
+        },
+        {
+            content: "Open an Employee Profile",
+            trigger: ".o_kanban_record:contains('Johnny H.')",
+            run: "click",
+        },
+        {
+            content: "Open user account menu",
+            trigger: ".o_user_menu",
+            run: "click",
+        },
+        {
+            content: "Open My Preferences",
+            trigger: "[data-menu=preferences]",
+            run: "click",
+        },
+    ],
+});
+
+registry.category("web_tour.tours").add("hr_officer_create_employee_tour", {
+    steps: () => [
+        stepUtils.showAppsMenuItem(),
+        {
+            content: "Open Employees app",
+            trigger: ".o_app[data-menu-xmlid='hr.menu_hr_root']",
+            run: "click",
+        },
+        {
+            content: "Open Management menu",
+            trigger: '[data-menu-xmlid="hr.menu_hr_employee_payroll"]',
+            run: "click",
+        },
+        {
+            trigger: "button.o-kanban-button-new",
+            content: "Create a new employee",
+            run: "click",
+        },
+        {
+            trigger: '.o_field_widget[name="name"] input',
+            content: "Set a Name",
+            run: "edit My Employee",
+        },
+        {
+            content: "Save Employee",
+            trigger: ".o_form_button_save",
+            run: "click",
+        },
+        {
+            trigger: ".o_form_saved",
+        },
+    ],
+});
+
+registry.category("web_tour.tours").add("hr_user_kanban_view_tour", {
+    steps: () => [
+        stepUtils.showAppsMenuItem(),
+        {
+            content: "Open Employees app",
+            trigger: ".o_app[data-menu-xmlid='hr.menu_hr_root']",
+            run: "click",
+        },
+    ],
+});

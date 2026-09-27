@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_view_tax_form_l10n_it_edi_extended" model="ir.ui.view">
+        <field name="name">account.tax.form.l10n.it.edi.extended</field>
+        <field name="model">account.tax</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="l10n_it.account_tax_form_l10n_it"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='advanced_options']" position="inside">
+                <group>
+                    <field name="l10n_it_withholding_type"  readonly="amount &gt;= 0.0"/>
+                    <field name="l10n_it_withholding_reason" invisible="not l10n_it_withholding_type"/>
+                    <field name="l10n_it_pension_fund_type"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

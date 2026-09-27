@@ -1,0 +1,65 @@
+.o_tax_group { width: 0% }
+
+.o_tax_group_edit {
+    white-space: nowrap;
+}
+
+.o_tax_group_edit:hover {
+    color: #00A09D;
+    cursor: pointer;
+}
+
+.o_tax_group_editable .o_tax_group_amount_value input {
+    width: 65%;
+    float: right;
+    text-align: right;
+}
+
+.o_tax_group_editable .o_tax_group_amount_value::before {
+    content: ' ';
+}
+
+.o_tax_total_label {
+    margin-bottom: 0 !important;
+    padding-right: var(--o-subtotal-footer-label-padding);
+}
+
+.o_list_monetary {
+    /*rtl:ignore*/
+    text-align: right;
+    /*rtl:ignore*/
+    direction: ltr;
+}
+
+.o_cash_rounding_button {
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.o_cash_rounding_button:hover {
+    color: #00A09D;
+    opacity: 1;
+}
+.o_cash_rounding_dropdown {
+    max-height: none;
+    overflow: visible;
+
+    .o_cash_rounding_dropdown_title {
+        font-weight: bold;
+        pointer-events: none;
+    }
+
+    .o_cash_rounding_dropdown_selected {
+        color: $o-component-active-color;
+        background-color: $o-component-active-bg !important;
+        box-shadow: inset 2px 0 0 $o-component-active-border;
+    }
+
+    .o_cash_rounding_dropdown_action {
+        color: $o-enterprise-action-color;
+    }
+
+    &.o-dropdown--menu .dropdown-item:hover {
+        background-color: $dropdown-link-hover-bg;
+    }
+}

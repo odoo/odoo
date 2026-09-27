@@ -1,0 +1,30 @@
+.o_nocontent_help:has(.oe_view_nocontent_attendance) {
+    max-width: none !important;
+    margin: 0% !important;
+    padding: 0% !important;
+}
+
+.o_view_nocontent:has(.oe_view_nocontent_attendance_mobile) {
+    position: sticky !important;
+}
+
+.o_nocontent_help:has(.oe_view_nocontent_attendance_mobile) {
+    position: relative;
+}
+
+.att_container {
+    font-variant-numeric: tabular-nums;
+
+    .dropdown-menu:not(.o_bottom_sheet_body) & {
+        width: 400px;
+        max-width: 100%;
+    }
+
+    .o_wrap_btn_sign_out {
+        background: var(--#{$prefix}popover-bg);
+    }
+}
+
+.o_readonly_color:has(.o_readonly_modifier) {
+    color: $text-muted;
+}

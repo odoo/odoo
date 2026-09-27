@@ -1,0 +1,12 @@
+<odoo>
+    <record id="calendar_alarm_view_kanban" model="ir.ui.view">
+        <field name="name">calendar.alarm.view.kanban.inherit.sms</field>
+        <field name="model">calendar.alarm</field>
+        <field name="inherit_id" ref="calendar.calendar_alarm_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='mail_template_id']" position="after">
+                <field name="sms_template_id" invisible="not sms_template_id"/>
+            </xpath>
+        </field>
+    </record> 
+</odoo>

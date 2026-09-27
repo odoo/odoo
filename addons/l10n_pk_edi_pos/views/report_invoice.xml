@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='qrcode']" position="after">
+            <div t-if="o._l10n_pk_edi_pos_qr()" name="l10n_pk_edi_pos_qr_code">
+                <p>
+                    <strong class="text-center">FBR QR Code</strong>
+                    <img class="d-block" t-att-src="o._l10n_pk_edi_pos_qr_code_src()"/>
+                </p>
+            </div>
+        </xpath>
+    </template>
+</odoo>

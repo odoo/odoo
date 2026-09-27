@@ -1,0 +1,36 @@
+.o_rating_page_thank_you {
+    min-height: 80vh;
+}
+
+/* Rating feedback */
+.o_rating_page_submit {
+
+    .btn-group > .btn:not(:first-child),
+    .btn-group > .btn-group:not(:first-child) > .btn {
+        margin-left: 0 !important;
+    }
+    .o_rating_label {
+        opacity: 0.5;
+        border: none !important;
+        &:hover {
+            transform: scale(1.1);
+        }
+        img {
+            &.bg-white:hover,
+            &.bg-white:focus {
+                background-color: #ffffff !important;
+            }
+        }
+    }
+
+    .btn-check:checked + .o_rating_label {
+        transform: scale(1.2);
+        opacity: 1;
+        img {
+            &.bg-white:hover,
+            &.bg-white:focus {
+                background-color: #ffffff !important;
+            }
+        }
+    }
+}

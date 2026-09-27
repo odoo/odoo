@@ -1,0 +1,97 @@
+import { describe, expect, queryAllTexts, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
+import { animationFrame, tick } from "@odoo/hoot-mock";
+import { defineModels, fields, models, serverState } from "@web/../tests/web_test_helpers";
+import { setupEditor, testEditor } from "./_helpers/editor";
+import { unformat } from "./_helpers/format";
+import { getContent } from "./_helpers/selection";
+import { deleteBackward, insertText, undo } from "./_helpers/user_actions";
+
+class ResUsers extends models.Model {
+    _name = "res.users";
+
+    signature = fields.Html();
+    _records = [
+        {
+            id: serverState.userId,
+            signature: "<h1>Hello</h1>",
+        },
+    ];
+}
+defineModels([ResUsers]);
+
+test("apply 'Signature' command", async () => {
+    const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+    await insertText(editor, "/signature");
+    await animationFrame();
+    expect(".active .o-we-command-name").toHaveText("Signature");
+    await press("enter");
+    await tick();
+    expect(getContent(el)).toBe(
+        `<p>ab</p><div class="o-signature-container" contenteditable="false" data-o-mail-quote-container="1"><div data-o-mail-quote="1">-- <br><div contenteditable="true"><h1>Hello[]</h1></div></div></div><p>cd</p>`
+    );
+});
+
+test("undo a 'Signature' command", async () => {
+    const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+    await insertText(editor, "test");
+    await insertText(editor, "/signature");
+    await press("enter");
+    await tick();
+    expect(getContent(el)).toBe(
+        `<p>abtest</p><div class="o-signature-container" contenteditable="false" data-o-mail-quote-container="1"><div data-o-mail-quote="1">-- <br><div contenteditable="true"><h1>Hello[]</h1></div></div></div><p>cd</p>`
+    );
+    undo(editor);
+    expect(getContent(el)).toBe("<p>abtest[]cd</p>");
+});
+
+test("should remove an emptied signature block", async () => {
+    await testEditor({
+        contentBefore: unformat(`
+            <p>ab</p>
+            <div class="o-signature-container"><p>[]<br></p></div>`),
+        stepFunction: deleteBackward,
+        contentAfter: `<p>ab</p><p>[]<br></p>`,
+    });
+});
+
+test("should ensure a delimiter, mail-quote classes, wrap content in an editable zone during edition, and unwrap it after cleanForSave", async () => {
+    await testEditor({
+        contentBefore: `<div class="o-signature-container">abracadabra</div>`,
+        contentAfterEdit: `<p data-selection-placeholder=""><br></p><div class="o-signature-container" contenteditable="false" data-o-mail-quote-container="1"><div data-o-mail-quote="1">-- <br><div contenteditable="true"><p>abracadabra</p></div></div></div><p data-selection-placeholder=""><br></p>`,
+        contentAfter: `<div class="o-signature-container" data-o-mail-quote-container="1"><div data-o-mail-quote="1">-- <br><p>abracadabra</p></div></div>`,
+    });
+});
+
+describe("availability", () => {
+    test("signature should be available from span inside editable", async () => {
+        const { editor } = await setupEditor("<p><span>ab[]</span></p>");
+        await insertText(editor, "/signature");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toInclude("Signature");
+    });
+    test("signature should not be available from span which is the root of editable", async () => {
+        const { editor } = await setupEditor(
+            '<div contenteditable="false"><p><span contenteditable="true">ab[]</span></p></div>'
+        );
+        await insertText(editor, "/signature");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).not.toInclude("Signature");
+    });
+    test("signature should not be available from p which is the root of editable", async () => {
+        const { editor } = await setupEditor(
+            '<div contenteditable="false"><p contenteditable="true">ab[]</p></div>'
+        );
+        await insertText(editor, "/signature");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).not.toInclude("Signature");
+    });
+    test("signature should be available from div which is the root of editable", async () => {
+        const { editor } = await setupEditor(
+            '<div contenteditable="false"><div contenteditable="true">ab[]</div></div>'
+        );
+        await insertText(editor, "/signature");
+        await animationFrame();
+        expect(queryAllTexts(".o-we-command-name")).toInclude("Signature");
+    });
+});

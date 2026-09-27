@@ -1,0 +1,18 @@
+.o_report_cmr {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 7pt;
+    font-weight: normal;
+    page-break-after: always;
+    &:last-child { page-break-after: auto; }
+
+    table { width: 100%;}
+    td { padding: 0.5em;}
+    th { font-weight: bold; padding: 0.8em; }
+
+    .cmr-label, .cmr-label + .cmr-translated,
+    .cmr-field-label, .cmr-field-label + .cmr-translated { font-weight: bold; line-height: 0.8;}
+
+    &.cmr-copy-copy_sender    { color: #cc0000; }
+    &.cmr-copy-copy_consignee { color: #0044cc; }
+    &.cmr-copy-copy_carrier   { color: #006600; }
+}

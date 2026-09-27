@@ -1,0 +1,37 @@
+{
+    'name': "Import/Export electronic invoices with UBL/CII",
+    'category': 'Accounting/Accounting',
+    'description': """
+Electronic invoicing module
+===========================
+
+Allows to export and import formats: E-FFF, UBL Bis 3, EHF3, NLCIUS, Factur-X (CII), XRechnung (UBL).
+When generating the PDF on the invoice, the PDF will be embedded inside the xml for all UBL formats. This allows the
+receiver to retrieve the PDF with only the xml file. Note that **EHF3 is fully implemented by UBL Bis 3** (`reference
+<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_implementation>`_).
+
+Note that E-FFF, NLCIUS and XRechnung (UBL) are only available for Belgian, Dutch and German companies,
+respectively. UBL Bis 3 is only available for companies which country is present in the `EAS list
+<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.
+    """,
+    'depends': ['account'],
+    'data': [
+        'data/uom_data.xml',
+        'data/cii_22_templates.xml',
+        'data/ir_config_parameter_data.xml',
+        'views/account_tax_views.xml',
+        'views/account_move_views.xml',
+        'views/res_partner_views.xml',
+        'views/uom_uom_views.xml',
+        'report/account_edi_ubl_cii_report_templates.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'account_edi_ubl_cii/static/src/scss/**/*',
+        ],
+    },
+    'auto_install': True,
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
+    'uninstall_hook': 'uninstall_hook',
+}

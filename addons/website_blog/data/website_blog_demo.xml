@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="group_ids" eval="[(3, ref('website_blog.group_website_blog_manager'))]"/>
+        </record>
+
+        <record id="base.default_user_group" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('website_blog.group_website_blog_manager'))]"/>
+        </record>
+    </data>
+    <data>
+        <record id="blog_blog_1" model="blog.blog">
+            <field name="name">Travel</field>
+            <field name="subtitle">Find inspiration for your next adventure with guides, tips, and stories from around the globe.</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_1.webp')", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
+        </record>
+        <record id="blog_blog_2" model="blog.blog">
+            <field name="name">Technology</field>
+            <field name="subtitle">Stay ahead of the curve with the latest tech insights, trends, and how-tos.</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_2.webp')", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
+        </record>
+        <record id="blog_blog_3" model="blog.blog">
+            <field name="name">Lifestyle</field>
+            <field name="subtitle">Upgrade your daily routine with ideas on wellness, productivity, and modern living.</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_3.webp')", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
+        </record>
+        <record id="blog_blog_4" model="blog.blog">
+            <field name="name">Business</field>
+            <field name="subtitle">Build smarter strategies and grow with insights from industry leaders and real-world case studies.</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/blog_4.webp')", "opacity": "0.6", "background_color_class": "o_cc5"}</field>
+        </record>
+
+        <!-- TAGS -->
+        <record id="blog_tag_1" model="blog.tag">
+            <field name="name">Cybersecurity</field>
+            <field name="color">1</field>
+        </record>
+        <record id="blog_tag_2" model="blog.tag">
+            <field name="name">Threats</field>
+            <field name="color">2</field>
+        </record>
+        <record id="blog_tag_3" model="blog.tag">
+            <field name="name">Technology</field>
+            <field name="color">3</field>
+        </record>
+        <record id="blog_tag_4" model="blog.tag">
+            <field name="name">Budget travel</field>
+            <field name="color">7</field>
+        </record>
+        <record id="blog_tag_5" model="blog.tag">
+            <field name="name">Tips</field>
+            <field name="color">5</field>
+        </record>
+        <record id="blog_tag_6" model="blog.tag">
+            <field name="name">Savings</field>
+            <field name="color">4</field>
+        </record>
+        <record id="blog_tag_7" model="blog.tag">
+            <field name="name">Productivity</field>
+            <field name="color">3</field>
+        </record>
+        <record id="blog_tag_8" model="blog.tag">
+            <field name="name">Remote work</field>
+            <field name="color">6</field>
+        </record>
+        <record id="blog_tag_9" model="blog.tag">
+            <field name="name">Smart homes</field>
+            <field name="color">4</field>
+        </record>
+        <record id="blog_tag_10" model="blog.tag">
+            <field name="name">IoT</field>
+            <field name="color">6</field>
+        </record>
+        <record id="blog_tag_11" model="blog.tag">
+            <field name="name">Future</field>
+            <field name="color">11</field>
+        </record>
+        <record id="blog_tag_12" model="blog.tag">
+            <field name="name">Asia</field>
+            <field name="color">7</field>
+        </record>
+        <record id="blog_tag_13" model="blog.tag">
+            <field name="name">Off the beaten path</field>
+            <field name="color">10</field>
+        </record>
+        <record id="blog_tag_14" model="blog.tag">
+            <field name="name">Minimalism</field>
+            <field name="color">7</field>
+        </record>
+        <record id="blog_tag_15" model="blog.tag">
+            <field name="name">Lifestyle</field>
+            <field name="color">6</field>
+        </record>
+        <record id="blog_tag_16" model="blog.tag">
+            <field name="name">Blockchain</field>
+            <field name="color">6</field>
+        </record>
+        <record id="blog_tag_17" model="blog.tag">
+            <field name="name">Finance</field>
+            <field name="color">6</field>
+        </record>
+        <record id="blog_tag_18" model="blog.tag">
+            <field name="name">Innovation</field>
+            <field name="color">10</field>
+        </record>
+        <record id="blog_tag_19" model="blog.tag">
+            <field name="name">AI</field>
+            <field name="color">11</field>
+        </record>
+        <record id="blog_tag_20" model="blog.tag">
+            <field name="name">Startups</field>
+            <field name="color">10</field>
+        </record>
+        <record id="blog_tag_21" model="blog.tag">
+            <field name="name">Entrepreneurship</field>
+            <field name="color">7</field>
+        </record>
+        <record id="blog_tag_22" model="blog.tag">
+            <field name="name">No money</field>
+            <field name="color">6</field>
+        </record>
+
+
+        <!-- POSTS -->
+        <record id="blog_post_1" model="blog.post">
+            <field name="name">How to travel the world on a budget</field>
+            <field name="subtitle">Traveling doesn't have to break the bank. Find out how to travel on a tight budget with these essential tips.</field>
+            <field name="blog_id" ref="blog_blog_1"/>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="is_published" eval="True"/>
+            <field name="published_date" eval="(datetime.now()-relativedelta(days=100)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_4'), ref('blog_tag_5'), ref('blog_tag_6')])]"/>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_1.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
+            <field name="content"><![CDATA[
+<section class="s_text_block" data-snippet="s_text_block">
+<div class="container s_allow_columns">
+<p>Traveling the world might sound like a luxury, but it doesn't have to come with a luxury price tag. With a few practical strategies and a flexible mindset, it's possible to explore new places, meet new people, and experience different cultures, without draining your savings.</p>
+
+<p>From choosing the right destinations to being smart about accommodation and transportation, there are many ways to make travel both affordable and rewarding. Whether you're planning a quick escape or a long-term journey, these ideas will help you get started without overspending.</p>
+<figure class="mt-2 mb-5">
+    <img src="/website_blog/static/src/img/content_1_1.webp" class="img-fluid w-100"/>
+    <figcaption class="figure-caption text-muted">Photo by Thought Catalog, @thoughtcatalog</figcaption>
+</figure>
+
+<h2 id="blog_table_of_content_1" class="h3-fs" data-anchor="true">Travel smart without spending big</h2>
+<p>Many travelers discover that being flexible with their plans can lead to big savings. Choosing to travel off-season, flying mid-week, or visiting lesser-known destinations can all make a big difference in price. Countries in Southeast Asia, Eastern Europe, and Central America, for example, offer rich experiences for just a fraction of the cost you'd expect in more touristy regions.</p>
+<p>Accommodation is another area where you can cut costs while gaining a more authentic experience. Guesthouses, hostels, and home rentals often provide a closer connection to local life, and cost far less than traditional hotels. Some travelers even arrange house-sitting or volunteer stays, exchanging help for free lodging and meals.</p>
+<p>Food and transportation also offer great opportunities to save. Cooking your own meals when possible, taking public transport, and walking whenever you can aren't just budget-friendly, they often lead to the most memorable moments of a trip.</p>
+<p><br/></p>
+
+<blockquote class="blockquote my-5">
+    <em class="h4 my-0">The best journeys in life are those that answer questions you never thought to ask. Traveling on a budget teaches you to slow down, observe, and appreciate more with less.</em>
+    <footer class="blockquote-footer text-muted">A famous traveler</footer>
+</blockquote>
+
+<p><br/></p>
+<p>Traveling slowly, staying longer in each place, also reduces expenses and deepens your connection with the culture. You'll have time to learn, adapt, and experience daily life rather than rushing from one attraction to the next.</p>
+<p><br/></p>
+
+<h2 id="blog_table_of_content_2" class="h3-fs" data-anchor="true">Conclusion</h2>
+<p>You don't need a huge budget to see the world. What you do need is a willingness to plan creatively, let go of rigid expectations, and embrace the unknown. Budget travel isn't about cutting corners, it's about making intentional choices that let you experience more with less.</p>
+<p>Whether you're a solo traveler, a couple planning your next adventure, or someone chasing a lifelong dream, the tools are out there to help you go further without overspending. With the right approach, traveling the world becomes not just affordable, but deeply rewarding.</p>
+</div>
+</section>
+]]>
+            </field>
+        </record>
+
+        <record id="blog_post_2" model="blog.post">
+            <field name="name">The rise of smart homes: What's next?</field>
+            <field name="subtitle">Smart homes are no longer a luxury. Learn what's next for the connected home revolution.</field>
+            <field name="blog_id" ref="blog_blog_2"/>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="is_published" eval="True"/>
+            <field name="published_date" eval="(datetime.now()-relativedelta(days=25)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_9'), ref('blog_tag_10'), ref('blog_tag_11')])]"/>
+            <field name="visits">246</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_2.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
+            <field name="content"><![CDATA[
+<section class="s_text_block" data-snippet="s_text_block">
+<div class="container s_allow_columns">
+<p>From controlling lights with a tap on your phone to automating your morning coffee, smart home technology has become part of everyday life. What started as a convenience has quickly evolved into a lifestyle shift, transforming how we interact with our living spaces.</p>
+<p>With new devices constantly hitting the market and major tech players investing heavily in home automation, smart homes are no longer a futuristic concept. But as these systems become more integrated and intelligent, the big question is: what's coming next?</p>
+
+<figure class="mt-2 mb-5">
+    <img src="/website_blog/static/src/img/content_2_1.webp" class="img-fluid w-100"/>
+    <figcaption class="figure-caption text-muted">Photo by Jakub Żerdzicki, @jakubzerdzicki</figcaption>
+</figure>
+
+<h2 id="blog_table_of_content_1" class="h3-fs" data-anchor="true">Beyond convenience: the future of connected living</h2>
+<p>Smart homes are growing up. What began with simple voice assistants and connected light bulbs has matured into fully integrated systems that manage everything from energy use to home security. Artificial intelligence is at the heart of this evolution, enabling homes to learn from behavior patterns and anticipate needs in real time.</p>
+<p>The next wave of innovation is pointing toward even deeper personalization and sustainability. Imagine a home that not only knows when to turn off lights but adjusts your heating, monitors air quality, tracks your energy usage, and suggests optimizations. As sensors become more sophisticated and data becomes more actionable, homes are getting smarter, and greener.</p>
+<p><br/></p>
+
+<blockquote class="blockquote my-5">
+    <em class="h4 my-0">The best technology doesn't just automate tasks. It adapts to our lives and helps us live better. The rise of smart homes is a shift from control to collaboration between people and their environments.</em>
+    <footer class="blockquote-footer text-muted">A famous tech enthusiast</footer>
+</blockquote>
+
+<p><br/></p>
+<p>Privacy and interoperability are also becoming central concerns. Consumers want systems that protect their data and work seamlessly with other devices, regardless of brand. This is driving a shift toward more open platforms and stricter security standards, shaping how future devices will be designed and connected.</p>
+<p><br/></p>
+
+<h2 id="blog_table_of_content_2" class="h3-fs" data-anchor="true">Conclusion</h2>
+<p>The smart home is no longer just about gadgets, it's about creating a living environment that responds to you, supports your lifestyle, and helps you live more efficiently. As technology continues to evolve, homes will become more intuitive, sustainable, and secure.</p>
+<p>Whether you're a tech enthusiast, a business exploring new markets, or simply curious about where things are heading, the future of smart homes is full of potential. The next chapter isn’t just about making homes smarter, it's about making them more human.</p>
+</div>
+</section>
+]]>
+            </field>
+        </record>
+
+        <record id="blog_post_3" model="blog.post">
+            <field name="name">How to stay productive working from home</field>
+            <field name="subtitle">Working from home can be challenging. Here are some proven tips to stay productive and motivated.</field>
+            <field name="blog_id" ref="blog_blog_3"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_7'), ref('blog_tag_8'), ref('blog_tag_5')])]"/>
+            <field name="visits">467</field>
+            <field name="is_published" eval="True"/>
+            <field name="published_date" eval="(datetime.now()-relativedelta(days=15)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_3.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
+            <field name="content"><![CDATA[
+<section class="s_text_block" data-snippet="s_text_block">
+<div class="container s_allow_columns">
+<p>Working from home has become the new normal for many professionals around the world. While it offers flexibility and eliminates the daily commute, it also brings unique challenges when it comes to staying focused and organized.</p>
+<p>Whether you're freelancing, running a small business, or managing a remote team, creating a productive work-from-home environment is key. With the right habits and a bit of structure, working remotely can be just as efficient, if not more, than working in an office.</p>
+
+<figure class="mt-2 mb-5">
+    <img src="/website_blog/static/src/img/content_3_1.webp" class="img-fluid w-100"/>
+    <figcaption class="figure-caption text-muted">Photo by Domenico Loia, @domenicoloia</figcaption>
+</figure>
+
+<h2 id="blog_table_of_content_1" class="h3-fs" data-anchor="true">Finding balance, focus, and routine</h2>
+<p>The most effective remote workers tend to follow one simple principle: treat home like the office. Setting a consistent routine, starting at the same time each day, taking regular breaks, and clearly defining work hours, can help separate professional time from personal time, even when both happen in the same place.</p>
+<p>Your workspace also matters. Having a dedicated area that's quiet, comfortable, and free of distractions goes a long way in maintaining focus. Even if you don't have a home office, carving out a small, intentional space can signal to your brain that it's time to work.</p>
+<p>Communication is another crucial element, especially if you're collaborating with others. Regular check-ins, clear expectations, and the right tools, like messaging apps or task managers, can keep everyone on the same page without constant video calls or micromanaging.</p>
+<p><br/></p>
+
+<blockquote>
+    <em class="h4 my-0">Productivity isn't about doing more. It's about doing what matters, with focus and intention. Working from home gives you the freedom to shape your day, use it to your advantage.</em>
+    <footer class="blockquote-footer text-muted">A famous sociologist</footer>
+</blockquote>
+
+<p><br/></p>
+<h2 id="blog_table_of_content_2" class="h3-fs" data-anchor="true">Conclusion</h2>
+<p>Staying productive while working from home is all about building the right environment, routines, and habits. When done thoughtfully, remote work can lead to greater autonomy, improved focus, and better overall satisfaction.</p>
+<p>As work culture continues to evolve, embracing the home office as a professional space is more relevant than ever. With the right approach, working from home can support not just productivity, but well-being too.</p>
+</div>
+</section>
+]]>
+            </field>
+        </record>
+
+        <record id="blog_post_4" model="blog.post">
+            <field name="name">The future of artificial intelligence in everyday life</field>
+            <field name="subtitle">AI is changing the way we live. Discover the groundbreaking applications of artificial intelligence that will shape our future.</field>
+            <field name="blog_id" ref="blog_blog_2"/>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_19'), ref('blog_tag_11'), ref('blog_tag_18')])]"/>
+            <field name="visits">453</field>
+            <field name="is_published" eval="True"/>
+            <field name="published_date" eval="(datetime.now()-relativedelta(days=70)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_4.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.2", "background_color_class": "o_cc5"}</field>
+            <field name="content"><![CDATA[
+<section class="s_text_block" data-snippet="s_text_block">
+<div class="container s_allow_columns">
+<p>Artificial Intelligence (AI) is no longer a distant concept confined to science fiction. It is rapidly becoming an integral part of our daily routines, transforming how we live, work, and interact. From smart assistants in our homes to personalized recommendations on our devices, AI is shaping the future in ways we are just beginning to understand.</p>
+<p>As AI technology continues to evolve, its applications in everyday life are expanding. Automated systems now handle complex tasks like managing home energy consumption, optimizing traffic flow in cities, and even assisting with healthcare diagnostics. These advancements promise to make daily life more efficient, convenient, and tailored to individual needs.</p>
+
+<figure class="mt-2 mb-5">
+    <img src="/website_blog/static/src/img/content_6_1.webp" class="img-fluid w-100"/>
+    <figcaption class="figure-caption text-muted">Photo by Nick Design, @nickshuperdesign</figcaption>
+</figure>
+
+<h2 id="blog_table_of_content_1" class="h3-fs" data-anchor="true">AI's Impact on Society</h2>
+<p>Moreover, AI's influence extends beyond convenience to fostering deeper human connections. Virtual companions and language translation tools break down communication barriers, enabling people from diverse backgrounds to connect more easily. This growing accessibility highlights AI's potential to create a more inclusive and connected world.</p>
+<p>However, with these exciting developments come important questions about privacy, ethics, and the impact on employment. As AI systems become more autonomous, it is crucial to ensure they are designed and used responsibly, keeping human values at the forefront. Addressing these challenges will determine how beneficial AI ultimately is in everyday life.</p>
+<p><br/></p>
+
+<blockquote class="blockquote my-5">
+    <em class="h4 my-0">The real question is not whether machines think but whether humans do.</em>
+    <footer class="blockquote-footer text-muted">A famous computer scientist</cite></footer>
+</blockquote>
+
+<p><br/></p>
+
+<h2 id="blog_table_of_content_2" class="h3-fs" data-anchor="true">Conclusion</h2>
+<p>The future of AI in everyday life holds incredible promise, offering the potential to enhance comfort, efficiency, and human connection in unprecedented ways. Yet, realizing these benefits requires careful consideration of ethical implications and a commitment to responsible innovation. By thoughtfully integrating AI into our daily environments, we can harness its power to improve lives while preserving the values that make us human.</p>
+</div>
+</section>
+]]>
+            </field>
+        </record>
+
+        <record id="blog_post_5" model="blog.post">
+            <field name="name">The benefits of a minimalist lifestyle</field>
+            <field name="subtitle">Less is more. Discover the surprising benefits of adopting a minimalist lifestyle and how to get started.</field>
+            <field name="blog_id" ref="blog_blog_3"/>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_7'), ref('blog_tag_14'), ref('blog_tag_15')])]"/>
+            <field name="is_published" eval="True"/>
+            <field name="published_date" eval="(datetime.now()-relativedelta(days=50)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_5.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.2", "background_color_class": "o_cc5"}</field>
+            <field name="content"><![CDATA[
+<section class="s_text_block" data-snippet="s_text_block">
+<div class="container s_allow_columns">
+<p>In a world filled with noise, distractions, and never-ending to-do lists, many people are turning to minimalism as a way to regain clarity and control. But minimalism isn't just about having fewer things, it's about making room for what truly matters.</p>
+<p>Whether you're simplifying your home, your schedule, or your digital life, embracing a minimalist mindset can bring more focus, freedom, and peace into your everyday routine.</p>
+
+<figure class="mt-2 mb-5">
+    <img src="/website_blog/static/src/img/content_4_1.webp" class="img-fluid w-100"/>
+    <figcaption class="figure-caption text-muted">Photo by Alexey Aladashvili, @alexeyaladashvili61</figcaption>
+</figure>
+
+<h2 id="blog_table_of_content_1" class="h3-fs" data-anchor="true">Less clutter, more intention</h2>
+<p>At its core, minimalism invites us to ask: what do I really need? By letting go of the excess, physical or mental, we create space for what brings value. A tidy home can reduce stress and boost concentration. A simplified calendar can leave more time for meaningful work or connection. Even a decluttered digital life can lead to better focus and fewer distractions.</p>
+<p>Minimalism also helps break the cycle of consumerism. When you stop chasing the next purchase or upgrade, you begin to appreciate what you already have. This shift often leads to smarter spending, less waste, and a stronger sense of gratitude.</p>
+<p><br/></p>
+
+<blockquote class="blockquote my-5">
+    <em class="h4 my-0">Minimalism isn't about having nothing. It's about making room for everything that matters. Living with intention can lead to more joy, clarity, and freedom.</em>
+    <footer class="blockquote-footer text-muted">A famous psychologist</footer>
+</blockquote>
+
+<p><br/></p>
+<p>For many, minimalism also brings emotional benefits. Fewer possessions mean fewer responsibilities and less decision fatigue. With less noise, it becomes easier to listen to your own needs, goals, and values, and act on them with purpose.</p>
+<p><br/></p>
+
+<h2 id="blog_table_of_content_2" class="h3-fs" data-anchor="true">Conclusion</h2>
+<p>Minimalism isn't a trend or a strict set of rules. It's a mindset that helps you focus on what counts and let go of what doesn't. Whether you're just starting to declutter or already living with less, the benefits go far beyond a clean space.</p>
+<p>By choosing simplicity, you create space for clarity, calm, and connection. And sometimes, the less you have, the more room you make for a better life.</p>
+</div>
+</section>
+]]>
+            </field>
+        </record>
+
+        <record id="blog_post_6" model="blog.post">
+            <field name="name">Top 10 underrated travel destinations in Asia</field>
+            <field name="subtitle">Discover the most underrated travel spots in Asia that are still off the radar, yet filled with rich culture.</field>
+            <field name="blog_id" ref="blog_blog_1"/>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_12'), ref('blog_tag_13')])]"/>
+            <field name="is_published" eval="True"/>
+            <field name="published_date" eval="(datetime.now()-relativedelta(days=40)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_6.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
+            <field name="content"><![CDATA[
+<section class="s_text_block" data-snippet="s_text_block">
+<div class="container s_allow_columns">
+<p>Asia is home to some of the world's most iconic travel spots, from the bustling streets of Tokyo to the white sands of Bali. But beyond the usual tourist trails lie hidden gems that offer just as much charm, culture, and adventure, often with fewer crowds and a more authentic experience.</p>
+<p>Whether you're seeking serene beaches, ancient temples, or vibrant local life, these lesser-known destinations deserve a spot on your travel list.</p>
+
+<figure class="mt-2 mb-5">
+    <img src="/website_blog/static/src/img/content_5_1.webp" class="img-fluid w-100"/>
+    <figcaption class="figure-caption text-muted">Photo by Mega Caesaria, @megacaesaria</figcaption>
+</figure>
+
+<h2 id="blog_table_of_content_1" class="h3-fs" data-anchor="true">Explore beyond the obvious</h2>
+<ol>
+    <li>
+        <strong>Luang Prabang, Laos</strong>
+        <br/>
+        Nestled between mountains and rivers, this UNESCO World Heritage town offers a peaceful blend of Buddhist heritage, colonial architecture, and natural beauty.
+        <br/>
+        <br/>
+    </li>
+    <li>
+        <strong>Tainan, Taiwan</strong>
+        <br/>
+        Known as Taiwan's oldest city, Tainan is a haven for street food lovers and history buffs, with countless temples and lively night markets.
+        <br/>
+        <br/>
+    </li>
+    <li>
+        <strong>Isaan Region, Thailand</strong>
+        <br/>
+        This northeastern region showcases rural Thai life, ancient Khmer ruins, and authentic cuisine, far from the touristy beaches of the south.
+        <br/>
+        <br/>
+    </li>
+    <li>
+        <strong>Gujarat, India</strong>
+        <br/>
+        Often overshadowed by Rajasthan, Gujarat offers rich history, vibrant festivals, salt deserts, and the Gir National Park, home to the rare Asiatic lion.
+        <br/>
+        <br/>
+    </li>
+    <li>
+        <strong>Tana Toraja, Indonesia</strong>
+        <br/>
+        Located in Sulawesi, this highland region is known for its dramatic landscapes and fascinating funeral traditions that reflect a deep cultural heritage.
+        <br/>
+        <br/>
+    </li>
+    <li>
+        <strong>Gorkhi-Terelj National Park, Mongolia</strong>
+        <br/>
+        Just outside Ulaanbaatar, this stunning park combines sweeping grasslands, granite cliffs, and traditional nomadic culture.
+        <br/>
+        <br/>
+    </li>
+    <li>
+        <strong>Siquijor Island, Philippines</strong>
+        <br/>
+        A quiet alternative to the country's better-known islands, Siquijor is filled with waterfalls, coral reefs, and local legends of mysticism.
+        <br/>
+        <br/>
+    </li>
+    <li>
+        <strong>Sapa, Vietnam</strong>
+        <br/>
+        Beyond the well-trodden paths of Hanoi and Ho Chi Minh City, Sapa offers terraced rice fields, cool mountain air, and interactions with ethnic minority groups.
+        <br/>
+        <br/>
+    </li>
+    <li>
+        <strong>Jeonju, South Korea</strong>
+        <br/>
+        Famous for its traditional hanok village and delicious bibimbap, Jeonju provides a glimpse into Korea's past with a modern creative twist.
+        <br/>
+        <br/>
+    </li>
+    <li>
+        <strong>Haputale, Sri Lanka</strong>
+        <br/>
+        This small town in the central highlands offers tea plantations, misty hills, and breathtaking views, all without the crowds of nearby Ella.
+        <br/>
+        <br/>
+    </li>
+</ol>
+<p><br/></p>
+
+<blockquote class="blockquote my-5">
+    <em class="h4 my-0">The best journeys often begin where the guidebook ends. Asia is full of surprises for those willing to look beyond the mainstream.</em>
+    <footer class="blockquote-footer text-muted">A famous traveler</footer>
+</blockquote>
+
+<p><br/></p>
+<p>Exploring these underrated places not only supports local communities but also gives you a richer, more personal travel experience.</p>
+<p><br/></p>
+
+<h2 id="blog_table_of_content_2" class="h3-fs" data-anchor="true">Conclusion</h2>
+<p>From remote mountains to coastal hideaways, Asia is full of destinations that go unnoticed by the average tourist. These lesser-known spots offer the same sense of wonder and discovery, often with more warmth, authenticity, and room to breathe.</p>
+<p>So if you're planning your next trip, consider stepping off the beaten path. You might just find your new favorite place.</p>
+</div>
+</section>
+]]>
+            </field>
+        </record>
+
+        <record id="blog_post_7" model="blog.post">
+            <field name="name">How to start your own business with no money</field>
+            <field name="subtitle">You don't need capital to get started. Find out how you can launch a successful business with limited resources.</field>
+            <field name="blog_id" ref="blog_blog_4"/>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_20'), ref('blog_tag_21'), ref('blog_tag_22')])]"/>
+            <field name="is_published" eval="True"/>
+            <field name="published_date" eval="(datetime.now()-relativedelta(days=80)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_7.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4", "background_color_class": "o_cc5"}</field>
+            <field name="content"><![CDATA[
+<section class="s_text_block" data-snippet="s_text_block">
+<div class="container s_allow_columns">
+<p>Starting a business without any upfront capital may sound impossible, but countless entrepreneurs have done it successfully. The key lies in creativity, resourcefulness, and leveraging available tools and networks. With the right mindset and strategy, you can turn an idea into a viable business even with little to no money.</p>
+<p>One of the first steps is to identify a service or product that requires minimal investment but solves a real problem. Many businesses today begin as side projects or freelance services, allowing founders to test the market and build a customer base without heavy financial risk.</p>
+
+<figure class="mt-2 mb-5">
+    <img src="/website_blog/static/src/img/content_7_1.webp" class="img-fluid w-100"/>
+    <figcaption class="figure-caption text-muted">Photo by Marília Castelli, @liacastelli</figcaption>
+</figure>
+
+<h2 id="blog_table_of_content_1" class="h3-fs" data-anchor="true">Finding Opportunities in Constraints</h2>
+<p>Constraints often spark innovation. When you lack funds, you're forced to think outside the box, using free online platforms for marketing, bartering skills for services, and building partnerships to reduce costs. Social media, blogs, and community groups provide inexpensive ways to promote your business and connect with potential clients.</p>
+<p>Moreover, tapping into your existing skills and networks can be a game changer. Offering consulting, tutoring, or digital services requires little overhead and can generate revenue quickly. By focusing on what you already know and who you know, you maximize your chances of early success.</p>
+<p><br/></p>
+
+<blockquote class="blockquote my-5">
+    <em class="h4 my-0">"Do not wait to strike till the iron is hot; but make it hot by striking."</em>
+    <footer class="blockquote-footer text-muted">A famous CEO</footer>
+</blockquote>
+
+<p><br/></p>
+
+<h2 id="blog_table_of_content_2" class="h3-fs" data-anchor="true">Conclusion</h2>
+<p>Launching a business with no money demands resilience, creativity, and a willingness to learn and adapt. By leveraging free resources, focusing on your strengths, and building meaningful relationships, you can overcome financial barriers and create a sustainable venture. Remember, every successful entrepreneur started somewhere, often with just an idea and determination.</p>
+</div>
+</section>
+]]>
+            </field>
+        </record>
+
+        <record id="blog_comment_1" model="mail.message">
+            <field name="body">This is exactly what I needed, hostels and off-season travel saved me a fortune on my last trip to Southeast Asia. Already planning the next one on a shoestring budget.</field>
+            <field name="model">blog.post</field>
+            <field name="res_id" ref="blog_post_1"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo_portal"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="blog_comment_2" model="mail.message">
+            <field name="body">How long would you recommend staying in one place when you’re traveling slowly? I’m trying to balance cheaper accommodation with actually seeing each region.</field>
+            <field name="model">blog.post</field>
+            <field name="res_id" ref="blog_post_1"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="blog_comment_3" model="mail.message">
+            <field name="body">Setting fixed work hours and a dedicated desk made a huge difference, I used to work from the couch and couldn’t switch off. Thanks for the routine tips!</field>
+            <field name="model">blog.post</field>
+            <field name="res_id" ref="blog_post_3"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="blog_comment_4" model="mail.message">
+            <field name="body">I started with one drawer last weekend, already feel less stressed. “Less clutter, more intention” really clicked for me.</field>
+            <field name="model">blog.post</field>
+            <field name="res_id" ref="blog_post_5"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="blog_comment_5" model="mail.message">
+            <field name="body">Unsubscribing from promo emails was my first “digital minimalism” win: fewer distractions and I stopped buying things I didn’t need.</field>
+            <field name="model">blog.post</field>
+            <field name="res_id" ref="blog_post_5"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo_portal"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="blog_comment_6" model="mail.message">
+            <field name="body">Luang Prabang is on my list now, had only heard about the usual stops. Which of these ten would you pick for a two-week first trip to Asia?</field>
+            <field name="model">blog.post</field>
+            <field name="res_id" ref="blog_post_6"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+
+        <record id="blog_comment_7" model="mail.message">
+            <field name="body">I launched a small consulting offer using free social channels: no upfront cash, just skills I already had. Would love to hear how you handled your first paying clients.</field>
+            <field name="model">blog.post</field>
+            <field name="res_id" ref="blog_post_7"/>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+        </record>
+    </data>
+</odoo>

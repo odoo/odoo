@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="l10n_latam.document.type" id="ecf_31">
+            <field name="sequence">10</field>
+            <field name="code">31</field>
+            <field name="name">Electronic Tax Credit Invoice</field>
+            <field name="name@es_419">Factura de Crédito Fiscal Electrónica</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">E31</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ecf_32">
+            <field name="sequence">10</field>
+            <field name="code">32</field>
+            <field name="name">Electronic Consumer Invoice</field>
+            <field name="name@es_419">Factura de Consumo Electrónica</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">invoice</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">E32</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ecf_33">
+            <field name="sequence">10</field>
+            <field name="code">33</field>
+            <field name="name">Electronic Debit Note</field>
+            <field name="name@es_419">Nota de Débito Electrónica</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">debit_note</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">E33</field>
+        </record>
+
+        <record model="l10n_latam.document.type" id="ecf_34">
+            <field name="sequence">10</field>
+            <field name="code">34</field>
+            <field name="name">Electronic Credit Note</field>
+            <field name="name@es_419">Nota de Crédito Electrónica</field>
+            <field name="country_id" ref="base.do"/>
+            <field name="internal_type">credit_note</field>
+            <field name="active" eval="True"/>
+            <field name="doc_code_prefix">E34</field>
+        </record>
+    </data>
+</odoo>

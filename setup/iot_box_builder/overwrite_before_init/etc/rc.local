@@ -1,0 +1,46 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+exec 1>/var/log/rc.local.log 2>&1  # send stdout and stderr from rc.local to a log file
+set -x                             # display commands before execution
+
+# Ensure Wi-Fi radio is enabled
+nmcli radio wifi on
+
+# Print the IP address
+_IP=$(hostname -I) || true
+if [ "$_IP" ]; then
+  printf "My IP address is %s\n" "$_IP"
+fi
+
+mkdir -p /var/run/odoo
+chown odoo:odoo /var/run/odoo
+
+# For compatibility between new IoT Box images and old Odoo code on it (it will not start Odoo on boot without this)
+start_wifi=/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/wireless_ap.sh
+if [ -f $start_wifi ]; then
+  $start_wifi &
+fi
+
+# Update current branch
+cd /home/pi/odoo
+localbranch=$(sudo -u odoo git symbolic-ref -q --short HEAD)
+localremote=$(sudo -u odoo git config branch.$localbranch.remote)
+
+sudo -u odoo rm -f /home/pi/odoo/.git/shallow.lock
+sudo -u odoo git remote set-url "${localremote}" "https://github.com/odoo/odoo.git"
+
+sudo -u odoo GIT_SSL_NO_VERIFY=1 git fetch "${localremote}" "${localbranch}" --depth=1
+sudo -u odoo git reset --hard FETCH_HEAD
+
+exit 0

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="res_users_form_view_calendars" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tz']" position="after">
+                    <span class="o_form_label fw-bold text-900" invisible="share">Calendar</span>
+                    <div class="o_row mb-1" invisible="share">
+                        <a name="%(calendar.action_calendar_calendar)d" type="action" class="oe_link cursor-pointer">
+                            <i class="me-2 oi" data-icon="arrow_forward"/>Manage my calendars
+                        </a>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+        <!-- Update User form !-->
+        <record id="res_users_form_view" model="ir.ui.view">
+            <field name="name">res.users.form.calendar</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tz']" position="after">
+                    <span class="o_form_label fw-bold text-900" invisible="share or id != uid">Calendar</span>
+                    <div class="o_row mb-1" invisible="share or id != uid">
+                        <a name="%(calendar.action_calendar_calendar)d" type="action" class="oe_link cursor-pointer">
+                            <i class="me-2 oi" data-icon="arrow_forward"/>Manage my calendars
+                        </a>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.SelectionPopup">
+        <t t-set="bodyClass" t-value="'d-flex flex-column gap-2 pt-0 ' + (this.props.bodyClass || '')"/>
+        <Dialog title="this.props.title" footer="false" size="this.props.size" bodyClass="bodyClass">
+            <button t-foreach="this.props.list" t-as="item" t-key="item.id"
+                    class="selection-item d-flex align-items-center justify-content-between btn btn-lg btn-outline-secondary w-100 p-3 text-start"
+                    t-attf-class="o_colorlist_item_color_{{ item.color }}"
+                    t-att-class="{ 'selected active': item.isSelected }"
+                    t-on-click="() => this.selectItem(item.id)">
+
+               <div class="d-flex align-items-center">
+                    <div class="ratio ratio-1x1 me-3" style="width: 40px" t-if="item.image">
+                         <img class="rounded-3" t-att-src="item.image"/>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <span t-out="item.label" />
+                        <span t-out="item.description" t-if="item.description" />
+                    </div>
+               </div>
+                <i class="oi" t-att-class="{ 'text-action': item.isSelected }" t-attf-data-icon="{{ item.isSelected ? 'check' : 'chevron_forward' }}"/>
+            </button>
+        </Dialog>
+    </t>
+
+</templates>

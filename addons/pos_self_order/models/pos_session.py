@@ -1,0 +1,52 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import models, api
+
+
+class PosSession(models.Model):
+    _inherit = 'pos.session'
+
+    @api.model
+    def _load_pos_data_models(self, config_id):
+        data = super()._load_pos_data_models(config_id)
+        data += ['mail.template']
+        return data
+
+    @api.model
+    def _load_pos_self_data_fields(self, config):
+        return ['id', 'user_id', 'config_id', 'payment_method_ids', 'state']
+
+    @api.model
+    def _load_pos_self_data_domain(self, data):
+        return [('config_id', '=', data['pos.config'].id), ('state', 'not in', ['closed', 'closing_control'])]
+
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
+        if not read_records:
+            return read_records
+
+        record = read_records[0]
+        record['_self_ordering'] = (
+            self.env["pos.config"]
+            .sudo()
+            .search_count(
+                [
+                    *self.env["pos.config"]._check_company_domain(self.env.company),
+                    '|', ("self_ordering_mode", "=", "kiosk"),
+                    ("self_ordering_mode", "=", "mobile"),
+                ],
+                limit=1,
+            )
+            > 0
+        )
+        return read_records
+
+    def close_session_from_ui(self, payment_method_closing={}):
+        result = super().close_session_from_ui(payment_method_closing)
+        self.config_id.notify_session_state_changed()
+        return result
+
+    def _set_opening_control_data(self, cashbox_value: int, notes: str):
+        super()._set_opening_control_data(cashbox_value, notes)
+        self.config_id.notify_session_state_changed()

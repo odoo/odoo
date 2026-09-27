@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_open_hr_employee_create_version_wizard" model="ir.actions.act_window">
+        <field name="name">New Employee Records</field>
+        <field name="res_model">hr.employee.create.version.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size': 'medium'}</field>
+    </record>
+
+    <record id="hr_employee_create_version_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.create.version.wizard.form</field>
+        <field name="model">hr.employee.create.version.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Employee Records">
+                <sheet>
+                    <div class="fs-5 me-2" >
+                        <p>
+                            This will create a new employee record for
+                            <field name="employee_count" nolabel="1" readonly="1" class="oe_inline"/>
+                            employees at the selected date.
+                        </p>
+                    </div>
+
+                    <group>
+                        <field name="date_version" string="Start date" placeholder="Choose a date"/>
+                    </group>
+
+                    <footer>
+                        <button
+                            name="action_create_versions"
+                            string="Create"
+                            type="object"
+                            class="btn btn-primary"
+                        />
+                        <button
+                            string="Discard"
+                            special="cancel"
+                            class="btn btn-secondary"
+                        />
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

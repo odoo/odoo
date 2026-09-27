@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.PhoneField">
+        <div class="d-inline-flex align-items-baseline w-100">
+            <t t-if="this.props.readonly">
+                <span t-out="this.value"/>
+                <t t-if="this.props.displayButtons" t-call="web.PhoneFieldActions"/>
+            </t>
+            <t t-else="">
+                <input
+                    class="o_input"
+                    t-att-id="this.props.id"
+                    type="tel"
+                    autocomplete="off"
+                    t-att-placeholder="this.props.placeholder"
+                    t-ref="this.inputRef"
+                />
+                <t t-if="this.props.displayButtons" t-call="web.PhoneFieldActions"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.PhoneFieldActions">
+        <span class="d-flex flex-nowrap">
+            <t t-foreach="this.actionButtons" t-as="btn" t-key="btn.name">
+                <t
+                    t-tag="btn.href ? 'a' : 'button'"
+                    t-if="this.value"
+                    t-att-href="btn.href"
+                    t-att-title="btn.name"
+                    t-on-click.prevent.stop="btn.onSelected"
+                    class="o_phone_form_link btn btn-light btn-sm text-nowrap d-inline-flex align-items-center py-0 ms-1"
+                >
+                    <i class="oi oi-filled" t-att-data-icon="btn.icon"/><small class="fw-bold ms-1 d-none d-md-inline"><t t-out="btn.name"/></small>
+                </t>
+            </t>
+        </span>
+    </t>
+
+</templates>

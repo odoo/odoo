@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sale_management.SaleManagementTemplateListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <button class="btn btn-primary o_list_button_add" position="replace">
+            <SaleTemplateDropdown
+                t-if="!this.env.inDialog and !this.editedRecord and this.activeActions.create"
+                newButtonClasses="'btn btn-primary o_list_button_add'"
+                record="this.model.root"
+            />
+        </button>
+    </t>
+</templates>

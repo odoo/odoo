@@ -1,0 +1,40 @@
+version = 1
+
+[formatters.singledb]
+class = "odoo.logging.ColoredFormatter"
+format = "%(asctime)s\t%(levelname)s\t%(dbname)s\t%(message)s"
+datefmt = "%Y-%m-%dT%H:%M:%S"
+
+[formatters.json]
+class = "odoo.logging.JSONFormatter"
+
+[handlers.console]
+class = "logging.StreamHandler"
+formatter = "singledb"
+level = "INFO"
+stream = "ext://sys.stderr"
+
+[handlers.json]
+class = "logging.handlers.WatchedFileHandler"
+formatter = "json"
+filename = "odoo.log"
+
+[handlers.buffer]
+class = "logging.handlers.MemoryHandler"
+target = "json"
+capacity = 10000
+
+[handlers.db]
+class = "odoo.logging.PostgreSQLHandler"
+log_db = "%d"
+level = "RUNBOT"
+
+[root]
+handlers = ["console", "buffer", "db"]
+level = "DEBUG"
+
+[loggers."odoo.sql_db"]
+level = "INFO"
+
+[loggers.werkzeug]
+level = "WARNING"

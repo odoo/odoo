@@ -1,0 +1,12 @@
+.o_snippet_preview_wrap {
+    .s_dynamic_snippet_category {
+        // Enforces a single-column layout and fixed row height for category
+        // cards in the snippet dialog's mobile preview for mobile devices.
+        @include media-breakpoint-down(md) {
+            .o_category_container {
+                --DynamicCategory-columns: 1 !important;
+                grid-auto-rows: minmax(40vh, auto) !important;
+            }
+        }
+    }
+}

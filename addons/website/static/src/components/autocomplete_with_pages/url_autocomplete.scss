@@ -1,0 +1,12 @@
+.o-autocomplete {
+    .ui-autocomplete-category > .dropdown-item:hover {
+        background-color: initial;
+        cursor: default;
+    }
+    &.ui-widget-content {
+        background-color: $dropdown-bg;
+        border: $dropdown-border-width solid $dropdown-border-color;
+        @include border-radius($dropdown-border-radius);
+        @include box-shadow($dropdown-box-shadow);
+    }
+}

@@ -1,0 +1,111 @@
+.o_select_menu {
+    &.o_select_menu_multi_select input {
+        flex: 1 0 50px;
+    }
+
+    .o_select_menu_toggler_clear {
+        transform: translateY(-50%);
+
+        &:hover i {
+            color: red;
+        }
+    }
+
+    .o_tag {
+        margin: 2px;
+    }
+
+    .o_select_menu_caret {
+        @include o-position-absolute($o-input-padding-y, $o-input-padding-x, $input-border-width);
+        visibility: hidden;
+
+        &:after {
+            @include o-caret-down;
+        }
+    }
+
+    &:hover, &:focus-within {
+        .o_select_menu_caret {
+            visibility: visible;
+        }
+    }
+
+    button .o_select_menu_caret {
+        right: 3px;
+    }
+
+    .form-select + .o_select_menu_caret {
+        display: none;
+    }
+
+    .badge {
+        .o_badge_text, .o_tag_badge_text {
+            @include o-text-overflow(inline-block);
+            max-width: var(--Tag-max-width, 200px);
+        }
+    }
+}
+
+.o_select_menu_menu {
+    background-color: $dropdown-bg;
+
+    .o_select_menu_searchbox {
+        background-color: $dropdown-bg;
+        position: relative;
+        padding: 5px;
+
+        input {
+            cursor: text !important;
+            height: $input-height;
+            padding-left: 20px;
+        }
+
+        &:before {
+            @include o-position-absolute($top: 50%, $left: map-get($spacers, 2));
+            transform: translateY(-50%);
+            content: "search";
+            font-family: 'Material Symbols Outlined';
+            line-height: 1;
+            opacity: .75;
+        }
+    }
+
+    .o_select_menu_group {
+        background-color: $dropdown-bg;
+        top: calc(var(--border-width) * -1);
+    }
+
+    .o_select_menu-choices {
+        padding: var(--SelectMenu-padding, 0);
+
+        > *:first-child {
+            margin-top: var(--SelectMenuItem-margin-y, 0.5rem);
+        }
+        > *:last-child {
+            margin-bottom: var(--SelectMenuItem-margin-y, 0.5rem);
+        }
+    }
+
+    &:not(.o_bottom_sheet) {
+        max-height: 300px;
+
+        .o-dropdown-item:before {
+            display: none;
+        }
+    }
+
+    .o_filtered_text {
+        background: var(--SelectMenu__filteredText-bg-color, none);
+        color: var(--SelectMenu__filteredText-color, #{map-get($theme-colors, "primary")});
+    }
+}
+
+.o_bottom_sheet .o_select_menu_menu {
+    padding: 0;
+
+    .dropdown-item {
+        font-weight: normal;
+        margin: 0 auto;
+        max-width: calc(100% - 2 * var(--offcanvas-padding-x));
+    }
+}

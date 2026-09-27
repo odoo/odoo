@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_property_form_l10n_kr" model="ir.ui.view">
+        <field name="name">res.partner.property.form.l10n_kr</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <group id="invoice_send_settings" position="inside">
+                <field name="l10n_kr_default_issuance_type" invisible="'KR' not in fiscal_country_codes"/>
+            </group>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_l10n_lk_vat_registered" model="ir.ui.view">
+        <field name="name">res.partner.form.l10n_lk_vat_registered</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_lk_vat_registered" string="VAT Registered" invisible="parent_id or 'LK' not in fiscal_country_codes"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

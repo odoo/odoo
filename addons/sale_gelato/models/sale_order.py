@@ -1,0 +1,248 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import logging
+import pprint
+
+from markupsafe import Markup
+
+from odoo import api, models
+from odoo.exceptions import UserError, ValidationError
+
+from odoo.addons.sale_gelato import utils
+
+_logger = logging.getLogger(__name__)
+
+
+class SaleOrder(models.Model):
+    _inherit = "sale.order"
+
+    # === COMPUTE METHODS === #
+
+    @api.depends("order_line.product_id")
+    def _compute_show_ship_button(self):
+        """Override of `sale` to hide the 'Deliver' button when the order holds Gelato products."""
+        super()._compute_show_ship_button()
+        for order in self:
+            if any(order.order_line.product_id.mapped("gelato_product_uid")):
+                order.show_ship_button = False
+
+    # === CRUD METHODS === #
+
+    def _prevent_mixing_gelato_and_non_gelato_products(self):
+        """Ensure that the order lines don't mix Gelato and non-Gelato products.
+
+        This method is not a constraint and is called from the `create` and `write` methods of
+        `sale.order.line` to cover the cases where adding/writing on order lines would not trigger a
+        constraint check (e.g., adding products through the Catalog).
+
+        :return: None
+        :raise ValidationError: If Gelato and non-Gelato products are mixed.
+        """
+        for order in self:
+            gelato_lines = order.order_line.filtered(
+                lambda line: line.product_id.gelato_product_uid
+            )
+            non_gelato_lines = (order.order_line - gelato_lines).filtered(
+                lambda line: line.product_id.sale_ok and line.product_id.type != "service"
+            )  # Filter out non-saleable (sections, etc.) and non-deliverable products.
+            if gelato_lines and non_gelato_lines:
+                raise ValidationError(
+                    order.env._(
+                        "You cannot mix Gelato products with non-Gelato products in the same order."
+                    )
+                )
+
+    # === ONCHANGE METHODS ===#
+
+    # Depend on partner_id to trigger the onchange if partner_shipping_id is not in the view.
+    @api.onchange("partner_id", "partner_shipping_id", "order_line")
+    def _onchange_gelato_validate_shipping_address(self):
+        """Warn if the address doesn't comply with Gelato requirements."""
+        for gelato_order in self.filtered(
+            lambda o: any(o.order_line.product_id.mapped("gelato_product_uid"))
+        ):
+            try:
+                gelato_order.partner_shipping_id._gelato_validate_address()
+            except ValidationError as e:
+                return {
+                    "warning": {
+                        "title": gelato_order.env._("The address is incorrect."),
+                        "message": str(e),
+                    }
+                }
+
+    # === ACTION METHODS === #
+
+    def action_open_delivery_wizard(self):
+        """Override of `delivery` to set a Gelato delivery method by default in the wizard."""
+        res = super().action_open_delivery_wizard()
+
+        if not self.env.context.get("carrier_recompute") and any(
+            line.product_id.gelato_product_uid for line in self.order_line
+        ):
+            gelato_delivery_method = self.env["delivery.carrier"].search(
+                [("delivery_type", "=", "gelato")], limit=1
+            )
+            res["context"]["default_carrier_id"] = gelato_delivery_method.id
+        return res
+
+    def action_confirm(self):
+        """Override of `sale` to send the order to Gelato on confirmation."""
+        res = super().action_confirm()
+        for order in self.filtered(
+            lambda o: any(o.order_line.product_id.mapped("gelato_product_uid"))
+        ):
+            shipping_address = order.partner_shipping_id
+            shipping_address._gelato_validate_address()
+            order._create_order_on_gelato()
+        return res
+
+    # === BUSINESS METHODS === #
+
+    def _create_order_on_gelato(self):
+        """Send the order creation request to Gelato and log the request result on the chatter.
+
+        :return: None
+        """
+        delivery_line = self.order_line.filtered(
+            lambda line: line.is_delivery and line.product_id.default_code in ("normal", "express")
+        )
+        payload = {
+            "orderType": "draft",  # The order is confirmed/deleted later, see @post_commit hooks.
+            "orderReferenceId": self.id,
+            "customerReferenceId": f"Odoo Partner #{self.partner_id.id}",
+            "currency": self.currency_id.name,
+            "items": self._gelato_prepare_items_payload(),
+            "shipmentMethodUid": delivery_line.product_id.default_code or "cheapest",
+            "shippingAddress": self.partner_shipping_id._gelato_prepare_address_payload(),
+        }
+        try:
+            api_key = self.company_id.sudo().gelato_api_key  # In sudo mode to read on the company.
+            data = utils.make_request(api_key, "order", "v4", "orders", payload=payload)
+
+            # Add hooks to confirm/delete the order on Gelato only after the transaction is
+            # committed/rolled back. This prevents creating duplicate confirmed orders on Gelato.
+            @self.env.cr.postcommit.add
+            def confirm_gelato():
+                with self.env.registry.cursor() as cr:
+                    order = self.with_env(self.env(cr=cr))
+                    order._confirm_order_on_gelato(data["id"])
+
+            @self.env.cr.postrollback.add
+            def delete_gelato():
+                with self.env.registry.cursor() as cr:
+                    order = self.with_env(self.env(cr=cr))
+                    order._delete_order_on_gelato(data["id"])
+        except UserError as exc:
+            raise UserError(
+                self.env._(
+                    "The order with reference %(order_reference)s was not sent to Gelato.\n"
+                    "Reason: %(error_message)s",
+                    order_reference=self.display_name,
+                    error_message=str(exc),
+                )
+            ) from exc
+
+        _logger.info("Notification received from Gelato with data:\n%s", pprint.pformat(data))
+        self.message_post(
+            body=self.env._("The order has been successfully passed on Gelato."),
+            author_id=self.env.ref("base.partner_root").id,
+        )
+
+    def _gelato_prepare_items_payload(self):
+        """Create the payload for the 'items' key of an 'orders' request.
+
+        :return: The items payload.
+        :rtype: dict
+        """
+        items_payload = []
+        for gelato_line in self.order_line.filtered(
+            lambda line: line.product_id.gelato_product_uid
+        ):
+            # Build the list of images to send as the set of defined variant images, plus the
+            # template images that are not overridden by variant images.
+            defined_variant_images = gelato_line.product_id.gelato_variant_image_ids.filtered("raw")
+            all_template_images = gelato_line.product_id.product_tmpl_id.gelato_image_ids
+            remaining_template_images = all_template_images.filtered(
+                lambda image: image.name not in defined_variant_images.mapped("name")
+            )
+            line_images = defined_variant_images | remaining_template_images
+
+            # Build the item payload.
+            item_data = {
+                "itemReferenceId": gelato_line.product_id.id,
+                "productUid": gelato_line.product_id.gelato_product_uid,
+                "files": [image._gelato_prepare_file_payload() for image in line_images],
+                "quantity": int(gelato_line.product_uom_qty),
+            }
+            items_payload.append(item_data)
+        return items_payload
+
+    def _confirm_order_on_gelato(self, gelato_order_id):
+        """Send the order confirmation request to Gelato.
+
+        This is performed in a separate transaction to allow running as post-commit hook.
+
+        :return: None
+        """
+        self.ensure_one()
+
+        _logger.info(
+            "Confirmation of Gelato order %s for sales order %s", gelato_order_id, self.display_name
+        )
+        data = None
+        try:
+            api_key = self.company_id.sudo().gelato_api_key  # In sudo mode to read on the company.
+            payload = {"orderType": "order"}  # Confirm the order (draft -> order).
+            data = utils.make_request(
+                api_key, "order", "v4", f"orders/{gelato_order_id}", payload=payload, method="PATCH"
+            )
+        except UserError as e:
+            self.message_post(
+                body=self.env._(
+                    "Unable to confirm the order %(order_reference)s on Gelato.%(error_message)s",
+                    order_reference=gelato_order_id,
+                    error_message=Markup("<br/>%s") % e,
+                ),
+                author_id=self.env.ref("base.partner_root").id,
+            )
+        finally:
+            _logger.info(
+                "Received confirmation request response for Gelato order %s:\n%s",
+                gelato_order_id,
+                pprint.pformat(data),
+            )
+
+    def _delete_order_on_gelato(self, gelato_order_id):
+        """Send the order deletion request to Gelato.
+
+        This is performed in a separate transaction to allow running as post-commit hook.
+
+        :return: None
+        """
+        self.ensure_one()
+
+        _logger.info(
+            "Deletion of Gelato order %s for sales order %s", gelato_order_id, self.display_name
+        )
+        data = None
+        try:
+            api_key = self.company_id.sudo().gelato_api_key  # In sudo mode to read on the company.
+            data = utils.make_request(
+                api_key, "order", "v4", f"orders/{gelato_order_id}", method="DELETE"
+            )
+        except UserError as e:
+            self.message_post(
+                body=self.env._(
+                    "Unable to delete the order %(order_reference)s on Gelato.%(error_message)s",
+                    order_reference=gelato_order_id,
+                    error_message=Markup("<br/>%s") % e,
+                ),
+                author_id=self.env.ref("base.partner_root").id,
+            )
+        finally:
+            _logger.info(
+                "Received deletion request response for Gelato order %s:\n%s",
+                gelato_order_id,
+                pprint.pformat(data),
+            )

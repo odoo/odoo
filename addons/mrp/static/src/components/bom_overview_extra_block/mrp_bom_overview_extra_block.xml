@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp.BomOverviewExtraBlock">
+        <BomOverviewSpecialLine
+            type="this.props.type"
+            isFolded="this.state.isFolded"
+            showOptions="this.props.showOptions"
+            data="this.props.data"
+            precision="this.props.precision"
+            toggleFolded.bind="this.onToggleFolded"/>
+
+        <t t-if="!this.state.isFolded" t-foreach="this.props.type == 'operations' ? this.props.data.operations : this.props.data.byproducts" t-as="extra_data" t-key="extra_data.index">
+            <BomOverviewLine
+                showOptions="this.props.showOptions"
+                data="extra_data"
+                precision="this.props.precision"
+                />
+        </t>
+    </t>
+
+</templates>

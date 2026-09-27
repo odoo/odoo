@@ -1,0 +1,178 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import datetime
+
+from odoo import Command
+from odoo.addons.mrp.tests.common import TestMrpCommon
+from odoo.tests import Form
+
+
+class TestWorkorder(TestMrpCommon):
+    _test_user_groups = (
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'mrp.group_mrp_manager',
+        'mrp.group_mrp_routings',  # view visibility (duration/workorder fields) granted to cls.env.user in Common
+        'mrp.group_mrp_byproducts',  # view visibility (byproducts) granted to mrp users in Common
+        'stock.group_stock_manager',  # setup: warehouse/route/rule/orderpoint/location/picking_type config in test bodies
+        'uom.group_uom',  # view visibility (uom_id) granted to cls.env.user in Common
+    )
+
+    _test_user_name = 'Test Product Manager'
+
+    def test_workorder_move_start_preserves_duration(self):
+        """Moving only the start date of a planned work order (e.g. through the
+        gantt edit dialog) must keep its expected duration and shift the end date,
+        rather than recomputing - and drifting - the duration from the new dates.
+
+        Changing the start date triggers _onchange_date_start, which recomputes the
+        end date from start + duration. That cascades into _onchange_date_finished,
+        which used to recompute the duration from the dates. plan_hours and
+        get_work_duration_data are not exact inverses when the stored (UTC) dates do
+        not line up with the calendar working hours, so the duration drifted (e.g.
+        180 -> 270 minutes). A non-UTC timezone is required to expose the drift: at
+        UTC the round trip is exact and the bug does not reproduce.
+        """
+        self.env.company.sudo().tz = 'Europe/Brussels'  # UTC+2
+        # Continuous 8:00-16:00 calendar with no overhead.
+        calendar = self.env['resource.calendar'].sudo().create({
+            'name': 'Continuous 8-16',
+            'attendance_ids': [Command.create({
+                'dayofweek': str(day), 'hour_from': 8.0, 'hour_to': 16.0,
+            }) for day in range(5)],
+        })
+        self.workcenter_1.write({
+            'time_efficiency': 100, 'time_start': 0, 'time_stop': 0,
+            'resource_calendar_id': calendar.id,
+        })
+        self.workcenter_1.capacity_ids.write({'time_start': 0, 'time_stop': 0})
+        mo = self.env['mrp.production'].create({
+            'product_id': self.bom_2.product_id.id,
+            'bom_id': self.bom_2.id,
+            'product_qty': 1,
+        })
+        mo.action_confirm()
+        wo = mo.workorder_ids[0]
+        wo.duration_expected = 180.0
+        wo.with_context(bypass_duration_calculation=True).write({
+            'date_start': datetime(2025, 6, 2, 8, 0, 0),  # 10:00 local
+            'date_finished': datetime(2025, 6, 2, 11, 0, 0),  # 13:00 local
+        })
+        # Move the start to a time that is not on the opening hour through the form.
+        with Form(wo) as wo_form:
+            wo_form.date_start = datetime(2025, 6, 2, 11, 30, 0)  # 13:30 local
+        self.assertEqual(wo.duration_expected, 180.0,
+                         "Moving the start date should not change the work order duration")
+        self.assertEqual(wo.date_finished, datetime(2025, 6, 3, 6, 30, 0),  # 8:30 local
+                         "End date should follow the start date for the same duration")
+
+    def test_workorder_operation_assignment(self):
+        """Test that moves aren't automatically assigned to the last workorder
+        when the quantity to produce (`product_qty`) is changed.
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_2
+        mo = mo_form.save()
+        mo.action_confirm()
+        wiz = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 5
+        })
+        wiz.change_prod_qty()
+        self.assertFalse(mo.workorder_ids[-1].move_raw_ids)
+
+    def test_workorder_in_progress_expected_duration(self):
+        """Test that in progress workorder duration are correctly adapted according to the
+        quantity to produce (`product_qty`).
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo = mo_form.save()
+        mo.action_confirm()
+        wo = mo.workorder_ids[0]
+        initial_duration = wo.duration_expected
+        wo.button_start()
+        wiz = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 2
+        })
+        wiz.change_prod_qty()
+        self.assertEqual(wo.duration_expected, wiz.product_qty * initial_duration)
+
+    def test_planning_respects_operation_dependencies(self):
+        """ Test that each workorder must start after all its blockers when button_plan is called.
+            opA
+            ├── opB  (leaf)
+            └── opC
+                └── opD  (leaf)
+        """
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'uom_id': self.product_6.uom_id.id,
+            'product_qty': 1.0,
+            'allow_operation_dependencies': True,
+            'operation_ids': [
+                Command.create({'name': 'opA', 'workcenter_id': self.workcenter_2.id, 'time_cycle': 60, 'sequence': 1}),
+                Command.create({'name': 'opB', 'workcenter_id': self.workcenter_2.id, 'time_cycle': 60, 'sequence': 2}),
+                Command.create({'name': 'opC', 'workcenter_id': self.workcenter_2.id, 'time_cycle': 60, 'sequence': 3}),
+                Command.create({'name': 'opD', 'workcenter_id': self.workcenter_2.id, 'time_cycle': 60, 'sequence': 4}),
+            ],
+            'bom_line_ids': [Command.create({'product_id': self.product_1.id, 'product_qty': 1})],
+        })
+        opA, opB, opC, opD = bom.operation_ids.sorted('sequence')
+        opB.blocked_by_operation_ids = [Command.link(opA.id)]
+        opC.blocked_by_operation_ids = [Command.link(opA.id)]
+        opD.blocked_by_operation_ids = [Command.link(opC.id)]
+
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+        })
+        mo.action_confirm()
+        mo.button_plan()
+
+        # Ensure workorders are scheduled respecting dependencies by checking
+        # the order of workorders when sorted by `date_start`.
+        wo_sorted = mo.workorder_ids.sorted('date_start')
+        self.assertRecordValues(
+            wo_sorted,
+            [
+                {'operation_id': opA.id},
+                {'operation_id': opB.id},
+                {'operation_id': opC.id},
+                {'operation_id': opD.id},
+            ],
+            field_names=['operation_id'],
+        )
+
+    def test_start_workorder_keeps_mo_planned(self):
+        """Starting a work order on a planned MO with several work orders must not
+        unplan the MO.
+        """
+        mo = self.env['mrp.production'].create({'bom_id': self.bom_3.id})
+        mo.action_confirm()
+        mo.button_plan()
+        self.assertTrue(mo.is_planned)
+
+        mo.workorder_ids.sorted('date_start')[0].button_start()
+        self.assertTrue(mo.is_planned, "Starting a work order must not unplan the MO")
+
+    def test_duplicate_mo_workorder_name_not_suffixed(self):
+        """
+        Duplicating a manufacturing order should keep its workorders' names
+        as-is: the generic "(copy)" suffix applied by default to 'name'
+        fields on copy should not apply to workorders.
+        """
+        self.bom_1.write({
+            'operation_ids': [
+                Command.create({'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'sequence': 1}),
+                Command.create({'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'sequence': 2}),
+            ],
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo_form.product_qty = 10
+        mo = mo_form.save()
+        mo.action_confirm()
+        original_names = mo.workorder_ids.mapped('name')
+        self.assertEqual(original_names, ['Cutting Machine', 'Weld Machine'])
+
+        mo_copy = mo.copy()
+        self.assertEqual(mo_copy.workorder_ids.mapped('name'), original_names)

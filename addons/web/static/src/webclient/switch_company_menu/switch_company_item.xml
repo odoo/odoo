@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="web.SwitchCompanyItem">
+    <span
+        class="d-flex o_switch_company_item dropdown-item p-0 w-100"
+        t-att-class="{
+            'disabled': !this.isCompanyAllowed,
+            'o-navigable': this.isCompanyAllowed,
+            'alert-light': this.isCompanySelected,
+            'bg-primary-subtle': this.isCurrent
+        }"
+        tabindex="0"
+        data-menu="company"
+        t-att-data-company-id="this.props.company.id"
+    >
+        <CheckBox
+            value="this.isCompanySelected"
+            onChange.bind="this.toggleCompany"
+            disabled="!this.isCompanyAllowed"
+            className="'ms-2 d-flex align-items-center bg-transparent'"
+            ariaLabel="this.props.company.name"
+            title="this.checkboxTitle"
+        />
+
+        <div
+            role="button"
+            t-att-aria-pressed="this.isCurrent ? 'true' : 'false'"
+            t-att-aria-label="'Switch to ' + this.props.company.name"
+            t-att-title="'Switch to ' + this.props.company.name"
+            class="d-flex flex-grow-1 align-items-center py-0 log_into ps-2 border-0"
+            t-att-class="{
+                'btn fw-normal': !this.isCurrent,
+                'btn-link text-primary': this.isCompanyAllowed,
+                'disabled': !this.isCompanyAllowed,
+            }"
+            t-on-click="() => this.logIntoCompany()"
+        >
+            <span
+                class="company_label text-body text-truncate"
+                t-attf-style="padding-left:{{this.props.level * 20}}px;">
+                <t t-out="this.props.company.name"/>
+            </span>
+        </div>
+    </span>
+</t>
+
+</templates>

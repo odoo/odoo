@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="mail_message_view_list" model="ir.ui.view">
+            <field name="name">mail.message.view.list.inherit.mail.tracking.sms</field>
+            <field name="model">mail.message</field>
+            <field name="inherit_id" ref="mail_tracking.mail_message_view_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='source_view_id']" position="after">
+                    <field name="source_mailing_id" optional="hide" string="Src Mailing"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mail_message_view_form" model="ir.ui.view">
+            <field name="name">mail.message.view.form.inherit.mail.tracking.sms</field>
+            <field name="model">mail.message</field>
+            <field name="inherit_id" ref="mail_tracking.mail_message_view_form_inherit_mail_tracking"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='source_view_id']" position="after">
+                    <field name="source_mailing_id" string="Src SMS Template"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mail_message_view_search" model="ir.ui.view">
+            <field name="name">mail.message.view.search.inherit.mail.tracking.sms</field>
+            <field name="model">mail.message</field>
+            <field name="inherit_id" ref="mail_tracking.mail_message_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='group_by_source_view_id']" position="after">
+                    <filter string="Mailing" name="group_by_source_mailing_id" domain="[]" context="{'group_by': 'source_mailing_id'}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

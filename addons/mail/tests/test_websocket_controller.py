@@ -1,0 +1,76 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from freezegun import freeze_time
+
+from odoo.http.session import SESSION_ROTATION_INTERVAL
+from odoo.tests import HttpCase, tagged
+
+from odoo.addons.bus.tests.common import BusCase
+from odoo.addons.mail.tests.common import mail_new_test_user
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
+class TestWebsocketController(HttpCase, BusCase):
+    def test_im_status_offline_on_websocket_closed(self):
+        self._reset_bus()
+        self.env["bus.bus"]._sendone("dummy", "dummy_notification", None)  # Subscribing with 0 would fallback to last id.
+        self.env.cr.precommit.run()  # Trigger bus record creation.
+        initial_last_id = self.env["bus.bus"]._bus_last_id()
+        test_user = mail_new_test_user(self.env, login="test_user", password="test_user")
+        self.authenticate(test_user.login, test_user.password)
+        self.env["mail.presence"]._update_presence(test_user)
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        self.env["bus.bus"].search([]).unlink()
+        self.make_jsonrpc_request("/websocket/on_closed", {})
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        presence_notif, self_notif = self.make_jsonrpc_request(
+            "/websocket/peek_notifications",
+            {
+                "channels": [f"odoo-presence-res.users_{test_user.id}"],
+                "last": initial_last_id,
+                "is_first_poll": True,
+            },
+        )["notifications"]
+        self.assertEqual(presence_notif["message"]["type"], "mail.record/insert")
+        self.assertEqual(presence_notif["message"]["payload"]["res.users"][0]["id"], test_user.id)
+        self.assertEqual(presence_notif["message"]["payload"]["res.users"][0]["im_status"], "offline")
+        self.assertEqual(self_notif["message"]["type"], "mail.record/insert")
+        self.assertEqual(self_notif["message"]["payload"]["res.users"][0]["id"], test_user.id)
+        self.assertEqual(self_notif["message"]["payload"]["res.users"][0]["presence_status"], "offline")
+
+    def test_guest_receives_its_channels_on_peek_notifications(self):
+        channel = self.env["discuss.channel"].create(
+            {"name": "General", "channel_type": "channel", "group_public_id": False}
+        )
+        guest = self.env["mail.guest"].create({"name": "Guest"})
+        channel._add_members(guests=guest)
+        self.opener.cookies[guest._cookie_name] = guest._format_auth_cookie()
+        result = self.make_jsonrpc_request(
+            "/websocket/peek_notifications",
+            {"channels": [], "last": 0, "is_first_poll": True},
+        )
+        self.assertIn([self.env.cr.dbname, "mail.guest", guest.id], result["channels"])
+        self.assertIn([self.env.cr.dbname, "discuss.channel", channel.id], result["channels"])
+
+    @freeze_time("2026-03-03", as_kwarg='clock')
+    def test_do_not_rotate_session_when_updating_presence(self, clock):
+        self.authenticate('admin', 'admin')
+        self.url_open('/odoo').raise_for_status()
+        original_session = self.opener.cookies['session_id']
+
+        clock.tick(SESSION_ROTATION_INTERVAL + 1)
+        self.make_jsonrpc_request('/websocket/peek_notifications', {
+            'channels': [],
+            'last': 0,
+            'is_first_poll': True,
+        })
+        self.make_jsonrpc_request('/websocket/update_bus_presence', {
+            'inactivity_period': 0,
+        })
+        self.assertEqual(self.opener.cookies['session_id'], original_session,
+            "Session rotation must not occur at the websocket routes "
+            "that are re-exposed on HTTP for convenience.")
+
+        self.url_open('/odoo').raise_for_status()
+        self.assertNotEqual(self.opener.cookies['session_id'], original_session,
+            "Session rotation should occur with other URLs.")

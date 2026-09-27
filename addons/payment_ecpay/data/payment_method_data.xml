@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- https://developers.ecpay.com.tw/16633/ -->
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_bank_transfer" model="payment.method">
+        <field name="name">Bank Transfer</field>
+        <field name="code">bank_transfer</field>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.TWD')])]"/>
+    </record>
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.TWD')])]"/>
+    </record>
+
+    <record id="payment_method_cvs" model="payment.method">
+        <field name="name">CVS</field>
+        <field name="code">cvs</field>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/cvs.png"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.TWD')])]"/>
+    </record>
+
+    <record id="payment_method_mobile_wallet" model="payment.method">
+        <field name="name">Mobile Wallet</field>
+        <field name="code">mobile_wallet</field>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/wallet.png"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.TWD')])]"/>
+    </record>
+
+    <record id="payment_method_twqr" model="payment.method">
+        <field name="name">TWQR</field>
+        <field name="code">twqr</field>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/twqr.png"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.TWD')])]"/>
+    </record>
+
+    <record id="payment_method_wechat_pay" model="payment.method">
+        <field name="name">WeChat Pay</field>
+        <field name="code">wechat_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/wechat_pay.png"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.TWD')])]"/>
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+
+    <record id="payment_method_7eleven" model="payment.method">
+        <field name="name">7Eleven</field>
+        <field name="code">7eleven</field>
+        <field name="primary_payment_method_id" eval="ref('payment_ecpay.payment_method_cvs')"/>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/7eleven.png"/>
+    </record>
+
+    <record id="payment_method_family_mart" model="payment.method">
+        <field name="name">Family Mart</field>
+        <field name="code">family_mart</field>
+        <field name="primary_payment_method_id" eval="ref('payment_ecpay.payment_method_cvs')"/>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/family_mart.png"/>
+    </record>
+
+    <record id="payment_method_hi_life" model="payment.method">
+        <field name="name">Hi-Life</field>
+        <field name="code">hi_life</field>
+        <field name="primary_payment_method_id" eval="ref('payment_ecpay.payment_method_cvs')"/>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/hi_life.png"/>
+    </record>
+
+    <record id="payment_method_ipass_money" model="payment.method">
+        <field name="name">iPASS Money</field>
+        <field name="code">ipass_money</field>
+        <field name="primary_payment_method_id" eval="ref('payment_ecpay.payment_method_mobile_wallet')"/>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/ipass_money.png"/>
+    </record>
+
+    <record id="payment_method_jcb" model="payment.method">
+        <field name="name">JCB</field>
+        <field name="code">jcb</field>
+        <field name="primary_payment_method_id" eval="ref('payment_ecpay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/jcb.png"/>
+    </record>
+
+    <record id="payment_method_jkopay" model="payment.method">
+        <field name="name">Jkopay</field>
+        <field name="code">jkopay</field>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_ecpay.payment_method_mobile_wallet')"
+        />
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/jkopay.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_ecpay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_ok_mart" model="payment.method">
+        <field name="name">OK Mart</field>
+        <field name="code">ok_mart</field>
+        <field name="primary_payment_method_id" eval="ref('payment_ecpay.payment_method_cvs')"/>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/ok_mart.png"/>
+    </record>
+
+    <record id="payment_method_unionpay" model="payment.method">
+        <field name="name">UnionPay</field>
+        <field name="code">unionpay</field>
+        <field name="primary_payment_method_id" eval="ref('payment_ecpay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/unionpay.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_ecpay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_ecpay"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>

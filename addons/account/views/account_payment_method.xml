@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_payment_method_line_tree" model="ir.ui.view">
+        <field name="name">account.payment.method.line.list</field>
+        <field name="model">account.payment.method.line</field>
+        <field name="arch" type="xml">
+            <list edit="0">
+                <field name="name" string="Payment Method Name"/>
+                <field name="journal_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_payment_method_line_kanban_mobile" model="ir.ui.view">
+        <field name="name">account.payment.method.line.kanban</field>
+        <field name="model">account.payment.method.line</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <t t-name="card">
+                    <field name="display_name"/>
+                </t>
+            </kanban>
+        </field>
+    </record>
+
+</odoo>

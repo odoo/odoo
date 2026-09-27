@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_payment_receipt_document">
+        <t t-set="o" t-value="o.with_context(lang=lang)"/>
+        <t t-call="web.external_layout" o="o">
+            <t t-set="values" t-value="o._get_payment_receipt_report_values()"/>
+            <div class="page">
+                <h3><strong><span t-field="o.payment_receipt_title">Payment Receipt</span>: <span t-field="o.name">INV0001</span></strong></h3>
+
+                <div class="mb-4 mt-3">
+                    <div class="oe_structure"></div>
+                    <div class="row">
+                        <div class="col-6" t-if="o.partner_type">
+                            <div>
+                                <t t-if="o.partner_type == 'customer'">Customer:</t>
+                                <t t-else="o.partner_type == 'supplier'">Vendor:</t>
+                                <span t-field="o.partner_id" data-oe-demo="Marc Demo"/>
+                            </div>
+                            <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
+                        </div>
+                        <div class="col-6">
+                            <div t-if="o.date">
+                                Payment Date: <span t-field="o.date">2026-01-01</span>
+                            </div>
+                            <div t-if="o.amount">
+                                Payment Amount: <span t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}">50 USD</span>
+                            </div>
+                            <div name="payment_method"
+                                 t-if="values['display_payment_method'] and o.payment_method_line_id">
+                                Payment Method: <span t-field="o.payment_method_line_id.name">Credit card</span>
+                            </div>
+                            <div t-if="o.memo">
+                                Memo: <span t-field="o.memo">Sample Memo</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oe_structure"></div>
+                </div>
+
+                <div class="oe_structure"></div>
+                <table name="invoices"
+                       t-if="values['display_invoices']"
+                       class="table table-borderless">
+                    <t t-set="invoices" t-value="o.reconciled_invoice_ids or o.reconciled_bill_ids"/>
+                    <t t-set="inv_to_rows" t-value="{inv.id: inv._get_reconciled_invoices_partials_for_receipt() for inv in invoices}"/>
+                    <!-- Check if invoices include different currencies -->
+                    <t t-set="otherCurrency" t-value="any(row['currency_payment'] and inv.currency_id != row['currency_payment'] for inv in invoices for row in inv_to_rows[inv.id])"/>
+                    <thead>
+                        <tr>
+                            <th><span>Invoice Date</span></th>
+                            <th><span>Invoice Number</span></th>
+                            <th><span>Reference</span></th>
+                            <!-- Add a column if there are different currencies -->
+                            <th t-if="otherCurrency" class="text-end"><span>Amount In Currency</span></th>
+                            <th class="text-end"><span>Amount</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="invoices" t-as="inv">
+                            <!-- MOVE -->
+                            <t t-if="inv.move_type != 'entry'">
+                                <tr>
+                                    <td><span t-field="inv.invoice_date">2023-01-01</span></td>
+                                    <td><span t-field="inv.name">INV001</span></td>
+                                    <td><span t-field="inv.ref" data-oe-demo="Sample Ref"/></td>
+                                    <td t-if="otherCurrency"/>
+                                    <td class="text-end"><span t-field="inv.amount_total">100.00 USD</span></td>
+                                </tr>
+                                <!-- PAYMENTS/REVERSALS -->
+                                <tr t-foreach="inv_to_rows[inv.id]" t-as="row">
+                                    <td><span t-if="row['date']" t-out="row['date']" t-options="{'widget': 'date'}">2023-01-05</span></td>
+                                    <td><span t-out="row['name']">PAY001</span></td>
+                                    <td><span t-if="row['ref']" t-out="row['ref']" data-oe-demo="Payment Ref"/></td>
+                                    <!-- Fill the column "Amount In Currency" only if necessary -->
+                                    <td t-if="otherCurrency" class="text-end"><span t-if="row['currency_payment'] and row['currency_payment'] != row['currency_invoice']" t-out="row['amount_payment']" t-options="{'widget': 'monetary', 'display_currency': row['currency_payment']}">50.00 EUR</span></td>
+                                    <td class="text-end"><span t-out="row['amount_invoice']" t-options="{'widget': 'monetary', 'display_currency': row['currency_invoice']}">25.00 USD</span></td>
+                                </tr>
+                                <!-- BALANCE -->
+                                <tr>
+                                    <td/>
+                                    <td><strong>Due Amount for <span t-field="inv.name">INV001</span></strong></td>
+                                    <td/>
+                                    <td t-if="otherCurrency"/>
+                                    <td class="text-end"><strong><span t-field="inv.amount_residual">25.0 USD</span></strong></td>
+                                </tr>
+                            </t>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+            <div class="oe_structure"></div>
+        </t>
+    </template>
+
+    <template id="report_payment_receipt">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang or o.company_id.partner_id.lang"/>
+                <t t-call="account.report_payment_receipt_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

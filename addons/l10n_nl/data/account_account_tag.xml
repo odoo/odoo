@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Account Tags -->
+        <record id="account_tag_1" model="account.account.tag">
+            <field name="name">Wages and salaries</field>
+            <field name="name@nl">Lonen en salarissen</field>
+            <field name="name@de">Löhne und Gehälter</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_2" model="account.account.tag">
+            <field name="name">Accommodation costs</field>
+            <field name="name@nl">Huisvestingskosten</field>
+            <field name="name@de">Unterbringungskosten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_3" model="account.account.tag">
+            <field name="name">Financial fixed assets</field>
+            <field name="name@nl">Financiële vaste activa</field>
+            <field name="name@de">Finanzanlagen</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_4" model="account.account.tag">
+            <field name="name">Stocks</field>
+            <field name="name@nl">Voorraden</field>
+            <field name="name@de">Bestände</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_5" model="account.account.tag">
+            <field name="name">Office costs</field>
+            <field name="name@nl">Kantoorkosten</field>
+            <field name="name@de">Bürokosten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_6" model="account.account.tag">
+            <field name="name">Transport costs</field>
+            <field name="name@nl">Vervoerskosten</field>
+            <field name="name@de">Transportkosten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_7" model="account.account.tag">
+            <field name="name">Cost of sales</field>
+            <field name="name@nl">Verkoopkosten</field>
+            <field name="name@de">Verkaufskosten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_8" model="account.account.tag">
+            <field name="name">General expenses</field>
+            <field name="name@nl">Algemene Kosten</field>
+            <field name="name@de">Allgemeine Kosten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_9" model="account.account.tag">
+            <field name="name">Shareholders' equity</field>
+            <field name="name@nl">Eigen vermogen</field>
+            <field name="name@de">Eigenkapital</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_10" model="account.account.tag">
+            <field name="name">Cost of Goods Sold</field>
+            <field name="name@nl">Kostprijs van de omzet</field>
+            <field name="name@de">Herstellkosten des Umsatzes</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_11" model="account.account.tag">
+            <field name="name">Net turnover</field>
+            <field name="name@nl">Netto-omzet</field>
+            <field name="name@de">Nettoumsatz</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_12" model="account.account.tag">
+            <field name="name">Result on other assets</field>
+            <field name="name@nl">Resultaat overige activa</field>
+            <field name="name@de">Ergebnis aus sonstigen Vermögenswerten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_13" model="account.account.tag">
+            <field name="name">Other current liabilities</field>
+            <field name="name@nl">Overige kortlopende schulden</field>
+            <field name="name@de">Sonstige kurzfristige Verbindlichkeiten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_14" model="account.account.tag">
+            <field name="name">Provisions</field>
+            <field name="name@nl">Voorzieningen</field>
+            <field name="name@de">Rückstellungen</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_15" model="account.account.tag">
+            <field name="name">Non-current liabilities</field>
+            <field name="name@nl">Langlopende schulden</field>
+            <field name="name@de">Langfristige Verbindlichkeiten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_16" model="account.account.tag">
+            <field name="name">Other operating income</field>
+            <field name="name@nl">Overige bedrijfsopbrengsten</field>
+            <field name="name@de">Sonstige betriebliche Erträge</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_17" model="account.account.tag">
+            <field name="name">Intangible assets</field>
+            <field name="name@nl">Immateriële vaste activa</field>
+            <field name="name@de">Immaterielle Vermögenswerte</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_18" model="account.account.tag">
+            <field name="name">Social charges</field>
+            <field name="name@nl">Sociale lasten</field>
+            <field name="name@de">Sozialabgaben</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_19" model="account.account.tag">
+            <field name="name">Other personnel costs</field>
+            <field name="name@nl">Overige personeelskosten</field>
+            <field name="name@de">Sonstige Personalkosten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_20" model="account.account.tag">
+            <field name="name">Pension charges</field>
+            <field name="name@nl">Pensioenlasten</field>
+            <field name="name@de">Pensionskosten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_21" model="account.account.tag">
+            <field name="name">Depreciation of property, plant and equipment</field>
+            <field name="name@nl">Afschrijving materiële vaste activa</field>
+            <field name="name@de">Abschreibung von Sachanlagen</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_22" model="account.account.tag">
+            <field name="name">Amortisation of intangible assets</field>
+            <field name="name@nl">Afschrijving immateriële vaste activa</field>
+            <field name="name@de">Abschreibung von immateriellen Vermögenswerten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_23" model="account.account.tag">
+            <field name="name">Property, plant and equipment</field>
+            <field name="name@nl">Materiële vaste activa</field>
+            <field name="name@de">Sachanlagen</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_24" model="account.account.tag">
+            <field name="name">Securities</field>
+            <field name="name@nl">Effecten</field>
+            <field name="name@de">Wertpapiere</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_25" model="account.account.tag">
+            <field name="name">Cash at bank and in hand</field>
+            <field name="name@nl">Liquide middelen</field>
+            <field name="name@de">Kassenbestand und Bankguthaben</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_26" model="account.account.tag">
+            <field name="name">Distribution costs</field>
+            <field name="name@nl">Distributiekosten</field>
+            <field name="name@de">Vertriebskosten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_27" model="account.account.tag">
+            <field name="name">Receivables</field>
+            <field name="name@nl">Vorderingen</field>
+            <field name="name@de">Forderungen</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_28" model="account.account.tag">
+            <field name="name">Suspense accounts</field>
+            <field name="name@nl">Tussenrekeningen</field>
+            <field name="name@de">Zwischenkonten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_29" model="account.account.tag">
+            <field name="name">Error account</field>
+            <field name="name@nl">Foutenrekening</field>
+            <field name="name@de">Fehler: Konto</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_30" model="account.account.tag">
+            <field name="name">Interest income</field>
+            <field name="name@nl">Rente baten</field>
+            <field name="name@de">Zinserträge</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_31" model="account.account.tag">
+            <field name="name">Interest and other financial charges</field>
+            <field name="name@nl">Rente- en overige financiële lasten</field>
+            <field name="name@de">Zinsen und sonstige Finanzaufwendungen</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_32" model="account.account.tag">
+            <field name="name">Taxes &#38; social charges</field>
+            <field name="name@nl">Belastingen &amp; sociale lasten</field>
+            <field name="name@de">Steuern und Sozialabgaben</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="account_tag_33" model="account.account.tag">
+            <field name="name">Taxes</field>
+            <field name="name@nl">Belastingen</field>
+            <field name="name@de">Steuern</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+
+        <!-- Tags for BS tags report -->
+        <record id="account_tag_immat" model="account.account.tag">
+            <field name="name">Intangible Fixed Asset</field>
+            <field name="name@nl">Immateriële vaste activa</field>
+            <field name="name@de">Immaterielle Sachanlage</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_fin" model="account.account.tag">
+            <field name="name">Financial Fixed Active</field>
+            <field name="name@nl">Financiële vaste activa</field>
+            <field name="name@de">Finanzanlage</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_cap" model="account.account.tag">
+            <field name="name">Paid-up and Called-up Capital</field>
+            <field name="name@nl">Gestort en opgevraagd kapitaal</field>
+            <field name="name@de">Eingezahltes und eingefordertes Kapital</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_premium" model="account.account.tag">
+            <field name="name">Premium</field>
+            <field name="name@nl">Premie</field>
+            <field name="name@de">Prämie</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_revaluation_res" model="account.account.tag">
+            <field name="name">Revaluation reserve</field>
+            <field name="name@nl">Herwaarderingsreserve</field>
+            <field name="name@de">Neubewertungsrücklage</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_legal_res" model="account.account.tag">
+            <field name="name">Legal and Statutory Reserves</field>
+            <field name="name@nl">Wettelijke en statutaire reserves</field>
+            <field name="name@de">Gesetzliche und satzungsmäßige Rücklagen</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_other_res" model="account.account.tag">
+            <field name="name">Other Reserves</field>
+            <field name="name@nl">Overige reserves</field>
+            <field name="name@de">Sonstige Rücklagen</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_undist_profit" model="account.account.tag">
+            <field name="name">Undistributed Profit</field>
+            <field name="name@nl">Onverdeelde winst</field>
+            <field name="name@de">Nicht ausgeschütteter Gewinn</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_prev_years_earnings" model="account.account.tag">
+            <field name="name">Previous Years Profit</field>
+            <field name="name@nl">Winst van voorgaande jaren</field>
+            <field name="name@de">Gewinn des Vorjahres</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_long_debt" model="account.account.tag">
+            <field name="name">Long-term liabilities</field>
+            <field name="name@nl">Langlopende verplichtingen</field>
+            <field name="name@de">Langfristige Verbindlichkeiten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_sh_debt" model="account.account.tag">
+            <field name="name">Current Liabilities</field>
+            <field name="name@nl">Kortlopende verplichtingen</field>
+            <field name="name@de">Kurzfristige Verbindlichkeiten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_cred" model="account.account.tag">
+            <field name="name">Creditors</field>
+            <field name="name@nl">Crediteuren</field>
+            <field name="name@de">Kreditoren</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+
+        <!-- Tags for PL tags report -->
+        <record id="account_tag_net" model="account.account.tag">
+            <field name="name">Net sales</field>
+            <field name="name@nl">Nettoverkoop</field>
+            <field name="name@de">Nettoverkäufe</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_hous" model="account.account.tag">
+            <field name="name">Housing costs</field>
+            <field name="name@nl">Huisvestingskosten</field>
+            <field name="name@de">Wohnkosten</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+        <record id="account_tag_reso" model="account.account.tag">
+            <field name="name">Result other assets</field>
+            <field name="name@nl">Resultaat overige activa</field>
+            <field name="name@de">Ergebnis sonstiger Vermögenswerte</field>
+            <field name="applicability">accounts</field>
+            <field name="country_id" ref="base.nl"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_project_act_window_sms_composer" model="ir.actions.act_window">
+        <field name="name">Send SMS</field>
+        <field name="res_model">sms.composer</field>
+        <field name="group_ids" eval="[(4,ref('project.group_project_manager'))]"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_composition_mode': 'mass',
+            'default_mass_keep_log': True,
+            'default_res_ids': active_ids,
+        }</field>
+        <field name="binding_model_id" ref="model_project_project"/>
+        <field name="binding_view_types">list,kanban</field>
+    </record>
+</odoo>

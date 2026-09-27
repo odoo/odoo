@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="mail_canned_response_data_hello" model="mail.canned.response">
+            <field name="source">hello</field>
+            <field name="substitution">Hello, how may I help you?</field>
+            <field name="group_ids" eval="[(6, 0, [ref('base.group_user')])]"/>
+        </record>
+
+    </data>
+</odoo>

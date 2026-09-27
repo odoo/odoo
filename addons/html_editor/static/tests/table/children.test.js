@@ -1,0 +1,1369 @@
+import { findInSelection } from "@html_editor/utils/selection";
+import { describe, expect, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
+import { setupEditor, testEditor } from "../_helpers/editor";
+import { unformat } from "../_helpers/format";
+import { undo } from "../_helpers/user_actions";
+import { getContent } from "../_helpers/selection";
+
+function addRow(position, rowsToAdd = 1) {
+    return (editor) => {
+        const selection = editor.shared.selection.getEditableSelection();
+        editor.shared.table.addRow(position, findInSelection(selection, "tr"), rowsToAdd);
+    };
+}
+
+function addColumn(position, columnsToAdd = 1) {
+    return (editor) => {
+        const selection = editor.shared.selection.getEditableSelection();
+        editor.shared.table.addColumn(position, findInSelection(selection, "td, th"), columnsToAdd);
+    };
+}
+
+function turnIntoHeader(row) {
+    return (editor) => {
+        if (!row) {
+            const selection = editor.shared.selection.getEditableSelection();
+            row = findInSelection(selection, "tr");
+        }
+        editor.shared.table.turnIntoHeader(row);
+    };
+}
+
+function turnIntoRow(row) {
+    return (editor) => {
+        if (!row) {
+            const selection = editor.shared.selection.getEditableSelection();
+            row = findInSelection(selection, "tr");
+        }
+        editor.shared.table.turnIntoRow(row);
+    };
+}
+
+function moveColumn(targetIndex, cell) {
+    return (editor) => {
+        if (!cell) {
+            const selection = editor.shared.selection.getEditableSelection();
+            cell = findInSelection(selection, "td, th");
+        }
+        editor.shared.table.moveColumn(targetIndex, cell);
+    };
+}
+
+function moveRow(targetIndex, row) {
+    return (editor) => {
+        if (!row) {
+            const selection = editor.shared.selection.getEditableSelection();
+            row = findInSelection(selection, "tr");
+        }
+        editor.shared.table.moveRow(targetIndex, row);
+    };
+}
+
+function removeRow(row) {
+    return (editor) => {
+        if (!row) {
+            const selection = editor.shared.selection.getEditableSelection();
+            row = findInSelection(selection, "tr");
+        }
+        editor.shared.table.removeRow(row);
+    };
+}
+
+function removeColumn(cell) {
+    return (editor) => {
+        if (!cell) {
+            const selection = editor.shared.selection.getEditableSelection();
+            cell = findInSelection(selection, "td, th");
+        }
+        editor.shared.table.removeColumn(cell);
+    };
+}
+
+describe("row", () => {
+    describe("convert", () => {
+        test("should convert the first row to table header", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <td style="width: 20px;">ab[]</td>
+                                <td style="width: 25px;">cd</td>
+                                <td style="width: 30px;">ef</td>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: turnIntoHeader(),
+                contentAfter: unformat(`
+                    <table>
+                        <colgroup>
+                            <col style="width: 20px;">
+                            <col style="width: 25px;">
+                            <col style="width: 30px;">
+                        </colgroup>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <th class="o_table_header">ab[]</th>
+                                <th class="o_table_header">cd</th>
+                                <th class="o_table_header">ef</th>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+
+        test("should convert table header to normal row", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <td style="width: 20px;">ab[]</td>
+                                <td style="width: 25px;">cd</td>
+                                <td style="width: 30px;">ef</td>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: turnIntoRow(),
+                contentAfter: unformat(`
+                    <table>
+                        <colgroup>
+                            <col style="width: 20px;">
+                            <col style="width: 25px;">
+                            <col style="width: 30px;">
+                        </colgroup>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <td>ab[]</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+    });
+
+    describe("above", () => {
+        test("should add a row above the top row", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table><tbody><tr style="height: 20px;">' +
+                    '<td style="width: 20px;">ab</td>' +
+                    '<td style="width: 25px;">cd</td>' +
+                    '<td style="width: 30px;">ef[]</td>' +
+                    "</tr></tbody></table>",
+                stepFunction: addRow("before"),
+                contentAfter:
+                    "<table>" +
+                    "<colgroup>" +
+                    '<col style="width: 20px;">' +
+                    '<col style="width: 25px;">' +
+                    '<col style="width: 30px;">' +
+                    "</colgroup>" +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "</tr>" +
+                    '<tr style="height: 20px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef[]</td>" +
+                    "</tr></tbody></table>",
+            });
+        });
+
+        test("should add a row above the middle row", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table><tbody><tr style="height: 20px;">' +
+                    '<td style="width: 20px;">ab</td>' +
+                    '<td style="width: 25px;">cd</td>' +
+                    '<td style="width: 30px;">ef</td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef[]</td>" +
+                    "</tr></tbody></table>",
+                stepFunction: addRow("before"),
+                contentAfter:
+                    "<table>" +
+                    "<colgroup>" +
+                    '<col style="width: 20px;">' +
+                    '<col style="width: 25px;">' +
+                    '<col style="width: 30px;">' +
+                    "</colgroup>" +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef[]</td>" +
+                    "</tr></tbody></table>",
+            });
+        });
+
+        test("should add two rows above the top row and preserve widths", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody>" +
+                    '<tr style="height: 20px;">' +
+                    '<td style="width: 20px;">ab</td>' +
+                    '<td style="width: 25px;">cd</td>' +
+                    '<td style="width: 30px;">ef[]</td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>gh</td>" +
+                    "<td>ij</td>" +
+                    "<td>kl</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+                stepFunction: addRow("before", 2),
+                contentAfter:
+                    "<table>" +
+                    "<colgroup>" +
+                    '<col style="width: 20px;">' +
+                    '<col style="width: 25px;">' +
+                    '<col style="width: 30px;">' +
+                    "</colgroup>" +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "</tr>" +
+                    '<tr style="height: 20px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "</tr>" +
+                    '<tr style="height: 20px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef[]</td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>gh</td>" +
+                    "<td>ij</td>" +
+                    "<td>kl</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+            });
+        });
+        test("should add two rows below the bottom row", async () => {
+            await testEditor({
+                contentBefore:
+                    "<table><tbody>" +
+                    '<tr style="height: 20px;">' +
+                    '<td style="width: 20px;">ab</td>' +
+                    '<td style="width: 25px;">cd</td>' +
+                    '<td style="width: 30px;">ef</td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>gh</td>" +
+                    "<td>ij</td>" +
+                    "<td>kl[]</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+                stepFunction: addRow("after", 2),
+                contentAfter:
+                    "<table>" +
+                    "<colgroup>" +
+                    '<col style="width: 20px;">' +
+                    '<col style="width: 25px;">' +
+                    '<col style="width: 30px;">' +
+                    "</colgroup>" +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>gh</td>" +
+                    "<td>ij</td>" +
+                    "<td>kl[]</td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+            });
+        });
+    });
+
+    describe("below", () => {
+        test("should add a row below the bottom row", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table><tbody><tr style="height: 20px;">' +
+                    '<td style="width: 20px;">ab</td>' +
+                    '<td style="width: 25px;">cd</td>' +
+                    '<td style="width: 30px;">ef[]</td>' +
+                    "</tr></tbody></table>",
+                stepFunction: addRow("after"),
+                contentAfter:
+                    "<table>" +
+                    "<colgroup>" +
+                    '<col style="width: 20px;">' +
+                    '<col style="width: 25px;">' +
+                    '<col style="width: 30px;">' +
+                    "</colgroup>" +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef[]</td>" +
+                    "</tr>" +
+                    '<tr style="height: 20px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "</tr></tbody></table>",
+            });
+        });
+
+        test("should add a row below the middle row", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table><tbody><tr style="height: 20px;">' +
+                    '<td style="width: 20px;">ab</td>' +
+                    '<td style="width: 25px;">cd</td>' +
+                    '<td style="width: 30px;">ef[]</td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+                stepFunction: addRow("after"),
+                contentAfter:
+                    "<table>" +
+                    "<colgroup>" +
+                    '<col style="width: 20px;">' +
+                    '<col style="width: 25px;">' +
+                    '<col style="width: 30px;">' +
+                    "</colgroup>" +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef[]</td>" +
+                    "</tr>" +
+                    '<tr style="height: 20px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+            });
+        });
+    });
+
+    describe("move", () => {
+        test("should move header row down and convert it to normal row", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <th class="o_table_header" style="width: 20px;">ab[]</th>
+                                <th class="o_table_header" style="width: 25px;">cd</th>
+                                <th class="o_table_header" style="width: 30px;">ef</th>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>gh</td>
+                                <td>ij</td>
+                                <td>kl</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: moveRow(1),
+                contentAfter: unformat(`
+                    <table>
+                        <colgroup>
+                            <col style="width: 20px;">
+                            <col style="width: 25px;">
+                            <col style="width: 30px;">
+                        </colgroup>
+                        <tbody>
+                            <tr style="height: 30px;">
+                                <th class="o_table_header">gh</th>
+                                <th class="o_table_header">ij</th>
+                                <th class="o_table_header">kl</th>
+                            </tr>
+                            <tr style="height: 20px;">
+                                <td>ab[]</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+
+        test("should move second row up and convert it to header row", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <th class="o_table_header" style="width: 20px;">ab</th>
+                                <th class="o_table_header" style="width: 25px;">cd</th>
+                                <th class="o_table_header" style="width: 30px;">ef</th>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>gh</td>
+                                <td>ij</td>
+                                <td>kl[]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: moveRow(0),
+                contentAfter: unformat(`
+                    <table>
+                        <colgroup>
+                            <col style="width: 20px;">
+                            <col style="width: 25px;">
+                            <col style="width: 30px;">
+                        </colgroup>
+                        <tbody>
+                            <tr style="height: 30px;">
+                                <th class="o_table_header">gh</th>
+                                <th class="o_table_header">ij</th>
+                                <th class="o_table_header">kl[]</th>
+                            </tr>
+                            <tr style="height: 20px;">
+                                <td>ab</td>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+    });
+
+    describe("removal", () => {
+        test("should remove a row based on selection", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]ab</td> <td>cd</td>
+                            </tr>
+                            <tr>
+                                <td>ef</td> <td>gh</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: removeRow(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ef[]</td><td>gh</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should remove the row passed as argument", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]ab</td> <td>cd</td>
+                            </tr>
+                            <tr>
+                                <td>ef</td> <td>gh</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    // Select the second row
+                    const row = editor.editable.querySelectorAll("tr")[1];
+                    removeRow(row)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab[]</td><td>cd</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should remove the table upon sole row removal", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]ab</td> <td>cd</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                contentBeforeEdit: unformat(
+                    `<p data-selection-placeholder=""><br></p>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]ab</td> <td>cd</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`
+                ),
+                stepFunction: removeRow(),
+                contentAfter: "<p>[]<br></p>",
+            });
+        });
+        test("should remove column intersecting rowspan without breaking table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a</td><td rowspan="3"><p><br></p></td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td>d</td><td>e</td>
+                            </tr>
+                            <tr>
+                                <td>f</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    // Select the second row
+                    const row = editor.editable.querySelectorAll("tr")[1];
+                    removeRow(row)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a</td><td rowspan="2"><p><br></p></td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td>f[]</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should remove column intersecting muliple rowspan without breaking table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3">[]5</td>
+                                <td rowspan="3">6</td>
+                                <td>7</td>
+                                <td>8</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">9</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    // Select the second row
+                    const row = editor.editable.querySelectorAll("tr")[1];
+                    removeRow(row)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><p>[]<br></p></td>
+                                <td rowspan="2"><p><br></p></td>
+                                <td rowspan="2">9</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should remove the entire table when removing a row from a table where all cells have rowspan", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td rowspan="3">a</td><td rowspan="3">b</td><td rowspan="3">c</td>
+                            </tr>
+                            <tr></tr>
+                            <tr></tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    const row = editor.editable.querySelectorAll("tr")[0];
+                    removeRow(row)(editor);
+                },
+                contentAfter: "<p>[]<br></p>",
+            });
+        });
+    });
+});
+
+describe("column", () => {
+    describe("left", () => {
+        test("should add a column left of the leftmost column", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table style="width: 150px;">' +
+                    '<tbody><tr style="height: 20px;">' +
+                    '<td style="width: 40px;">ab[]</td>' +
+                    '<td style="width: 50px;">cd</td>' +
+                    '<td style="width: 60px;">ef</td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+                stepFunction: addColumn("before"),
+                contentAfter:
+                    '<table style="width: 150px;">' +
+                    '<colgroup><col style="width: 32px;">' +
+                    '<col style="width: 32px;"><col style="width: 40px;">' +
+                    '<col style="width: 45px;"></colgroup>' +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td>ab[]</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+            });
+        });
+
+        test("should add a `TH` column before", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                    '<th style="width: 40px;">ab[]</th>' +
+                    '<th style="width: 50px;">cd</th>' +
+                    '<th style="width: 60px;">ef</th>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+                stepFunction: addColumn("before"),
+                contentAfter:
+                    '<table style="width: 150px;">' +
+                    '<colgroup><col style="width: 32px;"><col style="width: 32px;">' +
+                    '<col style="width: 40px;"><col style="width: 45px;"></colgroup>' +
+                    '<tbody><tr style="height: 20px;">' +
+                    "<th><p><br></p></th>" +
+                    "<th>ab[]</th>" +
+                    "<th>cd</th>" +
+                    "<th>ef</th>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+            });
+        });
+
+        test("should add a column left of the middle column", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
+                    '<td style="width: 50px;">ab</td>' +
+                    '<td style="width: 65px;">cd</td>' +
+                    '<td style="width: 85px;">ef</td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;"><td>ab</td><td>cd[]</td><td>ef</td></tr>' +
+                    '<tr style="height: 40px;"><td>ab</td><td>cd</td><td>ef</td></tr>' +
+                    "</tbody></table>",
+                stepFunction: addColumn("before"),
+                contentAfter:
+                    '<table style="width: 200px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 38px;">' +
+                    '<col style="width: 49px;">' +
+                    '<col style="width: 49px;">' +
+                    '<col style="width: 63px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><td>ab</td><td><p><br></p></td><td>cd</td><td>ef</td></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td><p><br></p></td><td>cd[]</td><td>ef</td></tr>' +
+                    '<tr style="height: 40px;"><td>ab</td><td><p><br></p></td><td>cd</td><td>ef</td></tr>' +
+                    "</tbody></table>",
+            });
+        });
+
+        test("should add two columns before the leftmost column and preserve table width", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 40px;">' +
+                    '<col style="width: 50px;">' +
+                    '<col style="width: 60px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;">' +
+                    "<td>ab[]</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+                stepFunction: addColumn("before", 2),
+                contentAfter:
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 27px;">' +
+                    '<col style="width: 27px;">' +
+                    '<col style="width: 27px;">' +
+                    '<col style="width: 33px;">' +
+                    '<col style="width: 35px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td>ab[]</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+            });
+        });
+
+        test("should add two columns after the rightmost column and preserve table width", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 40px;">' +
+                    '<col style="width: 50px;">' +
+                    '<col style="width: 60px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef[]</td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+                stepFunction: addColumn("after", 2),
+                contentAfter:
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 23px;">' +
+                    '<col style="width: 28px;">' +
+                    '<col style="width: 32px;">' +
+                    '<col style="width: 32px;">' +
+                    '<col style="width: 34px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef[]</td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "<td><p><br></p></td>" +
+                    "<td><p><br></p></td>" +
+                    "</tr>" +
+                    "</tbody></table>",
+            });
+        });
+    });
+
+    describe("right", () => {
+        test("should add a column right of the rightmost column", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                    '<td style="width: 40px;">ab</td>' +
+                    '<td style="width: 50px;">cd</td>' +
+                    '<td style="width: 60px;">ef[]</td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+                stepFunction: addColumn("after"),
+                contentAfter:
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 29px;">' +
+                    '<col style="width: 36px;">' +
+                    '<col style="width: 41px;">' +
+                    // size was slightly adjusted to
+                    // preserve table width in view on
+                    // fractional division results
+                    '<col style="width: 43px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><td>ab</td><td>cd</td><td>ef[]</td><td><p><br></p></td></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td>cd</td><td>ef</td><td><p><br></p></td></tr>' +
+                    "</tbody></table>",
+            });
+        });
+
+        test("should add a `TH` column after", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
+                    '<th style="width: 40px;">ab</th>' +
+                    '<th style="width: 50px;">cd[]</th>' +
+                    '<th style="width: 60px;">ef</th>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+                stepFunction: addColumn("after"),
+                contentAfter:
+                    '<table style="width: 150px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 30px;">' +
+                    '<col style="width: 38px;">' +
+                    '<col style="width: 38px;">' +
+                    '<col style="width: 43px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><th>ab</th><th>cd[]</th><th><p><br></p></th><th>ef</th></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td>cd</td><td><p><br></p></td><td>ef</td></tr>' +
+                    "</tbody></table>",
+            });
+        });
+
+        test("should add a column right of the middle column", async () => {
+            await testEditor({
+                contentBefore:
+                    '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
+                    '<td style="width: 50px;">ab</td>' +
+                    '<td style="width: 65px;">cd</td>' +
+                    '<td style="width: 85px;">ef</td>' +
+                    "</tr>" +
+                    '<tr style="height: 30px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd[]</td>" +
+                    "<td>ef</td>" +
+                    "</tr>" +
+                    '<tr style="height: 40px;">' +
+                    "<td>ab</td>" +
+                    "<td>cd</td>" +
+                    "<td>ef</td>" +
+                    "</tr></tbody></table>",
+                stepFunction: addColumn("after"),
+                contentAfter:
+                    '<table style="width: 200px;">' +
+                    "<colgroup>" +
+                    '<col style="width: 38px;">' +
+                    '<col style="width: 49px;">' +
+                    '<col style="width: 49px;">' +
+                    '<col style="width: 63px;">' +
+                    "</colgroup>" +
+                    "<tbody>" +
+                    '<tr style="height: 20px;"><td>ab</td><td>cd</td><td><p><br></p></td><td>ef</td></tr>' +
+                    '<tr style="height: 30px;"><td>ab</td><td>cd[]</td><td><p><br></p></td><td>ef</td></tr>' +
+                    '<tr style="height: 40px;"><td>ab</td><td>cd</td><td><p><br></p></td><td>ef</td></tr>' +
+                    "</tbody></table>",
+            });
+        });
+    });
+
+    describe("move", () => {
+        test("should move second column left", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <th class="o_table_header" style="width: 20px;">ab</th>
+                                <th class="o_table_header" style="width: 25px;">cd[]</th>
+                                <th class="o_table_header" style="width: 30px;">ef</th>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>gh</td>
+                                <td>ij</td>
+                                <td>kl</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: moveColumn(0),
+                contentAfter: unformat(`
+                    <table>
+                        <colgroup>
+                            <col style="width: 25px;">
+                            <col style="width: 20px;">
+                            <col style="width: 30px;">
+                        </colgroup>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <th class="o_table_header">cd[]</th>
+                                <th class="o_table_header">ab</th>
+                                <th class="o_table_header">ef</th>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>ij</td>
+                                <td>gh</td>
+                                <td>kl</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+
+        test("should move second column right", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <th class="o_table_header" style="width: 20px;">ab</th>
+                                <th class="o_table_header" style="width: 30px;">cd[]</th>
+                                <th class="o_table_header" style="width: 25px;">ef</th>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>gh</td>
+                                <td>ij</td>
+                                <td>kl</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: moveColumn(2),
+                contentAfter: unformat(`
+                    <table>
+                        <colgroup>
+                            <col style="width: 20px;">
+                            <col style="width: 25px;">
+                            <col style="width: 30px;">
+                        </colgroup>
+                        <tbody>
+                            <tr style="height: 20px;">
+                                <th class="o_table_header">ab</th>
+                                <th class="o_table_header">ef</th>
+                                <th class="o_table_header">cd[]</th>
+                            </tr>
+                            <tr style="height: 30px;">
+                                <td>gh</td>
+                                <td>kl</td>
+                                <td>ij</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+    });
+
+    describe("removal", () => {
+        test("should remove a column based on selection", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]ab</td> <td>cd</td>
+                            </tr>
+                            <tr>
+                                <td>ef</td> <td>gh</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: removeColumn(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>cd[]</td>
+                            </tr>
+                            <tr>
+                                <td>gh</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+
+        test("should remove a column from a table with a header", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th class="o_table_header">[]Header 1</th>
+                                <th class="o_table_header">Header 2</th>
+                            </tr>
+                            <tr>
+                                <td>Cell 1</td>
+                                <td>Cell 2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: removeColumn(),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th class="o_table_header">Header 2[]</th>
+                            </tr>
+                            <tr>
+                                <td>Cell 2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+
+        test("should remove the column passed as argument", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]ab</td> <td>cd</td>
+                            </tr>
+                            <tr>
+                                <td>ef</td> <td>gh</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    // Select the second cell
+                    const cell = editor.editable.querySelectorAll("td")[1];
+                    removeColumn(cell)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>ab[]</td>
+                            </tr>
+                            <tr>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should remove the table upon sole column removal", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr> <td>[]ab</td> </tr>
+                            <tr> <td>cd</td> </tr>
+                        </tbody>
+                    </table>
+                `),
+                contentBeforeEdit: unformat(
+                    `<p data-selection-placeholder=""><br></p>
+                    <table>
+                        <tbody>
+                            <tr> <td>[]ab</td> </tr>
+                            <tr> <td>cd</td> </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder=""><br></p>`
+                ),
+                stepFunction: removeColumn(),
+                contentAfter: "<p>[]<br></p>",
+            });
+        });
+        test("should remove column intersecting colspan without breaking table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a</td><td>b</td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">d</td>
+                            </tr>
+                            <tr>
+                                <td>e</td><td>f</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    // Select the second cell
+                    const cell = editor.editable.querySelectorAll("td")[1];
+                    removeColumn(cell)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a[]</td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td>e</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should remove the entire table when removing a column from a table where all rows have only colspan cells", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="3">a</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">b</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">c</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    const cell = editor.editable.querySelectorAll("td")[0];
+                    removeColumn(cell)(editor);
+                },
+                contentAfter: "<p>[]<br></p>",
+            });
+        });
+        test("should remove row intersecting colspan and rowspan without breaking table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                                <td rowspan="3">3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">5</td>
+                                <td>6</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    const row = editor.editable.querySelectorAll("tr")[0];
+                    removeRow(row)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="2">5[]</td>
+                                <td rowspan="2"><p><br></p></td>
+                                <td>6</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+    });
+});
+
+describe("tab", () => {
+    test("should add a new row on press tab at the end of a table", async () => {
+        const contentBefore = unformat(`
+            <table><tbody>
+                <tr style="height: 20px;">
+                    <td style="width: 20px;">ab</td>
+                    <td>cd</td>
+                    <td>ef[]</td>
+                </tr>
+            </tbody></table>`);
+        const { el, editor } = await setupEditor(contentBefore);
+        await press("Tab");
+
+        const expectedContent = unformat(
+            `<p data-selection-placeholder=""><br></p>
+            <table>
+                <colgroup><col style="width: 20px;"></colgroup>
+                <tbody>
+                    <tr style="height: 20px;">
+                        <td style="">ab</td>
+                        <td>cd</td>
+                        <td>ef</td>
+                    </tr>
+                    <tr style="height: 20px;">
+                        <td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td>
+                        <td><p><br></p></td>
+                        <td><p><br></p></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder=""><br></p>`
+        );
+
+        expect(getContent(el)).toBe(expectedContent);
+
+        // Check that it was registed as a history commit.
+        undo(editor);
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table>
+                    <colgroup><col style="width: 20px;"></colgroup>
+                    <tbody>
+                        <tr style="height: 20px;">
+                            <td style="">ab</td>
+                            <td>cd</td>
+                            <td>ef[]</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder=""><br></p>`)
+        );
+    });
+
+    test("should not select whole text of the next cell", async () => {
+        await testEditor({
+            contentBefore:
+                '<table><tbody><tr style="height: 20px;"><td style="width: 20px;">ab</td><td>[cd]</td><td>ef</td></tr></tbody></table>',
+            stepFunction: () => press("Tab"),
+            contentAfter:
+                '<table><colgroup><col style="width: 20px;"></colgroup><tbody><tr style="height: 20px;"><td>ab</td><td>cd</td><td>ef[]</td></tr></tbody></table>',
+        });
+    });
+});

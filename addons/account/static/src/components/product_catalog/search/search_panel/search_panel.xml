@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t
+        t-name="account.ProductCatalogSearchPanelContent"
+        t-inherit="web.SearchPanelContent"
+        t-inherit-mode="primary"
+    >
+        <div t-ref="this.root" position="attributes">
+            <attribute
+                name="class" add="o_product_catalog_search_panel px-3" remove="px-2" separator=" "
+            />
+        </div>
+
+        <header position="attributes">
+            <attribute name="class" remove="text-uppercase" separator=" "/>
+        </header>
+
+        <xpath expr="//header/i" position="replace"/>
+
+        <section position="before">
+            <section
+                t-if="this.showSections"
+                class="o_search_panel_sections o_search_panel_section mt-4 mb-3 pb-4 border-bottom"
+            >
+                <t t-call="account.ProductCatalog.Sections"/>
+            </section>
+        </section>
+
+        <div class="o_search_panel_empty_state me-3" position="replace"/>
+    </t>
+
+    <t t-name="account.ProductCatalog.Sections">
+        <header class="d-flex align-items-center cursor-default mb-3">
+            <b class="me-2" t-out="this.orderName"/>
+            <button
+                t-attf-class="btn btn-sm ms-auto #{this.uiService.isSmall ? 'btn-link p-0' : 'btn-secondary'}"
+                t-on-click="() => this.enableSectionInput()"
+                title="Add a section"
+            >
+                Add Section
+            </button>
+        </header>
+        <ul class="list-group d-block" t-ref="this.sectionTreeRef">
+            <t t-foreach="this.state.sections" t-as="section" t-key="section.id === false and section.editing ? 'o_new_section' : section.id">
+                <SectionRow t-props="section"/>
+            </t>
+        </ul>
+        <div t-if="this.showPrices" class="mt-3 border-top">
+            <div class="d-flex justify-content-between mt-4">
+                <span>Total</span>
+                <span t-out="this.formatAmount(this.state.totalUntaxedAmount)"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="account.ProductCatalogSearchPanel" t-inherit="product.ProductCatalogSearchPanel" t-inherit-mode="primary">
+        <t t-call="web.SearchPanel.Regular" position="attributes">
+            <attribute name="t-call">account.ProductCatalogSearchPanelContent</attribute>
+        </t>
+    </t>
+
+    <t t-name="account.SearchPanel.MobileDrawer" t-inherit="product.SearchPanel.MobileDrawer" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_catalog_search_panel_content')]/t" position="attributes">
+            <attribute name="t-call">account.ProductCatalogSearchPanelContent</attribute>
+        </xpath>
+    </t>
+</templates>

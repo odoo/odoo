@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="hr_job_tag_view_form" model="ir.ui.view">
+            <field name="name">hr.job.tag.view.form</field>
+            <field name="model">hr.job.tag</field>
+            <field name="arch" type="xml">
+                <form string="Tags">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="color"/>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_job_tag_view_list" model="ir.ui.view">
+            <field name="name">hr.job.tag.view.list</field>
+            <field name="model">hr.job.tag</field>
+            <field name="arch" type="xml">
+                <list string="Tags" editable="bottom">
+                    <field name="name"/>
+                    <field name="color" widget="color_picker" />
+                </list>
+            </field>
+        </record>
+
+        <record id="hr_job_tag_action" model="ir.actions.act_window">
+            <field name="name">Job Tags</field>
+            <field name="res_model">hr.job.tag</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new tag
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

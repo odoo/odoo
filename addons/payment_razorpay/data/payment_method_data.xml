@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- https://razorpay.com/docs/payments/payment-methods/#supported-payment-methods -->
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+    </record>
+
+    <record id="payment_method_emi_india" model="payment.method">
+        <field name="name">EMI</field>
+        <field name="code">emi_india</field>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.in')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.INR')])]"/>
+    </record>
+
+    <record id="payment_method_fpx" model="payment.method">
+        <field name="name">FPX</field>
+        <field name="code">fpx</field>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/fpx.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.my')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.MYR')])]"/>
+    </record>
+
+    <record id="payment_method_netbanking" model="payment.method">
+        <field name="name">Netbanking</field>
+        <field name="code">netbanking</field>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.in')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.INR')])]"/>
+    </record>
+
+    <record id="payment_method_paylater_india" model="payment.method">
+        <field name="name">Pay Later</field>
+        <field name="code">paylater_india</field>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/pay_later.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">full_only</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.in')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.INR')])]"/>
+    </record>
+
+    <record id="payment_method_paynow" model="payment.method">
+        <field name="name">PayNow</field>
+        <field name="code">paynow</field>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/paynow.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.sg')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.SGD')])]"/>
+    </record>
+
+    <record id="payment_method_upi" model="payment.method">
+        <field name="name">UPI</field>
+        <field name="code">upi</field>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/upi.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.in')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.INR')])]"/>
+    </record>
+
+    <record id="payment_method_wallets_india" model="payment.method">
+        <field name="name">Wallets India</field>
+        <field name="code">wallets_india</field>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/wallet.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">full_only</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.in')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.INR')])]"/>
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+
+    <record id="payment_method_amex" model="payment.method">
+        <field name="name">American Express</field>
+        <field name="code">amex</field>
+        <field name="primary_payment_method_id" eval="ref('payment_razorpay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
+    </record>
+
+    <record id="payment_method_diners" model="payment.method">
+        <field name="name">Diners Club International</field>
+        <field name="code">diners</field>
+        <field name="primary_payment_method_id" eval="ref('payment_razorpay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/diners.png"/>
+    </record>
+
+    <record id="payment_method_discover" model="payment.method">
+        <field name="name">Discover</field>
+        <field name="code">discover</field>
+        <field name="primary_payment_method_id" eval="ref('payment_razorpay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/discover.png"/>
+    </record>
+
+    <record id="payment_method_maestro" model="payment.method">
+        <field name="name">Maestro</field>
+        <field name="code">maestro</field>
+        <field name="primary_payment_method_id" eval="ref('payment_razorpay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/maestro.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_razorpay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_rupay" model="payment.method">
+        <field name="name">RuPay</field>
+        <field name="code">rupay</field>
+        <field name="primary_payment_method_id" eval="ref('payment_razorpay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/rupay.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_razorpay.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_razorpay"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>

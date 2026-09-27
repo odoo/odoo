@@ -1,0 +1,38 @@
+{
+    'name': 'Pakistan - Accounting',
+    'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',
+    'icon': '/account/static/description/l10n.png',
+    'countries': ['pk'],
+    'version': '1.1',
+    'category': 'Accounting/Localizations/Account Charts',
+    'description': """
+Pakistan Accounting Module
+=======================================================
+Pakistan accounting basic charts and localization.
+
+Activates:
+
+- Chart of Accounts
+- Taxes
+- Tax Report
+- Withholding Tax Report
+    """,
+    'depends': [
+        'account',
+        'account_tax_python',
+        'l10n_account_withholding_tax',
+        'product',
+    ],
+    'auto_install': ['account'],
+    'data': [
+        'data/ir_config_data.xml',
+        'data/res_country_data.xml',
+        'views/account_tax_views.xml',
+    ],
+    'demo': [
+        'demo/res_partner_demo.xml',
+        'demo/demo_company.xml',
+    ],
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
+}

@@ -1,0 +1,27 @@
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
+import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
+
+class ReportPrintersLocalStorage extends Component {
+    static template = "printer.ReportPrintersLocalStorage";
+    props = useProps(standardActionServiceProps);
+
+    setup() {
+        this.orm = useService("orm");
+        this.printersCache = useService("report_printers_cache");
+        this.state = proxy({ reports: [] });
+
+        onWillStart(async () => {
+            this.state.reports = await this.orm.searchRead("ir.actions.report", [
+                ["id", "in", Object.keys(this.printersCache.cache || [])],
+            ]);
+        });
+    }
+    removeFromCache(id) {
+        this.printersCache.unCacheReport(id);
+        this.state.reports = this.state.reports.filter((report) => report.id !== id);
+    }
+}
+
+registry.category("actions").add("reset_linked_printers", ReportPrintersLocalStorage);

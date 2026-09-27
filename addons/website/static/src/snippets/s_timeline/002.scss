@@ -1,0 +1,14 @@
+.s_timeline[data-vcss="002"] {
+    @include media-breakpoint-up(md) {
+        --o-dot-left: 50%;
+        --o-dot-line-left: 50%;
+    }
+
+    .s_timeline_card {
+        // Keep the cards aligned in mobile view.
+        @include media-breakpoint-down(md) {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+    }
+}

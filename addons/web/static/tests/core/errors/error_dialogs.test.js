@@ -1,0 +1,396 @@
+import {
+    animationFrame,
+    click,
+    describe,
+    expect,
+    freezeTime,
+    queryAllTexts,
+    queryFirst,
+    test,
+    tick,
+} from "@odoo/hoot";
+import {
+    assignDialogTestEnv,
+    mockService,
+    mountWithCleanup,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { location } from "@web/core/browser/browser";
+import {
+    ClientErrorDialog,
+    Error504Dialog,
+    ErrorDialog,
+    RedirectWarningDialog,
+    SessionExpiredDialog,
+    UnlinkBlockedErrorDialog,
+    WarningDialog,
+} from "@web/core/errors/error_dialogs";
+
+describe.current.tags("desktop");
+
+test("ErrorDialog with traceback", async () => {
+    freezeTime();
+    expect(".o_dialog").toHaveCount(0);
+    assignDialogTestEnv();
+    await mountWithCleanup(ErrorDialog, {
+        props: {
+            message: "Something bad happened",
+            data: { debug: "Some strange unreadable stack" },
+            name: "ERROR_NAME",
+            traceback: "This is a traceback string",
+            close() {},
+        },
+    });
+    expect(".o_dialog").toHaveCount(1);
+    expect("header .modal-title").toHaveText("Oops!");
+    expect("main summary").toHaveText("See technical details(11/Mar/2019 09:30:00)");
+    expect(queryAllTexts("footer button")).toEqual(["Close"]);
+    expect(queryFirst("main p")).toHaveText(
+        "Something went wrong... If you really are stuck, share the report with your friendly support service"
+    );
+    expect("div.o_error_detail").toHaveCount(1);
+    await click("main summary");
+    await animationFrame();
+    expect(queryAllTexts("main .clearfix div > *")).toEqual([
+        "Odoo Error",
+        "Occurred on 11/Mar/2019 09:30:00",
+        "ERROR_NAME",
+        "Something bad happened",
+        "This is a traceback string",
+    ]);
+    expect(queryAllTexts("main .clearfix div > p")).toEqual([
+        "Odoo Error",
+        "Occurred on 11/Mar/2019 09:30:00",
+    ]);
+    expect(queryAllTexts("main .clearfix div > code")).toEqual([
+        "ERROR_NAME",
+        "Something bad happened",
+    ]);
+    expect("div.o_error_detail").toHaveCount(1);
+    expect("div.o_error_detail pre").toHaveText("This is a traceback string");
+});
+
+test("Client ErrorDialog with traceback", async () => {
+    freezeTime();
+    assignDialogTestEnv();
+    await mountWithCleanup(ClientErrorDialog, {
+        props: {
+            message: "Something bad happened",
+            data: { debug: "Some strange unreadable stack" },
+            name: "ERROR_NAME",
+            traceback: "This is a traceback string",
+            close() {},
+        },
+    });
+    expect(".o_dialog").toHaveCount(1);
+    expect("header .modal-title").toHaveText("Oops!");
+    expect("main summary").toHaveText("See technical details(11/Mar/2019 09:30:00)");
+    expect(queryAllTexts("footer button")).toEqual(["Close"]);
+    expect(queryFirst("main p")).toHaveText(
+        "Something went wrong... If you really are stuck, share the report with your friendly support service"
+    );
+    expect("div.o_error_detail").toHaveCount(1);
+    await click("main summary");
+    await animationFrame();
+    expect(queryAllTexts("main .clearfix div > *")).toEqual([
+        "Odoo Client Error",
+        "Occurred on 11/Mar/2019 09:30:00",
+        "ERROR_NAME",
+        "Something bad happened",
+        "This is a traceback string",
+    ]);
+    expect(queryAllTexts("main .clearfix div > p")).toEqual([
+        "Odoo Client Error",
+        "Occurred on 11/Mar/2019 09:30:00",
+    ]);
+    expect(queryAllTexts("main .clearfix div > code")).toEqual([
+        "ERROR_NAME",
+        "Something bad happened",
+    ]);
+    expect("div.o_error_detail").toHaveCount(1);
+    expect("div.o_error_detail pre").toHaveText("This is a traceback string");
+});
+
+test("button clipboard copy error traceback", async () => {
+    freezeTime();
+    expect.assertions(1);
+    const error = new Error();
+    error.name = "ERROR_NAME";
+    error.message = "This is the message";
+    error.traceback = "This is a traceback";
+    patchWithCleanup(navigator.clipboard, {
+        writeText(value) {
+            expect(value).toBe(
+                `${error.name}\n\n${error.message}\n\nOccurred on 11/Mar/2019 09:30:00\n\n${error.traceback}`
+            );
+        },
+    });
+    assignDialogTestEnv();
+    await mountWithCleanup(ErrorDialog, {
+        props: {
+            message: error.message,
+            name: error.name,
+            traceback: error.traceback,
+            close() {},
+        },
+    });
+    await click("main summary");
+    await animationFrame();
+    await click("[data-icon='assignment']");
+    await tick();
+});
+
+test("Display a tooltip on clicking copy button", async () => {
+    expect.assertions(1);
+    mockService("popover", () => ({
+        add(el, comp, params) {
+            expect(params).toEqual({ tooltip: "Copied" });
+            return () => {};
+        },
+    }));
+
+    assignDialogTestEnv();
+    await mountWithCleanup(ErrorDialog, {
+        props: {
+            message: "This is the message",
+            name: "ERROR_NAME",
+            traceback: "This is a traceback",
+            close() {},
+        },
+    });
+    await click("main summary");
+    await animationFrame();
+    await click("[data-icon='assignment']");
+});
+
+test("WarningDialog", async () => {
+    expect(".o_dialog").toHaveCount(0);
+    assignDialogTestEnv();
+    await mountWithCleanup(WarningDialog, {
+        props: {
+            exceptionName: "odoo.exceptions.UserError",
+            message: "...",
+            data: { arguments: ["Some strange unreadable message"] },
+            close() {},
+        },
+    });
+    expect(".o_dialog").toHaveCount(1);
+    expect("header .modal-title").toHaveText("Invalid Operation");
+    expect(".o_error_dialog").toHaveCount(1);
+    expect("main").toHaveText("Some strange unreadable message");
+    expect(".o_dialog footer button").toHaveText("Close");
+});
+
+test("RedirectWarningDialog", async () => {
+    mockService("action", {
+        doAction(actionId) {
+            expect.step(actionId);
+        },
+    });
+    expect(".o_dialog").toHaveCount(0);
+    assignDialogTestEnv();
+    await mountWithCleanup(RedirectWarningDialog, {
+        props: {
+            data: {
+                arguments: [
+                    "Some strange unreadable message",
+                    "buy_action_id",
+                    "Buy book on cryptography",
+                ],
+            },
+            close() {
+                expect.step("dialog-closed");
+            },
+        },
+    });
+    expect(".o_dialog").toHaveCount(1);
+    expect("header .modal-title").toHaveText("Odoo Warning");
+    expect("main").toHaveText("Some strange unreadable message");
+    expect(queryAllTexts("footer button")).toEqual(["Buy book on cryptography", "Close"]);
+
+    await click("footer button:nth-child(1)"); // click on "Buy book on cryptography"
+    await animationFrame();
+    expect.verifySteps(["buy_action_id", "dialog-closed"]);
+
+    await click("footer button:nth-child(2)"); // click on "Cancel"
+    await animationFrame();
+    expect.verifySteps(["dialog-closed"]);
+});
+
+test("UnlinkBlockedErrorDialog, single record that can't be archived", async () => {
+    assignDialogTestEnv();
+    await mountWithCleanup(UnlinkBlockedErrorDialog, {
+        props: {
+            data: {
+                context: {
+                    archivable: false,
+                    model_name: "Bar",
+                    res_model: "foo",
+                    res_ids: [1],
+                    blocked_ids: [1],
+                },
+            },
+            close() {
+                expect.step("dialog-closed");
+            },
+        },
+    });
+    expect("header .modal-title").toHaveText("Oops");
+    expect("main p").toHaveText("Not possible to delete the record because it is used in Bar");
+    expect("main a").toHaveCount(0, {
+        message: "a single-record delete has nothing else to show",
+    });
+    expect(queryAllTexts("footer button")).toEqual(["Close"]);
+
+    await click("footer button");
+    await animationFrame();
+    expect.verifySteps(["dialog-closed"]);
+});
+
+test("UnlinkBlockedErrorDialog, archiving acts on the whole selection", async () => {
+    mockService("orm", {
+        call(resModel, method, args) {
+            expect.step(`${method}:${resModel}:${args[0]}`);
+            return Promise.resolve(true);
+        },
+    });
+    mockService("action", {
+        get currentController() {
+            return { jsId: "controller_1" };
+        },
+        restore(jsId) {
+            expect.step(`restore:${jsId}`);
+        },
+    });
+    assignDialogTestEnv();
+    await mountWithCleanup(UnlinkBlockedErrorDialog, {
+        props: {
+            data: {
+                context: {
+                    archivable: true,
+                    model_name: "Bar",
+                    res_model: "foo",
+                    res_ids: [1, 2, 3],
+                    blocked_ids: [2],
+                },
+            },
+            close() {
+                expect.step("dialog-closed");
+            },
+        },
+    });
+    expect("main p:first").toHaveText(
+        "Not possible to delete all the records because some are used in Bar"
+    );
+    expect("main p:last").toHaveText("How about archiving them instead?");
+    expect(queryAllTexts("footer button")).toEqual(["Archive", "Discard"]);
+
+    await click("footer button:nth-child(1)"); // click on "Archive"
+    await animationFrame();
+    // the blocked records are not archived on their own: the user asked for
+    // the whole selection to go away. The current view has no idea any of
+    // this happened, hence the restore.
+    expect.verifySteps(["action_archive:foo:1,2,3", "restore:controller_1", "dialog-closed"]);
+});
+
+test("UnlinkBlockedErrorDialog, only the blocked records are shown", async () => {
+    mockService("action", {
+        doAction(action) {
+            expect.step(action.domain);
+        },
+    });
+    assignDialogTestEnv();
+    await mountWithCleanup(UnlinkBlockedErrorDialog, {
+        props: {
+            data: {
+                context: {
+                    archivable: false,
+                    model_name: "Bar",
+                    res_model: "foo",
+                    res_ids: [1, 2, 3],
+                    blocked_ids: [2],
+                },
+            },
+            close() {
+                expect.step("dialog-closed");
+            },
+        },
+    });
+    expect("main a").toHaveText("View non-deletable records");
+
+    await click("main a");
+    await animationFrame();
+    expect.verifySteps([[["id", "in", [2]]], "dialog-closed"]);
+});
+
+test("Error504Dialog", async () => {
+    expect(".o_dialog").toHaveCount(0);
+    assignDialogTestEnv();
+    await mountWithCleanup(Error504Dialog, { props: { close() {} } });
+    expect(".o_dialog").toHaveCount(1);
+    expect("header .modal-title").toHaveText("Request timeout");
+    expect("main p").toHaveText(
+        "The operation was interrupted. This usually means that the current operation is taking too much time."
+    );
+    expect(".o_dialog footer button").toHaveText("Close");
+});
+
+test("SessionExpiredDialog", async () => {
+    patchWithCleanup(location, {
+        reload() {
+            expect.step("location reload");
+        },
+    });
+    expect(".o_dialog").toHaveCount(0);
+    assignDialogTestEnv();
+    await mountWithCleanup(SessionExpiredDialog, { props: { close() {} } });
+    expect(".o_dialog").toHaveCount(1);
+    expect(".o_dialog").toHaveCount(1);
+    expect("header .modal-title").toHaveText("Odoo Session Expired");
+    expect("main p").toHaveText(
+        "Your Odoo session expired. The current page is about to be refreshed."
+    );
+    expect(".o_dialog footer button").toHaveText("Close");
+    await click(".o_dialog footer button");
+    await animationFrame();
+    expect.verifySteps(["location reload"]);
+});
+
+test("ErrorDialog with timestamp provided", async () => {
+    freezeTime();
+    expect(".o_dialog").toHaveCount(0);
+    assignDialogTestEnv();
+    await mountWithCleanup(ErrorDialog, {
+        props: {
+            message: "Something bad happened",
+            data: { debug: "Some strange unreadable stack", timestamp: 1700006000 },
+            name: "ERROR_NAME",
+            traceback: "This is a traceback string",
+            close() {},
+        },
+    });
+    expect(".o_dialog").toHaveCount(1);
+    expect("header .modal-title").toHaveText("Oops!");
+    expect("main summary").toHaveText("See technical details(14/Nov/2023 23:53:20)");
+    expect(queryFirst("main p")).toHaveText(
+        "Something went wrong... If you really are stuck, share the report with your friendly support service"
+    );
+    expect("div.o_error_detail").toHaveCount(1);
+    await click("main summary");
+    await animationFrame();
+    expect(queryAllTexts("main .clearfix div > *")).toEqual([
+        "Odoo Error",
+        "Occurred on 14/Nov/2023 23:53:20",
+        "ERROR_NAME",
+        "Something bad happened",
+        "This is a traceback string",
+    ]);
+    expect(queryAllTexts("main .clearfix div > p")).toEqual([
+        "Odoo Error",
+        "Occurred on 14/Nov/2023 23:53:20",
+    ]);
+    expect(queryAllTexts("main .clearfix div > code")).toEqual([
+        "ERROR_NAME",
+        "Something bad happened",
+    ]);
+});

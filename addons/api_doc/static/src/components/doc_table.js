@@ -1,0 +1,179 @@
+import { Component, computed, proxy, signal, t, useListener, useProps } from "@odoo/owl";
+import { localeCompare } from "@web/core/l10n/utils";
+
+export const TABLE_TYPES = {
+    Id: "id",
+    Code: "code-like",
+    Tooltip: "tooltip",
+};
+
+export class DocTable extends Component {
+    static components = { DocTable };
+    static template = "web.DocTable";
+
+    props = useProps({
+        data: t.any(),
+    });
+
+    items = computed(() => this.computeItems());
+    subTableRef = signal.ref();
+    tooltipRef = signal.ref();
+
+    setup() {
+        this.state = proxy({
+            sortBy: 0,
+            sortOrder: "desc",
+            subTable: undefined,
+            tooltipContent: "",
+            tooltipStyle: "",
+        });
+        this.isHovering = false;
+        this.hideTimeout = null;
+        this.requestAnim = null;
+
+        useListener(window, "click", (event) => {
+            const subTableEl = this.subTableRef();
+            if (subTableEl && subTableEl !== event.target && !subTableEl.contains(event.target)) {
+                this.state.subTable = null;
+            }
+        });
+
+        useListener(window, "scroll", () => (this.state.subTable = null));
+    }
+
+    showDynamicTooltip(event, content) {
+        if (this.requestAnim) {
+            cancelAnimationFrame(this.requestAnim);
+        }
+        if (this.hideTimeout) {
+            clearTimeout(this.hideTimeout);
+        }
+
+        this.activeHoverTarget = event.target;
+        this.isHovering = true;
+
+        const triggerRect = event.target.getBoundingClientRect();
+
+        this.requestAnim = requestAnimationFrame(() => {
+            if (!this.tooltipRef() || !this.isHovering) {
+                return;
+            }
+            const top = triggerRect.top;
+            const left = triggerRect.left + 20;
+
+            this.state.tooltipContent = content;
+            this.state.tooltipStyle = `
+                top: ${top}px;
+                left: ${left}px;
+                opacity: 1;
+                pointer-events: auto;
+            `;
+        });
+    }
+
+    scheduleHide(event) {
+        if (this.hideTimeout) {
+            clearTimeout(this.hideTimeout);
+        }
+        const currentTarget = event.target;
+        this.isHovering = false;
+
+        this.hideTimeout = setTimeout(() => {
+            if (!this.isHovering) {
+                const tooltipEl = this.tooltipRef();
+                this.state.tooltipStyle = `
+                    top: ${tooltipEl ? tooltipEl.style.top : 0};
+                    left: ${tooltipEl ? tooltipEl.style.left : 0};
+                    opacity: 0;
+                    pointer-events: none;
+                `;
+                setTimeout(() => {
+                    if (currentTarget === this.activeHoverTarget) {
+                        this.state.tooltipContent = "";
+                    }
+                }, 200);
+            }
+        }, 100);
+    }
+
+    keepAlive() {
+        if (this.hideTimeout) {
+            clearTimeout(this.hideTimeout);
+        }
+        this.isHovering = true;
+    }
+
+    computeItems() {
+        if (this.state.sortBy >= 0) {
+            const items = [...this.props.data.items];
+            items.sort((itemA, itemB) => {
+                const a = this.getValue(itemA[this.state.sortBy]);
+                const b = this.getValue(itemB[this.state.sortBy]);
+                if (this.state.sortOrder === "asc") {
+                    return localeCompare(b, a);
+                } else {
+                    return localeCompare(a, b);
+                }
+            });
+            return items;
+        } else {
+            return this.props.data.items;
+        }
+    }
+
+    showSubTable(event, subData) {
+        if (subData) {
+            this.state.subTable = subData;
+            const rect = event.target.getBoundingClientRect();
+            this.state.subTableStyle = `top: ${rect.bottom + 3}px; left: ${
+                rect.left
+            }px; z-index: 50;`;
+        }
+    }
+
+    getId(values) {
+        return values.find((v) => v.type === TABLE_TYPES.Id)?.value;
+    }
+
+    getTag(row) {
+        return row && typeof row === "object" && row.type === "code" ? "pre" : "span";
+    }
+
+    getValue(row) {
+        return String(row && typeof row === "object" ? row.value : row);
+    }
+
+    getClass(row) {
+        const classList = [];
+        if (row && typeof row === "object") {
+            if (row.type === "code") {
+                classList.push("font-monospace");
+            }
+            if (row.class) {
+                classList.push(row.class);
+            }
+        }
+        return classList.join(" ");
+    }
+
+    onRowHeaderClick(rowIndex) {
+        if (this.state.sortBy === rowIndex) {
+            this.state.sortOrder = this.state.sortOrder === "asc" ? "desc" : "asc";
+        }
+        this.state.sortBy = rowIndex;
+    }
+
+    getSortIcon(rowIndex) {
+        if (this.state.sortBy !== rowIndex) {
+            return "swap_vert";
+        } else if (this.state.sortOrder === "asc") {
+            return "arrow_upward";
+        } else {
+            return "arrow_downward";
+        }
+    }
+
+    goToModel(model) {
+        this.env.modelStore.setActiveModel({ model });
+    }
+}

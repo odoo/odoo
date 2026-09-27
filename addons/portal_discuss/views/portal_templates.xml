@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_docs_entry_inherit_discuss" inherit_id="portal.portal_docs_entry">
+        <xpath expr="//t[@t-set='show_counter_as_badge']" position="after">
+            <t t-set="show_counter_as_badge" t-value="show_counter_as_badge or entry.placeholder_count == 'discuss_count'"/>
+        </xpath>
+    </template>
+</odoo>

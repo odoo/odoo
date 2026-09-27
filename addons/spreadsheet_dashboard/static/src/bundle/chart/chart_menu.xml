@@ -1,0 +1,21 @@
+<odoo>
+    <div t-name="spreadsheet_dashboard.ChartMenu" t-inherit="o-spreadsheet-ChartMenu"
+        t-inherit-mode="extension">
+        <xpath
+            expr="//t[@t-foreach='this.getMenuItems()']"
+            position="before">
+            <t t-set="granularity"
+                t-value="this.env.model.getters.getChartGranularity(this.props.chartId)?.granularity" />
+            <t t-if="this.env.model.getters.isDashboard() and granularity and this.granularityOptions.length">
+                <Select
+                    class="'position-relative o-chart-menu-item w-auto py-0 px-1 text-muted text-nowrap rounded border-0'"
+                    popoverClass="'w-auto'"
+                    name="'chart-granularity'"
+                    values="this.granularityOptions"
+                    selectedValue="granularity"
+                    onChange.bind="this.onGranularitySelected"
+                />
+            </t>
+        </xpath>
+    </div>
+</odoo>

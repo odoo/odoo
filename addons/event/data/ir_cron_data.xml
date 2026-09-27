@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <!-- Event Mail Scheduler-->
+    <record model="ir.cron" forcecreate="True" id="event_mail_scheduler">
+        <field name="name">Event: Mail Scheduler</field>
+        <field name="model_id" ref="model_event_mail"/>
+        <field name="state">code</field>
+        <field name="code">model.schedule_communications(autocommit=True)</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">24</field>
+        <field name="interval_type">hours</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=15)).strftime('%Y-%m-%d %H:%M:%S')" />
+    </record>
+</data></odoo>

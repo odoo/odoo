@@ -1,0 +1,130 @@
+import {
+    clickOnEditAndWaitEditMode,
+    clickOnSave,
+    insertSnippet,
+    goBackToBlocks,
+    registerWebsitePreviewTour,
+    unfoldOptionsGroup,
+} from "@website/js/tours/tour_utils";
+
+const scrollToHeading = function (position) {
+    return {
+        content: `Scroll to h2 number ${position}`,
+        trigger: `:iframe .s_table_of_content h2:eq(${position})`,
+        run: function () {
+            this.anchor.scrollIntoView(true);
+        },
+    };
+};
+const checkTOCNavBar = function (tocPosition, activeHeaderPosition) {
+    return {
+        content: `Check that the header ${activeHeaderPosition} is active for TOC ${tocPosition}`,
+        trigger: `:iframe .s_table_of_content:eq(${tocPosition}) .table_of_content_link.table_of_content_link_depth_0:eq(${activeHeaderPosition}).active `,
+    };
+};
+
+registerWebsitePreviewTour(
+    "snippet_table_of_content",
+    {
+        edition: true,
+    },
+    () => [
+        ...insertSnippet({ id: "s_table_of_content", name: "Table of Content", groupName: "Text" }),
+        // Add a banner snippet at the end of the page to avoid an edge case
+        // with the table of content: When the table of content is the last
+        // snippet, scrolling to the last h2 title would scroll to the end of
+        // the page. Therefore, the last title of the table of content will be
+        // activated, instead of the h2 we scrolled to. The extra banner ensures
+        // correct activation behavior.
+        ...insertSnippet({ id: "s_banner", name: "Banner", groupName: "Intro" }),
+        {
+            content: "Drag the Text snippet group and drop it.",
+            trigger:
+                ".o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Text'] .o_snippet_thumbnail",
+            run: "drag_and_drop :iframe #wrap",
+        },
+        {
+            content: "Click on the s_table_of_content snippet.",
+            trigger: ':iframe .o_add_snippets_preview [data-snippet="s_table_of_content"]',
+            run: "click",
+        },
+        // To make sure that the public widgets of the two previous ones started.
+        ...insertSnippet({ id: "s_banner", name: "Banner", groupName: "Intro" }),
+        {
+            content: "Drag the Intro snippet group and drop it.",
+            trigger:
+                ".o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Intro'] .o_snippet_thumbnail",
+            run: "drag_and_drop :iframe #wrap",
+        },
+        {
+            content: "Click on the s_banner snippet.",
+            trigger: ':iframe .o_add_snippets_preview [data-snippet="s_banner"]',
+            run: "click",
+        },
+        ...clickOnSave(),
+        checkTOCNavBar(0, 0),
+        checkTOCNavBar(1, 0),
+        scrollToHeading(1),
+        checkTOCNavBar(0, 1),
+        checkTOCNavBar(1, 0),
+        scrollToHeading(2),
+        checkTOCNavBar(1, 0),
+        scrollToHeading(3),
+        checkTOCNavBar(1, 1),
+        ...clickOnEditAndWaitEditMode(),
+        {
+            content: "Click on the first TOC's title",
+            trigger: ":iframe .s_table_of_content:eq(0) h2",
+            run: "click",
+        },
+        ...unfoldOptionsGroup("Table of Content"),
+        {
+            content: "Hide the first TOC on mobile",
+            trigger:
+                '.options-container[data-container-title="Table of Content"] [data-action-param="no_mobile"]',
+            run: "click",
+        },
+        {
+            trigger: ":iframe .s_table_of_content:eq(0).o_snippet_mobile_invisible",
+        },
+        // Go back to blocks tabs to avoid changing the first ToC options
+        goBackToBlocks(),
+        {
+            content: "Click on the second TOC's title",
+            trigger: ":iframe .s_table_of_content:eq(1) h2",
+            run: "click",
+        },
+        ...unfoldOptionsGroup("Table of Content"),
+        {
+            content: "Hide the second TOC on desktop",
+            trigger:
+                '.options-container[data-container-title="Table of Content"] [data-action-param="no_desktop"]',
+            run: "click",
+        },
+        {
+            trigger: ":iframe .s_table_of_content:eq(1).o_snippet_desktop_invisible:not(:visible)",
+        },
+        ...clickOnSave(),
+        {
+            content: "Check that we have the good TOC on desktop",
+            trigger: ":iframe .s_table_of_content.o_snippet_mobile_invisible",
+        },
+        {
+            content: "The mobile TOC should not be visible on desktop",
+            trigger: ":iframe .s_table_of_content.o_snippet_desktop_invisible:not(:visible)",
+        },
+        {
+            content: "Toggle the mobile view",
+            trigger: ".o_mobile_preview > a",
+            run: "click",
+        },
+        {
+            content: "Check that we have the good TOC on mobile",
+            trigger: ":iframe .s_table_of_content.o_snippet_desktop_invisible",
+        },
+        {
+            content: "The desktop TOC should not be visible on mobile",
+            trigger: ":iframe .s_table_of_content.o_snippet_mobile_invisible:not(:visible)",
+        },
+    ]
+);

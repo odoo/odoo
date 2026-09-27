@@ -1,0 +1,210 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import datetime
+from zoneinfo import ZoneInfo
+
+from odoo import api, Command, fields, models, modules, _
+from odoo.fields import Domain
+
+
+class ResUsers(models.Model):
+    _inherit = 'res.users'
+
+    calendar_user_ids = fields.One2many('calendar.user', 'user_id')
+    calendar_ids = fields.One2many('calendar.calendar', compute='_compute_calendar_ids', readonly=False, user_writeable=True)
+    owned_calendar_ids = fields.One2many('calendar.calendar', compute='_compute_calendar_ids')
+    writable_calendar_ids = fields.One2many('calendar.calendar', compute='_compute_calendar_ids')
+    primary_calendar_id = fields.Many2one('calendar.calendar', compute='_compute_primary_calendar', store=True)
+
+    @api.depends('calendar_user_ids.is_primary', 'calendar_user_ids.access_role', 'calendar_user_ids.calendar_id')
+    def _compute_primary_calendar(self):
+        for user in self:
+            user.primary_calendar_id = user.calendar_user_ids.filtered(
+                lambda l: l.is_primary and l.access_role == 'owner').calendar_id
+
+    @api.depends('calendar_user_ids')
+    def _compute_calendar_ids(self):
+        calendar_user_records = self.env['calendar.user'].sudo().search([('user_id', 'in', self.ids)])
+        for user in self:
+            user.calendar_ids = calendar_user_records.filtered(lambda l: l.user_id.id == user.id).calendar_id
+            user.owned_calendar_ids = calendar_user_records.filtered(
+                lambda l: l.user_id.id == user.id and l.access_role == 'owner').calendar_id
+            user.writable_calendar_ids = calendar_user_records.filtered(
+                lambda l: l.user_id.id == user.id and l.access_role in ('owner', 'writer')).calendar_id
+
+    @api.model
+    def _find_or_create_primary_calendar(self):
+        self.ensure_one()
+        if self.primary_calendar_id:
+            return self.primary_calendar_id
+
+        self._generate_primary_calendar()
+        # Field should be recomputed after the creation of the primary calendar
+        return self.primary_calendar_id
+
+    def _generate_primary_calendar(self):
+        self.env['calendar.calendar'].sudo().create([
+            {
+                'name': user.display_name,
+                'calendar_default_privacy': self.env['ir.config_parameter'].sudo().get_str('calendar.default_privacy', 'public'),
+                'calendar_user_ids': [Command.create({
+                    'user_id': user.id,
+                    'is_primary': True,
+                    'access_role': 'owner',
+                    'is_filter_active': True,
+                    'is_filter_checked': True,
+                    'name': user.display_name,
+                })],
+            }
+            for user in self
+        ])
+
+    def get_selected_calendars_partner_ids(self, include_user=True):
+        """
+        Retrieves the partner IDs of the attendees selected in the calendar view.
+
+        :param bool include_user: Determines whether to include the current user's partner ID in the results.
+        :return: A list of integer IDs representing the partners selected in the calendar view.
+                 If 'include_user' is True, the list will also include the current user's partner ID.
+        :rtype: list
+        """
+        self.ensure_one()
+        partner_ids = self.env['calendar.filters'].search([
+            ('user_id', '=', self.id),
+        ]).partner_id.ids
+
+        if include_user:
+            partner_ids += [self.env.user.partner_id.id]
+        return partner_ids
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        users = super().create(vals_list)
+        users.filtered(lambda u: not u.share)._generate_primary_calendar()
+        return users
+
+    def unlink(self):
+        # Normal ondelete=cascade does not go through unlink() overrides, which we need to remove
+        # the calendar if this was its last user. Otherwise, we would end up with orphaned calendars.
+        self.calendar_user_ids.unlink()
+        return super().unlink()
+
+    def _systray_get_calendar_event_domain(self):
+        # Determine the domain for which the users should be notified. This method sends notification to
+        # events for which there's a reminder set and occurring between now and the end of the day.
+        # Note that "now" needs to be computed in the user TZ and converted into UTC to compare with the records values
+        # and "the end of the day" needs also conversion. Otherwise TZ diverting a lot from UTC would send notification
+        # for events occurring tomorrow.
+        # The user is notified if the start is occurring between now and the end of the day
+        # if the event is not finished.
+        #   |           |
+        #   |===========|===> DAY A (`start_dt`): now in the user TZ
+        #   |           |
+        #   |           | <--- `start_dt_utc`: now is on the right if the user lives
+        #   |           |               in West Longitude (America for example)
+        #   |           |
+        #   |  -------  | <--- `start`: the start of the event (in UTC)
+        #   | | event | |
+        #   |  -------  | <--- `stop`: the stop of the event (in UTC)
+        #   |           |
+        #   |           |
+        #   |           | <--- `stop_dt_utc` = `stop_dt` if user lives in an area of East longitude (positive shift compared to UTC, Belgium for example)
+        #   |           |
+        #   |           |
+        #   |-----------| <--- `stop_dt` = end of the day for DAY A from user point of view (23:59 in this TZ)
+        #   |===========|===> DAY B
+        #   |           |
+        #   |           | <--- `stop_dt_utc` = `stop_dt` if user lives in an area of West longitude (positive shift compared to UTC, America for example)
+        #   |           |
+        start_dt_utc = start_dt = datetime.datetime.now(datetime.UTC)
+        stop_dt_utc = datetime.datetime.combine(start_dt_utc.date(), datetime.time.max.replace(tzinfo=datetime.UTC))
+
+        tz = self.env.user.tz
+        if tz:
+            user_tz = ZoneInfo(tz)
+            start_dt = start_dt_utc.astimezone(user_tz)
+            stop_dt = datetime.datetime.combine(start_dt.date(), datetime.time.max.replace(tzinfo=user_tz, fold=1))
+            stop_dt_utc = stop_dt.astimezone(datetime.UTC)
+
+        start_date = start_dt.date()
+
+        current_user_non_declined_attendee_ids = self.env['calendar.attendee']._search([
+            ('partner_id', '=', self.env.user.partner_id.id),
+            ('state', '!=', 'declined'),
+        ])
+
+        is_today_allday = Domain.AND([
+            Domain('allday', '=', True),
+            Domain('start_date', '=', fields.Date.to_string(start_date)),
+        ])
+        is_today_ongoing_or_future = Domain.AND([
+            Domain.OR([
+                Domain('start', '>=', fields.Datetime.to_string(start_dt_utc)),
+                Domain('stop', '>=', fields.Datetime.to_string(start_dt_utc)),
+            ]),
+            Domain('start', '<=', fields.Datetime.to_string(stop_dt_utc)),
+        ])
+
+        return Domain.AND([
+            Domain('alarm_ids', "!=", False),
+            Domain('attendee_ids', 'in', current_user_non_declined_attendee_ids),
+            Domain.OR([
+                is_today_allday,
+                is_today_ongoing_or_future,
+            ])
+        ])
+
+    @api.model
+    def _get_activity_groups(self):
+        res = super()._get_activity_groups()
+        EventModel = self.env['calendar.event']
+        meetings_lines = EventModel.search_read(
+            self._systray_get_calendar_event_domain(),
+            ['id', 'start', 'name', 'allday'],
+            order='start',
+            limit=2,
+        )
+        if meetings_lines:
+            meeting_label = _("Upcoming Meetings")
+            meetings_systray = {
+                'id': self.env['ir.model']._get('calendar.event').id,
+                'type': 'meeting',
+                'name': meeting_label,
+                'is_today_meetings': True,
+                'model': 'calendar.event',
+                'icon': modules.module.get_module_icon(EventModel._original_module),
+                'domain': [('active', 'in', [True, False])],
+                'meetings': meetings_lines,
+                "view_type": EventModel._systray_view,
+            }
+            res.insert(0, meetings_systray)
+        return res
+
+    @api.model
+    def check_calendar_credentials(self):
+        return {}
+
+    def check_synchronization_status(self):
+        return {}
+
+    @api.model
+    def get_calendar_sync_email(self):
+        """Meant to be overridden by a specific calendar provider"""
+        return False
+
+    @api.model
+    def get_calendar_model_data(self):
+        return {
+            'credential_status': self.env.user.check_calendar_credentials(),
+            'sync_status': self.env.user.check_synchronization_status(),
+            'sync_email': self.env.user.get_calendar_sync_email(),
+            'default_duration': self.env['calendar.event'].get_default_duration(),
+        }
+
+    def _has_any_active_synchronization(self):
+        """
+        Overridable method for checking if user has any synchronization active in inherited modules.
+
+        :return: boolean indicating if any synchronization is active.
+        """
+        return False

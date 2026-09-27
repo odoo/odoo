@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_ph.external_layout_footer_content" inherit_id="web.external_layout_footer_content">
+        <xpath expr="//div[@t-field='company.report_footer']" position="before">
+            <t t-if="l10n_ph_voucher_footer">
+                <t t-call="l10n_ph.report_disbursement_voucher_document_footer"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- RR No. 7-2024 Sec. 6(B): the invoice states whether the seller is VAT-registered. -->
+    <template id="company_address_list" inherit_id="web.company_address_list">
+        <xpath expr="//ul[@name='company_address_list']//span[@t-field='company.country_id.vat_label']" position="replace">
+            <t t-if="company.account_fiscal_country_id.code == 'PH'">
+                <span t-out="('VAT REG ' if company.l10n_ph_is_vat_registered else 'NON VAT REG ') + company.country_id.vat_label"/>:
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+</odoo>

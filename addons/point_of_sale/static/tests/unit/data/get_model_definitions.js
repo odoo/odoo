@@ -1,0 +1,38 @@
+import { registry } from "@web/core/registry";
+import { createRelatedModels } from "@point_of_sale/app/models/related_models";
+import { DataServiceOptions } from "@point_of_sale/app/models/data_service_options";
+import { MockServer } from "@web/../tests/web_test_helpers";
+
+export const getModelDefinitions = () => {
+    const session = MockServer.current._models["pos.session"];
+    const modelsToLoad = session.getModelsToLoad({});
+    const response = {};
+    for (const model of modelsToLoad) {
+        response[model] = session._load_data_relations(model, []);
+    }
+    return response;
+};
+
+let generatedModels = null;
+
+export const getRelatedModelsInstance = (useModelClass = true) => {
+    if (generatedModels) {
+        return generatedModels;
+    }
+
+    const options = new DataServiceOptions();
+    const relations = getModelDefinitions();
+    const modelClasses = {};
+
+    if (useModelClass) {
+        for (const posModel of registry.category("pos_available_models").getAll()) {
+            const pythonModel = posModel.pythonModel;
+            modelClasses[pythonModel] = posModel;
+            relations[pythonModel] ??= {};
+        }
+    }
+
+    const models = createRelatedModels(relations, useModelClass ? modelClasses : {}, options);
+    generatedModels = models.models;
+    return models.models;
+};

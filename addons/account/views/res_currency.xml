@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_currency_form_inherit" model="ir.ui.view">
+            <field name="name">res.currency.form.inherit</field>
+            <field name="model">res.currency</field>
+            <field name="inherit_id" ref="base.view_currency_form"/>
+            <field name="arch" type="xml">
+                <form position="attributes">
+                    <attribute name="js_class">currency_form</attribute>
+                </form>
+
+                <xpath expr="//field[@name='decimal_places']" position="after">
+                    <div colspan="2" invisible="not display_rounding_warning" class="alert alert-danger" role="alert">
+                        <p class="m-0">
+                            <strong>WARNING - This change is irreversible</strong>
+                        </p>
+
+                        <p class="mt-1 mb-2">
+                            You are changing decimals in your entire database, including invoices,
+                            tax amounts, accounting amounts, reports. This is probably not intended.
+                        </p>
+
+                        <div>
+                            <field name="display_rounding_warning"
+                               widget="open_decimal_precision_button"/>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

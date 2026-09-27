@@ -1,0 +1,220 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from unittest.mock import patch
+
+from freezegun import freeze_time
+
+from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+from odoo.addons.l10n_vn_edi_viettel.tests.test_edi import TestVNEDI
+from odoo.exceptions import UserError
+from odoo.tests import tagged
+from odoo import Command
+
+
+@tagged("post_install_l10n", "post_install", "-at_install")
+class TestVNEDIPOS(TestVNEDI, TestPointOfSaleHttpCommon):
+    _test_user_groups = None  # FIXME list needed groups
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.template_2 = "2/0024"
+        cls.symbol_2 = cls.env['l10n_vn_edi_viettel.sinvoice.symbol'].create({
+            'name': 'C25MNK',
+            'invoice_template_code': cls.template_2,
+        })
+        cls.company.write({
+            "l10n_vn_pos_default_symbol": cls.symbol.id,
+        })
+        cls.walk_in_customer = cls.env.ref('l10n_vn_edi_viettel_pos.partner_walk_in_customer')
+
+        cls.main_pos_config.open_ui()
+        cls.session = cls.main_pos_config.current_session_id
+
+    def _create_simple_order(self):
+        return self.env['pos.order'].create(
+            {
+                "name": "Order/0001",
+                "session_id": self.session.id,
+                "lines": [
+                    Command.create(
+                        {
+                            "product_id": self.product.product_variant_id.id,
+                            "qty": 3,
+                            "price_unit": 1.0,
+                            "price_subtotal": 3.0,
+                            "price_subtotal_incl": 3.0,
+                        }
+                    )
+                ],
+                "partner_id": self.walk_in_customer.id,
+                "amount_tax": 0.0,
+                "amount_total": 3.0,
+                "amount_paid": 0.0,
+                "amount_return": 0.0,
+            }
+        )
+
+    def test_default_symbol(self):
+        """Test default symbol on POS order invoice."""
+        pos_order = self._create_simple_order()
+        invoice_vals = pos_order._prepare_invoice_vals()
+        self.assertEqual(
+            invoice_vals["l10n_vn_edi_invoice_symbol"],
+            self.symbol.id,
+            "The invoice symbol on the invoice values should be the default symbol of the company.",
+        )
+
+    def test_pos_specific_symbol(self):
+        """Test POS specific symbol on POS order invoice."""
+        self.main_pos_config.l10n_vn_pos_symbol = self.symbol_2.id
+        pos_order = self._create_simple_order()
+        invoice_vals = pos_order._prepare_invoice_vals()
+        self.assertEqual(
+            invoice_vals["l10n_vn_edi_invoice_symbol"],
+            self.symbol_2.id,
+            "The invoice symbol on the invoice values should be the symbol set in the POS configuration.",
+        )
+
+    def test_prepare_order_vals_rights(self):
+        """ Test that a pos users is able to register an invoice from the PoS without being blocked. """
+        self.pos_user = self.env['res.users'].create({
+            'name': 'A simple PoS man!',
+            'login': 'test_pos_user',
+            'password': 'pos_user',
+            'group_ids': [
+                (4, self.env.ref('base.group_user').id),
+                (4, self.env.ref('point_of_sale.group_pos_user').id),
+            ],
+        })
+        pos_order = self._create_simple_order()
+        pos_order.config_id.invalidate_recordset()
+        pos_order.with_user(self.pos_user)._prepare_invoice_vals()
+
+    @freeze_time('2024-01-01')
+    def test_invoice_send_and_print(self):
+        """ Test the invoice creation, sending and printing from a POS order."""
+        order = self._create_simple_order()
+        invoice = order._generate_pos_order_invoice()
+
+        self.assertEqual(invoice.l10n_vn_edi_invoice_state, 'ready_to_send')
+        self._send_invoice(invoice)
+
+        self.assertRecordValues(
+            invoice,
+            [{
+                'l10n_vn_edi_invoice_number': 'K24TUT01',
+                'l10n_vn_edi_reservation_code': '123456',
+                'l10n_vn_edi_invoice_state': 'sent',
+            }]
+        )
+        self.assertNotEqual(invoice.l10n_vn_edi_sinvoice_xml_file, False)
+        self.assertNotEqual(invoice.l10n_vn_edi_sinvoice_pdf_file, False)
+        self.assertNotEqual(invoice.l10n_vn_edi_sinvoice_file, False)
+
+    @freeze_time('2024-01-01')
+    def test_invoice_refund(self):
+        """ Test the refund flow of PoS order"""
+        order = self._create_simple_order()
+        invoice = order._generate_pos_order_invoice()
+        self._send_invoice(invoice)
+
+        refund_order = order._refund()
+        refund_invoice = refund_order._generate_pos_order_invoice()
+
+        self.assertEqual(refund_invoice.l10n_vn_edi_invoice_state, 'ready_to_send')
+        self._send_invoice(refund_invoice)
+        self.assertRecordValues(
+            refund_invoice,
+            [{
+                'l10n_vn_edi_invoice_number': 'K24TUT01',
+                'l10n_vn_edi_reservation_code': '123456',
+                'l10n_vn_edi_invoice_state': 'sent',
+            }]
+        )
+        self.assertNotEqual(refund_invoice.l10n_vn_edi_sinvoice_xml_file, False)
+        self.assertNotEqual(refund_invoice.l10n_vn_edi_sinvoice_pdf_file, False)
+        self.assertNotEqual(refund_invoice.l10n_vn_edi_sinvoice_file, False)
+
+    @freeze_time('2024-01-01')
+    def test_fetch_invoice_files(self):
+        """Test that l10n_vn_edi_fetch_invoice_files fetches and stores XML and PDF files on a sent POS invoice."""
+        order = self._create_simple_order()
+        invoice = order._generate_pos_order_invoice()
+        self._send_invoice(invoice)
+
+        self.assertEqual(invoice.l10n_vn_edi_invoice_state, 'sent')
+
+        # Clear the files so we can verify that fetch_invoice_files re-fetches them
+        invoice.l10n_vn_edi_sinvoice_pdf_file_id.unlink()
+        invoice.l10n_vn_edi_sinvoice_xml_file_id.unlink()
+        self.assertFalse(invoice.l10n_vn_edi_sinvoice_pdf_file)
+        self.assertFalse(invoice.l10n_vn_edi_sinvoice_xml_file)
+
+        pdf_response = ({
+            'name': 'sinvoice.pdf',
+            'mimetype': 'application/pdf',
+            'raw': b'pdf file',
+            'res_field': 'l10n_vn_edi_sinvoice_pdf_file',
+        }, "")
+        xml_response = ({
+            'name': 'sinvoice.xml',
+            'mimetype': 'application/xml',
+            'raw': b'xml file',
+            'res_field': 'l10n_vn_edi_sinvoice_xml_file',
+        }, "")
+
+        with patch('odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_pdf_file_data', return_value=pdf_response), \
+             patch('odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_xml_file_data', return_value=xml_response):
+            invoice.l10n_vn_edi_fetch_invoice_files()
+
+        self.assertNotEqual(invoice.l10n_vn_edi_sinvoice_pdf_file, False)
+        self.assertNotEqual(invoice.l10n_vn_edi_sinvoice_xml_file, False)
+
+    @freeze_time('2024-01-01')
+    def test_fetch_invoice_files_not_sent_raises(self):
+        """Test that calling l10n_vn_edi_fetch_invoice_files on a non-sent invoice raises a UserError."""
+        order = self._create_simple_order()
+        invoice = order._generate_pos_order_invoice()
+
+        self.assertNotEqual(invoice.l10n_vn_edi_invoice_state, 'sent')
+        with self.assertRaises(UserError):
+            invoice.l10n_vn_edi_fetch_invoice_files()
+
+    @freeze_time('2024-01-01')
+    def test_pos_sinvoice_auto_send_deferred_pdf(self):
+        """When use_download_invoice is disabled (deferred PDF), the SInvoice
+        submission must still happen during order validation."""
+        self.main_pos_config.write({
+            'l10n_vn_auto_send_to_sinvoice': True,
+            'use_download_invoice': False,
+        })
+
+        order = self._create_simple_order()
+        cash_pm = self.main_pos_config._get_cash_payment_method()
+        order.write({
+            'to_invoice': True,
+            'state': 'paid',
+            'amount_paid': order.amount_total,
+            'payment_ids': [Command.create({
+                'amount': order.amount_total,
+                'payment_method_id': cash_pm.id,
+                'session_id': self.session.id,
+            })],
+        })
+
+        create_resp = {'invoiceNo': 'K24TUT01', 'reservationCode': '123456'}
+        token_resp = {'access_token': '123', 'expires_in': '60'}
+        pdf_resp = {'name': 'sinvoice.pdf', 'mimetype': 'application/pdf', 'raw': b'pdf', 'res_field': 'l10n_vn_edi_sinvoice_pdf_file'}
+        xml_resp = {'name': 'sinvoice.xml', 'mimetype': 'application/xml', 'raw': b'xml', 'res_field': 'l10n_vn_edi_sinvoice_xml_file'}
+
+        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service.SInvoiceService.create_invoice', return_value=(create_resp, None)), \
+             patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service.SInvoiceService.get_access_token', return_value=(token_resp, None)), \
+             patch('odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_pdf_file_data', return_value=(pdf_resp, '')), \
+             patch('odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove._l10n_vn_edi_fetch_invoice_xml_file_data', return_value=(xml_resp, '')):
+            order._generate_order_invoice()
+
+        invoice = order.account_move
+        self.assertTrue(invoice, "Invoice should have been created")
+        self.assertEqual(invoice.l10n_vn_edi_invoice_state, 'sent', "SInvoice should be submitted during order validation even with deferred PDF")

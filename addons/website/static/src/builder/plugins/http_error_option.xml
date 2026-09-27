@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.httpErrorOption">
+        <BuilderRow label.translate="Hide Error Message" tooltip.translate="Hides an error message.">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: this.templatePage}"/>
+        </BuilderRow>
+    </t>
+
+    <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//t[@id='snippet_specific_options']" position="inside">
+            <http_error_option
+                selector="main:has(.s_error_page)"
+                title="Error Message"
+                editableOnly="false"
+                groups='["website.group_website_designer"]'/>
+        </xpath>
+    </t>
+</templates>

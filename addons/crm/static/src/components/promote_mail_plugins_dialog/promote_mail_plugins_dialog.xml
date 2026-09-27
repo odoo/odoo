@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="crm.PromoteMailPluginsDialog">
+        <Dialog title="this.props.title">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <h4>Tired of copy-pasting emails?</h4>
+                    <p class="m-0 mt-3">Bring Odoo into your inbox:</p>
+                    <ul class="ps-3 mb-0">
+                        <li>Connect to Gmail or Outlook accounts.</li>
+                        <li>Create Contacts, Leads, Tickets, Projects and Tasks.</li>
+                        <li>Find any Odoo record without leaving your inbox.</li>
+                        <li>Preview records and open their forms in one click.</li>
+                        <li>Save emails and attachments directly to Odoo.</li>
+                    </ul>
+                    <a role="button" class="btn btn-link p-0"
+                        href="https://www.odoo.com/documentation/latest/applications/general/integrations/mail_plugins.html"
+                        target="_blank">
+                        Learn More
+                    </a>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="ratio ratio-16x9">
+                        <iframe src="https://www.youtube.com/embed/_YZcjjU0xUM?si=R57M0l-dJSSXxCrw" allowfullscreen="true"/>
+                    </div>
+                </div>
+                <t t-set-slot="footer">
+                    <div class="d-flex flex-wrap gap-2">
+                        <a title="Gmail" role="button" class="btn btn-secondary"
+                            href="https://workspace.google.com/marketplace/app/odoo_inbox_addin/546131068990"
+                            target="_blank">
+                            <img src="https://download.odoocdn.com/digests/mail_plugin/static/src/img/gmail.png" style="width: 20px; margin-right: 5px;"/>
+                            Get it for Gmail
+                        </a>
+                        <a title="Outlook" role="button" class="btn btn-secondary"
+                            href="https://marketplace.microsoft.com/en-us/product/WA200009923"
+                            target="_blank">
+                            <img src="https://download.odoocdn.com/digests/mail_plugin/static/src/img/outlook.png" style="width: 20px; margin-right: 5px;"/>
+                            Get it for Outlook
+                        </a>
+                    </div>
+                </t>
+            </div>
+        </Dialog>
+    </t>
+</templates>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_iap_users_tree" model="ir.ui.view">
+            <field name="name">res.users.list.iap</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <list string="Users">
+                    <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded'}" width="30" nolabel="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="email" readonly="1"/>
+                </list>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,21 @@
+.o-mobile-figure.o-figure {
+    margin: 4px;
+
+    &:not(.o_empty_figure){
+        direction: ltr;
+    }
+
+    .o-chart-menu {
+        visibility: visible !important;
+        /* Compensate for the padding of the figure */
+        top: 4px !important;
+        right: 4px !important;
+    }
+
+    .o-carousel-full-screen-button,
+    .o-carousel-tabs-dropdown,
+    .o-chart-menu-item:not([name="chart-granularity"]) {
+        display: none !important;
+    }
+
+}

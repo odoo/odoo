@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo User (Regular) -->
+        <record id="partner_demo" model="res.partner">
+            <field name="name">Marc Demo</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="street">3575  Buena Vista Avenue</field>
+            <field name="city">Eugene</field>
+            <field name="state_id"  model="res.country.state" search="[('code','=','OR')]"/>
+            <field name="zip">97401</field>
+            <field name="country_id" ref="us"/>
+            <field name="tz">Europe/Brussels</field>
+            <field name="email">mark.brown23@example.com</field>
+            <field name="phone">(441)-695-2334</field>
+        </record>
+
+        <!-- Only update if we don't have information coming from the database manager -->
+        <function model="res.partner" name="write">
+            <value eval="[ref('base.main_partner')]"/>
+            <value eval="{
+                'name': 'YourCompany',
+                'street': '8000 Marina Blvd, Suite 300',
+                'city': 'Brisbane',
+                'zip': '94005',
+                'country_id': ref('base.us'),
+                'state_id': ref('base.state_us_5'),
+                'phone': '+1 555-555-5556',
+                'website': 'www.example.com',
+                'email': 'info@yourcompany.com',
+            } if obj(ref('base.main_partner')).name == 'My Company' else {}" model="res.partner"/>
+        </function>
+
+        <record id="user_demo" model="res.users">
+            <field name="partner_id" ref="base.partner_demo"/>
+            <field name="login">demo</field>
+            <field name="password">demo</field>
+            <field name="signature" type="html"><div>Mr Demo</div></field>
+            <field name="company_id" ref="main_company"/>
+            <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+            <field name="image_1920" type="bytes" file="base/static/img/user_demo-image.webp"/>
+        </record>
+
+        <record id="partner_demo" model="res.partner">
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+
+        <!-- Demo User (Light) -->
+        <record id="partner_light" model="res.partner">
+            <field name="name">Monica Light</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="street">118 Rue de l'Ange</field>
+            <field name="city">Namur</field>
+            <field name="zip">5000</field>
+            <field name="country_id" ref="be"/>
+            <field name="tz">Europe/Brussels</field>
+            <field name="email">light@example.com</field>
+            <field name="phone">+32-489-189-562</field>
+        </record>
+
+        <record id="user_light" model="res.users">
+            <field name="partner_id" ref="base.partner_light"/>
+            <field name="login">light</field>
+            <field name="password">light</field>
+            <field name="signature" type="html"><div>Mrs Light</div></field>
+            <field name="company_id" ref="main_company"/>
+            <field name="group_ids" eval="[Command.set([ref('base.group_user')])]"/>
+            <field name="image_1920" type="bytes" file="base/static/img/user_light-image.webp"/>
+        </record>
+
+        <record id="partner_light" model="res.partner">
+            <field name="user_id" ref="base.user_light"/>
+        </record>
+
+        <record model="res.partner" id="base.partner_root">
+            <field name="tz">Europe/Brussels</field>
+        </record>
+
+        <record model="res.partner" id="base.partner_admin">
+            <field name="name">Mitchell Admin</field>
+            <field name="street">215 Vine St</field>
+            <field name="city">Scranton</field>
+            <field name="zip">18503</field>
+            <field name='country_id' ref='base.us'/>
+            <field name='state_id' ref='state_us_39'/>
+            <field name="phone">+1 555-555-5555</field>
+            <field name="email">admin@yourcompany.example.com</field>
+            <field name="tz">Europe/Brussels</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="image_1920" type="bytes" file="base/static/img/partner_admin-image.webp"/>
+        </record>
+
+        <record id="base.user_admin" model="res.users">
+            <field name="signature" type="html"><div>Mitchell Admin</div></field>
+        </record>
+
+        <!-- Portal : partner and user -->
+        <record id="partner_demo_portal" model="res.partner">
+            <field name="name">Joel Willis</field>
+            <field name="email">joel.willis63@example.com</field>
+            <field name="street">858 Lynn Street</field>
+            <field name="city">Bayonne</field>
+            <field model="res.country.state" name="state_id" search="[('code','ilike','NJ')]"/>
+            <field name="zip">07002</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="image_1920" type="bytes" file="base/static/img/partner_demo_portal.webp"/>
+            <field name="phone">(683)-556-5104</field>
+        </record>
+        <record id="demo_user0" model="res.users" context="{'no_reset_password': True}">
+            <field name="partner_id" ref="partner_demo_portal"/>
+            <field name="login">portal</field>
+            <field name="password">portal</field>
+            <field name="signature" type="html"><div>Mr Demo Portal</div></field>
+            <field name="group_ids" eval="[Command.clear()]"/><!-- Avoid auto-including this user in any default group -->
+        </record>
+
+        <record id="base.group_portal" model="res.groups"><!-- Add the demo user to the portal (and therefore to the portal member group) -->
+            <field name="user_ids" eval="[Command.link(ref('demo_user0'))]"/>
+        </record>
+    </data>
+</odoo>

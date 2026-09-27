@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="l10n_co_pos.pos_order_receipt" inherit_id="point_of_sale.pos_order_receipt">
+            <div name="before-footer" position="before">
+                <div class="text-center mt-2 mb-2" t-if="order['name'] and conditions.get('code_co')">
+                    <span t-out="order['name']" />
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

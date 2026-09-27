@@ -1,0 +1,63 @@
+import { proxy } from "@odoo/owl";
+
+import { registry } from "@web/core/registry";
+
+export class MailCoreCommon {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {import("services").ServiceFactories} services
+     */
+    constructor(env, services) {
+        this.env = env;
+        this.busService = services.bus_service;
+        this.store = services["mail.store"];
+    }
+
+    setup() {
+        this.busService.subscribe("ir.attachment/delete", (payload) => {
+            const { id: attachmentId, message: messageData } = payload;
+            if (messageData) {
+                this.store["mail.message"].insert(messageData);
+            }
+            const attachment = this.store["ir.attachment"].get(attachmentId);
+            attachment?.delete();
+        });
+        this.busService.subscribe("mail.message/delete", (payload, { id: notifId }) => {
+            for (const messageId of payload.message_ids) {
+                const message = this.store["mail.message"].get(messageId);
+                if (!message) {
+                    continue;
+                }
+                this.env.bus.trigger("mail.message/delete", { message, notifId });
+                message.delete();
+            }
+        });
+        this.busService.subscribe("mail.record/insert", (payload) => {
+            this.store.insert(payload);
+        });
+        this.env.bus.addEventListener(
+            "discuss.channel/new_message",
+            ({ detail: { channel, message, silent } }) => {
+                if (this.env.services.ui.isSmall || message.isSelfAuthored || silent) {
+                    return;
+                }
+                channel.notifyMessageToUser(message);
+            }
+        );
+    }
+}
+
+export const mailCoreCommon = {
+    dependencies: ["bus_service", "mail.store"],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {import("services").ServiceFactories} services
+     */
+    start(env, services) {
+        const mailCoreCommon = proxy(new MailCoreCommon(env, services));
+        mailCoreCommon.setup();
+        return mailCoreCommon;
+    },
+};
+
+registry.category("services").add("mail.core.common", mailCoreCommon);

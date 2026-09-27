@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="account.StockValuationReport">
+        <div class="o_action account_report">
+            <ControlPanel>
+                <!-- Buttons bar -->
+                <t t-set-slot="control-panel-buttons">
+                    <StockValuationReportButtonsBar/>
+                </t>
+
+                <!-- Filters -->
+                <t t-set-slot="control-panel-actions">
+                   <div class="d-flex gap-1 flex-wrap">
+                       <StockValuationReportFilters/>
+                   </div>
+                </t>
+            </ControlPanel>
+             <div class="o_content">
+                <div id="warnings" class="warnings d-print-none"/>
+                <div class="fit-content w-print-100">
+                    <table class="table table-borderless table-hover w-print-100 mx-auto">
+                        <tbody>
+                            <t t-call="account.StockValuationReport.InitialBalance"/>
+                            <t t-if="this.data.accrual" t-call="account.StockValuationReport.Accrual"/>
+                            <t t-if="this.data.inventory_loss" t-call="account.StockValuationReport.InventoryLoss"/>
+                            <t t-call="account.StockValuationReport.StockVariation"/>
+                            <t t-call="account.StockValuationReport.EndingStock"/>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="account.StockValuationReport.EmptyLine">
+        <tr class="empty"><td colspan="4"/></tr>
+    </t>
+
+    <t t-name="account.StockValuationReport.InitialBalance">
+        <StockValuationReportLine
+            label.translate="Initial Balance"
+            level="0"
+            onClickMethod="this.data.initial_balance.lines.length ? this.openAccountMoves.bind(this) : undefined"
+            sublines="this.data.initial_balance.lines"
+            value="this.data.initial_balance.value"/>
+        <t t-call="account.StockValuationReport.EmptyLine"/>
+    </t>
+
+    <t t-name="account.StockValuationReport.StockVariation">
+        <StockValuationReportLine
+            label.translate="Stock Variation"
+            level="0"
+            sublines="this.data.stock_variation.lines"
+            value="this.data.stock_variation.value"/>
+        <t t-call="account.StockValuationReport.EmptyLine"/>
+    </t>
+
+    <t t-name="account.StockValuationReport.EndingStock">
+        <StockValuationReportLine
+            label.translate="Ending Stock"
+            level="0"
+            onClickMethod="this.data.ending_stock.lines.length ? this.openStockReport.bind(this) : undefined"
+            sublines="this.data.ending_stock.lines"
+            value="this.data.ending_stock.value"/>
+    </t>
+
+    <t t-name="account.StockValuationReport.InventoryLoss">
+        <StockValuationReportLine
+            label.translate="Inventory Loss"
+            level="0"
+            displayDebitCredit="true"
+            onClickMethod.bind="this.openInventoryLoss"
+            sublines="this.data.inventory_loss.lines"
+            value="this.data.inventory_loss.value"/>
+        <t t-call="account.StockValuationReport.EmptyLine"/>
+    </t>
+
+    <t t-name="account.StockValuationReport.Accrual">
+        <StockValuationReportLine
+            label.translate="Accruals"
+            level="0"
+            displayDebitCredit="true"
+            onClickMethod="this.data.accrual.lines.length ? this.openAccountMoves.bind(this) : undefined"
+            sublines="this.data.accrual.lines"
+            value="this.data.accrual.value"/>
+        <t t-call="account.StockValuationReport.EmptyLine"/>
+    </t>
+</templates>

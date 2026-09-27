@@ -1,0 +1,42 @@
+// Colors of the notification are not managed by this file.
+// It is handled by the other classes defining a background. (like danger, warning, etc.)
+// The notification just add overlays.
+
+.o_notification_manager {
+    position: fixed;
+    inset: auto $o-notification-margin ($o-navbar-height * 0.25) $o-notification-margin;
+    z-index: $o-notification-zindex;
+
+    @include media-breakpoint-up(md) {
+        inset: ($o-navbar-height * 1.15) $o-notification-margin auto auto;
+        min-width: $o-notification-min-width-md;
+        max-width: $o-notification-max-width-md;
+    }
+
+    @include media-breakpoint-down(md) {
+        .o_notification_content {
+            flex: 0 1 auto;
+        }
+
+        .o_notification_buttons {
+            flex: 0 0 auto;
+        }
+    }
+
+    .o_notification {
+        background-color: var(--Notification__background-color, #{$o-view-background-color}); // Needed to override the background in 'website.scss'
+    }
+
+    .o_notification_bar {
+        width: $o-notification-bar-width;
+    }
+}
+
+@include owl-fade(0.5s, "o_notification");
+
+.o_notification_progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+}

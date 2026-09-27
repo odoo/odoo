@@ -1,0 +1,247 @@
+import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
+import { Dialog } from "@web/core/dialog/dialog";
+import { Notebook } from "@web/core/notebook/notebook";
+
+import { Component, useProps, proxy, signal, t } from "@odoo/owl";
+import { TABS, renderMedia } from "./media_dialog_utils";
+
+const DEFAULT_SEQUENCE = 50;
+const sequence = (tab) => tab.sequence ?? DEFAULT_SEQUENCE;
+
+export const mediaDialogProps = {
+    activeTab: t.string().optional(),
+    addFieldImage: t.boolean().optional(),
+    close: t.function(),
+    document: t.customValidator(t.object(), (p) => p.nodeType === Node.DOCUMENT_NODE),
+    extraTabs: t.array(t.object()).optional([]),
+    media: t.any().optional(),
+    multiImages: t.boolean().optional(),
+    noImages: t.boolean().optional(),
+    onAttachmentChange: t.function().optional(),
+    onlyImages: t.boolean().optional(),
+    pendingAttachments: t.array().optional([]),
+    resId: t.any().optional(),
+    resModel: t.any().optional(),
+    save: t.function(),
+    useMediaLibrary: t.boolean().optional(true),
+    visibleTabs: t.array(t.string()).optional(),
+};
+
+export class MediaDialog extends Component {
+    static template = "html_editor.MediaDialog";
+    static components = {
+        Dialog,
+        Notebook,
+    };
+
+    props = useProps(mediaDialogProps);
+
+    setup() {
+        this.size = "xl";
+        this.contentClass = "o_select_media_dialog h-100";
+        this.title = _t("Select a media");
+        this.modalRef = signal.ref();
+
+        this.orm = useService("orm");
+        this.notificationService = useService("notification");
+
+        this.selectedMedia = proxy({});
+
+        this.initialIconClasses = [];
+
+        this.notebookPages = [];
+        this.addTabs();
+        this.notebookPages.sort((a, b) => sequence(a) - sequence(b));
+        this.tabs = Object.fromEntries(this.notebookPages.map((tab) => [tab.id, tab]));
+
+        this.errorMessages = {};
+        this.activeTab = signal(this.initialActiveTab);
+        this.isSaving = signal(false);
+
+        this.abortUploads = null;
+    }
+
+    get isAddButtonDisabled() {
+        const tab = this.activeTab();
+        const mediaForTab = this.selectedMedia[tab];
+        const saving = this.isSaving();
+        return !mediaForTab?.length || saving;
+    }
+
+    get initialActiveTab() {
+        if (this.props.activeTab) {
+            return this.props.activeTab;
+        }
+        if (this.props.media) {
+            const correspondingTab =
+                Object.keys(this.tabs).find((id) =>
+                    this.tabs[id].Component.mediaSpecificClasses.some((cls) =>
+                        [...this.props.media.classList].includes(cls)
+                    )
+                ) ||
+                Object.keys(this.tabs).find((id) =>
+                    this.tabs[id].Component.tagNames.includes(this.props.media.tagName)
+                );
+            if (correspondingTab) {
+                return correspondingTab;
+            }
+        }
+        return this.notebookPages[0].id;
+    }
+
+    addTab(tab, additionalProps = {}) {
+        if (this.props.visibleTabs && !this.props.visibleTabs.includes(tab.id)) {
+            return;
+        }
+        this.selectedMedia[tab.id] = [];
+        this.notebookPages.push({
+            ...tab,
+            props: {
+                ...tab.props,
+                ...additionalProps,
+                id: tab.id,
+                document: this.props.document,
+                resModel: this.props.resModel,
+                resId: this.props.resId,
+                media: this.props.media,
+                // multiImages: this.props.multiImages,
+                selectedMedia: this.selectedMedia,
+                selectMedia: (...args) =>
+                    this.selectMedia(...args, tab.id, additionalProps.multiSelect),
+                save: this.save.bind(this),
+                setAbortUploadsCallback: (abortFunc) => (this.abortUploads = abortFunc),
+                onAttachmentChange: this.props.onAttachmentChange,
+                errorMessages: (errorMessage) => (this.errorMessages[tab.id] = errorMessage),
+                modalRef: this.modalRef,
+                pendingAttachments: this.props.pendingAttachments,
+            },
+        });
+    }
+
+    addTabs() {
+        const onlyImages =
+            this.props.onlyImages ||
+            (this.props.media &&
+                this.props.media.parentElement &&
+                (this.props.media.parentElement.dataset.oeField === "image" ||
+                    this.props.media.parentElement.dataset.oeType === "image"));
+
+        if (!this.props.noImages) {
+            this.addTab(TABS.IMAGES, {
+                useMediaLibrary: this.props.useMediaLibrary,
+                multiSelect: this.props.multiImages,
+                addFieldImage: this.props.addFieldImage,
+            });
+        }
+        if (onlyImages) {
+            return;
+        }
+        const addIcons = !this.props.visibleTabs || this.props.visibleTabs.includes(TABS.ICONS.id);
+        if (addIcons) {
+            this.addTab(TABS.ICONS);
+
+            if (
+                this.props.media &&
+                TABS.ICONS.Component.tagNames.includes(this.props.media.tagName)
+            ) {
+                // Material Symbols or Odoo UI icon: identified by the data-icon
+                // attribute. The icon list is fetched lazily by the IconSelector,
+                // so the pre-selection is rebuilt directly from the media element.
+                const dataIcon = this.props.media.dataset.icon;
+                if (dataIcon) {
+                    this.selectMedia(
+                        {
+                            id: dataIcon,
+                            name: dataIcon,
+                            dataIcon,
+                            source: dataIcon.startsWith("oi_") ? "oi" : "ms",
+                            filled: this.props.media.classList.contains("oi-filled"),
+                        },
+                        TABS.ICONS.id
+                    );
+                }
+                // No initialIconClasses needed: data-icon is overwritten by createElements,
+                // and "oi" is the shared base class preserved across icon changes.
+            }
+        }
+        this.props.extraTabs.forEach((tab) => this.addTab(tab));
+    }
+
+    extraClassesToAdd() {
+        return [];
+    }
+
+    selectMedia(media, tabId, multiSelect) {
+        if (media && !Object.keys(media).length) {
+            // Clear media selection when an empty object is passed
+            this.selectedMedia[tabId] = [];
+            return;
+        }
+        if (multiSelect) {
+            const isMediaSelected = this.selectedMedia[tabId]
+                .map(({ id }) => id)
+                .includes(media.id);
+            if (!isMediaSelected) {
+                this.selectedMedia[tabId].push(media);
+            } else {
+                this.selectedMedia[tabId] = this.selectedMedia[tabId].filter(
+                    (m) => m.id !== media.id
+                );
+            }
+        } else {
+            this.selectedMedia[tabId] = [media];
+        }
+    }
+
+    async preProcessSave() {}
+
+    async save() {
+        const tab = this.activeTab();
+        if (this.errorMessages[tab]) {
+            this.notificationService.add(this.errorMessages[tab], {
+                type: "danger",
+            });
+            return;
+        }
+        await this.preProcessSave();
+        const selectedMedia = this.selectedMedia[tab];
+        // TODO In master: clean the save method so it performs the specific
+        // adaptation before saving from the active media selector and find a
+        // way to simply close the dialog if the media element remains the same.
+        const saveSelectedMedia =
+            selectedMedia.length &&
+            (this.activeTab() !== TABS.ICONS.id ||
+                selectedMedia[0].initialIconChanged ||
+                !this.props.media);
+        this.isSaving.set(true);
+        if (saveSelectedMedia) {
+            let elements = await renderMedia({
+                orm: this.orm,
+                activeTab: this.activeTab(),
+                availableTabs: this.tabs,
+                oldMediaNode: this.props.media,
+                selectedMedia: selectedMedia,
+                extraClassesToAdd: this.extraClassesToAdd(),
+                extraClassesToRemove: this.initialIconClasses,
+                document: this.props.document,
+            });
+            elements = this.props.multiImages ? elements : elements[0];
+            await this.props.save(elements, selectedMedia, this.activeTab(), this.props.media);
+        }
+        this.props.close();
+        this.isSaving.set(false);
+    }
+
+    onTabChange(tab) {
+        this.activeTab.set(tab);
+    }
+    async close() {
+        if (this.abortUploads) {
+            this.abortUploads();
+            delete this.abortUploads;
+        }
+        this.isSaving.set(false);
+        await this.props.close();
+    }
+}

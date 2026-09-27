@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_pos_ui_inherit_l10n_pe_pos" model="ir.ui.view">
+        <field name="name">res.partner.form.pos.ui.inherit.l10n_pe_pos</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="point_of_sale.view_partner_form_pos_ui"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='street2']" position="after">
+                <field name="l10n_pe_district" placeholder="District..." class="o_address_street" readonly="type == 'contact' and parent_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

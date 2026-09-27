@@ -1,0 +1,93 @@
+.s_masonry_block:not([data-vcss]) {
+    .row, .row > div {
+        display: flex;
+    }
+
+    .row > div {
+        padding-bottom: $grid-gutter-width/2;
+        padding-top: $grid-gutter-width/2;
+        justify-content: center;
+        flex-flow: column wrap;
+    }
+
+    .container-fluid > .row {
+        flex-flow: row nowrap;
+
+        @include media-breakpoint-down(lg) {
+            flex-flow: column nowrap;
+        }
+
+        > div.s_masonry_block_pseudo_col {
+            flex: 1 1 auto;
+            padding:0;
+
+            > .row {
+                flex-flow: row wrap;
+                min-height: 100%;
+                margin: 0;
+
+                @include media-breakpoint-down(md) {
+                    flex-flow: column nowrap;
+                }
+
+                > div {
+                    min-height: 50%;
+                    flex: 1 1 auto;
+                }
+            }
+        }
+    }
+
+    &.s_ratio_2_1 {
+        .row > div {
+            padding-top: $grid-gutter-width;
+            padding-bottom: $grid-gutter-width;
+        }
+    }
+}
+
+html[data-no-flex] .s_masonry_block:not([data-vcss]) {
+    min-height: 340px;
+    > div {
+        height: 100%;
+    }
+
+    .row {
+        height: 100%;
+
+        > div {
+            position: relative;
+            height: 100%;
+            min-height: 170px;
+            padding-top: 0;
+            padding-left: 0;
+        }
+    }
+
+    .content {
+        @include clearfix;
+    }
+
+    @include media-breakpoint-up(md) {
+        .row .row > div {
+            height: 50%;
+        }
+    }
+
+    @include media-breakpoint-up(lg) {
+        height: 0px; // hack to force height chain
+        &.s_ratio_2_1 {
+            position: relative;
+            padding: 0 0 50% 0; // to have 2:1 aspect ratio
+            > div {
+                padding-top: 0;
+                padding-bottom:0;
+                @include o-position-absolute(0, 0, 0, 0);
+            }
+        }
+
+        .content {
+            @include o-position-absolute($s-masonry-block-content-top, $s-masonry-block-content-right, $s-masonry-block-content-bottom, $s-masonry-block-content-left);
+        }
+    }
+}

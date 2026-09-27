@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_blog_posts_carousel" name="Blog Posts Carousel">
+    <t t-call="website.s_dynamic_snippet_template"
+        snippet_name.f="s_blog_posts_carousel"
+        main_page_url.f="/blog"
+        snippet_classes.f="s_blog_posts s_blog_post_big_picture o_dynamic_carousel_snippet"
+        custom_template_data.f='{"blog_posts_post_author_active":true}'
+        snippet_title.f="Latest Stories"
+        snippet_description.f="Explore fresh ideas and updates from our editorial team.">
+        <t t-call="website_blog.s_dynamic_snippet_blog_posts_carousel_preview_data"/>
+    </t>
+</template>
+
+</odoo>

@@ -1,0 +1,111 @@
+import { Component, onMounted, proxy, signal, t, useProps } from "@odoo/owl";
+import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
+import { Dialog } from "@web/core/dialog/dialog";
+import { useService } from "@web/core/utils/hooks";
+
+export class EventRegistrationSummaryDialog extends Component {
+    static template = "event.EventRegistrationSummaryDialog";
+    static components = { Dialog };
+
+    props = useProps({
+        close: t.function(),
+        doNextScan: t.function().optional(),
+        playSound: t.function().optional(),
+        registration: t.object(),
+    });
+
+    continueButtonRef = signal.ref();
+
+    setup() {
+        this.actionService = useService("action");
+        this.isBarcodeScannerSupported = isBarcodeScannerSupported();
+        this.orm = useService("orm");
+        this.notification = useService("notification");
+        this.button = proxy({ enabled: true });
+
+        this.registrationStatus = proxy({ value: this.registration.status });
+
+        onMounted(() => {
+            if (
+                ["already_registered", "need_manual_confirmation"].includes(
+                    this.props.registration.status
+                ) &&
+                this.props.playSound
+            ) {
+                this.props.playSound("notify");
+            } else if (
+                ["not_ongoing_event", "canceled_registration"].includes(
+                    this.props.registration.status
+                ) &&
+                this.props.playSound
+            ) {
+                this.props.playSound("error");
+            }
+            // Without this, repeat barcode scans don't work as focus is lost
+            this.continueButtonRef()?.focus();
+        });
+    }
+
+    get registration() {
+        return this.props.registration;
+    }
+
+    get needManualConfirmation() {
+        return this.registrationStatus.value === "need_manual_confirmation";
+    }
+
+    async onRegistrationClose() {
+        this.props.close();
+        if (this.props.doNextScan) {
+            this.onScanNext();
+        }
+    }
+
+    async undoRegistration() {
+        if (
+            ["confirmed_registration", "already_registered"].includes(this.registrationStatus.value)
+        ) {
+            if (this.registration.remaining_entries === 0) {
+                await this.orm.call("event.registration", "action_confirm_and_reset", [
+                    this.registration.id,
+                ]);
+            } else if (this.registration.remaining_entries > 0) {
+                await this.orm.call("event.registration", "action_cancel_last_sub_registration", [
+                    this.registration.id,
+                ]);
+            }
+        } else if (this.registrationStatus.value == "unconfirmed_registration") {
+            await this.orm.call("event.registration", "action_set_draft", [this.registration.id]);
+        }
+        this.props.close();
+    }
+
+    async onRegistrationPrintPdf() {
+        await this.actionService.doAction({
+            type: "ir.actions.report",
+            report_type: "qweb-pdf",
+            report_name: `event.event_registration_report_template_badge/${this.registration.id}`,
+        });
+        if (this.props.doNextScan) {
+            this.onScanNext();
+        }
+    }
+
+    async onRegistrationView() {
+        await this.actionService.doAction({
+            type: "ir.actions.act_window",
+            res_model: "event.registration",
+            res_id: this.registration.id,
+            views: [[false, "form"]],
+            target: "current",
+        });
+        this.props.close();
+    }
+
+    async onScanNext() {
+        this.props.close();
+        if (this.isBarcodeScannerSupported) {
+            this.props.doNextScan();
+        }
+    }
+}

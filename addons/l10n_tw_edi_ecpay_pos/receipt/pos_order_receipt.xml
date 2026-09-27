@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="l10n_tw_edi_ecpay_pos.pos_order_receipt_header" inherit_id="point_of_sale.pos_order_receipt_header">
+            <xpath expr="//span[@t-out=&quot;extra_data['formated_date_order']&quot;]" position="replace">
+                <t t-if="extra_data.get('isPrintEcpayInvoice') and not extra_data.get('ecpay_error')">
+                    <span t-out="extra_data['iis_create_date']" />
+                </t>
+                <t t-else="">$0</t>
+            </xpath>
+        </template>
+
+        <template id="l10n_tw_edi_ecpay_pos.pos_order_receipt_style" inherit_id="point_of_sale.pos_order_receipt_style">
+            <xpath expr="//style" position="inside">
+                #pos-receipt.ecpay-receipt { margin: 0 !important; padding: 0 !important; }
+                #pos-receipt.ecpay-receipt .text-normal-ecpay { font-size: 25px !important; line-height: 32px !important; }
+                #pos-receipt.ecpay-receipt .ecpay-pos-barcode { width: 355px !important; height: 68px !important; }
+                #pos-receipt.ecpay-receipt .ecpay-qrcode-left { width: 168px !important; height: 168px !important; }
+                #pos-receipt.ecpay-receipt .ecpay-qrcode-right { width: 188px !important; height: 188px !important; }
+            </xpath>
+        </template>
+    </data>
+</odoo>

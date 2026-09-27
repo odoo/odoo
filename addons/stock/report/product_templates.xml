@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="lot_barcode_alternative_label">
+            <t t-translation="off">
+^PW406
+^LL203
+^FO14,23^A0N,23^FB235,1,0,L^FH^FD<t t-out="name"/>^FS
+                <t t-if="barcode_value">
+^FO24,67^BY2^BCN,74,N^FH^FD<t t-out="barcode_value"/>^FS
+^FO14,159^A0N,21,16^FB170,1,0,L^FH^FD<t t-out="barcode_value"/>^FS
+                </t>
+                <t t-else="">
+^FO14,90^A0N,22^FB378,1,0,C^FDNo barcode available^FS
+                </t>
+                <t t-if="reference">
+^FO222,159^A0N,21,16^FB170,1,0,R^FH^FD<t t-out="reference"/>^FS
+                </t>
+            </t>
+        </template>
+
+        <template id="lot_qr_alternative_label">
+            <t t-translation="off">
+^PW406
+^LL203
+                <t t-if="barcode_value">
+^FO5,17^BXN,4,200,36,36^FH^FD<t t-out="barcode_value"/>^FS
+                    <t name="label_barcode_text">
+^FO155,145^A0N,16^TBN,246,23^FH^FD<t t-out="label['barcode_text']"/>^FS
+                    </t>
+                </t>
+                <t name="label_name">
+^FO155,21^A0N,22^TBN,246,23^FH^FD<t t-out="name"/>^FS
+                </t>
+                <t t-if="reference">
+^FO155,44,0^A0N,16,13^TBN,246,17^FH^FD<t t-out="reference"/>^FS
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

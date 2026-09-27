@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_calendar_event_calendar" model="ir.ui.view">
+        <field name="name">view.calendar.event.calendar.inherit.calendar</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_calendar"/>
+        <field name="arch" type="xml">
+            <xpath expr="//calendar" position="attributes">
+                <attribute name="show_unusual_days">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_ids']" position="attributes">
+                <attribute name="context">{'search_view_ref': 'hr_calendar.view_res_partner_filter_inherit_calendar'}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

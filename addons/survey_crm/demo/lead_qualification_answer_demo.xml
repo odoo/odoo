@@ -1,0 +1,83 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Could you be our best partner? - Answer demo -->
+        <record id="lead_qualification_user_input_1" model="survey.user_input">
+            <field name="survey_id" ref="lead_qualification_survey"/>
+            <field name="partner_id" ref="base.res_partner_address_4"/>
+            <field name="email">floyd.steward34@example.com</field>
+            <field name="state">done</field>
+        </record>
+
+        <record id="user_input_line_q1" model="survey.user_input.line">
+            <field name="user_input_id" ref="lead_qualification_user_input_1"/>
+            <field name="survey_id" ref="lead_qualification_survey"/>
+            <field name="question_id" ref="lead_qualification_question_1"/>
+            <field name="suggested_answer_id" ref="lead_qualification_question_1_question_answer_1"/>
+            <field name="answer_type">suggestion</field>
+        </record>
+
+        <record id="user_input_line_q2" model="survey.user_input.line">
+            <field name="user_input_id" ref="lead_qualification_user_input_1"/>
+            <field name="survey_id" ref="lead_qualification_survey"/>
+            <field name="question_id" ref="lead_qualification_question_2"/>
+            <field name="value_char_box">Floyd Steward</field>
+            <field name="answer_type">char_box</field>
+        </record>
+
+        <record id="user_input_line_q3" model="survey.user_input.line">
+            <field name="user_input_id" ref="lead_qualification_user_input_1"/>
+            <field name="survey_id" ref="lead_qualification_survey"/>
+            <field name="question_id" ref="lead_qualification_question_3"/>
+            <field name="value_char_box">floyd.steward34@example.com</field>
+            <field name="answer_type">char_box</field>
+        </record>
+
+        <record id="user_input_line_q4" model="survey.user_input.line">
+            <field name="user_input_id" ref="lead_qualification_user_input_1"/>
+            <field name="survey_id" ref="lead_qualification_survey"/>
+            <field name="question_id" ref="lead_qualification_question_4"/>
+            <field name="value_char_box">Analyst</field>
+            <field name="answer_type">char_box</field>
+        </record>
+
+        <record id="user_input_line_q6" model="survey.user_input.line">
+            <field name="user_input_id" ref="lead_qualification_user_input_1"/>
+            <field name="survey_id" ref="lead_qualification_survey"/>
+            <field name="question_id" ref="lead_qualification_question_6"/>
+            <field name="value_char_box">Acme Corporation</field>
+            <field name="answer_type">char_box</field>
+        </record>
+
+        <record id="user_input_line_q7_3" model="survey.user_input.line">
+            <field name="user_input_id" ref="lead_qualification_user_input_1"/>
+            <field name="survey_id" ref="lead_qualification_survey"/>
+            <field name="question_id" ref="lead_qualification_question_7"/>
+            <field name="suggested_answer_id" ref="lead_qualification_question_7_question_answer_3"/>
+            <field name="answer_type">suggestion</field>
+        </record>
+
+        <record id="user_input_line_q8" model="survey.user_input.line">
+            <field name="user_input_id" ref="lead_qualification_user_input_1"/>
+            <field name="survey_id" ref="lead_qualification_survey"/>
+            <field name="question_id" ref="lead_qualification_question_8"/>
+            <field name="suggested_answer_id" ref="lead_qualification_question_8_question_answer_2"/>
+            <field name="answer_type">suggestion</field>
+        </record>
+
+        <record id="user_input_line_q10" model="survey.user_input.line">
+            <field name="user_input_id" ref="lead_qualification_user_input_1"/>
+            <field name="survey_id" ref="lead_qualification_survey"/>
+            <field name="question_id" ref="lead_qualification_question_10"/>
+            <field name="skipped" eval="True"/>
+        </record>
+
+        <record id="user_input_line_q11" model="survey.user_input.line">
+            <field name="user_input_id" ref="lead_qualification_user_input_1"/>
+            <field name="survey_id" ref="lead_qualification_survey"/>
+            <field name="question_id" ref="lead_qualification_question_11"/>
+            <field name="value_text_box">We are excited about future opportunities with your team.</field>
+            <field name="answer_type">text_box</field>
+        </record>
+
+    </data>
+</odoo>

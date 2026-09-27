@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="dynamic_snippet_latest_courses_filter" model="ir.filters">
+            <field name="name">Latest eLearning Courses</field>
+            <field name="model_id">slide.channel</field>
+            <field name="user_ids" eval="False" />
+            <field name="domain">[('visibility', 'in', ['public', 'connected'])]</field>
+            <field name="sort">["published_date desc"]</field>
+            <field name="action_id" ref="website.action_website"/>
+        </record>
+        <record id="dynamic_filter_latest_courses" model="website.snippet.filter">
+            <field name="name">Latest eLearning Courses</field>
+            <field name="filter_id" ref="website_slides.dynamic_snippet_latest_courses_filter"/>
+            <field name="field_names">name,description_short,image_1920,total_slides,total_time</field>
+            <field name="limit" eval="16"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,2682 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import inspect
+import logging
+import io
+
+from PIL import Image
+from contextlib import contextmanager
+from unittest.mock import patch
+from unittest import skip
+from odoo import Command, api
+
+from odoo.tools import BinaryBytes, DEFAULT_SERVER_DATE_FORMAT
+from odoo.tests import tagged, loaded_demo_data
+from odoo.addons.account.tests.common import TestTaxCommon, AccountTestInvoicingHttpCommon
+from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
+from datetime import date, timedelta
+from odoo.addons.point_of_sale.tests.common import archive_products
+from odoo.exceptions import UserError
+from freezegun import freeze_time
+
+_logger = logging.getLogger(__name__)
+
+
+def _create_image(color: int | str = 0, dims=(1920, 1080), format='JPEG'):
+    f = io.BytesIO()
+    Image.new('RGB', dims, color).save(f, format)
+    f.seek(0)
+    return BinaryBytes(f.read())
+
+
+class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
+
+    _test_user_groups = None  # FIXME list needed groups
+
+    @classmethod
+    def _get_main_company(cls):
+        return cls.company_data['company']
+
+    def _get_url(self, pos_config=None):
+        pos_config = pos_config or self.main_pos_config
+        return f"/pos/ui/{pos_config.id}"
+
+    def get_method_additional_tags(self, test_method):
+        additional_tags = super().get_method_additional_tags(test_method)
+        method_source = inspect.getsource(test_method)
+        if "self.start_pos_tour" in method_source:
+            additional_tags.append("is_tour")
+        return additional_tags
+
+    def start_pos_tour(self, tour_name, login="pos_user", **kwargs):
+        self.start_tour(self._get_url(pos_config=kwargs.get('pos_config')), tour_name, login=login, **kwargs)
+
+    @contextmanager
+    def with_new_session(self, config=None, user=None):
+        config = config or self.main_pos_config
+        user = user or self.pos_user
+        config.with_user(user).open_ui()
+        session = config.current_session_id
+        yield session
+        closing_data = session.get_closing_control_data()
+        cash_details = closing_data['default_cash_details']
+        expected_cashbox_amount = cash_details['payment_amount']
+        cash_pm = self.main_pos_config._get_cash_payment_method()
+        session.close_session_from_ui({
+            cash_pm.id: expected_cashbox_amount,
+        })
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        env = cls.env
+        cls.env.user.group_ids += env.ref('point_of_sale.group_pos_manager')
+        journal_obj = env['account.journal']
+        account_obj = env['account.account']
+        main_company = cls._get_main_company()
+
+        cls.account_receivable = account_obj.create({'code': 'X1012',
+                                                 'name': 'Account Receivable - Test',
+                                                 'account_type': 'asset_receivable',
+                                                })
+        env.company.account_default_pos_receivable_account_id = cls.account_receivable
+        env['ir.default'].set('res.partner', 'property_account_receivable_id', cls.account_receivable.id, company_id=main_company.id)
+        # Pricelists are set below, do not take demo data into account
+        env['res.partner'].sudo().invalidate_model(['property_product_pricelist', 'specific_property_product_pricelist'])
+        # remove the all specific values for all companies only for test
+        env.cr.execute('UPDATE res_partner SET specific_property_product_pricelist = NULL')
+
+        # Create user.
+        cls.pos_user = cls.env['res.users'].create({
+            'name': 'A simple PoS man!',
+            'login': 'pos_user',
+            'password': 'pos_user',
+            'group_ids': [
+                (4, cls.env.ref('base.group_user').id),
+                (4, cls.env.ref('point_of_sale.group_pos_user').id),
+                (4, cls.env.ref('base.group_partner_manager').id),
+            ],
+            'tz': 'America/New_York',
+        })
+        cls.pos_admin = cls.env['res.users'].create({
+            'name': 'A powerful PoS man!',
+            'login': 'pos_admin',
+            'password': 'pos_admin',
+            'group_ids': [
+                (4, cls.env.ref('point_of_sale.group_pos_manager').id),
+            ],
+            'tz': 'America/New_York',
+        })
+
+        cls.pos_user.partner_id.email = 'pos_user@test.com'
+        cls.pos_admin.partner_id.email = 'pos_admin@test.com'
+
+        cls.bank_journal = journal_obj.create({
+            'name': 'Bank Test',
+            'type': 'bank',
+            'company_id': main_company.id,
+            'code': 'BNK',
+            'sequence': 10,
+        })
+
+        cls.bank_payment_method = env['pos.payment.method'].create({
+            'name': 'Bank',
+            'type': 'bank',
+            'journal_id': cls.bank_journal.id,
+            'outstanding_account_id': cls.inbound_payment_method_line.payment_account_id.id,
+        })
+        env['pos.config'].search([]).unlink()
+        cls.main_pos_config = env['pos.config'].create({
+            'name': 'Shop',
+            'module_pos_restaurant': False,
+        })
+
+        env['res.partner'].create({
+            'name': 'Acme Corporation',
+        })
+
+        if 'enforce_cities' in cls.env['res.country']._fields:
+            cls.env.company.country_id.enforce_cities = False
+
+        cash_journal = journal_obj.create({
+            'name': 'Cash Test',
+            'type': 'cash',
+            'company_id': main_company.id,
+            'code': 'CSH',
+            'sequence': 10,
+        })
+
+        archive_products(env)
+
+        cls.pos_desk_misc_test = env['pos.category'].create({
+            'name': 'Misc test',
+        })
+        cls.pos_cat_chair_test = env['pos.category'].create({
+            'name': 'Chair test',
+        })
+        cls.pos_cat_desk_test = env['pos.category'].create({
+            'name': 'Desk test',
+        })
+
+        # test an extra price on an attribute
+        cls.whiteboard_pen = env['product.template'].create({
+            'name': 'Whiteboard Pen',
+            'available_in_pos': True,
+            'list_price': 1.20,
+            'taxes_id': False,
+            'weight': 0.01,
+            'pos_categ_ids': [(4, cls.pos_desk_misc_test.id)],
+        })
+        cls.wall_shelf = env['product.template'].create({
+            'name': 'Wall Shelf Unit',
+            'available_in_pos': True,
+            'list_price': 1.98,
+            'taxes_id': False,
+            'barcode': '2100005000000',
+        })
+        cls.small_shelf = env['product.template'].create({
+            'name': 'Small Shelf',
+            'available_in_pos': True,
+            'list_price': 2.83,
+            'taxes_id': False,
+        })
+        cls.magnetic_board = env['product.template'].create({
+            'name': 'Magnetic Board',
+            'available_in_pos': True,
+            'list_price': 1.98,
+            'taxes_id': False,
+            'barcode': '2305000000004',
+        })
+        cls.monitor_stand = env['product.template'].create({
+            'name': 'Monitor Stand',
+            'available_in_pos': True,
+            'list_price': 3.19,
+            'taxes_id': False,
+            'barcode': '0123456789',  # No pattern in barcode nomenclature
+        })
+        cls.desk_pad = env['product.template'].create({
+            'name': 'Desk Pad',
+            'available_in_pos': True,
+            'list_price': 1.98,
+            'taxes_id': False,
+            'pos_categ_ids': [(4, cls.pos_cat_desk_test.id)],
+        })
+        cls.letter_tray = env['product.template'].create({
+            'name': 'Letter Tray',
+            'available_in_pos': True,
+            'list_price': 4.80,
+            'taxes_id': False,
+            'categ_id': env.ref('product.product_category_services').id,
+            'pos_categ_ids': [(4, cls.pos_cat_chair_test.id)],
+        })
+        cls.desk_organizer = env['product.template'].create({
+            'name': 'Desk Organizer',
+            'available_in_pos': True,
+            'list_price': 5.10,
+            'taxes_id': False,
+            'barcode': '2300002000007',
+        })
+        cls.configurable_chair = env['product.template'].create({
+            'name': 'Configurable Chair',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+        })
+        cls.vanela_gathiya = env['product.template'].create({
+            'name': 'Vanela Gathiya',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'to_weight': True,
+        })
+
+        attribute = env['product.attribute'].create({
+            'name': 'add 2',
+        })
+        attribute_value = env['product.attribute.value'].create({
+            'name': 'add 2',
+            'attribute_id': attribute.id,
+        })
+        line = env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.whiteboard_pen.id,
+            'attribute_id': attribute.id,
+            'value_ids': [(6, 0, attribute_value.ids)]
+        })
+        line.product_template_value_ids[0].price_extra = 2
+
+        cls.chair_color_attribute = env['product.attribute'].create({
+            'name': 'Color',
+            'display_type': 'color',
+            'create_variant': 'no_variant',
+        })
+        cls.chair_color_red = env['product.attribute.value'].create({
+            'name': 'Red',
+            'attribute_id': cls.chair_color_attribute.id,
+            'html_color': '#ff0000',
+        })
+        chair_color_blue = env['product.attribute.value'].create({
+            'name': 'Blue',
+            'attribute_id': cls.chair_color_attribute.id,
+            'html_color': '#0000ff',
+        })
+        chair_color_line = env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.configurable_chair.id,
+            'attribute_id': cls.chair_color_attribute.id,
+            'value_ids': [(6, 0, [cls.chair_color_red.id, chair_color_blue.id])]
+        })
+        chair_color_line.product_template_value_ids[0].price_extra = 1
+
+        chair_legs_attribute = env['product.attribute'].create({
+            'name': 'Chair Legs',
+            'display_type': 'select',
+            'create_variant': 'no_variant',
+        })
+        chair_legs_metal = env['product.attribute.value'].create({
+            'name': 'Metal',
+            'attribute_id': chair_legs_attribute.id,
+        })
+        chair_legs_wood = env['product.attribute.value'].create({
+            'name': 'Wood',
+            'attribute_id': chair_legs_attribute.id,
+        })
+        env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.configurable_chair.id,
+            'attribute_id': chair_legs_attribute.id,
+            'value_ids': [(6, 0, [chair_legs_metal.id, chair_legs_wood.id])]
+        })
+
+        cls.chair_fabrics_attribute = env['product.attribute'].create({
+            'name': 'Fabrics',
+            'display_type': 'radio',
+            'create_variant': 'no_variant',
+        })
+        chair_fabrics_leather = env['product.attribute.value'].create({
+            'name': 'Leather',
+            'attribute_id': cls.chair_fabrics_attribute.id,
+        })
+        cls.chair_fabrics_wool = env['product.attribute.value'].create({
+            'name': 'wool',
+            'attribute_id': cls.chair_fabrics_attribute.id,
+        })
+        cls.chair_fabrics_other = env['product.attribute.value'].create({
+            'name': 'Other',
+            'attribute_id': cls.chair_fabrics_attribute.id,
+            'is_custom': True,
+        })
+        env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.configurable_chair.id,
+            'attribute_id': cls.chair_fabrics_attribute.id,
+            'value_ids': [(6, 0, [chair_fabrics_leather.id, cls.chair_fabrics_wool.id, cls.chair_fabrics_other.id])]
+        })
+        chair_color_line.product_template_value_ids[1].is_custom = True
+
+        cls.chair_addons_attribute = env['product.attribute'].create({
+            'name': 'Add-ons',
+            'display_type': 'multi',
+            'create_variant': 'no_variant',
+        })
+        cls.chair_addon_cushion = env['product.attribute.value'].create({
+            'name': 'Cushion',
+            'attribute_id': cls.chair_addons_attribute.id,
+        })
+        cls.chair_addon_cupholder = env['product.attribute.value'].create({
+            'name': 'Cup Holder',
+            'attribute_id': cls.chair_addons_attribute.id,
+        })
+        cls.chair_addon_headrest = env['product.attribute.value'].create({
+            'name': 'Headrest',
+            'attribute_id': cls.chair_addons_attribute.id,
+        })
+        env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.configurable_chair.id,
+            'attribute_id': cls.chair_addons_attribute.id,
+            'value_ids': [(6, 0, [cls.chair_addon_cushion.id, cls.chair_addon_cupholder.id, cls.chair_addon_headrest.id])]
+        })
+
+        fixed_pricelist = env['product.pricelist'].create({
+            'name': 'Fixed',
+            'item_ids': [(0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 1,
+            }), (0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 2,
+                'applied_on': '0_product_variant',
+                'product_id': cls.wall_shelf.product_variant_id.id,
+            }), (0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 13.95,  # test for issues like in 7f260ab517ebde634fc274e928eb062463f0d88f
+                'applied_on': '0_product_variant',
+                'product_id': cls.small_shelf.product_variant_id.id,
+            })],
+        })
+
+        env['product.pricelist'].create({
+            'name': 'Percentage',
+            'item_ids': [(0, 0, {
+                'compute_price': 'discount',
+                'price_discount': 100,
+                'applied_on': '0_product_variant',
+                'product_id': cls.wall_shelf.product_variant_id.id,
+            }), (0, 0, {
+                'compute_price': 'discount',
+                'price_discount': 99,
+                'applied_on': '0_product_variant',
+                'product_id': cls.small_shelf.product_variant_id.id,
+            }), (0, 0, {
+                'compute_price': 'discount',
+                'price_discount': 0,
+                'applied_on': '0_product_variant',
+                'product_id': cls.magnetic_board.product_variant_id.id,
+            })],
+        })
+
+        env['product.pricelist'].create({
+            'name': 'Formula',
+            'item_ids': [(0, 0, {
+                'compute_price': 'discount',
+                'price_discount': 6,
+                'price_surcharge': 5,
+                'applied_on': '0_product_variant',
+                'product_id': cls.wall_shelf.product_variant_id.id,
+            }), (0, 0, {
+                # .99 prices
+                'compute_price': 'discount',
+                'price_surcharge': -0.01,
+                'price_round': 1,
+                'applied_on': '0_product_variant',
+                'product_id': cls.small_shelf.product_variant_id.id,
+            }), (0, 0, {
+                'compute_price': 'discount',
+                'price_min_margin': 10,
+                'price_max_margin': 100,
+                'applied_on': '0_product_variant',
+                'product_id': cls.magnetic_board.product_variant_id.id,
+            }), (0, 0, {
+                'compute_price': 'discount',
+                'price_surcharge': 10,
+                'price_max_margin': 5,
+                'applied_on': '0_product_variant',
+                'product_id': cls.monitor_stand.product_variant_id.id,
+            }), (0, 0, {
+                'compute_price': 'discount',
+                'price_discount': -100,
+                'price_min_margin': 5,
+                'price_max_margin': 20,
+                'applied_on': '0_product_variant',
+                'product_id': cls.desk_pad.product_variant_id.id,
+            })],
+        })
+
+        env['product.pricelist'].create({
+            'name': 'min_quantity ordering',
+            'item_ids': [(0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 1,
+                'applied_on': '0_product_variant',
+                'min_quantity': 2,
+                'product_id': cls.wall_shelf.product_variant_id.id,
+            }), (0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 2,
+                'applied_on': '0_product_variant',
+                'min_quantity': 1,
+                'product_id': cls.wall_shelf.product_variant_id.id,
+            }), (0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 1,
+                'applied_on': '0_product_variant',
+                'min_quantity': 5,
+                'product_id': cls.monitor_stand.product_variant_id.id,
+            })],
+        })
+
+        env['product.pricelist'].create({
+            'name': 'Product template',
+            'item_ids': [(0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 1,
+                'applied_on': '1_product',
+                'product_tmpl_id': cls.wall_shelf.id,
+            }), (0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 2,
+            })],
+        })
+
+        product_category_3 = env['product.category'].create({
+            'name': 'Services',
+            'parent_id': env.ref('product.product_category_services').id,
+        })
+
+        env['product.pricelist'].create({
+            # no category has precedence over category
+            'name': 'Category vs no category',
+            'item_ids': [(0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 1,
+                'applied_on': '2_product_category',
+                'categ_id': product_category_3.id,
+            }), (0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 2,
+            })],
+        })
+
+        env['product.pricelist'].create({
+            'name': 'Category',
+            'item_ids': [(0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 2,
+                'applied_on': '2_product_category',
+                'categ_id': env.ref('product.product_category_services').id,
+            }), (0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 1,
+                'applied_on': '2_product_category',
+                'categ_id': product_category_3.id,
+            })],
+        })
+
+        today = date.today()
+        one_week_ago = today - timedelta(weeks=1)
+        two_weeks_ago = today - timedelta(weeks=2)
+        one_week_from_now = today + timedelta(weeks=1)
+        two_weeks_from_now = today + timedelta(weeks=2)
+
+        public_pricelist = env['product.pricelist'].create({
+            'name': 'Public Pricelist',
+        })
+
+        env['product.pricelist'].create({
+            'name': 'Dates',
+            'item_ids': [(0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 1,
+                'date_start': two_weeks_ago.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                'date_end': one_week_ago.strftime(DEFAULT_SERVER_DATE_FORMAT),
+            }), (0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 2,
+                'date_start': today.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                'date_end': one_week_from_now.strftime(DEFAULT_SERVER_DATE_FORMAT),
+            }), (0, 0, {
+                'compute_price': 'fixed',
+                'fixed_price': 3,
+                'date_start': one_week_from_now.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                'date_end': two_weeks_from_now.strftime(DEFAULT_SERVER_DATE_FORMAT),
+            })],
+        })
+
+        cost_base_pricelist = env['product.pricelist'].create({
+            'name': 'Cost base',
+            'item_ids': [(0, 0, {
+                'base': 'standard_price',
+                'compute_price': 'discount',
+                'price_discount': 55,
+            })],
+        })
+
+        pricelist_base_pricelist = env['product.pricelist'].create({
+            'name': 'Pricelist base',
+            'item_ids': [(0, 0, {
+                'base': 'pricelist',
+                'base_pricelist_id': cost_base_pricelist.id,
+                'compute_price': 'discount',
+                'price_discount': 15,
+            })],
+        })
+
+        env['product.pricelist'].create({
+            'name': 'Pricelist base 2',
+            'item_ids': [(0, 0, {
+                'base': 'pricelist',
+                'base_pricelist_id': pricelist_base_pricelist.id,
+                'compute_price': 'discount',
+                'price_discount': 3,
+            })],
+        })
+
+        env['product.pricelist'].create({
+            'name': 'Pricelist base rounding',
+            'item_ids': [(0, 0, {
+                'base': 'pricelist',
+                'base_pricelist_id': fixed_pricelist.id,
+                'compute_price': 'discount',
+                'price_discount': 0.01,
+            })],
+        })
+
+        excluded_pricelist = env['product.pricelist'].create({
+            'name': 'Not loaded'
+        })
+        res_partner_18 = env['res.partner'].create({
+            'name': 'Lumber Inc',
+        })
+        res_partner_18.property_product_pricelist = excluded_pricelist
+
+        test_sale_journal = journal_obj.create({'name': 'Sales Journal - Test',
+                                                'code': 'TSJ',
+                                                'type': 'sale',
+                                                'company_id': main_company.id})
+
+        all_pricelists = env['product.pricelist'].search([
+            ('id', '!=', excluded_pricelist.id),
+            '|', ('company_id', '=', main_company.id), ('company_id', '=', False)
+        ])
+        all_pricelists.write(dict(currency_id=main_company.currency_id.id))
+
+        FP_POS_2M = env['account.fiscal.position'].create({
+            'name': "FP-POS-2M",
+        })
+
+        src_tax = env['account.tax'].create({
+            'name': "SRC",
+            'amount': 10,
+            'fiscal_position_ids': main_company.domestic_fiscal_position_id,
+        })
+        env['account.tax'].create({'name': "DST", 'amount': 5, 'fiscal_position_ids': [Command.link(FP_POS_2M.id)], 'original_tax_ids': [Command.link(src_tax.id)]})
+        env['account.tax'].create({'name': "DST2", 'amount': 10, 'fiscal_position_ids': [Command.link(FP_POS_2M.id)], 'original_tax_ids': [Command.link(src_tax.id)]})
+
+        cls.letter_tray.taxes_id = [(6, 0, [src_tax.id])]
+
+        cash_pm = cls.main_pos_config._get_cash_payment_method() or env['pos.payment.method'].create({
+            'name': 'Cash',
+            'type': 'cash',
+            'journal_id': cash_journal.id,
+            'receivable_account_id': cls.account_receivable.id,
+        })
+        cls.main_pos_config.write({
+            'tax_regime_selection': True,
+            'fiscal_position_ids': FP_POS_2M,
+            'journal_id': test_sale_journal.id,
+            'payment_method_ids': [(4, cash_pm.id)],
+            'use_pricelist': True,
+            'pricelist_id': public_pricelist.id,
+            'available_pricelist_ids': [(4, pricelist.id) for pricelist in all_pricelists],
+        })
+
+        cls.printer = cls.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'printer_ip': '0.0.0.0',
+            'use_type': 'receipt',
+        })
+
+        # Set customers
+        # Unlink some data partners that makes the test crash
+        for xmlid in [
+            "l10n_us_hr_payroll.res_partner_taxation_va",
+            "l10n_us_hr_payroll.res_partner_revenue_dc",
+            "l10n_us_hr_payroll.res_partner_pfl_dc",
+            "l10n_us_hr_payroll.res_partner_revenue_or",
+            "l10n_us_hr_payroll.res_partner_dcbs_or",
+            "l10n_us_hr_payroll.res_partner_employment_or",
+            "l10n_us_hr_payroll.res_partner_revenue_nc",
+            "l10n_us_hr_payroll.res_partner_state_tax_commission_id",
+            "l10n_us_hr_payroll.res_partner_department_taxes_vt",
+            "l10n_us_hr_payroll.res_partner_department_revenue_il",
+            "l10n_us_hr_payroll.res_partner_department_revenue_az",
+        ]:
+            partner = cls.env.ref(xmlid, raise_if_not_found=False)
+            if partner:
+                partner.unlink()
+
+        partners = cls.env['res.partner'].create([
+            {'name': 'Partner Test 1'},
+            {'name': 'Partner Test 2'},
+            {'name': 'Partner Test 3'},
+            {
+                'name': 'APartner Full',
+                'email': 'partner.full@example.com',
+                'street': '77 Santa Barbara Rd',
+                'city': 'Pleasant Hill',
+                'state_id': cls.env.ref('base.state_us_5').id,
+                'zip': '94523',
+                'country_id': cls.env.ref('base.us').id,
+            }
+        ])
+        cls.partner_test_1 = partners[0]
+        cls.partner_test_2 = partners[1]
+        cls.partner_test_3 = partners[2]
+        cls.partner_full = partners[3]
+
+        # Change the default sale pricelist of customers,
+        # so the js tests can expect deterministically this pricelist when selecting a customer.
+        # bad hack only for test
+        env['ir.default'].set("res.partner", "specific_property_product_pricelist", public_pricelist.id, company_id=main_company.id)
+
+
+@tagged('post_install', '-at_install')
+class TestUi(TestPointOfSaleHttpCommon):
+    _test_user_groups = None  # FIXME list needed groups
+
+    def test_01_pos_basic_order(self):
+        self.start_pos_tour('pos_pricelist')
+
+    def test_product_screen_tour(self):
+        self.whiteboard_pen.write({
+            'is_favorite': True
+        })
+        self.start_pos_tour('ProductScreenTour')
+
+    def test_payment_screen_tour(self):
+        self.start_pos_tour('PaymentScreenTour')
+
+    def test_feedback_screen_tour(self):
+        self.main_pos_config.write({
+            'iface_tipproduct': True,
+        })
+        self.start_pos_tour('FeedbackScreenTour')
+        for order in self.env['pos.order'].search([]):
+            self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
+
+        with patch.object((self.env.registry['pos.order']), 'order_receipt_generate_image', return_value=b'Receipt'):
+            order = self.env['pos.order'].search([('amount_total', '=', 72.0)])
+            order.action_send_receipt('test1@example.com')
+            message = self.env['mail.message'].search([('model', '=', 'pos.order'), ('res_id', '=', order.id)], limit=1)
+            self.assertEqual(len(message.attachment_ids), 1, "Should have 1 attachment when basic receipt is False")
+
+            message.unlink()
+
+            self.main_pos_config.basic_receipt = True
+            order.action_send_receipt('test2@example.com')
+            message = self.env['mail.message'].search([('model', '=', 'pos.order'), ('res_id', '=', order.id)], limit=1)
+            self.assertEqual(len(message.attachment_ids), 2, "Should have 2 attachments when basic receipt is True")
+
+    @skip('Temporary to fast merge new valuation')
+    def test_02_pos_with_invoiced(self):
+        self.pos_user.write({
+            'group_ids': [
+                (4, self.env.ref('account.group_account_invoice').id),
+            ]
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'ChromeTour', login="pos_user")
+        n_invoiced = self.env['pos.order'].search_count([('account_move', '!=', False)])
+        n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
+        self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
+        self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
+        last_order = self.env['pos.order'].search([], limit=1, order="id desc")
+        self.assertEqual(last_order.lines[0].price_subtotal, 30.0)
+        self.assertEqual(last_order.lines[0].price_subtotal_incl, 30.0)
+        # Check if session name contains config name as prefix
+        self.assertEqual(self.main_pos_config.name in last_order.session_id.name, True)
+
+    @skip('Temporary to fast merge new valuation')
+    def test_05_ticket_screen(self):
+        self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': '%m.%d.%Y', 'time_format': '%I.%M.%S %p'})
+        self.pos_user.write({
+            'group_ids': [
+                (4, self.env.ref('account.group_account_invoice').id),
+            ]
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'TicketScreenTour', login="pos_user")
+        self.env['res.lang']._lang_get(self.pos_user.lang).write({'date_format': 'MM/dd/yyyy', 'time_format': 'HH:mm:ss'})
+
+    def test_06_tip_screen(self):
+        self.main_pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True})
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PosTipAfterPaymentTour', login="pos_user")
+
+        orders = self.env['pos.order'].search([], limit=11, order="id desc")
+        order_tips = [o.tip_amount for o in orders]
+
+        order_tips.sort()
+        self.assertEqual(order_tips, [0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.8, 1.0, 1.5, 2.0, 10.0])
+
+    def test_ticket_screen_search_suggestions(self):
+        """The search field suggestions must stay above the order list, on mobile too."""
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_ticket_screen_search_suggestions')
+
+    def test_product_information_screen_admin(self):
+        '''Consider this test method to contain a test tour with miscellaneous tests/checks that require admin access.
+        '''
+        self.product_a.available_in_pos = True
+        self.pos_admin.write({
+            'group_ids': [Command.link(self.env.ref('product.group_product_manager').id)],
+        })
+        self.main_pos_config.write({
+            'is_margins_costs_accessible_to_every_user': True,
+        })
+        self.assertFalse(self.product_a.is_storable)
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'CheckProductInformation', login="pos_admin")
+
+    def test_pos_session_statistics_display(self):
+        """Test that POS session statistics are properly displayed in the UI."""
+        # For testing `opening_cash` and `paid_orders` in dashboard
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'SessionStatisticsDisplay', login="pos_user")
+
+        # For testing `draft_orders`
+        self.env['pos.order'].create({
+            'config_id': self.main_pos_config.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'company_id': self.main_pos_config.company_id.id,
+            'amount_total': 10.0,
+            'amount_paid': 10.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'partner_id': False,
+            'pricelist_id': self.main_pos_config.pricelist_id.id,
+            'pos_reference': '1000-004-00001',
+            'name': 'Order 1001',
+            'state': 'draft',
+            'lines': [(0, 0, {
+                'product_id': self.desk_pad.product_variant_id.id,
+                'price_unit': 10.00,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': False,
+                'price_subtotal': 10.00,
+                'price_subtotal_incl': 10.00,
+            })],
+        })
+
+        dashboard_statistics = self.main_pos_config.statistics_for_current_session
+
+        self.assertTrue(dashboard_statistics['date']['is_started'])
+        self.assertEqual(dashboard_statistics['cash']['raw_opening_cash'], 100.0)
+        self.assertEqual(dashboard_statistics['orders']['paid']['amount'], 45.0)
+        self.assertEqual(dashboard_statistics['orders']['paid']['count'], 2)
+        self.assertEqual(dashboard_statistics['orders']['draft']['amount'], 10.0)
+        self.assertEqual(dashboard_statistics['orders']['draft']['count'], 1)
+
+    def test_07_product_combo(self):
+        self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 4
+        setup_product_combo_items(self)
+        self.desk_accessories_combo.sequence = 100
+        combo_product_sofa = self.env["product.template"].create(
+            {
+                "name": "Combo product Sofa",
+                "is_storable": True,
+                "available_in_pos": True,
+                "list_price": 40,
+            }
+        )
+        sofa_size_attribute = self.env['product.attribute'].create({
+            'name': 'Size',
+            'display_type': 'radio',
+            'create_variant': 'always',
+        })
+        sofa_color_attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'display_type': 'radio',
+            'create_variant': 'always',
+        })
+        sofa_size_L = self.env['product.attribute.value'].create({
+            'name': 'L',
+            'attribute_id': sofa_size_attribute.id,
+        })
+        sofa_size_M = self.env['product.attribute.value'].create({
+            'name': 'M',
+            'attribute_id': sofa_size_attribute.id,
+        })
+        sofa_color_red = self.env['product.attribute.value'].create({
+            'name': 'red',
+            'attribute_id': sofa_color_attribute.id,
+        })
+        sofa_color_blue = self.env['product.attribute.value'].create({
+            'name': 'blue',
+            'attribute_id': sofa_color_attribute.id,
+        })
+
+        product_attribute_size = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': combo_product_sofa.id,
+            'attribute_id': sofa_size_attribute.id,
+            'value_ids': [Command.set([sofa_size_M.id, sofa_size_L.id])],
+
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': combo_product_sofa.id,
+            'attribute_id': sofa_color_attribute.id,
+            'value_ids': [Command.set([sofa_color_red.id, sofa_color_blue.id])],
+
+        })
+        product_attribute_size.product_template_value_ids[0].price_extra = 50
+        product_attribute_size.product_template_value_ids[1].price_extra = 100
+        self.sofa_combo = self.env["product.combo"].create(
+            {
+                "name": "Chairs Combo",
+                "combo_item_ids": [
+                    Command.create({
+                        "product_id": combo_product_sofa.product_variant_ids[0].id,
+                        "extra_price": 5,
+                    }),
+                    Command.create({
+                        "product_id": combo_product_sofa.product_variant_ids[1].id,
+                        "extra_price": 10,
+                    }),
+                ],
+            },
+        )
+        self.sofa_combo = self.env["product.product"].create(
+            {
+                "available_in_pos": True,
+                "list_price": 20,
+                "name": "Sofa Combo",
+                "type": "combo",
+                "uom_id": self.env.ref("uom.product_uom_unit").id,
+                "combo_ids": [
+                    Command.set([self.sofa_combo.id]),
+                ],
+            },
+        )
+        self.office_combo.write({
+            'lst_price': 50,
+            'barcode': 'SuperCombo',
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('ProductComboPriceTaxIncludedTour')
+        order = self.env['pos.order'].search([])
+        self.assertEqual(len(order.lines), 4, "There should be 4 order lines - 1 combo parent and 3 combo lines")
+        # check that the combo lines are correctly linked to each other
+        parent_line_id = self.env['pos.order.line'].search([('product_id.name', '=', 'Office Combo'), ('order_id', '=', order.id)])
+        combo_line_ids = self.env['pos.order.line'].search([('product_id.name', '!=', 'Office Combo'), ('order_id', '=', order.id)])
+        self.assertEqual(parent_line_id.combo_line_ids, combo_line_ids, "The combo parent should have 3 combo lines")
+        self.assertEqual(order.lines[1].price_unit, 18.67)
+        self.assertEqual(order.lines[2].price_unit, 30.00)
+        self.assertAlmostEqual(order.lines[3].price_unit, 10.33)
+        # In the future we might want to test also if:
+        #   - the combo lines are correctly stored in and restored from local storage
+        #   - the combo lines are correctly shared between the pos configs ( in cross ordering )
+
+    def test_chrome_without_cash_move_permission(self):
+        self.env.user.write({'group_ids': [
+            Command.set(
+                [
+                    self.env.ref('base.group_user').id,
+                    self.env.ref('point_of_sale.group_pos_user').id,
+                ]
+            )
+        ]})
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('chrome_without_cash_move_permission', login="accountman")
+
+    def test_GS1_pos_barcodes_scan(self):
+        barcodes_gs1_nomenclature = self.env.ref("barcodes_gs1_nomenclature.default_gs1_nomenclature")
+        default_nomenclature_id = self.env.ref("barcodes.default_barcode_nomenclature")
+        self.main_pos_config.company_id.write({
+            'nomenclature_id': barcodes_gs1_nomenclature.id
+        })
+        self.main_pos_config.write({
+            'fallback_nomenclature_id': default_nomenclature_id
+        })
+        self.env['product.product'].create({
+            'name': 'Product 1',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'barcode': '08431673020125',
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product 2',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'barcode': '08431673020126',
+        })
+
+        # 3760171283370 can be parsed with GS1 rules but it's not GS1
+        self.env['product.product'].create({
+            'name': 'Product 3',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'barcode': '3760171283370',
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'GS1BarcodeScanningTour', login="pos_user")
+
+    def test_gs1_barcode_scan_missing_product_variant(self):
+        """
+        Scanning a GS1 barcode for a product that is not loaded must add the specific
+        matching variant, not the first variant of the template.
+        """
+        barcodes_gs1_nomenclature = self.env.ref("barcodes_gs1_nomenclature.default_gs1_nomenclature")
+        default_nomenclature_id = self.env.ref("barcodes.default_barcode_nomenclature")
+        self.main_pos_config.company_id.write({
+            'nomenclature_id': barcodes_gs1_nomenclature.id,
+        })
+        self.main_pos_config.write({
+            'fallback_nomenclature_id': default_nomenclature_id,
+        })
+
+        size_attribute = self.env['product.attribute'].create({
+            'name': 'Size',
+            'create_variant': 'always',
+            'value_ids': [
+                Command.create({'name': 'L', 'sequence': 1}),
+                Command.create({'name': 'S', 'sequence': 2}),
+            ],
+        })
+        product_tmpl = self.env['product.template'].create({
+            'name': 'GS1 Missing Variant Product',
+            'available_in_pos': False,
+            'list_price': 10,
+            'taxes_id': False,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': size_attribute.id,
+                'value_ids': [Command.set(size_attribute.value_ids.ids)],
+            })],
+        })
+
+        variant_s = product_tmpl.product_variant_ids.filtered(
+            lambda v: any(val.name == 'S' for val in v.product_template_attribute_value_ids.mapped('product_attribute_value_id'))
+        )
+        variant_s.write({'barcode': '5400000002649'})
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'test_gs1_barcode_scan_missing_product_variant', login="pos_user")
+
+    def test_refund_order_with_fp_tax_included(self):
+        # create a fiscal position
+        self.fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'No Tax',
+        })
+        #create a tax of 15% tax included
+        self.tax1 = self.env['account.tax'].create({
+            'name': 'Tax 1',
+            'amount': 15,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'price_include_override': 'tax_included',
+        })
+        #create a tax of 0%
+        self.tax2 = self.env['account.tax'].create({
+            'name': 'Tax 2',
+            'amount': 0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'price_include_override': 'tax_included',
+            'fiscal_position_ids': self.fiscal_position,
+            'original_tax_ids': self.tax1,
+        })
+
+        self.product_test = self.env['product.product'].create({
+            'name': 'Product Test',
+            'is_storable': True,
+            'available_in_pos': True,
+            'list_price': 100,
+            'taxes_id': [(6, 0, self.tax1.ids)],
+        })
+
+        #add the fiscal position to the PoS
+        self.main_pos_config.write({
+            'fiscal_position_ids': [(4, self.fiscal_position.id)],
+            'tax_regime_selection': True,
+            })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'FiscalPositionNoTaxRefund', login="pos_user")
+        order = self.env['pos.order'].search([])
+        self.assertTrue(order[0].name == order[1].name + " REFUND")
+
+    def test_limited_product_pricelist_loading(self):
+        self.env['ir.config_parameter'].sudo().set_int('point_of_sale.limited_product_count', 1)
+
+        limited_category = self.env['pos.category'].create({
+            'name': 'Limited Category',
+        })
+        product_1 = self.env['product.product'].create({
+            'name': 'Test Product 1',
+            'list_price': 100,
+            'barcode': '0100100',
+            'taxes_id': False,
+            'pos_categ_ids': [(4, limited_category.id)],
+            'available_in_pos': True,
+        })
+
+        self.env['product.product'].create({
+            'name': 'Test Product 3',
+            'list_price': 300,
+            'barcode': '0100300',
+            'taxes_id': False,
+            'pos_categ_ids': [(4, limited_category.id)],
+            'available_in_pos': True,
+        })
+
+        pricelist_item = self.env['product.pricelist.item'].create([{
+            'applied_on': '3_global',
+            'fixed_price': 50,
+        }, {
+            'applied_on': '0_product_variant',
+            'product_id': product_1.id,
+            'fixed_price': 80,
+            'min_quantity': 1,
+        }, {
+            'applied_on': '0_product_variant',
+            'product_id': product_1.id,
+            'fixed_price': 70,
+            'min_quantity': 2,
+        }])
+        self.main_pos_config.write({
+            'iface_available_categ_ids': [],
+            'limit_categories': True,
+        })
+        self.main_pos_config.pricelist_id.write({'item_ids': [(6, 0, pricelist_item.ids)]})
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'limitedProductPricelistLoading', login="pos_user")
+
+    def test_restricted_categories_combo_product(self):
+        """
+        Ensure combo choices product are always loaded if parent is in allowed categories, even when restricted categories are configured:
+        - These combo choices should be visible when configuring the parent combo product but not be visible as product that we can directly sell inside POS
+        - These combo choices should appear on the preparation ticket changes
+        """
+        pos_restricted_categ = self.env["pos.category"].create({
+            "name": "Restricted product",
+        })
+        pos_other_categ = self.env["pos.category"].create({
+            "name": "Other products",
+        })
+        self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'printer_ip': '0.0.0.0',
+            'use_type': 'preparation',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+
+        self.main_pos_config.write({
+            'use_order_printer': True,
+            'preparation_printer_ids': [Command.set(self.env['pos.printer'].search([('use_type', '=', 'preparation')]).ids)],
+        })
+        self.main_pos_config.write({
+            "limit_categories": True,
+            "iface_available_categ_ids": [(6, 0, [pos_restricted_categ.id])],
+        })
+        setup_product_combo_items(self)
+        self.office_combo.pos_categ_ids = [(6, 0, [pos_restricted_categ.id])]
+        self.office_combo.combo_ids = [(6, 0, [self.desks_combo.id])]
+        self.desks_combo.combo_item_ids[0].product_id.pos_categ_ids = [(6, 0, [pos_restricted_categ.id])]
+        self.desks_combo.combo_item_ids[1].product_id.pos_categ_ids = [(6, 0, [pos_other_categ.id])]
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_restricted_categories_combo_product', login="pos_user")
+
+    def test_translate_product_name(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.pos_user.write({'lang': 'fr_FR'})
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        product.update_field_translations('name', {'fr_FR': 'Testez le produit'})
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'TranslateProductNameTour', login="pos_user")
+
+    def test_allow_order_modification_after_validation_error(self):
+        """
+        User error as a result of validation should block the order.
+        Taking action by order modification should be allowed.
+        """
+
+        self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 10.00,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        def sync_from_ui_patch(*_args, **_kwargs):
+            raise UserError('Test Error')
+
+        with patch.object(self.env.registry.models['pos.order'], "sync_from_ui", sync_from_ui_patch):
+            # If there is problem in the tour, remove the log catcher to debug.
+            with self.assertLogs(level="WARNING") as log_catcher:
+                self.main_pos_config.with_user(self.pos_user).open_ui()
+                self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'OrderModificationAfterValidationError', login="pos_user")
+
+            warning_outputs = [o for o in log_catcher.output if 'WARNING' in o]
+            self.assertEqual(len(warning_outputs), 1, "Exactly one warning should be logged")
+
+    def test_order_refund_flow(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_order_refund_flow')
+        self.assertEqual(self.env['mail.mail'].search_count([('email_to', '=', 'test@narendradamodardasmodi.com')]), 1)
+
+    def test_refund_few_quantities(self):
+        """ Test to check that refund works with quantities of less than 0.5 """
+        self.env['product.product'].create({
+            'name': 'Sugar',
+            'list_price': 3,
+            'taxes_id': False,
+            'available_in_pos': True,
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'RefundFewQuantities', login="pos_user")
+
+    def test_refund_multiple_products_amounts_compliance(self):
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 10.00,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        current_session = self.main_pos_config.current_session_id
+
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'refund_multiple_products_amounts_compliance', login="pos_user")
+
+        refund_order = current_session.order_ids.filtered(lambda order: order.is_refund)
+        self.assertEqual(refund_order.lines[0].price_subtotal, 2 * test_product.list_price)
+        closing_data = current_session.get_closing_control_data()
+        cash_details = closing_data['default_cash_details']
+        expected_cashbox_amount = cash_details['payment_amount']
+        cash_pm = self.main_pos_config._get_cash_payment_method()
+        current_session.close_session_from_ui({
+            cash_pm.id: expected_cashbox_amount,
+        })
+
+        self.assertEqual(current_session.state, 'closed')
+        report_refund_order, report_order = self.env['report.pos.order'].sudo().search([('order_id', 'in', current_session.order_ids.ids)])
+        self.assertEqual(report_order.margin, 20.0)
+        self.assertEqual(report_refund_order.margin, -20.0)
+        self.assertEqual(report_order.price_total, 20.0)
+        self.assertEqual(report_refund_order.price_total, -20.0)
+
+    def test_product_combo_price(self):
+        """ Check that the combo has the expected price """
+        self.desk_organizer.product_variant_id.write({"lst_price": 7})
+        self.desk_pad.product_variant_id.write({"lst_price": 2.5})
+        self.whiteboard_pen.product_variant_id.write({"lst_price": 1.5})
+
+        combos = self.env["product.combo"].create([
+            {
+                "name": product.name,
+                "combo_item_ids": [
+                    Command.create({
+                        "product_id": product.id, "extra_price": 0
+                    })
+                ]
+            }
+            for product in (self.desk_organizer.product_variant_id, self.desk_pad.product_variant_id, self.whiteboard_pen.product_variant_id)
+        ])
+
+        self.env["product.product"].create(
+            {
+                "available_in_pos": True,
+                "list_price": 7,
+                "standard_price": 10,
+                "name": "Desk Combo",
+                "type": "combo",
+                "taxes_id": False,
+                "combo_ids": [
+                    (6, 0, [combo.id for combo in combos])
+                ],
+            }
+        )
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'ProductComboPriceCheckTour', login="pos_user")
+        order = self.env['pos.order'].search([], limit=1)
+        self.assertEqual(order.lines.filtered(lambda l: l.product_id.type == 'combo').margin, 0)
+        self.assertEqual(order.lines.filtered(lambda l: l.product_id.type == 'combo').margin_percent, 0)
+
+    def test_customer_display_as_public(self):
+        self.main_pos_config.customer_display_bg_img = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
+        response = self.url_open(f"/web/image/pos.config/{self.main_pos_config.id}/customer_display_bg_img")
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('Shop.png' in response.headers['Content-Disposition'])
+
+    def test_product_with_dynamic_attributes(self):
+        dynamic_attribute = self.env['product.attribute'].create({
+            'name': 'Dynamic Attribute',
+            'create_variant': 'dynamic',
+        })
+        value_1 = self.env['product.attribute.value'].create({
+            'name': 'Test 1',
+            'attribute_id': dynamic_attribute.id,
+        })
+        value_2 = self.env['product.attribute.value'].create({
+            'name': 'Test 2',
+            'default_extra_price': 10,
+            'attribute_id': dynamic_attribute.id,
+        })
+        product_template = self.env['product.template'].create({
+            'name': 'Dynamic Product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'is_storable': True,
+            'available_in_pos': True,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_template.id,
+            'attribute_id': dynamic_attribute.id,
+            'value_ids': [Command.set([value_1.id, value_2.id])],
+        })
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PosProductWithDynamicAttributes', login="pos_admin")
+
+    def test_product_with_single_value_dynamic_attribute(self):
+        """A dynamic attribute with a single value must not open the configurator but still
+        creates the product variant on the server when added to the order."""
+        dynamic_attribute = self.env['product.attribute'].create({
+            'name': 'Single Dynamic Attribute',
+            'create_variant': 'dynamic',
+        })
+        value = self.env['product.attribute.value'].create({
+            'name': 'Only Value',
+            'attribute_id': dynamic_attribute.id,
+        })
+        product_template = self.env['product.template'].create({
+            'name': 'Single Dynamic Product',
+            'list_price': 5.0,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_template.id,
+            'attribute_id': dynamic_attribute.id,
+            'value_ids': [Command.set([value.id])],
+        })
+
+        no_variant_attribute = self.env['product.attribute'].create({
+            'name': 'No Variant Attribute',
+            'create_variant': 'no_variant',
+        })
+        no_variant_value = self.env['product.attribute.value'].create({
+            'name': 'No Variant Value',
+            'attribute_id': no_variant_attribute.id,
+        })
+        mixed_template = self.env['product.template'].create({
+            'name': 'Mixed Attribute Product',
+            'list_price': 7.0,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        self.env['product.template.attribute.line'].create([
+            {
+                'product_tmpl_id': mixed_template.id,
+                'attribute_id': dynamic_attribute.id,
+                'value_ids': [Command.set([value.id])],
+            },
+            {
+                'product_tmpl_id': mixed_template.id,
+                'attribute_id': no_variant_attribute.id,
+                'value_ids': [Command.set([no_variant_value.id])],
+            },
+        ])
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_product_with_single_value_dynamic_attribute', login="pos_user")
+
+    def test_product_search(self):
+        """Verify that the product search works correctly"""
+        product_with_variant = self.env['product.template'].create({
+            'name': 'Product with Variant',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'barcode': '1234567',
+        })
+
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Color always',
+            'create_variant': 'always',
+            'value_ids': [(0, 0, {
+                'name': 'Red',
+                'sequence': 1,
+            }), (0, 0, {
+                'name': 'Blue',
+                'sequence': 2,
+            })],
+        })
+
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_with_variant.id,
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, color_attribute.value_ids.ids)]
+        })
+        product_with_variant.product_variant_ids[0].write({
+            "barcode": "variant_barcode_1",
+            "default_code": "VARIANT_1"
+        })
+        product_with_variant.product_variant_ids[1].write({
+            "barcode": "variant_barcode_2",
+            "default_code": "VARIANT_2"
+        })
+
+        self.env['product.product'].create([
+            {
+                'name': 'Test Product 1',
+                'list_price': 100,
+                'taxes_id': False,
+                'available_in_pos': True,
+                'barcode': '1234567890123',
+                'default_code': 'TESTPROD1',
+            },
+            {
+                'name': 'Test Product 2',
+                'list_price': 100,
+                'taxes_id': False,
+                'available_in_pos': True,
+                'barcode': '1234567890124',
+                'default_code': 'TESTPROD2',
+            },
+            {
+                'name': 'Apple',
+                'list_price': 100,
+                'taxes_id': False,
+                'available_in_pos': True,
+            },
+            {
+                'name': 'galaxy',
+                'list_price': 100,
+                'taxes_id': False,
+                'available_in_pos': True,
+            },
+            {
+                'name': '1234567890123',
+                'list_price': 100,
+                'taxes_id': False,
+                'available_in_pos': True,
+            },
+        ])
+
+        att_color = self.env['product.attribute'].create({'name': 'Color', 'sequence': 1})
+
+        att_color_values = self.env['product.attribute.value'].create([
+            {'name': 'galaxy variant', 'attribute_id': att_color.id, 'sequence': 1},
+            {'name': 'blue', 'attribute_id': att_color.id, 'sequence': 2},
+            ])
+
+        self.env['product.template'].create({
+            'name': 'Test Product variant',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': att_color.id,
+                    'value_ids': [Command.set(att_color_values.mapped('id'))],
+                }),
+            ],
+            'available_in_pos': True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'ProductSearchTour', login="pos_user")
+
+    def test_customer_popup(self):
+        """Verify that the customer popup search & inifnite scroll work properly"""
+        self.env["res.partner"].create([{"name": "Z partner to search"}, {"name": "Z partner to scroll"}])
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'CustomerPopupTour', login="pos_user")
+
+    def test_tracking_number_closing_session(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_tracking_number_closing_session', login="accountman")
+
+        # Change should be given in cash
+        cash_payment_method = self.main_pos_config.payment_method_ids.filtered(lambda p: p.type == 'cash')
+        last_order = self.main_pos_config.current_session_id.order_ids[-1]
+        self.assertRecordValues(last_order.payment_ids.sorted(), [
+            {'amount': -18.02, 'payment_method_id': cash_payment_method.id, 'is_change': True},
+            {'amount': 20.0, 'payment_method_id': self.bank_payment_method.id, 'is_change': False},
+        ])
+
+        # References should not have gaps
+        references = self.env['pos.order'].search([], order="pos_reference").mapped("pos_reference")
+        for i in range(len(references) - 1):
+            self.assertEqual(int(references[i + 1].split('-')[-1]), int(references[i].split('-')[-1]) + 1, "There is a gap in the pos references")
+
+    def test_reload_page_before_payment_with_customer_account(self):
+        self.customer_account_payment_method = self.env['pos.payment.method'].create({
+            'name': 'Customer Account',
+            'type': 'pay_later',
+        })
+        self.main_pos_config.write({'payment_method_ids': [(6, 0, self.customer_account_payment_method.ids)]})
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            f'/pos/ui/{self.main_pos_config.id}',
+            'test_reload_page_before_payment_with_customer_account',
+            login='pos_user',
+        )
+
+    @freeze_time("2025-06-15 11:09")
+    def test_cash_in_out(self):
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_cash_in_out', login="pos_admin")
+
+        self.assertEqual(len(self.main_pos_config.current_session_id.bank_statement_line_ids), 1, "There should be one cash in/out statement line")
+        self.assertEqual(self.main_pos_config.current_session_id.bank_statement_line_ids[0].amount, -5, "The cash in/out amount should be -5")
+
+    def test_edit_paid_order(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_edit_paid_order', login="pos_user")
+        edited_orders = self.env['pos.order'].search([], limit=1)
+        # check invoice created
+        self.assertTrue(edited_orders[0].account_move)
+        self.assertEqual(edited_orders[0].partner_id.name, 'Partner Test 1')
+
+    def test_reuse_empty_floating_order(self):
+        """ Verify that after a payment, POS should reuse an existing empty floating order if available, instead of always creating new ones """
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_reuse_empty_floating_order', login="pos_user")
+
+    def test_order_and_invoice_amounts(self):
+        payment_term = self.env['account.payment.term'].create({
+            'name': "early_payment_term",
+            'discount_percentage': 10,
+            'discount_days': 10,
+            'early_discount': True,
+            'early_pay_discount_computation': 'mixed',
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'nb_days': 0,
+                'value_amount': 100,
+            })]
+        })
+        self.partner_test_1.property_payment_term_id = payment_term.id
+
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 10%',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 1000,
+            'taxes_id': [(6, 0, [tax.id])],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenInvoiceOrder', login="pos_user")
+
+        order = self.env['pos.order'].search([('partner_id', '=', self.partner_test_1.id)], limit=1)
+        self.assertTrue(order)
+
+        self.assertEqual(order.partner_id, self.partner_test_1)
+
+        invoice = self.env['account.move'].search([('invoice_origin', '=', order.pos_reference)], limit=1)
+        self.assertTrue(invoice)
+        self.assertFalse(invoice.invoice_payment_term_id)
+
+        self.assertAlmostEqual(order.amount_total, invoice.amount_total, places=2, msg="Order and Invoice amounts do not match.")
+
+    def test_product_create_update_from_frontend(self):
+        ''' This test verifies product creation and updates product details from the POS frontend. '''
+        self.pos_admin.write({
+            'group_ids': [Command.link(self.env.ref('base.group_system').id)],
+        })
+        self.env['pos.category'].search([('id', '!=', self.pos_cat_chair_test.id)]).write({'sequence': 100})
+        self.pos_cat_chair_test.write({'sequence': 1})
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour('/pos/ui/%d' % self.main_pos_config.id, 'test_product_create_update_from_frontend', login='pos_admin')
+
+        # In the frontend, a product was created during the tour with the following details:
+        # - Product name: Test Frontend Product
+        # - Barcode: 710535977349
+        # - List price: 20.0
+
+        #  Ensure that the original product created in the frontend ('Test Frontend Product') has been edited to ('Test Frontend Product Edited').
+        frontend_created_product = self.env['product.product'].search_count([('name', '=', 'Test Frontend Product')])
+        frontend_created_product_edited = self.env['product.product'].search([('name', '=', 'Test Frontend Product Edited')])
+
+        self.assertEqual(frontend_created_product, 0)
+        self.assertEqual(frontend_created_product_edited.name, 'Test Frontend Product Edited')
+        self.assertEqual(frontend_created_product_edited.barcode, '710535977348')
+        self.assertEqual(frontend_created_product_edited.list_price, 50.0)
+
+    def test_fiscal_position_tax_group_labels(self):
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'Fiscal Position Test',
+        })
+        tax_1 = self.env['account.tax'].create({
+            'name': 'Tax 15%',
+            'amount': 15,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'tax_group_id': self.env['account.tax.group'].create({
+                'name': 'Tax Group 15%',
+                'company_id': self.env.company.id,
+                'pos_receipt_label': 'Tax Group 1',
+            }).id,
+        })
+
+        tax_2 = self.env['account.tax'].create({
+            'name': 'Tax 5%',
+            'amount': 5,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'tax_group_id': self.env['account.tax.group'].create({
+                'name': 'Tax Group 5%',
+                'company_id': self.env.company.id,
+                'pos_receipt_label': 'Tax Group 2',
+            }).id,
+            'fiscal_position_ids': [Command.link(fiscal_position.id)],
+            'original_tax_ids': [Command.link(tax_1.id)],
+        })
+
+        self.product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'taxes_id': [(6, 0, [tax_1.id])],
+            'list_price': 100,
+            'available_in_pos': True,
+        })
+
+        self.main_pos_config.write({
+            'tax_regime_selection': True,
+            'fiscal_position_ids': [(6, 0, [fiscal_position.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_fiscal_position_tax_group_labels')
+        orders = self.main_pos_config.current_session_id.order_ids
+
+        self.assertEqual(orders[0].fiscal_position_id.id, fiscal_position.id)
+        self.assertEqual(orders[0].lines.tax_ids_after_fiscal_position.id, tax_2.id)
+        self.assertEqual(orders[0].amount_total, 105)
+        self.assertFalse(orders[1].fiscal_position_id)
+        self.assertEqual(orders[1].lines.tax_ids_after_fiscal_position.id, tax_1.id)
+        self.assertEqual(orders[1].amount_total, 115)
+
+    def test_draft_orders_not_syncing(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_draft_orders_not_syncing', login="pos_user")
+        n_draft_order = self.env['pos.order'].search_count([('state', '=', 'draft')], limit=1)
+        self.assertEqual(n_draft_order, 0, 'There should be no draft orders created')
+
+    def test_product_long_press(self):
+        """ Test the long press on product to open the product info """
+        archive_products(self.env)
+        self.main_pos_config.company_id.country_id.vat_label = 'Should stay Tax even after editing vat_label'
+        group_tax = self.env['account.tax'].create({
+            'name': 'Parent Tax',
+            'amount_type': 'group',
+            'children_tax_ids': [(0, 0, {
+                'name': 'Child Tax 1',
+                'amount': 10,
+            }), (0, 0, {
+                'name': 'Child Tax 2',
+                'amount': 5,
+            })],
+        })
+        self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 100,
+            'taxes_id': [(6, 0, [group_tax.id])],
+            'available_in_pos': True,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'test_product_long_press', login="pos_user")
+
+    def test_zero_decimal_places_currency(self):
+        zero_decimal_currency = self.env['res.currency'].create({
+            'name': 'ZeroDecimalCurrency',
+            'symbol': 'ZDC',
+            'rounding': 1.0,
+            'decimal_places': 0,
+        })
+
+        self.env.user.company_id.currency_id = zero_decimal_currency
+        self.main_pos_config.available_pricelist_ids.write({'currency_id': zero_decimal_currency.id})
+
+        self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_zero_decimal_places_currency', login="pos_user")
+        order = self.env['pos.order'].search([], limit=1)
+        self.assertEqual(order.payment_ids[0].payment_method_id.name, "Bank")
+
+    def test_barcode_search_attributes_preset(self):
+        product = self.env['product.template'].create({
+            'name': 'Product with Attributes',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+        })
+
+        # Product template to force UI reset (acts as a delay)
+        self.env['product.template'].create({
+            'name': 'Product without Attributes',
+            'available_in_pos': True,
+            'list_price': 20,
+            'taxes_id': False,
+            'barcode': '987654321',
+        })
+
+        attribute_1, attribute_2, attribute_3, attribute_4 = self.env['product.attribute'].create([{
+            'name': 'Attribute 1',
+            'create_variant': 'always',
+            'display_type': 'radio',
+            'value_ids': [(0, 0, {
+                'name': 'Value 1',
+            }), (0, 0, {
+                'name': 'Value 2',
+            })],
+        }, {
+            'name': 'Attribute 2',
+            'create_variant': 'always',
+            'display_type': 'pills',
+            'value_ids': [(0, 0, {
+                'name': 'Value 3',
+            }), (0, 0, {
+                'name': 'Value 4',
+            })],
+        }, {
+            'name': 'Attribute 3',
+            'create_variant': 'always',
+            'display_type': 'select',
+            'value_ids': [(0, 0, {
+                'name': 'Value 5',
+            }), (0, 0, {
+                'name': 'Value 6',
+            })],
+        }, {
+            'name': 'Attribute 4',
+            'create_variant': 'always',
+            'display_type': 'color',
+            'value_ids': [(0, 0, {
+                'name': 'Value 7',
+            }), (0, 0, {
+                'name': 'Value 8',
+            })],
+        }])
+
+        self.env['product.template.attribute.line'].create([{
+            'product_tmpl_id': product.id,
+            'attribute_id': attribute_1.id,
+            'value_ids': [(6, 0, attribute_1.value_ids.ids)],
+            'sequence': 1,
+        }, {
+            'product_tmpl_id': product.id,
+            'attribute_id': attribute_2.id,
+            'value_ids': [(6, 0, attribute_2.value_ids.ids)],
+            'sequence': 2,
+        }, {
+            'product_tmpl_id': product.id,
+            'attribute_id': attribute_3.id,
+            'value_ids': [(6, 0, attribute_3.value_ids.ids)],
+            'sequence': 3,
+        }, {
+            'product_tmpl_id': product.id,
+            'attribute_id': attribute_4.id,
+            'value_ids': [(6, 0, attribute_4.value_ids.ids)],
+            'sequence': 4,
+        }])
+
+        for p in product.product_variant_ids:
+            p.write({
+                'barcode': f'1234{"".join(p.product_template_attribute_value_ids.mapped(lambda ptav: ptav.name[-1]))}',
+            })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_barcode_search_attributes_preset', login="pos_user")
+
+    def test_auto_validate_force_done(self):
+        self.main_pos_config.write({
+            'auto_validate_electronic_payment': True
+        })
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_auto_validate_force_done', login="pos_user")
+
+    def test_pos_ui_round_globally(self):
+        self.main_pos_config.company_id.tax_calculation_rounding_method = 'round_globally'
+        tax_16 = self.env['account.tax'].create({
+            'name': 'Tax 16%',
+            'amount': 16,
+        })
+        self.env['product.product'].create([{
+            'name': 'Test Product 1',
+            'list_price': 7051.73,
+            'taxes_id': [(6, 0, [tax_16.id])],
+            'available_in_pos': True,
+        }, {
+            'name': 'Test Product 2',
+            'list_price': 352.59,
+            'taxes_id': [(6, 0, [tax_16.id])],
+            'available_in_pos': True,
+        }])
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_pos_ui_round_globally', login="pos_user")
+
+        pos_session = self.main_pos_config.current_session_id
+        self.assertEqual(pos_session.order_ids[0].payment_ids[0].amount, 7771.0)
+
+        # Close the session and check the session journal entry.
+        pos_session.close_session_from_ui()
+
+        lines = pos_session.move_ids.line_ids.sorted('balance')
+
+        self.assertEqual(len(lines), 3, "There should be 3 lines in the session journal entry")
+        self.assertAlmostEqual(lines[0].balance, -6699.14)  # Negative line and positive are aggregated
+        self.assertAlmostEqual(lines[1].balance, -1071.86)  # Negative line and positive are aggregated
+        self.assertAlmostEqual(lines[2].balance, 7771.0)
+
+    def test_preset_timing_retail(self):
+        """
+        Test to set order preset hour inside a tour
+        """
+        self.preset_dine_in = self.env['pos.preset'].create({
+            'name': 'Dine in',
+        })
+        self.preset_delivery = self.env['pos.preset'].create({
+            'name': 'Delivery',
+            'identification': 'address',
+        })
+        self.main_pos_config.write({
+            'use_presets': True,
+            'default_preset_id': self.preset_dine_in.id,
+            'available_preset_ids': [(6, 0, [self.preset_delivery.id])],
+        })
+        self.pos_user.street = 'Rue de Ramillies'
+        resource_calendar = self.env['resource.calendar'].create({
+            'name': 'Takeaway',
+            'attendance_ids': [(0, 0, {
+                'dayofweek': str(day),
+                'hour_from': 0,
+                'hour_to': 24,
+            }) for day in range(7)],
+        })
+        self.preset_delivery.write({
+            'use_timing': True,
+            'resource_calendar_id': resource_calendar
+        })
+        self.start_pos_tour('test_preset_timing_retail')
+
+    def test_pricelists_in_pos(self):
+        pos_limited_category = self.env['pos.category'].create({'name': 'Limited Category'})
+        pos_category = self.env['pos.category'].create({'name': 'test_pricelists_in_pos'})
+        product_category = self.env['product.category'].create({'name': 'test_pricelists_in_pos'})
+        orange_category = self.env['product.category'].create({'name': 'Orange Category'})
+
+        def generate_pricelist_items(pricelist, fixed_price, product=None, product_tmpl=None, product_category=None):
+            applied_on = '0_product_variant' if product else '1_product' if product_tmpl else '2_product_category' if product_category else '3_global'
+            return self.env['product.pricelist.item'].create({
+                'pricelist_id': pricelist.id,
+                'product_id': product.id if product else False,
+                'product_tmpl_id': product_tmpl.id if product_tmpl else False,
+                'categ_id': product_category.id if product_category else False,
+                'compute_price': 'fixed',
+                'applied_on': applied_on,
+                'fixed_price': fixed_price,
+            })
+
+        def generate_product_template_with_attributes(name, price, pos_category=None, product_category=None):
+            size_attribute = self.env['product.attribute'].create({
+                'name': 'Size',
+                'sequence': 4,
+                'value_ids': [(0, 0, {
+                    'name': 'BIG',
+                    'sequence': 1,
+                }), (0, 0, {
+                    'name': 'MEDIUM',
+                    'sequence': 2,
+                }), (0, 0, {
+                    'name': 'SMALL',
+                    'sequence': 3,
+                })],
+            })
+
+            product_tmpl = self.env['product.template'].create({
+                'name': name.capitalize(),
+                'available_in_pos': True,
+                'categ_id': product_category.id if product_category else False,
+                'pos_categ_ids': [(4, pos_category.id)] if pos_category else False,
+                'list_price': price,
+                'taxes_id': False,
+                'attribute_line_ids': [(0, 0, {
+                    'attribute_id': size_attribute.id,
+                    'value_ids': [(6, 0, size_attribute.value_ids.ids)]
+                })],
+            })
+
+            for index, variant in enumerate(product_tmpl.product_variant_ids):
+                variant.write({'barcode': f'{name}_{index}'})
+
+            return product_tmpl
+
+        banana = generate_product_template_with_attributes('banana', 10.00, pos_category)
+        apple = generate_product_template_with_attributes('apple', 5.00, False, product_category)
+        pear = generate_product_template_with_attributes('pear', 2.00)
+        lime = generate_product_template_with_attributes('lime', 1.00)
+        orange = generate_product_template_with_attributes('orange', 3.00, False, orange_category)
+        kiwi = generate_product_template_with_attributes('kiwi', 4.00)
+
+        test_pricelist = self.env['product.pricelist'].create({
+            'name': 'Test Pricelist',
+        })
+
+        percentage_pricelist = self.env['product.pricelist'].create({
+            'name': 'Percentage Pricelist',
+        })
+
+        generate_pricelist_items(test_pricelist, 20, False, banana)
+        generate_pricelist_items(test_pricelist, 100, banana.product_variant_ids[0])
+        generate_pricelist_items(test_pricelist, 150, banana.product_variant_ids[1])
+        generate_pricelist_items(test_pricelist, 500, False, False, product_category)
+        generate_pricelist_items(test_pricelist, 1000, False, False, orange_category)
+        generate_pricelist_items(test_pricelist, 100, apple.product_variant_ids[0])
+        generate_pricelist_items(test_pricelist, 20, pear.product_variant_ids[0])
+        generate_pricelist_items(test_pricelist, 40, pear.product_variant_ids[1])
+        generate_pricelist_items(test_pricelist, 60, pear.product_variant_ids[2])
+        generate_pricelist_items(test_pricelist, 100, False, lime)
+        generate_pricelist_items(test_pricelist, 200, lime.product_variant_ids[1])
+        generate_pricelist_items(test_pricelist, 400, lime.product_variant_ids[2])
+        generate_pricelist_items(test_pricelist, 600, orange.product_variant_ids[1])
+        generate_pricelist_items(test_pricelist, 500, orange.product_variant_ids[2])
+        generate_pricelist_items(test_pricelist, 10)
+        generate_pricelist_items(test_pricelist, 20, kiwi.product_variant_ids[0])
+
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': percentage_pricelist.id,
+            'base': 'pricelist',
+            'base_pricelist_id': test_pricelist.id,
+            'compute_price': 'discount',
+            'price_discount': 50,
+            'applied_on': '3_global',
+        })
+
+        self.main_pos_config.write({
+            "limit_categories": True,
+            "iface_available_categ_ids": [(6, 0, [pos_limited_category.id])],
+            'available_pricelist_ids': [(6, 0, [test_pricelist.id, percentage_pricelist.id])],
+            'pricelist_id': test_pricelist.id,
+        })
+
+        load_data_from_pos_stats = {'count': 0, 'items': {}}
+
+        # Test product exclusion
+        cherry = generate_product_template_with_attributes('cherry', 2.00)
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'sequence': 5,
+            'value_ids': [(0, 0, {
+                'name': 'RED',
+                'sequence': 1,
+            }), (0, 0, {
+                'name': 'GREEN',
+                'sequence': 2,
+            }), (0, 0, {
+                'name': 'BLUE',
+                'sequence': 3,
+            })],
+        })
+        cherry.attribute_line_ids = [(0, 0, {
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, color_attribute.value_ids.ids)]
+        })]
+        color_attribute = cherry.attribute_line_ids.filtered(lambda l: l.attribute_id.name == 'Color')
+        first_color_value = color_attribute.product_template_value_ids.filtered(lambda v: v.attribute_id.name == 'Color' and v.name == 'RED')
+        first_size_value = cherry.product_variant_ids.product_template_attribute_value_ids.filtered(lambda v: v.attribute_id.name == 'Size' and v.name == 'BIG')
+        first_color_value.excluded_value_ids = [Command.link(value) for value in first_size_value.ids]
+        for index, variant in enumerate(cherry.product_variant_ids):
+            variant.write({'barcode': f'cherry_{index}'})
+
+        def load_data_patch(self, local_data={}):
+            if 'product.template' in local_data.get('models', []) and len(local_data.get('search_params', {})) > 0:
+                load_data_from_pos_stats['count'] += 1
+            result = super(self.env.registry.models['pos.session'], self).load_data(local_data)
+            if 'product.template' in local_data.get('models', []) and len(local_data.get('search_params', {})) > 0:
+                lowered_name = result['product.template'][0]['display_name'].lower()
+                load_data_from_pos_stats['items'][lowered_name] = len(result['product.pricelist.item'])
+            return result
+        with patch.object(self.env.registry.models['pos.session'], "load_data", load_data_patch):
+            self.start_pos_tour('test_pricelists_in_pos')
+
+        # Should load 7 different products, since 7 products were created
+        # The stack count is 14 since load_data is called by the frontend (loadNewProducts)
+        # and by the backend (notify_synchronisation) after the frontend dispatch its new data
+        self.assertEqual(load_data_from_pos_stats['count'], 14)
+
+        # Length of loaded pricelist items should correspond to the number of items linked
+        # to the product template or product variant
+        # Global rules are loaded at starting of the PoS
+        self.assertEqual(load_data_from_pos_stats['items']['banana'], 3, "Banana should have 3 pricelist items")
+        self.assertEqual(load_data_from_pos_stats['items']['apple'], 1, "Apple should have 1 pricelist item")
+        self.assertEqual(load_data_from_pos_stats['items']['pear'], 3, "Pear should have 3 pricelist items")
+        self.assertEqual(load_data_from_pos_stats['items']['lime'], 3, "Lime should have 3 pricelist items")
+        self.assertEqual(load_data_from_pos_stats['items']['orange'], 2, "Orange should have 2 pricelist items")
+        self.assertEqual(load_data_from_pos_stats['items']['kiwi'], 1, "Kiwi should have 1 pricelist item")
+
+    def test_available_children_categories(self):
+        parent_categ = self.env['pos.category'].create({
+            'name': 'Parent Category',
+        })
+        children_categs = self.env['pos.category'].create([{
+            'name': 'Child Category 1',
+            'parent_id': parent_categ.id,
+        }, {
+            'name': 'Child Category 2',
+            'parent_id': parent_categ.id,
+        }])
+        self.env['product.product'].create([{
+            'name': 'parent product',
+            'pos_categ_ids': [(6, 0, [parent_categ.id])],
+            'available_in_pos': True,
+        }, {
+            'name': 'child product 1',
+            'pos_categ_ids': [(6, 0, [parent_categ.id, children_categs[0].id])],
+            'available_in_pos': True,
+        }, {
+            'name': 'child product 2',
+            'pos_categ_ids': [(6, 0, [parent_categ.id, children_categs[1].id])],
+            'available_in_pos': True,
+        }])
+        self.main_pos_config.write({
+            'limit_categories': True,
+            'iface_available_categ_ids': [(6, 0, [parent_categ.id, children_categs[1].id])],
+        })
+        self.main_pos_config.open_ui()
+        loaded_data = self.main_pos_config.current_session_id.load_data({'only_records': True})
+        category_id = [category['id'] for category in loaded_data['pos.category']]
+        self.assertNotIn(children_categs[0].id, category_id, "Child category is unavailable and shouldn't appear in the POS")
+        self.assertIn(children_categs[1].id, category_id, "Child category is available and should appear in the POS")
+
+    def test_available_product_uom_ids(self):
+        # Making sure that all of the non-special products that are included in the `load_data` are the ones created in this method.
+        self.env['product.template'].search([]).write({'is_favorite': False})
+
+        self.env['ir.config_parameter'].sudo().set_str('point_of_sale.limited_product_count', '2')
+        uom = self.env['uom.uom'].create({
+            'name': 'Random UOM',
+            'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
+        })
+        product_one, product_two, product_three = self.env['product.product'].create([{
+            'name': "product_one",
+            'available_in_pos': True,
+            'is_favorite': True,
+        },
+        {
+            'name': "product_two",
+            'available_in_pos': True,
+            'is_favorite': True,
+        },
+        {
+            'name': "product_three",
+            'available_in_pos': True,
+        }])
+
+        _, _, product_uom_three = self.env['product.uom'].create([{
+            'barcode': "product_one_barcode",
+            'uom_id': uom.id,
+            'product_id': product_one.id,
+        },
+        {
+            'barcode': "product_two_barcode",
+            'uom_id': uom.id,
+            'product_id': product_two.id,
+        },
+        {
+            'barcode': "product_three_barcode",
+            'uom_id': uom.id,
+            'product_id': product_three.id,
+        },
+        ])
+
+        self.env['product.template'].flush_model()
+        self.main_pos_config.open_ui()
+        loaded_data = self.main_pos_config.current_session_id.load_data({'only_records': True})
+        loaded_product_uoms = [loaded_product_uom['id'] for loaded_product_uom in loaded_data['product.uom']]
+
+        self.assertNotIn(product_uom_three.id, loaded_product_uoms, f"Product UOM {product_uom_three} shouldn't be loaded as its product {product_three} is not included in the results")
+
+    def test_fast_payment_validation_from_product_screen_without_automatic_receipt_printing(self):
+        self.preset_delivery = self.env['pos.preset'].create({
+            'name': 'Delivery',
+            'identification': 'address',
+        })
+        self.main_pos_config.write({
+            'use_fast_payment': True,
+            'use_presets': True,
+            'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
+            'default_preset_id': self.preset_delivery.id,
+            'available_preset_ids': [(6, 0, [self.preset_delivery.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_fast_payment_validation_from_product_screen_without_automatic_receipt_printing')
+        order1 = self.main_pos_config.current_session_id.order_ids[0]
+        order2 = self.main_pos_config.current_session_id.order_ids[1]
+        self.assertEqual(order1.state, 'paid', "The order should be paid after the fast payment validation")
+        self.assertEqual(len(order1.payment_ids), 1, "There should be one payment line used for the fast payment")
+        self.assertEqual(order1.payment_ids.payment_method_id, self.bank_payment_method, "The payment method used should be the bank payment method")
+        self.assertEqual(order2.state, 'paid', "The order should be paid")
+        self.assertEqual(len(order2.payment_ids), 1, "There should be one payment line")
+        self.assertEqual(order2.payment_ids.payment_method_id, self.bank_payment_method, "The payment method used should be the bank payment method")
+
+    def test_fast_payment_validation_from_product_screen_with_automatic_receipt_printing(self):
+        pos_printer = self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'printer_ip': '1.0.1.0',
+            'use_type': 'receipt',
+        })
+        # Ensure duplicating a printer preserves its configured IP address,
+        copied_printer_data = pos_printer.copy_data()
+        self.assertEqual(
+            copied_printer_data[0]['printer_ip'],
+            '1.0.1.0',
+            "The copied printer should preserve the original printer IP address.",
+        )
+        self.main_pos_config.write({
+            'use_fast_payment': True,
+            'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
+            'iface_print_auto': True,
+            'other_devices': True,
+            'receipt_printer_ids': [Command.set(pos_printer.ids)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_fast_payment_validation_from_product_screen_with_automatic_receipt_printing')
+        order1 = self.main_pos_config.current_session_id.order_ids[0]
+        order2 = self.main_pos_config.current_session_id.order_ids[1]
+        self.assertEqual(order1.state, 'paid', "The order should be paid after the fast payment validation")
+        self.assertEqual(len(order1.payment_ids), 1, "There should be one payment line used for the fast payment")
+        self.assertEqual(order1.payment_ids.payment_method_id, self.bank_payment_method, "The payment method used should be the bank payment method")
+        self.assertEqual(order2.state, 'paid', "The order should be paid")
+        self.assertEqual(len(order2.payment_ids), 1, "There should be one payment line")
+        self.assertEqual(order2.payment_ids.payment_method_id, self.bank_payment_method, "The payment method used should be the bank payment method")
+
+    def test_consistent_refund_process_between_frontend_and_backend(self):
+        """
+        Ensure that the partial refund process is consistent between the frontend and backend.
+        This includes validating the refund order creation, amount, state, and payment processing.
+        """
+        # Open POS UI with the POS user
+        pricelists = self.env['product.pricelist'].create([
+            {'name': 'Test Pricelist'},
+            {'name': 'Percentage Pricelist'},
+        ])
+        self.main_pos_config.write({
+            'available_pricelist_ids': [Command.set(pricelists.ids)],
+            'pricelist_id': pricelists[0].id,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        # Run the POS tour simulating a partial refund
+        self.start_pos_tour('test_consistent_refund_process_between_frontend_and_backend')
+
+        # Fetch orders created in the current POS session
+        orders = self.env['pos.order'].search([
+            ('session_id', '=', self.main_pos_config.current_session_id.id),
+        ])
+        self.assertEqual(len(orders), 2, "Expected two orders: original and refund.")
+        refunded = orders.filtered(lambda o: o.is_refund)
+        order = orders - refunded
+        self.assertEqual(
+            refunded.pricelist_id.id,
+            order.pricelist_id.id,
+            "Refund order pricelist should be the original order's pricelist.",
+        )
+
+        # Perform refund on order and retrieve the resulting draft refund order
+        refund_action = order.refund()
+        backend_refund_order = self.env['pos.order'].browse(refund_action['res_id'])
+
+        # Validate the refund order is in draft and has correct negative total
+        self.assertEqual(backend_refund_order.state, 'draft', "Refund order should be in draft state.")
+
+        # Create a payment for the refund using the configured bank method
+        payment_context = {
+            "active_id": backend_refund_order.id,
+        }
+        refund_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': backend_refund_order.amount_total,
+            'payment_method_id': self.bank_payment_method.id,
+        })
+
+        # Validate and finalize the refund payment
+        refund_payment.with_context(**payment_context).check()
+        self.assertEqual(backend_refund_order.state, 'paid', "Refund order should be marked as paid.")
+
+        # Lines are always positive even in refunds
+        self.assertTrue(backend_refund_order.lines.price_subtotal > 0)
+        self.assertTrue(refunded.lines.price_subtotal > 0)
+        self.assertTrue(backend_refund_order.lines.price_subtotal_incl > 0)
+        self.assertTrue(refunded.lines.price_subtotal_incl > 0)
+
+        # Refund order total should be negative (qty = -1)
+        self.assertTrue(backend_refund_order.amount_total < 0)
+        self.assertTrue(refunded.amount_total < 0)
+
+    def test_paid_order_with_archived_product_loads(self):
+        """ Test that a paid order with archived products can be loaded in the POS. """
+
+        archived_product = self.env['product.product'].create({
+            'name': 'Archived Product',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'taxes_id': False,
+            'active': False,  # Archived product
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.env['pos.order'].create({
+            'config_id': self.main_pos_config.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'company_id': self.main_pos_config.company_id.id,
+            'amount_total': 10.0,
+            'amount_paid': 10.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'partner_id': False,
+            'pricelist_id': self.main_pos_config.pricelist_id.id,
+            'pos_reference': '1000-004-00002',
+            'name': 'Order 0002',
+            'state': 'paid',
+            'lines': [(0, 0, {
+                'name': 'Line 0001',
+                'product_id': archived_product.id,
+                'price_unit': 10.00,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': False,
+                'price_subtotal': 10.00,
+                'price_subtotal_incl': 10.00,
+            })],
+        })
+
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_paid_order_with_archived_product_loads', login="pos_user")
+
+    def test_order_invoice_search(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.pos_user.group_ids = [Command.link(self.env.ref('account.group_account_invoice').id)]
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'test_order_invoice_search', login="pos_user")
+
+    def test_load_pos_demo_data(self):
+        """ Test that the demo data can be loaded by admin but not by user. """
+
+        if loaded_demo_data(self.env):
+            self.skipTest('Cannot test with demo data.')
+
+        # archive existing product records
+        archive_products(self.env)
+
+        # cannot load by pos user
+        self.start_pos_tour('test_load_pos_demo_data_by_pos_user', login='pos_user')
+        products = self.env['product.template'].search_count([('available_in_pos', '=', True)])
+        self.assertFalse(products, 'Demo data should not be loaded by user.')
+
+        # Member role with POS Administrator access
+        self.pos_user.write({'group_ids': [
+            Command.set(
+                [
+                    self.env.ref('base.group_user').id,
+                    self.env.ref('point_of_sale.group_pos_manager').id,
+                    self.env.ref('account.group_account_manager').id,
+                ]
+            )
+        ]})
+        self.start_pos_tour('test_load_pos_demo_data_with_member_role', login='pos_user')
+        products = self.env['product.template'].search_count([('available_in_pos', '=', True)])
+        self.assertFalse(products, 'Demo data should not be loaded by user with member role.')
+
+    def test_cross_exclusion_attribute_values(self):
+        """ If you create a product with two attributes and 2 values for each attribute, and you exclude one value of the first attribute with one value of the second attribute
+        and vice versa, you should still be able to select the other values of the attributes. """
+        self.attribute_1 = self.env['product.attribute'].create({
+            'name': 'attribute_1',
+            'create_variant': 'no_variant',
+        })
+
+        self.attribute_2 = self.env['product.attribute'].create({
+            'name': 'attribute_2',
+            'create_variant': 'no_variant',
+        })
+
+        self.attribute_1_value_1 = self.env['product.attribute.value'].create({
+            'name': 'attribute_1_value_1',
+            'attribute_id': self.attribute_1.id,
+        })
+        self.attribute_1_value_2 = self.env['product.attribute.value'].create({
+            'name': 'attribute_1_value_2',
+            'attribute_id': self.attribute_1.id,
+        })
+        self.attribute_2_value_1 = self.env['product.attribute.value'].create({
+            'name': 'attribute_2_value_1',
+            'attribute_id': self.attribute_2.id,
+        })
+        self.attribute_2_value_2 = self.env['product.attribute.value'].create({
+            'name': 'attribute_2_value_2',
+            'attribute_id': self.attribute_2.id,
+        })
+
+        self.test_product_1 = self.env['product.template'].create({
+            'name': 'Test Product 1',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'attribute_line_ids': [
+                (0, 0, {
+                    'attribute_id': self.attribute_1.id,
+                    'value_ids': [(6, 0, [self.attribute_1_value_1.id, self.attribute_1_value_2.id])],
+                }),
+                (0, 0, {
+                    'attribute_id': self.attribute_2.id,
+                    'value_ids': [(6, 0, [self.attribute_2_value_1.id, self.attribute_2_value_2.id])],
+                }),
+            ],
+        })
+
+        # Test the exclusion of attribute values
+        ptav_1_1 = self.test_product_1.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.attribute_1.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.attribute_1_value_1.id)
+        ptav_1_2 = self.test_product_1.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.attribute_1.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.attribute_1_value_2.id)
+        ptav_2_2 = self.test_product_1.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.attribute_2.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.attribute_2_value_2.id)
+        ptav_2_1 = self.test_product_1.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.attribute_2.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.attribute_2_value_1.id)
+
+        ptav_1_1.excluded_value_ids = [Command.link(ptav_2_1.id)]
+        ptav_1_2.excluded_value_ids = [Command.link(ptav_2_2.id)]
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_cross_exclusion_attribute_values')
+
+    def test_weight_product(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_weight_product')
+        order = self.env['pos.order'].search([], limit=1)
+        self.assertEqual(len(order.lines), 2, "There should be two order lines")
+        self.assertEqual(order.lines[0].price_subtotal_incl, 40, "The price unit should be 40")
+        self.assertEqual(order.lines[0].qty, 4, "The quantity should be 4")
+        self.assertEqual(order.lines[1].price_subtotal_incl, 40, "The price unit should be 40")
+        self.assertEqual(order.lines[1].qty, 1, "The quantity should be 1")
+
+    def test_sync_from_ui_one_by_one(self):
+        """
+        Sync from UI is now syncing orders one by one.
+        sync_from_ui should be called 6 times in this tour (6 orders created).
+        """
+
+        pos_order = self.env.registry.models['pos.order']
+        sync_counter = {'count': 0}
+
+        @api.model
+        def sync_from_ui_patch(self, orders):
+            sync_counter['count'] += 1
+            return super(pos_order, self).sync_from_ui(orders)
+
+        with patch.object(pos_order, "sync_from_ui", sync_from_ui_patch):
+            self.start_pos_tour("test_sync_from_ui_one_by_one", login="pos_user")
+            self.assertEqual(sync_counter['count'], 6)
+
+    def test_set_opening_note_without_cash_method(self):
+        cash_method = self.main_pos_config.payment_method_ids.filtered(lambda pm: pm.type == 'cash')
+        self.main_pos_config.payment_method_ids -= cash_method
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        current_session = self.main_pos_config.current_session_id
+        self.start_pos_tour('test_set_opening_note_without_cash_method')
+        self.assertEqual(current_session.opening_notes, 'Opening Notes')
+
+    def test_product_configurator_price(self):
+        """ Test that the product configurator displays the correct price when selecting attributes that impact the price. """
+        self.env['product.template'].search([('available_in_pos', '=', True)]).active = False
+        tax_10 = self.env['account.tax'].create({
+            'name': 'Tax 10%',
+            'amount': 10,
+        })
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'Include to Exclude',
+        })
+        tax_10 = self.env['account.tax'].create({
+            'name': 'Tax 10 Excluded',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'price_include_override': 'tax_excluded',
+        })
+        self.env['account.tax'].create({
+            'name': 'Tax 10 Included',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'price_include_override': 'tax_included',
+            'fiscal_position_ids': fiscal_position,
+            'original_tax_ids': tax_10,
+        })
+        product = self.env['product.template'].create({
+            'name': 'Configurable Product',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'taxes_id': [(6, 0, [tax_10.id])],
+        })
+        size_attribute = self.env['product.attribute'].create({
+            'name': 'Size',
+            'create_variant': 'always',
+        })
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'create_variant': 'no_variant',
+        })
+        small_size_value, large_size_value = self.env['product.attribute.value'].create([{
+            'name': 'Small',
+            'attribute_id': size_attribute.id,
+        }, {
+            'name': 'Large',
+            'attribute_id': size_attribute.id,
+        }])
+        red_color_value, blue_color_value = self.env['product.attribute.value'].create([{
+            'name': 'Red',
+            'attribute_id': color_attribute.id,
+        }, {
+            'name': 'Blue',
+            'attribute_id': color_attribute.id,
+        }])
+        size_line = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product.id,
+            'attribute_id': size_attribute.id,
+            'value_ids': [(6, 0, [small_size_value.id, large_size_value.id])],
+        })
+        size_line.product_template_value_ids[1].price_extra = 1
+        color_line = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product.id,
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, [red_color_value.id, blue_color_value.id])],
+        })
+        color_line.product_template_value_ids[0].price_extra = 2
+        color_line.product_template_value_ids[1].price_extra = 3
+
+        pricelist_1, pricelist_2 = self.env['product.pricelist'].create([{
+            'name': 'Pricelist 1',
+        }, {
+            'name': 'Pricelist 2',
+            'item_ids': [(0, 0, {
+                'applied_on': '1_product',
+                'product_tmpl_id': product.id,
+                'fixed_price': 20.0,
+            })],
+        }])
+        self.main_pos_config.write({
+            'available_pricelist_ids': [(6, 0, [pricelist_1.id, pricelist_2.id])],
+            'pricelist_id': pricelist_1.id,
+            'tax_regime_selection': True,
+            'fiscal_position_ids': [(6, 0, [fiscal_position.id])],
+        })
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_product_configurator_price', login="pos_user")
+
+    def test_not_available_pricelist_not_set_on_order(self):
+        """ Test that when the pricelist is not available, it is not set on the order """
+        not_available_pricelist, available_pricelist = self.env['product.pricelist'].create([{
+            'name': 'Not Available Pricelist',
+        }, {
+            'name': 'Available Pricelist',
+        }])
+
+        self.main_pos_config.write({
+            'available_pricelist_ids': [(4, available_pricelist.id)],
+            'pricelist_id': available_pricelist.id,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        pos_session = self.main_pos_config.current_session_id
+
+        partner = self.env['res.partner'].create({
+            'name': 'AA Customer',
+            'property_product_pricelist': not_available_pricelist.id,
+        })
+
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': pos_session.id,
+            'partner_id': partner.id,
+            'config_id': self.main_pos_config.id,
+            'lines': [(0, 0, {
+                'name': 'OL/0001',
+                'product_id': self.wall_shelf.product_variant_ids[0].id,
+                'price_unit': 10.00,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': False,
+                'price_subtotal': 10.00,
+                'price_subtotal_incl': 10.00,
+            })],
+            'pricelist_id': not_available_pricelist.id,
+            'amount_paid': 10.00,
+            'amount_total': 10.00,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'pos_reference': 'Test/0001',
+        })
+        order.action_pos_order_paid()
+
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_not_available_pricelist_not_set_on_order', login="pos_user")
+
+        created_order = self.env['pos.order'].search([('partner_id', '=', partner.id)], limit=1)
+        self.assertNotEqual(created_order.pricelist_id, not_available_pricelist)
+
+    def test_pos_open_ui_button(self):
+        """ Test the Open Register button click behavior in the dashboard. """
+        self.env['pos.session'].create({'name': 'Test Session', 'config_id': self.main_pos_config.id, 'user_id': self.pos_user.id})  # Skip the tax inclusion selection if not the first session opening
+        self.start_tour("/odoo/point-of-sale", 'test_pos_open_ui_button', login="pos_user")
+
+    def test_customer_search_prefilled_on_create(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_customer_search_prefilled_on_create')
+
+    def test_dynamic_barcode_extra(self):
+        """
+        Tests that a dynamic product with extra price has the right price when
+        added to the order via its barcode
+        """
+        dynamic_attribute = self.env['product.attribute'].create({
+            'name': 'Dynamic Attribute',
+            'create_variant': 'dynamic',
+        })
+        value_1, value_2 = self.env['product.attribute.value'].create([
+            {
+                'name': 'M',
+                'attribute_id': dynamic_attribute.id,
+            },
+            {
+                'name': 'L',
+                'default_extra_price': 10,
+                'attribute_id': dynamic_attribute.id,
+            }
+        ])
+        product_template = self.env['product.template'].create({
+            'name': 'Dynamic Product',
+            'is_storable': True,
+            'list_price': 30.0,
+            'available_in_pos': True,
+            'taxes_id': [],
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': dynamic_attribute.id,
+                    'value_ids': [Command.set([value_1.id, value_2.id])],
+                }),
+            ],
+        })
+        ptav_value_2 = product_template.attribute_line_ids.product_template_value_ids.filtered(
+            lambda v: v.product_attribute_value_id == value_2
+        )
+        self.env['product.product'].create({
+            'product_tmpl_id': product_template.id,
+            'product_template_attribute_value_ids': [Command.set(ptav_value_2.ids)],
+            'barcode': '1234567890',
+        })
+
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_dynamic_barcode_extra', login="pos_admin")
+
+    def test_saver_screen_close_overlays(self):
+        """Test that active overlays (e.g., dropdown menus) are closed when the SaverScreen is triggered."""
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('SaverScreenCloseOverlaysTour')
+
+    def test_default_fiscal_position_allowed(self):
+        """
+        Tests that when a fiscal position is used through the detect automatically
+        setting, it will not be chosen if it's not allowed in the PoS settings.
+        """
+        _, fp_allowed = self.env['account.fiscal.position'].create([
+            {
+                'name': 'Not Good',
+                'auto_apply': True,
+                'sequence': 1,
+                'country_id': self.env.ref('base.us').id,
+            },
+            {
+                'name': 'Allowed',
+                'auto_apply': False,
+                'sequence': 2,
+            }
+        ])
+        self.partner_test_1.country_id = self.env.ref('base.us').id
+        self.main_pos_config.write({
+            'tax_regime_selection': True,
+            'default_fiscal_position_id': fp_allowed.id,
+            'fiscal_position_ids': [Command.set(fp_allowed.ids)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_default_fiscal_position_allowed', login="pos_user")
+
+    def test_barcode_scan_preselect_always_variant(self):
+        """
+        When scanning a barcode that matches a specific variant, the product configurator
+        should open with the 'always' variant attribute (Color) preselected and only the
+        'no_variant' attribute (Size) requiring user input.
+        """
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'create_variant': 'always',
+            'display_type': 'radio',
+            'value_ids': [(0, 0, {'name': 'Red', 'sequence': 1}), (0, 0, {'name': 'Blue', 'sequence': 2})],
+        })
+        size_attribute = self.env['product.attribute'].create({
+            'name': 'Size',
+            'create_variant': 'no_variant',
+            'display_type': 'radio',
+            'value_ids': [(0, 0, {'name': 'Small', 'sequence': 1}), (0, 0, {'name': 'Large', 'sequence': 2})],
+        })
+        product = self.env['product.template'].create({
+            'name': 'Variant Barcode Product',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+            'attribute_line_ids': [
+                (0, 0, {
+                    'attribute_id': color_attribute.id,
+                    'value_ids': [(6, 0, color_attribute.value_ids.ids)],
+                }),
+                (0, 0, {
+                    'attribute_id': size_attribute.id,
+                    'value_ids': [(6, 0, size_attribute.value_ids.ids)],
+                }),
+            ],
+        })
+        red_variant, blue_variant = product.product_variant_ids
+        red_variant.barcode = 'VAR_RED_001'
+        blue_variant.barcode = 'VAR_BLUE_001'
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_barcode_scan_preselect_always_variant', login="pos_user")
+
+    def test_price_extra_pricelist_based_pricelist(self):
+        """
+        Tests that extra price is carried over when changing to a pricelist based pricelist
+        """
+        extra_attribute = self.env['product.attribute'].create({
+            'name': 'Extra attribute',
+            'create_variant': 'no_variant',
+        })
+        extra_value = self.env['product.attribute.value'].create({
+            'name': 'Extra value',
+            'attribute_id': extra_attribute.id,
+        })
+        attribute_line = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.whiteboard_pen.id,
+            'attribute_id': extra_attribute.id,
+            'value_ids': [Command.set(extra_value.ids)]
+        })
+        attribute_line.product_template_value_ids[0].price_extra = 100
+
+        pricelist_1 = self.env['product.pricelist'].create({'name': 'Pricelist 1'})
+        pricelist_2 = self.env['product.pricelist'].create({
+            'name': 'Pricelist 2',
+            'item_ids': [Command.create({
+                'compute_price': 'discount',
+                'base': 'pricelist',
+                'base_pricelist_id': pricelist_1.id,
+                'price_discount': 50,
+                'applied_on': '3_global',
+            })],
+        })
+
+        self.main_pos_config.write({
+            'pricelist_id': pricelist_1.id,
+            'available_pricelist_ids': [Command.set([pricelist_1.id, pricelist_2.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_price_extra_pricelist_based_pricelist', login="pos_user")
+
+
+# This class just runs the same tests as above but with mobile emulation
+class MobileTestUi(TestUi):
+    _test_user_groups = None  # FIXME list needed groups
+
+    browser_size = '375x667'
+    touch_enabled = True
+    allow_inherited_tests_method = True
+
+
+class TestTaxCommonPOS(TestPointOfSaleHttpCommon, TestTaxCommon):
+    _test_user_groups = None  # FIXME list needed groups
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.partner_a.name = "AAAAAA"  # The POS only load the first 100 partners
+
+    def create_base_line_product(self, base_line, **kwargs):
+        return self.env['product.product'].create({
+            **kwargs,
+            'available_in_pos': True,
+            'list_price': base_line['price_unit'],
+            'taxes_id': [Command.set(base_line['tax_ids'].ids)],
+            'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
+            'company_id': self.env.company.id,
+        })
+
+    def ensure_products_on_document(self, document, product_prefix):
+        for i, base_line in enumerate(document['lines'], start=1):
+            base_line['product_id'] = self.create_base_line_product(base_line, name=f'{product_prefix}_{i}')
+
+    def assert_pos_order_totals(self, order, expected_values):
+        expected_amounts = {}
+        if 'tax_amount_currency' in expected_values:
+            expected_amounts['amount_tax'] = expected_values['tax_amount_currency']
+        if 'total_amount_currency' in expected_values:
+            expected_amounts['amount_total'] = expected_values['total_amount_currency']
+        self.assertRecordValues(order, [expected_amounts])
+
+    def _close_pos_session(self):
+        session = self.main_pos_config.current_session_id
+        if session and session.state != 'closed':
+            draft_orders = session.order_ids.filtered(lambda o: o.state == 'draft')
+            if draft_orders:
+                draft_orders.action_pos_order_cancel()
+            cash_pm = self.main_pos_config._get_cash_payment_method()
+            session.close_session_from_ui({
+                cash_pm.id: 0,
+            })
+
+    def assert_pos_orders_and_invoices(self, tour, tests_with_orders):
+        if self.main_pos_config.current_session_id:
+            cash_pm = self.main_pos_config._get_cash_payment_method()
+            self.main_pos_config.current_session_id.close_session_from_ui({
+                cash_pm.id: 0,
+            })
+
+        self.start_pos_tour(tour)
+        orders = self.env['pos.order'].search([('session_id', '=', self.main_pos_config.current_session_id.id)], limit=len(tests_with_orders))
+        for index, (order, (test_code, _document, _soft_checking, _amount_type, _amount, expected_values)) in enumerate(zip(orders, tests_with_orders)):
+            with self.subTest(test_code=test_code, index=index):
+                self.assert_pos_order_totals(order, expected_values)
+                if order.account_move:
+                    self.assert_invoice_totals(order.account_move, expected_values)
+
+        self._close_pos_session()

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partners_form_website" model="ir.ui.view">
+        <field name="name">view.res.partner.form.website</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field eval="17" name="priority"/>
+        <field name="arch" type="xml">
+            <data>
+                <div name="button_box" position="inside">
+                    <field name="is_published" widget="website_redirect_button"/>
+                </div>
+            </data>
+        </field>
+    </record>
+</odoo>

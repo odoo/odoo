@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="survey.SurveyKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+        <ActionHelper position="replace">
+            <t t-if="this.showNoContentHelper">
+                <SurveySurveyActionHelper/>
+            </t>
+        </ActionHelper>
+        <xpath expr="//KanbanRecord[@record='record']" position="attributes">
+            <attribute name="isGrouped">this.props.list.isGrouped</attribute>
+        </xpath>
+        <xpath expr="//KanbanRecord[@record='groupOrRecord.record']" position="attributes">
+            <attribute name="isGrouped">this.props.list.isGrouped</attribute>
+        </xpath>
+    </t>
+</templates>

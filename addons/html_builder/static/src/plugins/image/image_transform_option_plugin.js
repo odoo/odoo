@@ -1,0 +1,57 @@
+import { Plugin } from "@html_editor/plugin";
+import { registry } from "@web/core/registry";
+import { ImageTransformation } from "@html_editor/main/media/image_transformation";
+import { BuilderAction } from "@html_builder/core/builder_action";
+
+export class ImageTransformOptionPlugin extends Plugin {
+    static id = "imageTransformOption";
+    /** @type {import("plugins").BuilderResources} */
+    resources = {
+        builder_actions: {
+            TransformImageAction,
+            ResetTransformImageAction,
+        },
+    };
+}
+
+export class TransformImageAction extends BuilderAction {
+    static id = "transformImage";
+    static dependencies = ["history"];
+    isApplied({ editingElement }) {
+        return editingElement.matches(`[style*="transform"], [style*="width"], [style*="height"]`);
+    }
+    async apply({
+        editingElement,
+        params: { isImageTransformationOpen, closeImageTransformation },
+    }) {
+        if (!isImageTransformationOpen()) {
+            const deferredTillMounted = Promise.withResolvers();
+            registry.category("main_components").add("ImageTransformation", {
+                Component: ImageTransformation,
+                props: {
+                    image: editingElement,
+                    document: this.document,
+                    editable: this.editable,
+                    destroy: () => closeImageTransformation(),
+                    onApply: () => {
+                        this.dependencies.history.commit();
+                    },
+                    onComponentMounted: () => {
+                        deferredTillMounted.resolve();
+                    },
+                },
+            });
+            await deferredTillMounted.promise;
+        }
+    }
+}
+export class ResetTransformImageAction extends BuilderAction {
+    static id = "resetTransformImage";
+    static dependencies = ["image"];
+    apply({ editingElement, params: { mainParam: closeImageTransformation } }) {
+        this.dependencies.image.resetImageTransformation(editingElement);
+        closeImageTransformation();
+    }
+}
+
+registry.category("builder-plugins").add(ImageTransformOptionPlugin.id, ImageTransformOptionPlugin);

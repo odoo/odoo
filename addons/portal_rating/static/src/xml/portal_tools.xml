@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="portal_rating.rating_stars_static">
+        <t t-set="val_integer" t-value="Math.floor(val)"/>
+        <t t-set="val_decimal" t-value="val - val_integer"/>
+        <t t-set="empty_star" t-value="5 - (val_integer+Math.ceil(val_decimal))"/>
+        <div class="o_website_rating_static"
+             t-att-style="inline_mode ? 'display:inline' : ''"
+             t-attf-aria-label="#{Math.round(val * 100) / 100} stars on 5"
+             t-attf-title="#{Math.round(val * 100) / 100} stars on 5">
+            <t t-foreach="Array(val_integer)" t-as="num" t-key="num_index">
+                <i class="oi oi-filled" data-icon="star" role="img"></i>
+            </t>
+            <t t-if="val_decimal">
+                <i class="oi" data-icon="star_half" role="img"></i>
+            </t>
+            <t t-foreach="Array(empty_star)" t-as="num" t-key="num_index">
+                <i class="oi text-black-25" data-icon="star" role="img"></i>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="portal_rating.rating_card">
+        <div class="o_website_rating_card_container sticky-top">
+            <t t-set="total_rating_stats" t-value="rating_stats ? rating_stats.total : 0"/>
+            <div class="d-flex flex-column gap-2">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="display-3 fw-bold lh-1">
+                        <t t-out="rating_stats ? rating_stats.avg.toFixed(1) : 0"/>
+                    </div>
+                    <div>
+                        <div class="fs-3">
+                            <t
+                                t-call="portal_rating.rating_stars_static"
+                                val="rating_stats ? rating_stats.avg : 0"
+                                inline_mode="true"
+                            />
+                        </div>
+                        <span class="text-muted">
+                            <t t-out="total_rating_stats"/>
+                            <t t-if="total_rating_stats == 1"> review</t>
+                            <t t-else=""> reviews</t>
+                        </span>
+                    </div>
+                </div>
+                <div class="o_website_rating_table d-flex flex-column gap-1 w-100">
+                    <t t-set="percents" t-value="rating_stats ? rating_stats['percent'] : {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}"/>
+                    <t t-foreach="Object.keys(percents).sort((a, b) => b - a)" t-as="percent" t-key="percent_index">
+                        <t t-set="row_selected" t-value="Math.floor(percent) == selected_rating"/>
+                        <div class="o_website_rating_table_row d-flex align-items-center gap-2 w-100"
+                            t-att-class="{ 'cursor-pointer' : percents[percent] }"
+                            t-att-data-star="percent"
+                            t-on-click="() => percents[percent] and (row_selected ? this.onClickStarDomainReset() : this.onClickStarDomain(percent))"
+                            t-att-title="Math.round(percents[percent]) + '%'">
+                            <span class="o_website_rating_table_percent text-nowrap text-end"
+                                t-att-class="{ 'opacity-50': !row_selected and selected_rating }">
+                                <t t-out="Math.floor(percent)"/>&#9733;
+                            </span>
+                            <div class="o_website_rating_table_progress flex-grow-1 py-2"
+                                t-att-class="{ 'opacity-50': !row_selected and selected_rating }">
+                                <div class="progress rounded">
+                                    <div class="progress-bar o_rating_progressbar" role="progressbar" t-att-aria-valuenow="percents[percent]" aria-valuemin="0" aria-valuemax="100" t-att-style="'width:' + percents[percent] + '%;'" aria-label="Progress bar">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="portal_rating.actions">
+        <button
+            t-if="this.composer()"
+            class="btn btn-primary"
+            t-on-click="() => this.state.showReviewComposer = true"
+        >
+            Write a review
+        </button>
+        <div
+            t-elif="this.env.inFrontendPortalChatter"
+            class="alert alert-light d-flex align-items-center gap-2 mb-1 py-2"
+        >
+            <a
+                class="btn btn-primary btn-sm"
+                t-att-href="this.loginRedirectUrl"
+            >
+                Log in
+            </a>
+            <span>To post a review</span>
+        </div>
+    </t>
+
+    <t t-name="portal_rating.rating_star_input">
+        <div class="o-mail-Composer-starCard mb-2" t-if="this.widget.options['display_rating']">
+            <t t-set="val_integer" t-value="Math.floor(default_rating)"/>
+            <t t-set="val_decimal" t-value="default_rating - val_integer"/>
+            <t t-set="empty_star" t-value="5 - (val_integer+Math.ceil(val_decimal))"/>
+
+            <div class="o-mail-Composer-stars enabled cursor-pointer">
+                <t t-foreach="Array(val_integer)" t-as="num" t-key="num_index">
+                    <i class="oi oi-filled" data-icon="star" role="img" aria-label="Full star"></i>
+                </t>
+                <t t-if="val_decimal">
+                    <i class="oi" data-icon="star_half" role="img" aria-label="Half a star"></i>
+                </t>
+                <t t-foreach="Array(empty_star)" t-as="num" t-key="num_index">
+                    <i class="oi text-black-25" data-icon="star" role="img" aria-label="Empty star"></i>
+                </t>
+            </div>
+            <input type="hidden" readonly="readonly" name="rating_value" t-att-value="default_rating || ''"/>
+        </div>
+    </t>
+</templates>

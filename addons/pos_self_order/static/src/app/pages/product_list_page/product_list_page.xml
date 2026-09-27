@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ProductListPage">
+        <div class="o_self_product_list_page d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade">
+            <!-- Categories -->
+            <t t-set="has_sub_categories" t-value="this.state.subCategories?.length > 0"/>
+            <div class="bg-view border-bottom user-select-none" t-att-class="{'o_self_shadow_top': !has_sub_categories and this.scrollShadow.top }" >
+                <div class="container o_self_container px-kiosk-p-0 ">
+                    <div class="category_container d-flex" t-ref="this.categoryContainerRef">
+                        <div class="category_list d-flex mw-100 mx-kiosk-p-auto py-3 px-kiosk-p-4 gap-0 gap-kiosk-p-3 overflow-x-auto overflow-y-hidden position-relative" t-ref="this.categoryListRef">
+                            <t t-foreach="this.state.topCategories" t-as="category" t-key="category.id">
+                                <t t-set="isSelectedCategory" t-value="category === this.topSelectedCategory"/>
+                                <button t-on-click="() => this.selectCategory(category)" role="button" class="category_btn btn d-flex flex-column align-items-center p-0 border-0 "  t-att-data-category-pill="category.id">
+                                    <img class="d-none d-kiosk-p-block mb-2 rounded-4 object-fit-cover transition-base" style="height: 110px; width: 110px;" t-attf-src="/web/image/pos.category/#{category.id}/image_128?unique=#{category.write_date}" draggable="false"/>
+                                    <div class="text-nowrap fw-medium rounded-pill px-3 py-1 d-flex align-items-center" t-att-class="{'text-bg-primary btn border-0': isSelectedCategory}" >
+                                       <span class="text-nowrap fw-medium" t-out="category.name" />
+                                    </div>
+                                </button>
+                            </t>
+                        </div>
+                         <div class="category_end flex-shrink-0 align-items-center" t-if="!this.selfOrder.kioskMode">
+                             <div class="ms-1 bg-secondary rounded-2 p-2 d-flex align-content-center align-items-center justify-content-center cursor-pointer" role="button" t-on-click="()=>this.displayCategoryList(this.state.topCategories)" >
+                                   <i class="oi" data-icon="format_list_bulleted" />
+                             </div>
+                        </div>
+                    </div>
+
+               </div>
+            </div>
+             <!-- Sub Categories -->
+            <div class="sub_category_container d-flex flex-shrink-0" t-ref="this.subCategoryContainerRef" t-att-class="{'show': has_sub_categories, 'o_self_shadow_top': has_sub_categories and this.scrollShadow.top }">
+                <div t-if="has_sub_categories" class="position-relative d-flex flex-nowrap flex-column w-100 text-bg-primary user-select-none">
+                   <!-- <div class="d-none d-kiosk-block triangle_pointer position-absolute start-50 translate-middle-x"></div> -->
+                    <div class="container o_self_container px-kiosk-p-0 d-flex">
+                        <div class="category_list d-flex mw-100 mx-kiosk-p-auto py-3 px-kiosk-p-4 gap-0 gap-kiosk-p-3 overflow-x-auto overflow-y-hidden"
+                            t-ref="this.subCategoryListRef">
+                            <t t-set="isAllSelected" t-value="!this.selectedCategory.parent_id "/>
+                            <button t-on-click="() => this.selectCategory(this.topSelectedCategory)" class="child_category_btn child_category_all btn px-3 py-1 rounded-pill border-0" t-att-class="{'btn-light': isAllSelected, 'btn-link text-reset': !isAllSelected}" >
+                                All
+                            </button>
+                            <t t-foreach="this.state.subCategories" t-as="child_category" t-key="child_category.id">
+                                <t t-set="isSelectedChildCategory" t-value="child_category === this.selectedCategory "/>
+                                <button t-on-click="() => this.selectCategory(child_category)" role="button" class="child_category_btn btn d-flex align-items-center gap-2 px-3 py-1 rounded-pill border-0" t-att-class="{'btn-light': isSelectedChildCategory, 'btn-link text-reset': !isSelectedChildCategory}">
+                                    <img class="d-none d-kiosk-p-block object-cover flex-shrink-0 rounded-3 my-1" t-attf-src="/web/image/pos.category/#{child_category.id}/image_128?unique=#{child_category.write_date}" draggable="false"/>
+                                    <span class="text-nowrap" t-out="child_category.name"/>
+                                </button>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products -->
+            <div class="d-flex flex-grow-1 overflow-y-auto o_self_fade position-relative" t-ref="this.productListRef">
+                <div class="product_container container o_self_container">
+                     <section t-foreach="this.productCategories" t-as="category" t-key="category.id" t-att-data-category="category.id" class="pb-sm-3 pb-lg-4">
+                         <div class="fs-2 fw-bold ps-3 ps-sm-0 py-2 py-sm-3 py-lg-4" t-out="category.name" t-if="!this.selfOrder.kioskMode"/>
+                         <t t-set="productList" t-value="this.getProducts(category)"/>
+                         <div class="product_list grid" t-att-class="{'pt-sm-3 pt-lg-4': this.selfOrder.kioskMode, 'pb-2': !this.selfOrder.kioskMode}">
+                            <div t-foreach="productList" t-as="product" t-key="product.id" class="o_self_product_box g-col-12 g-col-md-6 g-col-lg-3 rounded-4 p-3 p-lg-0 shadow-sm shadow-lg-none" t-att-class="{'g-col-kiosk-p-4': productList.length &lt;= 9 , 'g-col-kiosk-p-3': productList.length &gt; 9 }">
+                                <ProductCard product="product" qty="this.state.quantityByProductTmplId[product.id]" />
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div t-att-class="{'o_self_shadow_bottom': this.scrollShadow.bottom}">
+                <OrderWidget t-if="this.selfOrder.ordering">
+                    <t t-set-slot="left">
+                        <button
+                            t-if="this.showBackButton"
+                            role="button"
+                            t-attf-class="btn btn-secondary btn-back btn-lg {{this.ui.isSmall ? 'opacity-75' : ''}}"
+                            t-on-click="() => this.router.navigate(this.backTargetPage)">
+                            <i t-if="this.ui.isSmall" class="oi" data-icon="chevron_backward"/>
+                            <span t-if="!this.ui.isSmall">Back</span>
+                        </button>
+                        <button
+                            t-else=""
+                            role="button"
+                            t-attf-class="btn btn-secondary btn-cancel btn-lg {{this.ui.isSmall ? 'opacity-75' : ''}}"
+                            t-on-click="() => this.discardOrder()">
+                            <i t-if="this.ui.isSmall" class="oi oi-fw" data-icon="close_small" aria-hidden="true"/>
+                            <span t-if="!this.ui.isSmall">Discard</span>
+                        </button>
+                    </t>
+                    <t t-set-slot="right">
+                        <div class="d-flex align-items-center flex-shrink-0 me-2 me-sm-4">
+                            <div class="to-order d-flex flex-column align-items-start justify-content-center h-100 rounded-4" role="button" t-on-click="() => this.review()">
+                                <h4 class="d-none d-sm-block text-muted opacity-75">Total</h4>
+                                <div class="d-flex align-items-center">
+                                    <div class="fs-4 fw-bold o-so-tabular-nums rounded-pill py-1 px-3 px-md-4 text-bg-secondary" t-out="this.total.count"/>
+                                    <div class="fs-2 fw-bold o-so-tabular-nums order-total mx-2 text-primary">
+                                        <t t-out="this.selfOrder.formatMonetary(this.total.price)"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button
+                            role="button"
+                            t-attf-class="btn btn-primary cart btn-lg text-truncate {{this.checkoutDisabled ? 'disabled' : ''}}"
+                            t-on-click="() => this.review()">Checkout</button>
+                    </t>
+                </OrderWidget>
+            </div>
+        </div>
+    </t>
+</templates>

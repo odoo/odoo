@@ -1,0 +1,34 @@
+.o-mail-Activity-sidebar {
+    flex-basis: $o-mail-Message-sidebarWidth;
+    max-width: $o-mail-Message-sidebarWidth;
+}
+
+.o-mail-Activity-avatarContainer {
+    width: $o-mail-Avatar-size;
+    height: $o-mail-Avatar-size;
+}
+
+.o-mail-Activity-note p {
+    margin-bottom: map-get($spacers, 0);
+}
+
+.o-mail-Activity-iconContainer {
+    box-shadow: 0 0 0 2px $o-view-background-color;
+}
+
+.o-mail-Activity-avatar {
+    --Avatar-size: #{$o-mail-Avatar-size};
+}
+
+.o-mail-Activity-copy {
+    opacity: 0;
+
+    > span:last-child {
+        @include visually-hidden();
+    }
+}
+
+.o-mail-Activity-phoneNumber:hover .o-mail-Activity-copy,
+.o-mail-Activity-phoneNumber:focus-within .o-mail-Activity-copy {
+    opacity: 1;
+}

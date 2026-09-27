@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_document_search" model="ir.ui.view">
+        <field name="name">product.document.search.sale</field>
+        <field name="model">product.document</field>
+        <field name="inherit_id" ref="sale.product_document_search"/>
+        <field name="arch" type="xml">
+            <search position="inside">
+                <separator/>
+                <filter name="e_commerce" string="Show on Ecommerce" domain="[('attached_on_sale', '=', 'shown_on_product_page')]"/>
+            </search>
+        </field>
+    </record>
+</odoo>

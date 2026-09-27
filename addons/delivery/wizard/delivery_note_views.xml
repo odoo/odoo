@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="delivery_note_form_view" model="ir.ui.view">
+        <field name="name">delivery.note.wizard.form</field>
+        <field name="model">delivery.note.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Delivery Note">
+                <sheet>
+                    <field name="note_line_ids"/>
+                    <group>
+                        <group>
+                            <field name="dm_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="tracking_ref"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        string="Confirm Shipment"
+                        name="action_confirm"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button special="cancel" data-hotkey="x" class="btn btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

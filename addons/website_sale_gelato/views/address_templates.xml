@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="website_sale_gelato.limit" inherit_id="website_sale.address_form_fields">
+        <div id="div_name" position="before">
+            <t
+                t-set="is_gelato"
+                t-value="any(website_sale_order.order_line.product_id.mapped('gelato_product_uid'))"
+            />
+            <t t-set="max_length_title_15">Max 15 characters</t>
+            <t t-set="max_length_title_25">Max 25 characters</t>
+            <t t-set="max_length_title_30">Max 30 characters</t>
+            <t t-set="max_length_title_35">Max 35 characters</t>
+        </div>
+        <input id="o_phone" position="attributes">
+            <attribute name="t-att-title">is_gelato and max_length_title_25 or ''</attribute>
+            <attribute name="t-att-pattern">is_gelato and '.{0,25}' or '.*'</attribute>
+            <attribute name="t-att-maxlength">is_gelato and 25 or ''</attribute>
+        </input>
+        <input id="o_street" position="attributes">
+            <attribute name="t-att-title">is_gelato and max_length_title_35 or ''</attribute>
+            <attribute name="t-att-pattern">is_gelato and '.{0,35}' or '.*'</attribute>
+            <attribute name="t-att-maxlength">is_gelato and 35 or ''</attribute>
+        </input>
+        <input id="o_street2" position="attributes">
+            <attribute name="t-att-title">is_gelato and max_length_title_35 or ''</attribute>
+            <attribute name="t-att-pattern">is_gelato and '.{0,35}' or '.*'</attribute>
+            <attribute name="t-att-maxlength">is_gelato and 35 or ''</attribute>
+        </input>
+        <input id="o_zip_before_city" position="attributes">
+            <attribute name="t-att-title">is_gelato and max_length_title_15 or ''</attribute>
+            <attribute name="t-att-pattern">is_gelato and '.{0,15}' or '.*'</attribute>
+            <attribute name="t-att-maxlength">is_gelato and 15 or ''</attribute>
+        </input>
+        <input id="o_city" position="attributes">
+            <attribute name="t-att-title">is_gelato and max_length_title_30 or ''</attribute>
+            <attribute name="t-att-pattern">is_gelato and '.{0,30}' or '.*'</attribute>
+            <attribute name="t-att-maxlength">is_gelato and 30 or ''</attribute>
+        </input>
+        <input id="o_zip_after_city" position="attributes">
+            <attribute name="t-att-title">is_gelato and max_length_title_15 or ''</attribute>
+            <attribute name="t-att-pattern">is_gelato and '.{0,15}' or '.*'</attribute>
+            <attribute name="t-att-maxlength">is_gelato and 15 or ''</attribute>
+        </input>
+    </template>
+
+</odoo>

@@ -1,0 +1,29 @@
+import { registry } from "@web/core/registry";
+
+registry.category("web_tour.tours").add('website_sale_stock.subscribe_to_stock_notification', {
+    steps: () => [
+        {
+            content: "The product is out of stock",
+            trigger: "#product_stock_availability",
+        },
+        {
+            content: "Click on 'Be notified when back in stock'",
+            trigger: '#stock_notification_button',
+            run: "click",
+        },
+        {
+            content: "Fill email form",
+            trigger: 'div[id="stock_notification_form"] input[name="email"]',
+            run: "edit test@test.test",
+        },
+        {
+            content: "Click on the button",
+            trigger: '#stock_notification_submit_button',
+            run: "click",
+        },
+        {
+            content: "Success Message",
+            trigger: '#stock_notification_subscribed_button',
+        },
+    ],
+});

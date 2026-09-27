@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="address_form_fields" inherit_id="portal.address_form_fields">
+        <div id="div_vat" position="before">
+            <div
+                t-if="is_used_as_billing and res_company.account_fiscal_country_id.code == 'AR'"
+                class="col-lg-6 mb-3"
+            >
+                <label class="col-form-label" for="l10n_ar_afip_responsibility_type_id">
+                    ARCA Responsibility
+                </label>
+                <t t-call="portal.address_warning_icon" warning="commercial_fields_warning"/>
+                <select
+                    name="l10n_ar_afip_responsibility_type_id"
+                    t-att-class="(
+                        'pe-none opacity-50 form-select'
+                        if not can_edit_commercial_fields else 'form-select'
+                    )"
+                >
+                    <option value="">ARCA Responsibility...</option>
+                    <option
+                        t-foreach="responsibility_types"
+                        t-as="resp_type"
+                        t-att-value="resp_type.id"
+                        t-att-selected="resp_type.id == responsibility.id"
+                        t-out="resp_type.name"
+                    />
+                </select>
+            </div>
+        </div>
+    </template>
+
+</odoo>

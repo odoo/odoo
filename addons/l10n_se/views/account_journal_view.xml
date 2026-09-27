@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_journal_se_ocr_form" model="ir.ui.view">
+            <field name="name">account.journal.se.ocr.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_reference_model']" position="after">
+                    <field name="l10n_se_invoice_ocr_length" invisible="invoice_reference_model != 'se_ocr4'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

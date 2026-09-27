@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <record id="stock_warehouse_view_form_inherit_sinvoice" model="ir.ui.view">
+        <field name="name">stock.warehouse.view.form.inherit.sinvoice</field>
+        <field name="model">stock.warehouse</field>
+        <field name="inherit_id" ref="stock.view_warehouse"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='warehouse_config']/group" position="inside">
+                <group string="E-Transfer Note" invisible="l10n_vn_edi_country_code != 'VN'">
+                    <field name="l10n_vn_edi_sinvoice_symbol_id" options="{'no_open': True, 'no_create': True}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
