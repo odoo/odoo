@@ -536,7 +536,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         if production.bom_id:
             if move_raw.bom_line_id:
                 qty_in_bom_uom = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
-                bom_cost = currency.round(self._get_component_real_cost(move_raw, move_raw.bom_line_id.product_qty * qty_in_bom_uom / production.bom_id.product_qty))
+                bom_cost = currency.round(self._get_bom_cost(move_raw.bom_line_id, move_raw.bom_line_id.product_qty * qty_in_bom_uom / production.bom_id.product_qty))
             else:
                 bom_cost = False
         else:
@@ -586,6 +586,26 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         if move_raw.product_uom.is_zero(quantity):
             return 0
         return self._get_unit_cost(move_raw) * quantity
+
+    def _get_bom_cost(self, bom_line, quantity):
+        """ Recursively compute the cost of each bom_line based on child lines and/or child operations.
+        If there's no child bom, use the standard price of the product instead.
+        The aim is to have the same values as in the bom overview report (multiplied by the ratio of final product)
+
+        N.B.: we check lines & operations 1 level below because for existing replenishments with operations, those
+        operations are already computed in _get_operations_data. """
+        if float_is_zero(quantity, precision_rounding=bom_line.product_uom_id.rounding):
+            return 0
+        if bom_line.child_bom_id:
+            child_bom_cost = 0
+            qty_in_child_bom_uom = bom_line.product_uom_id._compute_quantity(quantity, bom_line.child_bom_id.product_uom_id)
+            if bom_line.child_line_ids:
+                for child_line in bom_line.child_line_ids:
+                    child_bom_cost += self._get_bom_cost(child_line, child_line.product_qty * qty_in_child_bom_uom / child_line.bom_id.product_qty)
+            if bom_line.child_bom_id.operation_ids:
+                child_bom_cost += sum(bom_line.child_bom_id.operation_ids.with_context(product=bom_line.product_id, quantity=qty_in_child_bom_uom).mapped('cost'))
+            return child_bom_cost
+        return bom_line.product_id.uom_id._compute_price(bom_line.product_id.standard_price, bom_line.product_uom_id) * quantity
 
     def _check_planned_start(self, mo_planned_start, receipt):
         if mo_planned_start and receipt.get('date', False) and receipt['date'] > mo_planned_start:
@@ -721,12 +741,14 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             if resupply_data:
                 mo_cost = resupply_data['currency']._convert(resupply_data['cost'], currency, (production.company_id or self.env.company), fields.Date.today())
                 to_order_line['summary']['mo_cost'] = mo_cost
-                to_order_line['summary']['bom_cost'] = currency.round(self._get_component_real_cost(move_raw, bom_missing_quantity))
                 to_order_line['summary']['receipt'] = self._check_planned_start(production.date_start, self._format_receipt_date('estimated', fields.Datetime.today() + timedelta(days=resupply_data['delay'])))
             else:
                 to_order_line['summary']['mo_cost'] = currency.round(product.standard_price * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id))
-                to_order_line['summary']['bom_cost'] = currency.round(self._get_component_real_cost(move_raw, bom_missing_quantity))
                 to_order_line['summary']['receipt'] = self._format_receipt_date('unavailable')
+            if move_raw.bom_line_id:
+                to_order_line['summary']['bom_cost'] = currency.round(self._get_bom_cost(move_raw.bom_line_id, bom_missing_quantity))
+            else:
+                to_order_line['summary']['bom_cost'] = currency.round(self._get_component_real_cost(move_raw, bom_missing_quantity))
             to_order_line['summary']['unit_cost'] = currency.round(to_order_line['summary']['mo_cost'] / missing_quantity)
 
             if self._is_production_started(production):
