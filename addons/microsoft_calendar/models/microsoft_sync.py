@@ -38,13 +38,17 @@ def after_commit(func):
         @self.env.cr.postcommit.add
         def called_after():
             db_registry = Registry(dbname)
-            with db_registry.cursor() as cr:
-                env = api.Environment(cr, uid, context)
-                try:
-                    func(self.with_env(env), *args, **kwargs)
-                except Exception as e:
-                    _logger.warning("Could not sync record now: %s" % self)
-                    _logger.exception(e)
+            try:
+                with db_registry.cursor() as cr:
+                    env = api.Environment(cr, uid, context)
+                    try:
+                        func(self.with_env(env), *args, **kwargs)
+                    except Exception as e:
+                        _logger.warning("Could not sync record now: %s" % self)
+                        _logger.exception(e)
+            except Exception as e:
+                _logger.warning("Could not commit sync of record: %s" % self)
+                _logger.exception(e)
 
     return wrapped
 
