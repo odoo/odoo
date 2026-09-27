@@ -56,6 +56,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'order_issue_date': invoice.invoice_date,
             'pricing_currency_code': invoice.currency_id.name.upper() if invoice.currency_id != invoice.company_id.currency_id else False,
             'currency_dp': 2,
+            'dispatch_document_reference_vals': self._get_dispatch_document_reference_vals(invoice),
         })
         # Nilvera will reject any <BuyerReference> tag, so remove it
         if vals['vals'].get('buyer_reference'):
@@ -66,6 +67,20 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             vals['vals']['note_vals'].append({'note': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual, vals['invoice'].currency_id), 'note_attrs': {}})
             vals['vals']['note_vals'].append({'note': self._get_invoice_currency_exchange_rate(invoice)})
         return vals
+
+    def _get_dispatch_document_reference_vals(self, invoice):
+        dispatch_document_ref_vals = []
+        if invoice.line_ids._fields.get('sale_line_ids') and self.env['stock.picking']._fields.get('l10n_tr_nilvera_dispatch_state'):
+            # If the invoice lines have a sale_line_ids field, we can use it to get the source orders.
+            # This will be used to link delivery orders created from sale orders.
+            source_orders = invoice.line_ids.sale_line_ids.order_id.picking_ids
+            for picking in source_orders.filtered(lambda p: p.state == 'done' and p.l10n_tr_nilvera_dispatch_state == 'sent'):
+                dispatch_document_ref_vals.append({
+                    'id': picking._get_nilvera_document_serial_number(),
+                    'issue_date': picking.scheduled_date.date(),
+                    'document_type_code': 'SEVK',
+                })
+        return dispatch_document_ref_vals
 
     @api.model
     def _l10n_tr_get_amount_integer_partn_text_note(self, amount, currency):
