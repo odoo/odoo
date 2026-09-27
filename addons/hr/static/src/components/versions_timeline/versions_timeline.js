@@ -141,6 +141,7 @@ export class VersionsTimeline extends StatusBarField {
     }
 }
 
+
 export const versionsTimeline = {
     ...statusBarField,
     component: VersionsTimeline,
