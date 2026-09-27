@@ -254,6 +254,31 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
         self.assertEqual(days, 5, "Working days should exclude weekends")
         self.assertEqual(hours, 40, "Working hours should be 5 * 8 hours")
 
+    def test_count_days_as_on_work_entry_type_change(self):
+        """Test duration calculation when the time type is changed after the dates"""
+        working_work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Test Time Off',
+            'code': 'Test Time Off 7',
+            'requires_allocation': False,
+            'count_days_as': 'working',
+        })
+        calendar_work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Test Time Off',
+            'code': 'Test Time Off 8',
+            'requires_allocation': False,
+            'count_days_as': 'calendar',
+        })
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee_hruser_id,
+            'work_entry_type_id': working_work_entry_type.id,
+            'request_date_from': date(2024, 6, 1),
+            'request_date_to': date(2024, 6, 7),
+        })
+        self.assertEqual(leave.number_of_days, 5, "Working days should exclude weekends")
+
+        leave.work_entry_type_id = calendar_work_entry_type
+        self.assertEqual(leave.number_of_days, 7, "Calendar days should include weekends")
+
     def test_change_count_days_as(self):
         """Changing count_days_as after leave is validated should raise ValidationError"""
         work_entry_type = self.env['hr.work.entry.type'].create({
