@@ -190,6 +190,20 @@
         $custom-colors: append($custom-colors, $key);
     }
     @include print-variable('custom-colors', $custom-colors);
+
+    // 7) What the builder needs to preview color presets (see
+    // `color_preset_preview.js`): which of their colors are set, and the
+    // contrast ratio they are compiled with.
+    @include print-variable('min-contrast-ratio', $min-contrast-ratio);
+    @for $index from 1 through length($o-color-combinations) {
+        $-set-keys: ();
+        @each $key in ('text', 'headings', 'h2', 'h3', 'h4', 'h5', 'h6', 'link', 'btn-primary', 'btn-primary-border', 'btn-secondary', 'btn-secondary-border') {
+            @if map-get($colors, 'o-cc#{$index}-#{$key}') {
+                $-set-keys: append($-set-keys, $key);
+            }
+        }
+        --o-cc#{$index}-set: '#{$-set-keys}';
+    }
 }
 
 @mixin body-image-bg-style() {
@@ -901,6 +915,146 @@ b, strong {
     .h#{$index}-fs {
         @include o-preview-rfs('h#{$index}-font-size', $value);
     }
+}
+
+// Theme preview of the color presets. Their colors are compiled into many
+// derived ones (contrasts, button states), which the builder computes the same
+// way (see `color_preset_preview.js`) and sets as `--o-preview-o-cc<N>-*`. The
+// rules below only apply while such a value is set on the root: they are more
+// specific than the compiled `.o_cc<N>` ones (html_editor) and do nothing on
+// the saved site. Each rule is gated on the value it uses, as the builder only
+// sets the ones the compiled CSS declares. The builder previews all presets at
+// once, so that these rules keep the compiled order between presets (nested
+// presets).
+@function o-preview-cc-gate($index, $key) {
+    @return 'html[style*="--o-preview-o-cc#{$index}-#{$key}:"]';
+}
+@mixin o-preview-cc-scope($index, $key) {
+    $-gate: o-preview-cc-gate($index, $key);
+    // Same scope as `$o-color-extras-nesting-selector` in the compiled rules.
+    #{$-gate} .o_cc#{$index}, #{$-gate} .o_colored_level .o_cc#{$index} {
+        @content;
+    }
+}
+@mixin o-preview-button-variant($name) {
+    --#{$prefix}btn-color: var(#{$name}-color);
+    --#{$prefix}btn-bg: var(#{$name}-bg);
+    --#{$prefix}btn-border-color: var(#{$name}-border);
+    --#{$prefix}btn-hover-color: var(#{$name}-hover-color);
+    --#{$prefix}btn-hover-bg: var(#{$name}-hover-bg);
+    --#{$prefix}btn-hover-border-color: var(#{$name}-hover-border);
+    --#{$prefix}btn-focus-shadow-rgb: var(#{$name}-focus-rgb);
+    --#{$prefix}btn-active-color: var(#{$name}-active-color);
+    --#{$prefix}btn-active-bg: var(#{$name}-active-bg);
+    --#{$prefix}btn-active-border-color: var(#{$name}-active-border);
+    --#{$prefix}btn-disabled-color: var(#{$name}-disabled-color);
+    --#{$prefix}btn-disabled-bg: var(#{$name}-bg);
+    --#{$prefix}btn-disabled-border-color: var(#{$name}-border);
+}
+@mixin o-preview-button-outline-variant($name) {
+    --#{$prefix}btn-color: var(#{$name}-outline);
+    --#{$prefix}btn-border-color: var(#{$name}-outline);
+    --#{$prefix}btn-hover-color: var(#{$name}-outline-contrast);
+    --#{$prefix}btn-hover-bg: var(#{$name}-outline);
+    --#{$prefix}btn-hover-border-color: var(#{$name}-outline);
+    --#{$prefix}btn-focus-shadow-rgb: var(#{$name}-outline-rgb);
+    --#{$prefix}btn-active-color: var(#{$name}-outline-contrast);
+    --#{$prefix}btn-active-bg: var(#{$name}-outline);
+    --#{$prefix}btn-active-border-color: var(#{$name}-outline);
+    --#{$prefix}btn-disabled-color: var(#{$name}-outline);
+    --#{$prefix}btn-disabled-border-color: var(#{$name}-outline);
+}
+@for $index from 1 through length($o-color-combinations) {
+    $-cc: '--o-preview-o-cc#{$index}';
+    // `o-bg-color()`
+    #{o-preview-cc-gate($index, 'bg')} .o_cc#{$index} {
+        --background-color: var(#{$-cc}-bg);
+        --o-cc-bg: var(#{$-cc}-bg);
+        background-color: var(#{$-cc}-bg);
+    }
+    #{o-preview-cc-gate($index, 'text')} .o_cc#{$index} {
+        --color: var(#{$-cc}-text);
+        color: var(#{$-cc}-text);
+    }
+    @include o-preview-cc-scope($index, 'text-muted') {
+        .text-muted {
+            color: var(#{$-cc}-text-muted) !important;
+        }
+    }
+    @include o-preview-cc-scope($index, 'headings') {
+        h1, h2, h3, h4, h5, h6 {
+            color: var(#{$-cc}-headings);
+        }
+    }
+    @for $level from 2 through 6 {
+        @include o-preview-cc-scope($index, 'h#{$level}') {
+            h#{$level} {
+                color: var(#{$-cc}-h#{$level});
+            }
+        }
+    }
+    @include o-preview-cc-scope($index, 'link') {
+        a:not(.btn):where(:not(.o_cc)), .btn-link:where(:not(.o_cc)) {
+            color: var(#{$-cc}-link);
+
+            &:hover {
+                color: var(#{$-cc}-link-hover);
+            }
+        }
+    }
+    @each $type in ('primary', 'secondary') {
+        @include o-preview-cc-scope($index, 'btn-#{$type}-bg') {
+            .btn-fill-#{$type} {
+                @include o-preview-button-variant('#{$-cc}-btn-#{$type}');
+            }
+            .btn-outline-#{$type} {
+                @include o-preview-button-outline-variant('#{$-cc}-btn-#{$type}');
+            }
+        }
+    }
+    @include o-preview-cc-scope($index, 'btn-primary-bg') {
+        .nav-pills, .nav-tabs {
+            .nav-link.active,
+            .show > .nav-link {
+                background-color: var(#{$-cc}-btn-primary-bg);
+                color: var(#{$-cc}-btn-primary-color);
+            }
+        }
+        a.list-group-item {
+            color: var(#{$-cc}-btn-primary-bg);
+
+            &.active {
+                background-color: var(#{$-cc}-btn-primary-bg);
+                color: var(#{$-cc}-btn-primary-color);
+                border-color: var(#{$-cc}-btn-primary-bg);
+            }
+        }
+    }
+    // `o-add-gradient()`: `none` removes a saved gradient.
+    #{o-preview-cc-gate($index, 'bg-gradient')} .o_cc#{$index} {
+        background-image: var(#{$-cc}-bg-gradient);
+    }
+    #{o-preview-cc-gate($index, 'bg-gradient')}:not([style*="#{$-cc}-bg-gradient: none"]) .o_cc#{$index} {
+        background-color: rgba(0, 0, 0, 0);
+    }
+}
+// The first preset is also the body's (website's `bootstrap_overridden.scss`).
+// Colors Bootstrap compiles from it into other components are only updated on
+// save.
+#{o-preview-cc-gate(1, 'bg')} {
+    --#{$prefix}body-bg: var(--o-preview-o-cc1-bg);
+    --#{$prefix}body-bg-rgb: var(--o-preview-o-cc1-bg-rgb);
+    --#{$prefix}link-color: var(--o-preview-o-cc1-link);
+    --#{$prefix}link-color-rgb: var(--o-preview-o-cc1-link-rgb);
+    --#{$prefix}link-hover-color: var(--o-preview-o-cc1-body-link-hover);
+    --#{$prefix}link-hover-color-rgb: var(--o-preview-o-cc1-body-link-hover-rgb);
+}
+#{o-preview-cc-gate(1, 'text')} {
+    --#{$prefix}body-color: var(--o-preview-o-cc1-text);
+    --#{$prefix}body-color-rgb: var(--o-preview-o-cc1-text-rgb);
+}
+#{o-preview-cc-gate(1, 'headings')} {
+    --#{$prefix}heading-color: var(--o-preview-o-cc1-headings);
 }
 
 font[style*='background']:not(.text-gradient),
