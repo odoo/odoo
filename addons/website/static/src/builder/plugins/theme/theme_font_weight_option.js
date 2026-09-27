@@ -107,3 +107,15 @@ export class CustomizeWebsiteFontWeightAction extends CustomizeWebsiteVariableAc
         await this.dependencies.customizeWebsite.customizeWebsiteVariables(variables, nullValue);
     }
 }
+
+export class PreviewWebsiteFontWeightAction extends CustomizeWebsiteFontWeightAction {
+    static id = "previewWebsiteFontWeight";
+    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
+    setup() {}
+    apply({ params: { mainParam: variableNames, nullValue = "null" }, value }) {
+        this.dependencies.customizeWebsite.previewWebsiteVariables(
+            Object.fromEntries(variableNames.map((variableName) => [variableName, value])),
+            nullValue
+        );
+    }
+}

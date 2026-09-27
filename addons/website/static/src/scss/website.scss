@@ -52,6 +52,14 @@
     $i: 1;
     @each $font-name in $-font-names {
         @include print-variable('font-number-#{$i}', $font-name);
+        // The page only loads the fonts it uses: the builder needs the URL to
+        // preview another one. Same URLs as in `font_urls_export.scss`.
+        $-font-config: map-get($o-theme-font-configs, $font-name);
+        @if map-get($-font-config, 'url') {
+            --font-url-#{$i}: "https://fonts.googleapis.com/css?family=#{unquote(map-get($-font-config, 'url'))}&display=swap&subset=latin,latin-ext,vietnamese";
+        } @else if map-get($-font-config, 'attachment') {
+            --font-url-#{$i}: "/web/content/#{map-get($-font-config, 'attachment')}/google-font-#{unquote(map-get($-font-config, 'name'))}";
+        }
         $i: $i + 1;
     }
 
@@ -246,25 +254,42 @@ body {
     }
 }
 
+// The `--o-preview-*` variables are only set while editing, to preview theme
+// values before they are compiled (see `previewWebsiteVariables`). Without
+// them, the compiled value applies.
+//
+// A value that is not customized and equals its parent's (e.g. the h2 line
+// height and the headings one) follows the parent in the preview, as it does
+// after save: `$parent-expr` is then the fallback.
+@function o-preview-value($key, $value, $parent-value: null, $parent-expr: null) {
+    $fallback: inspect($value);
+    @if $parent-expr and not o-website-value($key) and $value == $parent-value {
+        $fallback: $parent-expr;
+    }
+    @return var(--o-preview-#{$key}, #{$fallback});
+}
+
+// Without a value, these compile to an ignored `font-weight: !important`, so
+// the preview only works once a value is set.
+@mixin o-bold-font-weight($key) {
+    $-weight: o-website-value($key);
+    b, strong {
+        font-weight: if($-weight, o-preview-value($key, $-weight), null) !important;
+    }
+}
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-    b, strong {
-        font-weight: o-website-value('headings-font-weight-bold') !important;
-    }
+    @include o-bold-font-weight('headings-font-weight-bold');
 }
 
 // Keep display-5/6 covered for Bootstrap/custom markup, even though the editor
 // only exposes display-1 through display-4.
 .display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
-    b, strong {
-        font-weight: o-website-value('display-font-weight-bold') !important;
-    }
+    @include o-bold-font-weight('display-font-weight-bold');
 }
 
 .btn {
-    b, strong {
-        font-weight: o-website-value('btn-font-weight-bold') !important;
-    }
+    @include o-bold-font-weight('btn-font-weight-bold');
 }
 
 // The position of this rule is important: it ensures that manually set
@@ -721,42 +746,36 @@ $heading-margin-bottoms: map-merge((
     "display-4": $display-4-margin-bottom,
 ), $heading-margin-bottoms);
 
-// The `--o-preview-*` variables are only set while editing, to preview theme
-// values before they are compiled (see `previewWebsiteVariables`). Without
-// them, the compiled value applies.
-//
-// A heading value that is not customized follows the "headings" one, in the
-// preview as after save.
-@function o-heading-preview-value($map-key, $property, $value, $headings-value) {
-    @if not o-website-value('#{$map-key}-#{$property}') and $value == $headings-value {
-        $value: var(--o-preview-headings-#{$property}, #{$value});
-    }
-    @return var(--o-preview-#{$map-key}-#{$property}, #{$value});
-}
-
+// The headings font follows the base one when not customized.
+$-headings-previews: (
+    'font': o-preview-value('headings-font', $headings-font-family, $o-theme-font, o-preview-value('font', $o-theme-font)),
+    'line-height': o-preview-value('headings-line-height', $headings-line-height),
+    'margin-top': o-preview-value('headings-margin-top', $headings-margin-top),
+    'margin-bottom': o-preview-value('headings-margin-bottom', $headings-margin-bottom),
+);
+// The font family is otherwise only set by Bootstrap's `%heading`.
 h1, h2, h3, h4, h5, h6 {
-    line-height: var(--o-preview-headings-line-height, #{$headings-line-height});
-    margin-top: var(--o-preview-headings-margin-top, #{$headings-margin-top});
-    margin-bottom: var(--o-preview-headings-margin-bottom, #{$headings-margin-bottom});
+    font-family: map-get($-headings-previews, 'font');
+    line-height: map-get($-headings-previews, 'line-height');
+    margin-top: map-get($-headings-previews, 'margin-top');
+    margin-bottom: map-get($-headings-previews, 'margin-bottom');
 }
 @each $selector, $map-key in
 ("h2" "h2", "h3" "h3", "h4" "h4", "h5" "h5", "h6" "h6", ".display-1" "display-1",
 ".display-2" "display-2", ".display-3" "display-3", ".display-4" "display-4") {
     $is-heading-tag: str-slice($selector, 1, 1) != '.';
     #{$selector} {
-        @if ($headings-font-family != map-get($heading-font-families, $map-key)) {
-            font-family: map-get($heading-font-families, $map-key);
-        }
-        @each $property, $values, $headings-value in
-        ('line-height' $heading-line-heights $headings-line-height,
-        'margin-top' $heading-margin-tops $headings-margin-top,
-        'margin-bottom' $heading-margin-bottoms $headings-margin-bottom) {
+        @each $key, $property, $values, $headings-value in
+        ('font' 'font-family' $heading-font-families $headings-font-family,
+        'line-height' 'line-height' $heading-line-heights $headings-line-height,
+        'margin-top' 'margin-top' $heading-margin-tops $headings-margin-top,
+        'margin-bottom' 'margin-bottom' $heading-margin-bottoms $headings-margin-bottom) {
             $value: map-get($values, $map-key);
             // Always set on h2-h6, which get the same value from the rule
             // above anyway, so that previewing their own value works. Not on
             // the display classes, which also go on other tags.
             @if $is-heading-tag or $headings-value != $value {
-                #{$property}: o-heading-preview-value($map-key, $property, $value, $headings-value);
+                #{$property}: o-preview-value('#{$map-key}-#{$key}', $value, $headings-value, map-get($-headings-previews, $key));
             }
         }
     }
@@ -764,7 +783,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn {
     @if ($o-theme-buttons-font != $o-theme-font) {
-        font-family: $o-theme-buttons-font;
+        font-family: o-preview-value('buttons-font', $o-theme-buttons-font);
     }
 }
 
@@ -789,6 +808,28 @@ p {
     }
 }
 
+:root {
+    --#{$prefix}font-sans-serif: #{o-preview-value('font', $font-family-sans-serif)};
+    --#{$prefix}body-font-weight: #{o-preview-value('font-weight-normal', $font-weight-base)};
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-weight: o-preview-value('headings-font-weight', $headings-font-weight);
+}
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: map-get($-headings-previews, 'font');
+}
+b, strong {
+    font-weight: o-preview-value('font-weight-bolder', $font-weight-bolder);
+}
+.lead {
+    font-weight: o-preview-value('lead-font-weight', $lead-font-weight);
+}
+@for $index from 1 through 6 {
+    .display-#{$index} {
+        font-weight: o-preview-value('display-font-weight', $display-font-weight);
+    }
+}
+
 @mixin o-preview-button-size($suffix, $padding-y, $padding-x, $font-size, $border-radius) {
     --#{$prefix}btn-padding-y: var(--o-preview-btn-padding-y#{$suffix}, #{$padding-y});
     --#{$prefix}btn-padding-x: var(--o-preview-btn-padding-x#{$suffix}, #{$padding-x});
@@ -796,6 +837,9 @@ p {
     --#{$prefix}btn-border-radius: var(--o-preview-btn-border-radius#{$suffix}, #{$border-radius});
 }
 .btn {
+    // Unset (no custom buttons font), it stays empty so the button inherits.
+    --#{$prefix}btn-font-family: var(--o-preview-buttons-font, #{if($btn-font-family, inspect($btn-font-family), '')});
+    --#{$prefix}btn-font-weight: #{o-preview-value('btn-font-weight', $btn-font-weight)};
     @include o-preview-button-size('', $btn-padding-y, $btn-padding-x, $btn-font-size, $btn-border-radius);
 }
 .btn-lg {

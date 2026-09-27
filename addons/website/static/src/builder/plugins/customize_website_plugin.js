@@ -199,7 +199,8 @@ export class CustomizeWebsitePlugin extends Plugin {
      * - `--o-preview-<name>` is read by the rules that otherwise use the
      *   compiled value (`var(--o-preview-<name>, <compiled value>)`). It only
      *   exists while editing, so the saved site renders exactly the compiled
-     *   CSS.
+     *   CSS. It holds the same value, unless `cssValues` gives the CSS one
+     *   (e.g. a font family for a font name).
      * The SCSS customization is only written on save.
      *
      * A reset (empty value or `nullValue`) removes the override, so it shows
@@ -207,16 +208,20 @@ export class CustomizeWebsitePlugin extends Plugin {
      *
      * @param {Object<string, string>} variables
      * @param {string} [nullValue="null"]
+     * @param {Object<string, string>} [cssValues]
      */
-    previewWebsiteVariables(variables, nullValue = "null") {
+    previewWebsiteVariables(variables, nullValue = "null", cssValues = {}) {
         const style = this.document.documentElement.style;
         const previousState = Object.keys(variables).map((name) => [
             name,
             this.pendingVariables[name],
             style.getPropertyValue(`--${name}`),
+            style.getPropertyValue(`--o-preview-${name}`),
         ]);
         const nextState = Object.entries(variables).map(([name, value]) =>
-            value && value !== nullValue ? [name, value, value] : [name, nullValue, ""]
+            value && value !== nullValue
+                ? [name, value, value, cssValues[name] ?? value]
+                : [name, nullValue, "", ""]
         );
         // Staged as a custom mutation because the root is outside the
         // observed editable: this is what reverts hover previews and undo.
@@ -227,15 +232,18 @@ export class CustomizeWebsitePlugin extends Plugin {
     }
     setPendingVariables(state) {
         const style = this.document.documentElement.style;
-        for (const [name, pendingValue, inlineValue] of state) {
+        for (const [name, pendingValue, inlineValue, previewValue] of state) {
             if (pendingValue === undefined) {
                 delete this.pendingVariables[name];
             } else {
                 this.pendingVariables[name] = pendingValue;
             }
-            for (const property of [`--${name}`, `--o-preview-${name}`]) {
-                if (inlineValue) {
-                    style.setProperty(property, inlineValue);
+            for (const [property, value] of [
+                [`--${name}`, inlineValue],
+                [`--o-preview-${name}`, previewValue],
+            ]) {
+                if (value) {
+                    style.setProperty(property, value);
                 } else {
                     style.removeProperty(property);
                 }
