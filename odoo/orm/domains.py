@@ -2111,8 +2111,8 @@ def _optimize_merge_set_conditions_x2many_not_in(cls: type[DomainNary], conditio
     return _merge_set_conditions(cls, conditions)
 
 
-@nary_condition_optimization(['any'], ['many2one', 'one2many', 'many2many'])
-@nary_condition_optimization(['any!'], ['many2one', 'one2many', 'many2many'])
+@nary_condition_optimization(['any'], ['one2many', 'many2many'])
+@nary_condition_optimization(['any!'], ['one2many', 'many2many'])
 def _optimize_merge_any(cls, conditions, model):
     """Merge domains of 'any' conditions for relational fields.
 
@@ -2122,8 +2122,7 @@ def _optimize_merge_any(cls, conditions, model):
         a any (f = 8) or a any (g = 5)  <=>  a any (f = 8 or g = 5)     (for all fields)
         a any (f = 8) and a any (g = 5)  <=>  a any (f = 8 and g = 5)   (for many2one fields only)
     """
-    field = conditions[0]._field(model)
-    if field.type != 'many2one' and cls is DomainAnd:
+    if cls is DomainAnd:
         return conditions
     merge_conditions, other_conditions = partition(lambda c: isinstance(c.value, Domain), conditions)
     if len(merge_conditions) < 2:
@@ -2133,8 +2132,8 @@ def _optimize_merge_any(cls, conditions, model):
     return [DomainCondition(base.field_expr, base.operator, sub_domain), *other_conditions]
 
 
-@nary_condition_optimization(['not any'], ['many2one', 'one2many', 'many2many'])
-@nary_condition_optimization(['not any!'], ['many2one', 'one2many', 'many2many'])
+@nary_condition_optimization(['not any'], ['one2many', 'many2many'])
+@nary_condition_optimization(['not any!'], ['one2many', 'many2many'])
 def _optimize_merge_not_any(cls, conditions, model):
     """Merge domains of 'not any' conditions for relational fields.
 
@@ -2144,14 +2143,44 @@ def _optimize_merge_not_any(cls, conditions, model):
         a not any (f = 1) or a not any (g = 5) => a not any (f = 1 and g = 5)   (for many2one fields only)
         a not any (f = 1) and a not any (g = 5) => a not any (f = 1 or g = 5)   (for all fields)
     """
-    field = conditions[0]._field(model)
-    if field.type != 'many2one' and cls is DomainOr:
+    if cls is DomainOr:
         return conditions
     merge_conditions, other_conditions = partition(lambda c: isinstance(c.value, Domain), conditions)
     if len(merge_conditions) < 2:
         return conditions
     base = merge_conditions[0]
     sub_domain = cls.INVERSE(tuple(c.value for c in merge_conditions))
+    return [DomainCondition(base.field_expr, base.operator, sub_domain), *other_conditions]
+
+
+@nary_condition_optimization(['any', 'not any'], ['many2one'])
+@nary_condition_optimization(['any!', 'not any!'], ['many2one'])
+def _optimize_merge_m2o_any(cls, conditions, model):
+    """Merge domains ... TODO describe, simplified from above"""
+    merge_conditions, other_conditions = partition(lambda c: isinstance(c.value, Domain), conditions)
+    if len(merge_conditions) < 2:
+        return conditions
+    pos_conditions, neg_conditions = partition(lambda c: c.operator[:3] != 'not', merge_conditions)
+    base = merge_conditions[0]
+    if not neg_conditions:
+        # all conditions are positive
+        sub_domain = cls(tuple(c.value for c in pos_conditions))
+    elif not pos_conditions:
+        # all conditions are negative
+        sub_domain = cls.INVERSE(tuple(c.value for c in neg_conditions))
+    elif cls is DomainAnd:
+        # with an AND, we know a record must exist
+        base = pos_conditions[0]
+        sub_domain = cls(tuple((*(c.value for c in pos_conditions), *(~c.value for c in neg_conditions))))  # noqa: C409
+    else:
+        # keep them apart
+        if len(pos_conditions) == 1 and len(neg_conditions) == 1:
+            return conditions  # no change
+        return [
+            DomainCondition(base.field_expr, pos_conditions[0].operator, cls.apply(tuple(c.value for c in pos_conditions))),
+            DomainCondition(base.field_expr, neg_conditions[0].operator, cls.INVERSE.apply(tuple(c.value for c in neg_conditions))),
+            *other_conditions,
+        ]
     return [DomainCondition(base.field_expr, base.operator, sub_domain), *other_conditions]
 
 
