@@ -203,7 +203,7 @@ export class GeneratePrinterData {
         return this.order.payment_ids.map((line) => ({
             ...line.raw,
             payment_method_data: { name: line.payment_method_id?.name || "" },
-            amount: this.formatCurrency(line.amount, line.currency),
+            amount: this.formatCurrency(line.amount_currency || line.amount, line.currency),
         }));
     }
 
@@ -237,8 +237,13 @@ export class GeneratePrinterData {
             };
         }
 
+        const order = this.order.raw;
+        let amount_return_currency = 0;
+        if (this.order.payment_ids[0]?.isDifferentCurrency) {
+            amount_return_currency = this.order.amount_return * this.order.orderCurrency.rate;
+        }
         return {
-            order: this.order.raw,
+            order: { ...order, amount_return_currency: amount_return_currency },
             config: this.config.raw,
             company: this.company.raw,
             partner: this.order.partner_id ? this.order.partner_id.raw : false,

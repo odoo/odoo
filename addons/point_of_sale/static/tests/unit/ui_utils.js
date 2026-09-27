@@ -188,6 +188,13 @@ export async function clickPaymentMethod(name) {
     await animationFrame();
 }
 
+export async function clickCurrencyWisePaymentMethod(name, currencyCode, amount) {
+    await contains(
+        `.paymentmethod:contains("${name}") + div .currency-wise-method:contains("${currencyCode}"):contains("${amount}")`
+    ).click();
+    await animationFrame();
+}
+
 export async function clickValidatePayment() {
     await contains(".payment-screen .validation-button.highlight").click();
     await tick();
@@ -698,6 +705,14 @@ export async function clickPaymentline(opts) {
 export async function deletePaymentline(opts) {
     await contains(`${paymentlineSelector(opts)} .delete-button`).click();
     await animationFrame();
+}
+
+export async function paymentScreenAmountTotal(amount) {
+    await waitFor(`.paymentlines-container .total:contains('${amount}')`);
+}
+
+export async function paymentScreenRemainingTotal(amount) {
+    await waitFor(`.payment-status-amount:contains(Remaining):contains('${amount}')`);
 }
 
 export function countPaymentlines() {
