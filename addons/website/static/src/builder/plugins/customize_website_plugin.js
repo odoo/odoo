@@ -23,6 +23,7 @@ import { loadImage } from "@html_editor/utils/image_processing";
  * @typedef { Object } CustomizeWebsiteShared
  * @property { CustomizeWebsitePlugin['customizeWebsiteColors'] } customizeWebsiteColors
  * @property { CustomizeWebsitePlugin['customizeWebsiteVariables'] } customizeWebsiteVariables
+ * @property { CustomizeWebsitePlugin['previewWebsiteVariables'] } previewWebsiteVariables
  * @property { CustomizeWebsitePlugin['loadTemplateKey'] } loadTemplateKey
  * @property { CustomizeWebsitePlugin['makeSCSSCusto'] } makeSCSSCusto
  * @property { CustomizeWebsitePlugin['toggleTemplate'] } toggleTemplate
@@ -50,6 +51,7 @@ export class CustomizeWebsitePlugin extends Plugin {
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
+        "previewWebsiteVariables",
         "loadTemplateKey",
         "makeSCSSCusto",
         "toggleTemplate",
@@ -69,6 +71,7 @@ export class CustomizeWebsitePlugin extends Plugin {
     resources = {
         builder_actions: {
             CustomizeWebsiteVariableAction,
+            PreviewWebsiteVariableAction,
             CustomizeWebsiteSubVariablesAction,
             CustomizeWebsiteColorAction,
             SwitchThemeAction,
@@ -102,6 +105,14 @@ export class CustomizeWebsitePlugin extends Plugin {
                 reset_view_arch: false,
             });
         }
+        if (Object.keys(this.pendingVariables).length) {
+            // No bundle reload: the iframe is reloaded after save.
+            await this.makeSCSSCusto(
+                "/website/static/src/scss/options/user_values.scss",
+                this.pendingVariables
+            );
+            this.pendingVariables = {};
+        }
     }
     cache = {};
     activeRecords = {};
@@ -124,6 +135,7 @@ export class CustomizeWebsitePlugin extends Plugin {
      */
     pendingThemeRequests = [];
     variablesToCustomize = {};
+    pendingVariables = {};
     colorsToCustomize = {};
     resolves = {};
     getPendingThemeRequests() {
@@ -177,6 +189,53 @@ export class CustomizeWebsitePlugin extends Plugin {
         await this.debouncedSCSSVariablesCusto(nullValue);
         if (reloadBundles) {
             await this.reloadBundles();
+        }
+    }
+    /**
+     * Previews website variables by overriding their CSS variables inline on
+     * the iframe root, where both the compiled CSS and
+     * `getWebsiteVariableValue` read them. The SCSS customization is only
+     * written on save. Only works for variables the compiled CSS consumes
+     * through `var()`.
+     *
+     * A reset (empty value) removes the override, so it shows the last saved
+     * value rather than the default until save.
+     *
+     * @param {Object<string, string>} variables
+     * @param {string} [nullValue="null"]
+     */
+    previewWebsiteVariables(variables, nullValue = "null") {
+        const style = this.document.documentElement.style;
+        const previousState = Object.keys(variables).map((name) => [
+            name,
+            this.pendingVariables[name],
+            style.getPropertyValue(`--${name}`),
+        ]);
+        const nextState = Object.entries(variables).map(([name, value]) => [
+            name,
+            value || nullValue,
+            value || "",
+        ]);
+        // Staged as a custom mutation because the root is outside the
+        // observed editable: this is what reverts hover previews and undo.
+        this.dependencies.domObserver.applyCustomMutation({
+            apply: () => this.setPendingVariables(nextState),
+            revert: () => this.setPendingVariables(previousState),
+        });
+    }
+    setPendingVariables(state) {
+        const style = this.document.documentElement.style;
+        for (const [name, pendingValue, inlineValue] of state) {
+            if (pendingValue === undefined) {
+                delete this.pendingVariables[name];
+            } else {
+                this.pendingVariables[name] = pendingValue;
+            }
+            if (inlineValue) {
+                style.setProperty(`--${name}`, inlineValue);
+            } else {
+                style.removeProperty(`--${name}`);
+            }
         }
     }
     debouncedSCSSVariablesCusto = debounce(async (nullValue) => {
@@ -975,6 +1034,19 @@ export class CustomizeWebsiteVariableAction extends BuilderAction {
             },
             nullValue
         );
+    }
+}
+
+/**
+ * Same as `customizeWebsiteVariable`, but previewed live and only written on
+ * save. For variables the compiled CSS reads through `var()`.
+ */
+export class PreviewWebsiteVariableAction extends CustomizeWebsiteVariableAction {
+    static id = "previewWebsiteVariable";
+    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
+    setup() {}
+    apply({ params: { mainParam: variable, nullValue = "null" }, value }) {
+        this.dependencies.customizeWebsite.previewWebsiteVariables({ [variable]: value }, nullValue);
     }
 }
 
