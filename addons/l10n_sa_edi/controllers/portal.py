@@ -16,7 +16,11 @@ class L10nSAPortalAccount(PortalAccount):
         # EXTENDS portal
         rendering_values = super()._prepare_address_form_values(partner_sudo, *args, **kwargs)
         if self._is_sa_company():
-            rendering_values['identification_schemes'] = dict(request.env['res.partner']._fields['l10n_sa_edi_additional_identification_scheme']._description_selection(request.env)).items()
+            rendering_values['identification_schemes'] = [
+                (key.removeprefix('SA_'), metadata['label'])
+                for key, metadata in request.env['res.partner']._get_all_additional_identifiers_metadata().items()
+                if 'SA' in (metadata.get('countries') or [])
+            ]
 
         return rendering_values
 
