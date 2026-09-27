@@ -218,9 +218,11 @@ test("edit fields and back", async () => {
     `)
     );
 
+    // data-oe-demo/data-oe-expression-readable are editor-only metadata: they
+    // must not survive a save, but the (possibly user-edited) content is kept.
     expect(getContent(editor.getElContent())).toBe(
         unformat(`
-        <div>a<t t-out="object.display_name" data-oe-expression-readable="Display name" data-oe-demo="edited"></t></div>
+        <div>a<t t-out="object.display_name">edited</t></div>
     `)
     );
 
@@ -230,6 +232,22 @@ test("edit fields and back", async () => {
         `<p data-selection-placeholder=""><br></p>` +
             `<div>[]a<t t-out="object.field" data-oe-expression-readable="human > expr" data-oe-demo="demo brol" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">demo brol</t></div>` +
             `<p data-selection-placeholder=""><br></p>`
+    );
+});
+
+test("cleaning removes dummy attributes but keeps the fallback content", async () => {
+    // the node has no content: normalizeQwebPlaceholders backfills it with the
+    // data-oe-demo value, which must survive the save as the t-out fallback text
+    // while the data-oe-demo/data-oe-expression-readable attributes must not.
+    const { editor } = await setupEditor(
+        `<div>a<t t-out="object.field" data-oe-expression-readable="human > expr" data-oe-demo="demo brol"></t></div>`,
+        getEditorOptions()
+    );
+
+    expect(getContent(editor.getElContent())).toBe(
+        unformat(`
+            <div>a<t t-out="object.field">demo brol</t></div>
+        `)
     );
 });
 
