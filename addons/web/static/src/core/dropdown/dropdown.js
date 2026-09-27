@@ -133,6 +133,36 @@ export class Dropdown extends Component {
 
         this.uiService = useService("ui");
 
+        const options = this.getPopoverOptions();
+        this.popover = usePopover(DropdownPopover, options);
+
+        let mounted = false;
+        onMounted(() => {
+            mounted = true;
+            this.onStateChanged(this.state);
+        });
+        onWillDestroy(
+            immediateEffect(() => {
+                if (!mounted) {
+                    this.state.isOpen; // subscribe to signal
+                    return;
+                }
+                this.onStateChanged(this.state);
+            })
+        );
+
+        useLayoutEffect(
+            (target) => this.setTargetElement(target),
+            () => [this.target]
+        );
+        useEffect(() => {
+            if (this.props.disabled) {
+                this.closePopover();
+            }
+        });
+    }
+
+    getPopoverOptions() {
         const getPosition = () => this.position;
         const options = {
             animation: false,
@@ -162,32 +192,7 @@ export class Dropdown extends Component {
                 class: mergeClasses("o-dropdown--menu dropdown-menu show", this.props.menuClass),
             });
         }
-        this.popover = usePopover(DropdownPopover, options);
-
-        let mounted = false;
-        onMounted(() => {
-            mounted = true;
-            this.onStateChanged(this.state);
-        });
-        onWillDestroy(
-            immediateEffect(() => {
-                if (!mounted) {
-                    this.state.isOpen; // subscribe to signal
-                    return;
-                }
-                this.onStateChanged(this.state);
-            })
-        );
-
-        useLayoutEffect(
-            (target) => this.setTargetElement(target),
-            () => [this.target]
-        );
-        useEffect(() => {
-            if (this.props.disabled) {
-                this.closePopover();
-            }
-        });
+        return options;
     }
 
     get isBottomSheet() {
