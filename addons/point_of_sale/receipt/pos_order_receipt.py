@@ -344,7 +344,7 @@ class PosOrderReceipt(models.AbstractModel):
                 if name not in grouped_data:
                     grouped_data[name] = {"name": name, "index": index, "data": []}
                 grouped_data[name]["data"].append(c)
-            changes["grouped_data"] = sorted(
+            changes["groupedData"] = sorted(
                 grouped_data.values(), key=lambda g: g["index"]
             )
         return changes
