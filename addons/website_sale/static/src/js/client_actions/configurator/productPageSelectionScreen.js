@@ -6,6 +6,7 @@ import {
     ROUTES,
     useStore,
 } from '@website/client_actions/configurator/configurator';
+import { usePagePreviews } from '@website_sale/js/client_actions/configurator/pagePreview';
 
 export class ProductPageSelectionScreen extends ApplyConfiguratorScreen {
     static template = 'website_sale.Configurator.ProductPageSelectionScreen';
@@ -19,6 +20,7 @@ export class ProductPageSelectionScreen extends ApplyConfiguratorScreen {
         super.setup();
         this.orm = useService('orm');
         this.state = useStore();
+        this.previews = usePagePreviews();
         onWillStart(async () => {
             this.productPageStyles = await this.orm.call(
                 'website', 'get_configurator_product_page_styles', [], {}
