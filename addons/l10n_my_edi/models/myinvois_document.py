@@ -1523,9 +1523,15 @@ class MyInvoisDocument(models.Model):
         :return: the new bills.
         """
         company = journal.company_id
-        documents_data = [data for data in documents_data if data['document_type'] in RECEIVED_DOCUMENT_MOVE_TYPES]
-        # Branches share the TIN of their parent company, so they receive the same documents.
-        existing_documents = self.search([
+        # A document can come back on two pages if MyInvois receives new ones while we page through the results.
+        documents_data = list({
+            data['uuid']: data
+            for data in documents_data
+            if data['document_type'] in RECEIVED_DOCUMENT_MOVE_TYPES
+        }.values())
+        # Branches share the TIN of their parent company, so they receive the same documents. The user may not have
+        # the other branches enabled, which must not hide the documents they already imported.
+        existing_documents = self.sudo().search([
             ('is_received_document', '=', True),
             ('myinvois_external_uuid', 'in', [data['uuid'] for data in documents_data]),
             ('company_id', 'child_of', company.root_id.id),
@@ -1539,8 +1545,8 @@ class MyInvoisDocument(models.Model):
             if not document:
                 if data['status'] == 'valid':
                     new_documents_data.append(data)
-            elif document.myinvois_state == 'received' and data['status'] == 'cancelled':
-                cancelled_documents |= document
+            elif document.company_id == company and document.myinvois_state == 'received' and data['status'] == 'cancelled':
+                cancelled_documents |= document.sudo(False)
         if cancelled_documents:
             cancelled_documents._myinvois_log_message(self.env._("The supplier cancelled this document on MyInvois."))
             cancelled_documents.myinvois_state = 'cancelled'
@@ -1621,9 +1627,12 @@ class MyInvoisDocument(models.Model):
             & (Domain('vat', 'in', tins) | Domain('l10n_my_edi_malaysian_tin', 'in', tins)),
         )
         partners_per_tin = {}
-        # Prefer the companies to their contacts. The Malaysian TIN, when set, is the one used on MyInvois.
-        for partner in partners.sorted(lambda p: bool(p.parent_id)):
-            partners_per_tin.setdefault(partner.l10n_my_edi_malaysian_tin or partner.vat, partner.commercial_partner_id)
+        # The Malaysian TIN, when set, is the one used on MyInvois; the Tax ID is the fallback.
+        # Prefer the companies to their contacts.
+        for tin_field in ('l10n_my_edi_malaysian_tin', 'vat'):
+            for partner in partners.sorted(lambda p: bool(p.parent_id)):
+                if partner[tin_field] in tins:
+                    partners_per_tin.setdefault(partner[tin_field], partner.commercial_partner_id)
 
         names_per_missing_tin = {
             data['supplier_tin']: data['supplier_name']

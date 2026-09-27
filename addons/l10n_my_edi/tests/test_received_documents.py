@@ -133,7 +133,8 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
 
     @freeze_time('2024-08-15 10:00:00')
     def test_sync_all_pages(self):
-        _action, calls = self._sync([[self._document_data('DOC1')], [self._document_data('DOC2')]])
+        # DOC1 shifted to the second page as MyInvois received a new document while we were paging.
+        _action, calls = self._sync([[self._document_data('DOC1')], [self._document_data('DOC1'), self._document_data('DOC2')]])
         self.assertEqual([call['page'] for call in calls], [1, 2])
         self.assertEqual(len(self._get_received_bills(['DOC1', 'DOC2'])), 2)
 
