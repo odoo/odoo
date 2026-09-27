@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t
+        t-name="point_of_sale.PosProductField"
+        t-inherit="account.AccountProductField"
+        t-inherit-mode="primary"
+    >
+        <xpath expr="//div[@name='m2o_product']" position="after">
+            <div t-if="this.label" class="text-wrap fst-italic" t-out="this.label"/>
+        </xpath>
+    </t>
+
+</templates>
