@@ -1155,9 +1155,14 @@ class TestDomainOptimize(TransactionCase):
                 )
 
                 self.assertEqual(
+                    (Domain(field_name, 'any', left) & Domain(field_name, 'not any', right)).optimize(model),
+                    Domain(field_name, 'any', left & (~right).optimize(model[field_name])) if m2o
+                    else (Domain(field_name, 'any', left) & Domain(field_name, 'not any', right)),
+                )
+                self.assertEqual(
                     (Domain(field_name, 'any', left) | Domain(field_name, 'not any', right)).optimize(model),
-                    (Domain(field_name, 'any', left) | Domain(field_name, 'not any', right)),
-                    "Do not merge any and not any",
+                    Domain(field_name, 'not any', (~left).optimize(model[field_name]) & right) if m2o
+                    else (Domain(field_name, 'any', left) | Domain(field_name, 'not any', right)),
                 )
 
     def test_nary_optimize_same(self):

@@ -2111,19 +2111,17 @@ def _optimize_merge_set_conditions_x2many_not_in(cls: type[DomainNary], conditio
     return _merge_set_conditions(cls, conditions)
 
 
-@nary_condition_optimization(['any'], ['many2one', 'one2many', 'many2many'])
-@nary_condition_optimization(['any!'], ['many2one', 'one2many', 'many2many'])
+@nary_condition_optimization(['any'], ['one2many', 'many2many'])
+@nary_condition_optimization(['any!'], ['one2many', 'many2many'])
 def _optimize_merge_any(cls, conditions, model):
     """Merge domains of 'any' conditions for relational fields.
 
     This will lead to a smaller number of sub-queries which are equivalent.
     Example:
 
-        a any (f = 8) or a any (g = 5)  <=>  a any (f = 8 or g = 5)     (for all fields)
-        a any (f = 8) and a any (g = 5)  <=>  a any (f = 8 and g = 5)   (for many2one fields only)
+        a any (f = 8) or a any (g = 5)  <=>  a any (f = 8 or g = 5)
     """
-    field = conditions[0]._field(model)
-    if field.type != 'many2one' and cls is DomainAnd:
+    if cls is DomainAnd:
         return conditions
     merge_conditions, other_conditions = partition(lambda c: isinstance(c.value, Domain), conditions)
     if len(merge_conditions) < 2:
@@ -2133,25 +2131,63 @@ def _optimize_merge_any(cls, conditions, model):
     return [DomainCondition(base.field_expr, base.operator, sub_domain), *other_conditions]
 
 
-@nary_condition_optimization(['not any'], ['many2one', 'one2many', 'many2many'])
-@nary_condition_optimization(['not any!'], ['many2one', 'one2many', 'many2many'])
+@nary_condition_optimization(['not any'], ['one2many', 'many2many'])
+@nary_condition_optimization(['not any!'], ['one2many', 'many2many'])
 def _optimize_merge_not_any(cls, conditions, model):
     """Merge domains of 'not any' conditions for relational fields.
 
     This will lead to a smaller number of sub-queries which are equivalent.
     Example:
 
-        a not any (f = 1) or a not any (g = 5) => a not any (f = 1 and g = 5)   (for many2one fields only)
-        a not any (f = 1) and a not any (g = 5) => a not any (f = 1 or g = 5)   (for all fields)
+        a not any (f = 1) and a not any (g = 5) => a not any (f = 1 or g = 5)
     """
-    field = conditions[0]._field(model)
-    if field.type != 'many2one' and cls is DomainOr:
+    if cls is DomainOr:
         return conditions
     merge_conditions, other_conditions = partition(lambda c: isinstance(c.value, Domain), conditions)
     if len(merge_conditions) < 2:
         return conditions
     base = merge_conditions[0]
     sub_domain = cls.INVERSE(tuple(c.value for c in merge_conditions))
+    return [DomainCondition(base.field_expr, base.operator, sub_domain), *other_conditions]
+
+
+@nary_condition_optimization(['any', 'not any'], ['many2one'])
+@nary_condition_optimization(['any!', 'not any!'], ['many2one'])
+def _optimize_merge_m2o_any(cls, conditions, model):
+    """Merge domains of any condititions for many2one fields.
+
+    This will lead to smaller number of sub-queries which are equivalent.
+    Example:
+
+        a any (f = 8) or a any (g = 5)  <=>  a any (f = 8 or g = 5)
+        a any (f = 8) and a any (g = 5)  <=>  a any (f = 8 and g = 5)
+        a not any (f = 1) or a not any (g = 5) => a not any (f = 1 and g = 5)
+        a not any (f = 1) and a not any (g = 5) => a not any (f = 1 or g = 5)
+
+        a any (f = 8) and a not any (g = 5) <=> a any (f = 8 and not(g = 5))
+        a any (f = 8) or a not any (g = 5) <=> a not any (not (f = 8) and g = 5)
+    """
+    merge_conditions, other_conditions = partition(lambda c: isinstance(c.value, Domain), conditions)
+    if len(merge_conditions) < 2:
+        return conditions
+    pos_conditions, neg_conditions = partition(lambda c: c.operator[:3] != 'not', merge_conditions)
+    if not neg_conditions:
+        # all conditions are positive
+        base = merge_conditions[0]
+        sub_domain = cls(tuple(c.value for c in pos_conditions))
+    elif not pos_conditions:
+        # all conditions are negative
+        base = merge_conditions[0]
+        sub_domain = cls.INVERSE(tuple(c.value for c in neg_conditions))
+    else:
+        # with an AND, we know a record must exist
+        # with an OR, we know a record must not exist
+        if cls is DomainAnd:
+            strong_conditions, weak_conditions = pos_conditions, neg_conditions
+        else:
+            strong_conditions, weak_conditions = neg_conditions, pos_conditions
+        base = strong_conditions[0]
+        sub_domain = DomainAnd(tuple((*(c.value for c in strong_conditions), *(~c.value for c in weak_conditions))))  # noqa: C409
     return [DomainCondition(base.field_expr, base.operator, sub_domain), *other_conditions]
 
 
