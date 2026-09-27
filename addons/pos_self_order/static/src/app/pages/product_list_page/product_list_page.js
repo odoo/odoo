@@ -34,8 +34,7 @@ export class ProductListPage extends Component {
         if (initCategories) {
             this.selfOrder.computeAvailableCategories();
         }
-        const availableCategories = this.selfOrder.availableCategories;
-        const topCategories = availableCategories.filter((category) => !category.parent_id);
+        const topCategories = this.selfOrder.topCategories;
         const selectedCategory =
             initCategories && topCategories.length > 0
                 ? topCategories[0]
@@ -158,7 +157,8 @@ export class ProductListPage extends Component {
     }
 
     get topSelectedCategory() {
-        return this.selectedCategory?.parent_id || this.selectedCategory;
+        const category = this.selectedCategory;
+        return category?.parent_id?.self_order_available ? category.parent_id : category;
     }
 
     get selectedCategory() {
@@ -174,10 +174,12 @@ export class ProductListPage extends Component {
         if (!currentCategory) {
             return [];
         }
-        if (currentCategory.parent_id) {
-            return currentCategory.parent_id.child_ids;
-        }
-        return currentCategory.child_ids || [];
+        const children = currentCategory.parent_id
+            ? currentCategory.parent_id.child_ids
+            : currentCategory.child_ids;
+        return (children || []).filter((category) =>
+            this.selfOrder.isCategoryAvailable(category.id)
+        );
     }
 
     get productCategories() {
