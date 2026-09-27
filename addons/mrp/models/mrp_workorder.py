@@ -504,17 +504,24 @@ class MrpWorkorder(models.Model):
                     elif date_start and date_finished:
                         computed_duration = workorder._calculate_duration_expected(date_start=date_start, date_finished=date_finished)
                         values['duration_expected'] = computed_duration
-                # Update MO dates if the start date of the first WO or the
-                # finished date of the last WO is update.
-                if workorder == workorder.production_id.workorder_ids[0] and 'date_start' in values:
-                    if values['date_start']:
+                # Update the MO's date_start/date_finished as the min/max of its workorders' dates.
+                if values.get('date_start'):
+                    computed_date_start = min(filter(None, (
+                        fields.Datetime.to_datetime(values['date_start']) if wo == workorder else wo.date_start
+                        for wo in workorder.production_id.workorder_ids
+                    )))
+                    if computed_date_start and computed_date_start != workorder.production_id.date_start:
                         workorder.production_id.with_context(force_date=True).write({
-                            'date_start': fields.Datetime.to_datetime(values['date_start'])
+                            'date_start': computed_date_start,
                         })
-                if workorder == workorder.production_id.workorder_ids[-1] and 'date_finished' in values:
-                    if values['date_finished']:
+                if values.get('date_finished'):
+                    computed_date_finished = max(filter(None, (
+                        fields.Datetime.to_datetime(values['date_finished']) if wo == workorder else wo.date_finished
+                        for wo in workorder.production_id.workorder_ids
+                    )))
+                    if computed_date_finished and computed_date_finished != workorder.production_id.date_finished:
                         workorder.production_id.with_context(force_date=True).write({
-                            'date_finished': fields.Datetime.to_datetime(values['date_finished'])
+                            'date_finished': computed_date_finished,
                         })
 
         res = super().write(values)
@@ -584,8 +591,9 @@ class MrpWorkorder(models.Model):
             if consider_blocked_by:
                 wo.blocked_by_workorder_ids.filtered(lambda wo: wo.id not in done_wo and not wo.is_planned)._action_plan(from_date=from_date, alternative=alternative)
             done_wo.update(wo.blocked_by_workorder_ids.ids)
-            if wo.blocked_by_workorder_ids and wo.blocked_by_workorder_ids[-1].date_finished:
-                date_start = wo.blocked_by_workorder_ids[-1].date_finished
+            max_date_finished = max([blocked.date_finished for blocked in wo.blocked_by_workorder_ids if blocked.date_finished], default=None)
+            if max_date_finished:
+                date_start = max_date_finished
             # Consider workcenter and alternatives
             if self.env.context.get('workcenter_to_plan_on'):
                 alternative = False
@@ -603,14 +611,14 @@ class MrpWorkorder(models.Model):
                     duration_expected = wo.duration_expected
                 else:
                     duration_expected = wo._get_duration_expected(alternative_workcenter=workcenter)
-                from_date, to_date = workcenter._get_first_available_slot(date_start, duration_expected)
+                slot_start, slot_stop = workcenter._get_first_available_slot(date_start, duration_expected)
                 # If the workcenter is unavailable, try planning on the next one
-                if not from_date:
+                if not slot_start:
                     continue
                 # Check if this workcenter is better than the previous ones
-                if to_date and to_date < best_date_finished:
-                    best_date_start = from_date
-                    best_date_finished = to_date
+                if slot_stop and slot_stop < best_date_finished:
+                    best_date_start = slot_start
+                    best_date_finished = slot_stop
                     best_workcenter = workcenter
                     best_duration = duration_expected
             # If none of the workcenter are available, raise
