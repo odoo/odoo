@@ -80,6 +80,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             CustomizeWebsiteVariableAction,
             PreviewWebsiteVariableAction,
             PreviewWebsiteFontSizeAction,
+            ResetWebsiteVariablesAction,
             CustomizeWebsiteSubVariablesAction,
             PreviewWebsiteSubVariablesAction,
             CustomizeWebsiteColorAction,
@@ -1171,6 +1172,20 @@ export class PreviewWebsiteVariableAction extends CustomizeWebsiteVariableAction
     setup() {}
     apply({ params: { mainParam: variable, nullValue = "null" }, value }) {
         this.dependencies.customizeWebsite.previewWebsiteVariables({ [variable]: value }, nullValue);
+    }
+}
+
+/**
+ * Resets website variables to their theme default, through
+ * `previewWebsiteVariables` (which shows the last saved values until save).
+ */
+export class ResetWebsiteVariablesAction extends BuilderAction {
+    static id = "resetWebsiteVariables";
+    static dependencies = ["customizeWebsite"];
+    apply({ params: { mainParam: variables } }) {
+        this.dependencies.customizeWebsite.previewWebsiteVariables(
+            Object.fromEntries(variables.map((variable) => [variable, ""]))
+        );
     }
 }
 
