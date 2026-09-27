@@ -302,6 +302,7 @@ If you have development competencies, we can propose you specific traineeships</
             <field name="name">Monica Light</field>
             <field name="user_id" ref="base.user_light"/>
             <field name="work_contact_id" ref="base.partner_light"/>
+            <field name="image_1920" type="bytes" file="hr/static/img/employee_light-image.webp"/>
             <field name="date_version" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
             <field name="contract_date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
             <field name="employee_type_id" ref="contract_type_employee"/>
