@@ -155,13 +155,13 @@ class AccountMove(models.Model):
     def _post(self, soft=True):
         # EXTENDS 'account'
         # The user may split the single line of a received bill, but the bill must still match its e-invoice.
-        mismatched_bills = self.filtered(lambda move: (
-            move.l10n_my_edi_state == 'received'
-            and move.company_currency_id.compare_amounts(
-                abs(move.amount_total_signed),
-                move.l10n_my_edi_received_document_id.myinvois_amount_total,
-            )
-        ))
+        def total_mismatches(move):
+            document = move.l10n_my_edi_received_document_id
+            # The received total is in MYR, whatever the currency of the bill or of the company.
+            total = move.currency_id._convert(move.amount_total, document.currency_id, move.company_id, move.invoice_date or move.date)
+            return document.currency_id.compare_amounts(total, document.myinvois_amount_total)
+
+        mismatched_bills = self.filtered(lambda move: move.l10n_my_edi_state == 'received' and total_mismatches(move))
         if mismatched_bills:
             raise UserError(self.env._(
                 "The total of these bills no longer matches the e-invoice received from MyInvois: %(bills)s\n"
