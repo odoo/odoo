@@ -79,6 +79,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         builder_actions: {
             CustomizeWebsiteVariableAction,
             PreviewWebsiteVariableAction,
+            PreviewWebsiteFontSizeAction,
             CustomizeWebsiteSubVariablesAction,
             PreviewWebsiteSubVariablesAction,
             CustomizeWebsiteColorAction,
@@ -102,6 +103,51 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }),
         on_ready_to_save_document_handlers: this.onSave.bind(this),
+
+        // Previewed values (see `previewWebsiteVariables`) are history commit
+        // data: each step holds the previous and next state to apply.
+        history_commit_data_properties: ["themePreview"],
+        pending_history_commit_data_processors: (data) =>
+            this.pendingPreviewSteps.length
+                ? { ...data, themePreview: [...this.pendingPreviewSteps] }
+                : data,
+        on_committed_to_history_handlers: () => {
+            this.pendingPreviewSteps = [];
+        },
+        has_history_commit_changes_predicates: (commit) => {
+            if (commit.data.themePreview?.length) {
+                return true;
+            }
+        },
+        on_apply_history_commit_handlers: (commit) => {
+            for (const step of commit.data.themePreview || []) {
+                this.setPreviewState(step.next);
+            }
+        },
+        on_revert_history_commit_handlers: (commit) => {
+            for (const step of [...(commit.data.themePreview || [])].reverse()) {
+                this.setPreviewState(step.previous);
+            }
+        },
+        on_will_invalidate_pending_changes_handlers: () => {
+            for (const step of this.pendingPreviewSteps.reverse()) {
+                this.setPreviewState(step.previous);
+            }
+            this.pendingPreviewSteps = [];
+        },
+        on_pending_changes_unstashed_handlers: (stashedCommit) => {
+            this.pendingPreviewSteps.push(...(stashedCommit.data.themePreview || []));
+        },
+        save_point_history_commit_data_processors: (data) => ({
+            ...data,
+            themePreview: [...this.pendingPreviewSteps],
+        }),
+        on_savepoint_restored_handlers: (savePoint) => {
+            for (const step of savePoint.data.themePreview) {
+                this.setPreviewState(step.next);
+            }
+            this.pendingPreviewSteps.push(...savePoint.data.themePreview);
+        },
     };
 
     async onSave() {
@@ -144,6 +190,8 @@ export class CustomizeWebsitePlugin extends Plugin {
     variablesToCustomize = {};
     /** @type {Object<string, Object<string, string>>} values to write, by file URL */
     pendingCustomizations = {};
+    /** Preview steps not committed to the history yet. */
+    pendingPreviewSteps = [];
     colorsToCustomize = {};
     resolves = {};
     getPendingThemeRequests() {
@@ -246,12 +294,10 @@ export class CustomizeWebsitePlugin extends Plugin {
                 cssValues[name] ?? (isSet(variables[name]) ? variables[name] : ""),
             ]),
         };
-        // Staged as a custom mutation because the root is outside the
-        // observed editable: this is what reverts hover previews and undo.
-        this.dependencies.domObserver.applyCustomMutation({
-            apply: () => this.setPreviewState(nextState),
-            revert: () => this.setPreviewState(previousState),
-        });
+        // The root is outside the observed editable: the step goes to the
+        // history as commit data, which reverts hover previews and undo.
+        this.setPreviewState(nextState);
+        this.pendingPreviewSteps.push({ previous: previousState, next: nextState });
     }
     setPreviewState({ url, variables, aliases }) {
         const pending = (this.pendingCustomizations[url] ??= {});
@@ -265,6 +311,10 @@ export class CustomizeWebsitePlugin extends Plugin {
         }
         for (const [name, value] of aliases) {
             this.setRootProperty(`--o-preview-${name}`, value);
+        }
+        if (url.includes("/options/colors/")) {
+            // The color pickers show the website colors.
+            setBuilderCSSVariables(getHtmlStyle(this.document));
         }
     }
     setRootProperty(property, value) {
@@ -1121,6 +1171,30 @@ export class PreviewWebsiteVariableAction extends CustomizeWebsiteVariableAction
     setup() {}
     apply({ params: { mainParam: variable, nullValue = "null" }, value }) {
         this.dependencies.customizeWebsite.previewWebsiteVariables({ [variable]: value }, nullValue);
+    }
+}
+
+/**
+ * `previewWebsiteVariable` for the base and small font sizes: the compiled
+ * small font size is their ratio (in em), computed here.
+ */
+export class PreviewWebsiteFontSizeAction extends PreviewWebsiteVariableAction {
+    static id = "previewWebsiteFontSize";
+    apply({ params: { mainParam: variable, nullValue = "null" }, value }) {
+        const customizeWebsite = this.dependencies.customizeWebsite;
+        const style = getHtmlStyle(this.document);
+        const getSize = (name, printedName) => {
+            const size = name === variable ? value : customizeWebsite.getPendingValue(name);
+            return parseFloat(
+                size && size !== nullValue ? size : getCSSVariableValue(printedName, style)
+            );
+        };
+        const ratio =
+            getSize("small-font-size", "o-small-font-size") /
+            getSize("font-size-base", "font-size-base");
+        customizeWebsite.previewWebsiteVariables({ [variable]: value }, nullValue, {
+            "small-font-ratio": `${ratio}`,
+        });
     }
 }
 

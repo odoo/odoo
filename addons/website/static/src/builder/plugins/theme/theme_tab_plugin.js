@@ -5,7 +5,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { ThemeAdvancedOption } from "./theme_advanced_option";
 import { ThemeShadowOption } from "./theme_shadow_option";
 import { ThemeButtonOption } from "./theme_button_option";
-import { PreviewWebsiteColorPresetAction, ThemeColorsOption } from "./theme_colors_option";
+import { PreviewWebsiteColorAction, previewColors, ThemeColorsOption } from "./theme_colors_option";
 import { ThemeHeadingsOption } from "./theme_headings_option";
 import {
     CustomizeWebsiteFontFamilyAction,
@@ -124,7 +124,8 @@ export class ThemeTabPlugin extends Plugin {
             PreviewWebsiteFontFamilyAction,
             CustomizeWebsiteFontWeightAction,
             PreviewWebsiteFontWeightAction,
-            PreviewWebsiteColorPresetAction,
+            PreviewWebsiteColorAction,
+            PreviewWebsiteGrayAction,
             EditCustomCodeAction,
             ConfigureApiKeyAction,
         },
@@ -282,15 +283,15 @@ export class ThemeTabPlugin extends Plugin {
     setGrays(key, value) {
         this.grays[key] = value;
     }
-    buildGray(id) {
+    buildGray(id, grayParams = this.grayParams) {
         // Getting base grays defined in color_palette.scss
         const gray = getCSSVariableValue(`base-${id}`, getComputedStyle(document.documentElement));
         const grayRGB = convertCSSColorToRgba(gray);
         const hsl = convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);
         const adjustedGrayRGB = convertHslToRgb(
-            this.grayParams[GRAY_PARAMS.HUE],
+            grayParams[GRAY_PARAMS.HUE],
             Math.min(
-                Math.max(hsl.saturation + this.grayParams[GRAY_PARAMS.EXTRA_SATURATION], 0),
+                Math.max(hsl.saturation + grayParams[GRAY_PARAMS.EXTRA_SATURATION], 0),
                 100
             ),
             hsl.lightness
@@ -379,6 +380,49 @@ export class CustomizeGrayAction extends BuilderAction {
             }
         );
         setBuilderCSSVariables(getHtmlStyle(this.document));
+    }
+}
+/**
+ * Same as `customizeGray`, but previewed live and only written on save (see
+ * `previewColors`).
+ */
+export class PreviewWebsiteGrayAction extends CustomizeGrayAction {
+    static id = "previewWebsiteGray";
+    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
+    setup() {}
+    getValue({ params: { mainParam: grayParamName } }) {
+        return this.getGrayParams()[grayParamName];
+    }
+    apply({ params: { mainParam: grayParamName }, value }) {
+        const grayParams = { ...this.getGrayParams(), [grayParamName]: parseInt(value) };
+        const grays = {};
+        for (let i = 1; i < 10; i++) {
+            const key = (100 * i).toString();
+            grays[key] = this.dependencies.themeTab.buildGray(key, grayParams);
+            this.dependencies.themeTab.setGrays(key, grays[key]);
+        }
+        const { url } = this.dependencies.customizeWebsite.getColorsCustomization(
+            {},
+            { colorType: "gray" }
+        );
+        // The parameters are kept as preview values, to be undone with the
+        // grays.
+        previewColors(
+            this,
+            { colors: { [url]: grays }, nullValue: "null" },
+            Object.fromEntries(
+                Object.entries(grayParams).map(([name, param]) => [name, `${param}`])
+            )
+        );
+    }
+    getGrayParams() {
+        const style = getHtmlStyle(this.document);
+        return Object.fromEntries(
+            Object.entries(this.dependencies.themeTab.getGrayParams()).map(([name, param]) => {
+                const previewParam = getCSSVariableValue(`o-preview-${name}`, style);
+                return [name, previewParam ? parseFloat(previewParam) : param];
+            })
+        );
     }
 }
 export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {

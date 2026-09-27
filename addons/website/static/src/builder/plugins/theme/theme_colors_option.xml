@@ -38,18 +38,18 @@
                                             <div class="d-flex flex-row gap-1">
                                                 <BuilderColorPicker
                                                     title.translate="Primary"
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'" preview="true"
                                                     actionParam="'o-color-1'"
                                                     enabledTabs="['solid', 'custom']"
                                                     selectedTab="'custom'"/>
                                                 <BuilderColorPicker
                                                     title.translate="Secondary"
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'" preview="true"
                                                     actionParam="'o-color-2'"
                                                     enabledTabs="['solid', 'custom']"
                                                     selectedTab="'custom'"/>
                                                 <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'" preview="true"
                                                     actionParam="'o-color-3'"
                                                     enabledTabs="['solid', 'custom']"
                                                     selectedTab="'custom'"/>
@@ -59,12 +59,12 @@
                                             <span class="fst-italic" data-text-truncate-tooltip="">Light &amp; Dark</span>
                                             <div class="d-flex flex-row gap-1">
                                                 <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'" preview="true"
                                                     actionParam="'o-color-4'"
                                                     enabledTabs="['solid', 'custom']"
                                                     selectedTab="'custom'"/>
                                                 <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'" preview="true"
                                                     actionParam="'o-color-5'"
                                                     enabledTabs="['solid', 'custom']"
                                                     selectedTab="'custom'"/>
@@ -116,26 +116,26 @@
                                             <BuilderRow label.translate="Background">
                                                 <BuilderColorPicker
                                                     enabledTabs="['solid', 'custom', 'gradient']"
-                                                    action="'previewWebsiteColorPreset'" preview="true"
+                                                    action="'previewWebsiteColor'" preview="true"
                                                     actionParam="{ mainParam: `o-cc${preset.id}-bg`, gradientColor: `o-cc${preset.id}-bg-gradient` }"
                                                 />
                                             </BuilderRow>
                                             <BuilderRow label.translate="Text">
                                                 <BuilderColorPicker
-                                                    action="'previewWebsiteColorPreset'" preview="true"
+                                                    action="'previewWebsiteColor'" preview="true"
                                                     actionParam="`o-cc${preset.id}-text`"
                                                     enabledTabs="['solid', 'custom']"/>
                                             </BuilderRow>
                                             <BuilderRow label.translate="Headings">
                                                 <BuilderColorPicker
-                                                    action="'previewWebsiteColorPreset'" preview="true"
+                                                    action="'previewWebsiteColor'" preview="true"
                                                     actionParam="`o-cc${preset.id}-headings`"
                                                     enabledTabs="['solid', 'custom']"/>
                                                 <t t-set-slot="collapse">
                                                     <t t-foreach="[2, 3, 4, 5, 6]" t-as="j" t-key="j">
                                                         <BuilderRow label="`Headings ${j}`">
                                                             <BuilderColorPicker
-                                                                action="'previewWebsiteColorPreset'" preview="true"
+                                                                action="'previewWebsiteColor'" preview="true"
                                                                 actionParam="`o-cc${preset.id}-h${j}`"
                                                                 enabledTabs="['solid', 'custom']"/>
                                                         </BuilderRow>
@@ -144,30 +144,30 @@
                                             </BuilderRow>
                                             <BuilderRow label.translate="Links">
                                                 <BuilderColorPicker
-                                                    action="'previewWebsiteColorPreset'" preview="true"
+                                                    action="'previewWebsiteColor'" preview="true"
                                                     actionParam="`o-cc${preset.id}-link`"
                                                     enabledTabs="['solid', 'custom']"/>
                                             </BuilderRow>
                                             <BuilderRow label.translate="Primary Buttons">
                                                 <BuilderColorPicker
-                                                    action="'previewWebsiteColorPreset'" preview="true"
+                                                    action="'previewWebsiteColor'" preview="true"
                                                     actionParam="`o-cc${preset.id}-btn-primary`"
                                                     enabledTabs="['solid', 'custom']"
                                                     tooltip.translate="Fill Color"/>
                                                 <BuilderColorPicker
-                                                    action="'previewWebsiteColorPreset'" preview="true"
+                                                    action="'previewWebsiteColor'" preview="true"
                                                     actionParam="`o-cc${preset.id}-btn-primary-border`"
                                                     enabledTabs="['solid', 'custom']"
                                                     tooltip.translate="Border Color"/>
                                             </BuilderRow>
                                             <BuilderRow label.translate="Secondary Buttons">
                                                 <BuilderColorPicker
-                                                    action="'previewWebsiteColorPreset'" preview="true"
+                                                    action="'previewWebsiteColor'" preview="true"
                                                     actionParam="`o-cc${preset.id}-btn-secondary`"
                                                     enabledTabs="['solid', 'custom']"
                                                     tooltip.translate="Fill Color"/>
                                                 <BuilderColorPicker
-                                                    action="'previewWebsiteColorPreset'" preview="true"
+                                                    action="'previewWebsiteColor'" preview="true"
                                                     actionParam="`o-cc${preset.id}-btn-secondary-border`"
                                                     enabledTabs="['solid', 'custom']"
                                                     tooltip.translate="Border Color"/>
@@ -180,25 +180,25 @@
                                 <BuilderRow label.translate="Status Colors">
                                     <BuilderColorPicker title.translate="Success"
                                         enabledTabs="['solid', 'custom']"
-                                        action="'customizeWebsiteColor'"
+                                        action="'previewWebsiteColor'" preview="true"
                                         actionParam="{colorType: 'theme', mainParam: 'success'}"
                                         selectedTab="'custom'"
                                     />
                                     <BuilderColorPicker title.translate="Info"
                                         enabledTabs="['solid', 'custom']"
-                                        action="'customizeWebsiteColor'"
+                                        action="'previewWebsiteColor'" preview="true"
                                         actionParam="{colorType: 'theme', mainParam: 'info'}"
                                         selectedTab="'custom'"
                                     />
                                     <BuilderColorPicker title.translate="Warning"
                                         enabledTabs="['solid', 'custom']"
-                                        action="'customizeWebsiteColor'"
+                                        action="'previewWebsiteColor'" preview="true"
                                         actionParam="{colorType: 'theme', mainParam: 'warning'}"
                                         selectedTab="'custom'"
                                     />
                                     <BuilderColorPicker title.translate="Error"
                                         enabledTabs="['solid', 'custom']"
-                                        action="'customizeWebsiteColor'"
+                                        action="'previewWebsiteColor'" preview="true"
                                         actionParam="{colorType: 'theme', mainParam: 'danger'}"
                                         selectedTab="'custom'"
                                     />
@@ -217,14 +217,14 @@
                                     <t t-set-slot="collapse">
                                         <BuilderRow label.translate="Hue" level="1">
                                             <div class="o_we_slider_tint">
-                                                <BuilderRange action="'customizeGray'" actionParam="'gray-hue'"
+                                                <BuilderRange action="'previewWebsiteGray'" preview="true" actionParam="'gray-hue'"
                                                     min="0" max="359.9" step="0.1"
                                                 />
                                             </div>
                                         </BuilderRow>
                                         <BuilderRow label.translate="Saturation" level="1">
                                             <BuilderRange
-                                                action="'customizeGray'"
+                                                action="'previewWebsiteGray'" preview="true"
                                                 actionParam="'gray-extra-saturation'"
                                                 step="0.1"
                                                 unit="'%'"

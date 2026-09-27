@@ -5,7 +5,7 @@ import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting
 import { _t } from "@web/core/l10n/translation";
 import { isColorGradient } from "@web/core/utils/colors";
 import { CustomizeWebsiteColorAction } from "../customize_website_plugin";
-import { computeColorPresetPreview, parseColor } from "./color_preset_preview";
+import { computeColorSystemPreview, parseColor } from "./color_system_preview";
 import { ThemeColorsPreviewDialog } from "./theme_colors_preview_dialog";
 
 const PRESET_COLORS = [
@@ -137,80 +137,129 @@ export class ThemeColorsOption extends BaseOptionComponent {
     }
 }
 
+const GRAY_COLORS = ["100", "200", "300", "400", "500", "600", "700", "800", "900"];
+const THEME_COLORS = ["primary", "secondary", "success", "info", "warning", "danger", "light", "dark"];
+
 /**
- * Same as `customizeWebsiteColor` for the colors of a color preset, but
- * previewed live and only written on save. The colors the preset compiles
- * into are computed for all presets (see `color_preset_preview.js`).
+ * Previews a change of the website colors, as values to write by file URL (see
+ * `customizeWebsiteColors`). The colors the whole color system compiles into
+ * are computed from all colors (see `color_system_preview.js`): the changed
+ * ones, then the ones already previewed, then the saved ones. A color defined
+ * as another one (printed as `--o-ref-<name>`) follows it.
+ *
+ * @param {BuilderAction} action
+ * @param {Object} change
+ * @param {Object<string, Object<string, string>>} change.colors
+ * @param {string} [change.gradientColor] a color preset gradient
+ * @param {string} [change.gradientValue]
+ * @param {string} change.nullValue
+ * @param {Object<string, string>} [cssValues] other preview-only values
  */
-export class PreviewWebsiteColorPresetAction extends CustomizeWebsiteColorAction {
-    static id = "previewWebsiteColorPreset";
+export function previewColors(action, { colors, gradientColor, gradientValue, nullValue }, cssValues = {}) {
+    const customizeWebsite = action.dependencies.customizeWebsite;
+    const style = getHtmlStyle(action.document);
+    const getURL = (name) =>
+        customizeWebsite.getColorsCustomization(
+            {},
+            {
+                colorType: GRAY_COLORS.includes(name)
+                    ? "gray"
+                    : THEME_COLORS.includes(name)
+                    ? "theme"
+                    : "",
+            }
+        ).url;
+    // The value to save for a color if it changed (empty when reset).
+    const getNewValue = (name) => {
+        const url = getURL(name);
+        const value =
+            name in (colors[url] || {})
+                ? colors[url][name]
+                : customizeWebsite.getPendingValue(name, url);
+        return value === nullValue ? "" : value;
+    };
+    const resolvedColors = {};
+    const getColor = (name) => {
+        if (!(name in resolvedColors)) {
+            const value = getNewValue(name);
+            const reference = getCSSVariableValue(`o-ref-${name}`, style).slice(1, -1);
+            resolvedColors[name] =
+                value === undefined && reference
+                    ? getColor(reference)
+                    : // A reset color shows the saved one until save.
+                      toColor(value || getCSSVariableValue(name, style));
+        }
+        return resolvedColors[name];
+    };
+    const toColor = (cssColor) => {
+        // A named color (`'o-color-1'`, `var(--o-color-1)`) follows it.
+        const name = cssColor.match(/^'(.+)'$|^var\(--(.+)\)$/)?.slice(1).find(Boolean);
+        return name ? getColor(name) : parseColor(cssColor);
+    };
+    const presets = [1, 2, 3, 4, 5].map((index) => {
+        const setColors = getCSSVariableValue(`o-cc${index}-set`, style).slice(1, -1).split(" ");
+        const preset = {};
+        for (const key of PRESET_COLORS) {
+            const name = `o-cc${index}-${key}`;
+            const value = getNewValue(name);
+            const isSet = value === undefined ? key === "bg" || setColors.includes(key) : !!value;
+            preset[key] = isSet ? getColor(name) : null;
+        }
+        // A reset background shows the saved one until save.
+        preset.bg ||= parseColor(getCSSVariableValue(`o-cc${index}-bg`, style));
+        return preset;
+    });
+    const values = computeColorSystemPreview(getColor, presets, {
+        minContrastRatio: parseFloat(getCSSVariableValue("min-contrast-ratio", style)),
+        themeColorNames: THEME_COLORS.filter((name) => getCSSVariableValue(name, style)),
+        isFullLayout: getCSSVariableValue("layout", style) === "'full'",
+    });
+    // The preset gradients cover their background color (`none` hides a
+    // saved one).
+    for (let index = 1; index <= 5; index++) {
+        const name = `o-cc${index}-bg-gradient`;
+        const savedGradient = getCSSVariableValue(name, style).replace(/^'(.*)'$/, "$1");
+        let gradient = customizeWebsite.getPendingValue(name);
+        if (name === gradientColor) {
+            gradient = gradientValue || nullValue;
+        }
+        values[name] =
+            gradient === undefined ? savedGradient : gradient === nullValue ? savedGradient && "none" : gradient;
+    }
+    Object.assign(values, cssValues);
+    if (gradientColor) {
+        customizeWebsite.previewWebsiteVariables(
+            { [gradientColor]: gradientValue || nullValue },
+            nullValue,
+            { [gradientColor]: values[gradientColor] }
+        );
+    }
+    for (const [url, urlColors] of Object.entries(colors)) {
+        customizeWebsite.previewWebsiteVariables(urlColors, nullValue, values, url);
+    }
+}
+
+/**
+ * Same as `customizeWebsiteColor` for the Theme tab colors, but previewed
+ * live and only written on save.
+ */
+export class PreviewWebsiteColorAction extends CustomizeWebsiteColorAction {
+    static id = "previewWebsiteColor";
     // Drop the parent's `preview = false` and blocking `withCustomHistory`.
     setup() {}
-    apply({ params: { mainParam: color, gradientColor, nullValue = "null" }, value }) {
-        const customizeWebsite = this.dependencies.customizeWebsite;
+    apply({ params: { mainParam: color, colorType, gradientColor, nullValue = "null" }, value }) {
         // Same split as the parent: a gradient resets the color and the other
         // way around.
         const gradientValue = gradientColor && isColorGradient(value) ? value : "";
-        const { url, finalColors } = customizeWebsite.getColorsCustomization(
+        const { url, finalColors } = this.dependencies.customizeWebsite.getColorsCustomization(
             { [color]: gradientValue ? "" : value },
-            { resetCcOnEmpty: !gradientValue }
+            { colorType, resetCcOnEmpty: !gradientValue }
         );
-        const style = getHtmlStyle(this.document);
-        const toColor = (cssColor) =>
-            cssColor &&
-            parseColor(
-                cssColor.startsWith("var(") ? getCSSVariableValue(cssColor, style) : cssColor
-            );
-        const constants = {
-            bodyBg: toColor(getCSSVariableValue("body-bg", style)),
-            contrastLight: toColor(getCSSVariableValue("white", style)),
-            contrastDark: toColor(getCSSVariableValue("900", style)),
-            minContrastRatio: parseFloat(getCSSVariableValue("min-contrast-ratio", style)),
-            primary: toColor(getCSSVariableValue("primary", style)),
-            secondary: toColor(getCSSVariableValue("secondary", style)),
-        };
-        const cssValues = {};
-        for (let index = 1; index <= 5; index++) {
-            const setColors = getCSSVariableValue(`o-cc${index}-set`, style).slice(1, -1).split(" ");
-            const preset = {};
-            for (const key of PRESET_COLORS) {
-                const name = `o-cc${index}-${key}`;
-                const isSet = key === "bg" || setColors.includes(key);
-                const pendingValue =
-                    name in finalColors ? finalColors[name] : customizeWebsite.getPendingValue(name, url);
-                let cssColor = isSet ? getCSSVariableValue(name, style) : "";
-                if (pendingValue !== undefined) {
-                    // A named color (e.g. `'o-color-1'`) is printed as a
-                    // variable.
-                    cssColor = [nullValue, ""].includes(pendingValue)
-                        ? ""
-                        : pendingValue.replace(/^'(.*)'$/, "var(--$1)");
-                }
-                preset[key] = toColor(cssColor);
-            }
-            // A reset background shows the last saved one until save.
-            preset.bg ||= toColor(getCSSVariableValue(`o-cc${index}-bg`, style));
-            Object.assign(cssValues, computeColorPresetPreview(index, preset, constants));
-            // The gradient covers the background color (`none` to hide a saved
-            // one).
-            const gradientName = `o-cc${index}-bg-gradient`;
-            const savedGradient = getCSSVariableValue(gradientName, style).replace(/^'(.*)'$/, "$1");
-            let gradient = savedGradient;
-            if (gradientName === gradientColor) {
-                gradient = gradientValue || (savedGradient && "none");
-            } else if (customizeWebsite.getPendingValue(gradientName) !== undefined) {
-                gradient = customizeWebsite.getPendingValue(gradientName);
-                gradient = gradient === nullValue ? savedGradient && "none" : gradient;
-            }
-            cssValues[gradientName] = gradient;
-        }
-        if (gradientColor) {
-            customizeWebsite.previewWebsiteVariables(
-                { [gradientColor]: gradientValue || nullValue },
-                nullValue,
-                { [gradientColor]: cssValues[gradientColor] }
-            );
-        }
-        customizeWebsite.previewWebsiteVariables(finalColors, nullValue, cssValues, url);
+        previewColors(this, {
+            colors: { [url]: finalColors },
+            gradientColor,
+            gradientValue,
+            nullValue,
+        });
     }
 }

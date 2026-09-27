@@ -1,4 +1,4 @@
-// The color functions below mirror the SCSS ones the color presets are
+// The color functions below mirror the SCSS ones the theme colors are
 // compiled with (Bootstrap, web and html_editor), including libsass' numeric
 // behavior (`mix()` rounds channels, HSL adjustments do not), so that a preview
 // matches what is compiled on save.
@@ -121,7 +121,7 @@ function colorContrast(background, constants) {
     const realColor = opaque(constants.bodyBg, background);
     let maxRatio = 0;
     let maxRatioColor = null;
-    for (const color of [constants.contrastLight, constants.contrastDark, WHITE, BLACK]) {
+    for (const color of [constants.contrastLight, constants.contrastDark, constants.white, constants.black]) {
         const ratio = contrastRatio(realColor, color);
         if (ratio > constants.minContrastRatio) {
             return color;
@@ -159,10 +159,13 @@ function increaseContrast(color1, color2) {
 
 const toRgb = ({ r, g, b }) => [r, g, b].map((value) => Math.round(value * 1e5) / 1e5).join(", ");
 
-// Bootstrap's `button-variant()` and `button-outline-variant()` colors.
+const isSameColor = (color1, color2) =>
+    ["r", "g", "b", "a"].every((key) => color1[key] === color2[key]);
+
+// Bootstrap's `button-variant()` colors.
 function buttonVariant(background, border, constants) {
     const color = colorContrast(background, constants);
-    const isLight = ["r", "g", "b", "a"].every((key) => color[key] === constants.contrastLight[key]);
+    const isLight = isSameColor(color, constants.contrastLight);
     const hoverBackground = isLight ? shadeColor(background, 15) : tintColor(background, 15);
     const activeBackground = isLight ? shadeColor(background, 20) : tintColor(background, 20);
     return {
@@ -191,10 +194,11 @@ function buttonVariant(background, border, constants) {
  *        `btn-primary-border`, `btn-secondary`, `btn-secondary-border`), null
  *        when not set
  * @param {Object} constants compiled values: `bodyBg`, `contrastLight`,
- *        `contrastDark`, `minContrastRatio`, `primary`, `secondary`
+ *        `contrastDark`, `white`, `black`, `minContrastRatio`, `primary`,
+ *        `secondary`
  * @returns {Object<string, string>}
  */
-export function computeColorPresetPreview(index, preset, constants) {
+function computeColorPresetPreview(index, preset, constants) {
     const values = {};
     const bg = preset.bg;
     // `o-bg-color()` with a 0 opacity threshold.
@@ -240,10 +244,175 @@ export function computeColorPresetPreview(index, preset, constants) {
     for (const key of ["text", "text-muted", "text-rgb", "headings", "h2", "h3", "h4", "h5", "h6"]) {
         values[key] ??= "";
     }
+    return prefixValues(`o-cc${index}-`, values);
+}
+
+function prefixValues(prefix, values) {
     return Object.fromEntries(
         Object.entries(values).map(([key, value]) => [
-            `o-cc${index}-${key}`,
-            typeof value === "string" ? value : formatColor(value),
+            prefix + key,
+            !value ? "" : typeof value === "string" ? value : formatColor(value),
         ])
     );
+}
+
+// web's `bg-variant()`: `o-bg-color()` with its 0.3 opacity threshold, and a
+// 10% darker background on hover.
+function bgVariant(color, constants) {
+    const getTextColor = (background) =>
+        background.a > 0.3 ? colorContrast(background, constants) : null;
+    const text = getTextColor(color);
+    const hoverBackground = adjustLightness(color, -10);
+    return {
+        bg: color,
+        color: text,
+        muted: text && { ...text, a: text.a * 0.7 },
+        "hover-bg": hoverBackground,
+        "hover-color": getTextColor(hoverBackground),
+    };
+}
+
+// The `:root` variables of a Bootstrap theme color (with website's own
+// `$primary-text-emphasis` and `$primary-bg-subtle`) and the classes compiled
+// from it: `.text-*` (web's `text-emphasis-variant()`), `.text-bg-*`,
+// `.link-*`, `.btn-fill-*` and `.btn-outline-*` (web's review).
+function themeColorValues(name, color, env) {
+    const { constants, grays } = env;
+    let textEmphasis = shadeColor(color, 60);
+    let bgSubtle = tintColor(color, 80);
+    let borderSubtle = tintColor(color, 60);
+    if (name === "primary") {
+        if (env.isDarkPalette) {
+            textEmphasis = tintColor(color, 40);
+        } else if (!hasEnoughContrast(color, constants.bodyBg)) {
+            textEmphasis = increaseContrast(color, constants.bodyBg);
+        }
+        bgSubtle = env.isDarkPalette ? shadeColor(color, 70) : tintColor(color, 80);
+    } else if (name === "light") {
+        [textEmphasis, bgSubtle, borderSubtle] = [grays[700], mix(grays[100], constants.white, 50), grays[200]];
+    } else if (name === "dark") {
+        [textEmphasis, bgSubtle, borderSubtle] = [grays[700], grays[400], grays[500]];
+    }
+    const contrast = colorContrast(color, constants);
+    const linkHover = isSameColor(contrast, constants.contrastLight)
+        ? shadeColor(color, 20)
+        : tintColor(color, 20);
+    const values = {
+        [name]: color,
+        [`${name}-rgb`]: toRgb(color),
+        [`${name}-text-emphasis`]: textEmphasis,
+        [`${name}-bg-subtle`]: bgSubtle,
+        [`${name}-border-subtle`]: borderSubtle,
+        [`text-${name}-hover`]: adjustLightness(color, -20),
+        [`text-bg-${name}`]: contrast,
+        [`link-${name}-hover-rgb`]: toRgb(linkHover),
+    };
+    const btnBackground = env.btnBackgrounds[name] || color;
+    const btnBorder = env.btnBorders[name] || btnBackground;
+    for (const [key, value] of Object.entries(buttonVariant(btnBackground, btnBorder, constants))) {
+        values[`theme-btn-${name}-${key}`] = value;
+    }
+    const outline = increaseContrast(btnBorder, constants.bodyBg);
+    values[`theme-btn-${name}-outline`] = outline;
+    values[`theme-btn-${name}-outline-contrast`] = colorContrast(outline, constants);
+    values[`theme-btn-${name}-outline-rgb`] = toRgb(outline);
+    return values;
+}
+
+/**
+ * Computes the colors that the website compiles from its color system, as
+ * `--o-preview-*` values: the color presets (see `computeColorPresetPreview`),
+ * the theme colors (`:root` variables and the classes compiled from them), the
+ * grays and palette colors classes, the body, input and "active" component
+ * colors. A value the compiled CSS does not declare is returned empty.
+ *
+ * @param {(name: string) => {r, g, b, a}|null} getColor the resolved color of
+ *        a palette, theme or gray color name
+ * @param {Object[]} presets the 5 color presets (see
+ *        `computeColorPresetPreview`)
+ * @param {Object} options
+ * @param {number} options.minContrastRatio
+ * @param {string[]} options.themeColorNames the compiled theme colors
+ * @param {boolean} options.isFullLayout
+ * @returns {Object<string, string>}
+ */
+export function computeColorSystemPreview(getColor, presets, options) {
+    const grays = Object.fromEntries(
+        ["white", 100, 200, 300, 400, 500, 600, 700, 800, 900, "black"].map((name) => [
+            name,
+            getColor(`${name}`),
+        ])
+    );
+    const themeColors = Object.fromEntries(
+        options.themeColorNames.map((name) => [name, getColor(name)])
+    );
+    const bodyBg = presets[0].bg;
+    const constants = {
+        bodyBg,
+        contrastLight: grays.white,
+        contrastDark: grays[900],
+        white: grays.white,
+        black: grays.black,
+        minContrastRatio: options.minContrastRatio,
+        primary: themeColors.primary,
+        secondary: themeColors.secondary,
+    };
+    const bodyColor = presets[0].text || colorContrast(bodyBg, constants);
+    const env = {
+        constants,
+        grays,
+        isDarkPalette: isSameColor(colorContrast(bodyColor, constants), constants.contrastDark),
+        btnBackgrounds: { primary: presets[0]["btn-primary"], secondary: presets[0]["btn-secondary"] },
+        btnBorders: {
+            primary: presets[0]["btn-primary-border"],
+            secondary: presets[0]["btn-secondary-border"],
+        },
+    };
+    const values = { colors: "1" };
+    presets.forEach((preset, i) =>
+        Object.assign(values, computeColorPresetPreview(i + 1, preset, constants))
+    );
+    for (const [name, color] of Object.entries(themeColors)) {
+        Object.assign(values, prefixValues("", themeColorValues(name, color, env)));
+    }
+    for (let index = 1; index <= 9; index++) {
+        const gray = grays[index * 100];
+        Object.assign(values, prefixValues(`bg-${index * 100}-`, bgVariant(gray, constants)));
+        Object.assign(values, prefixValues("", {
+            [index * 100]: gray,
+            [`text-${index * 100}-hover`]: adjustLightness(gray, -20),
+        }));
+    }
+    for (let index = 1; index <= 5; index++) {
+        const color = getColor(`o-color-${index}`);
+        Object.assign(values, prefixValues(`bg-o-color-${index}-`, bgVariant(color, constants)));
+        Object.assign(values, prefixValues("", {
+            [`o-color-${index}`]: color,
+            [`text-o-color-${index}-hover`]: adjustLightness(color, -20),
+        }));
+    }
+    // `$component-active-bg` and the root variables not compiled per color.
+    const componentActiveBg = presets[0]["btn-primary"] || themeColors.primary;
+    const tertiaryBg = mix(colorContrast(bodyBg, constants), bodyBg, 10);
+    const inputBg = getColor("input") || bodyBg;
+    const bodyFill = options.isFullLayout ? bodyBg : getColor("body");
+    Object.assign(values, prefixValues("", {
+        "component-active-bg": componentActiveBg,
+        "component-active-color": colorContrast(componentActiveBg, constants),
+        "focus-ring-color": { ...themeColors.primary, a: 0.25 },
+        "form-valid-color": themeColors.success,
+        "form-invalid-color": themeColors.danger,
+        "secondary-color": { ...bodyColor, a: 0.75 },
+        "secondary-color-rgb": toRgb(bodyColor),
+        "tertiary-color": { ...bodyColor, a: 0.5 },
+        "tertiary-color-rgb": toRgb(bodyColor),
+        "secondary-bg": grays[200],
+        "secondary-bg-rgb": toRgb(grays[200]),
+        "tertiary-bg": tertiaryBg,
+        "tertiary-bg-rgb": toRgb(tertiaryBg),
+        "body-fill": bodyFill && opaque(WHITE, bodyFill),
+        "input-bg": inputBg,
+        "input-color": bodyColor,
+    }));
+    return values;
 }

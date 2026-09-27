@@ -62,7 +62,7 @@
         </BuilderRow>
         <BuilderRow label.translate="Background" level="1" t-if="!this.isActiveItem('layout_full_opt')">
             <BuilderColorPicker enabledTabs="['solid', 'custom']"
-                action="'customizeWebsiteColor'"
+                action="'previewWebsiteColor'" preview="true"
                 actionParam="'body'"/>
         </BuilderRow>
         <BuilderRow label.translate="Image" level="1" t-if="this.isActiveItem('body_bg_image_opt')">
@@ -93,10 +93,10 @@
 <t t-name="website.ThemeParagraphOption">
     <BuilderContext preview="false">
         <BuilderRow label.translate="Font Size">
-            <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'font-size-base'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
+            <BuilderNumberInput action="'previewWebsiteFontSize'" actionParam="'font-size-base'" preview="true" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'small-font-size'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
+                    <BuilderNumberInput action="'previewWebsiteFontSize'" actionParam="'small-font-size'" preview="true" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
                 </BuilderRow>
             </t>
         </BuilderRow>
@@ -194,7 +194,7 @@
         <BuilderRow label.translate="Background">
             <BuilderColorPicker noTransparency="true"
                 enabledTabs="['solid', 'custom']"
-                action="'customizeWebsiteColor'"
+                action="'previewWebsiteColor'" preview="true"
                 actionParam="'input'"
             />
         </BuilderRow>
