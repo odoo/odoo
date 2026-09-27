@@ -86,7 +86,8 @@ class PosOrderReceipt(models.AbstractModel):
                 data['lot_names'] = ["%s %s" % (lot_label, lot.lot_name) for lot in line.pack_lot_ids]
 
             data['product_uom_name'] = line.product_id.uom_id.name
-            data['price_subtotal_incl'] = self._order_receipt_format_currency(data['price_subtotal_incl'])
+            display_price = data['price_subtotal_incl'] if display_price_incl else data['price_subtotal']
+            data['price_subtotal_incl'] = self._order_receipt_format_currency(display_price)
             data['no_discount_price'] = self._order_receipt_format_currency(line._get_price_no_discount(self.config_id))
 
             # Compute line unit price
