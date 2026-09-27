@@ -265,12 +265,15 @@ class StockRule(models.Model):
 
     def _update_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, line):
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, line.uom_id, rounding_method='HALF-UP')
-        seller = product_id.with_company(company_id)._select_seller(
-            partner_id=line.selected_seller_id.partner_id or line.partner_id,
-            quantity=line.product_qty + procurement_uom_po_qty,
-            date=line.order_id.date_order and line.order_id.date_order.date(),
-            uom_id=line.uom_id,
-            params={'force_uom': values.get('force_uom')})
+        if values.get('supplierinfo_id'):
+            seller = values['supplierinfo_id']
+        else:
+            seller = product_id.with_company(company_id)._select_seller(
+                partner_id=line.selected_seller_id.partner_id or line.partner_id,
+                quantity=line.product_qty + procurement_uom_po_qty,
+                date=line.order_id.date_order and line.order_id.date_order.date(),
+                uom_id=line.uom_id,
+                params={'force_uom': values.get('force_uom')})
 
         price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.sudo().tax_ids, company_id) if seller else line.price_unit
         if price_unit and seller and line.order_id.currency_id and seller.currency_id != line.order_id.currency_id:
