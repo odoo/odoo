@@ -1809,10 +1809,16 @@ class ProductTemplate(models.Model):
                     ("assign", "!=", "manual")
                 ])
 
-            if auto_assign_ribbons:
-                variant = variant or self._get_variant_for_combination(
-                    self._get_first_available_combination()
-                )
+            if auto_assign_ribbons and not variant:
+                if self.allow_out_of_stock_order:
+                    variant = self.env["product.product"].browse(
+                        self._get_first_possible_variant_id()
+                    )
+                else:
+                    variant = next(
+                        (v for v in self.product_variant_ids if not v._is_sold_out()),
+                        self.product_variant_id,
+                    )
             for rb in auto_assign_ribbons:
                 if rb._is_applicable_for(variant, price_vals):
                     return rb
@@ -1929,7 +1935,7 @@ class ProductTemplate(models.Model):
     def _get_first_available_combination(self, necessary_values=None):
         """Override of `product` to return the first combination that has stock."""
         res = super()._get_first_available_combination(necessary_values)
-        if not self.env.context.get("website_id"):
+        if not self.env.context.get("website_id") or self.allow_out_of_stock_order:
             return res
 
         for combination in self._get_possible_combinations(necessary_values):
