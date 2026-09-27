@@ -17,7 +17,6 @@ test("activity assign popover simplest layout", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
-        activity_category: "not_upload_file",
         can_write: true,
         res_id: partnerId,
         res_model: "res.partner",
@@ -43,7 +42,6 @@ test("activity assign popover assign user", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
-        activity_category: "not_upload_file",
         can_write: true,
         res_id: partnerId,
         res_model: "res.partner",
