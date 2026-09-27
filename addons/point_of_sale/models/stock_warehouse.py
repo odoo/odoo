@@ -46,5 +46,6 @@ class Warehouse(models.Model):
     def _create_missing_pos_picking_types(self):
         warehouses = self.env['stock.warehouse'].search([('pos_type_id', '=', False)])
         for warehouse in warehouses:
+            warehouse._create_missing_locations({})
             new_vals = warehouse._create_or_update_sequences_and_picking_types()
             warehouse.write(new_vals)
