@@ -144,7 +144,7 @@ class PeppolSettingsButtons extends Component {
     async checkCode() {
         // avoid making users click save on the settings
         // and then clicking the confirm button to check the code
-        await this._callConfigMethod("button_peppol_sender_registration");
+        await this._callConfigMethod("button_register_with_kyc");
     }
 
     async sendCode() {
