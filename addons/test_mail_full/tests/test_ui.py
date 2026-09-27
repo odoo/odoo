@@ -3,6 +3,7 @@
 from urllib.parse import urlencode
 
 from odoo import tests
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail_full.tests.test_portal import TestPortal
 
 
@@ -108,4 +109,29 @@ class TestUIPortal(TestPortal):
         self.start_tour(
             f"/my/test_portal_records/{self.record_portal.id}?token={self.record_portal._portal_ensure_token()}",
             "portal_composer_actions_tour_portal_user",
+        )
+
+    def test_message_highlight(self):
+        self.record_portal_no_partner = self.env['mail.test.portal.no.partner'].create({
+            'name': 'Test Portal Record',
+        })
+        self.record_portal_message = self.env["mail.message"].create(
+            {
+                "author_id": self.user_employee.partner_id.id,
+                "body": "Test Message",
+                "model": self.record_portal_no_partner._name,
+                "res_id": self.record_portal_no_partner.id,
+                "subtype_id": self.ref("mail.mt_comment"),
+            }
+        )
+        self.user_portal = mail_new_test_user(
+            self.env,
+            groups='base.group_portal',
+            login='user_portal',
+        )
+        self.record_portal_no_partner.message_subscribe(partner_ids=[self.user_portal.partner_id.id])
+        self.start_tour(
+            f"/mail/message/{self.record_portal_message.id}",
+            "portal_message_highlight_tour",
+            login=self.user_portal.login,
         )

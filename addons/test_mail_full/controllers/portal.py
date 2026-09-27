@@ -40,3 +40,8 @@ class PortalTest(http.Controller):
     @http.route('/test_portal/public_type/<int:res_id>', type='http', auth='public', methods=['GET'])
     def test_public_record_view(self, res_id):
         return request.make_response(f'Testing public controller for {res_id}')
+
+    @http.route("/my/test_portal_no_partner/<int:res_id>", type="http", auth="public", website=True)
+    def test_no_partner_portal_record_page(self, res_id, **kwargs):
+        record = request.env["mail.test.portal.no.partner"]._get_thread_with_access(res_id, **kwargs)
+        return request.render("test_mail_full.test_portal_template", {"object": record})
