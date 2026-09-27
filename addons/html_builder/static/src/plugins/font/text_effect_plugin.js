@@ -332,17 +332,28 @@ export class TextEffectPlugin extends Plugin {
         this.dependencies.split.splitSelection();
         const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
         this.dependencies.selection.setSelection(selection);
+        const cursors = this.dependencies.selection.preserveSelection();
         const commonAncestor = this.splitForTextEffect(selection);
+        cursors.restore();
         if (!commonAncestor) {
             return {};
         }
-        const { startContainer, endContainer, direction } = selection;
+        const { startContainer, startOffset, endContainer, endOffset, direction } =
+            this.dependencies.selection.getEditableSelection();
 
         const range = new Range();
-        range.setStartBefore(
-            findFurthest(startContainer, commonAncestor, () => true) || startContainer
-        );
-        range.setEndAfter(findFurthest(endContainer, commonAncestor, () => true) || endContainer);
+        if (startContainer === commonAncestor && !isTextNode(startContainer)) {
+            range.setStart(startContainer, startOffset);
+        } else {
+            range.setStartBefore(
+                findFurthest(startContainer, commonAncestor, () => true) || startContainer
+            );
+        }
+        if (endContainer === commonAncestor && !isTextNode(endContainer)) {
+            range.setEnd(endContainer, endOffset);
+        } else {
+            range.setEndAfter(findFurthest(endContainer, commonAncestor, () => true) || endContainer);
+        }
         const span = this.document.createElement("span");
         range.surroundContents(span);
         // Remove text effect inside the span and containing the span (the ancestors have been split so it only contains the span)
