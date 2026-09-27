@@ -721,26 +721,43 @@ $heading-margin-bottoms: map-merge((
     "display-4": $display-4-margin-bottom,
 ), $heading-margin-bottoms);
 
+// The `--o-preview-*` variables are only set while editing, to preview theme
+// values before they are compiled (see `previewWebsiteVariables`). Without
+// them, the compiled value applies.
+//
+// A heading value that is not customized follows the "headings" one, in the
+// preview as after save.
+@function o-heading-preview-value($map-key, $property, $value, $headings-value) {
+    @if not o-website-value('#{$map-key}-#{$property}') and $value == $headings-value {
+        $value: var(--o-preview-headings-#{$property}, #{$value});
+    }
+    @return var(--o-preview-#{$map-key}-#{$property}, #{$value});
+}
+
 h1, h2, h3, h4, h5, h6 {
-    line-height: $headings-line-height;
-    margin-top: $headings-margin-top;
-    margin-bottom: $headings-margin-bottom;
+    line-height: var(--o-preview-headings-line-height, #{$headings-line-height});
+    margin-top: var(--o-preview-headings-margin-top, #{$headings-margin-top});
+    margin-bottom: var(--o-preview-headings-margin-bottom, #{$headings-margin-bottom});
 }
 @each $selector, $map-key in
 ("h2" "h2", "h3" "h3", "h4" "h4", "h5" "h5", "h6" "h6", ".display-1" "display-1",
 ".display-2" "display-2", ".display-3" "display-3", ".display-4" "display-4") {
+    $is-heading-tag: str-slice($selector, 1, 1) != '.';
     #{$selector} {
         @if ($headings-font-family != map-get($heading-font-families, $map-key)) {
             font-family: map-get($heading-font-families, $map-key);
         }
-        @if ($headings-line-height != map-get($heading-line-heights, $map-key)) {
-            line-height: map-get($heading-line-heights, $map-key);
-        }
-        @if ($headings-margin-top != map-get($heading-margin-tops, $map-key)) {
-            margin-top: map-get($heading-margin-tops, $map-key);
-        }
-        @if ($headings-margin-bottom != map-get($heading-margin-bottoms, $map-key)) {
-            margin-bottom: map-get($heading-margin-bottoms, $map-key);
+        @each $property, $values, $headings-value in
+        ('line-height' $heading-line-heights $headings-line-height,
+        'margin-top' $heading-margin-tops $headings-margin-top,
+        'margin-bottom' $heading-margin-bottoms $headings-margin-bottom) {
+            $value: map-get($values, $map-key);
+            // Always set on h2-h6, which get the same value from the rule
+            // above anyway, so that previewing their own value works. Not on
+            // the display classes, which also go on other tags.
+            @if $is-heading-tag or $headings-value != $value {
+                #{$property}: o-heading-preview-value($map-key, $property, $value, $headings-value);
+            }
         }
     }
 }
@@ -753,7 +770,93 @@ h1, h2, h3, h4, h5, h6 {
 
 // Texts
 p {
-    margin-top: $paragraph-margin-top;
+    margin-top: var(--o-preview-paragraph-margin-top, #{$paragraph-margin-top});
+    margin-bottom: var(--o-preview-paragraph-margin-bottom, #{$paragraph-margin-bottom});
+}
+
+// Theme preview of values that Bootstrap and html_editor compile: the same
+// rules again, reading `--o-preview-*` first (see above). Keep the order of
+// the original rules, as they override each other.
+
+@mixin o-preview-rfs($name, $value, $property: font-size) {
+    $val: rfs-value($value);
+    $fluid-val: rfs-fluid-value($value);
+    #{$property}: var(--o-preview-#{$name}, #{$fluid-val});
+    @if $val != $fluid-val {
+        @include _rfs-media-query-rule() {
+            #{$property}: var(--o-preview-#{$name}, #{$val});
+        }
+    }
+}
+
+@mixin o-preview-button-size($suffix, $padding-y, $padding-x, $font-size, $border-radius) {
+    --#{$prefix}btn-padding-y: var(--o-preview-btn-padding-y#{$suffix}, #{$padding-y});
+    --#{$prefix}btn-padding-x: var(--o-preview-btn-padding-x#{$suffix}, #{$padding-x});
+    @include o-preview-rfs('btn-font-size#{$suffix}', $font-size, --#{$prefix}btn-font-size);
+    --#{$prefix}btn-border-radius: var(--o-preview-btn-border-radius#{$suffix}, #{$border-radius});
+}
+.btn {
+    @include o-preview-button-size('', $btn-padding-y, $btn-padding-x, $btn-font-size, $btn-border-radius);
+}
+.btn-lg {
+    @include o-preview-button-size('-lg', $btn-padding-y-lg, $btn-padding-x-lg, $btn-font-size-lg, $btn-border-radius-lg);
+}
+.btn-sm {
+    @include o-preview-button-size('-sm', $btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
+}
+@each $color, $width in $o-btn-outline-border-width-defaults {
+    .btn-#{$color} {
+        border-width: var(--o-preview-btn-#{$color}-outline-border-width, #{$width});
+    }
+}
+
+@mixin o-preview-input-size($suffix, $padding-y, $padding-x, $font-size, $border-radius) {
+    padding: var(--o-preview-input-padding-y#{$suffix}, #{$padding-y}) var(--o-preview-input-padding-x#{$suffix}, #{$padding-x});
+    @include o-preview-rfs('input-font-size#{$suffix}', $font-size);
+    @include border-radius(var(--o-preview-input-border-radius#{$suffix}, #{$border-radius}), 0);
+}
+.form-control {
+    @include o-preview-input-size('', $input-padding-y, $input-padding-x, $input-font-size, $input-border-radius);
+    // Side-specific widths that differ from the global one are set with
+    // `!important` in `bootstrap_overridden.scss`.
+    @each $side, $width in (top: $input-border-top-width, right: $input-border-right-width, bottom: $input-border-bottom-width, left: $input-border-left-width) {
+        border-#{$side}-width: var(--o-preview-input-border-#{$side}-width, #{$width or $input-border-width});
+    }
+}
+.form-control-sm {
+    @include o-preview-input-size('-sm', $input-padding-y-sm, $input-padding-x-sm, $input-font-size-sm, $input-border-radius-sm);
+}
+.form-control-lg {
+    @include o-preview-input-size('-lg', $input-padding-y-lg, $input-padding-x-lg, $input-font-size-lg, $input-border-radius-lg);
+}
+.form-control-color {
+    padding: var(--o-preview-input-padding-y, #{$input-padding-y});
+}
+
+// The fluid (rfs) font sizes still apply without preview; a previewed size is
+// the desktop one at all widths.
+@each $selector, $name, $value in
+("h1, .h1" 'h1-font-size' $h1-font-size, "h2, .h2" 'h2-font-size' $h2-font-size,
+"h3, .h3" 'h3-font-size' $h3-font-size, "h4, .h4" 'h4-font-size' $h4-font-size,
+"h5, .h5" 'h5-font-size' $h5-font-size, "h6, .h6" 'h6-font-size' $h6-font-size) {
+    #{$selector} {
+        @include o-preview-rfs($name, $value);
+    }
+}
+@for $index from 1 through 4 {
+    .display-#{$index} {
+        @include o-preview-rfs('display-#{$index}-font-size', map-get($display-font-sizes, $index));
+    }
+}
+@for $index from 1 through 4 {
+    .display-#{$index}-fs {
+        @include o-preview-rfs('display-#{$index}-font-size', map-get($display-font-sizes, $index));
+    }
+}
+@each $index, $value in (1: $h1-font-size, 2: $h2-font-size, 3: $h3-font-size, 4: $h4-font-size, 5: $h5-font-size, 6: $h6-font-size) {
+    .h#{$index}-fs {
+        @include o-preview-rfs('h#{$index}-font-size', $value);
+    }
 }
 
 font[style*='background']:not(.text-gradient),

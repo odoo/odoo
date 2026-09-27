@@ -73,6 +73,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             CustomizeWebsiteVariableAction,
             PreviewWebsiteVariableAction,
             CustomizeWebsiteSubVariablesAction,
+            PreviewWebsiteSubVariablesAction,
             CustomizeWebsiteColorAction,
             SwitchThemeAction,
             AddLanguageAction,
@@ -192,14 +193,17 @@ export class CustomizeWebsitePlugin extends Plugin {
         }
     }
     /**
-     * Previews website variables by overriding their CSS variables inline on
-     * the iframe root, where both the compiled CSS and
-     * `getWebsiteVariableValue` read them. The SCSS customization is only
-     * written on save. Only works for variables the compiled CSS consumes
-     * through `var()`.
+     * Previews website variables inline on the iframe root, under two names:
+     * - `--<name>` overrides the printed value, which `getWebsiteVariableValue`
+     *   and CSS already reading it through `var()` use;
+     * - `--o-preview-<name>` is read by the rules that otherwise use the
+     *   compiled value (`var(--o-preview-<name>, <compiled value>)`). It only
+     *   exists while editing, so the saved site renders exactly the compiled
+     *   CSS.
+     * The SCSS customization is only written on save.
      *
-     * A reset (empty value) removes the override, so it shows the last saved
-     * value rather than the default until save.
+     * A reset (empty value or `nullValue`) removes the override, so it shows
+     * the last saved value rather than the default until save.
      *
      * @param {Object<string, string>} variables
      * @param {string} [nullValue="null"]
@@ -211,11 +215,9 @@ export class CustomizeWebsitePlugin extends Plugin {
             this.pendingVariables[name],
             style.getPropertyValue(`--${name}`),
         ]);
-        const nextState = Object.entries(variables).map(([name, value]) => [
-            name,
-            value || nullValue,
-            value || "",
-        ]);
+        const nextState = Object.entries(variables).map(([name, value]) =>
+            value && value !== nullValue ? [name, value, value] : [name, nullValue, ""]
+        );
         // Staged as a custom mutation because the root is outside the
         // observed editable: this is what reverts hover previews and undo.
         this.dependencies.domObserver.applyCustomMutation({
@@ -231,10 +233,12 @@ export class CustomizeWebsitePlugin extends Plugin {
             } else {
                 this.pendingVariables[name] = pendingValue;
             }
-            if (inlineValue) {
-                style.setProperty(`--${name}`, inlineValue);
-            } else {
-                style.removeProperty(`--${name}`);
+            for (const property of [`--${name}`, `--o-preview-${name}`]) {
+                if (inlineValue) {
+                    style.setProperty(property, inlineValue);
+                } else {
+                    style.removeProperty(property);
+                }
             }
         }
     }
@@ -1060,10 +1064,16 @@ export class CustomizeWebsiteSubVariablesAction extends CustomizeWebsiteVariable
         const currentValue = this._subVariablesValue([variable, ...subVariables]);
         return currentValue;
     }
-    async apply({
-        params: { mainParam: variable, nullValue = "null", subVariablesConfig = {} },
-        value,
-    }) {
+    async apply({ params, value }) {
+        await this.dependencies.customizeWebsite.customizeWebsiteVariables(
+            this.getVariablesToUpdate(params, value),
+            params.nullValue
+        );
+    }
+    getVariablesToUpdate(
+        { mainParam: variable, nullValue = "null", subVariablesConfig = {} },
+        value
+    ) {
         // 1. A single variable with potential sub-variables: update all.
         const variablesToUpdate = [variable, ...(subVariablesConfig[variable] || [])].map(
             (name) => [name, value]
@@ -1079,10 +1089,7 @@ export class CustomizeWebsiteSubVariablesAction extends CustomizeWebsiteVariable
                 this._subVariablesValue(otherSubVariables) === value ? value : nullValue,
             ]);
         }
-        await this.dependencies.customizeWebsite.customizeWebsiteVariables(
-            Object.fromEntries(variablesToUpdate),
-            nullValue
-        );
+        return Object.fromEntries(variablesToUpdate);
     }
     /**
      * Returns the shared value of a list of CSS variables, or `null`
@@ -1098,6 +1105,18 @@ export class CustomizeWebsiteSubVariablesAction extends CustomizeWebsiteVariable
             return values[0];
         }
         return null;
+    }
+}
+
+export class PreviewWebsiteSubVariablesAction extends CustomizeWebsiteSubVariablesAction {
+    static id = "previewWebsiteSubVariables";
+    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
+    setup() {}
+    apply({ params, value }) {
+        this.dependencies.customizeWebsite.previewWebsiteVariables(
+            this.getVariablesToUpdate(params, value),
+            params.nullValue
+        );
     }
 }
 
