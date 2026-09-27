@@ -3,6 +3,7 @@ import re
 import uuid
 
 from lxml import etree, html
+from markupsafe import escape
 
 from odoo import api, models
 from odoo.tools import xml_translate
@@ -287,7 +288,7 @@ class WebsiteHTMLTextProcessor(models.AbstractModel):
                     f'</{tag}>',
                 )
                 for el in wrapping_html
-                for tag, attrs in [(el["tag"], " ".join([f'{k}="{v}"' for k, v in el["attr"].items()]))]
+                for tag, attrs in [(el["tag"], " ".join([f'{k}="{escape(v)}"' for k, v in el["attr"].items()]))]
             ]
             opening_tags, closing_tags = zip(*tags)
             wrapping_pattern = f'{"".join(opening_tags)}$0{"".join(closing_tags[::-1])}'
@@ -337,7 +338,7 @@ class WebsiteHTMLTextProcessor(models.AbstractModel):
 
             tag = hashes_to_tags_and_attributes[hash_value]['tag']
             attr = hashes_to_tags_and_attributes[hash_value]['attr']
-            attr_string = (" " + " ".join([f'{key}="{value}"' for key, value in attr.items()])) if attr else ''
+            attr_string = (" " + " ".join([f'{key}="{escape(value)}"' for key, value in attr.items()])) if attr else ''
 
             # Handle self-closing tag if content is "0"
             if content == "0":
