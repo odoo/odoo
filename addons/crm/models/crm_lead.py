@@ -146,7 +146,7 @@ class Lead(models.Model):
         help="Classify and analyze your lead/opportunity categories like: Training, Service")
     color = fields.Integer('Color Index', default=0)
     # Revenues
-    expected_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
+    expected_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True, default=0.0)
     prorated_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_prorated_revenue")
     recurring_revenue = fields.Monetary('Recurring Revenues', currency_field='company_currency', tracking=True)
     recurring_plan = fields.Many2one('crm.recurring.plan', string="Recurring Plan")
