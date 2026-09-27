@@ -1542,7 +1542,10 @@ class MyInvoisDocument(models.Model):
             elif document.myinvois_state == 'received' and data['status'] == 'cancelled':
                 cancelled_documents |= document
         if cancelled_documents:
-            cancelled_documents._myinvois_set_state('cancelled', self.env._("The supplier cancelled this document on MyInvois."))
+            cancelled_documents._myinvois_log_message(self.env._("The supplier cancelled this document on MyInvois."))
+            cancelled_documents.myinvois_state = 'cancelled'
+            # A posted bill may already be paid: cancelling it would silently undo its reconciliation.
+            cancelled_documents.invoice_ids.filtered(lambda bill: bill.state == 'draft').button_cancel()
 
         if not new_documents_data:
             return self.env['account.move']

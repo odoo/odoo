@@ -140,21 +140,25 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
     @freeze_time('2024-08-15 10:00:00')
     def test_sync_again(self):
         """ Syncing a month again only imports the new documents, and reflects the cancellations of the supplier. """
-        self._sync([[self._document_data('DOC1'), self._document_data('DOC2')]])
-        bills = self._get_received_bills(['DOC1', 'DOC2'])
+        self._sync([[self._document_data('DOC1'), self._document_data('DOC2'), self._document_data('DOC4')]])
+        bills = self._get_received_bills(['DOC1', 'DOC2', 'DOC4'])
+        bills.filtered(lambda b: b.ref == 'IV-DOC4').action_post()
 
         action, _calls = self._sync([[
             self._document_data('DOC1'),
             self._document_data('DOC2', status='cancelled'),
+            # A posted bill may be paid already: it is left to the user.
+            self._document_data('DOC4', status='cancelled'),
             # Cancelled before we ever saw it: there is nothing to pay.
             self._document_data('DOC3', status='cancelled'),
         ]])
 
         self.assertEqual(action['tag'], 'display_notification')
-        self.assertEqual(self._get_received_bills(['DOC1', 'DOC2', 'DOC3']), bills)
+        self.assertEqual(self._get_received_bills(['DOC1', 'DOC2', 'DOC3', 'DOC4']), bills)
         self.assertRecordValues(bills.sorted('ref'), [
             {'ref': 'IV-DOC1', 'state': 'draft', 'l10n_my_edi_state': 'received'},
             {'ref': 'IV-DOC2', 'state': 'cancel', 'l10n_my_edi_state': 'cancelled'},
+            {'ref': 'IV-DOC4', 'state': 'posted', 'l10n_my_edi_state': 'cancelled'},
         ])
 
     @freeze_time('2024-08-15 10:00:00')
