@@ -508,14 +508,19 @@ class MrpBom(models.Model):
         """
         exploded_bom_line_ids = []
         subassembly_count = 0
+        visited_boms = set()
 
         def _traverse_bom_line(bom_line):
             nonlocal subassembly_count
             exploded_bom_line_ids.append(bom_line.id)
             if bom_line.child_bom_id:
+                if bom_line.child_bom_id.id in visited_boms:
+                    return
+                visited_boms.add(bom_line.child_bom_id.id)
                 subassembly_count += 1
                 for child_line in bom_line.child_line_ids:
                     _traverse_bom_line(child_line)
+                visited_boms.remove(bom_line.child_bom_id.id)
 
         for bom_line in self.bom_line_ids:
             _traverse_bom_line(bom_line)
