@@ -136,6 +136,29 @@ class TestWorkEntryType(TransactionCase):
         self.assertTrue(copies.code.startswith("MYTEST_"))
         self.assertEqual(self.env['hr.work.entry.type'].search_count([('code', '=', copies.code)]), 1)
 
+    def test_name_search_finds_by_name_or_code(self):
+        """
+        Search should match both the name and the payroll code
+        """
+        absence_type = self.env['hr.work.entry.type'].create({
+            'code': 'ABS',
+            'name': 'Absence Type',
+            'count_as': 'absence',
+            'country_id': False,
+        })
+        working_type = self.env['hr.work.entry.type'].create({
+            'code': 'WORK2',
+            'name': 'Working Time',
+            'count_as': 'working_time',
+            'country_id': False,
+        })
+
+        names = self.env['hr.work.entry.type'].name_search('Absence')
+        self.assertIn(absence_type.id, [result[0] for result in names])
+
+        codes = self.env['hr.work.entry.type'].name_search('WORK2')
+        self.assertIn(working_type.id, [result[0] for result in codes])
+
     def test_get_default_attendance_ids_transfers_work_entry_type(self):
         """ Calendar copies built from a company's calendar must carry over the
         attendances' work_entry_type_id, not just their hours. """
