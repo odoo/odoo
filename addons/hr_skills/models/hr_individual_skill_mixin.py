@@ -269,11 +269,13 @@ class HrIndividualSkillMixin(models.AbstractModel):
         yesterday = fields.Date.today() - relativedelta(days=1)
         to_remove = self.env[self._name]
         to_archive = self.env[self._name]
-        for individual_skill in self:
-            if individual_skill.valid_from >= yesterday or (individual_skill.valid_to and individual_skill.valid_to <= yesterday):
-                to_remove += individual_skill
+
+        for skill in self:
+            if skill.valid_from >= yesterday or (skill.valid_to and skill.valid_to <= yesterday):
+                to_remove += skill
             else:
-                to_archive += individual_skill
+                to_archive += skill
+
         if to_archive:
             overlapping_dict = self._get_overlapping_individual_skill([{
                     f"{self._linked_field_name()}": skill[self._linked_field_name()].id,
@@ -284,14 +286,13 @@ class HrIndividualSkillMixin(models.AbstractModel):
                     "skill_level_id": skill.skill_level_id.id,
                     "is_certification": skill.is_certification
             } for skill in to_archive])
-            new_overlapped_skill_ids = []
+            new_overlapped_skill_ids = self.env[self._name]
             for new_skills in overlapping_dict.values():
-                for new_skill in new_skills:
-                    new_overlapped_skill_ids.append(new_skill['id'])
-            changed_to_remove = to_archive.filtered(lambda ind_skill: ind_skill.id in new_overlapped_skill_ids)
-            to_archive -= changed_to_remove
-            to_remove += changed_to_remove
-        return [[2, skill.id] for skill in to_remove] + [[1, skill.id, {'valid_to': yesterday}] for skill in to_archive]
+                new_overlapped_skill_ids |= new_skills
+            to_archive -= new_overlapped_skill_ids
+            to_remove |= new_overlapped_skill_ids
+        to_archive.with_context(apply_skills=True).write({'valid_to': yesterday})
+        return to_remove.with_context(apply_skills=True).unlink()
 
     def _create_individual_skills(self, vals_list):
         """
@@ -367,13 +368,11 @@ class HrIndividualSkillMixin(models.AbstractModel):
                     fields.Date.from_string(cert.valid_to),
                 )
                 certification_set[key] = cert
+            certification_types = self.env["hr.skill.type"].search([
+                ('id', 'in', [vals["skill_type_id"] for vals in vals_list]),
+                ('is_certification', '!=', False)
+            ]).ids
 
-            certification_types = set(
-                self.env["hr.skill.type"]
-                .browse([vals["skill_type_id"] for vals in vals_list])
-                .filtered("is_certification")
-                .ids
-            )
         for vals in vals_list:
             individual_skill_id = vals.get(self._linked_field_name(), False)
             skill_id = vals["skill_id"]
@@ -412,9 +411,10 @@ class HrIndividualSkillMixin(models.AbstractModel):
 
             vals_to_return.append(vals)
 
-        return skills_to_archive._expire_individual_skills() + [[0, 0, new_create_val] for new_create_val in vals_to_return]
+        skills_to_archive.unlink()
+        return self.with_context(apply_skills=True).create(vals_to_return)
 
-    def _write_individual_skills(self, commands):
+    def _write_individual_skills(self, vals):
         """
         Transform a list of write commands into a list of create, write and unlink commands according to the logic of
         how skills should behave. The relevant logic is as follows:
@@ -428,10 +428,6 @@ class HrIndividualSkillMixin(models.AbstractModel):
         :param commands: list of WRITE commands
         :return: List of CREATE, WRITE, UNLINK commands
         """
-        self_dict = self.grouped('id')
-        result_command = []
-        create_vals = []
-        remove_from_expire = self.env[self._name]
 
         def _get_passive_field_value(field, skill):
             """
@@ -449,89 +445,43 @@ class HrIndividualSkillMixin(models.AbstractModel):
                 return skill[field].ids
             return skill[field]
 
-        for command in commands:
-            ind_skill = self_dict.get(command[1])
-            vals = command[2]
-            if not any(key in vals for key in ["skill_type_id", "skill_id", "skill_level_id", self._linked_field_name()]):
-                result_command.append([1, ind_skill.id, vals])
-                remove_from_expire += ind_skill
-                continue
+        if not set(vals.keys()) & {"skill_type_id", "skill_id", "skill_level_id", self._linked_field_name()}:
+            self.with_context(apply_skills=True).write(vals)
 
+        for skill in self:
             passive_vals = {
-                field: vals.get(field, _get_passive_field_value(field, ind_skill))
-                for field in self._get_passive_fields()
+                    field: vals.get(field, _get_passive_field_value(field, skill))
+                    for field in self._get_passive_fields()
             }
             new_vals = {
-                f'{self._linked_field_name()}': vals.get(self._linked_field_name(), ind_skill[self._linked_field_name()].id),
-                'skill_id': vals.get('skill_id', ind_skill.skill_id.id),
-                'skill_level_id': vals.get('skill_level_id', ind_skill.skill_level_id.id),
-                'skill_type_id': vals.get('skill_type_id', ind_skill.skill_type_id.id),
+                f'{self._linked_field_name()}': vals.get(self._linked_field_name(), skill[self._linked_field_name()].id),
+                'skill_id': vals.get('skill_id', skill.skill_id.id),
+                'skill_level_id': vals.get('skill_level_id', skill.skill_level_id.id),
+                'skill_type_id': vals.get('skill_type_id', skill.skill_type_id.id),
                 **passive_vals,
             }
             skill_type = self.env['hr.skill.type'].browse(new_vals['skill_type_id'])
-            valid_from = vals.get('valid_from', ind_skill.valid_from if skill_type.is_certification else fields.Date.today())
-            valid_to = vals.get('valid_to', ind_skill.valid_to if skill_type.is_certification else False)
+
             new_vals.update({
-                'valid_from': valid_from,
-                'valid_to': valid_to,
+                'valid_from':  vals.get('valid_from', skill.valid_from if skill_type.is_certification else fields.Date.today()),
+                'valid_to': vals.get('valid_to', skill.valid_to if skill_type.is_certification else False),
             })
-            create_vals.append(new_vals)
-        return result_command + (self - remove_from_expire)._expire_individual_skills() + self.env[self._name]._create_individual_skills(create_vals)
+            skill.copy(new_vals)
+            skill.unlink()
+        return True
 
-    def _get_transformed_commands(self, commands, individuals):
-        """
-        Transform a list of ORM commands to fit with the business constraints and preserve the logic of how skills and
-        certifications should behave. The key behaviors are as follows:
+    @api.model_create_multi
+    def create(self, vals_list):
+        if self.env.context.get('apply_skills'):
+            return super().create(vals_list)
+        return self._create_individual_skills(vals_list)
 
-        Skills:
-        1. Only one active skill per `skill_id` is allowed (e.g., one "English" skill per linked_field record).
+    def write(self, vals):
+        if self.env.context.get('apply_skills'):
+            return super().write(vals)
+        return self._write_individual_skills(vals)
 
-        Certifications (`is_certification=True`):
-        1. Multiple certifications with the same `skill_id` and `level_id` are allowed if their date ranges differ (e.g.,
-            "Odoo Certified (2024-01-01 → 2024-12-31)" and "Odoo Certified (2024-06-01 → 2025-05-31)" can coexist.)
-
-        Shared Rules:
-        - Updates always create new records (archiving old ones) rather than in-place writes.
-        - No two records can have all their fields identical.
-        - A skill/certification is active if `valid_to` is unset or in the future.
-        - A skill/certification that is not active is considered archived.
-        - A skill/certification is only deleted if valid_from is from the past 24 hours or it is expired.
-
-        :param commands: list of CREATE, WRITE, and UNLINK commands
-        :param individuals: a recordset of linked_field's model
-        :return: List of CREATE, WRITE, and UNLINK commands
-        """
-        if not commands:
-            return
-        updated_ids = set()
-        updated_commands = []
-        created_values = []
-        unlinked_ids = set()
-        for command in commands:
-            if command[0] == 1:
-                updated_ids.add(command[1])
-                updated_commands.append(command)
-            elif command[0] == 2:
-                unlinked_ids.add(command[1])
-            elif command[0] == 0:
-                if individuals:
-                    for individual in individuals:
-                        individual_command = command[2]
-                        individual_command[self._linked_field_name()] = individual.id
-                        created_values.append(individual_command)
-                else:
-                    created_values.append(command[2])
-        mixed_command_ids = list(updated_ids & unlinked_ids)
-        if mixed_command_ids:
-            # reset updated values
-            updated_ids = set()
-            updated_commands = []
-            for command in commands:
-                if command[1] not in mixed_command_ids and command[0] == 1:
-                    updated_commands.append(command)
-                    updated_ids.append(command[1])
-        # Process individual_skill_ids values
-        unlinked_commands = self.env[self._name].browse(list(unlinked_ids))._expire_individual_skills()
-        updated_commands = self.env[self._name].browse(list(updated_ids))._write_individual_skills(updated_commands)
-        created_commands = self.env[self._name]._create_individual_skills(created_values)
-        return unlinked_commands + updated_commands + created_commands
+    def unlink(self):
+        if self.env.context.get('apply_skills'):
+            return super().unlink()
+        return self._expire_individual_skills()
