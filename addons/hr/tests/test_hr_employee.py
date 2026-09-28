@@ -4,7 +4,7 @@ from psycopg2.errors import UniqueViolation
 
 from odoo.tests import Form, users, HttpCase, tagged, new_test_user
 from odoo.addons.hr.tests.common import TestHrCommon
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, split_every
 from odoo.exceptions import ValidationError
 
 class TestHrEmployee(TestHrCommon):
@@ -425,24 +425,21 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(employee_norbert.avatar_1920, user_norbert.avatar_1920)
 
     def test_badge_validation(self):
-        # check employee's barcode should be a sequence of digits and alphabets
+        # check employee's barcode should be printable ASCII characters except spaces
         employee = self.env['hr.employee'].create({
             'name': 'Badge Employee'
         })
 
         employee_form = Form(employee)
-        employee_form.barcode = 'Test@badge1'
-        with self.assertRaises(ValidationError):
-            employee_form.save()
-
-        employee_form.barcode = 'Testàë@badge'
-        with self.assertRaises(ValidationError):
-            employee_form.save()
-
-        employee_form.barcode = 'Testbadge2'
+        employee_form.barcode = 'Test@badge_1'
         employee_form.save()
 
-        self.assertEqual(employee_form.barcode, 'Testbadge2')
+        self.assertEqual(employee_form.barcode, 'Test@badge_1')
+
+        for invalid_barcode in ('Testàë@badge', 'Test badge', ' Testbadge', 'Testbadge ', 'Testbadge\n', 'A' * 19):
+            with self.subTest(barcode=invalid_barcode), self.assertRaises(ValidationError):
+                employee_form.barcode = invalid_barcode
+                employee_form.save()
 
     def test_is_flexible(self):
         employee = self.env['hr.employee'].create({
@@ -488,6 +485,33 @@ class TestHrEmployee(TestHrCommon):
         self.assertTrue(days)
         self.assertFalse(days['2025-01-04'])
 
+    def test_copy_cache_from_alignment(self):
+        EXPORT_BATCH_SIZE = 3
+        joe, harrison, miles, chris = self.env['hr.employee'].create([
+            {'name': 'Joe'},
+            {'name': 'Harrison'},
+            {'name': 'Miles'},
+            {'name': 'Chris'}])
+        departments = self.env['hr.department'].create([
+            {'name': 'Department 1', 'manager_id': joe.id},
+            {'name': 'Department 2', 'manager_id': harrison.id},
+            {'name': 'Department 3', 'manager_id': miles.id},
+            {'name': 'Department 4', 'manager_id': chris.id},
+            {'name': 'Department 5', 'manager_id': joe.id}])
+        user = self.env['res.users'].create({
+            'name': "User",
+            'login': "user@example.com",
+            'email': "user@example.com",
+            'groups_id': [(6, 0, (self.env.ref('base.group_user') + self.env.ref('base.group_allow_export')).ids)]
+        })
+        rows = []
+        for batch in split_every(EXPORT_BATCH_SIZE, departments.ids, self.env['hr.department'].with_user(user).browse):
+            rows.extend(batch.export_data(['name', 'manager_id']).get('datas', []))
+
+        self.assertEqual(len(rows), 5)
+        self.assertEqual([row[1] for row in rows], [
+            'Joe', 'Harrison', 'Miles', 'Chris', 'Joe'
+        ])
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeLinks(HttpCase):

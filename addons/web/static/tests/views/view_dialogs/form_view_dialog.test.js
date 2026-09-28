@@ -434,6 +434,7 @@ test("existing record has an expand button", async () => {
     });
     await mountWithCleanup(WebClient);
     getService("dialog").add(FormViewDialog, {
+        expandedFormRef: "test_partner_form_view",
         resModel: "partner",
         resId: 1,
         context: {key: "val"}
@@ -453,6 +454,7 @@ test("existing record has an expand button", async () => {
             [[false, "form"]],
             {
                 key: "val",
+                form_view_ref: "test_partner_form_view",
             },
         ],
     ]);

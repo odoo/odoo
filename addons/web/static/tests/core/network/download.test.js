@@ -1,8 +1,8 @@
-import { after, describe, expect, test } from "@odoo/hoot";
+import { after, describe, expect, test, runAllTimers } from "@odoo/hoot";
 import { Deferred, mockFetch } from "@odoo/hoot-mock";
 import { patchTranslations } from "@web/../tests/web_test_helpers";
 
-import { download } from "@web/core/network/download";
+import { download, downloadFile } from "@web/core/network/download";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 
 describe.current.tags("headless");
@@ -104,4 +104,20 @@ test("handles success download", async () => {
     download({ data: { someKey: "someValue" }, url: "/some_url" });
     await deferred;
     expect.verifySteps(["fetching file", "file downloaded"]);
+});
+
+test("url with an apostrophe is fetched, not turned into a text blob", async () => {
+    patchTranslations();
+
+    const fileUrl = "/web/content/1?filename=file'name.zip&download=true";
+    mockFetch((url) => {
+        expect.step(url);
+        return new Response(new Blob(["zip"], { type: "application/zip" }), {
+            headers: { "Content-Disposition": "attachment; filename*=UTF-8''file%27name.zip" },
+        });
+    });
+
+    downloadFile(fileUrl);
+    await runAllTimers();
+    expect.verifySteps([fileUrl]);
 });

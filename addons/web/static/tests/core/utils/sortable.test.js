@@ -387,6 +387,67 @@ test("draggable area contains overflowing visible elements", async () => {
     expect(".item.o_dragged").toHaveCount(0);
 });
 
+test("draggable area contains overflowing visible elements (RTL)", async () => {
+    class List extends Component {
+        static props = ["*"];
+        static template = xml`
+                <div class="controller" style="max-width: 900px; min-width: 900px; direction: rtl;">
+                    <div class="content" style="max-width: 600px;">
+                        <div t-ref="renderer" class="renderer d-flex" style="overflow: visible;">
+                            <div t-foreach="[1, 2, 3]" t-as="c" t-key="c" t-attf-class="list m-0 list{{ c }}">
+                                <div style="min-width: 300px; min-height: 50px;"
+                                    t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-esc="'item' + l + '' + c" t-attf-class="item item{{ l + '' + c }}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        setup() {
+            useSortable({
+                ref: useRef("renderer"),
+                elements: ".item",
+                groups: ".list",
+                connectGroups: true,
+                touchDelay: 0,
+            });
+        }
+    }
+
+    await mountWithCleanup(List);
+
+    const controller = queryFirst(".controller");
+    const content = queryFirst(".content");
+    const renderer = queryFirst(".renderer");
+
+    expect(content).toHaveProperty("scrollLeft", 0);
+    expect(controller).toHaveRect({ width: 900 });
+    expect(content).toHaveRect({ width: 600 });
+    expect(renderer).toHaveRect({ width: 600 });
+    expect(renderer).toHaveProperty("scrollWidth", 900);
+    expect(".item.o_dragged").toHaveCount(0);
+
+    const overflowLeft = renderer.getBoundingClientRect().right - renderer.scrollWidth;
+
+    const { cancel, moveTo } = await contains(".item11").drag();
+
+    // Drag first record of first group to the left
+    await moveTo(".list3 .item:first");
+
+    // Verify that there is no scrolling
+    expect(content).toHaveProperty("scrollLeft", 0);
+    expect(".item.o_dragged").toHaveCount(1);
+
+    // Verify that the dragged element is allowed to go inside the
+    // overflowing part of the draggable container.
+    expect(".item.o_dragged").toHaveRect({ left: overflowLeft });
+    expect(".list3 .item:first").toHaveRect({ left: overflowLeft });
+
+    // Cancel drag
+    await cancel();
+
+    expect(".item.o_dragged").toHaveCount(0);
+});
+
 test("Dynamically disable sortable feature", async () => {
     expect.assertions(3);
 
