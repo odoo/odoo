@@ -32,6 +32,8 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
         # We use demo to register without triggering any api calls.
         cls.proxy_user = cls.env['account_edi_proxy_client.user']._register_proxy_user(cls.company_data['company'], 'l10n_my_edi', 'demo')
         cls.proxy_user.edi_mode = 'test'
+        # Not registered to MyInvois, and not in MYR.
+        cls.other_company_data = cls.setup_other_company(currency_id=cls.env.ref('base.USD').id)
 
     def _document_data(self, uuid, **values):
         """ A received document, as returned by the proxy. """
@@ -187,6 +189,20 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
         bill.invoice_line_ids = [Command.create({'name': 'Delivery', 'quantity': 1, 'price_unit': 400.0, 'tax_ids': []})]
         bill.action_post()
         self.assertEqual(bill.state, 'posted')
+
+    @freeze_time('2024-08-15 10:00:00')
+    def test_sync_uses_the_company_of_the_journal(self):
+        """ The documents synced are the ones of the company the bills are created in. """
+        wizard = self.env['myinvois.document.sync.wizard'].create({
+            'month': '2024-07-01',
+            'journal_id': self.other_company_data['default_journal_purchase'].id,
+        })
+        with (
+            patch(CONTACT_PROXY_METHOD) as mock_contact_proxy,
+            self.assertRaisesRegex(UserError, 'register for the E-Invoicing service'),
+        ):
+            wizard.button_sync()
+        mock_contact_proxy.assert_not_called()
 
     @freeze_time('2024-08-15 10:00:00')
     def test_sync_error(self):
