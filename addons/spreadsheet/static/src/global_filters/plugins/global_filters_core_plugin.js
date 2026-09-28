@@ -1,12 +1,10 @@
 /** @ts-check */
 
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
-import {
-    checkFilterDefaultValueIsValid,
-    globalFieldMatchingRegistry,
-} from "@spreadsheet/global_filters/helpers";
+import { checkFilterDefaultValueIsValid } from "@spreadsheet/global_filters/helpers";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
+import { corePlugins, Registry } from "@odoo/o-spreadsheet";
 
 /**
  * @typedef {import("@spreadsheet").GlobalFilter} GlobalFilter
@@ -20,11 +18,14 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
         "getGlobalFilters",
         "getGlobalFilterDefaultValue",
         "getFieldMatchingForModel",
+        "getGlobalFieldMatchingRegistry",
     ]);
+    static dependencies = [corePlugins.CellPlugin];
     constructor(config) {
         super(config);
         /** @type {Array.<GlobalFilter>} */
         this.globalFilters = [];
+        this.globalFieldMatchingRegistry = new Registry();
     }
 
     /**
@@ -169,6 +170,15 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
     }
 
     /**
+     * Registry of the data sources (pivot, list, chart) that can be matched
+     * with a global filter. It is specific to this model: each data source
+     * plugin registers its own accessors in it.
+     */
+    getGlobalFieldMatchingRegistry() {
+        return this.globalFieldMatchingRegistry;
+    }
+
+    /**
      * Returns the field matching for a given model by copying the matchings of another DataSource that
      * share the same model, including only the chain and type.
      *
@@ -180,17 +190,13 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
             return {};
         }
 
-        for (const matcher of globalFieldMatchingRegistry.getAll()) {
-            for (const dataSourceId of matcher.getIds(this.getters)) {
-                const model = matcher.getModel(this.getters, dataSourceId);
+        for (const matcher of this.globalFieldMatchingRegistry.getAll()) {
+            for (const dataSourceId of matcher.getIds()) {
+                const model = matcher.getModel(dataSourceId);
                 if (model === newModel) {
                     const fieldMatching = {};
                     for (const filter of globalFilters) {
-                        const matchedField = matcher.getFieldMatching(
-                            this.getters,
-                            dataSourceId,
-                            filter.id
-                        );
+                        const matchedField = matcher.getFieldMatching(dataSourceId, filter.id);
                         if (matchedField) {
                             fieldMatching[filter.id] = {
                                 chain: matchedField.chain,
@@ -301,7 +307,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
         for (const sheetId of sheetIds) {
             for (const cell of this.getters.getCells(sheetId)) {
                 if (cell.isFormula) {
-                    const originalContent = cell.compiledFormula.toFormulaString(this.getters)
+                    const originalContent = cell.compiledFormula.toFormulaString(this.getters);
                     const newContent = originalContent.replace(
                         new RegExp(`FILTER\\.VALUE\\(\\s*"${currentLabel}"\\s*\\)`, "g"),
                         `FILTER.VALUE("${newLabel}")`

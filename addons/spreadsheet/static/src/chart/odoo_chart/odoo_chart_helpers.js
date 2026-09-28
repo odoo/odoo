@@ -1,7 +1,6 @@
 import { navigateTo } from "@spreadsheet/actions/helpers";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
-import { globalFieldMatchingRegistry } from "@spreadsheet/global_filters/helpers";
 
 const DataSourceViewTypeMap = {
     list: "list",
@@ -160,16 +159,18 @@ export async function navigateToOdooMenu(env, odooMenuId, newWindow) {
 }
 
 export async function navigateToOdooDatasource(env, dataSourceType, dataSourceCoreId, newWindow) {
-    const getters = env.model().getters;
-    const dataSourceFieldMatching = globalFieldMatchingRegistry.get(dataSourceType);
-    if (!dataSourceFieldMatching.getIds(getters).includes(dataSourceCoreId)) {
+    const dataSourceFieldMatching = env
+        .model()
+        .getters.getGlobalFieldMatchingRegistry()
+        .get(dataSourceType);
+    if (!dataSourceFieldMatching.getIds().includes(dataSourceCoreId)) {
         return;
     }
-    const domain = dataSourceFieldMatching.getDomain(getters, dataSourceCoreId);
-    const actionXmlId = dataSourceFieldMatching.getActionXmlId(getters, dataSourceCoreId);
-    const model = dataSourceFieldMatching.getModel(getters, dataSourceCoreId);
-    const name = dataSourceFieldMatching.getDisplayName(getters, dataSourceCoreId);
-    const context = dataSourceFieldMatching.getContext(getters, dataSourceCoreId);
+    const domain = dataSourceFieldMatching.getDomain(dataSourceCoreId);
+    const actionXmlId = dataSourceFieldMatching.getActionXmlId(dataSourceCoreId);
+    const model = dataSourceFieldMatching.getModel(dataSourceCoreId);
+    const name = dataSourceFieldMatching.getDisplayName(dataSourceCoreId);
+    const context = dataSourceFieldMatching.getContext(dataSourceCoreId);
 
     await navigateTo(
         env,

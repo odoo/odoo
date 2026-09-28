@@ -1,5 +1,4 @@
 import { registries } from "@odoo/o-spreadsheet";
-import { globalFieldMatchingRegistry } from "../global_filters/helpers";
 import { _t } from "@web/core/l10n/translation";
 import { navigateToOdooDatasource } from "../chart/odoo_chart/odoo_chart_helpers";
 const { urlRegistry } = registries;
@@ -41,12 +40,12 @@ urlRegistry.add("OdooDataSources", {
     }),
     urlRepresentation(url, getters) {
         const [dsType, dsId] = parseDataSourceUrl(url);
-        const dsFieldMatching = globalFieldMatchingRegistry.get(dsType);
-        const ids = dsFieldMatching.getIds(getters);
+        const dsFieldMatching = getters.getGlobalFieldMatchingRegistry().get(dsType);
+        const ids = dsFieldMatching.getIds();
         if (!ids.includes(dsId)) {
             return _t("Data source deleted");
         }
-        return dsFieldMatching.getDisplayName(getters, dsId);
+        return dsFieldMatching.getDisplayName(dsId);
     },
     open(url, env, newWindow) {
         const [dsType, dsId] = parseDataSourceUrl(url, env, newWindow);
@@ -54,12 +53,12 @@ urlRegistry.add("OdooDataSources", {
     },
     getLinkProposals(env) {
         const proposals = [];
-        const getters = env.model().getters;
-        for (const dataSourceType of globalFieldMatchingRegistry.getKeys()) {
-            const dsFieldMatching = globalFieldMatchingRegistry.get(dataSourceType);
-            for (const dataSourceCoreId of dsFieldMatching.getIds(getters)) {
-                const tag = dsFieldMatching.getTag(getters, dataSourceCoreId);
-                const displayName = dsFieldMatching.getDisplayName(getters, dataSourceCoreId);
+        const registry = env.model().getters.getGlobalFieldMatchingRegistry();
+        for (const dataSourceType of registry.getKeys()) {
+            const dsFieldMatching = registry.get(dataSourceType);
+            for (const dataSourceCoreId of dsFieldMatching.getIds()) {
+                const tag = dsFieldMatching.getTag(dataSourceCoreId);
+                const displayName = dsFieldMatching.getDisplayName(dataSourceCoreId);
                 proposals.push({
                     label: `${tag} - ${displayName}`,
                     url: `${ODOO_DATA_SOURCE_PREFIX}${dataSourceType}/${dataSourceCoreId}`,

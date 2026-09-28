@@ -2,6 +2,8 @@ import { OdooCorePlugin } from "@spreadsheet/plugins";
 
 export class IrMenuPlugin extends OdooCorePlugin {
     static getters = /** @type {const} */ (["getIrMenu"]);
+    static dependencies = [];
+
     constructor(config) {
         super(config);
         this.env = config.custom.env;
