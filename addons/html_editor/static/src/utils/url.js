@@ -1,3 +1,4 @@
+import { browser } from "@web/core/browser/browser";
 import { session } from "@web/session";
 
 const ODOO_DOMAIN_REGEX = new RegExp(`^https?://${session.db}\\.odoo\\.com(/.*)?$`);
@@ -97,4 +98,28 @@ export function isAbsoluteURLInCurrentDomain(url, env = null) {
         // one, is always a bad practice anyway.
         ODOO_DOMAIN_REGEX.test(urlObj.origin)
     );
+}
+
+/**
+ * Get the links of the given readonly content that open in a new tab: the ones
+ * leaving the website, or all of them inside an iframe, where they would
+ * otherwise navigate within it.
+ *
+ * @param {HTMLElement} container
+ * @returns {NodeListOf<HTMLAnchorElement>}
+ */
+export function getLinksToRetarget(container) {
+    const selector =
+        container.ownerDocument === document
+            ? `a:not([href^="${browser.location.origin}"]):not([href^="/"])`
+            : "a";
+    return container.querySelectorAll(selector);
+}
+
+/**
+ * @param {HTMLAnchorElement} link
+ */
+export function retargetLinkToNewTab(link) {
+    link.setAttribute("target", "_blank");
+    link.setAttribute("rel", "noreferrer");
 }
