@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, press, queryFirst, tick } from "@odoo/hoot-dom";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { animationFrame, press, tick } from "@odoo/hoot-dom";
+import { contains as webContains, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 import {
@@ -8,7 +8,6 @@ import {
     click,
     contains,
     defineMailModels,
-    insertText,
     isInViewportOf,
     listenStoreFetch,
     openDiscuss,
@@ -19,6 +18,7 @@ import {
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { PRESENT_VIEWPORT_THRESHOLD } from "@mail/core/common/thread";
 
 describe.current.tags("desktop");
@@ -254,7 +254,7 @@ test("Post message when seeing old message should jump to present", async () => 
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
     await contains("[title='Jump to Present']");
-    await insertText(".o-mail-Composer-input", "Newly posted");
+    await insertTextInComposer(".o-mail-Composer", "Newly posted");
     await press("Enter");
     await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
@@ -326,7 +326,7 @@ test("focus composer after jump to present", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Composer.o-focused");
-    queryFirst(".o-mail-Composer-input").blur();
+    await webContains(".o_navbar").click(); // click away
     await contains(".o-mail-Composer.o-focused", { count: 0 });
     await click("[title='Jump to Present']");
     await contains(".o-mail-Composer.o-focused");

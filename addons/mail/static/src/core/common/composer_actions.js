@@ -16,7 +16,6 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { markEventHandled } from "@web/core/utils/misc";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
@@ -94,9 +93,6 @@ registerComposerAction("add-emoji", {
     disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
     icon: "sentiment_satisfied",
     name: _t("Add Emojis"),
-    onSelected(params, ev) {
-        markEventHandled(ev, "Composer.onClickAddEmoji");
-    },
     setup({ store }) {
         if (store.env.services.ui.isSmall) {
             return;
@@ -114,9 +110,8 @@ registerComposerAction("upload-files", {
     condition: ({ owner }) => owner.allowUpload,
     icon: "attach_file",
     name: _t("Attach Files"),
-    onSelected: ({ composer, owner }, ev) => {
+    onSelected: ({ composer, owner }) => {
         owner.fileUploaderRef()?.click();
-        markEventHandled(ev, "composer.clickOnAddAttachment");
         composer.autofocus++;
     },
     setup: ({ owner }) => (owner.fileUploaderRef = signal.ref()),

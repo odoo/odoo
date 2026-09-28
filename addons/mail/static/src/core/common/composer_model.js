@@ -3,7 +3,6 @@ import {
     convertBrToLineBreak,
     prepareBodyForEditing,
     generatePartnerMentionElement,
-    prettifyMessageText,
 } from "@mail/utils/common/format";
 import { createElementFromContent, getInnerHtml } from "@mail/utils/common/html";
 import { markup } from "@odoo/owl";
@@ -16,43 +15,11 @@ export class Composer extends Record {
     setup() {
         super.setup(...arguments);
         this.onChange(
-            () => [this.composerText],
-            function onChangeComposerText(composerText) {
-                if (this.updateFrom === "html") {
-                    this.updateFrom = undefined;
-                    return;
-                }
-                const validMentions = this.store.getMentionsFromText(composerText, {
-                    mentionedPartners: this.mentionedPartners,
-                    mentionedRoles: this.mentionedRoles,
-                    thread: this.targetThread,
-                });
-                const prettifiedHtml = prettifyMessageText(composerText, {
-                    validMentions,
-                    thread: this.targetThread,
-                    trim: false,
-                });
-                if (this.composerHtml.toString() !== prettifiedHtml.toString()) {
-                    this.updateFrom = "text";
-                    this.composerHtml = prettifiedHtml;
-                }
-            },
-            { immediate: true, initialRun: false }
-        );
-        this.onChange(
             () => [this.composerHtml],
             function onChangeComposerHtml(composerHtml) {
-                if (this.updateFrom === "text") {
-                    this.updateFrom = undefined;
-                    return;
-                }
-                const prettifiedText = isHtmlEmpty(composerHtml)
+                this.composerText = isHtmlEmpty(composerHtml)
                     ? ""
                     : convertBrToLineBreak(composerHtml, { trim: false });
-                if (this.composerText !== prettifiedText) {
-                    this.updateFrom = "html";
-                    this.composerText = prettifiedText;
-                }
             },
             { immediate: true, initialRun: false }
         );
@@ -72,34 +39,35 @@ export class Composer extends Record {
         this.attachments.length = 0;
         this.replyToMessage = undefined;
         this.restoredFromFullComposer = false;
-        if (this.updateFrom === "html") {
-            this.composerHtml = markup("<div class='o-paragraph'><br></div>");
-        } else {
-            this.composerText = "";
-        }
-        Object.assign(this.selection, {
-            start: 0,
-            end: 0,
-            direction: "none",
-        });
+        this.composerHtml = markup("<div class='o-paragraph'><br></div>");
     }
 
     /**
-     * @param {string} text - text to insert
-     * @param {number} position - insertion position
-     * @param {Object} [options]
-     * @param {boolean} [options.moveCursorToEnd=false] - If true, place cursor at end of composerText
+     * Appends plain text on a new line at the end of the content.
+     *
+     * @param {string} text
      */
-    insertText(text, position, { moveCursorToEnd = false } = {}) {
-        const before = this.composerText.substring(0, position);
-        const after = this.composerText.substring(position);
-        this.composerText = before + text + after;
-        this.selection.start = before.length + text.length;
-        if (moveCursorToEnd) {
-            this.selection.start = this.composerText.length;
+    appendText(text) {
+        const composerBody = createElementFromContent(this.composerHtml);
+        const doc = composerBody.ownerDocument;
+        let block = composerBody.lastElementChild;
+        if (!block) {
+            block = doc.createElement("div");
+            block.classList.add("o-paragraph");
+            composerBody.append(block);
         }
-        this.selection.end = this.selection.start;
-        this.forceCursorMove = true;
+        if (isHtmlEmpty(this.composerHtml)) {
+            block.replaceChildren();
+        } else {
+            block.append(doc.createElement("br"));
+        }
+        text.split("\n").forEach((line, index) => {
+            if (index) {
+                block.append(doc.createElement("br"));
+            }
+            block.append(line);
+        });
+        this.composerHtml = getInnerHtml(composerBody);
     }
 
     attachments = fields.Many("ir.attachment");
@@ -111,6 +79,7 @@ export class Composer extends Record {
     mentionedRoles = fields.Many("res.role");
     cannedResponses = fields.Many("mail.canned.response");
     isDirty = false;
+    /** Plain text version of `composerHtml`, kept in sync with it. */
     composerText = "";
     composerHtml = fields.Html(markup("<div class='o-paragraph'><br></div>"), {
         compute() {
@@ -124,24 +93,24 @@ export class Composer extends Record {
         },
     });
     thread = fields.One("mail.thread");
-    /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
-    selection = fields.Attr(
-        {
-            start: 0,
-            end: 0,
-            direction: "none",
-        },
-        { asProxy: true }
-    );
-    /** @type {boolean} */
-    forceCursorMove;
+    /**
+     * Last selection in the editor, as paths from the editable, to restore it
+     * when the editor is re-created with the same content.
+     *
+     * @type {{
+     *  anchorPath: number[],
+     *  anchorOffset: number,
+     *  focusPath: number[],
+     *  focusOffset: number,
+     *  composerHtml: string,
+     * }|undefined}
+     */
+    editorSelection;
     isFocused = false;
     autofocus = 0;
     /** When set, this means the composer content was restored from local storage, and content was saved from full composer */
     restoredFromFullComposer = false;
     replyToMessage = fields.One("mail.message", { inverse: "composerAsReplyToMessage" });
-    /** @type {"text" | "html" | undefined} */
-    updateFrom = undefined;
 
     get syncHtmlWithMessage() {
         return this.message && !this.isDirty;
@@ -154,13 +123,6 @@ export class Composer extends Record {
     /** @param {import("models").Message} message */
     insertReplyFromNote(message) {
         this.mentionedPartners.add(message.author);
-        if (!this.store.env.services["mail.composer"].htmlEnabled) {
-            const mentionText = `@${message.authorName} `;
-            if (!this.composerText.includes(mentionText)) {
-                this.insertText(mentionText, 0, { moveCursorToEnd: true });
-            }
-            return;
-        }
         const composerBody = createElementFromContent(this.composerHtml);
         if (
             composerBody.querySelector(

@@ -17,4 +17,12 @@ patch(ChatWindow.prototype, {
     getActionComponent(params) {
         return getCallActionComponent(params) ?? super.getActionComponent(params);
     },
+    onKeydown(ev) {
+        if (ev.key === "Escape" && this.rtc.isFullscreen) {
+            // The chat window is covered by the meeting view, which handles escape. Focus may
+            // remain in the chat window when its composer holds the document selection.
+            return;
+        }
+        return super.onKeydown(...arguments);
+    },
 });
