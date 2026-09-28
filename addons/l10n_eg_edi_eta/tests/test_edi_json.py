@@ -939,3 +939,33 @@ class TestEdiJson(TestEGEdiCommon):
                     'response': ETA_TEST_RESPONSE,
                 },
             )
+
+    def test_10_debit_note_document_type(self):
+        with freeze_time(self.frozen_today), patch(
+            'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',
+            new=mocked_action_post_sign_invoices,
+        ), patch(
+            'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
+            new=mocked_l10n_eg_edi_post_invoice_web_service,
+        ):
+            invoice = self.create_invoice(
+                partner_id=self.partner_a.id,
+                invoice_line_ids=[
+                    {
+                        'product_id': self.product_a.id,
+                        'price_unit': 100.0,
+                        'quantity': 1.0,
+                        'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                        'tax_ids': [Command.set(self.env.ref(f'account.{self.env.company.id}_eg_standard_sale_14').ids)],
+                    },
+                ],
+            )
+            invoice.action_post()
+
+            debit_note = self._create_debit_note(invoice, post=True, reason='Price correction')
+            debit_note.action_post_sign_invoices()
+
+            generated_files = self._process_documents_web_services(debit_note, {'eg_eta'})
+            self.assertTrue(generated_files)
+            json_file = json.loads(generated_files[0])
+            self.assertEqual(json_file['request']['documentType'], 'd')
