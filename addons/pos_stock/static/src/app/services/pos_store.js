@@ -39,15 +39,18 @@ patch(PosStore.prototype, {
         if (values.product_id.tracking === "lot") {
             const productTemplate = values.product_id.product_tmpl_id;
             const related_lines = [];
-            const price = productTemplate.getPrice(
-                order.pricelist_id,
-                values.qty,
-                values.price_extra,
-                false,
-                values.product_id,
-                selectedOrderline,
-                related_lines
-            );
+            const isDifferentUom =
+                selectedOrderline.product_uom_id.id !== productTemplate.uom_id.id;
+            const price =
+                productTemplate.getPrice(
+                    order.pricelist_id,
+                    values.qty,
+                    values.price_extra,
+                    false,
+                    values.product_id,
+                    selectedOrderline,
+                    related_lines
+                ) * (isDifferentUom ? selectedOrderline.product_uom_id.relative_factor : 1);
             related_lines
                 .filter((line) => line.price_type !== "manual")
                 .forEach((line) => line.setUnitPrice(price));

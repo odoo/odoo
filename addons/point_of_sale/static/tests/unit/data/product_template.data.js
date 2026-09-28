@@ -36,6 +36,7 @@ export class ProductTemplate extends models.ServerModel {
             "pos_optional_product_ids",
             "sequence",
             "product_tag_ids",
+            "uom_ids",
         ];
     }
 
