@@ -228,6 +228,12 @@ class MyInvoisDocument(models.Model):
         readonly=True,
     )
 
+    # Two syncs running at the same time cannot see the documents the other one is importing.
+    _received_document_uuid_unique = models.UniqueIndex(
+        "(myinvois_external_uuid) WHERE is_received_document",
+        "This document was already received from MyInvois.",
+    )
+
     def init(self):
         super().init()
         self.env.cr.execute("""
@@ -1531,7 +1537,8 @@ class MyInvoisDocument(models.Model):
         }.values())
         # Branches share the TIN of their parent company, so they receive the same documents. The user may not have
         # the other branches enabled, which must not hide the documents they already imported.
-        existing_documents = self.sudo().search([
+        # Archived documents were imported all the same.
+        existing_documents = self.sudo().with_context(active_test=False).search([
             ('is_received_document', '=', True),
             ('myinvois_external_uuid', 'in', [data['uuid'] for data in documents_data]),
             ('company_id', 'child_of', company.root_id.id),
