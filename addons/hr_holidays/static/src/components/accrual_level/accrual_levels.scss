@@ -26,7 +26,7 @@
   }
 
   .o_accrual_input {
-      border-bottom: solid $border-width $border-color;
+      border-bottom: solid var(--border-width) var(--border-color);
   }
 
   .o_form_label {
@@ -45,7 +45,7 @@
     padding: 8px;
     font-weight: $o-font-weight-normal;
     border: solid $border-width $border-color;
-    border-radius: $border-radius;
+    border-radius: var(--border-radius);
     background-color: $o-webclient-background-color;
   }
 }
@@ -97,7 +97,7 @@
   }
 
   .arrow {
-    border: solid $border-color;
+    border: solid var(--border-color);
     border-width: 0 $border-width*2 $border-width*2 0;
     padding: 5px;
     margin-top: -10px - $border-width*2;

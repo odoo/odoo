@@ -243,8 +243,8 @@
 
             --formView-sheet-padding-y: var(--formView-sheet-padding-y-md, #{map-get($spacers, 3)});
             --formView-sheet-margin-x: var(--formView-sheet-margin-x-md, 0);
-            --formView-sheet-border-width: var(--formView-sheet-border-width-md, #{$border-width});
-            --formView-sheet-border-radius: var(--formView-sheet-border-radius-md, #{$border-radius-lg});
+            --formView-sheet-border-width: var(--formView-sheet-border-width-md, var(--border-width));
+            --formView-sheet-border-radius: var(--formView-sheet-border-radius-md, var(--border-radius-lg));
         }
 
         @include media-breakpoint-up(lg) {
@@ -481,7 +481,7 @@
         color: var(--gray-700);
 
         &:not(:empty) {
-            box-shadow: 0 $border-width 0 $o-form-separator-color;
+            box-shadow: 0 var(--border-width) 0 $o-form-separator-color;
         }
 
         &:empty {
@@ -510,7 +510,7 @@
         margin-top: $o-form-spacing-unit * 2;
 
         > .tab-content {
-            border-bottom: 1px solid $border-color;
+            border-bottom: 1px solid var(--border-color);
 
             > .tab-pane {
                 padding: $o-horizontal-padding 0;
@@ -753,7 +753,7 @@
             .oe_subtotal_footer_separator {
                 width: 100%;
                 text-align: right;
-                border-top: 1px solid $border-color;
+                border-top: 1px solid var(--border-color);
                 font-weight: $font-weight-bold;
                 font-size: 1.3em;
             }

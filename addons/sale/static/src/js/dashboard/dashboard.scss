@@ -42,8 +42,8 @@
             }
 
             &.active {
-                outline: $border-width $border-style #{map-get($states, color-active)};
-                outline-offset: $border-width;
+                outline: var(--border-width) var(--border-style) #{map-get($states, color-active)};
+                outline-offset: var(--border-width);
 
                 .o_dashboard_card_data {
                     color: #{map-get($states, color-active)};
@@ -55,7 +55,7 @@
 
 .o_date_filter_wrapper {
     @include media-breakpoint-up(md) {
-        border-right: $border-width $border-style $border-color;
+        border-right: var(--border-width) $border-style $border-color;
         background: transparent !important;
     }
 }

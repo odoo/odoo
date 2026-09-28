@@ -82,13 +82,13 @@
         .o-mail-MessagingMenu-tabIcon {
             background: $o-component-active-bg;
             color: $o-enterprise-action-color;
-            outline: $border-width solid rgba($o-enterprise-action-color, 0.15);
+            outline: var(--border-width) solid rgba($o-enterprise-action-color, 0.15);
             outline-offset: -$border-width;
         }
     }
 
     &:focus-visible {
-        outline: $border-width solid $o-enterprise-action-color !important;
+        outline: var(--border-width) solid $o-enterprise-action-color !important;
     }
 
     .o-mail-MessagingMenu-tabIcon {

@@ -2,7 +2,7 @@
     padding: 0;
 
     tr {
-        border: $border-width solid $border-color;
+        border: var(--border-width) solid $border-color;
         &:hover {
             cursor: pointer;
         }
@@ -14,7 +14,7 @@
 
 .partner-list table { 
     td {
-        border: $border-width solid $border-color;
+        border: var(--border-width) solid $border-color;
         border-style: solid none;
         padding: map-get($spacers, 3);
     }

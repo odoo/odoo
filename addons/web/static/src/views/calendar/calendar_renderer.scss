@@ -1,6 +1,6 @@
 .o_calendar_renderer {
     --o-circle-padding: calc(#{map-get($spacers, 1 )} / 2);
-    --o-cw-border-color: #{$border-color};
+    --o-cw-border-color: var(--border-color);
 
     background-color: $o-view-background-color;
 
@@ -26,7 +26,7 @@
         /* `web/lib/fullcalendar/core/main.css` gives events with links and draggable events a hand mouse pointer, */
         /* but doesn't take into account that events have popovers. */
         cursor: pointer;
-        --fc-event-text-color: #{$body-color};
+        --fc-event-text-color: var(--body-color);
         --fc-event-bg-color: #{$o-view-background-color};
         overflow: hidden;
 
@@ -35,7 +35,7 @@
         }
 
         &:hover {
-            color: $body-color;
+            color: var(--body-color);
 
             &:not(.o_event_dot) .fc-bg {
                 --o-bg-opacity: .35;
@@ -323,7 +323,7 @@
                 @include media-only(screen) {
                     &:after {
                         position: absolute;
-                        top: $border-width;
+                        top: var(--border-width);
                         left: 0;
                         bottom: calc(-1 * var(--fc-timegrid-divider-size, 15px));
                         right: 0;
@@ -405,7 +405,7 @@
                     position: absolute;
                     height: .75rem;
                     width: .75rem;
-                    border: $border-width solid $o-view-background-color;
+                    border: var(--border-width) solid $o-view-background-color;
                     border-radius: var(--border-radius-pill);
                     background-color: var(--o-cw-bg);
                     transform: translate(-50%, -50%);

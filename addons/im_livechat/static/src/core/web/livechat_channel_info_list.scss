@@ -37,19 +37,19 @@
 
     button.active.o-inProgress  {
         --list-group-active-bg: #{rgba($success, .15)};
-        --list-group-active-color: #{$success};
-        --list-group-active-border-color: #{$success};
+        --list-group-active-color: var(--success);
+        --list-group-active-border-color: var(--success);
 
         .o-livechat-LivechatStatusSelection-Label {
             color: var(--list-group-color);
         }
         &.o-livechat-LivechatStatusLabel-icon {
-            color: $success;
+            color: var(--success);
         }
 
         .form-check-input {
-            background-color: $success;
-            border-color: $success;
+            background-color: var(--success);
+            border-color: var(--success);
         }
     }
 
