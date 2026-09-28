@@ -56,6 +56,7 @@
         </ul>
     </li>
     <li t-else="" t-on-click="() => this._onMenuClicked(section)"  t-att-data-menu-xmlid="section.xmlid"
+        class="cursor-pointer"
         t-att-class="{
             'fw-bold text-900 py-3': !isNested,
             'border-top': !isNested &amp;&amp; subMenu_index != 0,
