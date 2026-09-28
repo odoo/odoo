@@ -52,9 +52,6 @@
                     invisible="not (locked or state == 'cancel')"
                 />
             </button>
-            <xpath expr="//widget[@name='discount_menu']" position="attributes">
-                <attribute name="groups" remove="sale.group_discount_per_so_line"/>
-            </xpath>
             <xpath expr="//list//column[@name='sol_qty']" position="before">
                 <field name="is_reward_line" column_invisible="True"/>
             </xpath>

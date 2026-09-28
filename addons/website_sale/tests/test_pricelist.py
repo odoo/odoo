@@ -215,10 +215,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             )
 
     def test_pricelist_combination(self):
-        # Enable discounts to view discount in sale_order
-        self._enable_discounts()
         self.pricelist = self._enable_pricelists()
-        self.env.user.group_ids += self.env.ref("sale.group_discount_per_so_line")
 
         product = self.env["product.product"].create({
             "name": "Super Product",
@@ -482,7 +479,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
 
             frozen_time.move_to(tomorrow + timedelta(seconds=10))
             so._cart_update_line_quantity(line_id=sol.id, quantity=2)
-            self.assertEqual(sol.price_unit, 80.0, "Reduction should be applied")
+            self.assertEqual(sol.discount, 20.0, "Reduction should be applied")
             self.assertEqual(sol.price_total, 160)
 
     def test_pricelist_anonymous_user(self):
