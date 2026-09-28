@@ -1,4 +1,5 @@
 import logging
+import re
 import requests
 
 from markupsafe import Markup
@@ -85,6 +86,11 @@ class ResPartner(models.Model):
             return id_value[:9]
         return False
 
+    def _l10n_fr_pdp_get_flow_10_vat(self):
+        """Return the partner VAT number stripped of the formatting characters allowed in Flow 10 (G2.19)."""
+        self.ensure_one()
+        return re.sub(r"[-. ]", "", self.vat or "")
+
     def _l10n_fr_pdp_get_flow_10_identifier(self):
         """Return the scheme and identifier used for a Flow 10 party."""
         self.ensure_one()
@@ -95,7 +101,7 @@ class ResPartner(models.Model):
         if siren := self._l10n_fr_pdp_get_siren():
             return '0002', siren
 
-        partner_vat = self.vat or ''
+        partner_vat = self._l10n_fr_pdp_get_flow_10_vat()
         if country_code == 'WF' and self.name:
             return '0227', country_code + self.name[:16]
         if (
