@@ -476,28 +476,30 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             {'quantity': 1.0},
         ])
 
-    def test_no_component_consumption_on_lot_removal(self):
+    def test_no_component_unreserve_on_lot_removal(self):
         """
         If we have a manufacturing order (MO) for a product tracked by lot, and we assign a lot number
-        and then unassign it, the components should not be consumed at that point.
+        and then unassign it, the components should not be unreserved at that point.
         """
-        quant = self.create_quant(self.raw_none, 3)
-        quant |= self.create_quant(self.raw_lot, 2)
-        quant |= self.create_quant(self.raw_serial, 1)
-        quant.action_apply_inventory()
+        quant1 = self.create_quant(self.raw_none, 3)
+        quant2 = self.create_quant(self.raw_lot, 2)
+        quant3 = self.create_quant(self.raw_serial, 1)
+        (quant1 | quant2 | quant3).action_apply_inventory()
+        raw_lot = quant2.lot_id
+        raw_serial = quant3.lot_id
         mo = self.create_mo(self.mo_lot_tmpl, self.DEFAULT_TRIGGERS_COUNT)
         mo.action_confirm()
         mo.action_generate_serial()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'quantity': 3.0, 'picked': False},
-            {'quantity': 2.0, 'picked': False},
-            {'quantity': 1.0, 'picked': False},
+            {'quantity': 3.0, 'picked': False, 'lot_ids': []},
+            {'quantity': 2.0, 'picked': False, 'lot_ids': raw_lot.ids},
+            {'quantity': 1.0, 'picked': False, 'lot_ids': raw_serial.ids},
         ])
         mo.action_clear_lot_producing_ids()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'quantity': 0.0, 'picked': False},
-            {'quantity': 0.0, 'picked': False},
-            {'quantity': 0.0, 'picked': False},
+            {'quantity': 3.0, 'picked': False, 'lot_ids': []},
+            {'quantity': 2.0, 'picked': False, 'lot_ids': raw_lot.ids},
+            {'quantity': 1.0, 'picked': False, 'lot_ids': raw_serial.ids},
         ])
 
     def test_consume_post_confirmation_reservation(self):
