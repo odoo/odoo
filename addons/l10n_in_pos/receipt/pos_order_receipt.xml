@@ -29,17 +29,17 @@
             </div>
         </template>
         <template id="l10n_in_pos.pos_order_receipt_header" inherit_id="point_of_sale.pos_order_receipt_header">
-            <span name="ticket" position="after">
+            <td name="ticket" position="after">
                 <span t-if="conditions.get('code_in') and not order['to_invoice']">
                     <t t-if="order['is_refund']">R-</t>INVOICE
                 </span>
                 <span t-elif="conditions.get('code_in') and order['to_invoice']">
                     Tax <t t-if="order['is_refund']">R-</t>Invoice
                 </span>
-            </span>
-            <span name="ticket" position="attributes">
+            </td>
+            <td name="ticket" position="attributes">
                 <attribute name="t-if">not conditions.get('code_in')</attribute>
-            </span>
+            </td>
         </template>
         <template id="l10n_in_pos.pos_orderline_receipt_information" inherit_id="point_of_sale.pos_orderline_receipt_information">
             <div name="extra-info">
