@@ -18,18 +18,22 @@ export class MessagingMenuCallParticipants extends Component {
     toggleFn = toggleFn;
     expanded = signal(false);
     /** Expand / collapse is only offered from 2 participants, a single one is always shown expanded. */
-    canToggle = computed(() => this.channel.rtc_session_ids.length >= 2);
+    canToggle = computed(() => this.props.channel.rtc_session_ids.length >= 2);
     isExpanded = computed(() => !this.canToggle() || this.expanded());
     personas = computed(() =>
         this.sessions.map((session) => session.channel_member_id?.persona).filter(Boolean)
     );
-    selfInCall = computed(() => Boolean(this.rtc.selfSession?.in(this.channel.rtc_session_ids)));
+    selfInCall = computed(() =>
+        Boolean(this.rtc.selfSession?.in(this.props.channel.rtc_session_ids))
+    );
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
-        this.channel = useProps.static("channel", t.instanceOf(this.store["discuss.channel"]));
+        this.props = useProps({
+            channel: t.instanceOf(this.store["discuss.channel"]).static(),
+        });
         useOnChange(
             () => [this.canToggle(), this.selfInCall()],
             (canToggle, selfInCall) => this.expanded.set(selfInCall)
@@ -37,7 +41,7 @@ export class MessagingMenuCallParticipants extends Component {
     }
 
     get sessions() {
-        const sessions = [...this.channel.rtc_session_ids];
+        const sessions = [...this.props.channel.rtc_session_ids];
         return sessions.sort((s1, s2) => {
             const nameDiff = localeCompare(s1.name, s2.name);
             if (nameDiff !== 0) {

@@ -9,12 +9,9 @@ export class Tabs extends Component {
         this.props = useProps({
             direction: t.selection(["h", "v"]).optional("v"),
             initialTabId: t.or([t.string(), t.number()]).optional(),
+            /** Root element, either owned by the parent (`ref` prop) or local. */
+            ref: t.signal(t.ref(), { settable: true }).optional(() => signal.ref()),
         });
-        /** Root element, either owned by the parent (`ref` prop) or local. */
-        this.rootRef = useProps.static(
-            "ref",
-            t.signal(t.ref()).optional(() => signal.ref())
-        );
         this.activeHeaderId = signal(this.props.initialTabId);
         this.headerRefs = useChildRefs();
         this.navRef = signal();

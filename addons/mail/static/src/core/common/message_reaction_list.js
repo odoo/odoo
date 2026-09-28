@@ -1,4 +1,4 @@
-import { propComputed, propSignal, useHover } from "@mail/utils/common/hooks";
+import { useHover } from "@mail/utils/common/hooks";
 import { Component, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -21,12 +21,11 @@ export class MessageReactionList extends Component {
         super.setup(...arguments);
         this.loadEmoji = useLoadEmoji();
         this.store = useService("mail.store");
-        this.message = propSignal("message", t.instanceOf(this.store["mail.message"]));
-        this.openReactionMenu = useProps.static(
-            "openReactionMenu",
-            openReactionMenuType(this.store)
-        );
-        this.reaction = propComputed("reaction", t.instanceOf(this.store.MessageReactions));
+        this.props = useProps({
+            message: t.signal(t.instanceOf(this.store["mail.message"])),
+            openReactionMenu: openReactionMenuType(this.store).static(),
+            reaction: t.signal(t.instanceOf(this.store.MessageReactions)),
+        });
         this.ui = useService("ui");
         this.preview = useDropdownState();
         this.hover = useHover([this.reactionButtonRef, this.reactionPreviewRef], {
@@ -41,7 +40,7 @@ export class MessageReactionList extends Component {
         const { count, content: emoji } = reaction;
         const personNames = reaction.personas
             .slice(0, 3)
-            .map((persona) => this.message().getPersonaName(persona));
+            .map((persona) => this.props.message().getPersonaName(persona));
         const shortcode = emojiLoader.getShortCode(emoji);
         switch (count) {
             case 1:
@@ -114,7 +113,7 @@ export class MessageReactionList extends Component {
     onContextMenu(ev) {
         if (this.ui.isSmall) {
             ev.preventDefault();
-            this.openReactionMenu();
+            this.props.openReactionMenu();
         }
     }
 
@@ -125,6 +124,6 @@ export class MessageReactionList extends Component {
      */
     onClickReactionList(ev, { reactionAtRender }) {
         this.preview.isOpen = false; // closes dropdown immediately as to not recover focus after dropdown closes
-        this.openReactionMenu(reactionAtRender);
+        this.props.openReactionMenu(reactionAtRender);
     }
 }

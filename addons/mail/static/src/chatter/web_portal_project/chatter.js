@@ -1,9 +1,9 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
-import { propComputed, useMessageScrolling } from "@mail/utils/common/hooks";
+import { useMessageScrolling } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, proxy, signal, t, useOnChange } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t, useOnChange, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { router } from "@web/core/browser/router";
@@ -16,13 +16,12 @@ export class Chatter extends Component {
 
     setup() {
         this.store = useService("mail.store");
-        this.composer = propComputed("composer", t.boolean().optional(true));
-        this.threadId = propComputed(
-            "threadId",
-            t.or([t.number(), t.literal(false)]).optional(false)
-        );
-        this.threadModel = propComputed("threadModel", t.string());
-        this.twoColumns = propComputed("twoColumns", t.boolean().optional(false));
+        this.props = useProps({
+            composer: t.signal(t.boolean()).optional(true),
+            threadId: t.signal(t.or([t.number(), t.literal(false)])).optional(false),
+            threadModel: t.signal(t.string()),
+            twoColumns: t.signal(t.boolean()).optional(false),
+        });
         this.thread = signal(null, {
             type: t.instanceOf(this.store["mail.thread"]),
         });
@@ -47,7 +46,7 @@ export class Chatter extends Component {
         onMounted(this._onMounted);
 
         useOnChange(
-            () => [this.threadId(), this.threadModel()],
+            () => [this.props.threadId(), this.props.threadModel()],
             (threadId, threadModel) => this.changeThread(threadModel, threadId),
             { initialRun: false }
         );
@@ -158,7 +157,7 @@ export class Chatter extends Component {
     }
 
     _onMounted() {
-        this.changeThread(this.threadModel(), this.threadId());
+        this.changeThread(this.props.threadModel(), this.props.threadId());
         if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
             if (this.env.chatter) {
                 this.env.chatter.fetchThreadData = false;

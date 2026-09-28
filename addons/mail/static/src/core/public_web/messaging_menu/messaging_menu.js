@@ -33,9 +33,9 @@ export class MessagingMenu extends Component {
 
     isIosPwa = isIOS() && isDisplayStandalone();
     filteredMessages = computed(() => {
-        const filters = [...this.state().activePluginFilters];
-        if (this.state().selectedFilter) {
-            filters.push(this.state().selectedFilter);
+        const filters = [...this.props.state().activePluginFilters];
+        if (this.props.state().selectedFilter) {
+            filters.push(this.props.state().selectedFilter);
         }
         const messages = this.activeTab().sortedMessages;
         return messages.filter((m) =>
@@ -43,7 +43,7 @@ export class MessagingMenu extends Component {
         );
     });
     messages = computed(() => {
-        if (this.state().searchTerm) {
+        if (this.props.state().searchTerm) {
             return this.messageSearch.results;
         }
         return this.filteredMessages();
@@ -57,8 +57,8 @@ export class MessagingMenu extends Component {
         this.messageSearch = useSearch({
             fetch: (term) =>
                 this.activeTab().loadMore({
-                    filter: this.state().selectedFilter,
-                    pluginFilters: this.state().activePluginFilters,
+                    filter: this.props.state().selectedFilter,
+                    pluginFilters: this.props.state().activePluginFilters,
                     searchTerm: term,
                 }),
             filter: (term) =>
@@ -73,29 +73,27 @@ export class MessagingMenu extends Component {
             deps: () => [this.filteredMessages()],
         });
         this.store = useService("mail.store");
-        this.state = useProps.static(
-            "state",
-            types.signal(types.instanceOf(this.store.MessagingMenuUIState))
-        );
-        this.activeTab = computed(() => this.state().activeTab);
-        this.close = useProps.static("close", types.function().optional());
-        this.searchInputAutofocus = useProps.static(
-            "searchInputAutofocus",
-            types.signal(types.number()).optional(() => signal(0))
-        );
-        this.focusSearchInput = incrementFn(this.searchInputAutofocus);
+        this.props = useProps({
+            close: types.function().optional().static(),
+            searchInputAutofocus: types
+                .signal(types.number(), { settable: true })
+                .optional(() => signal(0)),
+            state: types.signal(types.instanceOf(this.store.MessagingMenuUIState)),
+        });
+        this.activeTab = computed(() => this.props.state().activeTab);
+        this.focusSearchInput = incrementFn(this.props.searchInputAutofocus);
         this.ui = useService("ui");
-        // Bound once so `onClickMessage` is a stable (useProps.static) handler.
+        // Bound once so `onClickMessage` is a stable (propStatic) handler.
         this.onClickMessage = this.onClickMessage.bind(this);
         useOnBottomScrolled(this.tabContentRef, () =>
             this.activeTab().loadMore({
-                filter: this.state().selectedFilter,
-                pluginFilters: this.state().activePluginFilters,
+                filter: this.props.state().selectedFilter,
+                pluginFilters: this.props.state().activePluginFilters,
             })
         );
         // On search term change: update the search state.
         useEffect(() => {
-            this.messageSearch.searchTerm = this.state().searchTerm;
+            this.messageSearch.searchTerm = this.props.state().searchTerm;
         });
         this.hasTouch = hasTouch;
     }
@@ -114,7 +112,9 @@ export class MessagingMenu extends Component {
     }
 
     get noSearchResultText() {
-        return this.state().searchTerm ? _t('No results for "%s".', this.state().searchTerm) : "";
+        return this.props.state().searchTerm
+            ? _t('No results for "%s".', this.props.state().searchTerm)
+            : "";
     }
 
     get noFilterResultText() {
@@ -128,9 +128,9 @@ export class MessagingMenu extends Component {
     get showNotificationHubExtras() {
         const menu = this.store.messagingMenu;
         return (
-            !this.state().searchTerm &&
-            !this.state().selectedFilter &&
-            this.state().activeTab.eq(menu.odooBotNotificationsTab)
+            !this.props.state().searchTerm &&
+            !this.props.state().selectedFilter &&
+            this.props.state().activeTab.eq(menu.odooBotNotificationsTab)
         );
     }
 
@@ -150,7 +150,7 @@ export class MessagingMenu extends Component {
     onClickAction(action) {
         action.onClick();
         if (!action.preventDropdownClose) {
-            this.close?.();
+            this.props.close?.();
         }
     }
 
@@ -184,6 +184,6 @@ export class MessagingMenu extends Component {
                 }
                 throw error;
             });
-        this.close?.();
+        this.props.close?.();
     }
 }
