@@ -291,7 +291,5 @@ class ResPartner(models.Model):
         return Domain([
             ('routing_scheme', '!=', False),
             ('routing_endpoint', '!=', False),
-            '|',
-            ('peppol_verification_state', '=', 'valid'),
             ('id', 'in', registered_company_partners.ids),
         ])
