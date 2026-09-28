@@ -485,24 +485,21 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(employee_norbert.avatar_1920, user_norbert.avatar_1920)
 
     def test_badge_validation(self):
-        # check employee's barcode should be a sequence of digits and alphabets
+        # check employee's barcode should be printable ASCII characters except spaces
         employee = self.env['hr.employee'].create({
             'name': 'Badge Employee'
         })
 
         employee_form = Form(employee)
-        employee_form.barcode = 'Test@badge1'
-        with self.assertRaises(ValidationError):
-            employee_form.save()
-
-        employee_form.barcode = 'Testàë@badge'
-        with self.assertRaises(ValidationError):
-            employee_form.save()
-
-        employee_form.barcode = 'Testbadge2'
+        employee_form.barcode = 'Test@badge_1'
         employee_form.save()
 
-        self.assertEqual(employee_form.barcode, 'Testbadge2')
+        self.assertEqual(employee_form.barcode, 'Test@badge_1')
+
+        for invalid_barcode in ('Testàë@badge', 'Test badge', ' Testbadge', 'Testbadge ', 'Testbadge\n', 'A' * 19):
+            with self.subTest(barcode=invalid_barcode), self.assertRaises(ValidationError):
+                employee_form.barcode = invalid_barcode
+                employee_form.save()
 
     def test_departure_wizard(self):
         """ Test the archiving wizard in the case of multiple employees """
