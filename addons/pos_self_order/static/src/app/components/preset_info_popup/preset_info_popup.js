@@ -1,4 +1,4 @@
-import { Component, EventBus, onWillStart, proxy, useProps, signal, t } from "@odoo/owl";
+import { Component, EventBus, proxy, useProps, signal, t } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { Dialog } from "@web/core/dialog/dialog";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
@@ -136,10 +136,6 @@ export class PresetInfoPopup extends Component {
             isSubmitting: false,
         });
         this.addressRecord = this.makeAddressRecord();
-
-        onWillStart(async () => {
-            await this.selfOrder.syncPresetSlotAvaibility(this.preset);
-        });
     }
 
     async setInformations() {
