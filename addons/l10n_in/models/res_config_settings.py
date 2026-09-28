@@ -71,12 +71,10 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_in_composition_tax_rate',
         readonly=False
     )
-    l10n_in_gst_efiling_feature = fields.Boolean(string="GST Reports & E-Filing")
     l10n_in_disable_b2c_hsn_reporting = fields.Boolean(related='company_id.l10n_in_disable_b2c_hsn_reporting', readonly=False)
     l10n_in_fetch_vendor_edi_feature = fields.Boolean(string="Fetch Vendor E-Invoiced Document")
     l10n_in_enet_vendor_batch_payment_feature = fields.Boolean(string="ENet Vendor Batch Payment")
 
-    module_l10n_in_reports = fields.Boolean("GST E-Filing & Matching")
     module_l10n_in_edi = fields.Boolean("Indian Electronic Invoicing")
     module_l10n_in_ewaybill = fields.Boolean("Indian Electronic Waybill")
     module_l10n_in_boe = fields.Boolean("Bill of Entry")
@@ -84,18 +82,8 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         super().set_values()
         if self.country_code == 'IN':
-            if (
-                not self.module_l10n_in_reports
-                and (
-                    self.l10n_in_fetch_vendor_edi_feature
-                    or self.l10n_in_gst_efiling_feature
-                    or self.l10n_in_enet_vendor_batch_payment_feature
-                )
-            ):
-                self.module_l10n_in_reports = True
             for l10n_in_feature in (
                 "l10n_in_fetch_vendor_edi_feature",
-                "l10n_in_gst_efiling_feature",
                 "l10n_in_enet_vendor_batch_payment_feature",
             ):
                 if self[l10n_in_feature]:
@@ -122,7 +110,6 @@ class ResConfigSettings(models.TransientModel):
                 self.module_l10n_in_edi
                 or self.module_l10n_in_ewaybill
                 or self.l10n_in_gstin_status_feature
-                or self.l10n_in_gst_efiling_feature
             )
         ):
             raise ValidationError(_(
