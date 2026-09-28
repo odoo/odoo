@@ -235,9 +235,20 @@ class ResourceCalendarLeaves(models.Model):
         end_date = fields.Date.add(fields.Date.today(), years=1)
         prepared_public_holidays = self._prepare_public_holidays_data(start_date, end_date)['prepared_public_holidays']
         if prepared_public_holidays:
-            create_values = [
-                public_holiday_value
-                for company_data in prepared_public_holidays.values()
-                for public_holiday_value in company_data
-            ]
+            create_values = []
+            for company_id, company_data in prepared_public_holidays.items():
+                company = self.env['res.company'].browse(company_id)
+                company_tz = ZoneInfo(company.tz or self.env.user.tz or 'UTC')
+
+                for public_holiday_value in company_data:
+                    create_values.append({
+                        **public_holiday_value,
+                        'date_from': convert_timezone(
+                            datetime.combine(public_holiday_value['date_from'], time.min), UTC, company_tz,
+                        ),
+                        'date_to': convert_timezone(
+                            datetime.combine(public_holiday_value['date_to'], time.max), UTC, company_tz,
+                        ),
+                    })
+
             self.env['resource.calendar.leaves'].sudo().create(create_values)
