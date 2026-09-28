@@ -37,9 +37,8 @@ export async function renderMedia({
     extraClassesToAdd,
     extraClassesToRemove,
 }) {
-    const elements = await availableTabs[activeTab].Component.createElements(selectedMedia, {
-        orm: orm,
-    });
+    const activeTabComponent = availableTabs[activeTab].Component;
+    const elements = await activeTabComponent.createElements(selectedMedia, { orm: orm });
     elements.forEach((element) => {
         if (oldMediaNode) {
             element.classList.add(...oldMediaNode.classList);
@@ -50,7 +49,10 @@ export async function renderMedia({
         }
         for (const otherTab of Object.keys(availableTabs).filter((key) => key !== activeTab)) {
             for (const property of availableTabs[otherTab].Component.mediaSpecificStyles) {
-                element.style.removeProperty(property);
+                // Remove styles that do not also exist in the target type.
+                if (!activeTabComponent.mediaSpecificStyles.includes(property)) {
+                    element.style.removeProperty(property);
+                }
             }
             element.classList.remove(...availableTabs[otherTab].Component.mediaSpecificClasses);
             const extraClassesToRemove = [];
@@ -69,7 +71,7 @@ export async function renderMedia({
             // Remove classes that do not also exist in the target type.
             element.classList.remove(
                 ...extraClassesToRemove.filter((candidateName) => {
-                    for (const name of availableTabs[activeTab].Component.mediaExtraClasses) {
+                    for (const name of activeTabComponent.mediaExtraClasses) {
                         if (typeof name === "string") {
                             if (candidateName === name) {
                                 return false;
@@ -91,7 +93,7 @@ export async function renderMedia({
         element.classList.remove(...extraClassesToRemove);
         element.classList.remove("o_modified_image_to_save");
         element.classList.remove("oe_edited_link");
-        element.classList.add(...availableTabs[activeTab].Component.mediaSpecificClasses);
+        element.classList.add(...activeTabComponent.mediaSpecificClasses);
     });
     return elements;
 }
