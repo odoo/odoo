@@ -205,6 +205,35 @@ class TestResource(TestHrCommon):
         self.assertEqual(21 * 7 + 21 * 8, attendances['hours'],
             "Attendances should add up multiple contracts with varying work weeks.")
 
+    def test_multi_contract_attendance_timezone(self):
+        """ An employee who relocates keeps the former timezone on the versions
+            covering the former period, since changing the timezone on the
+            employee only writes on the version that is currently running. The
+            attendances of a period must be read in the timezone of the version
+            covering it, not in the one the employee is on today.
+
+            The steps below are the ones performed from the employee form:
+             1. Richard works from Chicago, under the 2021-09-01 to 2021-10-31
+                contract, on the 35h calendar (8:00-12:00, 13:00-16:00);
+             2. a new contract starts on 2021-11-01, carrying the timezone of
+                the previous version over to the new one;
+             3. Richard relocates to Brussels, which only changes the timezone
+                of the version running today.
+        """
+        self.employee.tz = 'America/Chicago'
+        self.employee.create_version(self.contract_cdi_values)
+        self.employee.tz = 'Europe/Brussels'
+
+        # 2021-10-01 is covered only by the 2021-09-01 to 2021-10-31 version.
+        # 13:00 UTC is 08:00 in Chicago and takes the whole working day, but
+        # 15:00 in Brussels, i.e. only the last hour of it.
+        attendances = self.employee._get_calendar_attendances(
+            datetime(2021, 10, 1, 13, tzinfo=UTC),
+            datetime(2021, 10, 1, 23, tzinfo=UTC),
+        )
+        self.assertEqual(attendances['hours'], 7,
+            "Attendances should be read in the timezone of the version covering the period.")
+
     def test_alter_resource_calendar_of_resouce(self):
         self.assertEqual(self.employee.resource_calendar_id, self.employee.resource_id.calendar_id)
         self.assertEqual(self.employee.version_id.resource_calendar_id, self.employee.resource_id.calendar_id)
