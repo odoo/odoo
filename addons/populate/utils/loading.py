@@ -27,6 +27,8 @@ def load_populate(env):
     populate_folder_by_module_name = {}
 
     for module in modules_installed:
+        modules_deps[module.name] = module.dependencies_id.mapped('name')
+
         module_path = get_module_path(module.name)
         if not module_path:
             continue
@@ -35,11 +37,12 @@ def load_populate(env):
         if not populate_folder.is_dir():
             continue
 
-        modules_deps[module.name] = module.dependencies_id.mapped('name')
         populate_folder_by_module_name[module.name] = populate_folder
 
     for module_name in topological_sort(modules_deps):
-        populate_folder = populate_folder_by_module_name[module_name]
+        populate_folder = populate_folder_by_module_name.get(module_name)
+        if not populate_folder:
+            continue
 
         # If it's a valid python module, import it.
         # Allows for modules to define custom generators.
