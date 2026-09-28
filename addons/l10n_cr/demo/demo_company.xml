@@ -2,12 +2,15 @@
 <odoo>
     <record id="base.partner_demo_company_cr" model="res.partner" forcecreate="1">
         <field name="name">CR Company</field>
-        <field name="vat">4000961586</field>
-        <field name="street"/>
-        <field name="city"/>
+        <field name="vat">3101012009</field>
+        <field name="street">Avenida Central, Edificio Torre Mercedes, piso 5</field>
+        <field name="street2">Paseo Colón</field>
+        <field name="l10n_cr_district_id" ref="district_cr_10103"/>
+        <field name="city_id" ref="city_cr_101"/>
+        <field name="city">San José</field>
+        <field name="state_id" ref="base.state_SJ"/>
+        <field name="zip">10103</field>
         <field name="country_id" ref="base.cr"/>
-        <field name="state_id" ref="base.state_L"/>
-        <field name="zip"/>
         <field name="phone">+506 8312 3456</field>
         <field name="email">info@company.crexample.com</field>
         <field name="website">www.crexample.com</field>
