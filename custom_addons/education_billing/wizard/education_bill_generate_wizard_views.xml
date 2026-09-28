@@ -13,7 +13,8 @@
                         <group string="Target Institusi &amp; Kelas">
                             <field name="school_id" options="{'no_create': True}"/>
                             <field name="level" invisible="1"/>
-                            <field name="class_id" options="{'no_create': True}"/>
+                            <field name="target_scope" widget="radio" options="{'horizontal': true}"/>
+                            <field name="class_id" invisible="target_scope != 'class'" required="target_scope == 'class'" options="{'no_create': True}"/>
                             <field name="bill_type" readonly="1"/>
                         </group>
                         <group string="Periode &amp; Tanggal">
@@ -23,9 +24,66 @@
                             <field name="academic_year_id" options="{'no_create': True}" required="1"/>
                             <field name="bill_date"/>
                             <field name="due_date"/>
-                            <field name="auto_publish"/>
+                            <field name="target_state"/>
                         </group>
                     </group>
+
+                    <div class="mt-3 mb-2">
+                        <h6 class="fw-bold text-primary mb-2">
+                            <i class="fa fa-list-alt me-1"/> Daftar Siswa / Mahasiswa yang Akan Ditagih
+                        </h6>
+
+                        <div class="row g-2 mb-2">
+                            <div class="col-md-4">
+                                <div class="p-2 border rounded bg-light d-flex justify-content-between align-items-center">
+                                    <span class="text-muted small">Total Siswa Terdeteksi:</span>
+                                    <span class="fw-bold fs-6"><field name="candidate_count" readonly="1"/> Siswa</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-2 border rounded bg-light d-flex justify-content-between align-items-center">
+                                    <span class="text-muted small">Siap Diterbitkan:</span>
+                                    <span class="fw-bold fs-6 text-success"><field name="ready_count" readonly="1"/> Tagihan</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-2 border rounded bg-light d-flex justify-content-between align-items-center">
+                                    <span class="text-muted small">Estimasi Total Penerimaan:</span>
+                                    <span class="fw-bold fs-6 text-primary"><field name="total_amount_estimated" widget="monetary" readonly="1"/></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2 mb-2 p-2 bg-light border rounded">
+                            <field name="select_all" class="oe_inline"/>
+                            <label for="select_all" string="Pilih Semua Siswa yang Siap Ditagih" class="fw-bold mb-0 text-dark small"/>
+                        </div>
+                    </div>
+
+                    <field name="currency_id" invisible="1"/>
+                    <field name="preview_line_ids" nolabel="1">
+                        <list editable="bottom" create="false" delete="false" 
+                              decoration-muted="state_preview != 'ready'" 
+                              decoration-warning="state_preview == 'already_exists'" 
+                              decoration-danger="state_preview == 'zero_amount'">
+                            <field name="selected"/>
+                            <field name="student_id_number" string="NISN / NIM" readonly="1"/>
+                            <field name="student_name" string="Siswa / Mahasiswa" readonly="1"/>
+                            <field name="class_name" string="Kelas / Rombel" readonly="1"/>
+                            <field name="period_label" string="Periode Tagihan" readonly="1"/>
+                            <field name="amount" widget="monetary" sum="Total Nominal" readonly="1"/>
+                            <field name="parent_name" string="Orang Tua / Wali" readonly="1"/>
+                            <field name="parent_contact" string="No. WhatsApp / HP" readonly="1"/>
+                            <field name="state_preview" widget="badge" 
+                                   decoration-success="state_preview == 'ready'" 
+                                   decoration-warning="state_preview == 'already_exists'" 
+                                   decoration-danger="state_preview == 'zero_amount'" readonly="1"/>
+                            <field name="student_id" column_invisible="True"/>
+                            <field name="class_id" column_invisible="True"/>
+                            <field name="parent_id" column_invisible="True"/>
+                            <field name="currency_id" column_invisible="True"/>
+                        </list>
+                    </field>
                 </sheet>
                 <footer>
                     <button name="action_generate_bills" string="Generate Tagihan" type="object" class="btn-primary"/>
