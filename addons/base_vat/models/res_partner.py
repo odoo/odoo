@@ -11,19 +11,19 @@ from stdnum.util import clean
 from stdnum import luhn
 
 from odoo import api, models, fields, _, tools, modules
-from odoo.tools import LazyTranslate, hash_sign
+from odoo.tools import LazyTranslate, frozendict, hash_sign
 from odoo.exceptions import ValidationError, UserError
 
 _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
 
-_eu_country_vat = {
+_eu_country_vat = frozendict({
     'GR': 'EL'
-}
+})
 
-_eu_country_vat_inverse = {v: k for k, v in _eu_country_vat.items()}
+_eu_country_vat_inverse = frozendict({v: k for k, v in _eu_country_vat.items()})
 
-_ref_vat = {
+_ref_vat = frozendict({
     'al': 'ALJ91402501L',
     'ar': _lt('AR200-5536168-2 or 20055361682'),
     'at': 'ATU12345675',
@@ -85,12 +85,12 @@ _ref_vat = {
     'xi': 'XI123456782',
     'sa': _lt('310175397400003 [Fifteen digits, first and last digits should be "3"]'),
     'jp': 'T7000012050002',
-}
+})
 
-_region_specific_vat_codes = {
+_region_specific_vat_codes = frozenset({
     'xi',
     't',
-}
+})
 
 
 class ResPartner(models.Model):
