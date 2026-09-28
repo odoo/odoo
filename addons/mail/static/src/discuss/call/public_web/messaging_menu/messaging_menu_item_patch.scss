@@ -1,7 +1,7 @@
 /* The notification item and this panel together form a single visual card. */
 .o-mail-MessagingMenuItem:has(.o-mail-MessagingMenuCallParticipants) {
     @include o-mail-call-bordered(var(--mail-MessagingMenuItem-inCallBorderedOpacity, .35));
-    border-radius: $border-radius;
+    border-radius: var(--border-radius);
 
     .o-mail-NotificationItem {
         &:not(:hover):not(.o-active) {

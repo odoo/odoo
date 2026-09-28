@@ -204,10 +204,10 @@ $shadow-sizes: sm, md, lg, xl;
 
 @include media-breakpoint-down(sm) {
    .btn {
-       border-radius: $border-radius-lg;
+       border-radius: var(--border-radius-lg);
    }
   .modal-content {
-     border-radius: $border-radius-lg;
+     border-radius: var(--border-radius-lg);
   }
 }
 

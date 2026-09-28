@@ -2,7 +2,7 @@
     --btn-border-color: #{$o-gray-200};
 
     &:hover {
-        border: $border-width solid $border-color;
+        border: var(--border-width) solid var(--border-color);
         --btn-hover-bg: #{$o-view-background-color};
     }
 
@@ -20,8 +20,8 @@
 }
 
 .product-img img {
-    border-top-right-radius: $border-radius-lg;
-    border-top-left-radius: $border-radius-lg;
+    border-top-right-radius: var(--border-radius-lg);
+    border-top-left-radius: var(--border-radius-lg);
 }
 
 .pos-receipt {

@@ -4,7 +4,7 @@
     &[class*="o_calendar_color_"] {
         --o-bg-opacity: 1;
 
-        border-radius: $border-radius;
+        border-radius: var(--border-radius);
         border-color: var(--o-cw-popover-color, var(--info));
         padding: 0 map-get($spacers, 1);
         background: RGBA(var(--o-cw-popover-color--subtle, #{to-rgb($info)}), var(--o-bg-opacity));
