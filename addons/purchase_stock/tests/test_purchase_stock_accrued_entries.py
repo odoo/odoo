@@ -342,3 +342,38 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
         })
         with self.assertRaises(UserError):
             wizard.create_entries()
+
+    def test_stock_valuation_report_accruals_without_bills_to_receive_account(self):
+        """Test that the stock valuation report computes accruals without a bills-to-receive account"""
+        self.env.company.account_bills_to_receive_id = False
+        self.product_a.is_storable = True
+        self.product_a.categ_id.write({
+            'property_valuation': 'real_time',
+            'property_stock_valuation_account_id': self.company_data['default_account_assets'].id,
+            'property_account_bills_to_receive_id': False,
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_qty': 10.0,
+                    'price_unit': self.product_a.list_price,
+                    'tax_ids': False,
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        pick = po.picking_ids
+        pick.move_ids.write({'quantity': 2, 'picked': True})
+        Form.from_action(self.env, pick.button_validate()).save().process()
+
+        report_values = self.env['account.stock.valuation.report'].get_report_values()
+        accrual_lines = report_values['data']['accrual']['lines']
+
+        # Verify the accrual amount and ensure no sublines are generated without an account.
+        self.assertEqual(accrual_lines[0]['credit'], 2 * self.product_a.list_price)
+        self.assertFalse(accrual_lines[0]['lines'])
