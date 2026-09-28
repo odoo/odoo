@@ -36,6 +36,7 @@ Fitur Utama:
         'wizard/education_bill_generate_wizard_views.xml',
         'wizard/education_bill_reject_wizard_views.xml',
         'wizard/education_reminder_wizard_views.xml',
+        'wizard/education_bill_mass_update_wizard_views.xml',
         'views/education_school_views.xml',
         'views/education_academic_views.xml',
         'views/education_parent_views.xml',
