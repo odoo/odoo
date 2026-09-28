@@ -50,6 +50,7 @@ class AccountMove(models.Model):
         compute='_compute_l10n_my_edi_received_document_id',
         store=True,
         index='btree_not_null',
+        check_company=True,
     )
     l10n_my_edi_document_type = fields.Selection(
         related='l10n_my_edi_received_document_id.myinvois_document_type',
@@ -59,7 +60,7 @@ class AccountMove(models.Model):
     l10n_my_edi_validation_time = fields.Datetime(
         related='l10n_my_edi_received_document_id.myinvois_validation_time',
         string="Validated Date",
-        help="When the document passed the MyInvois validation. It sets the tax period of the document.",
+        help="When the document passed the MyInvois validation: the reference date to check in which tax period it can be claimed.",
     )
     # Fields required to be set on the document in some cases.
     l10n_my_edi_exemption_reason = fields.Char(

@@ -16,11 +16,10 @@ SYNC_MONTH_COUNT = 24
 class MyInvoisDocumentSyncWizard(models.TransientModel):
     _name = 'myinvois.document.sync.wizard'
     _description = 'Sync Received Documents Wizard'
-    _check_company_auto = True
 
     @api.model
     def _default_journal_id(self):
-        return self.env.company.l10n_my_edi_default_import_journal_id or self.env['account.journal'].search([
+        return self.env['account.journal'].search([
             *self.env['account.journal']._check_company_domain(self.env.company),
             ('type', '=', 'purchase'),
         ], limit=1)
@@ -29,12 +28,6 @@ class MyInvoisDocumentSyncWizard(models.TransientModel):
     # Fields declaration
     # ------------------
 
-    company_id = fields.Many2one(
-        comodel_name='res.company',
-        required=True,
-        readonly=True,
-        default=lambda self: self.env.company,
-    )
     month = fields.Selection(
         selection='_selection_month',
         string='Month',
@@ -45,10 +38,10 @@ class MyInvoisDocumentSyncWizard(models.TransientModel):
     journal_id = fields.Many2one(
         comodel_name='account.journal',
         string='Journal',
-        help='The journal of the bills created from the received documents.',
+        help='The journal of the bills created from the received documents. '
+             'The documents received by the company of this journal are synced.',
         domain="[('type', '=', 'purchase')]",
         required=True,
-        check_company=True,
         default=lambda self: self._default_journal_id(),
     )
 
@@ -59,7 +52,8 @@ class MyInvoisDocumentSyncWizard(models.TransientModel):
     @api.model
     def _selection_month(self):
         """ The current month and the ones before it, as far back as MyInvois keeps documents. """
-        current_month = date_utils.start_of(fields.Date.context_today(self), 'month')
+        # The search window is in Malaysian time: so must be the current month.
+        current_month = date_utils.start_of(fields.Date.context_today(self.with_context(tz='Asia/Kuala_Lumpur')), 'month')
         months = [current_month - relativedelta(months=index) for index in range(SYNC_MONTH_COUNT)]
         return [(fields.Date.to_string(month), format_date(self.env, month, date_format='MMM yyyy')) for month in months]
 
@@ -70,7 +64,9 @@ class MyInvoisDocumentSyncWizard(models.TransientModel):
     def button_sync(self):
         """ Create a draft bill for each new document received during the selected month. """
         self.ensure_one()
-        proxy_user = self.company_id.sudo().l10n_my_edi_proxy_user_id
+        # The journal can be set through RPC: it must be one the user has access to.
+        self.journal_id.check_access('read')
+        proxy_user = self.journal_id.company_id.sudo().l10n_my_edi_proxy_user_id
         if not proxy_user:
             raise UserError(self.env._("Please register for the E-Invoicing service in the settings first."))
 
