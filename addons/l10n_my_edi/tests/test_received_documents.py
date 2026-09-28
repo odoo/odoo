@@ -254,6 +254,34 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
             wizard.button_sync()
         mock_contact_proxy.assert_not_called()
 
+    def test_post_received_bill_total_in_other_company_currency(self):
+        """ The total of the e-invoice is in MYR, even for a company keeping its books in another currency. """
+        company_data = self.other_company_data
+        myr = self.env.ref('base.MYR')
+        self.env['res.currency.rate'].create({'name': '2024-01-01', 'rate': 4.0, 'currency_id': myr.id, 'company_id': company_data['company'].id})
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'journal_id': company_data['default_journal_purchase'].id,
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2024-07-10',
+            'currency_id': myr.id,
+            'invoice_line_ids': [Command.create({'name': 'IV-DOC1', 'quantity': 1, 'price_unit': 1000.0, 'tax_ids': []})],
+        })
+        self.env['myinvois.document'].create({
+            'name': 'IV-DOC1',
+            'company_id': company_data['company'].id,
+            'currency_id': myr.id,
+            'journal_id': company_data['default_journal_purchase'].id,
+            'move_type': 'in_invoice',
+            'is_received_document': True,
+            'myinvois_state': 'received',
+            'myinvois_amount_total': 1000.0,
+            'myinvois_external_uuid': 'DOC1',
+            'invoice_ids': [Command.link(bill.id)],
+        })
+        bill.action_post()
+        self.assertEqual(bill.state, 'posted')
+
     @freeze_time('2024-08-15 10:00:00')
     def test_sync_error(self):
         wizard = self.env['myinvois.document.sync.wizard'].create({
