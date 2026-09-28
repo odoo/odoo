@@ -1665,12 +1665,50 @@ class AccountMove(models.Model):
             AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
             tax_amls = self.line_ids.filtered('tax_repartition_line_id')
             tax_lines = [self._prepare_tax_line_for_taxes_computation(tax_line) for tax_line in tax_amls]
+
+            tax_lines_to_keep = tax_lines
             if round_from_tax_lines == 'reapply_currency_rate':
+                # Changing the rate should preserve the tax amounts that have been set manually by the user
+                # (in foreign currency) but reapply the currency rate on them to get the balance.
+                # However, the tax lines whose amount in foreign currency is not a manual value but only
+                # reflects what the base lines compute naturally must not go through that shortcut:
+                # that's why we recompute them from the base lines with the new rate instead, to avoid adding
+                # an extra rounding error by reapplying the rate on an amount that is already rounded.
+                AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+
+                def grouping_function(base_line, tax_data):
+                    if not tax_data:
+                        return
+                    return {
+                        'tax': tax_data['tax'],
+                        'currency': base_line['currency_id'],
+                        'is_refund': base_line['is_refund'],
+                    }
+
+                natural_values_per_key = {
+                    (grouping_key['tax'].id, grouping_key['currency'].id, grouping_key['is_refund']): values
+                    for grouping_key, values in AccountTax._aggregate_base_lines_aggregated_values(
+                        AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function)
+                    ).items()
+                    if grouping_key
+                }
+
+                rate = self.invoice_currency_rate
+                tax_lines_to_keep = []
                 for tax_line in tax_lines:
-                    rate = self.invoice_currency_rate
-                    if rate:
-                        tax_line['balance'] = self.company_currency_id.round(tax_line['amount_currency'] / rate)
-            AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines if round_from_tax_lines else [])
+                    tax_rep = tax_line['tax_repartition_line_id']
+                    currency = tax_line['currency_id']
+                    key = (tax_rep.tax_id.id, currency.id, tax_rep.document_type == 'refund')
+                    natural_amount_currency = natural_values_per_key.get(key, {}).get('tax_amount_currency', 0.0)
+                    current_amount_currency = tax_line['sign'] * tax_line['amount_currency']
+                    if not currency.is_zero(current_amount_currency - natural_amount_currency):
+                        # The amount in foreign currency doesn't match what the base lines compute naturally:
+                        # it has been set manually and must be preserved, only reapplying the new rate on it.
+                        if rate:
+                            tax_line['balance'] = self.company_currency_id.round(tax_line['amount_currency'] / rate)
+                        tax_lines_to_keep.append(tax_line)
+
+            AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines_to_keep if round_from_tax_lines else [])
         else:
             # The move is not stored yet so the only thing we have is the invoice lines.
             base_lines += self._prepare_epd_base_lines_for_taxes_computation_from_base_lines(base_amls)
