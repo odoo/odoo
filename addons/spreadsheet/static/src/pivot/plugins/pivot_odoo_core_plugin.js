@@ -1,9 +1,11 @@
 // @ts-check
 
 import { Domain } from "@web/core/domain";
+import { corePlugins } from "@odoo/o-spreadsheet";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 
 export class PivotOdooCorePlugin extends OdooCorePlugin {
+    static dependencies = [corePlugins.PivotCorePlugin];
     handle(cmd) {
         switch (cmd.type) {
             // this command is deprecated. use UPDATE_PIVOT instead

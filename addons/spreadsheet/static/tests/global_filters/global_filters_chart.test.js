@@ -5,7 +5,6 @@ import { describe, expect, test } from "@odoo/hoot";
 
 import { createSpreadsheetWithChart } from "@spreadsheet/../tests/helpers/chart";
 import { addGlobalFilter, setGlobalFilterValue } from "@spreadsheet/../tests/helpers/commands";
-import { globalFieldMatchingRegistry } from "@spreadsheet/global_filters/helpers";
 import { THIS_YEAR_GLOBAL_FILTER } from "../helpers/global_filter";
 
 const { DateTime } = luxon;
@@ -88,13 +87,13 @@ test("field matching is removed when chart is deleted", async function () {
         sheetId: model.getters.getActiveSheetId(),
         figureId: model.getters.getFigureIdFromChartId(chartId),
     });
-    expect(globalFieldMatchingRegistry.get("chart").getIds(model.getters)).toEqual([], {
+    expect(model.getters.getGlobalFieldMatchingRegistry().get("chart").getIds()).toEqual([], {
         message: "it should have removed the chart and its fieldMatching and datasource altogether",
     });
     model.dispatch("REQUEST_UNDO");
     expect(model.getters.getChartFieldMatch(chartId)[filter.id]).toEqual(matching);
     model.dispatch("REQUEST_REDO");
-    expect(globalFieldMatchingRegistry.get("chart").getIds(model.getters)).toEqual([]);
+    expect(model.getters.getGlobalFieldMatchingRegistry().get("chart").getIds()).toEqual([]);
 });
 
 test("field matching is removed when filter is deleted", async function () {

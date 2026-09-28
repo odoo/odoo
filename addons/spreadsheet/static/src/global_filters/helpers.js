@@ -11,7 +11,6 @@ import { Registry } from "@spreadsheet/o_spreadsheet/o_spreadsheet";
 import { deepEqual } from "@web/core/utils/objects";
 import { formatList } from "@web/core/l10n/utils";
 
-export const globalFieldMatchingRegistry = new Registry();
 export const globalFilterDateRegistry = new Registry();
 
 const { DateTime, Interval } = luxon;

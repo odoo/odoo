@@ -70,6 +70,19 @@ export class PivotCoreViewGlobalFilterPlugin extends OdooEvaluationPlugin {
     constructor(config) {
         super(config);
         this._pendingAddDomains = false;
+
+        const registry = this.getters.getGlobalFieldMatchingRegistry();
+        registry.replace("pivot", {
+            ...registry.get("pivot"),
+            waitForReady: () =>
+                this.getters
+                    .getPivotIds()
+                    .map((pivotId) => this.getters.getPivot(pivotId))
+                    .filter((pivot) => pivot.type === "ODOO")
+                    .map((pivot) => pivot.loadMetadata()),
+            getFields: (pivotId) => this.getters.getPivot(pivotId).getFields(),
+            getDomain: (pivotId) => this.getters.getPivot(pivotId).getDomainWithGlobalFilters(),
+        });
     }
 
     beforeHandle(cmd) {

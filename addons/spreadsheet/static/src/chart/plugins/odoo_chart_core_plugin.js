@@ -2,7 +2,11 @@ import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { Domain } from "@web/core/domain";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
+import { corePlugins, stores } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
+
+const { SidePanelStore } = stores;
+import { GlobalFiltersCorePlugin } from "@spreadsheet/global_filters";
 
 /**
  * @typedef {Object} Chart
@@ -35,12 +39,34 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
         "getOdooChartFieldMatching",
         "getChartGranularity",
     ]);
+    static dependencies = [corePlugins.ChartPlugin, GlobalFiltersCorePlugin];
 
     constructor(config) {
         super(config);
 
         /** @type {Object.<string, Chart>} */
         this.charts = {};
+
+        this.getters.getGlobalFieldMatchingRegistry().replace("chart", {
+            getIds: () => this.getOdooChartIds(),
+            getDisplayName: (chartId) => this.getOdooChartName(chartId),
+            getFieldMatching: (chartId, filterId) =>
+                this.getOdooChartFieldMatching(chartId, filterId),
+            getModel: (chartId) =>
+                this.getters.getChart(chartId).getDefinition().dataSource.metaData.resModel,
+            getTag: (chartId) => {
+                const odooChartId = this.getOdooChartIds().indexOf(chartId) + 1;
+                return _t("Chart #%(odooChartId)s", { odooChartId });
+            },
+            getActionXmlId: (chartId) => this.getters.getChartDefinition(chartId).actionXmlId,
+            // Note: we don't support the datasource context on drilldown for the charts, so we never stored it
+            getContext: () => {},
+            openSidePanel: (env, chartId) => {
+                const figureId = env.model().getters.getFigureIdFromChartId(chartId);
+                env.model().dispatch("SELECT_FIGURE", { figureId });
+                env.getStore(SidePanelStore).open("ChartPanel", { chartId });
+            },
+        });
     }
 
     allowDispatch(cmd) {
