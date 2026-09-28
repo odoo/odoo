@@ -13,7 +13,7 @@ class LinkTracker(models.Model):
             'name': _("Visit Webpage Statistics"),
             'type': 'ir.actions.act_url',
             'url': '%s+' % (self.short_url),
-            'target': 'new',
+            'target': 'self',
         }
 
     def _compute_short_url_host(self):
