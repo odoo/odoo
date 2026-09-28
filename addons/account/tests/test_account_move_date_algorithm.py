@@ -283,3 +283,38 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
                 self.assertRecordValues(caba_move, [{
                     'date': fields.Date.from_string(expected_date),
                 }])
+
+    @freezegun.freeze_time('2017-01-12')
+    def test_in_invoice_date_with_year_range_sequence(self):
+        """The accounting date of a bill using a fiscal year range sequence is pushed to the
+        end of the fiscal year of the bill date when that fiscal year is already over."""
+        self.env.company.write({'fiscalyear_last_day': 31, 'fiscalyear_last_month': '3'})
+
+        # Give the purchase journal a sequence resetting on the fiscal year range.
+        first_bill = self._create_invoice('in_invoice', '2015-06-01')
+        first_bill.name = 'BILL/15-16/0001'
+        first_bill.action_post()
+
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({'product_id': self.product_a.id, 'price_unit': 1200.0, 'tax_ids': []}),
+            ],
+        })
+
+        # The fiscal year of the bill date (2015-04-01 -> 2016-03-31) is over:
+        # the accounting date is the end of that fiscal year.
+        bill.invoice_date = '2016-01-01'
+        self.assertRecordValues(bill, [{
+            'invoice_date': fields.Date.from_string('2016-01-01'),
+            'date': fields.Date.from_string('2016-03-31'),
+        }])
+
+        # The fiscal year of the bill date (2016-04-01 -> 2017-03-31) is still open:
+        # the accounting date is today.
+        bill.invoice_date = '2016-12-01'
+        self.assertRecordValues(bill, [{
+            'invoice_date': fields.Date.from_string('2016-12-01'),
+            'date': fields.Date.from_string('2017-01-12'),
+        }])
