@@ -515,6 +515,13 @@
         <field name="country_id" ref="base.be"/>
     </record>
 
+    <!-- 017.42 -->
+    <record id="hr_work_entry.l10n_be_work_entry_type_guaranteed_wage_interrupted_day_illness" model="hr.work.entry.type">
+        <field name="time_off_selectable">False</field>
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+    </record>
+
     <!-- 020.49 -->
     <record id="hr_work_entry.l10n_be_work_entry_type_economic_unemployment_refused_by_administration" model="hr.work.entry.type">
         <field name="requires_allocation" eval="False"/>
