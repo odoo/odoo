@@ -73,7 +73,6 @@ export class MsoPlugin extends Plugin {
             return defaultEmailNodeArguments;
         }
         const color = computedStyle.getPropertyValue("color");
-        
 
         // inline-block or inline element, with border or background-color
         // check if alone or not on its line (if alone => rectangle with background,

@@ -23,7 +23,8 @@ export function buildBadgeVmlNodes({ borderRadius, backgroundColor, horizontalAl
             mso-position-horizontal:${horizontalAlignment};
             mso-position-vertical:top;
             stroked="false">
-            <v:textbox inset="${left}px,${top}px,${right}px,${bottom}px" style="mso-fit-shape-to-text:true;">
+            <v:textbox inset="${left}px,${top}px,${right}px,${bottom}px" style="mso-fit-shape-to-text:true;"
+        >
     `;
     const suffixContent = `
             </v:textbox>
