@@ -199,7 +199,7 @@
             justify-content: center;
 
             .fc-more-link {
-                color: $link-color;
+                color: var(--link-color);
                 cursor: pointer;
 
                 &:hover {
@@ -406,7 +406,7 @@
                     height: .75rem;
                     width: .75rem;
                     border: $border-width solid $o-view-background-color;
-                    border-radius: $border-radius-pill;
+                    border-radius: var(--border-radius-pill);
                     background-color: var(--o-cw-bg);
                     transform: translate(-50%, -50%);
                 }
@@ -471,7 +471,7 @@
                     .fc-daygrid-week-number {
                         /* only in Month view */
                         @include media-breakpoint-down(lg) {
-                            background-color: $gray-100;
+                            background-color: var(--gray-100);
                         }
                     }
 
@@ -730,7 +730,7 @@
                 background-color: rgba(var(--o-event-bg--subtle-rgb), var(--o-bg-opacity));
 
                 &:before {
-                    color: var(--o-event-bg, #{$info});
+                    color: var(--o-event-bg, var(--info));
                 }
             }
         }

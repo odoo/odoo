@@ -36,14 +36,14 @@
 
         .o_employee_redirect:hover {
             .o_media_object {
-                box-shadow: 0 0 0 $border-width * 2 $info;
+                box-shadow: 0 0 0 $border-width * 2 var(--info);
             }
         }
     }
 
     .o_org_chart_entry_self {
         .o_media_object:not(.placeholder) {
-            outline: $border-width solid $info;
+            outline: $border-width solid var(--info);
             outline-offset: $border-width;
         }
     }

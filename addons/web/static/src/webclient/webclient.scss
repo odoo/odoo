@@ -113,7 +113,7 @@ kbd {
         inset: 0 auto auto;
         transform: translate(-1.25em, 50%);
         font: 1em/1 "Material Symbols Outlined";
-        color: $link-color;
+        color: var(--link-color);
         content: "check";
       }
 
@@ -135,7 +135,7 @@ kbd {
       right: auto;
       transform: translate(0, 50%);
       font: 1em/1 "Material Symbols Outlined";
-      color: $link-color;
+      color: var(--link-color);
       display: inline-block;
       content: "check";
       border: 0;
@@ -222,7 +222,7 @@ select {
   color: $o-main-text-color;
 
   > option {
-    background: $light;
+    background: var(--light);
   }
 
   /* This is a hack to remove the outline in FF */

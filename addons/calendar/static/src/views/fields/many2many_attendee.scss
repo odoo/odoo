@@ -25,11 +25,11 @@
     }
     .o_attendee_status_declined {
         background-color: tint-color($danger, 80%);
-        color: $danger;
+        color: var(--danger);
     }
     .o_attendee_status_tentative {
-        background-color: $gray-200;
-        color: $dark;
+        background-color: var(--gray-200);
+        color: var(--dark);
     }
 }
 .o_touch_device .o_form_view .o_field_widget.o_field_many2manyattendee:has(.o_tag):has(.o_field_many2many_selection) input {
