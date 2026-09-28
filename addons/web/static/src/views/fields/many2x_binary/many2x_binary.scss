@@ -48,7 +48,11 @@ $o-attachment-margin: 5px;
     }
 
     .o_attachment_uploaded, .o_attachment_delete {
-        @include o-position-absolute(0, 0, 0, $left: auto);
+        position: absolute;
+        top: 0;
+        left: auto;
+        bottom: 0;
+        right: 0;
         display: flex;
         align-items: center;
         justify-content: center;

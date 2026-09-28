@@ -18,7 +18,8 @@
             height: 100%;
 
             .o_list_table thead {
-                @include o-position-sticky(0);
+                position: sticky;
+                inset: 0 auto auto;
                 z-index: var(--sticky-header-zindex);
             }
         }
@@ -139,7 +140,9 @@
                 --fieldWidget-display: block; /* Will affect inner components (see fields.scss) */
 
                 display: table-cell;
-                @include text-truncate();
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
 
                 &.o_list_text {
                     white-space: pre-wrap;
@@ -357,7 +360,11 @@
         tbody .o_column_resizing {
             position: relative;
             &:after {
-                @include o-position-absolute($top: 0, $bottom: 0, $right: 0);
+                position: absolute;
+                top: 0;
+                left: auto;
+                bottom: 0;
+                right: 0;
                 background-color: #{$border-color};
                 width: 4px;
                 content: '';
@@ -459,7 +466,11 @@
                     }
                     > .o_dropdown_button,
                     .o_datepicker_button {
-                        @include o-position-absolute(0, 0);
+                        position: absolute;
+                        top: 0;
+                        left: auto;
+                        bottom: auto;
+                        right: 0;
                     }
                 }
                 .form-check {

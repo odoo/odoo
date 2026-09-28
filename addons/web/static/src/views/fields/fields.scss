@@ -118,7 +118,11 @@
         }
 
         .o_dropdown_button, .o_datepicker_button {
-            @include o-position-absolute($o-input-padding-y, $o-input-padding-x, var($input-border-width));
+            position: absolute;
+            top: $o-input-padding-y;
+            left: auto;
+            bottom: var($input-border-width);
+            right: $o-input-padding-x;
             pointer-events: none;
 
             &:after {
@@ -233,7 +237,11 @@
         position: relative;
 
         .o_form_image_controls {
-            @include o-position-absolute(0, 0);
+            position: absolute;
+            top: 0;
+            left: auto;
+            bottom: auto;
+            right: 0;
             width: 100%;
 
             color: white;
@@ -295,7 +303,11 @@
             position: relative;
 
             > .o_field_domain_panel {
-                @include o-position-absolute(0, 0);
+                position: absolute;
+                top: 0;
+                left: auto;
+                bottom: auto;
+                right: 0;
                 margin-top: 0;
             }
         }
@@ -322,7 +334,11 @@
         padding-right: 6rem;
         word-break: break-word;
         .o_clipboard_button {
-            @include o-position-absolute($top: 0, $right: 0);
+            position: absolute;
+            top: 0;
+            left: auto;
+            bottom: auto;
+            right: 0;
             &.o_btn_text_copy {
                 position: absolute;
                 top: 0;

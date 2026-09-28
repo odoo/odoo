@@ -16,7 +16,11 @@
     }
 
     .o_select_menu_caret {
-        @include o-position-absolute($o-input-padding-y, $o-input-padding-x, $input-border-width);
+        position: absolute;
+        top: $o-input-padding-y;
+        left: auto;
+        bottom: $input-border-width;
+        right: $o-input-padding-x;
         visibility: hidden;
 
         &:after {
@@ -61,7 +65,11 @@
         }
 
         &:before {
-            @include o-position-absolute($top: 50%, $left: map-get($spacers, 2));
+            position: absolute;
+            top: 50%;
+            left: map-get($spacers, 2);
+            bottom: auto;
+            right: auto;
             transform: translateY(-50%);
             content: "search";
             font-family: 'Material Symbols Outlined';

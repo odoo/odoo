@@ -46,7 +46,11 @@
         @include o-we-preview-box($text-muted);
         .o_invalid_warning {
             width: 90%;
-            @include o-position-absolute($top: 50%, $left: 50%);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            bottom: auto;
+            right: auto;
             transform: translate(-50%, -50%);
         }
     }

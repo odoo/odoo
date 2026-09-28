@@ -64,7 +64,8 @@
 
         &:after {
             content: '';
-            @include o-position-absolute(0, 0, 0, 0);
+            position: absolute;
+            inset: 0;
             box-shadow: 0 0 200px rgba(#111827, .9) inset;
             z-index: 1;
         }
@@ -75,7 +76,8 @@
     /* ======================================= */
 
     #o_website_loader_step_colors, #o_website_loader_step_images, #o_website_loader_step_text, #o_website_loader_step_generic {
-        @include o-position-absolute(0, 0, 0, 0);
+        position: absolute;
+        inset: 0;
         transition: opacity 1s ease-in-out;
         transform-style: preserve-3d;
     }
@@ -278,7 +280,11 @@
         }
 
         .o_website_loader_circle, .o_website_loader_circle_mask {
-            @include o-position-absolute(50%, $left: 50%);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            bottom: auto;
+            right: auto;
             margin-left: $-loader-gap * -1;
             margin-top: $-loader-gap * -1;
         }

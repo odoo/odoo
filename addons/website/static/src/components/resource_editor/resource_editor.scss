@@ -64,12 +64,20 @@ $o-we-ace-color: #2F3129 !default;
                 position: relative;
 
                 &::before {
-                    @include o-position-absolute(-100vh, 0, -100vh);
+                    position: absolute;
+                    top: -100vh;
+                    left: auto;
+                    bottom: -100vh;
+                    right: 0;
                     @include ace-line-error-mixin;
                     width: 2px;
                 }
                 &::after {
-                    @include o-position-absolute(-100%, 0, -100%, 0);
+                    position: absolute;
+                    top: -100%;
+                    left: 0;
+                    bottom: -100%;
+                    right: 0;
                     @include ace-line-error-mixin;
                     font-family: var(--icon-font-family, "Material Symbols Outlined");
                     content: "warning";

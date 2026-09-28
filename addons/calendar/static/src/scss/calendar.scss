@@ -103,7 +103,8 @@
 
     &.o_calendar_event_draft::after {
         content: '';
-        @include o-position-absolute(0, 0, 0, 0);
+        position: absolute;
+        inset: 0;
         display: block;
         z-index: 3;
         background-color: rgba($o-view-background-color, var(--o-overlay-opacity));

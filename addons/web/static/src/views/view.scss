@@ -12,7 +12,8 @@
 
 /* No content helper */
 .o_view_nocontent {
-    @include o-position-absolute(0, 0, 0, 0);
+    position: absolute;
+    inset: 0;
     pointer-events: none;
     z-index: var(--o-view-nocontent-zindex, 1);
     display: flex;

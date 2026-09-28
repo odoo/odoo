@@ -17,7 +17,11 @@
             }
 
             &:before {
-                @include o-position-absolute(0, $left: ($o-hrs-timeline-dot-size * .5 + o-to-rem($o-horizontal-padding) - o-to-rem($border-width)));
+                position: absolute;
+                top: 0;
+                left: ($o-hrs-timeline-dot-size * .5 + o-to-rem($o-horizontal-padding) - o-to-rem($border-width));
+                bottom: auto;
+                right: auto;
                 width: $border-width;
                 height: 100%;
                 background-color: $border-color;

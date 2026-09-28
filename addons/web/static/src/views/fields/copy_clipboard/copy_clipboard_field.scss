@@ -6,7 +6,9 @@
 .o_field_CopyClipboardURL {
     min-width: 0;
     .o_form_uri {
-        @include text-truncate();
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         flex: 1 1 0 !important;
     }
 }

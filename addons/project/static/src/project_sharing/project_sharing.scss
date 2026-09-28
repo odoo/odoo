@@ -13,7 +13,11 @@
 }
 .o_card_record {
     &.o_kanban_record_colored::after {
-            @include o-position-absolute(0, auto, 0, 0);
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: auto;
             width: 6px;
             border-right: 4px solid transparent;
             border-radius: inherit;

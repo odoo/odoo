@@ -124,7 +124,11 @@
         /* Timeline line */
         &:after {
             content: ' ';
-            @include o-position-absolute($top: -#{map-get($spacers, 3)}, $left: -$line-left);
+            position: absolute;
+            top: -#{map-get($spacers, 3)};
+            left: -$line-left;
+            bottom: auto;
+            right: auto;
             height: calc(100% - 1.25rem);       /* 20px */
             border-left: $border-width * 2 solid;
             border-color: $border-color;
@@ -134,7 +138,11 @@
         /* Timeline dot (small) */
         &:before {
             content: '';
-            @include o-position-absolute($top: 50%, $left: calc(-#{$line-left} - #{$dot-size-small / 2}));
+            position: absolute;
+            top: 50%;
+            left: calc(-#{$line-left} - #{$dot-size-small / 2});
+            bottom: auto;
+            right: auto;
             transform: translateY(-50%);
             border-radius: 50%;
             width: $dot-size-small;
@@ -210,7 +218,11 @@
                     border-bottom-color: $o-view-background-color;
 
                     &::after {
-                        @include o-position-absolute($top: -$border-width, $right: -$border-width, $left: -$border-width);
+                        position: absolute;
+                        top: -$border-width;
+                        left: -$border-width;
+                        bottom: auto;
+                        right: -$border-width;
                         height: $border-width * 3;
                         background-color: var(--historyDialog__link-border-top-color--active, #{$o-brand-odoo});
                         content: '';

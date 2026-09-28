@@ -6,7 +6,11 @@
     }
 
     .o_dropdown_button {
-        @include o-position-absolute($o-input-padding-y, $o-input-padding-x);
+        position: absolute;
+        top: $o-input-padding-y;
+        left: auto;
+        bottom: auto;
+        right: $o-input-padding-x;
         pointer-events: none;
 
         &::after {

@@ -204,7 +204,9 @@
     }
 
     > span .o_field_widget, .o_stat_info, .o_stat_value {
-        @include text-truncate;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .oe_stat_button,

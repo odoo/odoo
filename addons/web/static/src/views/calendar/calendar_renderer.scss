@@ -57,7 +57,8 @@
 
         &.o_past_event::after {
             content: '';
-            @include o-position-absolute(0, 0, 0, 0);
+            position: absolute;
+            inset: 0;
             display: block;
             z-index: 3;
             background-color: rgba($o-view-background-color, var(--o-overlay-opacity));
@@ -321,7 +322,11 @@
 
                 @include media-only(screen) {
                     &:after {
-                        @include o-position-absolute($border-width, 0, calc(-1 * var(--fc-timegrid-divider-size, 15px)), 0);
+                        position: absolute;
+                        top: $border-width;
+                        left: 0;
+                        bottom: calc(-1 * var(--fc-timegrid-divider-size, 15px));
+                        right: 0;
                         background: var(--fc-timegrid-divider-background,linear-gradient(0deg, rgba($o-shadow-color, 0), rgba($o-shadow-color, 0.16)));
                         pointer-events: none;
                         content: "";
