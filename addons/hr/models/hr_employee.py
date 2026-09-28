@@ -2218,18 +2218,19 @@ class HrEmployee(models.Model):
         if not valid_versions:
             calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
             return calendar.get_work_duration_data(
-                date_from,
-                date_to,
+                date_from.astimezone(employee_tz),
+                date_to.astimezone(employee_tz),
                 domain=[('company_id', 'in', [False, self.company_id.id])])
         duration_data = {'days': 0, 'hours': 0}
         for version in valid_versions:
-            version_start = datetime.combine(version.date_start, time.min, employee_tz)
-            version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
+            version_tz = ZoneInfo(version._get_tz())
+            version_start = datetime.combine(version.date_start, time.min, version_tz)
+            version_end = datetime.combine(version.date_end or date.max, time.max, version_tz)
             calendar = version.resource_calendar_id or version.company_id.resource_calendar_id
             version_duration_data = calendar\
                 .get_work_duration_data(
-                    max(date_from, version_start),
-                    min(date_to, version_end),
+                    max(date_from, version_start).astimezone(version_tz),
+                    min(date_to, version_end).astimezone(version_tz),
                     domain=[('company_id', 'in', [False, version.company_id.id])])
             duration_data['days'] += version_duration_data['days']
             duration_data['hours'] += version_duration_data['hours']
