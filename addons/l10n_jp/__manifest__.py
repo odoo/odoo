@@ -41,6 +41,7 @@ Note:
         'data/account_report_jct_deduction_schedule_5_3.xml',
         'data/account_report_jct_return.xml',
         'data/report_paperformat.xml',
+        'data/res_country_data.xml',
         'report/jp_report.xml',
         'report/jp_account_report.xml',
         'data/report_layout.xml',

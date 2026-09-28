@@ -9,5 +9,5 @@ class TestJPAddressFormat(TransactionCase):
         jp_country = self.env.ref('base.jp')
         self.assertEqual(
             jp_country.mapped('address_format')[0],
-            '%(zip)s\n%(state_name)s %(city)s\n%(street)s\n%(street2)s\n%(country_name)s',
+            '%(zip)s\n%(country_name)s %(state_name)s %(city)s\n%(street)s\n%(street2)s',
         )
