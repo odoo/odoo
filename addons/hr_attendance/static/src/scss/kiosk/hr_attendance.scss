@@ -1,6 +1,6 @@
 :root {
     @include media-breakpoint-up(lg) {
-        // Allow to handle root font size whether or not the website is installed
+        /* Allow to handle root font size whether or not the website is installed */
         --bs-root-font-size: #{$o-attendance-font-size-root-lg};
         --root-font-size: #{$o-attendance-font-size-root-lg};
     }
@@ -10,13 +10,13 @@
         --root-font-size: #{$o-attendance-font-size-root-xxl};
     }
 
-    // UW
+    /* UW */
     @media (min-width: 2560px) {
         --bs-root-font-size: #{$o-attendance-font-size-root-uw};
         --root-font-size: #{$o-attendance-font-size-root-uw};
     }
 
-    //4K
+    /* 4K */
     @media screen and (min-width: 3839px), (min-height: 3839px) {
         --bs-root-font-size: #{$o-attendance-font-size-root-4k};
         --root-font-size: #{$o-attendance-font-size-root-4k};
@@ -91,7 +91,7 @@
 .o_attendance_form .o_content{
     overflow: hidden !important;
 }
-// Shared with web client and login screen
+/* Shared with web client and login screen */
 .o_attendance_background{
     background: {
         size: cover;
@@ -158,7 +158,7 @@
         @include transition($input-transition);
 
         &:focus {
-            outline: none; // remove default blue outline
+            outline: none; /* remove default blue outline */
         }
     }
 

@@ -1,5 +1,5 @@
 .o_kanban_record {
-    // Scoped here rather than on the root so nested rules keep their specificity.
+    /* Scoped here rather than on the root so nested rules keep their specificity. */
     &:not(.o_kanban_ghost) {
         background-color: $o-view-background-color;
     }
@@ -41,14 +41,14 @@
         }
     }
 
-    // Records colours
+    /* Records colours */
     .o_kanban_record_colored:after {
         @include o-position-absolute(0, auto, 0, -$border-width);
         content: "";
     }
 
     @for $size from 2 through length($o-colors) {
-        // Note: the first color is not defined as it is the 'no color' for kanban
+        /* Note: the first color is not defined as it is the 'no color' for kanban */
         &.o_kanban_color_#{$size - 1}::after {
             $-color: nth($o-colors, $size);
 

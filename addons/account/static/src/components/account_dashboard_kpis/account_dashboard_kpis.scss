@@ -35,7 +35,7 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
     container-type: inline-size;
 
     @include media-breakpoint-down(md) {
-        margin: 0 0 (1px + $border-width); // 1px offsets .o_kanban_record:first-of-type's hardcoded margin-top
+        margin: 0 0 (1px + $border-width); /* 1px offsets .o_kanban_record:first-of-type's hardcoded margin-top */
     }
 }
 
@@ -69,7 +69,7 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
     }
 }
 
-// Keep the highest-priority cards that fit on one row.
+/* Keep the highest-priority cards that fit on one row. */
 @include show-account-dashboard-kpi-at-capacity(2, "invoices", "expenses");
 @include show-account-dashboard-kpi-at-capacity(3, "expenses", "receivable");
 @include show-account-dashboard-kpi-at-capacity(4, "receivable", "payable");
@@ -90,7 +90,7 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
         }
     }
 
-    // Shift priorities because Invoice Layout is unavailable on mobile.
+    /* Shift priorities because Invoice Layout is unavailable on mobile. */
     @include show-account-dashboard-kpi-at-capacity(
         1, "invoices", null, $mobile-card-min-width
     );

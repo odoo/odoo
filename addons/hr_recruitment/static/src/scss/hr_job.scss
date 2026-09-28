@@ -9,7 +9,7 @@
                 --Ribbon-height: 1.9;
 
                 @include media-breakpoint-between(md, xxl) {
-                    min-width: calc(100vw - (#{$btn-font-size-sm} + #{$btn-padding-x-sm * 2} + #{map-get($spacers, 1) * 4})); // cscreen size reduced by the size of the closed search panel
+                    min-width: calc(100vw - (#{$btn-font-size-sm} + #{$btn-padding-x-sm * 2} + #{map-get($spacers, 1) * 4})); /* cscreen size reduced by the size of the closed search panel */
                 }
 
                 &:not(.o_kanban_ghost) {

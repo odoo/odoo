@@ -1,6 +1,6 @@
 [data-text-truncate-tooltip] {
     @include text-truncate();
-    // Prevent Chrome from revealing truncated text on click.
+    /* Prevent Chrome from revealing truncated text on click. */
     user-select: none;
 }
 
@@ -15,8 +15,8 @@
     @include reset-text();
     @include font-size($tooltip-font-size);
 
-    // Note: Not cross-browser but not such a big deal since it's
-    // needed for minor aesthetic adaptations only.
+    /* Note: Not cross-browser but not such a big deal since it's */
+    /* needed for minor aesthetic adaptations only. */
     &:has(.o-tooltip--technical) {
         max-width: $tooltip-max-width * 2;
 

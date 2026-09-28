@@ -1,5 +1,5 @@
-// = Onboarding Panel
-// ============================================================================
+/* = Onboarding Panel */
+/* ============================================================================ */
 $o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
 
 .o_onboarding_container {
@@ -31,8 +31,8 @@ $o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
         z-index: 2;
     }
 
-    // = Step Design
-    // ------------------------------------------------------------------------
+    /* = Step Design */
+    /* ------------------------------------------------------------------------ */
     .o_onboarding_step {
         flex: 1 1 0;
 
@@ -90,8 +90,8 @@ $o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
             }
         }
 
-        // = "To do" Step Design
-        // --------------------------------------------------------------------
+        /* = "To do" Step Design */
+        /* -------------------------------------------------------------------- */
         &[data-step-state="not_done"] {
             .o_onboarding_step_content_info {
                 animation: o_onboarding_zoomIn ($o-onboarding-base-time * 1.5) both;
@@ -104,8 +104,8 @@ $o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
             }
         }
 
-        // = "Just Done" Step Design
-        // --------------------------------------------------------------------
+        /* = "Just Done" Step Design */
+        /* -------------------------------------------------------------------- */
         &[data-step-state="just_done"] {
             .o_onboarding_step_content_info {
                 animation: o_onboarding_fadeIn ($o-onboarding-base-time * 3);
@@ -121,8 +121,8 @@ $o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
         }
     }
 
-    // = Animations
-    // ------------------------------------------------------------------------
+    /* = Animations */
+    /* ------------------------------------------------------------------------ */
     @keyframes o_onboarding_slideInUp {
         from {
             transform: translate3d(0, 20%, 0);

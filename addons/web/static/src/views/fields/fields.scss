@@ -2,26 +2,26 @@
     cursor: not-allowed;
 }
 
-// .o_field_highlight is used in several types of view to force fields
-// to be displayed with a bottom border even when not hovered (e.g. added
-// by mobile detection, in several specific places such as spreadsheet or
-// knowledge sidebars, settings view, kanban quick create (not a form view), etc.)
+/* .o_field_highlight is used in several types of view to force fields */
+/* to be displayed with a bottom border even when not hovered (e.g. added */
+/* by mobile detection, in several specific places such as spreadsheet or */
+/* knowledge sidebars, settings view, kanban quick create (not a form view), etc.) */
 .o_field_highlight .o_field_widget .o_input, .o_field_highlight.o_field_widget .o_input {
     border-color: var(--o-input-border-color);
 }
 
-// field decoration classes (e.g. text-danger) are set on the field root node,
-// but bootstrap contextual classes do not work on input/textarea, so we have to
-// explicitely set their color to the one of their parent
+/* field decoration classes (e.g. text-danger) are set on the field root node, */
+/* but bootstrap contextual classes do not work on input/textarea, so we have to */
+/* explicitely set their color to the one of their parent */
 .o_field_widget {
     input, textarea, select, button.o_input {
         color: inherit;
     }
 }
 
-//------------------------------------------------------------------------------
-// Field States
-//------------------------------------------------------------------------------
+/* ------------------------------------------------------------------------------ */
+/* Field States */
+/* ------------------------------------------------------------------------------ */
 
 :root {
     @include print-variable(o-input-border-color, $o-form-lightsecondary);
@@ -43,9 +43,9 @@
     @include print-variable(o-caret-color, map-get($theme-colors, 'danger'));
 }
 
-//------------------------------------------------------------------------------
-// Generic input
-//------------------------------------------------------------------------------
+/* ------------------------------------------------------------------------------ */
+/* Generic input */
+/* ------------------------------------------------------------------------------ */
 
 .o_input {
     border: $input-border-width solid var(--o-input-border-color);
@@ -57,14 +57,14 @@
         text-overflow: ellipsis;
     }
 
-    // -- Nested o_input(s)
+    /* -- Nested o_input(s) */
     .o_input {
         border: 0;
         padding: 0;
     }
 }
 
-// Invalid
+/* Invalid */
 .o_field_invalid:not(:focus-within) {
     &.o_input, > .o_input, &.o_form_label {
         color: o-text-color('danger');
@@ -75,22 +75,22 @@
     }
 }
 
-// Empty
+/* Empty */
 .o_field_empty {
     display: none;
 }
 
-// Numbers
+/* Numbers */
 .o_field_number {
     white-space: nowrap;
 }
 
-//------------------------------------------------------------------------------
-// Fields
-//------------------------------------------------------------------------------
+/* ------------------------------------------------------------------------------ */
+/* Fields */
+/* ------------------------------------------------------------------------------ */
 
 .o_field_widget {
-    // Default display and alignment of widget and internal <input/>
+    /* Default display and alignment of widget and internal <input/> */
     text-align: inherit;
     display: var(--fieldWidget-display, inline-block);
 
@@ -111,7 +111,7 @@
         text-align: inherit;
     }
 
-    // Dropdowns inputs
+    /* Dropdowns inputs */
     .o_input_dropdown, .o_datepicker {
         .o_input, > input {
             padding-right: ($caret-width * 2.5) + $o-input-padding-x;
@@ -127,12 +127,12 @@
         }
     }
 
-    // Block fields
+    /* Block fields */
     &.note-editor, &.o_field_html, &.oe_form_field_text, &.o_field_domain, &.o_graph_linechart, &.o_graph_barchart {
         display: block;
     }
 
-    // Flex fields (inline)
+    /* Flex fields (inline) */
     &.o_field_many2one, &.o_field_radio, &.o_field_percent_pie, &.o_field_monetary, &.o_field_binary_file, &.o_field_float_percentage {
         display: inline-flex;
         > span, > button {
@@ -140,7 +140,7 @@
         }
     }
 
-    // Dropdowns input (many2one, ...)
+    /* Dropdowns input (many2one, ...) */
     .o_input_dropdown {
         flex: 1 1 auto;
         position: relative;
@@ -155,13 +155,13 @@
         }
     }
 
-    // Text
+    /* Text */
     &.o_field_text, &.oe_form_field_text .oe_form_text_content {
         width: 100%;
         white-space: pre-wrap;
     }
 
-    // Many2One
+    /* Many2One */
     &.o_field_many2one {
         flex-direction: column;
     }
@@ -176,7 +176,7 @@
         padding-bottom: 0;
     }
 
-    // Handle widget
+    /* Handle widget */
     .o_row_handle {
         cursor: grab;
         color: #adb5bd;
@@ -187,7 +187,7 @@
         }
     }
 
-    // Radio buttons
+    /* Radio buttons */
     &.o_field_radio {
         @include media-breakpoint-down(md) {
             display: inline-block;
@@ -214,12 +214,12 @@
         }
     }
 
-    // Percent pie
+    /* Percent pie */
     &.o_field_percent_pie {
         align-items: center;
     }
 
-    // Ace editor
+    /* Ace editor */
     .o_ace_view_editor {
         width: 100%;
         .ace-view-editor {
@@ -228,7 +228,7 @@
         }
     }
 
-    // Image
+    /* Image */
     &.o_field_image, &.o_field_image_url {
         position: relative;
 
@@ -281,12 +281,12 @@
         }
     }
 
-    // Input loading/file
+    /* Input loading/file */
     .o_form_binary_progress, .o_hidden_input_file .o_input_file {
         display: none;
     }
 
-    // Domain
+    /* Domain */
     &.o_field_domain {
         > .o_field_domain_panel {
             margin-top: 8px;
@@ -301,7 +301,7 @@
         }
     }
 
-    // PDF Viewer
+    /* PDF Viewer */
     &.o_field_pdfviewer, &.o_field_pdf_viewer .o_pdfview_iframe {
         width: 100%;
         height: 450px;
@@ -309,7 +309,7 @@
         margin-top: 10px;
     }
 
-    // Copy to clipboard
+    /* Copy to clipboard */
     &.o_field_copy {
         position: relative;
         width: 100% !important;
@@ -358,7 +358,7 @@ button.o_field_float_toggle {
     text-align: center;
 }
 
-// Selection fields
+/* Selection fields */
 select.o_field_widget.o_input {
-    padding: 1px;  // Other inputs get a 1px padding automatically added by the browsers but selects do not
+    padding: 1px;  /* Other inputs get a 1px padding automatically added by the browsers but selects do not */
 }

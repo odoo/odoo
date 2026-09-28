@@ -10,28 +10,28 @@ html, body {
     height: 100%;
 }
 
-// Disable default border-style added by _reboot.scss
+/* Disable default border-style added by _reboot.scss */
 tfoot {
   tr, td, th {
     border-style: none;
   }
 }
 
-// ------------------------------------------------------------------
-//  General
-// ------------------------------------------------------------------
+/* ------------------------------------------------------------------ */
+/* General */
+/* ------------------------------------------------------------------ */
 .o_web_client {
   direction: ltr;
-  position: relative; // normally useless but required by bootstrap-datepicker
+  position: relative; /* normally useless but required by bootstrap-datepicker */
   background-color: $o-webclient-background-color;
   color-scheme: $o-webclient-color-scheme;
 }
 
-// ------------------------------------------------------------------
-// Misc. widgets
-// ------------------------------------------------------------------
+/* ------------------------------------------------------------------ */
+/* Misc. widgets */
+/* ------------------------------------------------------------------ */
 
-// Buttons
+/* Buttons */
 .o_icon_button {
   background-color: transparent;
   border: 0;
@@ -40,19 +40,19 @@ tfoot {
 }
 
 
-// User input typically entered via keyboard
+/* User input typically entered via keyboard */
 kbd {
   border: 1px solid $o-gray-200;
   box-shadow: $kbd-box-shadow;
 }  
 
-//== Backgound light colors variations (bootstrap extensions)
+/* == Backgound light colors variations (bootstrap extensions) */
 @each $-name, $-bg-color in $theme-colors {
   $-safe-text-color: color-contrast(mix($-bg-color, $o-view-background-color));
   @include bg-variant(".bg-#{$-name}-light", rgba(map-get($theme-colors, $-name), 0.5), $-safe-text-color);
 }
 
-//== Badges
+/* == Badges */
 .badge {
   min-width: $o-badge-min-width;
   line-height: var(--o-Badge-lineHeight, 1.166);
@@ -61,38 +61,38 @@ kbd {
   user-select: none;
   font-weight: var(--o-Badge-fontWeight, 500);
   @include o-text-overflow;
-  transition: none; // remove transition to prevent badges from flickering at reload
+  transition: none; /* remove transition to prevent badges from flickering at reload */
   color: $o-black;
 }
 
-//== Input group
+/* == Input group */
 .input-group {
-  // Bring input group elements to the front when hovered or active
-  // so they properly overlay the borders like the focus state
+  /* Bring input group elements to the front when hovered or active */
+  /* so they properly overlay the borders like the focus state */
   .btn, .form-control, .form-select, .form-floating {
-    // Allow the value to be updated using a CSS variable, with the
-    // default value as a fallback.
+    /* Allow the value to be updated using a CSS variable, with the */
+    /* default value as a fallback. */
     z-index: var(--InputGroupEl-z-index, 2);
 
     &:hover {
-      // This arbitrary value matches the z-index used for the focus
-      // state, minus 1 (see _input-group.scss).
-      // This keeps the border correct when the user clicks or focuses
-      // an element and then drags to an adjacent one.
-      // This value should be updated if the default z-index changes.
+      /* This arbitrary value matches the z-index used for the focus */
+      /* state, minus 1 (see _input-group.scss). */
+      /* This keeps the border correct when the user clicks or focuses */
+      /* an element and then drags to an adjacent one. */
+      /* This value should be updated if the default z-index changes. */
       --InputGroupEl-z-index: 4;
     }
 
     &:active {
-      // This arbitrary value matches the z-index used for the focus
-      // state (see _input-group.scss)
+      /* This arbitrary value matches the z-index used for the focus */
+      /* state (see _input-group.scss) */
       --InputGroupEl-z-index: 5;
     }
   }
 }
 
-// == Boostrap Dropdown
-// ----------------------------------------------------------------------------
+/* == Boostrap Dropdown */
+/* ---------------------------------------------------------------------------- */
 :not(.dropstart) > .dropdown-item {
   &.active, &.selected {
     position: relative;
@@ -151,16 +151,16 @@ kbd {
   display: none;
 }
 
-//== Printing improvements
+/* == Printing improvements */
 @media print {
   .table-responsive {
     overflow-x: initial;
   }
 }
 
-//== Action manager
-// ensure special links are styled as pointers even when they don't
-// have an href
+/* == Action manager */
+/* ensure special links are styled as pointers even when they don't */
+/* have an href */
 [type="action"],
 [type="toggle"] {
   cursor: pointer !important;
@@ -183,9 +183,9 @@ kbd {
   }
 }
 
-//------------------------------------------------------------------------------
-// Inputs and selects (note: put the o_input class to have the style)
-//------------------------------------------------------------------------------
+/* ------------------------------------------------------------------------------ */
+/* Inputs and selects (note: put the o_input class to have the style) */
+/* ------------------------------------------------------------------------------ */
 [type="text"],
 [type="password"],
 [type="number"],
@@ -197,12 +197,12 @@ select {
   width: 100%;
   display: block;
   outline: none;
-  border-radius: 0; // webkit OSX browsers have a border-radius on select, input and textarea
+  border-radius: 0; /* webkit OSX browsers have a border-radius on select, input and textarea */
 }
 
 select {
 
-  // FIXME buggy 'padding-left'
+  /* FIXME buggy 'padding-left' */
   cursor: pointer;
   min-width: 50px;
 
@@ -215,7 +215,7 @@ select {
     background: $light;
   }
 
-  // This is a hack to remove the outline in FF
+  /* This is a hack to remove the outline in FF */
   &:-moz-focusring {
     color: transparent;
     text-shadow: 0 0 0 $o-main-text-color;
@@ -226,27 +226,27 @@ select {
 }
 
 @mixin o-placeholder {
-  // Rules below need to be separeted. Otherwise all browsers will discard the whole rule.
+  /* Rules below need to be separeted. Otherwise all browsers will discard the whole rule. */
   color: $input-placeholder-color;
 }
 ::-webkit-input-placeholder {
-  // WebKit, Blink, Edge
+  /* WebKit, Blink, Edge */
   @include o-placeholder;
 }
 ::-moz-placeholder {
-  // Mozilla Firefox 19+
+  /* Mozilla Firefox 19+ */
   @include o-placeholder;
 }
 :-ms-input-placeholder {
-  // Internet Explorer 10-11
+  /* Internet Explorer 10-11 */
   @include o-placeholder;
 }
 
-//------------------------------------------------------------------------------
-// Misc.
-//------------------------------------------------------------------------------
+/* ------------------------------------------------------------------------------ */
+/* Misc. */
+/* ------------------------------------------------------------------------------ */
 
-//== Titles
+/* == Titles */
 @include media-breakpoint-down(md) {
   h1 {
     font-size: $h1-font-size * 3 / 4;
@@ -260,7 +260,7 @@ select {
   }
 }
 
-//== Alerts
+/* == Alerts */
 .alert {
   &.alert-info,
   &.alert-success,
@@ -273,7 +273,7 @@ select {
   }
 }
 
-//== Badges
+/* == Badges */
 .badge {
     &.text-bg-default, &.bg-light, &.text-bg-light, &.bg-default, &.text-primary{
         outline: 1px solid $o-brand-primary;
@@ -281,27 +281,27 @@ select {
     }
 }
 
-//== Buttons
+/* == Buttons */
 
-// Disable unnecessary box-shadows on mouse hover
+/* Disable unnecessary box-shadows on mouse hover */
 .btn:focus:hover:not(:focus-visible) {
   box-shadow: none;
 }
 
-//== Navbar
+/* == Navbar */
 .navbar .navbar-toggle {
   border-color: transparent;
 }
 
-//== Labels
+/* == Labels */
 .label {
   border-radius: 0;
-  font-size: 1em; // Override 75% of .label
+  font-size: 1em; /* Override 75% of .label */
 }
 
-//------------------------------------------------------------------------------
-// Print Style
-//------------------------------------------------------------------------------
+/* ------------------------------------------------------------------------------ */
+/* Print Style */
+/* ------------------------------------------------------------------------------ */
 
 @include media-only(print) {
   html, body {

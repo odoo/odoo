@@ -21,11 +21,11 @@
     padding: 0;
     line-height: 1;
 
-    // Reset button's background and border properties
+    /* Reset button's background and border properties */
     background: none!important;
     border: 0 !important;
 
-    // Define the pseudo-element
+    /* Define the pseudo-element */
     &:before {
         @include o-position-absolute(50%, $left: 50%);
         transform: translate(-50%, -50%);
@@ -35,7 +35,7 @@
         aspect-ratio: 1;
         border-radius: var(--o-btn-circle-radius, 100%);
 
-        // Apply button rules to the pseudoelement itself
+        /* Apply button rules to the pseudoelement itself */
         background: var(--btn-bg);
         border: var(--btn-border-width) solid var(--btn-border-color);
         @include transition($btn-transition);

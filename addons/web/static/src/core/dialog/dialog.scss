@@ -20,7 +20,7 @@
         text-align: left;
 
         button {
-            margin: 0; // Reset boostrap.
+            margin: 0; /* Reset boostrap. */
         }
 
         button.o-default-button:not(:only-child) {
@@ -109,17 +109,17 @@
 
             .modal-header {
                 button[data-icon="arrow_back"], .o_expand_button {
-                    // Use BS default btn-close padding logic
+                    /* Use BS default btn-close padding logic */
                     padding: calc(var(--#{$prefix}modal-header-padding-y) * .5) calc(var(--#{$prefix}modal-header-padding-x) * .5);
                 }
 
                 .o_expand_button {
-                    // Use BS default btn-close margin logic
+                    /* Use BS default btn-close margin logic */
                     margin: calc(-.5 * var(--#{$prefix}modal-header-padding-y)) calc(-.5 * var(--#{$prefix}modal-header-padding-x)) calc(-.5 * var(--#{$prefix}modal-header-padding-y)) auto;
                 }
 
                 button[data-icon="arrow_back"] {
-                    // Invert BS default btn-close margin logic
+                    /* Invert BS default btn-close margin logic */
                     margin: calc(-.5 * var(--#{$prefix}modal-header-padding-y)) auto calc(-.5 * var(--#{$prefix}modal-header-padding-y)) calc(-.5 * var(--#{$prefix}modal-header-padding-x));
                 }
             }

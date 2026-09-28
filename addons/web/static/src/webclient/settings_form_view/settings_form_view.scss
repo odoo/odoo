@@ -38,7 +38,7 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
    cursor: pointer;
 }
 
-// MIXINS
+/* MIXINS */
 @mixin o-base-settings-horizontal-padding($padding-base: $input-btn-padding-y-sm) {
    padding: $padding-base $o-horizontal-padding;
 
@@ -47,7 +47,7 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
    }
 }
 
-// Use a very specif selector to overwrite generic form-view rules
+/* Use a very specif selector to overwrite generic form-view rules */
 .o_form_view.o_base_settings_view .o_form_renderer.o_form_nosheet {
    display: flex;
    flex-flow: column nowrap;
@@ -58,7 +58,7 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
     margin-bottom: var(--settings__controlPanel-margin-bottom, #{map-get($spacers, 3)});
 }
 
-// BASE SETTINGS LAYOUT
+/* BASE SETTINGS LAYOUT */
 .o_base_settings_view .o_form_renderer {
    --settings__tab-bg: #{map-get($grays, '100')};
    --settings__tab-bg--active: #{$o-component-active-bg};
@@ -152,7 +152,7 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
                }
 
                .o_settings_container {
-                   max-width: map-get($grid-breakpoints, lg); // Provide a maximum container size to ensure readability
+                   max-width: map-get($grid-breakpoints, lg); /* Provide a maximum container size to ensure readability */
                    @include media-breakpoint-up(md) {
                         @include o-base-settings-horizontal-padding(0);
                    }

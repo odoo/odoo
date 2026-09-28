@@ -3,7 +3,7 @@
         margin-bottom: 0;
     }
 
-    // Invalidate `--heading-color` when under colored element in editable
+    /* Invalidate `--heading-color` when under colored element in editable */
     :where([style*="color:"]) {
         --heading-color: none;
     }
@@ -20,8 +20,8 @@
     }
 }
 
-#wrapwrap, // avoid duplicating in portal
-.o_mass_mailing_value, // avoid duplicating in mass_mailing
+#wrapwrap, /* avoid duplicating in portal */
+.o_mass_mailing_value, /* avoid duplicating in mass_mailing */
 .o_field_html {
     .o-float-start-parent {
         & ~ ul, & ~ ol {

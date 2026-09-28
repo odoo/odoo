@@ -1,12 +1,12 @@
 
-// The goal of this file is to contain CSS hacks related to allowing
-// section and note on sale order and invoice.
+/* The goal of this file is to contain CSS hacks related to allowing */
+/* section and note on sale order and invoice. */
 
 table.o_section_and_note_list_view {
     --o-SectionAndNote-border-color: #{$gray-500};
 
     .o_list_section_options {
-        width: 1px;  // to prevent the column to expand
+        width: 1px;  /* to prevent the column to expand */
         text-overflow: unset !important;
     }
 
@@ -27,8 +27,8 @@ table.o_section_and_note_list_view {
             font-weight: $font-weight-bolder;
 
             &:where(:not(:empty)) {
-                // When dragging, an empty tr is created we don't want
-                // a border here.
+                /* When dragging, an empty tr is created we don't want */
+                /* a border here. */
                 border-top-color: var(--o-SectionAndNote-border-color);
             }
 
@@ -44,14 +44,14 @@ table.o_section_and_note_list_view {
             font-weight: $font-weight-bold;
         }
 
-        // Check if next sibling is a section to apply a border-color.
+        /* Check if next sibling is a section to apply a border-color. */
         &:where(:not(.o_dragged):has(+ .o_is_line_section:not(.o_dragged, .d-table-row))) {
             border-color: var(--o-SectionAndNote-border-color);
         }
     }
 
-    // Check if first tr in the table is a section to apply a border-color on
-    // the <th> els.
+    /* Check if first tr in the table is a section to apply a border-color on */
+    /* the <th> els. */
     &:where(:has(tbody > tr:first-child.o_is_line_section:not(.o_dragged, .d-table-row))) th {
         border-color: var(--o-SectionAndNote-border-color);
     }

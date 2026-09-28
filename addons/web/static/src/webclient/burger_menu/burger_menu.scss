@@ -1,13 +1,13 @@
-//------------------------------------------------------------------------------
-// Mobile Burger Menu
-//------------------------------------------------------------------------------
+/* ------------------------------------------------------------------------------ */
+/* Mobile Burger Menu */
+/* ------------------------------------------------------------------------------ */
 
 .o_burger_menu, .o_app_menu_sidebar {
     width: Min(360px, 80%);
     z-index: $zindex-tooltip + 10;
     transition: transform .2s ease;
 
-    // Menu Toggle-Animations
+    /* Menu Toggle-Animations */
     transform: translateX(-100%);
 
     &.o-burger-slide-enter, &.o-burger-slide-leave,
@@ -15,7 +15,7 @@
         transform: translateX(0);
     }
 
-    // ====== Top-Bar
+    /* ====== Top-Bar */
     .o_sidebar_topbar {
         min-height: $o-navbar-height;
         background-color: $o-burger-topbar-bg;
@@ -28,15 +28,15 @@
         }
     }
 
-    // ====== Menu content container (both App's and User's entries)
+    /* ====== Menu content container (both App's and User's entries) */
     .o_burger_menu_content {
         &.o_burger_menu_app {
             background-color: $o-burger-base-bg;
         }
 
-        // Menu entries size and layout
+        /* Menu entries size and layout */
         ul {
-            // Handle menu text-indentation
+            /* Handle menu text-indentation */
             li {
                 padding-left: $o-horizontal-padding;
                 ul > li {
@@ -59,13 +59,13 @@
 }
 
 .o_app_menu_sidebar {
-    // Menu Toggle-Animations
+    /* Menu Toggle-Animations */
     transform: translateX(100%);
 }
 
-//------------------------------------------------------------------------------
-// Design rules not scoped within the main component
-//------------------------------------------------------------------------------
+/* ------------------------------------------------------------------------------ */
+/* Design rules not scoped within the main component */
+/* ------------------------------------------------------------------------------ */
 
 @include media-breakpoint-down(md) {
     .o_debug_dropdown {

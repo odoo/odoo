@@ -9,7 +9,7 @@
     --DateTimePicker__Template-columns: 4;
     --DateTimePicker__Day-template-rows: 6;
 
-    // Spacing knob for containers that inline the picker instead of floating it.
+    /* Spacing knob for containers that inline the picker instead of floating it. */
     padding: var(--DateTimePicker-padding, #{map-get($spacers, 2)});
     width: $o-datetime-picker-width;
 
@@ -17,7 +17,7 @@
         width: $o-datetime-picker-reduced-width;
     }
 
-    // Day
+    /* Day */
     .o_selected {
         color: $o-component-active-color;
         background: $o-component-active-bg;
@@ -53,7 +53,7 @@
         color: $o-calendar-today-color;
     }
 
-    // Grids
+    /* Grids */
 
     .o_date_picker {
         grid-template-rows: repeat(var(--DateTimePicker__Day-template-rows), 1fr);
@@ -65,7 +65,7 @@
         grid-template-columns: repeat(var(--DateTimePicker__Template-columns), 1fr);
     }
 
-    // Utilities
+    /* Utilities */
 
     .o_date_item_picker .o_datetime_button {
         &.o_selected:not(.o_select_start, .o_select_end) {

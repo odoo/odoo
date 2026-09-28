@@ -1,4 +1,4 @@
-// Specific CSS rules for M3 style
+/* Specific CSS rules for M3 style */
 
 .o_form_view {
     @include media-breakpoint-down(md) {
@@ -42,13 +42,13 @@
             border-radius: var(--field-spacing-unit);
             margin-bottom: calc(-1 * var(--body-font-size)) !important;
 
-            // Hide the border of the adjacent sibling box that is under the label
+            /* Hide the border of the adjacent sibling box that is under the label */
             background: linear-gradient(0deg, transparent 0%, $o-view-background-color 45%, $o-view-background-color 55%, transparent 100%);
 
             font-size: $font-size-sm !important;
             font-weight: $font-weight-normal;
 
-            // Avoid overflowing outside the viewport
+            /* Avoid overflowing outside the viewport */
             max-width: calc(100% - 5%);
             overflow: hidden;
             white-space: nowrap;
@@ -67,7 +67,7 @@
             }
         }
 
-        // Subtotals are already visually grouped by the footer itself, no box needed
+        /* Subtotals are already visually grouped by the footer itself, no box needed */
         .o_inner_group:not(.oe_subtotal_footer) {
             :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)) {
                 @extend %-o-field-box;
@@ -79,7 +79,7 @@
                     color: var(--body-color);
                     background: var(--secondary-bg) !important;
                     padding: 0 !important;
-                    border: 0 !important; // .btn-light border, visible on the dark pill
+                    border: 0 !important; /* .btn-light border, visible on the dark pill */
                     border-radius: calc(1.5 * var(--field-spacing-unit));
                     justify-content: center;
                 }
@@ -104,7 +104,7 @@
                     color: $o-action;
                 }
 
-                // For o_readonly_modifier input label
+                /* For o_readonly_modifier input label */
                 span.o_form_label {
                     display: inline-block;
                 }
@@ -139,9 +139,9 @@
         .o_outlined {
             @extend %-o-field-box;
 
-            // `.o_row` pulls its content outwards to align it on the edges of
-            // the cell holding it. As the box itself, it would rather stick out
-            // of the boxes of the fields around it.
+            /* `.o_row` pulls its content outwards to align it on the edges of */
+            /* the cell holding it. As the box itself, it would rather stick out */
+            /* of the boxes of the fields around it. */
             &.o_row {
                 margin-inline: 0;
             }

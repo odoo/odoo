@@ -1,14 +1,14 @@
 .o_field_properties {
     width: 100%;
-    // be sure that the property field can take zero height
-    // in case no property exists
+    /* be sure that the property field can take zero height */
+    /* in case no property exists */
     display: block;
     margin-bottom: 0 !important;
 }
 
-// The web client will add a "o_field_invalid" class when the field is considered
-// as not valid (at least one empty label). In that case we want to have in red
-// only the empty label, and not all inputs / components.
+/* The web client will add a "o_field_invalid" class when the field is considered */
+/* as not valid (at least one empty label). In that case we want to have in red */
+/* only the empty label, and not all inputs / components. */
 .o_field_properties,
 .o_field_properties.o_field_invalid,
 .o_property_field_popover {
@@ -38,7 +38,7 @@
             }
         }
     }
-    // only the empty property label should be affected by `o_field_invalid`
+    /* only the empty property label should be affected by `o_field_invalid` */
     .o_field_property_empty_label {
         color: map-get($theme-colors, 'danger');
     }
@@ -68,8 +68,8 @@
 }
 
 .o_field_property_add {
-    // cancel button padding to align the
-    // text button with properties labels
+    /* cancel button padding to align the */
+    /* text button with properties labels */
     margin-left: -1rem;
 }
 
@@ -84,7 +84,7 @@
     font-size: inherit;
     box-sizing: border-box;
 
-    // fullscreen on small screen sizes
+    /* fullscreen on small screen sizes */
     @include media-breakpoint-down(md) {
         top: 0px !important;
         left: 0px !important;
@@ -118,12 +118,12 @@
 }
 
 .o_property_dragging {
-    // make the background transparent for "o_property_drag_group" effect
+    /* make the background transparent for "o_property_drag_group" effect */
     input {
         background: transparent;
     }
 
-    // disabled click interaction when dragging on those elements
+    /* disabled click interaction when dragging on those elements */
     .o_field_property_open_popover,
     .o_field_property_label,
     input {
@@ -141,7 +141,7 @@
 }
 
 .o_field_properties div:not([columns="1"]) .o_property_drag_group {
-    // highlight effect on the group is activated only in multi-columns
+    /* highlight effect on the group is activated only in multi-columns */
     box-sizing: border-box;
     background-color: #{tint-color($o-action, 90%)};
     border: 1px solid #{$o-action};

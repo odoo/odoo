@@ -1,9 +1,9 @@
 @mixin hide-scrollbar {
-  -ms-overflow-style: none;  // IE 10+
-  scrollbar-width: none;  // Firefox
+  -ms-overflow-style: none;  /* IE 10+ */
+  scrollbar-width: none;  /* Firefox */
 
   &::-webkit-scrollbar {
-    display: none;  // Safari and Chrome
+    display: none;  /* Safari and Chrome */
   }
 }
 

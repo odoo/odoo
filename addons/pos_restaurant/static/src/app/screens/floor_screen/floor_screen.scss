@@ -287,7 +287,7 @@ $o-fe-color-active-background-color: var(--background-color) !default;
     }
   }
 
-  // In strict mode, only the indicator is clickable for resize
+  /* In strict mode, only the indicator is clickable for resize */
   &.o_fp_strict_mode {
     > .o_fp_handle {
       pointer-events: none;
@@ -327,7 +327,7 @@ $o-fe-color-active-background-color: var(--background-color) !default;
   }
 
 
-  // Hide non-active indicators for each resize action
+  /* Hide non-active indicators for each resize action */
   $resize-dirs: n, e, s, w, ne, se, sw, nw;
 
   @each $d in $resize-dirs {

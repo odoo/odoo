@@ -67,7 +67,7 @@
         }
 
         &:has(> .o_kanban_record:nth-child(12)) {
-            // 3 cards per row for large screens if there are more than 5 cards (+ 6 ghost cards)
+            /* 3 cards per row for large screens if there are more than 5 cards (+ 6 ghost cards) */
             @include media-breakpoint-up(xxl) {
                 --KanbanRecord-width: 31vw;
             }
@@ -93,7 +93,7 @@
     }
 }
 
-// Style for the widget "dashboard_graph"
+/* Style for the widget "dashboard_graph" */
 .o_dashboard_graph {
     position: relative;
     margin: $spacer (-$spacer);

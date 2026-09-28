@@ -1,4 +1,4 @@
-// ------- Kanban Menu -------
+/* ------- Kanban Menu ------- */
 .o-dropdown--kanban-record-menu {
     margin-top: -1px;
     margin-bottom: 0px;
@@ -6,8 +6,8 @@
 
     $o-kanban-manage-toggle-height: 35px;
 
-    // Arbitrary value to place the dropdown-menu exactly below the
-    // dropdown-toggle (height is forced so that it works on Firefox)
+    /* Arbitrary value to place the dropdown-menu exactly below the */
+    /* dropdown-toggle (height is forced so that it works on Firefox) */
     top: $o-kanban-manage-toggle-height;
 
     > div {
@@ -16,7 +16,7 @@
         margin-bottom: 5px;
     }
 
-    // Dropdown menu with complex layout
+    /* Dropdown menu with complex layout */
     .container {
         max-width: 400px;
         margin-left: 0;
@@ -67,7 +67,7 @@
 
 }
 
-// ------- Kanban View -------
+/* ------- Kanban View ------- */
 .o_kanban_view {
     @include media-breakpoint-down(md) {
         &.o_field_x2many_kanban .o_kanban_ghost {
@@ -100,10 +100,10 @@
     }
 }
 
-// ------- Kanban renderer -------
+/* ------- Kanban renderer ------- */
 .o_kanban_renderer {
-    // ----------------------------------------------------------------------------
-    // Default KanbanView values
+    /* ---------------------------------------------------------------------------- */
+    /* Default KanbanView values */
 
     --Kanban-background: #{$o-kanban-background};
     --Kanban-gap: unset;
@@ -133,15 +133,15 @@
     --Card__image--fill-width: #{$o-kanban-image-fill-width};
     --Card-Footer-gap: 4px;
 
-    // ----------------------------------------------------------------------------
-    // Inner components contextual adaptations
+    /* ---------------------------------------------------------------------------- */
+    /* Inner components contextual adaptations */
     .o_kanban_record {
         --Ribbon-font-size: #{$font-size-sm};
         --Ribbon-wrapper-width: 6.5rem;
         --Ribbon-height:  calc(var(--Ribbon-font-size) * 2);
     }
 
-    // ----------------------------------------------------------------------------
+    /* ---------------------------------------------------------------------------- */
 
     border-top: $border-width solid var(--Kanban-background);
     background: var(--Kanban-background);
@@ -172,8 +172,8 @@
         border-radius: $border-radius-lg;
         background-color: $o-view-background-color;
         margin-bottom: map-get($spacers, 3);
-        // TODO: Use variables from card.scss.
-        // We may need to define the card variables on o_kanban_renderer parent so it's accessible from this element.
+        /* TODO: Use variables from card.scss. */
+        /* We may need to define the card variables on o_kanban_renderer parent so it's accessible from this element. */
         padding: 14px;
 
         .o_form_view .o_inner_group {
@@ -193,7 +193,7 @@
         }
     }
 
-    // Kanban Grouped Layout
+    /* Kanban Grouped Layout */
     &.o_kanban_grouped {
         --KanbanGroup-width: calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
         --KanbanGroup-max-width: calc(1.25 * var(--KanbanGroup-width));
@@ -201,7 +201,7 @@
         min-height: 100%;
 
         @include media-breakpoint-down(md) {
-            --KanbanGroup-width: 90%; // don't take full width to give a hint of next/previous column on smaller screens
+            --KanbanGroup-width: 90%; /* don't take full width to give a hint of next/previous column on smaller screens */
 
             min-height: initial;
             height: 100%;
@@ -231,7 +231,7 @@
         }
     }
 
-    // Kanban Grouped Layout - Column default
+    /* Kanban Grouped Layout - Column default */
     .o_kanban_group {
         .o_kanban_header > .o_kanban_header_title {
             &:hover .o_group_config {
@@ -245,15 +245,15 @@
                 1px 0px 0px 0px var(--KanbanColumn__highlight-border) inset;
 
             .o_kanban_header {
-                // hack to display correct background color
+                /* hack to display correct background color */
                 margin: 0 calc(-1 * var(--KanbanGroup-padding-h) + 1px);
                 padding: 0 calc(var(--KanbanGroup-padding-h) - 1px);
             }
         }
 
         .o_kanban_counter {
-            // Reserve one line of text so the row doesn't grow once
-            // the progressbar data is loaded.
+            /* Reserve one line of text so the row doesn't grow once */
+            /* the progressbar data is loaded. */
             min-height: 1lh;
         }
     }
@@ -301,14 +301,14 @@
         }
     }
 
-    // Kanban Grouped Layout - Column Folded
+    /* Kanban Grouped Layout - Column Folded */
     .o_kanban_group.o_column_folded {
 
-        // don't fill the width of record for a folded column
+        /* don't fill the width of record for a folded column */
         .o_kanban_record.o_draggable {
             display: none !important;
         }
-        // don't visually fold on smaller screens (aka. mobile)
+        /* don't visually fold on smaller screens (aka. mobile) */
         @include media-breakpoint-up(md) {
             --KanbanGroup-padding-h: 0;
 
@@ -325,7 +325,7 @@
             }
 
             button.o_column_unfold {
-                // Matches .o_column_title font-size
+                /* Matches .o_column_title font-size */
                 width: 1.05rem;
                 height: map-get($font-sizes, 4) * $line-height-lg;
                 gap: .5rem;
@@ -356,7 +356,7 @@
         }
     }
 
-    // Kanban UN-grouped Layout
+    /* Kanban UN-grouped Layout */
     &.o_kanban_ungrouped {
         min-height: 100%;
 
@@ -374,7 +374,7 @@
             }
 
             &.o_kanban_ghost {
-                max-height: 0 !important; // to prevent view writers to override this height
+                max-height: 0 !important; /* to prevent view writers to override this height */
             }
         }
     }
@@ -401,13 +401,13 @@
     }
 }
 
-// ------- Sample mode -------
+/* ------- Sample mode ------- */
 .o_kanban_view .o_view_sample_data {
-    // all records
+    /* all records */
     .o_kanban_record,
-    // load more buttons
+    /* load more buttons */
     .o_kanban_load_more,
-    // progress bars and counters
+    /* progress bars and counters */
     .o_kanban_counter {
         @include o-sample-data-disabled;
     }
