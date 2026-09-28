@@ -26,6 +26,7 @@ class AccountAnalyticLine(models.Model):
         'Amount',
         required=True,
         default=0.0,
+        currency_field='currency_id',
     )
     unit_amount = fields.Float(
         'Quantity',
