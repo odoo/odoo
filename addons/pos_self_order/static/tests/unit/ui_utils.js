@@ -77,14 +77,10 @@ export async function selectSpecificSlot(slotValue) {
     await animationFrame();
 }
 
-export async function checkSlotUnavailable(slotValue) {
+export async function checkSlotDisabled(slotValue) {
     await waitFor(".self_order_pills_selection_popup");
-    const slots = queryAll(".self_order_pills_selection_popup .option-item").map((slot) =>
-        slot.textContent.trim()
-    );
-    if (slots.includes(slotValue)) {
-        throw new Error(`${slotValue} should not be available`);
-    }
+    const slots = queryAll(".self_order_pills_selection_popup .option-item");
+    expect(slots.some((slot) => slot.textContent.trim() === slotValue && slot.disabled)).toBe(true);
 }
 
 export async function clickProduct(name) {

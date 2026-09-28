@@ -1369,7 +1369,7 @@ test("test_slot_limit_orders: slot limit order test", async () => {
     await Utils.clickProduct("Free");
     await Utils.clickBtn("Checkout");
     await Utils.clickBtn("Order");
-    await Utils.checkSlotUnavailable("12:00");
+    await Utils.checkSlotDisabled("12:00");
 });
 
 test("test_self_order_preset_btn: check preset button displays correct preset", async () => {
