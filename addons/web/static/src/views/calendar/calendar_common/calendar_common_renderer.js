@@ -190,7 +190,8 @@ export class CalendarCommonRenderer extends Component {
         const showWeek = view.calendar.getOption("weekNumbers");
         const weekText = view.calendar.getOption("weekTextShort");
         const weekColumn = !this.customOptions.weekNumbersWithinDays;
-        if (showWeek && weekColumn) {
+        // Only the month view has a row per week
+        if (showWeek && weekColumn && view.type === "dayGridMonth") {
             makeWeekColumn({ el, weekText });
         }
     }
