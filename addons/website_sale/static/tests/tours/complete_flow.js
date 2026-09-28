@@ -40,6 +40,15 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
         ),
         tourUtils.waitForInteractionToLoad(),
         {
+            // Filling in the address now lands directly on `/shop/payment` (single landing,
+            // same as a logged-in customer): reach `/shop/checkout` again, the same way a
+            // logged-in customer would, to manage a separate billing address.
+            content: "Edit billing address from the payment page",
+            trigger: '#delivery_and_billing a:contains("Edit")',
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
             content: "Billing address is not same as delivery address",
             trigger: '#use_delivery_as_billing',
             run: "click",
@@ -73,37 +82,35 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
             trigger: '#billing_address_list:contains(17, SO1 Billing Road):contains(SO1BillingCity):contains(Afghanistan)',
         },
         {
+            // Opens the edit dialog instead of navigating to a new page.
             content: "Click for edit billing address",
             trigger: '#billing_address_list a[href^="/shop/address?address_type=billing"].js_edit_address:first',
             run: "click",
-            expectUnloadPage: true,
         },
         {
-            trigger: 'h4:contains("Edit address")',
+            content: "Wait for the edit address dialog to be populated",
+            trigger: '#o_wsale_edit_address_modal select[name="country_id"]',
         },
         {
             content: "Change billing address form",
-            trigger: 'select[name="country_id"]',
-        },
-        {
-            trigger: `input[name="name"]`,
+            trigger: '#o_wsale_edit_address_modal input[name="name"]',
             run: "edit abcd",
         },
         {
-            trigger: `input[name="phone"]`,
+            trigger: '#o_wsale_edit_address_modal input[name="phone"]',
             run: "edit 11111111",
         },
         {
-            trigger: `input[name="street"]`,
+            trigger: '#o_wsale_edit_address_modal input[name="street"]',
             run: "edit SO1 Billing Street Edited, 33",
         },
         {
-            trigger: `input[name="city"]`,
+            trigger: '#o_wsale_edit_address_modal input[name="city"]',
             run: "edit SO1BillingCityEdited",
         },
         {
-            content: "Click on Confirm button to save the address",
-            trigger: 'a[name="website_sale_main_button"]',
+            content: "Click on Save button to save the address",
+            trigger: "button[name='o_wsale_edit_address_modal_save']",
             run: "click",
             expectUnloadPage: true,
         },
