@@ -16,3 +16,6 @@ class HrLeave(models.Model):
             m = rem // 60
             duration = f'{h}h{m:02d}' if m else f'{h}h'
             leave.display_name = f'{leave.work_entry_type_id.name} {duration}'.strip()
+
+    def action_reprocess_time_rules(self):
+        return self.env['hr.time.rule.regenerate.wizard'].action_open_from_records(self)

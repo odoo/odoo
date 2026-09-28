@@ -404,7 +404,7 @@ class TestHrAttendance(HttpCase, TransactionCase):
             self.assertEqual(att.check_out, datetime(2025, 3, 12, 16, 0))
 
 
-@tagged('attendance_process')
+@tagged('attendance_process', 'post_install', '-at_install')
 class TestAbsenceDetectionCron(TransactionCase):
 
     @classmethod
