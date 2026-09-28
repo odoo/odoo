@@ -2899,3 +2899,28 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         self.invoice.button_cancel()
         self.assertIn(self.invoice.id, get_ids('cancel'))
         self.assertIn(self.invoice.id, get_ids(['not_paid', 'paid'], 'not in'))
+
+    def test_in_invoice_onchange_keep_imported_discount_precision(self):
+        """ Test that an imported bill can have discounts more precise than the decimal precision.
+            Editing should compute the taxes on the stored discounts
+        """
+        tax_21 = self.percent_tax(21.0)
+        with self.env['account.move']._disable_discount_precision():
+            bill = self.env['account.move'].create({
+                'move_type': 'in_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2019-01-01',
+                'invoice_line_ids': [Command.create({
+                    'name': 'line',
+                    'quantity': 100.0,
+                    'price_unit': 1000.0,
+                    'discount': 9.996,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                })],
+            })
+
+        with Form(bill) as bill_form:
+            with bill_form.invoice_line_ids.edit(0) as line_form:
+                line_form.name = 'edited line'
+        bill.action_post()
+        self.assertRecordValues(bill, [{'amount_untaxed': 90004.0, 'amount_tax': 18900.84, 'amount_total': 108904.84}])
