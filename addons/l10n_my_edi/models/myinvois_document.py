@@ -1636,8 +1636,9 @@ class MyInvoisDocument(models.Model):
         partners_per_tin = {}
         # The Malaysian TIN, when set, is the one used on MyInvois; the Tax ID is the fallback.
         # Prefer the companies to their contacts.
+        partners = partners.sorted(lambda p: bool(p.parent_id))
         for tin_field in ('l10n_my_edi_malaysian_tin', 'vat'):
-            for partner in partners.sorted(lambda p: bool(p.parent_id)):
+            for partner in partners:
                 if partner[tin_field] in tins:
                     partners_per_tin.setdefault(partner[tin_field], partner.commercial_partner_id)
 
