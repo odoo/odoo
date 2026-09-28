@@ -34,7 +34,7 @@ class PurchaseOrderLine(models.Model):
     discount = fields.Float(
         string="Discount (%)",
         compute='_compute_price_unit_and_date_planned_and_name',
-        digits='Discount', aggregator='avg',
+        min_display_digits='Discount', aggregator='avg',
         store=True, readonly=False)
     tax_ids = fields.Many2many(
         comodel_name='account.tax',
