@@ -7,7 +7,7 @@ import { onMounted, onPatched, proxy } from "@odoo/owl";
 export const DELAY = 400;
 
 export class AccountNumberWidget extends CharField {
-    static template = "account.AccountNumberWidget";
+    static template = "base.AccountNumberWidget";
     setup() {
         super.setup();
         this.state = proxy({ label: "" });
