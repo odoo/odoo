@@ -156,7 +156,7 @@
                             <field name="accrual_plan_id"
                                 placeholder="Regular allocation"
                                 readonly="not is_officer or state in ['refuse', 'validate']"
-                                domain="[('work_entry_type_id', '=', work_entry_type_id)] if work_entry_type_id else []"
+                                domain="[('work_entry_type_id', '=', work_entry_type_id)] if work_entry_type_id else [('work_entry_type_id', '!=', False)]"
                                 invisible="hide_accrual_plan_id"/>
                             <field name="number_of_days" invisible="1"/>
                             <div class="o_td_label">
