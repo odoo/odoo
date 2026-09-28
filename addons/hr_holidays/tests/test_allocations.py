@@ -299,6 +299,31 @@ class TestAllocations(TestHrHolidaysCommon):
 
         allocation_one.write({'number_of_days_display': 3, 'number_of_days': 3})
 
+    def test_leave_spanning_two_allocations_in_western_timezone(self):
+        """ A leave overlapping two consecutive allocations is split between
+            them. The working hours used to split it are read in the employee's
+            timezone, otherwise the parts do not add up to the duration of the
+            leave and the difference is reported as a missing allocation.
+        """
+        self.employee.tz = 'America/Chicago'
+        allocation_2025, allocation_2026 = self.env['hr.leave.allocation'].create([{
+            'name': 'Allocation %s' % year,
+            'work_entry_type_id': self.work_entry_type_paid.id,
+            'employee_id': self.employee.id,
+            'number_of_days': 10,
+            'date_from': date(year, 1, 1),
+            'date_to': date(year, 12, 31),
+        } for year in (2025, 2026)])
+        (allocation_2025 + allocation_2026).action_approve()
+
+        # 3 working days covered by the 2025 allocation, 2 by the 2026 one
+        leave = self._take_leave(self.employee, self.work_entry_type_paid, date(2025, 12, 29), date(2026, 1, 2))
+        leave.action_approve()
+
+        self.assertEqual(leave.number_of_days, 5)
+        self.assertEqual(allocation_2025.leaves_taken, 3)
+        self.assertEqual(allocation_2026.leaves_taken, 2)
+
     @users('admin')
     @freeze_time('2024-03-25')
     def test_allocation_dropdown_after_period(self):
