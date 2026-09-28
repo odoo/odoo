@@ -58,3 +58,20 @@ describe("Icon styles", () => {
         expect(".font-icons-icons [data-icon^='oi_']").toHaveStyle({ fontFamily: /odoo_ui_icons/ });
     });
 });
+
+test("Video size should be retained when the video or its options are changed", async () => {
+    const videoUrl = "//www.youtube.com/embed/qxb74CMR748";
+    onRpc("/html_editor/video_url/data", () => ({ platform: "youtube", embed_url: videoUrl }));
+    await setupWebsiteBuilder(
+        `<div class="media_iframe_video" data-oe-expression="${videoUrl}"
+            style="width: 50% !important;"/>`
+    );
+
+    await dblclick(":iframe .media_iframe_video");
+    await contains(".o_video_dialog_options input[type='checkbox']").click();
+    await contains(".modal-footer .btn-primary").click();
+    expect(":iframe .media_iframe_video").toHaveStyle(
+        { width: "50% !important" },
+        { inline: true }
+    );
+});
