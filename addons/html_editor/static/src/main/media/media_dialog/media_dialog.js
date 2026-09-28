@@ -188,10 +188,8 @@ export class MediaDialog extends Component {
      * @returns {Array<HTMLElement>}
      */
     async renderMedia(selectedMedia) {
-        const elements = await this.tabs[this.state.activeTab].Component.createElements(
-            selectedMedia,
-            { orm: this.orm }
-        );
+        const activeTabComponent = this.tabs[this.state.activeTab].Component;
+        const elements = await activeTabComponent.createElements(selectedMedia, { orm: this.orm });
         elements.forEach((element) => {
             if (this.props.media) {
                 element.classList.add(...this.props.media.classList);
@@ -204,7 +202,10 @@ export class MediaDialog extends Component {
                 (key) => key !== this.state.activeTab
             )) {
                 for (const property of this.tabs[otherTab].Component.mediaSpecificStyles) {
-                    element.style.removeProperty(property);
+                    // Remove styles that do not also exist in the target type.
+                    if (!activeTabComponent.mediaSpecificStyles.includes(property)) {
+                        element.style.removeProperty(property);
+                    }
                 }
                 element.classList.remove(...this.tabs[otherTab].Component.mediaSpecificClasses);
                 const extraClassesToRemove = [];
@@ -223,8 +224,7 @@ export class MediaDialog extends Component {
                 // Remove classes that do not also exist in the target type.
                 element.classList.remove(
                     ...extraClassesToRemove.filter((candidateName) => {
-                        for (const name of this.tabs[this.state.activeTab].Component
-                            .mediaExtraClasses) {
+                        for (const name of activeTabComponent.mediaExtraClasses) {
                             if (typeof name === "string") {
                                 if (candidateName === name) {
                                     return false;
@@ -246,9 +246,7 @@ export class MediaDialog extends Component {
             element.classList.remove(...this.initialIconClasses);
             element.classList.remove("o_modified_image_to_save");
             element.classList.remove("oe_edited_link");
-            element.classList.add(
-                ...this.tabs[this.state.activeTab].Component.mediaSpecificClasses
-            );
+            element.classList.add(...activeTabComponent.mediaSpecificClasses);
         });
         return elements;
     }
