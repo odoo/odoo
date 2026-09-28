@@ -107,7 +107,7 @@ class AccountBankStatementLine(models.Model):
         store=True,
     )
     country_code = fields.Char(
-        related='company_id.account_fiscal_country_id.code'
+        related='company_id.country_code'
     )
 
     # Technical field used to store the internal reference of the statement line for fast indexing and easier comparing
