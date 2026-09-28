@@ -83,11 +83,12 @@ export class LineBreakPlugin extends Plugin {
      * @param {Object} params
      * @param {HTMLElement} params.targetNode
      * @param {number} params.targetOffset
+     * @returns {HTMLBRElement[]}
      */
     insertLineBreakElement({ targetNode, targetOffset }) {
         const closestEl = closestElement(targetNode);
         if (closestEl && !closestEl.isContentEditable) {
-            return;
+            return [];
         }
         const restore = prepareUpdate(targetNode, targetOffset);
 
@@ -145,6 +146,7 @@ export class LineBreakPlugin extends Plugin {
                 break;
             }
         }
+        return brEls;
     }
 
     onBeforeInput(e) {

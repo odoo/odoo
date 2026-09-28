@@ -40,6 +40,26 @@ const [getPreviousLeavesInBlock, getNextLeavesInBlock] = [DIRECTIONS.LEFT, DIREC
     )
     .map((path) => (node, offset) => [...path(node, offset)]);
 
+export const SPLIT_OPERATION_TYPES = /** @type {const} */ ({
+    BLOCK: "block",
+    LINE: "line",
+    HANDLED: "handled",
+});
+
+/**
+ * @typedef { typeof SPLIT_OPERATION_TYPES[keyof typeof SPLIT_OPERATION_TYPES] } SplitOperationType
+ */
+
+/**
+ * @template { SplitOperationType } T
+ * @typedef { T extends "block"
+ *    ? { type: T, before: HTMLElement, after: HTMLElement }
+ *    : T extends "line"
+ *        ? { type: T, lineBreaks: HTMLBRElement[] }
+ *        : { type: T }
+ * } SplitOperationResult
+ */
+
 /**
  * @typedef { Object } SplitShared
  * @property { SplitPlugin['isUnsplittable'] } isUnsplittable
@@ -56,7 +76,7 @@ const [getPreviousLeavesInBlock, getNextLeavesInBlock] = [DIRECTIONS.LEFT, DIREC
  * @typedef {(({element: HTMLElement, secondPart: HTMLElement}) => void)[]} on_element_split_handlers
  * @typedef {(() => void)[]} on_will_split_block_handlers
  *
- * @typedef {((params: { targetNode: Node, targetOffset: number, blockToSplit: HTMLElement | null }) => void | true)[]} split_element_block_overrides
+ * @typedef {((params: { targetNode: Node, targetOffset: number, blockToSplit: HTMLElement | null }) => void | boolean | SplitOperationResult)[]} split_element_block_overrides
  *
  * @typedef {((node: Node) => boolean | undefined)[]} is_node_splittable_predicates
  */
@@ -160,7 +180,7 @@ export class SplitPlugin extends Plugin {
      * @param {Object} param0
      * @param {Node} param0.targetNode
      * @param {number} param0.targetOffset
-     * @returns {[HTMLElement|undefined, HTMLElement|undefined]}
+     * @returns {SplitOperationResult<SplitOperationType>}
      */
     splitBlockNode({ targetNode, targetOffset }) {
         if (targetNode.nodeType === Node.TEXT_NODE) {
@@ -170,8 +190,11 @@ export class SplitPlugin extends Plugin {
         const blockToSplit = closestElement(targetNode, isBlock);
         const params = { targetNode, targetOffset, blockToSplit };
 
-        if (this.delegateTo("split_element_block_overrides", params)) {
-            return [undefined, undefined];
+        for (const override of this.getResource("split_element_block_overrides")) {
+            const result = override(params);
+            if (result) {
+                return result.type ? result : { type: SPLIT_OPERATION_TYPES.HANDLED };
+            }
         }
 
         return this.splitElementBlock(params);
@@ -181,7 +204,7 @@ export class SplitPlugin extends Plugin {
      * @param {HTMLElement} param0.targetNode
      * @param {number} param0.targetOffset
      * @param {HTMLElement} param0.blockToSplit
-     * @returns {[HTMLElement|undefined, HTMLElement|undefined]}
+     * @returns {SplitOperationResult<"block" | "line">}
      */
     splitElementBlock({ targetNode, targetOffset, blockToSplit }) {
         // If the block is unsplittable or the targetNode is within an
@@ -194,8 +217,11 @@ export class SplitPlugin extends Plugin {
             // unsplittable.  The check must be done from the targetNode up to
             // the block for unsplittables. There are apparently no tests for
             // this.
-            this.dependencies.lineBreak.insertLineBreakElement({ targetNode, targetOffset });
-            return [undefined, undefined];
+            const lineBreaks = this.dependencies.lineBreak.insertLineBreakElement({
+                targetNode,
+                targetOffset,
+            });
+            return { type: SPLIT_OPERATION_TYPES.LINE, lineBreaks };
         }
         const restore = prepareUpdate(targetNode, targetOffset);
 
@@ -225,7 +251,7 @@ export class SplitPlugin extends Plugin {
 
         this.dependencies.selection.setCursorStart(afterElement);
 
-        return [beforeElement, afterElement];
+        return { type: SPLIT_OPERATION_TYPES.BLOCK, before: beforeElement, after: afterElement };
     }
 
     /**
