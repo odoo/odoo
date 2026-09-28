@@ -10,6 +10,12 @@ import {
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
+export const many2ManyTagsEmailFieldProps = {
+    ...many2ManyTagsFieldProps,
+    context: t.object().optional(),
+    canEditTags: t.boolean().optional(),
+};
+
 export class FieldMany2ManyTagsEmailMany2xAutocomplete extends Many2XAutocomplete {
     /**
      * @override
@@ -33,11 +39,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         Tag: RecipientTag,
         Many2XAutocomplete: FieldMany2ManyTagsEmailMany2xAutocomplete,
     };
-    props = useProps({
-        ...many2ManyTagsFieldProps,
-        context: t.object().optional(),
-        canEditTags: t.boolean().optional(),
-    });
+    props = useProps(many2ManyTagsEmailFieldProps);
 
     setup() {
         super.setup();
