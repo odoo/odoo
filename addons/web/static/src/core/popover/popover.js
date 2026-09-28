@@ -115,6 +115,7 @@ export const popoverProps = {
     arrow: t.boolean().optional(true),
     class: t.any().optional(""),
     role: t.string().optional(),
+    id: t.string().optional(),
 
     // Positioning props
     fixedPosition: t.boolean().optional(false),
