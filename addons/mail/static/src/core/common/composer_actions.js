@@ -64,6 +64,7 @@ registerComposerAction("send-message", {
         (store.env.services.ui.isSmall && composer.message) ||
         (!owner.env.inChatter && !composer.message),
     disabledCondition: ({ owner }) => owner.isSendButtonDisabled,
+    hasBtnBg: true,
     icon: "send",
     isActive: ({ owner }) => !owner.isSendButtonDisabled,
     name: ({ composer, owner }) =>
