@@ -56,7 +56,7 @@
 
         .o_button_icon {
             font-size: $-stat-button-icon-size;
-            color: var(--o-stat-button-color, #{$primary});
+            color: var(--o-stat-button-color, var(--primary));
 
             &:before {
                 margin-right: $-stat-button-icon-margin-end;
@@ -236,7 +236,7 @@
         /* Use the value of $focus-ring-box-shadow defined in bootstrap_overridden.scss, */
         /* but apply it with inset so the ring is visible inside the button. */
         /* If the default value changes, this should be updated accordingly. */
-        --#{$prefix}btn-focus-box-shadow: inset 0 0 #{$focus-ring-blur} #{$focus-ring-width * .5} #{$o-component-active-border}, inset 0 0 #{$focus-ring-blur} #{$focus-ring-width} #{$focus-ring-color};
+        --#{$prefix}btn-focus-box-shadow: inset 0 0 #{$focus-ring-blur} #{$focus-ring-width * .5} #{$o-component-active-border}, inset 0 0 #{$focus-ring-blur} var(--focus-ring-width) var(--focus-ring-color);
 
         height: auto;
         width: 100%;
