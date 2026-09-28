@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add("website_livechat.lazy_frontend_bus", {
             trigger: "body:not(.o-bus-service-started):not(.o-worker-service-started)",
         },
         {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-html",
             run: "press Enter",
         },
         { trigger: "body.o-bus-service-started.o-worker-service-started" },

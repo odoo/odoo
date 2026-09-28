@@ -89,8 +89,8 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             editComposer("I want to say..."),
             {
                 // Simulate that the user is typing, so the chatbot shouldn't go to the next step
-                trigger: `${LIVECHAT_COMPOSER}:enabled`,
-                async run({ edit }) {
+                trigger: `${LIVECHAT_COMPOSER}[contenteditable='true']`,
+                async run({ editor }) {
                     chatbotDelayProcessingDef = Promise.withResolvers();
                     let failTimeout = setTimeout(() => {
                         chatbotDelayProcessingDef.reject(
@@ -98,7 +98,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                         );
                     }, 5000);
                     chatbotDelayProcessingDef.promise.then(() => clearTimeout(failTimeout));
-                    await edit("Never mind!");
+                    await editor("Never mind!");
                     await chatbotDelayProcessingDef.promise;
                     chatbotDelayProcessingDef = Promise.withResolvers();
                     failTimeout = setTimeout(() => {
@@ -107,7 +107,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                         );
                     }, 5000);
                     chatbotDelayProcessingDef.promise.then(() => clearTimeout(failTimeout));
-                    await edit("Never mind!!!");
+                    await editor("Never mind!!!");
                     await chatbotDelayProcessingDef.promise;
                 },
             },
@@ -149,7 +149,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             waitForMessage("I will transfer you to a human."),
             {
                 // Wait for the operator to be added: composer is only enabled at that point.
-                trigger: ".o-livechat-root:shadow .o-mail-Composer-input:enabled",
+                trigger: ".o-livechat-root:shadow .o-mail-Composer-html[contenteditable='true']",
             },
         ];
     },

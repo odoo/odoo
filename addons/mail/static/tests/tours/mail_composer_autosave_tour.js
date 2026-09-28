@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_a
         },
         {
             content: "Edit the body",
-            trigger: ".o-wysiwyg div[contenteditable='true']",
+            trigger: ".modal .o-wysiwyg div[contenteditable='true']",
             run: "editor Hello-- Mitchell Admin",
         },
         {

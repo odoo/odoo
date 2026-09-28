@@ -16,8 +16,8 @@ registry.category("web_tour.tours").add("portal_rating_tour", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o_review_composer_modal .o-mail-Composer-input",
-            run: "edit Excellent service!",
+            trigger: "#chatterRoot:shadow .o_review_composer_modal .o-mail-Composer-html",
+            run: "editor Excellent service!",
         },
         {
             trigger: "#chatterRoot:shadow .o_review_composer_modal .o-mail-Composer-send:enabled",

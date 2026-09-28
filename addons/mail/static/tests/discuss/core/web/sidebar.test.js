@@ -33,7 +33,7 @@ test("unknown channel can be displayed and interacted with", async () => {
     await openDiscuss(channelId);
     await waitForChannels([`discuss.channel_${channelId}`]);
     await waitFor(".o-mail-NotificationItem.o-active:has(:text('Not So Secret')):count(1)");
-    await insertTextInComposer(".o-mail-Composer", "Hello", { replace: true });
+    await insertTextInComposer(".o-mail-Composer", "Hello");
     await press("Enter");
     await waitFor(".o-mail-Message:has(:text('Hello')):count(1)");
     await expect.waitForSteps(["discuss.channel/new_message"]);

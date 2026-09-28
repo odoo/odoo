@@ -5,9 +5,10 @@ import {
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
 import { click, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test } from "@odoo/hoot";
 import { press, waitFor } from "@odoo/hoot-dom";
-import { contains, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import { getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -21,7 +22,7 @@ test("Handle livechat history command", async () => {
     });
     await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
-    await contains(".o-mail-Composer-input").edit("Hello World!", { confirm: false });
+    await insertTextInComposer(".o-mail-Composer", "Hello World!");
     const subscribed = waitUntilSubscribe();
     await press("Enter");
     await subscribed;

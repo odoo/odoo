@@ -35,6 +35,9 @@ patch(Composer.prototype, {
     },
     get wysiwygConfig() {
         const config = super.wysiwygConfig;
+        if (!this.composerService.htmlEnabled) {
+            return config;
+        }
         return { ...config, Plugins: [...config.Plugins, TranslatePlugin] };
     },
 });

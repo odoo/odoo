@@ -1,4 +1,4 @@
-import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
+import { getDeepestPosition, isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 import { rightPos } from "@html_editor/utils/position";
 import {
     generatePartnerMentionElement,
@@ -8,7 +8,6 @@ import {
 import { useSearch } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { proxy, t, useOnChange, useProps, useScope } from "@odoo/owl";
-import { emojiType } from "@web/core/emoji_picker/emoji_loader";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 
@@ -20,7 +19,6 @@ import { useService } from "@web/core/utils/hooks";
 export const SUGGESTION_DELIMITERS = Object.freeze({
     PARTNER: "@",
     CANNED_RESPONSE: "::",
-    EMOJI: ":",
     CHANNEL_COMMAND: "/",
 });
 
@@ -30,7 +28,6 @@ export const optionType = (store) =>
         buttonClass: t.string().optional(),
         cannedResponse: t.instanceOf(store["mail.canned.response"]).optional(),
         classList: t.string().optional(),
-        emoji: emojiType.optional(),
         group: t.any().optional(),
         help: t.string().optional(),
         isSpecial: t.boolean().optional(),
@@ -50,7 +47,6 @@ export const optionType = (store) =>
  * @typedef {import("models").ResPartner
  *   | import("models").ResRole
  *   | import("models").CannedResponse
- *   | import("@web/core/emoji_picker/emoji_picker").Emoji
  *   | import("@mail/core/common/store_plugin").SpecialMention} Suggestion
  */
 
@@ -58,7 +54,6 @@ export class UseSuggestion {
     ancestors = useAncestors();
     props = useProps();
     scope = useScope();
-    composerService = useService("mail.composer");
     suggestionService = useService("mail.suggestion");
 
     /**
@@ -83,7 +78,7 @@ export class UseSuggestion {
         useOnChange(
             () => this.detectionDeps,
             () => {
-                if (this.composerService.htmlEnabled && !this.editor()) {
+                if (!this.editor()) {
                     return;
                 }
                 this.detect();
@@ -93,12 +88,7 @@ export class UseSuggestion {
     }
     /** The composer state {@link detect} depends on. */
     get detectionDeps() {
-        return [
-            this.composer.selection.start,
-            this.composer.selection.end,
-            this.composer.composerText,
-            this.composer.composerHtml,
-        ];
+        return [this.composer.composerHtml];
     }
     /**
      * Whether the user closed the suggestion list. Only the answer of an ongoing fetch is
@@ -128,32 +118,18 @@ export class UseSuggestion {
     }
     detect() {
         this.isDismissed = false;
-        let start = 0;
-        let end = 0;
-        let text = "";
-        if (this.composerService.htmlEnabled) {
-            const selection = this.editor().shared.selection.getEditableSelection();
-            if (
-                !isTextNode(selection.startContainer) ||
-                !isContentEditable(selection.startContainer) ||
-                !selection.isCollapsed
-            ) {
-                this.clearSearch();
-                return;
-            }
-            start = selection.startOffset;
-            end = selection.endOffset;
-            text = selection.anchorNode.textContent;
-        } else {
-            start = this.composer.selection.start;
-            end = this.composer.selection.end;
-            text = this.composer.composerText;
-        }
-        if (start !== end) {
+        const selection = this.editor().shared.selection.getEditableSelection();
+        if (!selection.isCollapsed) {
             // avoid interfering with multi-char selection
             this.clearSearch();
             return;
         }
+        const [node, start] = this.getCursorPosition();
+        if (!isTextNode(node) || !isContentEditable(node)) {
+            this.clearSearch();
+            return;
+        }
+        const text = node.textContent;
         const candidatePositions = [];
         // consider the chars before the current cursor position
         let numberOfSpaces = 0;
@@ -217,30 +193,31 @@ export class UseSuggestion {
         }
         this.clearSearch();
     }
+    /**
+     * Programmatic insertions (e.g. canned response button) may leave the
+     * cursor between nodes rather than inside a text node.
+     *
+     * @returns {[Node, number]}
+     */
+    getCursorPosition() {
+        const { endContainer, endOffset } = this.editor().shared.selection.getEditableSelection();
+        return getDeepestPosition(endContainer, endOffset);
+    }
     get thread() {
         return this.composer.thread || this.composer.message?.thread;
     }
     insert(option) {
-        let position = this.detection.position + 1;
-        if (
-            [SUGGESTION_DELIMITERS.EMOJI, SUGGESTION_DELIMITERS.CANNED_RESPONSE].includes(
-                this.detection.delimiter
-            ) ||
-            (this.composerService.htmlEnabled &&
-                this.detection.delimiter !== SUGGESTION_DELIMITERS.CHANNEL_COMMAND)
-        ) {
-            position = this.detection.position;
-        }
-        if (this.composerService.htmlEnabled) {
-            const { startContainer, endContainer, endOffset } =
-                this.editor().shared.selection.getEditableSelection();
-            this.editor().shared.selection.setSelection({
-                anchorNode: startContainer,
-                anchorOffset: position,
-                focusNode: endContainer,
-                focusOffset: endOffset,
-            });
-        }
+        const position =
+            this.detection.delimiter === SUGGESTION_DELIMITERS.CHANNEL_COMMAND
+                ? this.detection.position + 1
+                : this.detection.position;
+        const [node, offset] = this.getCursorPosition();
+        this.editor().shared.selection.setSelection({
+            anchorNode: node,
+            anchorOffset: position,
+            focusNode: node,
+            focusOffset: offset,
+        });
         if (option.partner) {
             this.composer.mentionedPartners.add({ id: option.partner.id });
         } else if (option.role) {
@@ -248,21 +225,12 @@ export class UseSuggestion {
         } else if (option.cannedResponse) {
             this.composer.cannedResponses.push(option.cannedResponse);
         }
-        if (this.composerService.htmlEnabled) {
-            const inlineElement = makeMentionFromOption(option, { thread: this.thread });
-            this.editor().shared.dom.insert(inlineElement);
-            const [anchorNode, anchorOffset] = rightPos(inlineElement);
-            this.editor().shared.selection.setSelection({ anchorNode, anchorOffset });
-            this.editor().shared.dom.insert("\u00A0");
-            this.editor().shared.history.commit();
-        } else {
-            // remove the user-typed search delimiter
-            this.composer.composerText =
-                this.composer.composerText.substring(0, position) +
-                this.composer.composerText.substring(this.composer.selection.end);
-            this.clearSearch();
-            this.composer.insertText(`${option.label} `, position);
-        }
+        const inlineElement = makeMentionFromOption(option, { thread: this.thread });
+        this.editor().shared.dom.insert(inlineElement);
+        const [anchorNode, anchorOffset] = rightPos(inlineElement);
+        this.editor().shared.selection.setSelection({ anchorNode, anchorOffset });
+        this.editor().shared.dom.insert("\u00A0");
+        this.editor().shared.history.commit();
     }
     update() {
         if (!this.detection.delimiter) {
@@ -388,14 +356,6 @@ export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
                     source: suggestion.source,
                     title: suggestion.substitution,
                     classList,
-                })),
-            };
-        case "emoji":
-            return {
-                optionTemplate: "mail.Composer.suggestionEmoji",
-                options: suggestions.map((suggestion) => ({
-                    emoji: suggestion,
-                    label: suggestion.codepoints,
                 })),
             };
         default:

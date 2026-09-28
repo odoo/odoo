@@ -63,7 +63,10 @@ export class NavigableList extends Component {
         onExternalClick(this.rootRef, async (ev) => {
             // Let event be handled by bubbling handlers first.
             await new Promise(setTimeout);
-            if (isEventHandled(ev, "composer.onClickTextarea")) {
+            if (
+                isEventHandled(ev, "composer.onClickInput") ||
+                isEventHandled(ev, "composer.clickInsertCannedResponse")
+            ) {
                 return;
             }
             this.close();
