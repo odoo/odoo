@@ -203,9 +203,21 @@ class PurchaseOrderLine(models.Model):
             for inv_line in line._get_invoice_lines():
                 if inv_line.move_id.state not in ['cancel'] or inv_line.move_id.payment_state == 'invoicing_legacy':
                     if inv_line.move_id.move_type == 'in_invoice':
+<<<<<<< 07b9fe7764f6c1e8ab83a42001e3652abc98542b
                         invoiced_qties[line] += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.uom_id)
+||||||| fb5dffbfc2b2281a2c4ba994214cc860dee28cca
+                        invoiced_qties[line] += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom_id)
+=======
+                        invoiced_qties[line] += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom_id, round=False)
+>>>>>>> c97c16eedf7d35f01fc28600e486938fbed4734c
                     elif inv_line.move_id.move_type == 'in_refund':
+<<<<<<< 07b9fe7764f6c1e8ab83a42001e3652abc98542b
                         invoiced_qties[line] -= inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.uom_id)
+||||||| fb5dffbfc2b2281a2c4ba994214cc860dee28cca
+                        invoiced_qties[line] -= inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom_id)
+=======
+                        invoiced_qties[line] -= inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom_id, round=False)
+>>>>>>> c97c16eedf7d35f01fc28600e486938fbed4734c
         return invoiced_qties
 
     def _get_invoice_lines(self):
