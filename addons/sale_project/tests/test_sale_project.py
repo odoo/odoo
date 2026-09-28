@@ -1093,6 +1093,36 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
         })
         self.assertEqual(task3.sale_order_id, sale_order, "Task matches SO's partner_id")
 
+    def test_task_change_project_and_partner_resets_sale_line(self):
+        """
+        Moving a task to a project of another customer and changing its partner
+        in the same write must not keep the SO line of the previous customer.
+        """
+        other_partner = self.env['res.partner'].create({'name': "Other customer"})
+        sale_order, other_sale_order = self.env['sale.order'].with_context(tracking_disable=True).create([{
+            'partner_id': partner.id,
+            'order_line': [Command.create({'product_id': self.product_order_service1.id})],
+        } for partner in (self.partner, other_partner)])
+        (sale_order | other_sale_order).action_confirm()
+        project, other_project = self.env['project.project'].create([{
+            'name': f"Project {so.partner_id.name}",
+            'allow_billable': True,
+            'partner_id': so.partner_id.id,
+            'sale_line_id': so.order_line.id,
+        } for so in (sale_order, other_sale_order)])
+
+        task = self.env['project.task'].create({'name': "Task", 'project_id': project.id})
+        self.assertEqual(task.sale_line_id, sale_order.order_line)
+
+        task.write({'project_id': other_project.id, 'partner_id': other_partner.id})
+        self.assertEqual(task.sale_line_id, other_sale_order.order_line, "The task takes the SO line of its new project")
+        self.assertEqual(task.sale_order_id, other_sale_order)
+
+        # writing the current partner again (e.g. an import) keeps the SO line
+        task.sale_line_id = sale_order.order_line
+        task.write({'partner_id': other_partner.id})
+        self.assertEqual(task.sale_line_id, sale_order.order_line, "The SO line is kept when the partner does not change")
+
     def test_action_view_project_ids(self):
         order = self.env['sale.order'].create({
             'name': 'Project Order',
