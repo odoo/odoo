@@ -756,8 +756,11 @@ describe("pos_store.js", () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
 
-        const fastPM = store.config.payment_method_ids[0];
+        const fastPM = store.config.paymentMethods[0];
         const card = store.models["pos.payment.method"].get(2);
+        // Card comes first in payment_method_ids but Cash has the lowest sequence
+        expect(store.config.payment_method_ids[0]).toBe(card);
+        expect(fastPM.name).toBe("Cash");
         const payLaterMethod = store.models["pos.payment.method"].find(
             (pm) => pm.type === "pay_later"
         );
