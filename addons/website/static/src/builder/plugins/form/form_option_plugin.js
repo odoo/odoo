@@ -1568,18 +1568,25 @@ export class SetDescriptionAction extends BuilderAction {
         // This action is used for two scenarios:
         // 1. The target field is a checkbox: The field description will be set
         // with the position specified in the `value`.
-        // 2. Otherwise, the field description will be simply toggled.
-        const toggleMode = !value || value === "none" || !field.description;
+        // 2. Otherwise, the field description will be visibly toggled
+        // Non-visible descriptions will be removed on save
+        const toggleMode =
+            !value ||
+            value === "none" ||
+            !field.description ||
+            field.description.classList.contains("d-none");
         field.formatInfo.textPosition = value;
         if (toggleMode) {
-            // If enabled, the field description will be changed to the
-            // default one in qweb.
-            field.description = !field.description;
+            if (field.description) {
+                field.description.classList.toggle("d-none");
+            } else {
+                field.description = true; // Will be changed to default description in qweb
+            }
         }
         this.dependencies.websiteFormOption.replaceField(fieldEl, field, fields);
         const description = fieldEl.querySelector(".s_website_form_field_description")
             ?.childNodes[0];
-        if (description) {
+        if (description && !description.parentElement.classList.contains("d-none")) {
             if (!isPreviewing) {
                 this.editable.focus();
             }
