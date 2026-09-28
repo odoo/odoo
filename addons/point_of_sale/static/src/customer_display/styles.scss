@@ -73,12 +73,12 @@ li {
 
 .o_customer_display_sidebar {
     background: center / cover no-repeat;
-    border-right: $border-width solid $border-color;
+    border-right: var(--border-width) solid var(--border-color);
     flex-basis: 50%;
 
     @include media-breakpoint-down(md) {
         border-right: 0;
-        border-bottom: $border-width solid $border-color;
+        border-bottom: var(--border-width) solid $border-color;
     }
 
     @media (orientation: portrait) {
@@ -97,7 +97,7 @@ li {
     animation: item_in 1s ease;
 
     &:not(:last-child) {
-        border-bottom: $border-width solid $border-color;
+        border-bottom: var(--border-width) solid var(--border-color);
     }
 
     .price-per-unit {
@@ -126,6 +126,6 @@ li {
     img {
         max-height: 100%;
         max-width: 100%;
-        border-radius: $border-radius-lg !important;
+        border-radius: var(--border-radius-lg) !important;
     }
 }

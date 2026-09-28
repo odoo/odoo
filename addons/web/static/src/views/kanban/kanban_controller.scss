@@ -143,7 +143,7 @@
 
     /* ---------------------------------------------------------------------------- */
 
-    border-top: $border-width solid var(--Kanban-background);
+    border-top: var(--border-width) solid var(--Kanban-background);
     background: var(--Kanban-background);
     padding: var(--Kanban-padding);
     gap: var(--Kanban-gap);
@@ -168,8 +168,8 @@
     }
 
     .o_kanban_quick_create {
-        border: $border-width solid $border-color;
-        border-radius: $border-radius-lg;
+        border: var(--border-width) solid var(--border-color);
+        border-radius: var(--border-radius-lg);
         background-color: $o-view-background-color;
         margin-bottom: map-get($spacers, 3);
         /* TODO: Use variables from card.scss. */

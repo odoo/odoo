@@ -6,7 +6,7 @@
 
     img:hover {
         cursor: context-menu;
-        outline: $border-width solid $o-action;
+        outline: var(--border-width) solid $o-action;
     }
 
     .attendee_tag_status {
@@ -21,7 +21,7 @@
 
     .o_attendee_status_accepted {
         background-color: tint-color($success, 80%);
-        color: $success;
+        color: var(--success);
     }
     .o_attendee_status_declined {
         background-color: tint-color($danger, 80%);
