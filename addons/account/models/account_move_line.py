@@ -413,7 +413,7 @@ class AccountMoveLine(models.Model):
     )
     discount = fields.Float(
         string='Discount (%)',
-        digits='Discount',
+        min_display_digits='Discount',
         default=0.0,
     )
     tax_calculation_rounding_method = fields.Selection(
