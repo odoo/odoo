@@ -755,9 +755,10 @@ class ProjectTask(models.Model):
         for task in self:
             task.display_parent_task_button = task.parent_id in accessible_parent_tasks
 
+    @api.depends_context('uid')
     def _compute_display_follow_button(self):
         if not self.env.user.share:
-            self.display_follow_button = False
+            self.display_follow_button = self.env.user.has_group('project.group_project_user')
             return
         collaborator_projects = self.env['project.collaborator'].sudo().search([
             ('project_id', 'in', self.project_id.ids),
