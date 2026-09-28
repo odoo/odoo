@@ -330,8 +330,8 @@ class TestSaleOrder(SaleCommon):
 
     def test_discount_rounding(self):
         """
-            Check the discount is properly rounded and the price subtotal
-            computed with this rounded discount
+            Check the discount is not rounded and the price subtotal
+            is computed with the discount as provided
         """
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
@@ -342,8 +342,8 @@ class TestSaleOrder(SaleCommon):
                 'discount': 74.246,
             })]
         })
-        self.assertEqual(sale_order.order_line.price_subtotal, 49.44, "Subtotal should be equal to 192 * (1 - 0.7425)")
-        self.assertEqual(sale_order.order_line.discount, 74.25)
+        self.assertEqual(sale_order.order_line.price_subtotal, 49.45, "Subtotal should be equal to 192 * (1 - 0.74246)")
+        self.assertEqual(sale_order.order_line.discount, 74.246)
 
     def test_tax_amount_rounding(self):
         """ Check order amounts are rounded according to settings """

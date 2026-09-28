@@ -233,7 +233,10 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
             line['tax_ids'] = related_purchase_tax.ids
             line['price_unit'] = line_product.list_price
 
+        discounts = [line.pop('discount') for line in so_line_vals]
         self.assertRecordValues(po.order_line, so_line_vals)
+        for po_line, discount in zip(po.order_line, discounts):
+            self.assertAlmostEqual(po_line.discount, discount)
 
     def test_so_product_unit_price_with_different_uom(self):
         company = self.company_data['company']
