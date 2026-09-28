@@ -1004,7 +1004,7 @@ class MrpWorkorder(models.Model):
         date_to_plan_on = max((wo.leave_id.date_to for wo in self.blocked_by_workorder_ids if wo.leave_id), default=datetime.now())
         if self.env.context.get('date_to_plan_on'):
             date_to_plan_on = fields.Datetime.from_string(self.env.context.get('date_to_plan_on'))
-        self._action_plan(from_date=date_to_plan_on, alternative=False, consider_blocked_by=False)
+        self._action_plan(from_date=date_to_plan_on)
 
     def action_unplan(self):
         self.leave_id.unlink()
