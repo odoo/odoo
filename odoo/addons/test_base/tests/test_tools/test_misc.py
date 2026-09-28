@@ -2,8 +2,14 @@
 
 import base64
 import datetime
+import io
 import os.path
 from zoneinfo import ZoneInfo
+
+import openpyxl
+import xlsxwriter
+from markupsafe import Markup
+from openpyxl.worksheet.formula import ArrayFormula
 
 from odoo.tests.common import BaseCase, TransactionCase, freeze_time, tagged
 from odoo.tools import config, misc, urls
@@ -839,3 +845,34 @@ class TestFormatAmountFunction(TransactionCase):
         # Has no effect on number having same decimal and thousandth seperator - currency position after
         self.currency_object_format_amount.position = "after"
         self.assert_format_amount(10000, "10#000%sfA" % "\N{NO-BREAK SPACE}", False, "GFL")
+
+
+class TestXlsxWorkbook(BaseCase):
+    def test_write_values(self):
+        names = ['Deco Addict', '=Sale= Promo', '{=Office=}', 'https://www.odoo.com', 'mailto:info@odoo.com']
+        output = io.BytesIO()
+        with xlsxwriter.Workbook(output, {'in_memory': True}) as workbook:
+            worksheet = workbook.add_worksheet()
+            for col, name in enumerate(names):
+                worksheet.write(0, col, name)
+            worksheet.write_row(1, 0, names)
+            worksheet.write_column(2, 0, names)
+            worksheet.merge_range(2, 1, 2, 2, names[1])
+            worksheet.write('B4', names[2])
+            worksheet.write('C4', Markup(names[3]))
+            worksheet.write(4, 1, 42)
+            worksheet.write_formula(5, 1, '=B5*2')
+            worksheet.write_array_formula('B7', '{=SUM(B5:B6*2)}')
+
+        sheet = openpyxl.load_workbook(output).active
+        text_cells = [*sheet[1], *sheet[2], *sheet['A'][2:], sheet['B3'], sheet['B4'], sheet['C4']]
+        self.assertEqual(
+            [cell.value for cell in text_cells],
+            [*names, *names, *names, names[1], names[2], names[3]],
+        )
+        for cell in text_cells:
+            self.assertEqual(cell.data_type, 's')
+            self.assertIsNone(cell.hyperlink)
+        self.assertEqual(sheet['B5'].value, 42)
+        self.assertEqual(sheet['B6'].data_type, 'f')
+        self.assertIsInstance(sheet['B7'].value, ArrayFormula)
