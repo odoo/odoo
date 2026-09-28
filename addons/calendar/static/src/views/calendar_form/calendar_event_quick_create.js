@@ -71,7 +71,7 @@ export class CalendarEventQuickCreateFormController extends CalendarEventFormCon
      * on a record, the user is redirected back to the record they clicked the activity button on.
      */
     async onRecordSaved() {
-        await super.onRecordSaved(arguments);
+        await super.onRecordSaved(...arguments);
         if (this.props.context.return_to_parent_breadcrumb) {
             const breadcrumb = this.actionService.currentController.config.breadcrumbs.at(-2);
             if (breadcrumb) {
