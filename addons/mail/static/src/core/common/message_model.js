@@ -32,7 +32,7 @@ import {
 import { renderToElement } from "@web/core/utils/render";
 import { url } from "@web/core/utils/urls";
 
-import { markup } from "@odoo/owl";
+import { markup, shallowEqual } from "@odoo/owl";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 import { discussComponentRegistry } from "./discuss_component_registry";
 
@@ -84,13 +84,16 @@ export class Message extends Record {
         return editedDate ? deserializeDateTime(editedDate) : undefined;
     });
     /** attachments not already clearly visible in the body, unlike inlined images */
-    extra_body_attachment_ids = this.computed(() => {
-        const inlinedImageAttachmentIds = [
-            ...(this.bodyEl?.querySelectorAll("img[data-attachment-id]") ?? []),
-        ].map((img) => parseInt(img.dataset.attachmentId));
+    extra_body_attachment_ids = this.computed(
+        () => {
+            const inlinedImageAttachmentIds = [
+                ...(this.bodyEl?.querySelectorAll("img[data-attachment-id]") ?? []),
+            ].map((img) => parseInt(img.dataset.attachmentId));
 
-        return this.attachment_ids.filter((a) => !inlinedImageAttachmentIds.includes(a.id));
-    });
+            return this.attachment_ids.filter((a) => !inlinedImageAttachmentIds.includes(a.id));
+        },
+        { equals: shallowEqual }
+    );
     hasLink = this.computed(() => {
         if (this.isBodyEmpty) {
             return false;
@@ -128,8 +131,9 @@ export class Message extends Record {
     /** @type {string|undefined} */
     postFailMessage = undefined;
     reactions = fields.Many("MessageReactions", { inverse: "message" });
-    sortedReactions = this.computed(() =>
-        [...this.reactions].sort((r1, r2) => r1.sequence - r2.sequence)
+    sortedReactions = this.computed(
+        () => [...this.reactions].sort((r1, r2) => r1.sequence - r2.sequence),
+        { equals: shallowEqual }
     );
     notification_ids = fields.Many("mail.notification", { inverse: "mail_message_id" });
     self_notification = this.computed(() =>
@@ -491,8 +495,9 @@ export class Message extends Record {
         return null;
     }
 
-    failureNotifications = this.computed(() =>
-        this.notification_ids.filter((notification) => notification.isFailure)
+    failureNotifications = this.computed(
+        () => this.notification_ids.filter((notification) => notification.isFailure),
+        { equals: shallowEqual }
     );
 
     get scheduledDateSimple() {

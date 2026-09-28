@@ -2,7 +2,7 @@ import { ActionList } from "@mail/core/common/action_list";
 import { UseThreadActions } from "@mail/core/common/thread_actions";
 import { attClassObjectToString } from "@mail/utils/common/format";
 
-import { Component, computed, types, useProps } from "@odoo/owl";
+import { Component, computed, shallowEqual, types, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
@@ -46,23 +46,28 @@ export class MeetingSideActions extends Component {
         return { channel: () => this.store.rtc.channel };
     }
 
-    actions = computed(() => {
-        const threadActions = this.props.threadActions;
-        // the channel can already be gone while the meeting view tears down
-        if (this.store.rtc.channel?.default_display_mode === "video_full_screen") {
-            return threadActions.actions.filter((action) => QUICK_ACTION_IDS.includes(action.id));
-        }
-        const actions = threadActions.actions.filter((action) =>
-            QUICK_ACTION_IDS.includes(action.id)
-        );
-        actions.push(
-            threadActions.more(this.callActionsParams, {
-                actions: meetingMoreActionGroups(threadActions, QUICK_ACTION_IDS),
-                dropdownMenuClass: attClassObjectToString({
-                    "o-discuss-CallActionList-menu": Boolean(this.env.inMeetingView),
-                }),
-            })
-        );
-        return actions;
-    });
+    actions = computed(
+        () => {
+            const threadActions = this.props.threadActions;
+            // the channel can already be gone while the meeting view tears down
+            if (this.store.rtc.channel?.default_display_mode === "video_full_screen") {
+                return threadActions.actions.filter((action) =>
+                    QUICK_ACTION_IDS.includes(action.id)
+                );
+            }
+            const actions = threadActions.actions.filter((action) =>
+                QUICK_ACTION_IDS.includes(action.id)
+            );
+            actions.push(
+                threadActions.more(this.callActionsParams, {
+                    actions: meetingMoreActionGroups(threadActions, QUICK_ACTION_IDS),
+                    dropdownMenuClass: attClassObjectToString({
+                        "o-discuss-CallActionList-menu": Boolean(this.env.inMeetingView),
+                    }),
+                })
+            );
+            return actions;
+        },
+        { equals: shallowEqual }
+    );
 }

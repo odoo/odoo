@@ -19,6 +19,7 @@ import {
     Component,
     computed,
     proxy,
+    shallowEqual,
     signal,
     status,
     t,
@@ -263,22 +264,28 @@ export class Message extends Component {
 
     // components have no getter memoization: explicit computeds, so each
     // piece re-runs only when its deps change and keeps a stable identity
-    quickActions = computed(() => {
-        const allActions = this.messageActions.actions;
-        return allActions.slice(
-            0,
-            allActions.length > this.quickActionCount
-                ? this.quickActionCount - 1
-                : this.quickActionCount
-        );
-    });
+    quickActions = computed(
+        () => {
+            const allActions = this.messageActions.actions;
+            return allActions.slice(
+                0,
+                allActions.length > this.quickActionCount
+                    ? this.quickActionCount - 1
+                    : this.quickActionCount
+            );
+        },
+        { equals: shallowEqual }
+    );
 
-    moreMenuActions = computed(() => {
-        const allActions = this.messageActions.actions;
-        return allActions.length > this.quickActionCount
-            ? allActions.slice(this.quickActionCount - 1)
-            : false;
-    });
+    moreMenuActions = computed(
+        () => {
+            const allActions = this.messageActions.actions;
+            return allActions.length > this.quickActionCount
+                ? allActions.slice(this.quickActionCount - 1)
+                : false;
+        },
+        { equals: shallowEqual }
+    );
 
     moreAction = computed(() => {
         const moreActions = this.moreMenuActions();
@@ -299,16 +306,19 @@ export class Message extends Component {
             : undefined;
     });
 
-    actions = computed(() => {
-        const moreAction = this.moreAction();
-        const actions = moreAction
-            ? [...this.quickActions(), moreAction]
-            : [...this.quickActions()];
-        if (this.isAlignedRight) {
-            actions.reverse();
-        }
-        return actions;
-    });
+    actions = computed(
+        () => {
+            const moreAction = this.moreAction();
+            const actions = moreAction
+                ? [...this.quickActions(), moreAction]
+                : [...this.quickActions()];
+            if (this.isAlignedRight) {
+                actions.reverse();
+            }
+            return actions;
+        },
+        { equals: shallowEqual }
+    );
 
     get attClass() {
         return {

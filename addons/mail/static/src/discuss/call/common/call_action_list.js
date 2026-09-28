@@ -8,6 +8,7 @@ import { Tooltip } from "@web/core/tooltip/tooltip";
 import { ActionList } from "@mail/core/common/action_list";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { attClassObjectToString } from "@mail/utils/common/format";
+import { nestedShallowEqual } from "@mail/utils/common/signal";
 
 /**
  * What a small screen keeps in its bar; everything else goes into "More". "deafen" is there
@@ -46,81 +47,86 @@ export class CallActionList extends Component {
         this.popover = usePopover(Tooltip, {
             position: "top-middle",
         });
-        this.actions = computed(() => {
-            const partition = toRaw(this.callActions).partition;
-            if (this.ui.isSmall) {
-                return this.smallScreenActions(partition);
-            }
-            const other = partition.other.filter((a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT));
-            const group2 = [];
-            let disconnectGroupIndex = -1;
-            for (const groupActions of partition.group) {
-                const filtered = groupActions.filter(
+        this.actions = computed(
+            () => {
+                const partition = toRaw(this.callActions).partition;
+                if (this.ui.isSmall) {
+                    return this.smallScreenActions(partition);
+                }
+                const other = partition.other.filter(
                     (a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT)
                 );
-                const sequenceGroup = filtered[0].sequenceGroup;
-                const hasPipActions = sequenceGroup === 200 && this.props.pipExtraActions;
-                const pipActions = hasPipActions ? this.props.pipExtraActions : [];
-                const maxQuickActions = pipActions.length > 0 ? 1 : 4;
-                const quickActions = filtered.slice(0, maxQuickActions);
-                const moreActions = [...pipActions, ...filtered.slice(maxQuickActions)];
-                const newGroup = moreActions?.length
-                    ? [
-                          ...quickActions,
-                          this.callActions.more(
-                              this.callActionsParams,
-                              {
-                                  actions: moreActions,
-                                  dropdownMenuClass: attClassObjectToString({
-                                      "m-0 mb-1 overflow-x-hidden": true,
-                                      "o-discuss-CallActionList-menu": Boolean(
-                                          this.env.inMeetingView
-                                      ),
-                                  }),
-                                  dropdownPosition: "top-end",
-                                  name: this.MORE,
-                              },
-                              sequenceGroup
-                          ),
-                      ]
-                    : quickActions;
-                if (sequenceGroup >= 300 && disconnectGroupIndex === -1) {
-                    disconnectGroupIndex = group2.length;
+                const group2 = [];
+                let disconnectGroupIndex = -1;
+                for (const groupActions of partition.group) {
+                    const filtered = groupActions.filter(
+                        (a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT)
+                    );
+                    const sequenceGroup = filtered[0].sequenceGroup;
+                    const hasPipActions = sequenceGroup === 200 && this.props.pipExtraActions;
+                    const pipActions = hasPipActions ? this.props.pipExtraActions : [];
+                    const maxQuickActions = pipActions.length > 0 ? 1 : 4;
+                    const quickActions = filtered.slice(0, maxQuickActions);
+                    const moreActions = [...pipActions, ...filtered.slice(maxQuickActions)];
+                    const newGroup = moreActions?.length
+                        ? [
+                              ...quickActions,
+                              this.callActions.more(
+                                  this.callActionsParams,
+                                  {
+                                      actions: moreActions,
+                                      dropdownMenuClass: attClassObjectToString({
+                                          "m-0 mb-1 overflow-x-hidden": true,
+                                          "o-discuss-CallActionList-menu": Boolean(
+                                              this.env.inMeetingView
+                                          ),
+                                      }),
+                                      dropdownPosition: "top-end",
+                                      name: this.MORE,
+                                  },
+                                  sequenceGroup
+                              ),
+                          ]
+                        : quickActions;
+                    if (sequenceGroup >= 300 && disconnectGroupIndex === -1) {
+                        disconnectGroupIndex = group2.length;
+                    }
+                    group2.push(newGroup);
                 }
-                group2.push(newGroup);
-            }
-            // Gather the layout actions (Fullscreen, Adjust view, Picture in Picture) into a "More"
-            // menu placed between Raise Hand and the end-call button.
-            const layoutActions = toRaw(this.callActions).actions.filter((a) =>
-                a.tags.includes(ACTION_TAGS.CALL_LAYOUT)
-            );
-            if (layoutActions.length) {
-                const layoutGroup = [
-                    this.callActions.more(
-                        this.callActionsParams,
-                        {
-                            actions: [layoutActions],
-                            dropdownMenuClass: attClassObjectToString({
-                                "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden": true,
-                                "o-discuss-CallActionList-menu o-inMeetingView": Boolean(
-                                    this.env.inMeetingView
-                                ),
-                            }),
-                            dropdownPosition: "top-end",
-                            id: "call-layout",
-                            name: this.MORE,
-                        },
-                        "call-layout"
-                    ),
-                ];
-                group2.splice(
-                    disconnectGroupIndex === -1 ? group2.length : disconnectGroupIndex,
-                    0,
-                    layoutGroup
+                // Gather the layout actions (Fullscreen, Adjust view, Picture in Picture) into a "More"
+                // menu placed between Raise Hand and the end-call button.
+                const layoutActions = toRaw(this.callActions).actions.filter((a) =>
+                    a.tags.includes(ACTION_TAGS.CALL_LAYOUT)
                 );
-            }
-            return [...group2, other];
-        });
+                if (layoutActions.length) {
+                    const layoutGroup = [
+                        this.callActions.more(
+                            this.callActionsParams,
+                            {
+                                actions: [layoutActions],
+                                dropdownMenuClass: attClassObjectToString({
+                                    "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden": true,
+                                    "o-discuss-CallActionList-menu o-inMeetingView": Boolean(
+                                        this.env.inMeetingView
+                                    ),
+                                }),
+                                dropdownPosition: "top-end",
+                                id: "call-layout",
+                                name: this.MORE,
+                            },
+                            "call-layout"
+                        ),
+                    ];
+                    group2.splice(
+                        disconnectGroupIndex === -1 ? group2.length : disconnectGroupIndex,
+                        0,
+                        layoutGroup
+                    );
+                }
+                return [...group2, other];
+            },
+            { equals: nestedShallowEqual }
+        );
     }
 
     /**
