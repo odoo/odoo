@@ -1,4 +1,5 @@
 import { describe, test, expect } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ProductPage } from "@pos_self_order/app/pages/product_page/product_page";
 import { setupSelfPosEnv } from "../utils";
@@ -6,6 +7,38 @@ import { definePosSelfModels } from "../data/generate_model_definitions";
 import * as Utils from "@pos_self_order/../tests/unit/ui_utils";
 
 definePosSelfModels();
+
+test("renders the product image or the correct missing-image placeholder", async () => {
+    const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
+    const product = store.models["product.template"].get(204);
+    const config = store.models["pos.config"].get(odoo.pos_config_id);
+    product.image_128 = "product-image";
+
+    await Utils.clickOrderNow();
+    await Utils.selectLocation("Dine in");
+    await Utils.clickCategory("Miscellaneous");
+    await Utils.clickProduct("Desk Organizer");
+
+    expect(".o_self_product_page").toHaveCount(1);
+    expect(".o_self_product_image img").toHaveAttribute(
+        "data-src",
+        product.getImageUrl().replace("image_256", "image_512")
+    );
+    product.image_128 = false;
+    config.module_pos_restaurant = true;
+    await animationFrame();
+    expect(".o_self_product_image img").toHaveAttribute(
+        "data-src",
+        "/pos_self_order/static/img/restaurant_placeholder.png"
+    );
+
+    config.module_pos_restaurant = false;
+    await animationFrame();
+    expect(".o_self_product_image img").toHaveAttribute(
+        "data-src",
+        "/pos_self_order/static/img/retail_placeholder.png"
+    );
+});
 
 test("changeQuantity and isProductAvailable", async () => {
     const store = await setupSelfPosEnv();
