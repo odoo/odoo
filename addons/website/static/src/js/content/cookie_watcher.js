@@ -19,9 +19,15 @@ function watch3rdPartyScripts(thirdPartyDomainsBlockList) {
         },
         set(val) {
             const cookiesBarCookie = document.cookie.match(cookieRegex)?.groups.value;
+            let optionalCookiesAccepted = false;
+            try {
+                optionalCookiesAccepted = !!JSON.parse(cookiesBarCookie)?.optional;
+            } catch {
+                // Missing or malformed cookie: optional cookies are not accepted.
+            }
             const host = removeWWW(new URL(val, window.location.origin).host.toLowerCase());
             if (
-                (!cookiesBarCookie || !JSON.parse(cookiesBarCookie).optional)
+                !optionalCookiesAccepted
                 && blockList.some((domain) => host === domain || host.endsWith(`.${domain}`))
             ) {
                 this.dataset.nocookieSrc = val;
