@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, tick } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
 import { waitFor } from "@odoo/hoot-dom";
 import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
@@ -257,5 +257,23 @@ test("should debounce hint on selection change", async () => {
     await new Promise((resolve) => setTimeout(resolve, 30));
     expect(getContent(el)).toBe(
         `<p><br></p><p><br></p><p><br></p><p><br></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+});
+
+test("should keep the hint of the selected block until the debounced update", async () => {
+    const { el, editor } = await setupEditor("<p></p>", {
+        config: { debounceHints: true, placeholder: "test" },
+    });
+    expect(getContent(el)).toBe(`<p o-we-hint-text="test" class="o-we-hint"></p>`);
+
+    editor.editable.focus();
+    setContent(el, "<p>[]</p>");
+    await tick();
+    // Removing it until the debounced update would make it blink.
+    expect(el.firstElementChild).toHaveClass("o-we-hint");
+
+    await advanceTime(30);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
     );
 });
