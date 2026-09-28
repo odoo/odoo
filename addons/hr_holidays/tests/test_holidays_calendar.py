@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
+import pytz
 
 from odoo.osv import expression
 
@@ -116,3 +117,55 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         # Ensure that the length of the duration matches the start and stop times
         self.assertTrue(event.allday)
         self.assertEqual(event.duration, 105)
+
+    def test_contiguous_leaves_gantt_singleton_error(self):
+        """
+        Contiguous hour-based leaves merge into one interval whose data is a
+        multi-record resource.calendar.leaves set. _get_flexible_leaves_date
+        must not raise a singleton error on it.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Flexible Leaves',
+            'requires_allocation': 'no',
+            'leave_validation_type': 'no_validation',
+            'request_unit': 'hour',
+        })
+        test_date = date(2026, 10, 15)
+
+        leaves = self.env['hr.leave']
+        # Back-to-back slots: 08:00-12:00 and 12:00-16:00
+        for name, hour_from, hour_to in (
+            ('Morning Time Off', 8, 12),
+            ('Afternoon Time Off', 12, 16),
+        ):
+            leave = self.env['hr.leave'].create({
+                'name': name,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': test_date,
+                'request_date_to': test_date,
+                'request_unit_hours': True,
+                'request_hour_from': hour_from,
+                'request_hour_to': hour_to,
+            })
+            leave.action_validate()
+            leaves |= leave
+
+        calendar_leaves = self.env['resource.calendar.leaves'].search(
+            [('holiday_id', 'in', leaves.ids)])
+        # Guard: the test is meaningless unless the set has several records
+        self.assertGreater(len(calendar_leaves), 1, "Need >1 calendar leaves to reproduce")
+        self.assertTrue(all(calendar_leaves.holiday_id.mapped('request_unit_hours')))
+
+        tz = pytz.timezone(self.employee_emp.tz or 'UTC')
+        start = pytz.utc.localize(datetime.combine(test_date, datetime.min.time()))
+        end = pytz.utc.localize(datetime.combine(test_date, datetime.max.time()))
+        resource = self.employee_emp.resource_id
+        res_leaves = [(start, end, calendar_leaves)]
+
+        # Must not raise "Expected singleton" (ValueError)
+        result = self.env['resource.calendar']._get_flexible_leaves_date(
+            res_leaves, resource, tz)
+
+        # Hour-based leaves keep their exact interval instead of being widened to full days
+        self.assertEqual(result, [(start, end)])
