@@ -1,3 +1,4 @@
+import { parseJSON } from "@html_builder/utils/json";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
@@ -10,7 +11,7 @@ export class PlausiblePush extends Interaction {
         window.plausible ||= function () {
             (window.plausible.q = window.plausible.q || []).push(arguments);
         };
-        window.plausible(eventName, { props: JSON.parse(eventParams) || {} });
+        window.plausible(eventName, { props: parseJSON(eventParams) || {} });
     }
 }
 

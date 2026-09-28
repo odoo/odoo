@@ -228,6 +228,7 @@
             "website/static/src/**/common/**/*",
         ],
         'web.assets_frontend': [
+            'html_builder/static/src/utils/json.js',
             'html_builder/static/src/utils/scrolling.js',
             'website/static/src/interactions/**/*',
             'website/static/src/core/**/*',
@@ -358,6 +359,7 @@
             'website/static/tests/page_url_field.test.js',
         ],
         'web.assets_unit_tests_setup': [
+            'html_builder/static/src/utils/json.js',
             'html_builder/static/src/utils/scrolling.js',
             'web/static/src/legacy/js/core/class.js',
             'web/static/src/legacy/js/public/lazyloader.js',

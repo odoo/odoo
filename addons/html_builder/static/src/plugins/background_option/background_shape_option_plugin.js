@@ -1,3 +1,4 @@
+import { parseJSON } from "@html_builder/utils/json";
 import { getValueFromVar } from "@html_builder/utils/utils";
 import { normalizeColor } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
@@ -132,7 +133,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             animated = "false",
             showOnMobile,
             shapeAnimationSpeed,
-        } = json ? JSON.parse(json) : {};
+        } = parseJSON(json) || {};
 
         let shapeContainerEl = editingElement.querySelector(":scope > .o_we_shape");
 
@@ -260,7 +261,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         };
         const json = editingElement.dataset.oeShapeData;
         if (json) {
-            Object.assign(defaultData, JSON.parse(json.replace(/'/g, '"')));
+            Object.assign(defaultData, parseJSON(json.replace(/'/g, '"')));
             // Compatibility with old shapes.
             defaultData.shape = defaultData.shape.replace("web_editor", "html_builder");
         }

@@ -1,3 +1,4 @@
+import { parseJSON } from "@html_builder/utils/json";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { ChartOption, DATASET_KEY_PREFIX, getColor } from "./chart_option";
 import { Plugin } from "@html_editor/plugin";
@@ -44,7 +45,7 @@ export class BaseChartAction extends BuilderAction {
     }
 
     getData(editingElement) {
-        return JSON.parse(editingElement.dataset.data);
+        return parseJSON(editingElement.dataset.data) || { labels: [], datasets: [] };
     }
 
     getMaxValue(editingElement) {

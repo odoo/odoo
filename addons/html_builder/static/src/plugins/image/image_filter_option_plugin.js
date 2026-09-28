@@ -1,3 +1,4 @@
+import { parseJSON } from "@html_builder/utils/json";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { normalizeColor } from "@html_builder/utils/utils_css";
 import { defaultImageFilterOptions } from "@html_editor/main/media/image_post_process_plugin";
@@ -42,18 +43,18 @@ export class SetCustomFilterAction extends BuilderAction {
     static id = "setCustomFilter";
     static dependencies = ["imagePostProcess"];
     getValue({ editingElement, params: { mainParam: filterProperty } }) {
-        const filterOptions = JSON.parse(editingElement.dataset.filterOptions || "{}");
+        const filterOptions = parseJSON(editingElement.dataset.filterOptions) || {};
         return filterOptions[filterProperty] || defaultImageFilterOptions[filterProperty];
     }
     isApplied({ editingElement, params: { mainParam: filterProperty }, value: filterValue }) {
-        const filterOptions = JSON.parse(editingElement.dataset.filterOptions || "{}");
+        const filterOptions = parseJSON(editingElement.dataset.filterOptions) || {};
         return (
             filterValue ===
             (filterOptions[filterProperty] || defaultImageFilterOptions[filterProperty])
         );
     }
     async load({ editingElement: img, params: { mainParam: filterProperty }, value }) {
-        const filterOptions = JSON.parse(img.dataset.filterOptions || "{}");
+        const filterOptions = parseJSON(img.dataset.filterOptions) || {};
         filterOptions[filterProperty] =
             filterProperty === "filterColor"
                 ? normalizeColor(value, getHtmlStyle(this.document))

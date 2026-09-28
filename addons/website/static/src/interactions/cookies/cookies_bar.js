@@ -1,3 +1,4 @@
+import { parseJSON } from "@html_builder/utils/json";
 import { Popup } from "@website/interactions/popup/popup";
 import { registry } from "@web/core/registry";
 
@@ -176,7 +177,7 @@ export class CookiesBar extends Popup {
      */
     onShowCookiesBar() {
         const currCookie = cookie.get(this.el.id);
-        if ((currCookie && JSON.parse(currCookie).optional) || !this.popupAlreadyShown) {
+        if (parseJSON(currCookie)?.optional || !this.popupAlreadyShown) {
             return;
         }
         this.bsModal.show();

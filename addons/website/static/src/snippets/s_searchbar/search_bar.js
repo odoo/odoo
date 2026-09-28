@@ -1,3 +1,4 @@
+import { parseJSON } from "@html_builder/utils/json";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
@@ -46,7 +47,7 @@ export class SearchBar extends Interaction {
             displayExtraLink: dataset.displayExtraLink && JSON.parse(dataset.displayExtraLink),
             displayDetail: dataset.displayDetail && JSON.parse(dataset.displayDetail),
             // Make it easy for customization to disable fuzzy matching on specific searchboxes
-            allowFuzzy: !(dataset.noFuzzy && JSON.parse(dataset.noFuzzy)),
+            allowFuzzy: !parseJSON(dataset.noFuzzy),
         };
         for (const fieldEl of form.querySelectorAll("input[type='hidden']")) {
             this.options[fieldEl.name] = fieldEl.value;
@@ -76,7 +77,7 @@ export class SearchBar extends Interaction {
     }
 
     start() {
-        if (this.inputEl.dataset.noFuzzy && JSON.parse(this.inputEl.dataset.noFuzzy)) {
+        if (parseJSON(this.inputEl.dataset.noFuzzy)) {
             const noFuzzyEl = document.createElement("input");
             noFuzzyEl.setAttribute("type", "hidden");
             noFuzzyEl.setAttribute("name", "noFuzzy");
