@@ -60,7 +60,12 @@ kbd {
   font-size:  var(--o-Badge-fontSize, 0.85714em);
   user-select: none;
   font-weight: var(--o-Badge-fontWeight, 500);
-  @include o-text-overflow;
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
   transition: none; /* remove transition to prevent badges from flickering at reload */
   color: $o-black;
 }

@@ -393,7 +393,12 @@
 
 .o_kanban_mobile .o_kanban_renderer .o_kanban_record {
     div.label {
-        @include o-text-overflow;
+        display: inline-block;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: top;
     }
 }
 

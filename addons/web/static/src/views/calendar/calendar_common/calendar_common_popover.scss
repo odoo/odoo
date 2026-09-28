@@ -58,7 +58,12 @@
     }
 
     .o_field_widget:not(.o_field_properties) {
-        @include o-text-overflow(block);
+        display: block;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: top;
     }
 
     .o-card-grid {

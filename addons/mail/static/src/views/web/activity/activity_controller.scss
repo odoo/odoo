@@ -124,7 +124,12 @@
         }
 
         .o_text_block {
-            @include o-text-overflow($max-width: 15rem);
+            display: inline-block;
+            max-width: 15rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: top;
             display: block;
         }
     }

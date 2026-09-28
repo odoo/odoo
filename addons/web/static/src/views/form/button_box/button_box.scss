@@ -18,7 +18,12 @@
     }
 
     %-stat-button-text {
-        @include o-text-overflow(block);
+        display: block;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: top;
         order: 1;
         font-size: $o-font-size-base-smaller;
         line-height: $line-height-sm;
@@ -60,7 +65,12 @@
 
         /* Some buttons only display text without using StatInfo template */
         > span {
-            @include o-text-overflow(block);
+            display: block;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: top;
         }
 
         .o_field_statinfo {
