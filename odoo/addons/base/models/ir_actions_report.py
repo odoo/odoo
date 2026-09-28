@@ -91,10 +91,9 @@ class IrActionsReport(models.Model):
 
     @api.onchange('name')
     def _onchange_name(self):
-        for action in self:
-            if action.name:
-                name = re.sub(r'[^a-z0-9_]', '', action.name.replace(' ', '_').lower())
-                action.report_name = "report_name." + name
+        for action in self.filtered(lambda a: not a._origin and a.name):
+            name = re.sub(r'[^a-z0-9_]', '', action.name.replace(' ', '_').lower())
+            action.report_name = "report_name." + name
 
     def _search_model_id(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
