@@ -23,9 +23,7 @@ export class ConfirmationPage extends Component {
 
         onMounted(() => {
             if (this.selfOrder.config.self_ordering_mode === "kiosk") {
-                this.defaultTimeout = setTimeout(() => {
-                    this.router.navigate("default");
-                }, 30000);
+                this.defaultTimeout = setTimeout(() => this.backToHome({ force: true }), 15000);
             }
         });
 
@@ -51,30 +49,26 @@ export class ConfirmationPage extends Component {
         return this.selfOrder.models["pos.order"].getBy("uuid", this.selfOrder.selectedOrderUuid);
     }
 
-    async initOrder(retry = true) {
-        const order = this.selfOrder.models["pos.order"].find(
-            (o) => o.access_token === this.props.orderAccessToken
-        );
+    async initOrder() {
+        const order = await this.selfOrder.getOrderByAccessToken(this.props.orderAccessToken);
 
-        if (!order && retry) {
-            await this.selfOrder.getUserDataFromServer([this.props.orderAccessToken]);
-            return this.initOrder(false);
-        }
-
-        this.selfOrder.selectedOrderUuid = order.uuid;
-
-        if (
-            !order ||
-            (this.selfOrder.hasPaymentMethod() &&
-                this.selfOrder.config.self_ordering_mode === "mobile" &&
-                this.selfOrder.config.self_ordering_pay_after === "each" &&
-                order.state !== "paid")
-        ) {
+        if (!order) {
             this.router.navigate("default");
             return;
         }
 
         this.selfOrder.selectedOrderUuid = order.uuid;
+
+        if (
+            this.selfOrder.hasPaymentMethod() &&
+            this.selfOrder.config.self_ordering_mode === "mobile" &&
+            this.selfOrder.config.self_ordering_pay_after === "each" &&
+            order.state !== "paid"
+        ) {
+            this.router.navigate("default");
+            return;
+        }
+
         this.state.onReload = false;
     }
 
@@ -99,7 +93,9 @@ export class ConfirmationPage extends Component {
      * the changes before sending them to the printer.
      */
     async printOrderChanges() {
-        if (this.selfOrder.config.self_ordering_mode === "mobile") {
+        // If mobile self-ordering, the preparation changes are printed with Obox
+        // If the kiosk language has changed, the preparation changes are printed after the reload in the kiosk default language
+        if (this.selfOrder.config.self_ordering_mode === "mobile" || this.needsLanguageReset()) {
             return;
         }
 
@@ -136,7 +132,7 @@ export class ConfirmationPage extends Component {
                         trackingNumber: this.confirmedOrder.tracking_number,
                         message: e.body,
                         close: () => {
-                            this.router.navigate("default");
+                            this.backToHome();
                         },
                     });
                     this.updateHasPaper(false);
@@ -153,10 +149,36 @@ export class ConfirmationPage extends Component {
         return {};
     }
 
-    backToHome() {
-        if (!this.setDefautLanguage()) {
-            this.router.navigate("default");
+    backToHome({ force = false } = {}) {
+        if (!force && (!this.confirmedOrder || this.state.onReload)) {
+            return;
         }
+
+        if (!this.needsLanguageReset()) {
+            this.router.navigate("default");
+            return;
+        }
+
+        this.state.onReload = true;
+
+        // Print later (after reload) so the prep ticket will print in Kiosk lang
+        this.selfOrder.setPendingPreparation(this.props.orderAccessToken);
+        cookie.set("frontend_lang", this.defaultLanguage.code);
+
+        // A full page load, to apply the restored language
+        this.router.load("default");
+    }
+
+    get defaultLanguage() {
+        return this.selfOrder.config.self_ordering_default_language_id;
+    }
+
+    needsLanguageReset() {
+        return Boolean(
+            this.selfOrder.config.self_ordering_mode === "kiosk" &&
+                this.defaultLanguage &&
+                this.selfOrder.currentLanguage.code !== this.defaultLanguage.code
+        );
     }
 
     async updateHasPaper(state) {
@@ -167,23 +189,6 @@ export class ConfirmationPage extends Component {
         this.selfOrder.has_paper = state;
     }
 
-    setDefautLanguage() {
-        const defaultLanguage = this.selfOrder.config.self_ordering_default_language_id;
-
-        if (
-            defaultLanguage &&
-            this.selfOrder.currentLanguage.code !== defaultLanguage.code &&
-            !this.state.onReload &&
-            this.selfOrder.config.self_ordering_mode === "kiosk"
-        ) {
-            cookie.set("frontend_lang", defaultLanguage.code);
-            window.location.reload();
-            this.state.onReload = true;
-            return true;
-        }
-
-        return this.state.onReload;
-    }
     get orderTimeStr() {
         return this.confirmedOrder.preset_time.toFormat("h:mm a");
     }

@@ -13,7 +13,6 @@ export class LandingPage extends Component {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
         this.dialog = useService("dialog");
-        this.activeSelected = false;
 
         onWillStart(() => {
             if (this.selfOrder.config.self_ordering_mode === "kiosk") {
@@ -37,14 +36,6 @@ export class LandingPage extends Component {
 
     get languages() {
         return this.selfOrder.config.self_ordering_available_language_ids;
-    }
-
-    get activeImage() {
-        if (!this.activeSelected) {
-            this.activeSelected = true;
-            return "active";
-        }
-        return "";
     }
 
     get draftOrder() {
@@ -112,6 +103,11 @@ export class LandingPage extends Component {
     }
 
     showMyOrderBtn() {
+        if (this.selfOrder.config.self_ordering_mode === "kiosk") {
+            // We should never see the "My Order" button in kiosk mode
+            return false;
+        }
+
         const ordersNotDraft = this.selfOrder.models["pos.order"].find((o) => o.access_token);
         return this.selfOrder.ordering && ordersNotDraft;
     }
