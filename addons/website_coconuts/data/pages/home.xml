@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Disable Default Home -->
+<record id="website.homepage" model="ir.ui.view">
+    <field name="active" eval="False"/>
+</record>
+
+<!-- Home -->
+<record id="page_home" model="website.page">
+    <field name="name">Home</field>
+    <field name="is_published" eval="True"/>
+    <field name="key">website_coconuts.page_home</field>
+    <field name="url">/</field>
+    <field name="type">qweb</field>
+    <field name="website_id" eval="1"/>
+    <field name="arch" type="xml">
+        <t name="Home" t-name="website_coconuts.page_home">
+            <!-- Title -->
+            <t t-set="additional_title" t-value="'Home'"/>
+            <!-- Content -->
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+
+                    <!-- Snippets -->
+                    <t t-call="website_coconuts.s_coconuts_image_text"/>
+                    <t t-call="website_coconuts.s_coconuts_boxes"/>
+
+                    <!-- Background Shape -->
+                    <section class="pt80 pb80" data-oe-shape-data="{'shape':'web_editor/Zigs/06'}">
+                        <div class="o_we_shape o_web_editor_Zigs_06"/>
+                        <div class="s_allow_columns o_container_small">
+                            <p class="o_default_snippet_text">Great stories have a <b class="o_default_snippet_text">personality</b>. Consider telling a great story that provides personality. Writing a story with personality for potential clients will assist with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
+                        </div>
+                    </section>
+
+                </div>
+            </t>
+        </t>
+    </field>
+</record>
+
+</odoo>

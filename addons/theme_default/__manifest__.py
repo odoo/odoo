@@ -8,6 +8,9 @@
     'depends': ['website'],
     'data': [
         'data/generate_primary_template.xml',
+        'views/snippets/s_company_team.xml',
+        'views/snippets/s_text_image.xml',
+        'views/snippets/s_image_text.xml',
     ],
     'images': [
         'static/description/cover.png',
