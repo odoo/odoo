@@ -11,9 +11,9 @@ const { DateTime } = luxon;
 export class MailMessage extends models.ServerModel {
     _name = "mail.message";
 
-    author_id = fields.Generic({ default: () => serverState.partnerId });
+    author_id = fields.Many2one({ default: () => serverState.partnerId });
     date = fields.Datetime({ default: () => serializeDateTime(DateTime.now()) });
-    pinned_at = fields.Generic({ default: false });
+    pinned_at = fields.Datetime({ default: false });
 
     /** @type {typeof models.Model["prototype"]["create"]} */
     create(vals) {
@@ -74,10 +74,7 @@ export class MailMessage extends models.ServerModel {
         return messageIds;
     }
 
-    _store_message_fields(
-        res,
-        { format_reply = true, chatter_fields, inbox_fields = false, followers } = {}
-    ) {
+    _store_message_fields(res, { format_reply = true, inbox_fields = false } = {}) {
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
         /** @type {import("mock_models").MailThread} */

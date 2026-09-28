@@ -20,7 +20,8 @@ import {
     safeSplit,
 } from "./mock_server_utils";
 
-const { DEFAULT_FIELD_VALUES, DEFAULT_RELATIONAL_FIELD_VALUES, S_FIELD, copyFields } = fields;
+const { DEFAULT_FIELD_VALUES, DEFAULT_RELATIONAL_FIELD_VALUES, S_FIELD_REQUIRED_KEYS, copyFields } =
+    fields;
 
 /**
  * @typedef {import("fields").INumerical["aggregator"]} Aggregator
@@ -311,7 +312,8 @@ function getModelDefinition(previous, constructor) {
 
     // Fields declared as JS class fields (do not override explicit fields)
     for (const [fieldName, fieldDef] of Object.entries(model)) {
-        if (!fieldDef?.[S_FIELD]) {
+        if (!fieldDef?.[S_FIELD_REQUIRED_KEYS]) {
+            // Not a field
             continue;
         }
         model._fields[fieldName] ||= validateFieldDefinition(fieldName, fieldDef);
@@ -483,17 +485,17 @@ function getViewKey(viewType, viewId) {
 }
 
 /**
- * @param {string} data 
+ * @param {string} data
  * @returns {string}
  */
 function simpleHash(data) {
     let hash = 0;
     for (let i = 0; i < data.length; i++) {
-        hash = ((hash << 5) - hash) + data.charCodeAt(i);
+        hash = (hash << 5) - hash + data.charCodeAt(i);
         hash |= 0; // Convert to 32-bit integer
     }
     // unsigned hex
-    return (hash >>> 0).toString(16).padStart(8, '0');
+    return (hash >>> 0).toString(16).padStart(8, "0");
 }
 
 /**
@@ -590,8 +592,9 @@ function isValidFieldValue(record, fieldDef) {
             return isValidId(value, fieldDef, record);
         }
         case "binary":
-            return typeof value === "string" || (
-                typeof value === "object" && value.content !== undefined
+            return (
+                typeof value === "string" ||
+                (typeof value === "object" && value.content !== undefined)
             );
         case "properties": {
             return isObject(value);
@@ -1263,12 +1266,11 @@ function updateComodelRelationalFields(model, record, originalRecord) {
  * @param {FieldDefinition} fieldDef
  */
 function validateFieldDefinition(fieldName, fieldDef) {
-    if (fieldDef[S_FIELD] && fieldDef.name) {
+    if (S_FIELD_REQUIRED_KEYS in fieldDef && fieldDef.name) {
         throw new MockServerError(
             `Cannot set the name of field "${fieldName}" from its definition: got "${fieldDef.name}"`
         );
     }
-    delete fieldDef[S_FIELD];
     return fieldDef;
 }
 
@@ -3054,7 +3056,7 @@ export class Model extends Array {
             records: this.read(
                 records.map((r) => r.id),
                 unique(["id", ...fieldNames]),
-                "web",
+                "web"
             ),
         };
         if (countLimit) {
@@ -3469,7 +3471,7 @@ export class Model extends Array {
                             result[field.name].filename = filename;
                         }
                     }
-                    if (load != 'web') {
+                    if (load !== "web") {
                         result[field.name].content = content;
                     }
                     if (content) {
@@ -3537,7 +3539,7 @@ export class Model extends Array {
                             const result = this.env[modelName].web_read(
                                 id,
                                 relatedFields,
-                                makeKwArgs({ context: {...context, ...spec[fieldName].context} })
+                                makeKwArgs({ context: { ...context, ...spec[fieldName].context } })
                             );
                             record[fieldName] = result[0];
                         }
@@ -3564,7 +3566,7 @@ export class Model extends Array {
                             const [result] = this.env[model].web_read(
                                 id,
                                 relatedFields,
-                                makeKwArgs({ context: {...context, ...spec[fieldName].context} })
+                                makeKwArgs({ context: { ...context, ...spec[fieldName].context } })
                             );
                             record[fieldName] = result;
                         }
@@ -3587,7 +3589,7 @@ export class Model extends Array {
                             let result = relModel.web_read(
                                 relResIds,
                                 relatedFields,
-                                makeKwArgs({ context: {...context, ...spec[fieldName].context} })
+                                makeKwArgs({ context: { ...context, ...spec[fieldName].context } })
                             );
                             if (limit) {
                                 result = result.map((r, i) => (i < limit ? r : { id: r.id }));
@@ -3600,13 +3602,13 @@ export class Model extends Array {
                 case "many2one": {
                     for (const record of records) {
                         if (record[fieldName] !== false) {
-                            if (!relatedFields) {
-                                record[fieldName] = record[fieldName];
-                            } else {
+                            if (relatedFields) {
                                 record[fieldName] = getRelation(field).web_read(
                                     [record[fieldName]],
                                     relatedFields,
-                                    makeKwArgs({ context: {...context, ...spec[fieldName].context} })
+                                    makeKwArgs({
+                                        context: { ...context, ...spec[fieldName].context },
+                                    })
                                 )[0];
                             }
                         }
