@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="cinetpay_replace_payment_form" inherit_id="website_sale.payment">
+        <xpath expr="//div[@id='payment_method']" position="replace">
+            <div id="payment_method" class="o_not_editable mt-4">
+                <t t-if="payment_methods_sudo or tokens_sudo">
+                    <!-- Cas normal : des méthodes de paiement configurées -->
+                    <t t-call="payment.form"/>
+                </t>
+                <t t-elif="order and order.order_line">
+                    <!-- Cas personnalisé : pas de méthodes de paiement, mais une commande existe -->
+                    <div class="text-center mt-5">
+                        <a t-att-href="'/shop/buy_now/%s?amount_total=%s' % (order.id, order.amount_total)"
+                           class="btn btn-success shadow-sm"
+                           style="font-size: 1rem; padding: 0.75rem 1.5rem; border-radius: 0.5rem;">
+                            <i class="fa fa-credit-card me-2"></i> Payer par Mobile Money
+                        </a>
+                    </div>
+                </t>
+                <t t-else="">
+                    <!-- Cas où aucune commande n'est en cours -->
+                    <div class="alert alert-warning mt-5" role="alert">
+                        Aucun produit disponible pour le paiement.
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </template>
+</odoo>

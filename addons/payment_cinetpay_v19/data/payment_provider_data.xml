@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="payment_method_cinetpay" model="payment.method">
+        <field name="name">CinetPay</field>
+        <field name="code">cinetpay</field>
+        <field name="sequence">2</field>
+        <field name="image" type="base64" file="payment_cinetpay_v19/static/description/icon.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+    </record>
+</odoo>
