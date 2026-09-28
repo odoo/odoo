@@ -602,7 +602,8 @@ export function rerenderField(fieldEl, fields) {
  * @param {HTMLElement} fieldEl
  */
 export function getDescriptionPosition(fieldEl) {
-    if (!fieldEl.querySelector(".s_website_form_field_description")) {
+    const descriptionEl = fieldEl.querySelector(".s_website_form_field_description");
+    if (!descriptionEl || descriptionEl.classList.contains("d-none")) {
         return "none";
     } else {
         const descriptionPositionClass = [...fieldEl.classList].find((cls) =>
