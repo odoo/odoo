@@ -58,3 +58,7 @@ class SaleOrder(models.Model):
                 max_free_kit_qty = min(max_free_kit_qty, (component.free_qty - unavailable_component_qty) // qty_per_kit[component])
             unavailable_qty += free_qty - max_free_kit_qty
         return unavailable_qty
+
+    def _get_cart_and_free_qty(self, product, line=None):
+        cart_qty, free_qty = super()._get_cart_and_free_qty(product, line)
+        return cart_qty, free_qty - self._get_unavailable_quantity_from_kits(product)
