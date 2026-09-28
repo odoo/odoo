@@ -58,7 +58,7 @@ by a unified `ir.access` model, and `res.groups.category_id` was replaced by
 - Maintenance history per vehicle, with a "Log Maintenance…" wizard
 - Daily scheduled action reminding about soon-to-expire insurance
 - Realistic demo data (Tata Nexon, Mahindra XUV700, Hyundai Creta, Toyota Innova Crysta)
-- Owl-based Fleet Dashboard client action with live stat cards
+- Owl-based Fleet Dashboard client action: 6 live stat cards + a category pie chart, backed by a caching service
 
 ## Server Framework Concepts Covered
 
@@ -84,6 +84,7 @@ by a unified `ir.access` model, and `res.groups.category_id` was replaced by
 | 18. *(beyond tutorial)* Scheduled Actions | Insurance expiry reminder (`ir.cron`) | `models/fleet_vehicle.py`, `data/ir_cron_data.xml` | `db13cde` |
 | 19. *(beyond tutorial)* Demo Data & Cleanup | Realistic sample fleet | `demo/fleet_training_demo.xml` | `c051a0c` |
 | 20. *(beyond tutorial, JS Framework)* Owl Components | Reusable `FleetStatCard`, dashboard client action | `static/src/fleet_dashboard/`, `views/fleet_dashboard_views.xml` | *(see git log)* |
+| 21. *(beyond tutorial, JS Framework)* Build a Dashboard | Caching service, pie chart, 6 live stats | `static/src/fleet_dashboard/fleet_dashboard_service.js` | *(see git log)* |
 
 Run `git log --oneline -- addons/fleet_training` from the `community` repo for
 the full, chronological commit history behind this table.
@@ -997,3 +998,57 @@ end-to-end in a real headless-Chromium session (not just install logs): with
 3 vehicles seeded (1 available / 1 assigned / 1 in maintenance), the page
 rendered all 4 cards with the correct live numbers, correct icons, and zero
 browser console errors.
+---
+
+## Chapter 21 — Build a Dashboard (beyond tutorial, JS Framework)
+
+**Concept.** Two ideas from the real "Build a dashboard" tutorial chapter:
+**services** (a singleton registered under `registry.category("services")`
+with `dependencies: [...]` and a `start(env, {deps}) {...}` returning the
+service object — any component can then `useService("name")` instead of
+re-fetching/re-computing the same thing) and **charts** via the built-in
+`useChart(getConfig)` hook (`@web/core/utils/chart_hook`), which manages a
+Chart.js instance's whole lifecycle (load the bundle, instantiate on mount,
+re-instantiate on patch, destroy on unmount) — you only supply the config and
+a `<canvas t-ref="this.chart.ref"/>`.
+
+**Why?** Calling `orm.call` directly from a component (Chapter 20) is fine
+once, but if two components on the same page both needed fleet stats, they'd
+each fire their own request. A service is the standard place to put shared,
+cacheable data-fetching — exactly what the real tutorial's "cache network
+calls, create a service" section teaches.
+
+**Where?**
+- [`static/src/fleet_dashboard/fleet_dashboard_service.js`](static/src/fleet_dashboard/fleet_dashboard_service.js) — the caching service
+- [`static/src/fleet_dashboard/fleet_dashboard.js`](static/src/fleet_dashboard/fleet_dashboard.js) — now uses the service instead of `orm` directly, adds the chart
+- [`models/fleet_vehicle.py`](models/fleet_vehicle.py) — `get_fleet_dashboard_stats` extended with category breakdown, total maintenance cost, and expiring-insurance count
+
+**Code explanation.** `fleetDashboardService` depends on `orm`, keeps one
+`cache` variable in its closure, and exposes `getStats(forceRefresh)` —
+first caller triggers the real RPC, every later caller (from any component)
+gets the cached result until a forced refresh. `FleetDashboard` swaps
+`useService("orm")` for `useService("fleet_dashboard_data")` — one-line
+change, same rest of the component. The pie chart's `getChartConfig()`
+builds a standard Chart.js config from `this.state.by_category`
+(server-computed via `_read_group` on `category_id`); `useChart` handles
+everything else. Two new stat cards (Insurance Expiring Soon, Total
+Maintenance Cost) reuse the exact same `FleetStatCard` from Chapter 20 —
+composition paying off, zero new card code needed.
+
+**Fleet functionality.** The dashboard now shows 6 live stats plus a pie
+chart of the fleet broken down by category — a real, at-a-glance fleet
+overview built entirely from data introduced in earlier chapters (category
+from Chapter 7, maintenance cost from Chapter 16, insurance date from
+Chapter 18).
+
+**What changed.** Added `fleet_dashboard_service.js`; updated
+`fleet_dashboard.js`/`.xml` (service + chart + 2 cards); extended
+`get_fleet_dashboard_stats` in `fleet_vehicle.py`.
+
+**Testing.** Upgraded and re-verified in a real browser session with seeded
+category and maintenance data: all 6 cards showed correct live values
+(including the ₹1500 maintenance cost and the 3-way category pie chart with
+a legend), the `<canvas>` element was present and rendered, and the browser
+console reported zero errors both times (Chapter 20's 4-card version and
+Chapter 21's full 6-card + chart version were each independently verified
+end-to-end, not just installed).

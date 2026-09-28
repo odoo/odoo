@@ -148,9 +148,26 @@ class FleetVehicle(models.Model):
         by_state = {state: 0 for state, _label in self._fields['state'].selection}
         for state, count in self._read_group([], ['state'], ['__count']):
             by_state[state] = count
+
+        by_category = [
+            {'name': category.display_name or self.env._("Uncategorized"), 'count': count}
+            for category, count in self._read_group([], ['category_id'], ['__count'])
+        ]
+
+        deadline = fields.Date.context_today(self) + relativedelta(days=30)
+        expiring_insurance = self.search_count([
+            ('insurance_expiry_date', '!=', False),
+            ('insurance_expiry_date', '<=', deadline),
+        ])
+
+        total_maintenance_cost = sum(self.search([]).mapped('maintenance_cost_total'))
+
         return {
             'total': total,
             'available': by_state.get('available', 0),
             'assigned': by_state.get('assigned', 0),
             'maintenance': by_state.get('maintenance', 0),
+            'by_category': by_category,
+            'expiring_insurance': expiring_insurance,
+            'total_maintenance_cost': total_maintenance_cost,
         }

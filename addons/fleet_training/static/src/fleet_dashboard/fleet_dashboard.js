@@ -1,6 +1,8 @@
 import { Component, onWillStart, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { useChart } from "@web/core/utils/chart_hook";
+import { getColor } from "@web/core/colors/colors";
 import { FleetStatCard } from "./stat_card/stat_card";
 
 export class FleetDashboard extends Component {
@@ -8,19 +10,41 @@ export class FleetDashboard extends Component {
     static components = { FleetStatCard };
 
     setup() {
-        this.orm = useService("orm");
+        this.dashboardData = useService("fleet_dashboard_data");
         this.state = proxy({
             total: 0,
             available: 0,
             assigned: 0,
             maintenance: 0,
+            expiring_insurance: 0,
+            total_maintenance_cost: 0,
+            by_category: [],
         });
+        this.chart = useChart(() => this.getChartConfig());
         onWillStart(async () => this.loadStats());
     }
 
     async loadStats() {
-        const stats = await this.orm.call("fleet_training.vehicle", "get_fleet_dashboard_stats", []);
+        const stats = await this.dashboardData.getStats();
         Object.assign(this.state, stats);
+    }
+
+    getChartConfig() {
+        return {
+            type: "pie",
+            data: {
+                labels: this.state.by_category.map((c) => c.name),
+                datasets: [
+                    {
+                        data: this.state.by_category.map((c) => c.count),
+                        backgroundColor: this.state.by_category.map((c, i) => getColor(i)),
+                    },
+                ],
+            },
+            options: {
+                maintainAspectRatio: false,
+            },
+        };
     }
 }
 
