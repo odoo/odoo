@@ -18,11 +18,13 @@ import {
     mountView,
     onRpc,
     pagerNext,
+    patchWithCleanup,
     contains,
     webModels,
 } from "@web/../tests/web_test_helpers";
 
 import { getOrigin } from "@web/core/utils/urls";
+import { ImageField } from "@web/views/fields/image/image_field";
 
 const MY_IMAGE =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -907,6 +909,43 @@ test("convert image to webp", async () => {
         { message: "image field should not be set" }
     );
     await setFiles(imageFile);
+});
+
+test("keep upload metadata when WebP encoding falls back to PNG", async () => {
+    patchWithCleanup(HTMLCanvasElement.prototype, {
+        toDataURL(type, ...args) {
+            if (type === "image/webp") {
+                return "data:image/png;base64,mocked_data";
+            }
+            return super.toDataURL(type, ...args);
+        },
+    });
+    let uploadedInfo;
+    let record;
+    patchWithCleanup(ImageField.prototype, {
+        onFileUploaded(info) {
+            uploadedInfo = info;
+            record = this.props.record;
+            return super.onFileUploaded(info);
+        },
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="document" widget="image" options="{'convert_to_webp': True}"/>
+            </form>
+        `,
+    });
+    const imageData = Uint8Array.from(atob(MY_IMAGE), (c) => c.charCodeAt(0));
+    await setFiles(new File([imageData], "image.jpg", { type: "image/jpeg" }));
+    await waitFor('div[name=document] img[data-src="data:image/png;base64,mocked_data"]');
+
+    expect(uploadedInfo.name).toBe("image.jpg");
+    expect(uploadedInfo.type).toBe("image/jpeg");
+    expect(record.data.document).toBe("mocked_data");
 });
 
 test.tags("desktop");
