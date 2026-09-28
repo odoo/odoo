@@ -431,6 +431,39 @@ class EducationBill(models.Model):
         return True
 
     # ---------------------------------------------------------
+    # MASS WORKFLOW ACTIONS
+    # ---------------------------------------------------------
+    def action_mass_verify_payment(self):
+        """Mass Action: Verifikasi & Tandai Lunas seluruh record yang dipilih"""
+        valid_bills = self.filtered(lambda r: r.state in ('unpaid', 'waiting_verification', 'draft'))
+        for b in valid_bills:
+            if b.state == 'draft':
+                b.action_publish_bill()
+            b.action_verify_payment()
+        return True
+
+    def action_mass_submit_payment(self):
+        """Mass Action: Ajukan Pembayaran seluruh record yang dipilih"""
+        valid_bills = self.filtered(lambda r: r.state in ('unpaid', 'draft', 'rejected'))
+        for b in valid_bills:
+            b.action_submit_payment()
+        return True
+
+    def action_mass_publish_bill(self):
+        """Mass Action: Terbitkan Tagihan seluruh record draft yang dipilih"""
+        valid_bills = self.filtered(lambda r: r.state == 'draft')
+        for b in valid_bills:
+            b.action_publish_bill()
+        return True
+
+    def action_mass_cancel(self):
+        """Mass Action: Batalkan seluruh record non-lunas yang dipilih"""
+        valid_bills = self.filtered(lambda r: r.state != 'verified')
+        for b in valid_bills:
+            b.action_cancel()
+        return True
+
+    # ---------------------------------------------------------
     # REMINDER HELPER (WhatsApp & Email)
     # ---------------------------------------------------------
     def get_reminder_message(self):
