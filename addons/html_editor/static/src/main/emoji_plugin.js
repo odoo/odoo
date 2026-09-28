@@ -67,6 +67,7 @@ export class EmojiPlugin extends Plugin {
     }
 
     destroy() {
+        super.destroy();
         this._abortController.abort();
     }
 

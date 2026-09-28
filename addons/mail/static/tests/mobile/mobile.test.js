@@ -41,6 +41,7 @@ test("can leave channel in mobile", async () => {
 });
 
 test("enter key should create a newline in composer", async () => {
+    mockUserAgent("android");
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();

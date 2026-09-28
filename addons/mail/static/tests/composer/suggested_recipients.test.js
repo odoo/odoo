@@ -111,6 +111,7 @@ test("Opening full composer in 'log note' mode should not copy selected suggeste
     await waitFor(".o-mail-RecipientsInput .o_tag_badge_text:contains(John Jane):count(1)");
     await waitFor(".o-mail-RecipientsInput .o_tag_badge_text:contains(john@test.be):count(1)");
     await click("button:text('Log note')");
+    await contains(".o-mail-Composer [o-we-hint-text='Log an internal note…']");
     await click("button[title='Open Full Composer']");
     await doActionCalled;
     await expect.waitForSteps(["do-action"]);

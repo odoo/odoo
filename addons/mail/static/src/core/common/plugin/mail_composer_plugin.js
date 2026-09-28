@@ -24,6 +24,25 @@ const ALLOWED_TAGS = [
 const PRESERVED_CLASSNAMES = new Set(["o_mail_redirect", "o-discuss-mention"]);
 
 /**
+ * Hint whose text is re-read on every hint update instead of being captured once.
+ *
+ * The editor config is only read at editor creation, but the composer
+ * placeholder can change during its lifetime (e.g. the livechat "Tab to next
+ * live chat" hint, or a WhatsApp conversation being closed).
+ *
+ * @param {string} selector
+ * @param {() => string|undefined} getText
+ */
+function lazyHint(selector, getText) {
+    return {
+        selector,
+        get text() {
+            return getText();
+        },
+    };
+}
+
+/**
  * This plugin works with the composer used in Discuss, ChatWindow and Chatter.
  * For the full composer, it is using HtmlComposerMessageField.
  */
@@ -36,10 +55,12 @@ export class MailComposerPlugin extends Plugin {
         should_bypass_paste_image_files_predicates: () => true,
         on_link_created_handlers: (linkEl) => (linkEl.target = "_blank"),
         hints: [
-            withSequence(1, {
-                selector: `.odoo-editor-editable > ${baseContainerGlobalSelector}:only-child`,
-                text: this.config.placeholder,
-            }),
+            withSequence(
+                1,
+                lazyHint(`.odoo-editor-editable > ${baseContainerGlobalSelector}:only-child`, () =>
+                    this.config.composerPluginDependencies.getPlaceholder()
+                )
+            ),
         ],
         hint_targets_providers: (selectionData, editable) => {
             const el = editable.firstChild;

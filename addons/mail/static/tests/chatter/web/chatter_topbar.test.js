@@ -129,7 +129,7 @@ test("log note toggling", async () => {
     await click("button:text('Log note')");
     await waitFor("button.active:text('Log note'):count(1)");
     await waitFor(
-        ".o-mail-Composer .o-mail-Composer-input[placeholder='Log an internal note…']:count(1)"
+        ".o-mail-Composer-html .o-we-hint[o-we-hint-text='Log an internal note…']:count(1)"
     );
     await click("button:text('Log note')");
     await waitFor("button:not(.active):text('Log note'):count(1)");
@@ -146,7 +146,7 @@ test("send message toggling", async () => {
     await click("button:text('Send message')");
     await waitFor("button.active:text('Send message'):count(1)");
     await waitFor(
-        ".o-mail-Composer-input[placeholder='Send a message to all followers and selected contacts…']:count(1)"
+        ".o-mail-Composer-html .o-we-hint[o-we-hint-text='Send a message to all followers and selected contacts…']:count(1)"
     );
     await click("button:text('Send message')");
     await waitFor("button:not(.active):text('Send message'):count(1)");
@@ -165,12 +165,14 @@ test("log note/send message switching", async () => {
     await waitFor("button.active:text('Send message'):count(1)");
     await waitFor("button:not(.active):text('Log note'):count(1)");
     await waitFor(
-        ".o-mail-Composer-input[placeholder='Send a message to all followers and selected contacts…']:count(1)"
+        ".o-mail-Composer-html .o-we-hint[o-we-hint-text='Send a message to all followers and selected contacts…']:count(1)"
     );
     await click("button:text('Log note')");
     await waitFor("button:not(.active):text('Send message'):count(1)");
     await waitFor("button.active:text('Log note'):count(1)");
-    await waitFor(".o-mail-Composer-input[placeholder='Log an internal note…']:count(1)");
+    await waitFor(
+        ".o-mail-Composer-html .o-we-hint[o-we-hint-text='Log an internal note…']:count(1)"
+    );
 });
 
 test("attachment counter without attachments", async () => {

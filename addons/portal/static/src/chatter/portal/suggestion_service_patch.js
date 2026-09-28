@@ -7,10 +7,8 @@ import { patch } from "@web/core/utils/patch";
 const suggestionServicePatch = {
     getSupportedDelimiters(thread, ancestors) {
         if (ancestors?.inFrontendPortalChatter) {
-            return [
-                [SUGGESTION_DELIMITERS.CANNED_RESPONSE],
-                [SUGGESTION_DELIMITERS.EMOJI, undefined, 2],
-            ];
+            // Emoji suggestions are handled by the emoji plugin of the editor.
+            return [[SUGGESTION_DELIMITERS.CANNED_RESPONSE]];
         }
         return super.getSupportedDelimiters(...arguments);
     },

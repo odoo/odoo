@@ -116,6 +116,7 @@ test("Composer GIF button should open the GIF picker (chat window)", async () =>
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem:contains('General')");
+    await contains(".o-mail-ChatWindow .o-mail-Composer-html:focus");
     await click(".o-mail-ChatWindow .o-mail-Composer [title='More Actions']");
     await click(".o-dropdown-item:contains('Send GIF')");
     await waitFor(".o-discuss-GifPicker:count(1)");
@@ -247,6 +248,7 @@ test("Composer GIF button should open the GIF picker keyboard in footer", async 
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-mail-Composer-html:focus");
     await click("button[title='More Actions']");
     await click(".dropdown-item:contains('Send GIF')");
     await waitFor(".o-mail-Composer-footer .o-discuss-GifPicker:count(1)");
@@ -306,7 +308,7 @@ test("Pause GIF when thread is not focused", async () => {
     await waitFor(".o-mail-LinkPreviewImage img:not([data-paused]):count(1)");
     await click("button[title='Send GIF']");
     await waitFor(".o-mail-LinkPreviewImage img[data-paused]:count(1)");
-    await click(".o-mail-Composer-input");
+    await click(".o-mail-Composer-html");
     await waitFor(".o-mail-LinkPreviewImage img:not([data-paused]):count(1)");
 });
 

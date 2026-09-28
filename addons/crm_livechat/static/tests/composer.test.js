@@ -1,5 +1,10 @@
 import { defineCrmLivechatModels } from "@crm_livechat/../tests/crm_livechat_test_helpers";
-import { click, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
+import {
+    click,
+    openDiscuss,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test } from "@odoo/hoot";
 import { onRpc, serverState } from "@web/../tests/web_test_helpers";

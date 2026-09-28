@@ -109,7 +109,7 @@ test("Basic keyboard navigation", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-mail-Composer-input:focus:count(1)"); // as to ensure no race condition with auto-focus of emoji picker
+    await waitFor(".o-mail-Composer-html:focus:count(1)"); // as to ensure no race condition with auto-focus of emoji picker
     await click("button[title='Add Emojis']");
     await waitFor(".o-Emoji[data-index='0'].o-active:count(1)");
     // detect amount of emojis per row for navigation
@@ -136,7 +136,7 @@ test("Basic keyboard navigation", async () => {
     ).dataset;
     triggerHotkey("Enter");
     await waitForNone(".o-EmojiPicker");
-    await containsTextInComposer(".o-mail-Composer", codepoints);
+    await contains(".o-mail-Composer-html", { textContent: codepoints });
 });
 
 test("recent category (basic)", async () => {
@@ -231,7 +231,7 @@ test("selecting an emoji while holding down the Shift key prevents the emoji pic
     await click(".o-EmojiPicker-content .o-Emoji:text('👺')", { shiftKey: true });
     await waitFor(".o-EmojiPicker-navbar [title='Smileys & Emotion']:count(1)");
     await waitFor(".o-EmojiPicker:count(1)");
-    await containsTextInComposer(".o-mail-Composer", "👺");
+    await contains(".o-mail-Composer-html", { textContent: "👺" });
 });
 
 test("shortcodes shown in emoji title in message", async () => {

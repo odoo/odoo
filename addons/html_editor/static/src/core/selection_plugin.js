@@ -2,6 +2,7 @@ import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
     getDeepestEditablePosition,
     getDeepestPosition,
+    isContentEditable,
     isEmptyTextNode,
     isMediaElement,
     isProtected,
@@ -796,6 +797,10 @@ export class SelectionPlugin extends Plugin {
         if (selection) {
             if (documentSelectionIsInEditable || selection.anchorNode === null) {
                 selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+            }
+            // Setting the selection synchronously triggers focus handlers, which
+            // may move the document selection outside of the editable.
+            if (this.isSelectionInEditable(selection)) {
                 this.activeSelection = this.makeActiveSelection(selection, true);
             } else {
                 let range = new Range();
@@ -1376,7 +1381,7 @@ export class SelectionPlugin extends Plugin {
         // Get up-to-date selection
         const { editableSelection } = this.getSelectionData();
         // Avoid setting the selection if it's not inside an uneditable element
-        const isInUneditable = (node) => !closestElement(node).isContentEditable;
+        const isInUneditable = (node) => !isContentEditable(closestElement(node));
         let { startContainer: start, endContainer: end } = editableSelection;
         if (!(isInUneditable(start) || (end !== start && isInUneditable(end)))) {
             return editableSelection;

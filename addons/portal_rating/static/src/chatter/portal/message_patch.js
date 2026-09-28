@@ -1,6 +1,5 @@
 import { PortalChatterPlugin } from "@portal/chatter/portal/portal_chatter_plugin";
 import { Message } from "@mail/core/common/message";
-import { convertBrToLineBreak } from "@mail/utils/common/format";
 import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 import { signal, useOnChange } from "@odoo/owl";
@@ -83,18 +82,10 @@ patch(Message.prototype, {
     onClikEditComment() {
         this.state.editRating = !this.state.editRating;
         if (this.state.editRating) {
-            const messageContent = convertBrToLineBreak(
-                this.props.message.rating_id.publisher_comment
-            );
             this.props.message.composer = {
                 message: this.props.message,
                 composerHtml: this.props.message.rating_id.publisher_comment,
                 portalComment: true,
-                selection: {
-                    start: messageContent.length,
-                    end: messageContent.length,
-                    direction: "none",
-                },
             };
         } else {
             this.message.composer = null;

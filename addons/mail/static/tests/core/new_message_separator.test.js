@@ -28,6 +28,7 @@ import {
 } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import {
+    contains as webContains,
     Command,
     getService,
     makeKwArgs,
@@ -64,7 +65,9 @@ test("keep new message separator when message is deleted", async () => {
     await start();
     await openDiscuss(generalId);
     await waitFor(".o-mail-Message:count(2)");
-    queryFirst(".o-mail-Composer-input").blur();
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
+    await webContains(".o_navbar").click(); // click away
+    await waitFor(".o-mail-Composer-html:not(:focus):count(1)");
     await hover(".o-mail-Message:has(:text('message 0'))");
     await click("[title='Expand']", {
         parent: [".o-mail-Message:has(:text('message 0'))"],
@@ -179,7 +182,7 @@ test("keep new message separator until user goes back to the thread", async () =
     );
     await waitFor(".o-mail-Thread-newMessage:contains('New'):count(1)");
     await hootClick(document.body); // Force "focusin" back on the textarea
-    await hootClick(".o-mail-Composer-input");
+    await hootClick(".o-mail-Composer-html");
     await waitNotifications([
         "mail.record/insert",
         (n) => n["discuss.channel.member"][0].new_message_separator,
@@ -448,8 +451,8 @@ test("pending mark as read does not revert a later mark as unread", async () => 
     await waitFor(".o-mail-Message:has(:text('Hello everyone!')):count(1)");
     await expect.waitForSteps(["handle_mark_as_read", "mark_as_read_rpc"]);
     // Request a second mark as read, queued until the first one completes.
-    queryFirst(".o-mail-Composer-input").blur();
-    await click(".o-mail-Composer-input");
+    queryFirst(".o-mail-Composer-html").blur();
+    await click(".o-mail-Composer-html");
     await hover(".o-mail-Message:has(:text('Hello everyone!'))");
     await click("[title='Expand']", {
         parent: [".o-mail-Message:has(:text('Hello everyone!'))"],

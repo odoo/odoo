@@ -1,6 +1,9 @@
 import { describe, test } from "@odoo/hoot";
 import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
-import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
+import {
+    containsTextInComposer,
+    insertTextInComposer,
+} from "@mail/../tests/mail_test_helpers_composer";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
 
@@ -51,7 +54,7 @@ test("Internal user mention shows their live chat username", async () => {
     await openDiscuss(channelId);
     await insertTextInComposer(".o-mail-Composer", "@");
     await click('.o-mail-Composer-suggestion:contains(Mitchell Admin "Batman")');
-    await contains(".o-mail-Composer-input:value(@Batman)");
+    await containsTextInComposer(".o-mail-Composer", "\uFEFF@Batman\uFEFF\u00a0");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Message a.o_mail_redirect", { text: "@Batman" });
 });

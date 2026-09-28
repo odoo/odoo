@@ -16,6 +16,7 @@ test("can add, replace, and remove emojis to a poll option", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
     await click(".o-mail-Composer button[title='More Actions']");
     await click(".o-dropdown-item:text('Create Poll')");
     await waitFor(".modal-header:text('Create Poll'):count(1)");
@@ -42,11 +43,13 @@ test("poll creation should be disabled during message editing", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
     await click(".o-mail-Composer button[title='More Actions']");
     await waitFor(".o-dropdown-item:text('Create Poll'):count(1)");
     await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
+    await waitFor(".o-mail-Message .o-mail-Composer-html:focus:count(1)");
     await click(".o-mail-Message .o-mail-Composer button[title='More Actions']");
     await waitFor(".o-dropdown-item:text('Attach Files'):count(1)");
     await waitForNone(".o-dropdown-item:text('Create Poll')");
@@ -58,6 +61,7 @@ test("autofocus question on poll opening and user-added options", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
     await click(".o-mail-Composer button[title='More Actions']");
     await click(".o-dropdown-item:text('Create Poll')");
     await waitFor(".modal-header:text('Create Poll'):count(1)");

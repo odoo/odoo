@@ -4,12 +4,26 @@ import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hoo
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { NavigableList } from "@mail/core/common/navigable_list";
-import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
+import {
+    MAIL_HTML_PLUGINS,
+    MAIL_HTML_PLUGINS_SMALL_UI,
+    MAIL_TEXT_PLUGINS,
+} from "@mail/core/common/plugin/plugin_sets";
 import { mapSuggestionsToOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
 import { groupAttachments } from "@mail/utils/common/attachments";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
-import { propComputed, useMaybePlugin, useSelection, useVisible } from "@mail/utils/common/hooks";
-import { generatePartnerMentionElement, trimEmptyBlocksAround } from "@mail/utils/common/format";
+import {
+    onExternalClick,
+    propComputed,
+    useMaybePlugin,
+    useVisible,
+} from "@mail/utils/common/hooks";
+import {
+    addLink,
+    generatePartnerMentionElement,
+    parseAndTransform,
+    trimEmptyBlocksAround,
+} from "@mail/utils/common/format";
 import { getInnerHtml } from "@mail/utils/common/html";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { Wysiwyg } from "@html_editor/wysiwyg";
@@ -34,6 +48,7 @@ import {
     untrack,
     useApp,
     useListener,
+    useOnChange,
     usePlugin,
     useProps,
 } from "@odoo/owl";
@@ -61,8 +76,8 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useComposerActions } from "@mail/core/common/composer_actions";
 import { ActionList, CircleInlineAction } from "@mail/core/common/action_list";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
-import { closestElement, lastLeaf } from "@html_editor/utils/dom_traversal";
-import { rightPos } from "@html_editor/utils/position";
+import { childNodes, closestElement, lastLeaf } from "@html_editor/utils/dom_traversal";
+import { nodeSize, rightPos } from "@html_editor/utils/position";
 import { syntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/backend/syntax_highlighting/syntax_highlighting";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -87,6 +102,34 @@ class SendMessageInlineAction extends CircleInlineAction {
             "o-sendMessageActive o-text-white shadow-sm": this.action.isActive,
         };
     }
+}
+
+/**
+ * @param {Node} root
+ * @param {Node} node
+ * @returns {number[]|undefined} indexes of the successive children leading from
+ *  `root` to `node`, undefined if `node` is not inside `root`
+ */
+function getNodePath(root, node) {
+    const path = [];
+    while (node && node !== root) {
+        path.unshift(childNodes(node.parentNode).indexOf(node));
+        node = node.parentNode;
+    }
+    return node === root ? path : undefined;
+}
+
+/**
+ * @param {Node} root
+ * @param {number[]} path
+ * @returns {Node|undefined}
+ */
+function getNodeFromPath(root, path) {
+    let node = root;
+    for (const index of path) {
+        node = node?.childNodes[index];
+    }
+    return node;
 }
 
 class FullComposerRecoveryPopover extends Component {
@@ -173,14 +216,31 @@ export class Composer extends Component {
         );
         this.ui = useService("ui");
         this.composerService = useService("mail.composer");
-        this.ref = signal.ref(HTMLTextAreaElement);
-        this.fakeTextarea = signal.ref(HTMLTextAreaElement);
         this.inputContainerRef = signal.ref(HTMLSpanElement);
         this.pickerContainerRef = signal.ref(HTMLDivElement);
         this.state = proxy({
             active: true,
             isFullComposerOpen: false,
         });
+        // Block input while a message is being posted. The editable is not
+        // turned off for this, because that would make it lose the focus.
+        for (const type of ["beforeinput", "keydown", "paste", "cut", "drop"]) {
+            useListener(
+                this.inputContainerRef,
+                type,
+                (ev) => {
+                    if (this.state.active || !this.editor?.editable.contains(ev.target)) {
+                        return;
+                    }
+                    ev.stopPropagation();
+                    if (type !== "keydown") {
+                        // not on keydown, so that navigation keys still work
+                        ev.preventDefault();
+                    }
+                },
+                { capture: true }
+            );
+        }
         this.rootRef = signal.ref(HTMLDivElement);
         this.notification = usePlugin(NotificationPlugin);
         this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
@@ -192,23 +252,6 @@ export class Composer extends Component {
                 "dropdown-menu o-dropdown--menu bg-view overflow-visible o-rounded-bubble mx-1",
         });
         this.fullComposerBus = new EventBus();
-        this.selection = useSelection({
-            ref: this.ref,
-            model: this.props.composer.selection,
-            preserveOnClickAwayPredicate: async (ev) => {
-                // Let event be handled by bubbling handlers first.
-                await new Promise(setTimeout);
-                return (
-                    !this.isEventTrusted(ev) ||
-                    isEventHandled(ev, "sidebar.openChannel") ||
-                    isEventHandled(ev, "emoji.selectEmoji") ||
-                    isEventHandled(ev, "Composer.onClickAddEmoji") ||
-                    isEventHandled(ev, "composer.clickOnAddAttachment") ||
-                    isEventHandled(ev, "composer.selectSuggestion") ||
-                    isEventHandled(ev, "composer.clickInsertCannedResponse")
-                );
-            },
-        });
         this.suggestion = useSuggestion(computed(() => this.editor));
         this.markEventHandled = markEventHandled;
         this.onDropFile = this.onDropFile.bind(this);
@@ -255,23 +298,43 @@ export class Composer extends Component {
                         : !this.thread?.messageInEdition?.composer?.isEditComposerVisible)
             );
         }
+        onExternalClick(this.rootRef, () => {
+            // Clicking away cancels the selection, so that a later insertion
+            // (e.g. an emoji) appends instead of replacing it. An open action
+            // or "More" dropdown keeps it: its panel or menu is a popover,
+            // rendered outside the composer.
+            if (!this.composerActions.activeAction && !this.moreAction()?.isActive) {
+                this.isSelectionCancelled = true;
+            }
+        });
         useLayoutEffect(
             () => {
                 const focus = this.props.autofocus + this.props.composer.autofocus;
-                if (focus && this.ref()) {
-                    this.selection.restore();
-                    this.ref().focus();
-                }
                 if (focus && this.editor?.editable) {
                     this.editor.shared.selection.focusEditable();
                     this.editor.shared.selection.selectAroundNonEditable();
                 }
             },
-            () => [
-                this.props.autofocus + this.props.composer.autofocus,
-                this.props.placeholder,
-                untrack(this.ref),
-            ]
+            () => [this.props.autofocus + this.props.composer.autofocus, this.props.placeholder]
+        );
+        this.isEditorReady = signal(false);
+        useLayoutEffect(
+            () => {
+                // The placeholder is rendered by the editor as a hint: the
+                // editor has no way to know it changed, so ask for a refresh.
+                if (this.isEditorReady()) {
+                    this.editor.shared.hint.updateHints();
+                }
+            },
+            () => [this.isEditorReady(), this.placeholder]
+        );
+        useOnChange(
+            () => [this.isEditorReady(), this.isEditorReadonly, this.isEditorDisabled],
+            (isEditorReady) => {
+                if (isEditorReady) {
+                    this.updateEditableState();
+                }
+            }
         );
         useLayoutEffect(
             () => {
@@ -283,67 +346,12 @@ export class Composer extends Component {
         );
         useLayoutEffect(
             () => {
-                const fakeTextareaEl = this.fakeTextarea();
-                if (fakeTextareaEl?.scrollHeight && this.ref()) {
-                    let wasEmpty = false;
-                    if (!fakeTextareaEl.value) {
-                        wasEmpty = true;
-                        fakeTextareaEl.value = "0";
-                    }
-                    this.ref().style.height = fakeTextareaEl.scrollHeight + "px";
-                    if (wasEmpty) {
-                        fakeTextareaEl.value = "";
-                    }
-                }
                 this.saveContentDebounced();
             },
-            () => [this.props.composer.composerText, untrack(this.ref)]
+            () => [this.props.composer.composerText]
         );
         useLayoutEffect(
-            () => {
-                if (!this.props.composer.forceCursorMove) {
-                    return;
-                }
-                this.selection.restore();
-                this.props.composer.forceCursorMove = false;
-            },
-            () => [this.props.composer.forceCursorMove]
-        );
-        useLayoutEffect(
-            () => {
-                if (!this.ancestors.inChatter || !this.props.composer.mentionedPartners.length) {
-                    return;
-                }
-                const fragment = createDocumentFragmentFromContent(
-                    this.props.composer.composerHtml
-                );
-                const elements = fragment.querySelectorAll(
-                    `.o_mail_redirect, .o-discuss-readonly-mention`
-                );
-                let hasChanged = false;
-                for (const el of elements) {
-                    const partnerId = Number(el.dataset.oeId);
-                    const partner = this.props.composer.mentionedPartners.find(
-                        (p) => p.id === partnerId
-                    );
-                    if (
-                        partner.partner_share &&
-                        this.props.type === COMPOSER_TYPES.NOTE &&
-                        el.tagName === "A"
-                    ) {
-                        const span = generatePartnerMentionElement(partner, { readonly: true });
-                        el.replaceWith(span);
-                        hasChanged = true;
-                    } else if (el.tagName !== "A") {
-                        const link = generatePartnerMentionElement(partner);
-                        el.replaceWith(link);
-                        hasChanged = true;
-                    }
-                }
-                if (hasChanged) {
-                    this.props.composer.composerHtml = getInnerHtml(fragment);
-                }
-            },
+            () => this.syncMentionsWithComposerType(),
             () => [this.props.type]
         );
         useLayoutEffect(
@@ -375,7 +383,6 @@ export class Composer extends Component {
             ]
         );
         onMounted(() => {
-            this.ref()?.scrollTo({ top: 0, behavior: "instant" });
             if (!this.props.composer.composerText) {
                 this.restoreContent();
             }
@@ -408,6 +415,13 @@ export class Composer extends Component {
         if (!lastNode) {
             return;
         }
+        if (!this.editor.editable.isContentEditable) {
+            // The editable is turned off (e.g. while posting), so all of its
+            // content is uneditable: selecting around it would select all of
+            // it, and the next typed text would replace the paragraph.
+            this.editor.shared.selection.setCursorEnd(lastNode);
+            return;
+        }
         const nonEditableAncestor = closestElement(lastNode, (el) => !el.isContentEditable);
         if (nonEditableAncestor && this.editor.editable.contains(nonEditableAncestor)) {
             const [anchorNode, anchorOffset] = rightPos(nonEditableAncestor);
@@ -416,6 +430,115 @@ export class Composer extends Component {
             this.editor.shared.selection.setCursorEnd(lastNode);
         }
         this.editor.shared.selection.selectAroundNonEditable();
+    }
+
+    /**
+     * Saves the selection on the composer, so that it can be restored when the
+     * editor is re-created with the same content (e.g. when switching thread).
+     *
+     * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
+     */
+    saveEditorSelection({ anchorNode, anchorOffset, focusNode, focusOffset }) {
+        const anchorPath = getNodePath(this.editor.editable, anchorNode);
+        const focusPath = getNodePath(this.editor.editable, focusNode);
+        if (!anchorPath || !focusPath) {
+            return;
+        }
+        this.props.composer.editorSelection = {
+            anchorPath,
+            anchorOffset,
+            focusPath,
+            focusOffset,
+            composerHtml: this.props.composer.composerHtml.toString(),
+        };
+    }
+
+    /**
+     * @returns {boolean} whether the saved selection could be restored
+     */
+    restoreEditorSelection() {
+        const savedSelection = this.props.composer.editorSelection;
+        if (savedSelection?.composerHtml !== this.props.composer.composerHtml.toString()) {
+            return false;
+        }
+        const anchorNode = getNodeFromPath(this.editor.editable, savedSelection.anchorPath);
+        const focusNode = getNodeFromPath(this.editor.editable, savedSelection.focusPath);
+        if (
+            !anchorNode ||
+            !focusNode ||
+            savedSelection.anchorOffset > nodeSize(anchorNode) ||
+            savedSelection.focusOffset > nodeSize(focusNode)
+        ) {
+            return false;
+        }
+        this.editor.shared.selection.setSelection({
+            anchorNode,
+            anchorOffset: savedSelection.anchorOffset,
+            focusNode,
+            focusOffset: savedSelection.focusOffset,
+        });
+        return true;
+    }
+
+    /**
+     * Keeps the mentions in sync with the current composer type.
+     *
+     * Mentions of partners that are not internal users must not be links in a
+     * note: the note is internal, but the link would show up for portal users
+     * of the record. The type can be switched (Send message <-> Log note) with
+     * content already typed.
+     */
+    syncMentionsWithComposerType() {
+        if (!this.ancestors.inChatter || !this.props.composer.mentionedPartners.length) {
+            return;
+        }
+        const fragment = createDocumentFragmentFromContent(this.props.composer.composerHtml);
+        const elements = fragment.querySelectorAll(`.o_mail_redirect, .o-discuss-readonly-mention`);
+        let hasChanged = false;
+        for (const el of elements) {
+            const partnerId = Number(el.dataset.oeId);
+            const partner = this.props.composer.mentionedPartners.find((p) => p.id === partnerId);
+            if (!partner) {
+                continue;
+            }
+            const readonly = partner.partner_share && this.props.type === COMPOSER_TYPES.NOTE;
+            // only replace when needed: it runs both on type switch and on post
+            if (readonly === (el.tagName === "A")) {
+                el.replaceWith(generatePartnerMentionElement(partner, { readonly }));
+                hasChanged = true;
+            }
+        }
+        if (hasChanged) {
+            this.props.composer.composerHtml = getInnerHtml(fragment);
+        }
+    }
+
+    updateEditableState() {
+        const { editable } = this.editor;
+        // `readonly` means nothing on a contenteditable: turn the editable off.
+        const isEditable = !this.isEditorReadonly && !this.isEditorDisabled;
+        if (editable.getAttribute("contenteditable") === String(isEditable)) {
+            return;
+        }
+        if (!isEditable) {
+            // Turning the editable off blurs it: give the focus back after.
+            this.hadEditableFocus = editable.getRootNode().activeElement === editable;
+        }
+        editable.setAttribute("contenteditable", isEditable);
+        if (isEditable && this.hadEditableFocus) {
+            this.hadEditableFocus = false;
+            this.editor.shared.selection.focusEditable();
+        }
+    }
+
+    /** Whether the content can't be changed here, e.g. while it is in the full composer. */
+    get isEditorReadonly() {
+        return this.props.composer.restoredFromFullComposer;
+    }
+
+    /** Whether the content can't be edited at all. */
+    get isEditorDisabled() {
+        return this.props.disabled;
     }
 
     get areAllActionsDisabled() {
@@ -476,10 +599,16 @@ export class Composer extends Component {
     get wysiwygConfig() {
         return {
             content: this.props.composer.composerHtml,
-            placeholder: this.placeholder,
             baseContainers: ["DIV", "P"],
-            Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
+            Plugins: !this.composerService.htmlEnabled
+                ? MAIL_TEXT_PLUGINS
+                : this.ui.isSmall
+                ? MAIL_HTML_PLUGINS_SMALL_UI
+                : MAIL_HTML_PLUGINS,
             composerPluginDependencies: {
+                // Read lazily: the config is only read once, at editor
+                // creation, but the placeholder can change afterwards.
+                getPlaceholder: () => this.placeholder,
                 onBeforePaste: (selection, ev) => this.onPaste(ev),
                 onFocusin: this.onFocusin.bind(this),
                 onFocusout: this.onFocusout.bind(this),
@@ -489,12 +618,32 @@ export class Composer extends Component {
             embeddedComponentInfo: { app: this.app, env: this.env },
             resources: {
                 embedded_components: [syntaxHighlightingEmbedding],
+                on_selectionchange_handlers: ({
+                    editableSelection,
+                    documentSelectionIsInEditable,
+                }) => {
+                    // The editable selection may be reset outside of it (e.g.
+                    // editor removed): keep the last one set by the user.
+                    if (documentSelectionIsInEditable) {
+                        this.saveEditorSelection(editableSelection);
+                        // Moving the cursor changes the suggestion being typed.
+                        this.suggestion.detect();
+                    }
+                },
             },
-            classList: ["o-mail-Composer-html", "min-w-0"],
+            classList: [
+                "o-mail-Composer-html",
+                "min-w-0",
+                ...(this.isMobileOS ? ["o-mobile"] : []),
+            ],
             onChange: () => this.onChangeWysiwygContent(),
             onEditorReady: () => {
-                this.setEditorCursorEnd();
+                if (!this.restoreEditorSelection()) {
+                    this.setEditorCursorEnd();
+                }
                 this.editor.shared.history.commit();
+                this.updateEditableState();
+                this.isEditorReady.set(true);
             },
         };
     }
@@ -624,10 +773,7 @@ export class Composer extends Component {
             anchorRef: this.inputContainerRef,
             position: this.ancestors.inChatter ? "bottom-fit" : "top-fit",
             onClose: () => this.suggestion.dismiss(),
-            onSelect: (ev, option) => {
-                this.suggestion.insert(option);
-                markEventHandled(ev, "composer.selectSuggestion");
-            },
+            onSelect: (ev, option) => this.suggestion.insert(option),
             isLoading: !!searchTerm && loading,
             options: [],
             rememberPosition: false,
@@ -893,11 +1039,6 @@ export class Composer extends Component {
         this.deleteSavedContent();
     }
 
-    isEventTrusted(ev) {
-        // Allow patching during tests
-        return ev.isTrusted;
-    }
-
     async processMessage(cb) {
         if (this.props.composer.attachments.some(({ uploading }) => uploading)) {
             this.notification.add(_t("Please wait while the file is uploading."), {
@@ -908,13 +1049,19 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(trimEmptyBlocksAround(this.props.composer.composerHtml));
+            // The type may have just been switched, before the layout effect.
+            this.syncMentionsWithComposerType();
+            let body = trimEmptyBlocksAround(this.props.composer.composerHtml);
+            if (!this.composerService.htmlEnabled) {
+                // Links are only styled while typing (VisualLinkPlugin): linkify them on post.
+                body = parseAndTransform(body, addLink);
+            }
+            await cb(body);
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
             this.clear();
             this.state.active = true;
-            this.ref()?.focus();
         }
     }
 
@@ -1056,23 +1203,8 @@ export class Composer extends Component {
 
     onClickInsertCannedResponse(ev) {
         markEventHandled(ev, "composer.clickInsertCannedResponse");
-        if (this.editor) {
-            if (!isHtmlEmpty(this.props.composer.composerHtml)) {
-                this.editor.shared.dom.insert(" ");
-            }
-            this.editor.shared.dom.insert("::");
-            this.editor.shared.history.commit();
-        } else {
-            const composerText = this.props.composer.composerText;
-            const firstPart = composerText.slice(0, this.props.composer.selection.start);
-            const secondPart = composerText.slice(
-                this.props.composer.selection.end,
-                composerText.length
-            );
-            const toInsertPart = firstPart.length === 0 || firstPart.at(-1) === " " ? "::" : " ::";
-            this.props.composer.composerText = firstPart + toInsertPart + secondPart;
-            this.selection.moveCursor((firstPart + toInsertPart).length);
-        }
+        const prefix = isHtmlEmpty(this.props.composer.composerHtml) ? "" : " ";
+        this.insertInEditor(prefix + "::");
         if (!this.ui.isSmall || !this.ancestors.inChatter) {
             this.props.composer.autofocus++;
         }
@@ -1093,19 +1225,7 @@ export class Composer extends Component {
     }
 
     addEmoji(str) {
-        if (this.editor) {
-            this.editor.shared.dom.insert(str);
-            this.editor.shared.history.commit();
-        } else {
-            const composerText = this.props.composer.composerText;
-            const firstPart = composerText.slice(0, this.props.composer.selection.start);
-            const secondPart = composerText.slice(
-                this.props.composer.selection.end,
-                composerText.length
-            );
-            this.props.composer.composerText = firstPart + str + secondPart;
-            this.selection.moveCursor((firstPart + str).length);
-        }
+        this.insertInEditor(str);
         if (this.ui.isSmall && !this.ancestors.inChatter) {
             return false;
         } else {
@@ -1113,8 +1233,26 @@ export class Composer extends Component {
         }
     }
 
+    /**
+     * Inserts content at the composer cursor, replacing its selection.
+     *
+     * A selection cancelled by a click away is not replaced: the content is
+     * appended at the end instead, like it is for an empty selection.
+     *
+     * @param {string|Node} content
+     */
+    insertInEditor(content) {
+        if (this.isSelectionCancelled) {
+            this.isSelectionCancelled = false;
+            this.setEditorCursorEnd();
+        }
+        this.editor.shared.dom.insert(content);
+        this.editor.shared.history.commit();
+    }
+
     onFocusin(ev) {
         ev.stopPropagation();
+        this.isSelectionCancelled = false;
         this.props.composer.isFocused = true;
         if (this.props.composer.thread?.shouldMarkAsReadOnFocus) {
             this.props.composer.thread.markAsRead();

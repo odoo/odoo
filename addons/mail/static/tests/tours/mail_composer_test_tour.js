@@ -19,8 +19,8 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Write something in composer",
-            trigger: ".o-mail-Composer-input",
-            run: "edit blahblah @Not && click body",
+            trigger: ".o-mail-Composer-html",
+            run: "editor blahblah @Not && click body",
         },
         {
             content: "Mention a partner",
@@ -169,7 +169,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Check full composer text is kept",
-            trigger: ".o-mail-Composer-input:value(keep the content)",
+            trigger: ".o-mail-Composer-html:text('keep the content')",
         },
         {
             content: "Open full composer",
@@ -218,8 +218,8 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         },
         {
             content: "Write a message",
-            trigger: ".o-mail-Composer-input",
-            run: "edit hello world",
+            trigger: ".o-mail-Composer-html",
+            run: "editor hello world",
         },
         {
             content: "Send message from chatter",
