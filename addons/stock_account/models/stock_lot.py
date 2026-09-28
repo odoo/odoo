@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import _, api, fields, models
 
 
@@ -25,28 +27,92 @@ class StockLot(models.Model):
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
         at_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
-        for lot in self:
-            if not lot.lot_valuated:
+
+        valued = self.filtered('lot_valuated')
+        if self - valued:
+            (self - valued).total_value = 0.0
+            (self - valued).avg_cost = 0.0
+        if not valued:
+            return
+
+        qty_valued = {lot.id: lot.product_qty for lot in valued}
+        qty_available = {
+            lot.id: lot.product_qty
+            for lot in valued.with_context(warehouse_id=False)
+        }
+
+        fifo_lots = self.browse()
+        avco_lots = self.browse()
+        for lot in valued:
+            product = lot.product_id
+            qv, qa = qty_valued[lot.id], qty_available[lot.id]
+            if product.uom_id.is_zero(qv):
                 lot.total_value = 0.0
                 lot.avg_cost = 0.0
-                continue
-            valuated_product = lot.product_id.with_context(at_date=at_date, lot_id=lot.id)
-            qty_valued = lot.product_qty
-            qty_available = lot.with_context(warehouse_id=False).product_qty
-            if valuated_product.uom_id.is_zero(qty_valued):
-                lot.total_value = 0
-                lot.avg_cost = 0.0
-            elif valuated_product.cost_method == 'standard' or valuated_product.uom_id.is_zero(qty_available):
-                lot.total_value = lot.standard_price * qty_valued
+            elif product.cost_method == 'standard' or product.uom_id.is_zero(qa):
+                lot.total_value = lot.standard_price * qv
                 lot.avg_cost = lot.standard_price
-            elif valuated_product.cost_method == 'average':
-                avco_result = valuated_product.with_context(warehouse_id=False)._run_avco(at_date=at_date, lot=lot.with_context(warehouse_id=False))
-                lot.total_value = avco_result[1] * qty_valued / qty_available
-                lot.avg_cost = avco_result[0]
+            elif product.cost_method == 'average':
+                avco_lots |= lot
             else:
-                fifo_value = valuated_product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date, lot=lot.with_context(warehouse_id=False))
-                lot.total_value = fifo_value * qty_valued / qty_available
-                lot.avg_cost = fifo_value / qty_available if qty_available else 0.0
+                fifo_lots |= lot
+
+        for lot in avco_lots:
+            product = lot.product_id.with_context(at_date=at_date, lot_id=lot.id, warehouse_id=False)
+            avco_result = product._run_avco(at_date=at_date, lot=lot.with_context(warehouse_id=False))
+            lot.total_value = avco_result[1] * qty_valued[lot.id] / qty_available[lot.id]
+            lot.avg_cost = avco_result[0]
+
+        if fifo_lots:
+            fifo_values = fifo_lots._fifo_value_batch(qty_available, at_date)
+            for lot in fifo_lots:
+                qa = qty_available[lot.id]
+                value = fifo_values.get(lot.id, 0.0)
+                lot.total_value = value * qty_valued[lot.id] / qa
+                lot.avg_cost = value / qa if qa else 0.0
+
+    def _fifo_value_batch(self, qty_by_lot, at_date=None):
+        """Mirrors standard _run_fifo"""
+        domain = [
+            ('lot_id', 'in', self.ids),
+            ('state', '=', 'done'),
+            ('move_id.is_in', '=', True),
+        ]
+        if at_date:
+            domain.append(('date', '<=', at_date))
+
+        lines = self.env['stock.move.line'].search_fetch(
+            domain,
+            ['lot_id', 'move_id', 'quantity_product_uom', 'date'],
+            order='date desc, id desc',
+        )
+
+        moves = lines.move_id
+        moves.fetch(['value', 'quantity'])
+        unit_cost = {}
+        for move in moves:
+            valued_qty = move._get_valued_qty()
+            unit_cost[move.id] = move.value / valued_qty if valued_qty else 0.0
+
+        # Value each lot by consuming its most recent receipts until its quantity is covered.
+        remaining = dict(qty_by_lot)
+        values = defaultdict(float)
+        for line in lines:
+            lot_id = line.lot_id.id
+            need = remaining.get(lot_id, 0.0)
+            if need <= 0:
+                continue
+            take = min(need, line.quantity_product_uom)
+            values[lot_id] += take * unit_cost[line.move_id.id]
+            remaining[lot_id] = need - take
+
+        for lot in self:
+            if lot.product_id.uom_id.compare(remaining.get(lot.id, 0.0), 0) > 0:
+                product = lot.product_id.with_context(
+                    at_date=at_date, lot_id=lot.id, warehouse_id=False)
+                values[lot.id] = product._run_fifo(
+                    qty_by_lot[lot.id], lot=lot.with_context(warehouse_id=False), at_date=at_date)
+        return values
 
     # TODO: remove avg cost column in master and merge the two compute methods
     def _compute_avg_cost(self):
