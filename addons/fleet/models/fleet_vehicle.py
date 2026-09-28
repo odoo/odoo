@@ -114,16 +114,16 @@ class FleetVehicle(models.Model):
             or guideline under which a vehicle's emissions are measured.")
     category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', compute='_compute_category', store=True, readonly=False)
     image_128 = fields.Image(related='model_id.image_128', readonly=True)
-    contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder', search='_search_contract_renewal_due_soon',
+    contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder',compute_sudo=True, search='_search_contract_renewal_due_soon',
         string='Has Contracts to renew')
-    contract_renewal_overdue = fields.Boolean(compute='_compute_contract_reminder', search='_search_get_overdue_contract_reminder',
+    contract_renewal_overdue = fields.Boolean(compute='_compute_contract_reminder', compute_sudo=True, search='_search_get_overdue_contract_reminder',
         string='Has Contracts Overdue')
     contract_state = fields.Selection(
         [('futur', 'Incoming'),
          ('open', 'In Progress'),
          ('expired', 'Expired'),
          ('closed', 'Closed')
-        ], string='Last Contract State', compute='_compute_contract_reminder', required=False)
+        ], string='Last Contract State', compute='_compute_contract_reminder',compute_sudo=True, required=False, groups="fleet_group_user")
     car_value = fields.Float(string="Catalog Value (VAT Incl.)", tracking=True)
     net_car_value = fields.Float(string="Purchase Value")
     residual_value = fields.Float()
