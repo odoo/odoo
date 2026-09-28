@@ -614,6 +614,34 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
     expect.verifySteps(["onRightSwipe"]);
 });
 
+test("the touched element gets a touchcancel once the swipe starts", async () => {
+    class Parent extends Component {
+        static components = { ActionSwiper };
+        static template = xml`
+            <div class="d-flex">
+                <ActionSwiper onRightSwipe="{ action: () => {} }">
+                    <div class="target-component" style="width: 200px; height: 80px" t-on-touchcancel="() => this.onTouchCancel()">Test</div>
+                </ActionSwiper>
+            </div>
+        `;
+        onTouchCancel() {
+            expect.step("touchcancel");
+        }
+    }
+    await mountWithCleanup(Parent);
+    const swiper = queryFirst(".o_actionswiper");
+    const { moveTo, drop } = await contains(".target-component").drag({
+        position: { clientX: 0, clientY: 0 },
+        initialPointerMoveDistance: 0,
+    });
+    await moveTo(swiper, { position: { clientX: 5, clientY: 0 } });
+    expect.verifySteps([]);
+    await moveTo(swiper, { position: { clientX: swiper.clientWidth / 2, clientY: 0 } });
+    expect.verifySteps(["touchcancel"]);
+    await drop();
+    expect.verifySteps([]);
+});
+
 test("an async action is awaited before being executed", async () => {
     const prom = Promise.withResolvers();
 

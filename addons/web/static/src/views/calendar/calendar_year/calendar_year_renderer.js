@@ -150,8 +150,9 @@ export class CalendarYearRenderer extends Component {
         };
     }
     handleDateClick(info) {
-        if (!info.jsEvent || info.jsEvent.defaultPrevented) {
-            // The event might be fired after a touch pointerup without any jsEvent
+        // The event might be fired after a touch pointerup without any jsEvent, or after a touch
+        // taken over by another gesture (e.g. the swiper)
+        if (!info.jsEvent || info.jsEvent.defaultPrevented || info.jsEvent.type === "touchcancel") {
             return;
         }
         this.onDateClick(info);

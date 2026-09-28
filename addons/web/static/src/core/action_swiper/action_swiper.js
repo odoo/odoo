@@ -177,6 +177,7 @@ export class ActionSwiper extends Component {
                 }
                 if (Math.abs(this.swipedDistance) > this.constructor.swipeEffectiveThreshold) {
                     this.isSwipeStarted = true;
+                    this.cancelTargetTouch(ev);
                     this.applyStyle(this.swipedDistance);
                 }
             }
@@ -230,6 +231,22 @@ export class ActionSwiper extends Component {
         if (this.targetContainer()) {
             this.targetContainer().classList.add("o_actionswiper_transition_enabled");
         }
+    }
+
+    /**
+     * The swiper takes over the gesture and will stop the propagation of the next touch events,
+     * so let the touched element know that its touch sequence is aborted, as the browser does
+     * when it starts scrolling.
+     *
+     * @param {TouchEvent} ev
+     */
+    cancelTargetTouch(ev) {
+        ev.target.dispatchEvent(
+            new TouchEvent("touchcancel", {
+                bubbles: true,
+                changedTouches: [...ev.changedTouches],
+            })
+        );
     }
 
     handleSwipe(action) {
