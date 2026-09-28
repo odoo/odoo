@@ -100,6 +100,8 @@ export class CalendarYearRenderer extends Component {
             viewDidMount: this.viewDidMount.bind(this),
             weekNumberCalculation: (date) => getLocalYearAndWeek(date).week,
             weekNumbers: false,
+            // the week column replaces the week numbers rendered in the days
+            inlineWeekNumberClass: !this.customOptions.weekNumbersWithinDays && "d-none",
             weekNumberFormat: { week: "numeric" },
             fixedWeekCount: false,
         };

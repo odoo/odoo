@@ -172,6 +172,8 @@ export class CalendarCommonRenderer extends Component {
             weekends: this.props.isWeekendVisible,
             weekNumberCalculation: (date) => getLocalYearAndWeek(date).week,
             weekNumbers: true,
+            // the week column replaces the week numbers rendered in the days
+            inlineWeekNumberClass: !this.customOptions.weekNumbersWithinDays && "d-none",
             dayHeaderContent: this.getHeaderHtml.bind(this),
             eventDisplay: "block", // Restore old render in daygrid view for single-day timed events
             eventTimeFormat: is24HourFormat() ? HOUR_FORMATS[24] : HOUR_FORMATS[12],
