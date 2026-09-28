@@ -122,7 +122,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
         })}`,
         `/mail/message/post - ${JSON.stringify({
             post_data: {
-                body: "Hello!",
+                body: "<div>Hello!</div>",
                 email_add_signature: true,
                 message_type: "comment",
                 subtype_xmlid: "mail.mt_comment",
@@ -190,9 +190,9 @@ test("Only create one channel when posting multiple messages", async () => {
     await subscribed;
     await expect.waitForSteps([
         "/im_livechat/get_session",
-        "/mail/message/post - 1",
-        "/mail/message/post - 2",
-        "/mail/message/post - 3",
+        "/mail/message/post - <div>1</div>",
+        "/mail/message/post - <div>2</div>",
+        "/mail/message/post - <div>3</div>",
     ]);
 });
 

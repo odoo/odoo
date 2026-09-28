@@ -153,8 +153,8 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
-            run: "edit Second review is edited in message composer",
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-html",
+            run: "editor Second review is edited in message composer",
         },
         {
             trigger:
@@ -183,7 +183,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger:
-                "#chatterRoot:shadow .o-mail-Message:contains('Second review is edited in message composer')",
+                "#chatterRoot:shadow .o-mail-Message:not(:has(.o-mail-Composer)):contains('Second review is edited in message composer')",
         },
         {
             trigger: "span:contains(Edit Review)",
@@ -256,8 +256,8 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
-            run: "edit Fill the message body",
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-html",
+            run: "editor Fill the message body",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message button:contains(save)",
@@ -265,7 +265,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
         },
         {
             trigger:
-                "#chatterRoot:shadow .o-mail-Message[data-persistent] .o-mail-Message-body:contains(Fill the message body)",
+                "#chatterRoot:shadow .o-mail-Message[data-persistent]:not(:has(.o-mail-Composer)) .o-mail-Message-body:contains(Fill the message body)",
         },
         {
             trigger:
@@ -284,8 +284,8 @@ registry.category("web_tour.tours").add("course_review_modification", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
-            run: "edit",
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-html",
+            run: "editor",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message button:contains(save)",
@@ -326,15 +326,16 @@ registry.category("web_tour.tours").add("course_review_modification_by_admin", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
-            run: "edit Admin edited this review.",
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-html",
+            run: "editor Admin edited this review.",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message button:text(save)",
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message-body:contains(Admin edited this review.)",
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message:not(:has(.o-mail-Composer)) .o-mail-Message-body:contains(Admin edited this review.)",
         },
         // If it fails here, it means that the default values have changed after the admin edited someone else's review.
         {
@@ -415,8 +416,8 @@ registry.category("web_tour.tours").add("course_review_modification_by_admin", {
         },
         { trigger: "a[href='#discuss'].active:text(Comments (4))" },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Composer-input",
-            run: "edit Test comment",
+            trigger: "#chatterRoot:shadow .o-mail-Composer-html",
+            run: "editor Test comment",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Composer-send:enabled",

@@ -71,9 +71,9 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'Change the stage of the task.',
     run: "click",
 }, {
-    trigger: '.o-mail-Composer-input',
+    trigger: '.o-mail-Composer-html',
     content: 'Write a message in the chatter of the task',
-    run: "edit I create a new task for testing purpose.",
+    run: "editor I create a new task for testing purpose.",
 }, {
     trigger: '.o-mail-Composer-send:enabled',
     content: 'Send the message',
@@ -233,7 +233,7 @@ registry.category("web_tour.tours").add("portal_project_sharing_chatter_mention_
         },
         { trigger: ".o_project_sharing" },
         { trigger: ".o_kanban_record:contains('Test Task')", run: "click" },
-        { trigger: ".o-mail-Composer-input", run: "edit @Alice" },
+        { trigger: ".o-mail-Composer-html", run: "editor @Alice" },
         { trigger: ".o-mail-Composer-suggestionPartner-name:text('Alice')" },
     ],
 });

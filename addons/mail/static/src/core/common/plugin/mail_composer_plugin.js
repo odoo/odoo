@@ -1,8 +1,9 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
-import { isBlock } from "@html_editor/utils/blocks";
-import { isEmptyBlock } from "@html_editor/utils/dom_info";
-import { childNodes } from "@html_editor/utils/dom_traversal";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
+import { getDeepestPosition, isEmptyBlock } from "@html_editor/utils/dom_info";
+import { childNodes, closestElement, lastLeaf } from "@html_editor/utils/dom_traversal";
+import { rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 
 const ALLOWED_TAGS = [
@@ -21,7 +22,26 @@ const ALLOWED_TAGS = [
     "UL",
 ];
 
-const PRESERVED_CLASSNAMES = new Set(["o_mail_redirect", "o-discuss-mention"]);
+export const PRESERVED_CLASSNAMES = new Set(["o_mail_redirect", "o-discuss-mention"]);
+
+/**
+ * Hint whose text is re-read on every hint update instead of being captured once.
+ *
+ * The editor config is only read at editor creation, but the composer
+ * placeholder can change during its lifetime (e.g. the livechat "Tab to next
+ * live chat" hint, or a WhatsApp conversation being closed).
+ *
+ * @param {string} selector
+ * @param {() => string|undefined} getText
+ */
+function lazyHint(selector, getText) {
+    return {
+        selector,
+        get text() {
+            return getText();
+        },
+    };
+}
 
 /**
  * This plugin works with the composer used in Discuss, ChatWindow and Chatter.
@@ -30,16 +50,19 @@ const PRESERVED_CLASSNAMES = new Set(["o_mail_redirect", "o-discuss-mention"]);
 export class MailComposerPlugin extends Plugin {
     static id = "mail_composer";
     static dependencies = ["clipboard", "dom", "hint", "history", "input", "selection"];
+    static shared = ["cancelSelection", "insert", "setCursorEnd", "updateEditableState"];
     resources = {
         on_will_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
         paste_odoo_editor_html_overrides: this.handlePasteHtmlOverride.bind(this),
         should_bypass_paste_image_files_predicates: () => true,
         on_link_created_handlers: (linkEl) => (linkEl.target = "_blank"),
         hints: [
-            withSequence(1, {
-                selector: `.odoo-editor-editable > ${baseContainerGlobalSelector}:only-child`,
-                text: this.config.placeholder,
-            }),
+            withSequence(
+                1,
+                lazyHint(`.odoo-editor-editable > ${baseContainerGlobalSelector}:only-child`, () =>
+                    this.config.composerPluginDependencies.getPlaceholder()
+                )
+            ),
         ],
         hint_targets_providers: (selectionData, editable) => {
             const el = editable.firstChild;
@@ -63,17 +86,108 @@ export class MailComposerPlugin extends Plugin {
             "keydown",
             this.config.composerPluginDependencies.onKeydown
         );
-        this.addDomListener(
-            this.editable,
-            "focusin",
-            this.config.composerPluginDependencies.onFocusin
-        );
+        this.addDomListener(this.editable, "focusin", (ev) => {
+            this.isSelectionCancelled = false;
+            this.config.composerPluginDependencies.onFocusin(ev);
+        });
         this.addDomListener(
             this.editable,
             "focusout",
             this.config.composerPluginDependencies.onFocusout
         );
     }
+
+    /**
+     * Cancels the selection, so that the next insertion appends at the end
+     * instead of replacing it. It applies until the editable is focused again.
+     */
+    cancelSelection() {
+        this.isSelectionCancelled = true;
+    }
+
+    /**
+     * Inserts content at the cursor, replacing the selection.
+     *
+     * A cancelled selection is not replaced: the content is appended at the
+     * end instead, like it is for an empty selection.
+     *
+     * @param {string|Node} content
+     * @param {Object} [options]
+     * @param {boolean} [options.replaceSelection=true] when false, inserts the
+     *   content before the selection instead of replacing it
+     * @param {boolean} [options.spaceBefore] inserts a space before the content,
+     *   unless the cursor is at the start of its block or already after a space
+     */
+    insert(content, { replaceSelection = true, spaceBefore = false } = {}) {
+        if (this.isSelectionCancelled) {
+            this.isSelectionCancelled = false;
+            this.setCursorEnd();
+        } else if (!replaceSelection) {
+            const { startContainer, startOffset } =
+                this.dependencies.selection.getEditableSelection();
+            this.dependencies.selection.setSelection({
+                anchorNode: startContainer,
+                anchorOffset: startOffset,
+            });
+        }
+        if (spaceBefore && !this.isCursorAfterSpace()) {
+            this.dependencies.dom.insert(" ");
+        }
+        this.dependencies.dom.insert(content);
+        this.dependencies.history.commit();
+    }
+
+    /** Whether the cursor is at the start of its block or after a whitespace. */
+    isCursorAfterSpace() {
+        const { startContainer, startOffset } = this.dependencies.selection.getEditableSelection();
+        const [node, offset] = getDeepestPosition(startContainer, startOffset);
+        const range = this.document.createRange();
+        range.setStart(closestBlock(node), 0);
+        range.setEnd(node, offset);
+        const textBefore = range.toString().replaceAll("\u200B", "");
+        return !textBefore || /\s$/.test(textBefore);
+    }
+
+    setCursorEnd() {
+        const lastNode = lastLeaf(this.editable);
+        if (!lastNode) {
+            return;
+        }
+        if (!this.editable.isContentEditable) {
+            // The editable is turned off (e.g. while it is readonly), so all of
+            // its content is uneditable: selecting around it would select all
+            // of it, and the next typed text would replace the paragraph.
+            this.dependencies.selection.setCursorEnd(lastNode);
+            return;
+        }
+        const nonEditableAncestor = closestElement(lastNode, (el) => !el.isContentEditable);
+        if (nonEditableAncestor && this.editable.contains(nonEditableAncestor)) {
+            const [anchorNode, anchorOffset] = rightPos(nonEditableAncestor);
+            this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+        } else {
+            this.dependencies.selection.setCursorEnd(lastNode);
+        }
+        this.dependencies.selection.selectAroundNonEditable();
+    }
+
+    /** Turns the editable on or off, according to whether it is editable. */
+    updateEditableState() {
+        // `readonly` means nothing on a contenteditable: turn the editable off.
+        const isEditable = this.config.composerPluginDependencies.isEditable();
+        if (this.editable.getAttribute("contenteditable") === String(isEditable)) {
+            return;
+        }
+        if (!isEditable) {
+            // Turning the editable off blurs it: give the focus back after.
+            this.hadEditableFocus = this.editable.getRootNode().activeElement === this.editable;
+        }
+        this.editable.setAttribute("contenteditable", isEditable);
+        if (isEditable && this.hadEditableFocus) {
+            this.hadEditableFocus = false;
+            this.dependencies.selection.focusEditable();
+        }
+    }
+
     handlePasteHtmlOverride(selection, sanitizedFragment) {
         if (sanitizedFragment.childNodes.length === 0) {
             return false;
