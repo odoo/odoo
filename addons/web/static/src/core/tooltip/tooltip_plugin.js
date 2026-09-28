@@ -3,8 +3,10 @@ import { services } from "@web/core/services";
 import { Tooltip } from "./tooltip";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { PopoverPlugin } from "@web/core/popover/popover_plugin";
+import { isVisible, TABABLE_SELECTORS } from "@web/core/utils/ui";
 
-import { onWillDestroy, Plugin, useListener, usePlugin } from "@odoo/owl";
+import { effect, onWillDestroy, Plugin, signal, useListener, usePlugin } from "@odoo/owl";
+import { generateHTMLId } from "../utils/strings";
 
 /**
  * The tooltip service allows to display custom tooltips on every elements with
@@ -45,6 +47,8 @@ export const CLOSE_DELAY = 200;
 export const SHOW_AFTER_DELAY = 250;
 const TOOLTIP_SELECTOR = "[data-tooltip], [data-tooltip-template]";
 const TOOLTIP_SELECTOR_WITH_TITLE = TOOLTIP_SELECTOR + ", [title]";
+const TOOLTIP_SELECTOR_WITH_CONTENT = `[data-tooltip]:not([data-tooltip='']), [data-tooltip-template]:not([data-tooltip-template=''])`;
+const TABABLE_SELECTOR = TABABLE_SELECTORS.join(",");
 
 export class TooltipPlugin extends Plugin {
     /** @private */
@@ -75,14 +79,23 @@ export class TooltipPlugin extends Plugin {
         }
 
         // Listen (using event delegation) to "mouseenter" events to open the tooltip if any
-        useListener(document.body, "mouseenter", this.onMouseenter.bind(this), {
+        useListener(document.body, "mouseenter", this.onMouseenterOrFocusin.bind(this), {
+            capture: true,
+        });
+        // Listen (using event delegation) to "focusin" events to open the tooltip if any
+        useListener(document.body, "focusin", this.onMouseenterOrFocusin.bind(this), {
             capture: true,
         });
         // Listen (using event delegation) to "mouseleave" events to close the tooltip if any
         useListener(document.body, "mouseleave", this.cleanupTooltip.bind(this), {
             capture: true,
         });
+        // Listen (using event delegation) to "focusout" events to close the tooltip if any
+        useListener(document.body, "focusout", this.onFocusout.bind(this), { capture: true });
         useListener(document.body, "click", this.onClick.bind(this), { capture: true });
+
+        // Ensure the tooltips are accessible to keyboard users.
+        useListener(document.body, "keydown", this.onKeydown.bind(this), { capture: true });
 
         onWillDestroy(() => {
             window.clearInterval(this.interval);
@@ -107,6 +120,8 @@ export class TooltipPlugin extends Plugin {
      * @private
      */
     cleanup() {
+        this.target?.removeAttribute("aria-describedby");
+        this.target?.removeAttribute("aria-details");
         this.target = null;
         window.clearTimeout(this.openTooltipTimeout);
         this.openTooltipTimeout = null;
@@ -153,17 +168,25 @@ export class TooltipPlugin extends Plugin {
         if (!this.target.title) {
             this.target.title = "";
         }
+        const tooltipId = generateHTMLId("tooltip_");
+        if (tooltip) {
+            this.target.setAttribute("aria-describedby", tooltipId);
+        } else if (template) {
+            this.target.setAttribute("aria-details", tooltipId);
+        }
         const timeoutDelay = this.isHelpNode(el) ? 0 : delay;
+        const popoverRef = signal.ref();
+        this.closeTooltip = this.popover.add(
+            this.target,
+            Tooltip,
+            { tooltip, template, info, tooltipId },
+            { position, popoverClass: "visually-hidden", ref: popoverRef }
+        );
         this.openTooltipTimeout = window.setTimeout(() => {
-            // verify that the element is still in the DOM
-            if (this.target.isConnected) {
-                this.closeTooltip = this.popover.add(
-                    this.target,
-                    Tooltip,
-                    { tooltip, template, info },
-                    { position }
-                );
-            }
+            // The timeout doesn't guarantee that the popover is mounted yet.
+            effect(() => {
+                popoverRef()?.classList.remove("visually-hidden");
+            });
         }, timeoutDelay);
     }
 
@@ -211,10 +234,10 @@ export class TooltipPlugin extends Plugin {
      * if there is, creates a timeout to open the corresponding tooltip
      * after a delay.
      *
-     * @param {MouseEvent} ev a "mouseenter" event
+     * @param {MouseEvent|FocusEvent} ev a "mouseenter" or "focusin" event
      * @private
      */
-    onMouseenter(ev) {
+    onMouseenterOrFocusin(ev) {
         const target = ev.target?.closest(TOOLTIP_SELECTOR_WITH_TITLE);
         if (!target) {
             return;
@@ -246,6 +269,20 @@ export class TooltipPlugin extends Plugin {
             ev.preventDefault();
         }
         this.cleanupTooltip(ev);
+    }
+
+    /**
+     * Checks whether the new target is different from the target that lost
+     * focus, and if so, clean it up.
+     * @param {FocusEvent} ev
+     */
+    onFocusout(ev) {
+        if (
+            (this.target === ev.target || this.target === ev.target.closest(TOOLTIP_SELECTOR)) &&
+            this.target !== ev.relatedTarget?.closest(TOOLTIP_SELECTOR)
+        ) {
+            this.cleanup();
+        }
     }
 
     /** @private */
@@ -283,6 +320,24 @@ export class TooltipPlugin extends Plugin {
                 this.showTimer = null;
                 window.clearTimeout(this.openTooltipTimeout);
                 this.openTooltipTimeout = null;
+            }
+        }
+    }
+
+    /**
+     * Sets tabindex=0 on visible tooltip targets that are not yet tabable so
+     * that it remains accessible with the keyboard.
+     * @param {KeyboardEvent} ev
+     */
+    onKeydown(ev) {
+        if (ev.key === "Tab") {
+            // Ensure the tooltips are accessible to keyboard users
+            const tooltipNotTabable = `:where(${TOOLTIP_SELECTOR_WITH_CONTENT}):not(${TABABLE_SELECTOR})`;
+            const tooltipEls = document.body.querySelectorAll(tooltipNotTabable);
+            for (const tooltipEl of tooltipEls) {
+                if (isVisible(tooltipEl)) {
+                    tooltipEl.tabIndex = "0";
+                }
             }
         }
     }
