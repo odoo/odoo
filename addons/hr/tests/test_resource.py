@@ -205,6 +205,26 @@ class TestResource(TestHrCommon):
         self.assertEqual(21 * 7 + 21 * 8, attendances['hours'],
             "Attendances should add up multiple contracts with varying work weeks.")
 
+    def test_multi_contract_attendance_timezone(self):
+        """ Verify that the attendances of each version are read in the
+            timezone of that version, and not in the timezone of the version
+            the employee is currently on.
+        """
+        self.employee.create_version(self.contract_cdi_values)
+        contract_cdi = self.employee.version_ids.filtered(lambda v: v.date_version == date(2021, 11, 1))
+        self.contract_cdd.tz = 'America/Chicago'
+        contract_cdi.tz = 'Europe/Brussels'
+
+        # 2021-10-01 is covered only by the 2021-09-01 to 2021-10-31 version,
+        # on the 35h calendar (8:00-12:00, 13:00-16:00). 13:00 UTC is 08:00 in
+        # Chicago and takes the whole day, but 15:00 in Brussels, i.e. 1 hour.
+        attendances = self.employee._get_calendar_attendances(
+            datetime(2021, 10, 1, 13, tzinfo=UTC),
+            datetime(2021, 10, 1, 23, tzinfo=UTC),
+        )
+        self.assertEqual(attendances['hours'], 7,
+            "Attendances should be read in the timezone of the version covering the period.")
+
     def test_alter_resource_calendar_of_resouce(self):
         self.assertEqual(self.employee.resource_calendar_id, self.employee.resource_id.calendar_id)
         self.assertEqual(self.employee.version_id.resource_calendar_id, self.employee.resource_id.calendar_id)
