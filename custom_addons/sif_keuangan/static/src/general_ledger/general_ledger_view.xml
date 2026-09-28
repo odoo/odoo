@@ -49,7 +49,7 @@
                                t-model="state.searchQuery" />
                     </div>
 
-                    <!-- Unit Kerja Filter -->
+                    <!-- Department filter; values retain legacy unit labels during migration. -->
                     <t t-if="state.data and state.data.units_list and state.data.units_list.length > 0">
                         <div class="o_report_filter_pill">
                             <i class="fa fa-building-o o_filter_icon" />
@@ -167,7 +167,7 @@
                                     <t t-esc="t('gl.period_prefix')" />: <span class="o_meta_highlight"><t t-esc="state.data.date_from_display" /> s/d <t t-esc="state.data.date_to_display" /></span>
                                     <t t-if="state.data.unit_name">
                                         <span class="mx-2 text-muted">•</span>
-                                        Unit: <span class="badge bg-secondary text-white"><t t-esc="state.data.unit_name" /></span>
+                                        Departemen: <span class="badge bg-secondary text-white"><t t-esc="state.data.unit_name" /></span>
                                     </t>
                                     <t t-if="state.data.partner_name">
                                         <span class="mx-2 text-muted">•</span>

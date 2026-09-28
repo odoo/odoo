@@ -5,7 +5,7 @@
     'category': 'Accounting',
     'summary': 'Pusat Jurnal & Buku Besar Terintegrasi PPL dan Aset',
     'author': 'SIFNEXT',
-    'depends': ['base', 'web'],
+    'depends': ['base', 'web', 'hr'],
     'data': [
         'security/security_groups.xml',
         'security/ir.model.access.csv',

@@ -21,7 +21,7 @@ export const TRANSLATIONS = {
     "search.pl": { id: "Cari akun...", en: "Search account..." },
 
     // Common Filter Options
-    "filter.all_units": { id: "Semua Unit Kerja", en: "All Business Units" },
+    "filter.all_units": { id: "Semua Departemen", en: "All Departments" },
     "filter.all_partners": { id: "Semua Rekanan", en: "All Partners" },
 
     // Presets

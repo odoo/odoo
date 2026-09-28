@@ -50,7 +50,7 @@
                                t-on-input="onSearchInput" />
                     </div>
 
-                    <!-- Unit Kerja Filter -->
+                    <!-- Department filter; values retain legacy unit labels during migration. -->
                     <t t-if="state.data and state.data.units_list and state.data.units_list.length > 0">
                         <div class="o_report_filter_pill">
                             <i class="fa fa-building-o o_filter_icon" />
@@ -167,7 +167,7 @@
                                     </t>
                                     <t t-if="state.data.unit_name">
                                         <span class="mx-2 text-muted">•</span>
-                                        Unit: <span class="badge bg-secondary text-white"><t t-esc="state.data.unit_name" /></span>
+                                        Departemen: <span class="badge bg-secondary text-white"><t t-esc="state.data.unit_name" /></span>
                                     </t>
                                 </div>
                             </div>

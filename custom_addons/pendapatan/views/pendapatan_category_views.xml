@@ -7,6 +7,7 @@
             <list string="Kategori Pendapatan">
                 <field name="code"/>
                 <field name="name"/>
+                <field name="company_id" string="Perusahaan"/>
                 <field name="periodicity"/>
                 <field name="coa_pendapatan_id"/>
                 <field name="coa_kas_id"/>
@@ -21,27 +22,31 @@
         <field name="arch" type="xml">
             <form string="Kategori Pendapatan">
                 <sheet>
+                    <field name="finance_central_readonly" invisible="1"/>
                     <div class="oe_title">
                         <label for="name" string="Nama Kategori"/>
                         <h1>
-                            <field name="name" placeholder="Contoh: SPP Bulanan"/>
+                            <field name="name" placeholder="Contoh: SPP Bulanan" readonly="finance_central_readonly"/>
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="code" placeholder="SPP"/>
-                            <field name="periodicity"/>
-                            <field name="active"/>
+                            <field name="company_id" readonly="finance_central_readonly"/>
+                            <field name="code" placeholder="SPP" readonly="finance_central_readonly"/>
+                            <field name="periodicity" readonly="finance_central_readonly"/>
+                            <field name="active" readonly="finance_central_readonly"/>
                         </group>
                         <group>
                             <field name="coa_pendapatan_id"
+                                   readonly="finance_central_readonly"
                                    options="{'no_create': True}"/>
                             <field name="coa_kas_id"
+                                   readonly="finance_central_readonly"
                                    options="{'no_create': True}"/>
                         </group>
                     </group>
                     <group>
-                        <field name="description" placeholder="Keterangan kategori..."/>
+                        <field name="description" readonly="finance_central_readonly" placeholder="Keterangan kategori..."/>
                     </group>
                 </sheet>
             </form>

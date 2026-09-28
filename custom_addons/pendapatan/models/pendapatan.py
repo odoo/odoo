@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 
 class Pendapatan(models.Model):
@@ -8,6 +8,23 @@ class Pendapatan(models.Model):
     _description = 'Pencatatan Pendapatan'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'tanggal desc, id desc'
+
+    finance_central_readonly = fields.Boolean(compute='_compute_finance_central_readonly')
+
+    @api.depends_context('uid')
+    def _compute_finance_central_readonly(self):
+        is_readonly = self.env.user.has_group('pendapatan.group_pendapatan_finance_central')
+        for record in self:
+            record.finance_central_readonly = is_readonly
+
+    def _check_finance_central_readonly(self):
+        if self.env.user.has_group('pendapatan.group_pendapatan_finance_central'):
+            raise AccessError(_('Finance pusat memiliki akses baca saja pada modul Pendapatan.'))
+
+    def _check_pendapatan_manager(self):
+        self._check_finance_central_readonly()
+        if not self.env.user.has_group('pendapatan.group_pendapatan_manager'):
+            raise AccessError(_('Hanya Manager Pendapatan yang dapat melakukan tindakan ini.'))
 
     # ------------------------------------------------------------------
     # HEADER FIELDS
@@ -41,6 +58,7 @@ class Pendapatan(models.Model):
         string='Kategori Pendapatan',
         required=True,
         ondelete='restrict',
+        check_company=True,
         tracking=True
     )
 
@@ -62,9 +80,9 @@ class Pendapatan(models.Model):
     )
 
     unit_name = fields.Char(
-        string='Unit Kerja / Sekolah',
-        default='KANTOR',
-        help='Misal: Sekolah ABC, Universitas XYZ, dll.'
+        string='Nama Unit Lama (Legacy)',
+        copy=False,
+        help='Nilai teks historis yang dipertahankan untuk migrasi dan kompatibilitas. Transaksi baru memakai department_id.',
     )
 
     source_partner_id = fields.Many2one(
@@ -149,31 +167,102 @@ class Pendapatan(models.Model):
         default=lambda self: self.env.company
     )
 
+    department_id = fields.Many2one(
+        'hr.department',
+        string='Departemen',
+        ondelete='restrict',
+        check_company=True,
+        default=lambda self: self._default_department_id(),
+        domain="[('company_id', '=', company_id)]",
+        tracking=True,
+    )
+
+    @api.model
+    def _default_department_id(self):
+        department = self.env.user.department_id
+        return department.id if department and department.company_id == self.env.company else False
+
     # ------------------------------------------------------------------
     # SQL CONSTRAINTS
     # ------------------------------------------------------------------
-    _sql_constraints = [
-        ('amount_positive', 'CHECK(amount > 0)',
-         'Nominal pendapatan harus lebih besar dari 0!'),
-    ]
+    _amount_positive = models.Constraint(
+        'CHECK(amount > 0)',
+        'Nominal pendapatan harus lebih besar dari 0!',
+    )
+
+    @api.constrains('company_id', 'department_id', 'category_id')
+    def _check_company_department_category(self):
+        for record in self:
+            if not record.department_id:
+                raise ValidationError(_('Departemen wajib diisi untuk setiap pendapatan.'))
+            if record.department_id.company_id != record.company_id:
+                raise ValidationError(_('Departemen harus berasal dari cabang yang sama dengan perusahaan pendapatan.'))
+            if record.category_id and record.category_id.company_id != record.company_id:
+                raise ValidationError(_('Kategori pendapatan harus berasal dari cabang yang sama.'))
 
     # ------------------------------------------------------------------
     # CREATE - SEQUENCE
     # ------------------------------------------------------------------
     @api.model_create_multi
     def create(self, vals_list):
+        self._check_finance_central_readonly()
         for vals in vals_list:
+            company = self.env['res.company'].browse(vals.get('company_id') or self.env.company.id).exists()
+            if not company:
+                raise ValidationError(_('Perusahaan/cabang pendapatan tidak ditemukan.'))
+            if company not in self.env.companies:
+                raise AccessError(_('Anda tidak memiliki akses ke perusahaan/cabang ini.'))
+
+            department_id = vals.get('department_id') or self.env.user.department_id.id
+            department = self.env['hr.department'].browse(department_id).exists()
+            if not department:
+                raise ValidationError(_('Departemen wajib dipilih sebelum membuat pendapatan.'))
+            if department.company_id != company:
+                raise ValidationError(_('Departemen harus berasal dari cabang yang sama dengan pendapatan.'))
+
+            category = self.env['pendapatan.category'].browse(vals.get('category_id')).exists()
+            if category and category.company_id != company:
+                raise ValidationError(_('Kategori pendapatan harus berasal dari cabang yang sama.'))
+
+            vals['company_id'] = company.id
+            vals['department_id'] = department.id
+            vals.setdefault('currency_id', company.currency_id.id)
             if vals.get('name', 'New') == 'New':
                 vals['name'] = self.env['ir.sequence'].next_by_code(
                     'pendapatan.pendapatan'
                 ) or 'New'
         return super(Pendapatan, self).create(vals_list)
 
+    def write(self, vals):
+        self._check_finance_central_readonly()
+        for record in self:
+            company = self.env['res.company'].browse(vals.get('company_id') or record.company_id.id).exists()
+            if not company or company not in self.env.companies:
+                raise AccessError(_('Anda tidak memiliki akses ke perusahaan/cabang ini.'))
+            department = self.env['hr.department'].browse(
+                vals.get('department_id') or record.department_id.id
+            ).exists()
+            if not department or department.company_id != company:
+                raise ValidationError(_('Departemen harus berasal dari cabang yang sama dengan pendapatan.'))
+            category = self.env['pendapatan.category'].browse(
+                vals.get('category_id') or record.category_id.id
+            ).exists()
+            if category and category.company_id != company:
+                raise ValidationError(_('Kategori pendapatan harus berasal dari cabang yang sama.'))
+        return super().write(vals)
+
+    def unlink(self):
+        self._check_finance_central_readonly()
+        return super().unlink()
+
     # ------------------------------------------------------------------
     # STATE TRANSITIONS - WORKFLOW
     # ------------------------------------------------------------------
     def action_submit(self):
         """Draft → Submitted (oleh user biasa)"""
+        self._check_finance_central_readonly()
+        if not self.env.user.has_group('pendapatan.group_pendapatan_user'):
+            raise AccessError(_('Anda tidak memiliki akses untuk mengajukan pendapatan.'))
         for rec in self:
             if rec.state != 'draft':
                 raise UserError(_('Hanya pendapatan berstatus Draft yang dapat diajukan.'))
@@ -193,6 +282,7 @@ class Pendapatan(models.Model):
 
     def action_approve(self):
         """Submitted → Approved (oleh manager)"""
+        self._check_pendapatan_manager()
         for rec in self:
             if rec.state != 'submitted':
                 raise UserError(_('Hanya pendapatan berstatus Diajukan yang dapat disetujui.'))
@@ -206,6 +296,7 @@ class Pendapatan(models.Model):
 
     def action_reject(self):
         """Submitted → Draft (tolak, kembali ke draft untuk revisi)"""
+        self._check_pendapatan_manager()
         for rec in self:
             if rec.state != 'submitted':
                 raise UserError(_('Hanya pendapatan berstatus Diajukan yang dapat ditolak.'))
@@ -218,6 +309,7 @@ class Pendapatan(models.Model):
 
     def action_post(self):
         """Approved → Posted + auto-create Jurnal di sif.jurnal.entry"""
+        self._check_pendapatan_manager()
         JurnalEntry = self.env['sif.jurnal.entry']
         JurnalLine = self.env['sif.jurnal.line']
 
@@ -251,7 +343,9 @@ class Pendapatan(models.Model):
                 'date': rec.tanggal,
                 'ref': rec.name,
                 'kwitansi_ref': rec.name,
-                'unit_name': rec.unit_name or 'KANTOR',
+                'unit_name': rec.department_id.name,
+                'company_id': rec.company_id.id,
+                'department_id': rec.department_id.id,
                 'source_type': 'pendapatan',
                 'line_ids': lines,
             }
@@ -270,6 +364,7 @@ class Pendapatan(models.Model):
 
     def action_cancel(self):
         """Batalkan pendapatan (hanya dari submitted/approved/posted)"""
+        self._check_pendapatan_manager()
         for rec in self:
             if rec.state in ('draft', 'cancelled'):
                 raise UserError(_('Pendapatan sudah dalam status Draft / Dibatalkan.'))
@@ -287,6 +382,7 @@ class Pendapatan(models.Model):
 
     def action_reset_to_draft(self):
         """Kembalikan ke draft (untuk koreksi, hanya manager)"""
+        self._check_pendapatan_manager()
         for rec in self:
             if rec.state == 'posted':
                 raise UserError(_('Pendapatan yang sudah terposting tidak dapat dikembalikan ke draft.'))
@@ -309,7 +405,19 @@ class Pendapatan(models.Model):
         RPC helper untuk membuat pendapatan dari modul lain.
         Akan langsung mengajukan (action_submit) & auto-approve & post.
         """
-        rec = self.sudo().create(vals)
+        self._check_pendapatan_manager()
+        values = dict(vals)
+        company = self.env['res.company'].browse(values.get('company_id') or self.env.company.id).exists()
+        if not company or company not in self.env.companies:
+            raise AccessError(_('Integrasi tidak memiliki akses ke perusahaan/cabang Pendapatan ini.'))
+        department = self.env['hr.department'].browse(
+            values.get('department_id') or self.env.user.department_id.id
+        ).exists()
+        if not department or department.company_id != company:
+            raise ValidationError(_('Integrasi harus mengirim departemen yang sesuai dengan cabang Pendapatan.'))
+        values['company_id'] = company.id
+        values['department_id'] = department.id
+        rec = self.sudo().create(values)
         rec.action_submit()
         rec.action_approve()
         rec.action_post()

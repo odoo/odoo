@@ -24,6 +24,25 @@
         <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 
+    <record id="group_pendapatan_finance_central" model="res.groups">
+        <field name="name">Pendapatan: Finance Pusat (Read Only)</field>
+        <field name="privilege_id" ref="privilege_pendapatan"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('sif_keuangan.group_sif_keuangan_central_readonly'))]"/>
+    </record>
+
+    <!-- Pendapatan and its categories are isolated by the user's allowed branches. -->
+    <record id="pendapatan_company_rule" model="ir.rule">
+        <field name="name">Pendapatan: allowed companies</field>
+        <field name="model_id" ref="model_pendapatan_pendapatan"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="pendapatan_category_company_rule" model="ir.rule">
+        <field name="name">Pendapatan categories: allowed companies</field>
+        <field name="model_id" ref="model_pendapatan_category"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
     <!-- All internal users get Pendapatan User -->
     <record id="base.group_user" model="res.groups">
         <field name="implied_ids" eval="[(4, ref('group_pendapatan_user'))]"/>

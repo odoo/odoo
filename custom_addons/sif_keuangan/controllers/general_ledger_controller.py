@@ -85,7 +85,7 @@ class GeneralLedgerController(http.Controller):
         company_name = data.get('company_name', 'PT Konsulta Semen Gresik')
         worksheet.write(0, 0, company_name, fmt_title)
         worksheet.write(1, 0, f"GENERAL LEDGER (BUKU BESAR) — Periode: {data.get('date_from')} s/d {data.get('date_to')}", fmt_subtitle)
-        unit_info = f" | Unit: {data.get('unit_name')}" if data.get('unit_name') else ""
+        unit_info = f" | Departemen: {data.get('unit_name')}" if data.get('unit_name') else ""
         worksheet.write(2, 0, f"Status: {'Hanya Jurnal Disetujui (Posted)' if data.get('target_move') == 'posted' else 'Semua Jurnal'}{unit_info}", fmt_subtitle)
 
         # Header Table

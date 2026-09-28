@@ -16,7 +16,8 @@
                 <field name="tanggal" string="Tanggal"/>
                 <field name="category_id" string="Kategori"/>
                 <field name="period_label" string="Label Periode"/>
-                <field name="unit_name" string="Unit Kerja"/>
+                <field name="company_id" string="Perusahaan"/>
+                <field name="department_id" string="Departemen"/>
                 <field name="amount" string="Nominal" sum="Total Pendapatan"/>
                 <field name="state" widget="badge"
                        decoration-info="state == 'draft'"
@@ -39,33 +40,33 @@
                     <button name="action_submit" string="Ajukan"
                             type="object" class="oe_highlight"
                             groups="pendapatan.group_pendapatan_user"
-                            invisible="state != 'draft'"/>
+                            invisible="state != 'draft' or finance_central_readonly"/>
                     <button name="action_approve" string="Setujui"
                             type="object" class="oe_highlight"
                             groups="pendapatan.group_pendapatan_manager"
-                            invisible="state != 'submitted'"/>
+                            invisible="state != 'submitted' or finance_central_readonly"/>
                     <button name="action_reject" string="Tolak / Revisi"
                             type="object"
                             groups="pendapatan.group_pendapatan_manager"
-                            invisible="state != 'submitted'"/>
+                            invisible="state != 'submitted' or finance_central_readonly"/>
                     <button name="action_post" string="Posting (Buat Jurnal)"
                             type="object" class="oe_highlight"
                             groups="pendapatan.group_pendapatan_manager"
-                            invisible="state != 'approved'"/>
+                            invisible="state != 'approved' or finance_central_readonly"/>
                     <button name="action_cancel" string="Batalkan"
                             type="object"
                             groups="pendapatan.group_pendapatan_manager"
-                            invisible="state in ('draft', 'cancelled', 'posted')"/>
+                            invisible="state in ('draft', 'cancelled', 'posted') or finance_central_readonly"/>
                     <button name="action_reset_to_draft" string="Reset ke Draft"
                             type="object"
                             groups="pendapatan.group_pendapatan_manager"
-                            invisible="state in ('draft', 'posted', 'cancelled')"/>
+                            invisible="state in ('draft', 'posted', 'cancelled') or finance_central_readonly"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,submitted,approved,posted"/>
                 </header>
                 <sheet>
+                    <field name="finance_central_readonly" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
                     <div class="oe_title">
                         <label for="name" string="Nomor Pendapatan"/>
                         <h1>
@@ -74,24 +75,35 @@
                     </div>
                     <group col="2">
                         <group string="Informasi Pendapatan">
-                            <field name="tanggal"/>
+                            <field name="tanggal" readonly="finance_central_readonly"/>
+                            <field name="company_id" readonly="1"/>
+                            <field name="department_id"
+                                   required="1"
+                                   readonly="finance_central_readonly"
+                                   domain="[('company_id', '=', company_id)]"
+                                   options="{'no_create': True, 'no_open': True}"/>
                             <field name="category_id"
+                                   readonly="finance_central_readonly"
+                                   domain="[('company_id', '=', company_id), ('active', '=', True)]"
                                    options="{'no_create': True, 'no_open': True}"/>
                             <field name="period_label"
+                                   readonly="finance_central_readonly"
                                    placeholder='Contoh: "Januari 2026" atau "Semester Genap 2025/2026"'/>
                             <field name="amount" widget="monetary"
+                                   readonly="finance_central_readonly"
                                    options="{'currency_field': 'currency_id', 'no_edit_currency': True}"/>
                         </group>
                         <group string="Detail">
-                            <field name="unit_name"
-                                   placeholder="Misal: Sekolah ABC, Universitas XYZ"/>
                             <field name="source_partner_id"
+                                   readonly="finance_central_readonly"
                                    options="{'no_create': True, 'no_open': True}"/>
-                            <field name="attachment" filename="name" widget="binary"/>
+                            <field name="attachment" filename="name" widget="binary"
+                                   readonly="finance_central_readonly"/>
                         </group>
                     </group>
                     <group string="Keterangan">
                         <field name="description" nolabel="1"
+                               readonly="finance_central_readonly"
                                placeholder="Uraian detail pendapatan (opsional)..."/>
                     </group>
                     <notebook>
@@ -108,6 +120,7 @@
                                     <field name="posted_by_id" readonly="1"/>
                                     <field name="posted_date" readonly="1"/>
                                     <field name="cancel_reason"
+                                           readonly="finance_central_readonly"
                                            placeholder="Wajib diisi jika ada pembatalan"/>
                                 </group>
                             </group>
@@ -137,7 +150,8 @@
             <search string="Pencarian Pendapatan">
                 <field name="name" string="Nomor"/>
                 <field name="period_label" string="Label Periode"/>
-                <field name="unit_name" string="Unit Kerja"/>
+                <field name="department_id" string="Departemen"/>
+                <field name="company_id" string="Perusahaan"/>
                 <field name="category_id" string="Kategori"/>
                 <field name="source_partner_id" string="Pemberi"/>
                 <separator/>
@@ -154,8 +168,10 @@
                 <separator/>
                 <filter string="Per Kategori" name="group_category"
                         context="{'group_by': 'category_id'}"/>
-                <filter string="Per Unit Kerja" name="group_unit"
-                        context="{'group_by': 'unit_name'}"/>
+                <filter string="Per Departemen" name="group_department"
+                        context="{'group_by': 'department_id'}"/>
+                <filter string="Per Perusahaan" name="group_company"
+                        context="{'group_by': 'company_id'}"/>
                 <filter string="Per Tanggal (Bulan)" name="group_date_month"
                         context="{'group_by': 'tanggal:month'}"/>
                 <filter string="Per Status" name="group_state"

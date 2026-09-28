@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_sifnext_departments" model="ir.ui.view">
+        <field name="name">res.company.form.sifnext.departments</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Departemen" name="sifnext_departments" groups="base.group_system">
+                    <field name="department_ids"
+                           context="{'default_company_id': id}"
+                           domain="[('company_id', '=', id)]">
+                        <list editable="bottom">
+                            <field name="name"/>
+                            <field name="parent_id"
+                                   domain="[('company_id', '=', parent.id)]"
+                                   options="{'no_create': True}"/>
+                            <field name="company_id" column_invisible="True"/>
+                            <field name="active" optional="hide"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

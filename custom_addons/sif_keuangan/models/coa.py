@@ -1,4 +1,5 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import AccessError
 
 class SifChartOfAccounts(models.Model):
     _name = 'sif.coa'
@@ -20,9 +21,27 @@ class SifChartOfAccounts(models.Model):
     display_name = fields.Char(string='Tampilan Akun', compute='_compute_display_name', store=True)
     active = fields.Boolean(string='Aktif', default=True)  # <-- Tambahkan ini
 
-    _sql_constraints = [
-        ('code_unique', 'unique(code)', 'Kode Akun sudah terdaftar! Gunakan kode unik.'),
-    ]
+    _code_unique = models.Constraint(
+        'unique(code)',
+        'Kode Akun sudah terdaftar! Gunakan kode unik.',
+    )
+
+    def _check_finance_central_readonly(self):
+        if self.env.user.has_group('sif_keuangan.group_sif_keuangan_central_readonly'):
+            raise AccessError(_('Finance pusat memiliki akses baca saja pada data Keuangan.'))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        self._check_finance_central_readonly()
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self._check_finance_central_readonly()
+        return super().write(vals)
+
+    def unlink(self):
+        self._check_finance_central_readonly()
+        return super().unlink()
 
     @api.depends('parent_id', 'parent_id.level')
     def _compute_level(self):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Pendapatan',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'category': 'Accounting',
     'summary': 'Manajemen Pendapatan Organisasi (Bulanan & Semester)',
     'description': """
@@ -31,6 +31,7 @@ Use case:
         'base',
         'mail',
         'sif_keuangan',
+        'sifnext_org',
     ],
 
     'data': [
