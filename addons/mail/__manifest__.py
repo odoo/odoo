@@ -185,6 +185,7 @@ For more specific needs, you may also assign custom-defined actions
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
             'mail/static/src/scss/variables/derived_variables.scss',
             'mail/static/src/scss/*.scss',
+            'mail/static/src/scss/*.css',
             'mail/static/lib/idb-keyval/idb-keyval.js',
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
             'mail/static/src/js/**/*',
@@ -200,6 +201,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/**/web_portal_project/**/*',
             'mail/static/src/**/web/**/*',
             ('remove', 'mail/static/src/**/*.dark.scss'),
+            ('remove', 'mail/static/src/**/*.dark.css'),
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),
             'mail/static/src/discuss/core/common/**/*',
@@ -209,6 +211,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/discuss/**/public_web/**/*',
             'mail/static/src/discuss/**/web/**/*',
             ('remove', 'mail/static/src/discuss/**/*.dark.scss'),
+            ('remove', 'mail/static/src/discuss/**/*.dark.css'),
             'mail/static/src/views/fields/**/*',
             ('remove', 'mail/static/src/views/web/activity/**'),
             'mail/static/src/convert_inline/**/*',
@@ -220,6 +223,7 @@ For more specific needs, you may also assign custom-defined actions
             # ensure core.dark.scss before any other style
             'mail/static/src/core/common/core.dark.scss',
             'mail/static/src/**/*.dark.scss',
+            'mail/static/src/**/*.dark.css',
         ],
         "web.assets_frontend": [
             "mail/static/src/html_editor/common/state_file_model_patch.js",
@@ -227,7 +231,7 @@ For more specific needs, you may also assign custom-defined actions
             "mail/static/src/utils/common/html.js",
         ],
         "web.assets_web_print": [
-            "mail/static/src/scss/discuss_print.scss",
+            "mail/static/src/scss/discuss_print.css",
         ],
         'mail.assets_discuss_public_test_tours': [
             ('include', 'web_tour.assets'),
@@ -290,6 +294,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/**/public/**/*',
             'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
             ('remove', 'mail/static/src/**/*.dark.scss'),
+            ('remove', 'mail/static/src/**/*.dark.css'),
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),
             'mail/static/src/discuss/core/common/**/*',
@@ -299,6 +304,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/discuss/**/public_web/**/*',
             'mail/static/src/discuss/**/public/**/*',
             ('remove', 'mail/static/src/discuss/**/*.dark.scss'),
+            ('remove', 'mail/static/src/discuss/**/*.dark.css'),
             ('remove', 'web/static/src/**/*.dark.scss'),
         ],
         'mail.assets_markdown': [
@@ -312,6 +318,7 @@ For more specific needs, you may also assign custom-defined actions
             "mail/static/src/core/common/**/*",
             "mail/static/src/**/common/**/*",
             ('remove', 'mail/static/src/**/*.dark.scss'),
+            ('remove', 'mail/static/src/**/*.dark.css'),
         ],
         'im_livechat.assets_embed_external': [
             ('include', 'web._assets_helpers'),

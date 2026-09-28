@@ -109,6 +109,7 @@
             'stock/static/src/**/*.js',
             'stock/static/src/**/*.xml',
             'stock/static/src/**/*.scss',
+            'stock/static/src/**/*.css',
             ('remove', 'stock/static/src/stock_forecasted/forecasted_graph.*'),
         ],
         'web.assets_backend_lazy': [
