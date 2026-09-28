@@ -1,4 +1,4 @@
-import { closestPath, findNode } from "./dom_traversal";
+import { childNodes, closestPath, findNode } from "./dom_traversal";
 
 const blockTagNames = [
     "ADDRESS",
@@ -116,10 +116,15 @@ export function isBlock(node) {
         return blockTagNames.includes(tagName);
     }
     const display = getComputedDisplay(node);
+    // In case the node has display `contents`, its block status depends on its
+    // children.
+    if (display === "contents") {
+        return childNodes(node).some((child) => isBlock(child));
+    }
     // In case the node has display `none` we don't know what is its display
     // so we check its tagName in `blockTagNames`
     if (display && display !== "none") {
-        return !display.includes("inline") && display !== "contents";
+        return !display.includes("inline");
     }
     return blockTagNames.includes(tagName);
 }
