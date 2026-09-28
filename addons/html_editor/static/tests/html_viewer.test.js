@@ -20,7 +20,7 @@ test(`XML-like self-closing elements are fixed in a standalone HtmlViewer`, asyn
     });
     await animationFrame();
     expect(".o_readonly").toHaveInnerHTML(
-        `<a href="#" target="_blank" rel="noreferrer"></a>outside<a href="#" target="_blank" rel="noreferrer">inside</a>`
+        `<a href="#" target="_blank" rel="noreferrer noopener"></a>outside<a href="#" target="_blank" rel="noreferrer noopener">inside</a>`
     );
 });
 

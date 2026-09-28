@@ -355,7 +355,7 @@ test("only external links should always open on a new tab in readonly", async ()
     expect("[name='txt'] p").toHaveText("first");
     for (const link of queryAll("a.external")) {
         expect(link.getAttribute("target")).toBe("_blank");
-        expect(link.getAttribute("rel")).toBe("noreferrer");
+        expect(link.getAttribute("rel")).toBe("noreferrer noopener");
     }
     for (const link of queryAll("a.internal")) {
         expect(link.getAttribute("target")).toBe(null);
@@ -366,7 +366,7 @@ test("only external links should always open on a new tab in readonly", async ()
     expect("[name='txt'] p").toHaveText("second");
     for (const link of queryAll("a.external")) {
         expect(link.getAttribute("target")).toBe("_blank");
-        expect(link.getAttribute("rel")).toBe("noreferrer");
+        expect(link.getAttribute("rel")).toBe("noreferrer noopener");
     }
     for (const link of queryAll("a.internal")) {
         expect(link.getAttribute("target")).toBe(null);
@@ -394,7 +394,7 @@ test("XML-like self-closing elements are fixed in readonly mode", async () => {
     expect(".odoo-editor-editable").toHaveCount(0);
     expect(`[name="txt"] .o_readonly`).toHaveCount(1);
     expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
-        `<a href="#" target="_blank" rel="noreferrer"></a>outside<a href="#" target="_blank" rel="noreferrer">inside</a>`
+        `<a href="#" target="_blank" rel="noreferrer noopener"></a>outside<a href="#" target="_blank" rel="noreferrer noopener">inside</a>`
     );
 });
 
@@ -2181,7 +2181,7 @@ describe("sandbox", () => {
         expect(readonlyIframe.contentDocument.body.querySelector("p")).toHaveText("first");
         for (const link of readonlyIframe.contentDocument.body.querySelectorAll("a")) {
             expect(link.getAttribute("target")).toBe("_blank");
-            expect(link.getAttribute("rel")).toBe("noreferrer");
+            expect(link.getAttribute("rel")).toBe("noreferrer noopener");
         }
 
         await contains(`.o_pager_next`).click();
@@ -2189,7 +2189,7 @@ describe("sandbox", () => {
         expect(readonlyIframe.contentDocument.body.querySelector("p")).toHaveText("second");
         for (const link of readonlyIframe.contentDocument.body.querySelectorAll("a")) {
             expect(link.getAttribute("target")).toBe("_blank");
-            expect(link.getAttribute("rel")).toBe("noreferrer");
+            expect(link.getAttribute("rel")).toBe("noreferrer noopener");
         }
     });
 
