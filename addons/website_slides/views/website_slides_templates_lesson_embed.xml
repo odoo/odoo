@@ -9,6 +9,17 @@
             <html>
                 <head>
                     <title><t t-out="slide.name"/></title>
+                    <script>
+                        if (!window.isSecureContext) {
+                            window.stop();
+                            const pre = document.createElement("pre");
+                            pre.textContent = `This content is designed to be embedded in a page served over an https:// connection.
+The page embedding it is currently served over an http:// connection without SSL/TLS, which is unsupported.
+For more information, please visit: https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Secure_Contexts`;
+                            document.documentElement.replaceChildren(document.createElement("body"));
+                            document.body.append(pre);
+                        }
+                    </script>
                     <t t-call-assets="website_slides.slide_embed_assets"/>
                     <script type="module" src="/web/static/lib/pdfjs/build/pdf.js"/>
                     <script type="module" src="/web/static/lib/pdfjs/build/pdf.worker.js"/>

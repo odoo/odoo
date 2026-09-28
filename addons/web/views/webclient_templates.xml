@@ -22,6 +22,15 @@
         <title t-out="title or 'Odoo'"/>
         <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/img/favicon.ico'"/>
         <script id="web.layout.odooscript" type="text/javascript">
+            if (!window.isSecureContext) {
+                window.stop();
+                const pre = document.createElement("pre");
+                pre.textContent = `Odoo is designed to be served over an https:// connection. You are currently running Odoo over
+an http:// connection without SSL/TLS, which is unsupported.
+For more information, please visit: https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Secure_Contexts`;
+                document.documentElement.replaceChildren(document.createElement("body"));
+                document.body.append(pre);
+            }
             var odoo = {
                 csrf_token: "<t t-out="request.csrf_token(None)"/>",
                 debug: "<t t-out="debug"/>",
