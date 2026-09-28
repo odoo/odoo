@@ -40,18 +40,14 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
         ),
         tourUtils.waitForInteractionToLoad(),
         {
+            content: "Check selected delivery address is same as typed in previous step",
+            trigger: '#delivery_address_list:contains(SO1 Delivery Street, 33, SO1DeliveryCity 10000, Afghanistan)',
+        },
+        tourUtils.confirmOrder(),
+        {
             content: "Billing address is not same as delivery address",
-            trigger: '#use_delivery_as_billing',
+            trigger: '#use_different_billing_address',
             run: "click",
-        },
-        {
-            content: "Add a billing address",
-            trigger: '#billing_address_list a[href^="/shop/address?address_type=billing"]:contains("Add")',
-            run: "click",
-            expectUnloadPage: true,
-        },
-        {
-            trigger: 'h4:contains("New address")',
         },
         ...tourUtils.fillAddressForm(
             {
@@ -63,24 +59,8 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
                 zip: "10000",
             },
             'Afghanistan',
+            false,
         ),
-        {
-            content: "Check selected delivery address is same as typed in previous step",
-            trigger: '#delivery_address_list:contains(SO1 Delivery Street, 33):contains(SO1DeliveryCity):contains(Afghanistan)',
-        },
-        {
-            content: "Check selected billing address is same as typed in previous step",
-            trigger: '#billing_address_list:contains(17, SO1 Billing Road):contains(SO1BillingCity):contains(Afghanistan)',
-        },
-        {
-            content: "Click for edit billing address",
-            trigger: '#billing_address_list a[href^="/shop/address?address_type=billing"].js_edit_address:first',
-            run: "click",
-            expectUnloadPage: true,
-        },
-        {
-            trigger: 'h4:contains("Edit address")',
-        },
         {
             content: "Change billing address form",
             trigger: 'select[name="country_id"]',
@@ -100,17 +80,6 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
         {
             trigger: `input[name="city"]`,
             run: "edit SO1BillingCityEdited",
-        },
-        {
-            content: "Click on Confirm button to save the address",
-            trigger: 'a[name="website_sale_main_button"]',
-            run: "click",
-            expectUnloadPage: true,
-        },
-        tourUtils.confirmOrder(),
-        {
-            content: "Check selected billing address is same as typed in previous step",
-            trigger: '#delivery_and_billing :contains(Billing):contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
         },
         ...tourUtils.payWithTransfer({
             redirect: false,
