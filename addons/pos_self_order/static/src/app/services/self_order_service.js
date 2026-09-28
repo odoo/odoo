@@ -435,6 +435,15 @@ export class SelfOrder extends Reactive {
         this.currentCategory = this.availableCategories[0];
     }
 
+    getProductImageUrl(product, model = "product.product") {
+        if (!product.image_128) {
+            return this.config.module_pos_restaurant
+                ? "/pos_self_order/static/img/restaurant_placeholder.png"
+                : "/pos_self_order/static/img/retail_placeholder.png";
+        }
+        return `/web/image/${model}/${product.id}/image_512?unique=${product.write_date}`;
+    }
+
     hasPaymentMethod() {
         return (
             this.config.self_ordering_mode === "kiosk" &&

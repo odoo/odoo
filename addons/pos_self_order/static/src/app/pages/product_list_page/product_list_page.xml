@@ -98,7 +98,7 @@
                         </div>
                         <button
                             role="button"
-                            t-attf-class="btn btn-primary cart btn-lg text-truncate {{this.checkoutDisabled ? 'disabled' : ''}}"
+                            t-attf-class="btn btn-primary cart btn-lg text-truncate flex-grow-1 {{this.checkoutDisabled ? 'disabled' : ''}}"
                             t-on-click="() => this.review()">Checkout</button>
                     </t>
                 </OrderWidget>
