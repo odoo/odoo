@@ -237,4 +237,49 @@
             </p>
         </field>
     </record>
+
+    <!-- SERVER ACTIONS FOR MASS OPERATIONS -->
+    <record id="action_server_mass_verify_bill" model="ir.actions.server">
+        <field name="name">Verifikasi &amp; Tandai Lunas (Massal)</field>
+        <field name="model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            records.action_mass_verify_payment()
+        </field>
+    </record>
+
+    <record id="action_server_mass_submit_bill" model="ir.actions.server">
+        <field name="name">Ajukan Pembayaran (Menunggu Verifikasi)</field>
+        <field name="model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            records.action_mass_submit_payment()
+        </field>
+    </record>
+
+    <record id="action_server_mass_publish_bill" model="ir.actions.server">
+        <field name="name">Terbitkan Tagihan (Belum Dibayar)</field>
+        <field name="model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            records.action_mass_publish_bill()
+        </field>
+    </record>
+
+    <record id="action_server_mass_cancel_bill" model="ir.actions.server">
+        <field name="name">Batalkan Tagihan (Massal)</field>
+        <field name="model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            records.action_mass_cancel()
+        </field>
+    </record>
 </odoo>
