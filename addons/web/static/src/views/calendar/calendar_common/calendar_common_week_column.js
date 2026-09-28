@@ -12,7 +12,6 @@ export function makeWeekColumn({ el, weekText }) {
         const week = document.createElement("div");
         week.classList.add("o-fc-week");
         week.innerText = getLocalYearAndWeek(luxon.DateTime.fromISO(date)).week;
-        row.querySelector(".fc-daygrid-week-number")?.classList.add("d-none");
         row.prepend(week);
     }
 }
