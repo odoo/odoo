@@ -3,7 +3,7 @@
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
         <xpath expr="//div[@name='delivery_date']/strong" position="replace">
             <strong t-if="o._l10n_lk_is_tax_invoice_company()">Supply Date</strong>
-            <t t-else="">$0</t>
+            <t t-else=""><replace-target/></t>
         </xpath>
 
         <xpath expr="//div[@name='delivery_date']" position="after">
