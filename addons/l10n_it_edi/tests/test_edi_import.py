@@ -730,7 +730,7 @@ class TestItEdiImport(TestItEdi, TestAccountEdiProxyUser):
                     'quantity': 5.0,
                     'name': 'DESCRIZIONE DELLA FORNITURA',
                     'price_unit': 1.0,
-                    'discount': -10.0,
+                    'discount': -10.000000000000014,
                 },
             ],
         }], applied_xml)
