@@ -93,4 +93,8 @@ export class PosPreset extends models.ServerModel {
             resource_calendar_id: 1,
         },
     ];
+
+    get_available_slots() {
+        return { usage_utc: { "2019-03-12 11:00:00": [1] } };
+    }
 }
