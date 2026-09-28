@@ -111,7 +111,7 @@ test("translation-context: xpath position replace (outer) with replace-target", 
                 <xpath expr="div" position="replace">
                     <div class="o_test_component" title="title">
                         text
-                        <div title="title2">$0</div>
+                        <div title="title2"><replace-target/></div>
                     </div>
                 </xpath>
             `,
@@ -410,7 +410,7 @@ test("translation-context: wrappers texts in t tags (3)", async () => {
                 <xpath expr="div" position="replace">
                     <div class="o_test_component" title="title">
                         text
-                        <div title="title2">$0</div>
+                        <div title="title2"><replace-target/></div>
                     </div>
                 </xpath>
             `,

@@ -1128,7 +1128,7 @@ class TestTemplating(ViewCase):
             'inherit_id': view1.id,
             'arch': """<xpath expr="//div[@role='search']" position="replace">
                 <form>
-                    <t>$0</t>
+                    <t><replace-target/></t>
                 </form>
             </xpath>
             """
@@ -1161,7 +1161,7 @@ class TestTemplating(ViewCase):
             'inherit_id': view1.id,
             'arch': """<xpath expr="//p[@role='search']" position="replace">
                 <form id="wrapper">
-                    <div>$0</div>
+                    <div><replace-target/></div>
                     <p id="added_content">content of sibling</p>
                 </form>
             </xpath>
