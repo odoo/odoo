@@ -48,7 +48,9 @@ class TestMailingTest(TestMassMailCommon):
         # not great but matches send_mail_test, maybe that should be a method
         # on mailing_test?
         record = self.env[mailing.mailing_model_real].search([], limit=1)
-        first_child = lxml.html.fromstring(self._mails.pop()['body']).xpath('//body/*[1]')[0]
+        # we consider first_child the element just after style because style
+        # will be always there to be properly loaded in outlook
+        first_child = lxml.html.fromstring(self._mails.pop()['body']).xpath('//body/*[2]')[0]
         self.assertEqual(first_child.tag, 'div')
         self.assertIn('display:none', first_child.get('style'),
                       "the preview node should be hidden")
