@@ -13,6 +13,7 @@ import { getMimetype } from "@html_editor/utils/image";
 import { WebsiteDialog } from "./dialog";
 import {
     Component,
+    markup,
     onMounted,
     onWillStart,
     onWillUnmount,
@@ -37,8 +38,10 @@ export const seoContext = proxy({
     seoName: "",
     metaImage: "",
     defaultTitle: "",
+    hasNoImageWarning: true,
     updatedAlts: [],
     brokenLinks: [],
+    checkedLinks: false,
 });
 
 const LINK_CHECK_BASE_OPTIONS = {
@@ -360,16 +363,31 @@ class Keyword extends Component {
             usedInH1: _t('"%(keyword)s" is used in page first level heading', {
                 keyword: this.props.keyword,
             }),
+            notUsedInH1: _t('"%(keyword)s" is not used in page first level heading', {
+                keyword: this.props.keyword,
+            }),
             usedInH2: _t('"%(keyword)s" is used in page second level heading', {
+                keyword: this.props.keyword,
+            }),
+            notUsedInH2: _t('"%(keyword)s" is not used in page second level heading', {
                 keyword: this.props.keyword,
             }),
             usedInTitle: _t('"%(keyword)s" is used in page title', {
                 keyword: this.props.keyword,
             }),
+            notUsedInTitle: _t('"%(keyword)s" is not used in page title', {
+                keyword: this.props.keyword,
+            }),
             usedInDescription: _t('"%(keyword)s" is used in page description', {
                 keyword: this.props.keyword,
             }),
+            notUsedInDescription: _t('"%(keyword)s" is not used in page description', {
+                keyword: this.props.keyword,
+            }),
             usedInContent: _t('"%(keyword)s" is used in page content', {
+                keyword: this.props.keyword,
+            }),
+            notUsedInContent: _t('"%(keyword)s" is not used in page content', {
                 keyword: this.props.keyword,
             }),
             suggestionTag: (suggestion) => _t('Add "%(suggestion)s"', { suggestion }),
@@ -394,7 +412,7 @@ class Keyword extends Component {
                         .map((word) => word.replace(regex, "").trim())
                         .filter(Boolean)
                 ),
-            ];
+            ].slice(0, 5);
         });
     }
 
@@ -513,7 +531,7 @@ class SEOPreview extends Component {
     setup() {
         this.website = useService("website");
         this.seoContext = proxy(seoContext);
-        this.logo = `/web/image/website/${encodeURIComponent(this.website.currentWebsite.id)}/logo`;
+        this.favicon = `/web/image/website/${encodeURIComponent(this.website.currentWebsite.id)}/favicon`;
     }
 
     get urlToBreadcrumbs() {
@@ -675,9 +693,15 @@ export class TitleDescription extends Component {
             return false;
         }
         if (this.seoContext.description.length < this.minRecommendedDescriptionSize) {
-            return _t("Too short (min 50 chars)");
+            return _t("%(count)s/%(limit)s chars min.", {
+                count: markup`<span class="text-warning">${this.seoContext.description.length}</span>`,
+                limit: this.minRecommendedDescriptionSize,
+            });
         } else if (this.seoContext.description.length > this.maxRecommendedDescriptionSize) {
-            return _t("Too long (max 160 chars)");
+            return _t("%(count)s/%(limit)s chars max.", {
+                count: markup`<span class="text-warning">${this.seoContext.description.length}</span>`,
+                limit: this.maxRecommendedDescriptionSize,
+            });
         }
         return false;
     }
@@ -799,7 +823,6 @@ export class SeoChecks extends Component {
         this.state = proxy({
             altAttributes: [],
             checkingLinks: false,
-            checkedLinks: false,
             counterLinks: 0,
             totalLinks: 0,
         });
@@ -812,6 +835,9 @@ export class SeoChecks extends Component {
             }
         });
         onMounted(() => {
+            this.seoContext.hasNoImageWarning = !this.state.altAttributes.some(
+                (alt) => !alt.decorative && alt.alt === ""
+            );
             if (this.props.isDefaultLang) {
                 this.getBrokenLinks();
             }
@@ -821,6 +847,9 @@ export class SeoChecks extends Component {
     imgUpdated(img) {
         img.updated = true;
         this.seoContext.updatedAlts = this.state.altAttributes.filter((img) => img.updated);
+        this.seoContext.hasNoImageWarning = !this.state.altAttributes.some(
+            (alt) => !alt.decorative && alt.alt === ""
+        );
     }
 
     async getAltAttributes() {
@@ -946,7 +975,7 @@ export class SeoChecks extends Component {
         });
         await Promise.all(promises);
         this.state.checkingLinks = false;
-        this.state.checkedLinks = true;
+        this.seoContext.checkedLinks = true;
         // Keep links order in the DOM.
         brokenLinks.sort((a, b) => a.position - b.position);
         this.seoContext.brokenLinks = brokenLinks.map((link) => ({
@@ -985,8 +1014,10 @@ export class OptimizeSEODialog extends Component {
 
         this.title = _t("Search Engine Optimization");
         this.saveButton = _t("Save");
-        this.size = "lg";
+        this.size = "xl";
         this.contentClass = "oe_seo_configuration";
+        seoContext.hasNoImageWarning = true;
+        seoContext.checkedLinks = false;
 
         onWillStart(async () => {
             // Wait for the preview iframe because this dialog reads directly
