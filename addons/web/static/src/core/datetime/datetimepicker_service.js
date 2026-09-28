@@ -504,12 +504,12 @@ export const datetimePickerService = {
                         const oldStringProps = stringProps;
 
                         stringProps = stringifyProps(nextProps);
-                        lastAppliedStringValue = stringProps.value;
-
-                        if (shallowEqual(oldStringProps, stringProps)) {
+                        
+                        if (shallowEqual(oldStringProps, stringProps) && stringProps.value === lastAppliedStringValue) {
                             return;
                         }
-
+                        
+                        lastAppliedStringValue = stringProps.value;
                         inputsChanged = ensureArray(nextProps.value).map(() => false);
 
                         for (const [key, value] of Object.entries(nextProps)) {
