@@ -1126,7 +1126,7 @@ class TestTemplating(ViewCase):
             'inherit_id': view1.id,
             'arch': """<xpath expr="//div[@role='search']" position="replace">
                 <form>
-                    <t>$0</t>
+                    <t><replace-target/></t>
                 </form>
             </xpath>
             """
