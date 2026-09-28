@@ -14,7 +14,7 @@ const isSmall = utils.isSmall;
 const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");
 
-const validFieldTypes = [
+export const validFieldTypes = [
     "binary",
     "boolean",
     "json",
