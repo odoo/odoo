@@ -6050,6 +6050,18 @@ class AccountMove(models.Model):
                     return date(invoice_date.year, 12, 31)
                 else:
                     return max(invoice_date, today)
+            elif number_reset == 'year_range':
+                # The sequence resets on the fiscal year, which does not
+                # necessarily end on December 31st.
+                _, date_end = date_utils.get_fiscal_year(
+                    invoice_date,
+                    day=self.company_id.fiscalyear_last_day,
+                    month=int(self.company_id.fiscalyear_last_month),
+                )
+                if today > date_end:
+                    return date_end
+                else:
+                    return max(invoice_date, today)
         return invoice_date
 
     def _get_violated_lock_dates(self, invoice_date, has_tax):
