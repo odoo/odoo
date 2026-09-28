@@ -21,10 +21,8 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        # Need to enable pricelist and discount to compute discount price.
+        # Need to enable pricelist to compute discount price.
         cls._enable_pricelists()
-        # `_enable_discount()` will not work because we need this group to enable on superuser
-        cls.env['res.config.settings'].create({'group_discount_per_so_line': True}).execute()
 
         # Seller company: it should import PO and export SO
         supplier_company_data = cls.setup_other_company(name='Gestral Inc.', vat='US9357841')

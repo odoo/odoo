@@ -1222,9 +1222,6 @@ class SaleOrder(models.Model):
 
     @api.depends("partner_id.name", "partner_id.sale_warn_msg", "order_line.sale_line_warn_msg")
     def _compute_sale_warning_text(self):
-        if not self.env.user.has_group("sale.group_warning_sale"):
-            self.sale_warning_text = ""
-            return
         for order in self:
             warnings = OrderedSet()
             if partner_msg := order.partner_id.sale_warn_msg:
@@ -2719,8 +2716,7 @@ class SaleOrder(models.Model):
 
     def _get_product_catalog_product_data(self, product, **kwargs) -> dict:
         product_data = super()._get_product_catalog_product_data(product, **kwargs)
-        has_warning_group = self.env["res.groups"]._is_feature_enabled("sale.group_warning_sale")
-        if product.sale_line_warn_msg and has_warning_group:
+        if product.sale_line_warn_msg:
             product_data.update(warning=product.sale_line_warn_msg)
         return product_data
 

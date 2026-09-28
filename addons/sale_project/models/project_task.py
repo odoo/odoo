@@ -105,9 +105,6 @@ class ProjectTask(models.Model):
 
     @api.depends('partner_id.name', 'partner_id.sale_warn_msg')
     def _compute_sale_warning_text(self):
-        if not self.env.user.has_group("sale.group_warning_sale"):
-            self.sale_warning_text = ""
-            return
         for task in self:
             warnings = OrderedSet()
             if partner_msg := task.partner_id.sale_warn_msg:

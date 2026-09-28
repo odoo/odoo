@@ -139,11 +139,6 @@ class TestProductCatalog(HttpCase, SaleCommon):
 
     def test_data_with_discounted_lines(self):
         self._create_pricelist_discount_rules()
-        self.env["res.config.settings"].sudo().create({
-            # Discounts included in price
-            "group_product_pricelist": True,
-            "group_discount_per_so_line": True,
-        }).execute()
         self.empty_order.order_line = [Command.create({"product_id": self.product.id})]
         sol = self.empty_order.order_line
         self.assertEqual(sol.price_unit, self.product.lst_price)
@@ -226,18 +221,13 @@ class TestProductCatalog(HttpCase, SaleCommon):
                 {
                     "product_id": product.id,
                     "product_uom_qty": 2.0,
-                    "price_unit": product.lst_price / 2,
-                    "discount": 0.0,
+                    "price_unit": product.lst_price,
+                    "discount": 50.0,
                 }
             ],
         )
 
-        # Enable discounts, add item --> discount should be on discount field
-        self.env["res.config.settings"].sudo().create({
-            # Discounts included in price
-            "group_product_pricelist": True,
-            "group_discount_per_so_line": True,
-        }).execute()
+        # Add a third item --> discount should stay on the discount field
         update_data = self.request_update_order_line_info(product=product, quantity=3.0)
         self.assertEqual(update_data["price"], product.lst_price / 2)
         self.assertRecordValues(
