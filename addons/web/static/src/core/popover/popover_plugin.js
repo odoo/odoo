@@ -56,6 +56,7 @@ export class PopoverPlugin extends Plugin {
                 animation: options.animation,
                 arrow: options.arrow,
                 role: options.role,
+                id: options.id,
                 position: options.position,
                 onPositioned: options.onPositioned,
                 fixedPosition: options.fixedPosition,

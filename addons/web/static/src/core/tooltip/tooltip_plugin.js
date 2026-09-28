@@ -2,6 +2,7 @@ import { services } from "@web/core/services";
 import { Tooltip } from "./tooltip";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { PopoverPlugin } from "@web/core/popover/popover_plugin";
+import { generateHTMLId } from "@web/core/utils/strings";
 
 import { onWillDestroy, Plugin, useListener, usePlugin } from "@odoo/owl";
 
@@ -75,13 +76,19 @@ class TooltipPlugin extends Plugin {
         }
 
         // Listen (using event delegation) to "mouseenter" events to open the tooltip if any
-        useListener(document.body, "mouseenter", this.#onMouseenter.bind(this), {
+        useListener(document.body, "mouseenter", this.#onMouseenterOrFocusin.bind(this), {
+            capture: true,
+        });
+        // Listen (using event delegation) to "focusin" events to open the tooltip if any
+        useListener(document.body, "focusin", this.#onMouseenterOrFocusin.bind(this), {
             capture: true,
         });
         // Listen (using event delegation) to "mouseleave" events to close the tooltip if any
         useListener(document.body, "mouseleave", this.#cleanupTooltip.bind(this), {
             capture: true,
         });
+        // Listen (using event delegation) to "focusout" events to close the tooltip if any
+        useListener(document.body, "focusout", this.#onFocusout.bind(this), { capture: true });
         useListener(document.body, "click", this.#onClick.bind(this), { capture: true });
 
         onWillDestroy(() => {
@@ -209,6 +216,7 @@ class TooltipPlugin extends Plugin {
      * Closes the currently opened tooltip if any, or prevent it from opening.
      */
     #cleanup() {
+        this.#target?.removeAttribute("aria-describedby");
         this.#target = null;
         window.clearTimeout(this.#openTooltipTimeout);
         this.#openTooltipTimeout = null;
@@ -253,6 +261,15 @@ class TooltipPlugin extends Plugin {
         if (!this.#target.title) {
             this.#target.title = "";
         }
+        // Minimal effort to ensure the tooltip doesn't repeat the aria-label.
+        // This doesn't take into account other accessible names (alt, label...)
+        const isMeaningfulTooltip =
+            tooltip &&
+            !this.#target.ariaLabel?.toLowerCase().includes(tooltip.trim().toLowerCase());
+        if (isMeaningfulTooltip) {
+            this.#target.setAttribute("aria-description", tooltip);
+        }
+
         const timeoutDelay = this.#isHelpNode(el) ? 0 : delay;
         this.#openTooltipTimeout = window.setTimeout(() => {
             // verify that the element is still in the DOM, and that the
@@ -261,11 +278,15 @@ class TooltipPlugin extends Plugin {
                 this.#target.isConnected &&
                 !this.#isTooltipRedundant(this.#target, tooltip, template)
             ) {
+                const tooltipId = generateHTMLId("tooltip_");
+                if (isMeaningfulTooltip) {
+                    this.#target.setAttribute("aria-describedby", tooltipId);
+                }
                 this.#closeTooltip = this.#popover.add(
                     this.#target,
                     Tooltip,
                     { tooltip, template, info },
-                    { position, role: "tooltip" }
+                    { position, role: "tooltip", id: tooltipId }
                 );
             }
         }, timeoutDelay);
@@ -314,9 +335,9 @@ class TooltipPlugin extends Plugin {
      * if there is, creates a timeout to open the corresponding tooltip
      * after a delay.
      *
-     * @param {MouseEvent} ev a "mouseenter" event
+     * @param {MouseEvent|FocusEvent} ev a "mouseenter" or "focusin" event
      */
-    #onMouseenter(ev) {
+    #onMouseenterOrFocusin(ev) {
         const target = ev.target?.closest(TOOLTIP_SELECTOR_WITH_TITLE);
         if (!target) {
             return;
@@ -347,6 +368,20 @@ class TooltipPlugin extends Plugin {
             ev.preventDefault();
         }
         this.#cleanupTooltip(ev);
+    }
+
+    /**
+     * Checks whether the new target is different from the target that lost
+     * focus, and if so, clean it up.
+     * @param {FocusEvent} ev
+     */
+    #onFocusout(ev) {
+        if (
+            (this.#target === ev.target || this.#target === ev.target.closest(TOOLTIP_SELECTOR)) &&
+            this.#target !== ev.relatedTarget?.closest(TOOLTIP_SELECTOR)
+        ) {
+            this.#cleanup();
+        }
     }
 
     #cleanupTooltip(ev) {

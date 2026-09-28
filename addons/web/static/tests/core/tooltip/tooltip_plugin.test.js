@@ -1,9 +1,10 @@
 import { expect, test } from "@odoo/hoot";
-import { click, drag, hover, leave, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
+import { click, drag, hover, leave, pointerDown, pointerUp, press, queryOne } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, mockTouch, runAllTimers } from "@odoo/hoot-mock";
 import { Component, proxy, xml } from "@odoo/owl";
 import {
     assignTestEnv,
+    contains,
     mountWithCleanup,
     patchWithCleanup,
     registerTemplate,
@@ -22,14 +23,20 @@ test("basic rendering", async () => {
     expect(".o_popover").toHaveCount(0);
     await hover(".mybtn");
     expect(".o_popover").toHaveCount(0);
+    expect("button").toHaveAttribute("aria-description", "hello");
+    expect("button").not.toHaveAttribute("aria-describedby");
 
     await runAllTimers();
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover").toHaveText("hello");
+    expect("button").toHaveAttribute("aria-description", "hello");
+    expect("button").toHaveAttribute("aria-describedby", queryOne(".o_popover").id);
 
     await leave();
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
+    expect("button").toHaveAttribute("aria-description", "hello");
+    expect("button").not.toHaveAttribute("aria-describedby");
 });
 
 test.tags("desktop");
@@ -43,18 +50,26 @@ test("basic rendering 2", async () => {
     expect(".o_popover").toHaveCount(0);
     await hover(".inner_span");
     expect(".o_popover").toHaveCount(0);
+    expect("[data-tooltip]").toHaveAttribute("aria-description", "hello");
 
     await runAllTimers();
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover").toHaveText("hello");
+    const popover = queryOne(".o_popover");
+    expect("[data-tooltip]").toHaveAttribute("aria-describedby", popover.id);
 
     await hover(".outer_span");
     await runAllTimers();
     expect(".o_popover").toHaveCount(1);
+    expect(queryOne(".o_popover")).toBe(popover);
+    expect("[data-tooltip]").toHaveAttribute("aria-description", "hello");
+    expect("[data-tooltip]").toHaveAttribute("aria-describedby", popover.id);
 
     await leave();
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
+    expect("[data-tooltip]").toHaveAttribute("aria-description", "hello");
+    expect("[data-tooltip]").not.toHaveAttribute("aria-describedby");
 });
 
 test.tags("desktop");
@@ -189,10 +204,14 @@ test("tooltip with a template, no info", async () => {
     expect(".o-tooltip").toHaveCount(0);
 
     await hover("button");
+    expect("button").not.toHaveAttribute("aria-description");
+    expect("button").not.toHaveAttribute("aria-describedby");
     await runAllTimers();
 
     expect(".o-tooltip").toHaveCount(1);
     expect(".o-tooltip").toHaveInnerHTML("<i>tooltip</i>");
+    expect("button").not.toHaveAttribute("aria-description");
+    expect("button").not.toHaveAttribute("aria-describedby");
 });
 
 test.tags("desktop");
@@ -200,7 +219,7 @@ test("tooltip with a template and info", async () => {
     class MyComponent extends Component {
         static template = xml`
             <button
-                data-tooltip-template="my_tooltip_template"
+                data-tooltip-template="my_tooltip_template_with_info"
                 t-att-data-tooltip-info="this.info">
                 Action
             </button>
@@ -211,7 +230,7 @@ test("tooltip with a template and info", async () => {
     }
 
     registerTemplate(
-        "my_tooltip_template",
+        "my_tooltip_template_with_info",
         /* xml */ `
             <ul>
                 <li>X: <t t-out="x"/></li>
@@ -720,4 +739,83 @@ test("no tooltip if only a descendant without text content overflows", async () 
     await hover(".mytext");
     await runAllTimers();
     expect(".o_popover").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("tooltip on focus", async () => {
+    class MyComponent extends Component {
+        static template = xml`
+            <button class="tooltip-btn" data-tooltip="hello">Button</button>
+            <button class="no-tooltip">No tooltip</button>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    expect(".o_popover").toHaveCount(0);
+
+    await contains(".tooltip-btn").focus();
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(1);
+
+    await press("Tab");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("tooltip on focus from and to child element", async () => {
+    class MyComponent extends Component {
+        static template = xml`
+        <button class="no-tooltip-1">space</button>
+        <div class="p-5" data-tooltip="hello">
+            <button>Action 1</button>
+            <button>Action 2</button>
+        </div>
+        <button class="no-tooltip-2">space</button>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    expect(".o_popover").toHaveCount(0);
+
+    await contains(".no-tooltip-1").focus();
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(0);
+
+    await press("Tab");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(1);
+    const popover = queryOne(".o_popover");
+
+    await press("Tab");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(queryOne(".o_popover")).toBe(popover);
+
+    await press("Tab");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("no aria-description if tooltip and label are the same", async () => {
+    class MyComponent extends Component {
+        static template = xml`<button class="mybtn" data-tooltip="action" aria-label="Action"><i/></button>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    expect(".o_popover").toHaveCount(0);
+    await hover(".mybtn");
+    expect(".o_popover").toHaveCount(0);
+    expect("button").not.toHaveAttribute("aria-description");
+    expect("button").not.toHaveAttribute("aria-describedby");
+
+    await runAllTimers();
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover").toHaveText("action");
+    expect("button").not.toHaveAttribute("aria-description");
+    expect("button").not.toHaveAttribute("aria-describedby");
 });
