@@ -1,7 +1,7 @@
 import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
 import { useRootComponents } from "@html_editor/others/embedded_component_utils";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
-import { fillHtmlTransferData } from "@html_editor/utils/clipboard";
+import { fillClipboardWithSelection } from "@html_editor/utils/clipboard";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
 import {
     Component,
@@ -17,10 +17,10 @@ import {
     useProps,
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
-import { location } from "@web/core/browser/browser";
 import { memoize } from "@web/core/utils/functions";
 import { TABLE_WRAPPER_SELECTOR, wrapTableInScrollContainer } from "@html_editor/utils/table";
 import { unwrapContents } from "@html_editor/utils/dom";
+import { getLinksToRetarget, retargetLinkToNewTab } from "@html_editor/utils/url";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
@@ -153,7 +153,7 @@ export class HtmlViewer extends Component {
     processReadonlyContent(container) {
         this.applyReadonlyAttributes(container);
         this.wrapTables(container);
-        this.addDomListener(container, "copy", this.onCopy);
+        this.addDomListener(container, "copy", fillClipboardWithSelection);
     }
 
     /**
@@ -178,18 +178,6 @@ export class HtmlViewer extends Component {
     }
 
     /**
-     * @param {ClipboardEvent} ev
-     */
-    onCopy(ev) {
-        ev.preventDefault();
-        const selection = ev.target.ownerDocument.defaultView.getSelection();
-        const clonedContents = selection.getRangeAt(0).cloneContents();
-        fillHtmlTransferData(ev, "clipboardData", clonedContents, {
-            textContent: selection.toString(),
-        });
-    }
-
-    /**
      * Ensure that elements with accessibility editor attributes correctly get
      * the standard accessibility attribute (aria-label, role).
      */
@@ -204,23 +192,17 @@ export class HtmlViewer extends Component {
 
     /**
      * Retarget links to open in a new tab.
-     * When inside an iframe, all links are retargeted.
-     * Otherwise, only external links (different origin) are retargeted.
+     *
+     * @param {HTMLElement} container
      */
     retargetLinks(container) {
-        const isInsideIframe = container.ownerDocument !== document;
-        const retargetSelector = isInsideIframe
-            ? "a"
-            : `a:not([href^="${location.origin}"]):not([href^="/"])`;
-
-        for (const link of container.querySelectorAll(retargetSelector)) {
+        for (const link of getLinksToRetarget(container)) {
             this.retargetLink(link);
         }
     }
 
     retargetLink(link) {
-        link.setAttribute("target", "_blank");
-        link.setAttribute("rel", "noreferrer");
+        retargetLinkToNewTab(link);
     }
 
     updateIframeContent(content) {
