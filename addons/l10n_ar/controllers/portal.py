@@ -19,6 +19,7 @@ class L10nARPortalAccount(CustomerPortal):
                 rendering_values['current_partner'].l10n_ar_afip_responsibility_type_id
             )
             rendering_values.update({
+                'display_b2b_fields': True,
                 'responsibility': default_afip_responsibility_type_id,
                 'responsibility_types': (
                     ArAfipResponsibilityType.search([])
