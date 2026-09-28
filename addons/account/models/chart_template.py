@@ -246,6 +246,7 @@ class AccountChartTemplate(models.AbstractModel):
         self._load_data(data)
         self._post_load_data(template_code, company, template_data)
         self._load_translations(companies=company)
+        self.env.cr.cache.pop('account_product_accounts', None)
 
         # Install the demo data when the first localization is instanciated on the company
         if install_demo and not reload_template:
