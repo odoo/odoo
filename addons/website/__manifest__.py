@@ -412,7 +412,7 @@
             'website/static/src/mail/core/common/**/*',
         ],
         "web.assets_web_dark": [
-            'website/static/src/components/dialog/*.dark.scss',
+            'website/static/src/components/dialog/*.dark.css',
             'website/static/src/scss/website.backend.dark.css',
             'website/static/src/components/website_loader/website_loader.dark.scss'
         ],
@@ -498,6 +498,7 @@
             'website/static/src/utils/**/*',
             'website/static/src/components/dialog/*.js',
             'website/static/src/components/dialog/*.scss',
+            'website/static/src/components/dialog/*.css',
             'website/static/src/components/dialog/*.xml',
             'website/static/src/components/editor/editor.scss',
             'website/static/src/components/navbar/navbar.js',
@@ -513,7 +514,7 @@
             'website/static/src/js/backend/**/*',
 
             # Don't include dark mode files in light mode
-            ('remove', 'website/static/src/components/dialog/*.dark.scss'),
+            ('remove', 'website/static/src/components/dialog/*.dark.css'),
         ],
         'website.website_builder_assets': [
             ('include', 'html_builder.assets'),
