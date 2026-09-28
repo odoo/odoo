@@ -14,14 +14,17 @@ class ReportProjectTaskUser(models.Model):
     overtime = fields.Float(readonly=True, groups="hr_timesheet.group_hr_timesheet_user")
 
     def _select(self):
-        return super()._select() + """,
+        return super()._select() + f""",
                 CASE WHEN COALESCE(t.allocated_hours, 0) = 0 THEN NULL ELSE t.effective_hours * 100 / t.allocated_hours END as progress,
                 NULLIF(t.effective_hours, 0) as effective_hours,
-                CASE WHEN COALESCE(t.allocated_hours, 0) = 0 THEN NULL ELSE t.allocated_hours - t.effective_hours END as remaining_hours,
+                {self._get_remaining_hours_sql()} as remaining_hours,
                 CASE WHEN t.allocated_hours > 0 THEN t.remaining_hours / t.allocated_hours ELSE 0 END as remaining_hours_percentage,
                 NULLIF(t.allocated_hours, 0) as allocated_hours,
                 NULLIF(t.overtime, 0) as overtime
         """
+
+    def _get_remaining_hours_sql(self):
+        return "CASE WHEN COALESCE(t.allocated_hours, 0) = 0 THEN NULL ELSE t.allocated_hours - t.effective_hours END"
 
     def _group_by(self):
         return super()._group_by() + """,
