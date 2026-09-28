@@ -3,7 +3,7 @@
 
 from odoo import Command
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, users
 
 
 @tagged('post_install', '-at_install')
@@ -277,3 +277,44 @@ class TestAutomation(TransactionCaseWithUserDemo):
             f.trg_date_range = 2
             self.assertEqual(f.trg_date_range_mode, 'after')
             self.assertEqual(f.trg_date_range, 2)
+
+    @users('admin')
+    def test_on_mail_received(self):
+        model = self.env.ref("mail.model_discuss_channel")
+        automation = self.env["base.automation"].create({
+            "name": "Test Incoming Message",
+            "trigger": "on_message_received",
+            "model_id": model.id,
+        })
+        action = self.env["ir.actions.server"].create({
+            "name": "Add 'X' to name",
+            "base_automation_id": automation.id,
+            "model_id": model.id,
+            "state": "code",
+            "code": """record.write({'name': record.name + 'X'})""",
+        })
+
+        action.flush_recordset()
+        automation.write({"action_server_ids": [Command.link(action.id)]})
+        # action cached was cached with admin, force CacheMiss
+        automation.env.clear()
+
+        # Comment
+        channel_admin_user = self.env['discuss.channel']._create_channel(group_id=None, name='New Channel')
+        channel_admin_user.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
+        self.assertEqual('New Channel', channel_admin_user.name, 'Comment should not trigger automation')
+
+        # Incoming Mail
+        channel_admin_user.message_post(
+             author_id=False, body='I love you!', subject='Hello, you fool!', message_type='email',
+             email_from='test@test.org', subtype_xmlid='mail.mt_comment'
+        )
+        self.assertEqual('New ChannelX', channel_admin_user.name, 'Incoming Mail should trigger automation')
+
+        # Outgoing Mail
+        self.env.company.email = 'info@example.org'
+        channel_admin_user.message_post(
+            body='Thank you!', subject='Hello, you fool!', message_type='email_outgoing',
+            email_from=self.env.company.email, author_id=self.env.ref('base.partner_root').id
+        )
+        self.assertEqual('New ChannelX', channel_admin_user.name, 'Outgoing mail should not trigger automation')
