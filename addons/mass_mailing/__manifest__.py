@@ -91,6 +91,7 @@
             'web/static/src/scss/animation.scss',
             'web/static/src/scss/mimetypes.scss',
             'web/static/src/scss/ui.scss',
+            'web/static/src/core/utils/text_overflow.css',
         ],
         # Minimal assets for theme selector iframe
         'mass_mailing.assets_iframe_theme_selector': [

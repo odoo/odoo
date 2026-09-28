@@ -39,10 +39,10 @@
                 </a>
             </div>
 
-            <div class="caption">
+            <div class="caption o_text_overflow d-block">
                 <a class="ml4" t-att-data-tooltip="'Download ' + file.name" t-att-href="url" download=""><t t-out='file.name'/></a>
             </div>
-            <div class="caption small">
+            <div class="caption small o_text_overflow d-block">
                 <a class="ml4 small text-uppercase" t-att-href="url" download=""><b><t t-out='ext'/></b></a>
                 <div t-if="editable" class="progress o_attachment_progress_bar">
                     <div class="progress-bar progress-bar-striped active" style="width: 100%">Uploading</div>

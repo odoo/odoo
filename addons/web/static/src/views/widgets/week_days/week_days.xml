@@ -7,7 +7,7 @@
                 <tr>
                     <t t-foreach="this.weekdays" t-as="day" t-key="day">
                         <th class="text-center border fw-bold">
-                            <div class="o_recurrent_weekday_label" t-att-data-tooltip="this.props.record.fields[day].string">
+                            <div class="o_recurrent_weekday_label o_text_overflow" t-att-data-tooltip="this.props.record.fields[day].string">
                                 <t t-out="this.props.record.fields[day].string" />
                             </div>
                         </th>

@@ -207,7 +207,12 @@
                 color: $o-list-footer-color;
                 background-color: $o-list-footer-bg-color;
                 font-weight: $o-list-footer-font-weight;
-                @include o-text-overflow(table-cell);
+                display: table-cell;
+                max-width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                vertical-align: top;
                 vertical-align: baseline;
             }
 
@@ -291,7 +296,12 @@
                 padding-bottom: 5px;
             }
             .o_group_name {
-                @include o-text-overflow(table-cell);
+                display: table-cell;
+                max-width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                vertical-align: top;
             }
             .o_group_buttons {
                 display: inline-block;
@@ -420,13 +430,28 @@
                 .o_field_widget:not(.o_row_handle):not(.o_field_handle):not(.o_field_badge) {
                     display: inline;
                     &.o_field_percent_pie{
-                        @include o-text-overflow(inline-flex);
+                        display: inline-flex;
+                        max-width: 100%;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        vertical-align: top;
                         span.o_pie_text{
-                            @include o-text-overflow(none);
+                            display: none;
+                            max-width: 100%;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            vertical-align: top;
                         }
                     }
                     span:not(.o_m2o_avatar) {
-                        @include o-text-overflow(inline);
+                        display: inline;
+                        max-width: 100%;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        vertical-align: top;
                     }
                 }
             }
