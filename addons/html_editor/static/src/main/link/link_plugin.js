@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
-import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
+import { mergeAdjacentTextNodes, removeClass, unwrapContents } from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
@@ -22,6 +22,13 @@ import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
+import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
+
+const FONT_SIZED_SPAN_SELECTOR = [
+    ...FONT_SIZE_CLASSES.map((className) => `span.${className}`),
+    'span[style*="font-size"]',
+].join(", ");
+const FONT_SIZED_BUTTON_CLASS = "o_btn_with_font_size";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
@@ -303,8 +310,15 @@ export class LinkPlugin extends Plugin {
         before_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
         after_paste_handlers: this.onPasteNormalizeLink.bind(this),
         selectionchange_handlers: this.handleSelectionChange.bind(this),
-        clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
-        normalize_handlers: this.normalizeLink.bind(this),
+        clean_for_save_handlers: ({ root }) => {
+            this.removeEmptyLinks(root);
+            this.clearFontSizedButtonClass(root);
+        },
+        normalize_handlers: [
+            this.normalizeLink.bind(this),
+            this.updateFontSizedButtonClass.bind(this),
+        ],
+        system_classes: [FONT_SIZED_BUTTON_CLASS],
         after_insert_handlers: this.handleAfterInsert.bind(this),
         on_will_remove_handlers: () => this.closeLinkTools(),
 
@@ -1065,6 +1079,27 @@ export class LinkPlugin extends Plugin {
             this.removeEmptyLinks(endBlock);
         }
         this.dependencies.history.addStep();
+    }
+
+    updateFontSizedButtonClass(root) {
+        const buttons = selectElements(root, ".btn");
+        const parentButton = closestElement(root, ".btn");
+        if (parentButton && parentButton !== root) {
+            buttons.push(parentButton);
+        }
+        for (const button of buttons) {
+            if (button.querySelector(FONT_SIZED_SPAN_SELECTOR)) {
+                button.classList.add(FONT_SIZED_BUTTON_CLASS);
+            } else if (button.classList.contains(FONT_SIZED_BUTTON_CLASS)) {
+                removeClass(button, FONT_SIZED_BUTTON_CLASS);
+            }
+        }
+    }
+
+    clearFontSizedButtonClass(root) {
+        for (const button of selectElements(root, `.${FONT_SIZED_BUTTON_CLASS}`)) {
+            removeClass(button, FONT_SIZED_BUTTON_CLASS);
+        }
     }
 
     removeEmptyLinks(root) {
