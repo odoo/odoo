@@ -487,5 +487,33 @@
             <field name="work_entry_type_id" ref="hr_work_entry.l10n_om_work_entry_type_overtime_rest_days"/>
         </record>
 
+        <!-- ================================================================
+            ZA - South Africa
+            ================================================================ -->
+        <record id="hr_time_rule_l10n_za_overtime" model="hr.time.rule">
+            <field name="name">Overtime (150%)</field>
+            <field name="sequence">10</field>
+            <field name="country_id" ref="base.za"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'ZA')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="apply_on_public_holidays" eval="False"/>
+            <field name="amount_rate">1.5</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.za_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.za_work_entry_type_overtime_work_days"/>
+        </record>
+
+        <record id="hr_time_rule_l10n_za_public_holiday" model="hr.time.rule">
+            <field name="name">Public Holiday Overtime (200%)</field>
+            <field name="sequence">20</field>
+            <field name="country_id" ref="base.za"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'ZA')]</field>
+            <field name="apply_on_public_holidays" eval="True"/>
+            <field name="timing_start">0</field>
+            <field name="timing_stop">24</field>
+            <field name="amount_rate">2.0</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.za_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.za_work_entry_type_overtime_public_holidays"/>
+        </record>
     </data>
 </odoo>
