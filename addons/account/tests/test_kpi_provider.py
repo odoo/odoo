@@ -8,9 +8,42 @@ class TestKpiProvider(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
+        company = cls.env.ref('base.main_company')
+        cls.company_id = company.id
         cls.partner_id = cls.env['res.partner'].create({'name': 'Someone'})
-
+        cls.income_account, _, cls.suspense_account = cls.env['account.account'].with_company(cls.company_id).create([
+            {
+                'name': 'Income',
+                'code': '40000',
+                'account_type': 'income',
+            },
+            {
+                'name': 'Receivables',
+                'code': '10000',
+                'account_type': 'asset_receivable'
+            },
+            {
+                'name': 'Suspense',
+                'code': '20000',
+                'account_type': 'asset_current'
+            }
+        ])
+        company.account_journal_suspense_account_id = cls.suspense_account
+        cls.env['account.journal'].with_company(cls.company_id).create([
+            {
+                'name': 'Sales',
+                'type': 'sale',
+            },
+            {
+                'name': 'Miscellaneous',
+                'type': 'general'
+            },
+            {
+                'name': 'Purchase',
+                'type': 'purchase'
+            }
+        ]
+        )
         # Clean things for the test
         cls.env['account.payment'].search([]).action_cancel()
         moves_to_unlink = cls.env['account.move'].search([])
@@ -26,11 +59,9 @@ class TestKpiProvider(TransactionCase):
         self.assertCountEqual(self.env['kpi.provider'].get_account_kpi_summary(), [])
 
     def test_kpi_summary(self):
-        company_id = self.ref('base.main_company')
-        account_id = self.env['account.account'].search([('company_ids', '=', company_id)], limit=1)
         base_move = {
-            'company_id': company_id,
-            'invoice_line_ids': [Command.create({'account_id': account_id.id, 'quantity': 15, 'price_unit': 10})],
+            'company_id': self.company_id,
+            'invoice_line_ids': [Command.create({'account_id': self.suspense_account.id, 'quantity': 15, 'price_unit': 10})],
             'partner_id': self.partner_id.id,
         }
         self.env['account.move'].create(
@@ -49,11 +80,9 @@ class TestKpiProvider(TransactionCase):
         ])
 
     def test_kpi_summary_shouldnt_report_posted_moves(self):
-        company_id = self.ref('base.main_company')
-        account_id = self.env['account.account'].search([('company_ids', '=', company_id)], limit=1).id
         move = self.env['account.move'].create({
-            'company_id': company_id,
-            'invoice_line_ids': [Command.create({'account_id': account_id, 'quantity': 15, 'price_unit': 10})],
+            'company_id': self.company_id,
+            'invoice_line_ids': [Command.create({'account_id': self.income_account.id, 'quantity': 15, 'price_unit': 10})],
             'partner_id': self.partner_id.id,
             'move_type': 'out_invoice',
         })
@@ -65,11 +94,9 @@ class TestKpiProvider(TransactionCase):
         self.assertCountEqual(self.env['kpi.provider'].get_account_kpi_summary(), [])
 
     def test_kpi_summary_reports_posted_but_to_check_moves(self):
-        company_id = self.ref('base.main_company')
-        account_id = self.env['account.account'].search([('company_ids', '=', company_id)], limit=1).id
         move = self.env['account.move'].create({
-            'company_id': company_id,
-            'invoice_line_ids': [Command.create({'account_id': account_id, 'quantity': 15, 'price_unit': 10})],
+            'company_id': self.company_id,
+            'invoice_line_ids': [Command.create({'account_id': self.income_account.id, 'quantity': 15, 'price_unit': 10})],
             'partner_id': self.partner_id.id,
             'move_type': 'out_invoice',
         })
@@ -85,11 +112,9 @@ class TestKpiProvider(TransactionCase):
         self.assertCountEqual(self.env['kpi.provider'].get_account_kpi_summary(), [])
 
     def test_kpi_summary_reports_unreconciled_bank_statements(self):
-        company_id = self.ref('base.main_company')
-        account_id = self.env['account.account'].search([('company_ids', '=', company_id), ('account_type', '=', 'income')], limit=1).id
         move = self.env['account.move'].create({
-            'company_id': company_id,
-            'line_ids': [Command.create({'account_id': account_id, 'quantity': 15, 'price_unit': 10})],
+            'company_id': self.company_id,
+            'line_ids': [Command.create({'account_id': self.income_account.id, 'quantity': 15, 'price_unit': 10})],
             'partner_id': self.env.user.partner_id.id,
             'move_type': 'out_invoice',
         })
