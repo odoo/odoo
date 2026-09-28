@@ -80,6 +80,7 @@ class HrLeave(models.Model):
     _time_rule_span_end_field = 'date_to'
     _time_rule_write_ctx = {
         'skip_time_rules': True,
+        'skip_payroll_issues': True,
         'leave_fast_create': True,
         'leave_skip_date_check': True,
         'leave_skip_state_check': True,
@@ -282,7 +283,7 @@ class HrLeave(models.Model):
 
     time_rule_id = fields.Many2one('hr.time.rule', string="Time Rule", copy=False, index=True)
     source_leave_id = fields.Many2one('hr.leave', string="Source Leave", copy=False, index=True)
-    output_leave_ids = fields.One2many('hr.leave', 'source_leave_id')
+    output_leave_ids = fields.One2many('hr.leave', 'source_leave_id', domain=[('time_rule_id', '!=', False)])
     is_time_rule_trimmed = fields.Boolean(
         string='Trimmed by Time Rule', default=False, copy=False,
         help="Set when a time rule trims this leave's end to sub-day precision. "
@@ -1399,6 +1400,9 @@ class HrLeave(models.Model):
         if self.env.context.get('leave_skip_state_check'):
             return
         for holiday in self:
+            if holiday.source_leave_id or not holiday.active:
+                # engine output child or archived source; not gated by the normal approval flow
+                continue
             if holiday.state in ['validate1', 'validate']:
                 message = _(
                     "To modify an approved time off, make sure you unapprove it first (%(employee)s: %(date_from)s to %(date_to)s).",
@@ -1573,7 +1577,8 @@ class HrLeave(models.Model):
                 'message': self.env._('There is no valid allocation to cover this request for the following employees: %s', invalid_employee_names),
             })
         if self.env.context.get('leave_fast_create') and not self.env.context.get('skip_create_resource_leave'):
-            holidays.filtered(lambda l: l.state == 'validate')._create_resource_leave()
+            # exclude leaves archived by time rules during this create (their children already got RCLs)
+            holidays.filtered(lambda l: l.state == 'validate' and l.active)._create_resource_leave()
         if zero_duration_employees:
             self.env.user._bus_send('simple_notification', {
                 'type': 'danger',
@@ -1616,8 +1621,13 @@ class HrLeave(models.Model):
         state_invalidated = 'state' in values and values['state'] != 'validate'
         if validated_leaves and state_invalidated:
             validated_leaves._remove_resource_leave()
-            # Preserve allocation reversal logic from existing codebase
-            self.env['hr.time.rule']._reverse_allocation_credits('hr.leave', validated_leaves.ids)
+            # include output children: in the archive+create arch the alloc log points to
+            # the output child (res_id = child.id), not the archived source.
+            all_ids = set(validated_leaves.ids)
+            all_ids.update(
+                validated_leaves.with_context(active_test=False).mapped('output_leave_ids').ids
+            )
+            self.env['hr.time.rule']._reverse_allocation_credits('hr.leave', all_ids)
 
         employee_id = values.get('employee_id', False)
         if not self.env.context.get('leave_fast_create'):
@@ -1683,8 +1693,15 @@ class HrLeave(models.Model):
                 raise UserError(error_message % {'state': state_description_values.get(holiday.state)})
 
     def unlink(self):
+        if not self.env.context.get('skip_time_rules'):
+            orphaned = self._get_orphaned_sources_on_unlink()
+        else:
+            orphaned = self.browse()
         self._prepare_leave_unlink()
-        return super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
+        result = super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
+        if orphaned:
+            orphaned.with_context(active_test=False, skip_time_rules=True).sudo().unlink()
+        return result
 
     def _prepare_leave_unlink(self):
         self.env['hr.time.rule']._reverse_allocation_credits('hr.leave', self.ids)
@@ -1715,6 +1732,13 @@ class HrLeave(models.Model):
 
     def _get_source_extra_fields_domain(self):
         return [('state', '=', 'validate')]
+
+    @api.model
+    def _time_rule_wizard_extra_domain(self):
+        return [('state', '=', 'validate')]
+
+    def action_reprocess_time_rules(self):
+        return self.env['hr.time.rule.regenerate.wizard'].action_open_from_records(self)
 
     def _get_write_source_extra_source_fields(self):
         return {'work_entry_type_id', 'state'}

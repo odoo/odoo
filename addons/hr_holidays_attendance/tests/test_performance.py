@@ -11,7 +11,7 @@ from odoo.tests.common import tagged, TransactionCase
 _logger = logging.getLogger(__name__)
 
 
-@tagged('post_install', '-at_install', 'hr_attendance_perf')
+@tagged('post_install', '-at_install', 'hr_attendance_perf', 'time_rule_pipeline')
 class TestHrTimeRulePerformance(TransactionCase):
     """
     Performance test for the time-rule pipeline.
