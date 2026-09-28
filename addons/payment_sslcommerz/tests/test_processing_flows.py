@@ -51,17 +51,18 @@ class TestProcessingFlows(SSLCommerzCommon, PaymentHttpCommon):
         self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_sslcommerz.controllers.main")
-    def test_returning_from_payment_triggers_validation_call(self):
-        """Test that receiving a redirect notification with a val_id triggers a call to the
-        Order Validation API."""
+    def test_reject_notification_with_mismatching_reference(self):
+        """Test that a notification is rejected when the verified reference doesn't match the
+        transaction."""
         self._create_transaction("redirect")
         url = self._build_url(const.PAYMENT_RETURN_ROUTE)
+        verified_data = {**self.payment_data, "tran_id": "other_reference"}
         with patch(
             "odoo.addons.payment.models.payment_transaction.PaymentTransaction._send_api_request",
-            return_value=self.payment_data,
-        ) as send_request_mock:
-            self._make_http_post_request(url, data=self.payment_data)
-        self.assertEqual(send_request_mock.call_count, 1)
+            return_value=verified_data,
+        ):
+            response = self._make_http_post_request(url, data=self.payment_data)
+        self.assertEqual(response.status_code, 403)
 
     @mute_logger("odoo.addons.payment_sslcommerz.controllers.main")
     def test_missing_val_id_does_not_trigger_processing(self):

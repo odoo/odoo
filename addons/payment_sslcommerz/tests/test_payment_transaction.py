@@ -34,14 +34,6 @@ class TestPaymentTransaction(SSLCommerzCommon):
         }
         self.assertDictEqual(tx._sslcommerz_prepare_session_payload(), expected_payload)
 
-    def test_extract_reference_finds_reference(self):
-        """Test that the transaction reference is found in the payment data."""
-        tx = self._create_transaction("redirect")
-        reference = self.env["payment.transaction"]._extract_reference(
-            "sslcommerz", self.payment_data
-        )
-        self.assertEqual(tx.reference, reference)
-
     def test_extract_amount_data_returns_amount_and_currency(self):
         """Test that the amount and currency are returned from the payment data."""
         tx = self._create_transaction("redirect")
@@ -63,12 +55,12 @@ class TestPaymentTransaction(SSLCommerzCommon):
         tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
         self.assertEqual(tx.payment_method_id.code, "mastercard")
 
-    def test_apply_updates_sets_bkash_payment_method(self):
-        """Test that the bKash payment method is updated from the payment data."""
+    def test_apply_updates_sets_mobilebanking_payment_method(self):
+        """Test that the mobile banking payment method is updated from the payment data."""
         self.payment_data.update({"card_brand": "MOBILEBANKING"})
         tx = self._create_transaction("redirect")
         tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
-        self.assertEqual(tx.payment_method_id.code, "bkash")
+        self.assertEqual(tx.payment_method_id.code, "mobilebanking")
 
     def test_apply_updates_confirms_transaction(self):
         """Test that the transaction state is set to 'done' when the payment data indicate a

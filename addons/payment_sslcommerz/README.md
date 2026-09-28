@@ -19,7 +19,7 @@ submission provided by the `payment` module.
 ## Module history
 
 - `20.0`
-  - The first version of the module is merged. odoo/odoo#269048
+  - The first version of the module is merged. odoo/odoo#282882
 
 ## Testing instructions
 

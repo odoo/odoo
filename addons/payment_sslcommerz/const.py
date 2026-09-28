@@ -38,7 +38,7 @@ SUPPORTED_CURRENCIES = {
 }
 
 # The codes of the default primary payment methods to activate
-DEFAULT_PAYMENT_METHOD_CODES = {"bkash", "card", "netbanking"}
+DEFAULT_PAYMENT_METHOD_CODES = {"card", "mobilebanking", "netbanking"}
 
 # Mapping of payment method codes to SSLCOMMERZ codes.
 PAYMENT_METHODS_MAPPING = frozendict({
@@ -46,12 +46,8 @@ PAYMENT_METHODS_MAPPING = frozendict({
     "netbanking": "internetbank",
 })
 
-# The codes of the payment methods that map to a single SSLCOMMERZ channel. For these, the
-# customer can be redirected directly to that channel, skipping SSLCOMMERZ's own selection page.
-DIRECT_OPEN_PAYMENT_METHOD_CODES = {"bkash"}
-
 # Mapping of payment method codes to SSLCOMMERZ response codes
-PAYMENT_METHODS_RESPONSE_MAPPING = frozendict({"bkash": "mobilebanking", "netbanking": "ib"})
+PAYMENT_METHODS_RESPONSE_MAPPING = frozendict({"netbanking": "ib"})
 
 # Mapping of transaction states to SSLCOMMERZ payment statuses.
 PAYMENT_STATUS_MAPPING = frozendict({

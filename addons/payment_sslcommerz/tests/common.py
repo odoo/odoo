@@ -15,8 +15,6 @@ class SSLCommerzCommon(PaymentCommon):
             },
         )
         cls.provider = cls.sslcommerz
-        cls.currency_bdt = cls._enable_currency("BDT")
-        cls.currency = cls.currency_bdt
 
         cls.payment_data = {
             "tran_id": cls.reference,

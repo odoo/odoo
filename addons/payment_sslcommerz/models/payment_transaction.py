@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
 
@@ -33,18 +33,12 @@ class PaymentTransaction(models.Model):
             self._set_error(str(error))
             return {}
 
-        if self.payment_method_code in const.DIRECT_OPEN_PAYMENT_METHOD_CODES:
-            available_gateways = {gw.get("gw") for gw in session_data.get("desc", [])}
-            if self.payment_method_code not in available_gateways:
-                self._set_error(self.env._("This payment method is currently unavailable."))
-                return {}
-            api_url = session_data["redirectGatewayURL"]
-            url_params = payment_utils.extract_url_params(api_url)
-            url_params["cardname"] = self.payment_method_code
-        else:
-            api_url = session_data["GatewayPageURL"]
-            url_params = payment_utils.extract_url_params(api_url)
-        return {"api_url": api_url, "http_method": "get", "url_params": url_params}
+        api_url = session_data["GatewayPageURL"]
+        return {
+            "api_url": api_url,
+            "http_method": "get",
+            "url_params": payment_utils.extract_url_params(api_url),
+        }
 
     def _sslcommerz_prepare_session_payload(self):
         """Create the payload for the hosted checkout session request.
@@ -66,20 +60,13 @@ class PaymentTransaction(models.Model):
             "fail_url": return_url,
             "cancel_url": return_url,
             "ipn_url": urls.urljoin(base_url, const.IPN_ROUTE),
-            "cus_name": self.partner_name or "",
+            "cus_name": (self.partner_name or "")[:50],
             "cus_email": self.partner_email or "",
             "product_name": "Odoo Product",
             "product_category": "general",
             "product_profile": "non-physical-goods",
             "multi_card_name": const.PAYMENT_METHODS_MAPPING.get(pm_code, pm_code),
         }
-
-    @api.model
-    def _extract_reference(self, provider_code, payment_data):
-        """Override of `payment` to extract the reference from the payment data."""
-        if provider_code != "sslcommerz":
-            return super()._extract_reference(provider_code, payment_data)
-        return payment_data.get("tran_id")
 
     def _extract_amount_data(self, payment_data):
         """Override of `payment` to extract the amount and currency from the payment data."""
@@ -97,24 +84,18 @@ class PaymentTransaction(models.Model):
             return super()._apply_updates(payment_data)
 
         self.provider_reference = payment_data.get("bank_tran_id")
-
         card_brand = (payment_data.get("card_brand") or "").lower()
         payment_method = self.provider_id._get_pm_from_code(
             card_brand, mapping=const.PAYMENT_METHODS_RESPONSE_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
-
         status = payment_data.get("status")
         if status in const.PAYMENT_STATUS_MAPPING["done"]:
             self._set_done()
         elif status in const.PAYMENT_STATUS_MAPPING["cancel"]:
             self._set_canceled()
         elif status in const.PAYMENT_STATUS_MAPPING["error"]:
-            self._set_error(
-                self.env._(
-                    "%(code)s: %(explanation)s.", code=status, explanation=payment_data.get("error")
-                )
-            )
+            self._set_error(self.env._("The payment failed with status: %s", status))
         else:
             _logger.warning(
                 "Received data with invalid payment status (%s) for transaction %s.",

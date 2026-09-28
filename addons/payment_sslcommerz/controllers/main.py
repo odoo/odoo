@@ -59,7 +59,7 @@ class SSLCommerzController(http.Controller):
         else:
             _logger.warning("Received notification data with missing val_id.")
 
-        return ""
+        return ""  # Acknowledge the notification.
 
     def _verify_and_process(self, tx_ref, val_id):
         """Verify the payment data with the Order Validation API and process it.
@@ -72,7 +72,7 @@ class SSLCommerzController(http.Controller):
             self
             .env["payment.transaction"]
             .sudo()
-            ._search_by_reference("sslcommerz", {"tran_id": tx_ref})
+            ._search_by_reference("sslcommerz", {"reference": tx_ref})
         )
         if not tx_sudo:
             return
