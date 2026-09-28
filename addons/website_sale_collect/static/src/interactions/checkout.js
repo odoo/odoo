@@ -1,4 +1,3 @@
-import { _t } from '@web/core/l10n/translation';
 import { patch } from '@web/core/utils/patch';
 import { patchDynamicContent } from '@web/public/utils';
 import { rpc } from '@web/core/network/rpc';
@@ -10,22 +9,6 @@ patch(Checkout.prototype, {
         patchDynamicContent(this.dynamicContent, {
             '.js_wsc_update_product_qty': { 't-on-click': this.onClickUpdateProductQty.bind(this) },
         });
-        this.deliveryAddressTitle = this.el.querySelector('[name="delivery_address_title"]');
-        if (this.deliveryAddressTitle) {
-            this.deliveryTitle = this.deliveryAddressTitle.textContent;
-            this.useDeliveryAsBillingLabel = this.el.querySelector(
-                '[name="use_delivery_as_billing_text"]'
-            );
-            this.useDeliveryAsBillingLabelText = this.useDeliveryAsBillingLabel.textContent;
-            this.inStoreTitle = _t('Contact Details');
-            this.useDeliveryAsBillingLabelInStoreText = _t('Same as contact details');
-            this._adaptDeliveryTitles();
-        }
-    },
-
-    async selectDeliveryMethod(ev) {
-        this._adaptDeliveryTitles();
-        await super.selectDeliveryMethod(...arguments);
     },
 
     /**
@@ -43,27 +26,6 @@ patch(Checkout.prototype, {
     },
 
     // #=== DOM MANIPULATION ===#
-
-    /**
-     * Change the delivery address title and the 'use delivery as billing' label depending on the
-     * selected delivery method.
-     *
-     * @private
-     * @return {void}
-     */
-    _adaptDeliveryTitles() {
-        const checkedRadio = this._getSelectedDeliveryRadio();
-        if (!checkedRadio || !this.deliveryAddressTitle || !this.useDeliveryAsBillingLabel) {
-            return;
-        }
-        if (checkedRadio.dataset.deliveryType === 'in_store') {
-            this.deliveryAddressTitle.textContent = this.inStoreTitle;
-            this.useDeliveryAsBillingLabel.textContent = this.useDeliveryAsBillingLabelInStoreText;
-        } else {
-            this.deliveryAddressTitle.textContent = this.deliveryTitle;
-            this.useDeliveryAsBillingLabel.textContent = this.useDeliveryAsBillingLabelText;
-        }
-    },
 
     /**
      * Add country selector specific data to location selector.
