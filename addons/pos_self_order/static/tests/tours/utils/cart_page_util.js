@@ -167,22 +167,6 @@ export function cancelOrder() {
     ];
 }
 
-export function checkSlotUnavailable(slotValue) {
-    return {
-        content: `Check that the ${slotValue} slot is not available`,
-        trigger: `.self_order_pills_selection_popup`,
-        run: () => {
-            const slots = Array.from(
-                document.querySelectorAll(".self_order_pills_selection_popup .option-item")
-            );
-            const firstSlotText = slots[0]?.textContent.trim();
-            if (firstSlotText === slotValue) {
-                throw new Error(`${slotValue} should not be available`);
-            }
-        },
-    };
-}
-
 export function isShown() {
     return {
         trigger: `.o_self_cart_page`,

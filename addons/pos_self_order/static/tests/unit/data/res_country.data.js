@@ -3,6 +3,6 @@ import { ResCountry } from "@point_of_sale/../tests/unit/data/res_country.data";
 
 patch(ResCountry.prototype, {
     _load_pos_self_data_fields() {
-        return ["id", "name", "code", "vat_label", "state_ids"];
+        return ["id", "name", "code", "vat_label", "state_ids", "phone_code"];
     },
 });
