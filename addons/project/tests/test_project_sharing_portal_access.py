@@ -10,6 +10,7 @@ from odoo import Command
 from odoo.tools import mute_logger, config
 from odoo.exceptions import AccessError
 from odoo.tests import HttpCase, tagged
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 from .test_project_sharing import TestProjectSharingCommon
 
@@ -228,6 +229,23 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         task = self.env["project.task"].with_user(self.user_portal).with_context(default_project_id=self.project_portal.id).create({'name': 'Task created by portal_user'})
         self.assertIn(self.user_portal.partner_id, task.sudo().message_partner_ids)
         self.assertIn(self.user_projectmanager.partner_id, task.sudo().message_partner_ids)
+
+    def test_display_follow_button(self):
+        """ The follow button is displayed for project users (e.g. customer
+        preview) and for portal collaborators, but not for internal users
+        without access to Project nor for portal users who do not collaborate
+        on the project. The value depends on the current user, so it must not
+        be shared between users reading the same task. """
+        user_internal = mail_new_test_user(self.env, 'internal_no_project', groups='base.group_user')
+        user_portal_not_collaborator = mail_new_test_user(self.env, 'portal_not_collaborator', groups='base.group_portal')
+        for user, expected in (
+            (self.user_projectuser, True),
+            (self.user_portal, True),
+            (user_internal, False),
+            (user_portal_not_collaborator, False),
+        ):
+            with self.subTest(user=user.login):
+                self.assertEqual(self.task_portal.with_user(user).display_follow_button, expected)
 
 
 @tagged('post_install', '-at_install')
