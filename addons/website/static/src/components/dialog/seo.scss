@@ -1,8 +1,15 @@
 .oe_seo_configuration {
     --seo__preview-title-color: #1a0dab; /* Google Search color */
 
-    > .modal-body {
-        padding-top: 0;
+    .modal-body {
+        @media (prefers-reduced-motion: no-preference) {
+            scroll-behavior: smooth;
+        }
+    }
+
+    .o_seo_overview {
+        margin: calc(var(--modal-padding) * -1) calc(var(--modal-padding) * -1) 0;
+        padding: var(--modal-padding);
     }
 
     #language-box {
@@ -15,73 +22,43 @@
     }
 
     .o_seo_og_image {
+        --seoImage__meta-img-size: calc(var(--o-bs-spacer-5) * 2);
+
+        .o_meta_img, .o_meta_img_upload {
+            width: var(--seoImage__meta-img-size);
+            height: var(--seoImage__meta-img-size);
+            transition: var(--o-bs-transition-base);
+            transition-property: border-color, color;
+
+            &:focus-visible {
+                outline: calc(var(--o-bs-border-width) * 2) solid var(--o-action);
+            }
+        }
+
         .o_meta_img {
-            position: relative;
-            transition: border-color 200ms;
-            display: inline-block;
-            border: 2px solid var(--gray-400);
+            border: var(--o-bs-border-width) solid var(--border-color);
 
-            > img {
-                width: 70px;
-                height: 70px;
-                object-fit: cover;
-                cursor: pointer;
-            }
-
-            &:hover, &:focus-visible {
-                border-color: var(--o-brand-primary);
-            }
-
-            &.o_active_image {
-                border-color: var(--o-brand-primary);
-
-                &:before {
-                    position: absolute;
-                    top: auto;
-                    left: auto;
-                    bottom: auto;
-                    right: 0;
-                    content: '';
-                    border: 16px solid color-mix(in srgb, var(--o-brand-primary) 80%, transparent);
-                    border-left-color: transparent;
-                    border-bottom-color: transparent;
-                }
-
-                &:after {
-                    position: absolute;
-                    top: 2px;
-                    left: auto;
-                    bottom: auto;
-                    right: 3px;
-                    display: inline-block;
-                    content: "check";
-                    font-family: var(--icon-font-family, "Material Symbols Outlined");
-                    color: white;
-                    font-size: 12px;
-                }
+            &:hover, &.o_active_image {
+                border-color: var(--o-action);
             }
 
             .o-custom-label {
-                position: absolute;
-                inset: auto auto 0px;
-                cursor: pointer;
                 background: color-mix(in srgb, var(--gray-800) 60%, transparent);
-                font-size: 12px;
+            }
+
+            .o_meta_img_check {
+                border-bottom-left-radius: var(--border-radius);
             }
         }
 
         .o_meta_img_upload {
-            cursor: pointer;
-            transition: 200ms;
-            display: inline-block;
-            padding: 23px 27px;
-            border: 3px dashed lighten(map-get($grays, '700'), 30%);
-            vertical-align: top;
-            color: lighten(map-get($grays, '600'), 30%);
+            --#{$prefix}border-style: dashed;
+
+            color: var(--seoImage__meta-img-upload-color, var(--o-bs-text-muted));
 
             &:hover, &:focus-visible {
-                border-color: var(--o-brand-primary);
-                color: var(--o-brand-primary);
+                --#{$prefix}border-color: var(--o-action);
+                --seoImage__meta-img-upload-color: var(--o-action);
             }
         }
 
@@ -96,14 +73,9 @@
         font-family: arial, sans-serif;
 
         .o_seo_preview_r {
-            cursor: pointer;
             color:var(--seo__preview-title-color);
             font-size: 20px;
             line-height: 32px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            -webkit-text-overflow: ellipsis;
-            white-space: nowrap;
         }
 
         .o_seo_preview_s {
@@ -115,34 +87,21 @@
             }
         }
 
-        .o_seo_preview_q {
-            flex: 1 1 auto;
-            min-width: 0;
-        }
-
         .o_seo_preview_g {
-            overflow: hidden;
             background-color: rgba(0,0,0,0.05);
             border-radius: 8px;
             width: 92px;
             height: 92px;
-
-            .o_seo_preview_i {
-                height: 100%;
-                width: 100%;
-                object-fit: cover;
-            }
         }
 
         .o_seo_preview_l {
             height: 28px;
             width: 28px;
-            margin-right: 12px;
         }
     }
 
-    td.o_seo_keyword_suggestion span.o_seo_suggestion.badge {
-        cursor: pointer;
+    .o_seo_mentioned_keyword, [data-icon="help"] {
+        cursor: help;
     }
 
     .o_seo_images_check {
@@ -153,27 +112,14 @@
         }
 
         .o_seo_checks_overlay {
-            position: absolute;
-            inset: 0;
             z-index: 5;
             background-color: color-mix(in srgb, var(--o-view-background-color) 50%, transparent);
             backdrop-filter: blur(1.4px);
         }
     }
-    .oe_remove:hover {
-        opacity: 0.7;
-    }
-    .o_seo_mentioned_keyword {
-        width: 30px;
-    }
-    .o_seo_keyword_row {
-        border-bottom: 1px dotted var(--gray-300);
-    }
     .o-img-thumbnail {
         width: 70px;
         height: 70px;
-        object-fit: cover;
-        border: 1px solid var(--gray-300);
     }
 
     /* We don't use a specific class here to highlight the fact that the */
