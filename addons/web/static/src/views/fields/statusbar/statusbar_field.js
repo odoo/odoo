@@ -93,7 +93,7 @@ export class StatusBarField extends Component {
         });
 
         const throttledRenderAndAdapt = useThrottleForAnimation(() => {
-            if (this.rootRef()) {
+            if (this.rootRef.el) {
                 adjust();
             }
         });
