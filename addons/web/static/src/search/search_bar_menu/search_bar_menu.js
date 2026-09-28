@@ -268,7 +268,7 @@ export class SearchBarMenu extends Component {
         try {
             await navigator.clipboard.writeText(shareUrl);
         } catch {
-            // Can fail in some context like if the browser is unsafe.
+            // Can fail if the clipboard permission is denied or the document is not focused.
             this.dialogService.add(AlertDialog, {
                 title: _t("Share the current view"),
                 body: _t(

@@ -1,6 +1,5 @@
 import { proxy } from "@odoo/owl";
 
-import { location } from "@web/core/browser/browser";
 import {
     isAndroidApp,
     isDisplayStandalone,
@@ -11,9 +10,6 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 async function getIosPwaPermission() {
-    if (location.protocol !== "https:") {
-        return "denied";
-    }
     const registration = await window.navigator.serviceWorker?.getRegistration();
     return (await registration?.pushManager.permissionState()) ?? "prompt";
 }

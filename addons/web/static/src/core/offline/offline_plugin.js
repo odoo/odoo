@@ -10,7 +10,6 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { Crypto, CRYPTO_ALGO } from "@web/core/crypto";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { NonSecureContextError } from "@web/core/errors/non_secure_context_error";
 import { _t } from "@web/core/l10n/translation";
 import { normalize } from "@web/core/l10n/utils";
 import { ConnectionLostError, rpc, rpcBus } from "@web/core/network/rpc";
@@ -23,22 +22,6 @@ import { session } from "@web/session";
 
 const IS_READY = Symbol("ready");
 
-class FakeIndexedDB {
-    // used in non secure context to disable the offline features as data can't be encrypted
-    invalidate() {}
-    read() {
-        return Promise.resolve({});
-    }
-    write() {}
-    delete() {}
-    getAllKeys() {
-        return Promise.resolve([]);
-    }
-    getAllEntries() {
-        return Promise.resolve([]);
-    }
-}
-
 export class OfflinePlugin extends Plugin {
     static VISITED_UI_TABLE_NAME = "visited-ui-items";
     static VISITED_UI_TABLE_NAME_DEBUG = "visited-ui-items-debug";
@@ -50,13 +33,8 @@ export class OfflinePlugin extends Plugin {
     debugMode = usePlugin(DebugModePlugin);
     orm = usePlugin(ORM);
 
-    _idb = window.isSecureContext
-        ? markRaw(new IndexedDB("offline", session.registry_hash + CRYPTO_ALGO))
-        : new FakeIndexedDB();
-    _crypto =
-        window.isSecureContext &&
-        session.browser_cache_secret &&
-        new Crypto(session.browser_cache_secret);
+    _idb = markRaw(new IndexedDB("offline", session.registry_hash + CRYPTO_ALGO));
+    _crypto = session.browser_cache_secret && new Crypto(session.browser_cache_secret);
     _visitedUITable = computed(() =>
         this.debugMode.isActive()
             ? OfflinePlugin.VISITED_UI_TABLE_NAME_DEBUG
@@ -269,11 +247,6 @@ export class OfflinePlugin extends Plugin {
     // -------------------------------------------------------------------------
 
     scheduleORM(model, method, args, kwargs, options) {
-        if (!window.isSecureContext) {
-            throw new NonSecureContextError(
-                _t("Offline features not available in a non-secure context")
-            );
-        }
         const value = { model, method, args, kwargs, extras: options.extras };
         const key = options.id ?? hashCode(JSON.stringify(value));
         this._ormToSync()[key] = { key, value };
@@ -434,12 +407,7 @@ export class OfflinePlugin extends Plugin {
     // -------------------------------------------------------------------------
 
     async _syncORM() {
-        if (!window.isSecureContext) {
-            return;
-        }
-
         // Only one tab can execute this block at a time
-        // This can only be done in a secure context
         await navigator.locks.request("db-sync", async () => {
             this.syncingORM.set(true);
             await this._updateScheduledORMList();

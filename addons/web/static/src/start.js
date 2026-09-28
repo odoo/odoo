@@ -3,7 +3,6 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { localization } from "@web/core/l10n/localization";
 import { user } from "@web/core/user";
 import { session } from "@web/session";
-import { _t } from "./core/l10n/translation";
 import { rpc } from "./core/network/rpc";
 import { isRPCCacheDisabled, RPCCache } from "./core/network/rpc_cache";
 import { mountComponent } from "./env";
@@ -33,20 +32,12 @@ export async function startWebClient(Webclient) {
     };
     odoo.isReady = false;
 
-    if (window.isSecureContext && session.browser_cache_secret && !isRPCCacheDisabled()) {
+    if (session.browser_cache_secret && !isRPCCacheDisabled()) {
         rpc.setCache(new RPCCache("rpc", session.registry_hash, session.browser_cache_secret));
     }
 
     await whenReady();
     await mountComponent(Webclient, document.body, { name: "Odoo Web Client" });
-
-    if (!window.isSecureContext) {
-        console.error(
-            _t(
-                "You are currently using a non-secure context. As a result, some Odoo features may be unavailable or function improperly. For more information, please visit: https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Secure_Contexts"
-            )
-        );
-    }
 
     const classList = document.body.classList;
     if (localization.direction === "rtl") {
