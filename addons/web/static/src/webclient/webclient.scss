@@ -104,7 +104,8 @@ kbd {
 
     &:not(.dropdown-item_active_noarrow) {
       &:before {
-        @include o-position-absolute(0);
+        position: absolute;
+        inset: 0 auto auto;
         transform: translate(-1.25em, 50%);
         font: 1em/1 "Material Symbols Outlined";
         color: $link-color;
@@ -122,7 +123,11 @@ kbd {
 .o-dropdown.dropstart > .dropdown-item.dropdown-toggle:not(.dropdown-item_active_noarrow) {
   &.active, &.selected {
     &::after {
-      @include o-position-absolute(0, $left: 90%);
+      position: absolute;
+      top: 0;
+      left: 90%;
+      bottom: auto;
+      right: auto;
       transform: translate(0, 50%);
       font: 1em/1 "Material Symbols Outlined";
       color: $link-color;

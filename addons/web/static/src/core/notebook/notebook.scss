@@ -121,7 +121,8 @@
 
     @include media-breakpoint-down(lg) {
         .o_notebook_content .oe-toolbar {
-            @include o-position-sticky($top: 0px);
+            position: sticky;
+            inset: 0px auto auto;
             margin-left: var(--Notebook-margin-x, $o-horizontal-padding);
             margin-right: var(--Notebook-margin-x, $o-horizontal-padding);
             width: auto;

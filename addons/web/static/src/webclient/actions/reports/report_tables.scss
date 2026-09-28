@@ -167,7 +167,11 @@ div#total {
             /* Position absolute will place the pseudo-element */
             /* above the table. We need to prevent events on this pseudo-element */
             /* to avoid messing up eventual user interaction with the table itself (report editor) */
-            @include o-position-absolute(0, 0, 0, 0);
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
             pointer-events: none;
             border: $border-width solid $gray-700;
         }

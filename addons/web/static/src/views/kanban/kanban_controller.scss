@@ -282,7 +282,8 @@
             display: flex !important;
         }
         .o_quick_create_title {
-            @include o-position-absolute(map-get($spacers, 4));
+            position: absolute;
+            inset: map-get($spacers, 4) auto auto;
             transform-origin: left bottom 0;
             transform: rotate(90deg);
             overflow: visible;
@@ -340,7 +341,8 @@
             }
 
             .o_column_title {
-                @include o-position-absolute(map-get($spacers, 3));
+                position: absolute;
+                inset: map-get($spacers, 3) auto auto;
                 transform-origin: left bottom 0;
                 transform: rotate(90deg);
                 overflow: visible;

@@ -36,7 +36,11 @@
                 border-color: $o-brand-primary;
 
                 &:before {
-                    @include o-position-absolute($right: 0);
+                    position: absolute;
+                    top: auto;
+                    left: auto;
+                    bottom: auto;
+                    right: 0;
                     content: '';
                     border: 16px solid rgba($o-brand-primary, 0.8);
                     border-left-color: transparent;
@@ -44,7 +48,11 @@
                 }
 
                 &:after {
-                    @include o-position-absolute(2px, 3px);
+                    position: absolute;
+                    top: 2px;
+                    left: auto;
+                    bottom: auto;
+                    right: 3px;
                     display: inline-block;
                     content: "check";
                     font-family: var(--icon-font-family, "Material Symbols Outlined");
@@ -54,7 +62,8 @@
             }
 
             .o-custom-label {
-                @include o-position-absolute($bottom: 0px);
+                position: absolute;
+                inset: auto auto 0px;
                 cursor: pointer;
                 background: rgba(map-get($grays, '800'), 0.6);
                 font-size: 12px;
@@ -144,7 +153,8 @@
         }
 
         .o_seo_checks_overlay {
-            @include o-position-absolute(0, 0, 0, 0);
+            position: absolute;
+            inset: 0;
             z-index: 5;
             background-color: rgba($o-view-background-color, 0.5);
             backdrop-filter: blur(1.4px);

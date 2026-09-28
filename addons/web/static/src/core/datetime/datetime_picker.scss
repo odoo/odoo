@@ -88,7 +88,8 @@
         }
 
         &:not([disabled])::before {
-            @include o-position-absolute(0,0,0,0);
+            position: absolute;
+            inset: 0;
 
             content: '';
             aspect-ratio: 1;

@@ -19,7 +19,11 @@
         cursor: pointer;
     }
     .o_slider_pointer, .o_opacity_pointer {
-        @include o-position-absolute($left: -50%);
+        position: absolute;
+        top: auto;
+        left: -50%;
+        bottom: auto;
+        right: auto;
         width: 200%;
         height: 8px;
         margin-top: -2px;

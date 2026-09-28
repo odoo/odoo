@@ -106,7 +106,11 @@
     .o_field_hr_presence_status, .o_field_hr_presence_status_private {
         --o-hr-presence-badge-size: #{$spacer};
 
-        @include o-position-absolute($top: 0, $right: 0);
+        position: absolute;
+        top: 0;
+        left: auto;
+        bottom: auto;
+        right: 0;
         z-index: 1;
         display: flex;
         align-items: center;

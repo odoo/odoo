@@ -36,7 +36,8 @@
 
     /* Main scroll container for gesture handling */
     .o_bottom_sheet_rail {
-        @include o-position-absolute(0, 0, 0, 0);
+        position: absolute;
+        inset: 0;
         overflow-y: auto;
         scrollbar-width: none;
         touch-action: pan-y;
@@ -212,7 +213,11 @@
         }
 
         &::after {
-            @include o-position-absolute(50%, $list-group-item-padding-x);
+            position: absolute;
+            top: 50%;
+            left: auto;
+            bottom: auto;
+            right: $list-group-item-padding-x;
             transform: translateY(-50%);
             color: var(--BottomSheetStatusBar__entry-caret--active, $o-action);
             text-rendering: auto;
@@ -266,7 +271,11 @@
             border: unset;
             transform: unset;
 
-            @include o-position-absolute(var(--dropdown-item-padding-y), $list-group-item-padding-x);
+            position: absolute;
+            top: var(--dropdown-item-padding-y);
+            left: auto;
+            bottom: auto;
+            right: $list-group-item-padding-x;
             padding-block: map-get($spacers, 2);
             text-rendering: auto;
             font: normal normal normal 14px/1 'Material Symbols Outlined';

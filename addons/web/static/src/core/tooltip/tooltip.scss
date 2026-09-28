@@ -1,5 +1,7 @@
 [data-text-truncate-tooltip] {
-    @include text-truncate();
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     /* Prevent Chrome from revealing truncated text on click. */
     user-select: none;
 }

@@ -31,7 +31,11 @@
     z-index: $o-mail-ChatWindow-zindex + 1;
 
     .arrow {
-        @include o-position-absolute(50%, $grid-gutter-width*0.5);
+        position: absolute;
+        top: 50%;
+        left: auto;
+        bottom: auto;
+        right: $grid-gutter-width*0.5;
         border-radius: 100%;
         padding: 12px 16px 11px 18px;
         @include o-FileViewer-arrow;

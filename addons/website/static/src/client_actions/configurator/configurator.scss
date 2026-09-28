@@ -1,5 +1,6 @@
 .o_configurator_container {
-    @include o-position-absolute(0, 0, 0, 0);
+    position: absolute;
+    inset: 0;
     background-color: if(
         $o-webclient-color-scheme == dark,
         $o-webclient-background-color,
@@ -149,7 +150,8 @@
 
         &.o_description_screen {
             &:before {
-                @include o-position-absolute(0, 0, 0, 0);
+                position: absolute;
+                inset: 0;
                 background: linear-gradient(to right, $o-webclient-background-color 50%, transparent);
                 content: '';
             }
@@ -225,7 +227,11 @@
                     transition: all 300ms ease;
 
                     [data-icon="keyboard_arrow_down"] {
-                        @include o-position-absolute($right: 0);
+                        position: absolute;
+                        top: auto;
+                        left: auto;
+                        bottom: auto;
+                        right: 0;
                         opacity:0;
                     }
 
@@ -411,7 +417,11 @@
                 }
             }
             .o_configurator_feature_status {
-                @include o-position-absolute($card-spacer-y * 0.5 , $card-spacer-x * 0.5);
+                position: absolute;
+                top: $card-spacer-y * 0.5;
+                left: auto;
+                bottom: auto;
+                right: $card-spacer-x * 0.5;
             }
         }
 
@@ -471,7 +481,8 @@
 
             .button_area,
             .theme_svg_container {
-                @include o-position-absolute(0, 0, 0, 0);
+                position: absolute;
+                inset: 0;
             }
 
             .button_area {

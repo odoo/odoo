@@ -43,7 +43,11 @@
 
     /* Records colours */
     .o_kanban_record_colored:after {
-        @include o-position-absolute(0, auto, 0, -$border-width);
+        position: absolute;
+        top: 0;
+        left: -$border-width;
+        bottom: 0;
+        right: auto;
         content: "";
     }
 
