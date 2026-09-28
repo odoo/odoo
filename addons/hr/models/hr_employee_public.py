@@ -50,6 +50,10 @@ class HrEmployeePublic(models.Model):
     parent_id = fields.Many2one('hr.employee.public', 'Manager', readonly=True)
     coach_id = fields.Many2one('hr.employee.public', 'Coach', readonly=True)
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
+    has_cross_company_relation = fields.Boolean(
+        string="Has Cross-Company Manager or Coach",
+        compute="_compute_has_cross_company_relation",
+    )
 
     @api.depends_context('uid')
     @api.depends('parent_id')
@@ -57,6 +61,14 @@ class HrEmployeePublic(models.Model):
         all_reports = self.env['hr.employee.public'].search([('id', 'child_of', self.env.user.employee_id.id)]).ids
         for employee in self:
             employee.is_manager = employee.id in all_reports
+
+    def _compute_has_cross_company_relation(self):
+        allowed_companies = self.env.companies
+        for employee in self:
+            employee.has_cross_company_relation = bool(
+                (employee.parent_id and employee.parent_id.sudo().company_id not in allowed_companies) or
+                (employee.coach_id and employee.coach_id.sudo().company_id not in allowed_companies)
+            )
 
     def _get_manager_only_fields(self):
         return []
