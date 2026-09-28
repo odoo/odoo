@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 from odoo.tools import SQL
 
 
@@ -16,6 +17,8 @@ class ResUsers(models.Model):
     bronze_badge = fields.Integer('Bronze badges count', compute="_get_user_badge_level")
     rank_id = fields.Many2one('gamification.karma.rank', 'Rank', index='btree_not_null')
     next_rank_id = fields.Many2one('gamification.karma.rank', 'Next Rank')
+
+    _active_karma_idx = models.Index('(karma DESC) WHERE active IS TRUE AND karma > 1')
 
     @api.depends('karma_tracking_ids.new_value')
     def _compute_karma(self):
@@ -240,8 +243,12 @@ WHERE final.user_id IN %s""",
         """
         if not self:
             return {}
-
-        where_query = self.env['res.users']._search(user_domain, bypass_access=True)
+        domain = Domain.AND([
+            user_domain,
+            # we only need to rank users with equal or more karma. No need to rank all of them
+            [('karma', '>=', min(self.mapped('karma')))],
+        ])
+        where_query = self.env['res.users']._search(domain, bypass_access=True)
 
         # we search on every user in the DB to get the real positioning (not the one inside the subset)
         # then, we filter to get only the subset.
@@ -251,7 +258,7 @@ FROM %s AS sub
 WHERE sub.user_id IN %s""",
             where_query.subselect(
                 SQL("%s as user_id", where_query.table.id),
-                SQL("row_number() OVER (ORDER BY res_users.karma DESC) AS karma_position"),
+                SQL("row_number() OVER (ORDER BY res_users.karma DESC, res_users.id DESC) AS karma_position"),
             ),
             tuple(self.ids),
         )
