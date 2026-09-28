@@ -10,6 +10,7 @@ from odoo import Command
 from odoo.tools import mute_logger, config
 from odoo.exceptions import AccessError
 from odoo.tests import HttpCase, tagged
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 from .test_project_sharing import TestProjectSharingCommon
 
@@ -182,6 +183,35 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         task = self.env["project.task"].with_user(self.user_portal).with_context(default_project_id=self.project_portal.id).create({'name': 'Task created by portal_user'})
         self.assertIn(self.user_portal.partner_id, task.sudo().message_partner_ids)
         self.assertIn(self.user_projectmanager.partner_id, task.sudo().message_partner_ids)
+
+    def test_display_follow_button(self):
+        """ The follow button is displayed for project users (e.g. customer
+        preview) and for portal users with Edit access, but not for internal
+        users without access to Project nor for portal users with limited
+        access. The value depends on the current user, so it must not be
+        shared between users reading the same task. """
+        user_internal = mail_new_test_user(self.env, 'internal_no_project', groups='base.group_user')
+        for user, expected in (
+            (self.user_projectuser, True),
+            (self.user_portal, True),
+            (user_internal, False),
+        ):
+            with self.subTest(user=user.login):
+                self.assertEqual(self.task_portal.with_user(user).display_follow_button, expected)
+
+        # The internal user without access to Project cannot follow the task
+        # from project sharing, hence the hidden button.
+        with self.assertRaises(AccessError):
+            self.task_portal.with_user(user_internal).project_sharing_toggle_is_follower()
+
+        # Switch the portal user, the only collaborator, to limited access.
+        self.project_portal.collaborator_ids.limited_access = True
+        task = self.task_portal.with_user(self.user_portal)
+        task.invalidate_recordset(['display_follow_button'])
+        self.assertFalse(
+            task.display_follow_button,
+            "The follow button should not be displayed for a portal user with limited access.",
+        )
 
 
 class TestProjectSharingChatterAccess(TestProjectSharingCommon, HttpCase):

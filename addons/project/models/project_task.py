@@ -736,9 +736,10 @@ class ProjectTask(models.Model):
         for task in self:
             task.current_user_same_company_partner = task.partner_id and commercial_partner_id == task.partner_id.commercial_partner_id
 
+    @api.depends_context('uid')
     def _compute_display_follow_button(self):
         if not self.env.user.share:
-            self.display_follow_button = False
+            self.display_follow_button = self.env.user.has_group('project.group_project_user')
             return
         project_collaborator_read_group = self.env['project.collaborator']._read_group(
             [('project_id', 'in', self.project_id.ids), ('partner_id', '=', self.env.user.partner_id.id)],
