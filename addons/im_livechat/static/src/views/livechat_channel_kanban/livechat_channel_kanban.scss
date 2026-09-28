@@ -1,8 +1,13 @@
 .o-livechat-ChannelKanban-highlighted {
-    background-color: $o-component-active-bg !important;
-    color: $o-component-active-color;
+    --Avatar-size: 24px; 
 
-    &::before {
-        background-color: $o-component-active-bg !important;
+    &::after {
+        @include o-position-absolute(0, auto, 0, 0);
+        width: 3px;
+        border-right: 4px solid transparent;
+        border-top-left-radius: var(--border-radius-lg);
+        border-bottom-left-radius: var(--border-radius-lg);
+        border-left: 3px solid var(--os-action-color);
+        content: "";
     }
 }
