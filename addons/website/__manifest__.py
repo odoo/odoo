@@ -50,6 +50,7 @@
         'views/snippets/s_image_text_box.xml',
         'views/snippets/s_striped_top.xml',
         'views/snippets/s_text_image.xml',
+        'views/snippets/s_dummy_snippet.xml',
         'views/snippets/s_image_text.xml',
         'views/snippets/s_mockup_image.xml',
         'views/snippets/s_instagram_page.xml',
