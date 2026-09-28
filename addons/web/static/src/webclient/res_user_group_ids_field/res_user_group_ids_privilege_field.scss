@@ -6,8 +6,8 @@
     }
 
     .o_is_disjoint:not(.o_is_implied) .o-checkbox > input {
-        background-color: $danger;
-        border-color: $danger;
+        background-color: var(--danger);
+        border-color: var(--danger);
     }
     .o_is_implied:not(.o_is_disjoint) .o-checkbox > input {
         @include o-custom-checkbox($form-check-input-checked-bg-color);

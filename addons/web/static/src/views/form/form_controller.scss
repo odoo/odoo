@@ -288,7 +288,7 @@
             position: sticky;
             top: 0;
             z-index: $zindex-sticky;
-            background-color: $body-bg;
+            background-color: var(--body-bg);
 
             .modal & {
                 --formView-statusbar-padding-top: #{map-get($spacers, 2)};
@@ -478,7 +478,7 @@
 
     /* Separators */
     .o_horizontal_separator {
-        color: $gray-700;
+        color: var(--gray-700);
 
         &:not(:empty) {
             box-shadow: 0 $border-width 0 $o-form-separator-color;
@@ -586,7 +586,7 @@
     /* Labels */
     .o_form_label {
         font-size: $font-size-base; /* The label muse have the same size whatever their position */
-        line-height: $line-height-base;
+        line-height: var(--body-line-height);
         font-weight: $font-weight-bold;
 
         @include media-breakpoint-down(md) {

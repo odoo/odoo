@@ -1,5 +1,5 @@
 .o-livechat-LivechatStatusLabel.o-help {
-    color: var(--livechat-LivechatStatusLabel-helpColor, #{$purple});
+    color: var(--livechat-LivechatStatusLabel-helpColor, var(--purple));
 }
 
 .o-livechat-LivechatStatusSelection {
@@ -13,7 +13,7 @@
 
     button:where(:not(.active)) {
         &:not(:hover) {
-            background-color: $gray-200;
+            background-color: var(--gray-200);
             opacity: 75%;
         }
 
@@ -71,7 +71,7 @@
 
     /* Dropdown */
     .o_popover & {
-        border-radius: $border-radius-xl;
+        border-radius: var(--border-radius-xl);
     }
 }
 

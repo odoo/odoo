@@ -5,7 +5,7 @@
         --o-bg-opacity: 1;
 
         border-radius: $border-radius;
-        border-color: var(--o-cw-popover-color, #{$info});
+        border-color: var(--o-cw-popover-color, var(--info));
         padding: 0 map-get($spacers, 1);
         background: RGBA(var(--o-cw-popover-color--subtle, #{to-rgb($info)}), var(--o-bg-opacity));
         font-weight: $font-weight-normal;
@@ -21,7 +21,7 @@
                 margin-right: map-get($spacers, 1);
                 font-family: 'Material Symbols Outlined';
                 font-size: $o-font-size-base-smaller;
-                color: var(--o-cw-popover-color, #{$info});
+                color: var(--o-cw-popover-color, var(--info));
                 content: '\f111';
             }
 

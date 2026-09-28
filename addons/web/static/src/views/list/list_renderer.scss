@@ -64,12 +64,12 @@
             border-spacing: 0;
 
             &.o_list_table_grouped .o_group_header {
-                --table-bg: #{$gray-200};
+                --table-bg: var(--gray-200);
                 color: color-contrast($gray-200);
             }
 
             &.o_list_table_ungrouped {
-                --table-striped-bg: #{$gray-100};
+                --table-striped-bg: var(--gray-100);
                 --table-striped-color: #{color-contrast($gray-100)};
             }
         }
@@ -527,7 +527,7 @@
             a:active,
             button:focus,
             button:active {
-                color: $link-hover-color;
+                color: var(--link-hover-color);
                 outline: none;
             }
 
@@ -547,7 +547,7 @@
 
         &.o_invalid_cell:not(:focus-within),
         > .o_column_group_field.o_invalid_cell:not(.o_readonly_modifier):not(:focus-within) {
-            border-bottom: 1px solid $danger;
+            border-bottom: 1px solid var(--danger);
             background-color: $o-input-invalid-bg;
         }
     }
