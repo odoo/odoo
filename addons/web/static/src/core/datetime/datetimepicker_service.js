@@ -273,7 +273,10 @@ export const datetimePickerService = {
                  * @returns {[T extends "format" ? string : DateTime, null] | [null, Error]}
                  */
                 const safeConvert = (operation, value) => {
-                    const { type } = pickerProps;
+                    let { type } = pickerProps;
+                    if (type == "datetime" && hookParams.showTime === false) {
+                        type = "date"
+                    }
                     const convertFn = (operation === "format" ? formatters : parsers)[type];
                     const options = { tz: pickerProps.tz, format: hookParams.format };
                     if (operation === "format") {
