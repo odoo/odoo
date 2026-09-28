@@ -237,8 +237,9 @@ export class CalendarCommonRenderer extends Component {
         return `[data-event-id="${event.id}"]`;
     }
     handleDateClick(info) {
-        if (!info.jsEvent || info.jsEvent.defaultPrevented) {
-            // The event might be fired after a touch pointerup without any jsEvent
+        // The event might be fired after a touch pointerup without any jsEvent, or after a touch
+        // taken over by another gesture (e.g. the swiper)
+        if (!info.jsEvent || info.jsEvent.defaultPrevented || info.jsEvent.type === "touchcancel") {
             return;
         }
         if (!this.props.model.hasMultiCreate) {

@@ -33,6 +33,7 @@ import {
     patchWithCleanup,
     preloadBundle,
     serverState,
+    swipeLeft,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -6207,6 +6208,26 @@ test(`three calendars are rendered in the ActionSwiper on touch devices`, async 
         message: "events are displayed on the following month",
     });
     expect(".o_actionswiper_left_swipe_area .fc-daygrid-row .fc-event").toHaveText("event 5");
+});
+
+test(`swiping from a day cell changes the month without clicking on the day`, async () => {
+    mockTouch(true);
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="month"/>`,
+    });
+    expect(`.o_calendar_current .fc-daygrid-day[data-date="2016-12-14"]`).toHaveCount(1);
+
+    await swipeLeft(
+        `.o_calendar_current .fc-daygrid-day[data-date="2016-12-14"]`,
+        { pointerDownDuration: 200 },
+        { position: { x: -queryRect(".o_calendar_current").width }, relative: true }
+    );
+    await advanceTime(1000);
+    await animationFrame();
+    expect(`.o_calendar_current .fc-daygrid-day[data-date="2017-01-18"]`).toHaveCount(1);
+    expect(`.o-calendar-quick-create`).toHaveCount(0);
 });
 
 test("Revert to the previous state if updateRecord fails (onEventResize)", async () => {
