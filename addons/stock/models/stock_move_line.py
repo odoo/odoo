@@ -662,7 +662,12 @@ class StockMoveLine(models.Model):
         for ml in mls_todo.with_context(quants_cache=quants_cache):
             # if this move line is force assigned, unreserve elsewhere if needed
             ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
-            available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id)
+            in_date = False
+            if ml.lot_id and ml.move_id.origin_returned_move_id:
+                # returned lots keep the incoming date they had when they left
+                quants = self.env['stock.quant']._gather(ml.product_id, ml.location_id, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
+                in_date = min(quants.filtered(lambda q: q.lot_id == ml.lot_id and q.quantity > 0).mapped('in_date'), default=False)
+            available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, in_date=in_date)
             ml._synchronize_quant(ml.quantity_product_uom, ml.location_dest_id, package=ml.result_package_id, in_date=in_date)
             if available_qty < 0:
                 ml._free_reservation(
