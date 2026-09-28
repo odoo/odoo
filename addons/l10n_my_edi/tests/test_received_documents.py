@@ -6,7 +6,7 @@ from freezegun import freeze_time
 
 from odoo import Command
 from odoo.exceptions import UserError
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -163,6 +163,56 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
             {'ref': 'IV-DOC2', 'state': 'cancel', 'l10n_my_edi_state': 'cancelled'},
             {'ref': 'IV-DOC4', 'state': 'posted', 'l10n_my_edi_state': 'cancelled'},
         ])
+
+    @freeze_time('2024-08-15 10:00:00')
+    def test_sync_again_archived_document(self):
+        self._sync([[self._document_data('DOC1')]])
+        bill = self._get_received_bills(['DOC1'])
+        bill.l10n_my_edi_received_document_id.action_archive()
+
+        self._sync([[self._document_data('DOC1')]])
+        self.assertEqual(self.env['account.move'].search([('ref', '=', 'IV-DOC1')]), bill)
+
+    @freeze_time('2024-08-15 10:00:00')
+    def test_sync_in_branch(self):
+        """ Branches share the TIN of their parent: a document imported by one is not imported again by the other,
+        even for a user who does not have the other one enabled.
+        """
+        parent = self.company_data['company']
+        branch = self.env['res.company'].create({
+            'name': 'MY Branch Company',
+            'parent_id': parent.id,
+            'country_id': self.env.ref('base.my').id,
+            'account_fiscal_country_id': self.env.ref('base.my').id,
+            'vat': parent.vat,
+        })
+        branch_journal = self.env['account.journal'].create({
+            'name': 'Branch Purchases',
+            'code': 'BPUR',
+            'type': 'purchase',
+            'company_id': branch.id,
+        })
+        self._sync([[self._document_data('DOC1')]])
+
+        branch_user = new_test_user(
+            self.env, login='branch_user', groups='account.group_account_invoice',
+            company_id=branch.id, company_ids=[Command.set((parent + branch).ids)],
+        )
+        wizard = self.env['myinvois.document.sync.wizard'].with_user(branch_user).with_context(allowed_company_ids=branch.ids).create({
+            'month': '2024-07-01',
+            'journal_id': branch_journal.id,
+        })
+        with patch(CONTACT_PROXY_METHOD, return_value={'documents': [self._document_data('DOC1')], 'page_count': 1}):
+            action = wizard.button_sync()
+        self.assertEqual(action['tag'], 'display_notification')
+        self.assertFalse(self.env['account.move'].search([('journal_id', '=', branch_journal.id)]))
+
+    @freeze_time('2024-08-15 10:00:00')
+    def test_sync_supplier_malaysian_tin_first(self):
+        """ The Malaysian TIN of a partner is the one used on MyInvois; its Tax ID only when it has none. """
+        self.partner_b.l10n_my_edi_malaysian_tin = self.partner_a.vat
+        self._sync([[self._document_data('DOC1', supplier_tin=self.partner_a.vat)]])
+        self.assertEqual(self._get_received_bills(['DOC1']).partner_id, self.partner_b)
 
     @freeze_time('2024-08-15 10:00:00')
     def test_received_bill_is_not_sent_to_myinvois(self):
