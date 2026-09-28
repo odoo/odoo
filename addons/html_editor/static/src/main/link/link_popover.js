@@ -27,6 +27,7 @@ import {
     getButtonType,
 } from "@html_editor/utils/button_style";
 import { closestElement, trapFocus } from "@html_editor/utils/dom_traversal";
+import { ICON_SELECTOR } from "@html_editor/utils/dom_info";
 
 export const linkPopoverProps = {
     advancedAttributeOptions: t.array().optional(),
@@ -126,7 +127,7 @@ export class LinkPopover extends Component {
             buttonShape: getButtonShape(linkElement),
             isImage: this.props.isImage,
             showReplaceTitleBanner: this.props.showReplaceTitleBanner,
-            canReplaceTitle: !linkElement.querySelector("img,.fa"),
+            canReplaceTitle: !linkElement.querySelector(`img,${ICON_SELECTOR}`),
             showLabel: !linkElement.childElementCount,
             stripDomain: true,
             showAdvancedOptions: false,
