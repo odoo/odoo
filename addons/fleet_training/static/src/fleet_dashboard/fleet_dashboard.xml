@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <div t-name="fleet_training.FleetDashboard" class="o_fleet_dashboard p-4">
+        <h2 class="mb-4">Fleet Dashboard</h2>
+        <div class="d-flex flex-wrap gap-3">
+            <FleetStatCard label.translate="Total Vehicles" value="this.state.total" icon="'directions_car'" color="'primary'"/>
+            <FleetStatCard label.translate="Available" value="this.state.available" icon="'check_circle'" color="'success'"/>
+            <FleetStatCard label.translate="Assigned" value="this.state.assigned" icon="'person'" color="'info'"/>
+            <FleetStatCard label.translate="In Maintenance" value="this.state.maintenance" icon="'build'" color="'warning'"/>
+        </div>
+    </div>
+</templates>

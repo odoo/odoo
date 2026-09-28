@@ -27,10 +27,16 @@ on top of a realistic Fleet Management use case.
         'views/res_partner_views.xml',
         'reports/fleet_vehicle_report.xml',
         'views/fleet_vehicle_analysis_views.xml',
+        'views/fleet_dashboard_views.xml',
         'data/ir_cron_data.xml',
     ],
     'demo': [
         'demo/fleet_training_demo.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'fleet_training/static/src/fleet_dashboard/**/*',
+        ],
+    },
     'application': True,
 }

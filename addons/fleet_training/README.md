@@ -58,6 +58,7 @@ by a unified `ir.access` model, and `res.groups.category_id` was replaced by
 - Maintenance history per vehicle, with a "Log Maintenance…" wizard
 - Daily scheduled action reminding about soon-to-expire insurance
 - Realistic demo data (Tata Nexon, Mahindra XUV700, Hyundai Creta, Toyota Innova Crysta)
+- Owl-based Fleet Dashboard client action with live stat cards
 
 ## Server Framework Concepts Covered
 
@@ -82,6 +83,7 @@ by a unified `ir.access` model, and `res.groups.category_id` was replaced by
 | 17. *(beyond tutorial)* Wizards | "Log Maintenance…" `TransientModel` wizard | `wizard/fleet_maintenance_wizard*.py/.xml` | `93325aa` |
 | 18. *(beyond tutorial)* Scheduled Actions | Insurance expiry reminder (`ir.cron`) | `models/fleet_vehicle.py`, `data/ir_cron_data.xml` | `db13cde` |
 | 19. *(beyond tutorial)* Demo Data & Cleanup | Realistic sample fleet | `demo/fleet_training_demo.xml` | `c051a0c` |
+| 20. *(beyond tutorial, JS Framework)* Owl Components | Reusable `FleetStatCard`, dashboard client action | `static/src/fleet_dashboard/`, `views/fleet_dashboard_views.xml` | *(see git log)* |
 
 Run `git log --oneline -- addons/fleet_training` from the `community` repo for
 the full, chronological commit history behind this table.
@@ -932,7 +934,66 @@ Nexon, which expires in 20 days).
 
 ---
 
-This closes the module: **15 chapters map directly to Server Framework 101**,
-plus **4 chapters that grow it into a genuinely usable application**
-(maintenance records, a wizard, a scheduled action, and demo data). See the
-concept-to-code table and suggested live-demo flow below.
+That closes the **Server Framework 101** side of the module: 15 chapters map
+directly to it, plus 4 chapters that grow it into a genuinely usable
+application (maintenance records, a wizard, a scheduled action, and demo
+data). The chapters below move to the frontend — the companion **Discover the
+JS Framework** tutorial (Owl components, then building a dashboard) — applied
+to the same fleet data. See the concept-to-code table and suggested live-demo
+flow below.
+
+---
+
+## Chapter 20 — Owl Components (beyond tutorial, JS Framework)
+
+**Concept.** [Owl](https://github.com/odoo/owl) is Odoo's own component
+framework (similar in spirit to React/Vue): a component is a JS class
+extending `Component`, with a `static template` string naming an XML template
+(`t-name` in a separate `.xml` file), and `props` declared via `useProps()`
+with typed helpers (`t.string()`, `t.number()`, `t.or([...])`,
+`.optional()`). Components compose by declaring `static components = {...}`
+and using the child as a capitalized XML tag. A client action is just a
+component registered under `registry.category("actions")`, opened by an
+`ir.actions.client` record whose `tag` matches the registration key.
+
+**Why?** Everything up to Chapter 19 is server-rendered — Odoo builds the UI
+from view XML on the backend. Owl is the *other* half of Odoo: interactive,
+client-side components for things a declarative view can't express (a real
+dashboard, in this case), while still living inside the same app, same
+security, same data.
+
+**Where?**
+- [`static/src/fleet_dashboard/stat_card/stat_card.js`](static/src/fleet_dashboard/stat_card/stat_card.js), [`.xml`](static/src/fleet_dashboard/stat_card/stat_card.xml) — the reusable component
+- [`static/src/fleet_dashboard/fleet_dashboard.js`](static/src/fleet_dashboard/fleet_dashboard.js), [`.xml`](static/src/fleet_dashboard/fleet_dashboard.xml) — composes 4 stat cards
+- [`models/fleet_vehicle.py`](models/fleet_vehicle.py) — `get_fleet_dashboard_stats`, the server-side data
+- [`views/fleet_dashboard_views.xml`](views/fleet_dashboard_views.xml) — `ir.actions.client` + menu
+- `__manifest__.py` — new `assets` key, `web.assets_backend` bundle
+
+**Code explanation.** `FleetStatCard` is a pure, generic, reusable component —
+label/value/icon/color in, a styled card out; it doesn't know anything about
+vehicles. `FleetDashboard` fetches stats via `useService("orm").call(...)` in
+`onWillStart`, stores them in `proxy({...})` reactive state, and renders four
+`<FleetStatCard .../>` tags with the state values as props — the same
+Many2one-esque "compose smaller pieces into a bigger one" idea as Chapter 7,
+just in JS. Icons use `<i class="oi" data-icon="...">` (Odoo 20's Material
+Symbols) — the exact same modernization already covered in Chapter 13, not a
+new concept, just the frontend applying it too. The `label` prop is
+user-facing text, so it's passed as `label.translate="Total Vehicles"` (a
+`.translate`-suffixed prop) instead of `label="'Total Vehicles'"` — Owl skips
+JS-expression parsing for `.translate` props and feeds the raw text straight
+to the translation function, so the value is plain text with no quotes, and
+the string becomes extractable for translators like any other UI string.
+
+**Fleet functionality.** A new **Dashboard** entry (first item in the Fleet
+Training menu) opens a real page showing four live tiles: Total Vehicles,
+Available, Assigned, In Maintenance.
+
+**What changed.** Added the `static/src/fleet_dashboard/` component pair;
+added `get_fleet_dashboard_stats` to `fleet_vehicle.py`; added
+`views/fleet_dashboard_views.xml`; manifest gained an `assets` key.
+
+**Testing.** Upgrade the module, open Fleet Training > Dashboard. Verified
+end-to-end in a real headless-Chromium session (not just install logs): with
+3 vehicles seeded (1 available / 1 assigned / 1 in maintenance), the page
+rendered all 4 cards with the correct live numbers, correct icons, and zero
+browser console errors.

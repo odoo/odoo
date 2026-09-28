@@ -141,3 +141,16 @@ class FleetVehicle(models.Model):
                     ),
                 }
             }
+
+    @api.model
+    def get_fleet_dashboard_stats(self):
+        total = self.search_count([])
+        by_state = {state: 0 for state, _label in self._fields['state'].selection}
+        for state, count in self._read_group([], ['state'], ['__count']):
+            by_state[state] = count
+        return {
+            'total': total,
+            'available': by_state.get('available', 0),
+            'assigned': by_state.get('assigned', 0),
+            'maintenance': by_state.get('maintenance', 0),
+        }
