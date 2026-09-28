@@ -157,6 +157,22 @@ class MailAliasMixinOptional(models.AbstractModel):
         creating inactive aliases (falsy name). """
         return not record_vals.get('alias_id') and record_vals.get('alias_name')
 
+    def _notify_get_alias_reply_to(self, res_ids):
+        """ Override to use the primary alias_id directly, giving it priority
+        over any other alias pointing to the same record. """
+        reply_to_email = {}
+        valid_aliases = self.alias_id.filtered_domain([
+            ('alias_parent_thread_id', '!=', False),
+            ('alias_name', '!=', False),
+            ('alias_domain_id', '!=', False),
+        ])
+        for alias in valid_aliases:
+            reply_to_email[alias.alias_parent_thread_id] = alias.alias_full_name
+        missing_ids = [res_id for res_id in res_ids if res_id not in reply_to_email]
+        if missing_ids:
+            reply_to_email.update(super()._notify_get_alias_reply_to(missing_ids))
+        return reply_to_email
+
     # --------------------------------------------------
     # MIXIN TOOL OVERRIDE METHODS
     # --------------------------------------------------
