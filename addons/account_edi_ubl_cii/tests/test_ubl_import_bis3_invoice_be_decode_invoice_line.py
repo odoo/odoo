@@ -18,7 +18,7 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
         self.assertRecordValues(invoice.invoice_line_ids, [{
             'price_unit': 1050.00,
             'quantity': 1.0,
-            'discount': 9.52380952380953,
+            'discount': 9.523809523809524,
         }])
 
     def test_partial_import_invoice_line_line_extension_amount_price_allowance_base_amount(self):
@@ -26,7 +26,7 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
         self.assertRecordValues(invoice.invoice_line_ids, [{
             'price_unit': 210.00,
             'quantity': 5.0,
-            'discount': 9.52380952380953,
+            'discount': 9.523809523809524,
         }])
 
     def test_partial_import_invoice_line_line_extension_amount_price_allowance_base_amount_and_amount(self):
@@ -35,7 +35,7 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
             {
                 'price_unit': 260.00,
                 'quantity': 5.0,
-                'discount': 26.92307692307695,
+                'discount': 26.923076923076923,
             },
         ])
 
@@ -45,7 +45,7 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
             {
                 'price_unit': 260.00,
                 'quantity': 5.0,
-                'discount': 26.92307692307695,
+                'discount': 26.923076923076923,
             },
         ])
 
@@ -74,7 +74,7 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
         self.assertRecordValues(invoice.invoice_line_ids, [{
             'price_unit': 210.00,
             'quantity': 5.0,
-            'discount': 9.52380952380953,
+            'discount': 9.523809523809524,
         }])
 
     def test_partial_import_invoice_line_line_extension_amount_price_amount(self):
@@ -82,7 +82,7 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
         self.assertRecordValues(invoice.invoice_line_ids, [{
             'price_unit': 210.00,
             'quantity': 5.0,
-            'discount': 9.52380952380953,
+            'discount': 9.523809523809524,
         }])
 
     def test_partial_import_invoice_line_line_extension_amount_zero_quantity(self):
@@ -90,7 +90,7 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
         self.assertRecordValues(invoice.invoice_line_ids, [{
             'price_unit': 1050.00,
             'quantity': 1.0,
-            'discount': 9.52380952380953,
+            'discount': 9.523809523809524,
         }])
 
     def test_partial_import_invoice_line_line_extension_amount_zero_quantity_zero_price_amount(self):
@@ -98,7 +98,7 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
         self.assertRecordValues(invoice.invoice_line_ids, [{
             'price_unit': 1050.00,
             'quantity': 1.0,
-            'discount': 9.52380952380953,
+            'discount': 9.523809523809524,
         }])
 
     def test_partial_import_invoice_line_price_amount_base_quantity(self):
@@ -106,7 +106,7 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
         self.assertRecordValues(invoice.invoice_line_ids, [{
             'price_unit': 210.00,
             'quantity': 5.0,
-            'discount': 9.52380952380953,
+            'discount': 9.523809523809524,
         }])
 
     def test_partial_import_invoice_line_negative_lines_and_total(self):
