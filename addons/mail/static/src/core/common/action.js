@@ -1,5 +1,6 @@
 import { isRecord, STORE_SYM } from "@mail/model/misc";
-import { Component, computed, proxy, signal, useScope } from "@odoo/owl";
+import { nestedShallowEqual } from "@mail/utils/common/signal";
+import { Component, computed, proxy, shallowEqual, signal, useScope } from "@odoo/owl";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -734,8 +735,10 @@ export class UseActions extends Reactive {
         // only re-run when the visible set or order actually changes, and
         // otherwise keep a stable array identity so consumers do not
         // re-render for unrelated changes.
-        this.actionsComputed = computed(() => this._computeActions());
-        this.partitionComputed = computed(() => this._computePartition());
+        this.actionsComputed = computed(() => this._computeActions(), { equals: shallowEqual });
+        this.partitionComputed = computed(() => this._computePartition(), {
+            equals: nestedShallowEqual,
+        });
     }
 
     /**

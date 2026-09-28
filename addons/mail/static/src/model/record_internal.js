@@ -198,9 +198,10 @@ export class RecordInternal {
     /**
      * @param {() => any} compute
      * @param {(value: any) => number|void} [msUntilStale]
+     * @param {(a: any, b: any) => boolean} [equals]
      * @returns {() => any} the computed holding the value
      */
-    makeComputed(compute, msUntilStale) {
+    makeComputed(compute, msUntilStale, equals) {
         const record = this.record;
         // the last computed value, answered while a write is being applied
         let heldValue;
@@ -222,7 +223,9 @@ export class RecordInternal {
             return heldValue;
         }
         return this.ensureScope().run(() =>
-            msUntilStale ? computedUntilStale(computeValue, msUntilStale) : computed(computeValue)
+            msUntilStale
+                ? computedUntilStale(computeValue, msUntilStale, { equals })
+                : computed(computeValue, { equals })
         );
     }
 
@@ -380,9 +383,9 @@ export class RecordInternal {
             let computedGetter = this.fieldsComputed.get(name);
             if (!computedGetter) {
                 // the declaration sits on the record until its first read
-                const { compute, msUntilStale } = record[name];
+                const { compute, msUntilStale, equals } = record[name];
                 delete record[name];
-                computedGetter = this.makeComputed(compute, msUntilStale);
+                computedGetter = this.makeComputed(compute, msUntilStale, equals);
                 this.fieldsComputed.set(name, computedGetter);
             }
             return computedGetter();

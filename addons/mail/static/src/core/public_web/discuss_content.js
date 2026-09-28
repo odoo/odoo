@@ -1,4 +1,13 @@
-import { Component, computed, proxy, signal, types, useOnChange, useProps } from "@odoo/owl";
+import {
+    Component,
+    computed,
+    proxy,
+    shallowEqual,
+    signal,
+    types,
+    useOnChange,
+    useProps,
+} from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
@@ -35,10 +44,13 @@ export class DiscussContent extends Component {
         this.rootRef = signal.ref(HTMLDivElement);
         this.threadAvatarRef = signal.ref(HTMLDivElement);
         this.threadActions = useThreadActions({ rootRef: this.rootRef, thread: () => this.thread });
-        this.headerActionsList = computed(() => {
-            const partition = this.threadActions.partition;
-            return [partition.quick, partition.other, ...partition.group.slice().reverse()];
-        });
+        this.headerActionsList = computed(
+            () => {
+                const partition = this.threadActions.partition;
+                return [partition.quick, partition.other, ...partition.group.slice().reverse()];
+            },
+            { equals: shallowEqual }
+        );
         this.state = proxy({ jumpThreadPresent: 0 });
         this.isDiscussContent = true;
         this.attClassObjectToString = attClassObjectToString;

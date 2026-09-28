@@ -3,7 +3,7 @@ import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, computed, signal, t, useOnChange, useProps } from "@odoo/owl";
+import { Component, computed, shallowEqual, signal, t, useOnChange, useProps } from "@odoo/owl";
 
 import { localeCompare } from "@web/core/l10n/utils/collation";
 import { _t } from "@web/core/l10n/translation";
@@ -20,8 +20,9 @@ export class MessagingMenuCallParticipants extends Component {
     /** Expand / collapse is only offered from 2 participants, a single one is always shown expanded. */
     canToggle = computed(() => this.channel.rtc_session_ids.length >= 2);
     isExpanded = computed(() => !this.canToggle() || this.expanded());
-    personas = computed(() =>
-        this.sessions.map((session) => session.channel_member_id?.persona).filter(Boolean)
+    personas = computed(
+        () => this.sessions.map((session) => session.channel_member_id?.persona).filter(Boolean),
+        { equals: shallowEqual }
     );
     selfInCall = computed(() => Boolean(this.rtc.selfSession?.in(this.channel.rtc_session_ids)));
 

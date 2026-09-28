@@ -36,7 +36,10 @@ export class Failure extends Record {
                 ...this.notifications
                     .map((notif) => notif.mail_message_id?.thread?.id)
                     .filter((id) => !!id),
-            ])
+            ]),
+        {
+            equals: (a, b) => a.size === b.size && [...a].every((id) => b.has(id)),
+        }
     );
     lastMessage = this.computed(() => {
         let lastMsg = this.notifications[0]?.mail_message_id;

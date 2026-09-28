@@ -28,6 +28,7 @@ import {
     onWillDestroy,
     onWillUnmount,
     proxy,
+    shallowEqual,
     signal,
     t,
     untrack,
@@ -433,7 +434,7 @@ export class Composer extends Component {
         });
     });
 
-    moreActionsList = computed(() => [this.moreAction()]);
+    moreActionsList = computed(() => [this.moreAction()], { equals: shallowEqual });
 
     get isMultiUpload() {
         return true;

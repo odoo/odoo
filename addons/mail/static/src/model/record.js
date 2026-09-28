@@ -313,10 +313,14 @@ export class Record {
      *
      * @template T
      * @param {() => T} compute
+     * @param {Object} [options={}]
+     * @param {(a: T, b: T) => boolean} [options.equals] compares the new
+     *  value to the previous one; a computed that returns an equal value
+     *  keeps its previous reference instead of notifying its readers.
      * @returns {T}
      */
-    computed(compute) {
-        return { [COMPUTED_SYM]: true, compute };
+    computed(compute, options) {
+        return { [COMPUTED_SYM]: true, compute, equals: options?.equals };
     }
 
     /**
@@ -329,10 +333,12 @@ export class Record {
      * @template T
      * @param {() => T} compute
      * @param {(value: T) => number|void} msUntilStale
+     * @param {Object} [options={}]
+     * @param {(a: T, b: T) => boolean} [options.equals]
      * @returns {T}
      */
-    computedUntilStale(compute, msUntilStale) {
-        return { ...this.computed(compute), msUntilStale };
+    computedUntilStale(compute, msUntilStale, options) {
+        return { ...this.computed(compute, options), msUntilStale };
     }
 
     /**

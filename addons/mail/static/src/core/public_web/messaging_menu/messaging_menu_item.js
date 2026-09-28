@@ -4,8 +4,9 @@ import { Priority } from "@mail/core/common/priority";
 import { MessagingMenuItemContextMenu } from "@mail/core/public_web/messaging_menu/messaging_menu_item_context_menu";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { propSignal, useLongPress, useRightClickMenu } from "@mail/utils/common/hooks";
+import { nestedShallowEqual } from "@mail/utils/common/signal";
 
-import { Component, computed, signal, types, useProps } from "@odoo/owl";
+import { Component, computed, shallowEqual, signal, types, useProps } from "@odoo/owl";
 
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nesting";
@@ -100,7 +101,9 @@ export class MessagingMenuItem extends Component {
     // computed for memoization/stable identity; the body stays a method so
     // patches can override it (an instance field would shadow a prototype
     // getter override)
-    actionsPartition = computed(() => this._computeActionsPartition());
+    actionsPartition = computed(() => this._computeActionsPartition(), {
+        equals: nestedShallowEqual,
+    });
 
     hasActions() {
         return this.messageActions.actionsComputed().length;
@@ -121,10 +124,13 @@ export class MessagingMenuItem extends Component {
         };
     }
 
-    actionsList = computed(() => {
-        const partition = this.actionsPartition();
-        return [partition.quick, partition.other, ...partition.group];
-    });
+    actionsList = computed(
+        () => {
+            const partition = this.actionsPartition();
+            return [partition.quick, partition.other, ...partition.group];
+        },
+        { equals: shallowEqual }
+    );
 
     get actionsTitle() {
         return _t("Thread Actions");

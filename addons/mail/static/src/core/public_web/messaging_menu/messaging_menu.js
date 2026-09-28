@@ -6,7 +6,7 @@ import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { useOnBottomScrolled, useSearch } from "@mail/utils/common/hooks";
 import { incrementFn } from "@mail/utils/common/signal";
 
-import { Component, computed, signal, types, useEffect, useProps } from "@odoo/owl";
+import { Component, computed, shallowEqual, signal, types, useEffect, useProps } from "@odoo/owl";
 
 import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -32,16 +32,19 @@ export class MessagingMenu extends Component {
     static template = "mail.MessagingMenu";
 
     isIosPwa = isIOS() && isDisplayStandalone();
-    filteredMessages = computed(() => {
-        const filters = [...this.state().activePluginFilters];
-        if (this.state().selectedFilter) {
-            filters.push(this.state().selectedFilter);
-        }
-        const messages = this.activeTab().sortedMessages;
-        return messages.filter((m) =>
-            filters.every((f) => !f.includesMessage || f.includesMessage(m))
-        );
-    });
+    filteredMessages = computed(
+        () => {
+            const filters = [...this.state().activePluginFilters];
+            if (this.state().selectedFilter) {
+                filters.push(this.state().selectedFilter);
+            }
+            const messages = this.activeTab().sortedMessages;
+            return messages.filter((m) =>
+                filters.every((f) => !f.includesMessage || f.includesMessage(m))
+            );
+        },
+        { equals: shallowEqual }
+    );
     messages = computed(() => {
         if (this.state().searchTerm) {
             return this.messageSearch.results;
