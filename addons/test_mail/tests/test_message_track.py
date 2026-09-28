@@ -692,6 +692,36 @@ class TestTrackingInternals(MailCommon):
             ('selection_type', 'char', invalid_value, 'Second'),
         ])
 
+    @users('employee')
+    def test_mail_track_uid_context_dependent(self):
+        employee = self.user_employee
+        admin = self.user_admin
+        total_companies = self.company_admin | self.company_2
+        self.assertIn(employee.company_ids, total_companies)
+        record = self.env['mail.test.multi.company.uid.dependent'].sudo().create(
+            {
+                'name': 'Test Multi Company UID Dependent',
+                'company_id': self.company_admin.id,
+                'company_ids': [(6, 0, total_companies.ids)],
+            }
+        )
+        # Make sudo be able to see all companies, but employee only one
+        record = record.with_user(employee)
+        self.assertNotEqual(record.company_ids, record.with_user(admin).company_ids)
+        self.flush_tracking()
+        self.assertEqual(len(record.message_ids), 1)
+        # Change name as employee
+        record.write({'name': 'Changed Name'})
+        self.flush_tracking()
+        self.assertEqual(len(record.message_ids), 2)
+        recent_message = record.message_ids[0]
+        self.assertTracking(recent_message, [('name', 'char', 'Test Multi Company UID Dependent', 'Changed Name')])
+        # Assert not tracking company_ids (since it has not been changed)
+        tracked_fields = recent_message.sudo().tracking_value_ids.mapped('field_id.name')
+        self.assertIn('name', tracked_fields)
+        self.assertNotIn('company_id', tracked_fields)
+        self.assertNotIn('company_ids', tracked_fields)
+
     def test_track_groups(self):
         """ Test field groups and filtering when using standard helpers """
         # say that 'email_from' is accessible to erp_managers only
