@@ -95,18 +95,22 @@
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Livechat : Javascript appending the livechat button">
             <t t-translation="off">
-                if (!window.odoo) {
-                    window.odoo = {};
+                if (!window.isSecureContext) {
+                    console.warn("Odoo Live Chat is designed to be served over an https:// connection. This website is currently served over an http:// connection without SSL/TLS, which is unsupported, so the Live Chat is disabled. For more information, please visit: https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Secure_Contexts");
+                } else {
+                    if (!window.odoo) {
+                        window.odoo = {};
+                    }
+                    odoo.__session_info__ = Object.assign(odoo.__session_info__ || {}, {
+                        ...<t t-out="json.dumps(info.get('session_info', {}))"/>,
+                        livechatData: {
+                            can_load_livechat: <t t-out="'true' if info['available'] else 'false'"/>,
+                            serverUrl: "<t t-out="info['server_url']"/>",
+                            options: <t t-out="json.dumps(info.get('options', {}))"/>,
+                        },
+                        test_mode: <t t-out="'true' if test_mode_enabled else 'false'"/>,
+                    });
                 }
-                odoo.__session_info__ = Object.assign(odoo.__session_info__ || {}, {
-                    ...<t t-out="json.dumps(info.get('session_info', {}))"/>,
-                    livechatData: {
-                        can_load_livechat: <t t-out="'true' if info['available'] else 'false'"/>,
-                        serverUrl: "<t t-out="info['server_url']"/>",
-                        options: <t t-out="json.dumps(info.get('options', {}))"/>,
-                    },
-                    test_mode: <t t-out="'true' if test_mode_enabled else 'false'"/>,
-                });
             </t>
         </template>
 
