@@ -687,8 +687,9 @@ test("related end date, both start date and end date empty", async () => {
     expect(".o_toggle_range").toHaveCount(0);
 });
 
-test("required: related end date, both start date and end date empty", async () => {
+test("required: related end date not required, both start date and end date empty", async () => {
     Partner._records[0].datetime = false;
+    Partner._fields.datetime_end.required = false;
 
     await mountView({
         type: "form",
@@ -701,44 +702,56 @@ test("required: related end date, both start date and end date empty", async () 
         resId: 1,
     });
 
-    expect(".o_field_daterange input").toHaveCount(1);
-    expect(".o_field_daterange input:eq(0)").toHaveAttribute("data-field", "datetime");
-    expect(".o_field_daterange input:eq(0)").toHaveValue("");
-    expect(".o_toggle_range").toHaveCount(0);
-    await contains(".o_field_boolean input").click();
-    expect(".o_field_daterange input").toHaveCount(2);
-    expect(".o_field_daterange input:eq(0)").toHaveAttribute("data-field", "datetime");
-    expect(".o_field_daterange input:eq(0)").toHaveValue("");
-    expect(".o_field_daterange input:eq(1)").toHaveAttribute("data-field", "datetime_end");
-    expect(".o_field_daterange input:eq(1)").toHaveValue("");
-    expect(".o_toggle_range").toHaveCount(0);
-    await contains(".o_field_daterange input:eq(0)").edit("06/06/2023 12:00:00");
-    expect(".o_field_daterange input").toHaveCount(2);
-    expect(".o_field_daterange input:eq(0)").toHaveAttribute("data-field", "datetime");
-    expect(".o_field_daterange input:eq(0)").toHaveValue("06/06/2023 12:00:00");
-    expect(".o_field_daterange input:eq(1)").toHaveAttribute("data-field", "datetime_end");
-    expect(".o_field_daterange input:eq(1)").toHaveValue("");
-    expect(".o_toggle_range").toHaveCount(0);
-    await contains(".o_field_daterange input:eq(1)").edit("07/07/2023 13:00:00");
-    expect(".o_field_daterange input").toHaveCount(0);
-    expect(".o_field_daterange button").toHaveCount(2);
-    expect(".o_field_daterange button:eq(0)").toHaveAttribute("data-field", "datetime");
-    expect(".o_field_daterange button:eq(0)").toHaveValue("06/06/2023 12:00:00");
-    expect(".o_field_daterange button:eq(1)").toHaveAttribute("data-field", "datetime_end");
-    expect(".o_field_daterange button:eq(1)").toHaveValue("07/07/2023 13:00:00");
-    expect(".o_toggle_range").toHaveCount(0);
-    await contains(".o_field_daterange button[data-field=datetime]").click();
-    await contains(".o_field_daterange input[data-field=datetime]").clear();
-    expect(".o_field_daterange input").toHaveCount(1);
-    expect(".o_field_daterange input").toHaveAttribute("data-field", "datetime");
-    expect(".o_field_daterange input").toHaveValue("");
-    expect(".o_field_daterange button").toHaveAttribute("data-field", "datetime_end");
-    expect(".o_field_daterange button").toHaveValue("07/07/2023 13:00:00");
-    expect(".o_toggle_range").toHaveCount(0);
+    expect(".o_field_daterange [data-field]").toHaveCount(1, {
+        message: "Only one field displayed because related field is optional",
+    });
+    // Open the picker
+    await contains(".o_field_daterange input[data-field=datetime]").click();
+    await animationFrame();
+    expect(".o_toggle_range").toHaveCount(1, { message: "range is optional" });
 
-    // Open the picker, this checks that props validation for the picker isn't
-    // broken by required being present
-    await contains(".o_field_daterange input:eq(0)").click();
+    await contains(".o_field_boolean input").click();
+    expect(".o_field_daterange [data-field]").toHaveCount(1, {
+        message:
+            "Only one field displayed because `datetime` is required but related field should stay optional",
+    });
+    // Open the picker
+    await contains(".o_field_daterange input[data-field=datetime]").click();
+    await animationFrame();
+    expect(".o_toggle_range").toHaveCount(1, { message: "range is still optional" });
+});
+
+test("required: related end date required, both start date and end date empty", async () => {
+    Partner._records[0].datetime = false;
+    Partner._fields.datetime_end.required = true;
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+            <form>
+                <field name="bool_field"/>
+                <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}" required="bool_field"/>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_daterange [data-field]").toHaveCount(2, {
+        message: "Two fields are displayed because related field is required",
+    });
+    // Open the picker
+    await contains(".o_field_daterange input[data-field=datetime]").click();
+    await animationFrame();
+    expect(".o_toggle_range").toHaveCount(0, { message: "range is mandatory" });
+
+    await contains(".o_field_boolean input").click();
+    expect(".o_field_daterange [data-field]").toHaveCount(2, {
+        message: "Two fields are displayed because `datetime` and related field are required",
+    });
+    // Open the picker
+    await contains(".o_field_daterange input[data-field=datetime]").click();
+    await animationFrame();
+    expect(".o_toggle_range").toHaveCount(0, { message: "range is mandatory" });
 });
 
 test("related start date, both start date and end date empty", async () => {
