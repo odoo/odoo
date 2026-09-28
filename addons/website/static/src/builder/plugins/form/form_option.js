@@ -12,6 +12,12 @@ export class FormOption extends BaseOptionComponent {
     static dependencies = ["websiteFormOption"];
     static components = { FormActionFieldsOption };
     static async cleanForSave(el, { dependencies, services }) {
+        for (const hiddenDescEl of el.querySelectorAll(
+            ".s_website_form_field_description.d-none"
+        )) {
+            hiddenDescEl.remove();
+        }
+
         for (const sigEl of el.querySelectorAll("input[name=website_form_signature]")) {
             sigEl.remove();
         }
