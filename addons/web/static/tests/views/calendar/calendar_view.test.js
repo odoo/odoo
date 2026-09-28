@@ -4267,6 +4267,19 @@ test(`European week start month mode on mobile`, async () => {
     expect(`.o_calendar_current .fc-daygrid-day:eq(-1)`).toHaveAttribute("data-date", "2019-10-06");
 });
 
+test.tags("mobile");
+test(`week mode on mobile has no week column`, async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
+    });
+    expect(`.o_calendar_current :is(.o-fc-week-header, .o-fc-week)`).toHaveCount(0);
+    expect(queryRect(`.o_calendar_current .fc-col-header-cell:eq(0)`).left).toBe(
+        queryRect(`.o_calendar_current .fc-timegrid-col:eq(0)`).left
+    );
+});
+
 test.tags("desktop");
 test(`Monday week start week mode on desktop`, async () => {
     mockDate("2019-09-15 08:00:00");
