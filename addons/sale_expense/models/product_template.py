@@ -27,6 +27,10 @@ class ProductTemplate(models.Model):
                 product_template.expense_policy_tooltip = _(
                     "Expenses will be added to the Sales Order at their sales price (product price, pricelist, etc.) when posted."
                 )
+            elif product_template.reinvoice_policy == 'cost_markup':
+                product_template.expense_policy_tooltip = self.env._(
+                    "Expenses will be added to the Sales Order at their cost price increased by a percentage margin."
+                )
 
     @api.depends('can_be_expensed')
     def _compute_visible_reinvoice_policy(self):
