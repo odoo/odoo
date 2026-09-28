@@ -214,12 +214,7 @@ export class CheckIdentity {
 
         // Hash the canvas image using SHA-256 to generate a unique fingerprint.
         // This prevents canvas forgery.
-        let hashBuffer;
-        try {
-            hashBuffer = await window.crypto.subtle.digest("SHA-256", buffer);
-        } catch {
-            return this.fingerprint; // `null` by default
-        }
+        const hashBuffer = await window.crypto.subtle.digest("SHA-256", buffer);
 
         try {
             this.fingerprint = new Uint8Array(hashBuffer).toBase64();

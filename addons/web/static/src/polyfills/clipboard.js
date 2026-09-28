@@ -88,11 +88,9 @@ async function write(items) {
  *
  * Spec: https://w3c.github.io/clipboard-apis/
  */
-if (window.navigator.clipboard) {
-    if (!window.navigator.clipboard.write) {
-        window.navigator.clipboard.write = write.bind(window);
-    }
-    if (!window.ClipboardItem) {
-        window.ClipboardItem = ClipboardItemImpl;
-    }
+if (!window.navigator.clipboard.write) {
+    window.navigator.clipboard.write = write.bind(window);
+}
+if (!window.ClipboardItem) {
+    window.ClipboardItem = ClipboardItemImpl;
 }

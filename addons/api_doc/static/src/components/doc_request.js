@@ -9,7 +9,7 @@ class CopyableCodeEditor extends CodeEditor {
     copied = signal(false);
 
     copyToClipboard() {
-        navigator?.clipboard?.writeText(this.aceEditor.getValue());
+        navigator.clipboard.writeText(this.aceEditor.getValue());
         this.copied.set(true);
         setTimeout(() => {
             this.copied.set(false);
