@@ -1,8 +1,22 @@
 .o_field_statusbar {
     > .o_statusbar_status {
+<<<<<<< a3882bb5da57cee476a0175aede35a19f11a657d
         @media screen and (min-width: 768px), print and (min-width: 188mm) {
+||||||| ec253c431bd8a294e14253d2ae7a79e3a870b578
+        @include media-breakpoint-up(md) {
+=======
+        @include media-breakpoint-up(md) {
+            --o-statusbar-border-color: #{$border-color};
+
+>>>>>>> f737734f7cfdef0f43f9ea7ac11cc0be9c789817
             border-radius: calc(var(--o-statusbar-radius) + var(--o-statusbar-padding));
+<<<<<<< a3882bb5da57cee476a0175aede35a19f11a657d
             border: var(--border-width) solid $border-color;
+||||||| ec253c431bd8a294e14253d2ae7a79e3a870b578
+            border: $border-width solid $border-color;
+=======
+            border: $border-width solid var(--o-statusbar-border-color);
+>>>>>>> f737734f7cfdef0f43f9ea7ac11cc0be9c789817
             padding: var(--o-statusbar-padding);
             background: var(--o-view-background-color);
         }
@@ -129,6 +143,17 @@
                 &:not(.o_arrow_button_current) {
                     color: var(--o-bs-text-muted);
                 }
+            }
+        }
+    }
+
+    &.o_field_invalid {
+        > .o_statusbar_status {
+            --o-statusbar-border-color: var(--o-input-border-color);
+
+            .o_arrow_button {
+                border-color: var(--o-input-border-color);
+                background-color: var(--o-input-background-color);
             }
         }
     }
