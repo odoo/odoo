@@ -85,7 +85,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/views/**/*',
             ('remove', 'im_livechat/static/src/views/lazy/**/*'),
             'im_livechat/static/src/scss/im_livechat_history.scss',
-            'im_livechat/static/src/scss/im_livechat_form.scss',
+            'im_livechat/static/src/scss/im_livechat_form.css',
             'im_livechat/static/src/core/common/**/*',
             'im_livechat/static/src/core/public_web/**/*',
             'im_livechat/static/src/core/web/**/*',

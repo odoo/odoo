@@ -160,7 +160,7 @@
             "website_sale/static/src/js/tours/website_sale_shop.js",
             "website_sale/static/src/js/product_image/**/*",
             "website_sale/static/src/xml/website_sale.xml",
-            "website_sale/static/src/scss/kanban_record.scss",
+            "website_sale/static/src/scss/kanban_record.css",
             "website_sale/static/src/js/dashboard/dashboard.js",
             "website_sale/static/src/views/**/*",
         ],

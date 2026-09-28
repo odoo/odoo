@@ -64,7 +64,7 @@
             "google_address_autocomplete/static/src/google_places_session.js",
             "google_address_autocomplete/static/src/address_autocomplete/google_address_autocomplete.js",
             "google_address_autocomplete/static/src/address_autocomplete/google_address_autocomplete.xml",
-            "google_address_autocomplete/static/src/address_autocomplete/google_address_autocomplete.scss",
+            "google_address_autocomplete/static/src/address_autocomplete/google_address_autocomplete.css",
             "web/static/src/core/autocomplete/*",
             "web/static/src/views/fields/char/*",
             "web/static/src/views/fields/translation/*",
