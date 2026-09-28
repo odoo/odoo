@@ -89,6 +89,7 @@ export function getOrderLineValues(
         price_unit: productPrice.pricelist_price,
         price_extra: 0,
         price_type: "original",
+        product_uom_id: product.uom_id.id,
     };
 
     if (Object.entries(selectedValues).length > 0) {
