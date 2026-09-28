@@ -1,5 +1,5 @@
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
-import { helpers, CompiledFormula, registries } from "@odoo/o-spreadsheet";
+import { helpers, CompiledFormula, registries, corePlugins } from "@odoo/o-spreadsheet";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 
 const { getMaxObjectId, deepEquals, deepCopy, getCanonicalSymbolName } = helpers;
@@ -74,6 +74,7 @@ export class ListCorePlugin extends OdooCorePlugin {
         "getListCompiledColumnFormula",
         "getListCompiledColumnDependencies",
     ]);
+    static dependencies = [corePlugins.SheetPlugin, corePlugins.NamedRangesPlugin];
     constructor(config) {
         super(config);
 

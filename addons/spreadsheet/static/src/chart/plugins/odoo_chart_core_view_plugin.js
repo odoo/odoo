@@ -16,6 +16,17 @@ export class OdooChartCoreViewPlugin extends OdooEvaluationPlugin {
 
         /** @type {Record<string, ChartDataSource>} */
         this.charts = {};
+
+        const registry = this.getters.getGlobalFieldMatchingRegistry();
+        registry.replace("chart", {
+            ...registry.get("chart"),
+            waitForReady: () =>
+                this.getters
+                    .getOdooChartIds()
+                    .map((chartId) => this.getChartDataSource(chartId).loadMetadata()),
+            getFields: (chartId) => this.getChartDataSource(chartId).getFields(),
+            getDomain: (chartId) => this.getChartDataSource(chartId).getComputedDomain(),
+        });
     }
 
     beforeHandle(cmd) {

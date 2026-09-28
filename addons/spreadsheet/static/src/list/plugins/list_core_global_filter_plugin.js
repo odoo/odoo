@@ -2,6 +2,12 @@ import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import { deepCopy } from "@web/core/utils/objects";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
+import { ListCorePlugin } from "./list_core_plugin";
+import { GlobalFiltersCorePlugin } from "@spreadsheet/global_filters";
+import { stores } from "@odoo/o-spreadsheet";
+import { _t } from "@web/core/l10n/translation";
+
+const { SidePanelStore } = stores;
 
 /**
  * @typedef GFLocalList
@@ -12,11 +18,24 @@ import { OdooCorePlugin } from "@spreadsheet/plugins";
 
 export class ListCoreGlobalFilterPlugin extends OdooCorePlugin {
     static getters = /** @type {const} */ (["getListFieldMatch", "getListFieldMatching"]);
+    static dependencies = [ListCorePlugin, GlobalFiltersCorePlugin];
     constructor(config) {
         super(config);
 
         /** @type {Object.<string, GFLocalList>} */
         this.fieldMatchings = {};
+
+        this.getters.getGlobalFieldMatchingRegistry().replace("list", {
+            getIds: () => this.getters.getListIds().filter((id) => this.getListFieldMatch(id)),
+            getDisplayName: (listId) => this.getters.getListName(listId),
+            getTag: (listId) => _t("List #%(list_id)s", { list_id: listId }),
+            getFieldMatching: (listId, filterId) => this.getListFieldMatching(listId, filterId),
+            getModel: (listId) => this.getters.getListDefinition(listId).model,
+            getActionXmlId: (listId) => this.getters.getListDefinition(listId).actionXmlId,
+            getContext: (listId) => this.getters.getListDefinition(listId).context,
+            openSidePanel: (env, listId) =>
+                env.getStore(SidePanelStore).open("LIST_PROPERTIES_PANEL", { listId }),
+        });
     }
 
     /**

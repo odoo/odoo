@@ -38,14 +38,23 @@ export class ListCoreViewPlugin extends OdooEvaluationPlugin {
     ]);
     constructor(config) {
         super(config);
-        /** @type {string} */
-        this.env = config.custom.env;
 
         /** @type {Record<string, ListDataSource>} */
         this.lists = {};
 
         this.custom = config.custom;
         this._pendingAddDomains = false;
+
+        const registry = this.getters.getGlobalFieldMatchingRegistry();
+        registry.replace("list", {
+            ...registry.get("list"),
+            waitForReady: () =>
+                this.getters
+                    .getListIds()
+                    .map((listId) => this.getListDataSource(listId).loadMetadata()),
+            getFields: (listId) => this.getListDataSource(listId).getFields(),
+            getDomain: (listId) => this.getListComputedDomain(listId),
+        });
         this.listPositionCache = new PositionMap();
         this.shouldInvalidateCache = false;
     }

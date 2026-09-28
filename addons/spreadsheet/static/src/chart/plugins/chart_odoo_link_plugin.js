@@ -1,8 +1,12 @@
 import { OdooCorePlugin } from "@spreadsheet/plugins";
-import { coreTypes, evaluationCommandTypes, constants } from "@odoo/o-spreadsheet";
+import { coreTypes, evaluationCommandTypes, constants, corePlugins } from "@odoo/o-spreadsheet";
+import { IrMenuPlugin } from "../../ir_ui_menu/ir_ui_menu_plugin";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { deepCopy } from "@web/core/utils/objects";
-import { globalFieldMatchingRegistry } from "@spreadsheet/global_filters/helpers";
+import { ListCorePlugin } from "@spreadsheet/list";
+import { OdooChartCorePlugin } from "./odoo_chart_core_plugin";
+import { ListCoreGlobalFilterPlugin } from "../../list/plugins/list_core_global_filter_plugin";
+import { PivotCoreGlobalFilterPlugin } from "../../pivot/plugins/pivot_core_global_filter_plugin";
 
 const { FIGURE_ID_SPLITTER } = constants;
 
@@ -25,12 +29,21 @@ const { FIGURE_ID_SPLITTER } = constants;
 
 /** Plugin that link charts with Odoo datasources. It contains the datasource type and its id. */
 export class ChartOdooLinkPlugin extends OdooCorePlugin {
+    static dependencies = [
+        IrMenuPlugin,
+        ListCorePlugin,
+        corePlugins.PivotCorePlugin,
+        PivotCoreGlobalFilterPlugin,
+        OdooChartCorePlugin,
+        ListCoreGlobalFilterPlugin,
+    ];
     static getters = /** @type {const} */ (["getChartOdooLink", "isDataSourceLinkedToChart"]);
 
     constructor(config) {
         super(config);
         /** @type {Object.<string, OdooLink | undefined >} */
         this.odooLinkReferences = {};
+        this.globalFieldMatchingRegistry = this.getters.getGlobalFieldMatchingRegistry();
     }
 
     allowDispatch(cmd) {
@@ -40,13 +53,13 @@ export class ChartOdooLinkPlugin extends OdooCorePlugin {
                     return CommandResult.Success;
                 }
                 const { dataSourceType, dataSourceCoreId } = cmd.odooLink;
-                if (!globalFieldMatchingRegistry.contains(dataSourceType)) {
+                if (!this.globalFieldMatchingRegistry.contains(dataSourceType)) {
                     return CommandResult.InvalidDataSourceType;
                 }
                 if (
-                    !globalFieldMatchingRegistry
+                    !this.globalFieldMatchingRegistry
                         .get(dataSourceType)
-                        .getIds(this.getters)
+                        .getIds()
                         .includes(dataSourceCoreId)
                 ) {
                     return CommandResult.InvalidDataSourceId;
@@ -135,9 +148,9 @@ export class ChartOdooLinkPlugin extends OdooCorePlugin {
         }
         if (odooLink.type === "dataSource") {
             const { dataSourceCoreId, dataSourceType } = odooLink;
-            const datasourceExists = globalFieldMatchingRegistry
+            const datasourceExists = this.globalFieldMatchingRegistry
                 .get(dataSourceType)
-                .getIds(this.getters)
+                .getIds()
                 .find((id) => id === dataSourceCoreId);
             return datasourceExists ? odooLink : undefined;
         } else {
