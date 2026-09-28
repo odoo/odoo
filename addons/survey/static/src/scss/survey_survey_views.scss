@@ -1,4 +1,4 @@
-// KANBAN VIEW
+/* KANBAN VIEW */
 .o_survey_view_kanban_view .o_kanban_renderer {
     .o_survey_kanban_card {
         .o_survey_certification_icon {
@@ -10,7 +10,7 @@
         }
     }
 
-    // Grouped / Ungrouped sections hidding
+    /* Grouped / Ungrouped sections hidding */
     &.o_kanban_grouped {
         .row > div {
             flex: 1 1 100% !important;
@@ -21,7 +21,7 @@
                 max-width: 50% !important;
             }
             &.d-none {
-                display: none !important; //forcing the d-none to override the d-lg or d-sm classes for grouped view
+                display: none !important; /* forcing the d-none to override the d-lg or d-sm classes for grouped view */
             }
         }
 
@@ -32,7 +32,7 @@
         }
     }
 
-    // Ungrouped display: whole length (kanban-list)
+    /* Ungrouped display: whole length (kanban-list) */
     &.o_kanban_ungrouped {
         .o_survey_kanban_card {
             --#{$prefix}gap: #{map-get($spacers, 3)} #{map-get($spacers, 2)};
@@ -56,36 +56,36 @@
             }
 
             .o_progressbar_value > div {
-                // Keep the correct size based on the percentage value.
+                /* Keep the correct size based on the percentage value. */
                 width: 5ch;
                 font-variant-numeric: tabular-nums;
             }
         }
     }
 
-    // Grouped specific
+    /* Grouped specific */
     &.o_kanban_grouped {
         .o_survey_kanban_card {
             --#{$prefix}columns: 2;
         }
     }
 
-    // Ungrouped specific
+    /* Ungrouped specific */
     &.o_kanban_ungrouped {
-        // Set a minimal height otherwise display may have different card sized
+        /* Set a minimal height otherwise display may have different card sized */
         .o_survey_kanban_card > div.row {
                 min-height: 60px;
         }
 
-        // Left semi-trophy icon for certifications: tweak display for list view
+        /* Left semi-trophy icon for certifications: tweak display for list view */
         .o_survey_kanban_card_certification {
             background-position: center left -35px;
             background-size: auto 75%;
         }
     }
 
-    // RIBBON: Kanban specific
-    // Ungrouped specific
+    /* RIBBON: Kanban specific */
+    /* Ungrouped specific */
     .o_survey_kanban_card {
         .ribbon {
             --Ribbon-wrapper-width: 6rem;
@@ -97,7 +97,7 @@
     }
 }
 
-// FORM view
+/* FORM view */
 .o_survey_form table.o_section_list_view tr.o_data_row.o_is_section {
     font-weight: bold;
     background-color: var(--SurveyForm__section-background-color, #DDD);
@@ -125,7 +125,7 @@
     }
 }
 
-// TOOLS
+/* TOOLS */
 .icon_rotates {
     transform: rotate(180deg);
 }

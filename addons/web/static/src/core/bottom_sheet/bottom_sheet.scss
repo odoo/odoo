@@ -1,7 +1,7 @@
 .o_bottom_sheet {
-    // =============================================
-    // Layout and inner elements
-    // =============================================
+    /* ============================================= */
+    /* Layout and inner elements */
+    /* ============================================= */
     --BottomSheet-slideIn-duration: #{$o_BottomSheet_slideIn_duration};
     --BottomSheet-slideIn-easing: #{$o_BottomSheet_slideIn_easing};
     --BottomSheet-slideOut-duration: #{$o_BottomSheet_slideOut_duration};
@@ -29,12 +29,12 @@
     transform-style: preserve-3d;
     contain: layout paint size;
 
-    // Workaround
+    /* Workaround */
     @media (prefers-reduced-motion: no-preference) {
         animation-name: has-animation;
     }
 
-    // Main scroll container for gesture handling
+    /* Main scroll container for gesture handling */
     .o_bottom_sheet_rail {
         @include o-position-absolute(0, 0, 0, 0);
         overflow-y: auto;
@@ -58,13 +58,13 @@
         }
     }
 
-    // Set snapping behaviors
+    /* Set snapping behaviors */
     .o_bottom_sheet_dismiss, .o_bottom_sheet_spacer, .o_bottom_sheet_sheet {
         scroll-snap-align: start;
         scroll-snap-stop: always;
     }
 
-    // Backdrop overlay
+    /* Backdrop overlay */
     .o_bottom_sheet_backdrop {
         position: fixed;
         inset: 0;
@@ -79,18 +79,18 @@
         backdrop-filter: grayscale(0%);
     }
 
-    // Dismiss area
+    /* Dismiss area */
     .o_bottom_sheet_dismiss {
         height: var(--dismiss-height, 50dvh);
     }
 
-    // Spacer area
+    /* Spacer area */
     .o_bottom_sheet_spacer {
         height: calc(100dvh - var(--sheet-height, 50dvh));
         pointer-events: none;
     }
 
-    // The actual sheet
+    /* The actual sheet */
     .o_bottom_sheet_sheet {
         --offcanvas-box-shadow: #{$box-shadow};
 
@@ -114,9 +114,9 @@
         }
     }
 
-    // =============================================
-    // States
-    // =============================================
+    /* ============================================= */
+    /* States */
+    /* ============================================= */
     @keyframes bottom-sheet-in {
         from { transform: translateY(100%) translateZ(0); }
         to { transform: translateY(0) translateZ(0); }
@@ -127,7 +127,7 @@
         to { transform: translateY(100%) translateZ(0); }
     }
 
-    // BottomSheet is ready to be rendered on screen
+    /* BottomSheet is ready to be rendered on screen */
     &.o_bottom_sheet_ready {
         opacity: 1;
 
@@ -143,17 +143,17 @@
         }
     }
 
-    // User interactions are now allowed
+    /* User interactions are now allowed */
     &.o_bottom_sheet_snapping .o_bottom_sheet_rail {
-        // Enable snap behavior
+        /* Enable snap behavior */
         scroll-snap-type: y mandatory;
 
         .o_bottom_sheet_backdrop {
             transition: none;
         }
 
-        // Provide a visual safenet in case of elastic
-        // overscroll (mostly iOS).
+        /* Provide a visual safenet in case of elastic */
+        /* overscroll (mostly iOS). */
         &:before {
             position: fixed;
             inset: auto auto 0 50%;
@@ -173,7 +173,7 @@
         }
     }
 
-    // Dismissing the sheet
+    /* Dismissing the sheet */
     &.o_bottom_sheet_dismissing {
         .o_bottom_sheet_sheet {
             @media (prefers-reduced-motion: no-preference) {
@@ -191,9 +191,9 @@
     }
 }
 
-// =============================================
-// Inner components design
-// =============================================
+/* ============================================= */
+/* Inner components design */
+/* ============================================= */
 .o_bottom_sheet .o_bottom_sheet_sheet {
     --BottomSheet-Entry-paddingX: #{$list-group-item-padding-x};
 
@@ -221,10 +221,10 @@
         }
     }
 
-    // TreeEntry
+    /* TreeEntry */
     --treeEntry-padding-v: 1.4rem;
 
-    // Dropdown
+    /* Dropdown */
     .dropdown-divider {
         --dropdown-divider-bg: #{$border-color};
         margin: map-get($spacers, 2) ($offcanvas-padding-x * .5);
@@ -247,12 +247,12 @@
     }
 
     .o_bottom_sheet_body:not(.o_custom_bottom_sheet) {
-        // Leave space for the active checkmark icon
+        /* Leave space for the active checkmark icon */
         &:has(.dropdown-item.active, .dropdown-item.selected) .dropdown-item {
             padding-right: $spacer * 2.5;
         }
 
-        // Dropdown
+        /* Dropdown */
         .dropdown-item:not(.dropdown-item_active_noarrow) {
             &.active, &.selected {
                 @extend %BottomSheet-Entry-active;
@@ -262,7 +262,7 @@
 
     .o_accordion_toggle {
         &::after {
-            // Reset original style
+            /* Reset original style */
             border: unset;
             transform: unset;
 

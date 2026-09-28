@@ -5,11 +5,11 @@
     --btn-group-gap: 0;
     --border-light-color:#e7e9ed;
 
-    // Disable zoom
+    /* Disable zoom */
     touch-action: pan-x pan-y;
     height: 100%;
 
-    // Target 4K devices
+    /* Target 4K devices */
     @media #{screen and (min-width: 3839px), (min-height: 3839px)} {
         --root-font-size: #{$o-so-font-size-4k};
     }
@@ -47,7 +47,7 @@
 html, body {
     height: 100%;
     overflow: hidden;
-    overscroll-behavior: none;  // disable swipe to go back
+    overscroll-behavior: none;  /* disable swipe to go back */
 }
 
 body {

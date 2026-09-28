@@ -1,12 +1,12 @@
-///
-/// This file regroups the CSS rules made to fix/extend bootstrap in the backend
-/// ==============================================================================
+/* / */
+/* / This file regroups the CSS rules made to fix/extend bootstrap in the backend */
+/* / ============================================================================== */
 
 
-// Buttons
-// ============================================================================
-// Generating bootstrap color buttons was disabled (see import_bootstrap.scss).
-// We do it ourself here generating each btn design type individually.
+/* Buttons */
+/* ============================================================================ */
+/* Generating bootstrap color buttons was disabled (see import_bootstrap.scss). */
+/* We do it ourself here generating each btn design type individually. */
 
 .btn {
     --#{$variable-prefix}btn-disabled-border-color: transparent;
@@ -14,8 +14,8 @@
     --#{$prefix}gradient: #{$o-gradient-btn};
 }
 
-// 1. Render buttons defined in '$o-btns-bs-override' and '$o-btns-bs-outline-override'
-//    maps.
+/* 1. Render buttons defined in '$o-btns-bs-override' and '$o-btns-bs-outline-override' */
+/* maps. */
 @each $-name, $-value in $o-btns-bs-override {
     .btn-#{$-name},
     .btn-group > .btn-#{$-name} ~ .btn.dropdown-toggle-split {
@@ -72,8 +72,8 @@
     }
 }
 
-// 2. Render '$theme-colors' buttons excluding the ones already generated
-//    using the custom maps.
+/* 2. Render '$theme-colors' buttons excluding the ones already generated */
+/* using the custom maps. */
 @each $-name, $-color in $theme-colors {
     @if (not map-get($o-btns-bs-override, $-name)) {
         .btn-#{$-name},
@@ -89,7 +89,7 @@
     }
 }
 
-// 3. Render custom buttons.
+/* 3. Render custom buttons. */
 @each $-name, $-color in $o-btn-custom {
     .btn-#{$-name},
     .btn-group > .btn-#{$-name} ~ .btn.dropdown-toggle-split {
@@ -97,38 +97,38 @@
     }
 }
 
-// 4. Space out the buttons of a '.btn-group' instead of letting them overlap
-//    their borders, making each of them individually recognizable.
+/* 4. Space out the buttons of a '.btn-group' instead of letting them overlap */
+/* their borders, making each of them individually recognizable. */
 .btn-group {
     gap: calc(var(--BtnGroup__btn-spacing, 1px) + #{$btn-border-width});
 }
 
-// Bootstrap '$theme-colors' text-x and bg-x classes generation
-// ============================================================================
-// Bootstrap's default behavior is to generate classes directly from its
-// '$theme-colors' map. However, we have disabled this to allow our own
-// approach.
+/* Bootstrap '$theme-colors' text-x and bg-x classes generation */
+/* ============================================================================ */
+/* Bootstrap's default behavior is to generate classes directly from its */
+/* '$theme-colors' map. However, we have disabled this to allow our own */
+/* approach. */
 
-// 'text-x' classes
-// ----------------------------------------------------------------------------
-// 1. To comply with WCAG standards, we need to use text-colors that are
-//    different from the ones in the '$theme-colors' map. We achieve this by
-//    creating a temporary map that overrides uncompliant colors with
-//    '$o-theme-text-colors' ones.
+/* 'text-x' classes */
+/* ---------------------------------------------------------------------------- */
+/* 1. To comply with WCAG standards, we need to use text-colors that are */
+/* different from the ones in the '$theme-colors' map. We achieve this by */
+/* creating a temporary map that overrides uncompliant colors with */
+/* '$o-theme-text-colors' ones. */
 $-o-theme-text-colors: map-merge($theme-colors, $o-theme-text-colors);
 
-// 2. Use different colors for links and buttons when in conjunction with
-//    'text-x' classes to keep consistency with previous versions of Bootstrap.
-//    To do so we pass the values through the 'text-emphasis-variant' mixin.
+/* 2. Use different colors for links and buttons when in conjunction with */
+/* 'text-x' classes to keep consistency with previous versions of Bootstrap. */
+/* To do so we pass the values through the 'text-emphasis-variant' mixin. */
 @each $-name, $-value in $-o-theme-text-colors {
     @include text-emphasis-variant(".text-#{$-name}", $-value);
 }
 
-// 3. Adapt the behaviour of .btn-link buttons when in conjuction with contextual
-//    classes (eg. text-warning). 'muted' is set as default text color, while
-//    the contextual-class color will be used on ':hover'.
-//    Note: For the custom classes, this is duplicated below where the classes are
-//    generated with the o-gray
+/* 3. Adapt the behaviour of .btn-link buttons when in conjuction with contextual */
+/* classes (eg. text-warning). 'muted' is set as default text color, while */
+/* the contextual-class color will be used on ':hover'. */
+/* Note: For the custom classes, this is duplicated below where the classes are */
+/* generated with the o-gray */
 .btn-link {
     font-weight: $btn-font-weight;
 
@@ -139,16 +139,16 @@ $-o-theme-text-colors: map-merge($theme-colors, $o-theme-text-colors);
     }
 }
 
-// 3. Cleanup temporary map
+/* 3. Cleanup temporary map */
 $-o-theme-text-colors: null;
 
-// 'bg-x' classes
-// ----------------------------------------------------------------------------
-// 1. Generate $theme-colors classes using 'o-print-color()' mixin in order to
-//    assign the color and print relative CSS variables as well. Note that
-//    'black' and 'white' are not included in the map, we'll generate these
-//    classes later in conjunction with legacy 'bg-white-x' and 'bg-black-x'
-//    ones.
+/* 'bg-x' classes */
+/* ---------------------------------------------------------------------------- */
+/* 1. Generate $theme-colors classes using 'o-print-color()' mixin in order to */
+/* assign the color and print relative CSS variables as well. Note that */
+/* 'black' and 'white' are not included in the map, we'll generate these */
+/* classes later in conjunction with legacy 'bg-white-x' and 'bg-black-x' */
+/* ones. */
 @each $-name, $-color in $theme-colors {
     .bg-#{$-name} {
         @include o-print-color($-color, background-color, bg-opacity);
@@ -156,12 +156,12 @@ $-o-theme-text-colors: null;
 }
 
 
-// Bootstrap black/white text-x and bg-x classes + legacy opacity ones
-// ============================================================================
+/* Bootstrap black/white text-x and bg-x classes + legacy opacity ones */
+/* ============================================================================ */
 
-// 1. Define placeholder-selectors (aka pseudo-classes) for both white and
-//    black. We'll then extend placeholder rather than classes to avoid
-//    performance issues during SCSS compilation.
+/* 1. Define placeholder-selectors (aka pseudo-classes) for both white and */
+/* black. We'll then extend placeholder rather than classes to avoid */
+/* performance issues during SCSS compilation. */
 %-text-white {
     @include o-print-color($o-white, color, text-opacity);
 }
@@ -199,10 +199,10 @@ $-o-theme-text-colors: null;
     @extend %-bg-black;
 }
 
-// 2. Generate legacy opacity-variations classes for both white and black. We
-//    don't specifically assign colors here, we just extend placeholder
-//    selectors. To control opacity we act on the '--X-opacity' Bootstrap
-//    default CSS variables.
+/* 2. Generate legacy opacity-variations classes for both white and black. We */
+/* don't specifically assign colors here, we just extend placeholder */
+/* selectors. To control opacity we act on the '--X-opacity' Bootstrap */
+/* default CSS variables. */
 $-o-grayscale-opacities: map-remove($o-opacities, 0, 100);
 @each $-name, $-value in $-o-grayscale-opacities {
     .bg-white-#{$-name} {
@@ -228,25 +228,25 @@ $-o-grayscale-opacities: map-remove($o-opacities, 0, 100);
     }
 }
 
-// 3. Cleanup temporary map
+/* 3. Cleanup temporary map */
 $-o-grayscale-opacities: null;
 
 
-// Odoo custom text/bg colors classes generation
-// ============================================================================
+/* Odoo custom text/bg colors classes generation */
+/* ============================================================================ */
 
-// 1. Extend odoo's custom colors maps adding Bootstrap's grays.
-//    Note: the card-body rule below needs those grays utilities to be defined
-//    before, so that the related o-bg-color text-muted rules work.
+/* 1. Extend odoo's custom colors maps adding Bootstrap's grays. */
+/* Note: the card-body rule below needs those grays utilities to be defined */
+/* before, so that the related o-bg-color text-muted rules work. */
 $-o-text-colors-custom: map-merge($o-text-colors-custom, $o-grays);
 $-o-bg-colors-custom: map-merge($o-bg-colors-custom, $o-grays);
 
-// 2. Generate custom 'text-x' contextual classes
+/* 2. Generate custom 'text-x' contextual classes */
 @each $-name, $-color in $-o-text-colors-custom {
     @include text-emphasis-variant(".text-#{$-name}", $-color);
 }
 
-// 3. Generate custom 'bg-x' and 'text-bg-x' contextual classes
+/* 3. Generate custom 'bg-x' and 'text-bg-x' contextual classes */
 @each $-name, $-color in map-merge($-o-bg-colors-custom, $o-grays) {
     .bg-#{$-name}, .text-bg-#{$-name}  {
         @include o-print-color($-color, background-color, bg-opacity);
@@ -257,15 +257,15 @@ $-o-bg-colors-custom: map-merge($o-bg-colors-custom, $o-grays);
     }
 }
 
-// 4. Cleanup temporary maps
+/* 4. Cleanup temporary maps */
 $-o-text-colors-custom: null;
 $-o-bg-colors-custom: null;
 
-// 5. Adapt the behaviour of .btn-link buttons when in conjuction with the custom
-//    contextual classes (eg. text-action). 'muted' is set as default text color,
-//    while the contextual-class color will be used on ':hover'.
-//    Note: the same is done above for the '$theme-colors'. Here on the
-//    '$o-text-colors-custom' because we don't want it to apply on the '$o-grays'.
+/* 5. Adapt the behaviour of .btn-link buttons when in conjuction with the custom */
+/* contextual classes (eg. text-action). 'muted' is set as default text color, */
+/* while the contextual-class color will be used on ':hover'. */
+/* Note: the same is done above for the '$theme-colors'. Here on the */
+/* '$o-text-colors-custom' because we don't want it to apply on the '$o-grays'. */
 .btn-link {
     @each $-name, $-color in $o-text-colors-custom{
         &.btn-#{$-name}, &.text-#{$-name} {
@@ -274,21 +274,21 @@ $-o-bg-colors-custom: null;
     }
 }
 
-// 6. Adds a bg-inherit custom utility class
+/* 6. Adds a bg-inherit custom utility class */
 .bg-inherit {
     background-color: inherit;
 }
 
-// Alert
-// ==============================================================================
+/* Alert */
+/* ============================================================================== */
 .alert {
     padding-top: var(--alert-padding-y, $alert-padding-y);
     padding-bottom: var(--alert-padding-y, $alert-padding-y);
     margin-bottom: var(--alert-margin-bottom, $alert-margin-bottom);
 }
 
-// Checkboxes and Radios - transitions and animations
-// ============================================================================
+/* Checkboxes and Radios - transitions and animations */
+/* ============================================================================ */
 .form-check-input {
     transition: background-color 250ms ease, border-color 200ms ease;
 }
@@ -302,8 +302,8 @@ $-o-bg-colors-custom: null;
     to { background-size: 100% 100%; }
 }
 
-// Switches
-// ============================================================================
+/* Switches */
+/* ============================================================================ */
 .form-switch {
     .form-check-input:checked {
         background-color: $o-success;
@@ -319,10 +319,10 @@ $-o-bg-colors-custom: null;
         border-color: $o-success;
     }
 
-    // Creating a different styling for toggle switches with a purpose of switching
-    // from A to B (eg. switching between month and year) rather than ON/OFF.
-    // The 'o_switch_toggle' class should be use in addition to the default
-    // 'form-switch' Bootstrap class.
+    /* Creating a different styling for toggle switches with a purpose of switching */
+    /* from A to B (eg. switching between month and year) rather than ON/OFF. */
+    /* The 'o_switch_toggle' class should be use in addition to the default */
+    /* 'form-switch' Bootstrap class. */
     &.o_switch_toggle {
         .form-check-input, .form-check-input:checked {
             border-color: $o-action;
@@ -343,8 +343,8 @@ $-o-bg-colors-custom: null;
     }
 }
 
-// Switches
-// ============================================================================
+/* Switches */
+/* ============================================================================ */
 .table {
     > :not(caption) > * > * {
         color: unset;

@@ -16,14 +16,14 @@
             th {
                 --table-bg: linear-gradient(to bottom, #{$o-webclient-background-color}, #{rgba($o-webclient-background-color, .75)});
 
-                // Temporary workaround: We replace the border with a box-shadow to simulate the border bottom so it keeps visible when scrolling.
+                /* Temporary workaround: We replace the border with a box-shadow to simulate the border bottom so it keeps visible when scrolling. */
                 border: 0;
                 box-shadow: inset 0px calc(#{$table-border-width} * -1) 0 0 $table-border-color;
 
-                // Need to redefine it with background insead of background-color to ensure applying gradient.
+                /* Need to redefine it with background insead of background-color to ensure applying gradient. */
                 background: var(--table-bg);
 
-                // Define backdrop blur here to ensure it will applied on all th
+                /* Define backdrop blur here to ensure it will applied on all th */
                 backdrop-filter: var(--o-backdrop-blur-sm);
             }
         }
@@ -81,7 +81,7 @@
         }
     }
 
-    // it contains a kanban card representing the record
+    /* it contains a kanban card representing the record */
     .o_activity_record > div {
         display: flex;
         flex: 1 1 auto;
@@ -172,5 +172,5 @@
 }
 
 .o_activity_view_table {
-    height: 1px; // this value is ignored on the table but it is necessary to ensure h-100 works on descendants to vertically center content inside cells
+    height: 1px; /* this value is ignored on the table but it is necessary to ensure h-100 works on descendants to vertically center content inside cells */
 }

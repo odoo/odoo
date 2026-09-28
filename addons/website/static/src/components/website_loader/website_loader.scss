@@ -1,5 +1,5 @@
 .o_website_loader_container {
-    $-accent-color: #BB86FC; // dark mode primary color
+    $-accent-color: #BB86FC; /* dark mode primary color */
     background-color: $o-view-background-color;
     pointer-events: all;
     z-index: $zindex-modal - 1;
@@ -55,7 +55,7 @@
 
         animation: loaderDone 1s ease-out;
     }
-    // Animation Steps Container
+    /* Animation Steps Container */
     #o_website_loader_animations_steps {
         width: 55%;
         background: #111827;
@@ -70,9 +70,9 @@
         }
     }
 
-    // =======================================
-    // Stages Timeline Definition
-    // =======================================
+    /* ======================================= */
+    /* Stages Timeline Definition */
+    /* ======================================= */
 
     #o_website_loader_step_colors, #o_website_loader_step_images, #o_website_loader_step_text, #o_website_loader_step_generic {
         @include o-position-absolute(0, 0, 0, 0);
@@ -84,7 +84,7 @@
         opacity: 0;
         transition-delay: .5s;
     }
-    // IMAGES Stage
+    /* IMAGES Stage */
     &.o_website_loader_container_images {
         #o_website_loader_step_colors span {
             opacity: 0;
@@ -100,7 +100,7 @@
             }
         }
     }
-    // TEXT Stage
+    /* TEXT Stage */
     &.o_website_loader_container_text {
 
         #o_website_loader_step_colors {
@@ -122,7 +122,7 @@
         }
     }
 
-    // GENERIC Stage
+    /* GENERIC Stage */
     &.o_website_loader_container_generic {
 
         #o_website_loader_step_colors, #o_website_loader_step_images {
@@ -140,11 +140,11 @@
         }
     }
 
-    // =======================================
-    // Steps specific rules
-    // =======================================
+    /* ======================================= */
+    /* Steps specific rules */
+    /* ======================================= */
 
-    // COLORS step
+    /* COLORS step */
     #o_website_loader_step_colors {
         $-random-colors: #7d773c, #607944, #775c35, #3d6273, #5f414c, #805f54, #76527a, #56476e, #4b676b, #95985f;
         $-random-color-cells: 28, 43, 31, 37, 14, 41, 34, 23, 19, 12;
@@ -190,7 +190,7 @@
         }
     }
 
-    // IMAGES step
+    /* IMAGES step */
     #o_website_loader_step_images {
         display: flex;
         animation: 7s ease-in-out alternate imagesPlaneMotion forwards;
@@ -234,7 +234,7 @@
         }
     }
 
-    // TEXT step
+    /* TEXT step */
     #o_website_loader_step_text {
 
         .o_website_loader_text_content {
@@ -267,7 +267,7 @@
         }
     }
 
-    // GENERIC step
+    /* GENERIC step */
     .o_website_loader_loader {
         $-loader-size: 120px;
         $-loader-gap: $-loader-size * .5;

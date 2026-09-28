@@ -1,5 +1,5 @@
 .o-form-buttonbox {
-    // Compute the expected oe_stat_button's height according to the default btn size.
+    /* Compute the expected oe_stat_button's height according to the default btn size. */
     $-stat-button-inner-size: calc(#{$btn-padding-y} * 2 + #{$btn-font-size} * #{$btn-line-height});
     $-stat-button-height: calc(#{$-stat-button-inner-size} + #{$btn-border-width} * 2);
 
@@ -46,7 +46,7 @@
 
         @include media-breakpoint-up(md) {
             height: $-stat-button-height;
-            min-width: 7.5em; // Arbitrary
+            min-width: 7.5em; /* Arbitrary */
         }
 
         .o_button_icon {
@@ -58,7 +58,7 @@
             }
         }
 
-        // Some buttons only display text without using StatInfo template
+        /* Some buttons only display text without using StatInfo template */
         > span {
             @include o-text-overflow(block);
         }
@@ -104,10 +104,10 @@
             color:inherit;
         }
 
-        // The following code ensures that the correct button state
-        // is brought to the front, depending on the situation.
-        // For example, when a user starts clicking on one button
-        // and then drags to another.
+        /* The following code ensures that the correct button state */
+        /* is brought to the front, depending on the situation. */
+        /* For example, when a user starts clicking on one button */
+        /* and then drags to another. */
         &.btn-outline-secondary, .o_button_more {
             &:hover {
                 z-index: 1;
@@ -147,7 +147,7 @@
         }
     }
 
-    // "More" button and dropdown
+    /* "More" button and dropdown */
     .oe_stat_button.dropdown {
         min-width: auto;
 
@@ -162,7 +162,7 @@
         }
     }
 
-    // Piechart
+    /* Piechart */
     --PercentPieField-size: #{$-stat-button-icon-size};
     --PercentPieField-gap: #{$-stat-button-icon-margin-end};
 
@@ -221,9 +221,9 @@
 .o_dropdown_more {
 
     .oe_stat_button {
-        // Use the value of $focus-ring-box-shadow defined in bootstrap_overridden.scss,
-        // but apply it with inset so the ring is visible inside the button.
-        // If the default value changes, this should be updated accordingly.
+        /* Use the value of $focus-ring-box-shadow defined in bootstrap_overridden.scss, */
+        /* but apply it with inset so the ring is visible inside the button. */
+        /* If the default value changes, this should be updated accordingly. */
         --#{$prefix}btn-focus-box-shadow: inset 0 0 #{$focus-ring-blur} #{$focus-ring-width * .5} #{$o-component-active-border}, inset 0 0 #{$focus-ring-blur} #{$focus-ring-width} #{$focus-ring-color};
 
         height: auto;

@@ -3,14 +3,14 @@
  * all views.
  */
 
-// Sample data global rules
+/* Sample data global rules */
 .o_view_sample_data {
     > :not(.o_search_panel) .form-check {
         pointer-events: none !important;
     }
 }
 
-// No content helper
+/* No content helper */
 .o_view_nocontent {
     @include o-position-absolute(0, 0, 0, 0);
     pointer-events: none;
@@ -50,7 +50,7 @@
     }
 }
 
-// Naive heuristic to leave enough space for the nocontent helper in dialogs
+/* Naive heuristic to leave enough space for the nocontent helper in dialogs */
 .o_dialog {
     .o_content:has(.o_view_nocontent) {
         height: 20rem;
@@ -58,14 +58,14 @@
     }
 }
 
-// Invisible modifier (can be inside the view, the button area, ...)
+/* Invisible modifier (can be inside the view, the button area, ...) */
 .o_invisible_modifier {
     display: none!important;
 }
 
-// Status
-// This should normally be put in fields.scss but these classes are used outside
-// of `.o_field_widget` so it needs to be placed at an upper level.
+/* Status */
+/* This should normally be put in fields.scss but these classes are used outside */
+/* of `.o_field_widget` so it needs to be placed at an upper level. */
 .o_status {
     border-radius: 50%;
     background-color: map-get($grays, '200');
@@ -101,7 +101,7 @@
     &.o_status {
         color: $white;
         &::before {
-            // Adjust the exclamation mark to fit the status circle
+            /* Adjust the exclamation mark to fit the status circle */
             transform: scale(0.7);
         }
     }

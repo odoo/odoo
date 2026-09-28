@@ -1,10 +1,10 @@
-// ------------------------------------------------------------------
-// Lato
-// ------------------------------------------------------------------
+/* ------------------------------------------------------------------ */
+/* Lato */
+/* ------------------------------------------------------------------ */
 $lato-font-path: './lato';
 
 @mixin lato-font($type, $weight, $style) {
-    // Cyrillic: U+0400-04FF, U+0500-052F
+    /* Cyrillic: U+0400-04FF, U+0500-052F */
     @font-face {
         font-family: 'Odoo Unicode Support Noto';
         src: url('https://fonts.odoocdn.com/fonts/noto/NotoSans-#{$type}.woff2') format('woff2'),
@@ -14,7 +14,7 @@ $lato-font-path: './lato';
         font-style: $style;
         unicode-range: U+0400-04FF, U+0500-052F;
     }
-    // Hebrew: U+0590-05FF, U+FB1D-FB4F
+    /* Hebrew: U+0590-05FF, U+FB1D-FB4F */
     @font-face {
         font-family: 'Odoo Unicode Support Noto';
         src: url('https://fonts.odoocdn.com/fonts/noto/NotoSansHebrew-#{$type}.woff2') format('woff2'),
@@ -24,7 +24,7 @@ $lato-font-path: './lato';
         font-style: $style;
         unicode-range: U+0590-05FF, U+FB1D-FB4F;
     }
-    // Arabic: U+0600-06FF, U+0750-077F
+    /* Arabic: U+0600-06FF, U+0750-077F */
     @font-face {
         font-family: 'Odoo Unicode Support Noto';
         src: url('https://fonts.odoocdn.com/fonts/noto/NotoSansArabic-#{$type}.woff2') format('woff2'),
@@ -34,7 +34,7 @@ $lato-font-path: './lato';
         font-style: $style;
         unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF;
     }
-    // Telugu: U+0C00-0C7F
+    /* Telugu: U+0C00-0C7F */
     @font-face {
         font-family: 'Odoo Unicode Support Noto';
         src: url('https://fonts.odoocdn.com/fonts/noto/NotoSansTelugu-#{$type}.woff2') format('woff2'),
@@ -75,9 +75,9 @@ $lato-font-path: './lato';
 @include lato-font-pair('Bol', 700);
 @include lato-font-pair('Bla', 900);
 
-// ------------------------------------------------------------------
-// Google fonts
-// ------------------------------------------------------------------
+/* ------------------------------------------------------------------ */
+/* Google fonts */
+/* ------------------------------------------------------------------ */
 $google-font-path: './google';
 
 @mixin google-font($family, $type, $weight, $style, $file_type) {

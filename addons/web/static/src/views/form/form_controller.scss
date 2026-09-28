@@ -1,4 +1,4 @@
-// Define left and right padding according to screen resolution
+/* Define left and right padding according to screen resolution */
 @mixin o-form-sheet-inner-left-padding {
     padding-left: $o-horizontal-padding;
     @include media-breakpoint-up(lg) {
@@ -12,7 +12,7 @@
     }
 }
 
-// Form view rules to break the default table layout
+/* Form view rules to break the default table layout */
 @mixin form-break-table() {
     --fieldWidget-margin-bottom: 0;
 
@@ -60,7 +60,7 @@
         min-height: 100%;
     }
 
-    // Utility classes
+    /* Utility classes */
     .oe_inline, .o_field_widget.oe_inline > * {
         width: auto!important;
     }
@@ -75,7 +75,7 @@
     }
 
     .o_row {
-        &, &.o_field_widget { // Some field may want to use o_row as root and these rules must prevalue
+        &, &.o_field_widget { /* Some field may want to use o_row as root and these rules must prevalue */
             display: flex;
             width: auto!important;
         }
@@ -84,7 +84,7 @@
         min-width: 50px;
         margin: 0 (-$o-form-spacing-unit/2);
 
-        > div, > span, > button, > label, > a, > input, > select { // > * did not add a level of priority to the rule
+        > div, > span, > button, > label, > a, > input, > select { /* > * did not add a level of priority to the rule */
             flex: 0 1 auto;
             width: auto!important;
             margin-right: $o-form-spacing-unit/2;
@@ -103,7 +103,7 @@
         }
     }
 
-    // Readonly specific rules
+    /* Readonly specific rules */
     .o_form_readonly {
         .oe_edit_only {
             display: none!important;
@@ -133,7 +133,7 @@
         }
     }
 
-    // Editable specific rules
+    /* Editable specific rules */
     .o_form_editable {
         .oe_read_only {
             display: none!important;
@@ -152,7 +152,7 @@
         .o_row {
             > .o_field_widget, > div {
                 flex: 1 1 auto;
-                width: 0!important; // 3rd flex argument does not work with input (must be auto and real width 0)
+                width: 0!important; /* 3rd flex argument does not work with input (must be auto and real width 0) */
 
                 &.o_field_boolean, &.o_field_boolean_toggle, &.o_priority, &.o_field_additional_identifiers_button {
                     flex: 0 0 auto;
@@ -192,18 +192,18 @@
         max-width: $o-form-renderer-max-width;
     }
 
-    // No sheet
+    /* No sheet */
     &.o_form_nosheet, .o_form_nosheet {
-        // Since 16.3 the `o_form_nosheet` element acts as a sheet filling the
-        // entire available room. To define its properties we use sheet's CSS
-        // variables in order to keep consistency and ease inner components
-        // contextual adaptations (notepad, alerts, listView...).
+        /* Since 16.3 the `o_form_nosheet` element acts as a sheet filling the */
+        /* entire available room. To define its properties we use sheet's CSS */
+        /* variables in order to keep consistency and ease inner components */
+        /* contextual adaptations (notepad, alerts, listView...). */
         padding: var(--formView-sheet-padding-y, #{$o-sheet-vpadding}) var(--formView-sheet-padding-x, #{$o-horizontal-padding});
         background-color: $o-view-background-color;
 
         .o_notebook {
             > .tab-content > .tab-pane > :first-child:not(.o_group) {
-                // These elements will appear attached to the tabs
+                /* These elements will appear attached to the tabs */
                 &.o_field_x2many.o_field_x2many_list {
                     margin-left: calc(var(--formView-sheet-padding-x) * -1);
                     margin-right: calc(var(--formView-sheet-padding-x) * -1);
@@ -212,7 +212,7 @@
         }
     }
 
-    // Sheet BG
+    /* Sheet BG */
     .o_form_sheet_bg {
         @include media-only(screen) {
             --formView-sheetBg-padding-x: #{map-get($spacers, 3)};
@@ -222,14 +222,14 @@
         padding-right: var(--formView-sheetBg-padding-right, var(--formView-sheetBg-padding-x));
         width: 100%;
         max-width: $o-form-view-sheet-max-width;
-        margin-right: auto; // Always align to the left
+        margin-right: auto; /* Always align to the left */
 
         &:not(:has(.o_form_statusbar)) {
             padding-top: var(--formView-sheetBg-padding-top, #{map-get($spacers, 2)});
         }
     }
 
-    // Sheet
+    /* Sheet */
     .o_form_sheet {
         margin: 0 var(--formView-sheet-margin-x, calc(var(--formView-sheetBg-padding-x) * -1));
         padding: var(--formView-sheet-padding-y, #{map-get($spacers, 3)}) var(--formView-sheet-padding-x, #{map-get($spacers, 3)});
@@ -259,7 +259,7 @@
 
     }
 
-    // Alerts
+    /* Alerts */
     .alert {
         --alert-padding-y: #{map-get($spacers, 2)};
 
@@ -276,7 +276,7 @@
         }
     }
 
-    // Statusbar
+    /* Statusbar */
     .o_form_statusbar {
         position: relative;
         z-index: 0;
@@ -316,7 +316,7 @@
         }
     }
 
-    // Title
+    /* Title */
     .oe_title {
         color: $headings-color;
 
@@ -324,7 +324,7 @@
             max-width: 75%;
 
             > h1, > h2, > h3 {
-                width: 100%; // Needed because inline-block when is a hx.o_row
+                width: 100%; /* Needed because inline-block when is a hx.o_row */
                 margin-top: 0;
                 margin-bottom: map-get($spacers, 3);
                 line-height: $headings-line-height;
@@ -340,7 +340,7 @@
         }
     }
 
-    // Avatar
+    /* Avatar */
     .oe_avatar {
         float: right;
         margin-bottom: 10px;
@@ -354,13 +354,13 @@
         }
     }
 
-    // Status dropdown
+    /* Status dropdown */
     a[data-bs-toggle="dropdown"] > .o_status {
         height: $h3-font-size;
         width: $h3-font-size;
     }
 
-    // Groups
+    /* Groups */
     .o_group {
         justify-content: space-between;
 
@@ -379,8 +379,8 @@
         @include media-breakpoint-up(sm) {
             .o_field_widget {
                 &.o_text_overflow {
-                    width: 1px!important; // hack to make the table layout believe it is a small element (so that the table does not grow too much) ...
-                    min-width: 100%;      // ... but in fact it takes the whole table space
+                    width: 1px!important; /* hack to make the table layout believe it is a small element (so that the table does not grow too much) ... */
+                    min-width: 100%;      /* ... but in fact it takes the whole table space */
                 }
             }
 
@@ -440,8 +440,8 @@
         }
     }
 
-    // The quick create is a narrow container whatever the viewport, so it never
-    // uses the two columns layout defined above.
+    /* The quick create is a narrow container whatever the viewport, so it never */
+    /* uses the two columns layout defined above. */
     &.o_kanban_quick_create_form {
         .o_inner_group {
             @include form-break-table;
@@ -476,7 +476,7 @@
         }
     }
 
-    // Separators
+    /* Separators */
     .o_horizontal_separator {
         color: $gray-700;
 
@@ -489,7 +489,7 @@
         }
     }
 
-    // Contextual adaptation
+    /* Contextual adaptation */
     .o_kanban_renderer {
         --Kanban-background: transparent;
         --KanbanRecord-margin-v: 0;
@@ -501,12 +501,12 @@
         }
     }
 
-    // Notebooks
+    /* Notebooks */
     .o_notebook {
         --Notebook-margin-x: calc(var(--formView-sheet-padding-x) * -1);
         --Notebook-padding-x: var(--formView-sheet-padding-x);
 
-        clear: both; // For the notebook not to have alongside floating elements
+        clear: both; /* For the notebook not to have alongside floating elements */
         margin-top: $o-form-spacing-unit * 2;
 
         > .tab-content {
@@ -523,11 +523,11 @@
                     }
                 }
                 > :first-child {
-                    // Reset margin to 0 and use tab-pane's padding
-                    // to define the distance between panel and content
+                    /* Reset margin to 0 and use tab-pane's padding */
+                    /* to define the distance between panel and content */
                     margin-top: 0;
 
-                    // These elements will appear attached to the tabs
+                    /* These elements will appear attached to the tabs */
                     &.o_field_html {
                         .note-editor.panel {
                             border: none;
@@ -543,14 +543,14 @@
                             padding: 0;
                         }
 
-                        // If immediatly followed by an .clearfix element, the note-editor it's the 'only'
-                        // tab's element. Reset margins to push the bar at the bottom.
+                        /* If immediatly followed by an .clearfix element, the note-editor it's the 'only' */
+                        /* tab's element. Reset margins to push the bar at the bottom. */
                         + .clearfix:last-child {
                             margin-bottom: -$o-horizontal-padding - $o-sheet-vpadding - $o-form-spacing-unit;
                         }
                     }
 
-                    // Full width on first x2many or on second x2many if first is invisible
+                    /* Full width on first x2many or on second x2many if first is invisible */
                     &:not(.o_group), &.o_invisible_modifier {
                         .o_field_x2many.o_field_x2many_list .o_list_renderer {
                             @include media-only(screen) {
@@ -568,7 +568,7 @@
                             }
 
 
-                            // use original padding-left for handle cell in editable list
+                            /* use original padding-left for handle cell in editable list */
                             tr > :first-child.o_handle_cell {
                                 padding-left: $table-cell-padding-x-sm;
                             }
@@ -583,9 +583,9 @@
         }
     }
 
-    // Labels
+    /* Labels */
     .o_form_label {
-        font-size: $font-size-base; // The label muse have the same size whatever their position
+        font-size: $font-size-base; /* The label muse have the same size whatever their position */
         line-height: $line-height-base;
         font-weight: $font-weight-bold;
 
@@ -599,7 +599,7 @@
         }
     }
 
-    // One2Many List views
+    /* One2Many List views */
     .o_field_widget {
         .o_list_table {
             &.table-striped {
@@ -608,7 +608,7 @@
                         border-top: none;
                     }
                 }
-                // Show "border" if tfoot has content only
+                /* Show "border" if tfoot has content only */
                 > tfoot > tr {
                     box-shadow: inset 0 1px 0 $border-color;
                     > td {
@@ -643,7 +643,7 @@
     }
 
     .oe_no_translation_content {
-        // hide content but show the translate button EN
+        /* hide content but show the translate button EN */
         height: 0;
 
         .o_field_translate:not(.o_field_input_buttons):not(.btn) {
@@ -651,11 +651,11 @@
         }
 
         .o_field_translate.btn {
-            // hide language button for current language
+            /* hide language button for current language */
             visibility: hidden !important;
             margin-top: -10px;
 
-            // force the translate button to EN
+            /* force the translate button to EN */
             &:after {
                 content: 'EN';
                 visibility: visible;
@@ -663,7 +663,7 @@
         }
     }
 
-    // Text field with oe_inline class
+    /* Text field with oe_inline class */
     .o_field_text.oe_inline {
         width: 100%!important;
         @include media-breakpoint-up(sm) {
@@ -702,7 +702,7 @@
         min-width: 7rem;
     }
 
-    // One2Many, Many2Many outside of group
+    /* One2Many, Many2Many outside of group */
     .o_field_widget {
         &.o_field_one2many, &.o_field_many2many {
             width: 100%;
@@ -712,12 +712,12 @@
         }
     }
 
-    // Prevent table overflow when having long chars in x2many list and the o_field_{one,many}2many class is not applied
+    /* Prevent table overflow when having long chars in x2many list and the o_field_{one,many}2many class is not applied */
     .o_field_widget:has(.o_field_x2many.o_field_x2many_list) {
         width: 100%;
     }
 
-    // Specific style classes
+    /* Specific style classes */
     --o-subtotal-footer-label-padding: 20px;
     @include media-breakpoint-up(md) {
         .o_inner_group.oe_subtotal_footer {
@@ -840,12 +840,12 @@
         }
     }
 
-    // Boolean
+    /* Boolean */
     .o_field_boolean + .o_form_label {
         margin-right: $o-form-spacing-unit * 3;
     }
 
-    // Timezone widget warning
+    /* Timezone widget warning */
     .o_tz_warning {
         cursor: help;
         position: absolute;
@@ -853,7 +853,7 @@
         margin-top: 5px;
     }
 
-    // for weekly recurrent
+    /* for weekly recurrent */
     .o_recurrent_weekdays {
         > table {
             width: 100%;
@@ -874,7 +874,7 @@
         }
     }
 
-    // One2Many Kanban views
+    /* One2Many Kanban views */
     .o_field_widget .o_kanban_view.o_kanban_ungrouped {
         padding: 0;
         .o_kanban_record {
@@ -882,7 +882,7 @@
         }
     }
 
-    // One2Many List views
+    /* One2Many List views */
     .o_field_widget .o_list_renderer {
         --ListRenderer-thead-bg-color: #{$o-view-background-color};
         --ListRenderer-tfoot-bg-color: #{$o-view-background-color};
@@ -943,7 +943,7 @@
     }
 }
 
-// Overridden style when form view in modal
+/* Overridden style when form view in modal */
 .modal .modal-dialog {
     .o_form_view {
         min-height: auto;
@@ -1026,14 +1026,14 @@
     flex-flow: row nowrap !important;
 
     .o_form_view_container {
-        width: 1px; // List view needs a width value to recompute the size correctly
+        width: 1px; /* List view needs a width value to recompute the size correctly */
     }
 
     .o_form_sheet_bg {
         overflow: auto;
         display: flex;
         flex-direction: column;
-        flex: 2 1 $o-form-sheet-min-width; // Side chatter is disabled if this has to shrink but this was added for safety
+        flex: 2 1 $o-form-sheet-min-width; /* Side chatter is disabled if this has to shrink but this was added for safety */
     }
 }
 
@@ -1058,7 +1058,7 @@
     }
 }
 
-// This ensures correct alignment with the cog button when there is no breadcrumb displayed.
+/* This ensures correct alignment with the cog button when there is no breadcrumb displayed. */
 .o_breadcrumb:not(:has(.breadcrumb)) + .o_form_status_indicator {
     align-self: center !important;
 }

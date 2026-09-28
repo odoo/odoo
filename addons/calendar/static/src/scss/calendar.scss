@@ -18,14 +18,14 @@
 
 .o_cw_activity_popover {
     div:first-child {
-        // Remove popover focus outline.
-        // NB: On open, popover auto-focus the first tabable element (cf useActiveElement hook).
-        //     tabindex="0" has been added to the first div wrapper to make it the first tabable element.
-        //     This prevents having, on popover open, a weird auto-focus style on the first button/link.
+        /* Remove popover focus outline. */
+        /* NB: On open, popover auto-focus the first tabable element (cf useActiveElement hook). */
+        /* tabindex="0" has been added to the first div wrapper to make it the first tabable element. */
+        /* This prevents having, on popover open, a weird auto-focus style on the first button/link. */
         outline: none;
     }
     .o-mail-ActivityListPopoverItem > :first-child .btn-link {
-        // Adjust spacings to prevent buttons box-shadow from overflowing the item container
+        /* Adjust spacings to prevent buttons box-shadow from overflowing the item container */
         width: 23px;
         margin: map-get($spacers, 1);
         padding-right: map-get($spacers, 1);
@@ -90,9 +90,9 @@
     }
 
     &.o_activity_event {
-        // For the user activity events, use the user color with
-        // a slight change so that activities can be spotted
-        // more easily in the calendar view.
+        /* For the user activity events, use the user color with */
+        /* a slight change so that activities can be spotted */
+        /* more easily in the calendar view. */
         @for $i from 1 through length($o-colors-complete) {
             $color: nth($o-colors-complete, $i);
             &.o_calendar_color_#{$i - 1} {
@@ -110,7 +110,7 @@
     }
 }
 
-// Color the attendee tags in the "Meet with" calendar filters to match their event color.
+/* Color the attendee tags in the "Meet with" calendar filters to match their event color. */
 @for $i from 1 through length($o-colors-complete) {
     $color: nth($o-colors-complete, $i);
     $color-subtle: mix($o-white, $color, 55%);

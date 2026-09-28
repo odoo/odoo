@@ -1,6 +1,6 @@
-// This file regroups all the styles applied on each external layout.
+/* This file regroups all the styles applied on each external layout. */
 
-// external_layout_light
+/* external_layout_light */
 .o_report_layout_standard {
     h2 {
         margin-bottom: map-get($spacers, 2) !important;
@@ -10,14 +10,14 @@
     }
 }
 
-// external_layout_bubble
+/* external_layout_bubble */
 .o_report_layout_bubble {
     #informations {
         margin: 0;
         border-radius: $border-radius-lg;
         padding: map-get($spacers, 2) $table-cell-padding-y;
 
-        // In pdf it overlaps with existing margin, set to 0 to replicate in HTML
+        /* In pdf it overlaps with existing margin, set to 0 to replicate in HTML */
         div:first-child {
             padding-left: 0;
         }
@@ -41,7 +41,7 @@
     }
 }
 
-// external_layout_folder
+/* external_layout_folder */
 .o_folder_adaptative_shape {
     top: -1px;
     height: 3rem;
@@ -55,7 +55,7 @@
     }
 }
 
-// external_layout_column
+/* external_layout_column */
 .o_report_layout_column {
     #informations > div.col:not(:last-child) {
         margin-right: map-get($spacers, 2);
@@ -63,7 +63,7 @@
     }
 }
 
-// external_layout_center
+/* external_layout_center */
 .o_layout_center_header {
     margin: (-$o-default-report-margins) (-$o-default-report-margins) (-$o-default-report-margins * .5);
     padding: $o-default-report-margins $o-default-report-margins ($o-default-report-margins * .5);
@@ -74,14 +74,14 @@
     }
 }
 
-// external_layout_dual
+/* external_layout_dual */
 .o_layout_dual_footer {
     .o_dual_shape_1 {
         top: 22mm;
     }
 }
 
-// external_layout_lines
+/* external_layout_lines */
 .o_layout_lines_header {
     .o_company_address_list {
         margin-bottom: 0;
@@ -92,7 +92,7 @@
     }
 }
 
-// external_layout_compact
+/* external_layout_compact */
 .o_report_layout_compact {
     h2 {
         margin-bottom: map-get($spacers, 1) !important;

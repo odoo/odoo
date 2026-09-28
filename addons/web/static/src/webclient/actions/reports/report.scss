@@ -1,7 +1,7 @@
 $o-default-report-font: 'Lato' !default;
 $o-default-report-primary-color: $o-gray-900 !default;
 $o-default-report-secondary-color: $o-default-report-primary-color !default;
-$o-default-report-margins:  11mm !default; // 7mm + container padding
+$o-default-report-margins:  11mm !default; /* 7mm + container padding */
 $o-snailmail-address-padding-top: 42px;
 
 
@@ -18,8 +18,8 @@ body {
 }
 
 
-// Layout spacing in css instead of relying on paperformat using padding instead
-// of margins to override the .container padding while keeping its margin.
+/* Layout spacing in css instead of relying on paperformat using padding instead */
+/* of margins to override the .container padding while keeping its margin. */
 
 .o_body_html, .o_body_pdf.o_css_margins {
     padding: 0 $o-default-report-margins;
@@ -32,7 +32,7 @@ body {
         padding-bottom: $o-default-report-margins;
 
         .o_footer_pager, p {
-            // Condensed footer spacing
+            /* Condensed footer spacing */
             margin-bottom: map-get($spacers, 1);
         }
     }
@@ -52,7 +52,7 @@ span.o_force_ltr {
     display: inline;
 }
 .o_force_ltr, .o_field_phone {
-    unicode-bidi: embed; // ensure element has level of embedding for direction
+    unicode-bidi: embed; /* ensure element has level of embedding for direction */
     /*rtl:ignore*/
     direction: ltr;
 }
@@ -146,15 +146,15 @@ li.oe-nested {
 }
 
 div[name=comment] p, div[name=address] p {
-    // wkhtmltopdf trims margin top/bottom which would extend a flex
-    // container's height. This rule cut the address block's p margins to replicate in html.
+    /* wkhtmltopdf trims margin top/bottom which would extend a flex */
+    /* container's height. This rule cut the address block's p margins to replicate in html. */
     margin-bottom: 0;
 }
 
 .o_snail_mail {
-    // Moving anything under the address (eg Tax ID) further down to
-    // avoid breaking Pingen validation. !important because field template
-    // comes with mb-0 utility class.
+    /* Moving anything under the address (eg Tax ID) further down to */
+    /* avoid breaking Pingen validation. !important because field template */
+    /* comes with mb-0 utility class. */
     .address {
         padding-top: $o-snailmail-address-padding-top;
 
@@ -163,7 +163,7 @@ div[name=comment] p, div[name=address] p {
         }
     }
 
-    // Same as above for followup, because it doesn't use the same structure.
+    /* Same as above for followup, because it doesn't use the same structure. */
     .o_followup_address {
         padding-top: $o-snailmail-address-padding-top;
 
@@ -173,19 +173,19 @@ div[name=comment] p, div[name=address] p {
     }
 }
 
-// The default ir.qweb.field.contact uses a text-truncate on the address span
-// which doesn't work in wkhtml and breaks the wrapping behavior.
+/* The default ir.qweb.field.contact uses a text-truncate on the address span */
+/* which doesn't work in wkhtml and breaks the wrapping behavior. */
 span[itemprop="streetAddress"] {
     white-space: normal;
 }
 
-// Force a max width on quantity column to handle long UoM
+/* Force a max width on quantity column to handle long UoM */
 .o_td_quantity {
     min-width: 7rem;
     max-width: 9rem;
 }
 
-// Override html_editor display styles as it uses 'calc' which doesn't work with wkhtmltopdf
+/* Override html_editor display styles as it uses 'calc' which doesn't work with wkhtmltopdf */
 .display-1-fs {
     font-size: 6rem;
 }
@@ -226,7 +226,7 @@ span[itemprop="streetAddress"] {
     font-size: 1rem;
 }
 
-// Alert
+/* Alert */
 .alert {
     padding: #{$alert-padding-y} #{$alert-padding-x};
     margin-bottom: #{$alert-margin-bottom};
@@ -268,8 +268,8 @@ hr {
     border-radius: 0.25rem;
 }
 
-// 1. Render buttons defined in '$o-btns-bs-override' and '$o-btns-bs-outline-override'
-//    maps.
+/* 1. Render buttons defined in '$o-btns-bs-override' and '$o-btns-bs-outline-override' */
+/* maps. */
 @each $-name, $-value in $o-btns-bs-override {
     .btn-#{$-name} {
         background-color: o-safe-get($-value, background);
@@ -291,8 +291,8 @@ hr {
     }
 }
 
-// // 2. Render '$theme-colors' buttons excluding the ones already generated
-//    using the custom maps.
+/* // 2. Render '$theme-colors' buttons excluding the ones already generated */
+/* using the custom maps. */
 @each $-name, $-color in $theme-colors {
     @if (not map-get($o-btns-bs-override, $-name)) {
         .btn-#{$-name} {

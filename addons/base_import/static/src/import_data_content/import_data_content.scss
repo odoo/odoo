@@ -25,19 +25,19 @@
 }
 
 .o_import_field_icon {
-    filter: invert(0.5); // make the icons visible in dark theme
+    filter: invert(0.5); /* make the icons visible in dark theme */
     background-image: url('/base_import/static/src/import_data_content/img/studio_icons.png');
     background-repeat: no-repeat;
     width: 25px;
     height: 20px;
 
     &.o_import_field_choice {
-        z-index: -1; // prevent icon dropdown overflow
+        z-index: -1; /* prevent icon dropdown overflow */
     }
 }
 
 .o_select_menu_menu .active:has(.o_import_field_icon) {
-    // Keep icon visible when selected
+    /* Keep icon visible when selected */
     position: relative;
     z-index: -1;
 }

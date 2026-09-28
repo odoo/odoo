@@ -1,16 +1,16 @@
 :root {
-    // Override css variables to influence the default style of the editor
-    // without duplicating the css.
+    /* Override css variables to influence the default style of the editor */
+    /* without duplicating the css. */
     @include print-variable('o-we-toolbar-height', $o-navbar-height);
 
-    // Need the colors, name, menu background color and footer background color of each color palette
+    /* Need the colors, name, menu background color and footer background color of each color palette */
     $o-palette-names: ();
     $-default-cc: ();
     $-bg-attrs: 'menu', 'footer';
     @each $attr in $-bg-attrs {
-        // Since the variables built here are currently only used for theme previews we
-        // decided to keep things simple and we deliberately ignore potential overrides
-        // from #{$-bg-attrs}-custom and #{$-bg-attrs}-gradient.
+        /* Since the variables built here are currently only used for theme previews we */
+        /* decided to keep things simple and we deliberately ignore potential overrides */
+        /* from #{$-bg-attrs}-custom and #{$-bg-attrs}-gradient. */
         $-default-cc: map-merge($-default-cc, ($attr: map-get($o-base-color-palette, $attr)))
     }
 
@@ -43,7 +43,7 @@
         }
     }
 
-    // Need the palette colors used as default menu and footer background color
+    /* Need the palette colors used as default menu and footer background color */
     @each $attr-name, $default-cc-idx in $-default-cc {
         $-cc: nth($o-color-combinations, $default-cc-idx);
         $-default-bg: map-get($-cc, 'bg');
@@ -52,7 +52,7 @@
 
     @include print-variable('palette-names', $o-selected-color-palettes-names);
 
-    // Need info about the base grays which are used to compute the final grays
+    /* Need info about the base grays which are used to compute the final grays */
     @each $name, $color in $o-base-gray-color-palette {
         @include print-variable('base-#{$name}', $color);
     }

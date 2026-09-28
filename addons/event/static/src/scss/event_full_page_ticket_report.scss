@@ -41,12 +41,12 @@
     .o_event_full_page_left_details {
         width: 78%;
         .o_event_full_page_left_details_top {
-            // Give at least height of qr code to allow bottom row to take 100%
-            // Without overlapping the qr code
+            /* Give at least height of qr code to allow bottom row to take 100% */
+            /* Without overlapping the qr code */
             min-height: 152px;
         }
         .o_event_full_page_left_details_bottom_qr_only {
-            // parent div only has 78% -> 128% of 78% is just below 100%
+            /* parent div only has 78% -> 128% of 78% is just below 100% */
             width: 128%;
         }
     }
@@ -56,10 +56,10 @@
     }
     .o_event_full_page_ticket_column {
         width: 50%;
-        // Prevent text overfow on the next column. While columns have the expected
-        // width, the text will overflow in address and date, most probably due to
-        // the oi icons. This prevents this overflow and makes sure we see the full
-        // content of address and date.
+        /* Prevent text overfow on the next column. While columns have the expected */
+        /* width, the text will overflow in address and date, most probably due to */
+        /* the oi icons. This prevents this overflow and makes sure we see the full */
+        /* content of address and date. */
         padding-right: 45px;
     }
     .o_event_full_page_ticket_answer {
@@ -68,15 +68,15 @@
     .o_event_full_page_extra_instructions {
         width: 100%;
         p {
-            margin: 0px;  // to match editor style (.o_field_html p)
+            margin: 0px;  /* to match editor style (.o_field_html p) */
         }
     }
 }
 
 .o_event_full_page_ticket_container .o_event_full_page_ticket_barcode {
     .o_event_barcode {
-        // Barcode image has fixed size. These values are hard-coded to
-        // have it aligned correctly in the pdf report.
+        /* Barcode image has fixed size. These values are hard-coded to */
+        /* have it aligned correctly in the pdf report. */
         margin: 28px 0 0 -8px;
         -webkit-transform: rotate(90deg);
         transform: rotate(90deg);

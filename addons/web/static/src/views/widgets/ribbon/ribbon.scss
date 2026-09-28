@@ -15,7 +15,7 @@
 
         z-index: var(--Ribbon-z-index);
         position: absolute;
-        width: 141.421%; //Square root of 2 to get the diagonal of the parent
+        width: 141.421%; /* Square root of 2 to get the diagonal of the parent */
         height: var(--Ribbon-height, var(--Ribbon-height-default));
         box-shadow: 0 var(--Ribbon-shadow-distance) var(--Ribbon-shadow-blur) rgba(0, 0, 0, .1);
         color: $white;
@@ -54,8 +54,8 @@
     }
 }
 
-// after ribbon widget there can be field widgets or oe_title which may
-// have widgets on right end, add margin-right so ribbon not overlap on it
+/* after ribbon widget there can be field widgets or oe_title which may */
+/* have widgets on right end, add margin-right so ribbon not overlap on it */
 .ribbon {
     &:not(.o_invisible_modifier) {
         ~ .oe_title, ~ .o_field_widget {

@@ -7,7 +7,7 @@
     );
     $input-font-size: 40%;
 
-    // Animated Background
+    /* Animated Background */
     .o_configurator_background {
         background-color: $o-webclient-background-color;
         transition: background-color 0.35s ease;
@@ -23,7 +23,7 @@
     }
 
     .o_configurator_screen {
-        // ==== Animations
+        /* ==== Animations */
         @keyframes configuratorFadeIn{
             from {opacity: 0}
             to {opacity: 1}
@@ -57,7 +57,7 @@
             }
         }
 
-        // ==== General Components
+        /* ==== General Components */
         %o_configurator_titles_weight {
             font-weight: 300;
 
@@ -97,8 +97,8 @@
             animation: configuratorFadeIn .35s;
         }
 
-        // TODO review in master, this seems useless and had to be overridden
-        // in stable templates. All the templates can be improved.
+        /* TODO review in master, this seems useless and had to be overridden */
+        /* in stable templates. All the templates can be improved. */
         .o_configurator_screen_content {
             overflow-y: auto;
         }
@@ -109,7 +109,7 @@
             }
         }
 
-        // ── Floating image showcase ───────────────────────────────────────
+        /* ── Floating image showcase ─────────────────────────────────────── */
         .o_configurator_industry_showcase {
             transform: rotate3d(0, 1, 1, 1deg) scale(0.94) translateX(10%);
         }
@@ -145,7 +145,7 @@
             backdrop-filter: blur(2px);
         }
 
-        // ==== Screens
+        /* ==== Screens */
 
         &.o_description_screen {
             &:before {
@@ -254,7 +254,7 @@
             }
 
             .custom-ui-autocomplete {
-                max-height: 300px; // <- Fallback
+                max-height: 300px; /* <- Fallback */
                 max-height: 35vh;
 
                 .ui-menu-item {
@@ -480,8 +480,8 @@
             }
 
             .theme_preview {
-                // Keep the first six themes visible without scrolling on most
-                // screens.
+                /* Keep the first six themes visible without scrolling on most */
+                /* screens. */
                 aspect-ratio: 16 / 10.7;
                 background: $card-bg;
                 transition:

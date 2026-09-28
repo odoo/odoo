@@ -1,10 +1,10 @@
-// ------------------------------------------------------------------
-// Layout
-// ------------------------------------------------------------------
+/* ------------------------------------------------------------------ */
+/* Layout */
+/* ------------------------------------------------------------------ */
 
 .o-mail-ChatterContainer, .o-mail-Form-chatter {
     background-color: $o-webclient-background-color;
-    --Chatter-asideExtraWidth: 0px; // to take into account more items, e.g. "close" chatter feature
+    --Chatter-asideExtraWidth: 0px; /* to take into account more items, e.g. "close" chatter feature */
     &.o-aside {
         @media (max-width: 1920px) {
             --ChatterAsideForm-padding-left: #{map-get($spacers, 2)};
@@ -27,21 +27,21 @@
     }
 }
 
-// Reduce horizontal spacing if the next sibling is an aside chatter
+/* Reduce horizontal spacing if the next sibling is an aside chatter */
 .o_form_sheet_bg:has(+ .o-mail-Form-chatter.o-aside) {
     @media screen and (max-width: 1920px) {
         --formView-sheetBg-padding-right: #{map-get($spacers, 2)};
     }
 }
 
-// Disable scroll anchoring when chatter is not in aside mode to prevent unwanted layout shifts
+/* Disable scroll anchoring when chatter is not in aside mode to prevent unwanted layout shifts */
 .o_content:has(.o-mail-Form-chatter:not(.o-aside)) {
     overflow-anchor: none;
 }
 
-// ------------------------------------------------------------------
-// Style
-// ------------------------------------------------------------------
+/* ------------------------------------------------------------------ */
+/* Style */
+/* ------------------------------------------------------------------ */
 
 .o-mail-ChatterContainer, .o-mail-Form-chatter {
     display: flex;

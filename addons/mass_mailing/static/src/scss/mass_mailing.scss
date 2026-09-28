@@ -1,6 +1,6 @@
 .o_form_view.o_mass_mailing_mailing_form .o_form_renderer {
     .o_notebook .tab-content .tab-pane .o_mail_body {
-        // cancel the padding of the form_sheet
+        /* cancel the padding of the form_sheet */
         margin: -$o-sheet-cancel-hpadding calc(var(--formView-sheet-padding-x) * -1) -40px;
     }
 
@@ -31,7 +31,7 @@
 
 @include media-breakpoint-up(lg) {
     .o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
-        // cancel the padding of the form_sheet when breakpoints are reached
+        /* cancel the padding of the form_sheet when breakpoints are reached */
         margin-left: calc(var(--formView-sheet-padding-x) * -1);
         margin-right: calc(var(--formView-sheet-padding-x) * -1);
     }
@@ -42,8 +42,8 @@
 }
 
 body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
-    // Forcing the iframe to have the correct display mode (mobile vs desktop) by making it
-    // take all the available horizontal space so that the theme lg rules are correctly applied.
+    /* Forcing the iframe to have the correct display mode (mobile vs desktop) by making it */
+    /* take all the available horizontal space so that the theme lg rules are correctly applied. */
     position: relative;
     justify-content: end;
     iframe {
@@ -53,8 +53,8 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
 }
 
 .o_form_view.o_mass_mailing_mailing_form .o_form_renderer {
-    // Align the model / domain container with subject field in large devices
-    // and provide better tap area to the filter
+    /* Align the model / domain container with subject field in large devices */
+    /* and provide better tap area to the filter */
     @include media-breakpoint-up(md) {
         .o_readonly_modifier.o_mailing_filter_readonly_width ,
         &.o_form_readonly .o_mailing_filter_readonly_width {
@@ -112,7 +112,7 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
                     max-width: 50% !important;
                 }
                 &.d-none {
-                    display: none !important; //forcing the d-none to override the d-lg or d-sm classes for grouped view
+                    display: none !important; /* forcing the d-none to override the d-lg or d-sm classes for grouped view */
                 }
                 &.o_mailing_list_kanban_stats > a {
                     @include kanban-stats-button-style;
@@ -162,24 +162,24 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
 }
 
 .o_form_view .o_group.o_inner_group.o_mass_mailing_mailing_group {
-    // Used to gain extra space in form.
+    /* Used to gain extra space in form. */
     display: block;
 }
 
 .o_mass_mailing_mailing_form:not(.o_mass_mailing_form_full_width) {
     .alert:not(.o_invisible_modifier) + .clearfix.position-relative.o_form_sheet {
-        //hides extra space between form and alert messages
+        /* hides extra space between form and alert messages */
         margin-top: -12px;
     }
 }
 
 .o_form_view.o_xxl_form_view .o_mass_mailing_mailing_form {
-    // This will hide the chatter scroll bar
+    /* This will hide the chatter scroll bar */
     height: initial;
 }
 
 .o_form_view {
-    // This will display the emoji widget in the right position after a text field with sms option.
+    /* This will display the emoji widget in the right position after a text field with sms option. */
     .o_sms_container ~ .o_mail_add_emoji{
         bottom: 55px;
     }
