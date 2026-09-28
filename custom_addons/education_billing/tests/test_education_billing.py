@@ -119,7 +119,7 @@ class TestEducationBilling(common.TransactionCase):
             'month': '09',
             'year': 2026,
             'academic_year_id': self.academic_year.id,
-            'auto_publish': True,
+            'target_state': 'unpaid',
         })
         action = wizard.action_generate_bills()
         self.assertTrue(action)
@@ -222,7 +222,7 @@ class TestEducationBilling(common.TransactionCase):
             'school_id': self.school_univ.id,
             'semester': 'ganjil',
             'academic_year_id': self.academic_year.id,
-            'auto_publish': True,
+            'target_state': 'unpaid',
         })
         self.assertEqual(wizard_univ.bill_type, 'ukt')
         action = wizard_univ.action_generate_bills()
