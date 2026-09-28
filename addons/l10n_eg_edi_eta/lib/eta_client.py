@@ -69,6 +69,9 @@ class ETAClient:
     def get_receipt_url(self, uuid, date_order, amount_total, seller_rin):
         return f'{self.invoice_domain}/receipts/search/{uuid}/share/{date_order}#Total:{amount_total},IssuerRIN:{seller_rin}'
 
+    def get_product_eta_codes_url(self):
+        return f'{self.invoice_domain}/codeusages'
+
     @property
     def api_domain(self):
         return self.ETA_DOMAINS[
