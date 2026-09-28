@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="res_city_district_view_list" model="ir.ui.view">
+        <field name="name">l10n_cr.res.city.district.list</field>
+        <field name="model">l10n_cr.res.city.district</field>
+        <field name="arch" type="xml">
+            <list string="Districts" editable="top" multi_edit="1">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="city_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="res_city_district_view_search" model="ir.ui.view">
+        <field name="name">l10n_cr.res.city.district.search</field>
+        <field name="model">l10n_cr.res.city.district</field>
+        <field name="arch" type="xml">
+            <search string="Search District">
+                <field name="name"/>
+                <field name="city_id"/>
+                <group>
+                    <filter name="group_by_city" string="Cantón" context="{'group_by': 'city_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="res_city_district_action" model="ir.actions.act_window">
+        <field name="name">Districts</field>
+        <field name="res_model">l10n_cr.res.city.district</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="res_city_district_menu"
+        name="Districts (CR)"
+        action="res_city_district_action"
+        parent="contacts.menu_localisation"
+        sequence="3"/>
+
+</odoo>

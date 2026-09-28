@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="res_company_view_form_inherit_l10n_cr" model="ir.ui.view">
+        <field name="name">res.company.view.form.inherit.l10n_cr</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <field name="zip" position="after">
+                <field name="l10n_cr_district_id"
+                       placeholder="District..."
+                       class="o_address_street"
+                       options="{'no_open': True, 'no_quick_create': True}"
+                       invisible="country_code != 'CR'"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

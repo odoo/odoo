@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="address_form_fields" inherit_id="portal.address_form_fields">
+        <div id="div_city_id" position="after">
+            <div
+                id="div_l10n_cr_district"
+                class="col-lg-6 mb-3"
+                t-att-style="country.code != 'CR' and 'display:none;'"
+            >
+                <label class="col-form-label" for="l10n_cr_district_id">District</label>
+                <select
+                    id="l10n_cr_district_id"
+                    name="l10n_cr_district_id"
+                    class="form-select"
+                    data-init="1"
+                    data-country-code="CR"
+                >
+                    <option value="">District...</option>
+                    <option
+                        t-foreach="l10n_cr_city_districts"
+                        t-as="district"
+                        t-att-value="district['id']"
+                        t-att-data-city-id="district['cityId']"
+                        t-att-data-state-id="district['stateId']"
+                        t-att-selected="district['id'] == partner_sudo.l10n_cr_district_id.id"
+                        t-out="district['name']"
+                    />
+                </select>
+            </div>
+        </div>
+    </template>
+
+</odoo>
