@@ -165,11 +165,11 @@ class OAuthController(http.Controller):
         except AccessDenied:
             # oauth credentials not valid, user could be on a temporary session
             _logger.info('OAuth2: access denied, redirect to main page in case a valid session exists, without setting cookies')
-            url = "/web/login?oauth_error=3"
+            url = "/web/login?oauth_error=2"
         except Exception:
             # signup error
             _logger.exception("Exception during request handling")
-            url = "/web/login?oauth_error=2"
+            url = "/web/login?oauth_error=3"
 
         redirect = request.redirect(url, 303)
         redirect.autocorrect_location_header = False
