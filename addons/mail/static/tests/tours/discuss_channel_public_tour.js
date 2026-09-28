@@ -40,8 +40,8 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             trigger: ".o_discuss_channel_public_modules_loaded",
         },
         {
-            trigger: ".o-mail-Composer-input",
-            run: "edit cheese",
+            trigger: ".o-mail-Composer-html",
+            run: "editor cheese",
         },
         {
             trigger: ".o-mail-Composer button[title='More Actions']",
@@ -127,7 +127,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         // The upload steps target the "Attach Files" item but feed the hidden input directly,
         // so the "More Actions" menu is left open. Close it before sending to avoid clicking
         // Send while the menu is still dismissing.
-        { trigger: ".o-mail-Composer-input", run: "click" },
+        { trigger: ".o-mail-Composer-html", run: "click" },
         { trigger: "body:not(:has(.o-discuss-dropdownMenu))" },
         {
             // Check the conversation is unchanged, as the text and the attachments
@@ -187,8 +187,8 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             run: "click",
         },
         {
-            trigger: ".o-mail-Message .o-mail-Composer-input",
-            run: "edit vegetables",
+            trigger: ".o-mail-Message .o-mail-Composer-html",
+            run: "editor vegetables",
         },
         {
             trigger: ".o-mail-Message .o-mail-Composer button[title='More Actions']",
@@ -210,13 +210,12 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             run: "click",
         },
         {
-            trigger: editedMessageSelector,
+            // Wait for the edition to be saved: while editing, the unlink button of the
+            // composer attachment removes it without confirmation.
+            trigger: `${editedMessageSelector}:not(:has(.o-mail-Composer)) .o-mail-AttachmentContainer:contains("text.txt")`,
         },
         {
-            trigger: `${editedMessageSelector} .o-mail-AttachmentContainer:contains("text.txt")`,
-        },
-        {
-            trigger: `${editedMessageSelector} .o-mail-AttachmentContainer:contains("extra.txt") .o-mail-Attachment-unlink`,
+            trigger: `${editedMessageSelector}:not(:has(.o-mail-Composer)) .o-mail-AttachmentContainer:contains("extra.txt") .o-mail-Attachment-unlink`,
             run: "click",
         },
         {

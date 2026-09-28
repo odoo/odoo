@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, press, queryFirst, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { animationFrame, press, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { contains, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
@@ -327,7 +327,7 @@ test("focus composer after jump to present", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(30)");
     await waitFor(".o-mail-Composer.o-focused:count(1)");
-    queryFirst(".o-mail-Composer-input").blur();
+    await contains(".o_navbar").click(); // click away
     await waitForNone(".o-mail-Composer.o-focused");
     await contains("[title='Jump to Present']:count(1)").click();
     await waitFor(".o-mail-Composer.o-focused:count(1)");

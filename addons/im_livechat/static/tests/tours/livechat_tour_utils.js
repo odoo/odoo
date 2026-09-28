@@ -1,9 +1,9 @@
-export const LIVECHAT_COMPOSER = ".o-livechat-root:shadow .o-mail-Composer-input";
+export const LIVECHAT_COMPOSER = ".o-livechat-root:shadow .o-mail-Composer-html";
 
 /** Type `text` into the livechat composer once it is ready, without sending it. */
 export const editComposer = (text) => ({
-    trigger: `${LIVECHAT_COMPOSER}:enabled`,
-    run: `edit ${text}`,
+    trigger: `${LIVECHAT_COMPOSER}[contenteditable='true']`,
+    run: `editor ${text}`,
 });
 
 /**
@@ -23,7 +23,7 @@ export const clickSend = () => ({
  * Steps editing the livechat composer once ready, then sending via the Send
  * button. Returns an array, so spread it into a tour: `...postMessage(text)`.
  *
- * Editing waits for the composer `:enabled`: a chatbot step message is
+ * Editing waits for the composer to be editable: a chatbot step message is
  * delivered over the bus and can arrive before the awaited step trigger
  * response that moves the chatbot to the next step and re-enables the composer.
  * Editing too early would answer the previous step.

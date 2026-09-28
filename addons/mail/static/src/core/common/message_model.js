@@ -764,7 +764,6 @@ export class Message extends Record {
         const validRoles = Array.from(
             this.bodyEl?.querySelectorAll(".o-discuss-mention[data-oe-model='res.role']") ?? []
         ).map((el) => this.store["res.role"].get(el.dataset.oeId));
-        const text = convertBrToLineBreak(this.body);
         if (this.thread?.messageInEdition) {
             this.thread.messageInEdition.composer = undefined;
         }
@@ -775,11 +774,6 @@ export class Message extends Record {
             mentionedPartners: this.partner_ids,
             mentionedRoles: validRoles,
             restoredFromFullComposer: this.fromFullComposer,
-            selection: {
-                start: text.length,
-                end: text.length,
-                direction: "none",
-            },
         };
     }
 

@@ -555,7 +555,8 @@ test("Mention a partner with special character (e.g. apostrophe ')", async () =>
     await insertTextInComposer(".o-mail-Composer", "@");
     await insertTextInComposer(".o-mail-Composer", "Pyn");
     await contains('.o-mail-Composer-suggestion:has(:text("Pynya\'s spokesman")):count(1)').click();
-    await containsTextInComposer(".o-mail-Composer", "@Pynya's spokesman ");
+    await containsTextInComposer(".o-mail-Composer", "\uFEFF@Pynya's spokesman\uFEFF\u00a0");
+    await waitForNone(".o-mail-Composer-suggestion");
     await press("Enter");
     await waitFor(
         `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]:text("@Pynya's spokesman"):count(1)`
@@ -586,10 +587,15 @@ test("mention 2 different partners that have the same name", async () => {
     await openDiscuss(channelId);
     await insertTextInComposer(".o-mail-Composer", "@Te");
     await contains(":nth-child(1 of .o-mail-Composer-suggestion)").click();
-    await containsTextInComposer(".o-mail-Composer", "@TestPartner ");
+    await containsTextInComposer(".o-mail-Composer", "\uFEFF@TestPartner\uFEFF\u00a0");
+    await waitForNone(".o-mail-Composer-suggestion");
     await insertTextInComposer(".o-mail-Composer", "@Te");
     await contains(":nth-child(2 of .o-mail-Composer-suggestion)").click();
-    await containsTextInComposer(".o-mail-Composer", "@TestPartner @TestPartner ");
+    await containsTextInComposer(
+        ".o-mail-Composer",
+        "\uFEFF@TestPartner\uFEFF\u00a0\uFEFF@TestPartner\uFEFF\u00a0"
+    );
+    await waitForNone(".o-mail-Composer-suggestion");
     await press("Enter");
     await waitFor(
         `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_1}"][data-oe-model="res.partner"]:text("@TestPartner"):count(1)`
@@ -614,9 +620,18 @@ test("Post a message containing an email address followed by a mention on anothe
     });
     await start();
     await openDiscuss(channelId);
-    await insertTextInComposer(".o-mail-Composer", "email@odoo.com\n@Te");
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
+    // "\n" inserts a line break, as Shift+Enter does in the composer.
+    await insertTextInComposer(".o-mail-Composer", "email@odoo.com\n");
+    await insertTextInComposer(".o-mail-Composer", "@Te");
     await contains(".o-mail-Composer-suggestion:count(1)").click();
-    await containsTextInComposer(".o-mail-Composer", "email@odoo.com\n@TestPartner ");
+    // the line break is a `<br>`: it doesn't show up in `textContent`
+    await containsTextInComposer(
+        ".o-mail-Composer",
+        "email@odoo.com\uFEFF@TestPartner\uFEFF\u00a0"
+    );
+    expect(".o-mail-Composer-html > .o-paragraph").toHaveCount(1);
+    await waitFor(".o-mail-Composer-html .o-paragraph br:count(1)");
     await press("Enter");
     await waitFor(
         `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]:text("@TestPartner"):count(1)`
@@ -679,7 +694,7 @@ test("first unseen message should be directly preceded by the new message separa
     await contains(".o-mail-Composer button[title='Send']:enabled:count(1)").click();
     await waitFor(".o-mail-Message:count(2)");
     // composer is focused by default, we remove that focus
-    queryFirst(".o-mail-Composer-input").blur();
+    await contains(".o_navbar").click(); // click away
     // simulate receiving a message
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -701,7 +716,7 @@ test("composer should be focused automatically after clicking on the send button
     await openDiscuss(channelId);
     await insertTextInComposer(".o-mail-Composer", "Dummy Message");
     await press("Enter");
-    await waitFor(".o-mail-Composer-input:focus:count(1)");
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
 });
 
 test("chat window header should not have unread counter for non-channel thread", async () => {

@@ -359,6 +359,7 @@ test("Close message search panel when navigating back on mobile", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
     await contains(".o-mail-ChatWindow-moreActions:count(1)").click();
     await contains("button:text('Search Messages'):count(1)").click();
     await waitFor(`${actionPanel("Search Messages")}:count(1)`);

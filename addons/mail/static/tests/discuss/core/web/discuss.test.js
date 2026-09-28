@@ -289,7 +289,7 @@ test("clicking chat correspondent avatars opens avatar card", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-mail-Composer-input:focus:count(1)");
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
     await contains(".o-mail-DiscussContent-threadAvatar.cursor-pointer:count(1)").click();
     await waitFor(".o_avatar_card:count(1)");
     await waitFor(".o-mail-avatar-card-name:text('Mario'):count(1)");
