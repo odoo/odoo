@@ -24,7 +24,7 @@ When a user logs in with a Passkey, MFA will not be required.
             'auth_passkey/static/lib/simplewebauthn.js',
             'auth_passkey/static/src/services/check_identity/*',
             'auth_passkey/static/src/views/*',
-            'auth_passkey/static/src/scss/res_users.scss',
+            'auth_passkey/static/src/scss/res_users.css',
         ],
         'web.assets_frontend': [
             'auth_passkey/static/lib/simplewebauthn.js',

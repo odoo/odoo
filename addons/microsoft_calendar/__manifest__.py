@@ -15,7 +15,7 @@
     'post_init_hook': 'init_initiating_microsoft_uuid',
     'assets': {
         'web.assets_backend': [
-            'microsoft_calendar/static/src/scss/microsoft_calendar.scss',
+            'microsoft_calendar/static/src/scss/microsoft_calendar.css',
             'microsoft_calendar/static/src/views/**/*',
         ],
         'web.assets_unit_tests': [

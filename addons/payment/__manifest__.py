@@ -36,7 +36,7 @@
             "payment/static/src/xml/*",
         ],
         "web.assets_backend": [
-            "payment/static/src/scss/payment_provider.scss",
+            "payment/static/src/scss/payment_provider.css",
             "payment/static/src/js/payment_wizard_copy_clipboard_field.js",
             "payment/static/src/components/**/*",
         ],

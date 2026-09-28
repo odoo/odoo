@@ -73,7 +73,7 @@ This addon provides an extensible, maintainable editor.
         'html_editor.assets_readonly': [
             'html_editor/static/src/components/html_viewer/**/*',
             'html_editor/static/src/local_overlay_container.*',
-            'html_editor/static/src/main/local_overlay.scss',
+            'html_editor/static/src/main/local_overlay.css',
             'html_editor/static/src/position_hook.*',
             'html_editor/static/src/html_migrations/**/*',
             'html_editor/static/src/main/list/list.scss',

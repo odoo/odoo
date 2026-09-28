@@ -15,7 +15,7 @@ Adds Arabic as a secondary language on your invoice, credit note, debit note, ve
     ],
     "assets": {
         "web.report_assets_common": [
-            "l10n_gcc_invoice/static/src/scss/styles.scss",
+            "l10n_gcc_invoice/static/src/scss/styles.css",
         ],
     },
 }
