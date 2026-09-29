@@ -136,19 +136,28 @@ class HrDepartment(models.Model):
 
         Only direct members of each department whose ``parent_id`` is the
         department's current manager are updated (not child departments, and
-        not employees with another manager); the new manager is skipped.
+        not employees with another manager); the new manager is skipped. Their
+        current version is updated, and so are their future versions in the
+        department with the previous manager; the past versions keep the history.
 
         :param manager_id: id of the new manager (``hr.employee``), or ``False``
         :type manager_id: int or bool
         """
         employees = self.env['hr.employee']
+        future_versions = self.env['hr.version']
         for department in self:
             employees = employees | self.env['hr.employee'].search([
                 ('id', '!=', manager_id),
                 ('department_id', '=', department.id),
                 ('parent_id', '=', department.manager_id.id)
             ])
+            future_versions |= self.env['hr.version'].search([
+                ('employee_id', '!=', manager_id),
+                ('department_id', '=', department.id),
+                ('parent_id', '=', department.manager_id.id),
+            ]).filtered(lambda v: v.employee_id.active and v.date_version > v.employee_id.current_version_id.date_version)
         employees.write({'parent_id': manager_id})
+        future_versions.write({'parent_id': manager_id})
 
     def get_record_default_action(self, access_uid=None):
         res = super().get_record_default_action(access_uid=access_uid)

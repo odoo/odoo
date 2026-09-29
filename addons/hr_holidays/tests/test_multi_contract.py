@@ -2,7 +2,7 @@
 
 from datetime import datetime, date
 from odoo.exceptions import ValidationError
-from odoo.tests import Form, freeze_time, tagged
+from odoo.tests import Form, freeze_time, new_test_user, tagged
 from odoo.addons.hr_holidays.tests.common import TestHolidayContract
 
 
@@ -546,3 +546,68 @@ class TestHolidaysMultiContract(TestHolidayContract):
         self.assertEqual(leave.state, 'cancel')
         self.assertEqual(leave.resource_calendar_id, self.calendar_40h)
         self.assertEqual(self.env['hr.leave'].search([('employee_id', '=', employee.id)]), leave)
+
+    def _create_leave_managers(self):
+        manager_user_1 = new_test_user(self.env, login='version_manager_1', groups='base.group_user')
+        manager_user_2 = new_test_user(self.env, login='version_manager_2', groups='base.group_user')
+        manager_1, manager_2 = self.env['hr.employee'].create([
+            {'name': 'Manager 1', 'user_id': manager_user_1.id},
+            {'name': 'Manager 2', 'user_id': manager_user_2.id},
+        ])
+        return manager_1, manager_2
+
+    def test_leave_manager_is_versioned(self):
+        manager_1, manager_2 = self._create_leave_managers()
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee', 'parent_id': manager_1.id, 'date_version': '2020-01-01',
+        })
+        old_version = employee.version_id
+        self.assertEqual(old_version.leave_manager_id, manager_1.user_id)
+
+        new_version = employee.create_version({'date_version': '2021-01-01'})
+        self.assertEqual(employee.current_version_id, new_version)
+        employee.parent_id = manager_2
+
+        self.assertEqual(old_version.leave_manager_id, manager_1.user_id, "Past versions keep their approver")
+        self.assertEqual(new_version.leave_manager_id, manager_2.user_id)
+        self.assertEqual(employee.leave_manager_id, manager_2.user_id, "The current version drives the employee's approver")
+        self.assertEqual(
+            employee.with_context(version_id=old_version.id).leave_manager_id, manager_1.user_id,
+        )
+        self.assertEqual(self.env['hr.employee'].search([('leave_manager_id', '=', manager_1.user_id.id)]).ids, [])
+        self.assertIn(employee, self.env['hr.employee'].search([('leave_manager_id', '=', manager_2.user_id.id)]))
+
+    @freeze_time('2026-06-01')
+    def test_archive_approver_keeps_past_versions(self):
+        manager_1, _manager_2 = self._create_leave_managers()
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee', 'parent_id': manager_1.id, 'date_version': '2020-01-01',
+        })
+        past_version = employee.version_id
+        current_version = employee.create_version({'date_version': '2026-01-01'})
+        future_version = employee.create_version({'date_version': '2030-01-01'})
+        self.assertEqual(employee.current_version_id, current_version)
+        self.assertEqual((past_version | current_version | future_version).leave_manager_id, manager_1.user_id)
+
+        manager_1.action_archive()
+        self.assertEqual(past_version.leave_manager_id, manager_1.user_id, "Past versions keep their approver history")
+        self.assertFalse((current_version | future_version).leave_manager_id)
+
+    @freeze_time('2026-06-01')
+    def test_future_manager_applies_with_its_version(self):
+        """A manager set on a future version does not grant the approver group yet, only on the current version."""
+        manager_1, manager_2 = self._create_leave_managers()
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee', 'parent_id': manager_1.id, 'date_version': '2020-01-01',
+        })
+        future_version = employee.create_version({'date_version': '2030-01-01'})
+        approver_group = 'hr_holidays.group_hr_holidays_responsible'
+
+        employee.with_context(version_id=future_version.id).parent_id = manager_2
+        self.assertEqual(future_version.leave_manager_id, manager_2.user_id)
+        self.assertEqual(employee.leave_manager_id, manager_1.user_id)
+        self.assertFalse(manager_2.user_id.has_group(approver_group))
+
+        employee.parent_id = manager_2
+        self.assertEqual(employee.leave_manager_id, manager_2.user_id)
+        self.assertTrue(manager_2.user_id.has_group(approver_group))

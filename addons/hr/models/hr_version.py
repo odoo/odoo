@@ -108,6 +108,17 @@ class HrVersion(models.Model):
     member_of_department = fields.Boolean("Member of department", compute='_compute_part_of_department', search='_search_part_of_department',
         help="Whether the employee is a member of the active user's department or one of it's child department.")
     job_id = fields.Many2one('hr.job', check_company=True, tracking=1, index=True)
+    parent_id = fields.Many2one(
+        'hr.employee', 'Manager', tracking=1, index='btree_not_null',
+        ui_domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
+    child_ids = fields.One2many('hr.employee', string='Direct subordinates', compute='_compute_child_ids',
+        search='_search_child_ids',
+        help="Active employees managed by the employee of this version (through their current version).")
+    coach_id = fields.Many2one(
+        'hr.employee', 'Coach', compute='_compute_coach', store=True, readonly=False, index='btree_not_null',
+        ui_domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]",
+        help='Select the "Employee" who is the coach of this employee.\n'
+             'The "Coach" has no specific rights or responsibilities by default.')
     address_id = fields.Many2one(
         'res.partner',
         string='Work Address',
@@ -231,6 +242,29 @@ class HrVersion(models.Model):
                     ('location_type', '=', 'office'),
                 ])
             version.work_location_id = work_locations if len(work_locations) == 1 else False
+
+    @api.depends_context('uid', 'allowed_company_ids')
+    @api.depends('employee_id.child_ids')
+    def _compute_child_ids(self):
+        # The subordinates belong to the employee, not to one of their versions:
+        # every version of a manager shows the same direct subordinates.
+        for version in self:
+            version.child_ids = version.employee_id.child_ids
+
+    def _search_child_ids(self, operator, value):
+        if operator not in ('in', 'any'):
+            return NotImplemented
+        return [('employee_id', 'any', [('child_ids', operator, value)])]
+
+    @api.depends('parent_id')
+    def _compute_coach(self):
+        for version in self:
+            manager = version.parent_id
+            previous_manager = version._origin.parent_id
+            if manager and (version.coach_id == previous_manager or not version.coach_id):
+                version.coach_id = manager
+            elif not version.coach_id:
+                version.coach_id = False
 
     @api.depends("private_country_id")
     def _compute_allowed_country_state_ids(self):
