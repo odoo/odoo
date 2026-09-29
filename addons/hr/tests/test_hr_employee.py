@@ -593,7 +593,7 @@ class TestHrEmployee(TestHrCommon):
         self.assertTrue(employee._is_flexible())
         self.assertFalse(employee._is_fully_flexible())
 
-        flexible_calendar.write({'hours_per_week': 0, 'hours_per_day': 0})
+        flexible_calendar.write({'hours_per_week': 0})
         self.assertTrue(employee._is_flexible())
         self.assertTrue(employee._is_fully_flexible())
 
