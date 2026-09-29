@@ -64,6 +64,26 @@ class PosPaymentMethod(models.Model):
     )
     hide_qr_code_method = fields.Boolean(compute='_compute_hide_qr_code_method')
 
+    @api.constrains("outstanding_account_id", "receivable_account_id")
+    def _check_accounts(self):
+        for method in self:
+            outstanding_account = method.outstanding_account_id
+            receivable_account = method.receivable_account_id
+            default_pos_receivable_account = method.company_id.account_default_pos_receivable_account_id
+
+            # outstanding_account_id is only required for bank journals
+            # Allow if receivable account is set and it doesn't match with outstanding account
+            if method.journal_id.type != "bank" or (
+                receivable_account and outstanding_account != receivable_account
+            ):
+                continue
+
+            if outstanding_account in (receivable_account, default_pos_receivable_account):
+                raise ValidationError(self.env._(
+                    "Please choose a different outstanding account. "
+                    "It must not match the receivable account or the company's default POS receivable account."
+                ))
+
     @api.model
     def _load_pos_data_domain(self, data):
         return ['|', ('active', '=', False), ('active', '=', True)]
