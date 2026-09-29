@@ -780,3 +780,12 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         self.assertEqual(registro['ImporteTotal'], desglose['BaseImponibleOimporteNoSujeto'])
         self.assertNotIn('TipoImpositivo', desglose)
         self.assertNotIn('CuotaRepercutida', desglose)
+
+    def test_journal_dashboard_data_multi_company(self):
+        """Ensure the journal dashboard handles journals with multiple companies."""
+        sale_journal = self.company_data['default_journal_sale']
+        dashboard_data = (
+            sale_journal | self.company_data_2['default_journal_sale']
+        )._get_journal_dashboard_data_batched()
+
+        self.assertIn('vf_rejected', dashboard_data[sale_journal.id])
