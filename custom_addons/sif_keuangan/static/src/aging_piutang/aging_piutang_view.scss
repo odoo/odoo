@@ -55,6 +55,27 @@
         font-size: 0.8125rem;
     }
 
+    /* View Switcher Icons */
+    .o_view_switcher {
+        .btn {
+            border-color: #CBD5E1;
+            padding: 4px 10px;
+            font-size: 0.875rem;
+            transition: all 0.15s ease-in-out;
+
+            &.active {
+                background-color: #0F172A !important;
+                color: #FFFFFF !important;
+                border-color: #0F172A !important;
+            }
+
+            &:hover:not(.active) {
+                background-color: #F1F5F9;
+                color: #0F172A;
+            }
+        }
+    }
+
     /* KPI Summary Cards */
     .o_kpi_card {
         background-color: #FFFFFF;
@@ -306,6 +327,86 @@
                 color: #FFFFFF !important;
                 font-weight: 800;
             }
+        }
+    }
+
+    /* Tree / Drilldown Table Styling */
+    .o_tree_table {
+        .o_partner_row {
+            background-color: #FFFFFF;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+
+            &:hover {
+                background-color: #F1F5F9 !important;
+            }
+
+            .o_fold_icon {
+                display: inline-block;
+                width: 16px;
+                text-align: center;
+                cursor: pointer;
+            }
+        }
+
+        .o_line_row {
+            background-color: #FAFAFA;
+            border-bottom: 1px dashed #E2E8F0;
+
+            &:hover {
+                background-color: #F8FAFC !important;
+            }
+
+            td {
+                padding: 6px 10px;
+                font-size: 0.785rem;
+            }
+        }
+    }
+
+    /* Kanban Card Grid Styling */
+    .o_aging_card {
+        background-color: #FFFFFF;
+        border: 1px solid #CBD5E1;
+        border-radius: 8px;
+        padding: 14px;
+        transition: all 0.15s ease-in-out;
+        cursor: pointer;
+
+        &:hover {
+            border-color: #94A3B8;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .o_card_title {
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: #0F172A;
+        }
+
+        .o_card_date {
+            font-size: 0.75rem;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .o_card_partner {
+            font-size: 0.8125rem;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .o_card_unit {
+            font-size: 0.75rem;
+            color: #64748B;
+        }
+
+        .o_card_amount {
+            font-size: 1.05rem;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            color: #0F172A;
         }
     }
 
