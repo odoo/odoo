@@ -9,6 +9,12 @@ from odoo import api, models
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    @api.onchange('vat', 'country_id')
+    def _ensure_country_prefix_on_vat(self):
+        for partner in self.filtered(lambda p: p._deduce_country_code() == 'BE' and p.vat):
+            if not partner.vat.upper().startswith('BE'):
+                partner.vat = f'BE{partner.vat}'
+
     @api.depends('vat', 'country_id')
     def _compute_company_registry(self):
         # OVERRIDE
