@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Paperformat Landscape untuk Laporan Aging Piutang 14 Kolom -->
+    <record id="paperformat_aging_piutang_landscape" model="report.paperformat">
+        <field name="name">Aging Piutang Landscape</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">6</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Definisi Aksi Laporan PDF Aging Piutang -->
+    <record id="action_report_aging_piutang" model="ir.actions.report">
+        <field name="name">Laporan Aging Piutang (Umur Piutang)</field>
+        <field name="model">sif.aging.piutang.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sif_keuangan.report_aging_piutang_document</field>
+        <field name="report_file">sif_keuangan.report_aging_piutang_document</field>
+        <field name="paperformat_id" ref="sif_keuangan.paperformat_aging_piutang_landscape"/>
+        <field name="print_report_name">'Aging_Piutang_' + (object.as_of_date.strftime('%Y%m%d') if object.as_of_date else 'Current')</field>
+    </record>
+
+    <!-- Template Laporan PDF Aging Piutang (14 Kolom) -->
+    <template id="report_aging_piutang_document">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page" style="font-family: Arial, sans-serif; font-size: 8.5px; color: #0F172A;">
+
+                    <!-- Header Laporan -->
+                    <div style="border-bottom: 2px solid #714B67; padding-bottom: 6px; margin-bottom: 10px;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="width: 70%; vertical-align: top;">
+                                    <h2 style="color: #714B67; margin: 0 0 4px 0; font-weight: bold; font-size: 16px;">
+                                        LAPORAN AGING PIUTANG (ANALISIS UMUR PIUTANG)
+                                    </h2>
+                                    <div style="color: #475569; font-size: 9.5px; line-height: 1.4;">
+                                        <strong>Perusahaan:</strong> <t t-esc="company.name"/>
+                                        <span style="margin: 0 8px; color: #94A3B8;">|</span>
+                                        <strong>Posisi Cut-off (As-of Date):</strong> <t t-esc="as_of_date_display"/>
+                                    </div>
+                                </td>
+                                <td style="width: 30%; text-align: right; vertical-align: top; font-size: 8.5px; color: #64748B;">
+                                    <div><strong>Mata Uang:</strong> IDR (Rp)</div>
+                                    <div>Dicetak pada: <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Ringkasan KPI Boxes -->
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 8.5px;">
+                        <tr>
+                            <td style="width: 25%; padding: 6px 8px; border: 1px solid #CBD5E1; background-color: #F8FAFC; border-radius: 4px;">
+                                <div style="color: #475569; font-size: 7.5px; font-weight: bold; text-transform: uppercase;">Total Piutang Aktif</div>
+                                <div style="font-size: 11px; font-weight: bold; color: #0F172A; margin-top: 2px;">
+                                    Rp <t t-esc="format_rp(totals.get('total_receivables'))"/>
+                                </div>
+                                <div style="color: #64748B; font-size: 7.5px;"><t t-esc="totals.get('partner_count', 0)"/> Debitur / <t t-esc="totals.get('doc_count', 0)"/> Dokumen</div>
+                            </td>
+                            <td style="width: 2%;"></td>
+                            <td style="width: 23%; padding: 6px 8px; border: 1px solid #86EFAC; background-color: #F0FDF4; border-radius: 4px;">
+                                <div style="color: #166534; font-size: 7.5px; font-weight: bold; text-transform: uppercase;">Lancar (Belum Jatuh Tempo)</div>
+                                <div style="font-size: 11px; font-weight: bold; color: #14532D; margin-top: 2px;">
+                                    Rp <t t-esc="format_rp(totals.get('total_current'))"/>
+                                </div>
+                                <div style="color: #166534; font-size: 7.5px;">Rasio: <t t-esc="totals.get('current_ratio', 0)"/>%</div>
+                            </td>
+                            <td style="width: 2%;"></td>
+                            <td style="width: 23%; padding: 6px 8px; border: 1px solid #FCD34D; background-color: #FEFCE8; border-radius: 4px;">
+                                <div style="color: #854D0E; font-size: 7.5px; font-weight: bold; text-transform: uppercase;">Menunggak 1 - 90 Hari</div>
+                                <div style="font-size: 11px; font-weight: bold; color: #713F12; margin-top: 2px;">
+                                    Rp <t t-esc="format_rp(totals.get('total_b_1_30', 0) + totals.get('total_b_31_60', 0) + totals.get('total_b_61_90', 0))"/>
+                                </div>
+                                <div style="color: #854D0E; font-size: 7.5px;">Rasio: <t t-esc="totals.get('overdue_ratio', 0)"/>%</div>
+                            </td>
+                            <td style="width: 2%;"></td>
+                            <td style="width: 23%; padding: 6px 8px; border: 1px solid #FCA5A5; background-color: #FEF2F2; border-radius: 4px;">
+                                <div style="color: #991B1B; font-size: 7.5px; font-weight: bold; text-transform: uppercase;">Kritis (&gt; 90 Hari)</div>
+                                <div style="font-size: 11px; font-weight: bold; color: #7F1D1D; margin-top: 2px;">
+                                    Rp <t t-esc="format_rp(totals.get('total_b_over_90'))"/>
+                                </div>
+                                <div style="color: #991B1B; font-size: 7.5px;">Rasio: <t t-esc="totals.get('critical_ratio', 0)"/>%</div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Tabel Matriks Aging 14 Kolom -->
+                    <table class="table table-sm table-bordered" style="width: 100%; border-collapse: collapse; font-size: 7.8px; margin-bottom: 8px;">
+                        <thead>
+                            <tr style="background-color: #714B67; color: #FFFFFF; text-align: center; font-weight: bold;">
+                                <th rowspan="2" style="width: 3%; padding: 4px; vertical-align: middle; border: 1px solid #5A3552;">NO</th>
+                                <th rowspan="2" style="width: 16%; padding: 4px; vertical-align: middle; text-align: left; border: 1px solid #5A3552;">NAMA DEBITUR / MITRA / SISWA</th>
+                                <th rowspan="2" style="width: 7%; padding: 4px; vertical-align: middle; border: 1px solid #5A3552;">KLASIFIKASI</th>
+                                <th rowspan="2" style="width: 10%; padding: 4px; vertical-align: middle; text-align: left; border: 1px solid #5A3552;">UNIT KERJA</th>
+                                <th rowspan="2" style="width: 8%; padding: 4px; vertical-align: middle; border: 1px solid #5A3552;">WHATSAPP</th>
+                                <th rowspan="2" style="width: 7%; padding: 4px; vertical-align: middle; text-align: right; border: 1px solid #5A3552;">LANCAR</th>
+                                <th colspan="3" style="width: 18%; padding: 3px; border: 1px solid #5A3552; background-color: #633F5B;">MENUNGGAK REGULER (1 - 90 H)</th>
+                                <th colspan="4" style="width: 22%; padding: 3px; border: 1px solid #7F1D1D; background-color: #991B1B;">BREAKDOWN KRITIS (&gt; 90 HARI)</th>
+                                <th rowspan="2" style="width: 9%; padding: 4px; vertical-align: middle; text-align: right; border: 1px solid #5A3552;">TOTAL PIUTANG</th>
+                            </tr>
+                            <tr style="background-color: #633F5B; color: #FFFFFF; text-align: center; font-weight: bold;">
+                                <th style="width: 6%; padding: 3px; text-align: right; border: 1px solid #5A3552;">1 - 30 H</th>
+                                <th style="width: 6%; padding: 3px; text-align: right; border: 1px solid #5A3552;">31 - 60 H</th>
+                                <th style="width: 6%; padding: 3px; text-align: right; border: 1px solid #5A3552;">61 - 90 H</th>
+                                <th style="width: 5.5%; padding: 3px; text-align: right; border: 1px solid #7F1D1D; background-color: #991B1B;">91 - 120 H</th>
+                                <th style="width: 5.5%; padding: 3px; text-align: right; border: 1px solid #7F1D1D; background-color: #991B1B;">121 - 180 H</th>
+                                <th style="width: 5.5%; padding: 3px; text-align: right; border: 1px solid #7F1D1D; background-color: #991B1B;">181 - 365 H</th>
+                                <th style="width: 5.5%; padding: 3px; text-align: right; border: 1px solid #7F1D1D; background-color: #991B1B;">&gt; 365 H</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="not partners">
+                                <tr>
+                                    <td colspan="14" style="text-align: center; padding: 15px; color: #64748B;">
+                                        Tidak ada data piutang untuk kriteria filter yang dipilih.
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-set="idx" t-value="1"/>
+                            <t t-foreach="partners" t-as="p">
+                                <tr style="border-bottom: 1px solid #E2E8F0; page-break-inside: avoid;">
+                                    <td style="text-align: center; padding: 3px; color: #334155;"><t t-esc="idx"/></td>
+                                    <td style="padding: 3px; text-align: left;">
+                                        <strong style="color: #0F172A;"><t t-esc="p['partner_name']"/></strong>
+                                        <t t-if="p.get('student_id_number') and p.get('student_id_number') != '-'">
+                                            <span style="font-size: 7px; color: #475569; margin-left: 3px;">[<t t-esc="p['student_id_number']"/>]</span>
+                                        </t>
+                                        <t t-if="p.get('parent_name') and p.get('parent_name') != '-'">
+                                            <div style="font-size: 7px; color: #64748B;">Wali: <t t-esc="p['parent_name']"/></div>
+                                        </t>
+                                    </td>
+                                    <td style="text-align: center; padding: 3px; color: #334155;"><t t-esc="p['partner_type_label']"/></td>
+                                    <td style="padding: 3px; text-align: left; color: #334155;"><t t-esc="p['unit_name']"/></td>
+                                    <td style="text-align: center; padding: 3px; color: #334155;"><t t-esc="p['phone'] or '-'"/></td>
+                                    <td style="text-align: right; padding: 3px; color: #0F172A;">
+                                        <t t-esc="format_rp(p['current']) if p['current'] > 0 else '-'"/>
+                                    </td>
+                                    <td style="text-align: right; padding: 3px; color: #0F172A;">
+                                        <t t-esc="format_rp(p['b_1_30']) if p['b_1_30'] > 0 else '-'"/>
+                                    </td>
+                                    <td style="text-align: right; padding: 3px; color: #0F172A;">
+                                        <t t-esc="format_rp(p['b_31_60']) if p['b_31_60'] > 0 else '-'"/>
+                                    </td>
+                                    <td style="text-align: right; padding: 3px; color: #0F172A;">
+                                        <t t-esc="format_rp(p['b_61_90']) if p['b_61_90'] > 0 else '-'"/>
+                                    </td>
+                                    <!-- Breakdown Kritis > 90 Hari -->
+                                    <td style="text-align: right; padding: 3px;" t-att-style="'color: #DC2626; font-weight: bold;' if p['b_91_120'] > 0 else 'color: #94A3B8;'">
+                                        <t t-esc="format_rp(p['b_91_120']) if p['b_91_120'] > 0 else '-'"/>
+                                    </td>
+                                    <td style="text-align: right; padding: 3px;" t-att-style="'color: #DC2626; font-weight: bold;' if p['b_121_180'] > 0 else 'color: #94A3B8;'">
+                                        <t t-esc="format_rp(p['b_121_180']) if p['b_121_180'] > 0 else '-'"/>
+                                    </td>
+                                    <td style="text-align: right; padding: 3px;" t-att-style="'color: #DC2626; font-weight: bold;' if p['b_181_365'] > 0 else 'color: #94A3B8;'">
+                                        <t t-esc="format_rp(p['b_181_365']) if p['b_181_365'] > 0 else '-'"/>
+                                    </td>
+                                    <td style="text-align: right; padding: 3px;" t-att-style="'color: #DC2626; font-weight: bold;' if p['b_over_365'] > 0 else 'color: #94A3B8;'">
+                                        <t t-esc="format_rp(p['b_over_365']) if p['b_over_365'] > 0 else '-'"/>
+                                    </td>
+                                    <td style="text-align: right; padding: 3px; font-weight: bold; color: #0F172A; background-color: #F8FAFC;">
+                                        <t t-esc="format_rp(p['total'])"/>
+                                    </td>
+                                </tr>
+                                <t t-set="idx" t-value="idx + 1"/>
+                            </t>
+
+                            <!-- Grand Total Row -->
+                            <tr style="background-color: #0F172A; color: #FFFFFF; font-weight: bold; border-top: 2px solid #000000; font-size: 8px;">
+                                <td colspan="5" style="padding: 5px; text-align: left; color: #FFFFFF;">TOTAL KESELURUHAN</td>
+                                <td style="text-align: right; padding: 5px; color: #FFFFFF;"><t t-esc="format_rp(totals.get('total_current'))"/></td>
+                                <td style="text-align: right; padding: 5px; color: #FFFFFF;"><t t-esc="format_rp(totals.get('total_b_1_30'))"/></td>
+                                <td style="text-align: right; padding: 5px; color: #FFFFFF;"><t t-esc="format_rp(totals.get('total_b_31_60'))"/></td>
+                                <td style="text-align: right; padding: 5px; color: #FFFFFF;"><t t-esc="format_rp(totals.get('total_b_61_90'))"/></td>
+                                <td style="text-align: right; padding: 5px; color: #FFFFFF;"><t t-esc="format_rp(totals.get('total_b_91_120'))"/></td>
+                                <td style="text-align: right; padding: 5px; color: #FFFFFF;"><t t-esc="format_rp(totals.get('total_b_121_180'))"/></td>
+                                <td style="text-align: right; padding: 5px; color: #FFFFFF;"><t t-esc="format_rp(totals.get('total_b_181_365'))"/></td>
+                                <td style="text-align: right; padding: 5px; color: #FFFFFF;"><t t-esc="format_rp(totals.get('total_b_over_365'))"/></td>
+                                <td style="text-align: right; padding: 5px; color: #FFFFFF; background-color: #020617;"><t t-esc="format_rp(totals.get('total_receivables'))"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Rumus Akuntansi Bottom Footer -->
+                    <div style="margin-top: 8px; padding: 5px 8px; border: 1px solid #CBD5E1; border-radius: 4px; background-color: #FFFFFF; font-size: 7.5px; color: #334155; text-align: center;">
+                        <strong>RUMUS AGING PIUTANG:</strong> Total Piutang Aktif = Saldo Lancar (≤ 0 Hari) + Menunggak Reguler (1 – 90 Hari) + Menunggak Kritis (&gt; 90 Hari)
+                    </div>
+
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

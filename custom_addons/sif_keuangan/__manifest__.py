@@ -16,10 +16,12 @@
         'views/general_ledger_views.xml',
         'views/balance_sheet_views.xml',
         'views/profit_loss_views.xml',
+        'views/aging_piutang_views.xml',
         'views/menu_views.xml',
         'reports/general_ledger_report.xml',
         'reports/balance_sheet_report.xml',
         'reports/profit_loss_report.xml',
+        'reports/aging_piutang_report.xml',
     ],
     'assets': {
         'web.assets_backend': [
@@ -28,6 +30,7 @@
             'sif_keuangan/static/src/general_ledger/**/*',
             'sif_keuangan/static/src/balance_sheet/**/*',
             'sif_keuangan/static/src/profit_loss/**/*',
+            'sif_keuangan/static/src/aging_piutang/**/*',
         ],
     },
 
