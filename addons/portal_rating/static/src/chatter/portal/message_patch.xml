@@ -6,10 +6,6 @@
                 <t t-call="portal_rating.rating_stars_static" val="this.ratingValue"/>
             </div>
         </div>
-        <xpath expr="//div[hasclass('o-mail-Message-richBody')]" position="attributes">
-            <attribute name="t-att-class">this.richBodyAttClass</attribute>
-            <attribute name="t-ref">this.richBodyRef</attribute>
-        </xpath>
         <xpath expr="//div[hasclass('o-mail-Message-richBody')]" position="after">
             <button
                 t-if="this.displayRating and this.ratingValue and this.state.isBodyClamped"
