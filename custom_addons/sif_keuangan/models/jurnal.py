@@ -126,10 +126,101 @@ class SifJurnalEntry(models.Model):
         if self.env.user.has_group('sif_keuangan.group_sif_keuangan_central_readonly'):
             raise AccessError(_('Finance pusat memiliki akses baca saja pada data Keuangan.'))
 
+    def _check_lock_dates(self, custom_date=None, custom_source_type=None, custom_lines=None):
+        """
+        Validasi batas tanggal kunci pembukuan (Lock Dates):
+        1. Hard Lock (fiscalyear_lock_date): Berlaku mutlak untuk semua pengguna termasuk Admin/Manager.
+        2. Lock Sales (sale_lock_date): Mengunci transaksi penjualan/pendapatan (source_type == 'pendapatan').
+        3. Lock Purchases (purchase_lock_date): Mengunci transaksi pembelian/PPL (source_type == 'ppl').
+        4. Lock Tax Return (tax_lock_date): Mengunci transaksi perpajakan.
+        5. Lock Everything (user_lock_date): Mengunci seluruh transaksi untuk staf operasional, mengizinkan pengecualian untuk Manager Keuangan.
+        """
+        is_manager = self.env.user.has_group('sif_keuangan.group_sif_keuangan_manager') or self.env.is_superuser()
+        for entry in self:
+            company = entry.company_id or self.env.company
+            target_date = custom_date or entry.date
+            source_type = custom_source_type or entry.source_type
+            lines = custom_lines if custom_lines is not None else entry.line_ids
+
+            if not target_date or not company:
+                continue
+
+            # 1. Hard Lock Check (Semua Pengguna)
+            if company.fiscalyear_lock_date and target_date <= company.fiscalyear_lock_date:
+                raise UserError(_(
+                    'Transaksi terkunci oleh Hard Lock hingga tanggal %s (inklusif).\n'
+                    'Tidak ada pengguna yang diizinkan menambah, mengubah, memposting, atau membatalkan transaksi pada periode ini.'
+                ) % company.fiscalyear_lock_date.strftime('%d/%m/%Y'))
+
+            # 2. Sales / Pendapatan Lock Check
+            if source_type == 'pendapatan' and company.sale_lock_date and target_date <= company.sale_lock_date:
+                raise UserError(_(
+                    'Transaksi Penjualan / Pendapatan terkunci hingga tanggal %s.'
+                ) % company.sale_lock_date.strftime('%d/%m/%Y'))
+
+            # 3. Purchases / PPL Lock Check
+            if source_type == 'ppl' and company.purchase_lock_date and target_date <= company.purchase_lock_date:
+                raise UserError(_(
+                    'Transaksi Pembelian / Pengadaan (PPL) terkunci hingga tanggal %s.'
+                ) % company.purchase_lock_date.strftime('%d/%m/%Y'))
+
+            # 4. Tax Return Lock Check
+            if company.tax_lock_date and target_date <= company.tax_lock_date:
+                has_tax = False
+                if lines:
+                    for l in lines:
+                        acc_name = getattr(l, 'account_id', False) and l.account_id.name or ''
+                        if any(kw in acc_name.lower() for kw in ['pajak', 'ppn', 'pph']):
+                            has_tax = True
+                            break
+                if has_tax:
+                    raise UserError(_(
+                        'Transaksi Perpajakan terkunci hingga tanggal %s setelah penutupan pajak (tax closing).'
+                    ) % company.tax_lock_date.strftime('%d/%m/%Y'))
+
+            # 5. Lock Everything (Soft Lock / Non-Manager Lock)
+            if company.user_lock_date and target_date <= company.user_lock_date:
+                if not is_manager:
+                    raise UserError(_(
+                        'Seluruh transaksi jurnal terkunci hingga tanggal %s untuk staf operasional.\n'
+                        'Hubungi Manajer Keuangan / Super User jika memerlukan jurnal penyesuaian.'
+                    ) % company.user_lock_date.strftime('%d/%m/%Y'))
+
     @api.model_create_multi
     def create(self, vals_list):
         self._check_finance_central_readonly()
+        is_manager = self.env.user.has_group('sif_keuangan.group_sif_keuangan_manager') or self.env.is_superuser()
         for vals in vals_list:
+            date_val = fields.Date.to_date(vals.get('date')) or fields.Date.today()
+            comp_id = vals.get('company_id') or self.env.company.id
+            company = self.env['res.company'].browse(comp_id)
+            source_type = vals.get('source_type', 'manual')
+
+            # 1. Hard Lock Check
+            if company.fiscalyear_lock_date and date_val <= company.fiscalyear_lock_date:
+                raise UserError(_(
+                    'Tidak dapat membuat transaksi pada atau sebelum tanggal Hard Lock %s.'
+                ) % company.fiscalyear_lock_date.strftime('%d/%m/%Y'))
+
+            # 2. Sales Lock
+            if source_type == 'pendapatan' and company.sale_lock_date and date_val <= company.sale_lock_date:
+                raise UserError(_(
+                    'Transaksi Penjualan / Pendapatan terkunci hingga tanggal %s.'
+                ) % company.sale_lock_date.strftime('%d/%m/%Y'))
+
+            # 3. Purchase Lock
+            if source_type == 'ppl' and company.purchase_lock_date and date_val <= company.purchase_lock_date:
+                raise UserError(_(
+                    'Transaksi Pembelian / Pengadaan (PPL) terkunci hingga tanggal %s.'
+                ) % company.purchase_lock_date.strftime('%d/%m/%Y'))
+
+            # 4. Soft Lock (Lock Everything)
+            if company.user_lock_date and date_val <= company.user_lock_date:
+                if not is_manager:
+                    raise UserError(_(
+                        'Seluruh transaksi jurnal terkunci hingga tanggal %s untuk staf operasional.'
+                    ) % company.user_lock_date.strftime('%d/%m/%Y'))
+
             if vals.get('name', _('New')) == _('New'):
                 seq = self.env['ir.sequence'].next_by_code('sif.jurnal.number')
                 while seq and self.search_count([('name', '=', seq)]):
@@ -137,7 +228,6 @@ class SifJurnalEntry(models.Model):
                 if seq:
                     vals['name'] = seq
                 else:
-                    date_val = fields.Date.to_date(vals.get('date')) or fields.Date.today()
                     prefix = f"J{date_val.strftime('%y%m')}"
                     last_rec = self.search([('name', '=like', f"{prefix}%")], order='id desc', limit=1)
                     next_num = 1
@@ -151,13 +241,20 @@ class SifJurnalEntry(models.Model):
 
     def write(self, vals):
         self._check_finance_central_readonly()
+        if any(k in vals for k in ['date', 'line_ids', 'partner_id', 'department_id', 'source_type', 'kwitansi_ref', 'ref', 'company_id', 'state']):
+            self._check_lock_dates()
+            if 'date' in vals:
+                new_date = fields.Date.to_date(vals['date'])
+                self._check_lock_dates(custom_date=new_date)
         return super().write(vals)
 
     def unlink(self):
         self._check_finance_central_readonly()
+        self._check_lock_dates()
         return super().unlink()
 
     def action_post(self):
+        self._check_lock_dates()
         for rec in self:
             if not rec.line_ids:
                 raise UserError(_('Transaksi jurnal tidak memiliki baris rincian debet/kredit.'))
@@ -170,9 +267,11 @@ class SifJurnalEntry(models.Model):
             rec.state = 'posted'
 
     def action_draft(self):
+        self._check_lock_dates()
         self.write({'state': 'draft'})
 
     def action_cancel(self):
+        self._check_lock_dates()
         self.write({'state': 'cancel'})
 
     # -------------------------------------------------------------------------
@@ -450,14 +549,20 @@ class SifJurnalLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         self._check_finance_central_readonly()
+        for vals in vals_list:
+            if vals.get('entry_id'):
+                entry = self.env['sif.jurnal.entry'].browse(vals['entry_id'])
+                entry._check_lock_dates()
         return super().create(vals_list)
 
     def write(self, vals):
         self._check_finance_central_readonly()
+        self.mapped('entry_id')._check_lock_dates()
         return super().write(vals)
 
     def unlink(self):
         self._check_finance_central_readonly()
+        self.mapped('entry_id')._check_lock_dates()
         return super().unlink()
 
     @api.depends('debit', 'credit')
