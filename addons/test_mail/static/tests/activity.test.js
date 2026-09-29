@@ -21,10 +21,10 @@ import { defineTestMailModels, testMailModels } from "@test_mail/../tests/test_m
 import {
     mockService,
     onRpc,
-    patchWithCleanup,
     serverState,
     contains as webContains,
 } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { formatDate, serializeDate } from "@web/core/l10n/dates";
 import { omit } from "@web/core/utils/objects";
 import { getOrigin } from "@web/core/utils/urls";
@@ -642,7 +642,7 @@ test("activity view: no group_by_menu and no comparison_menu", async () => {
 });
 
 test("activity view: group_by in the action has no effect", async () => {
-    patchWithCleanup(ActivityModel.prototype, {
+    patch(ActivityModel.prototype, {
         async load(params) {
             // force params to have a groupBy set, the model should ignore this value during the load
             params.groupBy = ["user_id"];
@@ -731,7 +731,7 @@ test("activity view: Domain should not reset on load", async () => {
 });
 
 test("activity view: 'scheduleActivity' does not add activity_ids condition as selectCreateDialog domain", async () => {
-    patchWithCleanup(ActivityController.prototype, {
+    patch(ActivityController.prototype, {
         scheduleActivity() {
             super.scheduleActivity();
             expect.step(this.getSearchProps().domain);
@@ -761,7 +761,7 @@ test("activity view: 'scheduleActivity' does not add activity_ids condition as s
 });
 
 test("activity view: 'onClose' of 'openActivityFormView' does not add activity_ids condition as selectCreateDialog domain", async () => {
-    patchWithCleanup(ActivityController.prototype, {
+    patch(ActivityController.prototype, {
         openActivityFormView(resId, activityTypeId) {
             super.openActivityFormView(resId, activityTypeId);
             expect.step(this.getSearchProps().domain);
@@ -787,7 +787,7 @@ test("activity view: 'onClose' of 'openActivityFormView' does not add activity_i
 });
 
 test("activity view: 'onReloadData' does not add activity_ids condition as selectCreateDialog domain", async () => {
-    patchWithCleanup(ActivityController.prototype, {
+    patch(ActivityController.prototype, {
         get rendererProps() {
             const rendererProps = { ...super.rendererProps };
             expect.step(this.getSearchProps().domain);
@@ -863,7 +863,7 @@ test("Activity view: many2one_avatar_user widget in activity view", async () => 
 });
 
 test("Activity view: on_destroy_callback doesn't crash", async () => {
-    patchWithCleanup(ActivityRenderer.prototype, {
+    patch(ActivityRenderer.prototype, {
         setup() {
             super.setup();
             onMounted(() => {

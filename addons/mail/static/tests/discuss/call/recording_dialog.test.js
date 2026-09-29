@@ -2,7 +2,8 @@ import { click, contains, defineMailModels, start } from "@mail/../tests/mail_te
 import { RecordingDialog } from "@mail/discuss/call/common/recording_dialog";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -23,7 +24,7 @@ async function openRecordingDialog() {
 test("video records audio and video", async () => {
     await start();
     const rtc = configureRecording();
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         setRecording(options) {
             expect(options).toEqual({ audio: true, transcription: false, video: true });
             expect.step("start recording");
@@ -46,7 +47,7 @@ test("video records audio and video", async () => {
 test("transcription can be selected with or without video", async () => {
     await start();
     const rtc = configureRecording();
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         setRecording(options) {
             expect(options).toEqual({ audio: false, transcription: true, video: false });
             expect.step("start transcription");
@@ -99,7 +100,7 @@ test("active recording keeps video immutable and transcription reactive", async 
         transcription: true,
         video: false,
     };
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         setRecording(options) {
             expect(options).toEqual({ transcription: true });
             expect.step("update transcription");
@@ -130,7 +131,7 @@ test("transcription-only recording must be stopped instead of updated", async ()
         transcription: true,
         video: false,
     };
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         setRecording(options) {
             expect(options).toEqual({ audio: false, transcription: false, video: false });
             expect.step("stop recording");

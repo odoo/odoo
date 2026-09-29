@@ -10,13 +10,14 @@ import {
 import { ImStatusMixin } from "@mail/core/common/im_status_mixin";
 import { describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 defineLivechatModels();
 
 test("Visitor going offline shows disconnection banner to operator", async () => {
-    patchWithCleanup(ImStatusMixin, { IM_STATUS_DEBOUNCE_DELAY: 0 });
+    patch(ImStatusMixin, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     const pyEnv = await startServer();
     pyEnv["res.users"].write([serverState.userId], {
         group_ids: pyEnv["res.groups"]

@@ -17,7 +17,7 @@ import { PTT_RELEASE_DURATION } from "@mail/discuss/call/common/rtc_service";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { advanceTime, freezeTime, keyDown, test } from "@odoo/hoot";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 defineMailModels();
 
@@ -75,7 +75,7 @@ test("Can push-to-talk", async () => {
         makeRecordFieldLocalId(Settings.localId(), "pushToTalkKey"),
         toRawValue("...f")
     );
-    patchWithCleanup(pttExtensionServiceInternal, {
+    patch(pttExtensionServiceInternal, {
         onAnswerIsEnabled(pttService) {
             pttService.isEnabled = false;
         },

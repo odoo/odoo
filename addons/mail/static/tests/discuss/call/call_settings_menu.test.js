@@ -15,7 +15,8 @@ import { parseRawValue, toRawValue } from "@mail/utils/common/local_storage";
 import { Settings } from "@mail/core/common/settings_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, keyDown, mockDate, test, expect } from "@odoo/hoot";
-import { getService, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import { isBrowserChrome } from "@web/core/browser/feature_detection";
 
@@ -23,7 +24,7 @@ describe.current.tags("desktop");
 defineMailModels();
 
 test("Device selectors match a selected device by ID and kind", async () => {
-    patchWithCleanup(window.navigator.mediaDevices, {
+    patch(window.navigator.mediaDevices, {
         enumerateDevices: async () => [
             {
                 deviceId: "default",
@@ -61,7 +62,7 @@ test("Device selectors match a selected device by ID and kind", async () => {
 });
 
 test("Renders the call settings", async () => {
-    patchWithCleanup(window.navigator.mediaDevices, {
+    patch(window.navigator.mediaDevices, {
         enumerateDevices: () => {
             const deviceList = [
                 {
@@ -178,7 +179,7 @@ test("local storage for call settings", async () => {
         edgeBlurAmountKey,
         voiceActivationThresholdKey,
     ];
-    patchWithCleanup(localStorage, {
+    patch(localStorage, {
         setItem(key, value) {
             if (callSettingsKeys.includes(key)) {
                 expect.step(`${key}: ${parseRawValue(value).value}`);
@@ -252,7 +253,7 @@ test("Adjust view dialog: each layout option and the prioritize-video toggle per
 });
 
 test("Changing inputs in Call Settings should pre-ask for browser permission", async () => {
-    patchWithCleanup(window.navigator.mediaDevices, {
+    patch(window.navigator.mediaDevices, {
         enumerateDevices: () =>
             Promise.resolve([
                 {

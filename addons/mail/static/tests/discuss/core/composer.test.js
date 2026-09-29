@@ -18,7 +18,8 @@ import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread_model";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { getService, serverState } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -27,7 +28,7 @@ defineMailModels();
 
 beforeEach(() => {
     // Simulate real user interactions
-    patchWithCleanup(Composer.prototype, {
+    patch(Composer.prototype, {
         isEventTrusted() {
             return true;
         },
@@ -188,7 +189,7 @@ test("keep mentions when channel post is deferred", async () => {
         channel_type: "channel",
     });
     const { promise, resolve } = Promise.withResolvers();
-    patchWithCleanup(Thread.prototype, {
+    patch(Thread.prototype, {
         async post(body, postData = {}, extraData = {}) {
             await promise;
             return super.post(body, postData, extraData);

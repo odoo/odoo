@@ -9,7 +9,8 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { ImStatusMixin } from "@mail/core/common/im_status_mixin";
 import { describe, test } from "@odoo/hoot";
-import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -63,7 +64,7 @@ test("initially away", async () => {
 });
 
 test("change icon on change partner im_status", async () => {
-    patchWithCleanup(ImStatusMixin, { IM_STATUS_DEBOUNCE_DELAY: 0 });
+    patch(ImStatusMixin, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     await start();

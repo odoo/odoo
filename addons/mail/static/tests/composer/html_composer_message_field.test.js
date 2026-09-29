@@ -20,9 +20,9 @@ import {
     mockService,
     mountView,
     onRpc,
-    patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import {
     click,
     contains as waitForContains,
@@ -43,7 +43,7 @@ defineMailModels([]);
 
 let htmlEditor;
 beforeEach(() => {
-    patchWithCleanup(HtmlComposerMessageField.prototype, {
+    patch(HtmlComposerMessageField.prototype, {
         onEditorLoad(editor) {
             htmlEditor = editor;
             return super.onEditorLoad(...arguments);
@@ -53,7 +53,7 @@ beforeEach(() => {
 
 test("media dialog: upload", async function () {
     const { promise: isUploaded, resolve: resolveUpload } = Promise.withResolvers();
-    patchWithCleanup(FileSelector.prototype, {
+    patch(FileSelector.prototype, {
         async onUploaded() {
             await super.onUploaded(...arguments);
             resolveUpload();
@@ -224,7 +224,7 @@ describe("Remove attachments", () => {
     });
 
     test("should remove image from html editor if removed from attachment list", async () => {
-        patchWithCleanup(FileSelector.prototype, {
+        patch(FileSelector.prototype, {
             async onUploaded() {
                 await super.onUploaded(...arguments);
                 expect.step("Image Uploaded");

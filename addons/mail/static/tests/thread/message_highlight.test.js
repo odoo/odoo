@@ -13,7 +13,8 @@ import { advanceTime, tick, waitFor } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";
 import { router, routerBus } from "@web/core/browser/router";
 import { range } from "@web/core/utils/numbers";
-import { mountWebClient, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWebClient } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 defineMailModels();
 describe.current.tags("desktop");
@@ -59,7 +60,7 @@ test("can highlight message (slow ref registration)", async () => {
     }
     await pyEnv["discuss.channel"].set_message_pin(channelId, middleMessageId, true);
     const { promise: refRegistered, resolve: resolveRefRegistration } = Promise.withResolvers();
-    patchWithCleanup(UseForwardRefsToParent.prototype, {
+    patch(UseForwardRefsToParent.prototype, {
         async registerRef(...args) {
             // Ensure scroll is made even when messages are mounted later.
             await refRegistered;

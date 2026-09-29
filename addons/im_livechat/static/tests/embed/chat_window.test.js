@@ -19,12 +19,8 @@ import {
 import { Attachment } from "@mail/core/common/attachment_model";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockFetch } from "@odoo/hoot-mock";
-import { 
-    Command, 
-    patchWithCleanup,
-    serverState, 
-    withUser 
-} from "@web/../tests/web_test_helpers";
+import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
@@ -238,7 +234,7 @@ test("Displays the name of agent in welcome message", async () => {
     });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 2" });
     const livechatChannelId = await loadDefaultEmbedConfig();
-    patchWithCleanup(session, {
+    patch(session, {
         livechatData: {
             ...session.livechatData,
             options: {
@@ -277,16 +273,16 @@ test("Displays the name of agent in welcome message", async () => {
 });
 
 test("should not make XMLHttpRequest to server file content when embedded externally", async () => {
-    patchWithCleanup(location, {
+    patch(location, {
         origin: "https://www.hoot.test",
     });
-    patchWithCleanup(session, {
+    patch(session, {
         origin: window.location.origin,
     });
     mockFetch(() => {
         throw new Error("Should not fetch from external to odoo");
     });
-    patchWithCleanup(HTMLAnchorElement.prototype, {
+    patch(HTMLAnchorElement.prototype, {
         click() {
             const url = new URL(this.href);
             expect.step(`${url.origin} ${url.searchParams.get("filename")}`);
@@ -308,22 +304,22 @@ test("should not make XMLHttpRequest to server file content when embedded extern
     await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(test.txt)");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Message .o-mail-AttachmentContainer:contains(test.txt)");
-    await click(".o-mail-Message .o-mail-AttachmentContainer:contains(test.txt) [title='Download']");
+    await click(
+        ".o-mail-Message .o-mail-AttachmentContainer:contains(test.txt) [title='Download']"
+    );
 
-    expect.verifySteps([
-        `${session.origin} test.txt`,
-    ]);
+    expect.verifySteps([`${session.origin} test.txt`]);
 });
 
 /** @see {@link import("@mail/core/attachment_list_patch").ExternalLivechatDisabledPdfReason} */
 test("should not allow preview of PDF attachments when embedded externally", async () => {
-    patchWithCleanup(location, {
+    patch(location, {
         origin: "https://www.hoot.test",
     });
-    patchWithCleanup(session, {
+    patch(session, {
         origin: window.location.origin,
     });
-    patchWithCleanup(Attachment.prototype, {
+    patch(Attachment.prototype, {
         get isViewable() {
             const res = super.isViewable;
             if (res) {

@@ -24,10 +24,10 @@ import {
     getService,
     makeKwArgs,
     onRpc,
-    patchWithCleanup,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -397,7 +397,7 @@ test("pending mark as read does not revert a later mark as unread", async () => 
     onRpc("/discuss/channel/set_new_message_separator", () =>
         expect.step("set_new_message_separator")
     );
-    patchWithCleanup(Thread.prototype, {
+    patch(Thread.prototype, {
         handleMarkAsRead() {
             expect.step("handle_mark_as_read");
             return super.handleMarkAsRead(...arguments);

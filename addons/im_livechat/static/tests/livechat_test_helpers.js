@@ -6,12 +6,8 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import {
-    defineModels,
-    serverState,
-    patchWithCleanup,
-    MockServer,
-} from "@web/../tests/web_test_helpers";
+import { defineModels, serverState, MockServer } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { ChatbotMessage } from "./mock_server/mock_models/chatbot_message";
 import { ChatbotScriptAnswer } from "./mock_server/mock_models/chatbot_script_answer";
 import { ChatbotScriptStep } from "./mock_server/mock_models/chatbot_script_step";
@@ -77,7 +73,7 @@ export async function loadDefaultEmbedConfig() {
     const livechatChannelId = pyEnv["im_livechat.channel"].create({
         user_ids: [serverState.userId],
     });
-    patchWithCleanup(session, {
+    patch(session, {
         livechatData: {
             can_load_livechat: true,
             serverUrl: window.origin,

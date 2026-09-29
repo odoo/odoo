@@ -14,7 +14,8 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { getService, onRpc, patchWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
+import { getService, onRpc, preloadBundle } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import { GifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
 import { animationFrame } from "@odoo/hoot-dom";
@@ -266,7 +267,7 @@ test("Searching for a GIF with a failling RPC should display an error", async ()
 });
 
 test("Scrolling at the bottom should trigger the search to load more gif, even after visiting the favorite.", async () => {
-    patchWithCleanup(GifPicker.prototype, {
+    patch(GifPicker.prototype, {
         get style() {
             return "width: 200px;height: 200px;background: #000";
         },

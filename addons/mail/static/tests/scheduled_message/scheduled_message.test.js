@@ -8,7 +8,8 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD } from "@mail/chatter/web/scheduled_message";
-import { mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { mockService, onRpc } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 import { MailComposerAttachmentSelector } from "@mail/core/web/mail_composer_attachment_selector";
@@ -418,7 +419,7 @@ test("Scheduled message with attachments", async () => {
 
 test("widget mail_composer_attachment_selector: edit attachment of scheduled message", async () => {
     const { promise: isUploaded, resolve: resolveUpload } = Promise.withResolvers();
-    patchWithCleanup(MailComposerAttachmentSelector.prototype, {
+    patch(MailComposerAttachmentSelector.prototype, {
         async onFileUploaded() {
             await super.onFileUploaded(...arguments);
             resolveUpload();

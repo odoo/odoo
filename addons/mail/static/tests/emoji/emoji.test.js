@@ -1,9 +1,5 @@
-import {
-    defineParams,
-    patchWithCleanup,
-    preloadBundle,
-    serverState,
-} from "@web/../tests/web_test_helpers";
+import { defineParams, preloadBundle, serverState } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import {
     click,
@@ -28,7 +24,7 @@ preloadBundle("web.assets_emoji");
 
 test("emoji picker correctly handles translations with special characters", async () => {
     // Reset emoji loader to reload translations *for* the current test
-    patchWithCleanup(emojiLoader, {
+    patch(emojiLoader, {
         _categories: signal.Array([]),
         _emojis: signal.Array([]),
         _loadingPromise: null,
@@ -256,7 +252,7 @@ test("Emoji picker shows failure to load emojis", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
     // Simulate failure to load emojis
-    patchWithCleanup(emojiLoader, {
+    patch(emojiLoader, {
         _emojis: signal.Array([]),
     });
     await openDiscuss(channelId);

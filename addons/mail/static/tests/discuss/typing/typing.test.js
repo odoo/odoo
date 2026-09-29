@@ -12,13 +12,8 @@ import {
 import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { animationFrame, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
-import {
-    Command,
-    getService,
-    patchWithCleanup,
-    serverState,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import { Store } from "@mail/core/common/store_service";
 import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
@@ -250,7 +245,7 @@ test('[text composer] other member typing status "is typing" refreshes of assumi
             Command.create({ partner_id: partnerId }),
         ],
     });
-    patchWithCleanup(ChannelMember.prototype, {
+    patch(ChannelMember.prototype, {
         registerTypingTimeout(...args) {
             expect.step("register_typing_timeout");
             super.registerTypingTimeout(...args);
@@ -305,7 +300,7 @@ test('other member typing status "is typing" refreshes of assuming no longer typ
             Command.create({ partner_id: partnerId }),
         ],
     });
-    patchWithCleanup(ChannelMember.prototype, {
+    patch(ChannelMember.prototype, {
         registerTypingTimeout(...args) {
             expect.step("register_typing_timeout");
             super.registerTypingTimeout(...args);

@@ -41,11 +41,11 @@ import {
     contains as webContains,
     Command,
     mockService,
-    patchWithCleanup,
     serverState,
     withUser,
     getService,
 } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { user } from "@web/core/user";
 import { getOrigin, url } from "@web/core/utils/urls";
@@ -1530,7 +1530,7 @@ test("Check notification popover for incoming messages", async () => {
     ]);
     // We patch the store mock as it doesn't support incoming_email_to and incoming_email_cc.
     const originalStoreMessageFields = MailMessage.prototype._store_message_fields;
-    patchWithCleanup(MailMessage.prototype, {
+    patch(MailMessage.prototype, {
         _store_message_fields(res) {
             originalStoreMessageFields.apply(this, arguments);
             res.attr("incoming_email_to", [["incomingTo", emailTo]], {
@@ -2588,7 +2588,7 @@ test("chatter - font size unchanged when there is only emoji", async () => {
 });
 
 test("Copy Message Link", async () => {
-    patchWithCleanup(window.navigator.clipboard, {
+    patch(window.navigator.clipboard, {
         writeText(text) {
             expect.step(text);
             super.writeText(text);
@@ -2732,7 +2732,7 @@ test("Prettify message links", async () => {
 });
 
 test("Clicking message link does not open a new tab", async () => {
-    patchWithCleanup(window, {
+    patch(window, {
         open() {
             throw new Error("Clicking message link should not open a new tab");
         },
@@ -2789,7 +2789,7 @@ test("context menu should not open on right-click when editing a message", async
         model: "discuss.channel",
         res_id: channelId,
     });
-    patchWithCleanup(Message.prototype, {
+    patch(Message.prototype, {
         onContextMenu() {
             expect.step("Message.onContextMenu");
             super.onContextMenu(...arguments);

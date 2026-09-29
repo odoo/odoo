@@ -3,8 +3,15 @@
 import { expect, describe, test } from "@odoo/hoot";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { click, freezeTime, queryOne } from "@odoo/hoot-dom";
-import { contains, startServer, start, openFormView, mailModels } from "@mail/../tests/mail_test_helpers";
-import { defineModels, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    startServer,
+    start,
+    openFormView,
+    mailModels,
+} from "@mail/../tests/mail_test_helpers";
+import { defineModels } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { CallDebrief } from "@mail/views/fields/call_debrief/call_debrief";
 
 describe.current.tags("desktop", "call_debrief");
@@ -36,7 +43,7 @@ function _createRecording(pyEnv, { start = 0, type = "audio" } = {}) {
 }
 
 function _setupCallDebriefPatch() {
-    patchWithCleanup(CallDebrief.prototype, {
+    patch(CallDebrief.prototype, {
         async _loadData(props) {
             await super._loadData(props);
             if (!this.state.mediaSegments) {
@@ -98,7 +105,7 @@ test("CallDebrief: active call uses the current time", async () => {
 });
 
 test("CallDebrief: pending uploads have no playback controls", async () => {
-    patchWithCleanup(CallDebrief.prototype, {
+    patch(CallDebrief.prototype, {
         async _loadData(props) {
             const artifacts = await super._loadData(props);
             expect.step("recordings loaded");
@@ -140,9 +147,7 @@ test("CallDebrief: renders video with playback", async () => {
     await start();
     await _openDebriefView(pyEnv, discussCallHistoryId);
 
-    await contains(
-        ".o-CallDebrief-media-container:not(.o-CallDebrief-media-container--no-video)"
-    );
+    await contains(".o-CallDebrief-media-container:not(.o-CallDebrief-media-container--no-video)");
     await contains(".o-CallDebrief-video video");
 
     // Mute first to avoid noise

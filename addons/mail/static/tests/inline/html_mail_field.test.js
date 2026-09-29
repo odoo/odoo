@@ -13,8 +13,8 @@ import {
     models,
     mountView,
     onRpc,
-    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { mailModels } from "../mail_test_helpers";
 
 function setSelectionInHtmlField(selector = "p", fieldName = "body") {
@@ -58,7 +58,7 @@ defineModels({ ...mailModels, CustomMessage });
 
 let htmlEditor;
 beforeEach(() => {
-    patchWithCleanup(HtmlMailField.prototype, {
+    patch(HtmlMailField.prototype, {
         onEditorLoad(editor) {
             htmlEditor = editor;
             return super.onEditorLoad(...arguments);

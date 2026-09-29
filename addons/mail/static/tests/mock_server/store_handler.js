@@ -103,7 +103,7 @@ export const storeHandlerRegistry = new StoreHandlerRegistry();
  * Register a store handler (the mock equivalent of the `@store_handler(...)` decorator, which does
  * not translate to JS), passing the handler function directly like `registerRoute`. The function
  * must be named and start with "store_"; it lands on the registry's `handlers` object so tests can
- * override it with `patch`/`patchWithCleanup`.
+ * override it with `patch`.
  */
 export function registerStoreHandler(name, func, options = {}) {
     storeHandlerRegistry.add(name, func, options);

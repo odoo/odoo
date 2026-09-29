@@ -1,7 +1,8 @@
 import { defineMailModels, start } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -9,7 +10,7 @@ defineMailModels();
 /** Replace idbKeyval by an in-memory database. */
 function mockIdbKeyval() {
     const values = new Map();
-    patchWithCleanup(window.idbKeyval, {
+    patch(window.idbKeyval, {
         Store: class {},
         async get(key) {
             return values.get(key);
@@ -32,7 +33,7 @@ test("Retries when closed", async () => {
     await start();
     const store = getService("mail.store");
     let open = false;
-    patchWithCleanup(window.idbKeyval, {
+    patch(window.idbKeyval, {
         set() {
             if (!open) {
                 expect.step("set:closed");
@@ -55,7 +56,7 @@ test("Retries only once (ignored if failed again)", async () => {
     await start();
     const store = getService("mail.store");
     let open = false;
-    patchWithCleanup(window.idbKeyval, {
+    patch(window.idbKeyval, {
         set() {
             if (!open) {
                 expect.step("set:closed");
@@ -79,7 +80,7 @@ test("No crash on idb unavailable", async () => {
     mockIdbKeyval();
     await start();
     const store = getService("mail.store");
-    patchWithCleanup(window.idbKeyval, {
+    patch(window.idbKeyval, {
         set() {
             expect.step("set");
             return Promise.reject(new Error("IDBDatabase.transaction: Can't start a transaction"));
@@ -89,7 +90,7 @@ test("No crash on idb unavailable", async () => {
     await animationFrame();
     await expect.waitForSteps(["set", "set"]);
     // Simulate unavailable idb (e.g. private mode, blocked storage).
-    patchWithCleanup(window.idbKeyval, {
+    patch(window.idbKeyval, {
         Store: class {
             constructor() {
                 expect.step("store:init");

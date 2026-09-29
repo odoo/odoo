@@ -17,7 +17,8 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { Command, patchWithCleanup, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import { queryFirst } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
@@ -53,7 +54,7 @@ test("new message from operator displays unread counter", async () => {
         "discuss.channel",
         "/discuss/channel/messages",
     ]);
-    patchWithCleanup(document, {
+    patch(document, {
         set title(value) {
             const match = value.match(/^\((\d+)\) .*/);
             if (match) {

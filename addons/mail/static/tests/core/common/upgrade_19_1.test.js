@@ -14,7 +14,8 @@ import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { Settings } from "@mail/core/common/settings_model";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
-import { getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { getService, serverState } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -172,7 +173,7 @@ test("call auto focus is 'off", async () => {
 });
 
 test("device input/output id", async () => {
-    patchWithCleanup(window.navigator.mediaDevices, {
+    patch(window.navigator.mediaDevices, {
         enumerateDevices: () =>
             Promise.resolve([
                 {

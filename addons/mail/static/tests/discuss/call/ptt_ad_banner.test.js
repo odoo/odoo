@@ -11,7 +11,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { pttExtensionServiceInternal } from "@mail/discuss/call/common/ptt_extension_service";
 import { describe, test } from "@odoo/hoot";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -20,7 +20,7 @@ test("display banner when ptt extension is not enabled", async () => {
     mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    patchWithCleanup(pttExtensionServiceInternal, {
+    patch(pttExtensionServiceInternal, {
         onAnswerIsEnabled(pttService) {
             pttService.isEnabled = false;
         },
