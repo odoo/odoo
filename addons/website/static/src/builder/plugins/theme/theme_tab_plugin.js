@@ -7,6 +7,7 @@ import { ThemeShadowOption } from "./theme_shadow_option";
 import { ThemeButtonOption } from "./theme_button_option";
 import {
     computeColorPreviewValues,
+    PreviewColorPaletteAction,
     PreviewWebsiteColorAction,
     previewColors,
     ThemeColorsOption,
@@ -23,7 +24,6 @@ import {
     ThemeFontWeightOption,
 } from "./theme_font_weight_option";
 import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Cache } from "@web/core/utils/cache";
@@ -34,7 +34,7 @@ import {
     convertRgbToHsl,
 } from "@web/core/utils/colors";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { CustomizeWebsiteVariableAction, USER_VALUES_URL } from "../customize_website_plugin";
+import { CustomizeButtonStyleAction } from "../customize_website_plugin";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { ImageSize } from "@html_builder/plugins/image/image_size";
@@ -124,13 +124,14 @@ export class ThemeTabPlugin extends Plugin {
     resources = {
         builder_actions: {
             CustomizeGrayAction,
-            ChangeColorPaletteAction,
+            PreviewColorPaletteAction,
             CustomizeWebsiteFontFamilyAction,
             PreviewWebsiteFontFamilyAction,
             CustomizeWebsiteFontWeightAction,
             PreviewWebsiteFontWeightAction,
             PreviewWebsiteColorAction,
             PreviewWebsiteGrayAction,
+            PreviewButtonStyleAction,
             EditCustomCodeAction,
             ConfigureApiKeyAction,
         },
@@ -430,74 +431,26 @@ export class PreviewWebsiteGrayAction extends CustomizeGrayAction {
         );
     }
 }
-export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
-    static id = "changeColorPalette";
-    static dependencies = ["customizeWebsite"];
-    setup() {
-        this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
-        // Undo/redo replays the wrapped `apply`, and the drop is its own
-        // preview step of the same history step: drop only here.
-        const applyWithHistory = this.apply;
-        this.apply = async (context) => {
-            if (context.loadResult && this.hasPreviewedColors()) {
-                this.dropColorPreview();
-            }
-            await applyWithHistory(context);
-        };
-    }
-    hasPreviewedColors() {
-        // Set by every color preview (see `computeColorSystemPreview`).
-        return !!getCSSVariableValue("o-preview-colors", getHtmlStyle(this.document));
-    }
-    /**
-     * Drops the previewed values that the server resets on a palette switch
-     * (see `make_scss_customization`), which would otherwise be written over
-     * the new palette on save, and the preview values computed from them.
-     */
-    dropColorPreview() {
-        const customizeWebsite = this.dependencies.customizeWebsite;
-        const getURL = (colorType) => customizeWebsite.getColorsCustomization({}, { colorType }).url;
-        customizeWebsite.dropPreview(
-            {
-                [getURL("")]: null,
-                [getURL("gray")]: null,
-                [getURL("theme")]: ["success", "info", "warning", "danger"],
-                [USER_VALUES_URL]: [1, 2, 3, 4, 5].map((index) => `o-cc${index}-bg-gradient`),
-            },
-            [
-                ...Object.keys(computeColorPreviewValues(this, { colors: {}, nullValue: "null" })),
-                ...Object.values(GRAY_PARAMS),
-            ]
-        );
-    }
-    async load() {
-        const style = this.window.getComputedStyle(this.document.body);
-        const hasCustomizedColors = getCSSVariableValue("has-customized-colors", style);
-        if ((hasCustomizedColors && hasCustomizedColors !== "false") || this.hasPreviewedColors()) {
-            return new Promise((resolve) => {
-                this.services.dialog.add(ConfirmationDialog, {
-                    body: _t(
-                        "Changing the color palette will reset all your color customizations, are you sure you want to proceed?"
-                    ),
-                    confirmLabel: _t("Apply New Palette"),
-                    confirm: () => resolve(true),
-                    cancel: () => resolve(false),
-                });
-            });
-        }
-        return true;
-    }
-    async apply(context) {
-        if (!context.loadResult) {
-            return;
-        }
-        await super.apply(context);
-        setBuilderCSSVariables(getHtmlStyle(this.document));
-        await Promise.allSettled(
-            this.getResource("on_website_color_updated_handlers").map((handler) =>
-                handler(["o-color-1", "o-color-2", "o-color-3", "o-color-4", "o-color-5"])
-            )
+/**
+ * Same as `customizeButtonStyle`, but previewed live and only written on save,
+ * with the buttons' colors as the color preview computes them (see
+ * `computeColorPreviewValues`). Only those: the other color rules can outrank
+ * more specific compiled ones while previewing.
+ */
+export class PreviewButtonStyleAction extends CustomizeButtonStyleAction {
+    static id = "previewButtonStyle";
+    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
+    setup() {}
+    apply({ params: { mainParam: which, nullValue = "null" }, value }) {
+        const isButtonValue = (name) =>
+            /^(theme|o-cc\d)-btn-/.test(name) && name.includes(`-btn-${which}-`);
+        const buttonValues = Object.entries(
+            computeColorPreviewValues(this, { colors: {}, nullValue })
+        ).filter(([name]) => isButtonValue(name));
+        this.dependencies.customizeWebsite.previewWebsiteVariables(
+            this.getVariables(which, value),
+            nullValue,
+            { ...Object.fromEntries(buttonValues), [`btn-${which}-style`]: value }
         );
     }
 }

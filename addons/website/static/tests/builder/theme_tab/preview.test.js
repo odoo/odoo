@@ -117,31 +117,6 @@ test("theme tab: a color is previewed, undone, redone and written on save", asyn
     expect.verifySteps([`${USER_COLORS} {"input":"#FF0000"}`]);
 });
 
-test("theme tab: a palette switch drops the previewed colors it resets", async () => {
-    mockThemeRpcs();
-    await setupWebsiteBuilder("", { loadIframeBundles: true });
-    await openThemeTab();
-    await contains(".o-tab-content .o-hb-theme-color-slider-btn").click();
-    await contains("button.o_we_color_preview[title='Primary']").click();
-    await contains(".o_popover button.solid-tab").click();
-    await contains(".o_popover button.o_color_button[data-color='#FF0000']").click();
-    expect(websiteRootStyle().getPropertyValue("--o-color-1")).toBe("#FF0000");
-
-    await contains(".o_theme_tab [data-icon='palette']").click();
-    await contains(`[data-action-value="'default-light-1'"] .o-color-palette-card span`).click();
-    // Confirmed, as the previewed color will be lost.
-    await contains(".o_dialog .btn-primary").click();
-    await expect.waitForSteps([
-        `${USER_VALUES} {"color-palettes-name":"'default-light-1'"}`,
-        "asset reload",
-    ]);
-    expect(websiteRootStyle().getPropertyValue("--o-color-1")).toBe("");
-    expect(websiteRootStyle().getPropertyValue("--o-preview-colors")).toBe("");
-
-    await save();
-    expect.verifySteps([]);
-});
-
 test("theme tab: a font change keeps the weights the new font has, else the nearest", async () => {
     const { getEditor } = await setupWebsiteBuilder("");
     const editor = getEditor();
@@ -192,4 +167,88 @@ test("theme tab: the page background follows the colors in every layout", async 
     expect(websiteRootStyle().getPropertyValue("--o-preview-boxed-body-fill")).toBe(
         "rgb(255, 255, 255)"
     );
+});
+
+test("theme tab: the link style is previewed and written on save", async () => {
+    mockThemeRpcs();
+    await setupWebsiteBuilder(`<p><a href="#">link</a></p>`, { loadIframeBundles: true });
+    await openThemeTab();
+
+    await contains("[data-label='Link Style'] .o-hb-select-toggle").click();
+    await contains(".o-hb-select-dropdown-item:contains('Always Underline')").click();
+    expect(":iframe a[href='#']").toHaveStyle({ textDecorationLine: "underline" });
+    expect.verifySteps([]);
+
+    await save();
+    expect.verifySteps([`${USER_VALUES} {"link-underline":"always"}`]);
+});
+
+test("theme tab: the button style is previewed and written on save", async () => {
+    mockThemeRpcs();
+    await setupWebsiteBuilder(
+        `<a href="#" class="btn btn-primary">button</a>
+        <section class="o_cc o_cc2"><a href="#" class="btn btn-primary">button</a></section>`,
+        { loadIframeBundles: true }
+    );
+    await openThemeTab();
+    const buttonStyle = () => getComputedStyle(queryFirst(":iframe #wrap > .btn-primary"));
+    const presetButtonStyle = () => getComputedStyle(queryFirst(":iframe .o_cc2 .btn-primary"));
+    const fillBackground = buttonStyle().backgroundColor;
+
+    await contains("[data-label='Primary Style'] .o-hb-select-toggle").click();
+    await contains(".o-hb-select-dropdown-item:contains('Outline')").click();
+    expect(buttonStyle().backgroundColor).toBe("rgba(0, 0, 0, 0)");
+    expect(buttonStyle().borderColor).toBe(
+        websiteRootStyle().getPropertyValue("--o-preview-theme-btn-primary-outline")
+    );
+    // In a preset, with the preset's colors.
+    expect(presetButtonStyle().backgroundColor).toBe("rgba(0, 0, 0, 0)");
+    expect(presetButtonStyle().borderColor).toBe(
+        websiteRootStyle().getPropertyValue("--o-preview-o-cc2-btn-primary-outline")
+    );
+
+    await contains("[data-label='Primary Style'] .o-hb-select-toggle").click();
+    await contains(".o-hb-select-dropdown-item:contains('Flat')").click();
+    expect(buttonStyle().backgroundColor).toBe(fillBackground);
+    expect(buttonStyle().textTransform).toBe("uppercase");
+    expect.verifySteps([]);
+
+    await save();
+    expect.verifySteps([
+        `${USER_VALUES} {"btn-primary-outline":"false","btn-primary-flat":"true"}`,
+    ]);
+});
+
+test("theme tab: the click effect is applied on save", async () => {
+    mockThemeRpcs();
+    onRpc("/website/theme_customize_data", async (request) => {
+        const { params } = await request.json();
+        expect.step(`assets ${JSON.stringify(params)}`);
+    });
+    await setupWebsiteBuilder("");
+    await openThemeTab();
+
+    await contains("[data-label='On Click Effect'] .o-hb-select-toggle").click();
+    await contains(".o-hb-select-dropdown-item:contains('Ripple')").click();
+    expect.verifySteps([]);
+
+    await save();
+    expect.verifySteps([
+        'assets {"is_view_data":false,"enable":["website.ripple_effect_scss","website.ripple_effect_js"],"disable":[],"reset_view_arch":false}',
+        `${USER_VALUES} {"btn-ripple":"true"}`,
+    ]);
+});
+
+test("theme tab: the sliders mark the theme default", async () => {
+    // The defaults are printed by the compiled CSS.
+    await setupWebsiteBuilder("", { loadIframeBundles: true });
+    await openThemeTab();
+
+    const mark = ".hb-row:has([data-action-param='body-line-height']) .o-hb-range-default";
+    // 1.5 on the paragraph line height's 1-2.5 range.
+    const position = "--o-hb-range-default-position: 0.3333333333333333;";
+    expect(mark).toHaveAttribute("style", position);
+    // Moving the value does not move the mark.
+    await contains(rowInput("body-line-height")).edit("2");
+    expect(mark).toHaveAttribute("style", position);
 });

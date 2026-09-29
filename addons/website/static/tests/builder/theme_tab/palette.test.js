@@ -1,4 +1,5 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, queryFirst, test } from "@odoo/hoot";
+import { waitForNone } from "@odoo/hoot-dom";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -7,7 +8,15 @@ import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_he
 
 defineWebsiteModels();
 
-test("theme tab: warning on palette change", async () => {
+const USER_VALUES = "/website/static/src/scss/options/user_values.scss";
+// `default-light-1`'s first color.
+const PALETTE_COLOR = "rgb(126, 209, 237)";
+// The palette, and the preset gradients the server resets with it.
+const PALETTE_WRITE = `${USER_VALUES} {${[1, 2, 3, 4, 5]
+    .map((index) => `"o-cc${index}-bg-gradient":"null"`)
+    .join(",")},"color-palettes-name":"'default-light-1'"}`;
+
+function mockThemeRpcs() {
     class WebsiteAssets extends models.Model {
         _name = "website.assets";
         make_scss_customization(location, changes) {
@@ -15,59 +24,64 @@ test("theme tab: warning on palette change", async () => {
         }
     }
     defineModels([WebsiteAssets]);
-    const def = Promise.withResolvers();
-    onRpc("/website/theme_customize_bundle_reload", async (request) => {
+    onRpc("/website/theme_customize_bundle_reload", () => {
         expect.step("asset reload");
-        def.resolve();
         return "";
     });
+}
 
-    await setupWebsiteBuilder("", {
-        styleContent: 'body { --has-customized-colors: "true"; }',
-    });
+function previewedColor() {
+    return queryFirst(":iframe html").style.getPropertyValue("--o-preview-o-color-1");
+}
+
+async function switchPalette() {
+    await contains(".o_theme_tab [data-icon='palette']").click();
+    await contains(`[data-action-value="'default-light-1'"] .o-color-palette-card span`).click();
+}
+
+async function openColors() {
     await contains(".o-snippets-tabs button[data-name=theme]").click();
     await contains(".o-tab-content .o-hb-theme-color-slider-btn").click();
-    await contains(".o_theme_tab [data-icon='palette']").click();
-    await contains(`[data-action-value="'default-light-1'"] .o-color-palette-card span`).click();
-    expect(".o_dialog").toHaveCount(1);
-    await contains(".o_dialog .btn-secondary").click();
+}
+
+async function save() {
+    await contains(".o-snippets-top-actions [data-action='save']").click();
+    await waitForNone(".o-snippets-top-actions");
+}
+
+test("theme tab: a palette switch is previewed, undone, redone and written on save", async () => {
+    mockThemeRpcs();
+    // The palettes are printed by the compiled CSS.
+    await setupWebsiteBuilder("", { loadIframeBundles: true });
+    await openColors();
+
+    await switchPalette();
     expect(".o_dialog").toHaveCount(0);
+    expect(previewedColor()).toBe(PALETTE_COLOR);
+
+    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    expect(previewedColor()).toBe("");
+    await contains(".o-snippets-top-actions button[data-icon='redo']").click();
+    expect(previewedColor()).toBe(PALETTE_COLOR);
     expect.verifySteps([]);
-    await contains(".o_theme_tab [data-icon='palette']").click();
-    await contains(`[data-action-value="'default-light-1'"] .o-color-palette-card span`).click();
-    expect(".o_dialog").toHaveCount(1);
-    await contains(".o_dialog .btn-primary").click();
-    await def.promise;
-    expect.verifySteps([
-        `/website/static/src/scss/options/user_values.scss {"color-palettes-name":"'default-light-1'"}`,
-        "asset reload",
-    ]);
+
+    await save();
+    expect.verifySteps([PALETTE_WRITE]);
 });
 
-test("theme tab: no warning on palette change", async () => {
-    class WebsiteAssets extends models.Model {
-        _name = "website.assets";
-        make_scss_customization(location, changes) {
-            expect.step(`${location} ${JSON.stringify(changes)}`);
-        }
-    }
-    defineModels([WebsiteAssets]);
-    const def = Promise.withResolvers();
-    onRpc("/website/theme_customize_bundle_reload", async (request) => {
-        expect.step("asset reload");
-        def.resolve();
-        return "";
-    });
+test("theme tab: a palette switch replaces the previewed colors", async () => {
+    mockThemeRpcs();
+    await setupWebsiteBuilder("", { loadIframeBundles: true });
+    await openColors();
+    await contains("button.o_we_color_preview[title='Primary']").click();
+    await contains(".o_popover button.solid-tab").click();
+    await contains(".o_popover button.o_color_button[data-color='#FF0000']").click();
+    expect(previewedColor()).toBe("rgb(255, 0, 0)");
 
-    await setupWebsiteBuilder("");
-    await contains(".o-snippets-tabs button[data-name=theme]").click();
-    await contains(".o-tab-content .o-hb-theme-color-slider-btn").click();
-    await contains(".o_theme_tab [data-icon='palette']").click();
-    await contains(`[data-action-value="'default-light-1'"] .o-color-palette-card span`).click();
-    await def.promise;
-    expect(".o_dialog").toHaveCount(0);
-    expect.verifySteps([
-        `/website/static/src/scss/options/user_values.scss {"color-palettes-name":"'default-light-1'"}`,
-        "asset reload",
-    ]);
+    await switchPalette();
+    expect(previewedColor()).toBe(PALETTE_COLOR);
+
+    // Only the palette is written: the server resets the colors.
+    await save();
+    expect.verifySteps([PALETTE_WRITE]);
 });

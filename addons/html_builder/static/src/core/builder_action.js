@@ -144,6 +144,18 @@ export class BuilderAction {
     getValue(context) {}
 
     /**
+     * Return the default value of the action on the element, if any (e.g. a
+     * theme's), for inputs to mark it (e.g. BuilderRange). Same format as
+     * @see getValue.
+     *
+     * @param { Object } context
+     * @param { HTMLElement } context.editingElement
+     * @param { ActionParams } [context.params]
+     * @returns { any }
+     */
+    getDefaultValue(context) {}
+
+    /**
      * Whether the action is already applied.
      * Used in combination with builder components that can only be active or
      * not (i.e. not inputs). For inputs, @see getValue.

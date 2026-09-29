@@ -24,7 +24,7 @@ import { loadImage } from "@html_editor/utils/image_processing";
  * @property { CustomizeWebsitePlugin['customizeWebsiteColors'] } customizeWebsiteColors
  * @property { CustomizeWebsitePlugin['customizeWebsiteVariables'] } customizeWebsiteVariables
  * @property { CustomizeWebsitePlugin['previewWebsiteVariables'] } previewWebsiteVariables
- * @property { CustomizeWebsitePlugin['dropPreview'] } dropPreview
+ * @property { CustomizeWebsitePlugin['previewSavedValues'] } previewSavedValues
  * @property { CustomizeWebsitePlugin['getPendingValue'] } getPendingValue
  * @property { CustomizeWebsitePlugin['copyPreviewTo'] } copyPreviewTo
  * @property { CustomizeWebsitePlugin['getColorsCustomization'] } getColorsCustomization
@@ -41,6 +41,7 @@ import { loadImage } from "@html_editor/utils/image_processing";
  * @property { CustomizeWebsitePlugin['isPluginDestroyed'] } isPluginDestroyed
  * @property { CustomizeWebsitePlugin['reloadBundles'] } reloadBundles
  * @property { CustomizeWebsitePlugin['setViewsOnSave'] } setViewsOnSave
+ * @property { CustomizeWebsitePlugin['setVariableAssets'] } setVariableAssets
  */
 
 /**
@@ -48,7 +49,7 @@ import { loadImage } from "@html_editor/utils/image_processing";
  */
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
-export const USER_VALUES_URL = "/website/static/src/scss/options/user_values.scss";
+const USER_VALUES_URL = "/website/static/src/scss/options/user_values.scss";
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
@@ -57,7 +58,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
         "previewWebsiteVariables",
-        "dropPreview",
+        "previewSavedValues",
         "getPendingValue",
         "copyPreviewTo",
         "getColorsCustomization",
@@ -74,6 +75,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "isPluginDestroyed",
         "reloadBundles",
         "setViewsOnSave",
+        "setVariableAssets",
     ];
 
     /** @type {import("plugins").WebsiteResources} */
@@ -171,8 +173,26 @@ export class CustomizeWebsitePlugin extends Plugin {
                 reset_view_arch: false,
             });
         }
-        // No bundle reload: the iframe is reloaded after save.
-        for (const [url, values] of Object.entries(this.pendingCustomizations)) {
+        const assetsToToggle = { enable: [], disable: [] };
+        for (const [variable, assets] of Object.entries(this.variableAssets)) {
+            const value = this.getPendingValue(variable);
+            if (value !== undefined) {
+                assetsToToggle[value === "true" ? "enable" : "disable"].push(...assets);
+            }
+        }
+        if (assetsToToggle.enable.length || assetsToToggle.disable.length) {
+            await rpc("/website/theme_customize_data", {
+                is_view_data: false,
+                ...assetsToToggle,
+                reset_view_arch: false,
+            });
+        }
+        // No bundle reload: the iframe is reloaded after save. The user values
+        // go first: a palette switch there resets the color files.
+        const customizations = Object.entries(this.pendingCustomizations).sort(
+            ([url1], [url2]) => (url2 === USER_VALUES_URL) - (url1 === USER_VALUES_URL)
+        );
+        for (const [url, values] of customizations) {
             if (Object.keys(values).length) {
                 await this.makeSCSSCusto(url, values);
             }
@@ -184,6 +204,8 @@ export class CustomizeWebsitePlugin extends Plugin {
     activeTemplateViews = {};
     viewsToEnableOnSave = new Set();
     viewsToDisableOnSave = new Set();
+    /** @type {Object<string, string[]>} assets toggled on save by a variable */
+    variableAssets = {};
     pendingViewRequests = new Set();
     pendingAssetRequests = new Set();
     /**
@@ -314,43 +336,36 @@ export class CustomizeWebsitePlugin extends Plugin {
         this.pendingPreviewSteps.push({ previous: previousState, next: nextState });
     }
     /**
-     * Drops previewed values, so that nothing is written for them on save
-     * (e.g. the ones a server-side reset covers), together with preview-only
-     * aliases. Like a preview, it is a history step.
+     * Previews values that are not written on save, e.g. the ones a server-side
+     * reset gives: they replace any pending value of the same name. Like a
+     * preview, it is a history step.
      *
-     * @param {Object<string, string[]|null>} namesByUrl the names to drop in
-     *        each file (`null`: all of them)
-     * @param {string[]} [aliasNames]
+     * @param {Object<string, Object<string, string>>} valuesByUrl the values of
+     *        each file (empty: the compiled one)
      */
-    dropPreview(namesByUrl, aliasNames = []) {
+    previewSavedValues(valuesByUrl) {
         const style = this.document.documentElement.style;
-        let aliases = aliasNames;
-        for (const [url, names] of Object.entries(namesByUrl)) {
+        for (const [url, values] of Object.entries(valuesByUrl)) {
             const pending = this.pendingCustomizations[url] || {};
-            const droppedNames = (names || Object.keys(pending)).filter((name) => name in pending);
+            const names = Object.keys(values);
             const step = {
                 previous: {
                     url,
-                    variables: droppedNames.map((name) => [
+                    variables: names.map((name) => [
                         name,
                         pending[name],
                         style.getPropertyValue(`--${name}`),
                     ]),
-                    aliases: aliases.map((name) => [
-                        name,
-                        style.getPropertyValue(`--o-preview-${name}`),
-                    ]),
+                    aliases: [],
                 },
                 next: {
                     url,
-                    variables: droppedNames.map((name) => [name, undefined, ""]),
-                    aliases: aliases.map((name) => [name, ""]),
+                    variables: names.map((name) => [name, undefined, values[name]]),
+                    aliases: [],
                 },
             };
             this.setPreviewState(step.next);
             this.pendingPreviewSteps.push(step);
-            // The aliases go with the first step only.
-            aliases = [];
         }
     }
     setPreviewState({ url, variables, aliases }) {
@@ -661,6 +676,16 @@ export class CustomizeWebsitePlugin extends Plugin {
     }
     isPluginDestroyed() {
         return this.isDestroyed;
+    }
+    /**
+     * Enables `assets` on save if `variable` is then saved as `'true'`, or
+     * disables them if it is saved as something else.
+     *
+     * @param {string} variable
+     * @param {string[]} assets
+     */
+    setVariableAssets(variable, assets) {
+        this.variableAssets[variable] = assets;
     }
 }
 
@@ -1205,6 +1230,9 @@ export class CustomizeWebsiteVariableAction extends BuilderAction {
         const currentValue = this.dependencies.customizeWebsite.getWebsiteVariableValue(variable);
         return currentValue;
     }
+    getDefaultValue({ params: { mainParam: variable } }) {
+        return getCSSVariableValue(`o-default-${variable}`, getHtmlStyle(this.document));
+    }
     async apply({ params: { mainParam: variable, nullValue = "null" }, value }) {
         await this.dependencies.customizeWebsite.customizeWebsiteVariables(
             {
@@ -1217,14 +1245,20 @@ export class CustomizeWebsiteVariableAction extends BuilderAction {
 
 /**
  * Same as `customizeWebsiteVariable`, but previewed live and only written on
- * save. For variables the compiled CSS reads through `var()`.
+ * save. For variables the compiled CSS reads through `var()`, or with
+ * `cssValues` (see `previewWebsiteVariables`). `assets` are toggled on save
+ * (see `setVariableAssets`).
  */
 export class PreviewWebsiteVariableAction extends CustomizeWebsiteVariableAction {
     static id = "previewWebsiteVariable";
     // Drop the parent's `preview = false` and blocking `withCustomHistory`.
     setup() {}
-    apply({ params: { mainParam: variable, nullValue = "null" }, value }) {
-        this.dependencies.customizeWebsite.previewWebsiteVariables({ [variable]: value }, nullValue);
+    apply({ params: { mainParam: variable, nullValue = "null", cssValues, assets }, value }) {
+        const customizeWebsite = this.dependencies.customizeWebsite;
+        customizeWebsite.previewWebsiteVariables({ [variable]: value }, nullValue, cssValues);
+        if (assets) {
+            customizeWebsite.setVariableAssets(variable, assets);
+        }
     }
 }
 
@@ -1421,12 +1455,15 @@ export class CustomizeButtonStyleAction extends BuilderAction {
     }
     async apply({ params: { mainParam: which, nullValue }, value }) {
         await this.dependencies.customizeWebsite.customizeWebsiteVariables(
-            {
-                [`btn-${which}-outline`]: value === "outline" ? "true" : "false",
-                [`btn-${which}-flat`]: value === "flat" ? "true" : "false",
-            },
+            this.getVariables(which, value),
             nullValue
         );
+    }
+    getVariables(which, style) {
+        return {
+            [`btn-${which}-outline`]: style === "outline" ? "true" : "false",
+            [`btn-${which}-flat`]: style === "flat" ? "true" : "false",
+        };
     }
 }
 

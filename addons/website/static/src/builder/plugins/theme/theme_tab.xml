@@ -144,10 +144,14 @@
 <t t-name="website.ThemeLinkOption">
     <BuilderContext preview="false">
         <BuilderRow label.translate="Link Style">
-            <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'link-underline'">
-                <BuilderSelectItem actionValue="'never'">No Underline</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'hover'">Underline On Hover</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'always'">Always Underline</BuilderSelectItem>
+            <!-- `cssValues`: the compiled text decorations. -->
+            <BuilderSelect action="'previewWebsiteVariable'" preview="true">
+                <BuilderSelectItem actionValue="'never'"
+                    actionParam="{mainParam: 'link-underline', cssValues: {'link-decoration': 'none', 'link-hover-decoration': 'none'}}">No Underline</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'hover'"
+                    actionParam="{mainParam: 'link-underline', cssValues: {'link-decoration': 'none', 'link-hover-decoration': 'underline'}}">Underline On Hover</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'always'"
+                    actionParam="{mainParam: 'link-underline', cssValues: {'link-decoration': 'underline', 'link-hover-decoration': 'underline'}}">Always Underline</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
     </BuilderContext>

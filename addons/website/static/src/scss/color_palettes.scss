@@ -52,6 +52,22 @@
 
     @include print-variable('palette-names', $o-selected-color-palettes-names);
 
+    // What a palette switch previews for the colors the palette does not set
+    // (see `getPaletteColors`): the base palette with the presets' defaults
+    // (same merge as `$o-color-palette`), and the base status colors.
+    $-base-palette: $o-base-color-palette;
+    @for $index from 1 through length($o-color-combinations) {
+        @each $element, $color in map-merge($o-base-color-combination, nth($o-color-combinations, $index)) {
+            $-base-palette: map-merge($-base-palette, ('o-cc#{$index}-#{$element}': $color));
+        }
+    }
+    @each $name, $color in ('success': $o-success, 'info': $o-info, 'warning': $o-warning, 'danger': $o-danger) {
+        $-base-palette: map-merge($-base-palette, ($name: map-get($o-base-theme-color-palette, $name) or $color));
+    }
+    @each $key, $value in $-base-palette {
+        @include print-variable('o-base-palette-#{$key}', $value);
+    }
+
     // Need info about the base grays which are used to compute the final grays
     @each $name, $color in $o-base-gray-color-palette {
         @include print-variable('base-#{$name}', $color);

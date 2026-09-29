@@ -227,18 +227,36 @@
         }
     }
 
-    // 9) What the builder previews for a reset (see `previewWebsiteVariables`):
-    // the value compiled without the user's one. A value that defaults to
-    // another one (e.g. the h2 line height to the headings one) is reset with
-    // it, so it shows that one's default.
-    @each $key in ('font-size-base', 'small-font-size', 'body-line-height', 'headings-line-height') {
-        @include print-variable('o-default-#{$key}', map-get($o-default-website-values, $key));
+    // 9) The Theme tab values without the user's: what a reset previews and
+    // the sliders mark (see `previewWebsiteVariables`, `getDefaultValue`).
+    // It is the theme's, else the compiled one while the user did not set
+    // it. A value that defaults to another one (e.g. the h2 line height to
+    // the headings one) defaults to that one's default.
+    $-defaults: ();
+    $-theme-keys: ('font-size-base', 'small-font-size', 'body-line-height', 'headings-line-height', 'paragraph-margin-top', 'paragraph-margin-bottom', 'headings-margin-top', 'headings-margin-bottom', 'btn-primary-outline-border-width', 'btn-secondary-outline-border-width');
+    @each $size in ('', '-sm', '-lg') {
+        @each $property in ('offset-x', 'offset-y', 'blur-radius', 'spread-radius') {
+            $-theme-keys: append($-theme-keys, 'box-shadow#{$size}-#{$property}');
+        }
     }
-    @each $level in (2, 3, 4, 5, 6) {
-        @include print-variable('o-default-h#{$level}-line-height', map-get($o-default-website-values, 'h#{$level}-line-height') or map-get($o-default-website-values, 'headings-line-height'));
+    @each $key in $-theme-keys {
+        $-defaults: map-merge($-defaults, ($key: map-get($o-default-website-values, $key)));
     }
-    @each $level in (1, 2, 3, 4) {
-        @include print-variable('o-default-display-#{$level}-line-height', map-get($o-default-website-values, 'display-#{$level}-line-height') or map-get($o-default-website-values, 'headings-line-height'));
+    @each $key, $value in (
+        'btn-padding-y': $btn-padding-y, 'btn-padding-x': $btn-padding-x, 'btn-font-size': $btn-font-size, 'btn-border-radius': $btn-border-radius,
+        'btn-padding-y-sm': $btn-padding-y-sm, 'btn-padding-x-sm': $btn-padding-x-sm, 'btn-font-size-sm': $btn-font-size-sm, 'btn-border-radius-sm': $btn-border-radius-sm,
+        'btn-padding-y-lg': $btn-padding-y-lg, 'btn-padding-x-lg': $btn-padding-x-lg, 'btn-font-size-lg': $btn-font-size-lg, 'btn-border-radius-lg': $btn-border-radius-lg,
+        'input-padding-y': $input-padding-y, 'input-padding-x': $input-padding-x, 'input-font-size': $input-font-size, 'input-border-radius': $input-border-radius,
+        'input-padding-y-sm': $input-padding-y-sm, 'input-padding-x-sm': $input-padding-x-sm, 'input-font-size-sm': $input-font-size-sm, 'input-border-radius-sm': $input-border-radius-sm,
+        'input-padding-y-lg': $input-padding-y-lg, 'input-padding-x-lg': $input-padding-x-lg, 'input-font-size-lg': $input-font-size-lg, 'input-border-radius-lg': $input-border-radius-lg,
+    ) {
+        $-defaults: map-merge($-defaults, ($key: if(map-get($o-user-website-values, $key), null, $value)));
+    }
+    @each $level in ('h2', 'h3', 'h4', 'h5', 'h6', 'display-1', 'display-2', 'display-3', 'display-4') {
+        @each $property in ('line-height', 'margin-top', 'margin-bottom') {
+            $-key: '#{$level}-#{$property}';
+            $-defaults: map-merge($-defaults, ($-key: map-get($o-default-website-values, $-key) or map-get($-defaults, 'headings-#{$property}')));
+        }
     }
     $-heading-font-size-multipliers: (
         1: $o-theme-h1-font-size-multiplier,
@@ -249,16 +267,19 @@
         6: $o-theme-h6-font-size-multiplier,
     );
     @each $level, $multiplier in $-heading-font-size-multipliers {
-        @include print-variable('o-default-h#{$level}-font-size', map-get($o-default-website-values, 'h#{$level}-font-size') or $font-size-base * $multiplier);
+        $-defaults: map-merge($-defaults, ('h#{$level}-font-size': map-get($o-default-website-values, 'h#{$level}-font-size') or $font-size-base * $multiplier));
     }
     // Same fallbacks as `$display-font-sizes`.
     @each $level, $size in (1: 5rem, 2: 4.5rem, 3: 4rem, 4: 3.5rem) {
-        @include print-variable('o-default-display-#{$level}-font-size', map-get($o-default-website-values, 'display-#{$level}-font-size') or $size);
+        $-defaults: map-merge($-defaults, ('display-#{$level}-font-size': map-get($o-default-website-values, 'display-#{$level}-font-size') or $size));
     }
-    $-default-input-border-width: map-get($o-default-website-values, 'input-border-width') or $input-btn-border-width;
-    @include print-variable('o-default-input-border-width', $-default-input-border-width);
+    $-input-border-width: map-get($o-default-website-values, 'input-border-width') or $input-btn-border-width;
+    $-defaults: map-merge($-defaults, ('input-border-width': $-input-border-width));
     @each $side in ('top', 'right', 'bottom', 'left') {
-        @include print-variable('o-default-input-border-#{$side}-width', map-get($o-default-website-values, 'input-border-#{$side}-width') or $-default-input-border-width);
+        $-defaults: map-merge($-defaults, ('input-border-#{$side}-width': map-get($o-default-website-values, 'input-border-#{$side}-width') or $-input-border-width));
+    }
+    @each $key, $value in $-defaults {
+        @include print-variable('o-default-#{$key}', $value);
     }
 }
 
@@ -901,6 +922,32 @@ b, strong {
     }
 }
 
+// `link-underline` (`$link-decoration`, `$link-hover-decoration`). Bootstrap's
+// link components are never underlined, but it only says so when links are:
+// say it in any case, so that it holds when previewing underlined links.
+a {
+    text-decoration: var(--o-preview-link-decoration, #{$link-decoration});
+
+    &:hover {
+        text-decoration: var(--o-preview-link-hover-decoration, #{$link-hover-decoration});
+    }
+}
+.btn, .dropdown-item, .list-group-item-action, .nav-link, .navbar-brand, .page-link {
+    text-decoration: none;
+}
+.btn, .card-link, .dropdown-item, .nav-link, .navbar-brand, .page-link {
+    &:hover {
+        text-decoration: none;
+    }
+}
+.btn-link {
+    text-decoration: var(--o-preview-link-decoration, #{$link-decoration});
+
+    &:hover {
+        text-decoration: var(--o-preview-link-hover-decoration, #{$link-hover-decoration});
+    }
+}
+
 @mixin o-preview-button-size($suffix, $padding-y, $padding-x, $font-size, $border-radius) {
     --#{$prefix}btn-padding-y: var(--o-preview-btn-padding-y#{$suffix}, #{$padding-y});
     --#{$prefix}btn-padding-x: var(--o-preview-btn-padding-x#{$suffix}, #{$padding-x});
@@ -1393,15 +1440,18 @@ font[class*='bg-'] {
 }
 
 // Buttons
+@mixin o-btn-flat {
+    border: 0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    @include button-size(0.75rem, 1.5rem, ($font-size-base * .75), 0);
+    &.btn-lg { @include button-size(1rem, 2rem, ($font-size-lg * .75), 0); }
+    &.btn-sm { @include button-size(.5rem, 1rem, ($font-size-sm * .75), 0); }
+    &.btn-xs { @include button-size(.25rem, .5rem, ($font-size-base * .5), 0); }
+}
 .btn {
     &.flat {
-        border: 0;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        @include button-size(0.75rem, 1.5rem, ($font-size-base * .75), 0);
-        &.btn-lg { @include button-size(1rem, 2rem, ($font-size-lg * .75), 0); }
-        &.btn-sm { @include button-size(.5rem, 1rem, ($font-size-sm * .75), 0); }
-        &.btn-xs { @include button-size(.25rem, .5rem, ($font-size-base * .5), 0); }
+        @include o-btn-flat;
     }
     &.rounded-circle {
         border-radius: 100px !important;
@@ -1409,6 +1459,63 @@ font[class*='bg-'] {
         &.btn-lg { @include button-size(.6rem, 1.8rem, $font-size-lg, 30px); }
         &.btn-sm { @include button-size(.3rem, .9rem, $font-size-sm, 30px); }
         &.btn-xs { @include button-size(.15rem, .45rem, ($font-size-base * .75), 30px); }
+    }
+}
+
+// Button styles (`btn-<type>-outline`, `btn-<type>-flat`), compiled by
+// extending `.btn-<type>` from one variant (`bootstrap_review_frontend.scss`):
+// while another style is previewed, `.btn-<type>` gets that variant's colors
+// (see `PreviewButtonStyleAction`) and look.
+@mixin o-preview-button-style-variant($style, $name) {
+    @if $style == 'outline' {
+        // Over the compiled fill variant.
+        --#{$prefix}btn-bg: transparent;
+        --#{$prefix}btn-disabled-bg: transparent;
+        @include o-preview-button-outline-variant($name);
+    } @else {
+        @include o-preview-button-variant($name);
+    }
+}
+@each $type in ('primary', 'secondary') {
+    $-is-outline: index($o-btn-outline-defaults, $type) != null;
+    $-is-flat: index($o-btn-flat-defaults, $type) != null;
+    @each $style in ('fill', 'outline', 'flat') {
+        $-gate: 'html[style*="--o-preview-theme-btn-#{$type}-bg:"][style*="--o-preview-btn-#{$type}-style: #{$style}"]';
+        $-changes-variant: ($style == 'outline') != $-is-outline;
+        $-changes-look: ($style == 'flat') != $-is-flat;
+        #{$-gate} .btn-#{$type} {
+            @if $-changes-look and $style == 'flat' {
+                @include o-btn-flat;
+            } @else if $-changes-look {
+                border: var(--#{$prefix}btn-border-width) solid var(--#{$prefix}btn-border-color);
+                letter-spacing: normal;
+                text-transform: none;
+                @include o-preview-button-size('', $btn-padding-y, $btn-padding-x, $btn-font-size, $btn-border-radius);
+                &.btn-lg {
+                    @include o-preview-button-size('-lg', $btn-padding-y-lg, $btn-padding-x-lg, $btn-font-size-lg, $btn-border-radius-lg);
+                }
+                &.btn-sm {
+                    @include o-preview-button-size('-sm', $btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
+                }
+            }
+            @if $-changes-variant {
+                @include o-preview-button-style-variant($style, '--o-preview-theme-btn-#{$type}');
+                // The flat look has no border.
+                @if $style == 'outline' {
+                    border-width: var(--o-preview-btn-#{$type}-outline-border-width, #{o-website-value('btn-#{$type}-outline-border-width')});
+                } @else if $style == 'fill' {
+                    border-width: var(--#{$prefix}btn-border-width);
+                }
+            }
+        }
+        @if $-changes-variant {
+            // Same scope as `o-preview-cc-scope()`.
+            @for $index from 1 through length($o-color-combinations) {
+                #{$-gate} .o_cc#{$index} .btn-#{$type}, #{$-gate} .o_colored_level .o_cc#{$index} .btn-#{$type} {
+                    @include o-preview-button-style-variant($style, '--o-preview-o-cc#{$index}-btn-#{$type}');
+                }
+            }
+        }
     }
 }
 
