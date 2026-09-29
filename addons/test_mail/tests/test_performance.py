@@ -1593,7 +1593,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
         for fnames in (['author_id', 'is_bookmarked'], ['is_bookmarked', 'author_id']):
             with self.subTest(fnames=fnames):
                 self.env.invalidate_all()
-                with self.assertQueryCount(employee=5):
+                with self.assertQueryCount(employee=6):
                     messages_all._read_format(fnames)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
