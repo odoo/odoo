@@ -934,3 +934,30 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         )
         self.assertEqual(results['value']['tax_totals']['base_amount'], 2000.0)
         self.assertEqual(results['value']['tax_totals']['total_amount'], 2600.0)
+
+    def test_vendor_bill_manual_tax_edit_anchors_total(self):
+        """
+        Test that manually editing the tax amount on a Vendor Bill with price_include tax keeps
+        the Total fixed and adjusts the Untaxed Amount instead.
+        """
+        invoice = self._create_invoice([(105.0, self.percent_tax_3_incl)], inv_type='in_invoice')
+        self.assertEqual(invoice.amount_untaxed, 100.0)
+        self.assertEqual(invoice.amount_tax, 5.0)
+        self.assertEqual(invoice.amount_total, 105.0)
+
+        delta_value = -0.01
+        tax_totals = invoice.tax_totals
+
+        tax_totals['subtotals'][0]['tax_groups'][0]['tax_amount_currency'] += delta_value
+        tax_totals['subtotals'][0]['tax_amount_currency'] += delta_value
+        tax_totals['tax_amount_currency'] += delta_value
+
+        tax_totals['subtotals'][0]['tax_groups'][0]['base_amount_currency'] -= delta_value
+        tax_totals['subtotals'][0]['base_amount_currency'] -= delta_value
+        tax_totals['base_amount_currency'] -= delta_value
+
+        invoice.tax_totals = tax_totals
+
+        self.assertEqual(invoice.amount_total, 105.0)
+        self.assertEqual(invoice.amount_untaxed, 100.01)
+        self.assertEqual(invoice.amount_tax, 4.99)
