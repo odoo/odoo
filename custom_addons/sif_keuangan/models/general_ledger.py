@@ -16,6 +16,14 @@ class SifGeneralLedger(models.AbstractModel):
     def _default_date_to(self):
         return fields.Date.context_today(self)
 
+    def _company_scope_domain(self, field_name):
+        """Keep company-tagged journals within the allowed companies.
+
+        Legacy journals without a company remain shared until they can be
+        explicitly mapped; new Pendapatan journals always carry a company.
+        """
+        return ['|', (field_name, '=', False), (field_name, 'in', self.env.companies.ids)]
+
     @api.model
     def get_general_ledger_data(self, filters=None):
         """
@@ -45,6 +53,16 @@ class SifGeneralLedger(models.AbstractModel):
         target_move = filters.get('target_move', 'posted') # 'posted' or 'all'
         search_query = (filters.get('search') or '').strip().lower()
         unit_name_filter = (filters.get('unit_name') or '').strip()
+        department_id_filter = filters.get('department_id')
+        if department_id_filter:
+            try:
+                department_id_filter = int(department_id_filter)
+            except (ValueError, TypeError):
+                department_id_filter = None
+        if department_id_filter:
+            department = self.env['hr.department'].browse(department_id_filter).exists()
+            if not department or department.company_id not in self.env.companies:
+                department_id_filter = None
         partner_id_filter = filters.get('partner_id')
         if partner_id_filter:
             try:
@@ -53,7 +71,7 @@ class SifGeneralLedger(models.AbstractModel):
                 partner_id_filter = None
 
         # 2. Ambil list unit kerja unik untuk dropdown filter
-        distinct_units = self.env['sif.jurnal.entry'].search([
+        distinct_units = self.env['sif.jurnal.entry'].search(self._company_scope_domain('company_id') + [
             ('unit_name', '!=', False),
             ('unit_name', '!=', '')
         ]).mapped('unit_name')
@@ -67,7 +85,7 @@ class SifGeneralLedger(models.AbstractModel):
         partners_list = sorted(partners_list, key=lambda x: x['name'])
 
         # 4. Domain unposted banner
-        unposted_domain = [
+        unposted_domain = self._company_scope_domain('company_id') + [
             ('state', '=', 'draft'),
             ('date', '<=', date_to)
         ]
@@ -76,7 +94,7 @@ class SifGeneralLedger(models.AbstractModel):
         unposted_count = self.env['sif.jurnal.entry'].search_count(unposted_domain)
 
         # 5. Base domain untuk baris periode
-        period_domain = [
+        period_domain = self._company_scope_domain('company_id') + [
             ('date', '>=', date_from),
             ('date', '<=', date_to)
         ]
@@ -84,17 +102,21 @@ class SifGeneralLedger(models.AbstractModel):
             period_domain.append(('state', '=', 'posted'))
         if unit_name_filter:
             period_domain.append(('entry_id.unit_name', '=', unit_name_filter))
+        if department_id_filter:
+            period_domain.append(('department_id', '=', department_id_filter))
         if partner_id_filter:
             period_domain.append(('partner_id', '=', partner_id_filter))
         
         all_lines = self.env['sif.jurnal.line'].search(period_domain, order='date asc, id asc')
 
         # 6. Saldo awal sebelum date_from (Initial Balance)
-        init_domain = [('date', '<', date_from)]
+        init_domain = self._company_scope_domain('company_id') + [('date', '<', date_from)]
         if target_move == 'posted':
             init_domain.append(('state', '=', 'posted'))
         if unit_name_filter:
             init_domain.append(('entry_id.unit_name', '=', unit_name_filter))
+        if department_id_filter:
+            init_domain.append(('department_id', '=', department_id_filter))
         if partner_id_filter:
             init_domain.append(('partner_id', '=', partner_id_filter))
         
@@ -255,7 +277,7 @@ class SifGeneralLedger(models.AbstractModel):
             d_to = str(date_to)
 
         return {
-            'company_name': self.env.company.name or 'PT Konsulta Semen Gresik',
+            'company_name': ' / '.join(self.env.companies.mapped('name')) or self.env.company.name,
             'date_from': date_from,
             'date_to': date_to,
             'date_from_display': d_from,
@@ -263,6 +285,7 @@ class SifGeneralLedger(models.AbstractModel):
             'target_move': target_move,
             'search': search_query,
             'unit_name': unit_name_filter,
+            'department_id': department_id_filter,
             'units_list': units_list,
             'partner_id': partner_id_filter,
             'partners_list': partners_list,
@@ -311,7 +334,7 @@ class SifGeneralLedgerWizard(models.TransientModel):
         required=True,
         default='posted'
     )
-    unit_name = fields.Char(string='Unit Kerja')
+    unit_name = fields.Char(string='Departemen / Unit Lama')
     partner_id = fields.Many2one('res.partner', string='Partner / Rekanan')
     account_ids = fields.Many2many(
         'sif.coa',
@@ -413,4 +436,3 @@ class ReportSifGeneralLedgerDocument(models.AbstractModel):
             'accounts': gl_data.get('accounts', []),
             'grand_total': gl_data.get('grand_total', {}),
         }
-

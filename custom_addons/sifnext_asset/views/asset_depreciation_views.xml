@@ -14,6 +14,8 @@
         <field name="arch" type="xml">
 
             <list string="Jadwal Penyusutan">
+                <field name="company_id" string="Perusahaan" groups="base.group_multi_company" optional="hide"/>
+                <field name="department_id" string="Departemen" optional="show"/>
                 <field name="depreciation_date"/>
                 <field name="depreciation_amount"/>
                 <field name="accumulated_depreciation"/>
@@ -72,6 +74,8 @@
                     <group>
 
                         <field name="asset_id"/>
+                        <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                        <field name="department_id" readonly="1"/>
 
                         <field name="depreciation_date"/>
 

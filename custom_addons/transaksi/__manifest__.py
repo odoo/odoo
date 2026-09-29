@@ -2,7 +2,7 @@
 {
     "name": "Transaksi Bank",
     "summary": "Mutasi Antar Rekening dan Alur Persetujuan Transfer Bank",
-    "version": "19.0.1.0.1",
+    "version": "19.0.2.0.1",
     "category": "Accounting/Accounting",
     "author": "Konsulta",
     "license": "LGPL-3",
@@ -11,6 +11,7 @@
         "mail",
         "sif_keuangan",
         "sifnext_ppl",
+        "sifnext_org",
     ],
     "data": [
         "security/security_groups.xml",

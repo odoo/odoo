@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequence Tagihan SPP / UKT -->
+        <record id="seq_education_bill" model="ir.sequence">
+            <field name="name">Nomor Tagihan Pendidikan</field>
+            <field name="code">education.bill</field>
+            <field name="prefix">BILL/%(year)s%(month)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequence Siswa/Mahasiswa jika auto -->
+        <record id="seq_education_student" model="ir.sequence">
+            <field name="name">Nomor Induk Siswa/Mahasiswa</field>
+            <field name="code">education.student</field>
+            <field name="prefix">SIS/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

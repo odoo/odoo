@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_education_parent_tree" model="ir.ui.view">
+        <field name="name">education.parent.tree</field>
+        <field name="model">education.parent</field>
+        <field name="arch" type="xml">
+            <list string="Data Orang Tua / Wali">
+                <field name="name"/>
+                <field name="relation_type"/>
+                <field name="whatsapp"/>
+                <field name="mobile"/>
+                <field name="email"/>
+                <field name="student_count"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_education_parent_form" model="ir.ui.view">
+        <field name="name">education.parent.form</field>
+        <field name="model">education.parent</field>
+        <field name="arch" type="xml">
+            <form string="Orang Tua / Wali">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Nama Lengkap Orang Tua / Wali"/>
+                        <h1>
+                            <field name="name" placeholder="Nama Lengkap..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Kontak &amp; Identitas">
+                            <field name="relation_type"/>
+                            <field name="nik"/>
+                            <field name="job"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group string="Komunikasi &amp; Reminder Tagihan">
+                            <field name="whatsapp" placeholder="Contoh: 628123456789 (Untuk Reminder WA)"/>
+                            <field name="mobile"/>
+                            <field name="phone"/>
+                            <field name="email" placeholder="contoh@email.com (Untuk Reminder Email)"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group string="Alamat">
+                        <field name="address" placeholder="Alamat lengkap tempat tinggal..."/>
+                    </group>
+                    <notebook>
+                        <page string="Daftar Anak (Siswa / Mahasiswa)">
+                            <field name="student_ids">
+                                <list>
+                                    <field name="student_id_number"/>
+                                    <field name="name"/>
+                                    <field name="school_id"/>
+                                    <field name="class_id"/>
+                                    <field name="billing_scheme"/>
+                                    <field name="total_unpaid_amount"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_education_parent_search" model="ir.ui.view">
+        <field name="name">education.parent.search</field>
+        <field name="model">education.parent</field>
+        <field name="arch" type="xml">
+            <search string="Cari Orang Tua">
+                <field name="name"/>
+                <field name="whatsapp"/>
+                <field name="email"/>
+                <field name="student_ids" string="Nama / NISN Siswa"/>
+                <separator/>
+                <filter name="group_relation" string="Hubungan" context="{'group_by': 'relation_type'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_education_parent" model="ir.actions.act_window">
+        <field name="name">Data Orang Tua / Wali</field>
+        <field name="res_model">education.parent</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_education_parent_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tambahkan data Orang Tua / Wali untuk reminder tagihan SPP dan UKT.
+            </p>
+        </field>
+    </record>
+</odoo>

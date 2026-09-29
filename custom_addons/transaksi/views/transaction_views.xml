@@ -12,8 +12,8 @@
                 <field name="transfer_category" optional="show"/>
                 <field name="sender_account_id" optional="show"/>
                 <field name="submission_time" optional="show"/>
-                <field name="user_id"/>
-                <field name="unit_id"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="department_id" string="Departemen"/>
                 <field name="transfer_type" widget="badge" decoration-info="transfer_type == 'single'" decoration-success="transfer_type == 'multiple'"/>
                 <field name="recipient_bank" optional="show"/>
                 <field name="recipient_account" optional="show"/>
@@ -26,6 +26,37 @@
                        decoration-success="state == 'approved'" 
                        decoration-danger="state == 'rejected'"/>
             </list>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_transaksi_transaction_kanban" model="ir.ui.view">
+        <field name="name">transaksi.transaction.kanban</field>
+        <field name="model">transaksi.transaction</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <field class="fw-bold fs-6" name="name"/>
+                            <field name="state" widget="badge" 
+                                   decoration-muted="state == 'draft'" 
+                                   decoration-info="state == 'submitted'" 
+                                   decoration-warning="state == 'verified'" 
+                                   decoration-success="state == 'approved'" 
+                                   decoration-danger="state == 'rejected'"/>
+                        </div>
+                        <div class="text-muted small mb-2">
+                            <span><field name="department_id" string="Departemen"/></span>
+                            <span class="ms-2">| <field name="date"/> <field name="submission_time"/></span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2 border-top pt-2">
+                            <field name="transfer_type" widget="badge" decoration-info="transfer_type == 'single'" decoration-success="transfer_type == 'multiple'"/>
+                            <field class="fw-bold text-primary" name="total_rupiah"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -88,7 +119,7 @@
                             <field name="sender_account_number"/>
                             <field name="sender_account_holder"/>
                             <field name="user_id"/>
-                            <field name="unit_id" readonly="state != 'draft'"/>
+                            <field name="department_id" readonly="state != 'draft'"/>
                             <field name="company_id" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
@@ -126,6 +157,7 @@
                                         <field name="rupiah" sum="Total Rupiah"/>
                                         <field name="line_notes" placeholder="Catatan Baris"/>
                                         <field name="ppl_id" optional="show" readonly="1" string="Sumber PPL"/>
+                                        <field name="department_id" optional="show" readonly="1" string="Departemen"/>
                                     </list>
                                 </field>
                             </div>
@@ -207,7 +239,7 @@
                 <field name="recipient_account" string="Nomor Rekening"/>
                 <field name="recipient_name" string="Nama Pemilik Rekening"/>
                 <field name="user_id"/>
-                <field name="unit_id"/>
+                <field name="department_id" string="Departemen"/>
 
                 <filter name="filter_draft" string="Draf" domain="[('state', '=', 'draft')]"/>
                 <filter name="filter_pending" string="Menunggu Persetujuan" domain="[('state', 'in', ['submitted', 'verified'])]"/>
@@ -222,10 +254,12 @@
                 <filter name="filter_single" string="Transfer Tunggal" domain="[('transfer_type', '=', 'single')]"/>
                 <filter name="filter_multiple" string="Transfer Massal" domain="[('transfer_type', '=', 'multiple')]"/>
 
-                <filter name="group_by_state" string="Status" domain="[]" context="{'group_by': 'state'}"/>
-                <filter name="group_by_date" string="Bulan Pengajuan" domain="[]" context="{'group_by': 'date:month'}"/>
-                <filter name="group_by_unit" string="Unit Kerja" domain="[]" context="{'group_by': 'unit_id'}"/>
-                <filter name="group_by_type" string="Tipe Transfer" domain="[]" context="{'group_by': 'transfer_type'}"/>
+                <group string="Group By">
+                    <filter name="group_by_state" string="Status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_date" string="Bulan Pengajuan" domain="[]" context="{'group_by': 'date:month'}"/>
+                    <filter name="group_by_department" string="Departemen" domain="[]" context="{'group_by': 'department_id'}"/>
+                    <filter name="group_by_type" string="Tipe Transfer" domain="[]" context="{'group_by': 'transfer_type'}"/>
+                </group>
             </search>
         </field>
     </record>

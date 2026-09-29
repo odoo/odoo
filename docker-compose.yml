@@ -1,9 +1,23 @@
 services:
+  db:
+    image: postgres:16
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    networks:
+      - dokploy-network
+    restart: always
+
   web:
     build: .
+    depends_on:
+      - db
     ports:
       - "8099:8069"
-    command: odoo -d db_sifnext -u presenly,presenly_payroll,sifnext_operational,sif_rka,sifnext_ppl,sif_keuangan,sifnext_asset,hr_payroll_custom,pendapatan,transaksi --proxy-mode
+    command: odoo -d db_sifnext -i base,education_billing -u presenly,presenly_payroll,sifnext_operational,sif_rka,sifnext_ppl,sif_keuangan,sifnext_asset,hr_payroll_custom,pendapatan,transaksi,education_billing --proxy-mode
     volumes:
       - odoo-web-data:/var/lib/odoo
       - ./custom_addons:/mnt/extra-addons
@@ -15,6 +29,7 @@ services:
 
 volumes:
   odoo-web-data:
+  odoo-db-data:
 
 networks:
   dokploy-network:

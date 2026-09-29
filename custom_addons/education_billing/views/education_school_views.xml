@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- LIST VIEW -->
+    <record id="view_education_school_tree" model="ir.ui.view">
+        <field name="name">education.school.tree</field>
+        <field name="model">education.school</field>
+        <field name="arch" type="xml">
+            <list string="Institusi Pendidikan">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="level" widget="badge"
+                       decoration-info="level == 'smp'"
+                       decoration-primary="level == 'sma'"
+                       decoration-warning="level == 'smk'"
+                       decoration-success="level == 'univ'"/>
+                <field name="default_spp_amount"/>
+                <field name="default_ukt_amount"/>
+                <field name="student_count"/>
+                <field name="category_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_education_school_form" model="ir.ui.view">
+        <field name="name">education.school.form</field>
+        <field name="model">education.school</field>
+        <field name="arch" type="xml">
+            <form string="Institusi Pendidikan">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Nama Institusi"/>
+                        <h1>
+                            <field name="name" placeholder="Misal: SMP SIF 1 / Universitas SIF"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Identitas &amp; Jenjang">
+                            <field name="code"/>
+                            <field name="level"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="address"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group string="Tarif &amp; Integrasi Pendapatan">
+                            <field name="default_spp_amount" invisible="level == 'univ'"/>
+                            <field name="default_ukt_amount" invisible="level != 'univ'"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="category_id" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Program Studi / Jurusan" invisible="level == 'smp'">
+                            <field name="major_ids">
+                                <list editable="bottom">
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Daftar Kelas">
+                            <field name="class_ids">
+                                <list editable="bottom">
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="major_id" domain="[('school_id', '=', parent.id)]"/>
+                                    <field name="academic_year_id"/>
+                                    <field name="monthly_spp_amount" invisible="parent.level == 'univ'"/>
+                                    <field name="semester_ukt_amount" invisible="parent.level != 'univ'"/>
+                                    <field name="student_count"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_education_school_search" model="ir.ui.view">
+        <field name="name">education.school.search</field>
+        <field name="model">education.school</field>
+        <field name="arch" type="xml">
+            <search string="Cari Institusi">
+                <field name="name"/>
+                <field name="code"/>
+                <separator/>
+                <filter name="filter_smp" string="SMP" domain="[('level', '=', 'smp')]"/>
+                <filter name="filter_sma" string="SMA" domain="[('level', '=', 'sma')]"/>
+                <filter name="filter_smk" string="SMK" domain="[('level', '=', 'smk')]"/>
+                <filter name="filter_univ" string="Universitas" domain="[('level', '=', 'univ')]"/>
+                <separator/>
+                <filter name="group_level" string="Jenjang Pendidikan" context="{'group_by': 'level'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_education_school" model="ir.actions.act_window">
+        <field name="name">Institusi Pendidikan (Sekolah / Kampus)</field>
+        <field name="res_model">education.school</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_education_school_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat institusi sekolah (SMP, SMA, SMK) atau universitas baru.
+            </p>
+        </field>
+    </record>
+</odoo>

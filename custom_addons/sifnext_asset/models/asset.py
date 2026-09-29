@@ -1,13 +1,17 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import AccessError, ValidationError, UserError
 
 
 class SifnextAsset(models.Model):
     _name = "sifnext.asset"
     _description = "SIFNEXT Asset"
     _order = "id desc"
+
+    def _check_finance_central_readonly(self):
+        if self.env.user.has_group("sif_keuangan.group_sif_keuangan_central_readonly"):
+            raise AccessError("Finance pusat memiliki akses baca saja pada aset.")
 
     # =====================================================
     # IDENTITAS ASET
@@ -33,9 +37,26 @@ class SifnextAsset(models.Model):
         ondelete="restrict",
     )
 
+    company_id = fields.Many2one(
+        "res.company",
+        string="Perusahaan",
+        default=lambda self: self.env.company,
+        index=True,
+        ondelete="restrict",
+    )
+
+    owner_department_id = fields.Many2one(
+        "hr.department",
+        string="Departemen Pemilik",
+        ondelete="restrict",
+        check_company=True,
+        domain="[('company_id', '=', company_id)]",
+    )
+
     owner_unit = fields.Char(
-        string="Unit Pemilik",
-        required=True,
+        string="Unit Pemilik (Legacy)",
+        copy=False,
+        help="Nilai teks historis. Aset baru memakai Departemen Pemilik.",
     )
 
     project_code = fields.Char(
@@ -286,8 +307,22 @@ class SifnextAsset(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        self._check_finance_central_readonly()
 
         for vals in vals_list:
+            company = self.env["res.company"].browse(vals.get("company_id") or self.env.company.id).exists()
+            if not company or company not in self.env.companies:
+                raise ValidationError("Perusahaan/cabang aset tidak valid atau tidak diizinkan.")
+            department = self.env["hr.department"].browse(
+                vals.get("owner_department_id") or self.env.user.department_id.id
+            ).exists()
+            if not department:
+                raise ValidationError("Departemen pemilik aset wajib ditentukan.")
+            if department.company_id != company:
+                raise ValidationError("Departemen pemilik aset harus berasal dari perusahaan/cabang yang sama.")
+            vals["company_id"] = company.id
+            vals["owner_department_id"] = department.id
+            vals["owner_unit"] = department.name
             if vals.get("code", "New") == "New":
                 vals["code"] = (
                     self.env["ir.sequence"].next_by_code(
@@ -303,11 +338,33 @@ class SifnextAsset(models.Model):
 
         return records
 
+    @api.constrains("company_id", "owner_department_id")
+    def _check_owner_department_company(self):
+        for record in self:
+            if record.owner_department_id and record.owner_department_id.company_id != record.company_id:
+                raise ValidationError("Departemen pemilik aset harus berasal dari perusahaan/cabang yang sama.")
+
     # =====================================================
     # UPDATE ASSET
     # =====================================================
 
     def write(self, vals):
+        self._check_finance_central_readonly()
+        vals = dict(vals)
+        organization_fields = {"company_id", "owner_department_id"}
+        if organization_fields.intersection(vals) and any(record.state != "draft" for record in self):
+            raise UserError("Perusahaan dan departemen aset yang sudah diperoleh tidak dapat diubah.")
+        for record in self:
+            company = self.env["res.company"].browse(vals.get("company_id") or record.company_id.id).exists()
+            if not company or company not in self.env.companies:
+                raise ValidationError("Perusahaan/cabang aset tidak valid atau tidak diizinkan.")
+            department = self.env["hr.department"].browse(
+                vals.get("owner_department_id") or record.owner_department_id.id
+            ).exists()
+            if not department or department.company_id != company:
+                raise ValidationError("Departemen pemilik aset harus berasal dari perusahaan/cabang yang sama.")
+            if "owner_department_id" in vals and "owner_unit" not in vals:
+                vals["owner_unit"] = department.name
 
         schedule_fields = {
             "category_id",
@@ -328,11 +385,16 @@ class SifnextAsset(models.Model):
 
         return result
 
+    def unlink(self):
+        self._check_finance_central_readonly()
+        return super().unlink()
+
     # =====================================================
     # POST PEROLEHAN KE FINANCE
     # =====================================================
 
     def action_post_acquisition(self):
+        self._check_finance_central_readonly()
 
         for record in self:
 
@@ -366,7 +428,10 @@ class SifnextAsset(models.Model):
                 asset_account_id=record.account_asset_id.id,
                 credit_account_id=record.account_cash_id.id,
                 date=record.acquisition_date,
-                unit_name=record.owner_unit or "KANTOR",
+                unit_name=record.owner_department_id.name,
+                company_id=record.company_id.id,
+                department_id=record.owner_department_id.id,
+                unit_dept=record.owner_department_id.sif_journal_unit_dept,
                 vendor_name=(
                     record.partner_id.name
                     if record.partner_id

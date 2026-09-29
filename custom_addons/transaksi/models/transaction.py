@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from markupsafe import Markup
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 
 class TransaksiTransaction(models.Model):
@@ -9,6 +9,10 @@ class TransaksiTransaction(models.Model):
     _description = "Dokumen Transaksi Mutasi Rekening"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "date desc, id desc"
+
+    def _check_finance_central_readonly(self):
+        if self.env.user.has_group("sif_keuangan.group_sif_keuangan_central_readonly"):
+            raise AccessError(_("Finance pusat memiliki akses baca saja pada transaksi bank."))
 
     name = fields.Char(
         string="Nomor Transaksi",
@@ -88,12 +92,14 @@ class TransaksiTransaction(models.Model):
         readonly=True,
         tracking=True,
     )
-    unit_id = fields.Many2one(
-        "sifnext.unit",
-        string="Unit Kerja",
-        default=lambda self: self.env.user.unit_id if hasattr(self.env.user, "unit_id") else False,
+    department_id = fields.Many2one(
+        "hr.department",
+        string="Departemen",
+        default=lambda self: self.env.user.department_id,
         tracking=True,
         domain="[('company_id', '=', company_id)]",
+        check_company=True,
+        ondelete="restrict",
     )
     company_id = fields.Many2one(
         "res.company",
@@ -102,6 +108,19 @@ class TransaksiTransaction(models.Model):
         required=True,
         index=True,
     )
+
+    @api.onchange("company_id", "ppl_id", "ppl_ids")
+    def _onchange_organization_scope(self):
+        for record in self:
+            linked_ppls = record.ppl_id | record.ppl_ids
+            if linked_ppls:
+                companies = linked_ppls.mapped("company_id")
+                if len(companies) == 1:
+                    record.company_id = companies
+                departments = linked_ppls.mapped("department_id")
+                record.department_id = departments if len(departments) == 1 else False
+            elif record.department_id and record.department_id.company_id != record.company_id:
+                record.department_id = False
 
     # Sumber Dana disimpan opsional di model untuk fase berikutnya, disembunyikan dari tampilan
     source_account_id = fields.Many2one(
@@ -425,6 +444,19 @@ class TransaksiTransaction(models.Model):
                 if len(parts) != 2 or not parts[0].isdigit() or not parts[1].isdigit() or not (0 <= int(parts[0]) <= 23) or not (0 <= int(parts[1]) <= 59):
                     raise ValidationError(_("Format Jam Pengajuan harus HH:MM (contoh: 14:30)."))
 
+    @api.constrains("company_id", "department_id", "ppl_id", "ppl_ids", "line_ids")
+    def _check_company_department_scope(self):
+        for record in self:
+            if record.department_id and record.department_id.company_id != record.company_id:
+                raise ValidationError(_("Departemen transaksi harus berasal dari perusahaan/cabang yang sama."))
+            ppls = record.ppl_id | record.ppl_ids | record.line_ids.mapped("ppl_id")
+            if any(ppl.company_id != record.company_id for ppl in ppls):
+                raise ValidationError(_("PPL dalam satu transaksi harus berasal dari perusahaan/cabang yang sama."))
+            if record.department_id and any(ppl.department_id != record.department_id for ppl in ppls):
+                raise ValidationError(_("Departemen transaksi harus sama dengan departemen PPL yang ditautkan."))
+            if not record.department_id and not ppls:
+                raise ValidationError(_("Departemen wajib diisi untuk transaksi tanpa PPL."))
+
     @api.constrains("transfer_type", "single_rupiah", "single_transfer_method", "single_destination_account", "source_account_number", "line_ids")
     def _check_business_rules(self):
         for rec in self:
@@ -483,7 +515,20 @@ class TransaksiTransaction(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        self._check_finance_central_readonly()
         for vals in vals_list:
+            company = self.env["res.company"].browse(vals.get("company_id") or self.env.company.id).exists()
+            if not company or company not in self.env.companies:
+                raise AccessError(_("Anda tidak memiliki akses ke perusahaan/cabang transaksi ini."))
+            vals["company_id"] = company.id
+            if "department_id" not in vals:
+                if vals.get("ppl_ids"):
+                    vals["department_id"] = False
+                elif vals.get("ppl_id"):
+                    ppl = self.env["sifnext.ppl"].browse(vals["ppl_id"]).exists()
+                    vals["department_id"] = ppl.department_id.id if ppl else False
+                else:
+                    vals["department_id"] = self.env.user.department_id.id or False
             if vals.get("name", "New") == "New":
                 vals["name"] = self.env["ir.sequence"].next_by_code("transaksi.transaction") or "New"
         records = super().create(vals_list)
@@ -493,6 +538,10 @@ class TransaksiTransaction(models.Model):
         return records
 
     def write(self, vals):
+        self._check_finance_central_readonly()
+        organization_fields = {"company_id", "department_id"}
+        if organization_fields.intersection(vals) and any(record.state != "draft" for record in self):
+            raise UserError(_("Perusahaan dan departemen transaksi hanya dapat diubah pada status Draf."))
         res = super().write(vals)
         for record in self:
             if record.transfer_type == "single" and not self.env.context.get("skip_single_sync"):
@@ -500,6 +549,7 @@ class TransaksiTransaction(models.Model):
         return res
 
     def unlink(self):
+        self._check_finance_central_readonly()
         for rec in self:
             if rec.state not in ("draft", "rejected"):
                 raise UserError(_("Hanya transaksi berstatus Draf atau Ditolak yang dapat dihapus."))

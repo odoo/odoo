@@ -20,7 +20,7 @@
                         </group>
                         <group string="Filter Tambahan (Opsional)">
                             <field name="account_id" string="Account" options="{'no_create': True}" placeholder="Kosongkan jika semua akun"/>
-                            <field name="unit_name" string="Unit Kerja" placeholder="Kosongkan jika semua unit"/>
+                            <field name="unit_name" string="Departemen / Unit Lama" placeholder="Kosongkan jika semua departemen"/>
                         </group>
                     </group>
                     <footer>
@@ -51,7 +51,9 @@
                     <button name="%(action_sif_buku_besar_wizard)d" string="Ganti Periode Tanggal" type="action" class="btn-primary"/>
                 </header>
                 <field name="date" string="Tanggal"/>
-                <field name="unit_name" string="Unit Kerja"/>
+                <field name="company_id" string="Perusahaan"/>
+                <field name="department_id" string="Departemen"/>
+                <field name="unit_name" string="Unit Kerja (Legacy)" optional="hide"/>
                 <field name="entry_number" string="Bukti / Nomer"/>
                 <field name="kwitansi_ref" string="Kwitansi"/>
                 <field name="name" string="Keterangan"/>
@@ -68,7 +70,9 @@
         <field name="arch" type="xml">
             <search string="Pencarian Buku Besar">
                 <field name="entry_number" string="Bukti / Nomer"/>
-                <field name="unit_name" string="Unit Kerja"/>
+                <field name="company_id" string="Perusahaan"/>
+                <field name="department_id" string="Departemen"/>
+                <field name="unit_name" string="Unit Kerja (Legacy)"/>
                 <field name="account_id" string="Account"/>
                 <field name="name" string="Keterangan"/>
                 <separator/>
@@ -98,7 +102,9 @@
             <list string="Jurnal Transaksi">
                 <field name="name" string="Nomor Bukti"/>
                 <field name="date" string="Tanggal"/>
-                <field name="unit_name" string="Unit Kerja"/>
+                <field name="company_id" string="Perusahaan" groups="base.group_multi_company"/>
+                <field name="department_id" string="Departemen"/>
+                <field name="unit_name" string="Unit Kerja (Legacy)" optional="hide"/>
                 <field name="ref" string="Referensi / Dokumen"/>
                 <field name="source_type" string="Sumber" widget="badge"
                        decoration-info="source_type == 'ppl'"
@@ -141,7 +147,11 @@
                             <field name="partner_id"/>
                         </group>
                         <group>
-                            <field name="unit_name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="department_id"
+                                   domain="[('company_id', '=', company_id)]"
+                                   options="{'no_create': True}"/>
+                            <field name="unit_name" string="Unit Kerja (Legacy)"/>
                             <field name="source_type" readonly="1"/>
                         </group>
                     </group>
@@ -152,7 +162,8 @@
                                     <field name="account_id"/>
                                     <field name="partner_id" optional="show"/>
                                     <field name="name" string="Keterangan"/>
-                                    <field name="unit_name" string="Unit Kerja"/>
+                                    <field name="department_id" string="Departemen"/>
+                                    <field name="unit_name" string="Unit Kerja (Legacy)" optional="hide"/>
                                     <field name="debit" sum="Total Debet"/>
                                     <field name="credit" sum="Total Kredit"/>
                                 </list>
@@ -174,7 +185,9 @@
         <field name="arch" type="xml">
             <search string="Pencarian Jurnal Transaksi">
                 <field name="name" string="Nomor Bukti"/>
-                <field name="unit_name" string="Unit Kerja"/>
+                <field name="company_id" string="Perusahaan" groups="base.group_multi_company"/>
+                <field name="department_id" string="Departemen"/>
+                <field name="unit_name" string="Unit Kerja (Legacy)"/>
                 <field name="ref" string="No. Referensi / PPL / Aset"/>
                 <separator/>
                 <filter string="Posted" name="filter_posted" domain="[('state', '=', 'posted')]"/>
@@ -184,7 +197,8 @@
                 <filter string="Dari Aset" name="filter_source_asset" domain="[('source_type', 'in', ('asset_buy', 'asset_depr'))]"/>
                 <filter string="Dari Pendapatan" name="filter_source_pendapatan" domain="[('source_type', '=', 'pendapatan')]"/>
                 <separator/>
-                <filter string="Per Unit Kerja" name="group_unit" context="{'group_by':'unit_name'}"/>
+                <filter string="Per Departemen" name="group_department" context="{'group_by':'department_id'}"/>
+                <filter string="Per Unit Kerja (Legacy)" name="group_unit" context="{'group_by':'unit_name'}"/>
                 <filter string="Per Sumber Transaksi" name="group_source" context="{'group_by':'source_type'}"/>
                 <filter string="Per Tanggal" name="group_date" context="{'group_by':'date:month'}"/>
             </search>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- LIST VIEW -->
+    <record id="view_education_student_tree" model="ir.ui.view">
+        <field name="name">education.student.tree</field>
+        <field name="model">education.student</field>
+        <field name="arch" type="xml">
+            <list string="Siswa / Mahasiswa">
+                <field name="student_id_number"/>
+                <field name="name"/>
+                <field name="school_id"/>
+                <field name="level" widget="badge"
+                       decoration-info="level == 'smp'"
+                       decoration-primary="level == 'sma'"
+                       decoration-warning="level == 'smk'"
+                       decoration-success="level == 'univ'"/>
+                <field name="class_id"/>
+                <field name="parent_id"/>
+                <field name="parent_whatsapp"/>
+                <field name="billing_scheme"/>
+                <field name="effective_amount"/>
+                <field name="unpaid_bills_count" string="Tagihan Tertunggak"/>
+                <field name="total_unpaid_amount" string="Total Tunggakan" decoration-danger="total_unpaid_amount &gt; 0"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_education_student_form" model="ir.ui.view">
+        <field name="name">education.student.form</field>
+        <field name="model">education.student</field>
+        <field name="arch" type="xml">
+            <form string="Siswa / Mahasiswa">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_education_bill_generate_wizard)d" type="action" class="oe_stat_button" icon="fa-money"
+                                context="{'default_school_id': school_id, 'default_class_id': class_id}">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="unpaid_bills_count"/></span>
+                                <span class="o_stat_text">Tunggakan</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Nama Lengkap Siswa / Mahasiswa"/>
+                        <h1>
+                            <field name="name" placeholder="Nama Lengkap..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Identitas &amp; Akademik">
+                            <field name="student_id_number" placeholder="NISN atau NIM..."/>
+                            <field name="school_id" options="{'no_create': True}"/>
+                            <field name="level" invisible="1"/>
+                            <field name="major_id" domain="[('school_id', '=', school_id)]" options="{'no_create': True}"/>
+                            <field name="class_id" domain="[('school_id', '=', school_id)]" options="{'no_create': True}"/>
+                            <field name="gender"/>
+                            <field name="birth_date"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group string="Orang Tua &amp; Kontak Reminder">
+                            <field name="parent_id" options="{'no_quick_create': True}"/>
+                            <field name="parent_whatsapp"/>
+                            <field name="parent_mobile"/>
+                            <field name="parent_email"/>
+                            <field name="phone" placeholder="No. HP Siswa"/>
+                            <field name="email" placeholder="Email Siswa"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group string="Skema &amp; Tarif Tagihan">
+                        <group>
+                            <field name="billing_scheme"/>
+                            <field name="custom_amount"/>
+                        </group>
+                        <group>
+                            <field name="effective_amount" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="total_unpaid_amount" readonly="1" decoration-danger="total_unpaid_amount &gt; 0"/>
+                        </group>
+                    </group>
+                    <group string="Alamat">
+                        <field name="address"/>
+                    </group>
+                    <notebook>
+                        <page string="Riwayat Tagihan (SPP / UKT)">
+                            <field name="bill_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="period_label"/>
+                                    <field name="bill_date"/>
+                                    <field name="due_date"/>
+                                    <field name="amount"/>
+                                    <field name="payment_date"/>
+                                    <field name="state" widget="badge"
+                                           decoration-muted="state == 'draft'"
+                                           decoration-warning="state == 'unpaid'"
+                                           decoration-info="state == 'waiting_verification'"
+                                           decoration-success="state == 'verified'"
+                                           decoration-danger="state in ('rejected', 'cancelled')"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_education_student_search" model="ir.ui.view">
+        <field name="name">education.student.search</field>
+        <field name="model">education.student</field>
+        <field name="arch" type="xml">
+            <search string="Cari Siswa / Mahasiswa">
+                <field name="name"/>
+                <field name="student_id_number"/>
+                <field name="parent_id"/>
+                <field name="school_id"/>
+                <field name="class_id"/>
+                <separator/>
+                <filter name="filter_smp" string="SMP" domain="[('level', '=', 'smp')]"/>
+                <filter name="filter_sma" string="SMA" domain="[('level', '=', 'sma')]"/>
+                <filter name="filter_smk" string="SMK" domain="[('level', '=', 'smk')]"/>
+                <filter name="filter_univ" string="Universitas" domain="[('level', '=', 'univ')]"/>
+                <separator/>
+                <filter name="filter_unpaid" string="Memiliki Tunggakan" domain="[('bill_ids.state', 'in', ['draft', 'unpaid', 'waiting_verification', 'rejected'])]"/>
+                <separator/>
+                <filter name="group_school" string="Sekolah / Kampus" context="{'group_by': 'school_id'}"/>
+                <filter name="group_level" string="Jenjang" context="{'group_by': 'level'}"/>
+                <filter name="group_class" string="Kelas" context="{'group_by': 'class_id'}"/>
+                <filter name="group_billing_scheme" string="Skema Tagihan" context="{'group_by': 'billing_scheme'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_education_student" model="ir.actions.act_window">
+        <field name="name">Data Siswa / Mahasiswa</field>
+        <field name="res_model">education.student</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_education_student_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Daftarkan siswa atau mahasiswa baru untuk mengelola tagihan SPP / UKT.
+            </p>
+        </field>
+    </record>
+</odoo>

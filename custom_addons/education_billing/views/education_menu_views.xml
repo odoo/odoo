@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ROOT MENU -->
+    <menuitem id="menu_education_billing_root"
+              name="Tagihan Pendidikan"
+              sequence="20"
+              web_icon="education_billing,static/description/icon.png"
+              groups="education_billing.group_education_billing_user"/>
+
+    <!-- 1. ANTREAN VERIFIKASI STAF (UTAMA) -->
+    <menuitem id="menu_education_verification_queue"
+              name="Antrean Verifikasi Staf"
+              parent="menu_education_billing_root"
+              action="action_education_bill_verification_queue"
+              sequence="10"/>
+
+    <!-- 2. TAGIHAN SPP & UKT -->
+    <menuitem id="menu_education_bills"
+              name="Tagihan (Billing)"
+              parent="menu_education_billing_root"
+              sequence="20"/>
+
+    <menuitem id="menu_education_bill_all"
+              name="Semua Tagihan"
+              parent="menu_education_bills"
+              action="action_education_bill_all"
+              sequence="10"/>
+
+    <record id="action_education_bill_spp" model="ir.actions.act_window">
+        <field name="name">Tagihan SPP Bulanan (Sekolah)</field>
+        <field name="res_model">education.bill</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('bill_type', '=', 'spp')]</field>
+        <field name="search_view_id" ref="view_education_bill_search"/>
+    </record>
+    <menuitem id="menu_education_bill_spp"
+              name="SPP Bulanan (SMP/SMA/SMK)"
+              parent="menu_education_bills"
+              action="action_education_bill_spp"
+              sequence="20"/>
+
+    <record id="action_education_bill_ukt" model="ir.actions.act_window">
+        <field name="name">Tagihan UKT Semesteran (Universitas)</field>
+        <field name="res_model">education.bill</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('bill_type', '=', 'ukt')]</field>
+        <field name="search_view_id" ref="view_education_bill_search"/>
+    </record>
+    <menuitem id="menu_education_bill_ukt"
+              name="UKT Semesteran (Universitas)"
+              parent="menu_education_bills"
+              action="action_education_bill_ukt"
+              sequence="30"/>
+
+    <menuitem id="menu_education_bill_generate"
+              name="Generate Tagihan Massal"
+              parent="menu_education_bills"
+              action="action_education_bill_generate_wizard"
+              sequence="40"/>
+
+    <menuitem id="menu_education_reminder_action"
+              name="Kirim Reminder Tagihan"
+              parent="menu_education_bills"
+              action="action_education_reminder_wizard"
+              sequence="50"/>
+
+    <!-- 3. SISWA & ORANG TUA -->
+    <menuitem id="menu_education_students_parents"
+              name="Siswa &amp; Orang Tua"
+              parent="menu_education_billing_root"
+              sequence="30"/>
+
+    <menuitem id="menu_education_student_item"
+              name="Data Siswa / Mahasiswa"
+              parent="menu_education_students_parents"
+              action="action_education_student"
+              sequence="10"/>
+
+    <menuitem id="menu_education_parent_item"
+              name="Data Orang Tua / Wali"
+              parent="menu_education_students_parents"
+              action="action_education_parent"
+              sequence="20"/>
+
+    <!-- 4. MASTER INSTITUSI & AKADEMIK -->
+    <menuitem id="menu_education_master"
+              name="Master Institusi"
+              parent="menu_education_billing_root"
+              sequence="40"
+              groups="education_billing.group_education_billing_manager"/>
+
+    <menuitem id="menu_education_school_item"
+              name="Sekolah &amp; Universitas"
+              parent="menu_education_master"
+              action="action_education_school"
+              sequence="10"/>
+
+    <menuitem id="menu_education_class_item"
+              name="Kelas / Rombel"
+              parent="menu_education_master"
+              action="action_education_class"
+              sequence="20"/>
+
+    <menuitem id="menu_education_major_item"
+              name="Jurusan / Program Studi"
+              parent="menu_education_master"
+              action="action_education_major"
+              sequence="30"/>
+
+    <menuitem id="menu_education_academic_year_item"
+              name="Tahun Ajaran"
+              parent="menu_education_master"
+              action="action_education_academic_year"
+              sequence="40"/>
+</odoo>

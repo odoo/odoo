@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- LIST VIEW -->
+    <record id="view_education_bill_tree" model="ir.ui.view">
+        <field name="name">education.bill.tree</field>
+        <field name="model">education.bill</field>
+        <field name="arch" type="xml">
+            <list string="Tagihan Pendidikan"
+                  decoration-muted="state == 'draft'"
+                  decoration-warning="state == 'unpaid'"
+                  decoration-info="state == 'waiting_verification'"
+                  decoration-success="state == 'verified'"
+                  decoration-danger="state in ('rejected', 'cancelled')">
+                <field name="name"/>
+                <field name="student_id_number"/>
+                <field name="student_id"/>
+                <field name="school_id"/>
+                <field name="level" widget="badge"
+                       decoration-info="level == 'smp'"
+                       decoration-primary="level == 'sma'"
+                       decoration-warning="level == 'smk'"
+                       decoration-success="level == 'univ'"/>
+                <field name="class_id"/>
+                <field name="period_label"/>
+                <field name="bill_type"/>
+                <field name="bill_date"/>
+                <field name="due_date"/>
+                <field name="amount"/>
+                <field name="parent_id"/>
+                <field name="parent_whatsapp"/>
+                <field name="state" widget="badge"
+                       decoration-muted="state == 'draft'"
+                       decoration-warning="state == 'unpaid'"
+                       decoration-info="state == 'waiting_verification'"
+                       decoration-success="state == 'verified'"
+                       decoration-danger="state in ('rejected', 'cancelled')"/>
+                <field name="pendapatan_id" optional="show"/>
+                <field name="journal_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_education_bill_form" model="ir.ui.view">
+        <field name="name">education.bill.form</field>
+        <field name="model">education.bill</field>
+        <field name="arch" type="xml">
+            <form string="Tagihan Pendidikan">
+                <header>
+                    <!-- Draft -> Unpaid -->
+                    <button name="action_publish_bill" string="Terbitkan Tagihan" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+
+                    <!-- Unpaid / Rejected -> Waiting Verification -->
+                    <button name="action_submit_payment" string="Ajukan Pembayaran" type="object"
+                            class="btn-secondary" invisible="state not in ('unpaid', 'rejected')"/>
+
+                    <!-- VERIFIKASI STAF: Waiting Verification / Unpaid -> Verified (Lunas + Auto Pendapatan & Jurnal) -->
+                    <button name="action_verify_payment" string="Verifikasi &amp; Tandai Lunas" type="object"
+                            class="btn-success" invisible="state not in ('waiting_verification', 'unpaid')"
+                            groups="education_billing.group_education_billing_user"
+                            confirm="Verifikasi pembayaran ini? Sistem akan mencatat ke daftar Pendapatan dan memposting jurnal otomatis ke Buku Besar."/>
+
+                    <!-- TOLAK VERIFIKASI (WIZARD) -->
+                    <button name="action_reject_payment_wizard" string="Tolak Bukti Bayar" type="object"
+                            class="btn-danger" invisible="state not in ('waiting_verification', 'unpaid')"
+                            groups="education_billing.group_education_billing_user"/>
+
+                    <!-- REMINDER KE ORANG TUA -->
+                    <button name="action_send_whatsapp_reminder" string="Kirim WA Orang Tua" type="object"
+                            class="btn-outline-success" icon="fa-whatsapp" invisible="state == 'verified'"/>
+                    <button name="action_send_email_reminder" string="Kirim Reminder Email" type="object"
+                            class="btn-outline-info" icon="fa-envelope" invisible="state == 'verified'"/>
+
+                    <!-- BATAL & RESET -->
+                    <button name="action_cancel" string="Batalkan" type="object"
+                            class="btn-secondary" invisible="state in ('verified', 'cancelled')"/>
+                    <button name="action_reset_draft" string="Reset ke Draft" type="object"
+                            class="btn-secondary" invisible="state not in ('rejected', 'cancelled')"/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,unpaid,waiting_verification,verified"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert" invisible="state != 'rejected'">
+                        <strong>Pembayaran Ditolak:</strong> <field name="reject_reason" readonly="1"/>
+                    </div>
+                    <div class="alert alert-success" role="alert" invisible="state != 'verified'">
+                        <strong>Pembayaran Terverifikasi (Lunas):</strong> Tercatat di Pendapatan: <field name="pendapatan_id" readonly="1"/> | Jurnal Buku Besar: <field name="journal_id" readonly="1"/>
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name" string="Nomor Tagihan"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Identitas Siswa / Mahasiswa">
+                            <field name="student_id" options="{'no_create': True}" readonly="state == 'verified'"/>
+                            <field name="student_id_number"/>
+                            <field name="school_id" options="{'no_create': True}" readonly="state == 'verified'"/>
+                            <field name="level" invisible="1"/>
+                            <field name="class_id" options="{'no_create': True}" readonly="state == 'verified'"/>
+                            <field name="major_id" options="{'no_create': True}" readonly="state == 'verified'"/>
+                            <field name="parent_id"/>
+                            <field name="parent_whatsapp"/>
+                            <field name="parent_email"/>
+                        </group>
+                        <group string="Skema &amp; Periode Tagihan">
+                            <field name="bill_type" widget="radio" readonly="state == 'verified'"/>
+                            <field name="month" invisible="bill_type != 'spp'" required="bill_type == 'spp'" readonly="state == 'verified'"/>
+                            <field name="year" invisible="bill_type != 'spp'" required="bill_type == 'spp'" readonly="state == 'verified'"/>
+                            <field name="semester" invisible="bill_type != 'ukt'" required="bill_type == 'ukt'" readonly="state == 'verified'"/>
+                            <field name="academic_year_id" options="{'no_create': True}" readonly="state == 'verified'"/>
+                            <field name="period_label" readonly="1"/>
+                            <field name="bill_date" readonly="state == 'verified'"/>
+                            <field name="due_date" readonly="state == 'verified'"/>
+                            <field name="amount" readonly="state == 'verified'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Pembayaran &amp; Bukti Verifikasi">
+                            <group>
+                                <group string="Rincian Pembayaran">
+                                    <field name="payment_date" readonly="state == 'verified'"/>
+                                    <field name="payment_method" readonly="state == 'verified'"/>
+                                    <field name="payment_ref" placeholder="No. Referensi Transfer / Bank" readonly="state == 'verified'"/>
+                                    <field name="notes" placeholder="Catatan pembayaran..." readonly="state == 'verified'"/>
+                                </group>
+                                <group string="Lampiran Bukti Transfer / Struk">
+                                    <field name="payment_proof" widget="image" class="oe_avatar" options="{'size': [200, 200]}" readonly="state == 'verified'"/>
+                                    <field name="payment_proof_filename" invisible="1"/>
+                                </group>
+                            </group>
+                            <group string="Log Verifikasi Staf" invisible="state != 'verified'">
+                                <group>
+                                    <field name="verified_by_id"/>
+                                    <field name="verified_date"/>
+                                </group>
+                                <group>
+                                    <field name="category_id"/>
+                                    <field name="pendapatan_id"/>
+                                    <field name="journal_id"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Riwayat Reminder">
+                            <group>
+                                <group>
+                                    <field name="reminder_count"/>
+                                    <field name="last_reminder_date"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_education_bill_search" model="ir.ui.view">
+        <field name="name">education.bill.search</field>
+        <field name="model">education.bill</field>
+        <field name="arch" type="xml">
+            <search string="Cari Tagihan">
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="student_id_number"/>
+                <field name="parent_id"/>
+                <field name="school_id"/>
+                <field name="period_label"/>
+
+                <!-- STATUS FILTERS -->
+                <filter name="filter_waiting_verification" string="Antrean Verifikasi Staf"
+                        domain="[('state', '=', 'waiting_verification')]"/>
+                <filter name="filter_unpaid" string="Belum Dibayar"
+                        domain="[('state', '=', 'unpaid')]"/>
+                <filter name="filter_verified" string="Terverifikasi (Lunas)"
+                        domain="[('state', '=', 'verified')]"/>
+                <filter name="filter_rejected" string="Bukti Ditolak"
+                        domain="[('state', '=', 'rejected')]"/>
+                <separator/>
+
+                <!-- TIPE TAGIHAN -->
+                <filter name="filter_spp" string="SPP Bulanan" domain="[('bill_type', '=', 'spp')]"/>
+                <filter name="filter_ukt" string="UKT Semesteran" domain="[('bill_type', '=', 'ukt')]"/>
+                <separator/>
+
+                <!-- JENJANG -->
+                <filter name="filter_smp" string="SMP" domain="[('level', '=', 'smp')]"/>
+                <filter name="filter_sma" string="SMA" domain="[('level', '=', 'sma')]"/>
+                <filter name="filter_smk" string="SMK" domain="[('level', '=', 'smk')]"/>
+                <filter name="filter_univ" string="Universitas" domain="[('level', '=', 'univ')]"/>
+
+                <separator/>
+                <!-- GROUP BY -->
+                <filter name="group_status" string="Status" context="{'group_by': 'state'}"/>
+                <filter name="group_school" string="Sekolah / Kampus" context="{'group_by': 'school_id'}"/>
+                <filter name="group_level" string="Jenjang" context="{'group_by': 'level'}"/>
+                <filter name="group_bill_type" string="Tipe Tagihan" context="{'group_by': 'bill_type'}"/>
+                <filter name="group_period" string="Periode Tagihan" context="{'group_by': 'period_label'}"/>
+                <filter name="group_class" string="Kelas" context="{'group_by': 'class_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION: SEMUA TAGIHAN -->
+    <record id="action_education_bill_all" model="ir.actions.act_window">
+        <field name="name">Daftar Semua Tagihan (SPP / UKT)</field>
+        <field name="res_model">education.bill</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_education_bill_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Belum ada tagihan pendidikan. Gunakan tombol Generate Tagihan Massal atau buat manual.
+            </p>
+        </field>
+    </record>
+
+    <!-- ACTION: ANTREAN VERIFIKASI STAF SEKOLAH / KAMPUS -->
+    <record id="action_education_bill_verification_queue" model="ir.actions.act_window">
+        <field name="name">Antrean Verifikasi Pembayaran Staf</field>
+        <field name="res_model">education.bill</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', 'in', ('waiting_verification', 'unpaid'))]</field>
+        <field name="context">{'search_default_filter_waiting_verification': 1}</field>
+        <field name="search_view_id" ref="view_education_bill_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Semua pembayaran SPP/UKT yang menunggu verifikasi staf sekolah atau kampus akan muncul di sini.
+            </p>
+        </field>
+    </record>
+
+    <!-- SERVER ACTIONS FOR MASS OPERATIONS -->
+    <record id="action_server_mass_verify_bill" model="ir.actions.server">
+        <field name="name">Verifikasi &amp; Tandai Lunas (Massal)</field>
+        <field name="model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            records.action_mass_verify_payment()
+        </field>
+    </record>
+
+    <record id="action_server_mass_submit_bill" model="ir.actions.server">
+        <field name="name">Ajukan Pembayaran (Menunggu Verifikasi)</field>
+        <field name="model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            records.action_mass_submit_payment()
+        </field>
+    </record>
+
+    <record id="action_server_mass_publish_bill" model="ir.actions.server">
+        <field name="name">Terbitkan Tagihan (Belum Dibayar)</field>
+        <field name="model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            records.action_mass_publish_bill()
+        </field>
+    </record>
+
+    <record id="action_server_mass_cancel_bill" model="ir.actions.server">
+        <field name="name">Batalkan Tagihan (Massal)</field>
+        <field name="model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            records.action_mass_cancel()
+        </field>
+    </record>
+</odoo>

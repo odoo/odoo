@@ -9,22 +9,23 @@
             <xpath expr="//header" position="inside">
                 <button name="action_create_ppl" 
                         type="object" 
-                        string="Buat PPL Gaji" 
+                        string="Buat PPL per Departemen"
                         class="btn-primary" 
-                        invisible="status != 'approved' or ppl_id != False"
+                        invisible="status != 'approved' or ppl_ids or ppl_id"
                         groups="hr_payroll_custom.group_payroll_manager"/>
             </xpath>
 
             <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="action_view_ppl" type="object" class="oe_stat_button" icon="fa-money" invisible="ppl_id == False">
+                <button name="action_view_ppl" type="object" class="oe_stat_button" icon="fa-money" invisible="not ppl_ids and not ppl_id">
                     <div class="o_stat_info">
-                        <span class="o_stat_text">PPL Gaji</span>
+                        <span class="o_stat_text">PPL Payroll</span>
                     </div>
                 </button>
             </xpath>
 
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name="ppl_id" invisible="1"/>
+                <field name="ppl_ids" invisible="1"/>
             </xpath>
 
         </field>
