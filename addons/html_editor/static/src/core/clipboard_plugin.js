@@ -361,22 +361,22 @@ export class ClipboardPlugin extends Plugin {
                 ) {
                     this.dependencies.lineBreak.insertLineBreak();
                 } else {
-                    const [blockBefore] = this.dependencies.split.splitBlock();
+                    const { before } = this.dependencies.split.splitBlock();
                     if (
                         block &&
+                        before &&
                         block.matches(baseContainerGlobalSelector) &&
-                        blockBefore &&
-                        !blockBefore.matches(getBaseContainerSelector("DIV"))
+                        !before.matches(getBaseContainerSelector("DIV"))
                     ) {
                         // Do something only if blockBefore is not a DIV (which is the no-margin option)
                         // replace blockBefore by a DIV.
                         const div = this.dependencies.baseContainer.createBaseContainer({
                             nodeName: "DIV",
-                            children: [...childNodes(blockBefore)],
+                            children: [...childNodes(before)],
                         });
                         const cursors = this.dependencies.selection.preserveSelection();
-                        blockBefore.replaceWith(div);
-                        cursors.remapNode(blockBefore, div).restore();
+                        before.replaceWith(div);
+                        cursors.remapNode(before, div).restore();
                     }
                 }
             }
