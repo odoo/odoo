@@ -667,6 +667,21 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             cookies={"cids": f"{self.company.id}"},
         )
 
+    def test_monthly_demand_vendor_return(self):
+        "Test Returning receipt must not increase the warehouse's demand."
+        product = self.product_1
+        po = self._create_purchase(product, quantity=10)
+        self._receive(po, quantity=15)
+        return_picking = po.picking_ids._create_return()
+        return_picking.move_ids.product_uom_qty = 5
+        return_picking.button_validate()
+        self.assertEqual(product.monthly_demand, 0)
+        self.assertEqual(product.with_context(warehouse_id=self.warehouse.id).monthly_demand, 0)
+        self._create_and_process_delivery_at_date([(product, 4)])
+        product.invalidate_recordset(['monthly_demand'])
+        self.assertEqual(product.monthly_demand, 4)
+        self.assertEqual(product.with_context(warehouse_id=self.warehouse.id).monthly_demand, 4)
+
     def test_monthly_demand_interwarehouse_two_step_delivery(self):
         """Ensure that monthly demand is correctly counted for waiting outgoing
         moves in inter-warehouse transfers using two-step delivery routes.
