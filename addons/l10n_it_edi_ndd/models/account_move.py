@@ -125,9 +125,6 @@ class AccountMove(models.Model):
         simplified_moves = self.filtered(lambda move:
             move._l10n_it_edi_is_simplified_document_type(move.l10n_it_document_type.code)
         )
-        errors.update(
-            (k, v)
-            for k, v in simplified_moves._l10n_it_edi_is_simplified_checks().items()
-            if v.get('level') in ('error', 'warning')
-        )
+        errors.update(simplified_moves._l10n_it_edi_is_simplified_checks())
+        errors.update(simplified_moves.commercial_partner_id._l10n_it_edi_export_check(['partner_simplified']))
         return errors
