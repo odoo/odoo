@@ -170,6 +170,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
 
     @api.model
     def _send_reminder(self):
+        print("pass inside the send reminder")
         # Executed via cron
         events_by_alarm = self._get_events_by_alarm_to_notify('email')
         if not events_by_alarm:
@@ -189,7 +190,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
                 alarm.mail_template_id,
                 force_send=len(attendees) <= force_send_limit,
                 notify_author=True,
-                completion_log_message=_('The %s reminder was sent', Markup('<i>%s</i>') % alarm.name)
+                notified_attendees_log_message=_('The %s reminder was sent to:', Markup('<i>%s</i>') % alarm.name)
             )
 
         events._setup_event_recurrent_alarms(events_by_alarm)
