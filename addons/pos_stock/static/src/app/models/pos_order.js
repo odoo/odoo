@@ -23,7 +23,9 @@ patch(PosOrder.prototype, {
                 line,
                 related_lines
             );
-            related_lines.forEach((line) => line.setUnitPrice(price));
+            related_lines
+                .filter((line) => line.price_type === "original")
+                .forEach((line) => line.setUnitPrice(price));
         } else {
             super.setLinePriceFromPriceList(line, pricelist);
         }
