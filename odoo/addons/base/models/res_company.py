@@ -35,7 +35,7 @@ class Company(models.Model):
     child_ids = fields.One2many('res.company', 'parent_id', string='Branches')
     all_child_ids = fields.One2many('res.company', 'parent_id', context={'active_test': False})
     parent_path = fields.Char(index=True, unaccent=False)
-    parent_ids = fields.Many2many('res.company', compute='_compute_parent_ids', compute_sudo=True)
+    parent_ids = fields.Many2many('res.company', compute='_compute_parent_ids', compute_sudo=True, context={'active_test': False})
     root_id = fields.Many2one('res.company', compute='_compute_parent_ids', compute_sudo=True)
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
     report_header = fields.Html(string='Company Tagline', translate=True, help="Company tagline, which is included in a printed document's header or footer (depending on the selected layout).")
