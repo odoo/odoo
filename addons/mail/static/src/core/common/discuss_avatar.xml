@@ -2,16 +2,19 @@
 <templates xml:space="preserve">
     <t t-name="mail.DiscussAvatar">
         <svg t-att-width="props.size" t-att-height="props.size" viewBox="0 0 32 32" class="o-mail-DiscussAvatar overflow-visible" t-attf-class="{{ props.className }}" t-att-class="{ 'o-isBrowserSafari': isBrowserSafari() }">
+            <t t-set="cutoutX" t-value="isTyping ? 14 : 19"/>
+            <t t-set="cutoutWidth" t-value="isTyping ? 24 : 16"/>
+            <t t-set="rtlShiftX" t-value="isRtl ? 32 - 2 * cutoutX - cutoutWidth : 0"/> <!-- mirror the cutout to the bottom-left corner -->
             <mask t-att-id="uniqueId" width="1000" height="1000">
                 <rect x="0" y="0" height="100%" width="100%" fill="white"/>
-                <rect t-if="showIcon" color="black" x="0" y="0" t-att-width="isTyping ? 24 : 16" t-att-height="isTyping ? 15 : 16" rx="8" ry="8" t-att-transform="'translate(' + (isTyping ? 14 : 19) + ', 19) ' + (props.iconExtraTransform ?? '')"/>
+                <rect t-if="showIcon" color="black" x="0" y="0" t-att-width="cutoutWidth" t-att-height="isTyping ? 15 : 16" rx="8" ry="8" t-attf-transform="translate({{cutoutX + rtlShiftX}}, 19) {{props.iconExtraTransform ?? ''}}"/>
             </mask>
             <foreignObject x="0" y="0" width="32" height="32" t-att-mask="'url(#' + uniqueId + ')'">
                 <t t-call="mail.DiscussAvatar.avatarImg"/> <!-- FIXME: owl doesn't like and load immediate <img> below <foreignObject>, hence t-call shenanigans -->
             </foreignObject>
-            <g t-if="showIcon" t-att-transform="'translate(' + (isTyping ? 16 : 21) + ', 20) ' + (props.iconExtraTransform ?? '')">
+            <g t-if="showIcon" t-attf-transform="translate({{(isTyping ? 16 : 21) + rtlShiftX}}, 20) {{props.iconExtraTransform ?? ''}}">
                 <svg width="25" height="15" viewBox="0 0 25 15">
-                    <foreignObject x="0" y="0" width="25" height="15">
+                    <foreignObject x="0" y="0" width="25" height="15" style="direction: ltr">
                         <ThreadIcon t-if="thread" thread="thread" typing="props.typing"/>
                         <ImStatus t-elif="props.member" member="props.member" className="'d-flex'" size="'md'" typing="props.typing"/>
                         <ImStatus t-elif="props.persona" persona="props.persona" typing="props.typing"/>
