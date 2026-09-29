@@ -52,6 +52,9 @@ class HrWorkEntryType(models.Model):
     virtual_remaining_leaves = fields.Float(
         compute='_compute_leaves', search='_search_virtual_remaining_leaves', string='Virtual Remaining Time Off',
         help='Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting Approval')
+    display_virtual_remaining_leaves = fields.Float(
+        compute='_compute_leaves', search='_search_display_virtual_remaining_leaves', string='Displayed Virtual Remaining Time Off',
+        help='Virtual Remaining Time Off - Future Time Off linked to an Accrual Plan. Only used for display')
 
     allocation_count = fields.Integer(
         compute='_compute_allocation_count', string='Allocations')
@@ -289,6 +292,17 @@ been taken for this time off type. Changing it now would affect existing employe
         work_entry_types = self.env['hr.work.entry.type'].search([])
         return [('id', 'in', work_entry_types.filtered(is_valid).ids)]
 
+    def _search_display_virtual_remaining_leaves(self, operator, value):
+        def is_valid(work_entry_type):
+            return not work_entry_type.requires_allocation or op(work_entry_type.display_virtual_remaining_leaves, value)
+        op = PY_OPERATORS.get(operator)
+        if not op:
+            return NotImplemented
+        if operator != 'in':
+            value = float(value)
+        work_entry_types = self.env['hr.work.entry.type'].search([])
+        return [('id', 'in', work_entry_types.filtered(is_valid).ids)]
+
     @api.depends_context('uid', 'employee_id', 'default_employee_id', 'leave_date_from', 'default_date_from')
     def _compute_leaves(self):
         employee = self.env['hr.employee']._get_contextual_employee()
@@ -302,6 +316,8 @@ been taken for this time off type. Changing it now would affect existing employe
             work_entry_type.max_leaves = work_entry_type_tuple[1].get('max_leaves', 0)
             work_entry_type.leaves_taken = work_entry_type_tuple[1].get('leaves_taken', 0)
             work_entry_type.virtual_remaining_leaves = work_entry_type_tuple[1].get('virtual_remaining_leaves', 0)
+            future_leaves = work_entry_type_tuple[1].get('future_accrual_leaves', 0)
+            work_entry_type.display_virtual_remaining_leaves = work_entry_type.virtual_remaining_leaves - future_leaves
 
     def _compute_allocation_count(self):
         today = fields.Date.to_string(date.today())
@@ -370,7 +386,7 @@ been taken for this time off type. Changing it now would affect existing employe
     def requested_display_name(self):
         return self.env.context.get('work_entry_type_display_name', True) and self.env.context.get('employee_id')
 
-    @api.depends('requires_allocation', 'virtual_remaining_leaves', 'max_leaves', 'unit_of_measure', 'country_id')
+    @api.depends('requires_allocation', 'display_virtual_remaining_leaves', 'max_leaves', 'unit_of_measure', 'country_id')
     @api.depends_context('work_entry_type_display_name', 'employee_id', 'company')
     def _compute_display_name(self):
         display_country_name = not bool(self.env.companies and len(self.env.companies.mapped('country_id')) == 1)
@@ -384,7 +400,7 @@ been taken for this time off type. Changing it now would affect existing employe
                 continue
             name = record.name
             if record.time_off_selectable and record.requires_allocation:
-                remaining_time = float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0
+                remaining_time = float_round(record.display_virtual_remaining_leaves, precision_digits=2) or 0.0
                 maximum = float_round(record.max_leaves, precision_digits=2) or 0.0
 
                 is_popover = self.env.context.get("is_popover", False)
@@ -493,7 +509,7 @@ been taken for this time off type. Changing it now would affect existing employe
         if not hidden_allocations:
             domain.append(('hide_on_dashboard', '=', False))
         work_entry_types = self.search(domain, order='id')
-        employee_work_entry_type_infos = work_entry_types.get_allocation_data(employee, target_date, same_year_only=same_year_only)[
+        employee_work_entry_type_infos = work_entry_types.get_allocation_data(employee, target_date, same_year_only=same_year_only, subtract_future_leaves=self.env.context.get('from_dashboard', False))[
             employee
         ]
         # We only need to filter allocation_data for the dashboard
@@ -506,7 +522,7 @@ been taken for this time off type. Changing it now would affect existing employe
         ]
         return filtered_employee_work_entry_type_infos
 
-    def get_allocation_data(self, employees, target_date=None, same_year_only=False):
+    def get_allocation_data(self, employees, target_date=None, same_year_only=False, subtract_future_leaves=False):
         allocation_data = defaultdict(list)
         if target_date and isinstance(target_date, str):
             target_date = datetime.fromisoformat(target_date).date()
@@ -546,6 +562,11 @@ been taken for this time off type. Changing it now would affect existing employe
                         'employee_company': employee.company_id.id,
                         'employee_country': employee.company_id.country_id.id,
                         'color': work_entry_type.color,
+                        # future leaves linked to an accrual plan
+                        'future_accrual_leaves': sum(
+                            leave['number_of_hours' if work_entry_type.unit_of_measure == 'hour' else 'number_of_days']
+                            for leave in extra_data[employee][work_entry_type]['to_recheck_leaves']
+                        ),
                     },
                     work_entry_type.requires_allocation,
                     work_entry_type.id)
@@ -565,6 +586,20 @@ been taken for this time off type. Changing it now would affect existing employe
                         lt_info[1]['leaves_approved'] += amount
                         lt_info[1]['leaves_taken'] += amount
                         lt_info[1]['remaining_leaves'] -= amount
+                if subtract_future_leaves:
+                    # if requested by the dashboard it subtract the future leaves linked to an accrual plan
+                    # the balance can become negative
+                    amount_field = 'number_of_hours' if work_entry_type.unit_of_measure == 'hour' else 'number_of_days'
+                    for leave in extra_data[employee][work_entry_type]['to_recheck_leaves']:
+                        amount = leave[amount_field]
+                        lt_info[1]['virtual_leaves_taken'] += amount
+                        lt_info[1]['virtual_remaining_leaves'] -= amount
+                        if leave.state == 'validate':
+                            lt_info[1]['leaves_approved'] += amount
+                            lt_info[1]['leaves_taken'] += amount
+                            lt_info[1]['remaining_leaves'] -= amount
+                        else:
+                            lt_info[1]['leaves_requested'] += amount
                 allocations_now = self.env['hr.leave.allocation']
                 allocations_date = self.env['hr.leave.allocation']
                 allocations_with_remaining_leaves = self.env['hr.leave.allocation']
