@@ -1,5 +1,5 @@
 .o_calendar_renderer {
-    --o-circle-padding: calc(#{map-get($spacers, 1 )} / 2);
+    --o-circle-padding: calc(var(--o-spacer-1) / 2);
     --o-cw-border-color: var(--border-color);
 
     background-color: var(--o-view-background-color);
@@ -104,7 +104,7 @@
 
             display: flex;
             align-items: center;
-            gap: map-get($spacers, 1);
+            gap: var(--o-spacer-1);
             border: none;
 
             &:before {
@@ -218,11 +218,11 @@
                 vertical-align: middle;
 
                 a {
-                    gap: map-get($spacers, 1);
-                    margin-left: map-get($spacers, 1);
+                    gap: var(--o-spacer-1);
+                    margin-left: var(--o-spacer-1);
                 }
                 .o_cw_day_number {
-                    padding: map-get($spacers, 1);
+                    padding: var(--o-spacer-1);
                     place-content: center;
                     line-height: 1;
                 }
@@ -240,7 +240,7 @@
                 }
 
                 .o_cw_day_number {
-                    padding: map-get($spacers, 1);
+                    padding: var(--o-spacer-1);
 
                     @include media-breakpoint-up(lg) {
                         font-size: 1.25rem;
@@ -362,7 +362,7 @@
                 }
 
                 .fc-event-main {
-                    margin: map-get($spacers, 1);
+                    margin: var(--o-spacer-1);
 
                     @include media-breakpoint-up(md) {
                         margin-top: 0;
@@ -455,7 +455,7 @@
                     }
 
                     @include media-breakpoint-up(lg) {
-                        padding: map-get($spacers, 1);
+                        padding: var(--o-spacer-1);
                     }
                 }
                 .fc-day {
@@ -510,7 +510,7 @@
             }
 
             .fc-event {
-                padding: 0 map-get($spacers, 1);
+                padding: 0 var(--o-spacer-1);
 
                 .fc-event-main:not(.o_homework_single):not(.o_homework_multi) {
                     display: flex;
@@ -576,7 +576,7 @@
                     /* On mobile year view, make months take the full screen width. */
                     /* Using "vw" instead of "%" to keep each month weekday columns aligned. */
                     @include media-breakpoint-down(md) {
-                        width: calc(100vw - #{map-get($spacers, 5)});
+                        width: calc(100vw - var(--o-spacer-5));
                     }
 
                     > .fc-toolbar.fc-header-toolbar {

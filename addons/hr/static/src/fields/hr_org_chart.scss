@@ -1,6 +1,6 @@
 
 #o_employee_org_chart {
-    --treeEntry-padding-v: #{map-get($spacers, 2)};
+    --treeEntry-padding-v: var(--o-spacer-2);
     --treeEntry--after-width: #{$o-hr-org-chart-entry-pic-small-size  * .25};
     --treeEntry--before-top: calc(-2 * (var(--treeEntry-padding-v)) - (#{$o-hr-org-chart-entry-pic-small-size} * .5));
 
@@ -97,8 +97,8 @@
 
 /* Specific popup style */
 .o_org_chart_popup {
-    --popover-header-padding-y: #{map-get($spacers, 1)};
-    --popover-header-padding-x: #{map-get($spacers, 2)};
+    --popover-header-padding-y: var(--o-spacer-1);
+    --popover-header-padding-x: var(--o-spacer-2);
 
     .o_employee_redirect {
         --btn-padding-x: var(--popover-header-padding-x);

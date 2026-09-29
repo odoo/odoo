@@ -6,7 +6,7 @@
 
         border-radius: var(--border-radius);
         border-color: var(--o-cw-popover-color, var(--info));
-        padding: 0 map-get($spacers, 1);
+        padding: 0 var(--o-spacer-1);
         background: RGBA(var(--o-cw-popover-color--subtle, #{to-rgb($info)}), var(--o-bg-opacity));
         font-weight: $font-weight-normal;
 
@@ -18,7 +18,7 @@
             --o-bg-opacity: 0;
 
             &:before {
-                margin-right: map-get($spacers, 1);
+                margin-right: var(--o-spacer-1);
                 font-family: 'Material Symbols Outlined';
                 font-size: var(--o-font-size-base-smaller);
                 color: var(--o-cw-popover-color, var(--info));
