@@ -7,7 +7,7 @@ import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_com
 import { CalendarYearPopover } from "@web/views/calendar/calendar_year/calendar_year_popover";
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
-import { Component, onMounted, onPatched, signal, t, useListener, useProps } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
@@ -29,21 +29,15 @@ export class CalendarYearRenderer extends Component {
     static template = "web.CalendarYearRenderer";
     props = useProps(calendarYearRendererProps);
 
-    setup() {
-        this.months = luxon.Info.months();
-        this.fcs = {};
-        this.fcRefs = {};
-        for (const month of this.months) {
-            this.fcRefs[month] = signal.ref();
-            this.fcs[month] = useFullCalendar(this.fcRefs[month], this.getOptionsForMonth(month));
-        }
-        this.popover = useCalendarPopover(this.constructor.components.Popover);
-        this.rootRef = signal.ref();
-        this.uiService = useService("ui");
+    fcRef = signal.ref();
 
-        onMounted(() => this.updateSize());
-        onPatched(() => this.updateSize());
-        useListener(window, "resize", () => this.onWindowResize());
+    setup() {
+        this.fc = useFullCalendar(
+            this.fcRef,
+            this.props.isDisabled ? this.disabledOptions : this.interactiveOptions
+        );
+        this.popover = useCalendarPopover(this.constructor.components.Popover);
+        this.uiService = useService("ui");
     }
 
     get disabledOptions() {
@@ -85,18 +79,25 @@ export class CalendarYearRenderer extends Component {
             dayHeaderFormat: "EEEEE",
             dayCellClass: this.getDayCellClassNames.bind(this),
             initialDate: this.props.initialDate.toISO(),
-            initialView: "dayGridMonth",
+            initialView: "multiMonthYear",
             direction: localization.direction,
             events: (_, successCb) => successCb(this.mapRecordsToEvents()),
             firstDay: this.props.model.firstDayOfWeek,
-            headerToolbar: { start: false, center: "title", end: false },
-            height: "auto",
+            headerToolbar: false,
+            height: "100%",
             locale: luxon.Settings.defaultLocale,
             navLinks: false,
             nowIndicator: true,
             showNonCurrentDates: false,
             timeZone: luxon.Settings.defaultZone.name,
-            titleFormat: { month: "long", year: "numeric" },
+            multiMonthMaxColumns: 12,
+            singleMonthMinWidth: 336,
+            singleMonthClass: (info) => info.multiMonthColumns === 1 && "fc-multimonth-singlecol",
+            singleMonthHeaderClass: "fc-multimonth-header",
+            singleMonthTitleFormat: { month: "long", year: "numeric" },
+            tableClass: "fc-multimonth-daygrid",
+            tableHeaderClass: "fc-multimonth-daygrid-header",
+            tableBodyClass: "fc-multimonth-daygrid-table",
             viewDidMount: this.viewDidMount.bind(this),
             weekNumberCalculation: (date) => getLocalYearAndWeek(date).week,
             weekNumbers: false,
@@ -131,16 +132,6 @@ export class CalendarYearRenderer extends Component {
             display: "background",
         };
     }
-    getDateWithMonth(month) {
-        return this.props.initialDate.set({ month: this.months.indexOf(month) + 1 }).toISO();
-    }
-    getOptionsForMonth(month) {
-        const options = this.props.isDisabled ? this.disabledOptions : this.interactiveOptions;
-        return {
-            ...options,
-            initialDate: this.getDateWithMonth(month),
-        };
-    }
     getPopoverProps(date, records) {
         return {
             date,
@@ -163,14 +154,7 @@ export class CalendarYearRenderer extends Component {
         this.popover.open(target, this.getPopoverProps(date, records), "o_cw_popover");
     }
     unselect() {
-        for (const fc of Object.values(this.fcs)) {
-            fc().unselect();
-        }
-    }
-    updateSize() {
-        const rootEl = this.rootRef();
-        const height = window.innerHeight - rootEl.getBoundingClientRect().top;
-        rootEl.style.height = `${height}px`;
+        this.fc().unselect();
     }
 
     onDateClick(info) {
@@ -249,8 +233,5 @@ export class CalendarYearRenderer extends Component {
             isAllDay: true,
         });
         this.unselect();
-    }
-    onWindowResize() {
-        this.updateSize();
     }
 }

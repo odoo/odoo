@@ -12,7 +12,11 @@ registry.category("web_tour.tours").add("time_off_request_calendar_view", {
         {
             content: "Click on the first Thursday of the year",
             trigger: ".fc-daygrid-day.fc-day-thu:not(.fc-day-disabled)",
-            run: "click",
+            async run({ click }) {
+                // the year view is scrolled to the current month
+                this.anchor.scrollIntoView({ block: "center" });
+                await click(this.anchor);
+            },
         },
         {
             content: "Save the leave",
