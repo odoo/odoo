@@ -1,10 +1,11 @@
 import { browser } from "@web/core/browser/browser";
-import { signal, t, useProps } from "@odoo/owl";
+import { signal, t, useEffect, useProps } from "@odoo/owl";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
+import { getTabableElements } from "@web/core/utils/ui";
 import {
     CardRenderer,
     getFormattedRecord,
@@ -51,6 +52,7 @@ export const kanbanRecordProps = {
     forceGlobalClick: t.any().optional(),
     getSelection: t.function().optional(() => () => []),
     groupByField: t.any().optional(),
+    hasSelectedRecords: t.any().optional(false),
     openAction: t.any().optional(),
     openRecord: t.function().optional(() => () => {}),
     progressBarState: t.any().optional(),
@@ -86,6 +88,40 @@ export class KanbanRecord extends CardRenderer {
         this.longTouchTimer = null;
         this.touchStartMs = 0;
         this.showMenu = this.constructor.MENU_ATTRIBUTE in this.templates;
+
+        // While selection mode is on, the only element of the card that should
+        // remain reachable with Tab is the selection btn: this lets the user
+        // move from one record's btn to the next one instead of tabbing
+        // through the record's own elements (eg. buttons, links, inputs).
+        useEffect(() => {
+            const isSelectionMode = this.props.selectionAvailable || this.props.hasSelectedRecords;
+            const rootEl = this.rootRef();
+            if (!isSelectionMode || !rootEl) {
+                return;
+            }
+            const btnEl = rootEl.querySelector(".o_record_selection_btn");
+            const disabledEls = getTabableElements(rootEl)
+                .filter((el) => el !== btnEl && !btnEl?.contains(el))
+                .map((el) => [el, el.getAttribute("tabindex")]);
+            if (rootEl.tabIndex >= 0) {
+                // Change the card tabindex as well, so pressing Tab moves
+                // directly from one selection_btn to the next instead of
+                // stopping on the card in between.
+                disabledEls.push([rootEl, rootEl.getAttribute("tabindex")]);
+            }
+            for (const [el] of disabledEls) {
+                el.tabIndex = -1;
+            }
+            return () => {
+                for (const [el, prevTabindex] of disabledEls) {
+                    if (prevTabindex === null) {
+                        el.removeAttribute("tabindex");
+                    } else {
+                        el.setAttribute("tabindex", prevTabindex);
+                    }
+                }
+            };
+        });
     }
 
     get renderingContext() {
@@ -228,7 +264,6 @@ export class KanbanRecord extends CardRenderer {
         if (this.props.getSelection().length > 0 || ev.altKey) {
             ev.stopPropagation();
             ev.preventDefault();
-            this.rootRef().focus();
             this.props.toggleSelection(this.props.record, ev.shiftKey);
             return;
         }
