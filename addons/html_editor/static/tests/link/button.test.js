@@ -77,7 +77,7 @@ describe("button style", () => {
         expect(el).toHaveInnerHTML(
             unformat(`
                 <div class="o-paragraph">
-                    <span class="display-1-fs">a\ufeff<a href="/test" class="btn btn-primary">\ufeffb\ufeff</a>\ufeffc</span>
+                    <span class="display-1-fs">a\ufeff<a href="/test" class="btn btn-primary o_link_in_selection">\ufeffb\ufeff</a>\ufeffc</span>
                 </div>
             `)
         );
@@ -108,7 +108,7 @@ describe("button style", () => {
         });
     });
 
-    test("backspace on button should not remove editor", async () => {
+    test("backspace should behave correctly", async () => {
         const { el, editor } = await setupEditor(
             '<p><a href="https://test.com/" class="btn btn-lg btn-primary">#</a>[]</p>'
         );
@@ -116,7 +116,19 @@ describe("button style", () => {
             `<p>\ufeff<a href="https://test.com/" class="btn btn-lg btn-primary">\ufeff#\ufeff</a>\ufeff[]</p>`
         );
         deleteBackward(editor);
+        // Selection jumps into the button on first backspace, unlike normal links
+        expect(getContent(el)).toBe(
+            `<p>\ufeff<a href="https://test.com/" class="btn btn-lg btn-primary">\ufeff#[]\ufeff</a>\ufeff</p>`
+        );
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            `<p>\ufeff<a href="https://test.com/" class="btn btn-lg btn-primary o_link_in_selection">\ufeff#[]\ufeff</a>\ufeff</p>`
+        );
         deleteBackward(editor);
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            `<p>\ufeff<a href="https://test.com/" class="btn btn-lg btn-primary o_link_in_selection">\ufeff[]\ufeff</a>\ufeff</p>`
+        );
         deleteBackward(editor);
         expect(getContent(el)).toBe(
             `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
@@ -220,7 +232,7 @@ describe("Custom button style", () => {
         await contains(".o_we_apply_link").click();
 
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="http://test.test/" class="btn btn-lg rounded-circle btn-fill-primary">Hello[]</a></p>'
+            '<p><a href="http://test.test/" class="btn btn-lg rounded-circle btn-fill-primary o_link_in_selection">Hello[]</a></p>'
         );
     });
 
@@ -311,14 +323,14 @@ describe("button edit", () => {
         manuallyDispatchProgrammaticEvent(button, "mousedown", { detail: 3 });
         await animationFrame();
         expect(getContent(el)).toBe(
-            '<p>this is a \ufeff<a href="http://test.test/" class="btn btn-fill-primary">\ufeff[test btn]\ufeff</a>\ufeff</p>'
+            '<p>this is a \ufeff<a href="http://test.test/" class="btn btn-fill-primary o_link_in_selection">\ufeff[test btn]\ufeff</a>\ufeff</p>'
         );
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p>this is a <a href="http://test.test/" class="btn btn-fill-primary">[test btn]</a></p>'
+            '<p>this is a <a href="http://test.test/" class="btn btn-fill-primary o_link_in_selection">[test btn]</a></p>'
         );
         await insertText(editor, "X");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p>this is a <a href="http://test.test/" class="btn btn-fill-primary">X[]</a></p>'
+            '<p>this is a <a href="http://test.test/" class="btn btn-fill-primary o_link_in_selection">X[]</a></p>'
         );
     });
 
@@ -350,7 +362,7 @@ describe("button edit", () => {
         await contains(".o-we-linkpopover input.o_we_label_link").fill("b");
         await click(".o_we_apply_link");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="http://test.test/" class="invisible btn btn-primary">ab[]</a></p>'
+            '<p><a href="http://test.test/" class="invisible btn btn-primary o_link_in_selection">ab[]</a></p>'
         );
     });
 });
