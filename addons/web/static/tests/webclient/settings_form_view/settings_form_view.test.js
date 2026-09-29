@@ -1182,6 +1182,43 @@ test("settings views show no content helper when the restored search matches not
     expect(".o_nocontent_help").toBeVisible();
 });
 
+test("settings views keep the search after saving", async () => {
+    onRpc("has_group", () => true);
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            res_model: "res.config.settings",
+            views: [[false, "form"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+        <form string="Settings" js_class="base_settings">
+            <app string="CRM" name="crm">
+                <block>
+                    <setting help="this is foo">
+                        <field name="foo"/>
+                    </setting>
+                    <setting help="this is bar">
+                        <field name="bar"/>
+                    </setting>
+                </block>
+            </app>
+        </form>
+    `;
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    await editSearch("Fo");
+    await runAllTimers();
+    await clickSave();
+    expect(sessionStorage.getItem("settings_search")).toBe("Fo");
+    // saving reloads the page, which opens the settings action again from scratch
+    await getService("action").doAction(1, { clearBreadcrumbs: true });
+    expect(".o_searchview_input").toHaveValue("Fo");
+    expect(".o_setting_box:visible").toHaveCount(1);
+    expect(sessionStorage.getItem("settings_search")).toBe(null);
+});
+
 test.tags("mobile");
 test("settings views show the search bar on mobile only when a search is restored", async () => {
     onRpc("has_group", () => true);
