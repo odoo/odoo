@@ -11,6 +11,7 @@ import {
 import { incrementFn } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { assignGetter } from "@mail/utils/common/misc";
+import { LIST_LOADER_EPOCH } from "@mail/utils/common/list_loader";
 
 import {
     Component,
@@ -158,7 +159,7 @@ export class Thread extends Component {
                     this.smoothScrollingPromise,
                 ]);
                 if (this.loadNewerState.isVisible && this.shouldTriggerLoadOnVisible) {
-                    this.props.thread.fetchMoreMessages({ epoch: "newer" });
+                    this.props.thread.fetchMoreMessages({ epoch: LIST_LOADER_EPOCH.NEWER });
                 }
             },
             { ready: false }
@@ -614,7 +615,6 @@ export class Thread extends Component {
         this.messageHighlight?.clear();
         if (!immediate || this.props.thread.loadNewer) {
             await this.props.thread.loadAround();
-            this.props.thread.loadNewer = false;
             this.state.showJumpPresent = false;
         }
         this.props.thread.scrollTop = immediate ? "bottom" : "bottom-smooth";
@@ -732,6 +732,9 @@ export class Thread extends Component {
 
     /** Already loaded threads (e.g. prefetched) show their messages from the first render. */
     get showLoadedContent() {
+        // ensure rendering observes resetCount to re-sync mountedAndLoaded when reset() is called,
+        // also when the thread is empty: no other change may follow the load
+        void this.resetCount();
         if (this.scope.status === 0 /* new */) {
             return this.props.thread.isLoaded;
         }
@@ -739,9 +742,8 @@ export class Thread extends Component {
     }
 
     get orderedMessages() {
-        // ensure rendering observes resetCount to re-sync mountedAndLoaded when reset() is called
-        void this.resetCount();
-        // and the readiness of the load triggers, observed from the following patch
+        // ensure rendering observes the readiness of the load triggers, observed from the
+        // following patch
         void this.loadOlderState.ready;
         void this.loadNewerState.ready;
         const messages = this.showLoadedContent

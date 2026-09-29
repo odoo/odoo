@@ -84,7 +84,7 @@ test("Jump to a message posted by another user before my own note", async () => 
     await insertTextInComposer(".o-mail-Composer", "my own note");
     await click(".o-mail-Composer button:enabled:text('Log')");
     await waitFor(".o-mail-Message-content:text('my own note'):count(1)");
-    await waitForNone(".o-mail-Message-content:text('hidden needle')");
+    await waitFor(".o-mail-Message-content:text('hidden needle'):count(1)");
     await click("[title='Search Messages']");
     await insertText(".o-mail-SearchInput input", "needle");
     await click(".o-mail-SearchMessageResult .o-mail-MessageCard-jump");
