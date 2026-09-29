@@ -2375,10 +2375,10 @@ class HrEmployee(models.Model):
         "As of <date>" tracking message.
 
         Side effects: ``user_id`` syncs work contact/image/timezone
-        (:meth:`_sync_user`); ``tz`` is propagated to the linked user (same
-        company); changing ``work_contact_id`` moves the bank accounts to the new
-        partner (and untrusts them); ``resource_calendar_id`` updates the
-        resource's calendar when the written version is the current one;
+        (:meth:`_sync_user`); changing ``work_contact_id`` moves the bank
+        accounts to the new partner (and untrusts them);
+        ``resource_calendar_id`` updates the resource's calendar when the
+        written version is the current one;
         ``current_version_id`` always copies the new version's calendar onto
         the resource; ``department_id``/``user_id`` subscribe the
         user to the department's auto-subscription channels.
@@ -2396,13 +2396,6 @@ class HrEmployee(models.Model):
             self._remove_work_contact_id(user, vals.get('company_id'))
         if 'work_permit_expiration_date' in vals:
             vals['work_permit_scheduled_activity'] = False
-        if vals.get('tz'):
-            users_to_update = self.env['res.users']
-            for employee in self:
-                if employee.user_id and employee.company_id == employee.user_id.company_id and vals['tz'] != employee.user_id.tz:
-                    users_to_update |= employee.user_id
-            if users_to_update:
-                users_to_update.write({'tz': vals['tz']})
         if vals.get('departure_description'):
             for employee in self:
                 employee.message_post(body=self.env._(
@@ -2430,25 +2423,12 @@ class HrEmployee(models.Model):
         if version_vals:
             version_vals['last_modified_date'] = fields.Datetime.now()
             version_vals['last_modified_uid'] = self.env.uid
-            self.version_id.write(version_vals)
+            # The changes are already tracked by the employee itself
+            self.version_id.with_context(skip_employee_tracking=True).write(version_vals)
 
             for employee in self:
-                multi_update_version_ids = self.env.context.get('multi_update_version_ids')
-                if multi_update_version_ids:
-                    first_version_sudo = employee.version_ids.filtered(lambda v: v.id == multi_update_version_ids[0]).sudo()
-                    last_version_sudo = employee.version_ids.filtered(lambda v: v.id == multi_update_version_ids[-1]).sudo()
-                else:
-                    first_version_sudo = employee.version_id.sudo()
-                    last_version_sudo = first_version_sudo
-                start = format_date_abbr(self.env, first_version_sudo.date_start) if first_version_sudo.date_start else False
-                end = format_date_abbr(self.env, last_version_sudo.date_end) if last_version_sudo.date_end else False
-                if start and end:
-                    msg = self.env._("As of %(start)s to %(end)s") % {'start': start, 'end': end}
-                elif start:
-                    msg = self.env._("As of %s") % (start)
-                else:
-                    msg = self.env._("As of")
-                employee._track_set_log_message(Markup("<b>%s</b>") % msg)
+                version_sudo = employee.version_id.sudo()
+                employee._track_set_log_message(self.env['hr.version']._get_version_update_log_message(version_sudo, version_sudo))
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
             # When added to a department or changing user, subscribe to the channels auto-subscribed by department

@@ -134,6 +134,29 @@ class TestHrEmployee(TestHrCommon):
         with mute_logger('odoo.sql_db'), self.assertRaises(NotNullViolation):
             self.res_users_hr_officer.tz = False
 
+    def test_version_timezone(self):
+        """ The timezone written on a version is propagated to the user only for the current version """
+        user = new_test_user(self.env, login='tz_user', tz='Africa/Cairo')
+        employee = self.env['hr.employee'].create({'name': 'Tz Employee', 'user_id': user.id})
+        current_version = employee.version_id
+        future_version = employee.create_version({'date_version': fields.Date.today() + relativedelta(months=1)})
+
+        future_version.tz = 'Europe/London'
+        self.assertEqual(user.tz, 'Africa/Cairo', "A future version doesn't change the timezone of the user")
+
+        current_version.tz = 'Europe/Brussels'
+        self.assertEqual(user.tz, 'Europe/Brussels', "The current version changes the timezone of the user")
+        self.assertEqual(future_version.tz, 'Europe/London')
+
+        # The default timezone of the version of a new employee isn't propagated to its user
+        user_without_tz = new_test_user(self.env, login='no_tz_user', tz=False)
+        employee = self.env['hr.employee'].with_user(self.res_users_hr_officer).create({
+            'name': 'No Tz Employee',
+            'user_id': user_without_tz.id,
+        })
+        self.assertTrue(employee.tz)
+        self.assertFalse(user_without_tz.tz, "Creating the employee doesn't change the timezone of the user")
+
     def test_employee_from_user(self):
         _tz = 'Pacific/Apia'
         _tz2 = 'America/Tijuana'
