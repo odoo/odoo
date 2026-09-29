@@ -17,14 +17,16 @@ export class StateSelectionField extends Component {
         ...standardFieldProps,
         showLabel: t.boolean().optional(true),
         withCommand: t.boolean().optional(),
+        viewType: t.string().optional(),
     });
 
     setup() {
-        this.colorPrefix = "o_status_";
         this.colors = {
             blocked: "red",
             done: "green",
         };
+        this.icons = this.icons || {};
+        this.classIcons = this.classIcons || {};
         if (this.props.withCommand) {
             const hotkeys = ["D", "F", "G"];
             for (const [index, [value, label]] of this.options.entries()) {
@@ -62,7 +64,15 @@ export class StateSelectionField extends Component {
     }
 
     statusColor(value) {
-        return this.colors[value] ? this.colorPrefix + this.colors[value] : "";
+        return this.colors[value] ? `o_status_${this.colors[value]} bg-subtle-${this.colors[value]}` : "text-muted";
+    }
+
+    stateIcon(value) {
+        return this.icons[value] || "circle";
+    }
+
+    stateIconClass(value) {
+        return value in this.classIcons ? this.classIcons[value] : this.colors[value] ? "oi-filled" : "";
     }
 
     async updateRecord(value) {
@@ -85,6 +95,9 @@ export const stateSelectionField = {
         return {
             showLabel: "hide_label" in options ? !options.hide_label : false,
             withCommand: viewType === "form",
+            // Type of the arch where this <field> is declared (e.g. "list" for a one2many list
+            // inside a form). Use it instead of env.config.viewType, which is the main view ("form").
+            viewType,
             readonly: dynamicInfo.readonly,
         };
     },

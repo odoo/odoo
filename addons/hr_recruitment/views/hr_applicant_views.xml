@@ -197,7 +197,7 @@
                 <widget name="web_ribbon" title="Archived" bg_color="text-bg-300" invisible="application_status != 'archived'"/>
                 <widget name="web_ribbon" title="Hired" invisible="application_status != 'hired'" />
                 <field name="active" invisible="1"/> <!-- drives invisible of the Create Employee/Refuse/Restore buttons, of stage_id and of refuse_reason_id -->
-                <field name="kanban_state" widget="hr_applicant_state_selection" invisible="application_status == 'refused' or application_status == 'archived' or is_pool_applicant" class="o_field_state_selection"/>
+                <field name="kanban_state" widget="hr_applicant_state_selection" options="{'hide_label': false}" invisible="application_status == 'refused' or application_status == 'archived' or is_pool_applicant" class="o_field_state_selection"/>
                 <div class="oe_title pe-0">
                     <label for="partner_name" class="oe_edit_only" string="Applicant" invisible="is_pool_applicant"/>
                     <label for="partner_name" class="oe_edit_only" string="Talent" invisible="not is_pool_applicant"/>

@@ -52,7 +52,7 @@
                     <field name="active" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <widget name="web_ribbon" text="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <field name="kanban_state" widget="event_state_selection" class="ms-auto float-end"/>
+                    <field name="kanban_state" widget="event_state_selection" options="{'hide_label': false}" class="ms-auto float-end"/>
                     <div class="oe_title">
                         <label for="name" string="Event Name"/>
                         <h1><field class="text-break" options="{'line_breaks': False}" widget="text" name="name" placeholder="e.g. Conference for Architects"/></h1>
