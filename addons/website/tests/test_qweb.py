@@ -561,12 +561,18 @@ class TestQwebDataSnippet(TransactionCase):
 
         # nb_snippets = 156
         first_search = 1  # for key & website
-        t_call_snippets = 4  # number of nested t-calls (t-call > view > t-call > other views...)
+        t_call_snippets = 2  # number of nested t-calls (t-call > view > t-call > other views...)
+        # website blog adds 2 more t-calls
+        if self.env['ir.module.module']._get("website_blog").state == 'installed':
+            t_call_snippets += 2
         fetch_snippets = 0  # number of fetches (normally performed with the previous search)
-        get_root_view = 2  # determine the root views
+        get_root_view = 1  # determine the root views
+        # website sale adds one more root view
+        if self.env['ir.module.module']._get("website_sale").state == 'installed':
+            get_root_view += 1
         combine_views = 3  # Queries performed to execute the read combine
 
-        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views  # 9
+        all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views
         self.assertEqual(len(ir_ui_view_queries), all_ir_ui_view_queries, f'ir_ui_view queries: {all_ir_ui_view_queries}')
 
         re_sql = re.compile(r'\bwebsite\b', re.IGNORECASE)
