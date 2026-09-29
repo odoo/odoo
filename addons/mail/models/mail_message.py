@@ -981,9 +981,18 @@ class MailMessage(models.Model):
         ).add(notifications.mail_message_id, "_store_message_fields")
 
     @api.model
-    def _message_fetch(self, domain, *, thread=None, search_term=None, search_filter=None, before=None, after=None, around=None, limit=30):
+    def _message_fetch(self, domain, *, thread=None, search_term=None, search_filter=None, before=None, after=None, around=None, exclude_ids=None, limit=30):
+        """Fetch the messages matching `domain` (and `thread`), newest first.
+
+        Pages are relative to a reference message id: `before`/`after` (excluded) give the
+        `limit` closest older/newer messages, `around` (included in the older half) gives half
+        of `limit` on each side. `exclude_ids` are skipped, for instance messages already known
+        client-side, so that the result is the next page contiguous to them.
+        """
         res = {}
         domain = Domain(True if domain is None else domain)
+        if exclude_ids:
+            domain &= Domain("id", "not in", exclude_ids)
         if thread:
             domain &= (
                 Domain("res_id", "=", thread.id)
@@ -1031,10 +1040,10 @@ class MailMessage(models.Model):
             return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}
         if before:
             domain &= Domain('id', '<', before)
-        if after:
+        if after is not None:
             domain &= Domain('id', '>', after)
-        res["messages"] = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
-        if after:
+        res["messages"] = self.search(domain, limit=limit, order='id ASC' if after is not None else 'id DESC')
+        if after is not None:
             res["messages"] = res["messages"].sorted('id', reverse=True)
         return res
 

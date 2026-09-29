@@ -1,5 +1,6 @@
 import { AND, fields, Record } from "@mail/model/export";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
+import { ListLoader } from "@mail/utils/common/list_loader";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 import { shallowEqual } from "@odoo/owl";
@@ -21,6 +22,7 @@ import { user } from "@web/core/user";
  * @property {number} [after]
  * @property {number} [around]
  * @property {number} [before]
+ * @property {number[]} [exclude_ids]
  * @property {number} [limit]
  */
 
@@ -172,8 +174,17 @@ export class Thread extends Record {
     });
     /** @type {integer|undefined} */
     followersCount;
-    loadOlder = false;
-    loadNewer = false;
+    /** Lazy loading of `messages`. */
+    messagesLoader = new ListLoader({
+        fetch: ({ routeParams, ...fetchParams }) =>
+            this.fetchMessages({ fetchParams, routeParams }),
+        getKnownIds: () => this.persistentMessages.map(({ id }) => id),
+        orderedById: true,
+    });
+    /** Whether messages older than `messages` can be loaded. */
+    loadOlder = this.computed(() => this.messagesLoader.state.older === "idle");
+    /** Whether messages newer than `messages` can be loaded. */
+    loadNewer = this.computed(() => this.messagesLoader.state.newer === "idle");
     get isFocused() {
         return this.isFocusedCounter !== 0;
     }
@@ -468,7 +479,7 @@ export class Thread extends Record {
      * @returns {Promise<{messages: number[]}>}
      */
     async fetchMessagesData({
-        fetchParams: { after, around, before, limit } = {},
+        fetchParams: { after, around, before, exclude_ids, limit } = {},
         routeParams = {},
     } = {}) {
         // ordered messages received: newest to oldest
@@ -482,6 +493,7 @@ export class Thread extends Record {
                     after,
                     around,
                     before,
+                    exclude_ids,
                 },
             },
             { readonly: false, requestData: true }
@@ -501,45 +513,23 @@ export class Thread extends Record {
         ) {
             return;
         }
-        const before = epoch === "older" ? this.oldestPersistentMessage?.id : undefined;
-        const after = epoch === "newer" ? this.newestPersistentMessage?.id : undefined;
-        let fetched = [];
+        let messages;
         try {
-            fetched = await this.fetchMessages({
-                fetchParams: { after, before, limit: this.moreFetchLimit },
-                routeParams,
+            messages = await this.messagesLoader.load(epoch, {
+                limit: this.moreFetchLimit,
+                params: { routeParams },
             });
         } catch {
             return;
         }
-        if (
-            (after !== undefined && !this.messages.some((message) => message.id === after)) ||
-            (before !== undefined && !this.messages.some((message) => message.id === before))
-        ) {
-            // there might have been a jump to message during RPC fetch.
-            // Abort feeding messages as to not put holes in message list.
+        if (!messages) {
+            // There might have been a jump to message during RPC fetch: the fetched messages
+            // are not contiguous to the current ones.
             return;
         }
-        const alreadyKnownMessages = new Set(this.messages.map(({ id }) => id));
-        const messagesToAdd = fetched.filter((message) => !alreadyKnownMessages.has(message.id));
-        if (epoch === "older") {
-            this.messages.unshift(...messagesToAdd);
-        } else {
-            this.messages.push(...messagesToAdd);
-        }
-        if (fetched.length < this.moreFetchLimit) {
-            if (epoch === "older") {
-                this.loadOlder = false;
-            } else if (epoch === "newer") {
-                this.loadNewer = false;
-                const missingMessages = this.pendingNewMessages.filter(
-                    ({ id }) => !alreadyKnownMessages.has(id)
-                );
-                if (missingMessages.length > 0) {
-                    this.messages.push(...missingMessages);
-                    this.messages.sort((m1, m2) => m1.id - m2.id);
-                }
-            }
+        this._insertFetchedMessages(messages);
+        if (epoch === "newer" && !this.loadNewer) {
+            this._insertFetchedMessages(this.pendingNewMessages);
         }
         this._enrichMessagesWithTransient();
         this.pendingNewMessages = [];
@@ -565,6 +555,9 @@ export class Thread extends Record {
     }
 
     /**
+     * Load the messages that are newer than the loaded ones, or the newest messages if the
+     * thread is not loaded yet.
+     *
      * @param {Object} [options]
      * @param {MessageRouteParams} [options.routeParams]
      */
@@ -575,51 +568,30 @@ export class Thread extends Record {
         ) {
             return;
         }
-        const after = this.getFetchNewMessagesAfter();
-        if (after === undefined && this.isLoaded) {
+        const isIncremental = this.getFetchNewMessagesAfter() !== undefined;
+        if (!isIncremental && this.isLoaded) {
             this.messages.splice(0, this.messages.length);
         }
-        let fetched = [];
+        const options = { limit: this.initialFetchLimit, params: { routeParams } };
+        let messages;
         try {
-            fetched = await this.fetchMessages({ fetchParams: { after }, routeParams });
+            // Loaded from the oldest loaded message, excluding the loaded ones: messages missed
+            // in between (e.g. posted by others before an own post) are loaded too.
+            messages = isIncremental
+                ? await this.messagesLoader.load("newer", { force: true, ...options })
+                : await this.messagesLoader.loadAround(undefined, options);
         } catch {
             return;
         }
-        // feed messages
-        // could have received a new message as notification during fetch
-        // filter out already fetched (e.g. received as notification in the meantime)
-        let startIndex;
-        if (after === undefined) {
-            startIndex = 0;
-        } else {
-            const afterIndex = this.messages.findIndex((message) => message.id === after);
-            if (afterIndex === -1) {
-                // there might have been a jump to message during RPC fetch.
-                // Abort feeding messages as to not put holes in message list.
-                return;
-            } else {
-                startIndex = afterIndex + 1;
-            }
+        if (messages) {
+            this._insertFetchedMessages(messages);
         }
-        const alreadyKnownMessages = new Set(this.messages.map((m) => m.id));
-        const filtered = fetched.filter(
-            (message) =>
-                !alreadyKnownMessages.has(message.id) &&
-                (this.persistentMessages.length === 0 ||
-                    message.id < this.oldestPersistentMessage.id ||
-                    message.id > this.newestPersistentMessage.id)
-        );
-        this.messages.splice(startIndex, 0, ...filtered);
-        Object.assign(this, {
-            loadOlder:
-                after === undefined && fetched.length === this.initialFetchLimit
-                    ? true
-                    : after === undefined && fetched.length !== this.initialFetchLimit
-                    ? false
-                    : this.loadOlder,
-        });
     }
 
+    /**
+     * @returns {number|undefined} the id of the newest loaded message when fetching new messages
+     *  can be incremental, `undefined` to reload the newest messages from scratch.
+     */
     getFetchNewMessagesAfter() {
         return this.isLoaded ? this.newestPersistentMessage?.id : undefined;
     }
@@ -672,41 +644,45 @@ export class Thread extends Record {
         }
         this.isLoaded = false;
         this.scrollTop = undefined;
-        const limit = !messageId && messageId !== 0 ? this.moreFetchLimit : this.moreFetchLimit * 2;
-        let receivedMessages;
+        const anchor = !messageId && messageId !== 0 ? undefined : messageId;
+        const limit = anchor === undefined ? this.moreFetchLimit : this.moreFetchLimit * 2;
+        const knownMessages = [...this.messages];
+        let messages;
         try {
             this.phantomMessages = this.messages;
-            const knownMessages = [...this.messages];
-            const fetched = await this.fetchMessages({
-                fetchParams: { around: messageId, limit },
-                routeParams,
+            messages = await this.messagesLoader.loadAround(anchor, {
+                limit,
+                params: { routeParams },
             });
-            receivedMessages = this.messages.filter((message) => message.notIn(knownMessages));
-            this.messages = fetched;
-            this.phantomMessages = [];
         } catch {
             this.isLoaded = true;
             return;
         }
         this.isLoaded = true;
-        this.loadNewer = messageId !== undefined ? true : false;
-        this.loadOlder = true;
-        if (this.messages.length < limit) {
-            const olderMessagesCount = this.messages.filter(({ id }) => id < messageId).length;
-            const newerMessagesCount = this.messages.filter(({ id }) => id > messageId).length;
-            if (olderMessagesCount < limit / 2 - 1) {
-                this.loadOlder = false;
-            }
-            if (newerMessagesCount < limit / 2) {
-                this.loadNewer = false;
-            }
+        if (!messages) {
+            return;
         }
+        const receivedMessages = this.messages.filter((message) => message.notIn(knownMessages));
+        this.messages = messages;
+        this.phantomMessages = [];
         this._enrichMessagesWithTransient();
         if (!this.loadNewer) {
-            const missingMessages = receivedMessages.filter((message) =>
-                message.notIn(this.messages)
-            );
-            this.messages.push(...missingMessages);
+            this._insertFetchedMessages(receivedMessages);
+        }
+    }
+
+    /**
+     * Insert the given messages at their place in `messages`, ordered by id.
+     *
+     * @param {import("models").Message[]} messages
+     */
+    _insertFetchedMessages(messages) {
+        const knownIds = new Set(this.messages.map(({ id }) => id));
+        const messagesToAdd = messages.filter(({ id }) => !knownIds.has(id));
+        const newestId = this.messages.at(-1)?.id ?? -Infinity;
+        this.messages.push(...messagesToAdd);
+        // Messages are not necessarily given in order, e.g. pending messages from the bus.
+        if (messagesToAdd.some(({ id }, i) => id < (i ? messagesToAdd[i - 1].id : newestId))) {
             this.messages.sort((m1, m2) => m1.id - m2.id);
         }
     }

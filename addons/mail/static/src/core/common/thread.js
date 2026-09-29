@@ -597,7 +597,6 @@ export class Thread extends Component {
         this.messageHighlight?.clear();
         if (!immediate || this.props.thread.loadNewer) {
             await this.props.thread.loadAround({ routeParams: this.messageFetchRouteParams });
-            this.props.thread.loadNewer = false;
             this.state.showJumpPresent = false;
         }
         this.props.thread.scrollTop = immediate ? "bottom" : "bottom-smooth";
