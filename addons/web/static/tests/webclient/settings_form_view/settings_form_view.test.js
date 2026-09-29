@@ -1033,6 +1033,208 @@ test("settings views can search when coming back in breadcrumbs", async () => {
     expect(queryFirst(".highlighter")).toHaveText("Fo", { message: "Fo word highlighted" });
 });
 
+test("settings views keep the search when coming back in breadcrumbs", async () => {
+    onRpc("has_group", () => true);
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            res_model: "res.config.settings",
+            views: [[false, "form"]],
+        },
+        {
+            id: 4,
+            name: "Other action",
+            res_model: "task",
+            views: [[false, "list"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+        <form string="Settings" js_class="base_settings">
+            <app string="CRM" name="crm">
+                <block>
+                    <setting help="this is foo">
+                        <field name="foo"/>
+                    </setting>
+                    <setting help="this is bar">
+                        <field name="bar"/>
+                    </setting>
+                </block>
+            </app>
+        </form>
+    `;
+    Task._views.list = /* xml */ `
+        <list>
+            <field name="display_name"/>
+        </list>
+    `;
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    await editSearch("Fo");
+    await runAllTimers();
+    expect(".o_setting_box:visible").toHaveCount(1);
+    await getService("action").doAction(4);
+    expect(".o_list_view").toHaveCount(1);
+    await click(".o_control_panel .breadcrumb-item a, .o_back_button");
+    await animationFrame();
+    expect(".o_searchview_input").toHaveValue("Fo");
+    expect(".o_setting_box:visible").toHaveCount(1);
+    expect(queryAllTexts(".highlighter")).toEqual(["Fo", "fo"]);
+});
+
+test("settings views keep a cleared search empty when coming back in breadcrumbs", async () => {
+    onRpc("has_group", () => true);
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            res_model: "res.config.settings",
+            views: [[false, "form"]],
+        },
+        {
+            id: 4,
+            name: "Other action",
+            res_model: "task",
+            views: [[false, "list"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+        <form string="Settings" js_class="base_settings">
+            <app string="CRM" name="crm">
+                <block>
+                    <setting help="this is foo">
+                        <field name="foo"/>
+                    </setting>
+                    <setting help="this is bar">
+                        <field name="bar"/>
+                    </setting>
+                </block>
+            </app>
+        </form>
+    `;
+    Task._views.list = /* xml */ `
+        <list>
+            <field name="display_name"/>
+        </list>
+    `;
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    await editSearch("Fo");
+    await runAllTimers();
+    await editSearch("");
+    await runAllTimers();
+    expect(".o_setting_box:visible").toHaveCount(2);
+    await getService("action").doAction(4);
+    expect(".o_list_view").toHaveCount(1);
+    await click(".o_control_panel .breadcrumb-item a, .o_back_button");
+    await animationFrame();
+    expect(".o_setting_box:visible").toHaveCount(2);
+    expect(".highlighter").toHaveCount(0);
+});
+
+test("settings views show no content helper when the restored search matches nothing", async () => {
+    onRpc("has_group", () => true);
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            res_model: "res.config.settings",
+            views: [[false, "form"]],
+        },
+        {
+            id: 4,
+            name: "Other action",
+            res_model: "task",
+            views: [[false, "list"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+        <form string="Settings" js_class="base_settings">
+            <app string="CRM" name="crm">
+                <block>
+                    <setting help="this is foo">
+                        <field name="foo"/>
+                    </setting>
+                    <setting help="this is bar">
+                        <field name="bar"/>
+                    </setting>
+                </block>
+            </app>
+        </form>
+    `;
+    Task._views.list = /* xml */ `
+        <list>
+            <field name="display_name"/>
+        </list>
+    `;
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    await editSearch("xyz");
+    await runAllTimers();
+    await animationFrame();
+    expect(".o_nocontent_help").toBeVisible();
+    await getService("action").doAction(4);
+    expect(".o_list_view").toHaveCount(1);
+    await click(".o_control_panel .breadcrumb-item a, .o_back_button");
+    await animationFrame();
+    await animationFrame();
+    expect(".o_searchview_input").toHaveValue("xyz");
+    expect(".o_nocontent_help").toBeVisible();
+});
+
+test.tags("mobile");
+test("settings views show the search bar on mobile only when a search is restored", async () => {
+    onRpc("has_group", () => true);
+    defineActions([
+        {
+            id: 1,
+            name: "Settings view",
+            res_model: "res.config.settings",
+            views: [[false, "form"]],
+        },
+        {
+            id: 4,
+            name: "Other action",
+            res_model: "task",
+            views: [[false, "list"]],
+        },
+    ]);
+    ResConfigSettings._views.form = /* xml */ `
+        <form string="Settings" js_class="base_settings">
+            <app string="CRM" name="crm">
+                <block>
+                    <setting help="this is foo">
+                        <field name="foo"/>
+                    </setting>
+                    <setting help="this is bar">
+                        <field name="bar"/>
+                    </setting>
+                </block>
+            </app>
+        </form>
+    `;
+    Task._views.list = /* xml */ `
+        <list>
+            <field name="display_name"/>
+        </list>
+    `;
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    await getService("action").doAction(4);
+    expect(".o_list_view").toHaveCount(1);
+    await click(".o_control_panel .breadcrumb-item a, .o_back_button");
+    await animationFrame();
+    expect(".o_searchview_input").toHaveCount(0);
+    await editSearch("Fo");
+    await runAllTimers();
+    await getService("action").doAction(4);
+    expect(".o_list_view").toHaveCount(1);
+    await click(".o_control_panel .breadcrumb-item a, .o_back_button");
+    await animationFrame();
+    expect(".o_searchview_input").toHaveValue("Fo");
+    expect(".o_searchview_input").not.toBeFocused();
+});
+
 test("search for default label when label has empty string", async () => {
     onRpc("has_group", () => true);
     defineActions([

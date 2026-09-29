@@ -294,6 +294,7 @@ export class FormController extends Component {
                 modelState: this.model.exportState(),
                 resId: this.model.root.resId,
             }),
+            getGlobalState: () => this.getGlobalState(),
         });
         useDebugCategory("form", { component: this });
 
@@ -599,6 +600,13 @@ export class FormController extends Component {
             ev.preventDefault();
             ev.returnValue = "Unsaved changes";
         }
+    }
+
+    /**
+     * State to keep when leaving the action, given back as `globalState` prop when coming back.
+     */
+    getGlobalState() {
+        return {};
     }
 
     getStaticActionMenuItems() {
