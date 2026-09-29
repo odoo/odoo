@@ -12,7 +12,6 @@ import { ChangeLayoutDialog } from "@mail/discuss/call/common/change_layout_dial
 import { QuickVoiceSettings } from "@mail/discuss/call/common/quick_voice_settings";
 import { QuickVideoSettings } from "@mail/discuss/call/common/quick_video_settings";
 import { RecordingDialog } from "@mail/discuss/call/common/recording_dialog";
-import { attClassObjectToString } from "@mail/utils/common/format";
 import { MicrophoneWarning } from "@mail/discuss/call/common/microphone_warning";
 import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
 import { Component, useEffect } from "@odoo/owl";
@@ -328,16 +327,10 @@ export const acceptWithCamera = {
 };
 registerCallAction("accept-with-camera", acceptWithCamera);
 registerCallAction("join-back", {
-    btnClass: ({ owner }) =>
-        attClassObjectToString({
-            "text-nowrap pe-2 rounded-pill": true,
-            "mx-1": !owner.env.inCallInvitation,
-        }),
     condition: ({ channel }) =>
         !channel?.isSelfInCall && typeof channel?.useCameraByDefault === "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: ({ channel }) => (channel.useCameraByDefault ? "videocam_f" : "phone_f"),
-    inlineName: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
     name: ({ channel }) => (channel?.useCameraByDefault ? _t("Join Video Call") : _t("Join Call")),
     onSelected: ({ channel, store }) =>
         store.rtc.requestToggleCall(channel, { camera: channel.useCameraByDefault }),
@@ -381,18 +374,9 @@ export const joinAction = {
 registerCallAction("join", joinAction);
 /** @type {CallActionDefinition} */
 export const rejectAction = {
-    btnClass: ({ owner, channel }) =>
-        attClassObjectToString({
-            "pe-2 rounded-pill": typeof channel?.useCameraByDefault === "boolean",
-            "mx-1": !owner.env.inCallInvitation && typeof channel?.useCameraByDefault === "boolean",
-        }),
     condition: ({ channel }) => channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: "close_small",
-    inlineName: ({ owner, channel }) =>
-        !owner.env.inCallInvitation && typeof channel?.useCameraByDefault === "boolean"
-            ? _t("Reject")
-            : undefined,
     name: _t("Reject"),
     onSelected: ({ channel, store }) => {
         if (store.rtc.hasPendingRequest) {

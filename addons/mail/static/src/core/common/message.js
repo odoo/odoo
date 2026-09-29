@@ -48,7 +48,7 @@ import {
     useLongPress,
     useRightClickMenu,
 } from "@mail/utils/common/hooks";
-import { ActionList } from "@mail/core/common/action_list";
+import { ActionList, CircleInlineAction } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
 import { Priority } from "@mail/core/common/priority";
@@ -252,6 +252,10 @@ export class Message extends Component {
                 untrack(this.messageBody),
             ]
         );
+    }
+
+    get actionComponent() {
+        return CircleInlineAction;
     }
 
     get messageActionsParams() {

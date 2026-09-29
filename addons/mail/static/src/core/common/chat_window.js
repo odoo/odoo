@@ -83,6 +83,9 @@ export class ChatWindow extends Component {
         useBackButton(() => this.close());
     }
 
+    /** @type {import("@mail/core/common/action_list").GetActionComponent} */
+    getActionComponent() {}
+
     get autofocusComposer() {
         if (this.isMobileOS || this.channel.composerDisabled || this.channel.composerHidden) {
             return undefined;

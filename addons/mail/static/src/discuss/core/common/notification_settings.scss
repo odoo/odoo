@@ -11,9 +11,11 @@
         --#{$prefix}btn-hover-bg: #{$dropdown-link-hover-bg};
         --#{$prefix}btn-active-bg: #{$dropdown-link-hover-bg};
 
-        &:hover, &.show {
-            .o-simulateDarkTheme & {
-                background-color: mix($gray-700, $gray-800);
+        @if $o-webclient-color-scheme != dark {
+            &:hover, &.show {
+                .o-discussCallTheme & {
+                    background-color: mix($gray-700, $gray-800);
+                }
             }
         }
     }

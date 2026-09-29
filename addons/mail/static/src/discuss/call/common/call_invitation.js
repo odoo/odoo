@@ -7,6 +7,7 @@ import {
     joinAction,
     rejectAction,
 } from "@mail/discuss/call/common/call_actions";
+import { getCallActionComponent } from "@mail/discuss/call/common/call_action_list";
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
 
 import { Component, computed, proxy, signal, types, useProps } from "@odoo/owl";
@@ -35,7 +36,12 @@ export class CallInvitation extends Component {
             hasCamera: false,
             hasMicrophone: this.rtc.microphonePermission === "granted",
         });
-        useSubEnv({ inCallInvitation: true });
+        useSubEnv({ inDiscussCallTheme: true });
+    }
+
+    /** @type {import("@mail/core/common/action_list").GetActionComponent} */
+    getActionComponent(params) {
+        return getCallActionComponent(params);
     }
 
     async joinCall() {
