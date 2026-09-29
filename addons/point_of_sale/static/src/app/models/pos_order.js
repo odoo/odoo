@@ -344,7 +344,9 @@ export class PosOrder extends PosOrderAccounting {
                     line,
                     related_lines
                 );
-                related_lines.forEach((line) => line.setUnitPrice(price));
+                related_lines
+                    .filter((line) => line.price_type !== "manual")
+                    .forEach((line) => line.setUnitPrice(price));
             } else {
                 const newPrice = line.product_id.product_tmpl_id.getPrice(
                     pricelist,

@@ -294,7 +294,9 @@ export class PosOrderline extends PosOrderlineAccounting {
                     this,
                     related_lines
                 );
-                related_lines.forEach((line) => line.setUnitPrice(price));
+                related_lines
+                    .filter((line) => line.price_type !== "manual")
+                    .forEach((line) => line.setUnitPrice(price));
             } else {
                 this.setUnitPrice(
                     productTemplate.getPrice(
