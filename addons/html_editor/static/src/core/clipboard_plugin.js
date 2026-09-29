@@ -214,7 +214,10 @@ export class ClipboardPlugin extends Plugin {
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 
-        if (this.checkPredicates("should_paste_as_text_predicates", selection, ev.clipboardData) ?? false) {
+        if (
+            this.checkPredicates("should_paste_as_text_predicates", selection, ev.clipboardData) ??
+            false
+        ) {
             this.pasteText(ev.clipboardData.getData("text/plain"));
         } else {
             this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
