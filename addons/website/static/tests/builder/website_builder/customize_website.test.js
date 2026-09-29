@@ -441,11 +441,8 @@ test("theme background image is properly set", async () => {
         "A".repeat(1000);
 
     patchWithCleanup(ToggleBodyBgImageAction.prototype, {
-        async apply(params) {
-            const { type: currentType, image: currentImage } = this.getCurrentConfig();
-            const oldConfig = { type: currentType, image: currentImage };
-            const newConfig = { type: "image", image: base64Image };
-            await this.applyConfig(oldConfig, newConfig);
+        async apply() {
+            this.previewConfig({ type: "image", image: base64Image });
         },
     });
 
@@ -461,11 +458,6 @@ test("theme background image is properly set", async () => {
     }
     defineModels([WebsiteAssets]);
 
-    onRpc("/website/theme_customize_bundle_reload", async (request) => {
-        expect.step("bundle_reload");
-        return { success: true };
-    });
-
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
         loadIframeBundles: true,
     });
@@ -475,7 +467,11 @@ test("theme background image is properly set", async () => {
     expect(".o_theme_tab button[data-action-id='toggleBodyBgImage']").toHaveCount(1);
     await contains(".o_theme_tab button[data-action-id='toggleBodyBgImage']").click();
     await animationFrame();
-    await expect.verifySteps(["scss_customization", "bundle_reload"]);
+    // Previewed, and only written on save.
+    expect(":iframe #wrapwrap").toHaveStyle({ backgroundImage: `url("${base64Image}")` });
+    expect.verifySteps([]);
+    await contains(".o-snippets-top-actions [data-action='save']").click();
+    await expect.verifySteps(["scss_customization"]);
 });
 
 test("BuilderButton with action “templatePreviewableWebsiteConfig”", async () => {

@@ -1,5 +1,5 @@
 import { expect, queryFirst, test } from "@odoo/hoot";
-import { waitForNone } from "@odoo/hoot-dom";
+import { waitFor, waitForNone } from "@odoo/hoot-dom";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -250,6 +250,8 @@ test("theme tab: the sliders mark the theme default", async () => {
     await setupWebsiteBuilder("", { loadIframeBundles: true });
     await openThemeTab();
 
+    // The Paragraph block mounts once the iframe's web fonts are ready.
+    await waitFor(".hb-row:has([data-action-param='body-line-height'])");
     const mark = ".hb-row:has([data-action-param='body-line-height']) .o-hb-range-default";
     // 1.5 on the paragraph line height's 1-2.5 range.
     const position = "--o-hb-range-default-position: 0.3333333333333333;";

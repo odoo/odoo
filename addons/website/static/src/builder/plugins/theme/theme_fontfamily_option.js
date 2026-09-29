@@ -3,7 +3,7 @@ import { useDomState } from "@html_builder/core/utils";
 import { BuilderFontFamilyPicker } from "@html_builder/core/building_blocks/builder_fontfamilypicker";
 import { BuilderButton } from "@html_builder/core/building_blocks/builder_button";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
-import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
+import { PreviewWebsiteVariableAction } from "../customize_website_plugin";
 import { FONT_VARIABLES_TO_RESET } from "../font/font_plugin";
 import { getParsedWeight } from "./theme_font_weight_option";
 import { useProps, t } from "@odoo/owl";
@@ -40,29 +40,9 @@ export class ThemeFontFamilyOption extends BaseOptionComponent {
     }
 }
 
-export class CustomizeWebsiteFontFamilyAction extends CustomizeWebsiteVariableAction {
-    static id = "customizeWebsiteFontFamily";
-
-    async apply({ params, value }) {
-        await this.dependencies.customizeWebsite.customizeWebsiteVariables(
-            this.getVariablesToUpdate(params, value),
-            params.nullValue
-        );
-    }
-    getVariablesToUpdate({ mainParam: variable, nullValue = "null" }, value) {
-        const variables = { [variable]: value };
-        for (const resetVariable of FONT_VARIABLES_TO_RESET[variable] || []) {
-            variables[resetVariable] = nullValue;
-        }
-        return variables;
-    }
-}
-
-export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteFontFamilyAction {
+export class PreviewWebsiteFontFamilyAction extends PreviewWebsiteVariableAction {
     static id = "previewWebsiteFontFamily";
     static dependencies = ["customizeWebsite", "themeTab"];
-    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
-    setup() {}
     /**
      * The page only loads the fonts it uses: load the previewed one, so that
      * it renders and its weights are known.
@@ -119,12 +99,15 @@ export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteFontFamilyAc
      * @param {{ value: number }[]} [weights] the new font's weights
      */
     getVariablesToUpdate(params, value, weights = []) {
-        const variables = super.getVariablesToUpdate(params, value);
+        const nullValue = params.nullValue ?? "null";
+        const variables = { [params.mainParam]: value };
+        for (const resetVariable of FONT_VARIABLES_TO_RESET[params.mainParam] || []) {
+            variables[resetVariable] = nullValue;
+        }
         if (!weights.length) {
             return variables;
         }
         const customizeWebsite = this.dependencies.customizeWebsite;
-        const nullValue = params.nullValue ?? "null";
         const values = weights.map((weight) => weight.value);
         for (const name of FONT_VARIABLES_TO_RESET[params.mainParam] || []) {
             // A weight set to "Auto" but not saved yet still shows the saved
@@ -147,4 +130,8 @@ export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteFontFamilyAc
         }
         return variables;
     }
+}
+// Alias, kept for compatibility with custom modules and themes.
+export class CustomizeWebsiteFontFamilyAction extends PreviewWebsiteFontFamilyAction {
+    static id = "customizeWebsiteFontFamily";
 }

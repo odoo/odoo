@@ -2,7 +2,7 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
+import { PreviewWebsiteVariableAction } from "../customize_website_plugin";
 
 export function getParsedWeight(value) {
     if (value === "") {
@@ -88,8 +88,11 @@ export class ThemeFontWeightOption extends BaseOptionComponent {
     }
 }
 
-export class CustomizeWebsiteFontWeightAction extends CustomizeWebsiteVariableAction {
-    static id = "customizeWebsiteFontWeight";
+/**
+ * Previews a font weight, set on several variables (e.g. the headings ones).
+ */
+export class PreviewWebsiteFontWeightAction extends PreviewWebsiteVariableAction {
+    static id = "previewWebsiteFontWeight";
 
     getValue({ params }) {
         return super.getValue({ params: { ...params, mainParam: params.mainParam[0] } });
@@ -100,22 +103,14 @@ export class CustomizeWebsiteFontWeightAction extends CustomizeWebsiteVariableAc
         return (currentValue === "" ? null : currentValue) === value;
     }
 
-    async apply({ params: { mainParam: variableNames, nullValue = "null" }, value }) {
-        const variables = Object.fromEntries(
-            variableNames.map((variableName) => [variableName, value])
-        );
-        await this.dependencies.customizeWebsite.customizeWebsiteVariables(variables, nullValue);
-    }
-}
-
-export class PreviewWebsiteFontWeightAction extends CustomizeWebsiteFontWeightAction {
-    static id = "previewWebsiteFontWeight";
-    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
-    setup() {}
     apply({ params: { mainParam: variableNames, nullValue = "null" }, value }) {
         this.dependencies.customizeWebsite.previewWebsiteVariables(
             Object.fromEntries(variableNames.map((variableName) => [variableName, value])),
             nullValue
         );
     }
+}
+// Alias, kept for compatibility with custom modules and themes.
+export class CustomizeWebsiteFontWeightAction extends PreviewWebsiteFontWeightAction {
+    static id = "customizeWebsiteFontWeight";
 }

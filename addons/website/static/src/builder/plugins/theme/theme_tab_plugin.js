@@ -34,7 +34,6 @@ import {
     convertRgbToHsl,
 } from "@web/core/utils/colors";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { CustomizeButtonStyleAction } from "../customize_website_plugin";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { ImageSize } from "@html_builder/plugins/image/image_size";
@@ -132,6 +131,7 @@ export class ThemeTabPlugin extends Plugin {
             PreviewWebsiteColorAction,
             PreviewWebsiteGrayAction,
             PreviewButtonStyleAction,
+            CustomizeButtonStyleAction,
             EditCustomCodeAction,
             ConfigureApiKeyAction,
         },
@@ -350,49 +350,14 @@ export class ThemeTabPlugin extends Plugin {
     }
 }
 
-export class CustomizeGrayAction extends BuilderAction {
-    static id = "customizeGray";
-    static dependencies = ["customizeWebsite", "themeTab"];
-    setup() {
-        this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
-    }
-    getValue({ params: { mainParam: grayParamName } }) {
-        return this.dependencies.themeTab.getGrayParams()[grayParamName];
-    }
-    async apply({ params: { mainParam: grayParamName }, value }) {
-        // Gray parameters are used *on the JS side* to compute the grays that
-        // will be saved in the database. We indeed need those grays to be
-        // computed here for faster previews so this allows to not duplicate
-        // most of the logic. Also, this gives flexibility to maybe allow full
-        // customization of grays in custo and themes. Also, this allows to ease
-        // migration if the computation here was to change: the user grays would
-        // still be unchanged as saved in the database.
-
-        this.dependencies.themeTab.setGrayParams(grayParamName, parseInt(value));
-        for (let i = 1; i < 10; i++) {
-            const key = (100 * i).toString();
-            this.dependencies.themeTab.setGrays(key, this.dependencies.themeTab.buildGray(key));
-        }
-
-        // Save all computed (JS side) grays in database
-        await this.dependencies.customizeWebsite.customizeWebsiteColors(
-            this.dependencies.themeTab.getGrays(),
-            {
-                colorType: "gray",
-            }
-        );
-        setBuilderCSSVariables(getHtmlStyle(this.document));
-    }
-}
 /**
- * Same as `customizeGray`, but previewed live and only written on save (see
- * `previewColors`).
+ * Previews a gray parameter (hue or saturation). The grays are computed from
+ * them *on the JS side* and saved as colors (see `previewColors`), which also
+ * allows full customization of grays in custo and themes.
  */
-export class PreviewWebsiteGrayAction extends CustomizeGrayAction {
+export class PreviewWebsiteGrayAction extends BuilderAction {
     static id = "previewWebsiteGray";
-    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
-    setup() {}
+    static dependencies = ["customizeWebsite", "themeTab"];
     getValue({ params: { mainParam: grayParamName } }) {
         return this.getGrayParams()[grayParamName];
     }
@@ -428,16 +393,29 @@ export class PreviewWebsiteGrayAction extends CustomizeGrayAction {
         );
     }
 }
+// Alias, kept for compatibility with custom modules and themes.
+class CustomizeGrayAction extends PreviewWebsiteGrayAction {
+    static id = "customizeGray";
+}
+
 /**
- * Same as `customizeButtonStyle`, but previewed live and only written on save,
- * with the buttons' colors as the color preview computes them (see
- * `computeColorPreviewValues`). Only those: the other color rules can outrank
- * more specific compiled ones while previewing.
+ * Previews a button style (fill, outline, flat), with the buttons' colors as
+ * the color preview computes them (see `computeColorPreviewValues`). Only
+ * those: the other color rules can outrank more specific compiled ones while
+ * previewing.
  */
-export class PreviewButtonStyleAction extends CustomizeButtonStyleAction {
+export class PreviewButtonStyleAction extends BuilderAction {
     static id = "previewButtonStyle";
-    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
-    setup() {}
+    static dependencies = ["customizeWebsite"];
+    isApplied({ params, value }) {
+        return this.getValue({ params }) === value;
+    }
+    getValue({ params: { mainParam: which } }) {
+        const style = getHtmlStyle(this.document);
+        const isOutline = getCSSVariableValue(`btn-${which}-outline`, style);
+        const isFlat = getCSSVariableValue(`btn-${which}-flat`, style);
+        return isFlat === "true" ? "flat" : isOutline === "true" ? "outline" : "fill";
+    }
     apply({ params: { mainParam: which, nullValue = "null" }, value }) {
         const isButtonValue = (name) =>
             /^(theme|o-cc\d)-btn-/.test(name) && name.includes(`-btn-${which}-`);
@@ -450,6 +428,16 @@ export class PreviewButtonStyleAction extends CustomizeButtonStyleAction {
             { ...Object.fromEntries(buttonValues), [`btn-${which}-style`]: value }
         );
     }
+    getVariables(which, style) {
+        return {
+            [`btn-${which}-outline`]: style === "outline" ? "true" : "false",
+            [`btn-${which}-flat`]: style === "flat" ? "true" : "false",
+        };
+    }
+}
+// Alias, kept for compatibility with custom modules and themes.
+class CustomizeButtonStyleAction extends PreviewButtonStyleAction {
+    static id = "customizeButtonStyle";
 }
 
 export class EditCustomCodeAction extends BuilderAction {

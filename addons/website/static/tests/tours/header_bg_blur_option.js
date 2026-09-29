@@ -31,8 +31,9 @@ function setHeaderBackgroundHex(hexColor) {
             run: `edit ${hexColor} && click body`,
         },
         {
-            content: "Wait for the operation to finish",
-            trigger: ".o_website_preview :iframe:not(:has(.o_loading_screen))",
+            // The picker closes once the color is applied.
+            content: "Wait for the color picker to close",
+            trigger: "body:not(:has(.o-hb-colorpicker))",
         },
     ];
 }

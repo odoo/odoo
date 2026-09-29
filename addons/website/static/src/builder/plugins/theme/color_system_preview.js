@@ -5,6 +5,7 @@
 
 const WHITE = { r: 255, g: 255, b: 255, a: 1 };
 const BLACK = { r: 0, g: 0, b: 0, a: 1 };
+const TRANSPARENT = { r: 0, g: 0, b: 0, a: 0 };
 
 let namedColorContext;
 
@@ -204,8 +205,8 @@ function buttonVariant(background, border, constants) {
 
 /**
  * Computes the colors that the `.o_cc<index>` rules (html_editor) compile from
- * a color preset, as `--o-preview-o-cc<index>-*` values. A value the compiled
- * CSS does not declare is returned empty, to remove a previous one.
+ * a color preset (`--o-preview-o-cc<index>-*` values, unprefixed). A value the
+ * compiled CSS does not declare is returned empty, to remove a previous one.
  *
  * @param {number} index
  * @param {Object<string, {r, g, b, a}|null>} preset the preset colors (`bg`,
@@ -275,7 +276,117 @@ function computeColorPresetPreview(index, preset, constants) {
     ]) {
         values[key] ??= "";
     }
-    return prefixValues(`o-cc${index}-`, values);
+    return values;
+}
+
+/**
+ * The areas' values (see `computeAreaPreview`) and the ones compiled from
+ * their colors elsewhere: the header's navbar variant and mobile menu, the
+ * footer's scroll-to-top button and the portal cards' hover.
+ *
+ * @param {Object[]} areas
+ * @param {Object[]} presetValues
+ * @param {Object} constants
+ * @returns {Object<string, string>}
+ */
+function computeAreasPreview(areas, presetValues, constants) {
+    const values = {};
+    // What the compiled CSS uses as an area's color: `o-color('<name>-custom')
+    // or o-color('<name>')`.
+    const colors = {};
+    for (const area of areas) {
+        colors[area.name] = area.custom || presetValues[area.preset - 1]?.bg || null;
+        const background =
+            area.name === "copyright" ? colors.footer || TRANSPARENT : constants.bodyBg;
+        const areaValues = computeAreaPreview({ ...area, background }, presetValues, constants);
+        Object.assign(values, prefixValues(`${area.name}-`, areaValues));
+    }
+    const menu = colors.menu;
+    const menuGradient = areas.find((area) => area.name === "menu").gradient;
+    const isDarkMenu = menu && !isSameColor(colorContrast(menu, constants), constants.contrastDark);
+    Object.assign(
+        values,
+        prefixValues("menu-", {
+            navbar: isDarkMenu ? "dark" : "light",
+            "mobile-fill": menuGradient ? TRANSPARENT : menu,
+            "mobile-bg-image": menuGradient || "none",
+            "mobile-accordion-bg": menu && shadeColor(menu, 5),
+        })
+    );
+    const footer = opaque(constants.bodyBg, colors.footer || TRANSPARENT);
+    const copyright = opaque(footer, colors.copyright || TRANSPARENT);
+    const footerContrast = colorContrast(footer, { ...constants, bodyBg: footer });
+    Object.assign(
+        values,
+        prefixValues("footer-scrolltop-", {
+            bg: footer,
+            color: isSameColor(footer, copyright)
+                ? { ...colorContrast(footer, constants), a: 0.5 }
+                : footerContrast,
+            "hover-bg": copyright,
+            "hover-color": colorContrast(copyright, { ...constants, bodyBg: footer }),
+        })
+    );
+    const portalCard = colors["portal-card"] || constants.bodyBg;
+    values["portal-card-hover-bg"] = formatColor(
+        toHsl(portalCard).l < 35 ? tintColor(portalCard, 15) : shadeColor(portalCard, 15)
+    );
+    return values;
+}
+
+/**
+ * Computes the colors of an area (header, footer…), compiled as its preset's
+ * rules (`o-apply-colors()` extends `.o_cc<preset>`) with its custom color
+ * over them (`o-bg-color()`) and its gradient over both, as
+ * `--o-preview-<name>-*` values (see `theme_preview.scss`). The values of a
+ * preset are all set, since the compiled rules of another one may apply below.
+ * Without a preset, only the custom color and gradient give values.
+ *
+ * @param {Object} area
+ * @param {number|null} area.preset
+ * @param {{r, g, b, a}|null} area.custom
+ * @param {string} area.gradient the area's gradient, if any
+ * @param {{r, g, b, a}} area.background what a translucent custom color is
+ *        over
+ * @param {Object[]} presetValues the presets' values (see
+ *        `computeColorPresetPreview`) and `bg-gradient`
+ * @param {Object} constants see `computeColorPresetPreview`
+ * @returns {Object<string, string|{r, g, b, a}>}
+ */
+function computeAreaPreview(area, presetValues, constants) {
+    const { "bg-gradient": presetGradient, ...preset } = presetValues[area.preset - 1] || {};
+    // Headings the preset does not color inherit (`o-bg-color()`'s reset).
+    const values = area.preset ? { ...preset, headings: preset.headings || "inherit" } : {};
+    let background = preset.bg || TRANSPARENT;
+    let image = presetGradient || "none";
+    if (area.custom) {
+        background = area.custom;
+        image = "none";
+        if (area.custom.a > 0.3) {
+            const text = colorContrast(area.custom, { ...constants, bodyBg: area.background });
+            Object.assign(values, {
+                text,
+                "text-muted": { ...text, a: text.a * 0.7 },
+                headings: "inherit",
+                h2: "",
+                h3: "",
+                h4: "",
+                h5: "",
+                h6: "",
+            });
+        }
+    }
+    if (values.headings) {
+        for (const level of [2, 3, 4, 5, 6]) {
+            values[`h${level}`] ||= values.headings;
+        }
+    }
+    values.text ||= area.preset ? "inherit" : "";
+    values.bg = background;
+    image = area.gradient || image;
+    values.fill = image === "none" ? background : TRANSPARENT;
+    values["bg-image"] = image;
+    return values;
 }
 
 function prefixValues(prefix, values) {
@@ -359,7 +470,8 @@ function themeColorValues(name, color, env) {
  * `--o-preview-*` values: the color presets (see `computeColorPresetPreview`),
  * the theme colors (`:root` variables and the classes compiled from them), the
  * grays and palette colors classes, the body, input and "active" component
- * colors. A value the compiled CSS does not declare is returned empty.
+ * colors, and the areas (see `computeAreaPreview`). A value the compiled CSS
+ * does not declare is returned empty.
  *
  * @param {(name: string) => {r, g, b, a}|null} getColor the resolved color of
  *        a palette, theme or gray color name
@@ -368,6 +480,10 @@ function themeColorValues(name, color, env) {
  * @param {Object} options
  * @param {number} options.minContrastRatio
  * @param {string[]} options.themeColorNames the compiled theme colors
+ * @param {string[]} options.presetGradients the presets' gradients, if any
+ * @param {Object[]} options.areas the areas (see `computeAreaPreview`, the
+ *        copyright's `background` is the footer's): `name`, `preset`, `custom`
+ *        and `gradient`
  * @returns {Object<string, string>}
  */
 export function computeColorSystemPreview(getColor, presets, options) {
@@ -406,9 +522,12 @@ export function computeColorSystemPreview(getColor, presets, options) {
         },
     };
     const values = { colors: "1" };
-    presets.forEach((preset, i) =>
-        Object.assign(values, computeColorPresetPreview(i + 1, preset, constants))
-    );
+    const presetValues = presets.map((preset, i) => {
+        const presetValues = computeColorPresetPreview(i + 1, preset, constants);
+        Object.assign(values, prefixValues(`o-cc${i + 1}-`, presetValues));
+        return { ...presetValues, "bg-gradient": options.presetGradients[i] };
+    });
+    Object.assign(values, computeAreasPreview(options.areas, presetValues, constants));
     for (const [name, color] of Object.entries(themeColors)) {
         Object.assign(values, prefixValues("", themeColorValues(name, color, env)));
     }

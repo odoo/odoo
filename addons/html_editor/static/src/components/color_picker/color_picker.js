@@ -347,8 +347,10 @@ export class ColorPicker extends Component {
             // picker, for example, if a user hovers any of the previewable
             // options in html builder. So here we reset the preview and apply
             // it again, in order to have the correct preview
+            const color = this.state.currentColorPreview;
             this.applyColorResetPreview();
-            this.props.applyColorPreview(this.state.currentColorPreview);
+            this.props.applyColorPreview(color);
+            this.state.currentColorPreview = color;
         }
     }
 

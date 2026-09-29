@@ -448,6 +448,7 @@
         ],
         'web._assets_frontend_helpers': [
             ('prepend', 'website/static/src/scss/bootstrap_overridden.scss'),
+            'website/static/src/scss/theme_preview_mixins.scss',
         ],
         'web._assets_bootstrap_frontend': [
             ('after', 'web/static/src/scss/utilities_custom.scss', 'html_builder/static/src/scss/utilities_custom.scss'),
@@ -476,6 +477,17 @@
             'website/static/src/components/googleplaces_autocomplete/*',
             'website/static/src/js/send_mail_form.js',
             'website/static/src/mail/core/common/**/*',
+        ],
+        # The Theme tab preview rules, only loaded in the builder and compiled
+        # with the website values like `web.assets_frontend`.
+        'website.assets_theme_preview': [
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_frontend_helpers'),
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
+            'website/static/src/scss/theme_preview.scss',
         ],
         'website.assets_theme_colors_preview': [
             ('include', 'web._assets_helpers'),

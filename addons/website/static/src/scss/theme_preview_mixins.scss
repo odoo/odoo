@@ -1,0 +1,36 @@
+// Mixins shared by `website.scss` and `theme_preview.scss` (the Theme tab
+// preview rules only loaded while editing).
+
+@mixin o-preview-rfs($name, $value, $property: font-size) {
+    $val: rfs-value($value);
+    $fluid-val: rfs-fluid-value($value);
+    #{$property}: var(--o-preview-#{$name}, #{$fluid-val});
+    @if $val != $fluid-val {
+        @include _rfs-media-query-rule() {
+            #{$property}: var(--o-preview-#{$name}, #{$val});
+        }
+    }
+}
+
+@mixin o-preview-button-size($suffix, $padding-y, $padding-x, $font-size, $border-radius) {
+    --#{$prefix}btn-padding-y: var(--o-preview-btn-padding-y#{$suffix}, #{$padding-y});
+    --#{$prefix}btn-padding-x: var(--o-preview-btn-padding-x#{$suffix}, #{$padding-x});
+    @include o-preview-rfs('btn-font-size#{$suffix}', $font-size, --#{$prefix}btn-font-size);
+    --#{$prefix}btn-border-radius: var(--o-preview-btn-border-radius#{$suffix}, #{$border-radius});
+}
+
+// The look of a flat button (`.btn.flat`, button style "Flat").
+@mixin o-btn-flat {
+    border: 0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    @include button-size(0.75rem, 1.5rem, ($font-size-base * .75), 0);
+    &.btn-lg { @include button-size(1rem, 2rem, ($font-size-lg * .75), 0); }
+    &.btn-sm { @include button-size(.5rem, 1rem, ($font-size-sm * .75), 0); }
+    &.btn-xs { @include button-size(.25rem, .5rem, ($font-size-base * .5), 0); }
+}
+
+@mixin o-bg-blur-option {
+    --o-blur-factor: MIN(calc(1 + var(--o-bg-blur) * .05), var(--o-bg-blur-enhance, 1.25));
+    backdrop-filter: contrast(var(--o-blur-factor)) brightness(var(--o-blur-factor)) blur(calc(var(--o-bg-blur, 0) * 1px));
+}

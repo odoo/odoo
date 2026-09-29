@@ -5,6 +5,7 @@ import {
 } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
+import { loadBundle } from "@web/core/assets";
 import { parseHTML } from "@html_editor/utils/html";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -25,6 +26,8 @@ import { loadImage } from "@html_editor/utils/image_processing";
  * @property { CustomizeWebsitePlugin['customizeWebsiteVariables'] } customizeWebsiteVariables
  * @property { CustomizeWebsitePlugin['previewWebsiteVariables'] } previewWebsiteVariables
  * @property { CustomizeWebsitePlugin['previewSavedValues'] } previewSavedValues
+ * @property { CustomizeWebsitePlugin['previewBodyImage'] } previewBodyImage
+ * @property { CustomizeWebsitePlugin['previewColorVariable'] } previewColorVariable
  * @property { CustomizeWebsitePlugin['getPendingValue'] } getPendingValue
  * @property { CustomizeWebsitePlugin['copyPreviewTo'] } copyPreviewTo
  * @property { CustomizeWebsitePlugin['getColorsCustomization'] } getColorsCustomization
@@ -59,6 +62,8 @@ export class CustomizeWebsitePlugin extends Plugin {
         "customizeWebsiteVariables",
         "previewWebsiteVariables",
         "previewSavedValues",
+        "previewBodyImage",
+        "previewColorVariable",
         "getPendingValue",
         "copyPreviewTo",
         "getColorsCustomization",
@@ -90,12 +95,13 @@ export class CustomizeWebsitePlugin extends Plugin {
             CustomizeWebsiteColorAction,
             SwitchThemeAction,
             AddLanguageAction,
-            CustomizeButtonStyleAction,
             WebsiteConfigAction,
             PreviewableWebsiteConfigAction,
             TemplatePreviewableWebsiteConfigAction,
             SelectTemplateAction,
             ToggleBodyBgImageAction,
+            PreviewBodyImageAction,
+            PreviewIconFontAction,
             ReplaceBodyBgImageAction,
             RemoveBodyBgImageAction,
             BodyBgPositionOverlayAction,
@@ -294,7 +300,8 @@ export class CustomizeWebsitePlugin extends Plugin {
      * The SCSS customization is only written on save, in the file at `url`.
      *
      * A reset (empty value or `nullValue`) previews the default printed as
-     * `--o-default-<name>`, if any, else the last saved value.
+     * `--o-default-<name>`, if any, else the last saved value. Another null
+     * value than `"null"` saves an explicit value: it previews no value.
      *
      * @param {Object<string, string>} variables
      * @param {string} [nullValue="null"]
@@ -306,7 +313,8 @@ export class CustomizeWebsitePlugin extends Plugin {
         const pending = this.pendingCustomizations[url] || {};
         const isSet = (value) => value && value !== nullValue;
         const htmlStyle = getHtmlStyle(this.document);
-        const getDefault = (name) => getCSSVariableValue(`o-default-${name}`, htmlStyle);
+        const getDefault = (name) =>
+            nullValue === "null" ? getCSSVariableValue(`o-default-${name}`, htmlStyle) : "initial";
         const aliasNames = new Set([...Object.keys(variables), ...Object.keys(cssValues)]);
         const previousState = {
             url,
@@ -367,6 +375,42 @@ export class CustomizeWebsitePlugin extends Plugin {
             this.setPreviewState(step.next);
             this.pendingPreviewSteps.push(step);
         }
+    }
+    /**
+     * Previews a color saved in the colors file (e.g. a border color).
+     *
+     * @param {string} name
+     * @param {string} value a CSS color
+     */
+    previewColorVariable(name, value) {
+        const { url, finalColors } = this.getColorsCustomization({ [name]: value }, {});
+        this.previewWebsiteVariables(finalColors, "null", { [name]: value }, url);
+    }
+    /**
+     * Previews body image values. The background (`body-image-bg-style()` in
+     * `website.scss`) is compiled from all of them: it is previewed as a whole,
+     * from these values and the current other ones (see `theme_preview.scss`).
+     *
+     * @param {Object<string, string>} variables
+     * @param {string} [nullValue="null"]
+     */
+    previewBodyImage(variables, nullValue = "null") {
+        const get = (name) => {
+            const value = name in variables ? variables[name] : this.getWebsiteVariableValue(name);
+            return value && value !== nullValue ? value.replace(/^'(.*)'$/, "$1") : "";
+        };
+        const image = get("body-image");
+        const width = get("body-image-pattern-width");
+        const height = get("body-image-pattern-height");
+        const isPattern = get("body-image-type") === "pattern";
+        this.previewWebsiteVariables(variables, nullValue, {
+            "body-image-bg": image ? `url("${image}")` : "none",
+            "body-image-size": isPattern
+                ? [width || "auto", height].filter(Boolean).join(" ")
+                : "cover",
+            "body-image-repeat": isPattern ? "repeat" : "no-repeat",
+            "body-image-position": get("body-image-background-position") || "center",
+        });
     }
     setPreviewState({ url, variables, aliases }) {
         const pending = (this.pendingCustomizations[url] ??= {});
@@ -508,46 +552,43 @@ export class CustomizeWebsitePlugin extends Plugin {
     async _reloadBundles() {
         const bundles = await rpc("/website/theme_customize_bundle_reload");
         const documents = [this.document, this.config.extraPreviewDocument].filter(Boolean);
-        const allLinksIframeEls = [];
-        const proms = [];
-        const createLinksProms = (bundleURLs, insertionEl, document) => {
-            const newLinkEls = [];
-            for (const url of bundleURLs) {
+        const swapLinks = (bundleURLs, oldLinkEls, document) => {
+            const newLinkEls = bundleURLs.map((url) => {
                 const linkEl = document.createElement("link");
                 linkEl.setAttribute("type", "text/css");
                 linkEl.setAttribute("rel", "stylesheet");
                 linkEl.setAttribute("href", `${url}#t=${new Date().getTime()}`); // Ensures that the css will be reloaded.
-                newLinkEls.push(linkEl);
-                proms.push(
-                    new Promise((resolve) => {
-                        linkEl.addEventListener("load", resolve);
-                        linkEl.addEventListener("error", resolve);
-                    })
-                );
-            }
-            for (const el of newLinkEls) {
-                insertionEl.insertAdjacentElement("afterend", el);
-            }
+                return linkEl;
+            });
+            oldLinkEls.at(-1).after(...newLinkEls);
+            return Promise.all(
+                newLinkEls.map(
+                    (linkEl) =>
+                        new Promise((resolve) => {
+                            linkEl.addEventListener("load", resolve);
+                            linkEl.addEventListener("error", resolve);
+                        })
+                )
+            ).then(() => oldLinkEls.forEach((el) => el.remove()));
         };
-        for (const document of documents) {
-            for (const [bundleName, bundleURLs] of Object.entries(bundles)) {
-                const selector = `link[href*="${bundleName}"]`;
-                const linksIframeEls = document.querySelectorAll(selector);
-                if (linksIframeEls.length) {
-                    allLinksIframeEls.push(...linksIframeEls);
-                    createLinksProms(
-                        bundleURLs,
-                        linksIframeEls[linksIframeEls.length - 1],
-                        document
+        const swapBundle = (bundleName) =>
+            Promise.all(
+                documents.map((document) => {
+                    const oldLinkEls = [
+                        ...document.querySelectorAll(`link[href*="${bundleName}"]`),
+                    ];
+                    const bundleURLs = bundles?.[bundleName];
+                    return (
+                        oldLinkEls.length &&
+                        bundleURLs &&
+                        swapLinks(bundleURLs, oldLinkEls, document)
                     );
-                }
-            }
-        }
-        await Promise.all(proms).then(() => {
-            for (const el of allLinksIframeEls) {
-                el.remove();
-            }
-        });
+                })
+            );
+        await swapBundle("web.assets_frontend");
+        // The preview rules (see `loadThemePreviewBundle`) are only used while
+        // previewing: compiled after the page's, and not waited for.
+        swapBundle("website.assets_theme_preview");
         this.dependencies.edit_interaction.restartInteractions();
     }
 
@@ -782,22 +823,14 @@ export class AddLanguageAction extends BuilderAction {
 
 export class ToggleBodyBgImageAction extends BuilderAction {
     static id = "toggleBodyBgImage";
-    static dependencies = ["builderActions", "domObserver", "customizeWebsite", "media"];
+    static dependencies = ["builderActions", "customizeWebsite", "media"];
     setup() {
         this.canTimeout = false;
     }
     isApplied() {
         return !!this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image");
     }
-    async applyConfigWithLoader(config) {
-        this.services.ui.block({ delay: 2500 });
-        try {
-            await this.setBodyBgConfig(config);
-        } finally {
-            this.services.ui.unblock();
-        }
-    }
-    async setBodyBgConfig(config) {
+    previewConfig(config) {
         // Store the current body bg selection (image + type).
         const variables = {
             "body-image-type": `'${config.type}'`,
@@ -809,8 +842,8 @@ export class ToggleBodyBgImageAction extends BuilderAction {
             variables["body-image-pattern-width"] = "";
             variables["body-image-pattern-height"] = "";
         }
-        await this.dependencies.customizeWebsite.customizeWebsiteVariables(variables);
-        this.trigger("on_dom_updated_handlers");
+        // An explicit null, so that the removal is previewed.
+        this.dependencies.customizeWebsite.previewBodyImage(variables, "NULL");
     }
     getCurrentConfig() {
         return {
@@ -819,13 +852,6 @@ export class ToggleBodyBgImageAction extends BuilderAction {
                 "image",
             image: this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image") || "",
         };
-    }
-    async applyConfig(oldConfig, newConfig) {
-        await this.applyConfigWithLoader(newConfig);
-        this.dependencies.domObserver.stageCustomMutation({
-            apply: () => this.applyConfigWithLoader(newConfig),
-            revert: () => this.applyConfigWithLoader(oldConfig),
-        });
     }
     async apply({ editingElement: el } = {}) {
         await this.dependencies.media.openMediaDialog(
@@ -837,18 +863,12 @@ export class ToggleBodyBgImageAction extends BuilderAction {
             onlyImages: true,
             node: editingElement,
             save: async (imageEl) => {
-                const { type: currentType, image: currentImage } = this.getCurrentConfig();
-                const oldConfig = { type: currentType, image: currentImage };
-                const newConfig = { type: currentType, image: imageEl.src };
-                await this.applyConfig(oldConfig, newConfig);
+                this.previewConfig({ type: this.getCurrentConfig().type, image: imageEl.src });
             },
         };
     }
-    async clean() {
-        const { type: currentType, image: currentImage } = this.getCurrentConfig();
-        const oldConfig = { type: currentType, image: currentImage };
-        const newConfig = { type: "image", image: "" };
-        await this.applyConfig(oldConfig, newConfig);
+    clean() {
+        this.previewConfig({ type: "image", image: "" });
     }
 }
 
@@ -870,12 +890,7 @@ export class RemoveBodyBgImageAction extends BuilderAction {
 
 export class BodyBgPositionOverlayAction extends BuilderAction {
     static id = "bodyBgPositionOverlay";
-    static dependencies = [
-        "overlayButtons",
-        "domObserver",
-        "backgroundPositionOption",
-        "customizeWebsite",
-    ];
+    static dependencies = ["overlayButtons", "backgroundPositionOption", "customizeWebsite"];
     setup() {
         this.withLoadingEffect = false;
         this.canTimeout = false;
@@ -887,8 +902,8 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
             // variables.
             editingElement.style.backgroundPosition = "";
         };
-        const setBackgroundPosition = async (value) => {
-            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
+        const setBackgroundPosition = (value) => {
+            this.dependencies.customizeWebsite.previewBodyImage({
                 "body-image-background-position": value,
             });
             clearInlinePosition();
@@ -912,14 +927,7 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
             });
         });
         if (bgPosition) {
-            const currentPosition =
-                this.dependencies.customizeWebsite.getWebsiteVariableValue(
-                    "body-image-background-position"
-                ) || "";
-            this.dependencies.domObserver.applyCustomMutation({
-                apply: () => setBackgroundPosition(bgPosition),
-                revert: () => setBackgroundPosition(currentPosition),
-            });
+            setBackgroundPosition(bgPosition);
         } else {
             clearInlinePosition();
         }
@@ -1281,6 +1289,39 @@ export class PreviewWebsiteVariableAction extends CustomizeWebsiteVariableAction
 }
 
 /**
+ * The other body image values (see `previewBodyImage`).
+ */
+export class PreviewBodyImageAction extends PreviewWebsiteVariableAction {
+    static id = "previewBodyImage";
+    apply({ params: { mainParam: variable, nullValue = "null" }, value }) {
+        this.dependencies.customizeWebsite.previewBodyImage({ [variable]: value }, nullValue);
+    }
+}
+
+const ICON_FONT_BUNDLES = {
+    "Material Symbols Rounded": "web.material_symbols_rounded",
+    "Material Symbols Sharp": "web.material_symbols_sharp",
+};
+
+/**
+ * Previews the icon font: the page only has the font face of its own.
+ */
+export class PreviewIconFontAction extends PreviewWebsiteVariableAction {
+    static id = "previewIconFont";
+    async load({ value }) {
+        const bundle = ICON_FONT_BUNDLES[value] || "web.material_symbols_outlined";
+        await loadBundle(bundle, { targetDoc: this.document });
+    }
+    apply({ params: { mainParam: variable }, value }) {
+        // The icons read `--icon-font-family`, set on the body over the
+        // printed one (see `theme_preview.scss`). An empty value is Outlined.
+        this.dependencies.customizeWebsite.previewWebsiteVariables({ [variable]: value }, "null", {
+            [variable]: `"${value || "Material Symbols Outlined"}"`,
+        });
+    }
+}
+
+/**
  * Resets website variables to their theme default, through
  * `previewWebsiteVariables` (which previews the default).
  */
@@ -1322,18 +1363,21 @@ export class PreviewWebsiteFontSizeAction extends PreviewWebsiteVariableAction {
     }
 }
 
-export class CustomizeWebsiteSubVariablesAction extends CustomizeWebsiteVariableAction {
-    static id = "customizeWebsiteSubVariables";
+/**
+ * Previews a variable and the sub-variables it sets (e.g. a border width and
+ * its sides).
+ */
+export class PreviewWebsiteSubVariablesAction extends PreviewWebsiteVariableAction {
+    static id = "previewWebsiteSubVariables";
     getValue({ params: { mainParam: variable, subVariablesConfig = {} } }) {
         const subVariables = subVariablesConfig[variable] || [];
         // A global variable returns the common value of its sub-variables
         // if they are all identical. Otherwise, it returns null. And each
         // sub-variable always returns its own current value.
-        const currentValue = this._subVariablesValue([variable, ...subVariables]);
-        return currentValue;
+        return this._subVariablesValue([variable, ...subVariables]);
     }
-    async apply({ params, value }) {
-        await this.dependencies.customizeWebsite.customizeWebsiteVariables(
+    apply({ params, value }) {
+        this.dependencies.customizeWebsite.previewWebsiteVariables(
             this.getVariablesToUpdate(params, value),
             params.nullValue
         );
@@ -1375,17 +1419,9 @@ export class CustomizeWebsiteSubVariablesAction extends CustomizeWebsiteVariable
         return null;
     }
 }
-
-export class PreviewWebsiteSubVariablesAction extends CustomizeWebsiteSubVariablesAction {
-    static id = "previewWebsiteSubVariables";
-    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
-    setup() {}
-    apply({ params, value }) {
-        this.dependencies.customizeWebsite.previewWebsiteVariables(
-            this.getVariablesToUpdate(params, value),
-            params.nullValue
-        );
-    }
+// Alias, kept for compatibility with custom modules and themes.
+class CustomizeWebsiteSubVariablesAction extends PreviewWebsiteSubVariablesAction {
+    static id = "customizeWebsiteSubVariables";
 }
 
 export class CustomizeWebsiteColorAction extends BuilderAction {
@@ -1452,36 +1488,6 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
         await Promise.allSettled(
             this.getResource("on_website_color_updated_handlers").map((handler) => handler([color]))
         );
-    }
-}
-
-export class CustomizeButtonStyleAction extends BuilderAction {
-    static id = "customizeButtonStyle";
-    static dependencies = ["customizeWebsite"];
-    setup() {
-        this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
-    }
-    isApplied({ params, value }) {
-        return this.getValue({ params }) === value;
-    }
-    getValue({ params: { mainParam: which } }) {
-        const style = getHtmlStyle(this.document);
-        const isOutline = getCSSVariableValue(`btn-${which}-outline`, style);
-        const isFlat = getCSSVariableValue(`btn-${which}-flat`, style);
-        return isFlat === "true" ? "flat" : isOutline === "true" ? "outline" : "fill";
-    }
-    async apply({ params: { mainParam: which, nullValue }, value }) {
-        await this.dependencies.customizeWebsite.customizeWebsiteVariables(
-            this.getVariables(which, value),
-            nullValue
-        );
-    }
-    getVariables(which, style) {
-        return {
-            [`btn-${which}-outline`]: style === "outline" ? "true" : "false",
-            [`btn-${which}-flat`]: style === "flat" ? "true" : "false",
-        };
     }
 }
 

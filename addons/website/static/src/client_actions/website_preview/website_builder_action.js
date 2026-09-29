@@ -15,7 +15,7 @@ import {
     useProps,
     t,
 } from "@odoo/owl";
-import { loadBundle } from "@web/core/assets";
+import { loadBundle, loadCSS } from "@web/core/assets";
 import { location, browser } from "@web/core/browser/browser";
 import { isBrowserChrome, isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
@@ -337,11 +337,25 @@ export class WebsiteBuilderClientAction extends Component {
         // now, and if it comes first, we'll get a crash. So we make sure that we
         // properly wait for the iframe to be completely ready.
         await this.waitForIframeReady();
+        const targetDoc = this.websiteContent().contentDocument;
         await Promise.all([
-            loadBundle("website.assets_inside_builder_iframe", {
-                targetDoc: this.websiteContent().contentDocument,
-            }),
+            loadBundle("website.assets_inside_builder_iframe", { targetDoc }),
+            this.loadThemePreviewBundle(targetDoc),
         ]);
+    }
+
+    /**
+     * The Theme tab preview rules are compiled with the website values, which
+     * a save can change: their URL is asked each time, not cached like
+     * `loadBundle` does.
+     *
+     * @param {Document} targetDoc
+     */
+    async loadThemePreviewBundle(targetDoc) {
+        const bundles = await rpc("/website/theme_customize_bundle_reload");
+        await Promise.all(
+            bundles["website.assets_theme_preview"].map((url) => loadCSS(url, { targetDoc }))
+        );
     }
 
     /**

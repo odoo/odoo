@@ -106,10 +106,6 @@ export class SetStylePortalCardAction extends StyleAction {
     static id = "setStylePortalCard";
     static dependencies = ["customizeWebsite", "color"];
 
-    setup() {
-        this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
-    }
     /**
      * Applies the specified style to portal cards.
      *
@@ -117,24 +113,13 @@ export class SetStylePortalCardAction extends StyleAction {
      * @param {string} value - The value to apply for the style property
      *
      */
-    async apply({ params, value }) {
-        const styleName = params.mainParam;
-        const variableMap = {
-            "border-style": "portal-card-border-style",
-            "border-radius": "portal-card-border-radius",
-            "border-width": "portal-card-border-width",
-            "border-color": "portal-card-border-color",
-        };
-
-        if (styleName in variableMap) {
-            if (styleName === "border-color") {
-                return this.dependencies.customizeWebsite.customizeWebsiteColors({
-                    [variableMap[styleName]]: value,
-                });
-            }
-            return this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                [variableMap[styleName]]: value,
-            });
+    apply({ params: { mainParam: styleName }, value }) {
+        const customizeWebsite = this.dependencies.customizeWebsite;
+        const variable = `portal-card-${styleName}`;
+        if (styleName === "border-color") {
+            customizeWebsite.previewColorVariable(variable, value);
+        } else {
+            customizeWebsite.previewWebsiteVariables({ [variable]: value });
         }
     }
 }

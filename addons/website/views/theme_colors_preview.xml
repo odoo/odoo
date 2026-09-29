@@ -5,6 +5,7 @@
     <xpath expr="//head/link[last()]" position="after">
         <t t-call="website.font_links"/>
         <t t-call-assets="web.assets_frontend" t-js="false"/>
+        <t t-call-assets="website.assets_theme_preview" t-js="false"/>
         <t t-call-assets="website.assets_wysiwyg" t-js="false"/>
         <t t-call-assets="website.assets_theme_colors_preview"/>
     </xpath>

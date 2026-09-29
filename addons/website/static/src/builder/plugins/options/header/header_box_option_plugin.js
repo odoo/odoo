@@ -28,10 +28,6 @@ export class HeaderBoxOptionPlugin extends Plugin {
 export class StyleActionHeaderAction extends StyleAction {
     static id = "styleActionHeader";
     static dependencies = ["customizeWebsite", "color"];
-    setup() {
-        this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
-    }
     getValue(...args) {
         const { params } = args[0];
         const value = super.getValue(...args);
@@ -40,31 +36,31 @@ export class StyleActionHeaderAction extends StyleAction {
         }
         return value;
     }
-    async apply({ params, value }) {
-        const styleName = params.mainParam;
-
+    apply({ params: { mainParam: styleName }, value }) {
+        const customizeWebsite = this.dependencies.customizeWebsite;
         if (styleName === "border-color") {
-            return this.dependencies.customizeWebsite.customizeWebsiteColors({
-                "menu-border-color": value,
-            });
+            customizeWebsite.previewColorVariable("menu-border-color", value);
+        } else {
+            // A header with a bottom (or right) border only uses the first width.
+            const cssValues =
+                styleName === "border-width"
+                    ? { "menu-border-bottom-width": value.split(" ")[0] }
+                    : {};
+            customizeWebsite.previewWebsiteVariables(
+                { [`menu-${styleName}`]: value },
+                "null",
+                cssValues
+            );
         }
-        return this.dependencies.customizeWebsite.customizeWebsiteVariables({
-            [`menu-${styleName}`]: value,
-        });
     }
 }
 
 export class SetShadowModeHeaderAction extends SetShadowModeAction {
     static id = "setShadowModeHeader";
     static dependencies = ["customizeWebsite"];
-    setup() {
-        this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
-    }
-    async apply({ value: shadowMode }) {
-        const defaultShadow = getDefaultShadow(shadowMode);
-        return this.dependencies.customizeWebsite.customizeWebsiteVariables({
-            "menu-box-shadow-style": defaultShadow,
+    apply({ value: shadowMode }) {
+        this.dependencies.customizeWebsite.previewWebsiteVariables({
+            "menu-box-shadow-style": getDefaultShadow(shadowMode),
         });
     }
 }
@@ -72,15 +68,10 @@ export class SetShadowModeHeaderAction extends SetShadowModeAction {
 export class SetShadowStyleHeaderAction extends SetShadowStyleAction {
     static id = "setShadowStyleHeader";
     static dependencies = ["customizeWebsite"];
-    setup() {
-        this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
-    }
-    async apply({ editingElement, params: { mainParam: attributeName }, value }) {
+    apply({ editingElement, params: { mainParam: attributeName }, value }) {
         const shadow = getCurrentShadow(editingElement);
         shadow[attributeName] = value;
-
-        return this.dependencies.customizeWebsite.customizeWebsiteVariables({
+        this.dependencies.customizeWebsite.previewWebsiteVariables({
             "menu-box-shadow-style": shadowToString(shadow),
         });
     }
@@ -89,38 +80,27 @@ export class SetShadowStyleHeaderAction extends SetShadowStyleAction {
 export class SetShadowClassHeaderAction extends BuilderAction {
     static id = "setShadowClassHeader";
     static dependencies = ["customizeWebsite"];
-    setup() {
-        this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
-    }
     isApplied({ params: { mainParam: shadowClass } }) {
         const currentShadowClass =
             this.dependencies.customizeWebsite.getWebsiteVariableValue("menu-shadow-class");
         return currentShadowClass === shadowClass;
     }
-    async apply({ params: { mainParam: shadowClass } }) {
-        await this.dependencies.customizeWebsite.customizeWebsiteVariables(
-            {
-                "menu-shadow-class": shadowClass,
-            },
-            "''"
-        );
-        const currentShadowClass =
-            this.dependencies.customizeWebsite.getWebsiteVariableValue("menu-shadow-class");
-        if (currentShadowClass === "o-shadow-custom") {
-            const defaultShadow = getDefaultShadow();
-            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                "menu-box-shadow-style": defaultShadow,
+    apply({ params: { mainParam: shadowClass } }) {
+        const customizeWebsite = this.dependencies.customizeWebsite;
+        // `none` for the preview rules (see `theme_preview.scss`).
+        customizeWebsite.previewWebsiteVariables({ "menu-shadow-class": shadowClass }, "''", {
+            "menu-shadow-class": shadowClass || "none",
+        });
+        if (shadowClass === "o-shadow-custom") {
+            customizeWebsite.previewWebsiteVariables({
+                "menu-box-shadow-style": getDefaultShadow(),
             });
         }
     }
-    async clean() {
-        const currentShadowClass =
-            this.dependencies.customizeWebsite.getWebsiteVariableValue("menu-shadow-class");
-        if (currentShadowClass === "o-shadow-custom") {
-            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                "menu-box-shadow-style": null,
-            });
+    clean() {
+        const customizeWebsite = this.dependencies.customizeWebsite;
+        if (customizeWebsite.getWebsiteVariableValue("menu-shadow-class") === "o-shadow-custom") {
+            customizeWebsite.previewWebsiteVariables({ "menu-box-shadow-style": "" });
         }
     }
 }

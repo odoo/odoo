@@ -12,9 +12,8 @@
         <BuilderRow label.translate="Background" level="1">
             <BuilderColorPicker
                 enabledTabs="['theme', 'custom', 'gradient']"
-                preview="false"
                 defaultColor="''"
-                action="'customizeWebsiteColor'"
+                action="'previewWebsiteColor'"
                 actionParam="{
                     mainParam: 'menu-custom',
                     gradientColor: 'menu-gradient',
@@ -23,9 +22,8 @@
                 }"/>
             <BuilderColorPicker t-if="this.isActiveItem('header_sales_one_opt')"
                 enabledTabs="['theme', 'custom', 'gradient']"
-                preview="false"
                 defaultColor="''"
-                action="'customizeWebsiteColor'"
+                action="'previewWebsiteColor'"
                 actionParam="{
                     mainParam: 'header-sales_one-custom',
                     gradientColor: 'menu-secondary-gradient',
@@ -34,9 +32,8 @@
                 }"/>
             <BuilderColorPicker t-if="this.isActiveItem('header_sales_two_opt')"
                 enabledTabs="['theme', 'custom', 'gradient']"
-                preview="false"
                 defaultColor="''"
-                action="'customizeWebsiteColor'"
+                action="'previewWebsiteColor'"
                 actionParam="{
                     mainParam: 'header-sales_two-custom',
                     gradientColor: 'menu-secondary-gradient',
@@ -45,9 +42,8 @@
                 }"/>
             <BuilderColorPicker t-if="this.isActiveItem('header_sales_three_opt')"
                 enabledTabs="['theme', 'custom', 'gradient']"
-                preview="false"
                 defaultColor="''"
-                action="'customizeWebsiteColor'"
+                action="'previewWebsiteColor'"
                 actionParam="{
                     mainParam: 'header-sales_three-custom',
                     gradientColor: 'menu-secondary-gradient',
@@ -56,9 +52,8 @@
                 }"/>
             <BuilderColorPicker t-if="this.isActiveItem('header_sales_four_opt')"
                 enabledTabs="['theme', 'custom', 'gradient']"
-                preview="false"
                 defaultColor="''"
-                action="'customizeWebsiteColor'"
+                action="'previewWebsiteColor'"
                 actionParam="{
                     mainParam: 'header-sales_four-custom',
                     gradientColor: 'menu-secondary-gradient',
@@ -67,7 +62,7 @@
                 }"/>
         </BuilderRow>
         <BuilderRow label.translate="Blur" level="2" t-if="this.domState.isBlurAvailable">
-            <BuilderRange action="'customizeWebsiteVariable'" actionParam="'header-bg-blur'" min="0" max="10" step="0.5" />
+            <BuilderRange action="'previewWebsiteVariable'" actionParam="'header-bg-blur'" min="0" max="10" step="0.5" />
         </BuilderRow>
         <t t-set="noPreviewOptionsContentWidth" t-value="[
             'header_boxed_opt',
@@ -97,7 +92,7 @@
 
         <BuilderRow t-if="this.isActiveItem('header_sidebar_opt')" label.translate="Width" level="1">
             <BuilderNumberInput
-                action="'customizeWebsiteVariable'"
+                action="'previewWebsiteVariable'"
                 actionParam="'sidebar-width'"
                 default="null"
                 unit="'px'"

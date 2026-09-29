@@ -1,0 +1,753 @@
+///
+/// Theme tab preview rules that only apply while editing. Only loaded in the
+/// builder (`website.assets_theme_preview`), compiled with the website values
+/// like `web.assets_frontend`, so that visitors don't download them.
+///
+
+// The frontend bundle extends some of the selectors re-declared below: the
+// same extends here, so that the rules reach the same elements.
+@each $color, $value in $theme-colors {
+    .btn-#{$color} {
+        @extend .btn-#{if(index($o-btn-outline-defaults, $color), 'outline', 'fill')}-#{$color} !optional;
+    }
+}
+.btn-group-sm > .btn {
+    @extend .btn-sm !optional;
+}
+.btn-group-lg > .btn {
+    @extend .btn-lg !optional;
+}
+@for $level from 1 through 6 {
+    .h#{$level} {
+        @extend h#{$level} !optional;
+    }
+}
+.o_wysiwyg_loader {
+    @extend :disabled !optional;
+}
+// The overlays use the first preset (the areas' presets are below).
+#wrapwrap.o_header_overlay > header:not(.o_header_affixed):not(.o_header_sidebar):not(.o_top_menu_collapse_shown) > .navbar,
+#wrapwrap > main.o_breadcrumb_overlay div.o_page_breadcrumb nav {
+    @extend .o_cc1 !optional;
+}
+
+// Rules gated on a previewed value, e.g. `html[style*="--o-preview-x:"] …`:
+// they only apply while the builder sets that value on the root, for values
+// whose compiled rule only exists when set, or that other compiled values
+// derive from. They do nothing on the saved site.
+
+// Values compiled from the base font size when not set themselves.
+$-font-size-base-headings: (1: $h1-font-size, 2: $h2-font-size, 3: $h3-font-size, 4: $h4-font-size, 5: $h5-font-size, 6: $h6-font-size);
+html[style*="--o-preview-font-size-base:"] {
+    @each $index, $value in $-font-size-base-headings {
+        @if not o-website-value('h#{$index}-font-size') {
+            h#{$index}, .h#{$index} {
+                font-size: var(--o-preview-h#{$index}-font-size, calc(var(--o-preview-font-size-base) * #{divide($value, $font-size-base)}));
+            }
+        }
+    }
+    @each $index, $value in $-font-size-base-headings {
+        @if not o-website-value('h#{$index}-font-size') {
+            .h#{$index}-fs {
+                font-size: var(--o-preview-h#{$index}-font-size, calc(var(--o-preview-font-size-base) * #{divide($value, $font-size-base)}));
+            }
+        }
+    }
+    .lead {
+        font-size: calc(var(--o-preview-font-size-base) * #{divide($lead-font-size, $font-size-base)});
+    }
+    .base-fs {
+        font-size: var(--o-preview-font-size-base);
+    }
+}
+// `$small-font-size` is compiled as a ratio of the base font size (in em),
+// which the builder computes.
+html[style*="--o-preview-small-font-ratio:"] {
+    small, .small, .o_small-fs {
+        font-size: calc(var(--o-preview-small-font-ratio) * 1em);
+    }
+}
+// Display values only compiled when they differ from the headings ones.
+@for $index from 1 through 4 {
+    @each $key, $property in ('font': font-family, 'line-height': line-height, 'margin-top': margin-top, 'margin-bottom': margin-bottom) {
+        html[style*="--o-preview-display-#{$index}-#{$key}:"] .display-#{$index} {
+            #{$property}: var(--o-preview-display-#{$index}-#{$key});
+        }
+    }
+}
+// Bold weights only compiled when set.
+@each $key, $selector in ('headings-font-weight-bold': 'h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6', 'display-font-weight-bold': '.display-1, .display-2, .display-3, .display-4, .display-5, .display-6', 'btn-font-weight-bold': '.btn') {
+    html[style*="--o-preview-#{$key}:"] {
+        #{$selector} {
+            b, strong {
+                font-weight: var(--o-preview-#{$key}) !important;
+            }
+        }
+    }
+}
+
+// Theme preview of the color presets. Their colors are compiled into many
+// derived ones (contrasts, button states), which the builder computes the same
+// way (see `color_system_preview.js`) and sets as `--o-preview-o-cc<N>-*`. The
+// rules below only apply while such a value is set on the root: they are more
+// specific than the compiled `.o_cc<N>` ones (html_editor) and do nothing on
+// the saved site. Each rule is gated on the value it uses, as the builder only
+// sets the ones the compiled CSS declares. The builder previews all presets at
+// once, so that these rules keep the compiled order between presets (nested
+// presets).
+@function o-preview-cc-gate($index, $key) {
+    @return 'html[style*="--o-preview-o-cc#{$index}-#{$key}:"]';
+}
+@mixin o-preview-cc-scope($index, $key) {
+    $-gate: o-preview-cc-gate($index, $key);
+    // Same scope as `$o-color-extras-nesting-selector` in the compiled rules.
+    #{$-gate} .o_cc#{$index}, #{$-gate} .o_colored_level .o_cc#{$index} {
+        @content;
+    }
+}
+@mixin o-preview-button-variant($name) {
+    --#{$prefix}btn-color: var(#{$name}-color);
+    --#{$prefix}btn-bg: var(#{$name}-bg);
+    --#{$prefix}btn-border-color: var(#{$name}-border);
+    --#{$prefix}btn-hover-color: var(#{$name}-hover-color);
+    --#{$prefix}btn-hover-bg: var(#{$name}-hover-bg);
+    --#{$prefix}btn-hover-border-color: var(#{$name}-hover-border);
+    --#{$prefix}btn-focus-shadow-rgb: var(#{$name}-focus-rgb);
+    --#{$prefix}btn-active-color: var(#{$name}-active-color);
+    --#{$prefix}btn-active-bg: var(#{$name}-active-bg);
+    --#{$prefix}btn-active-border-color: var(#{$name}-active-border);
+    --#{$prefix}btn-disabled-color: var(#{$name}-disabled-color);
+    --#{$prefix}btn-disabled-bg: var(#{$name}-bg);
+    --#{$prefix}btn-disabled-border-color: var(#{$name}-border);
+}
+@mixin o-preview-button-outline-variant($name) {
+    --#{$prefix}btn-color: var(#{$name}-outline);
+    --#{$prefix}btn-border-color: var(#{$name}-outline);
+    --#{$prefix}btn-hover-color: var(#{$name}-outline-contrast);
+    --#{$prefix}btn-hover-bg: var(#{$name}-outline);
+    --#{$prefix}btn-hover-border-color: var(#{$name}-outline);
+    --#{$prefix}btn-focus-shadow-rgb: var(#{$name}-outline-rgb);
+    --#{$prefix}btn-active-color: var(#{$name}-outline-contrast);
+    --#{$prefix}btn-active-bg: var(#{$name}-outline);
+    --#{$prefix}btn-active-border-color: var(#{$name}-outline);
+    --#{$prefix}btn-disabled-color: var(#{$name}-outline);
+    --#{$prefix}btn-disabled-border-color: var(#{$name}-outline);
+}
+@for $index from 1 through length($o-color-combinations) {
+    $-cc: '--o-preview-o-cc#{$index}';
+    // `o-bg-color()`
+    #{o-preview-cc-gate($index, 'bg')} .o_cc#{$index} {
+        --background-color: var(#{$-cc}-bg);
+        --o-cc-bg: var(#{$-cc}-bg);
+        background-color: var(#{$-cc}-bg);
+    }
+    #{o-preview-cc-gate($index, 'text')} .o_cc#{$index} {
+        --color: var(#{$-cc}-text);
+        color: var(#{$-cc}-text);
+    }
+    @include o-preview-cc-scope($index, 'text-muted') {
+        .text-muted {
+            color: var(#{$-cc}-text-muted) !important;
+        }
+    }
+    @include o-preview-cc-scope($index, 'headings') {
+        h1, h2, h3, h4, h5, h6 {
+            color: var(#{$-cc}-headings);
+        }
+    }
+    @for $level from 2 through 6 {
+        @include o-preview-cc-scope($index, 'h#{$level}') {
+            h#{$level} {
+                color: var(#{$-cc}-h#{$level});
+            }
+        }
+    }
+    @include o-preview-cc-scope($index, 'link') {
+        a:not(.btn):where(:not(.o_cc)), .btn-link:where(:not(.o_cc)) {
+            color: var(#{$-cc}-link);
+
+            &:hover {
+                color: var(#{$-cc}-link-hover);
+            }
+        }
+    }
+    @each $type in ('primary', 'secondary') {
+        @include o-preview-cc-scope($index, 'btn-#{$type}-bg') {
+            .btn-fill-#{$type} {
+                @include o-preview-button-variant('#{$-cc}-btn-#{$type}');
+            }
+            .btn-outline-#{$type} {
+                @include o-preview-button-outline-variant('#{$-cc}-btn-#{$type}');
+            }
+        }
+    }
+    @include o-preview-cc-scope($index, 'btn-primary-bg') {
+        .nav-pills, .nav-tabs {
+            .nav-link.active,
+            .show > .nav-link {
+                background-color: var(#{$-cc}-btn-primary-bg);
+                color: var(#{$-cc}-btn-primary-color);
+            }
+        }
+        a.list-group-item {
+            color: var(#{$-cc}-btn-primary-bg);
+
+            &.active {
+                background-color: var(#{$-cc}-btn-primary-bg);
+                color: var(#{$-cc}-btn-primary-color);
+                border-color: var(#{$-cc}-btn-primary-bg);
+            }
+        }
+    }
+    // `o-add-gradient()`: `none` removes a saved gradient.
+    #{o-preview-cc-gate($index, 'bg-gradient')} .o_cc#{$index} {
+        background-image: var(#{$-cc}-bg-gradient);
+    }
+    #{o-preview-cc-gate($index, 'bg-gradient')}:not([style*="#{$-cc}-bg-gradient: none"]) .o_cc#{$index} {
+        background-color: rgba(0, 0, 0, 0);
+    }
+}
+// The first preset is also the body's (website's `bootstrap_overridden.scss`).
+// Colors Bootstrap compiles from it into other components are only updated on
+// save.
+#{o-preview-cc-gate(1, 'bg')} {
+    --#{$prefix}body-bg: var(--o-preview-o-cc1-bg);
+    --#{$prefix}body-bg-rgb: var(--o-preview-o-cc1-bg-rgb);
+    --#{$prefix}link-color: var(--o-preview-o-cc1-link);
+    --#{$prefix}link-color-rgb: var(--o-preview-o-cc1-link-rgb);
+    --#{$prefix}link-hover-color: var(--o-preview-o-cc1-body-link-hover);
+    --#{$prefix}link-hover-color-rgb: var(--o-preview-o-cc1-body-link-hover-rgb);
+}
+#{o-preview-cc-gate(1, 'text')} {
+    --#{$prefix}body-color: var(--o-preview-o-cc1-text);
+    --#{$prefix}body-color-rgb: var(--o-preview-o-cc1-text-rgb);
+}
+#{o-preview-cc-gate(1, 'headings')} {
+    --#{$prefix}heading-color: var(--o-preview-o-cc1-headings);
+}
+
+// Theme preview of the area colors (header, footer…). An area is compiled as
+// its preset's `.o_cc<N>` rules (`o-apply-colors()` extends them) with its
+// custom color and gradient over them. The builder computes the result (see
+// `computeAreaPreview`) and sets these values together, so that another
+// preset's compiled rules don't show through. Without a preset, it only sets
+// what the custom color and gradient give: the rest keeps the compiled rules.
+$-preview-areas: (
+    'menu': '.navbar-light',
+    'header-sales_one': '#wrapwrap .o_header_sales_one_bot',
+    'header-sales_two': '#wrapwrap .o_header_sales_two_top',
+    'header-sales_three': '#wrapwrap .o_header_sales_three_top',
+    'header-sales_four': '#wrapwrap .o_header_sales_four_bot',
+    'footer': '.o_footer',
+    'copyright': '.o_footer .o_footer_copyright',
+    'breadcrumb': '#wrapwrap > main:not(.o_breadcrumb_overlay) div.o_page_breadcrumb nav',
+    'portal-card': '.o_portal_index_card > a:not(.alert)',
+);
+@each $name, $selector in $-preview-areas {
+    $-area: '--o-preview-#{$name}';
+    html[style*="#{$-area}-fill:"] #{$selector} {
+        background-color: var(#{$-area}-fill);
+        background-image: var(#{$-area}-bg-image);
+    }
+    html[style*="#{$-area}-text:"] #{$selector} {
+        --background-color: var(#{$-area}-bg);
+        --color: var(#{$-area}-text);
+        --o-cc-bg: var(#{$-area}-bg);
+        color: var(#{$-area}-text);
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(#{$-area}-headings);
+        }
+        @for $level from 2 through 6 {
+            h#{$level} {
+                color: var(#{$-area}-h#{$level});
+            }
+        }
+    }
+    html[style*="#{$-area}-text-muted:"] #{$selector} .text-muted {
+        color: var(#{$-area}-text-muted) !important;
+    }
+    html[style*="#{$-area}-link:"] #{$selector} {
+        a:not(.btn):where(:not(.o_cc)), .btn-link:where(:not(.o_cc)) {
+            color: var(#{$-area}-link);
+
+            &:hover {
+                color: var(#{$-area}-link-hover);
+            }
+        }
+        @each $type in ('primary', 'secondary') {
+            .btn-fill-#{$type} {
+                @include o-preview-button-variant('#{$-area}-btn-#{$type}');
+            }
+            .btn-outline-#{$type} {
+                @include o-preview-button-outline-variant('#{$-area}-btn-#{$type}');
+            }
+        }
+        .nav-pills, .nav-tabs {
+            .nav-link.active,
+            .show > .nav-link {
+                background-color: var(#{$-area}-btn-primary-bg);
+                color: var(#{$-area}-btn-primary-color);
+            }
+        }
+        a.list-group-item {
+            color: var(#{$-area}-btn-primary-bg);
+
+            &.active {
+                background-color: var(#{$-area}-btn-primary-bg);
+                color: var(#{$-area}-btn-primary-color);
+                border-color: var(#{$-area}-btn-primary-bg);
+            }
+        }
+    }
+}
+// The header's own links (`website.scss`), then the active ones (Bootstrap),
+// win over the preset ones.
+html[style*="--o-preview-menu-link:"] .navbar-light {
+    a.nav-link {
+        color: var(--#{$variable-prefix}nav-link-color);
+
+        &:hover {
+            color: var(--#{$variable-prefix}nav-link-hover-color);
+        }
+    }
+    .navbar-nav .nav-link {
+        &.active,
+        &.show {
+            color: var(--#{$prefix}navbar-active-color);
+        }
+    }
+}
+// A dark header color extends `.navbar-dark` (`website.scss`).
+html[style*="--o-preview-menu-navbar: dark"] .navbar-light {
+    --#{$prefix}navbar-color: #{$navbar-dark-color};
+    --#{$prefix}navbar-hover-color: #{$navbar-dark-hover-color};
+    --#{$prefix}navbar-disabled-color: #{$navbar-dark-disabled-color};
+    --#{$prefix}navbar-active-color: #{$navbar-dark-active-color};
+    --#{$prefix}navbar-brand-color: #{$navbar-dark-brand-color};
+    --#{$prefix}navbar-brand-hover-color: #{$navbar-dark-brand-hover-color};
+    --#{$prefix}navbar-toggler-border-color: #{$navbar-dark-toggler-border-color};
+    --#{$prefix}navbar-toggler-icon-bg: #{escape-svg($navbar-dark-toggler-icon-bg)};
+    --NavLinkWithBackground-bg-color: #{rgba($navbar-dark-active-color, .1)};
+    --NavLinkWithBackground-bg-color--hover: #{rgba($navbar-dark-active-color, .2)};
+    --NavStretch-placeholder-color: #{rgba($navbar-dark-active-color, .3)};
+    --HeaderSeparator-bg-color: #{rgba($navbar-dark-active-color, .15)};
+
+    .btn-close {
+        filter: $btn-close-white-filter;
+    }
+}
+html[style*="--o-preview-menu-navbar: light"] .navbar-light {
+    --#{$prefix}navbar-color: #{$navbar-light-color};
+    --#{$prefix}navbar-hover-color: #{$navbar-light-hover-color};
+    --#{$prefix}navbar-disabled-color: #{$navbar-light-disabled-color};
+    --#{$prefix}navbar-active-color: #{$navbar-light-active-color};
+    --#{$prefix}navbar-brand-color: #{$navbar-light-brand-color};
+    --#{$prefix}navbar-brand-hover-color: #{$navbar-light-brand-hover-color};
+    --#{$prefix}navbar-toggler-border-color: #{$navbar-light-toggler-border-color};
+    --#{$prefix}navbar-toggler-icon-bg: #{escape-svg($navbar-light-toggler-icon-bg)};
+    // Their consumers' fallbacks.
+    --NavLinkWithBackground-bg-color: initial;
+    --NavLinkWithBackground-bg-color--hover: initial;
+    --NavStretch-placeholder-color: initial;
+    --HeaderSeparator-bg-color: initial;
+}
+html[style*="--o-preview-menu-mobile-fill:"] .o_navbar_mobile {
+    background-color: var(--o-preview-menu-mobile-fill);
+    background-image: var(--o-preview-menu-mobile-bg-image);
+}
+html[style*="--o-preview-menu-mobile-accordion-bg:"] .o_navbar_mobile .top_menu > .accordion .accordion-button:not(.collapsed) {
+    background-color: var(--o-preview-menu-mobile-accordion-bg);
+}
+html[style*="--o-preview-footer-scrolltop-bg:"] #o_footer_scrolltop {
+    --background-color: var(--o-preview-footer-scrolltop-bg);
+    --color: var(--o-preview-footer-scrolltop-color);
+    background-color: var(--o-preview-footer-scrolltop-bg);
+    color: var(--o-preview-footer-scrolltop-color);
+
+    &:hover, &:focus {
+        --background-color: var(--o-preview-footer-scrolltop-hover-bg);
+        --color: var(--o-preview-footer-scrolltop-hover-color);
+        background-color: var(--o-preview-footer-scrolltop-hover-bg);
+        color: var(--o-preview-footer-scrolltop-hover-color);
+    }
+}
+html[style*="--o-preview-portal-card-hover-bg:"] .o_portal_index_card > a:not(.alert):hover {
+    background-color: var(--o-preview-portal-card-hover-bg);
+}
+
+// Theme preview of the rest of the color system (palette, theme and gray
+// colors): same principle as the color presets, the builder computes and sets
+// all these values together with them (see `color_system_preview.js`).
+$-colors-gate: 'html[style*="--o-preview-colors:"]';
+$-preview-theme-colors: ();
+@each $name in ('primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark') {
+    @if map-has-key($theme-colors, $name) {
+        $-preview-theme-colors: append($-preview-theme-colors, $name);
+    }
+}
+#{$-colors-gate} {
+    @each $name in $-preview-theme-colors {
+        @each $suffix in ('', '-rgb', '-text-emphasis', '-bg-subtle', '-border-subtle') {
+            --#{$prefix}#{$name}#{$suffix}: var(--o-preview-#{$name}#{$suffix});
+        }
+    }
+    @for $index from 1 through 9 {
+        --#{$prefix}gray-#{$index * 100}: var(--o-preview-#{$index * 100});
+    }
+    @each $name in ('secondary-color', 'tertiary-color', 'secondary-bg', 'tertiary-bg') {
+        --#{$prefix}#{$name}: var(--o-preview-#{$name});
+        --#{$prefix}#{$name}-rgb: var(--o-preview-#{$name}-rgb);
+    }
+    --#{$prefix}focus-ring-color: var(--o-preview-focus-ring-color);
+    // The printed preset colors (html_editor), with the same fallbacks.
+    @for $index from 1 through length($o-color-combinations) {
+        $-cc: '--o-preview-o-cc#{$index}';
+        --o-cc#{$index}-bg: var(#{$-cc}-bg);
+        --o-cc#{$index}-text: var(#{$-cc}-text);
+        --o-cc#{$index}-headings: var(#{$-cc}-headings, var(#{$-cc}-text));
+        @for $level from 2 through 6 {
+            --o-cc#{$index}-h#{$level}: var(#{$-cc}-h#{$level}, var(#{$-cc}-headings, var(#{$-cc}-text)));
+        }
+        --o-cc#{$index}-link: var(#{$-cc}-link);
+        @each $type in ('primary', 'secondary') {
+            --o-cc#{$index}-btn-#{$type}: var(#{$-cc}-btn-#{$type}-bg);
+            --o-cc#{$index}-btn-#{$type}-text: var(#{$-cc}-btn-#{$type}-color);
+            --o-cc#{$index}-btn-#{$type}-border: var(#{$-cc}-btn-#{$type}-border);
+        }
+    }
+    @if index($-preview-theme-colors, 'success') {
+        --#{$prefix}form-valid-color: var(--o-preview-form-valid-color);
+        --#{$prefix}form-valid-border-color: var(--o-preview-form-valid-color);
+    }
+    @if index($-preview-theme-colors, 'danger') {
+        --#{$prefix}form-invalid-color: var(--o-preview-form-invalid-color);
+        --#{$prefix}form-invalid-border-color: var(--o-preview-form-invalid-color);
+    }
+}
+// web's `bg-variant()` and `text-emphasis-variant()` (grays, palette colors)
+// and the theme colors' `.text-*` (Bootstrap order: helpers, then web's).
+@mixin o-preview-bg-variant($parent, $name) {
+    #{$-colors-gate} #{$parent} {
+        --background-color: var(#{$name}-bg);
+        --color: var(#{$name}-color);
+        background-color: var(#{$name}-bg) !important;
+        color: var(#{$name}-color);
+    }
+    $-muted-gate: 'html[style*="#{$name}-muted:"]';
+    #{$-muted-gate} #{$parent} .text-muted, #{$-muted-gate} .o_colored_level #{$parent} .text-muted {
+        color: var(#{$name}-muted) !important;
+    }
+    #{$-colors-gate} a#{$parent}, #{$-colors-gate} button#{$parent} {
+        &:hover, &:focus {
+            --background-color: var(#{$name}-hover-bg);
+            --color: var(#{$name}-hover-color);
+            background-color: var(#{$name}-hover-bg) !important;
+            color: var(#{$name}-hover-color);
+        }
+    }
+}
+@mixin o-preview-text-variant($parent, $name) {
+    #{$-colors-gate} #{$parent} {
+        color: var(--o-preview-#{$name}) !important;
+    }
+    #{$-colors-gate} a#{$parent} {
+        &:hover, &:focus {
+            color: var(--o-preview-text-#{$name}-hover) !important;
+        }
+    }
+}
+@each $name in $-preview-theme-colors {
+    #{$-colors-gate} .text-bg-#{$name} {
+        color: var(--o-preview-text-bg-#{$name}) !important;
+    }
+    #{$-colors-gate} .link-#{$name} {
+        &:hover, &:focus {
+            color: RGBA(var(--o-preview-link-#{$name}-hover-rgb), var(--#{$prefix}link-opacity, 1)) !important;
+            text-decoration-color: RGBA(var(--o-preview-link-#{$name}-hover-rgb), var(--#{$prefix}link-underline-opacity, 1)) !important;
+        }
+    }
+}
+@for $index from 1 through 9 {
+    @include o-preview-bg-variant('.bg-#{$index * 100}', '--o-preview-bg-#{$index * 100}');
+    @include o-preview-text-variant('.text-#{$index * 100}', $index * 100);
+}
+@each $name in $-preview-theme-colors {
+    @include o-preview-text-variant('.text-#{$name}', $name);
+}
+@each $name in $-preview-theme-colors {
+    #{$-colors-gate} .btn-fill-#{$name} {
+        @include o-preview-button-variant('--o-preview-theme-btn-#{$name}');
+    }
+}
+@each $name in $-preview-theme-colors {
+    #{$-colors-gate} .btn-outline-#{$name} {
+        @include o-preview-button-outline-variant('--o-preview-theme-btn-#{$name}');
+    }
+}
+@for $index from 1 through 5 {
+    @include o-preview-bg-variant('.bg-o-color-#{$index}', '--o-preview-bg-o-color-#{$index}');
+    @include o-preview-text-variant('.text-o-color-#{$index}', 'o-color-#{$index}');
+}
+// `$component-active-bg`, the body and the inputs.
+#{$-colors-gate} {
+    .nav-pills {
+        --#{$prefix}nav-pills-link-active-bg: var(--o-preview-component-active-bg);
+        --#{$prefix}nav-pills-link-active-color: var(--o-preview-component-active-color);
+    }
+    .list-group {
+        --#{$prefix}list-group-active-bg: var(--o-preview-component-active-bg);
+        --#{$prefix}list-group-active-border-color: var(--o-preview-component-active-bg);
+        --#{$prefix}list-group-active-color: var(--o-preview-component-active-color);
+    }
+    .pagination {
+        --#{$prefix}pagination-active-bg: var(--o-preview-component-active-bg);
+        --#{$prefix}pagination-active-border-color: var(--o-preview-component-active-bg);
+        --#{$prefix}pagination-active-color: var(--o-preview-component-active-color);
+    }
+    .form-check-input:checked {
+        background-color: var(--o-preview-component-active-bg);
+        border-color: var(--o-preview-component-active-bg);
+    }
+    .progress, .progress-stacked {
+        --#{$prefix}progress-bar-bg: var(--o-preview-primary);
+    }
+    body {
+        // Same layouts as the compiled one (see BOXED_BODY_BG_ODOO).
+        @if o-website-value('layout') != 'full' {
+            background-color: var(--o-preview-boxed-body-fill);
+        } @else {
+            background-color: var(--o-preview-body-fill);
+        }
+    }
+    .form-control:not(:disabled), .form-select:not(:disabled) {
+        background-color: var(--o-preview-input-bg);
+        color: var(--o-preview-input-color);
+    }
+}
+
+// Button styles (`btn-<type>-outline`, `btn-<type>-flat`), compiled by
+// extending `.btn-<type>` from one variant (`bootstrap_review_frontend.scss`):
+// while another style is previewed, `.btn-<type>` gets that variant's colors
+// (see `PreviewButtonStyleAction`) and look.
+@mixin o-preview-button-style-variant($style, $name) {
+    @if $style == 'outline' {
+        // Over the compiled fill variant.
+        --#{$prefix}btn-bg: transparent;
+        --#{$prefix}btn-disabled-bg: transparent;
+        @include o-preview-button-outline-variant($name);
+    } @else {
+        @include o-preview-button-variant($name);
+    }
+}
+@each $type in ('primary', 'secondary') {
+    $-is-outline: index($o-btn-outline-defaults, $type) != null;
+    $-is-flat: index($o-btn-flat-defaults, $type) != null;
+    @each $style in ('fill', 'outline', 'flat') {
+        $-gate: 'html[style*="--o-preview-theme-btn-#{$type}-bg:"][style*="--o-preview-btn-#{$type}-style: #{$style}"]';
+        $-changes-variant: ($style == 'outline') != $-is-outline;
+        $-changes-look: ($style == 'flat') != $-is-flat;
+        #{$-gate} .btn-#{$type} {
+            @if $-changes-look and $style == 'flat' {
+                @include o-btn-flat;
+            } @else if $-changes-look {
+                border: var(--#{$prefix}btn-border-width) solid var(--#{$prefix}btn-border-color);
+                letter-spacing: normal;
+                text-transform: none;
+                @include o-preview-button-size('', $btn-padding-y, $btn-padding-x, $btn-font-size, $btn-border-radius);
+                &.btn-lg {
+                    @include o-preview-button-size('-lg', $btn-padding-y-lg, $btn-padding-x-lg, $btn-font-size-lg, $btn-border-radius-lg);
+                }
+                &.btn-sm {
+                    @include o-preview-button-size('-sm', $btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
+                }
+            }
+            @if $-changes-variant {
+                @include o-preview-button-style-variant($style, '--o-preview-theme-btn-#{$type}');
+                // The flat look has no border.
+                @if $style == 'outline' {
+                    border-width: var(--o-preview-btn-#{$type}-outline-border-width, #{o-website-value('btn-#{$type}-outline-border-width')});
+                } @else if $style == 'fill' {
+                    border-width: var(--#{$prefix}btn-border-width);
+                }
+            }
+        }
+        @if $-changes-variant {
+            // Same scope as `o-preview-cc-scope()`.
+            @for $index from 1 through length($o-color-combinations) {
+                #{$-gate} .o_cc#{$index} .btn-#{$type}, #{$-gate} .o_colored_level .o_cc#{$index} .btn-#{$type} {
+                    @include o-preview-button-style-variant($style, '--o-preview-o-cc#{$index}-btn-#{$type}');
+                }
+            }
+        }
+    }
+}
+
+// Theme preview of the other website values, compiled only when set or as
+// literals: while previewed, the same rules read `--o-preview-<name>`.
+
+// Header font and format (`website.scss`).
+html[style*="--o-preview-navbar-font:"] {
+    .navbar-brand, .navbar-text, .navbar .nav-link, .navbar a.js_change_lang span,
+    .navbar a.o_add_language {
+        font-family: var(--o-preview-navbar-font);
+    }
+}
+html[style*="--o-preview-header-font-size:"] header {
+    font-size: var(--o-preview-header-font-size);
+
+    .dropdown-menu, .btn {
+        font-size: inherit !important;
+    }
+}
+html[style*="--o-preview-header-text-color:"] {
+    #wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled, header .o_navbar_mobile {
+        .nav-item > .nav-link > *, .nav-item > .nav-link::after, .js_language_selector span, .badge, .nav-item > .accordion-item * {
+            color: var(--o-preview-header-text-color) !important;
+        }
+    }
+}
+
+// Logo heights. The logo padding of a previewed height is the one of the
+// saved header font size.
+$-preview-nav-link-height: $nav-link-height;
+@if o-website-value('header-font-size') {
+    $-preview-nav-link-height: o-website-value('header-font-size') * $line-height-base + $nav-link-padding-y * 2;
+}
+html[style*="--o-preview-logo-height:"] header .navbar-brand {
+    font-size: calc(var(--o-preview-logo-height) / #{$line-height-base});
+
+    &, &.logo {
+        padding-top: MAX(0px, calc((#{$-preview-nav-link-height} - var(--o-preview-logo-height)) / 2));
+        padding-bottom: MAX(0px, calc((#{$-preview-nav-link-height} - var(--o-preview-logo-height)) / 2));
+    }
+}
+html[style*="--o-preview-fixed-logo-height:"] .o_header_affixed.o_header_is_scrolled .navbar-brand {
+    font-size: calc(var(--o-preview-fixed-logo-height) / #{$line-height-base});
+
+    img {
+        height: var(--o-preview-fixed-logo-height);
+    }
+}
+
+// Header background blur.
+html[style*="--o-preview-header-bg-blur:"] header {
+    $-navbar-selector: if(o-website-value('header-template') == 'sidebar', "nav.navbar.o_header_mobile", "nav.navbar");
+
+    #{$-navbar-selector}::before, .o_navbar_mobile {
+        --o-bg-blur: var(--o-preview-header-bg-blur);
+    }
+    #{$-navbar-selector} {
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            border-radius: inherit;
+            pointer-events: none;
+
+            @include o-bg-blur-option;
+        }
+
+        .o_main_nav {
+            position: relative;
+            z-index: 1;
+        }
+    }
+    &.o_header_sidebar > nav.navbar:not(.o_header_mobile) {
+        @include media-breakpoint-up(lg) {
+            --o-bg-blur: var(--o-preview-header-bg-blur);
+            @include o-bg-blur-option;
+        }
+    }
+    .o_navbar_mobile {
+        @include o-bg-blur-option;
+    }
+}
+
+// Sidebar header width.
+@if o-website-value('header-template') == 'sidebar' {
+    @include media-breakpoint-up(lg) {
+        html[style*="--o-preview-sidebar-width:"] #wrapwrap:has(> header) {
+            $-padding: var(--o-preview-sidebar-width);
+            @if o-website-value('layout') != 'full' {
+                $-padding: calc(#{$grid-gutter-width} * 2 + var(--o-preview-sidebar-width));
+            }
+            #{if(o-website-value("hamburger-position") == "right", padding-right, padding-left)}: $-padding;
+
+            > header {
+                --Offcanvas-horizontal-width: var(--o-preview-sidebar-width);
+                width: var(--o-preview-sidebar-width);
+            }
+        }
+    }
+}
+
+// Header border and shadow: the border only exists with a width, and its
+// bottom (or right) width is the first one.
+header nav.navbar {
+    html[style*="--o-preview-menu-border-width:"] & {
+        border-style: var(--o-preview-menu-border-style, var(--menu-border-style, solid)) !important;
+        border-color: var(--o-preview-menu-border-color, var(--menu-border-color, #{$border-color})) !important;
+        border-width: 0 0 var(--o-preview-menu-border-bottom-width) 0 !important;
+
+        &.o_border_right_only {
+            border-width: 0 var(--o-preview-menu-border-bottom-width) 0 0 !important;
+        }
+        &.o_full_border {
+            border-width: var(--o-preview-menu-border-width) !important;
+        }
+    }
+    html[style*="--o-preview-menu-border-style:"] & {
+        border-style: var(--o-preview-menu-border-style) !important;
+    }
+    html[style*="--o-preview-menu-border-color:"] & {
+        border-color: var(--o-preview-menu-border-color) !important;
+    }
+    html[style*="--o-preview-menu-border-radius:"] &:not(.o_header_force_no_radius) {
+        border-radius: var(--o-preview-menu-border-radius) !important;
+    }
+    @each $class, $shadow in ('none': none, 'shadow': var(--box-shadow), 'shadow-sm': var(--box-shadow-sm), 'shadow-lg': var(--box-shadow-lg), 'o-shadow-custom': var(--o-preview-menu-box-shadow-style, var(--menu-box-shadow-style))) {
+        html[style*="--o-preview-menu-shadow-class: #{$class};"] & {
+            box-shadow: $shadow !important;
+        }
+    }
+    html[style*="--o-preview-menu-box-shadow-style:"] & {
+        box-shadow: var(--o-preview-menu-box-shadow-style) !important;
+    }
+}
+
+// Portal cards border (`portal.scss`).
+.o_portal_index_card > a:not(.alert) {
+    html[style*="--o-preview-portal-card-border-width:"] & {
+        border-style: var(--o-preview-portal-card-border-style, var(--portal-card-border-style, solid)) !important;
+        border-color: var(--o-preview-portal-card-border-color, var(--portal-card-border-color, currentColor)) !important;
+        border-width: var(--o-preview-portal-card-border-width) !important;
+    }
+    html[style*="--o-preview-portal-card-border-style:"] & {
+        border-style: var(--o-preview-portal-card-border-style) !important;
+    }
+    html[style*="--o-preview-portal-card-border-color:"] & {
+        border-color: var(--o-preview-portal-card-border-color) !important;
+    }
+    html[style*="--o-preview-portal-card-border-radius:"] & {
+        border-radius: var(--o-preview-portal-card-border-radius) !important;
+    }
+}
+
+// Page background image (`body-image-bg-style()`), computed by the builder
+// from all its values (see `previewBodyImage`).
+html[style*="--o-preview-body-image-bg:"] #wrapwrap {
+    background-image: var(--o-preview-body-image-bg);
+    background-attachment: fixed;
+    background-size: var(--o-preview-body-image-size);
+    background-repeat: var(--o-preview-body-image-repeat);
+    background-position: var(--o-preview-body-image-position);
+}
+
+// Icons font: over the printed `--icon-font-family`.
+html[style*="--o-preview-icon-font-family:"] body {
+    --icon-font-family: var(--o-preview-icon-font-family);
+}

@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { isColorGradient } from "@web/core/utils/colors";
 import {
     CustomizeWebsiteColorAction,
-    CustomizeWebsiteVariableAction,
+    PreviewWebsiteVariableAction,
 } from "../customize_website_plugin";
 import { computeColorSystemPreview, parseColor } from "./color_system_preview";
 import { ThemeColorsPreviewDialog } from "./theme_colors_preview_dialog";
@@ -145,6 +145,21 @@ const PRESETS = [1, 2, 3, 4, 5];
 const PALETTE_COLORS = PRESETS.map((index) => `o-color-${index}`);
 const STATUS_COLORS = ["success", "info", "warning", "danger"];
 const THEME_COLORS = ["primary", "secondary", ...STATUS_COLORS, "light", "dark"];
+// The areas colored like a preset (see `computeAreaPreview`) and their
+// gradient. The footer goes before the copyright, which is over it.
+const AREA_GRADIENTS = {
+    menu: "menu-gradient",
+    "header-sales_one": "menu-secondary-gradient",
+    "header-sales_two": "menu-secondary-gradient",
+    "header-sales_three": "menu-secondary-gradient",
+    "header-sales_four": "menu-secondary-gradient",
+    footer: "footer-gradient",
+    copyright: "copyright-gradient",
+    breadcrumb: "breadcrumb-gradient",
+    "portal-card": "portal-gradient",
+};
+// Area colors are reset with an explicit null (see `previewWebsiteVariables`).
+const isNull = (value) => ["null", "NULL"].includes(value);
 
 /**
  * Previews a change of the website colors, as values to write by file URL (see
@@ -207,8 +222,17 @@ export function computeColorPreviewValues(action, change) {
             name in (colors[url] || {})
                 ? colors[url][name]
                 : customizeWebsite.getPendingValue(name, url);
-        return value === nullValue ? "" : value;
+        return value === nullValue || isNull(value) ? "" : value;
     };
+    // A gradient (user value): the new one, `null` when reset, else undefined.
+    const getNewGradient = (name) => {
+        const gradient =
+            name === gradientColor
+                ? gradientValue || nullValue
+                : customizeWebsite.getPendingValue(name);
+        return gradient === nullValue || isNull(gradient) ? null : gradient;
+    };
+    const getSavedGradient = (name) => getCSSVariableValue(name, style).replace(/^'(.*)'$/, "$1");
     const resolvedColors = {};
     const getColor = (name) => {
         if (!(name in resolvedColors)) {
@@ -243,39 +267,55 @@ export function computeColorPreviewValues(action, change) {
         preset.bg ||= parseColor(getCSSVariableValue(`o-cc${index}-bg`, style));
         return preset;
     });
+    const presetGradients = PRESETS.map((index) => {
+        const name = `o-cc${index}-bg-gradient`;
+        const gradient = getNewGradient(name);
+        return gradient === undefined ? getSavedGradient(name) : gradient || "";
+    });
+    const areas = Object.entries(AREA_GRADIENTS).map(([name, gradientName]) => {
+        const preset = getNewValue(name) ?? getCSSVariableValue(name, style);
+        const custom = getNewValue(`${name}-custom`);
+        const gradient = getNewGradient(gradientName);
+        return {
+            name,
+            preset: parseInt(preset) || null,
+            custom: toColor(custom ?? getCSSVariableValue(`${name}-custom`, style)),
+            gradient: gradient === undefined ? getSavedGradient(gradientName) : gradient || "",
+        };
+    });
     const values = computeColorSystemPreview(getColor, presets, {
         minContrastRatio: parseFloat(getCSSVariableValue("min-contrast-ratio", style)),
         themeColorNames: THEME_COLORS.filter((name) => getCSSVariableValue(name, style)),
+        presetGradients,
+        areas,
     });
     // The preset gradients cover their background color (`none` hides a
     // saved one).
     for (const index of PRESETS) {
         const name = `o-cc${index}-bg-gradient`;
-        const savedGradient = getCSSVariableValue(name, style).replace(/^'(.*)'$/, "$1");
-        let gradient = customizeWebsite.getPendingValue(name);
-        if (name === gradientColor) {
-            gradient = gradientValue || nullValue;
-        }
+        const savedGradient = getSavedGradient(name);
         values[name] =
-            gradient === undefined
-                ? savedGradient
-                : gradient === nullValue
-                ? savedGradient && "none"
-                : gradient;
+            getNewGradient(name) === null ? savedGradient && "none" : presetGradients[index - 1];
     }
     return values;
 }
 
 /**
- * Same as `customizeWebsiteColor` for the Theme tab colors, but previewed
- * live and only written on save.
+ * Same as `customizeWebsiteColor`, but previewed live and only written on
+ * save.
  */
 export class PreviewWebsiteColorAction extends CustomizeWebsiteColorAction {
     static id = "previewWebsiteColor";
     // Drop the parent's `preview = false` and blocking `withCustomHistory`.
     setup() {}
     async apply({
-        params: { mainParam: color, colorType, gradientColor, nullValue = "null" },
+        params: {
+            mainParam: color,
+            colorType,
+            gradientColor,
+            combinationColor,
+            nullValue = "null",
+        },
         value,
         isPreviewing,
     }) {
@@ -284,7 +324,7 @@ export class PreviewWebsiteColorAction extends CustomizeWebsiteColorAction {
         const gradientValue = gradientColor && isColorGradient(value) ? value : "";
         const { url, finalColors } = this.dependencies.customizeWebsite.getColorsCustomization(
             { [color]: gradientValue ? "" : value },
-            { colorType, resetCcOnEmpty: !gradientValue }
+            { colorType, combinationColor, resetCcOnEmpty: !gradientValue }
         );
         previewColors(this, {
             colors: { [url]: finalColors },
@@ -342,6 +382,11 @@ function getPaletteColors(action, paletteName) {
         const keys = PRESET_COLORS.filter((key) => getPaletteValue(`o-cc${index}-${key}`));
         colors[`o-cc${index}-set`] = `'${keys.join(" ")}'`;
     }
+    // A value the palette does not set hides the saved one.
+    for (const name of Object.keys(AREA_GRADIENTS)) {
+        colors[name] = getPaletteValue(name) || "initial";
+        colors[`${name}-custom`] = resolve(getPaletteValue(`${name}-custom`)) || "initial";
+    }
     const themeColors = getPaletteValues(STATUS_COLORS);
     for (const [name, reference] of [
         ["primary", "'o-color-1'"],
@@ -359,16 +404,19 @@ function getPaletteColors(action, paletteName) {
 /**
  * Switches the color palette, previewed live and only written on save.
  */
-export class PreviewColorPaletteAction extends CustomizeWebsiteVariableAction {
+export class PreviewColorPaletteAction extends PreviewWebsiteVariableAction {
     static id = "previewColorPalette";
-    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
-    setup() {}
     async apply({ params: { mainParam: variable }, value, isPreviewing }) {
         const customizeWebsite = this.dependencies.customizeWebsite;
         customizeWebsite.previewSavedValues(getPaletteColors(this, value.slice(1, -1)));
-        // The server resets the preset gradients too.
+        // The server resets the preset and area gradients too, except the
+        // portal cards' one.
+        const gradients = [
+            ...PRESETS.map((index) => `o-cc${index}-bg-gradient`),
+            ...Object.values(AREA_GRADIENTS).filter((name) => name !== "portal-gradient"),
+        ];
         customizeWebsite.previewWebsiteVariables(
-            Object.fromEntries(PRESETS.map((index) => [`o-cc${index}-bg-gradient`, ""]))
+            Object.fromEntries(gradients.map((name) => [name, ""]))
         );
         customizeWebsite.previewWebsiteVariables(
             { [variable]: value },

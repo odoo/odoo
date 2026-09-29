@@ -211,6 +211,7 @@ export async function setupWebsiteBuilder(
             // (location, rpc, ...). So we don't load the js part of the bundle
             if (loadIframeBundles) {
                 await loadBundle("website.assets_inside_builder_iframe", { targetDoc, js: false });
+                await loadBundle("website.assets_theme_preview", { targetDoc });
             }
             if (loadIframeBuilderTemplates) {
                 // Load the builder's *.edit.xml, needed for some options
