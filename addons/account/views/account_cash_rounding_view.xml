@@ -22,7 +22,7 @@
                         <div class="oe_title">
                             <label for="name"/>
                             <h1 class="o_outlined">
-                                <field name="name_placeholder" invisible="1"/>
+                                <field name="name_placeholder" invisible="1"/> <!-- feeds the name field's placeholder_field option below -->
                                 <field name="name" options="{'placeholder_field': 'name_placeholder'}"/>
                             </h1>
                         </div>
@@ -68,7 +68,7 @@
             <field name="arch" type="xml">
                 <list string="Rounding List" editable="top" multi_edit="1" open_form_view="True">
                     <field name="sequence" widget="handle"/>
-                    <field name="name_placeholder" column_invisible="1"/>
+                    <field name="name_placeholder" column_invisible="1"/> <!-- feeds the name column's placeholder_field option below -->
                     <field name="name" options="{'placeholder_field': 'name_placeholder'}"/>
                     <field name="rounding"/>
                     <field name="strategy"/>
