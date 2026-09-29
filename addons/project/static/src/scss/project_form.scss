@@ -27,7 +27,7 @@
 }
 
 .o_form_view.o_form_project_tasks .o_notebook > .tab-content > .tab-pane > :first-child.o_field_html .o_readonly {
-    padding: $o-horizontal-padding $o-horizontal-padding;
+    padding: var(--o-horizontal-padding) var(--o-horizontal-padding);
 }
 
 .o_project_update_description {
@@ -35,7 +35,7 @@
         border: 0;
     }
     &.o_field_html .o_readonly {
-        padding: $o-horizontal-padding $o-horizontal-padding;
+        padding: var(--o-horizontal-padding) var(--o-horizontal-padding);
     }
 }
 
@@ -43,7 +43,7 @@
     &:hover, &:focus {
         background-color: transparent;
         opacity: 0.8;
-        color: $o-main-text-color;
+        color: var(--o-main-text-color);
     }
 }
 

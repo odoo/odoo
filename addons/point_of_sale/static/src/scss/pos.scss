@@ -15,17 +15,17 @@ select > option {
 
 .btn-light {
     --btn-border-color: #cccccc;
-    --btn-active-bg: #{$o-gray-300};
-    --btn-color: #{$o-gray-900};
+    --btn-active-bg: var(--o-gray-300);
+    --btn-color: var(--o-gray-900);
     --btn-active-border-color: var(--btn-border-color);
 }
 
 .btn-secondary {
     --btn-bg: #F4F4F4;
     --btn-border-color: #cccccc;
-    --btn-color: #{$o-gray-900};
+    --btn-color: var(--o-gray-900);
     --btn-disabled-bg: var(--btn-bg);
-    --btn-disabled-color: #{$o-gray-700};
+    --btn-disabled-color: var(--o-gray-700);
     --btn-disabled-border-color: var(--btn-border-color);
     &:disabled, &.disabled {
         filter: saturate(0);

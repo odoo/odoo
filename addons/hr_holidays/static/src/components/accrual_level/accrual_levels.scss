@@ -30,7 +30,7 @@
   }
 
   .o_form_label {
-    font-weight: $o-font-weight-normal;
+    font-weight: var(--o-font-weight-normal);
   }
 }
 
@@ -43,10 +43,10 @@
   & p {
     width: 70%;
     padding: 8px;
-    font-weight: $o-font-weight-normal;
+    font-weight: var(--o-font-weight-normal);
     border: solid $border-width $border-color;
     border-radius: var(--border-radius);
-    background-color: $o-webclient-background-color;
+    background-color: var(--o-webclient-background-color);
   }
 }
 
@@ -66,7 +66,7 @@
   }
 
   .o_accrual_plan_levels {
-    background-color: $o-webclient-background-color;
+    background-color: var(--o-webclient-background-color);
 
     & > .o_accrual_levels_scrollable {
       overflow-y: auto;
@@ -83,7 +83,7 @@
   .new-text {
     top: -20px;
     right: 5px;
-    color: $o-brand-primary;
+    color: var(--o-brand-primary);
     pointer-events: none;
   }
 
@@ -92,8 +92,8 @@
   }
 
   .new {
-    background-color: $o-brand-primary;
-    border-color: $o-brand-primary;
+    background-color: var(--o-brand-primary);
+    border-color: var(--o-brand-primary);
   }
 
   .arrow {
@@ -105,27 +105,27 @@
   }
 
   .o_accrual_bg {
-    background-color: $o-view-background-color;
+    background-color: var(--o-view-background-color);
   }
 
   .delete span:hover {
       background-color: $o-danger;
-      color: $o-white;
+      color: var(--o-white);
   }
 
   &:has(.content:hover, .time > span:hover) {
 
     .content {
-      border-color: $o-brand-primary !important;
+      border-color: var(--o-brand-primary) !important;
     }
 
     .time > span {
-      border-color: $o-brand-primary !important;
+      border-color: var(--o-brand-primary) !important;
     }
 
     .timeline > .circle {
-      border-color: $o-brand-primary !important;
-      background-color: $o-brand-primary;
+      border-color: var(--o-brand-primary) !important;
+      background-color: var(--o-brand-primary);
     }
   }
 }

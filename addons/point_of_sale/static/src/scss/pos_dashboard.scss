@@ -1,6 +1,6 @@
 .o_pos_kanban .o_kanban_renderer {
-  --Card-padding-v: #{$o-kanban-dashboard-vpadding};
-  --Card-padding-h: #{$o-kanban-dashboard-hpadding};
+  --Card-padding-v: var(--o-kanban-dashboard-vpadding);
+  --Card-padding-h: var(--o-kanban-dashboard-hpadding);
 
   .o_kanban_record .o_dashboard_graph {
     margin-bottom: -#{map-get($spacers, 2)};
@@ -13,19 +13,19 @@
 
 .pos-scenario-card {
   &:hover {
-    background-color: $o-gray-200;
+    background-color: var(--o-gray-200);
     cursor: pointer;
-    border: 1px solid $o-gray-300;
+    border: 1px solid var(--o-gray-300);
 
     .img-container {
-      background-color: $o-gray-200;
+      background-color: var(--o-gray-200);
     }
   }
 
   .img-container {
     height: 110px;
     width: 110px;
-    background-color: $o-gray-100;
+    background-color: var(--o-gray-100);
 
     .scenario-img {
       height: 90px;

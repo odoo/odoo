@@ -115,11 +115,11 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
     padding: map-get($spacers, 2) map-get($spacers, 3);
     border: var(--border-width) solid var(--border-color);
     border-radius: var(--border-radius-lg);
-    background-color: $o-view-background-color;
+    background-color: var(--o-view-background-color);
     scroll-snap-align: start;
 
     &:not(:disabled):hover {
-        border-color: $o-brand-primary;
+        border-color: var(--o-brand-primary);
         background-color: mix($o-brand-primary, $o-view-background-color, 5%);
     }
 

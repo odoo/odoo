@@ -29,14 +29,14 @@
 /*                 Quick-Edit Form View
  **********************************************************/
 .modal-dialog:has(.o_calendar_event_form_quick_create_width) {
-    --modal-width: #{$o-modal-sm};
+    --modal-width: var(--o-modal-sm);
 }
 
 .o_calendar_event_form_quick_create {
     .o_outlined {
         > i {
             /* Make every suffix icons gray, aligned and take same width */
-            color: $o-gray-600;
+            color: var(--o-gray-600);
             text-align: center;
             width: 1rem;
         }

@@ -1,6 +1,6 @@
 :root {
     --secondary-active-background: #{mix($o-action, $o-white, 10%)};
-    --secondary-active-border: #{$o-action};
+    --secondary-active-border: var(--o-action);
 
     --btn-group-gap: 0;
     --border-light-color:#e7e9ed;
@@ -77,7 +77,7 @@ li {
 }
 
 .numpad-button:disabled {
-    background-color: $o-gray-100;
+    background-color: var(--o-gray-100);
 }
 
 .form-control:focus {
@@ -102,7 +102,7 @@ li {
 }
 
 .numpad-button.active, .numpad-button:active {
-    --btn-active-bg: #{$o-gray-300};
+    --btn-active-bg: var(--o-gray-300);
 }
 
 .o_so_product_details {
