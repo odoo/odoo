@@ -1,5 +1,5 @@
 id,name,model_id,group_id/id,operation,domain
-project_project_manager_rule,Project: project manager: see all,project.project,project.group_project_manager,crud,
+project_project_manager_rule,Project: project manager,project.project,project.group_project_manager,crud,
 project_public_members_rule,Project: employees: public project or team member,project.project,base.group_user,r,"[
             '|',
                 ('privacy_visibility', 'in', ['employees', 'portal']),
@@ -38,12 +38,8 @@ project_user_read_on_tasks_templates_without_project_rule,Project/Task: project 
             ('is_template', '=', True),
             ('project_id', '=', False),
         ]"
-ir_rule_private_task,Project: See private tasks,project.task,project.group_project_user,r,"[
-            ('project_id', 'access', 'read'),
-        ]"
+task_visibility_project_rule,Project/Task: accessible project,project.task,base.group_user,r,"[('project_id', 'access', 'read')]"
 task_visibility_rule,Project/Task: employees: follow required for follower-only projects,project.task,base.group_user,r,"[
-            '|',
-                ('project_id', 'access', 'read'),
                 '|',
                     ('message_partner_ids', 'in', [user.partner_id.id]),
                     # to subscribe check access to the record, follower is not enough at creation
