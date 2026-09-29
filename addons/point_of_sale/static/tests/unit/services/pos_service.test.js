@@ -102,6 +102,38 @@ describe("pos_store.js", () => {
         expect(exclusions.has(9999)).toBe(false);
     });
 
+    test("sendOrderInPreparation marks changes as sent when printed on retry", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const printer = store.unwatched.printers[0];
+        let printedCount = 0;
+        printer.printReceipt = async () => {
+            printedCount++;
+            if (printedCount === 1) {
+                return { successful: false, message: { body: "The printer is not reachable." } };
+            }
+            return { successful: true };
+        };
+        let retryPopupProps;
+        patchWithCleanup(store.dialog, {
+            add: (component, props) => {
+                retryPopupProps = props;
+            },
+        });
+
+        await store.sendOrderInPreparation(order);
+        expect(retryPopupProps.message).toInclude("The printer is not reachable.");
+        expect(store.getOrderChanges(order).nbrOfChanges).toBe(5);
+
+        await retryPopupProps.retry();
+        expect(printedCount).toBe(2);
+
+        // The changes printed on retry must not be printed again with the next ones
+        expect(store.getOrderChanges(order).nbrOfChanges).toBe(0);
+        await store.sendOrderInPreparation(order);
+        expect(printedCount).toBe(2);
+    });
+
     describe("syncAllOrders", () => {
         test("simple sync", async () => {
             const store = await setupPosEnv();
