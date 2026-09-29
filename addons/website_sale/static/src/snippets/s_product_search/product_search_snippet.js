@@ -2,7 +2,7 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { redirect } from '@web/core/utils/urls';
 import { _t } from '@web/core/l10n/translation';
-import { createFilterDropdown, fetchProductSearchData, renderAttributeFilter } from './product_search_utils';
+import { fetchProductSearchData } from './product_search_utils';
 
 export class ProductSearchSnippet extends Interaction {
     static selector = '.s_product_search';
@@ -12,25 +12,54 @@ export class ProductSearchSnippet extends Interaction {
             't-on-keydown': this.onKeydown,
         },
         '.s_product_search_filters': { 't-on-change': this.onChangeFilter },
+        '.s_product_search_attribute_filter': {
+            't-att-class': (filterEl) => ({
+                'd-none': !this.attributes.some((attr) => attr.id === parseInt(filterEl.dataset.attributeId)),
+            }),
+        },
     };
 
     async willStart() {
-        const { tags, attributes } = await this.waitFor(fetchProductSearchData());
+        const needTags = !this.el.querySelector('.s_product_search_tags_wrap').classList.contains('d-none')
+            && !document.body.classList.contains('o_wsale_product_search_no_tags');
+        const attributeIds = [...this.el.querySelectorAll('.s_product_search_attribute_filter[data-attribute-id]')]
+            .map((filterEl) => parseInt(filterEl.dataset.attributeId));
+        this.tags = [];
+        this.attributes = [];
+        if (!needTags && !attributeIds.length) {
+            return;
+        }
+        const { tags = [], attributes = [] } = await this.waitFor(
+            fetchProductSearchData({ tags: needTags, attribute_ids: attributeIds })
+        );
         this.tags = tags;
         this.attributes = attributes;
     }
 
     start() {
-        const tagsEl = this.el.querySelector('.s_product_search_tags');
-        tagsEl.replaceChildren();
-        if (this.tags.length) {
-            tagsEl.appendChild(createFilterDropdown('tags', _t('Tags'), this.tags));
+        const tagsMenuEl = this.el.querySelector('.s_product_search_tags .s_product_search_filter_menu');
+        if (this.tags.length && tagsMenuEl) {
+            this.renderAt('website_sale.s_product_search.filter_items', { key: 'tags', items: this.tags }, tagsMenuEl);
+        }
+        for (const filterEl of this.el.querySelectorAll('.s_product_search_attribute_filter')) {
+            const attribute = this.attributes.find((attr) => attr.id === parseInt(filterEl.dataset.attributeId));
+            const menuEl = filterEl.querySelector('.s_product_search_filter_menu');
+            if (attribute && menuEl) {
+                this.renderAt('website_sale.s_product_search.filter_items', {
+                    key: `attribute_${attribute.id}`,
+                    items: attribute.value_ids,
+                    displayType: attribute.display_type,
+                }, menuEl);
+            }
         }
 
-        const attributesEl = this.el.querySelector('.s_product_search_attributes');
-        for (const filterEl of attributesEl.querySelectorAll('.s_product_search_attribute_filter')) {
-            renderAttributeFilter(filterEl, this.attributes);
-        }
+        this.registerCleanup(() => {
+            for (const groupEl of this.el.querySelectorAll('.s_product_search_filter_group')) {
+                groupEl.querySelector('.s_product_search_filter_selected').textContent = '';
+                groupEl.querySelector('.s_product_search_filter_btn').setAttribute('aria-expanded', 'false');
+                groupEl.querySelector('.s_product_search_filter_menu').classList.remove('show');
+            }
+        });
     }
 
     onKeydown(ev) {
@@ -47,8 +76,9 @@ export class ProductSearchSnippet extends Interaction {
         const btnEl = groupEl.querySelector('.s_product_search_filter_btn');
         const labelEl = btnEl.querySelector('.flex-shrink-0');
         const selectedEl = groupEl.querySelector('.s_product_search_filter_selected');
-        const checkedNames = [...groupEl.querySelectorAll('.s_product_search_filter_checkbox:checked')]
-            .map((checkboxEl) => checkboxEl.closest('.form-check').querySelector('.form-check-label').textContent);
+        const checkedNames = [...groupEl.querySelectorAll(
+            '.form-check:has(.s_product_search_filter_checkbox:checked) .form-check-label'
+        )].map((checkedLabelEl) => checkedLabelEl.textContent);
         selectedEl.textContent = checkedNames.join(', ');
         const gap = parseFloat(getComputedStyle(btnEl).columnGap) || 0;
         const availableWidth = btnEl.clientWidth - labelEl.getBoundingClientRect().width - gap;

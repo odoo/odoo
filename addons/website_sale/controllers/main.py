@@ -174,21 +174,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 self.env["product.template"]._get_attribute_value_domain(attribute_value_dict)
             )
 
-        if tags:
-            domains.append(
-                Domain.OR([
-                    Domain("product_tag_ids", "in", tags),
-                    Domain("product_variant_ids.additional_product_tag_ids", "in", tags),
-                ])
-            )
-
-        if ribbon:
-            domains.append(
-                Domain.OR([
-                    Domain("website_ribbon_id", "=", ribbon),
-                    Domain("product_variant_ids.variant_ribbon_id", "=", ribbon),
-                ])
-            )
+        domains.append(
+            self.env["product.template"]._get_variant_filters_domain(tags=tags, ribbon=ribbon)
+        )
 
         return Domain.AND(domains)
 
@@ -363,20 +351,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 url = urlparse(request.httprequest.url)
                 return request.redirect(url._replace(path=path).geturl(), code=301)
 
-        try:
-            min_price = float(min_price)
-        except ValueError:
-            min_price = 0
-        try:
-            max_price = float(max_price)
-        except ValueError:
-            max_price = 0
-
-        try:
-            ribbon = int(ribbon) if ribbon else None
-        except ValueError:
-            ribbon = None
-        post["ribbon"] = ribbon
+        min_price = self._cast_as_float(min_price) or 0
+        max_price = self._cast_as_float(max_price) or 0
+        ribbon = post["ribbon"] = self._cast_as_int(ribbon)
 
         website_domain = website.website_domain()
 
@@ -413,15 +390,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             request.session.pop("attribute_value_params", None)
 
-        filter_by_tags_enabled = website.is_view_active("website_sale.filter_products_tags")
-        if filter_by_tags_enabled:
-            if tags:
-                post["tags"] = tags
-                unslug = self.env["ir.http"]._unslug
-                tags = {tag_id for tag in tags.split(",") if (tag_id := unslug(tag)[1])}
-            else:
-                post["tags"] = None
-                tags = {}
+        if tags:
+            post["tags"] = tags
+            unslug = self.env["ir.http"]._unslug
+            tags = {tag_id for tag in tags.split(",") if (tag_id := unslug(tag)[1])}
+        else:
+            post["tags"] = None
+            tags = {}
 
         url = category.website_url if category else SHOP_PATH
         keep = QueryURL(
@@ -488,11 +463,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         search_term = fuzzy_search_term if fuzzy_search_term else search
         shop_domain = self._get_shop_domain(
-            search_term,
-            category,
-            attribute_value_dict,
-            tags=tags if filter_by_tags_enabled else None,
-            ribbon=ribbon,
+            search_term, category, attribute_value_dict, tags=tags, ribbon=ribbon
         )
         shop_query = request.env["product.template"]._search(shop_domain)
 
@@ -579,6 +550,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             product_count = len(search_product)
 
         ProductTag = self.env["product.tag"]
+        filter_by_tags_enabled = website.is_view_active("website_sale.filter_products_tags")
         if filter_by_tags_enabled:
             all_tags = ProductTag.search_fetch(
                 Domain.AND([
@@ -724,8 +696,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             values["available_max_price"] = float_round(available_max_price, 2)
             if available_min_price != available_max_price:
                 nb_filter_sections += 1
+        values["tags"] = tags
         if filter_by_tags_enabled:
-            values.update({"all_tags": all_tags, "tags": tags})
+            values["all_tags"] = all_tags
             if all_tags:
                 nb_filter_sections += 1
         if category:

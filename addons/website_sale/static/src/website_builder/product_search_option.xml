@@ -10,7 +10,7 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Tags">
+    <BuilderRow t-if="this.state.tags?.length" label.translate="Tags">
         <BuilderSelect dataAttributeAction="'tagId'">
             <BuilderSelectItem dataAttributeActionValue="''">All Tags</BuilderSelectItem>
             <t t-foreach="this.state.tags" t-as="tag" t-key="tag.id">
@@ -26,17 +26,13 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Attribute Filter">
-        <button
-            class="btn btn-success btn-sm w-100"
-            t-att-disabled="!this.state.attributes || !this.state.attributes.length"
-            t-on-click="() => this.addAttributeFilter()"
-        >Add</button>
+    <BuilderRow t-if="this.state.attributes?.length" label.translate="Attribute Filter">
+        <BuilderButton action="'addProductSearchAttributeFilter'" type="'success'" preview="false">Add</BuilderButton>
     </BuilderRow>
     <BuilderRow label.translate="Search Bar">
         <BuilderCheckbox classAction="'d-none'" applyTo="'.s_product_search_search'" inverseAction="true"/>
     </BuilderRow>
-    <BuilderRow label.translate="Tags">
+    <BuilderRow t-if="this.state.tags?.length" label.translate="Tags">
         <BuilderCheckbox classAction="'d-none'" applyTo="'.s_product_search_tags_wrap'" inverseAction="true"/>
     </BuilderRow>
     <BuilderRow id="'price_range_opt'" label.translate="Price Range">
