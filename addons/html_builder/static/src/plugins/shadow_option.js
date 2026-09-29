@@ -1,5 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useProps, t } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 export class ShadowOption extends BaseOptionComponent {
     static template = "html_builder.ShadowOption";
@@ -9,7 +10,10 @@ export class ShadowOption extends BaseOptionComponent {
         setShadowStyleAction: t.string().optional("setShadowStyle"),
     });
 
-    getOnClick(shadowClass) {
-        return () => this.env.editThemeOption(shadowClass, "theme-shadow");
+    getEditAction(shadowClass) {
+        return {
+            title: _t("Edit in Theme Tab"),
+            onClick: () => this.env.editThemeOption(shadowClass, "theme-shadow"),
+        };
     }
 }
