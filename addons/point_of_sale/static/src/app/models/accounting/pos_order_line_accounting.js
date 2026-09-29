@@ -168,7 +168,8 @@ export class PosOrderlineAccounting extends Base {
     }
 
     isRefund() {
-        return this.order_id.isRefund;
+        // FIXME order_id compute price before lines full setup so the back-reference can be missing
+        return this.order_id?.isRefund || false;
     }
 
     getUnitPriceFromDisplayPrice(price) {

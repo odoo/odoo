@@ -14,8 +14,10 @@ test("uiState", async () => {
     const order = await getFilledOrder(store);
     const card = store.models["pos.payment.method"].get(2);
     const paymentline = createPaymentLine(store, order, card);
+    const state = paymentline.uiState;
+    delete state.lastUse;
 
-    expect(paymentline.uiState).toEqual({
+    expect(state).toEqual({
         initStateDate: DateTime.fromISO("2025-01-09T13:00:00"),
     });
 });

@@ -20,6 +20,11 @@ export class ProductProduct extends Base {
         this.product_tmpl_id?.onUpdate(); // To invalidate the searchString of the template
     }
 
+    touch() {
+        super.touch();
+        this.product_tmpl_id?.touch();
+    }
+
     getImageUrl() {
         return `/web/image?model=product.product&field=image_256&id=${this.id}&unique=${this.write_date}`;
     }

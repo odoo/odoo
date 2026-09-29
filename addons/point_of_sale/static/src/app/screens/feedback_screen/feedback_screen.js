@@ -42,6 +42,9 @@ export class FeedbackScreen extends Component {
 
         useRouterParamsChecker(this.constructor.name);
         onWillStart(() => {
+            // This will clean whole pos data.
+            // It will delete the paid order as well as any other outdated records.
+            this.pos.data.cleanOutdatedRecords();
             this.waiter();
         });
 

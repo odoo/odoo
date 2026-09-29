@@ -80,7 +80,7 @@ class PosOrderLine(models.Model):
 
     @api.model
     def _load_pos_data_dependencies(self):
-        return ['pos.order']
+        return ['pos.order', 'product.product']
 
     @api.model
     def _load_pos_data_fields(self, config):

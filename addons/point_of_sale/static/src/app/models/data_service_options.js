@@ -19,18 +19,33 @@ export class DataServiceOptions {
             },
             "product.attribute.custom.value": {
                 key: "id",
-                condition: (record) => record.pos_order_id?.canBeRemovedFromIndexedDB,
+                condition: (record) =>
+                    record.pos_order_line_id?.order_id?.canBeRemovedFromIndexedDB,
                 getRecordsBasedOnLines: (orderlines) =>
                     orderlines.flatMap((line) => line.custom_attribute_value_ids),
             },
             "pos.prep.order": {
                 key: "uuid",
-                condition: (record) => !record.pos_order_id,
+                condition: (record) =>
+                    !record.pos_order_id || record.pos_order_id.canBeRemovedFromIndexedDB,
             },
             "pos.prep.line": {
                 key: "uuid",
-                condition: (record) => !record.prep_order_id,
+                condition: (record) =>
+                    !record.prep_order_id ||
+                    !record.prep_order_id.pos_order_id ||
+                    record.prep_order_id.pos_order_id.canBeRemovedFromIndexedDB,
             },
+        };
+    }
+
+    get recordLimits() {
+        const deviceRam = navigator.deviceMemory || 4; // Default to 4GB if not available
+        const maxRecords = deviceRam * 100; // Example: scale max records with device RAM
+        return {
+            "pos.order": 1, // Only paid order are targeted for cleanup
+            "product.template": maxRecords,
+            "res.partner": maxRecords,
         };
     }
 
@@ -85,6 +100,14 @@ export class DataServiceOptions {
             "res.users",
             "account.tax", // Cannot be auto-loaded because the record needs adaptions
         ];
+    }
+
+    /**
+     * Relational fields ("model.field") that do not prevent the record they point to from
+     * being removed by the cleanup of outdated records (see getOutdatedRecords).
+     */
+    get cleanupIgnoredReferences() {
+        return [];
     }
 
     get cascadeDeleteModels() {
