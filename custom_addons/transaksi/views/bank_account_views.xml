@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_transaksi_bank_account_list" model="ir.ui.view">
+        <field name="name">transaksi.bank.account.list</field>
+        <field name="model">transaksi.bank.account</field>
+        <field name="arch" type="xml">
+            <list string="Data Rekening Bank">
+                <field name="bank_name"/>
+                <field name="account_number"/>
+                <field name="account_holder"/>
+                <field name="name" string="Alias / Label"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_transaksi_bank_account_form" model="ir.ui.view">
+        <field name="name">transaksi.bank.account.form</field>
+        <field name="model">transaksi.bank.account</field>
+        <field name="arch" type="xml">
+            <form string="Data Rekening Bank">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Nama / Alias Rekening"/>
+                        <h1><field name="name" placeholder="Contoh: BCA Operational Pusat"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="bank_name" placeholder="BCA / BNI / Mandiri / BRI..."/>
+                            <field name="account_number"/>
+                            <field name="account_holder"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_transaksi_bank_account_search" model="ir.ui.view">
+        <field name="name">transaksi.bank.account.search</field>
+        <field name="model">transaksi.bank.account</field>
+        <field name="arch" type="xml">
+            <search string="Cari Data Rekening">
+                <field name="name"/>
+                <field name="bank_name"/>
+                <field name="account_number"/>
+                <field name="account_holder"/>
+                <filter string="Nama Bank" name="group_bank" domain="[]" context="{'group_by': 'bank_name'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_transaksi_bank_account" model="ir.actions.act_window">
+        <field name="name">Data Rekening</field>
+        <field name="res_model">transaksi.bank.account</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_transaksi_bank_account_search"/>
+    </record>
+</odoo>

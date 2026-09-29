@@ -28,6 +28,40 @@ class TransaksiTransaction(models.Model):
         required=True,
         tracking=True,
     )
+    transfer_category = fields.Selection(
+        [
+            ("inhouse", "Mutasi Antar Rekening"),
+            ("interbank", "Mutasi Antar Bank"),
+        ],
+        string="Kategori Mutasi",
+        default="inhouse",
+        required=True,
+        tracking=True,
+    )
+    sender_account_id = fields.Many2one(
+        "transaksi.bank.account",
+        string="Rekening Pengirim",
+        tracking=True,
+        help="Rekening bank pengirim dari Data Rekening.",
+    )
+    sender_bank_name = fields.Char(
+        string="Bank Pengirim",
+        related="sender_account_id.bank_name",
+        store=True,
+        readonly=True,
+    )
+    sender_account_number = fields.Char(
+        string="No Rekening Pengirim",
+        related="sender_account_id.account_number",
+        store=True,
+        readonly=True,
+    )
+    sender_account_holder = fields.Char(
+        string="Nama Pemilik Rekening Pengirim",
+        related="sender_account_id.account_holder",
+        store=True,
+        readonly=True,
+    )
     @api.model
     def _default_submission_time(self):
         return fields.Datetime.context_timestamp(self, fields.Datetime.now()).strftime("%H:%M")

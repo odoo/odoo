@@ -12,12 +12,43 @@
               parent="menu_transaksi_root"
               sequence="10"/>
 
-    <!-- Menu Item: Mutasi Antar Rekening -->
+    <!-- Actions for Mutasi Bank -->
+    <record id="action_transaksi_transaction_inhouse" model="ir.actions.act_window">
+        <field name="name">Mutasi Antar Rekening</field>
+        <field name="res_model">transaksi.transaction</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('transfer_category', '=', 'inhouse')]</field>
+        <field name="context">{'default_transfer_category': 'inhouse'}</field>
+    </record>
+
+    <record id="action_transaksi_transaction_interbank" model="ir.actions.act_window">
+        <field name="name">Mutasi Antar Bank</field>
+        <field name="res_model">transaksi.transaction</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('transfer_category', '=', 'interbank')]</field>
+        <field name="context">{'default_transfer_category': 'interbank'}</field>
+    </record>
+
+    <!-- Menu Item 1: Mutasi Antar Rekening -->
     <menuitem id="menu_transaksi_all"
               name="Mutasi Antar Rekening"
               parent="menu_transaksi_main"
-              action="action_transaksi_transaction"
+              action="action_transaksi_transaction_inhouse"
               sequence="10"/>
+
+    <!-- Menu Item 2: Mutasi Antar Bank -->
+    <menuitem id="menu_transaksi_interbank"
+              name="Mutasi Antar Bank"
+              parent="menu_transaksi_main"
+              action="action_transaksi_transaction_interbank"
+              sequence="20"/>
+
+    <!-- Top Navbar Menu: Data Rekening -->
+    <menuitem id="menu_transaksi_bank_account"
+              name="Data Rekening"
+              parent="menu_transaksi_root"
+              action="action_transaksi_bank_account"
+              sequence="30"/>
 
     <!-- Submenu: Persetujuan (Approval) -->
     <menuitem id="menu_transaksi_approval"
@@ -30,7 +61,7 @@
     <record id="action_transaksi_transaction_to_verify" model="ir.actions.act_window">
         <field name="name">Menunggu Verifikasi Keuangan</field>
         <field name="res_model">transaksi.transaction</field>
-        <field name="view_mode">list,kanban,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('state', '=', 'submitted')]</field>
         <field name="context">{'default_state': 'draft'}</field>
     </record>
@@ -38,7 +69,7 @@
     <record id="action_transaksi_transaction_to_approve" model="ir.actions.act_window">
         <field name="name">Menunggu Persetujuan Direktur</field>
         <field name="res_model">transaksi.transaction</field>
-        <field name="view_mode">list,kanban,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('state', '=', 'verified')]</field>
         <field name="context">{'default_state': 'draft'}</field>
     </record>

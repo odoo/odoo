@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sif_keuangan.AgedPayableClientView" owl="1">
+        <div class="o_aged_payable_app o_report_app d-flex flex-column h-100 bg-light">
+
+            <!-- ================= TOP ACTION & FILTER BAR ================= -->
+            <div class="o_report_topbar px-4 py-2 bg-white border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2 shadow-sm">
+                <!-- Left Action Buttons -->
+                <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-sm btn-report-pdf d-flex align-items-center gap-1 shadow-sm"
+                            t-on-click="onExportPDF"
+                            t-att-disabled="state.loading">
+                        <i class="fa fa-file-pdf-o" />
+                        <span>PDF</span>
+                    </button>
+                    <button class="btn btn-sm btn-report-xlsx d-flex align-items-center gap-1 shadow-sm"
+                            t-on-click="onExportXLSX"
+                            t-att-disabled="state.loading">
+                        <i class="fa fa-file-excel-o" />
+                        <span>XLSX</span>
+                    </button>
+                    <span class="fw-bold fs-5 text-dark ms-2">Aged Payable</span>
+                </div>
+
+                <!-- Right High-Precision Filters (Tanpa Arrow Dropdown, Plain Text Clickable) -->
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <!-- Filter 1: As of Date -->
+                    <div class="o_report_filter_pill d-flex align-items-center gap-1 px-2 py-1 bg-light rounded border">
+                        <i class="fa fa-calendar text-muted" />
+                        <span class="small fw-semibold text-muted">As of</span>
+                        <input type="date"
+                               class="form-control form-control-sm border-0 bg-transparent py-0 px-1 shadow-none"
+                               style="width: 130px;"
+                               t-att-value="state.filters.as_of_date"
+                               t-on-change="onDateChange" />
+                    </div>
+
+                    <!-- Filter 2: Partners / Vendor Filter -->
+                    <div class="o_report_filter_pill d-flex align-items-center gap-1 px-2 py-1 bg-light rounded border">
+                        <select class="form-select form-select-sm border-0 bg-transparent shadow-none py-0 px-1 fw-semibold text-dark"
+                                style="width: auto; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none;"
+                                t-on-change="onPartnerChange">
+                            <option value="">Partners</option>
+                            <t t-if="state.data and state.data.vendors_list">
+                                <t t-foreach="state.data.vendors_list" t-as="v" t-key="v.id">
+                                    <option t-att-value="v.id" t-att-selected="state.filters.partner_id == v.id">
+                                        <t t-esc="v.name" />
+                                    </option>
+                                </t>
+                            </t>
+                        </select>
+                    </div>
+
+                    <!-- Filter 3: Based on Due Date vs Invoice Date -->
+                    <div class="o_report_filter_pill d-flex align-items-center gap-1 px-2 py-1 bg-light rounded border">
+                        <select class="form-select form-select-sm border-0 bg-transparent shadow-none py-0 px-1 fw-semibold text-dark"
+                                style="width: auto; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none;"
+                                t-on-change="onBasedOnChange">
+                            <option value="due_date" t-att-selected="state.filters.based_on == 'due_date'">Based on Due Date</option>
+                            <option value="invoice_date" t-att-selected="state.filters.based_on == 'invoice_date'">Based on Invoice Date</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter 4: Period Days (30, 60, 90) -->
+                    <div class="o_report_filter_pill d-flex align-items-center gap-1 px-2 py-1 bg-light rounded border">
+                        <select class="form-select form-select-sm border-0 bg-transparent shadow-none py-0 px-1 fw-semibold text-dark"
+                                style="width: auto; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none;"
+                                t-on-change="onPeriodDaysChange">
+                            <option value="30" t-att-selected="state.filters.period_days == 30">30 Days</option>
+                            <option value="60" t-att-selected="state.filters.period_days == 60">60 Days</option>
+                            <option value="90" t-att-selected="state.filters.period_days == 90">90 Days</option>
+                        </select>
+                    </div>
+
+                    <!-- Filter 5: Posted vs All Entries -->
+                    <div class="o_report_filter_pill d-flex align-items-center gap-1 px-2 py-1 bg-light rounded border">
+                        <select class="form-select form-select-sm border-0 bg-transparent shadow-none py-0 px-1 fw-semibold text-dark"
+                                style="width: auto; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none;"
+                                t-on-change="onTargetMoveChange">
+                            <option value="posted" t-att-selected="state.filters.target_move == 'posted'">Posted Entries</option>
+                            <option value="all" t-att-selected="state.filters.target_move == 'all'">All Entries</option>
+                        </select>
+                    </div>
+
+                    <!-- Currency indicator -->
+                    <div class="badge bg-secondary text-white px-2 py-1">
+                        In .Rp
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= WARNING BANNER ================= -->
+            <t t-if="state.data and state.data.has_unposted">
+                <div class="alert alert-info border-0 rounded-0 mb-0 py-2 px-4 d-flex align-items-center justify-content-between shadow-sm" style="background-color: #E0F2FE; color: #0369A1;">
+                    <div class="small">
+                        There are <strong>unposted Journal Entries / PPL</strong> prior or included in this period.
+                    </div>
+                    <button type="button" class="btn-close small" data-bs-dismiss="alert" aria-label="Close" />
+                </div>
+            </t>
+
+            <!-- ================= REPORT TABLE CARD ================= -->
+            <div class="flex-grow-1 overflow-auto p-4">
+                <div class="card border-0 shadow-sm bg-white rounded-3">
+                    <div class="card-body p-4">
+
+                        <t t-if="state.loading">
+                            <div class="text-center py-5 text-muted">
+                                <i class="fa fa-spinner fa-spin fa-2x mb-2" />
+                                <div>Memuat data Aged Payable...</div>
+                            </div>
+                        </t>
+
+                        <t t-else="">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle border mb-0 text-dark" style="font-size: 13.5px;">
+                                    <thead class="table-light border-bottom text-muted fw-semibold">
+                                        <tr>
+                                            <th class="ps-3 py-2" style="min-width: 250px;">Aged Payable</th>
+                                            <th class="text-end py-2" style="width: 120px;">Invoice Date</th>
+                                            <th class="text-end py-2" style="width: 130px;">At Date</th>
+                                            <th class="text-end py-2" style="width: 130px;"><t t-esc="state.data.headers.b1" /></th>
+                                            <th class="text-end py-2" style="width: 130px;"><t t-esc="state.data.headers.b2" /></th>
+                                            <th class="text-end py-2" style="width: 130px;"><t t-esc="state.data.headers.b3" /></th>
+                                            <th class="text-end py-2" style="width: 130px;"><t t-esc="state.data.headers.b4" /></th>
+                                            <th class="text-end py-2" style="width: 130px;"><t t-esc="state.data.headers.older" /></th>
+                                            <th class="text-end pe-3 py-2" style="width: 140px;">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-if="!state.data.vendors or state.data.vendors.length == 0">
+                                            <tr>
+                                                <td colspan="9" class="text-center py-5 text-muted">
+                                                    Tidak ada data utang jatuh tempo ditemukan untuk kriteria filter ini.
+                                                </td>
+                                            </tr>
+                                        </t>
+
+                                        <t t-foreach="state.data.vendors" t-as="vendor" t-key="vendor.id">
+                                            <!-- Vendor Group Header Row -->
+                                            <tr class="fw-bold bg-light border-top">
+                                                <td class="ps-3 py-2">
+                                                    <span class="me-2 text-secondary" style="cursor: pointer;" t-on-click="() => this.toggleVendor(vendor.id)">
+                                                        <i t-att-class="isVendorUnfolded(vendor.id) ? 'fa fa-caret-down' : 'fa fa-caret-right'" />
+                                                    </span>
+                                                    <span><t t-esc="vendor.name" /></span>
+                                                    <span class="badge bg-outline-secondary text-muted border ms-2 small fw-normal">Partner</span>
+                                                </td>
+                                                <td class="text-end py-2"></td>
+                                                <td class="text-end py-2"><t t-esc="vendor.total_current_fmt != '0.00' ? vendor.total_current_fmt : ''" /></td>
+                                                <td class="text-end py-2"><t t-esc="vendor.total_b1_fmt != '0.00' ? vendor.total_b1_fmt : ''" /></td>
+                                                <td class="text-end py-2"><t t-esc="vendor.total_b2_fmt != '0.00' ? vendor.total_b2_fmt : ''" /></td>
+                                                <td class="text-end py-2"><t t-esc="vendor.total_b3_fmt != '0.00' ? vendor.total_b3_fmt : ''" /></td>
+                                                <td class="text-end py-2"><t t-esc="vendor.total_b4_fmt != '0.00' ? vendor.total_b4_fmt : ''" /></td>
+                                                <td class="text-end py-2"><t t-esc="vendor.total_older_fmt != '0.00' ? vendor.total_older_fmt : ''" /></td>
+                                                <td class="text-end pe-3 py-2"></td>
+                                            </tr>
+
+                                            <!-- Invoice Sub-Rows -->
+                                            <t t-if="isVendorUnfolded(vendor.id)">
+                                                <t t-foreach="vendor.lines" t-as="line" t-key="line.id">
+                                                    <tr class="border-bottom-0" style="font-size: 13px;">
+                                                        <td class="ps-5 py-1 text-primary" style="cursor: pointer;" t-on-click="() => this.openPPLForm(line.id)">
+                                                            <t t-esc="line.name" />
+                                                        </td>
+                                                        <td class="text-end py-1 text-muted"><t t-esc="line.invoice_date_display" /></td>
+                                                        <td class="text-end py-1 text-muted"><t t-esc="line.current_amount_fmt != '0.00' ? line.current_amount_fmt : '0.00'" /></td>
+                                                        <td class="text-end py-1 text-muted"><t t-esc="line.b1_fmt != '0.00' ? line.b1_fmt : '0.00'" /></td>
+                                                        <td class="text-end py-1 text-muted"><t t-esc="line.b2_fmt != '0.00' ? line.b2_fmt : '0.00'" /></td>
+                                                        <td class="text-end py-1 text-muted"><t t-esc="line.b3_fmt != '0.00' ? line.b3_fmt : '0.00'" /></td>
+                                                        <td class="text-end py-1 text-muted"><t t-esc="line.b4_fmt != '0.00' ? line.b4_fmt : '0.00'" /></td>
+                                                        <td class="text-end py-1 text-muted"><t t-esc="line.older_fmt != '0.00' ? line.older_fmt : '0.00'" /></td>
+                                                        <td class="text-end pe-3 py-1"></td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+
+                                            <!-- Vendor Total Row -->
+                                            <tr class="fw-bold border-bottom">
+                                                <td class="ps-4 py-2">Total <t t-esc="vendor.name" /></td>
+                                                <td class="text-end py-2"></td>
+                                                <td class="text-end py-2"><t t-esc="vendor.total_current_fmt" /></td>
+                                                <td class="text-end py-2"><t t-esc="vendor.total_b1_fmt" /></td>
+                                                <td class="text-end py-2"><t t-esc="vendor.total_b2_fmt" /></td>
+                                                <td class="text-end py-2"><t t-esc="vendor.total_b3_fmt" /></td>
+                                                <td class="text-end py-2"><t t-esc="vendor.total_b4_fmt" /></td>
+                                                <td class="text-end py-2"><t t-esc="vendor.total_older_fmt" /></td>
+                                                <td class="text-end pe-3 py-2 text-dark"><t t-esc="vendor.total_grand_fmt" /></td>
+                                            </tr>
+                                        </t>
+
+                                        <!-- Grand Total Aged Payable Row -->
+                                        <t t-if="state.data.vendors and state.data.vendors.length > 0">
+                                            <tr class="fw-bold border-top border-bottom table-secondary" style="font-size: 14px;">
+                                                <td class="ps-3 py-3">Total Aged Payable</td>
+                                                <td class="text-end py-3"></td>
+                                                <td class="text-end py-3"><t t-esc="state.data.grand_totals.current_fmt" /></td>
+                                                <td class="text-end py-3"><t t-esc="state.data.grand_totals.b1_fmt" /></td>
+                                                <td class="text-end py-3"><t t-esc="state.data.grand_totals.b2_fmt" /></td>
+                                                <td class="text-end py-3"><t t-esc="state.data.grand_totals.b3_fmt" /></td>
+                                                <td class="text-end py-3"><t t-esc="state.data.grand_totals.b4_fmt" /></td>
+                                                <td class="text-end py-3"><t t-esc="state.data.grand_totals.older_fmt" /></td>
+                                                <td class="text-end pe-3 py-3 text-dark fs-6"><t t-esc="state.data.grand_totals.total_fmt" /></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </t>
+
+</templates>

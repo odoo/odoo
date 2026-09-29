@@ -1,0 +1,32 @@
+.o_aged_payable_app {
+    .o_report_filter_pill {
+        background-color: #F8FAFC;
+        &:hover {
+            background-color: #F1F5F9;
+        }
+    }
+}
+
+@media print {
+    .o_report_topbar button,
+    .o_report_topbar select,
+    .o_report_topbar .badge,
+    .o_report_topbar input[type="date"] {
+        display: none !important;
+    }
+    .o_aged_payable_app .o_report_topbar {
+        box-shadow: none !important;
+        border-bottom: 1px solid #ccc !important;
+    }
+    .o_aged_payable_app {
+        height: auto !important;
+        overflow: visible !important;
+    }
+    .flex-grow-1 {
+        overflow: visible !important;
+    }
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #dee2e6 !important;
+    }
+}

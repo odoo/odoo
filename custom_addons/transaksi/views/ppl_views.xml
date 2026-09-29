@@ -10,7 +10,7 @@
             <xpath expr="//header" position="inside">
                 <button name="action_create_bank_transfer" type="object" string="Ajukan Transfer Bank" class="btn-primary"
                         groups="sifnext_ppl.group_ppl_finance,transaksi.group_transaksi_finance,transaksi.group_transaksi_manager"
-                        invisible="state != 'approved' or payment_method != 'bank' or (transaction_id and transaction_state not in ('rejected', 'failed'))"/>
+                        invisible="state != 'approved' or payment_method != 'bank' or (transaction_id and transaction_state != 'rejected' and transaction_state != 'failed')"/>
             </xpath>
 
             <!-- Stat Button: Transfer Bank -->
@@ -27,7 +27,7 @@
             </xpath>
 
             <!-- Detail Pembayaran: Tautan Dokumen Transaksi -->
-            <xpath expr="//field[@name='payment_reference']" position="after">
+            <xpath expr="//field[@name='source_type']" position="after">
                 <field name="transaction_id" readonly="1" invisible="not transaction_id"/>
                 <field name="transaction_state" readonly="1" invisible="not transaction_id"/>
             </xpath>

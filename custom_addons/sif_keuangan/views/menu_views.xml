@@ -52,10 +52,8 @@
     <menuitem id="menu_sif_aging_report_sub" 
               name="Laporan Aging Hutang" 
               parent="menu_sif_laporan" 
-              action="action_sif_aging_report_wizard" 
+              action="action_sif_aged_payable_client" 
               sequence="50"/>
-
-
 
     <!-- Kategori 3: Master Data -->
     <menuitem id="menu_sif_master" 
@@ -67,6 +65,18 @@
               name="Chart of Accounts (COA)" 
               parent="menu_sif_master" 
               action="action_sif_coa" 
+              sequence="10"/>
+
+    <!-- Kategori 4: Pengaturan -->
+    <menuitem id="menu_sif_setting" 
+              name="Pengaturan" 
+              parent="menu_sif_keuangan_root" 
+              sequence="40"/>
+
+    <menuitem id="menu_sif_lock_date_sub" 
+              name="Kunci Tanggal" 
+              parent="menu_sif_setting" 
+              action="action_sif_lock_date" 
               sequence="10"/>
 
 </odoo>

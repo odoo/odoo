@@ -1,226 +1,208 @@
 # -*- coding: utf-8 -*-
+import datetime
 from odoo import api, fields, models, _
-
 
 class SifAgingReportLine(models.TransientModel):
     _name = 'sif.aging.report.line'
     _description = 'Detail Baris Laporan Umur Utang Dagang'
 
-    wizard_id = fields.Many2one(
-        'sif.aging.report.wizard',
-        ondelete='cascade'
-    )
-
-    vendor_id = fields.Many2one(
-        'sif.vendor',
-        string='Rekanan / Vendor'
-    )
-
-    vendor_name = fields.Char(string='Rekanan')
+    vendor_id = fields.Many2one('sif.vendor', string='Rekanan / Vendor')
+    vendor_name = fields.Char(string='Rekanan / Partner')
     ppl_name = fields.Char(string='No PPL / Faktur')
-    invoice_date = fields.Date(string='Tanggal Faktur')
-    due_date = fields.Date(string='Batas Waktu')
+    invoice_date = fields.Date(string='Invoice Date')
+    due_date = fields.Date(string='Tanggal Jatuh Tempo')
     overdue_days = fields.Integer(string='Umur (Hari)')
 
-    # Nominal untuk perhitungan total aging
-    current_amount = fields.Monetary(string='Pada Tanggal')
+    current_amount = fields.Monetary(string='At Date')
     days_1_30 = fields.Monetary(string='1-30')
     days_31_60 = fields.Monetary(string='31-60')
     days_61_90 = fields.Monetary(string='61-90')
     days_91_120 = fields.Monetary(string='91-120')
-    days_older = fields.Monetary(string='Lebih Tua')
+    days_older = fields.Monetary(string='Older')
 
     total_amount = fields.Monetary(string='Total')
-
-    # Umur dalam hari untuk ditampilkan pada tabel detail
-    age_1_30 = fields.Integer(string='1-30 Hari')
-    age_31_60 = fields.Integer(string='31-60 Hari')
-    age_61_90 = fields.Integer(string='61-90 Hari')
-    age_91_120 = fields.Integer(string='91-120 Hari')
-    age_older = fields.Integer(string='Lebih Tua')
-
-    currency_id = fields.Many2one(
-        'res.currency',
-        default=lambda self: self.env.company.currency_id
-    )
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
 
 
-class SifAgingReportWizard(models.TransientModel):
-    _name = 'sif.aging.report.wizard'
-    _description = 'Laporan Umur Utang Dagang'
+class SifAgedPayableEngine(models.AbstractModel):
+    _name = 'sif.aged.payable'
+    _description = 'Engine & Logic Aged Payable (Laporan Aging Hutang)'
 
-    as_of_date = fields.Date(
-        string='Sejak Tanggal',
-        default=fields.Date.context_today,
-        required=True
-    )
+    @api.model
+    def _format_rupiah(self, amount):
+        if amount is None or abs(amount) < 0.001:
+            return "0.00"
+        val = float(amount)
+        prefix = "-Rp " if val < -0.001 else ""
+        abs_val = abs(val)
+        parts = f"{abs_val:,.2f}".split(".")
+        int_part = parts[0].replace(",", ".")
+        dec_part = parts[1]
+        return f"{prefix}{int_part},{dec_part}"
 
-    vendor_id = fields.Many2one(
-        'sif.vendor',
-        string='Rekanan / Vendor'
-    )
+    @api.model
+    def get_aged_payable_data(self, filters=None):
+        if not filters:
+            filters = {}
 
-    company_id = fields.Many2one(
-        'res.company',
-        string='Perusahaan',
-        default=lambda self: self.env.company
-    )
+        as_of_str = filters.get('as_of_date') or fields.Date.today().strftime('%Y-%m-%d')
+        as_of_dt = fields.Date.to_date(as_of_str)
 
-    line_ids = fields.One2many(
-        'sif.aging.report.line',
-        'wizard_id',
-        string='Rincian Utang'
-    )
+        based_on = filters.get('based_on') or 'due_date'
+        period_days = int(filters.get('period_days') or 30)
+        target_move = filters.get('target_move') or 'posted'
+        partner_id = int(filters.get('partner_id')) if filters.get('partner_id') else False
+        search_query = (filters.get('search') or '').strip().lower()
 
-    total_current = fields.Monetary(
-        compute='_compute_totals',
-        string='Total Pada Tanggal'
-    )
+        domain = [('payment_term', '=', 'jatuh_tempo')]
+        if target_move == 'posted':
+            domain.append(('state', 'in', ['approved', 'paid', 'done']))
+        else:
+            domain.append(('state', 'in', ['draft', 'submitted', 'verified', 'approved', 'paid', 'done']))
 
-    total_1_30 = fields.Monetary(
-        compute='_compute_totals',
-        string='Total 1-30'
-    )
+        if partner_id:
+            domain.append(('vendor_id', '=', partner_id))
 
-    total_31_60 = fields.Monetary(
-        compute='_compute_totals',
-        string='Total 31-60'
-    )
+        ppls = self.env['sifnext.ppl'].search(domain, order='vendor_id, request_date asc')
 
-    total_61_90 = fields.Monetary(
-        compute='_compute_totals',
-        string='Total 61-90'
-    )
-
-    total_91_120 = fields.Monetary(
-        compute='_compute_totals',
-        string='Total 91-120'
-    )
-
-    total_older = fields.Monetary(
-        compute='_compute_totals',
-        string='Total Lebih Tua'
-    )
-
-    total_grand = fields.Monetary(
-        compute='_compute_totals',
-        string='Total Umur Utang Dagang'
-    )
-
-    currency_id = fields.Many2one(
-        'res.currency',
-        default=lambda self: self.env.company.currency_id
-    )
-
-    @api.depends('line_ids')
-    def _compute_totals(self):
-        for rec in self:
-            rec.total_current = sum(
-                rec.line_ids.mapped('current_amount')
-            )
-            rec.total_1_30 = sum(
-                rec.line_ids.mapped('days_1_30')
-            )
-            rec.total_31_60 = sum(
-                rec.line_ids.mapped('days_31_60')
-            )
-            rec.total_61_90 = sum(
-                rec.line_ids.mapped('days_61_90')
-            )
-            rec.total_91_120 = sum(
-                rec.line_ids.mapped('days_91_120')
-            )
-            rec.total_older = sum(
-                rec.line_ids.mapped('days_older')
-            )
-            rec.total_grand = sum(
-                rec.line_ids.mapped('total_amount')
-            )
-
-    def action_generate_report(self):
-        self.ensure_one()
-
-        self.line_ids.unlink()
-
-        domain = [
+        unposted_count = self.env['sifnext.ppl'].search_count([
             ('payment_term', '=', 'jatuh_tempo'),
-            ('state', '=', 'approved'),
-            ('company_id', '=', self.company_id.id),
-        ]
+            ('state', 'in', ['draft', 'submitted', 'verified'])
+        ])
 
-        if self.vendor_id:
-            domain.append(
-                ('vendor_id', '=', self.vendor_id.id)
-            )
+        all_vendors = self.env['sif.vendor'].search([], order='name asc')
+        vendors_list = [{'id': v.id, 'name': v.name} for v in all_vendors]
 
-        ppls = self.env['sifnext.ppl'].search(
-            domain,
-            order='vendor_id, request_date asc'
-        )
+        interval = period_days
 
-        as_of = self.as_of_date or fields.Date.today()
+        grand_totals = {
+            'current': 0.0,
+            'b1': 0.0,
+            'b2': 0.0,
+            'b3': 0.0,
+            'b4': 0.0,
+            'older': 0.0,
+            'total': 0.0,
+        }
 
-        lines = []
+        vendors_dict = {}
 
         for ppl in ppls:
-            due = ppl.due_date or ppl.request_date
-            days = (as_of - due).days if due else 0
+            v_id = ppl.vendor_id.id if ppl.vendor_id else 0
+            v_name = ppl.vendor_id.name if ppl.vendor_id else 'Tanpa Rekanan'
+
+            if search_query:
+                if search_query not in v_name.lower() and search_query not in (ppl.name or '').lower() and search_query not in (ppl.title or '').lower():
+                    continue
+
+            due_date_val = ppl.due_date or ppl.request_date
+            baseline_date = due_date_val if based_on == 'due_date' else ppl.request_date
+
+            days = (as_of_dt - baseline_date).days if baseline_date else 0
             amt = ppl.total_amount
 
-            # Nominal untuk ringkasan
             c_amt = amt if days <= 0 else 0.0
-            d1_30 = amt if 1 <= days <= 30 else 0.0
-            d31_60 = amt if 31 <= days <= 60 else 0.0
-            d61_90 = amt if 61 <= days <= 90 else 0.0
-            d91_120 = amt if 91 <= days <= 120 else 0.0
-            d_older = amt if days > 120 else 0.0
+            b1_amt = amt if 1 <= days <= interval else 0.0
+            b2_amt = amt if interval < days <= interval * 2 else 0.0
+            b3_amt = amt if interval * 2 < days <= interval * 3 else 0.0
+            b4_amt = amt if interval * 3 < days <= interval * 4 else 0.0
+            older_amt = amt if days > interval * 4 else 0.0
 
-            # Umur hari untuk tabel detail
-            age_1_30 = days if 1 <= days <= 30 else 0
-            age_31_60 = days if 31 <= days <= 60 else 0
-            age_61_90 = days if 61 <= days <= 90 else 0
-            age_91_120 = days if 91 <= days <= 120 else 0
-            age_older = days if days > 120 else 0
+            if v_id not in vendors_dict:
+                vendors_dict[v_id] = {
+                    'id': v_id,
+                    'name': v_name,
+                    'lines': [],
+                    'total_current': 0.0,
+                    'total_b1': 0.0,
+                    'total_b2': 0.0,
+                    'total_b3': 0.0,
+                    'total_b4': 0.0,
+                    'total_older': 0.0,
+                    'total_grand': 0.0,
+                }
 
-            lines.append((0, 0, {
-                'ppl_name': ppl.name,
-                'vendor_id': (
-                    ppl.vendor_id.id
-                    if ppl.vendor_id else False
-                ),
-                'vendor_name': (
-                    ppl.vendor_id.name
-                    if ppl.vendor_id else 'Tanpa Rekanan'
-                ),
-                'invoice_date': ppl.request_date,
-                'due_date': due,
+            v_entry = vendors_dict[v_id]
+            v_entry['lines'].append({
+                'id': ppl.id,
+                'name': f"{ppl.name} ({ppl.title})" if ppl.title else ppl.name,
+                'invoice_date_display': ppl.request_date.strftime('%m/%d/%Y') if ppl.request_date else '',
+                'due_date_display': due_date_val.strftime('%m/%d/%Y') if due_date_val else '',
                 'overdue_days': days,
-
-                # Nominal
                 'current_amount': c_amt,
-                'days_1_30': d1_30,
-                'days_31_60': d31_60,
-                'days_61_90': d61_90,
-                'days_91_120': d91_120,
-                'days_older': d_older,
+                'current_amount_fmt': self._format_rupiah(c_amt),
+                'b1': b1_amt,
+                'b1_fmt': self._format_rupiah(b1_amt),
+                'b2': b2_amt,
+                'b2_fmt': self._format_rupiah(b2_amt),
+                'b3': b3_amt,
+                'b3_fmt': self._format_rupiah(b3_amt),
+                'b4': b4_amt,
+                'b4_fmt': self._format_rupiah(b4_amt),
+                'older': older_amt,
+                'older_fmt': self._format_rupiah(older_amt),
                 'total_amount': amt,
+                'total_amount_fmt': self._format_rupiah(amt),
+            })
 
-                # Umur hari
-                'age_1_30': age_1_30,
-                'age_31_60': age_31_60,
-                'age_61_90': age_61_90,
-                'age_91_120': age_91_120,
-                'age_older': age_older,
-            }))
+            v_entry['total_current'] += c_amt
+            v_entry['total_b1'] += b1_amt
+            v_entry['total_b2'] += b2_amt
+            v_entry['total_b3'] += b3_amt
+            v_entry['total_b4'] += b4_amt
+            v_entry['total_older'] += older_amt
+            v_entry['total_grand'] += amt
 
-        self.write({
-            'line_ids': lines
-        })
+            grand_totals['current'] += c_amt
+            grand_totals['b1'] += b1_amt
+            grand_totals['b2'] += b2_amt
+            grand_totals['b3'] += b3_amt
+            grand_totals['b4'] += b4_amt
+            grand_totals['older'] += older_amt
+            grand_totals['total'] += amt
+
+        res_vendors = []
+        for v_id, v_data in vendors_dict.items():
+            v_data['total_current_fmt'] = self._format_rupiah(v_data['total_current'])
+            v_data['total_b1_fmt'] = self._format_rupiah(v_data['total_b1'])
+            v_data['total_b2_fmt'] = self._format_rupiah(v_data['total_b2'])
+            v_data['total_b3_fmt'] = self._format_rupiah(v_data['total_b3'])
+            v_data['total_b4_fmt'] = self._format_rupiah(v_data['total_b4'])
+            v_data['total_older_fmt'] = self._format_rupiah(v_data['total_older'])
+            v_data['total_grand_fmt'] = self._format_rupiah(v_data['total_grand'])
+            res_vendors.append(v_data)
+
+        h_b1 = f"1-{interval}"
+        h_b2 = f"{interval + 1}-{interval * 2}"
+        h_b3 = f"{interval * 2 + 1}-{interval * 3}"
+        h_b4 = f"{interval * 3 + 1}-{interval * 4}"
 
         return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'sif.aging.report.wizard',
-            'res_id': self.id,
-            'view_mode': 'form',
-            'target': 'new',
+            'as_of_date': as_of_str,
+            'as_of_date_display': as_of_dt.strftime('%m/%d/%Y') if as_of_dt else '',
+            'based_on': based_on,
+            'period_days': period_days,
+            'target_move': target_move,
+            'partner_id': partner_id,
+            'has_unposted': unposted_count > 0,
+            'vendors': res_vendors,
+            'vendors_list': vendors_list,
+            'headers': {
+                'at_date': 'At Date',
+                'b1': h_b1,
+                'b2': h_b2,
+                'b3': h_b3,
+                'b4': h_b4,
+                'older': 'Older',
+            },
+            'grand_totals': {
+                'current_fmt': self._format_rupiah(grand_totals['current']),
+                'b1_fmt': self._format_rupiah(grand_totals['b1']),
+                'b2_fmt': self._format_rupiah(grand_totals['b2']),
+                'b3_fmt': self._format_rupiah(grand_totals['b3']),
+                'b4_fmt': self._format_rupiah(grand_totals['b4']),
+                'older_fmt': self._format_rupiah(grand_totals['older']),
+                'total_fmt': self._format_rupiah(grand_totals['total']),
+            },
+            'company_name': self.env.company.name,
         }

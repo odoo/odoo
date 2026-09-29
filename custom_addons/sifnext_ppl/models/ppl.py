@@ -156,7 +156,9 @@ class SifnextPPL(models.Model):
             sequence = self.env["ir.sequence"].next_by_code(
                 "sifnext.ppl", sequence_date=request_date,
             ) or "New"
-            vals["name"] = f"{unit.code}/{sequence}"
+            p_term = vals.get("payment_term", "langsung")
+            prefix = "BILL/PPL" if p_term == "jatuh_tempo" else "PPL"
+            vals["name"] = f"{prefix}/{unit.code}/{sequence}"
         return super().create(vals_list)
 
     def _is_submitted_coa_update(self, commands):

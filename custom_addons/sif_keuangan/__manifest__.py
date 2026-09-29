@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Accounting',
-    'version': '1.0',
+    'version': '1.0.1',
     'category': 'Accounting',
     'summary': 'Pusat Jurnal & Buku Besar Terintegrasi PPL dan Aset',
     'author': 'SIFNEXT',
@@ -19,6 +19,7 @@
         'views/balance_sheet_views.xml',
         'views/profit_loss_views.xml',
         'views/aging_report_views.xml',
+        'views/lock_date_views.xml',
         'views/menu_views.xml',
 
         'reports/general_ledger_report.xml',
@@ -32,6 +33,7 @@
             'sif_keuangan/static/src/general_ledger/**/*',
             'sif_keuangan/static/src/balance_sheet/**/*',
             'sif_keuangan/static/src/profit_loss/**/*',
+            'sif_keuangan/static/src/aged_payable/**/*',
         ],
     },
 
