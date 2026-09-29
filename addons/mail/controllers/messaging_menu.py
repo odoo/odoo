@@ -93,12 +93,23 @@ class MessagingMenuController(WebclientController):
         filter_ids=None,
         exclude_ids=None,
         search_term=None,
+        before=None,
+        after=None,
+        around=None,
     ):
+        """Load the next page of messages of `tab_id`, see `mail.message._message_fetch` for
+        the paging parameters."""
         domain = self._get_menu_load_more_domain(tab_id, filter_ids, exclude_ids)
         messages = self._resolve_messages(
             store,
             domain=domain,
-            fetch_params={"limit": limit, "search_term": search_term},
+            fetch_params={
+                "after": after,
+                "around": around,
+                "before": before,
+                "limit": limit,
+                "search_term": search_term,
+            },
         )
         if messages:
             request.update_context(add_inbox_fields=True)
