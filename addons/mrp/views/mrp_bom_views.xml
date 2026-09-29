@@ -255,6 +255,17 @@
                     <filter string="Kit" name="phantom" domain="[('type', '=', 'phantom')]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="My Activities" name="filter_activities_my"
+                        domain="[('activity_user_id', '=', uid)]"/>
+                    <separator invisible="1"/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('my_activity_date_deadline', '&lt;', 'today')]"
+                        help="Show all records whose next activity date is past"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('my_activity_date_deadline', '=', 'today')]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
                     <group>
                         <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
                         <filter string='BoM Type' name="group_by_type" domain="[]" context="{'group_by' : 'type'}"/>
