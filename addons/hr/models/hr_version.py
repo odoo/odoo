@@ -114,6 +114,14 @@ class HrVersion(models.Model):
     member_of_department = fields.Boolean("Member of department", compute='_compute_part_of_department', search='_search_part_of_department',
         help="Whether the employee is a member of the active user's department or one of it's child department.")
     job_id = fields.Many2one('hr.job', check_company=True, tracking=1, index=True)
+    parent_id = fields.Many2one(
+        'hr.employee', 'Manager', tracking=1, index='btree_not_null',
+        domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
+    coach_id = fields.Many2one(
+        'hr.employee', 'Coach', compute='_compute_coach', store=True, readonly=False, index='btree_not_null',
+        domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]",
+        help='Select the "Employee" who is the coach of this employee.\n'
+             'The "Coach" has no specific rights or responsibilities by default.')
     job_title = fields.Char(compute="_compute_job_title", inverse="_inverse_job_title", store=True, readonly=False,
         string="Job Title", tracking=True)
     is_custom_job_title = fields.Boolean(compute='_compute_is_custom_job_title', store=True, default=False, groups="hr.group_hr_user")
@@ -225,6 +233,16 @@ class HrVersion(models.Model):
     def _inverse_job_title(self):
         for version in self:
             version.is_custom_job_title = version.job_title != version.job_id.name
+
+    @api.depends('parent_id')
+    def _compute_coach(self):
+        for version in self:
+            manager = version.parent_id
+            previous_manager = version._origin.parent_id
+            if manager and (version.coach_id == previous_manager or not version.coach_id):
+                version.coach_id = manager
+            elif not version.coach_id:
+                version.coach_id = False
 
     @api.depends('job_id')
     def _compute_is_custom_job_title(self):
