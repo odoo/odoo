@@ -240,7 +240,7 @@ class EventEvent(models.Model):
     # ------------------------------------------------------------
 
     def copy(self, default=None):
-        res = super().copy(default=default)
+        res = super(EventEvent, self.with_context(check_translations=True)).copy(default=default)
         res.copy_event_menus(self)
         return res
 
