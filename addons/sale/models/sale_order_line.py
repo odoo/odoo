@@ -419,6 +419,7 @@ class SaleOrderLine(models.Model):
     collapse_composition = fields.Boolean(
         string="Collapse Composition", copy=True, default=False
     )  # Whether this section's lines will be hidden in reports and in the portal.
+    line_number_offset = fields.Integer(compute="_compute_line_number_offset")
 
     mandatory_product = fields.Boolean(
         string="Is Product Mandatory", compute="_compute_mandatory_product"
@@ -1703,6 +1704,22 @@ class SaleOrderLine(models.Model):
                     last_sub = line
                 elif line in sale_order_lines:
                     line.parent_id = last_sub or last_section
+
+    def _compute_line_number_offset(self):
+        sale_order_lines = set(self)
+        for order, lines in self.grouped("order_id").items():
+            lines.line_number_offset = 0
+            if not order.show_sol_numbers:
+                continue
+            line_count = 0
+            for line in order.order_line.sorted("sequence"):
+                if line in sale_order_lines:
+                    line.line_number_offset = line_count
+                if line.display_type == "line_section" or not (
+                    line.parent_id.collapse_composition
+                    or line.parent_id.parent_id.collapse_composition
+                ):
+                    line_count += 1
 
     def _compute_mandatory_product(self):
         self.mandatory_product = (
