@@ -5,18 +5,22 @@
     'category': 'Accounting',
     'summary': 'Pusat Jurnal & Buku Besar Terintegrasi PPL dan Aset',
     'author': 'SIFNEXT',
-    'depends': ['base', 'web'],
+    'depends': ['base', 'web', 'mail'],
     'data': [
         'security/security_groups.xml',
         'security/ir.model.access.csv',
         'data/sequence_data.xml',
         'data/sif_coa_data.xml',
+
         'views/coa_views.xml',
+        'views/vendor_views.xml',
         'views/jurnal_views.xml',
         'views/general_ledger_views.xml',
         'views/balance_sheet_views.xml',
         'views/profit_loss_views.xml',
+        'views/aging_report_views.xml',
         'views/menu_views.xml',
+
         'reports/general_ledger_report.xml',
         'reports/balance_sheet_report.xml',
         'reports/profit_loss_report.xml',
@@ -30,7 +34,6 @@
             'sif_keuangan/static/src/profit_loss/**/*',
         ],
     },
-
 
     'installable': True,
     'application': True,

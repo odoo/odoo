@@ -163,7 +163,6 @@ class TestPPLWorkflow(TransactionCase):
 
     def test_employee_submit_without_coa_then_finance_verify(self):
         ppl = self._create_ppl()
-        self.assertEqual(ppl.applicant_id, self.user)
         self.assertEqual(ppl.unit_id, self.unit)
         self.assertEqual(ppl.source_type, "manual")
         self.assertEqual(ppl.total_amount, 100_000)
@@ -324,7 +323,6 @@ class TestPPLWorkflow(TransactionCase):
 
         ppl.with_user(self.finance).write({
             "request_date": ppl.request_date,
-            "applicant_id": ppl.applicant_id.id,
             "unit_id": ppl.unit_id.id,
             "partner_id": ppl.partner_id.id or False,
             "title": ppl.title,

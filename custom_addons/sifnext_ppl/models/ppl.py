@@ -10,10 +10,13 @@ class SifnextPPL(models.Model):
 
     name = fields.Char(default="New", readonly=True, copy=False, tracking=True, index=True)
     request_date = fields.Date(required=True, default=fields.Date.context_today, tracking=True)
-    applicant_id = fields.Many2one(
-        "res.users", required=True, default=lambda self: self.env.user,
-        readonly=True, tracking=True,
+    vendor_id = fields.Many2one("sif.vendor", string="Vendor", tracking=True)
+    payment_term = fields.Selection(
+        [("langsung", "Langsung"), ("jatuh_tempo", "Jatuh Tempo")],
+        string="Tipe Pembayaran", default="langsung", required=True, tracking=True,
     )
+    due_date = fields.Date(string="Tanggal Jatuh Tempo", tracking=True)
+    batas_waktu = fields.Char(string="Batas Waktu", compute="_compute_batas_waktu", store=True)
     unit_id = fields.Many2one(
         "sifnext.unit",
         string="Unit",
@@ -87,6 +90,16 @@ class SifnextPPL(models.Model):
         "Nomor PPL harus unik dalam satu perusahaan.",
     )
 
+    @api.depends("payment_term", "due_date")
+    def _compute_batas_waktu(self):
+        for record in self:
+            if record.payment_term == "langsung":
+                record.batas_waktu = "Langsung"
+            elif record.due_date:
+                record.batas_waktu = fields.Date.to_string(record.due_date)
+            else:
+                record.batas_waktu = "Jatuh Tempo"
+
     @api.depends("payment_method")
     def _compute_payment_source_domain(self):
         for record in self:
@@ -107,6 +120,12 @@ class SifnextPPL(models.Model):
         domain="[('active', '=', True), ('parent_id', '!=', False), ('account_type', '=', 'expense')]",
     )
 
+    @api.constrains("payment_term", "due_date")
+    def _check_due_date(self):
+        for record in self:
+            if record.payment_term == "jatuh_tempo" and not record.due_date:
+                raise ValidationError(_("Tanggal jatuh tempo wajib diisi untuk pembayaran Jatuh Tempo."))
+
     @api.depends("line_ids.subtotal", "line_ids.tax_type", "line_ids.tax_amount")
     def _compute_total_amount(self):
         for record in self:
@@ -125,16 +144,8 @@ class SifnextPPL(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        is_finance = self.env.user.has_group("sifnext_ppl.group_ppl_finance")
         for vals in vals_list:
-            applicant = self.env["res.users"].browse(vals.get("applicant_id", self.env.user.id))
-            if not is_finance and applicant != self.env.user:
-                raise AccessError(_("Pegawai hanya dapat membuat PPL atas nama sendiri."))
-            if not is_finance:
-                applicant = self.env.user
-                vals["applicant_id"] = applicant.id
-                vals["source_type"] = "manual"
-            unit = self.env["sifnext.unit"].browse(vals.get("unit_id") or applicant.unit_id.id)
+            unit = self.env["sifnext.unit"].browse(vals.get("unit_id") or self.env.user.unit_id.id)
             if not unit:
                 raise ValidationError(_("Unit pemohon wajib ditentukan sebelum membuat PPL."))
             company = self.env["res.company"].browse(vals.get("company_id", self.env.company.id))
@@ -175,11 +186,8 @@ class SifnextPPL(models.Model):
         }
         if workflow_fields.intersection(vals) and not self.env.context.get("ppl_workflow_write"):
             raise AccessError(_("Status dan audit workflow hanya dapat diubah melalui tindakan PPL."))
-        if "applicant_id" in vals and not self.env.user.has_group("sifnext_ppl.group_ppl_finance"):
-            if vals["applicant_id"] != self.env.user.id:
-                raise AccessError(_("Pegawai tidak dapat mengubah pemohon PPL."))
         protected = {
-            "request_date", "applicant_id", "unit_id", "partner_id", "title", "description",
+            "request_date", "unit_id", "partner_id", "vendor_id", "payment_term", "due_date", "title", "description",
             "source_type",
         }
         protected_values = {field: vals[field] for field in protected.intersection(vals)}
@@ -247,10 +255,10 @@ class SifnextPPL(models.Model):
                 "request_date": fields.Date.to_string(self.request_date),
                 "title": self.title,
                 "description": self.description,
-                "applicant": {
-                    "id": self.applicant_id.id,
-                    "name": self.applicant_id.name,
-                },
+                "vendor": {
+                    "id": self.vendor_id.id,
+                    "name": self.vendor_id.name,
+                } if self.vendor_id else None,
                 "unit": {
                     "id": self.unit_id.id,
                     "code": self.unit_id.code,
@@ -486,6 +494,8 @@ class SifnextPPL(models.Model):
         for record in self:
             if record.state != "approved":
                 raise UserError(_("Hanya PPL Disetujui yang dapat dibayar."))
+            if record.payment_term == "jatuh_tempo" and record.due_date and record.due_date > fields.Date.today():
+                raise UserError(_("PPL jatuh tempo belum mencapai batas waktu pembayaran (%s).") % record.due_date)
             if not record.payment_method or not record.payment_date or not record.payment_reference \
                     or not record.payment_source_account_id:
                 raise ValidationError(_("Metode, tanggal, referensi, dan sumber dana pembayaran wajib diisi."))

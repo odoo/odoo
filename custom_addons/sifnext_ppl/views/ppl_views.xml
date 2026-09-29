@@ -3,13 +3,15 @@
         <field name="name">sifnext.ppl.list</field>
         <field name="model">sifnext.ppl</field>
         <field name="arch" type="xml">
-            <list decoration-info="state == 'submitted'" decoration-success="state in ('approved', 'paid', 'done')">
+            <list decoration-info="state == 'submitted'" decoration-success="state == 'approved' or state == 'paid' or state == 'done'">
                 <field name="name"/>
                 <field name="request_date"/>
-                <field name="applicant_id"/>
+                <field name="vendor_id"/>
                 <field name="unit_id"/>
-                <field name="partner_id"/>
                 <field name="title"/>
+                <field name="payment_term"/>
+                <field name="due_date"/>
+                <field name="batas_waktu" string="Batas Waktu"/>
                 <field name="total_amount" sum="Total"/>
                 <field name="state" widget="badge"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -24,10 +26,8 @@
             <search>
                 <field name="name"/>
                 <field name="title"/>
-                <field name="applicant_id"/>
+                <field name="vendor_id"/>
                 <field name="unit_id"/>
-                <field name="partner_id"/>
-                <filter name="my_ppl" string="PPL Saya" domain="[('applicant_id', '=', uid)]"/>
                 <filter name="to_verify" string="Menunggu Verifikasi" domain="[('state', '=', 'submitted')]"/>
                 <group>
                     <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
@@ -44,17 +44,16 @@
             <form string="Detail PPL">
                 <sheet>
                     <group>
-                        <field name="ppl_state" invisible="True"/>
+                        <field name="ppl_state" invisible="1"/>
                         <field name="description" readonly="ppl_state != 'draft'"/>
                         <field name="quantity" readonly="ppl_state != 'draft'"/>
                         <field name="unit_price" readonly="ppl_state != 'draft'"/>
-                        <field name="subtotal" readonly="True"/>
-                        <field name="currency_id" invisible="True"/>
-                        <field name="company_id" invisible="True"/>
+                        <field name="subtotal" readonly="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
                         <field name="journal_account_id" string="COA"
-                               groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"
                                options="{'no_create': True, 'no_create_edit': True}"
-                               readonly="ppl_state not in ('draft', 'submitted')"/>
+                               readonly="ppl_state != 'draft' and ppl_state != 'submitted'"/>
                     </group>
                     <group string="Lampiran Item">
                         <field name="attachment_ids" widget="many2many_binary"
@@ -82,9 +81,9 @@
                     <button name="action_done" type="object" string="Selesaikan" class="btn-primary"
                             groups="sifnext_ppl.group_ppl_finance" invisible="state != 'paid'"/>
                     <button name="%(action_sifnext_ppl_reject_wizard)d" type="action" string="Revisi / Tolak"
-                            groups="sifnext_ppl.group_ppl_approver,sifnext_ppl.group_ppl_finance" invisible="state not in ('submitted', 'verified')"
+                            groups="sifnext_ppl.group_ppl_approver,sifnext_ppl.group_ppl_finance" invisible="state != 'submitted' and state != 'verified'"
                             context="{'default_ppl_id': id}"/>
-                    <button name="action_show_transaction_history" type="object" string="Lihat History Transfer" class="btn-info" invisible="state not in ('paid', 'done')"/>
+                    <button name="action_show_transaction_history" type="object" string="Lihat History Transfer" class="btn-info" invisible="state != 'paid' and state != 'done'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submitted,verified,approved,paid,done"/>
                 </header>
                 <sheet>
@@ -96,9 +95,11 @@
                     <group>
                         <group>
                             <field name="request_date" readonly="state != 'draft'"/>
-                            <field name="applicant_id"/>
-                            <field name="unit_id" required="True" readonly="state != 'draft'"/>
-                            <field name="partner_id" readonly="state != 'draft'"/>
+                            <field name="vendor_id" readonly="state != 'draft'"/>
+                            <field name="unit_id" required="1" readonly="state != 'draft'"/>
+                            <field name="payment_term" widget="radio" readonly="state != 'draft'"/>
+                            <field name="due_date" invisible="payment_term != 'jatuh_tempo'" readonly="state != 'draft'"/>
+                            <field name="batas_waktu" string="Batas Waktu" readonly="1"/>
                             <field name="source_type" readonly="state != 'draft'"/>
                         </group>
                         <group>
@@ -113,7 +114,7 @@
                     </group>
                     <notebook>
                         <page string="Detail Kebutuhan">
-                            <group class="oe_right" groups="sifnext_ppl.group_ppl_finance" invisible="state not in ('draft', 'submitted')">
+                            <group class="oe_right" groups="sifnext_ppl.group_ppl_finance" invisible="state != 'draft' and state != 'submitted'">
                                 <div class="o_row">
                                     <button name="action_select_all_lines" type="object" string="Pilih Semua" class="btn-secondary" style="margin-right: 4px;"/>
                                     <button name="action_deselect_all_lines" type="object" string="Batal Pilih" class="btn-secondary" style="margin-right: 8px;"/>
@@ -123,87 +124,85 @@
                                 </div>
                             </group>
                             <field name="line_ids" invisible="state != 'draft'">
-                                <list editable="bottom" open_form_view="True">
+                                <list editable="bottom">
                                     <field name="is_selected"/>
                                     <field name="sequence" widget="handle"/>
-                                    <field name="employee_id" optional="show" readonly="True"/>
+                                    <field name="employee_id" optional="show" readonly="1"/>
                                     <field name="description"/>
                                     <field name="tax_type"/>
-                                    <field name="tax_percentage" invisible="tax_type == 'none'"/>
-                                    <field name="attachment_count" string="Lampiran" readonly="True" optional="show"/>
+                                    <field name="tax_percentage"/>
+                                    <field name="attachment_count" string="Lampiran" readonly="1" optional="show"/>
                                     <field name="quantity"/>
                                     <field name="unit_price"/>
                                     <field name="subtotal"/>
                                     <field name="journal_account_id" string="COA"
-                                           groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"
                                            options="{'no_create': True, 'no_create_edit': True}"/>
                                     <field name="rka_anggaran" optional="hide" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
                                     <field name="rka_realisasi" optional="hide" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
                                     <field name="rka_sisa" optional="show" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
                                     <field name="budget_status" string="Status Budget" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
-                                    <field name="currency_id" column_invisible="True"/>
-                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
                                 </list>
                             </field>
                             <field name="line_ids" groups="sifnext_ppl.group_ppl_finance"
                                    invisible="state != 'submitted'">
-                                <list editable="bottom" create="false" delete="false" open_form_view="True">
+                                <list editable="bottom" create="false" delete="false">
                                     <field name="is_selected"/>
-                                    <field name="sequence" readonly="True"/>
-                                    <field name="employee_id" optional="show" readonly="True"/>
-                                    <field name="description" readonly="True"/>
-                                    <field name="tax_type" readonly="True"/>
-                                    <field name="tax_percentage" readonly="True" invisible="tax_type == 'none'"/>
-                                    <field name="attachment_count" string="Lampiran" readonly="True" optional="show"/>
-                                    <field name="quantity" readonly="True"/>
-                                    <field name="unit_price" readonly="True"/>
-                                    <field name="subtotal" readonly="True"/>
+                                    <field name="sequence" readonly="1"/>
+                                    <field name="employee_id" optional="show" readonly="1"/>
+                                    <field name="description" readonly="1"/>
+                                    <field name="tax_type" readonly="1"/>
+                                    <field name="tax_percentage" readonly="1"/>
+                                    <field name="attachment_count" string="Lampiran" readonly="1" optional="show"/>
+                                    <field name="quantity" readonly="1"/>
+                                    <field name="unit_price" readonly="1"/>
+                                    <field name="subtotal" readonly="1"/>
                                     <field name="journal_account_id" string="COA"
                                            options="{'no_create': True, 'no_create_edit': True}"/>
                                     <field name="rka_anggaran" optional="hide"/>
                                     <field name="rka_realisasi" optional="hide"/>
                                     <field name="rka_sisa" optional="show"/>
-                                    <field name="budget_status" string="Status Budget" readonly="True"/>
-                                    <field name="currency_id" column_invisible="True"/>
-                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="budget_status" string="Status Budget" readonly="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
                                 </list>
                             </field>
-                            <field name="line_ids" readonly="True"
-                                   invisible="state in ('draft', 'submitted')">
-                                <list create="false" delete="false" edit="false" open_form_view="True">
+                            <field name="line_ids" readonly="1"
+                                   invisible="state == 'draft' or state == 'submitted'">
+                                <list create="false" delete="false" edit="false">
                                     <field name="sequence"/>
                                     <field name="employee_id" optional="show"/>
                                     <field name="description"/>
                                     <field name="tax_type"/>
-                                    <field name="tax_percentage" invisible="tax_type == 'none'"/>
+                                    <field name="tax_percentage"/>
                                     <field name="attachment_count" string="Lampiran" optional="show"/>
                                     <field name="quantity"/>
                                     <field name="unit_price"/>
                                     <field name="subtotal"/>
-                                    <field name="journal_account_id" string="COA"
-                                           groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
+                                    <field name="journal_account_id" string="COA"/>
                                     <field name="rka_anggaran" optional="hide" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
                                     <field name="rka_realisasi" optional="hide" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
                                     <field name="rka_sisa" optional="show" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
                                     <field name="budget_status" string="Status Budget" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
-                                    <field name="currency_id" column_invisible="True"/>
-                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
                                 </list>
                             </field>
-                            <field name="line_ids" readonly="True" groups="!sifnext_ppl.group_ppl_finance"
+                            <field name="line_ids" readonly="1" groups="!sifnext_ppl.group_ppl_finance"
                                    invisible="state != 'submitted'">
-                                <list create="false" delete="false" edit="false" open_form_view="True">
+                                <list create="false" delete="false" edit="false">
                                     <field name="sequence"/>
                                     <field name="employee_id" optional="show"/>
                                     <field name="description"/>
                                     <field name="tax_type"/>
-                                    <field name="tax_percentage" invisible="tax_type == 'none'"/>
+                                    <field name="tax_percentage"/>
                                     <field name="attachment_count" string="Lampiran" optional="show"/>
                                     <field name="quantity"/>
                                     <field name="unit_price"/>
                                     <field name="subtotal"/>
-                                    <field name="currency_id" column_invisible="True"/>
-                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
                                 </list>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
@@ -217,7 +216,7 @@
                                 <group string="Sumber Dana">
                                     <field name="payment_source_domain_name" invisible="1"/>
                                     <field name="payment_method" readonly="state != 'approved'"/>
-                                    <field name="payment_source_account_id" readonly="state != 'approved'" 
+                                    <field name="payment_source_account_id" readonly="state != 'approved'"
                                            options="{'no_create': True, 'no_create_edit': True}"
                                            domain="[('active', '=', True), ('parent_id', '!=', False), ('account_type', '=', 'asset'), ('name', 'ilike', payment_source_domain_name)]"/>
                                     <field name="payment_date" readonly="state != 'approved'"/>
@@ -270,7 +269,7 @@
                     <group>
                         <group string="Informasi Utama">
                             <field name="name" readonly="1"/>
-                            <field name="partner_id" readonly="1"/>
+                            <field name="vendor_id" readonly="1"/>
                             <field name="total_amount" readonly="1"/>
                         </group>
                         <group string="Detail Sumber Dana">
@@ -310,7 +309,7 @@
             <list string="Rekap History Transfer" create="false" edit="false" delete="false" decoration-success="state == 'done'">
                 <field name="payment_date"/>
                 <field name="name" string="No PPL"/>
-                <field name="partner_id" string="Penerima"/>
+                <field name="vendor_id" string="Vendor"/>
                 <field name="payment_dest_bank" string="Bank Tujuan"/>
                 <field name="payment_dest_account_number" string="No Rekening"/>
                 <field name="payment_dest_account_name" string="Atas Nama"/>
@@ -325,7 +324,7 @@
         <field name="name">Rekap History Transfer</field>
         <field name="res_model">sifnext.ppl</field>
         <field name="view_mode">list,form</field>
-        <field name="domain">[('state', 'in', ('paid', 'done'))]</field>
+        <field name="domain">[('state', 'in', ['paid', 'done'])]</field>
         <field name="view_id" ref="view_ppl_history_transfer_tree"/>
         <field name="search_view_id" ref="view_sifnext_ppl_search"/>
     </record>
@@ -333,4 +332,5 @@
     <menuitem id="menu_sifnext_finance_root" name="PPL" sequence="30" groups="base.group_user"/>
     <menuitem id="menu_sifnext_ppl" name="PPL" parent="menu_sifnext_finance_root" action="action_sifnext_ppl" sequence="10"/>
     <menuitem id="menu_ppl_history_transfer" name="History Transfer" parent="menu_sifnext_finance_root" action="action_ppl_history_transfer" sequence="20"/>
+    <menuitem id="menu_sifnext_vendor" name="Master Vendor" parent="menu_sifnext_finance_root" action="sif_keuangan.action_sif_vendor" sequence="30"/>
 </odoo>
