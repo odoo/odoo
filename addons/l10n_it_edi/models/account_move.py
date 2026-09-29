@@ -737,7 +737,7 @@ class AccountMove(models.Model):
 
         # Flags
         is_self_invoice = self.l10n_it_edi_is_self_invoice
-        document_type = self.l10n_it_document_type.code
+        document_type = self._l10n_it_edi_get_document_type()
 
         # Represent if the document is a reverse charge refund in a single variable
         reverse_charge = document_type in ['TD16', 'TD17', 'TD18', 'TD19']
@@ -1030,51 +1030,40 @@ class AccountMove(models.Model):
             The maximum threshold is 400 Euro, except for the forfettario tax regime (RF19), which can
             issue simplified invoices without the amount limit.
 
-            Deprecated since 18.0: use `not _l10n_it_edi_is_simplified_checks`.
-            It will be removed in ``20.0``.
+            A simplified invoice is chosen automatically only when the move and partner
+            checks pass and the partner's address is incomplete: with a complete address
+            an ordinary invoice is preferred.
         """
         self.ensure_one()
-        return not self._l10n_it_edi_is_simplified_checks()
+        partner = self.commercial_partner_id
+        return (
+            not self._l10n_it_edi_is_simplified_checks()
+            and partner._l10n_it_edi_export_check([
+                'partner_address_missing',
+                'partner_simplified',
+            ]).keys() == {'l10n_it_edi_partner_address_missing'}
+        )
 
     def _l10n_it_edi_is_simplified_checks(self):
-        """ Warnings can be ignored by setting `l10n_it_document_type == 'TD07'`
+        """ Warnings can be ignored by setting `l10n_it_document_type in ('TD07', 'TD08', 'TD09')'`
             in the optional `l10n_it_edi_ndd` module
         """
         errors = {}
         build_error = self._l10n_it_edi_build_move_error
 
-        if wrong_partner_moves := self.filtered(lambda move:
-            not move.commercial_partner_id._l10n_it_edi_is_italian()
-            or move.commercial_partner_id._l10n_it_edi_is_public_administration()
-        ):
-            errors['l10n_it_edi_move_simplified_partner'] = build_error(self.env._(
-                "Simplified Invoices (TD07) can only be used with domestic partners"
-                " that do not belong to the Public Administration."
-                " Please issue an ordinary invoice instead."),
-                records=wrong_partner_moves,
-            )
         if wrong_amount_moves := self.filtered(lambda move:
             move.company_id.l10n_it_tax_system != 'RF19' and move.amount_total > 400
         ):
             errors['l10n_it_edi_move_simplified_amount'] = build_error(self.env._(
-                "Simplified Invoices (TD07) can only be issued for a total amount of up to 400€."
+                "Simplified Invoices (TD07, TD08, TD09) can only be issued for a total amount of up to 400€."
                 " Please issue an ordinary invoice instead."),
                 records=wrong_amount_moves,
             )
         if reverse_charge_moves := self.filtered(lambda move: move.l10n_it_edi_is_self_invoice):
             errors['l10n_it_edi_move_simplified_self_invoice'] = build_error(self.env._(
-                "Simplified Invoices (TD07) cannot be used for self-invoices."
+                "Simplified Invoices (TD07, TD08, TD09) cannot be used for self-invoices."
                 " Please issue an ordinary invoice instead."),
                 records=reverse_charge_moves,
-            )
-        if incomplete_address_moves := self.filtered(lambda move:
-            'l10n_it_edi_partner_address_missing' not in move.commercial_partner_id._l10n_it_edi_export_check()
-        ):
-            errors['l10n_it_edi_move_simplified_address_complete'] = build_error(self.env._(
-                "Simplified Invoices (TD07) are generally preferred when partner address"
-                " is incomplete, so please issue an ordinary invoice instead."),
-                records=incomplete_address_moves,
-                level='info',
             )
         return errors
 
@@ -1153,7 +1142,8 @@ class AccountMove(models.Model):
             'TD07': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
-                     'simplified': True},
+                     'simplified': True,
+                     'debit_note': False},
             'TD08': {'move_types': ['out_refund'],
                      'import_type': 'in_refund',
                      'self_invoice': False,
@@ -1161,7 +1151,8 @@ class AccountMove(models.Model):
             'TD09': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
-                     'simplified': True},
+                     'simplified': True,
+                     'debit_note': True},
             'TD28': {'move_types': ['in_invoice', 'in_refund'],
                      'import_type': 'in_invoice',
                      'simplified': False,
@@ -1201,9 +1192,9 @@ class AccountMove(models.Model):
             Retrieve document type from the move. If not set, compare the features
             of the invoice to the requirements of each Document Type (TDxx)
             FatturaPA until you find a valid one.
-            If the user has selected (the default) TD01 and the partner has no complete address
-            then we can't issue a TD01 invoice - but if it's possible to issue a simplified invoice,
-            then switch automatically to the TD07.
+            If the user has selected an ordinary document type (TD01 invoice, TD04 credit note, TD05 debit note)
+            and the partner has no complete address, but a simplified document can be issued,
+            then switch automatically to the simplified one (TD07, TD08, TD09).
         """
         self.ensure_one()
 
@@ -1219,9 +1210,11 @@ class AccountMove(models.Model):
             return actual_values == expected_values
 
         if self.l10n_it_document_type:
-            if self.l10n_it_document_type.code == 'TD01' and self._l10n_it_edi_is_simplified():
-                return 'TD07'
-            return self.l10n_it_document_type.code
+            code = self.l10n_it_document_type.code
+            simplified_codes = {'TD01': 'TD07', 'TD04': 'TD08', 'TD05': 'TD09'}
+            if code in simplified_codes and self._l10n_it_edi_is_simplified():
+                return simplified_codes[code]
+            return code
 
         invoice_features = self._l10n_it_edi_features_for_document_type_selection()
         for document_type_code, document_type_features in self._l10n_it_edi_document_type_mapping().items():
@@ -2085,13 +2078,8 @@ class AccountMove(models.Model):
 
         companies = self.mapped("company_id")
         companies_partners = companies.mapped("partner_id")
-        moves_full = self.filtered(lambda m: not m._l10n_it_edi_is_simplified())
         moves_simplified = self.filtered(lambda m: m._l10n_it_edi_is_simplified())
-        moves_simplified_errors = {
-            k: v
-            for k, v in moves_simplified._l10n_it_edi_is_simplified_checks().items()
-            if v.get('level') in ('error', 'warning')
-        }
+        moves_full = self - moves_simplified
 
         full = moves_full.mapped("commercial_partner_id").filtered(lambda p: p not in companies_partners)
         simplified = moves_simplified.mapped("commercial_partner_id").filtered(lambda p: p not in companies_partners | full)
@@ -2100,12 +2088,11 @@ class AccountMove(models.Model):
         return {
             **companies._l10n_it_edi_export_check(),
             **full._l10n_it_edi_export_check(['partner_address_missing']),
-            **simplified._l10n_it_edi_export_check(['partner_country_missing']),
+            **simplified._l10n_it_edi_export_check(['partner_country_missing', 'partner_simplified']),
             **(simplified | full)._l10n_it_edi_export_check(['partner_vat_codice_fiscale_missing']),
             **representatives._l10n_it_edi_export_check(['partner_vat_missing']),
             **self._l10n_it_edi_base_export_check(),
             **self._l10n_it_edi_export_taxes_check(),
-            **moves_simplified_errors,
         }
 
     def _l10n_it_edi_build_move_error(self, message, records=None, level='warning'):
@@ -2143,6 +2130,9 @@ class AccountMove(models.Model):
             if moves := pa_moves.filtered(lambda move: not move.l10n_it_origin_document_type and (move.l10n_it_cig or move.l10n_it_cup)):
                 message = _("CIG/CUP fields of partner(s) are present, please fill out Origin Document Type field in the Electronic Invoicing tab.")
                 errors['move_missing_origin_document_field'] = build_error(message=message, records=moves)
+        if simplified_moves := self.filtered(lambda move: move._l10n_it_edi_is_simplified_document_type(move._l10n_it_edi_get_document_type())):
+            errors.update(simplified_moves._l10n_it_edi_is_simplified_checks())
+            errors.update(simplified_moves.commercial_partner_id._l10n_it_edi_export_check(['partner_simplified']))
         return errors
 
     def _l10n_it_edi_export_taxes_check(self):
@@ -2264,9 +2254,11 @@ class AccountMove(models.Model):
         ''' Create the xml file content.
             :return:    The XML content as bytestring.
         '''
-        qweb_template_name = (
-            'l10n_it_edi.account_invoice_it_FatturaPA_export' if not self._l10n_it_edi_is_simplified()
-            else 'l10n_it_edi.account_invoice_it_simplified_FatturaPA_export')
+        document_type = self._l10n_it_edi_get_document_type()
+        if self._l10n_it_edi_is_simplified_document_type(document_type):
+            qweb_template_name = 'l10n_it_edi.account_invoice_it_simplified_FatturaPA_export'
+        else:
+            qweb_template_name = 'l10n_it_edi.account_invoice_it_FatturaPA_export'
         xml_content = self.env['ir.qweb']._render(qweb_template_name, {
             **self._l10n_it_edi_get_values(pdf_values),
             **self._l10n_it_edi_get_formatters()})
