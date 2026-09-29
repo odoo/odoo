@@ -1,15 +1,16 @@
-import { Component, onPatched, onWillStart, proxy, props, t } from "@odoo/owl";
+import { Component, onPatched, onWillStart, proxy, signal, t, useProps } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { useRef, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 import { OrderHistoryLine } from "./order_history_line/order_history_line";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 
 export class CartQuickReorder extends Component {
     static template = "website_sale.CartQuickReorder";
     static components = { OrderHistoryLine };
-    props = props({ templateData: t.object() });
+    props = useProps({ templateData: t.object() });
+    offCanvasRef = signal.ref();
 
     setup() {
         this.state = proxy({
@@ -18,7 +19,6 @@ export class CartQuickReorder extends Component {
             currency_id: null,
         });
         this.cartService = useService("cart");
-        this.offCanvasRef = useRef("quickReorderSidebar");
 
         useAutofocus();
 

@@ -49,7 +49,7 @@
                     t-att-value="this.parseInt(this.state.quantity)"
                     t-on-input="(event) => this.updateQuantity(event.target.value)"
                     t-on-keydown="(event) => event.key === 'Enter' and this.doReorder()"
-                    t-custom-ref="qtyInput"
+                    t-ref="qtyInput"
                 />
                 <button
                     type="button"

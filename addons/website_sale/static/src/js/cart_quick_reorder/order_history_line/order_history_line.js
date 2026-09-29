@@ -1,13 +1,15 @@
-import { Component, onPatched, proxy } from "@odoo/owl";
-import { useRef } from "@web/owl2/utils";
+import { Component, onPatched, proxy, signal, t, useProps } from "@odoo/owl";
 
 export class OrderHistoryLine extends Component {
-    static props = { line: Object, focus: Boolean };
     static template = "website_sale.OrderHistoryLine";
+    props = useProps({
+        line: t.object(),
+        focus: t.boolean(),
+    });
+    qtyInput = signal.ref();
 
     setup() {
         this.state = proxy({ quantity: this.props.line.product_uom_qty });
-        this.qtyInput = useRef("qtyInput");
 
         onPatched(() => {
             if (this.props.focus) {

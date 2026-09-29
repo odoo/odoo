@@ -1,14 +1,14 @@
-import { Component, proxy, props, t } from "@odoo/owl";
+import { Component, proxy, useProps, t } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
 
 export const CLICK_DELAY = 200;
 
 export class CartLine extends Component {
     static template = "website_sale.CartLine";
-    props = props({
+    props = useProps({
         isQuantityViewActive: t.boolean(),
         isWishlistViewActive: t.boolean(),
-        isUomFeatureEnabled: t.boolean(),
+        showProductReferencePrice: t.boolean(),
         templateData: t.object(),
         line: t.object(),
     });
@@ -34,6 +34,10 @@ export class CartLine extends Component {
             && (
                 this.props.line.max_qunantity === undefined
                 || effectiveQuantity <= this.props.line.max_qunantity
+            )
+            && (
+                this.props.line.min_qunantity === undefined
+                || effectiveQuantity >= this.props.line.min_qunantity
             )
         ) {
             this.state.quantity = effectiveQuantity;

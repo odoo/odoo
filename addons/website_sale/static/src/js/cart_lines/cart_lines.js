@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy, props, t } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { CartLine } from "./cart_line/cart_line";
 import { CartAccessories } from "./cart_accessories/cart_accessories";
 import wishlistUtils from "@website_sale/js/wishlist_utils";
@@ -10,7 +10,7 @@ import { useSubEnv } from "@web/owl2/utils";
 export class CartLines extends Component {
     static template = "website_sale.CartLines";
     static components = { CartLine, CartAccessories };
-    props = props({ templateData: t.object() });
+    props = useProps({ templateData: t.object() });
 
     setup() {
         this.cartService = useService("cart");
@@ -20,7 +20,7 @@ export class CartLines extends Component {
             accessories: [],
             is_quantity_view_active: false,
             is_wishlist_view_active: false,
-            is_uom_feature_enabled: false,
+            show_product_reference_price: false,
             is_accessories_view_active: false,
         });
 
@@ -63,7 +63,7 @@ export class CartLines extends Component {
         return {
             isQuantityViewActive: this.state.is_quantity_view_active,
             isWishlistViewActive: this.state.is_wishlist_view_active,
-            isUomFeatureEnabled: this.state.is_uom_feature_enabled,
+            showProductReferencePrice: this.state.show_product_reference_price,
             templateData: this.props.templateData,
         };
     }

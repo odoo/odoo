@@ -289,6 +289,13 @@ export class CartService {
         this.showWarning(data.warning);
         this.bus.trigger("cart_update");
         this.bus.trigger("cart_amount_changed", [data.amount, data.minor_amount]);
+
+        if (data.tracking_info?.length) {
+            wSaleUtils.dispatchTrackingEvent("update_cart_event", {
+                currency: data.currency,
+                items: data.tracking_info,
+            });
+        }
     }
 
     /**
