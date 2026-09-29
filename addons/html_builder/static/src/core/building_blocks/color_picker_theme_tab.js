@@ -1,4 +1,5 @@
-import { Component, useProps, t } from "@odoo/owl";
+import { HighlightThemeRowPlugin } from "@html_builder/sidebar/highlight_theme_row_plugin";
+import { Component, t, usePlugin, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
@@ -12,9 +13,13 @@ export class ColorPickerThemeTab extends Component {
         onFocusin: t.function(),
         onFocusout: t.function(),
         selectedColorCombination: t.string().optional(),
-        editColorCombination: t.function().optional(),
         close: t.function().optional(),
     });
+
+    setup() {
+        super.setup();
+        this.highlightThemeRow = usePlugin(HighlightThemeRowPlugin);
+    }
 }
 
 registry.category("color_picker_tabs").add(

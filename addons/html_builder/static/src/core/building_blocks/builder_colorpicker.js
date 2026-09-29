@@ -203,7 +203,6 @@ export class BuilderColorPicker extends Component {
                 grayscales: this.props.grayscales,
                 defaultOpacity: this.props.defaultOpacity,
                 className: this.props.colorPickerClassName,
-                editColorCombination: this.env.editColorCombination,
             },
             options: {
                 onClose: onPreviewRevert,
