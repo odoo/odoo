@@ -181,7 +181,7 @@
                                     aria-label="What positioning?"
                                     aria-controls="selectPurposeMenu">
                                 <span class="d-flex align-items-center">
-                                    <t t-if="this.state.selectedPositioning" t-out="this.state.selectedPositioning"/>
+                                    <t t-out="this.state.selectedPositioning || this.state.formerSelectedPositioning"/>
                                     <i class="oi ms-auto ps-2" data-icon="keyboard_arrow_down" role="img"/>
                                 </span>
                             </button>
