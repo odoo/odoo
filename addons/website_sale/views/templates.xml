@@ -2534,6 +2534,7 @@
                     </t>
                     <t t-if="tx_sudo.state == 'cancel'">
                         <t t-out="tx_sudo.provider_id.sudo().cancel_msg"/>
+                        <span t-if="tx_sudo.state_message" t-esc="tx_sudo.state_message"/>
                     </t>
                     <t t-if="tx_sudo.state == 'authorized'">
                         <t t-if="tx_sudo.provider_id.sudo().auth_msg" t-out="tx_sudo.provider_id.sudo().auth_msg"/>
