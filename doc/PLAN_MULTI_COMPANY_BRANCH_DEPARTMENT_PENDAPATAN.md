@@ -1,8 +1,8 @@
 # Rencana Multi-Company, Cabang, Departemen, dan Pendapatan
 
-**Status:** Rencana untuk ditinjau — belum ada perubahan kode
+**Status:** Scope lanjutan diterapkan dan `db_sifnext` berhasil di-upgrade; clone migrasi lulus 41 test
 **Tanggal:** 28 September 2026
-**Ruang lingkup:** Master cabang dan departemen, pembatasan data Pendapatan, serta penyesuaian integrasi ke modul keuangan dan operasional.
+**Ruang lingkup:** Master cabang/departemen dan penerapannya pada Pendapatan, jurnal, PPL/payroll, Transaksi, RKA, dan Aset. Presenly, Absensi, dan Cuti dikecualikan.
 
 ## 1. Ringkasan
 
@@ -31,11 +31,11 @@ Setiap transaksi Pendapatan akan memiliki perusahaan/cabang dan departemen yang 
 - Kategori Pendapatan dikelola per cabang, bukan global.
 - RKA dipisahkan per cabang/company, tetapi tidak sampai tingkat departemen.
 - Record lama yang tidak dapat dipetakan boleh memakai departemen khusus “Belum Diklasifikasikan” pada company/cabang yang saat ini tercatat. Jika company yang tercatat adalah perusahaan induk, jangan memindahkannya ke cabang tanpa mapping yang disetujui. Nilainya tetap dilaporkan agar dapat ditinjau.
-- Finance pusat dapat membaca seluruh cabang, tanpa hak membuat, mengubah, menyetujui, atau mem-posting transaksi Pendapatan.
+- Finance pusat dapat membaca seluruh cabang, tanpa hak membuat, mengubah, menyetujui, atau mem-posting transaksi pada modul dalam scope.
 
-Rekomendasi yang masih menunggu persetujuan: kode wajib per departemen dan PPL payroll terpisah per departemen. Alasannya serta dampaknya dijelaskan pada Bagian 8.
+Rekomendasi kode wajib per departemen dan satu PPL payroll per departemen telah disetujui dan diterapkan. Implementasi master menggunakan `hr.department`; model aktif `sifnext.unit` diganti, dengan backup legacy dan pemetaan relasi pada migrasi.
 
-## 2. Temuan kondisi saat ini
+## 2. Temuan baseline sebelum implementasi
 
 ### 2.1 Perusahaan dan cabang
 
@@ -62,7 +62,7 @@ Rekomendasi yang masih menunggu persetujuan: kode wajib per departemen dan PPL p
 
 ### 2.4 Modul yang terhubung
 
-Tabel di bawah memetakan dampak jangka panjang, bukan berarti semua modul diubah pada tahap pertama. Batas aktual tahap pertama dan alasan penundaan dijelaskan di Bagian 9.
+Tabel di bawah mencatat baseline sebelum perubahan dan kaitan antarmodul. Scope yang disetujui serta modul yang dikecualikan dicatat pada Bagian 9.
 
 | Modul | Kondisi sekarang | Dampak yang perlu direncanakan |
 |---|---|---|
@@ -74,7 +74,7 @@ Tabel di bawah memetakan dampak jangka panjang, bukan berarti semua modul diubah
 | `hr_payroll_custom` | Slip sudah memiliki `department_id` terkait ke departemen pegawai dan payroll batch memiliki company. | Pertahankan relasi standar; validasi company dan departemen pegawai. Integrasi payroll ke PPL saat ini memilih unit pertama di company; rekomendasinya satu batch menghasilkan satu PPL per departemen yang ada di batch tersebut. |
 | `sifnext_operational` | Peminjaman membaca `hr.employee.department_id` untuk menampilkan departemen peminjam. | Pertahankan sebagai sumber data departemen pegawai; tinjau filter company pada record operasional. |
 
-## 3. Model data yang diusulkan
+## 3. Model data target
 
 ### 3.1 Cabang
 
@@ -87,12 +87,12 @@ Tabel di bawah memetakan dampak jangka panjang, bukan berarti semua modul diubah
 
 1. Gunakan `hr.department` sebagai satu-satunya master departemen.
 2. Setiap departemen operasional wajib mempunyai `company_id` yang menunjuk cabang pemiliknya. Departemen induk/anak, bila dipakai, harus tetap berada di cabang yang sama.
-3. Rekomendasi: tambahkan field kode SIF wajib (misalnya `sif_code`) pada setiap department operasional untuk mempertahankan prefix nomor PPL, integrasi, dan pelaporan. Kode harus unik di dalam cabang, dinormalisasi konsisten, dan tidak dicampur dengan `journal_unit_dept`; rekomendasi ini menunggu persetujuan pengguna.
-4. Pertahankan `journal_unit_dept` sementara sebagai atribut pemetaan akuntansi lama, atau buat tabel pemetaan yang eksplisit. Tentukan pemilik dan aturan nilainya sebelum menghapus `sifnext.unit`.
+3. Tambahkan field kode SIF wajib (`sif_code`) pada setiap department operasional untuk mempertahankan prefix nomor PPL, integrasi, dan pelaporan. Kode unik di dalam cabang, dinormalisasi konsisten, dan tidak dicampur dengan `journal_unit_dept`.
+4. Simpan klasifikasi akuntansi lama pada `hr.department.sif_journal_unit_dept` dan pada tabel backup unit legacy untuk audit; klasifikasi ini bukan kode atau nama department.
 
 ### 3.3 Pengguna
 
-1. Berikan satu departemen penugasan melalui `res.users.department_id` sebagai sumber default dan otoritatif untuk Pendapatan tahap pertama. Sinkronisasi dengan `hr.employee.department_id` ditunda bersama payroll agar modul yang dikecualikan tidak ikut berubah.
+1. Gunakan `res.users.department_id` sebagai default Pendapatan dan `hr.employee.department_id` sebagai sumber department payroll. Keduanya tidak disinkronkan otomatis.
 2. Department pengguna harus berasal dari salah satu company/cabang yang diizinkan pengguna. Domain UI hanya bantuan; validasi server juga wajib.
 3. Konfigurasikan `company_ids` pengguna sesuai cabang yang benar-benar boleh diakses. Contoh: pengguna UISI hanya diberi cabang UISI; Finance pusat dapat diberi beberapa cabang sesuai mandatnya.
 4. Department penugasan menjadi default dan identitas organisasi, bukan filter visibilitas Pendapatan. Sesuai keputusan pengguna, semua department dalam cabang yang diizinkan terlihat oleh Pendapatan User.
@@ -114,7 +114,7 @@ Model `pendapatan.pendapatan` ditargetkan mempunyai:
 
 Tambahan teknis: pertahankan `currency_id` sebagai field pendukung; aktifkan pemeriksaan company pada relasi yang relevan; lakukan constraint untuk memastikan `department_id.company_id == company_id` dan category tidak lintas company. Ganti `unit_name` untuk transaksi baru dengan relasi departemen. Nilai teks lama tidak dihapus sebelum data historis berhasil dipetakan.
 
-## 4. Kebijakan akses yang direncanakan
+## 4. Kebijakan akses yang diterapkan
 
 ### 4.1 Batas cabang
 
@@ -139,68 +139,61 @@ Pemisahan kerahasiaan dilakukan pada company/cabang. Record rule department tida
 
 - Audit `create_pendapatan_from_external()` dan semua pemanggilnya. Hindari `sudo()` tanpa pemeriksaan eksplisit bahwa caller berhak membuat pada company/departemen tersebut.
 - Posting ke jurnal harus membawa `company_id` dan `department_id`; pastikan `sudo()` yang dibutuhkan untuk integrasi jurnal tidak mengubah dimensi organisasi atau melewati validasi.
-- API PPL/Transaksi sementara dapat menerima `unit_id` sebagai alias kompatibilitas, tetapi kontrak baru harus mengirim identitas departemen secara eksplisit dan memiliki rencana penghapusan alias.
+- API PPL/Transaksi mempertahankan `unit` sebagai alias kompatibilitas; `department` menjadi relasi otoritatif. Penghapusan alias dilakukan setelah konsumen terverifikasi.
 
-## 5. Urutan implementasi yang disarankan
+## 5. Urutan implementasi
 
 ### Fase 0 — Keputusan dan inventarisasi
 
-1. Konfirmasi rekomendasi kode departemen dan skenario PPL payroll pada Bagian 8; keputusan akses, kategori, RKA, histori, dan Finance pusat sudah dicatat.
-2. Inventarisasi company parent-child yang akan menjadi cabang, company yang saat ini dipakai record, seluruh `sifnext.unit`, pengguna, PPL, Pendapatan, jurnal, RKA, aset, dan payroll batch.
-3. Siapkan backup database dan tabel pemetaan lama → baru. Jangan menebak mapping hanya dari kemiripan nama.
+1. Keputusan telah ditetapkan: kode departemen wajib dan unik per cabang; satu PPL payroll per departemen; Finance pusat read-only; RKA per company, bukan department; fallback tidak boleh menebak cabang.
+2. Inventarisasi company, departemen, kode/unit lama, pengguna, PPL/payroll, Pendapatan/jurnal, RKA, aset, dan transaksi bank.
+3. Jalankan upgrade pada clone database dengan backup tabel legacy dan validasi mapping sebelum menyentuh database kerja.
 
 ### Fase 1 — Fondasi master organisasi
 
-1. Buat modul fondasi bersama (nama sementara `sifnext_org`) yang bergantung pada `hr`.
-2. Jika rekomendasi kode disetujui, tambahkan kode SIF ke `hr.department`; lanjutkan dengan validasi keunikan per company, penugasan departemen pengguna, aturan company, dan tampilan departemen pada form company branch.
-3. Uji pembuatan departemen dari halaman cabang, termasuk departemen anak dan validasi agar tidak lintas cabang.
+1. Modul `sifnext_org` memperluas `hr.department` dengan kode SIF, penugasan departemen pengguna, klasifikasi jurnal legacy, dan tampilan administrasi.
+2. Kode dinormalisasi dan unik dalam company; validasi server mencegah kode duplikat dan department pengguna lintas company yang diizinkan.
+3. Cabang tetap menggunakan `res.company` dan departemen dibuat dari administrasi HR/company.
 
 ### Fase 2 — Migrasi master dan pengguna
 
-1. Buat/pastikan record `res.company` cabang mempunyai induk yang benar.
-2. Buat master `hr.department` baru untuk masing-masing cabang.
-3. Konfigurasikan penugasan departemen pengguna khusus untuk Pendapatan. Jangan menyalin atau mengubah `res.users.unit_id` pada tahap ini; field tersebut masih dipakai PPL.
-4. Migrasi `sifnext.unit` dan pemetaan `res.users.unit_id` ke master departemen ditunda sampai PPL serta modul yang terhubung disetujui untuk diubah.
+1. Pastikan parent-child `res.company` sesuai struktur cabang dan department memiliki company yang benar.
+2. Backup unit lama dan relasi user/PPL/Transaksi; pindahkan referensi bisnis ke `hr.department`.
+3. Backfill relasi PPL, payroll batch, transfer bank, aset, dan pengguna tanpa mengubah histori nominal/workflow.
+4. Setelah semua relasi dimigrasikan dan backup diperiksa, hapus model/tabel aktif `sifnext.unit`; simpan backup legacy untuk audit.
 
 ### Fase 3 — Pendapatan dan keamanan
 
-1. Tambahkan `department_id`, tampilkan `company_id`, ganti `unit_name` pada form/list/search/group-by dengan Departemen.
-2. Default company dari cabang aktif dan department dari penugasan pengguna; batasi pilihan kategori dan departemen ke company tersebut.
-3. Tambahkan record rules company dan department, validasi create/write, serta validasi pada seluruh tombol workflow dan RPC.
-4. Ubah sequence agar aman untuk beberapa cabang dan hindari nomor ganda sesuai kebijakan nomor yang disetujui.
-5. Backfill record Pendapatan lama memakai tabel pemetaan eksplisit dari `unit_name`/company. Tinjau dan setujui record yang tidak dapat dipetakan sebelum menjadikannya wajib.
+1. Pendapatan memakai company/department terstruktur, kategori per cabang, company record rules, dan validasi pada UI/API/workflow.
+2. PPL dan Transaksi memakai `department_id`, validasi company/department, migrasi data lama, dan kontrak `unit` kompatibilitas yang dibutuhkan.
+3. Payroll menghasilkan satu PPL per department pegawai pada batch; hubungan ke batch tetap disimpan.
+4. RKA menggunakan `company_id` untuk pemisahan anggaran dan realisasi antarcabang.
+5. Aset menggunakan company/department owner dan meneruskan dimensi tersebut ke jurnal.
 
 ### Fase 4 — Jurnal dan laporan keuangan
 
-1. Tambahkan company/departemen terstruktur pada `sif.jurnal.entry` untuk jurnal yang berasal dari Pendapatan; pastikan baris jurnal konsisten dengan header.
-2. Ubah laporan, wizard, dan export `sif_keuangan` agar jurnal Pendapatan dapat difilter per branch/company dan department. Pertahankan `unit_name` dan perilaku laporan lama untuk jurnal yang belum mempunyai dimensi baru.
-3. Pada tahap ini hanya posting Pendapatan yang mengirim kedua dimensi secara eksplisit. PPL, aset, dan sumber jurnal lain tetap memakai kontrak lama.
-4. Backfill histori jurnal Pendapatan hanya berdasarkan mapping yang disetujui; jangan menebak company atau department jurnal dari modul yang ditunda.
+1. Jurnal dari Pendapatan, PPL, dan aset membawa company/department; jurnal legacy tetap menyimpan nilai teks untuk audit.
+2. Terapkan Finance pusat read-only secara server-side pada model dan operasi workflow, selain ACL/menu.
+3. Pertahankan alias payload `unit` selama masa kompatibilitas; gunakan `department` sebagai field relasi otoritatif.
 
-### Tahap lanjutan — PPL, payroll, transaksi, aset, dan RKA (ditunda)
+### Fase 5 — Integrasi dan kompatibilitas
 
-1. Setelah mendapat persetujuan terpisah, migrasikan PPL dan detailnya dari `unit_id` ke departemen; perbarui domain, constraint, nomor, view, access rules, payload integrasi, dan test.
-2. Dalam perubahan yang sama dengan PPL, ubah `transaksi.transaction` dan pembentukan PPL agar department/company tetap sama. Jangan mengubah Transaksi sebelum kontrak PPL siap.
-3. Setelah ruang lingkup aset disetujui, ubah `sifnext.asset.owner_unit` menjadi relasi departemen dan bawa company/department ke jurnal aset.
-4. Payroll tetap memakai `hr.employee.department_id` yang ada. Penyesuaian payroll-to-PPL hanya dilakukan setelah keputusan batch multi-departemen dan perubahan PPL disetujui.
-5. Walaupun anggaran tidak dibagi per department, RKA tetap perlu dimensi company/cabang sesuai keputusan pengguna. Tambahkan company ke RKA dan detail bulan, ubah constraint `(account_id, tahun)` menjadi `(account_id, company_id, tahun)`, dan ubah pencarian budget/realisasi setelah modul RKA disetujui untuk disentuh.
-6. Pertahankan kompatibilitas API dengan versi payload baru yang menyertakan `department`; hapus field/alias `unit` hanya setelah konsumen internal dan eksternal tervalidasi.
+PPL, payroll, Transaksi, Aset, dan RKA termasuk dalam scope implementasi yang disetujui. Alias payload `unit` dipertahankan selama masa kompatibilitas; `hr.department` menjadi relasi bisnis aktif. Presenly, Absensi, dan Cuti tetap di luar scope.
 
 ### Fase 6 — Penghapusan legacy dan rilis
 
-1. Jalankan migrasi pada salinan database, cocokkan jumlah record dan nominal sebelum/sesudah.
-2. Jalankan test otomatis, upgrade modul secara berurutan, kemudian UAT lintas cabang.
-3. Setelah semua record dan integrasi terverifikasi, hentikan penulisan `sifnext.unit`/`unit_name` dan baru kemudian hapus kompatibilitas legacy pada rilis terpisah.
+1. Jalankan migrasi pada clone database, cocokkan jumlah record/dimensi sebelum dan sesudah, serta pastikan tabel backup legacy tersedia.
+2. Jalankan test otomatis dan UAT lintas cabang; test scope lanjutan terakhir lulus 41/41.
+3. Pertahankan nilai teks/alias integrasi legacy yang masih diperlukan; jangan gunakan `sifnext.unit` sebagai master aktif.
 
 ## 6. Strategi migrasi data
 
 1. Buat backup penuh database dan filestore sebelum upgrade.
-2. Siapkan mapping untuk Pendapatan lama dengan minimal kolom: company/cabang lama, nilai `unit_name`, department baru, kode department, dan keputusan mapping. Jangan migrasikan `sifnext.unit` atau `res.users.unit_id` pada tahap ini.
-3. Migrasikan master sebelum transaksi agar foreign key departemen tersedia.
-4. Backfill record Pendapatan menggunakan company yang sudah tercatat dan mapping yang disetujui. Jangan mengubah histori workflow atau nominal.
-5. Record historis yang tidak bisa dipetakan dimasukkan ke department “Belum Diklasifikasikan” pada company yang tercatat, sesuai persetujuan pengguna. Laporkan jumlah dan nilai nominalnya; tetap sediakan daftar untuk ditinjau dan dipindahkan ke department/cabang sebenarnya bila mapping ditemukan.
-6. Bandingkan jumlah Pendapatan, total nominal per company/periode/status, dan jurnal yang dibuat dari Pendapatan sebelum/sesudah migrasi. RKA, PPL, payroll, aset, dan transaksi tidak dimigrasikan atau diubah pada tahap ini.
-7. Simpan nilai `unit_name` lama untuk audit sampai validasi UAT dan rekonsiliasi selesai.
+2. Salin unit lama dan relasi `res.users`, PPL, serta Transaksi ke tabel backup migrasi sebelum field legacy dihapus.
+3. Migrasikan master ke `hr.department`, kemudian backfill company/department pada Pendapatan, PPL, payroll, jurnal, RKA, aset, dan transfer.
+4. Gunakan company yang tercatat dan mapping eksplisit. Jika department tidak dapat dipetakan, gunakan “Belum Diklasifikasikan” pada company tersebut; jangan menebak cabang.
+5. Simpan nilai teks `unit_name`/owner dan payload kompatibilitas untuk audit/integrasi lama.
+6. Bandingkan jumlah record, company, department, nominal, status, dan jurnal sebelum/sesudah migrasi.
 
 ## 7. Kriteria penerimaan dan pengujian
 
@@ -225,9 +218,9 @@ Pemisahan kerahasiaan dilakukan pada company/cabang. Record rule department tida
 ### Modul terintegrasi
 
 - Jurnal Pendapatan dan laporan akuntansinya dapat difilter per company dan department tanpa mengubah total jurnal Pendapatan.
-- Pemilihan department/company pada Pendapatan tidak mengubah kontrak PPL, payroll, aset, atau transaksi lama.
-- Uji regresi memastikan alur PPL/payroll/aset yang tidak disentuh tetap dapat berjalan menggunakan field dan kontrak lama.
-- Pemisahan RKA per cabang, migrasi PPL/payroll, serta dimensi department pada aset dan Transaksi adalah kriteria penerimaan tahap lanjutan, bukan tahap pertama.
+- PPL, payroll, Transaksi, dan Aset mempertahankan company/department konsisten; batch payroll lintas department membuat satu PPL per department.
+- RKA dan realisasi terpisah per company, tanpa department sebagai dimensi anggaran.
+- Finance pusat dapat membaca cabang yang diizinkan dan ditolak saat mencoba create/write/unlink atau menjalankan workflow mutation.
 
 ### Migrasi
 
@@ -245,41 +238,40 @@ Pemisahan kerahasiaan dilakukan pada company/cabang. Record rule department tida
 
 4. Record lama yang tidak dapat dipetakan boleh ditempatkan di department “Belum Diklasifikasikan” pada company/cabang yang tercatat. Nilainya tetap dilaporkan dan bisa ditinjau kemudian.
 
-5. Finance pusat memiliki akses baca ke seluruh cabang, tanpa hak perubahan atau approval/posting.
+5. Finance pusat memiliki akses baca ke seluruh cabang pada modul dalam scope, tanpa hak perubahan atau approval/posting.
 
-### 8.2 Rekomendasi yang menunggu persetujuan
+### 8.2 Rekomendasi yang disetujui
 
-1. **Kode department — rekomendasi: wajib dan unik per cabang.** Master lama `sifnext.unit` sudah mempunyai `code`, dan nomor PPL saat ini diawali kode tersebut (`unit.code/sequence`). Kode department yang stabil mempermudah migrasi, integrasi, serta identifikasi saat nama department berubah atau sama di cabang lain. Efeknya, semua department baru harus diberi kode sebelum digunakan dan setiap kode lama harus dipetakan. Kode yang sama boleh digunakan di cabang berbeda; uniqueness dijaga di dalam company/cabang. Jika kode tidak diwajibkan, sequence PPL perlu beralih ke nomor tingkat cabang dan tidak lagi menunjukkan department.
-2. **Payroll batch lintas department — rekomendasi: satu PPL per department.** Model PPL saat ini menaruh satu `unit_id` pada header, bukan per baris. Memecah batch menjadi beberapa PPL mempertahankan struktur satu PPL = satu department, membuat jurnal/laporan mudah ditelusuri per department, dan menghindari penetapan department yang keliru pada header. Efeknya satu payroll batch dapat menghasilkan beberapa PPL, approval, dan jurnal. PPL-PPL itu tetap dapat ditautkan ke batch asal; proses pembayaran bisa dikelompokkan hanya jika alur Transaksi mendukungnya.
+1. **Kode department wajib dan unik per cabang.** Master lama `sifnext.unit` sudah mempunyai `code`, dan nomor PPL menggunakan kode tersebut. Kode department yang stabil mempermudah migrasi, integrasi, serta identifikasi saat nama department berubah atau sama di cabang lain. Kode yang sama boleh digunakan di cabang berbeda; uniqueness dijaga di dalam company/cabang.
+2. **Payroll batch lintas department menghasilkan satu PPL per department.** Model PPL menaruh satu department pada header. Memecah batch mempertahankan struktur satu PPL = satu department, membuat jurnal/laporan mudah ditelusuri, dan menghindari penetapan department yang keliru. Satu batch dapat menghasilkan beberapa PPL, approval, dan jurnal; setiap PPL ditautkan ke batch asal.
 
    Alternatifnya adalah satu PPL gabungan per batch. Agar department tidak hilang, perlu menambah department di setiap baris PPL, mengubah integrasi payroll, membuat jurnal mempertahankan department per baris, dan mengadaptasi laporan. Efek positifnya lebih sedikit dokumen dan satu approval; implementasinya lebih luas dan tidak cocok dengan desain PPL header tunggal yang ada. Karena RKA tidak dibedakan per department, pemisahan ini untuk jejak audit/pelaporan, bukan pembatasan budget.
-3. **Sumber department pengguna tahap pertama.** Implementasi memakai `res.users.department_id` sebagai sumber default Pendapatan. Tidak ada sinkronisasi ke `hr.employee.department_id` pada tahap ini; pemetaan keduanya ditinjau kembali saat payroll dibuka.
+3. **Sumber department pengguna.** `res.users.department_id` menjadi default untuk Pendapatan; payroll-to-PPL menggunakan `hr.employee.department_id`. Keduanya tidak disinkronkan secara otomatis.
 
-## 9. Batas scope tahap pertama dan modul yang ditunda
+## 9. Scope implementasi dan pengecualian
 
-### 9.1 Modul yang akan diubah pada tahap pertama
+### 9.1 Modul dalam scope
 
-1. **`sifnext_org` (modul baru)** — fondasi departemen bersama berbasis `hr.department`, penugasan departemen untuk kebutuhan Pendapatan, dan akses daftar departemen dari form cabang. Kode departemen ditambahkan bila rekomendasi pada Bagian 8 disetujui. Cabang tetap memakai `res.company` bawaan; tidak dibuat model cabang baru. Modul ini tidak memigrasikan atau mengganti `sifnext.unit`/`res.users.unit_id` yang masih dipakai PPL.
-2. **`pendapatan`** — menambah relasi department, menampilkan Perusahaan dan Departemen, mengelola kategori per cabang, menerapkan record rule company agar user hanya melihat cabang yang diizinkan, dan menegakkan konsistensi company-department pada UI, create/write, workflow, serta RPC. User di cabang yang sama melihat semua department di cabang tersebut.
-3. **`sif_keuangan` (perubahan terbatas)** — menyimpan `company_id` dan `department_id` pada jurnal yang dibuat dari Pendapatan, meneruskan dua dimensi itu saat posting, dan membatasi filter/laporan pada company yang diizinkan. `unit_name` serta alur jurnal PPL/aset lama dipertahankan; Finance pusat read-only juga dibatasi dari perubahan jurnal/COA melalui server-side checks.
+1. **`sifnext_org`** — master `hr.department`, kode unik, penugasan departemen pengguna, klasifikasi jurnal legacy, backup/migrasi dari `sifnext.unit`; cabang tetap memakai `res.company`.
+2. **`pendapatan`** — department terstruktur, kategori per cabang, company record rules, validasi company/department, dan jalur Finance pusat read-only.
+3. **`sif_keuangan`** — dimensi company/department pada jurnal, laporan terkait, kompatibilitas `unit_name`, dan pemeriksaan read-only Finance pusat.
+4. **`sifnext_ppl` dan payroll integration** — PPL memakai department, migrasi referensi user/PPL, satu PPL per department payroll, dan relasi ke batch payroll.
+5. **`transaksi`** — department/company pada transfer, validasi PPL, aturan cabang dan akses Finance pusat read-only.
+6. **`sif_rka`** — RKA dan realisasi dipisahkan per company/cabang, tidak per department.
+7. **`sifnext_asset`** — company/department owner, migrasi asset, serta dimensi journal pembelian/penyusutan.
 
-Migrasi tahap pertama hanya mencakup transaksi Pendapatan dan jurnal asal Pendapatan. Master lama PPL, payroll, aset, dan transaksi lain tidak dimigrasikan. Pada database lokal `db_sifnext`, 10 record Pendapatan lama tidak cocok dengan nama department yang tersedia; semuanya diberi department “Belum Diklasifikasikan” pada company lama `PT Konsulta Semen Gresik`. Nilai unit lama tidak cukup untuk memindahkan record tersebut ke cabang UISI atau Politeknik secara aman, jadi tidak ada tebakan mapping.
+Pada clone `sifnext_full_scope_migration_test_fix`, upgrade selesai dan 41/41 test lulus. Migrasi memetakan 1 unit legacy ke department, menetapkan department pada 4 user, memigrasikan 22 referensi PPL dan 9 transaksi bank; 2 transaksi memakai department fallback company. Lima aset memakai fallback company karena tidak ada nama owner yang cocok. Tabel aktif `sifnext_unit` dihapus setelah backup dan relasi lama diverifikasi. `db_sifnext` kemudian di-upgrade dengan hasil mapping yang sama setelah backup database ke `/tmp/opencode/db_sifnext_pre_multi_scope_20260928.dump`.
 
-### 9.2 Modul yang sengaja tidak disentuh sekarang
+### 9.2 Modul yang dikecualikan
 
-| Modul | Mengapa mungkin perlu penyesuaian di masa depan | Batas untuk tahap pertama |
+| Modul | Mengapa mungkin perlu penyesuaian di masa depan | Status saat ini |
 |---|---|---|
 | **Presenly** | Perlu perubahan hanya bila perusahaan ingin aturan presensi/API/approval mengikuti struktur cabang atau department baru. Saat ini Presenly memakai `hr.work.location` untuk lokasi kerja fisik/geofence; lokasi ini tidak boleh otomatis diubah menjadi department atau company branch. | Tidak diubah. Tidak menjadi dependensi Pendapatan. |
 | **Cuti** | Jika user ingin daftar cuti, approval, atau laporan cuti dibatasi/dikelompokkan per cabang atau department, aturan HR dan data pegawai perlu ditinjau. Kebutuhan itu belum ditetapkan. | Tidak diubah. |
 | **Absensi** | Jika data kehadiran harus mengikuti batas akses cabang atau dilaporkan per department, employee/company, work location, dan record rules perlu ditinjau bersama Presenly. | Tidak diubah. |
-| **RKA** | Keputusan saat ini adalah RKA terpisah per cabang tetapi tidak per department. Model sekarang belum memiliki `company_id` dan unik hanya per COA/tahun; tanpa perubahan kelak, RKA lintas cabang dapat tercampur. Validasi PPL yang membaca RKA juga perlu diselaraskan. | Tidak diubah pada tahap pertama atas permintaan pengguna. Tidak ada klaim bahwa validasi RKA sudah branch-isolated setelah tahap pertama. |
-| **Aset** | `owner_unit` dan dimensi jurnal aset masih berupa teks. Relasi ke department/company diperlukan bila daftar aset, penyusutan, atau laporan aset harus dibatasi per cabang/departemen. | Tidak diubah; data dan posting aset tetap dengan perilaku lama. |
-| **PPL** | PPL memakai `sifnext.unit`, `res.users.unit_id`, satu `unit_id` pada header, serta kode unit untuk nomor/integrasi. Migrasi department memengaruhi transaksi lama, nomor, security rules, payroll integration, dan jurnal. | Tidak diubah; master dan API lama tetap berjalan. Department baru tidak menggantikannya dulu. |
-| **Payroll** | Slip sudah memiliki `hr.employee.department_id`, tetapi pembentukan PPL saat ini memilih unit pertama per company. Perubahan baru diperlukan setelah diputuskan bagaimana batch lintas department menjadi PPL. | Tidak diubah; integrasi payroll-ke-PPL tetap memakai kontrak lama. |
-| **Transaksi** | `transaksi.transaction` masih memakai `sifnext.unit` dan mengirim `unit_id` ke PPL. Mengubahnya sebelum PPL akan membuat payload tidak cocok dengan penerima. | Ditunda bersama PPL walau tidak disebut dalam daftar pengecualian; ubah bersamaan saat kontrak PPL disepakati. |
 
-Dengan batas ini, hasil tahap pertama adalah master department dan Pendapatan yang terisolasi per cabang, serta jurnal Pendapatan yang membawa dimensinya. Jurnal lama tanpa `company_id` diperlakukan sebagai data bersama dan tetap terlihat sesuai perilaku sebelumnya sampai ada pemetaan khusus. Batas ini **belum** mengubah keamanan atau laporan cabang untuk Presenly, Cuti, Absensi, RKA, Aset, PPL, Payroll, maupun Transaksi.
+Presenly, Cuti, dan Absensi tetap tidak berubah. Modul dalam scope memakai company/department untuk validasi dan visibilitas sesuai role; jurnal lama yang belum memiliki dimensi tetap mempertahankan data teks legacy untuk audit.
 
 ## 10. Status implementasi dan batas dokumen
 
-Dokumen ini menjadi rencana dan audit trail keputusan. Implementasi tahap pertama berada di branch `feat/multi-company-branch-department-pendapatan` dan mencakup `sifnext_org`, `pendapatan`, serta dimensi jurnal/laporan yang diperlukan dari `sif_keuangan`. Modul di Bagian 9.2 tetap tidak disentuh. Database lokal `db_sifnext` sudah di-upgrade; migrasi mengisi department fallback untuk 10 record Pendapatan lama pada company yang tercatat.
+Dokumen ini menjadi audit trail keputusan dan status implementasi. Branch `feat/multi-company-branch-department-pendapatan` mencakup seluruh modul pada Bagian 9.1. Clone database `sifnext_full_scope_migration_test_fix` berhasil di-upgrade dan seluruh 41 test scope lulus; `db_sifnext` juga berhasil di-upgrade setelah backup. Presenly, Cuti, dan Absensi tidak diubah.

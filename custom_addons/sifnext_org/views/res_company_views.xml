@@ -11,7 +11,9 @@
                            context="{'default_company_id': id}"
                            domain="[('company_id', '=', id)]">
                         <list editable="bottom">
+                            <field name="sif_code" required="1"/>
                             <field name="name"/>
+                            <field name="sif_journal_unit_dept"/>
                             <field name="parent_id"
                                    domain="[('company_id', '=', parent.id)]"
                                    options="{'no_create': True}"/>

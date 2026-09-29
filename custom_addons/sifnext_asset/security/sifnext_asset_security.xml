@@ -1,0 +1,12 @@
+<odoo>
+    <record id="sifnext_asset_company_rule" model="ir.rule">
+        <field name="name">Assets: allowed companies</field>
+        <field name="model_id" ref="model_sifnext_asset"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="sifnext_asset_depreciation_company_rule" model="ir.rule">
+        <field name="name">Asset depreciation: allowed companies</field>
+        <field name="model_id" ref="model_sifnext_asset_depreciation"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

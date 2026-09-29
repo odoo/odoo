@@ -54,11 +54,14 @@ def migrate(cr, version):
 
         income.write({"department_id": department.id})
         if income.journal_id:
-            income.journal_id.write({
+            journal_values = {
                 "company_id": company.id,
                 "department_id": department.id,
                 "unit_name": department.name,
-            })
+            }
+            if "unit_dept" in income.journal_id._fields:
+                journal_values["unit_dept"] = department.sif_journal_unit_dept
+            income.journal_id.write(journal_values)
 
     _logger.info(
         "Migrated Pendapatan department: %s exact legacy-name matches, %s assigned to per-company fallback departments.",

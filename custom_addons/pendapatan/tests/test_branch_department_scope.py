@@ -81,7 +81,10 @@ class TestPendapatanBranchDepartmentScope(TransactionCase):
 
     @classmethod
     def _create_user(cls, login, company, department, allowed_companies, extra_groups=None):
-        group_ids = [cls.env.ref("base.group_user").id]
+        group_ids = [
+            cls.env.ref("base.group_user").id,
+            cls.env.ref("pendapatan.group_pendapatan_user").id,
+        ]
         for xmlid in extra_groups or []:
             group_ids.append(cls.env.ref(xmlid).id)
         return cls.env["res.users"].create({

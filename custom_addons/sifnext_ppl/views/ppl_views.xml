@@ -7,7 +7,7 @@
                 <field name="name"/>
                 <field name="request_date"/>
                 <field name="applicant_id"/>
-                <field name="unit_id"/>
+                <field name="department_id"/>
                 <field name="partner_id"/>
                 <field name="title"/>
                 <field name="total_amount" sum="Total"/>
@@ -25,7 +25,7 @@
                 <field name="name"/>
                 <field name="title"/>
                 <field name="applicant_id"/>
-                <field name="unit_id"/>
+                <field name="department_id"/>
                 <field name="partner_id"/>
                 <filter name="my_ppl" string="PPL Saya" domain="[('applicant_id', '=', uid)]"/>
                 <filter name="to_verify" string="Menunggu Verifikasi" domain="[('state', '=', 'submitted')]"/>
@@ -97,7 +97,9 @@
                         <group>
                             <field name="request_date" readonly="state != 'draft'"/>
                             <field name="applicant_id"/>
-                            <field name="unit_id" required="True" readonly="state != 'draft'"/>
+                            <field name="department_id" required="True" readonly="state != 'draft'"
+                                   domain="[('company_id', '=', company_id)]"
+                                   options="{'no_create': True}"/>
                             <field name="partner_id" readonly="state != 'draft'"/>
                             <field name="source_type" readonly="state != 'draft'"/>
                         </group>

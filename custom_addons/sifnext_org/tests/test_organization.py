@@ -22,6 +22,22 @@ class TestSifnextOrganization(TransactionCase):
         self.assertIn(self.department, self.company.department_ids)
         self.assertNotIn(self.other_department, self.company.department_ids)
 
+    def test_department_codes_are_generated_and_unique_per_company(self):
+        self.assertTrue(self.department.sif_code)
+        with self.assertRaises(ValidationError):
+            self.env["hr.department"].create({
+                "name": "Duplicate Department Code",
+                "company_id": self.company.id,
+                "sif_code": self.department.sif_code,
+            })
+
+        same_code_other_company = self.env["hr.department"].create({
+            "name": "Same Code in Another Company",
+            "company_id": self.other_company.id,
+            "sif_code": self.department.sif_code,
+        })
+        self.assertEqual(same_code_other_company.sif_code, self.department.sif_code)
+
     def test_user_department_must_be_in_allowed_companies(self):
         user = self.env["res.users"].create({
             "name": "SIFNEXT Department User",

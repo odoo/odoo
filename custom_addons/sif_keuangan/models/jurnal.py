@@ -189,6 +189,9 @@ class SifJurnalEntry(models.Model):
                 'kwitansi_ref': getattr(ppl, 'kwitansi_ref', '') or getattr(ppl, 'receipt_number', ''),
                 'partner_id': partner_rec.id if partner_rec else False,
                 'unit_name': getattr(ppl, 'unit_name', '') or (ppl.department_id.name if hasattr(ppl, 'department_id') and ppl.department_id else 'KANTOR'),
+                'company_id': getattr(ppl, 'company_id', False).id if getattr(ppl, 'company_id', False) else False,
+                'department_id': getattr(ppl, 'department_id', False).id if getattr(ppl, 'department_id', False) else False,
+                'unit_dept': getattr(ppl, 'department_id', False).sif_journal_unit_dept if getattr(ppl, 'department_id', False) else False,
                 'source_type': 'ppl',
                 'lines': []
             }
@@ -244,9 +247,13 @@ class SifJurnalEntry(models.Model):
             'kwitansi_ref': vals.get('kwitansi_ref', ''),
             'partner_id': vals.get('partner_id', False),
             'unit_name': vals.get('unit_name', 'KANTOR'),
+            'company_id': vals.get('company_id') or False,
+            'department_id': vals.get('department_id') or False,
             'source_type': 'ppl',
             'line_ids': lines_command,
         }
+        if vals.get('unit_dept') and 'unit_dept' in self._fields:
+            entry_vals['unit_dept'] = vals['unit_dept']
 
         entry = self.sudo().create(entry_vals)
         if entry.line_ids:
@@ -260,7 +267,9 @@ class SifJurnalEntry(models.Model):
     def create_asset_purchase_journal(self, asset_name, asset_code, amount,
                                       asset_account_id, credit_account_id,
                                       date=False, unit_name='KANTOR',
-                                      vendor_name='', kwitansi=''):
+                                      vendor_name='', kwitansi='',
+                                      company_id=False, department_id=False,
+                                      unit_dept=False):
         txn_date = date or fields.Date.today()
         ref_label = f"Perolehan Aset: [{asset_code}] {asset_name}"
         if vendor_name:
@@ -281,21 +290,28 @@ class SifJurnalEntry(models.Model):
             })
         ]
 
-        entry = self.sudo().create({
+        entry_vals = {
             'date': txn_date,
             'ref': f"AST-BUY/{asset_code}",
             'kwitansi_ref': kwitansi,
             'unit_name': unit_name,
+            'company_id': company_id or False,
+            'department_id': department_id or False,
             'source_type': 'asset_buy',
             'line_ids': lines,
-        })
+        }
+        if unit_dept and 'unit_dept' in self._fields:
+            entry_vals['unit_dept'] = unit_dept
+        entry = self.sudo().create(entry_vals)
         entry.action_post()
         return entry
 
     @api.model
     def create_asset_depreciation_journal(self, asset_name, asset_code, amount,
                                           dep_account_id, exp_account_id,
-                                          date, period_name, unit_name='KANTOR'):
+                                          date, period_name, unit_name='KANTOR',
+                                          company_id=False, department_id=False,
+                                          unit_dept=False):
         desc = f"Penyusutan [{asset_code}] {asset_name} - Periode {period_name}"
         lines = [
             (0, 0, {
@@ -312,14 +328,19 @@ class SifJurnalEntry(models.Model):
             })
         ]
 
-        entry = self.sudo().create({
+        entry_vals = {
             'date': date or fields.Date.today(),
             'ref': f"DEP/{asset_code}/{period_name}",
             'kwitansi_ref': '',
             'unit_name': unit_name,
+            'company_id': company_id or False,
+            'department_id': department_id or False,
             'source_type': 'asset_depr',
             'line_ids': lines,
-        })
+        }
+        if unit_dept and 'unit_dept' in self._fields:
+            entry_vals['unit_dept'] = unit_dept
+        entry = self.sudo().create(entry_vals)
         entry.action_post()
         return entry
 

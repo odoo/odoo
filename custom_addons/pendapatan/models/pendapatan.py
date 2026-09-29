@@ -349,6 +349,8 @@ class Pendapatan(models.Model):
                 'source_type': 'pendapatan',
                 'line_ids': lines,
             }
+            if 'unit_dept' in JurnalEntry._fields:
+                entry_vals['unit_dept'] = rec.department_id.sif_journal_unit_dept
 
             entry = JurnalEntry.sudo().create(entry_vals)
             entry.action_post()

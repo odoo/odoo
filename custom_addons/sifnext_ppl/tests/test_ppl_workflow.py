@@ -11,9 +11,16 @@ class TestPPLWorkflow(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.unit = cls.env["sifnext.unit"].create({
-            "name": "Unit Automated Test PPL",
-            "code": "AUTOTEST",
+        cls.department = cls.env["hr.department"].create({
+            "name": "Department Automated Test PPL",
+            "sif_code": "AUTOTEST",
+            "sif_journal_unit_dept": "pusat",
+            "company_id": cls.env.company.id,
+        })
+        cls.second_department = cls.env["hr.department"].create({
+            "name": "Second Department Automated Test PPL",
+            "sif_code": "AUTOTEST2",
+            "sif_journal_unit_dept": "univ",
             "company_id": cls.env.company.id,
         })
         cls.user = new_test_user(
@@ -40,7 +47,13 @@ class TestPPLWorkflow(TransactionCase):
             groups="sifnext_ppl.group_ppl_approver",
             company_id=cls.env.company.id,
         )
-        (cls.user | cls.other_user | cls.finance | cls.director).write({"unit_id": cls.unit.id})
+        cls.finance_central = new_test_user(
+            cls.env,
+            login="test_ppl_finance_central",
+            groups="sif_keuangan.group_sif_keuangan_central_readonly",
+            company_id=cls.env.company.id,
+        )
+        (cls.user | cls.other_user | cls.finance | cls.director | cls.finance_central).write({"department_id": cls.department.id})
         cls.account = cls.env["account.account"].create({
             "name": "Biaya PPL Test",
             "code": "PPLTEST",
@@ -57,6 +70,13 @@ class TestPPLWorkflow(TransactionCase):
             "code": "PPL-JOURNAL-LINE",
             "account_type": "expense",
             "parent_id": cls.journal_account_parent.id,
+        })
+        cls.rka = cls.env["sif.rka.budget"].create({
+            "name": "RKA/PPLTEST/2026",
+            "account_id": cls.journal_account.id,
+            "tahun": "2026",
+            "nilai": 100_000_000,
+            "company_id": cls.env.company.id,
         })
         cls.payment_account_parent = cls.env["sif.coa"].create({
             "name": "Sumber Dana Test PPL",
@@ -102,11 +122,11 @@ class TestPPLWorkflow(TransactionCase):
         with self.assertRaises(UserError):
             ppl.with_user(self.user).write({"name": "AUTOTEST/PPL/09/2026/99999"})
 
-    def test_copy_gets_a_new_number_and_keeps_unit(self):
+    def test_copy_gets_a_new_number_and_keeps_department(self):
         ppl = self._create_ppl()
         duplicate = ppl.with_user(self.user).copy()
 
-        self.assertEqual(duplicate.unit_id, self.unit)
+        self.assertEqual(duplicate.department_id, self.department)
         self.assertNotEqual(duplicate.name, ppl.name)
         self.assertRegex(duplicate.name, r"^AUTOTEST/PPL/\d{2}/\d{4}/\d{5}$")
 
@@ -114,14 +134,14 @@ class TestPPLWorkflow(TransactionCase):
         employee = self.env.ref("sifnext_ppl.user_ppl_uat_employee")
         finance = self.env.ref("sifnext_ppl.user_ppl_uat_finance")
         director = self.env.ref("sifnext_ppl.user_ppl_uat_director")
-        uat_unit = self.env.ref("sifnext_ppl.unit_uat_ppl")
+        uat_department = self.env.ref("sifnext_ppl.department_uat_ppl")
 
         self.assertEqual(employee.login, "ppl_user")
         self.assertEqual(finance.login, "ppl_finance")
         self.assertEqual(director.login, "ppl_director")
-        self.assertEqual(employee.unit_id, uat_unit)
-        self.assertEqual(finance.unit_id, uat_unit)
-        self.assertEqual(director.unit_id, uat_unit)
+        self.assertEqual(employee.department_id, uat_department)
+        self.assertEqual(finance.department_id, uat_department)
+        self.assertEqual(director.department_id, uat_department)
         self.assertTrue(employee.has_group("base.group_user"))
         self.assertFalse(employee.has_group("sifnext_ppl.group_ppl_finance"))
         self.assertFalse(employee.has_group("sifnext_ppl.group_ppl_approver"))
@@ -130,12 +150,12 @@ class TestPPLWorkflow(TransactionCase):
         self.assertTrue(director.has_group("sifnext_ppl.group_ppl_approver"))
         self.assertFalse(director.has_group("sifnext_ppl.group_ppl_finance"))
 
-    def test_unit_code_is_normalized_and_unique_per_company(self):
-        self.assertEqual(self.unit.code, "AUTOTEST")
-        with self.assertRaises(Exception), self.cr.savepoint():
-            self.env["sifnext.unit"].create({
-                "name": "Duplikat Automated Test",
-                "code": " autotest ",
+    def test_department_code_is_normalized_and_unique_per_company(self):
+        self.assertEqual(self.department.sif_code, "AUTOTEST")
+        with self.assertRaises(ValidationError):
+            self.env["hr.department"].create({
+                "name": "Duplicate Automated Test",
+                "sif_code": " autotest ",
                 "company_id": self.env.company.id,
             })
 
@@ -152,19 +172,19 @@ class TestPPLWorkflow(TransactionCase):
         self.assertEqual(ppl.name, original_number)
         self.assertEqual(str(ppl.request_date), "2027-01-10")
 
-    def test_new_ppl_requires_applicant_unit(self):
-        self.user.write({"unit_id": False})
+    def test_new_ppl_requires_applicant_department(self):
+        self.user.write({"department_id": False})
         with self.assertRaises(ValidationError):
             self.env["sifnext.ppl"].with_user(self.user).create({
                 "title": "Tanpa Unit",
                 "description": "Harus ditolak",
             })
-        self.user.write({"unit_id": self.unit.id})
+        self.user.write({"department_id": self.department.id})
 
     def test_employee_submit_without_coa_then_finance_verify(self):
         ppl = self._create_ppl()
         self.assertEqual(ppl.applicant_id, self.user)
-        self.assertEqual(ppl.unit_id, self.unit)
+        self.assertEqual(ppl.department_id, self.department)
         self.assertEqual(ppl.source_type, "manual")
         self.assertEqual(ppl.total_amount, 100_000)
         self.assertNotEqual(ppl.name, "New")
@@ -197,6 +217,15 @@ class TestPPLWorkflow(TransactionCase):
         payload = ppl._prepare_integration_payload()
 
         self.assertEqual(ppl.line_ids.journal_account_id, self.journal_account)
+        self.assertEqual(
+            payload["ppl"]["department"],
+            {
+                "id": self.department.id,
+                "code": self.department.sif_code,
+                "name": self.department.name,
+            },
+        )
+        self.assertEqual(payload["ppl"]["unit"], payload["ppl"]["department"])
         self.assertEqual(
             payload["ppl"]["lines"][0]["account"],
             {
@@ -325,7 +354,7 @@ class TestPPLWorkflow(TransactionCase):
         ppl.with_user(self.finance).write({
             "request_date": ppl.request_date,
             "applicant_id": ppl.applicant_id.id,
-            "unit_id": ppl.unit_id.id,
+            "department_id": ppl.department_id.id,
             "partner_id": ppl.partner_id.id or False,
             "title": ppl.title,
             "description": ppl.description,
@@ -364,6 +393,21 @@ class TestPPLWorkflow(TransactionCase):
         ])
         self.assertEqual(user_results, own_ppl)
         self.assertEqual(finance_results, own_ppl | other_ppl)
+
+    def test_finance_central_reads_all_branch_ppl_without_write_access(self):
+        own_ppl = self._create_ppl()
+        other_ppl = self.env["sifnext.ppl"].with_user(self.other_user).create({
+            "title": "PPL user lain",
+            "description": "Akses baca Finance Pusat",
+        })
+        central = self.env["sifnext.ppl"].with_user(self.finance_central).with_context(
+            allowed_company_ids=[self.env.company.id],
+        )
+
+        visible = central.search([("id", "in", (own_ppl | other_ppl).ids)])
+        self.assertEqual(visible, own_ppl | other_ppl)
+        with self.assertRaises(AccessError):
+            central.browse(own_ppl.id).write({"description": "Tidak boleh diubah"})
 
     def test_approval_payment_and_done_without_account_move(self):
         ppl = self._create_ppl()
@@ -487,6 +531,8 @@ class TestPPLWorkflow(TransactionCase):
         self.assertEqual(len(payloads), 1)
         self.assertEqual(payloads[0]["schema_version"], 1)
         self.assertEqual(payloads[0]["ppl_id"], ppl.id)
+        self.assertEqual(payloads[0]["department_id"], self.department.id)
+        self.assertEqual(payloads[0]["company_id"], self.env.company.id)
         self.assertNotIn("account_id", payloads[0]["lines"][0])
         self.assertEqual(payloads[0]["lines"][0]["amount"], 100_000)
 
@@ -513,7 +559,7 @@ class TestPPLWorkflow(TransactionCase):
 
     def test_paid_journal_credit_follows_selected_source_account(self):
         ppl = self._prepare_approved_ppl()
-        ppl.unit_id.sudo().journal_unit_dept = "sma"
+        ppl.department_id.sudo().sif_journal_unit_dept = "sma"
         captured = []
 
         def create_from_ppl(record, data):
@@ -532,6 +578,102 @@ class TestPPLWorkflow(TransactionCase):
         self.assertEqual(credit_lines[0]["credit"], 100_000)
         self.assertEqual(debit_lines[0]["account_id"], self.journal_account.id)
         self.assertEqual(debit_lines[0]["debit"], 100_000)
+
+    def test_payroll_batch_creates_one_ppl_per_employee_department(self):
+        payroll_user = new_test_user(
+            self.env,
+            login="test_ppl_payroll_integration",
+            groups="hr_payroll_custom.group_payroll_user",
+            company_id=self.env.company.id,
+        )
+        batch = self.env["custom.payroll.batch"].create({
+            "periode_bulan": "9",
+            "periode_tahun": 2026,
+            "status": "approved",
+            "company_id": self.env.company.id,
+        })
+        employees = self.env["hr.employee"].create([
+            {
+                "name": "Payroll Department A Employee",
+                "company_id": self.env.company.id,
+                "department_id": self.department.id,
+            },
+            {
+                "name": "Payroll Department B Employee",
+                "company_id": self.env.company.id,
+                "department_id": self.second_department.id,
+            },
+        ])
+        self.env["custom.payroll.slip"].create([
+            {
+                "payroll_batch_id": batch.id,
+                "employee_id": employee.id,
+                "company_id": self.env.company.id,
+                "total_gaji_pokok": 100_000,
+            }
+            for employee in employees
+        ])
+
+        batch.with_user(payroll_user).with_context(
+            allowed_company_ids=[self.env.company.id],
+        ).action_create_ppl()
+
+        self.assertEqual(len(batch.ppl_ids), 2)
+        self.assertEqual(set(batch.ppl_ids.mapped("department_id").ids), {
+            self.department.id,
+            self.second_department.id,
+        })
+        self.assertTrue(all(ppl.source_type == "payroll" for ppl in batch.ppl_ids))
+        self.assertTrue(all(ppl.payroll_batch_id == batch for ppl in batch.ppl_ids))
+        self.assertIn(batch.ppl_id, batch.ppl_ids)
+
+    def test_payroll_batch_creates_one_ppl_per_employee_department(self):
+        payroll_user = new_test_user(
+            self.env,
+            login="test_ppl_payroll_integration",
+            groups="hr_payroll_custom.group_payroll_user",
+            company_id=self.env.company.id,
+        )
+        batch = self.env["custom.payroll.batch"].sudo().create({
+            "periode_bulan": "9",
+            "periode_tahun": 2026,
+            "status": "approved",
+            "company_id": self.env.company.id,
+        })
+        employees = self.env["hr.employee"].create([
+            {
+                "name": "Payroll Department A Employee",
+                "company_id": self.env.company.id,
+                "department_id": self.department.id,
+            },
+            {
+                "name": "Payroll Department B Employee",
+                "company_id": self.env.company.id,
+                "department_id": self.second_department.id,
+            },
+        ])
+        self.env["custom.payroll.slip"].create([
+            {
+                "payroll_batch_id": batch.id,
+                "employee_id": employee.id,
+                "company_id": self.env.company.id,
+                "total_gaji_pokok": 100_000,
+            }
+            for employee in employees
+        ])
+
+        batch.with_user(payroll_user).with_context(
+            allowed_company_ids=[self.env.company.id],
+        ).action_create_ppl()
+
+        self.assertEqual(len(batch.ppl_ids), 2)
+        self.assertEqual(set(batch.ppl_ids.mapped("department_id").ids), {
+            self.department.id,
+            self.second_department.id,
+        })
+        self.assertTrue(all(ppl.source_type == "payroll" for ppl in batch.ppl_ids))
+        self.assertTrue(all(ppl.payroll_batch_id == batch for ppl in batch.ppl_ids))
+        self.assertEqual(batch.ppl_id, batch.ppl_ids[0])
 
     def test_return_requires_reason(self):
         ppl = self._create_ppl()

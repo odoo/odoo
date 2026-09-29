@@ -15,7 +15,9 @@
                 <field name="code" string="Kode Aset"/>
                 <field name="name" string="Nama Aset"/>
                 <field name="category_id" string="Kategori"/>
-                <field name="owner_unit" string="Unit Pemilik"/>
+                <field name="company_id" string="Perusahaan" groups="base.group_multi_company"/>
+                <field name="owner_department_id" string="Departemen Pemilik"/>
+                <field name="owner_unit" string="Pemilik Lama" optional="hide"/>
                 <field name="project_code" string="Kode Proyek"/>
                 <field name="acquisition_date" string="Tanggal Perolehan"/>
 
@@ -135,9 +137,15 @@
 
                             <field name="code" readonly="1"/>
 
+                            <field name="company_id" groups="base.group_multi_company"/>
+
                             <field name="category_id"/>
 
-                            <field name="owner_unit"/>
+                            <field name="owner_department_id"
+                                   domain="[('company_id', '=', company_id)]"
+                                   options="{'no_create': True}"/>
+                            <field name="owner_unit" string="Pemilik Lama (Legacy)" readonly="1"
+                                   invisible="not owner_unit"/>
 
                             <field name="partner_id" string="Vendor"/>
 
@@ -385,7 +393,9 @@
                 <field name="code"/>
                 <field name="name"/>
                 <field name="category_id"/>
-                <field name="owner_unit"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="owner_department_id" string="Departemen Pemilik"/>
+                <field name="owner_unit" string="Pemilik Lama (Legacy)"/>
                 <field name="project_code"/>
 
                 <filter
@@ -409,9 +419,9 @@
                 />
 
                 <filter
-                    name="group_owner_unit"
-                    string="Unit Pemilik"
-                    context="{'group_by': 'owner_unit'}"
+                    name="group_owner_department"
+                    string="Departemen Pemilik"
+                    context="{'group_by': 'owner_department_id'}"
                 />
 
                 <filter

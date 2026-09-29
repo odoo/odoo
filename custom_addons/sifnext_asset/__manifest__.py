@@ -1,10 +1,11 @@
 {
     "name": "SIFNEXT Asset",
-    "version": "19.0.1.0.0",
+    "version": "19.0.3.0.0",
     "category": "Operations",
     "summary": "Asset Management",
-    "depends": ["base", "mail", "sif_keuangan"],
+    "depends": ["base", "mail", "sif_keuangan", "sifnext_org"],
     "data": [
+        "security/sifnext_asset_security.xml",
         "security/ir.model.access.csv",
         "data/sequence.xml",
         "views/asset_views.xml",
