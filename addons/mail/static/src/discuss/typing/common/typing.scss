@@ -36,6 +36,10 @@
 .o-discuss-Typing-icon {
     padding: 1px 0px;
     gap: 1px;
+
+    .o-mail-ImStatus &, .o-mail-ThreadIcon & {
+        gap: 2px; // spread the dots in the pill, whose width fits them
+    }
 }
 
 @keyframes o_mail_Typing_animation {
