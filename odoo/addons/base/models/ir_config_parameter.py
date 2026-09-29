@@ -84,6 +84,7 @@ class IrConfig_Parameter(models.Model):
         """
         old_value, id_ = self._get(key, type_)
         value_ = False if value is None else str(value)
+
         if not id_:
             self.create({'key': key, 'value': value_})
         elif old_value != value:
