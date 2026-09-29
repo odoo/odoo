@@ -283,6 +283,13 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
         self.assertEqual(bill.state, 'posted')
 
     @freeze_time('2024-08-15 10:00:00')
+    def test_received_bill_type_is_the_document_type(self):
+        self._sync([[self._document_data('DOC1')]])
+        bill = self._get_received_bills(['DOC1'])
+        with self.assertRaisesRegex(UserError, 'cannot be changed'):
+            bill.action_switch_move_type()
+
+    @freeze_time('2024-08-15 10:00:00')
     def test_sync_error(self):
         wizard = self.env['myinvois.document.sync.wizard'].create({
             'month': '2024-07-01',

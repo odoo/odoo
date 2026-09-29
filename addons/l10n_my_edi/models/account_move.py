@@ -165,6 +165,13 @@ class AccountMove(models.Model):
 
         return super()._auto_init()
 
+    def write(self, vals):
+        # EXTENDS 'account'
+        # A received bill records a document issued by the supplier: its type is the type of that document.
+        if 'move_type' in vals and any(move.l10n_my_edi_received_document_id and move.move_type != vals['move_type'] for move in self):
+            raise UserError(self.env._("The type of a bill received from MyInvois cannot be changed."))
+        return super().write(vals)
+
     def _post(self, soft=True):
         # EXTENDS 'account'
         # The user may split the single line of a received bill, but the bill must still match its e-invoice.
