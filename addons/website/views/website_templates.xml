@@ -3186,7 +3186,7 @@ Disallow: /*/my/*
 <template id="sitemap_locs">
     <url t-foreach="locs" t-as="page">
         <loc><t t-out="url_root"/><t t-out="page['loc']"/></loc><t t-if="page.get('lastmod', False)">
-        <lastmod t-out="page['lastmod']"/></t><t t-if="page.get('priority', False)">
+        <lastmod t-out="page['lastmod'].date()"/></t><t t-if="page.get('priority', False)">
         <priority t-out="page['priority']"/></t><t t-if="page.get('changefreq', False)">
         <changefreq t-out="page['changefreq']"/></t>
     </url>
@@ -3200,8 +3200,9 @@ Disallow: /*/my/*
 
 <template id="sitemap_index_xml"><t t-translation="off">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 <sitemapindex t-attf-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap t-translation="off" t-foreach="pages" t-as="page">
-    <loc><t t-out="url_root"/>sitemap-<t t-out="page"/>.xml</loc>
+  <sitemap t-translation="off" t-foreach="sitemaps" t-as="sitemap">
+    <loc><t t-out="url_root"/>sitemap-<t t-out="sitemap['id']"/>.xml</loc><t t-if="sitemap.get('lastmod')">
+    <lastmod t-out="sitemap['lastmod'].date()"/></t>
   </sitemap>
 </sitemapindex>
 </t>
