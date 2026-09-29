@@ -81,7 +81,7 @@ describe("link creation by powerbox", () => {
 
         await contains(".o-we-linkpopover input.o_we_href_input_link").fill("http://test.test/");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="http://test.test/" class="btn btn-primary">http://test.test/[]</a></p>'
+            '<p><a href="http://test.test/" class="btn btn-primary o_link_in_selection">http://test.test/[]</a></p>'
         );
     });
     test("Should keep http protocol on valid http url", async () => {
