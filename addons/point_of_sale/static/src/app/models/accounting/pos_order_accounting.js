@@ -40,11 +40,29 @@ export class PosOrderAccounting extends Base {
     }
 
     convertAmountToCurrency(amount, currency) {
-        if (currency.id === this.currency.id) {
-            return amount;
+        return currency.convert(amount, this.currency);
+    }
+
+    /**
+     * Remaining amount to pay in the given currency, without converting back and forth
+     * through the POS currency. Positive when an amount is due, negative for change.
+     */
+    getRemainingDueCurrency(currency) {
+        let remaining = this.totalDue;
+        let amountPaidInCurrency = 0;
+        for (const paymentLine of this.payment_ids) {
+            if (!paymentLine.isDone() || paymentLine.is_change) {
+                continue;
+            }
+            if (paymentLine.currency.id === currency.id && paymentLine.amount_currency) {
+                amountPaidInCurrency += paymentLine.amount_currency;
+            } else {
+                remaining -= paymentLine.amount;
+            }
         }
-        const amountInCompanyCurrency = this.currency.convertToDefaultCurrency(amount);
-        return currency.convert(amountInCompanyCurrency);
+        return currency.round(
+            this.convertAmountToCurrency(remaining, currency) - amountPaidInCurrency
+        );
     }
 
     formatAmountInCurrency(amount, currency) {
@@ -231,7 +249,10 @@ export class PosOrderAccounting extends Base {
      * @param paymentMethod: The payment method of the payment to be created.
      * @returns A monetary value.
      */
-    getDefaultAmountDueToPayIn(paymentMethod) {
+    getDefaultAmountDueToPayIn(paymentMethod, currency = this.currency) {
+        if (currency.id !== this.currency.id) {
+            return this.getRemainingDueCurrency(currency);
+        }
         const amount = this.shouldRound(paymentMethod)
             ? this.config_id.rounding_method.round(this.remainingDue)
             : this.remainingDue;
