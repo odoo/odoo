@@ -55,6 +55,7 @@
                                 <field name="company_id" required="1"/>
                             </group>
                             <group name="switch_calendar">
+                                <field name="hour_format_24" invisible="1"/>
                                 <label for="switch_calendar_type" string="2 Week's Calendar" class="o_form_label"/>
                                 <button name="switch_calendar_type" invisible="two_weeks_calendar" type="object"
                                     icon="fa-square-o" title="Switch to 2-weeks calendar" class="btn p-0"
@@ -64,6 +65,14 @@
                                     icon="fa-check-square" title="Switch to 1-week calendar" class="btn p-0"
                                     confirm="Are you sure you want to switch to a 1-week calendar? All work entries will be lost."
                                     confirm-label="Switch"/>
+
+                                <label for="switch_hour_format_type" string="24h format" class="o_form_label"/>
+                                <button name="switch_hour_format_type" type="object"
+                                    invisible="hour_format_24" icon="fa-square-o" class="btn p-0"
+                                    title="Switch to 24h format"/>
+                                <button name="switch_hour_format_type" type="object"
+                                    invisible="not hour_format_24" icon="fa-check-square" class="btn p-0"
+                                    title="Switch to default format"/>
                             </group>
                         </group>
                         <group name="resource_working_hours">

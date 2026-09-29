@@ -86,6 +86,10 @@ class ResourceCalendar(models.Model):
     work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
     work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', store=True,
         help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
+    hour_format_24 = fields.Boolean(
+        string="24h format",
+        help="Display work durations in hours and minutes (e.g. 8:00) instead of the default format (e.g. 8h).",
+    )
 
     # --------------------------------------------------
     # Constrains
@@ -206,6 +210,10 @@ class ResourceCalendar(models.Model):
             self.two_weeks_calendar = False
             self.attendance_ids.unlink()
             self.attendance_ids = self._get_default_attendance_ids(self.company_id)
+
+    def switch_hour_format_type(self):
+        for calendar in self:
+            calendar.hour_format_24 = not calendar.hour_format_24
 
     # --------------------------------------------------
     # Overrides
