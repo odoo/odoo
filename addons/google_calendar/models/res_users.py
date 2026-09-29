@@ -158,21 +158,21 @@ class User(models.Model):
 
     def stop_google_synchronization(self):
         self.ensure_one()
-        self.google_synchronization_stopped = True
+        self.env.user.google_synchronization_stopped = True
 
     def restart_google_synchronization(self):
         self.ensure_one()
-        if not self.google_calendar_account_id:
-            self.google_calendar_account_id = self.env['google.calendar.credentials'].sudo().create([{'user_ids': [Command.set(self.ids)]}])
-        self.google_synchronization_stopped = False
+        if not self.env.user.google_calendar_account_id:
+            self.env.user.google_calendar_account_id = self.env['google.calendar.credentials'].sudo().create([{'user_ids': [Command.set(self.env.user.ids)]}])
+        self.env.user.google_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_google_sync()
         self.env['calendar.event']._restart_google_sync()
 
     def unpause_google_synchronization(self):
-        self.env['ir.config_parameter'].sudo().set_param("google_calendar_sync_paused", False)
+        self.env['ir.config_parameter'].set_param("google_calendar_sync_paused", False)
 
     def pause_google_synchronization(self):
-        self.env['ir.config_parameter'].sudo().set_param("google_calendar_sync_paused", True)
+        self.env['ir.config_parameter'].set_param("google_calendar_sync_paused", True)
 
     @api.model
     def check_calendar_credentials(self):
