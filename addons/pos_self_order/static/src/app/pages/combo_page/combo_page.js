@@ -365,6 +365,7 @@ export class ComboPage extends Component {
             return;
         }
 
+<<<<<<< 8e95474acda7745612b201c8d357c4c09ceb7209
         if (this.state.showResume) {
             this.addToCart();
             return;
@@ -518,9 +519,46 @@ export class ComboPage extends Component {
             {},
             {},
             this.getComboSelection()
+||||||| ab3f85fe24ecfc7bea690f759399716f466eee7e
+        this.selfOrder.addToCart(
+            this.props.product,
+            this.state.qty,
+            "",
+            {},
+            {},
+            this.state.selectedCombos
+=======
+        const implicitCombos = this.props.product.combo_ids
+            .filter(
+                (c) =>
+                    c.combo_item_ids.length === 1 &&
+                    c.combo_item_ids[0].product_id.attribute_line_ids.length === 0
+            )
+            .map((c) => ({
+                combo_item_id: c.combo_item_ids[0],
+                configuration: {
+                    attribute_custom_values: [],
+                    attribute_value_ids: [],
+                    price_extra: 0,
+                },
+            }));
+
+        const comboOrder = this.props.product.combo_ids.map((c) => c.id);
+        const combos = [...this.state.selectedCombos, ...implicitCombos].sort(
+            (a, b) =>
+                comboOrder.indexOf(a.combo_item_id.combo_id.id) -
+                comboOrder.indexOf(b.combo_item_id.combo_id.id)
+>>>>>>> b907d47b469618e81cd9a64dd88259d2a9d231db
         );
+<<<<<<< 8e95474acda7745612b201c8d357c4c09ceb7209
 
         this.goBack();
+||||||| ab3f85fe24ecfc7bea690f759399716f466eee7e
+        this.router.back();
+=======
+        this.selfOrder.addToCart(this.props.product, this.state.qty, "", {}, {}, combos);
+        this.router.back();
+>>>>>>> b907d47b469618e81cd9a64dd88259d2a9d231db
     }
 
     getComboPrice() {

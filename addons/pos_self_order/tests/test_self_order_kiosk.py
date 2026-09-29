@@ -168,6 +168,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "test_self_order_kiosk_combo_sides")
 
+<<<<<<< 8e95474acda7745612b201c8d357c4c09ceb7209
     def test_self_order_kiosk_combo_qty_max_free(self):
         setup_product_combo_items(self)
         self.desks_combo.write({'combo_item_ids': [Command.unlink(item.id) for item in self.desks_combo.combo_item_ids[1:]], 'qty_max': 3})
@@ -181,6 +182,69 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self.start_tour(self.pos_config._get_self_order_route(), "test_self_order_kiosk_combo_qty_max_free")
 
+||||||| ab3f85fe24ecfc7bea690f759399716f466eee7e
+=======
+    def test_self_order_kiosk_combo_fixed_choice(self):
+        """A combo choice with a single item and no attributes (a "fixed"
+        choice) is not shown as a selection step in the kiosk UI, but it
+        must still be added to the order along with the combo choices the
+        customer actually picks."""
+        fixed_product = self.env["product.product"].create({
+            "name": "Fixed Side",
+            "available_in_pos": True,
+            "list_price": 3,
+        })
+        variable_product_1 = self.env["product.product"].create({
+            "name": "Variable Side 1",
+            "available_in_pos": True,
+            "list_price": 4,
+        })
+        variable_product_2 = self.env["product.product"].create({
+            "name": "Variable Side 2",
+            "available_in_pos": True,
+            "list_price": 5,
+        })
+        fixed_combo = self.env["product.combo"].create({
+            "name": "Fixed Choice",
+            "combo_item_ids": [
+                Command.create({"product_id": fixed_product.id, "extra_price": 0}),
+            ],
+        })
+        variable_combo = self.env["product.combo"].create({
+            "name": "Variable Choice",
+            "combo_item_ids": [
+                Command.create({"product_id": variable_product_1.id, "extra_price": 0}),
+                Command.create({"product_id": variable_product_2.id, "extra_price": 0}),
+            ],
+        })
+        self.env["product.product"].create({
+            "available_in_pos": True,
+            "list_price": 10,
+            "name": "Test Fixed Combo",
+            "type": "combo",
+            "combo_ids": [Command.set([fixed_combo.id, variable_combo.id])],
+        })
+
+        self.pos_config.write({
+            'takeaway': False,
+            'self_ordering_takeaway': False,
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "self_order_kiosk_combo_fixed_choice")
+
+        order = self.env['pos.order'].search([], order='id desc', limit=1)
+        self.assertEqual(
+            len(order.lines), 3,
+            "There should be 3 order lines - 1 combo parent, 1 variable choice, 1 fixed choice"
+        )
+        fixed_line = order.lines.filtered(lambda l: l.product_id == fixed_product)
+        self.assertEqual(len(fixed_line), 1, "The fixed choice should still be included in the order")
+
+>>>>>>> b907d47b469618e81cd9a64dd88259d2a9d231db
     def test_self_order_pricelist(self):
         # ignore pre-existing pricelists for the purpose of this test
         self.env['product.pricelist'].search([]).write({'active': False})
