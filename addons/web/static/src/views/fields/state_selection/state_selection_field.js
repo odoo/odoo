@@ -22,8 +22,8 @@ export class StateSelectionField extends Component {
 
     setup() {
         this.colors = {
-            blocked: "red",
-            done: "green",
+            blocked: "danger",
+            done: "success",
         };
         this.icons = this.icons || {};
         this.classIcons = this.classIcons || {};

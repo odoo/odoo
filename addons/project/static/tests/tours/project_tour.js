@@ -110,7 +110,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         trigger: ".dropdown-menu",
     },
     {
-        trigger: ".dropdown-menu i.o_status_red",
+        trigger: ".dropdown-menu i.o_status_danger",
         content: 'Mark the task as Canceled',
         run: "click",
     }, {

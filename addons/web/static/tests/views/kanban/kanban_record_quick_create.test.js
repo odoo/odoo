@@ -1128,7 +1128,7 @@ test("quick create record and change state in grouped mode", async () => {
     await animationFrame();
     await contains(".dropdown-item:nth-child(2)").click();
 
-    expect(".o_status:first").toHaveClass("o_status_green");
+    expect(".o_status:first").toHaveClass("o_status_success");
 });
 
 test("window resize should not change quick create form size", async () => {

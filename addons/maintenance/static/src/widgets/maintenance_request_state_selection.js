@@ -32,10 +32,10 @@ export class MaintenanceRequestStateSelection extends StateSelectionField {
         };
         this.colorIcons = {
             normal: "text-muted",
-            changes_requested: "o_status_orange",
+            changes_requested: "o_status_warning",
             approved: "text-success",
-            done: "o_status_green",
-            cancelled: "o_status_red",
+            done: "o_status_success",
+            cancelled: "o_status_danger",
         };
         this.colorButton = {
             normal: "btn-outline-secondary",

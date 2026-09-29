@@ -42,11 +42,11 @@ export class ProjectTaskStateSelection extends StateSelectionField {
         };
         this.colorIcons = {
             "01_in_progress": "text-muted",
-            "03_approved": "o_status o_status_green",
-            "02_changes_requested": "o_status o_status_orange",
-            "1_done": "o_status o_status_green",
-            "1_canceled": "o_status o_status_red",
-            "04_waiting_normal": "o_status o_status_blue",
+            "03_approved": "o_status o_status_success",
+            "02_changes_requested": "o_status o_status_warning",
+            "1_done": "o_status o_status_success",
+            "1_canceled": "o_status o_status_danger",
+            "04_waiting_normal": "o_status_info",
         };
         if (this.props.viewType != 'form') {
             super.setup();

@@ -195,11 +195,11 @@
                                         title="No workorder currently in progress. Click to mark work center as blocked."
                                         aria-label="No workorder currently in progress. Click to mark work center as blocked."
                                         invisible="working_state in ('blocked', 'done')"/>
-                                    <a name="unblock" type="object" class=" o_status o_status_red float-end"
+                                    <a name="unblock" type="object" class=" o_status o_status_danger float-end"
                                         title="Workcenter blocked, click to unblock."
                                         aria-label="Workcenter blocked, click to unblock."
                                         invisible="working_state in ('normal', 'done')"/>
-                                    <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_green float-end"
+                                    <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_success float-end"
                                         title="Work orders in progress. Click to block work center."
                                         aria-label="Work orders in progress. Click to block work center."
                                         invisible="working_state in ('normal', 'blocked')"/>
