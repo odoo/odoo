@@ -27,9 +27,9 @@ export class EventStateSelection extends StateSelectionField {
         };
         this.colorIcons = {
             normal: "text-muted",
-            done: "o_status_green",
-            blocked: "o_status_orange",
-            cancel: "o_status_red",
+            done: "o_status_success",
+            blocked: "o_status_warning",
+            cancel: "o_status_danger",
         };
     }
 
