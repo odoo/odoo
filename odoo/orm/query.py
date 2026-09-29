@@ -1,12 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
 
-import warnings
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
-    from typing import LiteralString
     from .fields import Field
     from .models import BaseModel
 
@@ -153,11 +151,9 @@ class Query:
         """ Return whether the query is known to return nothing. """
         return self._ids == ()
 
-    def select(self, *args: SQL | LiteralString) -> SQL:
+    def select(self, *args: SQL) -> SQL:
         """ Return the SELECT query as an ``SQL`` object. """
-        if not all(isinstance(a, SQL) for a in args):
-            warnings.warn("Since 20.0. select takes only SQL arguments")
-        select_clause = SQL(", ").join(map(SQL, args)) if args else self.table.id  # pylint: disable=sql-injection
+        select_clause = SQL(", ").join(args) if args else self.table.id
         return SQL(
             "%s%s%s%s%s%s%s%s",
             SQL("SELECT %s", select_clause),
@@ -170,13 +166,11 @@ class Query:
             SQL(f" OFFSET {int(self.offset)}") if self.offset else _SQL_EMPTY,
         )
 
-    def subselect(self, *args: SQL | LiteralString) -> SQL:
+    def subselect(self, *args: SQL) -> SQL:
         """ Similar to :meth:`.select`, but for sub-queries.
             This one avoids the ORDER BY clause when possible,
             and includes parentheses around the subquery.
         """
-        if not all(isinstance(a, SQL) for a in args):
-            warnings.warn("Since 20.0. select takes only SQL arguments")
         if self._ids is not None and not args:
             # inject the known result instead of the subquery
             if not self._ids:
@@ -190,7 +184,7 @@ class Query:
             # in this case, the ORDER BY clause is necessary
             return SQL("(%s)", self.select(*args))
 
-        select_clause = SQL(", ").join(map(SQL, args)) if args else self.table.id  # pylint: disable=sql-injection
+        select_clause = SQL(", ").join(args) if args else self.table.id
         return SQL(
             "(%s%s%s%s%s)",
             SQL("SELECT %s", select_clause),
