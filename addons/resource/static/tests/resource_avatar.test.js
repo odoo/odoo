@@ -12,11 +12,6 @@ beforeEach(() => {
             name: "admin",
             resource_type: "user",
         },
-        {
-            id: 2,
-            name: "crane",
-            resource_type: "material",
-        },
     ];
 });
 
@@ -31,5 +26,4 @@ test("Check the resource avatar icon", async () => {
     });
 
     expect(".img").toHaveCount(1);
-    expect("[data-icon='build']").toHaveCount(1);
 });

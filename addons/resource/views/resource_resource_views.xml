@@ -61,7 +61,7 @@
                 <field name="company_id" column_invisible="True"/>
                 <field name="avatar_128" widget="resource_avatar"
                     options="{'size': [24, 24], 'img_class': 'rounded-3'}"
-                    nolabel="1" width="30"/>
+                    nolabel="1" width="30" invisible="resource_type != 'user'"/>
                 <field name="name"/>
                 <field name="user_id" />
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
