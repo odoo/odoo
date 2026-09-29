@@ -3,6 +3,7 @@
 from unittest.mock import patch
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -57,3 +58,23 @@ class AuthorizeTest(AuthorizeCommon):
             },
         })
         self.assertEqual(source_tx.state, 'cancel')
+
+    def test_declined_authorization_keeps_reason(self):
+        """ Test that a declined auth-only request keeps the decline reason on the transaction. """
+        tx = self._create_transaction('direct')
+        declined_response = {
+            'messages': {'resultCode': 'Ok', 'message': [{'code': 'I00001', 'text': 'Successful.'}]},
+            'transactionResponse': {
+                'responseCode': '2',
+                'transId': '60000000001',
+                'accountType': 'Visa',
+                'errors': [{'errorCode': '2', 'errorText': "This transaction has been declined."}],
+            },
+        }
+        with patch.object(AuthorizeAPI, '_make_request', return_value=declined_response):
+            response = AuthorizeAPI(self.authorize).authorize(tx, opaque_data={'dataValue': 'x'})
+        self.assertEqual(response['x_response_reason_text'], "This transaction has been declined.")
+
+        tx._handle_notification_data('authorize', {'response': response})
+        self.assertEqual(tx.state, 'cancel')
+        self.assertEqual(tx.state_message, "This transaction has been declined.")
