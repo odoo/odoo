@@ -23,8 +23,8 @@ res_partner_rule_user,user read access,res.partner,purchase.group_purchase_user,
 access_res_partner_purchase_manager,res.partner.purchase.manager,res.partner,purchase.group_purchase_manager,c,
 access_account_journal,account.journal,account.journal,purchase.group_purchase_user,r,
 purchase_user_account_move_rule,Purchase User Journal Entry,account.move,purchase.group_purchase_user,crud,"[('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]"
-base_user_account_move_line_rule,Normal User Account Move Line,account.move.line,purchase.group_purchase_manager,crud,"[('move_id', 'access', 'read')]"
-base_user_account_move_line_rule_1,Normal User Account Move Line,account.move.line,purchase.group_purchase_user,cru,"[('move_id', 'access', 'read')]"
+base_user_account_move_line_rule,Normal User Account Move Line,account.move.line,purchase.group_purchase_manager,cud,"[('move_id', 'access', 'write')]"
+base_user_account_move_line_rule_1,Normal User Account Move Line,account.move.line,purchase.group_purchase_user,cu,"[('move_id', 'access', 'write')]"
 purchase_user_account_analytic_line_rule,Purchase User Account Analytic Line,account.analytic.line,purchase.group_purchase_user,r,
 account_partial_reconcile,account.partial.reconcile.purchase.user,account.partial.reconcile,purchase.group_purchase_user,r,
 access_product_supplierinfo_purchase_manager,product.supplierinfo purchase_manager,product.supplierinfo,purchase.group_purchase_manager,crud,

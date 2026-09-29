@@ -29,7 +29,7 @@ account_bank_statement_line_rule_basic_user,account.bank.statement.line.basic.us
 account_bank_statement_line_comp_rule,Account bank statement line company rule,account.bank.statement.line,,crud,"[('company_id', 'in', company_ids)]"
 account_move_line_rule_group_readonly,Readonly Move Line,account.move.line,account.group_account_readonly,r,
 account_move_line_see_all,All Journal Items,account.move.line,account.group_account_invoice,crud,
-account_invoice_line_rule_portal,Portal Invoice Lines,account.move.line,base.group_portal,r,"[('parent_state', 'not in', ('cancel', 'draft')), ('move_id.move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('move_id.partner_id','child_of',[user.commercial_partner_id.id])]"
+account_invoice_line_rule_everyone,Read Invoice Lines,account.move.line,base.group_everyone,r,"[('move_id', 'access', 'read')]"
 account_move_line_comp_rule,Entry lines,account.move.line,,crud,"[('company_id', 'in', company_ids)]"
 account_move_rule_group_readonly,Readonly Move,account.move,account.group_account_readonly,r,
 account_move_see_all,All Journal Entries,account.move,account.group_account_invoice,crud,
