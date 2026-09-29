@@ -59,7 +59,7 @@ class HrEmployee(models.Model):
             | self_sudo.department_id.manager_id.user_id
         ).sudo(self.env.su)
 
-    @api.depends('parent_id')
+    @api.depends('version_id.parent_id')
     def _compute_expense_manager(self):
         for employee in self:
             previous_manager = employee._origin.parent_id.user_id

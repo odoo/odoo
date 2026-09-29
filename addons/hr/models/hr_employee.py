@@ -283,9 +283,10 @@ class HrEmployee(models.Model):
         groups="hr.group_hr_user"
     )
     # Direct subordinates
-    parent_id = fields.Many2one('hr.employee', 'Manager', tracking=True, index=True,
-                                domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
-    child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates', domain=[('active', '=', True)])
+    parent_id = fields.Many2one(readonly=False, related='version_id.parent_id', inherited=True, tracking=True)
+    managed_version_ids = fields.One2many('hr.version', 'parent_id', groups="hr.group_hr_user")
+    child_ids = fields.One2many('hr.employee', string='Direct subordinates', compute='_compute_child_ids',
+        search='_search_child_ids')
     child_count = fields.Integer('Direct Subordinates Count', compute='_compute_child_count',
         recursive=True, compute_sudo=True)
 
@@ -674,6 +675,30 @@ class HrEmployee(models.Model):
                 version = employee.current_version_id
             employee.version_id = version
 
+    @api.depends_context('uid', 'allowed_company_ids')
+    @api.depends('managed_version_ids', 'managed_version_ids.employee_id.active', 'managed_version_ids.employee_id.current_version_id')
+    def _compute_child_ids(self):
+        children_per_parent = dict(self._read_group(
+            [('parent_id', 'in', self.ids), ('active', '=', True)],
+            ['parent_id'],
+            ['id:recordset'],
+        ))
+        for employee in self:
+            employee.child_ids = children_per_parent.get(employee._origin, self.browse())
+
+    def _search_child_ids(self, operator, value):
+        if operator not in ('in', 'any'):
+            return NotImplemented
+        if operator == 'any':
+            return [('id', 'in', self.env['hr.employee'].search(value).parent_id.ids)]
+        domain = Domain.FALSE
+        if child_ids := [child_id for child_id in value if child_id]:
+            domain |= Domain('id', 'in', self.env['hr.employee'].search([('id', 'in', child_ids)]).parent_id.ids)
+        if False in value:
+            domain |= Domain('id', 'not in', self.env['hr.employee'].search([('parent_id', '!=', False)]).parent_id.ids)
+        return domain
+
+    @api.depends('managed_version_ids', 'managed_version_ids.employee_id.active', 'managed_version_ids.employee_id.current_version_id')
     def _compute_child_count(self):
         employee_read_group = self._read_group(
             [('parent_id', 'in', self.ids)],
@@ -685,7 +710,7 @@ class HrEmployee(models.Model):
             employee.child_count = child_count_per_parent_id.get(employee._origin, 0)
 
     @api.depends_context('uid', 'company')
-    @api.depends('parent_id')
+    @api.depends('version_id.parent_id')
     def _compute_is_subordinate(self):
         subordinates = self.env.user.employee_id.subordinate_ids
         if not subordinates:
@@ -1040,7 +1065,7 @@ class HrEmployee(models.Model):
         for employee, work_contact in zip(self, work_contacts):
             employee.work_contact_id = work_contact
 
-    @api.depends('parent_id')
+    @api.depends('version_id.parent_id')
     def _compute_coach(self):
         for version in self:
             manager = version.parent_id
@@ -1937,7 +1962,7 @@ class HrEmployee(models.Model):
         return resources.unlink()
 
     def _get_employee_m2o_to_empty_on_archived_employees(self):
-        return ['parent_id', 'coach_id']
+        return ['coach_id']
 
     def _get_user_m2o_to_empty_on_archived_employees(self):
         return []
@@ -1951,6 +1976,9 @@ class HrEmployee(models.Model):
             user_fields_to_empty = self._get_user_m2o_to_empty_on_archived_employees()
             employee_domain = Domain.OR(Domain(field, 'in', archived_employees.ids) for field in employee_fields_to_empty)
             user_domain = Domain.OR(Domain(field, 'in', archived_employees.user_id.ids) for field in user_fields_to_empty)
+            self.env['hr.version'].sudo().search([('parent_id', 'in', archived_employees.ids)]).filtered(
+                lambda v: not v.employee_id or v.date_version >= v.employee_id.current_version_id.date_version,
+            ).parent_id = False
             employees = self.env['hr.employee'].search(employee_domain | user_domain)
             for employee in employees:
                 for field in employee_fields_to_empty:

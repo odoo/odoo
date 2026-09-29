@@ -136,7 +136,7 @@ class HrEmployee(models.Model):
 
         return res
 
-    @api.depends('parent_id')
+    @api.depends('version_id.parent_id')
     def _compute_attendance_manager(self):
         for employee in self:
             previous_manager = employee._origin.parent_id.user_id
