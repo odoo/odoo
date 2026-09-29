@@ -483,6 +483,10 @@ class AccountDocumentImportMixin(models.AbstractModel):
         """ Parse file_data['raw'] into an lxml.etree.ElementTree.
             Can be overridden if custom decoding is needed.
         """
+        # Strip UTF-8 BOM and Unicode replacement characters that some
+        # e-invoicing providers prepend to XML files, preventing parsing.
+        if isinstance(file_data.get('raw'), bytes):
+            file_data['raw'] = file_data['raw'].lstrip(b"\xef\xbb\xbf\xef\xbf\xbd")
         if (
             # XML attachments received by mail have a 'text/plain' mimetype.
             'text/plain' in file_data['mimetype'] and (guess_mimetype(file_data['raw'] or b'').endswith('/xml') or file_data['name'].endswith('.xml'))
