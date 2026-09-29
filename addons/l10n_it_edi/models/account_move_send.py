@@ -63,15 +63,18 @@ class AccountMoveSend(models.AbstractModel):
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
-        if (
-                ('it_edi_send' in invoice_data['extra_edis'] and not invoice.l10n_it_edi_attachment_file)
-                or (invoice_data['invoice_edi_format'] == 'it_edi_xml' and invoice._l10n_it_edi_ready_for_xml_export())
-        ):
-            if errors := invoice._l10n_it_edi_export_data_check():
-                invoice_data['error'] = {
-                    'error_title': _("Errors occurred while creating the e-invoice file:"),
-                    'errors': [error['message'] for error in errors.values()],
-                }
+        if ((
+            ('it_edi_send' in invoice_data['extra_edis'] and not invoice.l10n_it_edi_attachment_file)
+            or (invoice_data['invoice_edi_format'] == 'it_edi_xml' and invoice._l10n_it_edi_ready_for_xml_export())
+        ) and (errors := {
+            k: v
+            for k, v in invoice._l10n_it_edi_export_data_check().items()
+            if v.get('level') in ('error', 'warning')
+        })):
+            invoice_data['error'] = {
+                'error_title': _("Errors occurred while creating the e-invoice file:"),
+                'errors': [error['message'] for error in errors.values()],
+            }
 
     def _hook_invoice_document_after_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
