@@ -150,6 +150,33 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.assertEqual(holiday.timesheet_ids.project_id.id, company.internal_project_id.id)
         self.assertEqual(holiday.timesheet_ids.task_id.id, company.leave_timesheet_task_id.id)
 
+    def test_back_to_approval_removes_timesheets(self):
+        holiday = self.Requests.with_user(self.user_employee).create({
+            'name': 'Time Off 1',
+            'employee_id': self.empl_employee.id,
+            'work_entry_type_id': self.hr_work_entry_type_with_ts.id,
+            'request_date_from': self.leave_start_datetime,
+            'request_date_to': self.leave_end_datetime,
+        })
+        holiday.with_user(SUPERUSER_ID).action_approve()
+        timesheets = holiday.timesheet_ids
+        self.assertEqual(len(timesheets), 3)
+
+        holiday.with_user(SUPERUSER_ID).action_back_to_approval()
+        self.assertEqual(holiday.state, 'confirm')
+        self.assertFalse(timesheets.exists(), 'Timesheets should be removed when the time off goes back to approval')
+
+        # the employee moves the time off by one day, only the new dates are timesheeted on validation
+        holiday.with_user(self.user_employee).write({
+            'request_date_from': self.leave_start_datetime + relativedelta(days=1),
+            'request_date_to': self.leave_end_datetime + relativedelta(days=1),
+        })
+        holiday.with_user(SUPERUSER_ID).action_approve()
+        self.assertEqual(
+            sorted(holiday.timesheet_ids.mapped('date')),
+            [(self.leave_start_datetime + relativedelta(days=d)).date() for d in (1, 2, 3)],
+        )
+
     def test_validate_worked_leave(self):
         # employee creates a leave request of worked time type
         holiday = self.Requests.with_user(self.user_employee).create({
