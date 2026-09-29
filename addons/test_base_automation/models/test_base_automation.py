@@ -148,6 +148,21 @@ class LeadThread(models.Model):
     _description = "Threaded Lead Test"
 
 
+class ReadOnlyTest(models.Model):
+    _name = "base.automation.readonly.test"
+    _description = "Automated Rule Read-Only Test"
+
+    name = fields.Char()
+    tag_id = fields.Many2one('test_base_automation.tag')
+    tag_name = fields.Char(compute='_compute_tag_name', store=True, compute_sudo=False)
+    date_automation_last = fields.Datetime(readonly=True)
+
+    @api.depends('tag_id.name')
+    def _compute_tag_name(self):
+        for record in self:
+            record.tag_name = record.tag_id.name
+
+
 class ModelWithCharRecName(models.Model):
     _name = "base.automation.model.with.recname.char"
     _description = "Model with Char as _rec_name"
