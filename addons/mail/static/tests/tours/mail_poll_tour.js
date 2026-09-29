@@ -38,6 +38,7 @@ registry.category("web_tour.tours").add("mail_poll_tour.js", {
         { trigger: "body:not(:has(.o-mail-PollVotesPanel))" },
         { trigger: ".o-mail-Poll button:contains('Remove Vote')", run: "click" },
         { trigger: ".o-mail-PollOption:contains('Blue') input:not(:checked)" },
+        { trigger: ".o-mail-Message:has(.o-mail-Poll)", run: "hover" },
         { trigger: ".o-mail-Message:has(.o-mail-Poll) [title='Expand']", run: "click" },
         { trigger: ".o-mail-Message-moreMenu [name='reply-to']", run: "click" },
         {
@@ -56,14 +57,13 @@ registry.category("web_tour.tours").add("mail_poll_tour.js", {
         { trigger: ".o-mail-PollOption:contains('Blue') input", run: "click" },
         { trigger: ".o-mail-Poll button:contains('Vote'):enabled", run: "click" },
         { trigger: ".o-mail-PollOption:contains(Blue):contains(1 vote100%)" },
-        { trigger: ".o-mail-Message:has(.o-mail-Poll)", run: "hover && click [title='Expand']" },
+        { trigger: ".o-mail-Message:has(.o-mail-Poll)", run: "hover" },
+        { trigger: ".o-mail-Message:has(.o-mail-Poll) [title='Expand']", run: "click" },
         { trigger: "button:contains('End Poll')", run: "click" },
         { trigger: ".o-mail-PollResult:contains(Blue)" },
         { trigger: ".o-mail-PollResult:contains('Winning Answer∙100%')" },
-        {
-            trigger: ".o-mail-Message:has(.o-mail-Poll)",
-            run: "hover && click .o-mail-Message:has(.o-mail-Poll) [title='Expand']",
-        },
+        { trigger: ".o-mail-Message:has(.o-mail-Poll)", run: "hover" },
+        { trigger: ".o-mail-Message:has(.o-mail-Poll) [title='Expand']", run: "click" },
         { trigger: "button:contains('Delete')", run: "click" },
         { trigger: ".modal .btn:contains(Delete)", run: "click" },
         {

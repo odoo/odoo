@@ -123,6 +123,7 @@ export class Composer extends Record {
             return this.composerHtml;
         },
     });
+    isComposerHtmlEmpty = this.computed(() => isHtmlEmpty(this.composerHtml));
     thread = fields.One("mail.thread");
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = fields.Attr(

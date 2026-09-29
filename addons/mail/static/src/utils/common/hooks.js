@@ -1038,7 +1038,24 @@ export function useRightClickMenu(
             delete rootRef()?.dataset.rightClicking;
         },
     });
+    const everOpened = signal(false);
+    let pendingPosition;
+    const openAt = (el, { left, top }) => {
+        Object.assign(el.style, { left, top });
+        dropdownState.open();
+    };
+    useEffect(() => {
+        const el = anchor();
+        if (el && pendingPosition) {
+            const position = pendingPosition;
+            pendingPosition = undefined;
+            untrack(() => openAt(el, position));
+        }
+    });
     const res = {
+        get everOpened() {
+            return everOpened();
+        },
         get menuProps() {
             return {
                 anchorRef: anchor,
@@ -1060,10 +1077,13 @@ export function useRightClickMenu(
                 return false;
             }
             rootRef().dataset.rightClicking = true;
-            const el = anchor();
-            el.style.left = ev.clientX + "px";
-            el.style.top = ev.clientY + "px";
-            dropdownState.open();
+            const position = { left: ev.clientX + "px", top: ev.clientY + "px" };
+            if (anchor()) {
+                openAt(anchor(), position);
+            } else {
+                pendingPosition = position;
+                everOpened.set(true);
+            }
             ev.preventDefault();
             return true;
         },

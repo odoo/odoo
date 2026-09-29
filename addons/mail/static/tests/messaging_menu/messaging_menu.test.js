@@ -22,7 +22,7 @@ import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { Store as StoreModel } from "@mail/model/store";
 import { toRawValue } from "@mail/utils/common/local_storage";
 
-import { describe, expect, mockPermission, queryOne, test } from "@odoo/hoot";
+import { describe, expect, mockPermission, queryOne, rightClick, test } from "@odoo/hoot";
 import { animationFrame, mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
@@ -508,6 +508,8 @@ test("context menu anchor does not cover messaging menu items", async () => {
     pyEnv["discuss.channel"].create({ name: "test" });
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await contains(".o-mail-MessagingMenuItem");
+    await rightClick(".o-mail-MessagingMenuItem");
     await contains(".o-mail-MessagingMenu .o-mail-MessagingMenuItem-contextMenuAnchor");
     const contextMenuAnchorRect = queryOne(
         ".o-mail-MessagingMenuItem-contextMenuAnchor"

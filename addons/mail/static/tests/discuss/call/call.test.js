@@ -2198,10 +2198,11 @@ test("Meeting chat panel excludes call notifications for 'New Meeting' channels"
     await contains(".o-mail-Meeting");
     await click("[title='Chat']");
     await contains(".o-mail-ActionPanel-header:text('In call messages')");
-    await contains(".o-mail-Thread:has(:text('Meeting, Jan 1'))");
-    await contains(`.o-mail-NotificationMessage:text('Mitchell Admin started a call.${time}')`, {
-        count: 0,
-    });
+    await contains(".o-mail-Meeting .o-mail-Thread:has(:text('Meeting, Jan 1'))");
+    await contains(
+        `.o-mail-Meeting .o-mail-NotificationMessage:text('Mitchell Admin started a call.${time}')`,
+        { count: 0 }
+    );
 });
 
 test("active call with a recording shows a processing link", async () => {
@@ -2335,6 +2336,8 @@ test("Access to Pinned Messages from Meeting Chat", async () => {
     await contains(".o-mail-ActionPanel-header:has(:text('In call messages'))");
     await insertText(".o-mail-Meeting .o-mail-Composer-input", "hey");
     await click(".o-mail-Meeting .o-mail-Composer button[title='Send']:enabled");
+    await contains(".o-mail-Meeting .o-mail-Message");
+    await hover(".o-mail-Meeting .o-mail-Message");
     await click(".o-mail-Meeting .o-mail-Message [title='Expand']");
     await click(".dropdown-item:text('Pin')");
     await click(".modal-footer button:text('Pin Message')");

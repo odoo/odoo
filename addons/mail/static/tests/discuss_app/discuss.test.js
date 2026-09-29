@@ -2677,6 +2677,7 @@ test("Read-only channel member has bottom banner instead of composer", async () 
         count: 0,
     });
     // reply to message composer should disappear when channel becomes read-only again
+    await hover(".o-mail-Message:has(:text('Welcome to the read-only channel!'))");
     await click(".o-mail-Message:has(:text('Welcome to the read-only channel!')) [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
     await contains(".o-mail-Composer:has(:text('Replying to Mitchell Admin'))");

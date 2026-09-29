@@ -2,6 +2,7 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     insertText,
     openDiscuss,
     start,
@@ -122,6 +123,7 @@ test("Adding attachments", async () => {
     const file = new File(["file content"], "test.txt", { type: "text/plain" });
     await contains(`${env1.selector} .o-mail-Message:contains('Hello world!')`);
     await contains(`${env2.selector} .o-mail-Message:contains('Hello world!')`);
+    await hover(`${env1.selector} .o-mail-Message`);
     await click(`${env1.selector} .o-mail-Message button[title='Expand']`);
     await click(`${env1.selector} .o-dropdown-item:text('Edit')`);
     await click(`${env1.selector} .o-mail-Message .o-mail-Composer button[title='More Actions']`);
