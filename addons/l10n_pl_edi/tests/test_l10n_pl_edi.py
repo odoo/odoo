@@ -209,15 +209,62 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self._assert_export_invoice(credit_note, 'standerd_fa3_credit_note.xml')
 
     @freeze_time('2026-01-23')
-    def test_ksef_fa3_reverse_charge(self):
-        K_12_tax = self.env['account.chart.template'].ref('vs_dostu')
-        K_31_tax = self.env['account.chart.template'].ref('vs_stal')
+    def test_ksef_fa3_reverse_charge_np_ii(self):
+        """
+        Intra-EU B2B service (np II, art. 100 ust. 1 pkt 4):
+        - the invoice is flagged as reverse charge (P_18 = 1)
+        - the base is reported only in P_13_9, since P_13_8 excludes it.
+        - P_13_10 must not be present: it is reserved for domestic reverse charge.
+        """
+        partner_be = self.env['res.partner'].create({
+            'name': 'Test Customer BE',
+            'is_company': True,
+            'country_id': self.env.ref('base.be').id,
+            'vat': 'BE0477472701',
+            'street': 'Rue de la Loi 16',
+            'city': 'Brussels',
+            'zip': '1000',
+        })
+        eu_service_tax = self.env['account.chart.template'].ref('vs_dostu')
+        service_product = self._create_product(name='EU Service', type='service', taxes_id=[Command.set(eu_service_tax.ids)])
+        invoice = self._create_invoice(
+            invoice_date=fields.Date.today(),
+            partner_id=partner_be,
+            invoice_line_ids=[
+                Command.create({'product_id': service_product.id, 'quantity': 1, 'price_unit': 500.0, 'tax_ids': eu_service_tax.ids}),
+            ],
+            post=True)
+        self._assert_export_invoice(invoice, 'standard_fa3_format_invoice_reverse_charge_only_np_II.xml')
+
+    @freeze_time('2026-01-23')
+    def test_ksef_fa3_reverse_charge_domestic(self):
+        """
+        Domestic reverse charge (oo, K_31) is the only base reported in P_13_10, even when the invoice
+        also contains an np II line.
+        """
+        k_31 = self.env['account.account.tag']._get_tax_tags('K_31', self.country_pl.id)
+        domestic_reverse_charge_tax = self.env['account.tax'].create({
+            'name': '0% oo',
+            'amount': 0.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+            'country_id': self.country_pl.id,
+            'invoice_repartition_line_ids': [
+                Command.create({'repartition_type': 'base', 'tag_ids': k_31.ids}),
+                Command.create({'repartition_type': 'tax'}),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({'repartition_type': 'base', 'tag_ids': k_31.ids}),
+                Command.create({'repartition_type': 'tax'}),
+            ],
+        })
+        eu_service_tax = self.env['account.chart.template'].ref('vs_dostu')
         invoice = self._create_invoice(
             invoice_date=fields.Date.today(),
             partner_id=self.partner_pl,
             invoice_line_ids=[
-                Command.create({'product_id': self.product_a.id, 'quantity': 1, 'price_unit': 1000.0, 'tax_ids': K_12_tax.ids}),
-                Command.create({'product_id': self.product_a.id, 'quantity': 1, 'price_unit': 500.0, 'tax_ids': K_31_tax.ids}),
+                Command.create({'product_id': self.product_a.id, 'quantity': 1, 'price_unit': 1000.0, 'tax_ids': eu_service_tax.ids}),
+                Command.create({'product_id': self.product_a.id, 'quantity': 1, 'price_unit': 500.0, 'tax_ids': domestic_reverse_charge_tax.ids}),
             ],
             post=True)
         self._assert_export_invoice(invoice, 'standard_fa3_format_invoice_reverse_charge.xml')
