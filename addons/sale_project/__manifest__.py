@@ -25,7 +25,6 @@ This module allows to generate a project/task from sales orders.
         'report/account_analytic_line_views.xml',
         'report/sale_report_views.xml',
         'views/project_menus.xml',
-        'security/ir.access.csv',
     ],
     'demo': [
         'data/sale_project_demo.xml',
