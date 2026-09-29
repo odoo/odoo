@@ -58,6 +58,13 @@ class MassMailController(main.MassMailController):
         elif subscription_type == 'mobile':
             name = value
 
+        mailing_list = request.env['mailing.list'].sudo().browse(int(list_id)).exists()
+        if not request.env.user._is_internal() and not mailing_list.is_public:
+            return {
+                'toast_type': 'danger',
+                'toast_content': _("Invalid mailing list."),
+            }
+
         subscription = ContactSubscription.search(
             [('list_id', '=', int(list_id)), (f'contact_id.{fname}', '=', value)], limit=1)
         if not subscription:
