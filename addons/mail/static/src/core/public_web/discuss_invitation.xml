@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="mail.DiscussInvitation">
+    <t t-if="this.channel">
+        <div class="o-mail-DiscussInvitation d-flex position-absolute h-100 w-100 justify-content-center align-items-center" t-on-click="this.props.close">
+            <div class="d-flex position-relative flex-column gap-4 p-3 m-3 bg-view bg-opacity-100 rounded" style="max-width: 400px; width: 100%;">
+                <DiscussInvitationCard channel="this.channel" onConfirm="() => this.onClickConfirm()" canConfirm="true" />
+            </div>
+        </div>
+    </t>
+</t>
+</templates>
+

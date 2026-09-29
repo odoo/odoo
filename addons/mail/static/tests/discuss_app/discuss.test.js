@@ -2855,3 +2855,29 @@ test("Prevent link interactions in message preview", async () => {
     expect(".o-mail-NotificationItem-text").toHaveStyle({ pointerEvents: "none" });
     await contains(".o-mail-Message:has(:text('https://www.odoo.com'))");
 });
+
+test("opening discuss app with a pending invitation shows the invitation dialog", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, im_status: "online" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+        name: "This is a meeting",
+    });
+    const channel = pyEnv["discuss.channel"].browse(channelId)[0];
+    await start();
+    await openDiscuss(channelId, {
+        invitationToken: channel.uuid,
+    });
+    await contains(".o-mail-DiscussInvitation");
+    await contains(
+        ".o-mail-DiscussInvitation .o-mail-DiscussInvitationCard-invitation:contains(Mitchell Admin)"
+    );
+    await contains(
+        ".o-mail-DiscussInvitation .o-mail-DiscussInvitationCard-details:contains(This is a meeting)"
+    );
+});
