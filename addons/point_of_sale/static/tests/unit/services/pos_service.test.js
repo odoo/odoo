@@ -2,7 +2,7 @@ import { test, expect, describe } from "@odoo/hoot";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { ConnectionLostError } from "@web/core/network/rpc";
-import { onRpc } from "@web/../tests/web_test_helpers";
+import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { imageUrl } from "@web/core/utils/urls";
 import { prepareRoundingVals } from "../accounting/utils";
 const { DateTime } = luxon;
@@ -754,5 +754,45 @@ describe("pos_store.js", () => {
         );
         expect(weighed).toHaveLength(0);
         expect(line.qty).toBe(1.25);
+    });
+
+    describe("reloadData", () => {
+        test("keeps a paid order that could not be synced", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+            order.state = "paid";
+            store.data.network.offline = true;
+            patchWithCleanup(store.data, {
+                async resetIndexedDB() {
+                    expect.step("resetIndexedDB");
+                    throw new Error("stop before leaving the page");
+                },
+            });
+            patchWithCleanup(store.dialog, {
+                add(component, props) {
+                    expect.step(props.title);
+                },
+            });
+
+            await store.reloadData().catch(() => {});
+            expect.verifySteps(["Reload Data"]);
+            expect(store.models["pos.order"].get(order.id)).toBe(order);
+            expect(order.isSynced).toBe(false);
+        });
+
+        test("syncs a paid order before wiping local data", async () => {
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+            order.state = "paid";
+            patchWithCleanup(store.data, {
+                async resetIndexedDB() {
+                    expect.step(`resetIndexedDB, synced: ${order.isSynced}`);
+                    throw new Error("stop before leaving the page");
+                },
+            });
+
+            await expect(store.reloadData()).rejects.toThrow("stop before leaving the page");
+            expect.verifySteps(["resetIndexedDB, synced: true"]);
+        });
     });
 });
