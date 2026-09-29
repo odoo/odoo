@@ -9,7 +9,6 @@ account_invoice_send_batch_rule_see_all,All Invoice Send and Print (batch mode),
 access_sale_account_journal,account.journal sale order.user,account.journal,sales_team.group_sale_salesman,r,
 account_invoice_rule_see_personal,Personal Invoices,account.move,sales_team.group_sale_salesman,r,"[('move_type', 'in', ('out_invoice', 'out_refund')), '|', ('invoice_user_id', '=', user.id), ('invoice_user_id', '=', False)]"
 account_invoice_rule_see_all,All Invoices,account.move,sales_team.group_sale_salesman_all_leads,r,"[('move_type', 'in', ('out_invoice', 'out_refund'))]"
-base_user_account_move_line_rule,Normal User Account Move Line,account.move.line,sales_team.group_sale_salesman,r,"[('move_id', 'access', 'read')]"
 access_account_partial_reconcile_salesman,account_partial_reconcile salesman,account.partial.reconcile,sales_team.group_sale_salesman,r,
 access_account_payment_term_salesman,account_payment_term salesman,account.payment.term,sales_team.group_sale_salesman,r,
 access_account_tax_user,account.tax.user,account.tax,sales_team.group_sale_salesman,r,
