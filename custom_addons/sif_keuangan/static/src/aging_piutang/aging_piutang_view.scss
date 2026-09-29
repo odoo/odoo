@@ -129,6 +129,22 @@
         border: 1px solid #64748B;
         border-radius: 4px;
         letter-spacing: 0.02em;
+        white-space: nowrap !important;
+    }
+
+    /* Badge Jumlah Tagihan (High-Contrast, Slate Bold) */
+    .o_badge_doc_count {
+        display: inline-block;
+        padding: 2px 7px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        color: #0F172A !important;
+        background-color: #F1F5F9;
+        border: 1px solid #64748B;
+        border-radius: 4px;
+        letter-spacing: 0.01em;
+        white-space: nowrap !important;
     }
 
     .o_wali_text {
@@ -136,6 +152,7 @@
         color: #334155;
         font-weight: 600;
         margin-left: 4px;
+        white-space: nowrap !important;
 
         strong {
             color: #0F172A;
@@ -148,6 +165,7 @@
         color: #1E3A8A !important;
         border: 1px solid #93C5FD;
         font-weight: 700;
+        white-space: nowrap !important;
     }
 
     .o_badge_customer {
@@ -155,6 +173,7 @@
         color: #14532D !important;
         border: 1px solid #86EFAC;
         font-weight: 700;
+        white-space: nowrap !important;
     }
 
     .o_badge_distributor {
@@ -162,6 +181,7 @@
         color: #581C87 !important;
         border: 1px solid #D8B4FE;
         font-weight: 700;
+        white-space: nowrap !important;
     }
 
     .o_badge_vendor {
@@ -169,6 +189,7 @@
         color: #0F172A !important;
         border: 1px solid #64748B;
         font-weight: 700;
+        white-space: nowrap !important;
     }
 
     .o_badge_success {
@@ -176,6 +197,7 @@
         color: #14532D !important;
         border: 1px solid #4ADE80;
         font-weight: 800;
+        white-space: nowrap !important;
     }
 
     .o_badge_info {
@@ -183,6 +205,7 @@
         color: #075985 !important;
         border: 1px solid #38BDF8;
         font-weight: 800;
+        white-space: nowrap !important;
     }
 
     .o_badge_warning {
@@ -190,6 +213,7 @@
         color: #78350F !important;
         border: 1px solid #FBBF24;
         font-weight: 800;
+        white-space: nowrap !important;
     }
 
     .o_badge_danger {
@@ -197,6 +221,7 @@
         color: #7F1D1D !important;
         border: 1px solid #F87171;
         font-weight: 800;
+        white-space: nowrap !important;
     }
 
     /* Scrollable Container */
@@ -226,9 +251,10 @@
         font-size: 0.8125rem;
         border-color: #CBD5E1;
         min-width: 1400px;
-        width: 100%;
+        width: max-content;
         margin-bottom: 0;
         border-collapse: collapse;
+        white-space: nowrap !important;
 
         thead {
             background-color: #F8FAFC;
@@ -241,7 +267,7 @@
                 letter-spacing: 0.02em;
                 padding: 10px 10px;
                 border-color: #CBD5E1;
-                white-space: nowrap;
+                white-space: nowrap !important;
                 vertical-align: middle;
             }
 
@@ -291,19 +317,19 @@
                 color: #0F172A !important;
                 border-color: #CBD5E1;
                 font-size: 0.8125rem;
-                white-space: nowrap;
+                white-space: nowrap !important;
                 vertical-align: middle;
             }
 
             .o_col_partner {
-                white-space: normal;
-                min-width: 220px;
+                white-space: nowrap !important;
+                min-width: 320px;
                 color: #0F172A !important;
             }
 
             .o_col_unit {
-                white-space: normal;
-                min-width: 140px;
+                white-space: nowrap !important;
+                min-width: 150px;
                 color: #1E293B !important;
                 font-weight: 600;
             }
@@ -333,7 +359,7 @@
                 font-size: 0.8125rem;
                 border-color: #334155;
                 color: #FFFFFF !important;
-                white-space: nowrap;
+                white-space: nowrap !important;
                 font-weight: 800;
             }
 
@@ -377,12 +403,14 @@
                 padding: 7px 10px;
                 font-size: 0.8125rem;
                 color: #1E293B !important;
+                white-space: nowrap !important;
             }
 
             a {
                 color: #0F172A !important;
                 font-weight: 700;
                 text-decoration: underline;
+                white-space: nowrap !important;
 
                 &:hover {
                     color: #0284C7 !important;
@@ -410,24 +438,32 @@
             font-weight: 800;
             font-size: 0.875rem;
             color: #0F172A;
+            white-space: nowrap !important;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .o_card_date {
             font-size: 0.75rem;
             color: #334155;
             font-weight: 700;
+            white-space: nowrap !important;
         }
 
         .o_card_partner {
             font-size: 0.8125rem;
             color: #0F172A;
             font-weight: 700;
+            white-space: nowrap !important;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .o_card_unit {
             font-size: 0.75rem;
             color: #475569;
             font-weight: 600;
+            white-space: nowrap !important;
         }
 
         .o_card_amount {
@@ -435,6 +471,7 @@
             font-weight: 800;
             font-variant-numeric: tabular-nums;
             color: #0F172A;
+            white-space: nowrap !important;
         }
     }
 
