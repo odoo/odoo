@@ -59,6 +59,10 @@
             </p>
         </template>
 
+        <template id="message_pin_notification" technical_usage="mail_post_source">
+            <div class="o_mail_notification" data-oe-type="pin" t-att-data-oe-id="pinned_message_id"><t t-out="user_name"/> pinned a message to this channel.</div>
+        </template>
+
         <template id="discuss_channel_invitation_template">
             <div style="padding: 16px; background-color: #F1F1F1; font-family: Verdana, Arial, sans-serif; color: #454748; width: 100%; display: flex; justify-content: center;">
                 <div style="max-width: 590px; width: 100%; background-color: #ffffff; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; align-items: center;">

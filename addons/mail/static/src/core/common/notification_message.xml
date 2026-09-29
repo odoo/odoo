@@ -7,6 +7,9 @@
             <t t-if="this.message.notificationType === 'call'">
                 <span class="text-muted" t-out="this.callInformation"/>
             </t>
+            <t t-elif="this.message.notificationType === 'pin' and this.message.pinnedMessageId">
+                <span class="text-muted" t-out="this.pinInformation"/> <span class="o-mail-NotificationMessage-seeAllPins text-muted" t-out="this.seeAllPinsInformation"/>
+            </t>
             <t t-elif="this.showInlineBody">
                 <span class="text-muted" t-out="this.message.inlineBody"/>
             </t>

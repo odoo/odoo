@@ -885,11 +885,7 @@ export class DiscussChannel extends models.ServerModel {
 
         MailThread.set_message_pin.call(this, id, message_id, pinned);
         const [partner] = ResPartner.read(this.env.user.partner_id);
-        const notification = `<div data-oe-type="pin" class="o_mail_notification">
-                ${partner.display_name} pinned a
-                <a href="#" data-oe-type="highlight" data-oe-id='${message_id}'>message</a> to this channel.
-                <a href="#" data-oe-type="pin-menu">See all pinned messages</a>
-            </div>`;
+        const notification = `<div class="o_mail_notification" data-oe-type="pin" data-oe-id="${message_id}">${partner.display_name} pinned a message to this channel.</div>`;
         this.message_post(
             id,
             makeKwArgs({
