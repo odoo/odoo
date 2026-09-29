@@ -20,7 +20,10 @@ export function parseColor(cssColor) {
         const [r, g, b, a = 255] = digits.map((digit) => parseInt(digit, 16));
         return { r, g, b, a: a / 255 };
     }
-    const rgba = cssColor.match(/^rgba?\(([^)]+)\)$/)?.[1].split(/[\s,/]+/).map(parseFloat);
+    const rgba = cssColor
+        .match(/^rgba?\(([^)]+)\)$/)?.[1]
+        .split(/[\s,/]+/)
+        .map(parseFloat);
     if (rgba) {
         const [r, g, b, a = 1] = rgba;
         return { r, g, b, a };
@@ -41,7 +44,7 @@ export function formatColor({ r, g, b, a }) {
 
 // libsass' round: half up, with its 5 digits precision tolerance.
 function sassRound(value) {
-    return value % 1 - 0.5 > -1e-6 ? Math.ceil(value) : Math.floor(value);
+    return (value % 1) - 0.5 > -1e-6 ? Math.ceil(value) : Math.floor(value);
 }
 
 function mix(color1, color2, weight) {
@@ -60,7 +63,8 @@ function mix(color1, color2, weight) {
 
 const tintColor = (color, weight) => mix(WHITE, color, weight);
 const shadeColor = (color, weight) => mix(BLACK, color, weight);
-const opaque = (background, foreground) => mix({ ...foreground, a: 1 }, background, foreground.a * 100);
+const opaque = (background, foreground) =>
+    mix({ ...foreground, a: 1 }, background, foreground.a * 100);
 
 function toHsl({ r, g, b }) {
     [r, g, b] = [r / 255, g / 255, b / 255];
@@ -129,7 +133,12 @@ function colorContrast(background, constants) {
     const realColor = opaque(constants.bodyBg, background);
     let maxRatio = 0;
     let maxRatioColor = null;
-    for (const color of [constants.contrastLight, constants.contrastDark, constants.white, constants.black]) {
+    for (const color of [
+        constants.contrastLight,
+        constants.contrastDark,
+        constants.white,
+        constants.black,
+    ]) {
         const ratio = contrastRatio(realColor, color);
         if (ratio > constants.minContrastRatio) {
             return color;
@@ -146,7 +155,9 @@ const luma = ({ r, g, b }) => ((r * 0.299 + g * 0.587 + b * 0.114) / 255) * 100;
 // html_editor's `has-enough-contrast()` and `increase-contrast()`.
 function hasEnoughContrast(color1, color2) {
     return (
-        Math.abs(color1.r - color2.r) + Math.abs(color1.g - color2.g) + Math.abs(color1.b - color2.b) >=
+        Math.abs(color1.r - color2.r) +
+            Math.abs(color1.g - color2.g) +
+            Math.abs(color1.b - color2.b) >=
         500
     );
 }
@@ -230,7 +241,9 @@ function computeColorPresetPreview(index, preset, constants) {
         const btn = preset[`btn-${type}`];
         const btnColor = btn || constants[type];
         const borderColor = preset[`btn-${type}-border`] || btnColor;
-        for (const [key, value] of Object.entries(buttonVariant(btnColor, borderColor, constants))) {
+        for (const [key, value] of Object.entries(
+            buttonVariant(btnColor, borderColor, constants)
+        )) {
             values[`btn-${type}-${key}`] = value;
         }
         const outline = btn ? btnColor : increaseContrast(borderColor, bg);
@@ -249,7 +262,17 @@ function computeColorPresetPreview(index, preset, constants) {
         values["body-link-hover"] = bodyLinkHover;
         values["body-link-hover-rgb"] = toRgb(bodyLinkHover);
     }
-    for (const key of ["text", "text-muted", "text-rgb", "headings", "h2", "h3", "h4", "h5", "h6"]) {
+    for (const key of [
+        "text",
+        "text-muted",
+        "text-rgb",
+        "headings",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+    ]) {
         values[key] ??= "";
     }
     return prefixValues(`o-cc${index}-`, values);
@@ -297,7 +320,11 @@ function themeColorValues(name, color, env) {
         }
         bgSubtle = env.isDarkPalette ? shadeColor(color, 70) : tintColor(color, 80);
     } else if (name === "light") {
-        [textEmphasis, bgSubtle, borderSubtle] = [grays[700], mix(grays[100], constants.white, 50), grays[200]];
+        [textEmphasis, bgSubtle, borderSubtle] = [
+            grays[700],
+            mix(grays[100], constants.white, 50),
+            grays[200],
+        ];
     } else if (name === "dark") {
         [textEmphasis, bgSubtle, borderSubtle] = [grays[700], grays[400], grays[500]];
     }
@@ -369,7 +396,10 @@ export function computeColorSystemPreview(getColor, presets, options) {
         constants,
         grays,
         isDarkPalette: isSameColor(colorContrast(bodyColor, constants), constants.contrastDark),
-        btnBackgrounds: { primary: presets[0]["btn-primary"], secondary: presets[0]["btn-secondary"] },
+        btnBackgrounds: {
+            primary: presets[0]["btn-primary"],
+            secondary: presets[0]["btn-secondary"],
+        },
         btnBorders: {
             primary: presets[0]["btn-primary-border"],
             secondary: presets[0]["btn-secondary-border"],
@@ -385,44 +415,53 @@ export function computeColorSystemPreview(getColor, presets, options) {
     for (let index = 1; index <= 9; index++) {
         const gray = grays[index * 100];
         Object.assign(values, prefixValues(`bg-${index * 100}-`, bgVariant(gray, constants)));
-        Object.assign(values, prefixValues("", {
-            [index * 100]: gray,
-            [`text-${index * 100}-hover`]: adjustLightness(gray, -20),
-        }));
+        Object.assign(
+            values,
+            prefixValues("", {
+                [index * 100]: gray,
+                [`text-${index * 100}-hover`]: adjustLightness(gray, -20),
+            })
+        );
     }
     for (let index = 1; index <= 5; index++) {
         const color = getColor(`o-color-${index}`);
         Object.assign(values, prefixValues(`bg-o-color-${index}-`, bgVariant(color, constants)));
-        Object.assign(values, prefixValues("", {
-            [`o-color-${index}`]: color,
-            [`text-o-color-${index}-hover`]: adjustLightness(color, -20),
-        }));
+        Object.assign(
+            values,
+            prefixValues("", {
+                [`o-color-${index}`]: color,
+                [`text-o-color-${index}-hover`]: adjustLightness(color, -20),
+            })
+        );
     }
     // `$component-active-bg` and the root variables not compiled per color.
     const componentActiveBg = presets[0]["btn-primary"] || themeColors.primary;
     const tertiaryBg = mix(colorContrast(bodyBg, constants), bodyBg, 10);
     const inputBg = getColor("input") || bodyBg;
     const boxedBodyColor = getColor("body");
-    Object.assign(values, prefixValues("", {
-        "component-active-bg": componentActiveBg,
-        "component-active-color": colorContrast(componentActiveBg, constants),
-        "focus-ring-color": { ...themeColors.primary, a: 0.25 },
-        "form-valid-color": themeColors.success,
-        "form-invalid-color": themeColors.danger,
-        "secondary-color": { ...bodyColor, a: 0.75 },
-        "secondary-color-rgb": toRgb(bodyColor),
-        "tertiary-color": { ...bodyColor, a: 0.5 },
-        "tertiary-color-rgb": toRgb(bodyColor),
-        "secondary-bg": grays[200],
-        "secondary-bg-rgb": toRgb(grays[200]),
-        "tertiary-bg": tertiaryBg,
-        "tertiary-bg-rgb": toRgb(tertiaryBg),
-        // The page background in the full and in the other layouts (the
-        // compiled CSS uses the one of its layout).
-        "body-fill": opaque(WHITE, bodyBg),
-        "boxed-body-fill": boxedBodyColor && opaque(WHITE, boxedBodyColor),
-        "input-bg": inputBg,
-        "input-color": bodyColor,
-    }));
+    Object.assign(
+        values,
+        prefixValues("", {
+            "component-active-bg": componentActiveBg,
+            "component-active-color": colorContrast(componentActiveBg, constants),
+            "focus-ring-color": { ...themeColors.primary, a: 0.25 },
+            "form-valid-color": themeColors.success,
+            "form-invalid-color": themeColors.danger,
+            "secondary-color": { ...bodyColor, a: 0.75 },
+            "secondary-color-rgb": toRgb(bodyColor),
+            "tertiary-color": { ...bodyColor, a: 0.5 },
+            "tertiary-color-rgb": toRgb(bodyColor),
+            "secondary-bg": grays[200],
+            "secondary-bg-rgb": toRgb(grays[200]),
+            "tertiary-bg": tertiaryBg,
+            "tertiary-bg-rgb": toRgb(tertiaryBg),
+            // The page background in the full and in the other layouts (the
+            // compiled CSS uses the one of its layout).
+            "body-fill": opaque(WHITE, bodyBg),
+            "boxed-body-fill": boxedBodyColor && opaque(WHITE, boxedBodyColor),
+            "input-bg": inputBg,
+            "input-color": bodyColor,
+        })
+    );
     return values;
 }

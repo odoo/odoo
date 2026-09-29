@@ -296,10 +296,7 @@ export class ThemeTabPlugin extends Plugin {
         const hsl = convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);
         const adjustedGrayRGB = convertHslToRgb(
             grayParams[GRAY_PARAMS.HUE],
-            Math.min(
-                Math.max(hsl.saturation + grayParams[GRAY_PARAMS.EXTRA_SATURATION], 0),
-                100
-            ),
+            Math.min(Math.max(hsl.saturation + grayParams[GRAY_PARAMS.EXTRA_SATURATION], 0), 100),
             hsl.lightness
         );
         return convertRgbaToCSSColor(

@@ -224,10 +224,13 @@ export function computeColorPreviewValues(action, change) {
     };
     const toColor = (cssColor) => {
         // A named color (`'o-color-1'`, `var(--o-color-1)`) follows it.
-        const name = cssColor.match(/^'(.+)'$|^var\(--(.+)\)$/)?.slice(1).find(Boolean);
+        const name = cssColor
+            .match(/^'(.+)'$|^var\(--(.+)\)$/)
+            ?.slice(1)
+            .find(Boolean);
         return name ? getColor(name) : parseColor(cssColor);
     };
-    const presets = [1, 2, 3, 4, 5].map((index) => {
+    const presets = PRESETS.map((index) => {
         const setColors = getCSSVariableValue(`o-cc${index}-set`, style).slice(1, -1).split(" ");
         const preset = {};
         for (const key of PRESET_COLORS) {
@@ -246,7 +249,7 @@ export function computeColorPreviewValues(action, change) {
     });
     // The preset gradients cover their background color (`none` hides a
     // saved one).
-    for (let index = 1; index <= 5; index++) {
+    for (const index of PRESETS) {
         const name = `o-cc${index}-bg-gradient`;
         const savedGradient = getCSSVariableValue(name, style).replace(/^'(.*)'$/, "$1");
         let gradient = customizeWebsite.getPendingValue(name);
@@ -254,7 +257,11 @@ export function computeColorPreviewValues(action, change) {
             gradient = gradientValue || nullValue;
         }
         values[name] =
-            gradient === undefined ? savedGradient : gradient === nullValue ? savedGradient && "none" : gradient;
+            gradient === undefined
+                ? savedGradient
+                : gradient === nullValue
+                ? savedGradient && "none"
+                : gradient;
     }
     return values;
 }
@@ -336,7 +343,10 @@ function getPaletteColors(action, paletteName) {
         colors[`o-cc${index}-set`] = `'${keys.join(" ")}'`;
     }
     const themeColors = getPaletteValues(STATUS_COLORS);
-    for (const [name, reference] of [["primary", "'o-color-1'"], ["secondary", "'o-color-2'"]]) {
+    for (const [name, reference] of [
+        ["primary", "'o-color-1'"],
+        ["secondary", "'o-color-2'"],
+    ]) {
         themeColors[name] = resolve(reference);
         themeColors[`o-ref-${name}`] = reference;
     }

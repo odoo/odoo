@@ -129,13 +129,6 @@ $o-has-customized-13-0-color-system:
     or map-get($o-user-theme-color-palette, 'delta')
     or map-get($o-user-theme-color-palette, 'epsilon'));
 
-$o-has-customized-colors:
-    not not (length(map-keys($o-user-color-palette)) > 0
-    or map-get($o-user-theme-color-palette, 'success')
-    or map-get($o-user-theme-color-palette, 'info')
-    or map-get($o-user-theme-color-palette, 'warning')
-    or map-get($o-user-theme-color-palette, 'danger'));
-
 // Color palette
 // -------------
 

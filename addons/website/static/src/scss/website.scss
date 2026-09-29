@@ -182,8 +182,6 @@
 
     @include print-variable('color-palettes-name', $o-original-color-palette-name);
 
-    @include print-variable('has-customized-colors', $o-has-customized-colors);
-
     // 6) Get list of colorpalette custom colors
     $custom-colors: ();
     @each $key, $value in $o-color-palette {
@@ -192,7 +190,7 @@
     @include print-variable('custom-colors', $custom-colors);
 
     // 7) What the builder needs to preview color presets (see
-    // `color_preset_preview.js`): which of their colors are set, and the
+    // `color_system_preview.js`): which of their colors are set, and the
     // contrast ratio they are compiled with.
     @include print-variable('min-contrast-ratio', $min-contrast-ratio);
     // The small font size in rem (`--small-font-size` can be the em ratio).
@@ -1081,7 +1079,7 @@ html[style*="--o-preview-small-font-ratio:"] {
 
 // Theme preview of the color presets. Their colors are compiled into many
 // derived ones (contrasts, button states), which the builder computes the same
-// way (see `color_preset_preview.js`) and sets as `--o-preview-o-cc<N>-*`. The
+// way (see `color_system_preview.js`) and sets as `--o-preview-o-cc<N>-*`. The
 // rules below only apply while such a value is set on the root: they are more
 // specific than the compiled `.o_cc<N>` ones (html_editor) and do nothing on
 // the saved site. Each rule is gated on the value it uses, as the builder only

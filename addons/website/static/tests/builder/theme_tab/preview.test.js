@@ -100,7 +100,9 @@ test("theme tab: a color is previewed, undone, redone and written on save", asyn
     await setupWebsiteBuilder("", { loadIframeBundles: true });
     await openThemeTab();
 
-    await contains(".o_theme_tab .hb-row[data-label='Background']:last .o_we_color_preview").click();
+    await contains(
+        ".o_theme_tab .hb-row[data-label='Background']:last .o_we_color_preview"
+    ).click();
     await contains(".o_popover button.o_color_button[data-color='#FF0000']").click();
     expect(websiteRootStyle().getPropertyValue("--input")).toBe("#FF0000");
     expect(websiteRootStyle().getPropertyValue("--o-preview-colors")).toBe("1");
@@ -128,7 +130,9 @@ test("theme tab: a font change keeps the weights the new font has, else the near
     const action = editor.shared.builderActions.getAction("previewWebsiteFontFamily");
     const params = { mainParam: "font" };
 
-    expect(action.getVariablesToUpdate(params, "'Roboto'", [{ value: 400 }, { value: 700 }])).toEqual({
+    expect(
+        action.getVariablesToUpdate(params, "'Roboto'", [{ value: 400 }, { value: 700 }])
+    ).toEqual({
         font: "'Roboto'",
         "lead-font-weight": "400",
         "font-weight-normal": "400",
@@ -154,7 +158,9 @@ test("theme tab: the page background follows the colors in every layout", async 
     await setupWebsiteBuilder("", { loadIframeBundles: true });
     await openThemeTab();
     await contains(".o-tab-content .o-hb-theme-color-slider-btn").click();
-    await contains("div[data-container-title='Color Presets'] button.o_hb_collapse_toggler").click();
+    await contains(
+        "div[data-container-title='Color Presets'] button.o_hb_collapse_toggler"
+    ).click();
     await contains(
         "div[id^='builder_collapse_content'] div[data-label='Background'] .o_we_color_preview"
     ).click();
