@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add('website_sale_loyalty.promotions', {
         ...submitCouponCode('testcode'),
         {
             content: "check reward product",
-            trigger: 'div>h6:contains("10.0% discount on total amount")',
+            trigger: 'div>h6:contains("10% on your order")',
         },
         {
             content: "check loyalty points",
@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add('website_sale_loyalty.promotions', {
         /* 2. Add some cabinet to get a free one, play with quantity */
         {
             content: "go to shop",
-            trigger: 'div>h6:contains("10.0% discount on total amount")',
+            trigger: 'div>h6:contains("10% on your order")',
             run: function () {
                 rpc('/web/dataset/call_kw/account.tax/create', {
                     model: 'account.tax',
