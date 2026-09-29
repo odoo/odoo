@@ -84,6 +84,9 @@ class AuthorizeAPI:
             tx_response = response.get('transactionResponse', {})
             return {
                 'x_response_code': tx_response.get('responseCode'),
+                'x_response_reason_code': (tx_response.get('errors') or [{}])[0].get('errorCode'),
+                'x_avs_result_code': tx_response.get('avsResultCode'),
+                'x_cvv_result_code': tx_response.get('cvvResultCode'),
                 'x_trans_id': tx_response.get('transId'),
                 'x_type': operation,
                 'payment_method_code': tx_response.get('accountType'),

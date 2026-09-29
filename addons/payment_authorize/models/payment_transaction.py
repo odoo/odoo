@@ -8,7 +8,15 @@ from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
-from odoo.addons.payment_authorize.const import PAYMENT_METHODS_MAPPING, TRANSACTION_STATUS_MAPPING
+from odoo.addons.payment_authorize.const import (
+    AVS_AND_CVV_MISMATCH_REASON_CODES,
+    AVS_MISMATCH_REASON_CODES,
+    AVS_MISMATCH_RESULT_CODES,
+    CVV_MISMATCH_REASON_CODES,
+    CVV_MISMATCH_RESULT_CODES,
+    PAYMENT_METHODS_MAPPING,
+    TRANSACTION_STATUS_MAPPING,
+)
 
 
 _logger = logging.getLogger(__name__)
@@ -246,7 +254,7 @@ class PaymentTransaction(models.Model):
                 # triggered by a customer browsing the transaction from the portal.
                 self.env.ref('payment.cron_post_process_payment_tx')._trigger()
         elif status_code == '2':  # Declined
-            self._set_canceled(state_message=response_content.get('x_response_reason_text'))
+            self._set_canceled(state_message=self._authorize_get_decline_message(response_content))
         elif status_code == '4':  # Held for Review
             self._set_pending()
         else:  # Error / Unknown code
@@ -266,6 +274,43 @@ class PaymentTransaction(models.Model):
                     status=status_code, error=error_code
                 )
             )
+
+    def _authorize_get_decline_message(self, response_content):
+        """ Return the decline reason, completed with a hint when the AVS or CVV check failed.
+
+        Authorize.Net returns the same generic reason for most declines. The AVS and CVV results
+        are the only indication of a decline that the customer can fix themselves.
+
+        :param dict response_content: The formatted response of the transaction request.
+        :return: The decline message.
+        :rtype: str
+        """
+        reason_code = response_content.get('x_response_reason_code')
+        reason_text = response_content.get('x_response_reason_text')
+        both_mismatch = reason_code in AVS_AND_CVV_MISMATCH_REASON_CODES
+        avs_mismatch = both_mismatch or (
+            response_content.get('x_avs_result_code') in AVS_MISMATCH_RESULT_CODES
+            and reason_code not in AVS_MISMATCH_REASON_CODES
+        )
+        cvv_mismatch = (
+            both_mismatch
+            or reason_code in CVV_MISMATCH_REASON_CODES
+            or response_content.get('x_cvv_result_code') in CVV_MISMATCH_RESULT_CODES
+        )
+        if avs_mismatch and cvv_mismatch:
+            hint = _(
+                "The billing address and the card security code (CVV) do not match the card"
+                " issuer's records."
+            )
+        elif avs_mismatch:
+            hint = _(
+                "The billing address or postal code does not match the card issuer's records."
+            )
+        elif cvv_mismatch:
+            hint = _("The card security code (CVV) does not match.")
+        else:
+            return reason_text
+        return f"{reason_text}\n{hint}" if reason_text else hint
 
     def _authorize_tokenize(self):
         """ Create a token for the current transaction.
