@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { serializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, serializeDateTime } from "@web/core/l10n/dates";
 import { PosOrderAccounting } from "./accounting/pos_order_accounting";
 
 const { DateTime } = luxon;
@@ -273,8 +273,14 @@ export class PosOrder extends PosOrderAccounting {
         this.last_order_preparation_change.general_customer_note = this.general_customer_note;
         this.last_order_preparation_change.internal_note = this.internal_note;
         this.last_order_preparation_change.sittingMode = this.preset_id?.id || 0;
+        // The server discards changes dated before its own version: date them after the version
+        // they are based on, even if the device clock is behind the server one
+        const lastDate = deserializeDateTime(
+            this.last_order_preparation_change.metadata?.serverDate
+        );
+        const now = DateTime.now();
         this.last_order_preparation_change.metadata = {
-            serverDate: serializeDateTime(DateTime.now()),
+            serverDate: serializeDateTime(lastDate.isValid ? DateTime.max(lastDate, now) : now),
         };
         this._markDirty();
     }
