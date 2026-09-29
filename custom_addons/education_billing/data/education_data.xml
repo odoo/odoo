@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Default Master Sekolah / Kampus -->
+        <record id="school_smp_1" model="education.school">
+            <field name="name">SMP SIF Islamic School</field>
+            <field name="code">SMP-01</field>
+            <field name="level">smp</field>
+            <field name="default_spp_amount">500000.0</field>
+            <field name="category_id" ref="pendapatan.category_ops_non_afiliasi"/>
+        </record>
+
+        <record id="school_sma_1" model="education.school">
+            <field name="name">SMA SIF Unggulan</field>
+            <field name="code">SMA-01</field>
+            <field name="level">sma</field>
+            <field name="default_spp_amount">750000.0</field>
+            <field name="category_id" ref="pendapatan.category_ops_non_afiliasi"/>
+        </record>
+
+        <record id="school_smk_1" model="education.school">
+            <field name="name">SMK SIF Teknologi &amp; Rekayasa</field>
+            <field name="code">SMK-01</field>
+            <field name="level">smk</field>
+            <field name="default_spp_amount">800000.0</field>
+            <field name="category_id" ref="pendapatan.category_ops_non_afiliasi"/>
+        </record>
+
+        <record id="school_univ_1" model="education.school">
+            <field name="name">Universitas SIF Nusantara</field>
+            <field name="code">UNIV-01</field>
+            <field name="level">univ</field>
+            <field name="default_ukt_amount">4500000.0</field>
+            <field name="category_id" ref="pendapatan.category_ops_non_afiliasi"/>
+        </record>
+
+        <!-- Tahun Ajaran -->
+        <record id="academic_year_current" model="education.academic.year">
+            <field name="name">2025/2026</field>
+            <field name="code">TA2526</field>
+            <field name="start_date">2025-07-01</field>
+            <field name="end_date">2026-06-30</field>
+            <field name="is_current">True</field>
+        </record>
+    </data>
+</odoo>

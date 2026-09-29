@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_education_bill_reject_wizard_form" model="ir.ui.view">
+        <field name="name">education.bill.reject.wizard.form</field>
+        <field name="model">education.bill.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Tolak Verifikasi Pembayaran">
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        Bukti pembayaran akan ditolak dan tagihan dikembalikan ke status <strong>Bukti Ditolak</strong>. Siswa/orang tua dapat mengunggah bukti baru yang valid.
+                    </div>
+                    <group>
+                        <field name="bill_id" readonly="1"/>
+                        <field name="reason" placeholder="Contoh: Bukti transfer tidak jelas / nominal kurang / rekening tujuan tidak sesuai..."/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_confirm_reject" string="Tolak Pembayaran" type="object" class="btn-danger"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

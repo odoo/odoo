@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ========================================================= -->
+    <!-- TAHUN AJARAN -->
+    <!-- ========================================================= -->
+    <record id="view_education_academic_year_tree" model="ir.ui.view">
+        <field name="name">education.academic.year.tree</field>
+        <field name="model">education.academic.year</field>
+        <field name="arch" type="xml">
+            <list string="Tahun Ajaran">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="is_current" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_education_academic_year_form" model="ir.ui.view">
+        <field name="name">education.academic.year.form</field>
+        <field name="model">education.academic.year</field>
+        <field name="arch" type="xml">
+            <form string="Tahun Ajaran">
+                <header>
+                    <button name="set_as_current" string="Jadikan Tahun Ajaran Aktif" type="object" class="btn-primary" invisible="is_current"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="Contoh: 2025/2026"/>
+                            <field name="code" placeholder="TA2526"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="is_current"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_education_academic_year" model="ir.actions.act_window">
+        <field name="name">Tahun Ajaran</field>
+        <field name="res_model">education.academic.year</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========================================================= -->
+    <!-- JURUSAN / PRODI -->
+    <!-- ========================================================= -->
+    <record id="view_education_major_tree" model="ir.ui.view">
+        <field name="name">education.major.tree</field>
+        <field name="model">education.major</field>
+        <field name="arch" type="xml">
+            <list string="Jurusan / Prodi">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="school_id"/>
+                <field name="level"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_education_major_form" model="ir.ui.view">
+        <field name="name">education.major.form</field>
+        <field name="model">education.major</field>
+        <field name="arch" type="xml">
+            <form string="Jurusan / Program Studi">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="school_id" options="{'no_create': True}"/>
+                            <field name="level"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_education_major" model="ir.actions.act_window">
+        <field name="name">Jurusan / Program Studi</field>
+        <field name="res_model">education.major</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ========================================================= -->
+    <!-- KELAS / ROMBEL -->
+    <!-- ========================================================= -->
+    <record id="view_education_class_tree" model="ir.ui.view">
+        <field name="name">education.class.tree</field>
+        <field name="model">education.class</field>
+        <field name="arch" type="xml">
+            <list string="Kelas / Rombel">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="school_id"/>
+                <field name="major_id"/>
+                <field name="academic_year_id"/>
+                <field name="monthly_spp_amount"/>
+                <field name="semester_ukt_amount"/>
+                <field name="student_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_education_class_form" model="ir.ui.view">
+        <field name="name">education.class.form</field>
+        <field name="model">education.class</field>
+        <field name="arch" type="xml">
+            <form string="Kelas / Rombel">
+                <sheet>
+                    <group>
+                        <group string="Identitas Kelas">
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="school_id" options="{'no_create': True}"/>
+                            <field name="level" invisible="1"/>
+                            <field name="major_id" domain="[('school_id', '=', school_id)]" options="{'no_create': True}"/>
+                            <field name="academic_year_id" options="{'no_create': True}"/>
+                        </group>
+                        <group string="Tarif Khusus Kelas (Opsional)">
+                            <field name="monthly_spp_amount" invisible="level == 'univ'"/>
+                            <field name="semester_ukt_amount" invisible="level != 'univ'"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="student_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Daftar Siswa / Mahasiswa">
+                            <field name="student_ids" readonly="1">
+                                <list>
+                                    <field name="student_id_number"/>
+                                    <field name="name"/>
+                                    <field name="gender"/>
+                                    <field name="parent_id"/>
+                                    <field name="effective_amount"/>
+                                    <field name="total_unpaid_amount"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_education_class" model="ir.actions.act_window">
+        <field name="name">Kelas / Rombel</field>
+        <field name="res_model">education.class</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

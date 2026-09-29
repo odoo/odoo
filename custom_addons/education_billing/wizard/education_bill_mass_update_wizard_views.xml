@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_education_bill_mass_update_wizard_form" model="ir.ui.view">
+        <field name="name">education.bill.mass.update.wizard.form</field>
+        <field name="model">education.bill.mass.update.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Ubah Status Tagihan Massal">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        Anda memilih <strong><field name="total_selected" readonly="1"/> tagihan</strong> untuk diubah statusnya secara bersamaan.
+                    </div>
+                    <group>
+                        <group string="Pengaturan Status">
+                            <field name="target_state" widget="radio"/>
+                        </group>
+                        <group string="Detail Pembayaran (Jika Verifikasi / Lunas)" invisible="target_state not in ('verified', 'waiting_verification')">
+                            <field name="payment_method"/>
+                            <field name="payment_date"/>
+                            <field name="notes" placeholder="Catatan opsional..."/>
+                        </group>
+                    </group>
+                    <field name="bill_ids" invisible="1"/>
+                </sheet>
+                <footer>
+                    <button name="action_apply" string="Terapkan Perubahan" type="object" class="btn-primary"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_education_bill_mass_update_wizard" model="ir.actions.act_window">
+        <field name="name">Ubah Status Tagihan Massal</field>
+        <field name="res_model">education.bill.mass.update.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="education_billing.model_education_bill"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>

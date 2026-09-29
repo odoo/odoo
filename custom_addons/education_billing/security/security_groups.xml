@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_education_billing" model="ir.module.category">
+        <field name="name">Tagihan Pendidikan (Billing)</field>
+        <field name="sequence">25</field>
+    </record>
+
+    <record id="privilege_education_billing" model="res.groups.privilege">
+        <field name="name">Tagihan Pendidikan</field>
+        <field name="sequence">25</field>
+        <field name="category_id" ref="module_category_education_billing"/>
+    </record>
+
+    <!-- Staf Sekolah / Kampus (Verifikator) -->
+    <record id="group_education_billing_user" model="res.groups">
+        <field name="name">Tagihan Pendidikan: Staf Verifikator</field>
+        <field name="privilege_id" ref="privilege_education_billing"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Manager / Admin Billing Pendidikan -->
+    <record id="group_education_billing_manager" model="res.groups">
+        <field name="name">Tagihan Pendidikan: Manajer</field>
+        <field name="privilege_id" ref="privilege_education_billing"/>
+        <field name="implied_ids" eval="[(4, ref('group_education_billing_user'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <!-- All internal users get User group -->
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_education_billing_user'))]"/>
+    </record>
+
+    <!-- Administrator inherits Manager -->
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_education_billing_manager'))]"/>
+    </record>
+</odoo>

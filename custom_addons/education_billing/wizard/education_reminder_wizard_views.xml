@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_education_reminder_wizard_form" model="ir.ui.view">
+        <field name="name">education.reminder.wizard.form</field>
+        <field name="model">education.reminder.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Kirim Reminder Tagihan (SPP / UKT)">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        Kirimkan pesan pengingat tagihan (SPP Bulanan / UKT Semesteran) kepada Orang Tua atau Siswa untuk tagihan yang belum lunas.
+                    </div>
+                    <group>
+                        <group string="Filter Tagihan">
+                            <field name="school_id" options="{'no_create': True}"/>
+                            <field name="class_id" options="{'no_create': True}"/>
+                            <field name="reminder_channel" widget="radio"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Daftar Tagihan Belum Lunas">
+                            <field name="bill_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="student_id"/>
+                                    <field name="period_label"/>
+                                    <field name="amount"/>
+                                    <field name="due_date"/>
+                                    <field name="parent_id"/>
+                                    <field name="parent_whatsapp"/>
+                                    <field name="state" widget="badge"
+                                           decoration-warning="state == 'unpaid'"
+                                           decoration-info="state == 'waiting_verification'"
+                                           decoration-danger="state == 'rejected'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_send_reminders" string="Kirimkan Reminder" type="object" class="btn-primary"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_education_reminder_wizard" model="ir.actions.act_window">
+        <field name="name">Kirim Reminder Tagihan</field>
+        <field name="res_model">education.reminder.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

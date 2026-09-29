@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_education_bill_receipt" model="ir.actions.report">
+        <field name="name">Kwitansi Pembayaran Pendidikan</field>
+        <field name="model">education.bill</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">education_billing.report_kwitansi_document</field>
+        <field name="report_file">education_billing.report_kwitansi_document</field>
+        <field name="print_report_name">'Kwitansi_' + (object.name or '').replace('/', '_')</field>
+        <field name="binding_model_id" ref="model_education_bill"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_kwitansi_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="article page" style="font-family: Arial, sans-serif; font-size: 13px; padding: 20px;">
+                    <div style="border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px;">
+                        <h2 style="margin: 0; color: #1a5276;"><span t-esc="o.school_id.name"/></h2>
+                        <p style="margin: 2px 0;"><span t-esc="o.school_id.address or ''"/></p>
+                        <p style="margin: 2px 0;">Telepon: <span t-esc="o.school_id.phone or '-'"/> | Email: <span t-esc="o.school_id.email or '-'"/></p>
+                    </div>
+
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; text-decoration: underline;">KWITANSI BUKTI PEMBAYARAN PENDIDIKAN</h3>
+                        <p style="margin: 4px 0; font-weight: bold;">Nomor: <span t-esc="o.name"/></p>
+                    </div>
+
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                        <tr>
+                            <td style="width: 25%; padding: 6px 0;"><strong>Telah Terima Dari</strong></td>
+                            <td style="width: 5%;">:</td>
+                            <td style="width: 70%;"><span t-esc="o.student_id.name"/> (<span t-esc="o.student_id_number"/>)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px 0;"><strong>Orang Tua / Wali</strong></td>
+                            <td>:</td>
+                            <td><span t-esc="o.parent_id.name or '-'"/></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px 0;"><strong>Jenjang / Kelas</strong></td>
+                            <td>:</td>
+                            <td><span t-esc="o.school_id.name"/> - Kelas <span t-esc="o.class_id.name or '-'"/></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px 0;"><strong>Untuk Pembayaran</strong></td>
+                            <td>:</td>
+                            <td><strong><span t-esc="o.period_label"/></strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px 0;"><strong>Tanggal Pembayaran</strong></td>
+                            <td>:</td>
+                            <td><span t-field="o.payment_date" t-options="{'widget': 'date'}"/></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px 0;"><strong>Metode Pembayaran</strong></td>
+                            <td>:</td>
+                            <td><span t-field="o.payment_method"/> (Ref: <span t-esc="o.payment_ref or '-'"/>)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 6px 0;"><strong>Status Pembayaran</strong></td>
+                            <td>:</td>
+                            <td>
+                                <strong style="color: green;">LUNAS / TERVERIFIKASI</strong>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div style="background-color: #f2f4f4; border: 1px dashed #7f8c8d; padding: 15px; margin-bottom: 30px; text-align: center;">
+                        <span style="font-size: 14px; font-weight: bold;">JUMLAH TERBAYAR: </span>
+                        <span style="font-size: 18px; font-weight: bold; color: #1e8449;" t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                    </div>
+
+                    <div style="width: 100%; margin-top: 40px;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="width: 50%; text-align: center;">
+                                    <p>Penyetor / Siswa</p>
+                                    <br/><br/><br/>
+                                    <p>( <span t-esc="o.student_id.name"/> )</p>
+                                </td>
+                                <td style="width: 50%; text-align: center;">
+                                    <p>Staf Verifikator / Kasir</p>
+                                    <br/><br/><br/>
+                                    <p>( <span t-esc="o.verified_by_id.name or 'Staf Tata Usaha'"/> )</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
