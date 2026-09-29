@@ -11,6 +11,7 @@ export class PortalLoyaltyCardDialog extends Component {
             program_name: t.string(),
         }),
         card: t.object({
+            code: t.string(),
             points_display: t.any(),
             expiration_date: t.any().optional(),
             id: t.any(),
@@ -21,6 +22,12 @@ export class PortalLoyaltyCardDialog extends Component {
                 order_portal_url: t.any().optional(),
                 description: t.any(),
                 points: t.any(),
+            })
+        ),
+        rewards: t.array(
+            t.object({
+                description: t.string().optional(),
+                points: t.string().optional(),
             })
         ),
     });
