@@ -122,6 +122,8 @@ export class DomPlugin extends Plugin {
             ...this.systemAttributes.map((attr) => `[${attr}]`),
             ...this.systemStyleProperties.map((prop) => `[style*="${prop}"]`),
         ].join(",");
+        this.isUnsplittable = this.dependencies.split.isUnsplittable.bind(this);
+        this.createBaseContainer = this.dependencies.baseContainer.createBaseContainer.bind(this);
     }
 
     // Shared
@@ -302,12 +304,12 @@ export class DomPlugin extends Plugin {
             isContentEditable(block) &&
             (isContentEditable(node) ||
                 (!node.isConnected && !closestElement(node, "[contenteditable]"))) &&
-            !this.dependencies.split.isUnsplittable(node) &&
+            !this.isUnsplittable(node) &&
             (node.nodeName === block.nodeName ||
                 (this.dependencies.baseContainer.isCandidateForBaseContainer(node) &&
                     this.dependencies.baseContainer.isCandidateForBaseContainer(block)) ||
                 block.nodeName === "PRE" ||
-                (block.nodeName === "DIV" && this.dependencies.split.isUnsplittable(block))) &&
+                (block.nodeName === "DIV" && this.isUnsplittable(block))) &&
             // If the selection anchorNode is the editable itself, the content
             // should not be unwrapped.
             !isEditionBoundary(selection.anchorNode, this.editable);
@@ -413,7 +415,7 @@ export class DomPlugin extends Plugin {
         // If all the Html have been isolated, We force a split of the parent element
         // to have the need new line in the final result
         if (!container.hasChildNodes()) {
-            if (this.dependencies.split.isUnsplittable(closestBlock(currentNode.nextSibling))) {
+            if (this.isUnsplittable(closestBlock(currentNode.nextSibling))) {
                 this.dependencies.lineBreak.insertLineBreakNode({
                     targetNode: currentNode.nextSibling,
                     targetOffset: 0,
@@ -422,10 +424,7 @@ export class DomPlugin extends Plugin {
                 // If we arrive here, the o_enter index should always be 0.
                 const parent = currentNode.nextSibling.parentElement;
                 const index = childNodes(parent).indexOf(currentNode.nextSibling);
-                this.dependencies.split.splitBlockNode({
-                    targetNode: parent,
-                    targetOffset: index,
-                });
+                this.dependencies.split.splitBlockNode({ targetNode: parent, targetOffset: index });
             }
         }
 
@@ -441,12 +440,12 @@ export class DomPlugin extends Plugin {
                     !isEditionBoundary(currentNode, this.editable) &&
                     (!allowsParagraphRelatedElements(currentNode.parentElement) ||
                         (isListItemElement(currentNode.parentElement) &&
-                            !this.dependencies.split.isUnsplittable(nodeToInsert)))
+                            !this.isUnsplittable(nodeToInsert)))
                 ) {
-                    if (this.dependencies.split.isUnsplittable(currentNode.parentElement)) {
+                    if (this.isUnsplittable(currentNode.parentElement)) {
                         // If we have to insert an unsplittable element, we cannot afford to
                         // unwrap it we need to search for a more suitable spot to put it
-                        if (this.dependencies.split.isUnsplittable(nodeToInsert)) {
+                        if (this.isUnsplittable(nodeToInsert)) {
                             if (isEditionBoundary(currentNode.parentElement, this.editable)) {
                                 break;
                             }
@@ -490,7 +489,7 @@ export class DomPlugin extends Plugin {
                 if (
                     isListItemElement(currentNode.parentElement) &&
                     isBlock(nodeToInsert) &&
-                    this.dependencies.split.isUnsplittable(nodeToInsert)
+                    this.isUnsplittable(nodeToInsert)
                 ) {
                     const br = this.document.createElement("br");
                     currentNode[
@@ -697,9 +696,7 @@ export class DomPlugin extends Plugin {
                 newCandidate.classList.add(extraClass);
             }
             if (this.dependencies.baseContainer.isCandidateForBaseContainer(newCandidate)) {
-                const baseContainer = this.dependencies.baseContainer.createBaseContainer({
-                    nodeName: newCandidate.nodeName,
-                });
+                const baseContainer = this.createBaseContainer({ nodeName: newCandidate.nodeName });
                 this.copyAttributes(newCandidate, baseContainer);
                 newCandidate = baseContainer;
             }
