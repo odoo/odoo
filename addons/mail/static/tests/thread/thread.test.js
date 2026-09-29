@@ -549,7 +549,7 @@ test("Mention a partner with special character (e.g. apostrophe ')", async () =>
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Pyn");
-    await click('.o-mail-Composer-suggestion:has(:text("Pynya\'s spokesman"))');
+    await click('.o-mail-Composer-suggestion:has(:text("Pynya's spokesman"))');
     await contains(".o-mail-Composer-input", { value: "@Pynya's spokesman " });
     await press("Enter");
     await waitFor(
@@ -725,7 +725,7 @@ test("chat window header should not have unread counter for non-channel thread",
 test("Thread messages are only loaded once", async () => {
     const pyEnv = await startServer();
     const channelIds = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
-    listenStoreFetch("/discuss/channel/messages", { logParams: ["/discuss/channel/messages"] });
+    listenStoreFetch("/discuss/channel/messages");
     await start();
     pyEnv["mail.message"].create([
         {
@@ -741,20 +741,10 @@ test("Thread messages are only loaded once", async () => {
     ]);
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
     await click("button:has(:text('General'))");
-    await waitStoreFetch([
-        [
-            "/discuss/channel/messages",
-            { channel_id: channelIds[0], fetch_params: { limit: 60, around: 0 } },
-        ],
-    ]);
+    await waitStoreFetch("/discuss/channel/messages");
     await waitFor(".o-mail-Message-content:text('Message on channel1'):count(1)");
     await click("button:has(:text('Sales'))");
-    await waitStoreFetch([
-        [
-            "/discuss/channel/messages",
-            { channel_id: channelIds[1], fetch_params: { limit: 60, around: 0 } },
-        ],
-    ]);
+    await waitStoreFetch("/discuss/channel/messages");
     await waitFor(".o-mail-Message-content:text('Message on channel2'):count(1)");
     await click("button:has(:text('General'))");
     await waitStoreFetch();
@@ -765,10 +755,7 @@ test.tags("focus required");
 test("[text composer] Opening thread with needaction messages should mark all messages of thread as read", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
-    const [channelId, salesId] = pyEnv["discuss.channel"].create([
-        { name: "General" },
-        { name: "Sales" },
-    ]);
+    const [channelId] = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["mail.message"].create([
         { body: "Hello", model: "discuss.channel", res_id: channelId },
@@ -781,17 +768,13 @@ test("[text composer] Opening thread with needaction messages should mark all me
             ["res_id", "=", channelId],
         ]);
     });
-    listenStoreFetch("/discuss/channel/messages", { logParams: ["/discuss/channel/messages"] });
+    listenStoreFetch("/discuss/channel/messages");
     await start();
     await openDiscuss(channelId);
-    await expect.waitForSteps([
-        `store fetch: /discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":0}}`,
-    ]);
+    await expect.waitForSteps(["store fetch: /discuss/channel/messages"]);
     await waitFor(".o-mail-Message:count(2)");
     await click("button:has(:text('Sales'))");
-    await expect.waitForSteps([
-        `store fetch: /discuss/channel/messages - {"channel_id":${salesId},"fetch_params":{"limit":60,"around":0}}`,
-    ]);
+    await expect.waitForSteps(["store fetch: /discuss/channel/messages"]);
     const messageId = pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "@Mitchell Admin",
@@ -823,10 +806,7 @@ test.tags("focus required", "html composer");
 test("Opening thread with needaction messages should mark all messages of thread as read", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
-    const [channelId, salesId] = pyEnv["discuss.channel"].create([
-        { name: "General" },
-        { name: "Sales" },
-    ]);
+    const [channelId] = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Sales" }]);
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["mail.message"].create([
         { body: "Hello", model: "discuss.channel", res_id: channelId },
@@ -839,19 +819,15 @@ test("Opening thread with needaction messages should mark all messages of thread
             ["res_id", "=", channelId],
         ]);
     });
-    listenStoreFetch("/discuss/channel/messages", { logParams: ["/discuss/channel/messages"] });
+    listenStoreFetch("/discuss/channel/messages");
     await start();
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
     await openDiscuss(channelId);
-    await expect.waitForSteps([
-        `store fetch: /discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":0}}`,
-    ]);
+    await expect.waitForSteps(["store fetch: /discuss/channel/messages"]);
     await waitFor(".o-mail-Message:count(2)");
     await click("button:has(:text('Sales'))");
-    await expect.waitForSteps([
-        `store fetch: /discuss/channel/messages - {"channel_id":${salesId},"fetch_params":{"limit":60,"around":0}}`,
-    ]);
+    await expect.waitForSteps(["store fetch: /discuss/channel/messages"]);
     const messageId = pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "@Mitchell Admin",

@@ -613,6 +613,16 @@ export class Thread extends Record {
         });
     }
 
+    /**
+     * Fetches the messages to show when the thread is opened.
+     *
+     * @param {Object} [options]
+     * @param {MessageRouteParams} [options.routeParams]
+     */
+    async fetchInitialMessages({ routeParams = {} } = {}) {
+        return this.fetchNewMessages({ routeParams });
+    }
+
     getFetchNewMessagesAfter() {
         return this.isLoaded ? this.newestPersistentMessage?.id : undefined;
     }
