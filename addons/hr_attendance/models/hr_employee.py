@@ -363,7 +363,7 @@ class HrEmployee(models.Model):
         employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
         leave_intervals_by_cal_by_resource = defaultdict(lambda: defaultdict(Intervals))
         public_leave_intervals_by_cal_by_resource = defaultdict(lambda: defaultdict(Intervals))
-        attendance_intervals_by_employee = defaultdict(Intervals)
+        attendance_intervals_by_cal_by_resource = defaultdict(lambda: defaultdict(Intervals))
 
         for employee, intervals in version_periods_by_employee.items():
             for (_start, _stop, version) in intervals:
@@ -409,7 +409,7 @@ class HrEmployee(models.Model):
                 domain=self._get_calendar_attendance_domain() if cal else None,
             )
             for employee in employees:
-                attendance_intervals_by_employee[employee] = Intervals([(
+                attendance_intervals_by_cal_by_resource[cal][employee.resource_id.id] = Intervals([(
                     i_start.replace(tzinfo=None),
                     i_stop.replace(tzinfo=None),
                     i_model
@@ -422,7 +422,6 @@ class HrEmployee(models.Model):
             'public_leave': defaultdict(Intervals),
         }
         for employee, intervals in version_periods_by_employee.items():
-            employee_attendances = attendance_intervals_by_employee[employee]
             for (p_start, p_stop, version) in intervals:
                 interval = Intervals([(p_start.replace(tzinfo=None), p_stop.replace(tzinfo=None), self.env['resource.calendar'])])
                 if version.is_fully_flexible:
@@ -431,6 +430,7 @@ class HrEmployee(models.Model):
                 calendar = version.resource_calendar_id
                 employee_leaves = leave_intervals_by_cal_by_resource[calendar][employee.resource_id.id]
                 employee_public_leaves = public_leave_intervals_by_cal_by_resource[calendar][employee.resource_id.id]
+                employee_attendances = attendance_intervals_by_cal_by_resource[calendar][employee.resource_id.id]
                 full_schedule_by_employee['public_leave'][employee] |= employee_public_leaves & interval
                 full_schedule_by_employee['leave'][employee] |= employee_leaves & interval
                 full_schedule_by_employee['schedule'][employee] |= employee_attendances & interval
