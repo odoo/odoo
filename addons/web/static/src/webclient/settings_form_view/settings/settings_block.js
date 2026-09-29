@@ -25,6 +25,18 @@ export class SettingsBlock extends Component {
         useSubEnv({
             showAllContainer: this.showAllContainer,
         });
+        // The one `useLayoutEffect` of the settings form view that does not
+        // convert to `onMounted` + `onPatched`. It reads its dependency array
+        // from a render, which subscribes *this component* to the search value —
+        // and nothing else does: a block coming from the `res_config_dev_tool`
+        // widget holds a plain `Setting` rather than a `SearchableSetting`, so
+        // nothing inside it reads the search, and no parent re-renders it
+        // either. Without that subscription the block is never patched and
+        // never hides. Binding `d-none` from the template instead deadlocks:
+        // the class is derived from a DOM measurement that can only be taken in
+        // `onPatched`, which only runs when the render changed the DOM.
+        // Removing this hook means deriving the block's visibility from its
+        // settings' `visible()` signals rather than from the DOM.
         useLayoutEffect(
             () => {
                 const containerEl = this.settingsContainerRef();
