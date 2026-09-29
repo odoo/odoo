@@ -281,9 +281,14 @@ export class ProductConfiguratorDialog extends Component {
      */
     _updatePTAVCustomValue(productTmplId, ptavId, customValue) {
         const product = this._findProduct(productTmplId);
-        product.attribute_lines.find(
+        const ptal = product.attribute_lines.find(
             ptal => ptal.selected_attribute_value_ids.includes(ptavId)
-        ).customValue = customValue;
+        );
+        // A leftover custom value can point at a ptav no line has selected anymore (e.g. the
+        // product's own combination changed since), in which case there's nothing to set.
+        if (ptal) {
+            ptal.customValue = customValue;
+        }
     }
 
     /**
