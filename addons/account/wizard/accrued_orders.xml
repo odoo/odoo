@@ -13,7 +13,7 @@
                       <button name="open_duplicate"
                               type="object"
                               class="btn btn-link p-0 align-baseline">
-                        <field name="currency_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/> <!-- currency of the duplicate_price_total monetary widget next to it -->
                         <field name="duplicate_price_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                       </button>
                       <span> already exists for this period. Posting this entry will replace it.</span>

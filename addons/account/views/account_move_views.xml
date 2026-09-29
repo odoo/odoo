@@ -553,7 +553,7 @@
             <field name="arch" type="xml">
                 <list string="Journal Entries" default_order="reversed_entry_id nulls first, date"
                       decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
-                    <field name="currency_id" column_invisible="True"/>
+                    <field name="currency_id" column_invisible="True"/> <!-- currency for the amount_total monetary column -->
                     <field name="ref"/>
                     <field name="name"/>
                     <field name="date"/>
