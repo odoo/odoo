@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.mail_attachment_links">
+        <div class="o-attachments-container o-contenteditable-false" style="margin-top: 10px; margin-bottom: 10px; max-width: 900px; width: 100%;">
+            <div style="display: inline" t-foreach="attachments" t-key="attachment.id" t-as="attachment" t-att-data-attachment-id="attachment.id">
+                <div style="padding:0; margin:3px; vertical-align:middle; min-width:425px; width:fit-content; display:inline-block" width="fit-content">
+                    <div style="margin:0; padding: 10px; border-style:solid; border-width:0 0 0 3px; border-radius:5px; border-color:#a2dae3; background-color:#d1ecf1; color:#09414a;">
+                        <a t-att-href="attachment.url"
+                            style="margin:0; padding:0; text-decoration:none; border-radius:0; border-style:none; border-color:#008f8c; border-width:0; font-weight:500; width:100%; color:#008f8c; vertical-align: middle; font-size: 15px;"
+                            width="100%" target="_blank">
+                             &#11015; <t t-out="attachment.name"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
