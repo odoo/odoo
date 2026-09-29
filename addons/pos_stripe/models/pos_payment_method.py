@@ -20,6 +20,12 @@ class PosPaymentMethod(models.Model):
         params += ['stripe_serial_number']
         return params
 
+    @api.model
+    def stripe_get_merchant_country(self):    
+        self._stripe_check_access()    
+        account_info = self.sudo()._get_stripe_payment_provider()._send_api_request('GET', 'account')
+        return account_info.get('country')
+
     def _allowed_actions_in_self_order(self):
         return super()._allowed_actions_in_self_order() + ['stripe_connection_token', 'stripe_payment_intent', 'stripe_capture_payment']
 
