@@ -1,6 +1,6 @@
 .pos-scenario-card {
     &:hover {
-        background: var(--ScenarioCard-background--hover, #{$o-gray-200});
+        background: var(--ScenarioCard-background--hover, var(--o-gray-200));
     }
 
     &:focus-visible {
@@ -12,7 +12,7 @@
 .pos-scenario-card.disabled {
     cursor: not-allowed;
     pointer-events: none;
-    color:  $o-brand-secondary;
+    color:  var(--o-brand-secondary);
 
     img {
         opacity: 0.5;

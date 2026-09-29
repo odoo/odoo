@@ -2,7 +2,7 @@
 .o_survey_view_kanban_view .o_kanban_renderer {
     .o_survey_kanban_card {
         .o_survey_certification_icon {
-            color: $o-main-favorite-color;
+            color: var(--o-main-favorite-color);
         }
 
         .o_progressbar {
@@ -134,7 +134,7 @@
 
 .o_survey_sample_card {
     &:hover {
-        background: var(--SurveySampleCard-background--hover, #{$o-gray-200});
+        background: var(--SurveySampleCard-background--hover, var(--o-gray-200));
     }
 
     &:focus-visible {

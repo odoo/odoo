@@ -2,7 +2,7 @@
     --o-circle-padding: calc(#{map-get($spacers, 1 )} / 2);
     --o-cw-border-color: var(--border-color);
 
-    background-color: $o-view-background-color;
+    background-color: var(--o-view-background-color);
 
     @include media-breakpoint-down(lg) {
         border-top: 1px solid var(--o-cw-border-color);
@@ -27,7 +27,7 @@
         /* but doesn't take into account that events have popovers. */
         cursor: pointer;
         --fc-event-text-color: var(--body-color);
-        --fc-event-bg-color: #{$o-view-background-color};
+        --fc-event-bg-color: var(--o-view-background-color);
         overflow: hidden;
 
         @include media-breakpoint-down(md) {
@@ -145,7 +145,7 @@
 
         /* ===  Adapt calendar table borders and general layout === */
         /* ======================================================== */
-        --fc-page-bg-color: #{$o-view-background-color};
+        --fc-page-bg-color: var(--o-view-background-color);
         --fc-border-color: var(--o-cw-border-color);
         --fc-non-business-color: #{rgba($o-gray-300, .5)};
 
@@ -252,12 +252,12 @@
         /* ====== Both Day and Week agenda */
         .fc-timeGridDay-view,
         .fc-timeGridWeek-view {
-            --o-cw-bg: #{$o-calendar-today-background-color};
-            --o-cw-color: #{$o-calendar-today-color};
+            --o-cw-bg: var(--o-calendar-today-background-color);
+            --o-cw-color: var(--o-calendar-today-color);
 
             .fc-scrollgrid-section-body {
                 &:not(.fc-scrollgrid-section-liquid) .fc-scroller-harness {
-                    background-color: $o-view-background-color;
+                    background-color: var(--o-view-background-color);
                 }
 
                 &:first-child td {
@@ -358,7 +358,7 @@
 
                 /* Prevent events with similar color to visually overlap each other */
                 &:not(.o_event_allday):not(.o_homework_event) {
-                    box-shadow: 0 0 0 1px $o-view-background-color;
+                    box-shadow: 0 0 0 1px var(--o-view-background-color);
                 }
 
                 .fc-event-main {
@@ -405,7 +405,7 @@
                     position: absolute;
                     height: .75rem;
                     width: .75rem;
-                    border: var(--border-width) solid $o-view-background-color;
+                    border: var(--border-width) solid var(--o-view-background-color);
                     border-radius: var(--border-radius-pill);
                     background-color: var(--o-cw-bg);
                     transform: translate(-50%, -50%);
@@ -418,7 +418,7 @@
         .fc-timeGridWeek-view, .fc-dayGridMonth-view {
             .fc-col-header-cell a {
                 text-transform: uppercase;
-                font-size: $o-font-size-base-smaller;
+                font-size: var(--o-font-size-base-smaller);
             }
         }
 
@@ -431,7 +431,7 @@
 
             .o-fc-week, .o-fc-week-header {
                 line-height: $line-height-sm;
-                font-size: $o-font-size-base-smaller;
+                font-size: var(--o-font-size-base-smaller);
                 opacity: .5;
                 @include media-breakpoint-down(md) {
                     width: 3ch;
@@ -445,7 +445,7 @@
             .fc-daygrid-body tr {
                 .fc-daygrid-week-number {
                     line-height: $line-height-sm;
-                    font-size: $o-font-size-base-smaller;
+                    font-size: var(--o-font-size-base-smaller);
                     opacity: .8;
 
                     @include media-breakpoint-down(lg) {
@@ -494,8 +494,8 @@
                     }
 
                     &.fc-day-today {
-                        --o-cw-color: #{$o-calendar-today-color};
-                        --o-cw-bg: #{$o-calendar-today-background-color};
+                        --o-cw-color: var(--o-calendar-today-color);
+                        --o-cw-bg: var(--o-calendar-today-background-color);
 
                     }
                 }
@@ -607,7 +607,7 @@
                         }
 
                         .fc-day-header {
-                            font-size: $o-font-size-base-smaller;
+                            font-size: var(--o-font-size-base-smaller);
                         }
                     }
 
@@ -702,7 +702,7 @@
             }
 
             &.o_event_hatched:has(.fc-bg), &.o_attendee_status_tentative:has(.fc-bg) {
-                --fc-event-bg-color: #{$o-view-background-color};
+                --fc-event-bg-color: var(--o-view-background-color);
             }
             &.o_event_hatched:not(.o_event_dot):not(.fc-daygrid-event):not(.fc-timegrid-event), &.o_event_hatched .fc-bg, &.o_attendee_status_tentative:not(.o_event_dot) .fc-bg {
                 background: repeating-linear-gradient(

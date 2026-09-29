@@ -1,5 +1,5 @@
 .o-mail-MessagingMenu {
-    background-color: $o-view-background-color;
+    background-color: var(--o-view-background-color);
 }
 
 .o-mail-NotificationItem-counterArea:not(:empty) {
@@ -16,9 +16,9 @@
 }
 
 .o-mail-MessagingMenu-tabCounter {
-    min-width: $o-badge-min-width;
+    min-width: var(--o-badge-min-width);
     left: auto;
-    right: calc(50% - #{$o-badge-min-width} * 1.5);
+    right: calc(50% - var(--o-badge-min-width) * 1.5);
     transform: translate(0, 25%);
 }
 
@@ -34,7 +34,7 @@
 }
 
 .o-mail-MessagingMenu-navbar {
-    background-color: $o-webclient-background-color;
+    background-color: var(--o-webclient-background-color);
     width: 4.5rem;
 }
 
@@ -53,8 +53,8 @@
     --btn-hover-border-color: #{var(--mail-MessagingMenu-filterBorderColor, #{$border-color})};
 
     &.o-active {
-        --btn-color: #{$o-enterprise-action-color};
-        --btn-hover-color: #{$o-enterprise-action-color};
+        --btn-color: var(--o-enterprise-action-color);
+        --btn-hover-color: var(--o-enterprise-action-color);
         --btn-bg: #{rgba($o-enterprise-action-color, var(--mail-MessagingMenu-filterActiveBgOpacity, 0.12))};
         --btn-hover-bg: #{rgba($o-enterprise-action-color, var(--mail-MessagingMenu-filterActiveBgOpacity, 0.12))};
         --btn-border-color: #{rgba($o-enterprise-action-color, var(--mail-MessagingMenu-filterActiveBorderOpacity, 0.35))};
@@ -77,18 +77,18 @@
     }
 
     &.active {
-        --btn-active-color: #{$o-enterprise-action-color};
+        --btn-active-color: var(--o-enterprise-action-color);
 
         .o-mail-MessagingMenu-tabIcon {
-            background: $o-component-active-bg;
-            color: $o-enterprise-action-color;
+            background: var(--o-component-active-bg);
+            color: var(--o-enterprise-action-color);
             outline: var(--border-width) solid rgba($o-enterprise-action-color, 0.15);
             outline-offset: -$border-width;
         }
     }
 
     &:focus-visible {
-        outline: var(--border-width) solid $o-enterprise-action-color !important;
+        outline: var(--border-width) solid var(--o-enterprise-action-color) !important;
     }
 
     .o-mail-MessagingMenu-tabIcon {
