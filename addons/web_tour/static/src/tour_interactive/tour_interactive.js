@@ -2,17 +2,9 @@ import { markup } from "@odoo/owl";
 import { tourState } from "@web_tour/tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { Macro } from "@web/core/macro";
-import { utils } from "@web/core/ui/ui_utils";
 import { TourInteractiveObserver } from "@web_tour/tour_interactive/tour_interactive_observer";
 import { TourStepInteractive } from "@web_tour/tour_interactive/tour_step_interactive";
 import { TourPointer, pointerState } from "@web_tour/tour_pointer/tour_pointer";
-
-/**
- * @typedef ConsumeEvent
- * @property {string} name
- * @property {Element} target
- * @property {(ev: Event) => boolean} conditional
- */
 
 export class TourInteractive {
     static current = null;
@@ -269,10 +261,13 @@ export class TourInteractive {
             this.removeListeners = () => {};
             return;
         }
-        this.consumeEvents = this.getConsumeEventType(this.anchorEl, this.currentAction.event);
+        this.consumeEvents = this.currentAction.getConsumeEvents(this.anchorEl);
         const cleanups = this.setupListeners({
             consumeEvents: this.consumeEvents,
-            onConsume: () => {
+            onConsume: ({ selectsDropdownItem }) => {
+                if (selectsDropdownItem) {
+                    this.skipNextActionIfDropdownItem();
+                }
                 this.currentActionIndex++;
                 tourState.setCurrentIndex(this.currentActionIndex);
                 this.play();
@@ -293,8 +288,8 @@ export class TourInteractive {
     }
 
     /**
-     * @param {import("../../tour_utils").ConsumeEvent[]} params.consumeEvents
-     * @param {(ev: Event) => any} params.onConsume
+     * @param {import("./tour_action").ConsumeEvent[]} params.consumeEvents
+     * @param {(consumeEvent: import("./tour_action").ConsumeEvent) => any} params.onConsume
      * @param {() => any} params.onError
      */
     setupListeners({ consumeEvents, onConsume, onError = () => {} }) {
@@ -303,7 +298,7 @@ export class TourInteractive {
             type: c.name,
             listener: function (ev) {
                 if (!c.conditional || c.conditional(ev)) {
-                    onConsume();
+                    onConsume(c);
                 } else {
                     onError();
                 }
@@ -334,152 +329,5 @@ export class TourInteractive {
         if (nextAction?.findTrigger()?.closest(".o-autocomplete--dropdown-item")) {
             this.currentActionIndex++;
         }
-    }
-
-    /**
-     * @param {HTMLElement} [element]
-     * @param {string} [runCommand]
-     * @returns {ConsumeEvent[]}
-     */
-    getConsumeEventType(element, runCommand) {
-        const consumeEvents = [];
-        if (runCommand === "click") {
-            consumeEvents.push({
-                name: "click",
-                target: element,
-            });
-
-            // Click on a field widget with an autocomplete should be also completed with a selection though Enter or Tab
-            // This case is for the steps that click on field_widget
-            if (element.querySelector(".o-autocomplete--input")) {
-                consumeEvents.push({
-                    name: "keydown",
-                    target: element.querySelector(".o-autocomplete--input"),
-                    conditional: (ev) =>
-                        ["Tab", "Enter"].includes(ev.key) &&
-                        ev.target.parentElement.querySelector(
-                            ".o-autocomplete--dropdown-item .ui-state-active"
-                        ),
-                });
-            }
-
-            // Click on an element of a dropdown should be also completed with a selection though Enter or Tab
-            // This case is for the steps that click on a dropdown-item
-            if (element.closest(".o-autocomplete--dropdown-menu")) {
-                consumeEvents.push({
-                    name: "keydown",
-                    target: element.closest(".o-autocomplete").querySelector("input"),
-                    conditional: (ev) => ["Tab", "Enter"].includes(ev.key),
-                });
-            }
-
-            // Press enter on a button do the same as a click
-            if (element.tagName === "BUTTON") {
-                consumeEvents.push({
-                    name: "keydown",
-                    target: element,
-                    conditional: (ev) => ev.key === "Enter",
-                });
-
-                // Pressing enter in the input group does the same as clicking on the button
-                if (element.closest(".input-group")) {
-                    for (const inputEl of element.parentElement.querySelectorAll("input")) {
-                        consumeEvents.push({
-                            name: "keydown",
-                            target: inputEl,
-                            conditional: (ev) => ev.key === "Enter",
-                        });
-                    }
-                }
-            }
-        }
-
-        if (["fill", "edit"].includes(runCommand)) {
-            if (
-                utils.isSmall() &&
-                element.closest(".o_field_widget")?.matches(".o_field_many2one, .o_field_many2many")
-            ) {
-                consumeEvents.push({
-                    name: "click",
-                    target: element,
-                });
-            } else {
-                const isAutocompleteInput = element.classList.contains("o-autocomplete--input");
-                if (!isAutocompleteInput || this.config.robot) {
-                    consumeEvents.push({
-                        name: "input",
-                        target: element,
-                    });
-                }
-                if (isAutocompleteInput) {
-                    consumeEvents.push({
-                        name: "keydown",
-                        target: element,
-                        conditional: (ev) => {
-                            if (
-                                ["Tab", "Enter"].includes(ev.key) &&
-                                ev.target.parentElement.querySelector(
-                                    ".o-autocomplete--dropdown-item .ui-state-active"
-                                )
-                            ) {
-                                this.skipNextActionIfDropdownItem();
-                                return true;
-                            }
-                        },
-                    });
-                    consumeEvents.push({
-                        name: "click",
-                        target: element.ownerDocument,
-                        conditional: (ev) => {
-                            if (ev.target.closest(".o-autocomplete--dropdown-item")) {
-                                this.skipNextActionIfDropdownItem();
-                                return true;
-                            }
-                        },
-                    });
-                }
-            }
-        }
-
-        if (runCommand === "hover") {
-            consumeEvents.push({
-                name: "mouseenter",
-                target: element,
-            });
-        }
-
-        // Drag & drop run command
-        if (runCommand === "drag") {
-            consumeEvents.push({
-                name: "pointerdown",
-                target: element,
-            });
-        }
-
-        if (runCommand === "drop") {
-            const conditional = (ev) => {
-                const dropTarget = this.currentAction.findTrigger() || element;
-                const doc = dropTarget.ownerDocument;
-                if (doc.elementsFromPoint(ev.clientX, ev.clientY).includes(dropTarget)) {
-                    return true;
-                }
-                const rect = dropTarget.getBoundingClientRect();
-                const x = Math.min(Math.max(ev.clientX, rect.left + 1), rect.right - 1);
-                const y = Math.min(Math.max(ev.clientY, rect.top + 1), rect.bottom - 1);
-                return doc.elementsFromPoint(x, y).includes(dropTarget);
-            };
-            consumeEvents.push({
-                name: "pointerup",
-                target: element.ownerDocument,
-                conditional,
-            });
-            consumeEvents.push({
-                name: "drop",
-                target: element.ownerDocument,
-                conditional,
-            });
-        }
-
-        return consumeEvents;
     }
 }
