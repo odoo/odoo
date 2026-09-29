@@ -431,6 +431,9 @@ class MyInvoisDocument(models.Model):
         new_documents_data = []
         errored_doc_messages = {}
         for document in self:
+            # The file of a received document is the supplier's; we must not build our own.
+            if document.is_received_document:
+                continue
             if document.myinvois_file_id:
                 document.myinvois_file_id.write({
                     'name': f"{document.myinvois_file_id.name} (old)",
