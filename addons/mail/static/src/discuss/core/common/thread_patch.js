@@ -66,16 +66,6 @@ const threadPatch = {
             return super.applyScrollContextually(...arguments);
         }
     },
-    /** @override */
-    fetchInitialMessages() {
-        if (this.channel?.self_member_id && this.props.thread.scrollUnread) {
-            this.props.thread.loadAround({
-                messageId: this.channel.self_member_id.new_message_separator,
-            });
-        } else {
-            super.fetchInitialMessages();
-        }
-    },
     get newMessageBannerText() {
         if (this.channel?.self_member_id?.message_unread_counter > 1) {
             return _t("%s new messages", this.channel.self_member_id.message_unread_counter);
