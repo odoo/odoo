@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools
+from odoo.tools import SQL
 
 
 class HrEmployeeSkillReport(models.BaseModel):
@@ -22,8 +23,7 @@ class HrEmployeeSkillReport(models.BaseModel):
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
-
-        self.env.cr.execute("""
+        self.env.cr.execute(SQL("""
         CREATE OR REPLACE VIEW %s AS (
             SELECT
                 row_number() OVER () AS id,
@@ -42,7 +42,7 @@ class HrEmployeeSkillReport(models.BaseModel):
             LEFT OUTER JOIN hr_skill_type st ON st.id = sl.skill_type_id
             WHERE st.active IS True AND st.is_certification IS NOT TRUE AND s.valid_to IS NULL
         )
-        """ % (self._table, ))
+        """, SQL.identifier(self._table)))
 
     @api.model
     def formatted_read_grouping_sets(self, domain, grouping_sets, aggregates=(), *, order=None):

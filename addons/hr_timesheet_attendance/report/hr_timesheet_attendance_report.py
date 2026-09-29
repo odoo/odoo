@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools
+from odoo.tools import SQL
 
 
 class HrTimesheetAttendanceReport(models.Model):
@@ -21,7 +21,7 @@ class HrTimesheetAttendanceReport(models.Model):
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute("""CREATE OR REPLACE VIEW %s AS (
+        self.env.cr.execute(SQL("""CREATE OR REPLACE VIEW %s AS (
             SELECT
                 max(id) AS id,
                 t.employee_id,
@@ -68,7 +68,7 @@ class HrTimesheetAttendanceReport(models.Model):
             GROUP BY t.employee_id, t.date, t.company_id, t.emp_cost
             ORDER BY t.date
         )
-        """ % self._table)
+        """, SQL.identifier(self._table)))
 
     @api.model
     def formatted_read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[dict]:

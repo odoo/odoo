@@ -185,22 +185,21 @@ class MailThreadPhone(models.AbstractModel):
             return NotImplemented
 
         if operator == 'in':
-            query = """
+            query = SQL("""
                 SELECT m.id
                     FROM phone_blacklist bl
                     JOIN %s m
                     ON m.phone_sanitized = bl.number AND bl.active
-            """
+            """, self._table_sql)
         else:
-            query = """
+            query = SQL("""
                 SELECT m.id
                     FROM %s m
                     LEFT JOIN phone_blacklist bl
                     ON m.phone_sanitized = bl.number AND bl.active
                     WHERE bl.id IS NULL
-            """
-        self.env.cr.execute(query % self._table)
-        res = self.env.cr.fetchall()
+            """, self._table_sql)
+        res = self.env.execute_query(query)
         return [('id', 'in', [r[0] for r in res])]
 
     def _assert_phone_field(self):

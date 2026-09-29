@@ -15,7 +15,7 @@ from rjsmin import jsmin as rjsmin
 from odoo import release
 from odoo.api import SUPERUSER_ID
 from odoo.http import request
-from odoo.tools import OrderedSet, misc, profiler
+from odoo.tools import OrderedSet, SQL, misc, profiler
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS, BINARY_EXTENSIONS
 from odoo.tools.json import scriptsafe as json
 from odoo.tools.misc import file_open, file_path
@@ -184,10 +184,11 @@ class AssetsBundle(object):
         could unload fields loaded with a sudo(), and expected to be readable by the view.
         Such a view would be website.layout when main_object is an ir.ui.view.
         """
-        to_delete = set(attach.store_fname for attach in attachments if attach.store_fname)
-        self.env.cr.execute(f"""DELETE FROM {attachments._table} WHERE id IN (
-            SELECT id FROM {attachments._table} WHERE id in %s FOR NO KEY UPDATE SKIP LOCKED
-        )""", [tuple(attachments.ids)])
+        to_delete = OrderedSet(attach.store_fname for attach in attachments if attach.store_fname)
+        self.env.cr.execute(SQL("""
+            DELETE FROM %(table)s WHERE id IN (
+            SELECT id FROM %(table)s WHERE id IN %(ids)s FOR NO KEY UPDATE SKIP LOCKED
+        )""", table=SQL.identifier(attachments._table), ids=tuple(attachments.ids)))
         for fpath in to_delete:
             attachments._file_delete(fpath)
 

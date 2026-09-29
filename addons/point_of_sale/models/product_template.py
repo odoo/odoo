@@ -14,8 +14,10 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _default_pos_sequence(self):
-        self.env.cr.execute('SELECT MAX(pos_sequence) FROM %s' % self._table)
-        max_sequence = self.env.cr.fetchone()[0]
+        q = models.Query(self)
+        max_sequence = self.env.execute_query(
+            q.select(SQL("MAX(%s)", q.table.pos_sequence))
+        )[0][0]
         if max_sequence is None:
             return 1
         return max_sequence + 1
