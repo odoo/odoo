@@ -10,6 +10,7 @@ from odoo.tests import Form, tagged
 
 from odoo.addons.base.tests.files import GIF_RAW
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 @tagged('-at_install', 'post_install')
@@ -1281,3 +1282,43 @@ class TestExpenses(TestExpenseCommon):
         bank_line_to_reconcile.account_id = payment_line_to_reconcile.account_id
         (bank_line_to_reconcile + payment_line_to_reconcile).reconcile()
         self.assertEqual(expense.state, 'paid')
+
+    def test_expense_team_approver_refuse_mixed_selection(self):
+        """
+        - Set up a team approver and a subordinate, creating one submitted expense for each.
+        - Verify the approver cannot approve their own expense, but can approve the subordinate's.
+        - Refuse both expenses together to ensure a `UserError` is raised with a reason only for the invalid expense
+        (own expense), then verify the subordinate's expense opens the refusal wizard successfully.
+        """
+        team_approver = mail_new_test_user(
+            self.env,
+            login='expense_team_approver',
+            groups='base.group_user,hr_expense.group_hr_expense_team_approver',
+        )
+        approver_employee = self.env['hr.employee'].sudo().create({
+            'name': 'approver_employee',
+            'user_id': team_approver.id,
+            'expense_manager_id': self.expense_user_manager.id,
+        })
+        subordinate_employee = self.env['hr.employee'].sudo().create({
+            'name': 'subordinate_employee',
+            'parent_id': approver_employee.id,
+        })
+        own_expense = self.create_expenses({'name': 'Own expense', 'employee_id': approver_employee.id})
+        subordinate_expense = self.create_expenses({'name': 'Subordinate expense', 'employee_id': subordinate_employee.id})
+        expenses = own_expense + subordinate_expense
+        expenses.action_submit()
+        self.assertRecordValues(expenses, [{'state': 'submitted'}, {'state': 'submitted'}])
+
+        own_expense_as_approver = own_expense.with_user(team_approver)
+        subordinate_expense_as_approver = subordinate_expense.with_user(team_approver)
+        self.assertFalse(own_expense_as_approver.can_approve)
+        self.assertTrue(subordinate_expense_as_approver.can_approve)
+
+        with self.assertRaises(UserError) as error:
+            (own_expense_as_approver + subordinate_expense_as_approver).action_refuse()
+        self.assertIn("Own expense: It is your own expense", error.exception.args[0])
+        self.assertNotIn("Subordinate expense", error.exception.args[0])
+
+        action = subordinate_expense_as_approver.action_refuse()
+        self.assertEqual(action['res_model'], 'hr.expense.refuse.wizard')
