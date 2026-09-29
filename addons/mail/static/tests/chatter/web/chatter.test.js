@@ -1057,3 +1057,194 @@ test("Can log a note with a pasted mention of a partner not mentioned through su
         ".o-mail-Message .o-mail-Message-body.o-note:has(:text('@Other Partner')):count(1)"
     );
 });
+
+test("fetching new messages after posting does not skip messages posted in between", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Frodo" });
+    pyEnv["mail.message"].create({
+        body: "Before opening",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await waitFor(".o-mail-Message:count(1)");
+    // Posted by someone else while the chatter is open: not received from the bus.
+    pyEnv["mail.message"].create({
+        body: "Posted in between",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await click("button:text('Send message')");
+    await insertTextInComposer(".o-mail-Composer", "Own message");
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    // New messages are fetched after posting.
+    await waitFor(".o-mail-Message:count(3)");
+    await waitFor(".o-mail-Message:eq(0):has(:text('Own message')):count(1)");
+    await waitFor(".o-mail-Message:eq(1):has(:text('Posted in between')):count(1)");
+    await waitFor(".o-mail-Message:eq(2):has(:text('Before opening')):count(1)");
+});
+
+test("loading more messages only excludes the known messages beyond the loaded ones", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Frodo" });
+    const messageIds = [];
+    for (let i = 0; i < 31; i++) {
+        messageIds.push(
+            pyEnv["mail.message"].create({
+                body: `Before opening ${i}`,
+                message_type: "comment",
+                model: "res.partner",
+                res_id: partnerId,
+            })
+        );
+    }
+    listenStoreFetch("/mail/thread/messages", { logParams: ["/mail/thread/messages"] });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await waitFor(".o-mail-Message:count(30)");
+    const threadParams = { thread_id: partnerId, thread_model: "res.partner" };
+    await waitStoreFetch([
+        ["/mail/thread/messages", { ...threadParams, fetch_params: { limit: 30 } }],
+    ]);
+    // Posted by someone else while the chatter is open: not received from the bus.
+    pyEnv["mail.message"].create({
+        body: "Posted in between",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await click("button:text('Send message')");
+    await insertTextInComposer(".o-mail-Composer", "Own message");
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await waitFor(".o-mail-Message:count(32)");
+    await waitFor(".o-mail-Message:eq(0):has(:text('Own message')):count(1)");
+    await waitFor(".o-mail-Message:eq(1):has(:text('Posted in between')):count(1)");
+    // Newer messages from the newest fetched one, excluding the own message posted since.
+    const [ownMessageId] = pyEnv["mail.message"].search([["body", "ilike", "Own message"]]);
+    await waitStoreFetch([
+        [
+            "/mail/thread/messages",
+            {
+                ...threadParams,
+                fetch_params: { limit: 30, after: messageIds.at(-1), exclude_ids: [ownMessageId] },
+            },
+        ],
+    ]);
+    // Older messages from the oldest loaded one, no known message being older.
+    await click("button:text('Load More')");
+    await waitFor(".o-mail-Message:count(33)");
+    await waitFor(".o-mail-Message:eq(32):has(:text('Before opening 0')):count(1)");
+    await waitStoreFetch([
+        [
+            "/mail/thread/messages",
+            { ...threadParams, fetch_params: { limit: 30, before: messageIds[1] } },
+        ],
+    ]);
+    await waitForNone("button:text('Load More')");
+});
+
+test("loading more messages excludes the known messages older than the loaded ones", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Frodo" });
+    const messageIds = [];
+    for (let i = 0; i < 32; i++) {
+        messageIds.push(
+            pyEnv["mail.message"].create({
+                body: `Before opening ${i}`,
+                message_type: "comment",
+                model: "res.partner",
+                res_id: partnerId,
+            })
+        );
+    }
+    listenStoreFetch("/mail/thread/messages", { logParams: ["/mail/thread/messages"] });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await waitFor(".o-mail-Message:count(30)");
+    const threadParams = { thread_id: partnerId, thread_model: "res.partner" };
+    await waitStoreFetch([
+        ["/mail/thread/messages", { ...threadParams, fetch_params: { limit: 30 } }],
+    ]);
+    // Known out of band, older than the loaded messages.
+    const thread = getService("mail.store")["mail.thread"].get({
+        model: "res.partner",
+        id: partnerId,
+    });
+    thread.messages.unshift({
+        author_id: serverState.partnerId,
+        body: "Before opening 0",
+        date: "2019-05-05 10:00:00",
+        id: messageIds[0],
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+        thread: { model: "res.partner", id: partnerId },
+    });
+    await waitFor(".o-mail-Message:count(31)");
+    await click("button:text('Load More')");
+    await waitFor(".o-mail-Message:count(32)");
+    await waitFor(".o-mail-Message:eq(30):has(:text('Before opening 1')):count(1)");
+    await waitFor(".o-mail-Message:eq(31):has(:text('Before opening 0')):count(1)");
+    await waitStoreFetch([
+        [
+            "/mail/thread/messages",
+            {
+                ...threadParams,
+                fetch_params: { limit: 30, before: messageIds[2], exclude_ids: [messageIds[0]] },
+            },
+        ],
+    ]);
+    await waitForNone("button:text('Load More')");
+});
+
+test("fetching new messages after posting in an empty chatter loads them from the oldest", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Frodo" });
+    listenStoreFetch("/mail/thread/messages", { logParams: ["/mail/thread/messages"] });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await waitFor(".o-mail-Thread:has(:text('No messages yet.')):count(1)");
+    const threadParams = { thread_id: partnerId, thread_model: "res.partner" };
+    await waitStoreFetch([
+        ["/mail/thread/messages", { ...threadParams, fetch_params: { limit: 30 } }],
+    ]);
+    // Posted by someone else while the chatter is open: not received from the bus.
+    const messageIds = [];
+    for (let i = 0; i < 31; i++) {
+        messageIds.push(
+            pyEnv["mail.message"].create({
+                body: `Posted in between ${i}`,
+                message_type: "comment",
+                model: "res.partner",
+                res_id: partnerId,
+            })
+        );
+    }
+    await click("button:text('Send message')");
+    await insertTextInComposer(".o-mail-Composer", "Own message");
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await waitFor(".o-mail-Message:count(32)");
+    await waitFor(".o-mail-Message:eq(0):has(:text('Own message')):count(1)");
+    await waitFor(".o-mail-Message:eq(31):has(:text('Posted in between 0')):count(1)");
+    // Newer messages from the start of the empty list, excluding the own message posted since.
+    const [ownMessageId] = pyEnv["mail.message"].search([["body", "ilike", "Own message"]]);
+    await waitStoreFetch([
+        [
+            "/mail/thread/messages",
+            {
+                ...threadParams,
+                fetch_params: { limit: 30, after: 0, exclude_ids: [ownMessageId] },
+            },
+        ],
+        [
+            "/mail/thread/messages",
+            {
+                ...threadParams,
+                fetch_params: { limit: 30, after: messageIds[29], exclude_ids: [ownMessageId] },
+            },
+        ],
+    ]);
+});
