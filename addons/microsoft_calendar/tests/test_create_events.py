@@ -612,7 +612,7 @@ class TestCreateEvents(TestCommon):
         ]
         record = self.env['calendar.event'].search(search_domain)
         self.assertTrue(record, "The time off event should exist.")
-        self.assertEqual(record.name, "Marc Demo on Time Off : 1 days",
+        self.assertEqual(record.name, "Marc Demo on Time Off : 1 day",
                         "The event name should match the employee's time off description.")
         self.assertEqual(record.start_date, datetime(2020, 1, 15).date(),
                         "The start date should match the time off request.")
