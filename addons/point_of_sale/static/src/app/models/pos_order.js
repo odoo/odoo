@@ -1,5 +1,11 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
+<<<<<<< 3485cce77f7a217c0b933c848f16a3c6f6cf1c9f
+||||||| f721a126827c893a1d89ca7f8b608068c0ca9ec2
+import { serializeDateTime } from "@web/core/l10n/dates";
+=======
+import { deserializeDateTime, serializeDateTime } from "@web/core/l10n/dates";
+>>>>>>> f0564e9cb1ab0bce0b87d451a0f3ba8138d1bce3
 import { PosOrderAccounting } from "./accounting/pos_order_accounting";
 import { getStrNotes } from "./utils/order_change";
 
@@ -204,6 +210,124 @@ export class PosOrder extends PosOrderAccounting {
     get hasChange() {
         return this.lines.some((l) => l.uiState.hasChange);
     }
+<<<<<<< 3485cce77f7a217c0b933c848f16a3c6f6cf1c9f
+||||||| f721a126827c893a1d89ca7f8b608068c0ca9ec2
+    /**
+     * This function is called after the order has been successfully sent to the preparation tool(s).
+     * In the future, this status should be separated between the different preparation tools,
+     * so that if one of them returns an error, it is possible to send the information back to it
+     * without impacting the other tools.
+     */
+    updateLastOrderChange() {
+        const orderlineIdx = [];
+        this.lines.forEach((line) => {
+            orderlineIdx.push(line.preparationKey);
+
+            if (this.last_order_preparation_change.lines[line.preparationKey]) {
+                this.last_order_preparation_change.lines[line.preparationKey] = {
+                    ...this.last_order_preparation_change.lines[line.preparationKey],
+                    quantity: line.getQuantity(),
+                    note: line.getNote(),
+                    customer_note: line.getCustomerNote(),
+                };
+            } else {
+                this.last_order_preparation_change.lines[line.preparationKey] = {
+                    attribute_value_names: line.attribute_value_ids.map((a) => a.name),
+                    uuid: line.uuid,
+                    isCombo: Boolean(line?.combo_line_ids?.length),
+                    combo_parent_uuid: line?.combo_parent_id?.uuid,
+                    product_id: line.getProduct().id,
+                    name: line.getFullProductName(),
+                    basic_name: line.getProduct().name,
+                    display_name: line.getProduct().display_name,
+                    note: line.getNote(),
+                    quantity: line.getQuantity(),
+                    customer_note: line.getCustomerNote(),
+                };
+            }
+            line.setHasChange(false);
+            line.uiState.savedQuantity = line.getQuantity();
+        });
+        // Checks whether an orderline has been deleted from the order since it
+        // was last sent to the preparation tools or updated. If so we delete older changes.
+        for (const [key, change] of Object.entries(this.last_order_preparation_change.lines)) {
+            const orderline = this.models["pos.order.line"].getBy("uuid", change.uuid);
+            const lineNote = orderline?.note;
+            const changeNote = change?.note;
+            if (!orderline || (lineNote && changeNote && changeNote.trim() !== lineNote.trim())) {
+                delete this.last_order_preparation_change.lines[key];
+            }
+        }
+        this.last_order_preparation_change.general_customer_note = this.general_customer_note;
+        this.last_order_preparation_change.internal_note = this.internal_note;
+        this.last_order_preparation_change.sittingMode = this.preset_id?.id || 0;
+        this.last_order_preparation_change.metadata = {
+            serverDate: serializeDateTime(DateTime.now()),
+        };
+        this._markDirty();
+    }
+=======
+    /**
+     * This function is called after the order has been successfully sent to the preparation tool(s).
+     * In the future, this status should be separated between the different preparation tools,
+     * so that if one of them returns an error, it is possible to send the information back to it
+     * without impacting the other tools.
+     */
+    updateLastOrderChange() {
+        const orderlineIdx = [];
+        this.lines.forEach((line) => {
+            orderlineIdx.push(line.preparationKey);
+
+            if (this.last_order_preparation_change.lines[line.preparationKey]) {
+                this.last_order_preparation_change.lines[line.preparationKey] = {
+                    ...this.last_order_preparation_change.lines[line.preparationKey],
+                    quantity: line.getQuantity(),
+                    note: line.getNote(),
+                    customer_note: line.getCustomerNote(),
+                };
+            } else {
+                this.last_order_preparation_change.lines[line.preparationKey] = {
+                    attribute_value_names: line.attribute_value_ids.map((a) => a.name),
+                    uuid: line.uuid,
+                    isCombo: Boolean(line?.combo_line_ids?.length),
+                    combo_parent_uuid: line?.combo_parent_id?.uuid,
+                    product_id: line.getProduct().id,
+                    name: line.getFullProductName(),
+                    basic_name: line.getProduct().name,
+                    display_name: line.getProduct().display_name,
+                    note: line.getNote(),
+                    quantity: line.getQuantity(),
+                    customer_note: line.getCustomerNote(),
+                };
+            }
+            line.setHasChange(false);
+            line.uiState.savedQuantity = line.getQuantity();
+        });
+        // Checks whether an orderline has been deleted from the order since it
+        // was last sent to the preparation tools or updated. If so we delete older changes.
+        for (const [key, change] of Object.entries(this.last_order_preparation_change.lines)) {
+            const orderline = this.models["pos.order.line"].getBy("uuid", change.uuid);
+            const lineNote = orderline?.note;
+            const changeNote = change?.note;
+            if (!orderline || (lineNote && changeNote && changeNote.trim() !== lineNote.trim())) {
+                delete this.last_order_preparation_change.lines[key];
+            }
+        }
+        this.last_order_preparation_change.general_customer_note = this.general_customer_note;
+        this.last_order_preparation_change.internal_note = this.internal_note;
+        this.last_order_preparation_change.sittingMode = this.preset_id?.id || 0;
+        // The server discards changes dated before its own version: date them after the version
+        // they are based on, even if the device clock is behind the server one
+        const lastDate = deserializeDateTime(
+            this.last_order_preparation_change.metadata?.serverDate
+        );
+        const now = DateTime.now();
+        this.last_order_preparation_change.metadata = {
+            serverDate: serializeDateTime(lastDate.isValid ? DateTime.max(lastDate, now) : now),
+        };
+        this._markDirty();
+    }
+>>>>>>> f0564e9cb1ab0bce0b87d451a0f3ba8138d1bce3
 
     isEmpty() {
         return this.lines.length === 0;
