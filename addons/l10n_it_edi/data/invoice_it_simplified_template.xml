@@ -92,9 +92,10 @@
                             <Numero t-out="format_alphanumeric(record.name, -20)"/>
                             <BolloVirtuale t-if="record.l10n_it_stamp_duty" t-translation="off">SI</BolloVirtuale>
                         </DatiGeneraliDocumento>
-                        <DatiFatturaRettificata t-if="record.move_type == 'out_refund' and record.reversed_entry_id">
-                            <NumeroFR t-out="format_alphanumeric(record.reversed_entry_id.name, -20)"/>
-                            <DataFR t-out="format_date(record.reversed_entry_id.invoice_date)"/>
+                        <t t-set="rectified_move" t-value="record.reversed_entry_id if record.move_type == 'out_refund' else record.debit_origin_id"/>
+                        <DatiFatturaRettificata t-if="rectified_move">
+                            <NumeroFR t-out="format_alphanumeric(rectified_move.name, -20)"/>
+                            <DataFR t-out="format_date(rectified_move.invoice_date)"/>
                             <ElementiRettificati t-out="format_alphanumeric(record.ref, 1000)"/>
                         </DatiFatturaRettificata>
                     </DatiGenerali>
