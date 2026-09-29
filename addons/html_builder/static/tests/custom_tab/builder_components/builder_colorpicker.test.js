@@ -213,6 +213,58 @@ test("should apply transparent color if no color is defined", async () => {
     expect.verifySteps(["apply", "getValue"]); // Commit
 });
 
+test("noTransparency blocks transparent color slider, 8-digit hex input and used transparent colors", async () => {
+    addBuilderOption({
+        selector: ".test-no-transparency-target",
+        template: xml`<BuilderColorPicker styleAction="'background-color'" noTransparency="true" defaultColor="'#FFFFFF'"/>`,
+    });
+    addBuilderOption({
+        selector: ".test-transparency-target",
+        template: xml`<BuilderColorPicker styleAction="'background-color'" defaultColor="'#FFFFFF'"/>`,
+    });
+    await setupHTMLBuilder(`
+        <div class="test-no-transparency-target">a</div>
+        <div class="test-transparency-target">b</div>
+        <div style="background-color: rgba(255, 0, 0, 0.5);">transparent color</div>
+        <div style="background-color: rgb(0, 0, 255);">opaque color</div>
+    `);
+
+    const transparentSelector = ".o-overlay-item .o_color_button[data-color='#FF000080']";
+    const opaqueSelector = ".o-overlay-item .o_color_button[data-color='#0000FF']";
+
+    await contains(":iframe .test-transparency-target").click();
+    await contains(".o_hb_bg_options_container .o_we_color_preview").click();
+    await contains(".o-overlay-item button:contains('Custom')").click();
+    expect(transparentSelector).toHaveCount(1);
+    expect(opaqueSelector).toHaveCount(1);
+
+    await contains(":iframe .test-no-transparency-target").click();
+    await contains(".o_hb_bg_options_container .o_we_color_preview").click();
+    await contains(".o-overlay-item button:contains('Custom')").click();
+    expect(transparentSelector).toHaveCount(0);
+    expect(opaqueSelector).toHaveCount(1);
+    expect(".o-overlay-item .o_opacity_slider").toHaveCount(0);
+
+    let hexInputEl = await getIframeInput(
+        ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    await contains(hexInputEl).edit("#FF0000");
+    await animationFrame();
+    expect(":iframe .test-no-transparency-target").toHaveStyle({
+        "background-color": "rgb(255, 0, 0)",
+    });
+
+    await contains(hexInputEl).edit("#00FF0080");
+    await animationFrame();
+    expect(":iframe .test-no-transparency-target").not.toHaveStyle({
+        "background-color": "rgba(0, 255, 0, 0.5)",
+    });
+    expect(":iframe .test-no-transparency-target").toHaveStyle({
+        "background-color": "rgb(0, 255, 0)",
+    });
+});
+
 describe("Custom colorpicker: preview and commit", () => {
     before(() => {
         addBuilderAction({
