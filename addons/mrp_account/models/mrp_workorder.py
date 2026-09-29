@@ -43,7 +43,7 @@ class MrpWorkorder(models.Model):
             if not wo.id:
                 continue
             hours = wo.duration / 60.0
-            value = -hours * wo.workcenter_id.costs_hour
+            value = -hours * wo._get_costs_hour()
             wo._create_or_update_analytic_entry_for_record(value, hours)
 
     def _create_or_update_analytic_entry_for_record(self, value, hours):

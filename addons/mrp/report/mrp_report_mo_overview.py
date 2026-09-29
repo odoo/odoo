@@ -92,7 +92,7 @@ class ReportMoOverview(models.AbstractModel):
                 line_cost = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * line.product_qty
                 initial_bom_cost += currency.round(line_cost * production.product_uom_qty / production.bom_id.product_qty)
             for operation in missing_operations:
-                cost = (operation._get_duration_expected(production.product_id, production.product_qty) / 60.0) * operation.workcenter_id.costs_hour
+                cost = (operation._get_duration_expected(production.product_id, production.product_qty) / 60.0) * operation._get_costs_hour()
                 bom_cost = self.env.company.currency_id.round(cost)
                 initial_bom_cost += currency.round(bom_cost * production.product_uom_qty / production.bom_id.product_qty)
 
@@ -378,7 +378,7 @@ class ReportMoOverview(models.AbstractModel):
         total_duration = total_duration_expected = total_cost = total_mo_cost = 0
         total_bom_cost = False
         for index, workorder in enumerate(production.workorder_ids):
-            hourly_cost = workorder.costs_hour or workorder.workcenter_id.costs_hour
+            hourly_cost = workorder._get_costs_hour()
             duration = workorder.get_duration() / 60
             operation_cost = duration * hourly_cost
             mo_cost = workorder._compute_expected_operation_cost(without_employee_cost=True) if workorder.duration_expected\
