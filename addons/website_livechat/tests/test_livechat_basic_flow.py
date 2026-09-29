@@ -280,6 +280,7 @@ class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
                         "avatar_128_access_token": self.operator.partner_id._get_avatar_128_access_token(),
                         "country_id": False,
                         "id": self.operator.partner_id.id,
+                        "is_in_meeting": False,
                         "is_public": False,
                         "mention_token": self.operator.partner_id._get_mention_token(),
                         "user_ids": self.operator.ids,

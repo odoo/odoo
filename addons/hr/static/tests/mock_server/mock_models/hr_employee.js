@@ -12,6 +12,7 @@ export class HrEmployee extends models.ServerModel {
     work_email = fields.Char();
     work_phone = fields.Char();
     work_location_type = fields.Char();
+    is_off_hours = fields.Boolean();
     work_location_id = fields.Many2one({ relation: "hr.work.location" });
     job_title = fields.Char();
     company_id = fields.Many2one({ relation: "res.company" });
@@ -33,7 +34,7 @@ export class HrEmployee extends models.ServerModel {
 
     _store_im_status_fields(res) {
         res.one("user_id", "_store_im_status_fields");
-        res.extend(["active", "company_id", "work_location_type"]);
+        res.extend(["active", "company_id", "is_off_hours", "work_location_type"]);
     }
 
     _get_working_periods_by_field(employeeIds, start_time, end_time, field_key) {

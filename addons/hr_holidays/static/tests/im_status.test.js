@@ -17,7 +17,11 @@ defineHrHolidaysModels();
 
 test("change icon on change partner im_status for leave variants", async () => {
     const pyEnv = await startServer();
-    pyEnv["hr.employee"].create({ user_id: serverState.userId, leave_date_to: "2023-01-01" });
+    pyEnv["hr.employee"].create({
+        user_id: serverState.userId,
+        leave_date_to: "2023-01-01",
+        is_absent: true,
+    });
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     patchWithCleanup(ImStatusMixin, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     await start();
