@@ -294,7 +294,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         elif order_sudo.state == "sale":
             amount = payment_amount or order_sudo.amount_total
         else:
-            amount = currency.round(order_sudo.amount_total - order_sudo.amount_paid)
+            amount = payment_amount or currency.round(order_sudo.amount_total - order_sudo.amount_paid)
 
         # Prepare the portal page values
         company_mismatch = not payment_portal.PaymentPortal._can_partner_pay_in_company(
