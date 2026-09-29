@@ -55,7 +55,7 @@ export class NotificationMessage extends Component {
             }
         );
     }
-    
+
     get showDate() {
         return true;
     }
@@ -76,6 +76,24 @@ export class NotificationMessage extends Component {
             .map(([unit, amount]) => unit);
         return _t("Call lasted %(duration)s.", {
             duration: duration.shiftTo(...units).toHuman({ unitDisplay: "short" }),
+        });
+    }
+
+    get pinInformation() {
+        return _t(
+            "%(user)s pinned %(message_link_start)sa message%(message_link_end)s to this channel.",
+            {
+                user: this.message.authorName,
+                message_link_start: markup`<a href="#" data-oe-type="highlight" data-oe-id="${this.message.pinnedMessageId}">`,
+                message_link_end: markup`</a>`,
+            }
+        );
+    }
+
+    get seeAllPinsInformation() {
+        return _t("See %(pins_link_start)sall pinned messages%(pins_link_end)s.", {
+            pins_link_start: markup`<a href="#" data-oe-type="pin-menu">`,
+            pins_link_end: markup`</a>`,
         });
     }
 

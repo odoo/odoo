@@ -206,6 +206,14 @@ export class Message extends Record {
         },
         inverse: "threadCreationMessages",
     });
+    /** @type {number|undefined} */
+    pinnedMessageId = this.computed(() => {
+        if (this.notificationType !== "pin") {
+            return undefined;
+        }
+        const messageId = this.bodyEl?.querySelector(".o_mail_notification")?.dataset.oeId;
+        return messageId ? Number(messageId) : undefined;
+    });
     /** @type {string} display name of the record the message is posted on */
     record_name;
     /** @type {number} id of the record the message is posted on */
@@ -473,6 +481,9 @@ export class Message extends Record {
                     threadLink: getOuterHtml(threadLink),
                 })
             );
+        }
+        if (this.notificationType === "pin") {
+            return _t("%(user)s pinned a message to this channel.", { user: this.authorName });
         }
         if (this.isEmpty) {
             return _t("This message has been removed");

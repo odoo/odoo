@@ -9,6 +9,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test, expect } from "@odoo/hoot";
 import { disableAnimations } from "@odoo/hoot-mock";
+import { serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -77,7 +78,14 @@ test("Open pinned panel from notification", async () => {
     await click(".dropdown-item:text('Pin')");
     await click(".modal-footer button:text('Pin Message')");
     await contains(".o-discuss-PinnedMessagesPanel", { count: 0 });
-    await click(".o_mail_notification a:text('See all pinned messages')");
+    await contains(
+        `.o-mail-NotificationMessage span:text('${serverState.partnerName} pinned a message to this channel.')`
+    );
+    await contains(".o-mail-NotificationMessage-seeAllPins:text('See all pinned messages.')");
+    await contains(".o-mail-NotificationMessage a[data-oe-type='highlight']:text('a message')");
+    await click(
+        ".o-mail-NotificationMessage a[data-oe-type='pin-menu']:text('all pinned messages')"
+    );
     await contains(".o-discuss-PinnedMessagesPanel");
 });
 
@@ -129,10 +137,10 @@ test("Jump to message from notification", async () => {
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
     await click(".dropdown-item:text('Pin')");
     await click(".modal-footer button:text('Pin Message')");
-    await contains(".o_mail_notification");
+    await contains(".o-mail-NotificationMessage");
     await scroll(".o-mail-Thread", "bottom");
     await contains(".o-mail-Thread", { scroll: "bottom" });
-    await click(".o_mail_notification a:text('message')");
+    await click(".o-mail-NotificationMessage a[data-oe-type='highlight']:text('a message')");
     await contains(".o-mail-Thread", { count: 0, scroll: "bottom" });
 });
 
