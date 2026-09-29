@@ -48,7 +48,7 @@ export class PaymentScreenStatus extends Component {
     }
 
     get showStatus() {
-        return Boolean(this.order.remainingDue || this.order.change);
+        return !this.order.hasNoRemainingDueOrChange;
     }
 
     get amountText() {
