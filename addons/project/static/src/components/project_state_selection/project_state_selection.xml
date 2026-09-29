@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="project.ProjectStateSelection" t-inherit="web.StateSelectionField" t-inherit-mode="primary">
+        <xpath expr="//t[@t-if='this.props.readonly']/button/span[1]" position="attributes">
+            <attribute name="t-attf-class" add="{{ this.stateClassIcon(this.currentValue) }}" remove="o_status" separator=" "/>
+            <attribute name="t-attf-data-icon">{{ this.stateIcon(this.currentValue) }}</attribute>
+        </xpath>
+        <xpath expr="//Dropdown/button/div/span[1]" position="attributes">
+            <attribute name="t-attf-class" add="{{ this.stateClassIcon(this.currentValue) }}" remove="o_status" separator=" "/>
+            <attribute name="t-attf-data-icon">{{ this.stateIcon(this.currentValue) }}</attribute>
+        </xpath>
+        <xpath expr="//CheckboxItem/span[1]" position="attributes">
+            <attribute name="t-attf-class" add="{{ this.stateClassIcon(option[0]) }}" remove="o_status" separator=" "/>
+            <attribute name="t-attf-data-icon">{{ this.stateIcon(option[0]) }}</attribute>
+        </xpath>
+    </t>
+
+</templates>
