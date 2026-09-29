@@ -196,6 +196,7 @@ class MyInvoisDocumentPoS(models.Model):
         :return: A dict of pos order per config, for each config having a list of recordset each representing a single line in the xml.
         """
         lines_per_config = {}
+<<<<<<< 7d957c565edb3c6ba803f5b120b1e8e5110e8483
         # We don't mix orders from different configs in a single line as they have different sequences.
         # `_order` being reverse chronological, sorting in reverse yields the oldest orders first, so that the
         # consolidated invoices follow the order they were sold in.
@@ -224,6 +225,42 @@ class MyInvoisDocumentPoS(models.Model):
                 previous_order = order
                 previous_reference = reference
                 previous_is_refund = is_refund
+||||||| 14ad235f9c531227c3193579ce800ce95701684e
+        # We start by gathering the sessions involved in this process, and loop on their orders.
+        sorted_orders_to_consolidated = pos_order_ids.sorted(reverse=True)
+        sorted_session_orders = (
+            sorted_orders_to_consolidated.session_id.order_ids.sorted(reverse=True)
+        )
+        # During the loop, we want to gather "lines".
+        # One line can be comprised of any number of orders as long as they are continuous.
+        continuous_orders = []
+        for config, orders in itertools.groupby(sorted_session_orders, key=lambda o: o["config_id"]):
+            config_lines = []
+            for order in orders:
+                if continuous_orders and order not in pos_order_ids:
+                    config_lines.append(self.env["pos.order"].browse(continuous_orders))
+                    continuous_orders = []
+                elif order in pos_order_ids:
+                    continuous_orders.append(order.id)
+=======
+        # We start by gathering the sessions involved in this process, and loop on their orders.
+        sorted_orders_to_consolidated = pos_order_ids.sorted(reverse=True)
+        sorted_session_orders = sorted(
+            sorted_orders_to_consolidated.session_id.order_ids.sorted(reverse=True),
+            key=lambda o: o.config_id.id,
+        )
+        # During the loop, we want to gather "lines".
+        # One line can be comprised of any number of orders as long as they are continuous.
+        continuous_orders = []
+        for config, orders in itertools.groupby(sorted_session_orders, key=lambda o: o["config_id"]):
+            config_lines = []
+            for order in orders:
+                if continuous_orders and order not in pos_order_ids:
+                    config_lines.append(self.env["pos.order"].browse(continuous_orders))
+                    continuous_orders = []
+                elif order in pos_order_ids:
+                    continuous_orders.append(order.id)
+>>>>>>> de9d56405e912158c6bff0a95fc1a1a3b9253bd4
 
             lines_per_config[config] = [
                 pos_order_ids.browse(line_ids) for line_ids in config_line_ids
