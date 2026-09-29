@@ -5,6 +5,7 @@ from datetime import date, datetime, time
 from dateutil.relativedelta import relativedelta
 from babel.dates import format_date, get_date_format
 from zoneinfo import ZoneInfo
+from markupsafe import Markup
 
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
@@ -810,3 +811,42 @@ class HrVersion(models.Model):
             'target': 'current',
             'context': self.env.context
         }
+
+    @api.model
+    def _get_version_update_log_message(self, first_version, last_version):
+        start = format_date_abbr(self.env, first_version.date_start) if first_version.date_start else False
+        end = format_date_abbr(self.env, last_version.date_end) if last_version.date_end else False
+        if start and end:
+            msg = self.env._("As of %(start)s to %(end)s") % {'start': start, 'end': end}
+        elif start:
+            msg = self.env._("As of %s") % start
+        else:
+            msg = self.env._("As of")
+        return Markup("<b>%s</b>") % msg
+
+    def write_versions(self, vals):
+        """ Write vals on several versions at once and log a single tracking message
+        on each employee's chatter, computed on each employee's first version. """
+        if not self or not vals:
+            return True
+        self.check_access('write')  # The write will already be blocked if we don't have write access, but no reason to set up tracking anyways
+        versions_by_employee = self.sorted('date_version').grouped('employee_id')
+        vals = {
+            **vals,
+            'last_modified_date': fields.Datetime.now(),
+            'last_modified_uid': self.env.uid,
+        }
+        for employee, versions in versions_by_employee.items():
+            tracked_fnames = versions._track_get_fields() & vals.keys()
+            if tracked_fnames:
+                first_version_sudo = versions[0].sudo()
+                employee._track_record(
+                    versions[0],
+                    tracked_fnames,
+                    # Explicit initial values, so that the tracking is also done for a version
+                    # created in the same transaction (its tracking is discarded at creation).
+                    initial_values={first_version_sudo.id: {fname: first_version_sudo[fname] for fname in tracked_fnames}},
+                    body=self._get_version_update_log_message(first_version_sudo, versions[-1].sudo()),
+                )
+        self.write(vals)
+        return True

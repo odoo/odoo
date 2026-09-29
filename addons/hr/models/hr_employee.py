@@ -1904,22 +1904,8 @@ class HrEmployee(models.Model):
             self.version_id.write(version_vals)
 
             for employee in self:
-                multi_update_version_ids = self.env.context.get('multi_update_version_ids')
-                if multi_update_version_ids:
-                    first_version_sudo = employee.version_ids.filtered(lambda v: v.id == multi_update_version_ids[0]).sudo()
-                    last_version_sudo = employee.version_ids.filtered(lambda v: v.id == multi_update_version_ids[-1]).sudo()
-                else:
-                    first_version_sudo = employee.version_id.sudo()
-                    last_version_sudo = first_version_sudo
-                start = format_date_abbr(self.env, first_version_sudo.date_start) if first_version_sudo.date_start else False
-                end = format_date_abbr(self.env, last_version_sudo.date_end) if last_version_sudo.date_end else False
-                if start and end:
-                    msg = self.env._("As of %(start)s to %(end)s") % {'start': start, 'end': end}
-                elif start:
-                    msg = self.env._("As of %s") % (start)
-                else:
-                    msg = self.env._("As of")
-                employee._track_set_log_message(Markup("<b>%s</b>") % msg)
+                version_sudo = employee.version_id.sudo()
+                employee._track_set_log_message(self.env['hr.version']._get_version_update_log_message(version_sudo, version_sudo))
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
             # When added to a department or changing user, subscribe to the channels auto-subscribed by department
