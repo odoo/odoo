@@ -25,6 +25,7 @@ export class AgingPiutangView extends Component {
         const initialPartnerType = actionParams.partner_type || "all";
         const initialBucket = actionParams.bucket || "all";
         const initialSearch = actionParams.search || "";
+        const initialView = actionParams.view_mode || "tree"; // 'tree', 'matrix', 'list', 'kanban'
 
         this.state = useState({
             filters: {
@@ -39,12 +40,15 @@ export class AgingPiutangView extends Component {
                 lang: getActiveLang(),
             },
             searchQuery: initialSearch,
-            activeTab: "matrix", // 'matrix', 'detail', 'critical'
-            showBreakdown: true, // Breakdown > 90 hari
+            activeView: initialView, // 'tree', 'matrix', 'list', 'kanban'
+            showBreakdown: true, // Breakdown > 90 hari (5 bucket vs 8 bucket)
             data: null,
             loading: true,
             datePreset: "today",
             customAsOfDate: initialAsOfDate,
+            unfoldedPartners: {},
+            sortField: "total",
+            sortAsc: false,
         });
 
         onWillStart(async () => {
@@ -104,19 +108,67 @@ export class AgingPiutangView extends Component {
         this.loadData();
     }
 
-    setTab(tabName) {
-        this.state.activeTab = tabName;
-        if (tabName === "critical") {
-            this.state.filters.bucket = "over_90";
-            this.state.showBreakdown = true;
-        } else if (tabName === "matrix" && this.state.filters.bucket === "over_90") {
-            this.state.filters.bucket = "all";
-        }
-        this.loadData();
+    setView(viewMode) {
+        this.state.activeView = viewMode;
     }
 
     toggleBreakdown() {
         this.state.showBreakdown = !this.state.showBreakdown;
+    }
+
+    togglePartner(partnerKey) {
+        if (this.state.unfoldedPartners[partnerKey]) {
+            delete this.state.unfoldedPartners[partnerKey];
+        } else {
+            this.state.unfoldedPartners[partnerKey] = true;
+        }
+    }
+
+    isPartnerUnfolded(partnerKey) {
+        return Boolean(this.state.unfoldedPartners[partnerKey]);
+    }
+
+    unfoldAll() {
+        if (!this.state.data || !this.state.data.partners) return;
+        const unfolded = {};
+        for (const p of this.state.data.partners) {
+            unfolded[p.partner_key] = true;
+        }
+        this.state.unfoldedPartners = unfolded;
+    }
+
+    foldAll() {
+        this.state.unfoldedPartners = {};
+    }
+
+    onSort(field) {
+        if (this.state.sortField === field) {
+            this.state.sortAsc = !this.state.sortAsc;
+        } else {
+            this.state.sortField = field;
+            this.state.sortAsc = false;
+        }
+    }
+
+    get sortedPartners() {
+        if (!this.state.data || !this.state.data.partners) return [];
+        const list = [...this.state.data.partners];
+        const field = this.state.sortField;
+        const asc = this.state.sortAsc;
+
+        list.sort((a, b) => {
+            let va = a[field];
+            let vb = b[field];
+            if (typeof va === "string") {
+                va = va.toLowerCase();
+                vb = (vb || "").toLowerCase();
+                return asc ? va.localeCompare(vb) : vb.localeCompare(va);
+            }
+            va = Number(va) || 0;
+            vb = Number(vb) || 0;
+            return asc ? va - vb : vb - va;
+        });
+        return list;
     }
 
     onUnitChange(ev) {
