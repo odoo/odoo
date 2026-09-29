@@ -41,6 +41,7 @@ actions(Check in/Check out) performed by them.
             'hr_attendance/static/src/**/*.js',
             'hr_attendance/static/src/**/*.xml',
             'hr_attendance/static/src/scss/views/*.scss',
+            'hr_attendance/static/src/scss/views/*.css',
         ],
         'web.assets_unit_tests': [
             'hr_attendance/static/tests/*.test.js',
