@@ -377,12 +377,13 @@ class Many2one(_Relational['IdType']):
 
     def convert_to_read(self, value, record, use_display_name=True) -> IdType | tuple[IdType, str] | typing.Literal[False]:
         if use_display_name and value:
-            # evaluate display_name as superuser, because the visibility of a
-            # many2one field value (id and name) depends on the current record's
-            # access rights, and not the value's access rights.
+            # If access is denied, fall back to a default placeholder
+            # indicating that the related record is not accessible.
             try:
-                # performance: value.sudo() prefetches the same records as value
-                return (value.id, value.sudo().display_name)
+                if value.has_access('read'):
+                    return (value.id, value.sudo().display_name)
+                value.sudo().display_name  # potentially trigger missing error
+                return (value.id, record.env._("Restricted record"))
             except MissingError:
                 # Should not happen, unless the foreign key is missing.
                 return False

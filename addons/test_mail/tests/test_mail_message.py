@@ -257,13 +257,13 @@ class TestMessageValues(MailCommon):
         self.env.flush_all()
         self.env.invalidate_all()
         store_1 = Store().add(message.with_user(self.user_employee), "_store_message_fields")
-        self.assertEqual(store_1._build_result()["mail.message"][0].get("record_name"), "Test1")
+        self.assertEqual(store_1._build_result()["mail.message"][0].get("record_name"), "Restricted record")
 
         record1.write({"name": "Test2"})
         self.env.flush_all()
         self.env.invalidate_all()
         store_2 = Store().add(message.with_user(self.user_employee), "_store_message_fields")
-        self.assertEqual(store_2._build_result()["mail.message"][0].get('record_name'), 'Test2')
+        self.assertEqual(store_2._build_result()["mail.message"][0].get('record_name'), "Restricted record")
 
         # check model not inheriting from mail.thread -> should not crash
         record_nothread = self.env['mail.test.nothread'].create({'name': 'NoThread'})

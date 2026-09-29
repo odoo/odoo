@@ -1065,3 +1065,76 @@ class TestMessageSubModelAccess(MessageAccessCommon):
             msg="Portal cannot read notifications unless they are the recipient or the author"
         ):
             notifications.fetch(['read_date'])
+
+    def test_many2one_convert_to_read(self):
+        test_partner = self.env['res.partner'].create({
+            'name': 'Test Customer',
+        })
+
+        self.record_portal.customer_id = test_partner
+        customer = test_partner.with_user(self.user_portal)
+        with self.assertRaises(AccessError):
+            customer.read(['display_name'])
+        carrier = self.record_portal.with_user(self.user_portal)
+
+        res = carrier.read(['customer_id'])
+        self.assertEqual(res[0]['customer_id'], (customer.id, 'Restricted record'))
+
+        self.record_internal.customer_id = test_partner
+        customer = test_partner.with_user(self.user_employee)
+        customer.read(['display_name'])
+        carrier = self.record_internal.with_user(self.user_employee)
+
+        res = carrier.read(['customer_id'])
+        self.assertEqual(res[0]['customer_id'], (customer.id, 'Test Customer'))
+
+    def test_many2many_convert_to_read(self):
+        test_partner = self.env['res.partner'].create({
+            'name': 'Test Customer',
+        })
+
+        self.record_portal.related_partner_ids = test_partner
+        customer = test_partner.with_user(self.user_portal)
+        with self.assertRaises(AccessError):
+            customer.read(['display_name'])
+        carrier = self.record_portal.with_user(self.user_portal)
+
+        res = carrier.read(['related_partner_ids'])
+        self.assertEqual(res[0]['related_partner_ids'], [])
+
+        self.record_internal.related_partner_ids = test_partner
+        customer = test_partner.with_user(self.user_employee)
+        customer.read(['display_name'])
+        carrier = self.record_internal.with_user(self.user_employee)
+
+        res = carrier.read(['related_partner_ids'])
+        self.assertEqual(res[0]['related_partner_ids'], [customer.id])
+
+    def test_many2one_web_read(self):
+        test_partner = self.env['res.partner'].create({
+            'name': 'Test Customer',
+        })
+
+        self.record_portal.customer_id = test_partner
+        customer = test_partner.with_user(self.user_portal)
+        with self.assertRaises(AccessError):
+            customer.read(['display_name'])
+        carrier = self.record_portal.with_user(self.user_portal)
+
+        read_spec = {
+            'customer_id': {
+                'fields': {
+                    'display_name': {},
+                },
+            },
+        }
+        res = carrier.web_read(read_spec)
+        self.assertEqual(res[0]['customer_id']['display_name'], 'Restricted record')
+
+        self.record_internal.customer_id = test_partner
+        customer = test_partner.with_user(self.user_employee)
+        customer.read(['display_name'])
+        carrier = self.record_internal.with_user(self.user_employee)
+
+        res = carrier.web_read(read_spec)
+        self.assertEqual(res[0]['customer_id']['display_name'], 'Test Customer')
