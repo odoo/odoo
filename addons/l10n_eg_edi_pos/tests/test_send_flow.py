@@ -1,4 +1,5 @@
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from .common import TestL10nEgEdiPosCommon
@@ -118,3 +119,57 @@ class TestL10nEgEdiPosSendFlow(TestL10nEgEdiPosCommon):
         with self._mock_eta(send_response=self._eta_accepts_any_uuid()):
             self._pay(refund)
         self.assertEqual(self.eg_pos_config.sudo().l10n_eg_edi_pos_last_uuid, refund.l10n_eg_edi_pos_uuid)
+
+    def _create_sent_order(self):
+        """An order accepted by ETA as an e-receipt, so it carries a QR."""
+        order = self._create_unpaid_order()
+        with self._mock_eta(send_response=self._eta_accepts_any_uuid()):
+            self._pay(order)
+        self.assertEqual(order.l10n_eg_edi_pos_state, "sent_test")
+        self.assertTrue(order.l10n_eg_edi_pos_qr)
+        return order
+
+    def test_invoice_of_a_sent_receipt_is_signed_and_skips_e_invoicing(self):
+        """The sale is already reported through the receipt, so the invoice is
+        created without going through the ETA e-invoice flow."""
+        order = self._create_sent_order()
+        order.action_pos_order_invoice()
+        pos_invoice = order.account_move
+        self.assertTrue(pos_invoice.l10n_eg_is_signed)
+        regular_invoice = self.init_invoice(
+            "out_invoice",
+            partner=self.eg_individual_customer,
+            products=self.eg_product_untaxed.product_variant_id,
+            post=True,
+        )
+        for mode in ("demo", "preproduction", "production"):
+            with self.subTest(mode=mode):
+                self.company.l10n_eg_edi_api_mode = mode
+                self.assertTrue(regular_invoice._is_l10n_eg_edi_applicable(mode))
+                self.assertFalse(pos_invoice._is_l10n_eg_edi_applicable(mode))
+
+    def test_invoice_of_a_sent_receipt_carries_the_receipt_qr(self):
+        """The QR printed on the receipt is the one printed on the invoice, and
+        it is not gated by the e-invoice submission state."""
+        order = self._create_sent_order()
+        order.action_pos_order_invoice()
+        pos_invoice = order.account_move
+        self.assertEqual(pos_invoice.l10n_eg_qr_code, order.l10n_eg_edi_pos_qr)
+        self.assertEqual(pos_invoice.l10n_eg_edi_submission_state, "to_send")
+        self.assertTrue(pos_invoice._l10n_eg_eta_should_print_qr_code())
+
+    def test_signing_an_invoice_of_a_sent_receipt_is_a_no_op(self):
+        """The "Sign Invoice (ETA)" list action (action_l10n_eg_sign_invoices) must
+        skip an invoice whose sale was already fiscalised as an e-receipt."""
+        order = self._create_sent_order()
+        order.action_pos_order_invoice()
+        pos_invoice = order.account_move
+        pos_invoice.action_post_sign_invoices()
+        self.assertFalse(pos_invoice.l10n_eg_eta_json_doc_file)
+
+    def test_sent_receipts_cannot_be_consolidated_on_one_invoice(self):
+        """Each e-receipt is its own fiscal document, so several of them cannot
+        share one invoice and one QR."""
+        orders = self._create_sent_order() | self._create_sent_order()
+        with self.assertRaises(UserError):
+            orders._generate_pos_order_invoice()
