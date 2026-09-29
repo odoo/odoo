@@ -30,6 +30,7 @@
         'views/hr_applicant_category_views.xml',
         'views/hr_applicant_refuse_reason_views.xml',
         'views/hr_applicant_views.xml',
+        'views/hr_applicant_skill_views.xml',
         'views/hr_talent_pool_views.xml',
         'views/hr_employee_views.xml',
         'views/res_config_settings_views.xml',
@@ -47,6 +48,7 @@
     ],
     'demo': [
         'data/hr_recruitment_demo.xml',
+        'data/hr_applicant_skill_demo.xml',
     ],
     'other_files': [
         'data/scenarios/hr_recruitment_scenario.xml',
