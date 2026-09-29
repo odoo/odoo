@@ -389,6 +389,15 @@ export class Message extends Record {
         return !this.is_transient && !this.isPending;
     }
 
+    /** The poll option labels this message shows: every option, or only the winner once ended. */
+    get pollOptionLabels() {
+        if (this.ended_poll_ids.length) {
+            const winner = this.poll.winning_option_id;
+            return winner ? [winner.option_label] : [];
+        }
+        return this.poll?.option_ids.map((option) => option.option_label) ?? [];
+    }
+
     get resUrl() {
         return url(router.stateToUrl({ model: this.thread.model, resId: this.thread.id }));
     }

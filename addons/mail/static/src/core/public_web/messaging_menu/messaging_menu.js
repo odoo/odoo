@@ -89,18 +89,18 @@ export class MessagingMenu extends Component {
                     pluginFilters: this.state().activePluginFilters,
                     searchTerm: term,
                 }),
-            filter: (term) =>
-                this.filteredMessages().filter((m) => {
-                    const normalizedTerms = normalize(term);
-                    return (
-                        normalize(m.thread?.displayName).includes(normalizedTerms) ||
-                        normalize(m.authorName).includes(normalizedTerms) ||
-                        normalize(htmlToTextContentInline(m.bodyPreview || "")).includes(
-                            normalizedTerms
-                        ) ||
-                        normalize(m.bodyTextContentInline).includes(normalizedTerms)
-                    );
-                }),
+            filter: (term) => {
+                const normalizedTerm = normalize(term);
+                const matches = (text) => normalize(text).includes(normalizedTerm);
+                return this.filteredMessages().filter(
+                    (m) =>
+                        matches(m.thread?.displayName) ||
+                        matches(m.authorName) ||
+                        matches(htmlToTextContentInline(m.bodyPreview || "")) ||
+                        matches(m.bodyTextContentInline) ||
+                        m.pollOptionLabels.some(matches)
+                );
+            },
             deps: () => [this.filteredMessages()],
         });
         this.close = useProps.static("close", types.function().optional());

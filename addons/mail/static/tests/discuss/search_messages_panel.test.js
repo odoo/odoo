@@ -477,3 +477,46 @@ test("Empty search should not trigger rpc", async () => {
         ],
     ]);
 });
+
+test.tags("desktop");
+test("Search message include polls", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const messageIds = pyEnv["mail.message"].create(
+        [0, 1].map(() => ({
+            body: "",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        }))
+    );
+    const optionIds = pyEnv["mail.poll.option"].create([
+        { option_label: "pizza" },
+        { option_label: "burger" },
+    ]);
+    pyEnv["mail.poll"].create({
+        end_message_id: messageIds[1],
+        option_ids: optionIds,
+        poll_question: "what would you like to have?",
+        start_message_id: messageIds[0],
+        winning_option_id: optionIds[0],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Message:count(2)");
+    await contains("button[title='Search Messages']").click();
+    await waitFor(".o-mail-SearchMessageInput .o-mail-SearchInput input");
+    await editInput(document.body, ".o-mail-SearchMessageInput .o-mail-SearchInput input", "pizza");
+    await waitFor(
+        ".o-mail-SearchMessageResult .o-mail-Message:has(.o-mail-Message-searchHighlight:text('pizza')):count(2)"
+    );
+    await editInput(
+        document.body,
+        ".o-mail-SearchMessageInput .o-mail-SearchInput input",
+        "burger"
+    );
+    await waitFor(
+        ".o-mail-SearchMessageResult .o-mail-Message:has(.o-mail-Message-searchHighlight:text('burger'))"
+    );
+    await waitFor(".o-mail-SearchMessageResult .o-mail-Message:count(1)");
+});
