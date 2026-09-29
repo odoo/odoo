@@ -167,3 +167,32 @@ class AuthorizeTest(AuthorizeCommon):
             })
 
         self.assertEqual(call_order, ["tokenize", "void"])
+
+    def test_declined_authorization_keeps_reason(self):
+        """Test that a declined auth-only request keeps the decline reason on the transaction."""
+        self._disable_process_patcher()
+        tx = self._create_transaction("direct")
+        declined_response = {
+            "messages": {
+                "resultCode": "Ok",
+                "message": [{"code": "I00001", "text": "Successful."}],
+            },
+            "transactionResponse": {
+                "responseCode": "2",
+                "transId": "60000000001",
+                "accountType": "Visa",
+                "errors": [{"errorCode": "2", "errorText": "This transaction has been declined."}],
+            },
+        }
+        with patch.object(AuthorizeAPI, "_make_request", return_value=declined_response):
+            response = AuthorizeAPI(self.authorize).authorize(tx, opaque_data={"dataValue": "x"})
+        self.assertEqual(response["x_response_reason_text"], "This transaction has been declined.")
+
+        with patch.object(
+            AuthorizeAPI,
+            "get_transaction_details",
+            return_value={"transaction": {"authAmount": self.amount}},
+        ):
+            tx.with_context(payment_safe_write=True)._process({"response": response})
+        self.assertEqual(tx.state, "cancel")
+        self.assertEqual(tx.state_message, "This transaction has been declined.")
