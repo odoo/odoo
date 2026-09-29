@@ -8,7 +8,8 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     l10n_fr_closing_sequence_id = fields.Many2one('ir.sequence', 'Sequence to use to build sale closings', readonly=True)
-    siret = fields.Char(related='partner_id.siret', string='SIRET', size=14, readonly=False)
+    # Let the complete input reach res.partner.write before applying the SIRET size limit.
+    siret = fields.Char(related='partner_id.siret', string='SIRET', size=None, readonly=False)
     ape = fields.Char(string='APE')
     is_france_country = fields.Boolean(
         compute="_compute_is_france_country",
@@ -43,6 +44,9 @@ class ResCompany(models.Model):
 
     def write(self, vals):
         res = super(ResCompany, self).write(vals)
+        if 'siret' in vals or 'company_registry' in vals:
+            # The related fields may still cache the unformatted input.
+            self.invalidate_recordset(['siret', 'company_registry'])
         #if country changed to fr, create the securisation sequence
         for company in self:
             if company._is_accounting_unalterable():
