@@ -59,7 +59,7 @@ import {
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useComposerActions } from "@mail/core/common/composer_actions";
-import { ActionList } from "@mail/core/common/action_list";
+import { ActionList, CircleInlineAction } from "@mail/core/common/action_list";
 import { closestElement, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { rightPos } from "@html_editor/utils/position";
 import { syntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/backend/syntax_highlighting/syntax_highlighting";
@@ -506,6 +506,10 @@ export class Composer extends Component {
 
     get extended() {
         return this.props.mode === "extended";
+    }
+
+    get actionComponent() {
+        return CircleInlineAction;
     }
 
     get CANCEL_OR_SAVE_EDIT_TEXT() {

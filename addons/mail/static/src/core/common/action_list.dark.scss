@@ -1,5 +1,4 @@
 .o-mail-ActionList {
-    --mail-ActionList-buttonInlineIconOpacity: #{85%};
     --o-mail-ActionList-successNoBgColor: #{lighten($success, 10%)};
     --o-mail-ActionList-dangerNoBgColor: #{lighten($danger, 10%)};
     --o-mail-ActionList-primaryNoBgColor: #{lighten($primary, 10%)};
@@ -14,7 +13,11 @@
         }
     }
 
-    & button.o-inDiscussCall.o-hasBtnBg:not(.o-tag-DANGER):not(.o-tag-SUCCESS):not(.o-tag-PRIMARY) {
+    :where(button.o-inline.o-hasBtnBg) i {
+        opacity: 85%;
+    }
+
+    & button.o-discussCallTheme.o-hasBtnBg:not(.o-tag-DANGER):not(.o-tag-SUCCESS):not(.o-tag-PRIMARY) {
         background-color: var(--gray-200);
         border: 1px solid rgba(white, 0.1);
 

@@ -77,26 +77,28 @@ $o-bubble-colors: (
 
     padding: $dropdown-padding-y $dropdown-padding-x;
 
-    &.o-simulateDarkTheme {
-        background-color: $gray-800;
-        border-color: $gray-700 !important;
+    @if $o-webclient-color-scheme != dark {
+        &.o-discussCallTheme {
+            background-color: $gray-800;
+            border-color: $gray-700 !important;
 
-        * {
-            color: white;
-        }
-
-        .btn, .o-dropdown-item {
-            --gradient: transparent;
-        }
-
-        .form-switch .form-check-input {
-            &:checked {
-                --#{$prefix}form-switch-bg: #{escape-svg($form-switch-bg-image-dark)};
+            * {
+                color: white;
             }
-        }
 
-        select option {
-            background-color: $gray-700;
+            .btn, .o-dropdown-item {
+                --gradient: transparent;
+            }
+
+            .form-switch .form-check-input {
+                &:checked {
+                    --#{$prefix}form-switch-bg: #{escape-svg($form-switch-bg-image-dark)};
+                }
+            }
+
+            select option {
+                background-color: $gray-700;
+            }
         }
     }
 

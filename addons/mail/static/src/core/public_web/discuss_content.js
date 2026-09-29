@@ -73,6 +73,9 @@ export class DiscussContent extends Component {
         }
     }
 
+    /** @type {import("@mail/core/common/action_list").GetActionComponent} */
+    getActionComponent() {}
+
     get thread() {
         return this.props.thread || this.store.discuss.thread;
     }

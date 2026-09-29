@@ -102,7 +102,6 @@ function toArray(val) {
  * @property {string|(params: ActionParams_T) => string} [hotkey]
  * @property {string|(params: ActionParams_T) => string} [icon]
  * @property {string|(params: ActionParams_T) => string} [iconClass]
- * @property {boolean|TranslatedString|((params: ActionParams_T) => boolean|TranslatedString)} [inlineName=false]
  * @property {boolean|(params: ActionParams_T) => boolean} [isActive]
  * @property {TranslatedString|((params: ActionParams_T) => TranslatedString)} [name]
  * @property {string|(params: ActionParams_T) => string} [nameClass]
@@ -559,19 +558,6 @@ export class Action {
         return typeof this.definition.iconClass === "function"
             ? this.definition.iconClass.call(this, this.params)
             : this.definition.iconClass;
-    }
-
-    /** @param {Action} action @returns {string|undefined} */
-    _inlineName(action) {}
-    /** If set, when action is used in inline, shows action name in addition to icon. */
-    get inlineName() {
-        return (
-            this._inlineName(this.params) ??
-            (typeof this.definition.inlineName === "function"
-                ? this.definition.inlineName.call(this, this.params)
-                : this.definition.inlineName) ??
-            false
-        );
     }
 
     /** @param {Action} action @returns {boolean|undefined} */

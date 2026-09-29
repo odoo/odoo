@@ -35,14 +35,21 @@
             }
         }
 
-        &.o-simulateDarkTheme {
-            --gradient: transparent;
+        // The call theme looks dark, which the dark theme already provides.
+        @if $o-webclient-color-scheme != dark {
+            &.o-discussCallTheme {
+                --gradient: transparent;
+                color: #FFF !important;
 
-            &.o-hasBtnBg:hover {
-                filter: brightness(1.3);
-            }
-            &.o-dropdown-item:hover {
-                backdrop-filter: brightness(1.3);
+                &:not(.o-hasBtnBg) {
+                    background-color: transparent !important;
+                }
+                &.o-hasBtnBg:hover {
+                    filter: brightness(1.3);
+                }
+                &.o-dropdown-item:hover {
+                    backdrop-filter: brightness(1.3);
+                }
             }
         }
 
@@ -58,10 +65,6 @@
                     color: var(--o-mail-ActionList-Button-color--hover);
                     opacity: var(--o-mail-ActionList-Button-opacity--hover);
                 }
-            }
-
-            &.o-odooControlPanelSwitchStyle i {
-                opacity: var(--mail-ActionList-buttonInlineIconOpacity);
             }
 
             i.o-xsmaller {
@@ -160,14 +163,16 @@
         }
     }
 
-    & button.o-simulateDarkTheme.o-hasBtnBg:not(.o-tag-DANGER):not(.o-tag-SUCCESS):not(.o-tag-PRIMARY) {
-        background-color: #{$gray-800};
-        border: 1px solid rgba(white, 0.1);
+    @if $o-webclient-color-scheme != dark {
+        & button.o-discussCallTheme.o-hasBtnBg:not(.o-tag-DANGER):not(.o-tag-SUCCESS):not(.o-tag-PRIMARY) {
+            background-color: #{$gray-800};
+            border: 1px solid rgba(white, 0.1);
 
-        &.active {
-            // Same colors than dark theme since dark theme is simulated for call view.
-            background-color: #17373b !important;
-            border-color: #03f9e3 !important;
+            &.active {
+                // Same colors as the dark theme.
+                background-color: #17373b !important;
+                border-color: #03f9e3 !important;
+            }
         }
     }
 

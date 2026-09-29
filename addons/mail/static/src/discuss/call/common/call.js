@@ -164,6 +164,7 @@ export class Call extends Component {
         useHotkey("shift+m", ({ target }) => this.rtc.toggleMicrophone({ rootRef: () => target }));
         useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand));
         useSubEnv({
+            inDiscussCallTheme: true,
             inDiscussCallView: {
                 dragInsetBy: (surfaceKey, dX, dY) => this.dragInsetBy(surfaceKey, dX, dY),
                 dropInset: (surfaceKey) => this.dropInset(surfaceKey),

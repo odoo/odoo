@@ -11,7 +11,7 @@ export class PipBanner extends Component {
         super.setup();
         this.props = useProps({ compact: types.boolean().optional(false) });
         this.rtc = useService("discuss.rtc");
-        useSubEnv({ isDiscussPipBanner: true });
+        useSubEnv({ inDiscussCallTheme: true });
     }
 
     onClickClose() {

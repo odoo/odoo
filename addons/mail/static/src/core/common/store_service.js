@@ -183,22 +183,10 @@ export class Store extends BaseStore {
     /** @type {DebugModePlugin} */
     debugMode;
 
-    shouldSimulateDarkTheme(ctx) {
-        return (
-            (ctx?.env?.inDiscussCallView ||
-                ctx?.env?.inCallInvitation ||
-                ctx?.env.isDiscussPipBanner ||
-                ctx?.env?.inWelcomePage) &&
-            this.isOdooWhiteTheme &&
-            !ctx?.env.inDiscussActionPanel
-        );
-    }
-
     discussDropdownMenuClass(ctx) {
-        const simulateDarkTheme = this.shouldSimulateDarkTheme(ctx);
         return attClassObjectToString({
             "o-discuss-dropdownMenu d-flex flex-column": true,
-            "o-simulateDarkTheme": simulateDarkTheme,
+            "o-discussCallTheme": Boolean(ctx?.env?.inDiscussCallTheme),
         });
     }
 

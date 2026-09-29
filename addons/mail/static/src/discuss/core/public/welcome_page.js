@@ -19,7 +19,7 @@ export class WelcomePage extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
-        useSubEnv({ inWelcomePage: true });
+        useSubEnv({ inDiscussCallTheme: true, inWelcomePage: true });
         this.state = proxy({
             userName: this.store.discuss.thread.getPersonaName(this.store.self) ?? "",
             activateCamera: 0,

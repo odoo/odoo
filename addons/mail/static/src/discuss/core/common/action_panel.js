@@ -27,7 +27,7 @@ export class ActionPanel extends Component {
         );
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        useSubEnv({ inDiscussActionPanel: true });
+        useSubEnv({ inDiscussActionPanel: true, inDiscussCallTheme: false });
         useBackButton(
             () => this.props.close(),
             () => this.props.close

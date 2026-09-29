@@ -42,6 +42,7 @@ export class Meeting extends Component {
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
         useSubEnv({
+            inDiscussCallTheme: true,
             inDiscussCallView: true,
             inMeetingView: {
                 openChat: () =>
