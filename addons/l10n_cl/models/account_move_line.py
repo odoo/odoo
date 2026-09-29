@@ -53,7 +53,7 @@ class AccountMoveLine(models.Model):
         # 3. local invoice in different currency tax not included in price
         # 4. local invoice in different currency tax include in price -> this is the most problematic case because
         # 5. foreign invoice in different currency (without tax)
-        if self.display_type != 'product':
+        if self.display_type not in ('product', 'downpayment'):
             return {
                 'price_subtotal': 0,
             }

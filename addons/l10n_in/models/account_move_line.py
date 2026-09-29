@@ -292,12 +292,12 @@ class AccountMoveLine(models.Model):
         indian_sale_moves_lines = self.filtered(
             lambda l: l.move_id.country_code == 'IN'
             and l.move_id.is_sale_document(include_receipts=True)
-            and l.display_type in ('product', 'tax')
+            and l.display_type in ('product', 'downpayment', 'tax')
         )
         indian_moves_purchase_lines = self.filtered(
             lambda l: l.move_id.country_code == 'IN'
             and l.move_id.is_purchase_document(include_receipts=True)
-            and l.display_type in ('product', 'tax')
+            and l.display_type in ('product', 'downpayment', 'tax')
         )
         # No Indian sale or purchase lines to process
         if not indian_sale_moves_lines and not indian_moves_purchase_lines:

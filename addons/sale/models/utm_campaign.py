@@ -73,7 +73,7 @@ class UtmCampaign(models.Model):
                        AND move.campaign_id IN %(campaign_ids)s
                        AND move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
                        AND line.account_id IS NOT NULL
-                       AND line.display_type = 'product'
+                       AND line.display_type IN ('product', 'downpayment')
                   GROUP BY move.campaign_id
                     """,  # noqa: E501
                     campaign_ids=tuple(self.ids),

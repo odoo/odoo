@@ -26,7 +26,7 @@ class AccountMoveLine(models.Model):
         error_lines = {}
         for line in self:
             error_codes = []
-            if line.display_type != 'product' or line._l10n_in_is_global_discount():
+            if line.display_type not in ('product', 'downpayment') or line._l10n_in_is_global_discount():
                 continue
             if line._l10n_in_check_invalid_hsn_code():
                 error_codes.append('invalid_hsn')

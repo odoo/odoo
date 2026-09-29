@@ -33,7 +33,7 @@ class PosSession(models.Model):
             return commands
 
         product_lines = invoice_to_reverse.line_ids.filtered(
-            lambda line: line.display_type == 'product',
+            lambda line: line.display_type in ('product', 'downpayment'),
         )
 
         for idx, line in enumerate(product_lines):

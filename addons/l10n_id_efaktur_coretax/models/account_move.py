@@ -228,7 +228,7 @@ class AccountMove(models.Model):
             stlg_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("l10n_id_tax_group_stlg", raise_if_not_found=False)
             default_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("default_tax_group", raise_if_not_found=False)
             vat_collector_group = self.env['account.chart.template'].with_company(move.company_id.id).ref("l10n_id_tax_group_vat_collector", raise_if_not_found=False)
-            product_lines = move.line_ids.filtered(lambda line: line.display_type == 'product')
+            product_lines = move.line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment'))
             all_taxes = product_lines.mapped('tax_ids')
             tax_groups = set(all_taxes.mapped('tax_group_id'))
             ppn_groups = {non_luxury_group, luxury_group, zero_group, exempt_group, default_group, vat_collector_group}
@@ -423,7 +423,7 @@ class AccountMove(models.Model):
         base_lines, _tax_lines = self._get_rounded_base_and_tax_lines()
         base_lines = [
             base_line for base_line in base_lines
-            if base_line['tax_ids'] and base_line['record'].display_type == 'product'
+            if base_line['tax_ids'] and base_line['record'].display_type in ('product', 'downpayment')
         ]
         # Coretax rejects any negative amount, so every negative line is treated as a global
         # discount, not only the ones coming from the Global Discount feature.

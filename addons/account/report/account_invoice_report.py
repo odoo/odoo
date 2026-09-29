@@ -86,7 +86,7 @@ class AccountInvoiceReport(models.Model):
         query = self.env['account.move.line'].sudo().with_context(date_to=today)._search([
             ('move_type', 'in', self._fields['move_type'].get_values(self.env)),
             ('account_id', '!=', False),
-            ('display_type', '=', 'product'),
+            ('display_type', 'in', ('product', 'downpayment')),
         ])
         return query.subselect(*self._select_list(query.table))
 

@@ -416,7 +416,7 @@ class AccountMove(models.Model):
                 'records': self.filtered(
                     lambda m: any(
                         len(l.tax_ids.filtered(lambda t: t.l10n_hu_tax_type)) != 1
-                        for l in m.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+                        for l in m.invoice_line_ids.filtered(lambda l: l.display_type in ('product', 'downpayment'))
                     )
                 ),
                 'message': _('Please set exactly one VAT tax on each invoice line!'),
@@ -877,7 +877,7 @@ class AccountMove(models.Model):
             lambda m: m.l10n_hu_invoice_chain_index and m.l10n_hu_invoice_chain_index < self.l10n_hu_invoice_chain_index
         )
         first_line_number = sum(
-            len(move.line_ids.filtered(lambda l: l.display_type == 'product'))
+            len(move.line_ids.filtered(lambda l: l.display_type in ('product', 'downpayment')))
             for move in prev_chain_invoices
         ) + 1
 
@@ -898,7 +898,7 @@ class AccountMove(models.Model):
                 'lineDescription': (line.label or '').replace('\n', ' '),
             }
 
-            if 'is_downpayment' in line and line.is_downpayment:
+            if line.display_type == 'downpayment':
                 # Advance and final invoices.
                 line_values['advanceIndicator'] = True
 
@@ -1267,7 +1267,6 @@ class AccountMove(models.Model):
         lines_vals = []
         lines_tax_values = []
         lines_product_values = []
-        has_downpayment_field = 'is_downpayment' in self.env['account.move.line']._fields
         tax_type_selection = dict(self.env['account.tax']._fields['l10n_hu_tax_type']._description_selection(self.env))
         for line in invoice_xml.iterfind('{*}invoiceLines/{*}line'):
             quantity = float(line.findtext('{*}quantity') or 1)
@@ -1300,8 +1299,8 @@ class AccountMove(models.Model):
                 'price_unit': abs(price_unit) if move_type == 'in_refund' else price_unit
             }
 
-            if has_downpayment_field:
-                line_vals['is_downpayment'] = (line.findtext('{*}advanceData/{*}advanceIndicator') == 'true')
+            if line.findtext('{*}advanceData/{*}advanceIndicator') == 'true':
+                line_vals['display_type'] = 'downpayment'
 
             product_values = {'name': line_vals['name']}
             if (product_codes := line.find('{*}productCodes')) is not None:

@@ -279,7 +279,7 @@ class AccountMove(models.Model):
 
     def _l10n_es_tbai_get_invoice_values(self, cancel=False):
         self.ensure_one()
-        base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product')
+        base_amls = self.line_ids.filtered(lambda x: x.display_type in ('product', 'downpayment'))
         base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
         for base_line in base_lines:
             base_line['name'] = base_line['record'].name
@@ -339,7 +339,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         results = defaultdict(lambda: {'base_amount': 0.0, 'tax_amount': 0.0})
         amount_total = 0.0
-        for line in self.line_ids.filtered(lambda l: l.display_type in ('product', 'tax')):
+        for line in self.line_ids.filtered(lambda l: l.display_type in ('product', 'downpayment', 'tax')):
             if any(t.l10n_es_type == 'ignore' for t in line.tax_ids) or line.tax_line_id.l10n_es_type == 'ignore':
                 continue
             if line.tax_line_id.l10n_es_type != 'retencion':

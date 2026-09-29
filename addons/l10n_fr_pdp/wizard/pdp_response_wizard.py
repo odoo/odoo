@@ -139,7 +139,7 @@ class PdpResponseWizard(models.TransientModel):
         move.ensure_one()
         company = move.company_id
 
-        base_amls = move.line_ids.filtered(lambda x: x.display_type == 'product')
+        base_amls = move.line_ids.filtered(lambda x: x.display_type in ('product', 'downpayment'))
         base_lines = [move._prepare_product_base_line_for_taxes_computation(aml) for aml in base_amls]
         epd_amls = move.line_ids.filtered(lambda line: line.display_type == 'epd')
         base_lines += [move._prepare_epd_base_line_for_taxes_computation(line) for line in epd_amls]

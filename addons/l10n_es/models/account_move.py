@@ -87,7 +87,7 @@ class AccountMove(models.Model):
             if move.move_type in ('out_invoice', 'out_refund') and is_eu_partner:
                 has_identification = move.commercial_partner_id._l10n_es_has_identification()
                 total_amount = sum(move.invoice_line_ids.filtered(
-                    lambda line: line.display_type == 'product').mapped('price_total'))
+                    lambda line: line.display_type in ('product', 'downpayment')).mapped('price_total'))
                 under_limit = currency.compare_amounts(
                     total_amount, move.company_id.l10n_es_simplified_invoice_limit) <= 0
                 explicit_simplified = explicit_simplified or (not has_identification and under_limit)
@@ -149,7 +149,7 @@ class AccountMove(models.Model):
             if move.state == 'posted' and move.l10n_es_regime_code:
                 continue
             default_code = move.company_id._l10n_es_special_vat_regime_codes().get(move.company_id.l10n_es_special_vat_regime, '01')
-            lines = move.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+            lines = move.invoice_line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment'))
 
             regime_codes = set()
             for line in lines:

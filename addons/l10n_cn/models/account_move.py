@@ -76,7 +76,7 @@ class AccountMove(models.Model):
         must specify balance deduction info unless full-amount taxation (method '01') applies.
         """
         for move in self:
-            for line in move.invoice_line_ids.filtered(lambda line: line.display_type == 'product'):
+            for line in move.invoice_line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment')):
                 tax = line.tax_ids
                 if len(tax) != 1 or tax.amount_type != 'percent':
                     raise ValidationError(self.env._(

@@ -98,7 +98,7 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         product_lines = self.invoice_line_ids.filtered(
-            lambda line: line.display_type == "product",
+            lambda line: line.display_type in ('product', 'downpayment'),
         )
         if not product_lines:
             return False

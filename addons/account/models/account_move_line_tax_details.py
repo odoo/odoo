@@ -70,7 +70,7 @@ class AccountMoveLine(models.Model):
                 %(tax_line_join)s account_tax tax ON tax.id = rel.account_tax_id
                 LEFT JOIN account_tax_filiation_rel tax_filiation ON tax_filiation.parent_tax = tax.id
                 LEFT JOIN account_tax child_tax ON child_tax.id = tax_filiation.child_tax
-                WHERE rel.account_tax_id IS NOT NULL OR (aml.display_type = 'product' AND aml.tax_repartition_line_id IS NULL)
+                WHERE rel.account_tax_id IS NOT NULL OR (aml.display_type IN ('product', 'downpayment') AND aml.tax_repartition_line_id IS NULL)
                 GROUP BY aml.id
             ),
             tax_lines AS (

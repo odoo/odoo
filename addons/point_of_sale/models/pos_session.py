@@ -1156,7 +1156,7 @@ class PosSession(models.Model):
 
     def _prepare_account_move_line_commands_for_reversal(self, order, invoice_to_reverse):
         product_lines = invoice_to_reverse.line_ids.filtered(
-            lambda line: line.display_type == 'product',
+            lambda line: line.display_type in ('product', 'downpayment'),
         )
         reverse_move_lines = []
         for line in product_lines:

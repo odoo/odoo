@@ -12,7 +12,7 @@ class AccountMoveLine(models.Model):
             if (
                 line.move_id.country_code == 'MX'
                 and line.move_id.move_type == 'out_refund'
-                and line.display_type == 'product'
+                and line.display_type in ('product', 'downpayment')
                 and line.company_id.l10n_mx_income_return_discount_account_id
             ):
                 line.account_id = line.company_id.l10n_mx_income_return_discount_account_id

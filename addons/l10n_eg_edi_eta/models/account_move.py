@@ -395,7 +395,7 @@ class AccountMove(models.Model):
         from_currency = self.currency_id
         to_currency = self.company_id.currency_id
         if from_currency != to_currency and self.invoice_line_ids:
-            first_product_line = self.invoice_line_ids.filtered(lambda line: line.display_type == "product")[:1]
+            first_product_line = self.invoice_line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment'))[:1]
             amount_currency = first_product_line.amount_currency
             if not float_is_zero(amount_currency, precision_rounding=from_currency.rounding):
                 # The `balance` on an invoice line is a rounded value, calculated using the invoice_currency_rate.
@@ -457,7 +457,7 @@ class AccountMove(models.Model):
 
         self.ensure_one()
         AccountTax = self.env['account.tax']
-        base_amls = self.line_ids.filtered(lambda line: line.display_type == 'product')
+        base_amls = self.line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment'))
         base_lines = [self._prepare_product_base_line_for_taxes_computation(aml) for aml in base_amls]
         tax_amls = self.line_ids.filtered('tax_repartition_line_id')
         tax_lines = [self._prepare_tax_line_for_taxes_computation(aml) for aml in tax_amls]

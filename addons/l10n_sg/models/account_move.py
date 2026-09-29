@@ -36,7 +36,7 @@ class AccountMove(models.Model):
                 continue
 
             srca_s_lines = move.invoice_line_ids.filtered(
-                lambda l: l.display_type == 'product' and any(
+                lambda l: l.display_type in ('product', 'downpayment') and any(
                     t.ubl_cii_tax_category_code == 'SRCA-S' for t in l.tax_ids
                 )
             )

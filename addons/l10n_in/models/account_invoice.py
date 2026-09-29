@@ -217,7 +217,7 @@ class AccountMove(models.Model):
     )
     def _compute_l10n_in_warning(self):
         indian_invoice = self.filtered(lambda m: m.country_code == 'IN' and m.move_type != 'entry')
-        line_filter_func = lambda line: line.display_type == 'product' and line.tax_ids and line._origin
+        line_filter_func = lambda line: line.display_type in ('product', 'downpayment') and line.tax_ids and line._origin
         _xmlid_to_res_id = self.env['ir.model.data']._xmlid_to_res_id
         for move in indian_invoice:
             warnings = {}
@@ -225,7 +225,7 @@ class AccountMove(models.Model):
             action_name = _("Journal Item(s)")
             action_text = _("View Journal Item(s)")
             invalid_tax_lines = move.invoice_line_ids.filtered(
-                lambda line: line.display_type == 'product'
+                lambda line: line.display_type in ('product', 'downpayment')
                 and any(tax.l10n_in_tax_type == 'tcs' for tax in line.tax_ids)
             )
             if company.l10n_in_tcs_feature and not move.commercial_partner_id.l10n_in_pan_entity_id and invalid_tax_lines:
