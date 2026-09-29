@@ -21,3 +21,14 @@ class TestFiscalPosition(AccountTestInvoicingCommon):
 
         self.company.state_id = self.env.ref('base.state_ca_qc')
         self.assertEqual(self.company.domestic_fiscal_position_id, ChartTemplate.ref('fiscal_position_template_qc'))
+
+    def test_branch_state_change(self):
+        branch = self.env['res.company'].create({
+            'name': 'Branch',
+            'parent_id': self.company.id,
+        })
+        on_fp = self.env['account.chart.template'].with_company(self.company).ref('fiscal_position_template_on')
+        on_fp_sequence = on_fp.sequence
+
+        branch.state_id = self.env.ref('base.state_ca_on')
+        self.assertEqual(on_fp.sequence, on_fp_sequence)
