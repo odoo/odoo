@@ -398,7 +398,7 @@ class HrVersion(models.Model):
         # Convert date_start/date_stop to date/duration
         # Split work entries over 2 days due to timezone conversion
         # Regroup work entries of the same type
-        mapped_periods = defaultdict(lambda: defaultdict(lambda: self.env['hr.employee']))
+        mapped_periods = defaultdict(lambda: defaultdict(set))
         cached_periods = defaultdict(float)
         tz_by_version = {}
 
@@ -473,12 +473,13 @@ class HrVersion(models.Model):
                 vals['duration'] = 0.0
                 continue
             employee = version.employee_id
-            mapped_periods[date_start, date_stop][calendar] |= employee
+            mapped_periods[date_start, date_stop][calendar].add(employee.id)
 
         # {(date_start, date_stop): {calendar: {'hours': foo}}}
         mapped_version_data = defaultdict(lambda: defaultdict(lambda: {'hours': 0.0}))
         for (date_start, date_stop), employees_by_calendar in mapped_periods.items():
-            for calendar, employees in employees_by_calendar.items():
+            for calendar, employee_ids in employees_by_calendar.items():
+                employees = self.env['hr.employee'].browse(employee_ids)
                 mapped_version_data[date_start, date_stop][calendar] = employees._get_work_days_data_batch(
                     date_start, date_stop, compute_leaves=False, calendar=calendar)
 
