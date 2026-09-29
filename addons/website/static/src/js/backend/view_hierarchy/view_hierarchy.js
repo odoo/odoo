@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { HierarchyNavbar } from "./hierarchy_navbar";
 import { Layout } from "@web/search/layout";
 import { registry } from "@web/core/registry";
@@ -28,14 +27,14 @@ export class ViewHierarchy extends Component {
             this.linkViewsToParent();
         });
 
-        useLayoutEffect(
-            (searchFoundElem) => {
-                if (searchFoundElem) {
-                    searchFoundElem.scrollIntoView({ behavior: "smooth", block: "center" });
-                }
-            },
-            () => [document.querySelector(".o_search_found")]
-        );
+        // useLayoutEffect(
+        //     (searchFoundElem) => {
+        //         if (searchFoundElem) {
+        //             searchFoundElem.scrollIntoView({ behavior: "smooth", block: "center" });
+        //         }
+        //     },
+        //     () => [document.querySelector(".o_search_found")]
+        // );
     }
 
     /**
