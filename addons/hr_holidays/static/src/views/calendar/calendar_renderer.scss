@@ -10,7 +10,7 @@
             }
         }
 
-        > .fc-view-container > .fc-dayGridYear-view .hr_mandatory_day:not(.fc-day-disabled):not(.fc-day-today) .fc-daygrid-day-top:not(:hover),
+        .fc-multiMonthYear-view .hr_mandatory_day:not(.fc-day-disabled):not(.fc-day-today) .fc-daygrid-day-top:not(:hover),
         > div > .fc-dayGridMonth-view .hr_mandatory_day:not(.fc-day-disabled):not(.fc-day-today) {
             .fc-daygrid-day-number {
                 color: var(--mandatory-day-color) !important;
@@ -21,7 +21,7 @@
             border-radius: var(--border-radius-pill);
         }
 
-        .fc-dayGridMonth-view .fc-day.fc-day-today[class*="hr_mandatory_day_"] {
+        :is(.fc-dayGridMonth-view, .fc-multiMonthYear-view) .fc-day.fc-day-today[class*="hr_mandatory_day_"] {
             --o-cw-bg: var(--mandatory-day-color);
         }
 

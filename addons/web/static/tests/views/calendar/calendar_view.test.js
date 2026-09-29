@@ -4737,8 +4737,8 @@ test(`correctly display year view`, async () => {
     await toggleFilter("attendee_ids", 1);
     await toggleFilter("attendee_ids", 2);
 
-    expect(`.fc-month`).toHaveCount(12);
-    expect(queryAllTexts`.fc-month .fc-header-toolbar`).toEqual([
+    expect(`.fc-multimonth-month`).toHaveCount(12);
+    expect(queryAllTexts`.fc-multimonth-title`).toEqual([
         "January 2016",
         "February 2016",
         "March 2016",
@@ -4953,7 +4953,7 @@ test(`select events and discard create`, async () => {
         type: "calendar",
         arch: `<calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="is_all_day" mode="year"/>`,
     });
-    expect(`.o_calendar_current .fc-dayGridMonth-view`).toHaveCount(12);
+    expect(`.o_calendar_current .fc-multimonth-month`).toHaveCount(12);
 
     await selectDateRange("2016-11-13", "2016-11-19");
     expect(`.o-calendar-quick-create`).toHaveCount(1);
@@ -5923,17 +5923,19 @@ test("calendar (year): tap on date switch to day scale", async () => {
     expandCalendarView();
 
     // Should display year view
-    expect(".o_calendar_current .fc-dayGridYear-view").toHaveCount(1);
-    expect(".o_calendar_current .fc-month-container").toHaveCount(12);
+    expect(".o_calendar_current .fc-multiMonthYear-view").toHaveCount(1);
+    expect(".o_calendar_current .fc-multimonth-month").toHaveCount(12);
 
-    // Tap on a date
-    await click(".o_calendar_current .fc-daygrid-day[data-date='2016-02-05']");
+    // Tap on a date (the year view is scrolled to the current month)
+    const cell = queryFirst(".o_calendar_current .fc-daygrid-day[data-date='2016-02-05']");
+    cell.scrollIntoView({ block: "center" });
+    await click(cell);
     await animationFrame(); // switch renderer
     await animationFrame(); // await breadcrumb update
     expect(".o_calendar_container .o_calendar_header h5").toHaveText("5 February 2016");
 
     // Should display day view
-    expect(".o_calendar_current .fc-dayGridYear-view").toHaveCount(0);
+    expect(".o_calendar_current .fc-multiMonthYear-view").toHaveCount(0);
     expect(".o_calendar_current .fc-timeGridDay-view").toHaveCount(1);
     expect(queryFirst(".o_calendar_current .fc-col-header-cell[data-date]").dataset.date).toBe(
         "2016-02-05"

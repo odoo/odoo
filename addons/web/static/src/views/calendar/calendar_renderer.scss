@@ -494,7 +494,7 @@
 
         /* ====== Both Week and Month agenda */
 
-        .fc-timeGridWeek-view, .fc-dayGridMonth-view {
+        .fc-timeGridWeek-view, .fc-dayGridMonth-view, .fc-multiMonthYear-view {
             .fc-col-header-cell .fc-col-header-cell-cushion {
                 text-transform: uppercase;
                 font-size: var(--o-font-size-base-smaller);
@@ -503,7 +503,7 @@
 
         /* ====== Both Month and Months in Year agenda */
 
-        .fc-dayGridMonth-view {
+        .fc-dayGridMonth-view, .fc-multiMonthYear-view {
             .o-fc-week-header {
                 color: transparent;
             }
@@ -587,116 +587,123 @@
         }
 
         /* ====== Year only */
-        .fc-dayGridYear-view {
+        .fc-multiMonthYear-view {
             --fc-neutral-bg-color: none;
-            flex-direction: row;
-            .fc-view,
+            --fc-year-row-height: 2rem;
+            --fc-year-header-height: calc(var(--o-font-size-base-smaller) * var(--body-line-height));
+            border: none;
+
             .fc-col-header-row,
-            .fc-col-header-cell,
-            .fc-daygrid-row,
-            .fc-daygrid-day {
+            .fc-daygrid-row {
                 border: none;
             }
 
-            &.fc-readonly-year-view {
-                .fc-daygrid-day-top:not(.fc-has-event) {
-                    &, a {
-                        cursor: default !important;
+            /* FullCalendar sizes the multi-day fills (events, selection) with 1px borders between */
+            /* the days */
+            .fc-col-header-cell,
+            .fc-daygrid-day {
+                border-color: transparent;
+            }
+
+            .fc-daygrid-row .fc-day {
+                &.fc-day-today {
+                    padding-top: 0;
+                }
+                .fc-daygrid-day-top {
+                    &:hover > .fc-daygrid-day-number {
+                        $-bg: mix($o-view-background-color, $o-action, 75%);
+
+                        --o-cw-color: #{color-contrast($-bg)};
+                        --o-cw-bg: #{$-bg};
+                    }
+
+                    .fc-daygrid-day-number:before {
+                        height: 120%;
                     }
                 }
             }
 
-            &:not(.fc-readonly-year-view) {
-                .fc-daygrid-row .fc-day {
-                    &.fc-day-today {
-                        padding-top: 0;
-                    }
-                    .fc-daygrid-day-top {
-                        &:hover > .fc-daygrid-day-number {
-                            $-bg: mix($o-view-background-color, $o-action, 75%);
+            /* Keep the months height independent from the other months on the same line */
+            [role="listitem"] {
+                align-self: flex-start;
+            }
 
-                            --o-cw-color: #{color-contrast($-bg)};
-                            --o-cw-bg: #{$-bg};
-                        }
+            .fc-multimonth-month {
+                padding: var(--o-bs-spacer-3) var(--o-bs-spacer-2);
 
-                        .fc-daygrid-day-number:before {
-                            height: 120%;
-                        }
-                    }
+                @media screen and (min-width: 768px), print and (min-width: 188mm) {
+                    max-width: 21rem;
+                    margin-inline: auto;
                 }
             }
 
-            > .fc-month-container {
-                @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
-                    width: 100%;
+            /* Only keep the day number in the cells instead of stretching the rows over the */
+            /* aspect ratio FullCalendar forces (inline style and `!important` fill class) */
+            .fc-multimonth-daygrid-table {
+                aspect-ratio: auto !important;
+
+                > [role="rowgroup"] {
+                    position: static !important;
+                }
+            }
+
+            .fc-multimonth-title {
+                margin-bottom: 4px;
+                font-size: var(--o-bs-font-size-base);
+                cursor: default;
+            }
+
+            .fc-col-header-cell {
+                cursor: default;
+                font-size: var(--o-font-size-base-smaller);
+            }
+
+            .fc-col-header-cell-cushion {
+                line-height: var(--fc-year-header-height);
+            }
+
+            /* FullCalendar keeps the title and the day headers of a single column month sticky until */
+            /* its last week (inline margins), guessing the week height from its aspect ratio */
+            .fc-multimonth-singlecol {
+                --fc-year-sticky-offset: calc(var(--fc-year-row-height) + var(--fc-year-header-height));
+
+                .fc-multimonth-header, .fc-multimonth-daygrid-header {
+                    background-color: var(--o-view-background-color);
                 }
 
-                > .fc-month {
-                    width: 21rem;
-                    margin: auto;
+                .fc-multimonth-header {
+                    margin-bottom: var(--fc-year-sticky-offset) !important;
+                }
 
-                    /* On mobile year view, make months take the full screen width. */
-                    /* Using "vw" instead of "%" to keep each month weekday columns aligned. */
-                    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
-                        width: calc(100vw - var(--o-bs-spacer-5));
-                    }
+                .fc-multimonth-daygrid {
+                    margin-top: calc(-1 * var(--fc-year-sticky-offset)) !important;
+                }
 
-                    > .fc-toolbar.fc-header-toolbar {
-                        margin-bottom: 4px;
-                        cursor: default;
-                        justify-content: start;
+                .fc-multimonth-daygrid-header {
+                    margin-bottom: var(--fc-year-row-height) !important;
+                }
 
-                        .fc-toolbar-title {
-                            font-size: var(--o-bs-font-size-base);
-                        }
-                    }
+                .fc-multimonth-daygrid-table {
+                    margin-top: calc(-1 * var(--fc-year-row-height)) !important;
+                }
+            }
 
-                    .fc-widget-header {
-                        position: static;
-                        cursor: default;
-                    }
+            .fc-daygrid-row {
+                .fc-daygrid-day-top {
+                    display: flex;
+                    place-content: center;
+                    min-height: var(--fc-year-row-height);
+                    line-height: 1;
+                    cursor: pointer;
+                }
 
-                    .fc-dayGridMonth-view {
-                        border-right: none;
+                .o-fc-week {
+                    align-self: center;
+                    cursor: default;
+                }
 
-                        .fc-has-event {
-                            background-color: #b4dff5;
-                        }
-
-                        .fc-week-number {
-                            cursor: default;
-                            opacity: .5;
-                        }
-
-                        .fc-day-header {
-                            font-size: var(--o-font-size-base-smaller);
-                        }
-                    }
-
-                    .fc-daygrid-row {
-                        .fc-daygrid-day-top {
-                            display: flex;
-                            place-content: center;
-                            min-height: 2rem;
-                            line-height: 1;
-                        }
-
-                        .o-fc-week {
-                            align-self: center;
-                        }
-
-                        .fc-daygrid-day-events {
-                            display: none;
-                        }
-                    }
-
-                    .fc-disabled-day {
-                        background-color: unset;
-                    }
-
-                    .fc-daygrid-day-top {
-                        cursor: pointer;
-                    }
+                .fc-daygrid-day-events {
+                    display: none;
                 }
             }
         }
