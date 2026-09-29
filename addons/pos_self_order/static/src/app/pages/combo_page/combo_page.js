@@ -163,14 +163,28 @@ export class ComboPage extends Component {
             this.selfOrder.editedLine.delete();
         }
 
-        this.selfOrder.addToCart(
-            this.props.product,
-            this.state.qty,
-            "",
-            {},
-            {},
-            this.state.selectedCombos
+        const implicitCombos = this.props.product.combo_ids
+            .filter(
+                (c) =>
+                    c.combo_item_ids.length === 1 &&
+                    c.combo_item_ids[0].product_id.attribute_line_ids.length === 0
+            )
+            .map((c) => ({
+                combo_item_id: c.combo_item_ids[0],
+                configuration: {
+                    attribute_custom_values: [],
+                    attribute_value_ids: [],
+                    price_extra: 0,
+                },
+            }));
+
+        const comboOrder = this.props.product.combo_ids.map((c) => c.id);
+        const combos = [...this.state.selectedCombos, ...implicitCombos].sort(
+            (a, b) =>
+                comboOrder.indexOf(a.combo_item_id.combo_id.id) -
+                comboOrder.indexOf(b.combo_item_id.combo_id.id)
         );
+        this.selfOrder.addToCart(this.props.product, this.state.qty, "", {}, {}, combos);
         this.router.back();
     }
 
