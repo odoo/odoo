@@ -62,7 +62,7 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="toggle_prod_environment"
-                                invisible="not prod_environment or delivery_type == 'fixed' or delivery_type == 'base_on_rule'"
+                                invisible="not prod_environment or not support_test_environment"
                                 class="oe_stat_button"
                                 type="object" icon="play_arrow">
                             <div class="o_stat_info o_field_widget">
@@ -72,7 +72,7 @@
                         </button>
                         <!-- transfer referenced here due to view inheritance issue in current master (post-saas-16) -->
                         <button name="toggle_prod_environment"
-                                invisible="prod_environment or delivery_type == 'fixed' or delivery_type == 'base_on_rule'"
+                                invisible="prod_environment or not support_test_environment"
                                 class="oe_stat_button"
                                 type="object" icon="stop">
                             <div class="o_stat_info o_field_widget">
