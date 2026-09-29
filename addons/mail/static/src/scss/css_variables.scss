@@ -1,0 +1,13 @@
+/*
+ * CSS variables of mail: its design variables exposed as CSS custom
+ * properties, so that stylesheets can read them with `var()` instead of
+ * being compiled by libsass. Every bundle including this file emits its
+ * own values (light, dark...).
+ */
+:root {
+    --o-mail-Avatar-size: #{$o-mail-Avatar-size};
+    --o-mail-ChatWindow-width: #{$o-mail-ChatWindow-width};
+    --o-mail-Chatter-minWidth: #{$o-mail-Chatter-minWidth};
+    --o-mail-Meeting-bgColor: #{$o-mail-Meeting-bgColor};
+    --o-mail-Message-sidebarWidth: #{$o-mail-Message-sidebarWidth};
+}

@@ -137,6 +137,7 @@
             "point_of_sale/static/src/app/utils/debug-formatter.js",
 
             ('include', 'point_of_sale.payment_terminals'),
+            ('after', 'pos_self_order/static/src/app/primary_variables.scss', 'pos_self_order/static/src/scss/css_variables.scss'),
         ],
         # Assets tests
         "pos_self_order.assets_tests": [

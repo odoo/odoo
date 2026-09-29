@@ -28,6 +28,7 @@
             'web/static/lib/bootstrap/scss/_maps.scss',
             'web/static/fonts/fonts.scss',
             'html_builder/static/src/**/*',
+            ('remove', 'html_builder/static/src/scss/css_variables.scss'),
             ('remove', 'html_builder/static/src/**/*.edit.*'),
             ('remove', 'html_builder/static/src/**/*.dark.scss'),
         ],
@@ -57,6 +58,9 @@
         'web.assets_unit_tests': [
             'html_builder/static/tests/**/*',
             ('include', 'html_builder.assets'),
+        ],
+        'web._assets_bootstrap_backend': [
+            'html_builder/static/src/scss/css_variables.scss',
         ],
     },
     'license': 'LGPL-3',

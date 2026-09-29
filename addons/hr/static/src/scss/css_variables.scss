@@ -1,0 +1,10 @@
+/*
+ * CSS variables of hr: its design variables exposed as CSS custom
+ * properties, so that stylesheets can read them with `var()` instead of
+ * being compiled by libsass. Every bundle including this file emits its
+ * own values (light, dark...).
+ */
+:root {
+    --o-hr-org-chart-entry-pic-size: #{$o-hr-org-chart-entry-pic-size};
+    --o-hr-org-chart-entry-pic-small-size: #{$o-hr-org-chart-entry-pic-small-size};
+}
