@@ -1,3 +1,4 @@
+import { proxy } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { getModelName } from "./utils";
@@ -50,6 +51,8 @@ export class FormOption extends BaseOptionComponent {
             ".s_website_form_field:not(.s_website_form_dnone)"
         );
         this.showEndMessage = false;
+        this.missingRecord = proxy({ field: undefined });
+        this.onMissingRecord = (field) => (this.missingRecord.field = field);
         this.state = useDomState(async (el) => {
             const modelName = getModelName(el);
 
