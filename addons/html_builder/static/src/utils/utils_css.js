@@ -448,7 +448,7 @@ export function parseBoxShadow(value) {
     return value.match(regex)?.groups ?? {};
 }
 
-export function getAllUsedColors(el) {
+export function getAllUsedColors(el, noTransparency = false) {
     const usedCustomColors = new Set();
     const collectColor = (colorValue) => {
         if (isCSSColor(colorValue)) {
@@ -493,5 +493,14 @@ export function getAllUsedColors(el) {
     )) {
         collectUrlColors(getBgImageURLFromEl(bgEl));
     }
+
+    if (noTransparency) {
+        for (const color of usedCustomColors) {
+            if (color.length > 7) {
+                usedCustomColors.delete(color);
+            }
+        }
+    }
+
     return usedCustomColors;
 }
