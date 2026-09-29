@@ -31,12 +31,14 @@
             ('remove', 'html_builder/static/src/scss/css_variables.scss'),
             ('remove', 'html_builder/static/src/**/*.edit.*'),
             ('remove', 'html_builder/static/src/**/*.dark.scss'),
+            ('remove', 'html_builder/static/src/**/*.dark.css'),
         ],
         'web.assets_frontend': [
             'html_builder/static/src/scss/background.scss'
         ],
         'web.assets_web_dark': [
             'html_builder/static/src/**/*.dark.scss',
+            'html_builder/static/src/**/*.dark.css',
         ],
         'html_builder.assets_inside_builder_iframe': [
             ('include', 'web._assets_helpers'),
