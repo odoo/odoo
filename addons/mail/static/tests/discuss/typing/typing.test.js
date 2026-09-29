@@ -7,11 +7,13 @@ import {
     onRpcBefore,
     openDiscuss,
     openMessagingMenu,
+    setupChatHub,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { animationFrame, describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
+import { queryOne } from "@odoo/hoot-dom";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
@@ -787,6 +789,55 @@ test("chat: correspondent is typing", async () => {
     await waitFor(
         ".o-mail-MessagingMenuItem .o-mail-ThreadIcon[data-icon='circle'].text-success:count(1)"
     );
+});
+
+test("chat bubble avatar cutout fits the typing indicator", async () => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ name: "Demo", im_status: "online" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", user_ids: [userId] });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    setupChatHub({ folded: [channelId] });
+    await start();
+    // IM status has a glyph cutout
+    await waitFor(".o-mail-ChatBubble .o-mail-DiscussAvatar mask use[transform]");
+    withUser(userId, () =>
+        rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            is_typing: true,
+        })
+    );
+    // typing indicator has no glyph: rect cutout, fitted once the indicator is laid out
+    const hole = await waitFor(
+        ".o-mail-ChatBubble .o-mail-DiscussAvatar mask rect[fill=black][width]"
+    );
+    const avatar = queryOne(".o-mail-ChatBubble .o-mail-DiscussAvatar");
+    const icon = queryOne(".o-discuss-Typing-icon[title='Demo is typing...']", { root: avatar });
+    const avatarRect = avatar.getBoundingClientRect();
+    const iconRect = icon.getBoundingClientRect();
+    // mask is in CSS pixels of the avatar
+    const ratio = avatarRect.width / avatar.offsetWidth;
+    const iconLeft = (iconRect.left - avatarRect.left) / ratio;
+    const iconTop = (iconRect.top - avatarRect.top) / ratio;
+    const iconRight = iconLeft + iconRect.width / ratio;
+    const iconBottom = iconTop + iconRect.height / ratio;
+    const holeLeft = hole.x.baseVal.value;
+    const holeTop = hole.y.baseVal.value;
+    const holeRight = holeLeft + hole.width.baseVal.value;
+    const holeBottom = holeTop + hole.height.baseVal.value;
+    expect(holeLeft).toBeLessThan(iconLeft);
+    expect(holeTop).toBeLessThan(iconTop);
+    expect(holeRight).toBeGreaterThan(iconRight);
+    expect(holeBottom).toBeGreaterThan(iconBottom);
+    expect((holeLeft + holeRight) / 2).toBeCloseTo((iconLeft + iconRight) / 2, { margin: 1 });
+    expect((holeTop + holeBottom) / 2).toBeCloseTo((iconTop + iconBottom) / 2, { margin: 1 });
+    // icon is on the bottom-right corner, overflowing the avatar
+    expect(iconRight).toBeGreaterThan(avatar.offsetWidth);
 });
 
 test("[text composer] chat: correspondent is typing in chat window", async () => {
