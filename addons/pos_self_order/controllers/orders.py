@@ -9,6 +9,7 @@ from odoo.service.model import call_kw
 from werkzeug.exceptions import Forbidden, NotFound, BadRequest, Unauthorized
 from odoo.exceptions import MissingError
 from odoo.tools import consteq
+from .utils import check_kiosk_access
 
 
 def _haversine_distance(lat1, long1, lat2, long2):
@@ -334,6 +335,7 @@ class PosSelfOrderController(http.Controller):
         pos_config_sudo = request.env['pos.config'].sudo().search([('access_token', '=', access_token)], limit=1)
         if self._verify_config_constraint(pos_config_sudo):
             raise Unauthorized("Invalid access token")
+        check_kiosk_access(pos_config_sudo, request)
         company = pos_config_sudo.company_id
         user = pos_config_sudo.self_ordering_default_user_id
         return pos_config_sudo.sudo(False).with_company(company).with_user(user).with_context(allowed_company_ids=company.ids)

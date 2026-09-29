@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.PairingIndex">
+        <div class="d-flex justify-content-center align-items-center vh-100 ">
+            <div class="pairing-panel d-flex flex-column gap-3 gap-sm-4 w-100 text-center p-2 p-md-0"
+                 t-if="this.error() === 'unavailable'">
+                <div>
+                    <div class="fs-1 fw-bold">Pairing unavailable</div>
+                    <div class="text-muted">This kiosk can't get a pairing code right now.</div>
+                </div>
+
+                <div class="bg-white rounded shadow-sm p-4 text-muted">
+                    <div>This usually means too many devices at this location are already
+                        waiting to be paired. Ask a manager to pair or remove a pending
+                        device from Point of Sale → Configuration → Kiosks.</div>
+                    <div class="mt-3 opacity-75">This screen will try again automatically.</div>
+                </div>
+            </div>
+
+            <div class="pairing-panel d-flex flex-column gap-3 gap-sm-4 w-100 text-center p-2 p-md-0"
+                 t-elif="this.error()">
+                <div>
+                    <div class="fs-2 fw-bold">An Error Occurred</div>
+                    <div class="mt-1" t-out="this.error()"/>
+                </div>
+            </div>
+
+            <div class="pairing-panel d-flex flex-column gap-3 gap-sm-4 w-100 text-center p-2 p-md-0"
+                 t-elif="this.pairingData()">
+                <div>
+                    <div class="fs-1 fw-bold">Pair this kiosk</div>
+                    <div>To access the kiosk, please register this device using the pairing code below.</div>
+                </div>
+
+                <div class="bg-white rounded shadow-sm p-4 ">
+                   <div class="text-muted fs-4 opacity-75"> Pairing Code</div>
+                    <div class="text-primary fw-bold my-3 font-monospace pairing-code" style="font-size: 3.5rem">
+                       <t t-foreach="this.formattedCodeGroups" t-as="group" t-key="group_index">
+                           <span style="margin-right: 1.2rem;" t-out="group"/>
+                       </t>
+                   </div>
+                    <div class="text-muted ">
+                        Go to Point Of Sale → Configuration → Kiosks → Pair<div> and enter the code to register this device.</div>
+                    </div>
+               </div>
+            </div>
+
+        </div>
+    </t>
+</templates>
