@@ -385,6 +385,7 @@ export class TablePlugin extends Plugin {
         if (clipboardRoot.childNodes.length !== 1 || sourceTable?.nodeName !== "TABLE") {
             return false;
         }
+        this.fillMissingCells(sourceTable);
 
         // Source table size.
         const sourceRows = sourceTable.rows;
@@ -508,6 +509,8 @@ export class TablePlugin extends Plugin {
     /**
      * Adapts the tables contained in `root` to the structure the table
      * operations rely on:
+     * - the cells missing from ragged rows are filled in, so that every
+     *   table forms a complete grid.
      * - every table has a `<tbody>`, `<thead>` elements being merged or
      *   converted into it.
      * - the inline widths of the first row's cells are moved to the `<col>`
@@ -520,6 +523,7 @@ export class TablePlugin extends Plugin {
      */
     adaptTables(root) {
         for (const table of root.querySelectorAll("table")) {
+            this.fillMissingCells(table);
             let tbody = table.tBodies[0];
             const thead = table.tHead;
 
@@ -2109,5 +2113,42 @@ export class TablePlugin extends Plugin {
         }
         this.tableGridMap.set(table, grid);
         return grid;
+    }
+
+    /**
+     * Adds the cells missing from the rows of a ragged table.
+     *
+     * @param {HTMLTableElement} table
+     */
+    fillMissingCells(table) {
+        const rows = [...table.rows];
+        if (!rows.length) {
+            return;
+        }
+        const grid = this.buildTableGrid(table);
+        const width = Math.max(...grid.map((gridRow) => gridRow.length));
+        let hasMissingCells = false;
+        for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+            const row = rows[rowIndex];
+            const isHeaderRow =
+                row.cells.length > 0 && [...row.cells].every((cell) => cell.nodeName === "TH");
+            for (let colIndex = 0; colIndex < width; colIndex++) {
+                if (grid[rowIndex][colIndex]) {
+                    continue;
+                }
+                const newCell = this.document.createElement(isHeaderRow ? "th" : "td");
+                if (isHeaderRow) {
+                    newCell.classList.add("o_table_header");
+                }
+                newCell.append(this.dependencies.baseContainer.createBaseContainer());
+                // The cells lost by a partial copy are the leading ones of
+                // the first row, and the trailing ones of any other.
+                row.insertBefore(newCell, rowIndex === 0 ? row.firstChild : null);
+                hasMissingCells = true;
+            }
+        }
+        if (hasMissingCells) {
+            this.tableGridMap.delete(table);
+        }
     }
 }
