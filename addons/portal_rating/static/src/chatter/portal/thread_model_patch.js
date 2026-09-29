@@ -28,11 +28,11 @@ patch(Thread.prototype, {
         return super.moreFetchLimit;
     },
 
-    getFetchNewMessagesAfter() {
+    get canFetchNewMessagesIncrementally() {
         if (this.ratingChatter) {
-            return undefined;
+            return false;
         }
-        return super.getFetchNewMessagesAfter();
+        return super.canFetchNewMessagesIncrementally;
     },
 
     async fetchNewMessages() {

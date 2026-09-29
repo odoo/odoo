@@ -4,11 +4,13 @@ import {
     defineMailModels,
     editInput,
     insertText,
+    listenStoreFetch,
     openFormView,
     patchUiSize,
     scroll,
     start,
     startServer,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
@@ -84,13 +86,73 @@ test("Jump to a message posted by another user before my own note", async () => 
     await insertTextInComposer(".o-mail-Composer", "my own note");
     await click(".o-mail-Composer button:enabled:text('Log')");
     await waitFor(".o-mail-Message-content:text('my own note'):count(1)");
-    await waitForNone(".o-mail-Message-content:text('hidden needle')");
+    await waitFor(".o-mail-Message-content:text('hidden needle'):count(1)");
     await click("[title='Search Messages']");
     await insertText(".o-mail-SearchInput input", "needle");
     await click(".o-mail-SearchMessageResult .o-mail-MessageCard-jump");
     await waitFor(
         ".o-mail-Message.o-highlighted .o-mail-Message-content:text('hidden needle'):count(1)"
     );
+});
+
+test("Posting after jumping to a searched message loads the newest messages", async () => {
+    patchUiSize({ size: SIZES.XXL });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    const messageIds = [];
+    for (let i = 0; i < 100; i++) {
+        messageIds.push(
+            pyEnv["mail.message"].create({
+                body: i === 10 ? "needle" : `Message ${i}`,
+                message_type: "comment",
+                model: "res.partner",
+                res_id: partnerId,
+            })
+        );
+    }
+    listenStoreFetch("/mail/thread/messages", { logParams: ["/mail/thread/messages"] });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await waitFor(".o-mail-Message-content:text('Message 99'):count(1)");
+    await click("[title='Search Messages']");
+    await insertText(".o-mail-SearchInput input", "needle");
+    await click(".o-mail-SearchMessageResult .o-mail-MessageCard-jump");
+    await waitFor(".o-mail-Message.o-highlighted .o-mail-Message-content:text('needle'):count(1)");
+    await waitForNone(".o-mail-Message-content:text('Message 99')");
+    const threadParams = { thread_id: partnerId, thread_model: "res.partner" };
+    await waitStoreFetch([
+        ["/mail/thread/messages", { ...threadParams, fetch_params: { limit: 30 } }],
+        [
+            "/mail/thread/messages",
+            { ...threadParams, fetch_params: { search_term: "needle", before: false } },
+        ],
+        [
+            "/mail/thread/messages",
+            { ...threadParams, fetch_params: { limit: 60, around: messageIds[10] } },
+        ],
+    ]);
+    await click("button:text('Log note')");
+    await insertTextInComposer(".o-mail-Composer", "my own note");
+    await click(".o-mail-Composer button:enabled:text('Log')");
+    await waitFor(".o-mail-Thread .o-mail-Message:count(30)");
+    await waitFor(
+        ".o-mail-Thread .o-mail-Message:eq(0) .o-mail-Message-content:text('my own note'):count(1)"
+    );
+    await waitFor(
+        ".o-mail-Thread .o-mail-Message:eq(1) .o-mail-Message-content:text('Message 99'):count(1)"
+    );
+    // The jump to the present waits for the fetch of new messages started by the post.
+    const [ownMessageId] = pyEnv["mail.message"].search([["body", "ilike", "my own note"]]);
+    await waitStoreFetch([
+        [
+            "/mail/thread/messages",
+            {
+                ...threadParams,
+                fetch_params: { limit: 30, after: messageIds[40], exclude_ids: [ownMessageId] },
+            },
+        ],
+        ["/mail/thread/messages", { ...threadParams, fetch_params: { limit: 30 } }],
+    ]);
 });
 
 test("Close button should close the search panel", async () => {

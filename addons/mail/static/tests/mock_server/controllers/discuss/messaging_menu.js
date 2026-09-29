@@ -242,7 +242,6 @@ registerStoreHandler(
         if (messages.length) {
             store.add_inbox_fields = true;
         }
-        store.resolve_data_request((res) => res.attr("is_fully_loaded", messages.length < limit));
     }
 );
 
@@ -291,7 +290,9 @@ registerStoreHandler(
         }
         store.add_channels_last_message = true;
         store.add_channels_last_needaction = true;
-        store.resolve_data_request({ is_fully_loaded: channelIds.length < limit });
+        store.resolve_data_request((r) =>
+            r.many("channels", [], { value: DiscussChannel.browse(channelIds) })
+        );
     },
     { audience: "everyone" }
 );
