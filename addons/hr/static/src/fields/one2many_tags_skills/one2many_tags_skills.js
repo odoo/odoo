@@ -9,7 +9,7 @@ export class One2ManyTagsSkillsField extends X2ManyField {
         ...X2ManyField.components,
         BadgeTag,
     };
-    static template = "hr_recruitment_skills.One2ManyTagsSkillsField";
+    static template = "hr.One2ManyTagsSkillsField";
 
     setup() {
         super.setup();
