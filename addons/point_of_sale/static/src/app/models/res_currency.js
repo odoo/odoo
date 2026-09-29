@@ -29,16 +29,22 @@ export class ResCurrency extends numbers.AbstractNumbers {
         return this.isDefaultCurrency ? amount : amount / this.rate;
     }
 
-    convert(amount) {
-        return this.round(this.rawConvert(amount));
+    convert(amount, from = this.defaultCurrency) {
+        if (from.id === this.id) {
+            return this.round(amount);
+        }
+        const amountInDefaultCurrency = from.isDefaultCurrency
+            ? amount
+            : from.rawConvertToDefaultCurrency(amount);
+        return this.round(this.rawConvert(amountInDefaultCurrency));
     }
 
     convertToDefaultCurrency(amount) {
         return this.defaultCurrency.round(this.rawConvertToDefaultCurrency(amount));
     }
 
-    convertFormatted(amount) {
-        return formatCurrency(this.convert(amount), this.id);
+    convertFormatted(amount, from = this.defaultCurrency) {
+        return formatCurrency(this.convert(amount, from), this.id);
     }
 }
 
