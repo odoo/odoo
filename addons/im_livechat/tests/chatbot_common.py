@@ -42,6 +42,7 @@ class ChatbotCase(common.HttpCase):
         ] = cls.env['chatbot.script.answer'].sudo().create([{
             'name': 'I\'d like to buy the software',
             'script_step_id': cls.step_dispatch.id,
+            'redirect_link': "#chatbot-redirect",
         }, {
             'name': 'Pricing Question',
             'script_step_id': cls.step_dispatch.id,
