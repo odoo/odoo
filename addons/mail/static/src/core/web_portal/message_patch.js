@@ -20,6 +20,9 @@ patch(Message.prototype, {
     prepareMessageBody(bodyEl) {
         super.prepareMessageBody(...arguments);
         Array.from(bodyEl.querySelectorAll(".o-mail-read-more-less")).forEach((el) => el.remove());
+        if (!this.message.message_type?.includes("email")) {
+            return;
+        }
         this.insertReadMoreLess(bodyEl);
     },
 
