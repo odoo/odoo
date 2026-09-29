@@ -20,6 +20,7 @@ export class HrEmployee extends models.ServerModel {
         res.one("department_id", ["name"]);
         res.one("user_id", "_store_avatar_card_fields");
         res.one("work_location_id", ["location_type", "name"]);
+        res.many("employee_skill_ids", ["color", "display_name"]);
         res.extend([
             "active",
             "company_id",
