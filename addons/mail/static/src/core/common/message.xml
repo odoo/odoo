@@ -107,8 +107,8 @@
                                     </t>
                                 </t>
                                 <t t-if="this.message.bubbleColor and this.message.hasTextContent and !this.ancestors.inChatWindow" t-call="mail.Message.actions"/>
-                                <PollResult t-if="this.message.ended_poll_ids.length" poll="this.message.poll"/>
-                                <Poll t-elif="this.message.poll" poll="this.message.poll"/>
+                                <PollResult t-if="this.message.ended_poll_ids.length" messageSearch="this.props.messageSearch" poll="this.message.poll"/>
+                                <Poll t-elif="this.message.poll" messageSearch="this.props.messageSearch" poll="this.message.poll"/>
                             </div>
                             <div class="position-relative">
                                 <AttachmentList

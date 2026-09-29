@@ -5,7 +5,7 @@
             <div class="o-mail-PollResult card border rounded-4 mb-2 p-2 w-100">
                 <div class="d-flex gap-1 align-items-center fw-bold text-muted text-break card-title small mb-0">
                     <i class="oi o-mt-0_5 opacity-50 o-xsmaller" data-icon="oi_view-cohort"/>
-                    <span class="align-self-start" t-out="this.props.poll.pollClosedText"/>
+                    <span class="align-self-start" t-out="this.props.messageSearch?.highlight(this.props.poll.pollClosedText) ?? this.props.poll.pollClosedText"/>
                 </div>
                 <div class="card-body d-flex gap-2 align-items-center p-0" t-att-class="{ 'ms-2': !this.props.poll.winning_option_id?.option_emoji }">
                     <div class="d-flex align-items-center flex-grow-1 gap-2 smaller min-w-0 mt-1">
@@ -17,7 +17,7 @@
                             <span t-if="this.props.poll.winning_option_id.option_emoji" class="o-mail-PollResult-emojiWrapper d-flex align-items-center justify-content-center rounded-3 fs-2 o-px-1_5" t-out="this.props.poll.winning_option_id.option_emoji"/>
                             <div class="d-flex flex-column gap-1 min-w-0">
                                 <div class="d-flex align-items-center fs-5">
-                                    <p class="text-start fw-bold mb-0 text-truncate" t-out="this.props.poll.winning_option_id.option_label"/>
+                                    <p class="text-start fw-bold mb-0 text-truncate" t-out="this.props.messageSearch?.highlight(this.props.poll.winning_option_id.option_label) ?? this.props.poll.winning_option_id.option_label"/>
                                     <i t-if="this.props.poll.winning_option_id.selected_by_self" class="oi oi-filled ms-1 text-primary" data-icon="check_circle"/>
                                 </div>
                                 <p class="card-subtitle mb-0 text-muted smaller">Winning Answer<span class="o-mx-0_5">&#8729;</span><t t-out="this.props.poll.winning_option_id.vote_percentage"/>%</p>

@@ -130,6 +130,8 @@ export class MailMessage extends models.ServerModel {
         });
         // keep "record_name" and "res_id" for iOS app
         res.extend(["record_name", "res_id"]);
+        res.many("started_poll_ids", "_store_poll_fields");
+        res.many("ended_poll_ids", "_store_poll_fields");
         res.attr("subject");
         res.one("subtype_id", ["description"], { sudo: true });
         res.attr("write_date");
@@ -618,7 +620,7 @@ export class MailMessage extends models.ServerModel {
             const irAttachmentIds = IrAttachment.search([["name", "ilike", search_term]]);
             const authorIds = this.env["res.partner"].search([["name", "ilike", search_term]]);
             const guestIds = this.env["mail.guest"].search([["name", "ilike", search_term]]);
-            const message_domain = Domain.or([
+            let message_domain = Domain.or([
                 [["body", "ilike", html_search_term]],
                 [["attachment_ids", "in", irAttachmentIds]],
                 [["author_id", "in", authorIds]],
@@ -626,6 +628,8 @@ export class MailMessage extends models.ServerModel {
                 [["subject", "ilike", search_term]],
                 [["subtype_ids", "in", subtypeIds]],
             ]);
+            const poll_message_ids = this._get_poll_message_ids(thread, search_term);
+            message_domain = Domain.or([message_domain, [["id", "in", poll_message_ids]]]);
             domain = Domain.and([domain, message_domain]).toList();
         }
         if (search_term || isFiltered) {
@@ -656,6 +660,44 @@ export class MailMessage extends models.ServerModel {
         messages.length = Math.min(messages.length, limit);
         res.messages = messages;
         return res;
+    }
+
+    _get_poll_message_ids(thread, search_term) {
+        /** @type {import("mock_models").MailPoll} */
+        const MailPoll = this.env["mail.poll"];
+        /** @type {import("mock_models").MailPollOption} */
+        const MailPollOption = this.env["mail.poll.option"];
+
+        const optionIds = MailPollOption.search([["option_label", "ilike", search_term]]);
+        const start_poll_domain = Domain.or([
+            [["poll_question", "ilike", search_term]],
+            [["option_ids", "in", optionIds]],
+        ]);
+        const end_poll_domain = Domain.or([
+            [["poll_question", "ilike", search_term]],
+            [["winning_option_id", "in", optionIds]],
+        ]);
+        const messageIds = this.search([
+            ["res_id", "=", parseInt(thread[0].id)],
+            ["model", "=", thread._name],
+        ]);
+        const startPollIds = MailPoll.search(
+            Domain.and([[["start_message_id", "in", messageIds]], start_poll_domain]).toList()
+        );
+        const startPolls = MailPoll.browse(
+            MailPoll.search(
+                Domain.and([[["start_message_id", "in", messageIds]], start_poll_domain]).toList()
+            )
+        );
+        const endPolls = MailPoll.browse(
+            MailPoll.search(Domain.and([[["id", "in", startPollIds]], end_poll_domain]).toList())
+        );
+        return [
+            ...new Set([
+                ...Array.from(startPolls, (poll) => poll.start_message_id),
+                ...Array.from(endPolls, (poll) => poll.end_message_id),
+            ]),
+        ];
     }
 
     _linked_message_ids(message) {
