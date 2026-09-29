@@ -119,24 +119,24 @@
 
 <t t-name="mass_mailing.DesignGenericButtonOption">
     <BuilderContext action="'mass_mailing.CustomizeMailingVariable'">
-        <BuilderRow label="label" extraLabelClass="'fw-bolder'">
+        <BuilderRow label="label" extraLabelClass="'fw-bolder'" highlight="highlight">
             <BuilderNumberInput actionParam="{ variable: `${prefix}font-size` }" unit="'px'" saveUnit="'px'" default="0"/>
             <BuilderColorPicker noTransparency="true" title.translate="Text Color" enabledTabs="['solid', 'custom']"
                 actionParam="{ variable: `${prefix}color` }"/>
             <BuilderColorPicker noTransparency="true" title.translate="Background Color" enabledTabs="['solid', 'custom']"
                 actionParam="{ variable: `${prefix}background-color` }"/>
         </BuilderRow>
-        <BuilderRow label.translate="Padding" level="1">
+        <BuilderRow label.translate="Padding" level="1" highlight="highlight">
             <BuilderNumberInput title.translate="Y" unit="'px'" saveUnit="'px'" actionParam="{ variable: `${prefix}padding-y` }" default="0"/>
             <BuilderNumberInput title.translate="X" unit="'px'" saveUnit="'px'" actionParam="{ variable: `${prefix}padding-x` }" default="0"/>
         </BuilderRow>
-        <BuilderRow label.translate="Font Family" level="1">
+        <BuilderRow label.translate="Font Family" level="1" highlight="highlight">
             <FontFamilyPicker action="'mass_mailing.CustomizeMailingVariable'" actionParam="{ variable: `${prefix}font-family`}"/>
             <BuilderButton icon="'format_bold'" actionParam="{ variable: `${prefix}font-weight` }" actionValue="'bolder'"/>
             <BuilderButton icon="'format_italic'" actionParam="{ variable: `${prefix}font-style` }" actionValue="'italic'"/>
             <BuilderButton icon="'format_underlined'" actionParam="{ variable: `${prefix}text-decoration-line`}" actionValue="'underline'"/>
         </BuilderRow>
-        <BuilderRow label.translate="Border" level="1">
+        <BuilderRow label.translate="Border" level="1" highlight="highlight">
             <BuilderNumberInput actionParam="{ variable: `${prefix}border-width` }" unit="'px'" saveUnit="'px'" min="0"
                 default="0" composable="true"/>
             <BuilderSelect actionParam="{ variable: `${prefix}border-style` }">
@@ -156,10 +156,12 @@
 <t t-name="mass_mailing.DesignButtonOption">
     <t t-call="mass_mailing.DesignGenericButtonOption"
         prefix="`--btn-primary-`"
-        label.translate="Primary Button"/>
+        label.translate="Primary Button"
+        highlight="this.themeReveal.targetRowId === 'btn-primary'"/>
     <t t-call="mass_mailing.DesignGenericButtonOption"
         prefix="`--btn-secondary-`"
-        label.translate="Secondary Button"/>
+        label.translate="Secondary Button"
+        highlight="this.themeReveal.targetRowId === 'btn-secondary'"/>
 </t>
 
 <t t-name="mass_mailing.DesignSeparatorOption">

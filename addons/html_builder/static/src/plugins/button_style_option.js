@@ -7,6 +7,7 @@ import { BuilderNumberInput } from "@html_builder/core/building_blocks/builder_n
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { StyleAction, withoutTransition } from "@html_builder/core/core_builder_action_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import {
@@ -61,10 +62,15 @@ export class ButtonStyleOption extends BaseOptionComponent {
         });
     }
 
-    goToThemeTab() {
-        this.env.editColorCombination(
-            parseInt(this.state.buttonCombinationClass.replace("o_cc", ""))
-        );
+    getEditAction(buttonType) {
+        return {
+            title: _t("Edit color in Theme Tab"),
+            onClick: () =>
+                this.env.editColorCombination(
+                    parseInt(this.state.buttonCombinationClass.replace("o_cc", "")),
+                    `btn-${buttonType}`
+                ),
+        };
     }
 
     async getButtonStyles(el) {

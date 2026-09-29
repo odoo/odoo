@@ -166,4 +166,14 @@
         height: 0; // default collapsed state
         transition: height 0.35s ease;
     }
+
+    &.o_hb_row_highlight + .o_hb_collapse_content {
+        position: relative;
+    }
+
+    &.o_hb_row_highlight,
+    &.o_hb_row_highlight + .o_hb_collapse_content {
+        z-index: calc(var(--o-hb-highlight-overlay-z-index) + 1);
+        background-color: $o-we-bg-lighter;
+    }
 }

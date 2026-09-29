@@ -1,5 +1,7 @@
+import { ThemeRevealPlugin } from "@html_builder/core/building_blocks/theme_reveal_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { FontFamilyPicker } from "../fontfamily_picker";
@@ -71,6 +73,10 @@ export class DesignTabPlugin extends Plugin {
     getDesignOptionBlock(id, options) {
         const Option = class extends BaseOptionComponent {
             static selector = "*";
+            setup() {
+                super.setup();
+                this.themeReveal = usePlugin(ThemeRevealPlugin);
+            }
         };
         Object.assign(Option, options);
 

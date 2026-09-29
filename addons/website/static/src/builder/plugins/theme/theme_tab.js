@@ -1,7 +1,7 @@
-import { useSubEnv } from "@web/owl2/utils";
-import { Component, useProps, proxy, signal, t } from "@odoo/owl";
+import { ThemeRevealPlugin } from "@html_builder/core/building_blocks/theme_reveal_plugin";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { useOptionsSubEnv } from "@html_builder/utils/utils";
+import { Component, providePlugins, proxy, signal, t, useProps } from "@odoo/owl";
 
 export class ThemeTab extends Component {
     static template = "website.ThemeTab";
@@ -10,16 +10,14 @@ export class ThemeTab extends Component {
         // optionsContainers: t.array().optional([]),
         colorPresetToShow: t.or([t.number(), t.literal(null)]).optional(),
         targetRowId: t.or([t.string(), t.literal(null)]).optional(),
-        targetContainerId: t.or([t.string(), t.literal(null)]).optional(),
     });
     contentRef = signal.ref();
 
     setup() {
         useOptionsSubEnv(() => [this.env.editor.document.body]);
-        useSubEnv({
+        providePlugins([ThemeRevealPlugin], {
             colorPresetToShow: this.props.colorPresetToShow,
             targetRowId: this.props.targetRowId,
-            targetContainerId: this.props.targetContainerId,
         });
         this.state = proxy({
             fontsData: {},
