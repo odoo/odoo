@@ -75,9 +75,12 @@ class ResourceCalendar(models.Model):
         compute='_compute_global_leave_ids', store=True, readonly=False,
         domain=[('resource_id', '=', False)],
     )
-    days_per_week = fields.Float("Days per Week", compute="_compute_days_per_week", store=True, digits=(10, 5), readonly=False, copy=False)
+    days_per_week = fields.Float("Days per Week",
+        compute="_compute_days_per_week", store=True,
+        precompute=True, digits=(10, 5), readonly=False, copy=False)
     hours_per_day = fields.Float("Average Hour per Day", store=True, compute="_compute_hours_per_day", digits=(10, 5), readonly=False,
         help="Average hours per day a resource is supposed to work with this calendar.", copy=False)
+    # 0 is used as SENTINEL value to represent "Not Limited" hours, i.e. any number of hours
     hours_per_week = fields.Float(
         string="Hours per Week",
         compute="_compute_hours_per_week", store=True, digits=(10, 5), readonly=False, copy=False)
@@ -102,6 +105,11 @@ class ResourceCalendar(models.Model):
         check_company=True,
         help="Reference working hours used to compute the full-time equivalent.")
 
+    _check_days_per_week = models.Constraint(
+        'CHECK(days_per_week > 0 AND days_per_week <= 7)',
+        'Day per week must be strictly greater than 0, and smaller or equal to 7.',
+    )
+
     def _is_flexible(self):
         """ Return whether this calendar is flexible, i.e. of type ``undefined``: it has no
         attendance lines and the resource may work whenever it wants, optionally up to the
@@ -111,10 +119,10 @@ class ResourceCalendar(models.Model):
 
     def _is_fully_flexible(self):
         """ Return whether this calendar is flexible (see :meth:`_is_flexible`) and has no
-        hours target either (``hours_per_week`` and ``hours_per_day`` both zero). A fully
-        flexible resource is considered working during the whole requested period. """
+        hours target either (``hours_per_week`` is equal to 0 and ``days_per_week`` to 7).
+        A fully flexible resource is considered . """
         self.ensure_one()
-        return self._is_flexible() and not self.hours_per_week and not self.hours_per_day
+        return self._is_flexible() and not self.hours_per_week and self.days_per_week == 7
 
     def _get_attendances_to_unlink(self, next_calendar_type=None):
         """ Return the attendances that do not fit the calendar's ``calendar_type`` (or
@@ -221,15 +229,17 @@ class ResourceCalendar(models.Model):
         for calendar in self:
             # variable/undefined calendars don't have a reliable attendance pattern to derive
             # this from (undefined calendars have none at all); the user sets it directly instead.
-            if calendar.calendar_type != 'fixed':
-                continue
-            attendances = calendar.attendance_ids.filtered(lambda a: a._is_work_period())
-            calendar.days_per_week = len(set(attendances.mapped('dayofweek')))
+            if calendar.calendar_type == 'fixed':
+                attendances = calendar.attendance_ids.filtered(lambda a: a._is_work_period())
+                num_days = len(set(attendances.mapped('dayofweek')))
+                calendar.days_per_week = num_days or calendar.days_per_week or 5.0
+            else:
+                calendar.days_per_week = calendar.days_per_week or 5.0
 
     @api.depends('days_per_week', 'hours_per_week')
     def _compute_hours_per_day(self):
         for calendar in self:
-            calendar.hours_per_day = calendar.hours_per_week / calendar.days_per_week if calendar.days_per_week else 0
+            calendar.hours_per_day = calendar.hours_per_week / calendar.days_per_week if calendar.days_per_week else 0.0
 
     @api.depends('attendance_ids.duration_hours', 'calendar_type')
     def _compute_hours_per_week(self):
@@ -255,10 +265,10 @@ class ResourceCalendar(models.Model):
             # fixed calendars derive these from their attendance lines, always valid by construction
             if calendar.calendar_type == 'fixed':
                 continue
-            if calendar.hours_per_week < 0 or calendar.hours_per_week > 168:
-                raise ValidationError(self.env._("Hours per week must be between 0 and 168."))
-            if calendar.hours_per_day < 0 or calendar.hours_per_day > 24:
-                raise ValidationError(self.env._("Average hours per day must be between 0 and 24."))
+            if calendar.hours_per_week > 168:
+                raise ValidationError(self.env._("Hours per week cannot exceed 168."))
+            if calendar.hours_per_day > 24:
+                raise ValidationError(self.env._("Average hours cannot exceed 24."))
 
     @api.depends('hours_per_week', 'full_time_required_hours')
     def _compute_is_fulltime(self):
@@ -432,10 +442,7 @@ class ResourceCalendar(models.Model):
                 calendar = calendar_data.get('resource_calendar_id', self.env['resource.calendar'])
                 hours_per_week = calendar_data.get('hours_per_week')
                 hours_per_day = calendar_data.get('hours_per_day')
-                calendar_is_flexible = calendar._is_flexible()
-                is_fully_flexible = calendar_is_flexible and not hours_per_week and not hours_per_day
-                is_flexible = calendar_is_flexible and not is_fully_flexible
-                if not domain and is_fully_flexible:
+                if not domain and calendar._is_fully_flexible():
                     # A domain is only provided in extensions of `_work_intervals_batch` so when a domain is present,
                     # we should use the standard attendance intervals rather than the flexible employee special handling.
                     # This prevents a scenario where `_work_intervals_batch` calls this method twice and returns the same
@@ -447,7 +454,7 @@ class ResourceCalendar(models.Model):
                         'duration_hours': hours,
                     })
                     result_per_resource_id[resource.id] = Intervals([(start_datetime, end_datetime, dummy_attendance)], keep_distinct=True)
-                elif not domain and is_flexible:
+                elif not domain and calendar._is_flexible():
                     # For flexible Calendars, we create intervals to fill in the weekly intervals with the average daily hours
                     # until the full time required hours are met. This gives us the most correct approximation when looking at a daily
                     # and weekly range for time offs and overtime calculations and work entry generation

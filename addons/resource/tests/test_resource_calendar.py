@@ -25,6 +25,8 @@ class TestResourceCalendar(TransactionCase):
         fully_flex_calendar = self.env['resource.calendar'].create({
             'name': 'Fully Flexible Calendar',
             'calendar_type': 'undefined',
+            'hours_per_week': 0,
+            'days_per_week': 7,
             'attendance_ids': [],
         })
         resource = self.env['resource.resource'].create({
@@ -57,8 +59,8 @@ class TestResourceCalendar(TransactionCase):
             'name': 'Flexible Calendar',
             'calendar_type': 'undefined',
             'attendance_ids': [],
-            'hours_per_week': 30.0,
-            'hours_per_day': 7.0,
+            'hours_per_week': 35.0,
+            'days_per_week': 5.0,
         })
         flex_resource = self.env['resource.resource'].create({
             'name': 'Test FlexResource',
@@ -67,16 +69,16 @@ class TestResourceCalendar(TransactionCase):
         })
 
         # Case 1: get attendances for the full week.
-        # Expected: 7-7-7-7-2 (30 hours total)
-        expected_hours = [7, 7, 7, 7, 2]
+        # Expected: 7-7-7-7-7 (35 hours total, 7h in average)
+        expected_hours = [7, 7, 7, 7, 7]
 
         start_dt = datetime(2025, 6, 2, 0, 0, 0).astimezone(UTC)
         end_dt = datetime(2025, 6, 7, 23, 59, 59).astimezone(UTC)
         resources_per_tz = {
-            UTC: flex_resource
+            UTC: flex_resource,
         }
         result_per_resource_id = self.env['resource.calendar']._attendance_intervals_batch(
-            start_dt, end_dt, resources_per_tz=resources_per_tz
+            start_dt, end_dt, resources_per_tz=resources_per_tz,
         )
         self.assertEqual(expected_hours, [(end - start).total_seconds() / 3600 for start, end, dummy_attendance in result_per_resource_id[flex_resource.id]._items])
         self.assertEqual(expected_hours, [dummy_attendance.duration_hours for start, end, dummy_attendance in result_per_resource_id[flex_resource.id]._items])
@@ -280,7 +282,7 @@ class TestResourceCalendar(TransactionCase):
             'calendar_type': 'undefined',
             'attendance_ids': [],
             'hours_per_week': 0,
-            'hours_per_day': 0,
+            'days_per_week': 7,
         })
         self.assertEqual(
             fully_flex_calendar.get_work_duration_data(datetime(2026, 1, 5, tzinfo=UTC), datetime(2026, 1, 6, tzinfo=UTC)),

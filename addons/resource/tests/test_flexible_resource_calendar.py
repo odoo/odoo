@@ -16,7 +16,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'calendar_type': 'undefined',
             'attendance_ids': [],
             'hours_per_week': 0,
-            'hours_per_day': 0,
+            'days_per_week': 7,
         }, {
             'name': 'Flexible Calendar',
             'calendar_type': 'undefined',

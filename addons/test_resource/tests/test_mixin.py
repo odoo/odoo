@@ -148,7 +148,9 @@ class TestResMixin(TestResourceCommon):
         # Looking at John's calendar
 
         # Viewing it as Jean
-        # Views from 2018/04/01 15:00:00 to 2018/04/06 14:00:00
+        # Views from Tuesday 2018/04/03 8:00:00 to Friday 2018/04/06 23:00:00
+        # 8h on Tuesday + 5/12h on Friday as Jean does not see John's Friday afternoon
+        # as he is 9 hours ahead (Bruxelles timezone vs Los Angeles)
         data = self.john._get_work_days_data_batch(
             self.datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             self.datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
@@ -156,7 +158,7 @@ class TestResMixin(TestResourceCommon):
         self.assertEqual(data, {'days': 1.5, 'hours': 13})
 
         # Viewing it as Patel
-        # Views from 2018/04/01 11:00:00 to 2018/04/06 10:00:00
+        # Patel is 13 hours ahead of John
         data = self.john._get_work_days_data_batch(
             self.datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.tz),
             self.datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.patel.tz),
@@ -282,7 +284,7 @@ class TestResMixin(TestResourceCommon):
         self.assertEqual(datas['hours'], 0)
 
         # Jean takes a leave for John
-        # Gives 3 hours (3/8 of a day)
+        # Gives 3 hours (3/8 of a day) on Tuesday
         self.env['resource.calendar.leaves'].create({
             'name': 'John is sick',
             'calendar_id': self.john.resource_calendar_id.id,
@@ -292,22 +294,23 @@ class TestResMixin(TestResourceCommon):
         })
 
         # John takes a leave
-        # Gives all day (12 hours)
+        # Gives whole Friday day (12 hours)
         self.env['resource.calendar.leaves'].create({
             'name': 'John goes to holywood',
             'calendar_id': self.john.resource_calendar_id.id,
             'resource_id': self.john.resource_id.id,
             'date_from': self.datetime_str(2018, 4, 13, 7, 0, 0, tzinfo=self.john.tz),
-            'date_to': self.datetime_str(2018, 4, 13, 18, 0, 0, tzinfo=self.john.tz),
+            'date_to': self.datetime_str(2018, 4, 13, 23, 0, 0, tzinfo=self.john.tz),
         })
 
         # John asks how much leaves he has
         # He sees that he has only 15 hours of leave in his attendances
+        #  3/8 of Tuesday, and 12/12 on Friday
         data = self.john._get_leave_days_data_batch(
             self.datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.john.tz),
             self.datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.john.tz),
         )[self.john.id]
-        self.assertEqual(data, {'days': 1, 'hours': 10})
+        self.assertEqual(data, {'days': 1.5, 'hours': 15})
 
         # half days
         leave = self.env['resource.calendar.leaves'].create({
@@ -368,7 +371,7 @@ class TestResMixin(TestResourceCommon):
             'calendar_type': 'undefined',
             'attendance_ids': [],
             'hours_per_week': 0,
-            'hours_per_day': 0,
+            'days_per_week': 7.0,
         })
         flexible_record = self.env['resource.test'].create({
             'name': 'Flexible',
