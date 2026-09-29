@@ -147,7 +147,7 @@
                             </group>
                             <group col="2" name="group_worked_hours">
                                 <field name="worked_hours" string="Worked Time" widget="float_time"/>
-                                <field name="work_entry_type_id" groups="hr.group_hr_user"/>
+                                <field name="work_entry_type_id" groups="hr.group_hr_user" readonly="not can_edit"/>
                                 <field name="break_duration" widget="float_time" readonly="not can_edit"/>
                             </group>
                         </group>
@@ -293,6 +293,31 @@
             <xpath expr="//notebook" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <form position="inside">
+                <footer>
+                    <button
+                        string="Save"
+                        special="save"
+                        data-hotkey="s"
+                        class="btn btn-primary"
+                        close="1"
+                        invisible="not can_edit"/>
+                    <button
+                        special="cancel"
+                        data-hotkey="j"
+                        class="btn-secondary"
+                        close="1"/>
+                    <button
+                        string="Delete"
+                        name="unlink"
+                        type="object"
+                        data-hotkey="x"
+                        class="btn btn-danger ms-auto"
+                        close="1"
+                        confirm="Are you sure you want to delete this attendance?"
+                        invisible="not id or not is_manager"/>
+                </footer>
+            </form>
         </field>
     </record>
 
@@ -312,36 +337,6 @@
                 form_view_id="%(hr_attendance.hr_attendance_my_form_view)d">
                 <field name="wet_color" invisible="1"/>
                 <field name="work_entry_type_id" filters="1" color="color"/>
-                <field name="worked_hours" widget="float_time"/>
-                <field name="break_duration" widget="float_time"/>
-                <field name="source_stale" invisible="1"/>
-                <field name="source_attendance_id" invisible="1"/>
-                <popover>
-                    <field name="source_stale"/>
-                    <field name="source_attendance_id"/>
-                    <templates>
-                        <t t-name="popover-body" class="gap-3">
-                            <div class="alert alert-warning py-1 px-2 mb-0 small" role="status" invisible="not source_stale">
-                                <i class="oi oi-fw me-1" data-icon="warning" role="img"
-                                   aria-label="Warning" title="Warning"/>
-                                <span invisible="source_attendance_id">Source deleted</span>
-                                <span invisible="not source_attendance_id">Source modified</span>
-                            </div>
-                            <div class="d-flex align-items-baseline gap-2" invisible="not work_entry_type_id">
-                                <i class="oi oi-fw text-400" data-icon="label" aria-hidden="true" title="Time Type"/>
-                                <field name="work_entry_type_id"/>
-                            </div>
-                            <div class="d-flex align-items-baseline gap-2" invisible="not worked_hours">
-                                <i class="oi oi-fw text-400" data-icon="schedule" aria-hidden="true" title="Worked Hours"/>
-                                <field name="worked_hours" widget="float_time"/>
-                            </div>
-                            <div class="d-flex align-items-baseline gap-2" invisible="not break_duration">
-                                <i class="oi oi-fw text-400" data-icon="pause_circle" aria-hidden="true" title="Break Duration"/>
-                                <field name="break_duration" widget="float_time"/>
-                            </div>
-                        </t>
-                    </templates>
-                </popover>
             </calendar>
         </field>
     </record>

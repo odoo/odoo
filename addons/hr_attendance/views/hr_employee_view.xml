@@ -123,21 +123,6 @@
                 color="wet_color">
                 <field name="wet_color" invisible="1"/>
                 <field name="work_entry_type_id" filters="1" color="color"/>
-                <field name="worked_hours" widget="float_time"/>
-                <popover>
-                    <templates>
-                        <t t-name="popover-body" class="gap-3">
-                            <div class="d-flex align-items-baseline gap-2" invisible="not work_entry_type_id">
-                                <i class="oi oi-fw text-400" data-icon="label" aria-hidden="true" title="Time Type"/>
-                                <field name="work_entry_type_id"/>
-                            </div>
-                            <div class="d-flex align-items-baseline gap-2" invisible="not worked_hours">
-                                <i class="oi oi-fw text-400" data-icon="schedule" aria-hidden="true" title="Worked Hours"/>
-                                <field name="worked_hours" widget="float_time"/>
-                            </div>
-                        </t>
-                    </templates>
-                </popover>
             </calendar>
         </field>
     </record>

@@ -1,16 +1,16 @@
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { CalendarRenderer } from "@web/views/calendar/calendar_renderer";
-import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
 import { AttendanceCalendarOverview } from "../../components/attendance_calendar/attendance_calendar_overview";
+import { AttendanceCalendarCommonRenderer } from "./attendance_calendar_common_renderer";
 
 export class AttendanceCalendarRenderer extends CalendarRenderer {
     static template = "hr_attendance.AttendanceCalendarRenderer";
     static components = {
         ...CalendarRenderer.components,
         AttendanceCalendarOverview,
-        day: CalendarCommonRenderer,
-        week: CalendarCommonRenderer,
-        month: CalendarCommonRenderer,
+        day: AttendanceCalendarCommonRenderer,
+        week: AttendanceCalendarCommonRenderer,
+        month: AttendanceCalendarCommonRenderer,
     };
 
     get dateRange() {
