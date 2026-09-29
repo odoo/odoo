@@ -1,6 +1,6 @@
 {
     'name': 'RKA',
-    'version': '19.0.1.0.0',
+    'version': '19.0.2.5.0',
     'category': 'Accounting',
     'summary': 'Rencana Kerja dan Anggaran SIFNEXT',
     'description': '''
@@ -29,6 +29,7 @@
     ],
 
     'data': [
+        'security/rka_security.xml',
         'security/ir.model.access.csv',
         'views/rka_budget_views.xml',
         'reports/beban_usaha_report.xml',

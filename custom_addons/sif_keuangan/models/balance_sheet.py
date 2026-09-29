@@ -8,6 +8,9 @@ class SifBalanceSheet(models.AbstractModel):
     _name = 'sif.balance.sheet'
     _description = 'Balance Sheet (Neraca) Service & Engine'
 
+    def _company_scope_domain(self):
+        return ['|', ('company_id', '=', False), ('company_id', 'in', self.env.companies.ids)]
+
     @api.model
     def _default_date_to(self):
         return fields.Date.context_today(self)
@@ -61,7 +64,7 @@ class SifBalanceSheet(models.AbstractModel):
         fiscal_year_start = date_to_dt.replace(month=1, day=1).strftime('%Y-%m-%d')
         fy_start_dt = datetime.datetime.strptime(fiscal_year_start, '%Y-%m-%d').date()
 
-        base_domain = [('date', '<=', date_to)]
+        base_domain = self._company_scope_domain() + [('date', '<=', date_to)]
         if target_move == 'posted':
             base_domain.append(('state', '=', 'posted'))
         if unit_name:
@@ -137,9 +140,10 @@ class SifBalanceSheet(models.AbstractModel):
         self.env.cr.execute("""
             SELECT DISTINCT unit_name 
             FROM sif_jurnal_entry 
-            WHERE unit_name IS NOT NULL AND unit_name != '' 
+            WHERE unit_name IS NOT NULL AND unit_name != ''
+              AND (company_id IS NULL OR company_id = ANY(%s))
             ORDER BY unit_name
-        """)
+        """, (self.env.companies.ids,))
         units_list = [r[0] for r in self.env.cr.fetchall()]
 
         # Hitung snapshot periode utama
@@ -329,7 +333,7 @@ class SifBalanceSheet(models.AbstractModel):
         diff_liab_eq = tot_cur_liab_eq - tot_comp_liab_eq
 
         return {
-            'company_name': self.env.company.name or 'PT Konsulta Semen Gresik',
+            'company_name': ' / '.join(self.env.companies.mapped('name')) or self.env.company.name,
             'date_from': date_from,
             'date_to': date_to,
             'date_from_display': d_from_display,
@@ -494,7 +498,7 @@ class SifBalanceSheetWizard(models.TransientModel):
         ('posted', 'Hanya Jurnal Disetujui (Posted)'),
         ('all', 'Semua Jurnal (Termasuk Draft)'),
     ], string='Status Entri', default='posted', required=True)
-    unit_name = fields.Char(string='Unit Kerja')
+    unit_name = fields.Char(string='Departemen / Unit Lama')
     comparison_type = fields.Selection([
         ('none', 'Tanpa Komparasi'),
         ('last_month', 'Bulan Sebelumnya'),

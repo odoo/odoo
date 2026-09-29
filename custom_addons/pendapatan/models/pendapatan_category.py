@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 
 
 class PendapatanCategory(models.Model):
@@ -8,6 +8,14 @@ class PendapatanCategory(models.Model):
     _description = 'Master Kategori Pendapatan'
     _order = 'code asc, name asc'
     _rec_name = 'display_name'
+
+    finance_central_readonly = fields.Boolean(compute='_compute_finance_central_readonly')
+
+    @api.depends_context('uid')
+    def _compute_finance_central_readonly(self):
+        is_readonly = self.env.user.has_group('pendapatan.group_pendapatan_finance_central')
+        for record in self:
+            record.finance_central_readonly = is_readonly
 
     name = fields.Char(
         string='Nama Kategori',
@@ -64,10 +72,27 @@ class PendapatanCategory(models.Model):
         default=lambda self: self.env.company
     )
 
-    _sql_constraints = [
-        ('code_company_unique', 'unique(code, company_id)',
-         'Kode kategori pendapatan harus unik per perusahaan!'),
-    ]
+    _code_company_unique = models.Constraint(
+        'unique(code, company_id)',
+        'Kode kategori pendapatan harus unik per perusahaan!',
+    )
+
+    def _check_finance_central_readonly(self):
+        if self.env.user.has_group('pendapatan.group_pendapatan_finance_central'):
+            raise AccessError(_('Finance pusat memiliki akses baca saja pada kategori Pendapatan.'))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        self._check_finance_central_readonly()
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self._check_finance_central_readonly()
+        return super().write(vals)
+
+    def unlink(self):
+        self._check_finance_central_readonly()
+        return super().unlink()
 
     @api.depends('code', 'name')
     def _compute_display_name(self):

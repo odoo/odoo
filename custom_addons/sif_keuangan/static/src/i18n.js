@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { user } from "@web/core/user";
-
 /**
  * SIFNEXT Accounting Bilingual Translation Dictionary (ID / EN)
  * Auto-detects user preference language (id_ID vs en_US).
@@ -21,7 +19,7 @@ export const TRANSLATIONS = {
     "search.pl": { id: "Cari akun...", en: "Search account..." },
 
     // Common Filter Options
-    "filter.all_units": { id: "Semua Unit Kerja", en: "All Business Units" },
+    "filter.all_units": { id: "Semua Departemen", en: "All Departments" },
     "filter.all_partners": { id: "Semua Rekanan", en: "All Partners" },
 
     // Presets
@@ -114,11 +112,8 @@ export const TRANSLATIONS = {
 
 export function getActiveLang() {
     try {
-        if (user && user.lang) {
-            return user.lang;
-        }
-        if (user && user.context && user.context.lang) {
-            return user.context.lang;
+        if (typeof odoo !== "undefined" && odoo.session_info && odoo.session_info.user_context) {
+            return odoo.session_info.user_context.lang;
         }
     } catch (e) {}
     return "id_ID";

@@ -17,6 +17,7 @@
                                    placeholder="Kosongkan jika semua tanggal"/>
                         </group>
                         <group string="Filter Tambahan">
+                            <field name="company_id" string="Perusahaan"/>
                             <field name="category_id" string="Kategori"
                                    options="{'no_create': True}"
                                    placeholder="Kosongkan jika semua kategori"/>
@@ -24,8 +25,9 @@
                     </group>
                     <group>
                         <group string="Filter Lanjutan">
-                            <field name="unit_name" string="Unit Kerja"
-                                   placeholder="Kosongkan jika semua unit"/>
+                            <field name="department_id" string="Departemen"
+                                   options="{'no_create': True}"
+                                   placeholder="Kosongkan jika semua departemen"/>
                             <field name="state" string="Status"/>
                         </group>
                         <group string="Tampilan">

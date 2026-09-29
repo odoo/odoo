@@ -13,6 +13,7 @@
                     <button name="action_view_diagram_bulanan" type="object" string="Diagram Bulanan" class="btn-primary" display="always"/>
                     <button name="action_view_top_3_pengeluaran" type="object" string="Top 3 Pengeluaran" class="btn-secondary" display="always"/>
                 </header>
+                <field name="company_id" string="Perusahaan" groups="base.group_multi_company"/>
                 <field name="account_id" string="Akun / COA"/>
                 <field name="tahun" string="Tahun"/>
                 <field
@@ -51,6 +52,7 @@
                     name="account_id"
                     string="Akun / COA"
                 />
+                <field name="company_id" string="Perusahaan" groups="base.group_multi_company"/>
                 <field
                     name="tahun"
                     string="Tahun"
@@ -85,6 +87,7 @@
                 string="Anggaran Bulanan"
                 default_order="month asc"
             >
+                <field name="company_id" string="Perusahaan" groups="base.group_multi_company" optional="hide"/>
                 <field name="month" string="Bulan"/>
                 <field
                     name="budget_amount"
@@ -423,6 +426,7 @@
                 </header>
 
                 <field name="account_id"/>
+                <field name="company_id" string="Perusahaan" groups="base.group_multi_company"/>
                 <field name="tahun"/>
                 <field
                     name="nilai"
@@ -517,6 +521,7 @@
 
                     <group>
                         <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
                             <field name="account_id"/>
                             <field name="tahun"/>
                         </group>
@@ -629,6 +634,7 @@
         <field name="arch" type="xml">
             <search string="Cari RKA">
                 <field name="account_id"/>
+                <field name="company_id" string="Perusahaan" groups="base.group_multi_company"/>
                 <field name="tahun"/>
                 <field name="status"/>
 
@@ -734,7 +740,7 @@
 
                     <div class="oe_title">
                         <h1>
-                            Dashboard RKA — Tahun
+                            Dashboard RKA Tahun
                             <field
                                 name="tahun"
                                 readonly="1"
@@ -759,110 +765,33 @@
                         </group>
                     </group>
 
-                    <notebook>
-                        <page string="RKA Tahunan" name="page_rka_tahunan" invisible="display_mode != 'tahunan'">
-                            <field name="rka_ids" nolabel="1" context="{'graph_modal': False}">
-                                <list string="Daftar RKA Tahunan (klik baris untuk lihat detail bulanan per COA)" editable="bottom">
-                                    <field
-                                        name="account_id"
-                                        string="COA / Akun"
-                                        readonly="1"
-                                    />
-                                    <field
-                                        name="tahun"
-                                        string="Tahun"
-                                        readonly="1"
-                                    />
-                                    <field
-                                        name="nilai"
-                                        string="Anggaran Tahunan (Rp)"
-                                        readonly="1"
-                                        sum="Total Anggaran"
-                                    />
-                                    <field
-                                        name="realisasi"
-                                        string="Realisasi (Rp)"
-                                        readonly="1"
-                                        sum="Total Realisasi"
-                                    />
-                                    <field
-                                        name="sisa_anggaran"
-                                        string="Sisa Anggaran (Rp)"
-                                        readonly="1"
-                                    />
-                                    <field
-                                        name="persentase_realisasi"
-                                        widget="percentage"
-                                        string="% Realisasi"
-                                        readonly="1"
-                                    />
-                                    <!-- Tombol aksi: Lihat Detail Bulanan per COA -->
-                                    <button
-                                        name="action_view_monthly_detail"
-                                        type="object"
-                                        string="Detail Bulanan"
-                                        class="btn-primary"
-                                    />
-                                </list>
-                            </field>
-                        </page>
-                        <page string="Top 3 Pengeluaran" name="page_top3" invisible="display_mode != 'top3'">
-                            <field name="top3_ids" nolabel="1">
-                                <list string="Top 3 RKA dengan Pengeluaran Tertinggi">
-                                    <field
-                                        name="account_id"
-                                        string="COA / Akun"
-                                        readonly="1"
-                                    />
-                                    <field
-                                        name="nilai"
-                                        string="Anggaran (Rp)"
-                                        readonly="1"
-                                    />
-                                    <field
-                                        name="realisasi"
-                                        string="Realisasi (Rp)"
-                                        readonly="1"
-                                    />
-                                    <field
-                                        name="sisa_anggaran"
-                                        string="Sisa (Rp)"
-                                        readonly="1"
-                                    />
-                                    <field
-                                        name="persentase_realisasi"
-                                        widget="percentage"
-                                        string="%"
-                                        readonly="1"
-                                    />
-                                    <button
-                                        name="action_view_monthly_detail"
-                                        type="object"
-                                        string="Detail Bulanan"
-                                        class="btn-primary"
-                                    />
-                                </list>
-                            </field>
-                        </page>
-                        <page string="Data Bulanan" name="page_data_bulanan">
-                            <separator string="Detail Anggaran Per Bulan"/>
-                            <field name="monthly_ids" nolabel="1">
-                                <list
-                                    string="Anggaran Bulanan"
-                                    default_order="month asc">
-                                    <field name="name" string="Bulan"/>
-                                    <field name="budget_amount" string="Anggaran (Rp)"/>
-                                    <field name="realisasi" string="Realisasi (Rp)"/>
-                                    <field name="sisa_anggaran" string="Sisa (Rp)"/>
-                                    <field
-                                        name="persentase_realisasi"
-                                        widget="percentage"
-                                        string="% Terpakai"
-                                    />
-                                </list>
-                            </field>
-                        </page>
-                    </notebook>
+                    <div class="o_rka_dashboard_annual" invisible="display_mode != 'tahunan'">
+                        <h2>RKA Tahunan</h2>
+                        <field name="rka_ids" nolabel="1" readonly="1" context="{'graph_modal': False}">
+                            <list string="Daftar RKA Tahunan" create="0" edit="0" delete="0" no_open="1">
+                                <field name="account_id" string="COA / Akun" readonly="1"/>
+                                <field name="tahun" string="Tahun" readonly="1"/>
+                                <field name="nilai" string="Anggaran Tahunan (Rp)" readonly="1" sum="Total Anggaran"/>
+                                <field name="realisasi" string="Realisasi (Rp)" readonly="1" sum="Total Realisasi"/>
+                                <field name="sisa_anggaran" string="Sisa Anggaran (Rp)" readonly="1"/>
+                                <field name="persentase_realisasi" widget="percentage" string="% Realisasi" readonly="1"/>
+                                <button name="action_view_monthly_detail" type="object" string="Detail Bulanan" class="btn-primary"/>
+                            </list>
+                        </field>
+                    </div>
+                    <div class="o_rka_dashboard_top3" invisible="display_mode != 'top3'">
+                        <h2>Top 3 Pengeluaran</h2>
+                        <field name="top3_ids" nolabel="1" readonly="1">
+                            <list string="Top 3 RKA dengan Pengeluaran Tertinggi" create="0" edit="0" delete="0" no_open="1">
+                                <field name="account_id" string="COA / Akun" readonly="1"/>
+                                <field name="nilai" string="Anggaran (Rp)" readonly="1"/>
+                                <field name="realisasi" string="Realisasi (Rp)" readonly="1"/>
+                                <field name="sisa_anggaran" string="Sisa (Rp)" readonly="1"/>
+                                <field name="persentase_realisasi" widget="percentage" string="%" readonly="1"/>
+                                <button name="action_view_monthly_detail" type="object" string="Detail Bulanan" class="btn-primary"/>
+                            </list>
+                        </field>
+                    </div>
                 </sheet>
             </form>
         </field>
