@@ -297,7 +297,7 @@ class TestBatchPicking(TestStockBatchCommon):
             - The other picking must remain assigned (not validated).
         """
         self.env['stock.picking.type'].browse(self.picking_type_in).write({
-            'auto_batch': True,
+            'batch_creation_type': 'auto',
             'batch_group_by_partner': True
         })
         partner = self.env['res.partner'].create({'name': 'Supplier'})
@@ -439,7 +439,7 @@ class TestBatchPicking(TestStockBatchCommon):
             'code': 'outgoing',
             'company_id': self.env.company.id,
             'warehouse_id': warehouse.id,
-            'auto_batch': True,
+            'batch_creation_type': 'auto',
             'batch_group_by_partner': True,
         })
         partner_1 = self.env['res.partner'].create({
@@ -546,11 +546,11 @@ class TestBatchPicking(TestStockBatchCommon):
         })
         warehouse_1.out_type_id.write({
             'reservation_method': 'at_confirm',
-            'auto_batch': True,
+            'batch_creation_type': 'auto',
             'batch_group_by_src_loc': True,
         })
         (warehouse_2.qc_type_id | warehouse_2.store_type_id).write({
-            'auto_batch': True,
+            'batch_creation_type': 'auto',
             'batch_group_by_dest_loc': True,
         })
         self.env['stock.quant']._update_available_quantity(self.productA, warehouse_1.lot_stock_id, 10)
@@ -650,7 +650,7 @@ class TestBatchPicking(TestStockBatchCommon):
         # Create picking type to avoid conflicts with existing pickings with auto-batch enabled grouping by partner.
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         warehouse.out_type_id.write({
-            'auto_batch': True,
+            'batch_creation_type': 'auto',
             'batch_group_by_partner': True,
         })
         partner = self.env['res.partner'].create({'name': 'Lovely product'})
@@ -722,7 +722,7 @@ class TestBatchPicking(TestStockBatchCommon):
         """
         self.env['stock.picking.type'].browse(self.picking_type_in).write({
             'auto_show_allocation_report': True,
-            'auto_batch': True,
+            'batch_creation_type': 'auto',
             'batch_group_by_partner': True,
         })
 
@@ -973,7 +973,7 @@ class TestBatchPicking02(TestStockBatchCommon):
             'company_id': self.env.company.id,
         })
         warehouse.in_type_id.batch_group_by_partner = True
-        warehouse.in_type_id.auto_batch = True
+        warehouse.in_type_id.batch_creation_type = 'auto'
         productA, productB = self.productA, self.productB
         partner = self.env['res.partner'].create({'name': 'Mr. Belougat'})
         pickings = self.env['stock.picking'].create([
@@ -1125,7 +1125,7 @@ class TestBatchPicking02(TestStockBatchCommon):
         """
         warehouse = self.env.ref('stock.warehouse0')
         warehouse.int_type_id.write({
-            'auto_batch': True,
+            'batch_creation_type': 'auto',
             'batch_group_by_destination': True,
         })
         productA, productB = self.productA, self.productB
@@ -1185,10 +1185,10 @@ class TestBatchPicking02(TestStockBatchCommon):
     def test_backorder_batching_4(self):
         """
         Check that pickings are still linked to the batch after validation
-        when backorders are skipped without autobacth
+        when backorders are skipped with manual batch creation
         """
         warehouse = self.env.ref('stock.warehouse0')
-        warehouse.int_type_id.auto_batch = False
+        warehouse.int_type_id.batch_creation_type = 'manual'
         productA, productB = self.productA, self.productB
         partner = self.env['res.partner'].create({'name': 'Mr. Belougat'})
 
