@@ -83,7 +83,6 @@ export class Builder extends Component {
             currentOptionsContainers: undefined,
             themeColorPresetToShow: null,
             themeTargetRowId: null,
-            themeTargetContainerId: null,
         });
         this.invisibleElementsPanelState = proxy({
             invisibleEls: [],
@@ -315,10 +314,9 @@ export class Builder extends Component {
         this.switchTab(tab, { animated: false });
     }
 
-    setThemeReveal({ presetId = null, targetRowId = null, targetContainerId = null } = {}) {
+    setThemeReveal({ presetId = null, targetRowId = null } = {}) {
         this.state.themeColorPresetToShow = presetId;
         this.state.themeTargetRowId = targetRowId;
-        this.state.themeTargetContainerId = targetContainerId;
     }
 
     updateOptionsForTab(tab) {
@@ -381,7 +379,6 @@ export class Builder extends Component {
         return {
             colorPresetToShow: this.state.themeColorPresetToShow,
             targetRowId: this.state.themeTargetRowId,
-            targetContainerId: this.state.themeTargetContainerId,
         };
     }
 
@@ -412,20 +409,16 @@ export class Builder extends Component {
         return this.editor.resources["lower_panel_entries"] ?? [];
     }
 
-    editColorCombination(presetId) {
-        this.openThemeOption({ presetId });
+    editColorCombination(presetId, targetRowId = null) {
+        this.openThemeOption({ presetId, targetRowId });
     }
 
-    editThemeOption(targetRowId, targetContainerId) {
-        this.openThemeOption({ targetRowId, targetContainerId });
+    editThemeOption(targetRowId) {
+        this.openThemeOption({ targetRowId });
     }
 
-    openThemeOption({ presetId = null, targetRowId = null, targetContainerId = null } = {}) {
-        this.setThemeReveal({
-            presetId,
-            targetRowId,
-            targetContainerId,
-        });
+    openThemeOption({ presetId = null, targetRowId = null } = {}) {
+        this.setThemeReveal({ presetId, targetRowId });
         this.switchTab("theme", { animated: this.props.animateThemeTabSwitch });
     }
 

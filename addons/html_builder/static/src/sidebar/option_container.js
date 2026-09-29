@@ -1,13 +1,11 @@
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
-import { asyncComputed, onMounted, onWillStart, useProps, signal, t, useListener } from "@odoo/owl";
+import { asyncComputed, onWillStart, useProps, signal, t, useListener } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { BaseOptionComponent } from "../core/base_option_component";
 import { useOperation } from "../core/operation_plugin";
 import { useApplyVisibility, useGetItemValue, useVisibilityObserver } from "../core/utils";
-
-const HIGHLIGHT_DURATION = 2000;
 
 export class OptionsContainer extends BaseOptionComponent {
     static template = "html_builder.OptionsContainer";
@@ -26,7 +24,6 @@ export class OptionsContainer extends BaseOptionComponent {
         containerTopButtons: t.array(),
         containerTitle: t.object().optional({}),
         headerMiddleButtons: t.array().optional([]),
-        highlight: t.boolean().optional(false),
     });
     rootRef = signal.ref();
     contentRef = signal.ref();
@@ -51,20 +48,6 @@ export class OptionsContainer extends BaseOptionComponent {
             initial: [],
         });
         onWillStart(() => this.options.currentPromise());
-        onMounted(() => {
-            const rootEl = this.rootRef();
-            if (this.props.highlight && rootEl) {
-                rootEl.scrollIntoView({ behavior: "smooth", block: "center" });
-                rootEl.classList.add("o_hb_options_container_highlight");
-                // The highlight animation runs on sibling option containers, so
-                // the highlight class is removed here instead of using an
-                // "animation-end" event listener.
-                setTimeout(
-                    () => rootEl.classList.remove("o_hb_options_container_highlight"),
-                    HIGHLIGHT_DURATION
-                );
-            }
-        });
     }
 
     async filterAccessGroup(options) {

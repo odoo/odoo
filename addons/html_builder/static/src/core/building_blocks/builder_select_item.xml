@@ -30,4 +30,17 @@
     </BuilderComponent>
 </t>
 
+<t t-name="html_builder.BuilderSelectItemEdit">
+    <div class="d-flex">
+        <div class="flex-grow-1">
+            <t t-out="0"/>
+        </div>
+        <a t-if="editAction"
+            class="oi oi-filled btn o_hb_theme_tab_link"
+            data-icon="edit"
+            t-att-title="editAction.title"
+            t-on-click="editAction.onClick"/>
+    </div>
+</t>
+
 </templates>

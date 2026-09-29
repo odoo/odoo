@@ -13,7 +13,7 @@ export class ThemeColorsOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.palettes = this.getPalettes();
-        this.colorPresetToShow = this.env.colorPresetToShow;
+        this.colorPresetToShow = this.env.themeReveal.colorPresetToShow;
         this.grays = this.dependencies.themeTab.getGrays();
         this.state = useDomState(() => ({
             presets: this.getPresets(),

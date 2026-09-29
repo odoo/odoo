@@ -119,7 +119,8 @@
 
 <t t-name="mass_mailing.DesignGenericButtonOption">
     <BuilderContext action="'mass_mailing.CustomizeMailingVariable'">
-        <BuilderRow label="label" extraLabelClass="'fw-bolder'">
+        <BuilderRow label="label" extraLabelClass="'fw-bolder'"
+            highlight="this.env.themeReveal.targetRowId === rowId">
             <BuilderNumberInput actionParam="{ variable: `${prefix}font-size` }" unit="'px'" saveUnit="'px'" default="0"/>
             <BuilderColorPicker noTransparency="true" title.translate="Text Color" enabledTabs="['solid', 'custom']"
                 actionParam="{ variable: `${prefix}color` }"/>
@@ -156,9 +157,11 @@
 <t t-name="mass_mailing.DesignButtonOption">
     <t t-call="mass_mailing.DesignGenericButtonOption"
         prefix="`--btn-primary-`"
+        rowId="'btn-primary'"
         label.translate="Primary Button"/>
     <t t-call="mass_mailing.DesignGenericButtonOption"
         prefix="`--btn-secondary-`"
+        rowId="'btn-secondary'"
         label.translate="Secondary Button"/>
 </t>
 

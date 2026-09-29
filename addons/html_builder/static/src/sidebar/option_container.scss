@@ -47,13 +47,16 @@
     }
 }
 
-.o_theme_tab:has(.o_hb_options_container_highlight) {
-    .o_hb_options_container:not(.o_hb_options_container_highlight) {
+.o_theme_tab:has(.o_hb_row_highlight) {
+    --o-hb-highlight-overlay-z-index: 10;
+
+    .o_hb_options_container {
         position: relative;
+
         &::before {
             content: "";
             @include o-position-absolute(0, 0, 0, 0);
-            z-index: 10;
+            z-index: var(--o-hb-highlight-overlay-z-index);
             opacity: 0;
             animation: options-container-highlight-grey 2s ease;
             background-color: rgba(0, 0, 0, 0.5);
