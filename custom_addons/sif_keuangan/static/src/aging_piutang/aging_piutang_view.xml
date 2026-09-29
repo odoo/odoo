@@ -274,7 +274,6 @@
                                                     <th rowspan="2" class="o_col_partner" style="min-width: 180px; text-align: left;">NAMA DEBITUR / MITRA / SISWA</th>
                                                     <th rowspan="2" class="text-center o_col_badge" style="width: 100px; min-width: 100px;">KLASIFIKASI</th>
                                                     <th rowspan="2" class="o_col_unit" style="min-width: 130px; text-align: left;">UNIT KERJA / SEKOLAH</th>
-                                                    <th rowspan="2" class="text-center o_col_phone" style="width: 110px; min-width: 110px;">NO. WHATSAPP</th>
                                                     <th rowspan="2" class="text-end o_col_amt" style="width: 110px; min-width: 110px;">LANCAR</th>
                                                     <th colspan="3" class="text-center o_th_regular_group">MENUNGGAK REGULER (1 - 90 HARI)</th>
                                                     <t t-if="state.showBreakdown">
@@ -300,7 +299,7 @@
                                             <tbody>
                                                 <t t-if="state.data.partners.length == 0">
                                                     <tr>
-                                                        <td t-att-colspan="state.showBreakdown ? 14 : 11" class="text-center py-5 text-muted">
+                                                        <td t-att-colspan="state.showBreakdown ? 13 : 10" class="text-center py-5 text-muted">
                                                             <div class="py-3">
                                                                 <i class="fa fa-folder-open-o fa-2x mb-2 text-muted" /><br/>
                                                                 <span>Tidak ada data piutang untuk kriteria filter yang dipilih.</span>
@@ -328,14 +327,6 @@
                                                             </span>
                                                         </td>
                                                         <td class="text-dark fw-medium o_col_unit"><t t-esc="p.unit_name" /></td>
-                                                        <td class="text-center o_col_phone">
-                                                            <t t-if="p.phone and p.phone != '-'">
-                                                                <a href="javascript:void(0)" class="text-decoration-none text-success fw-bold small" t-on-click="() => this.openWhatsApp(p.phone)">
-                                                                    <i class="fa fa-whatsapp me-1" /><t t-esc="p.phone" />
-                                                                </a>
-                                                            </t>
-                                                            <t t-else="">-</t>
-                                                        </td>
                                                         <td class="text-end tabular-nums o_col_amt">
                                                             <span t-att-class="p.current &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.current)" /></span>
                                                         </td>
@@ -381,7 +372,7 @@
                                             <t t-if="state.data.partners.length &gt; 0">
                                                 <tfoot class="o_table_grand_footer text-end fw-bold">
                                                     <tr>
-                                                        <td colspan="5" class="text-start ps-3">TOTAL KESELURUHAN</td>
+                                                        <td colspan="4" class="text-start ps-3">TOTAL KESELURUHAN</td>
                                                         <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_current)" /></td>
                                                         <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_1_30)" /></td>
                                                         <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_31_60)" /></td>
@@ -421,13 +412,12 @@
                                                     <th class="text-center" style="width: 105px; min-width: 105px;">HARI TERLAMBAT</th>
                                                     <th class="text-center" style="width: 130px; min-width: 130px;">KATEGORI UMUR</th>
                                                     <th class="text-end o_th_total" style="width: 135px; min-width: 135px;">NOMINAL</th>
-                                                    <th class="text-center" style="width: 55px; min-width: 55px;">AKSI</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <t t-if="state.data.details.length == 0">
                                                     <tr>
-                                                        <td colspan="11" class="text-center py-5 text-muted">
+                                                        <td colspan="10" class="text-center py-5 text-muted">
                                                             <div class="py-3">
                                                                 <i class="fa fa-file-text-o fa-2x mb-2 text-muted" /><br/>
                                                                 <span>Tidak ada rincian dokumen untuk filter yang dipilih.</span>
@@ -471,14 +461,6 @@
                                                         <td class="text-end fw-bold text-dark tabular-nums o_td_total">
                                                             <t t-esc="formatRp(d.amount)" />
                                                         </td>
-                                                        <td class="text-center">
-                                                            <t t-if="d.phone and d.phone != '-'">
-                                                                <button class="btn btn-xs btn-outline-success p-1 px-2 rounded" title="Hubungi via WhatsApp" t-on-click="() => this.openWhatsApp(d.phone)">
-                                                                    <i class="fa fa-whatsapp" />
-                                                                </button>
-                                                            </t>
-                                                            <t t-else="">-</t>
-                                                        </td>
                                                     </tr>
                                                 </t>
                                             </tbody>
@@ -488,7 +470,6 @@
                                                     <tr>
                                                         <td colspan="9" class="text-start ps-3">TOTAL RINCIAN NOMINATIF</td>
                                                         <td class="tabular-nums o_td_grand_total"><t t-esc="formatRp(state.data.totals.total_receivables)" /></td>
-                                                        <td />
                                                     </tr>
                                                 </tfoot>
                                             </t>
@@ -545,7 +526,6 @@
                                                     <th class="text-center o_col_no" style="width: 36px; min-width: 36px;">NO</th>
                                                     <th style="min-width: 200px; text-align: left;">NAMA DEBITUR / SISWA</th>
                                                     <th style="min-width: 150px; text-align: left;">UNIT KERJA / SEKOLAH</th>
-                                                    <th class="text-center" style="width: 110px; min-width: 110px;">NO. WHATSAPP</th>
                                                     <th class="text-end" style="width: 105px; min-width: 105px;">91 - 120 HARI</th>
                                                     <th class="text-end" style="width: 105px; min-width: 105px;">121 - 180 HARI</th>
                                                     <th class="text-end" style="width: 105px; min-width: 105px;">181 - 365 HARI</th>
@@ -572,14 +552,6 @@
                                                                 </div>
                                                             </td>
                                                             <td class="text-dark fw-medium"><t t-esc="p.unit_name" /></td>
-                                                            <td class="text-center">
-                                                                <t t-if="p.phone and p.phone != '-'">
-                                                                    <a href="javascript:void(0)" class="text-decoration-none text-success fw-bold small" t-on-click="() => this.openWhatsApp(p.phone)">
-                                                                        <i class="fa fa-whatsapp me-1" /><t t-esc="p.phone" />
-                                                                    </a>
-                                                                </t>
-                                                                <t t-else="">-</t>
-                                                            </td>
                                                             <td class="text-end tabular-nums"><span t-att-class="p.b_91_120 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_91_120)" /></span></td>
                                                             <td class="text-end tabular-nums"><span t-att-class="p.b_121_180 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_121_180)" /></span></td>
                                                             <td class="text-end tabular-nums"><span t-att-class="p.b_181_365 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_181_365)" /></span></td>
@@ -590,7 +562,7 @@
                                                 </t>
                                                 <t t-if="crit_count == 0">
                                                     <tr>
-                                                        <td colspan="9" class="text-center py-5 text-success">
+                                                        <td colspan="8" class="text-center py-5 text-success">
                                                             <div class="py-3">
                                                                 <i class="fa fa-check-circle-o fa-2x mb-2 text-success" /><br/>
                                                                 <span class="fw-semibold">Kondisi Terjaga: Tidak ada piutang yang menunggak di atas 90 hari.</span>
