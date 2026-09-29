@@ -208,7 +208,15 @@ class HrVersion(models.Model):
                 # For multi day leaves, we want them to occupy the virtual working schedule 12 AM to average working days
                 # For one day leaves, we want them to occupy exactly the time it was taken, for a time off in days
                 # this will mean the virtual schedule and for time off in hours the chosen hours
+<<<<<<< 0f347c52dbc0bad8514e4f674b94c225aef9a40c
                 one_day_leaves = Intervals([l for l in leaves if l[0].astimezone(tz).date() == l[1].astimezone(tz).date()], keep_distinct=True)
+||||||| 8a2430f675e00112a1aeaddc66e8353f6b385c59
+                one_day_leaves = Intervals([l for l in leaves if l[0].date() == l[1].date()], keep_distinct=True)
+                one_day_worked_leaves = Intervals([l for l in worked_leaves if l[0].date() == l[1].date()], keep_distinct=True)
+=======
+                one_day_leaves = Intervals([l for l in leaves if l[0].date() == l[1].date() and l[2].resource_id], keep_distinct=True)
+                one_day_worked_leaves = Intervals([l for l in worked_leaves if l[0].date() == l[1].date() and l[2].resource_id], keep_distinct=True)
+>>>>>>> 2af31fd5d94627919ecbb4e716c24c882c40168d
                 multi_day_leaves = leaves - one_day_leaves
                 resources_per_tz = version._get_resources_per_tz()
                 static_attendances = calendar._attendance_intervals_batch(

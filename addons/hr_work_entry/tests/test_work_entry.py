@@ -451,6 +451,51 @@ class TestWorkEntry(TestWorkEntryBase):
             'resource_calendar_id': calendar_35h.id,
             'date_version': datetime(2025, 1, 10),
         })
+<<<<<<< 0f347c52dbc0bad8514e4f674b94c225aef9a40c
         work_entries_vals = employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
         self.assertEqual(len(work_entries_vals), 23, "23 attendance")
         self.assertEqual(sum(vals['duration'] for vals in work_entries_vals), 178, "7 * 8h + 6 * 7h + 10 * 8h")
+||||||| 8a2430f675e00112a1aeaddc66e8353f6b385c59
+        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(len(work_entries), 23, "23 attendance")
+        self.assertEqual(sum(work_entries.mapped("duration")), 178, "7 * 8h + 6 * 7h + 10 * 8h")
+=======
+        employee.generate_work_entries(datetime(2025, 1, 1), datetime(2025, 1, 31))
+        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', employee.id)])
+        self.assertEqual(len(work_entries), 23, "23 attendance")
+        self.assertEqual(sum(work_entries.mapped("duration")), 178, "7 * 8h + 6 * 7h + 10 * 8h")
+
+    @freeze_time('2025-09-15')
+    def test_flexible_calendar_public_holiday_duration(self):
+        """ A full day public holiday on a flexible calendar should last the average hours per day,
+            not the whole 24 hours of the day, whatever its work entry type. """
+        self.env.user.tz = 'America/Costa_Rica'
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 48h',
+            'flexible_hours': True,
+            'hours_per_week': 48,
+            'full_time_required_hours': 48,
+            'hours_per_day': 8,
+            'tz': 'America/Costa_Rica',
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Flexible Employee',
+            'tz': 'America/Costa_Rica',
+            'resource_calendar_id': flexible_calendar.id,
+            'date_version': date(2025, 1, 1),
+            'contract_date_start': date(2025, 1, 1),
+        })
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'calendar_id': flexible_calendar.id,
+            'date_from': datetime(2025, 9, 1, 0, 0, 0).replace(tzinfo=ZoneInfo('America/Costa_Rica')).astimezone(UTC).replace(tzinfo=None),
+            'date_to': datetime(2025, 9, 1, 23, 59, 59).replace(tzinfo=ZoneInfo('America/Costa_Rica')).astimezone(UTC).replace(tzinfo=None),
+            'work_entry_type_id': self.env.ref('hr_work_entry.work_entry_type_attendance').id,
+        })
+
+        work_entries = employee.generate_work_entries(date(2025, 9, 1), date(2025, 9, 2)).sorted('date')
+        self.assertEqual(len(work_entries), 2)
+        self.assertEqual(work_entries.mapped('date'), [date(2025, 9, 1), date(2025, 9, 2)])
+        self.assertEqual(work_entries.mapped('duration'), [8.0, 8.0])
+>>>>>>> 2af31fd5d94627919ecbb4e716c24c882c40168d
