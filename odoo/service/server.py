@@ -438,6 +438,7 @@ class ThreadedServer(CommonServer):
 
     def http_client_thread(self, client, address, prelude=b''):
         current_thread = threading.current_thread()
+        current_thread.type = 'http'
         try:
             current_thread.processing_http = True
             # timeout to avoid chrome headless preconnect during tests
@@ -503,12 +504,14 @@ class ThreadedServer(CommonServer):
                 current_thread.name, current_thread.ident, exc_info=True)
 
     def http_spawn(self):
-        threading.Thread(
+        t = threading.Thread(
             target=self.http_server_thread,
             args=(self.stop_event,),
             name="odoo.service.httpd",
             daemon=True,
-        ).start()
+        )
+        t.type = 'http'
+        t.start()
 
     def start(self, stop=False):
         self.logger.debug("setting signal handlers")
@@ -651,6 +654,7 @@ class ThreadedServer(CommonServer):
 
 class GeventServer(CommonServer):
     def __init__(self, app):
+        threading.current_thread().type = 'gevent'
         super().__init__(app)
         self.port = config['gevent_port']
         self.httpd = None
@@ -772,6 +776,7 @@ class PreforkServer(CommonServer):
     dispatcher to will parse the first HTTP request line.
     """
     def __init__(self, app):
+        threading.current_thread().type = 'http'
         super().__init__(app)
         # config
         self.population = config['workers']
@@ -1142,6 +1147,8 @@ class PreforkServer(CommonServer):
 
 class Worker:
     """ Workers """
+    type_: str
+
     def __init__(self, multi):
         self.multi = multi
         self.watchdog_time = time.time()
@@ -1247,6 +1254,7 @@ class Worker:
             target=self._runloop,
             daemon=True,
         )
+        t.type = self.type_
         t.start()
         t.join()
         self.logger.info("Exiting cleanly. request_count: %s, registry count: %s.", self.request_count, len(Registry.registries))
@@ -1273,6 +1281,8 @@ class Worker:
 
 class WorkerHTTP(Worker):
     """ HTTP Request workers """
+    type_ = 'http'
+
     def __init__(self, multi):
         super().__init__(multi)
 
@@ -1308,6 +1318,7 @@ class WorkerHTTP(Worker):
 
 class WorkerCron(Worker):
     """ Cron workers """
+    type_ = 'cron'
 
     def __init__(self, multi):
         super().__init__(multi)
