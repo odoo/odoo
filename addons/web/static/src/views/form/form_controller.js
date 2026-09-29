@@ -570,6 +570,8 @@ export class FormController extends Component {
                 });
                 if (!saved) {
                     this.disableSaveOnVisibilityChange = true;
+                } else {
+                    this.env.config.setDisplayName(this.displayName());
                 }
             }
         }
