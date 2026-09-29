@@ -16,7 +16,7 @@
                     </div>
                     <group>
                         <group invisible="not is_course">
-                            <field name="course_type" widget="radio" invisible="1"/> <!-- xpath anchor of resume_line_view_form_inherit, hr_event and hr_skills_slides which make the field visible -->
+                            <field name="course_type" widget="radio" invisible="1"/> <!-- xpath anchor of resume_line_view_form_inherit, hr_event and hr_slides which make the field visible -->
                             <field name="external_url" placeholder="e.g. https://duolingo.com/course/xyz"/>
                         </group>
                         <group id="resume_line_dates">
@@ -66,11 +66,11 @@
                 <field name="employee_id"/>
                 <field name="name" string="Training Title"/>
                 <field name="date_start" string="Date"/>
-                <field name="course_type" string="Type" column_invisible="1"/> <!-- xpath anchor of hr_event and hr_skills_slides which make this column visible -->
+                <field name="course_type" string="Type" column_invisible="1"/> <!-- xpath anchor of hr_event and hr_slides which make this column visible -->
                 <field name="line_type_id" string="Resume Section" optional="show" required="1" domain="[('is_course', '=', True)]"/>
                 <field name="certificate_file" widget="binary"/>
                 <field name="duration" string="Number of Hours" optional="hide"/>
-                <field name="external_url" optional="hide" column_invisible="1"/> <!-- xpath anchor of hr_event and hr_skills_slides which make this column visible -->
+                <field name="external_url" optional="hide" column_invisible="1"/> <!-- xpath anchor of hr_event and hr_slides which make this column visible -->
                 <field name="description" optional="hide"/>
                 <field name="resume_line_properties" optional="hide"/>
             </list>

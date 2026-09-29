@@ -5036,7 +5036,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'hr_recruitment_sign',
             'hr_recruitment_survey',
             'hr_sign',
-            'hr_skills_slides',
+            'hr_slides',
             'hr_timesheet',
             'im_livechat',
             'l10n_ae_hr_payroll',
