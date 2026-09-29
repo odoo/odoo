@@ -13,6 +13,8 @@
         'data/sif_coa_data.xml',
         'data/sif_coa_legacy_data.xml',
 
+        'wizard/sif_lock_date_wizard_views.xml',
+
         'views/coa_views.xml',
         'views/vendor_views.xml',
         'views/jurnal_views.xml',
