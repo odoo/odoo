@@ -361,6 +361,9 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/tests/mock_server/**/*',
             'bus/static/tests/mock_*.js',
         ],
+        'web._assets_bootstrap_backend': [
+            'mail/static/src/scss/css_variables.scss',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

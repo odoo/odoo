@@ -1,0 +1,13 @@
+/*
+ * CSS variables of onboarding: its design variables exposed as CSS custom
+ * properties, so that stylesheets can read them with `var()` instead of
+ * being compiled by libsass. Every bundle including this file emits its
+ * own values (light, dark...).
+ */
+:root {
+    --o-onboarding-color-blue: #{$o-onboarding-color-blue};
+    --o-onboarding-color-orange: #{$o-onboarding-color-orange};
+    --o-onboarding-image-size: #{$o-onboarding-image-size};
+    --o-onboarding-line-height: #{$o-onboarding-line-height};
+    --o-onboarding-line-width: #{$o-onboarding-line-width};
+}

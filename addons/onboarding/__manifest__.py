@@ -27,6 +27,9 @@ This module allows to manage onboardings and their progress
         'web._assets_primary_variables': [
             'onboarding/static/src/scss/onboarding.variables.scss',
         ],
+        'web._assets_bootstrap_backend': [
+            'onboarding/static/src/scss/css_variables.scss',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

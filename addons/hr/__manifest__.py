@@ -94,6 +94,9 @@
         'web.assets_tests': [
             'hr/static/tests/tours/**/*',
         ],
+        'web._assets_bootstrap_backend': [
+            'hr/static/src/scss/css_variables.scss',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

@@ -1,7 +1,7 @@
 .o-website-builder_sidebar {
     z-index: 0;
     width: 0px;
-    background-color: $o-we-sidebar-bg;
+    background-color: var(--o-we-sidebar-bg);
     transition: width ease 400ms, border 400ms;
 
     &.o_builder_sidebar_open {
@@ -120,5 +120,5 @@ body.o_builder_open .o_notification_manager {
     top: var(--o-bs-spacer-2);
     left: auto;
     bottom: auto;
-    right: calc(#{$o-we-sidebar-width} + 0.5rem);
+    right: calc(var(--o-we-sidebar-width) + 0.5rem);
 }

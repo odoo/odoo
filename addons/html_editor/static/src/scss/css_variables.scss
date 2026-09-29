@@ -1,0 +1,13 @@
+/*
+ * CSS variables of html_editor: its design variables exposed as CSS custom
+ * properties, so that stylesheets can read them with `var()` instead of
+ * being compiled by libsass. Every bundle including this file emits its
+ * own values (light, dark...).
+ */
+:root {
+    --o-we-bg-darker: #{$o-we-bg-darker};
+    --o-we-bg-light: #{$o-we-bg-light};
+    --o-we-bg-lighter: #{$o-we-bg-lighter};
+    --o-we-fg-dark: #{$o-we-fg-dark};
+    --o-we-fg-lighter: #{$o-we-fg-lighter};
+}

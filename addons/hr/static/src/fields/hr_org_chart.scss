@@ -18,20 +18,20 @@
         }
 
         &:after {
-            top: calc(#{$o-hr-org-chart-entry-pic-small-size} * .5 + var(--treeEntry-padding-v));
+            top: calc(var(--o-hr-org-chart-entry-pic-small-size) * .5 + var(--treeEntry-padding-v));
             width: var(--treeEntry--after-width);
         }
 
         .o_media_object {
-            width: $o-hr-org-chart-entry-pic-small-size;
-            height: $o-hr-org-chart-entry-pic-small-size;
+            width: var(--o-hr-org-chart-entry-pic-small-size);
+            height: var(--o-hr-org-chart-entry-pic-small-size);
             background-size: cover;
             background-position: center center;
         }
 
         &.o_org_chart_entry_self .o_media_object {
-            width: $o-hr-org-chart-entry-pic-size;
-            height: $o-hr-org-chart-entry-pic-size;
+            width: var(--o-hr-org-chart-entry-pic-size);
+            height: var(--o-hr-org-chart-entry-pic-size);
         }
 
         .o_employee_redirect:hover {
@@ -66,31 +66,31 @@
     }
 
     .o_org_chart_group_down .o_treeEntry, .o_org_chart_entry_self_container .o_treeEntry {
-        --treeEntry-padding-h: #{$o-hr-org-chart-entry-pic-size};
+        --treeEntry-padding-h: var(--o-hr-org-chart-entry-pic-size);
 
         padding-left: calc(var(--treeEntry-padding-h) - var(--treeEntry--after-width));
     }
 
     .o_org_chart_entry_self_container {
         .o_treeEntry:after {
-            top: calc(#{$o-hr-org-chart-entry-pic-size} * .5 + var(--treeEntry-padding-v));
+            top: calc(var(--o-hr-org-chart-entry-pic-size) * .5 + var(--treeEntry-padding-v));
         }
 
         &.o_org_chart_has_managers {
             .o_org_chart_entry_self {
-                --treeEntry-padding-h: #{$o-hr-org-chart-entry-pic-small-size};
+                --treeEntry-padding-h: var(--o-hr-org-chart-entry-pic-small-size);
 
                 padding-left: calc(var(--treeEntry-padding-h) - var(--treeEntry--after-width));
             }
 
             & + .o_org_chart_group_down {
-                padding-left: calc(#{$o-hr-org-chart-entry-pic-small-size} - var(--treeEntry--after-width));
+                padding-left: calc(var(--o-hr-org-chart-entry-pic-small-size) - var(--treeEntry--after-width));
             }
         }
 
         & + .o_org_chart_group_down {
             --treeEntry--after-width: #{$o-hr-org-chart-entry-pic-size * .25};
-            --treeEntry-padding-h: calc(#{$o-hr-org-chart-entry-pic-size} - var(--treeEntry--after-width));
+            --treeEntry-padding-h: calc(var(--o-hr-org-chart-entry-pic-size) - var(--treeEntry--after-width));
         }
     }
 }

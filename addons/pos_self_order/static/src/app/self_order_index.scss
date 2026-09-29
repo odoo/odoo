@@ -11,7 +11,7 @@
 
     /* Target 4K devices */
     @media #{screen and (min-width: 3839px), (min-height: 3839px)} {
-        --root-font-size: #{$o-so-font-size-4k};
+        --root-font-size: var(--o-so-font-size-4k);
     }
 
     .bg-secondary {
@@ -156,7 +156,7 @@ li {
 
 @include o-kiosk-portrait{
     &:root {
-        --root-font-size: #{$o-so-font-size-kiosk};
+        --root-font-size: var(--o-so-font-size-kiosk);
     }
 
      .o_self_container {

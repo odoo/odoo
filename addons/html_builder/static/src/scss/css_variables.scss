@@ -1,0 +1,12 @@
+/*
+ * CSS variables of html_builder: its design variables exposed as CSS custom
+ * properties, so that stylesheets can read them with `var()` instead of
+ * being compiled by libsass. Every bundle including this file emits its
+ * own values (light, dark...).
+ */
+:root {
+    --o-we-sidebar-bg: #{$o-we-sidebar-bg};
+    --o-we-sidebar-content-field-color: #{$o-we-sidebar-content-field-color};
+    --o-we-sidebar-content-field-input-bg: #{$o-we-sidebar-content-field-input-bg};
+    --o-we-sidebar-width: #{$o-we-sidebar-width};
+}
