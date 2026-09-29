@@ -239,7 +239,7 @@ test(`basic rendering`, async () => {
     const saturdayDate = DateTime.fromISO("2020-12-12");
     const intervals = Interval.fromDateTimes(sundayDate.startOf("day"), saturdayDate.endOf("day")).splitBy({ day: 1 });
     const workLocations = intervals.map(({ start }) => {
-        return queryFirst(`.fc-col-header-cell[data-date="${start.toISODate()}"] .o_worklocation_btn`);
+        return queryFirst(`.o_calendar_header_cell[data-date="${start.toISODate()}"] .o_worklocation_btn`);
     });
     expect(queryAllTexts(workLocations)).toEqual(["Office", "", "", "Home", "Set Location", "Set Location", "Office"]);
 
@@ -257,7 +257,7 @@ test(`multicalendar`, async () => {
     const saturdayDate = DateTime.fromISO("2020-12-12");
     const intervals = Interval.fromDateTimes(sundayDate.startOf("day"), saturdayDate.endOf("day")).splitBy({ day: 1 });
 
-    const dataSetsByDates = intervals.map(({ start }) => queryAllProperties(`.fc-col-header-cell[data-date="${start.toISODate()}"] .o_worklocation_btn .o_homeworking_content`, "dataset"));
+    const dataSetsByDates = intervals.map(({ start }) => queryAllProperties(`.o_calendar_header_cell[data-date="${start.toISODate()}"] .o_worklocation_btn .o_homeworking_content`, "dataset"));
     const locations = dataSetsByDates.flatMap((dataSets) => dataSets.length ? dataSets.map((ds) => ds.location) : [false]);
     expect(locations).toEqual([
         "Office", // sunday
@@ -273,13 +273,13 @@ test(`multicalendar`, async () => {
         "Office", // saturday
         "Office", // saturday
     ]);
-    expect(queryAll(`.fc-col-header-cell[data-date="2020-12-10"] .o_worklocation_text i.add_wl`, { visible: false })).toHaveCount(1);
-    expect(queryAll(`.fc-col-header-cell[data-date="2020-12-12"] .o_worklocation_text i.add_wl`, { visible: false })).toHaveCount(0);
+    expect(queryAll(`.o_calendar_header_cell[data-date="2020-12-10"] .o_worklocation_text i.add_wl`, { visible: false })).toHaveCount(1);
+    expect(queryAll(`.o_calendar_header_cell[data-date="2020-12-12"] .o_worklocation_text i.add_wl`, { visible: false })).toHaveCount(0);
 
-    await contains(`.fc-col-header-cell[data-date="2020-12-10"] .o_homework_content`).click();
+    await contains(`.o_calendar_header_cell[data-date="2020-12-10"] .o_homework_content`).click();
     expect(`.o_popover div[name="employee_name"]`).toHaveText("Brian");
-    expect(`.o_popover .o_cw_popover_edit`).toHaveCount(0);
-    expect(`.o_popover .o_cw_popover_delete`).toHaveCount(0);
+    expect(`.o_popover .o_calendar_popover_edit`).toHaveCount(0);
+    expect(`.o_popover .o_calendar_popover_delete`).toHaveCount(0);
     await contains(`.o_card_popover_close`).click();
 });
 
@@ -302,9 +302,9 @@ test(`test exceptions are correctly rendered`, async () => {
     }));
 
     await mountHomeWorkingView();
-    expect(`.fc-col-header-cell[data-date="2020-12-11"] .o_worklocation_btn`).toHaveText("Home");
+    expect(`.o_calendar_header_cell[data-date="2020-12-11"] .o_worklocation_btn`).toHaveText("Home");
 
-    await contains(`.fc-col-header-cell[data-date="2020-12-10"] .o_worklocation_text`, { visible: false }).click();
+    await contains(`.o_calendar_header_cell[data-date="2020-12-10"] .o_worklocation_text`, { visible: false }).click();
     expect.verifySteps([["hr_calendar.set_location_wizard_action", "2020-12-10"]]);
 });
 
@@ -336,12 +336,12 @@ test(`test exceptions are correctly rendered in multicalendar`, async () => {
     }));
 
     await mountHomeWorkingView();
-    expect(`.fc-col-header-cell[data-date="2020-12-11"] .o_homework_content`).toHaveCount(1);
-    expect(`.fc-col-header-cell[data-date="2020-12-11"] .o_worklocation_btn`).toHaveText("Office");
-    expect(`.fc-col-header-cell[data-date="2020-12-10"] .o_homework_content`).toHaveCount(2);
-    expect(`.fc-col-header-cell[data-date="2020-12-10"] .o_worklocation_btn`).toHaveText("Home");
-    expect(queryAll(`.fc-col-header-cell[data-date="2020-12-11"] .add_wl`, { visible: false })).toHaveCount(1);
+    expect(`.o_calendar_header_cell[data-date="2020-12-11"] .o_homework_content`).toHaveCount(1);
+    expect(`.o_calendar_header_cell[data-date="2020-12-11"] .o_worklocation_btn`).toHaveText("Office");
+    expect(`.o_calendar_header_cell[data-date="2020-12-10"] .o_homework_content`).toHaveCount(2);
+    expect(`.o_calendar_header_cell[data-date="2020-12-10"] .o_worklocation_btn`).toHaveText("Home");
+    expect(queryAll(`.o_calendar_header_cell[data-date="2020-12-11"] .add_wl`, { visible: false })).toHaveCount(1);
 
-    await contains(`.fc-col-header-cell[data-date="2020-12-11"] .add_wl`, { visible: false }).click();
+    await contains(`.o_calendar_header_cell[data-date="2020-12-11"] .add_wl`, { visible: false }).click();
     expect.verifySteps([["hr_calendar.set_location_wizard_action", "2020-12-11"]]);
 });

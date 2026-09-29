@@ -67,14 +67,14 @@ test(`canCreate is true`, async () => {
     await start({
         model: { ...FAKE_MODEL, canCreate: true },
     });
-    expect(`.o_cw_popover_create`).toHaveCount(1);
+    expect(`.o_calendar_popover_create`).toHaveCount(1);
 });
 
 test(`canCreate is false`, async () => {
     await start({
         model: { ...FAKE_MODEL, canCreate: false },
     });
-    expect(`.o_cw_popover_create`).toHaveCount(0);
+    expect(`.o_calendar_popover_create`).toHaveCount(0);
 });
 
 test(`click on create button`, async () => {
@@ -82,23 +82,23 @@ test(`click on create button`, async () => {
         createRecord: () => expect.step("create"),
         model: { ...FAKE_MODEL, canCreate: true },
     });
-    expect(`.o_cw_popover_create`).toHaveCount(1);
+    expect(`.o_calendar_popover_create`).toHaveCount(1);
 
-    await contains(`.o_cw_popover_create`).click();
+    await contains(`.o_calendar_popover_create`).click();
     expect.verifySteps(["create"]);
 });
 
 test(`group records`, async () => {
     await start();
-    expect(`.o_cw_body > div`).toHaveCount(4);
-    expect(`.o_cw_body > a`).toHaveCount(1);
-    expect(queryAllTexts`.o_cw_body > div`).toEqual([
+    expect(`.o_calendar_body > div`).toHaveCount(4);
+    expect(`.o_calendar_body > a`).toHaveCount(1);
+    expect(queryAllTexts`.o_calendar_body > div`).toEqual([
         "July 16, 2021\nR1\n14:00\nR2",
         "July 13-17, 2021\nR4",
         "July 15-17, 2021\nR3",
         "July 15-19, 2021\nR5",
     ]);
-    expect(`.o_cw_body`).toHaveText(
+    expect(`.o_calendar_body`).toHaveText(
         "July 16, 2021\nR1\n14:00\nR2\nJuly 13-17, 2021\nR4\nJuly 15-17, 2021\nR3\nJuly 15-19, 2021\nR5\n Create"
     );
 });
@@ -108,8 +108,8 @@ test(`click on record`, async () => {
         records: [FAKE_RECORDS[3]],
         editRecord: () => expect.step("edit"),
     });
-    expect(`.o_cw_body a.o_cw_popover_link`).toHaveCount(1);
+    expect(`.o_calendar_body a.o_calendar_popover_link`).toHaveCount(1);
 
-    await contains(`.o_cw_body a.o_cw_popover_link`).click();
+    await contains(`.o_calendar_body a.o_calendar_popover_link`).click();
     expect.verifySteps(["edit"]);
 });

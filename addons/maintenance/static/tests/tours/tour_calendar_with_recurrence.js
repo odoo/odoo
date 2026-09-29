@@ -71,19 +71,19 @@ registry.category("web_tour.tours").add("test_drag_and_drop_event_in_calendar", 
         },
         {
             content: 'Wait for monthly view to load',
-            trigger: '.fc-dayGridMonth-view',
+            trigger: '.o_calendar_fc_view_dayGridMonth',
         },
         {
             content: "Move event to 15th of the month",
             trigger: '.o_event[data-event-id="1"]',
             run: ({ drag_and_drop }) =>
-                drag_and_drop('.fc-daygrid-day[data-date$="15"]', { position: "center", relative: true }),
+                drag_and_drop('.o_calendar_day[data-date$="15"]', { position: "center", relative: true }),
         },
         {
             content: "Move occurrence to 20th of the month (nothing should happen)",
             trigger: '.o_event[data-event-id="2"]',
             run: ({ drag_and_drop }) =>
-                drag_and_drop('.fc-daygrid-day[data-date$="20"]', { position: "center", relative: true }),
+                drag_and_drop('.o_calendar_day[data-date$="20"]', { position: "center", relative: true }),
         },
     ],
 });

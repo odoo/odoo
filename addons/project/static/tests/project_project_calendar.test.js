@@ -30,8 +30,8 @@ test("check 'Edit' and 'View Tasks' buttons are in Project Calendar Popover", as
         `,
     });
 
-    expect(".fc-event-main").toHaveCount(1);
-    await click(".fc-event-main");
+    expect(".o_calendar_event_main").toHaveCount(1);
+    await click(".o_calendar_event_main");
     await runAllTimers();
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover .o_popover_footer .btn").toHaveCount(3);

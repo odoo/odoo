@@ -6,7 +6,12 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToFragment, renderToString } from "@web/core/utils/render";
 import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
 import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calendar_common_popover";
-import { convertRecordToEvent, getColor } from "@web/views/calendar/utils";
+import {
+    convertRecordToEvent,
+    getColor,
+    getFullCalendarTimeZone,
+    joinClasses,
+} from "@web/views/calendar/utils";
 import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
 import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
 import { useSquareSelection } from "@web/views/calendar/hooks/square_selection_hook";
@@ -20,14 +25,14 @@ const SCALE_TO_FC_VIEW = {
     month: "dayGridMonth",
 };
 const SCALE_TO_HEADER_FORMAT = {
-    day: "DDD",
-    week: "EEE d",
-    month: "EEEE",
+    day: { year: "numeric", month: "long", day: "numeric" },
+    week: { weekday: "short", day: "numeric" },
+    month: { weekday: "long" },
 };
 const SHORT_SCALE_TO_HEADER_FORMAT = {
     ...SCALE_TO_HEADER_FORMAT,
-    day: "D",
-    month: "EEE",
+    day: { year: "numeric", month: "numeric", day: "numeric" },
+    month: { weekday: "short" },
 };
 const HOUR_FORMATS = {
     12: {
@@ -109,11 +114,11 @@ export class CalendarCommonRenderer extends Component {
             eventDragStart: this.onEventDragStart.bind(this),
             eventDragStop: this.onEventDragStop.bind(this),
             eventDrop: this.onEventDrop.bind(this),
-            eventClass: this.eventClassNames.bind(this),
-            eventInnerClass: this.eventInnerClassNames.bind(this),
+            eventClass: (info) => joinClasses(this.eventClassNames(info)),
+            eventInnerClass: (info) => this.eventInnerClassNames(info),
             eventDidMount: this.onEventDidMount.bind(this),
             eventContent: this.onEventContent.bind(this),
-            backgroundEventClass: this.eventClassNames.bind(this),
+            backgroundEventClass: (info) => joinClasses(this.eventClassNames(info)),
             backgroundEventDidMount: this.onEventDidMount.bind(this),
             eventReceive: this.onEventScheduled.bind(this),
             eventResizableFromStart: true,
@@ -134,15 +139,16 @@ export class CalendarCommonRenderer extends Component {
         return {
             allDaySlot: true,
             allDayHeaderContent: "",
-            dayHeaderAlign: this.props.model.scale === "day" ? "start" : "center",
+            dayHeaderAlign: ({ inPopover }) =>
+                inPopover || this.props.model.scale === "day" ? "start" : "center",
             dayHeaderFormat: this.uiService.isSmall
                 ? SHORT_SCALE_TO_HEADER_FORMAT[this.props.model.scale]
                 : SCALE_TO_HEADER_FORMAT[this.props.model.scale],
             dayHeaderDidMount: this.onDayHeaderDidMount.bind(this),
             dayHeaderWillUnmount: this.onDayHeaderWillUnmount.bind(this),
             dateClick: this.handleDateClick.bind(this),
-            dayCellClass: this.getDayCellClassNames.bind(this),
-            dayLaneClass: this.getDayCellClassNames.bind(this),
+            dayCellClass: (info) => joinClasses(this.getDayCellClassNames(info)),
+            dayLaneClass: (info) => joinClasses(this.getDayCellClassNames(info)),
             events: (_, successCb) => successCb(this.mapRecordsToEvents()),
             initialDate: this.props.initialDate.toISO(),
             initialView: SCALE_TO_FC_VIEW[this.props.model.scale],
@@ -162,7 +168,7 @@ export class CalendarCommonRenderer extends Component {
             slotHeaderFormat: is24HourFormat() ? HOUR_FORMATS[24] : HOUR_FORMATS[12],
             slotMinHeight: this.uiService.isSmall ? 19 : 24,
             snapDuration: { minutes: 15 },
-            timeZone: luxon.Settings.defaultZone.name,
+            timeZone: getFullCalendarTimeZone(),
             weekNumberFormat: {
                 week:
                     this.props.model.scale === "month" || this.uiService.isSmall
@@ -319,11 +325,20 @@ export class CalendarCommonRenderer extends Component {
         }
         return true;
     }
-    eventClassNames({ el, event, isDragging, view }) {
+    eventClassNames({ el, event, isStart, isEnd, isMirror, isDragging, view }) {
         const classesToAdd = [];
         classesToAdd.push("o_event");
+        if (isStart) {
+            classesToAdd.push("o_calendar_event_start");
+        }
+        if (isEnd) {
+            classesToAdd.push("o_calendar_event_end");
+        }
+        if (isMirror) {
+            classesToAdd.push("o_calendar_event_mirror");
+        }
         if (isDragging) {
-            classesToAdd.push(view.type);
+            classesToAdd.push("o_calendar_event_dragging", view.type);
         }
         const record = this.props.model.records[event.id];
 
@@ -331,9 +346,7 @@ export class CalendarCommonRenderer extends Component {
             const color = getColor(record.colorIndex);
             if (typeof color === "number") {
                 classesToAdd.push(`o_calendar_color_${color}`);
-            } else if (typeof color === "string") {
-                classesToAdd.push("o_calendar_color_custom");
-            } else {
+            } else if (typeof color !== "string") {
                 classesToAdd.push("o_calendar_color_0");
             }
 
@@ -367,7 +380,7 @@ export class CalendarCommonRenderer extends Component {
         el.dataset.eventId = event.id;
         if (this.props.model.records[event.id]) {
             const bg = document.createElement("div");
-            bg.classList.add("fc-bg");
+            bg.classList.add("o_calendar_event_bg");
             el.appendChild(bg);
         }
     }
@@ -481,7 +494,7 @@ export class CalendarCommonRenderer extends Component {
         this.popover.close();
         this.props.cleanSquareSelection();
         this.fc().unselect();
-        this.highlightEvent(info.event, "o_cw_custom_highlight");
+        this.highlightEvent(info.event, "o_calendar_custom_highlight");
         this.ref().classList.add("o_interacting", "o_grabbing");
         if (!this.uiService.isSmall) {
             this.props.model.bus.trigger("CALENDAR_EVENT_DRAG", { dragging: true });
@@ -490,7 +503,7 @@ export class CalendarCommonRenderer extends Component {
     onEventResizeStart(info) {
         this.props.cleanSquareSelection();
         this.fc().unselect();
-        this.highlightEvent(info.event, "o_cw_custom_highlight");
+        this.highlightEvent(info.event, "o_calendar_custom_highlight");
     }
     onEventLimitClick() {
         this.fc().unselect();

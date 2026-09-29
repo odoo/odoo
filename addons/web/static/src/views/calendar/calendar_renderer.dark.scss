@@ -1,24 +1,10 @@
-.o_calendar_renderer {
-    .o_calendar_widget .o_calendar_disabled:not(.fc-more-popover) {
-        --o-calendar-disabled-bg: var(--gray-300);
-    }
+:root {
+    --o-calendar-faint: var(--gray-300);
+    --o-calendar-shadow: var(--o-white);
+    --o-calendar-divider-size: 25px;
+    --o-calendar-divider-opacity: .25;
+}
 
-    .o_calendar_widget .fc-timeGridDay-view,
-    .o_calendar_widget .fc-timeGridWeek-view {
-        .fc-timegrid-divider:after {
-            --fc-timegrid-divider-size: 25px;
-            --fc-timegrid-divider-background: linear-gradient(0deg, color-mix(in srgb, var(--white) 0%, transparent), color-mix(in srgb, var(--white) 25%, transparent));
-        }
-    }
-
-    @for $i from 1 through length($o-colors-complete) {
-        $color: nth($o-colors-complete, $i);
-        $color-subtle: mix($o-white, $color, 25%);
-
-        .o_calendar_color_#{$i - 1} {
-            &.fc-bg-event {
-                --fc-bg-event-color: #{$color-subtle};
-            }
-        }
-    }
+.o_calendar_bg_event[class*="o_calendar_color_"]:not(.o_calendar_color_custom) {
+    --fc-event-color: color-mix(in srgb, var(--o-white) 25%, var(--o-calendar-event-bg));
 }

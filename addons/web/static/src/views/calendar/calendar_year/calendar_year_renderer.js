@@ -1,6 +1,11 @@
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
-import { convertRecordToEvent, getColor } from "@web/views/calendar/utils";
+import {
+    convertRecordToEvent,
+    getColor,
+    getFullCalendarTimeZone,
+    joinClasses,
+} from "@web/views/calendar/utils";
 import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
 import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
 import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
@@ -58,7 +63,7 @@ export class CalendarYearRenderer extends Component {
             dayMaxEventRows: this.props.model.eventLimit,
             droppable: true,
             editable: this.props.model.canEdit,
-            backgroundEventClass: this.eventClassNames.bind(this),
+            backgroundEventClass: (info) => joinClasses(this.eventClassNames(info)),
             backgroundEventDidMount: this.onEventDidMount.bind(this),
             eventReceive: this.onEventScheduled.bind(this),
             eventResizableFromStart: true,
@@ -76,8 +81,8 @@ export class CalendarYearRenderer extends Component {
     get options() {
         return {
             dayHeaderAlign: "center",
-            dayHeaderFormat: "EEEEE",
-            dayCellClass: this.getDayCellClassNames.bind(this),
+            dayHeaderFormat: { weekday: "narrow" },
+            dayCellClass: (info) => joinClasses(this.getDayCellClassNames(info)),
             initialDate: this.props.initialDate.toISO(),
             initialView: "multiMonthYear",
             direction: localization.direction,
@@ -89,15 +94,10 @@ export class CalendarYearRenderer extends Component {
             navLinks: false,
             nowIndicator: true,
             showNonCurrentDates: false,
-            timeZone: luxon.Settings.defaultZone.name,
+            timeZone: getFullCalendarTimeZone(),
             multiMonthMaxColumns: 12,
             singleMonthMinWidth: 336,
-            singleMonthClass: (info) => info.multiMonthColumns === 1 && "fc-multimonth-singlecol",
-            singleMonthHeaderClass: "fc-multimonth-header",
             singleMonthTitleFormat: { month: "long", year: "numeric" },
-            tableClass: "fc-multimonth-daygrid",
-            tableHeaderClass: "fc-multimonth-daygrid-header",
-            tableBodyClass: "fc-multimonth-daygrid-table",
             viewDidMount: this.viewDidMount.bind(this),
             weekNumberCalculation: (date) => getLocalYearAndWeek(date).week,
             weekNumbers: false,
@@ -151,7 +151,7 @@ export class CalendarYearRenderer extends Component {
         this.onDateClick(info);
     }
     openPopover(target, date, records) {
-        this.popover.open(target, this.getPopoverProps(date, records), "o_cw_popover");
+        this.popover.open(target, this.getPopoverProps(date, records), "o_calendar_popover");
     }
     unselect() {
         this.fc().unselect();
@@ -191,17 +191,21 @@ export class CalendarYearRenderer extends Component {
         }
         return [];
     }
-    eventClassNames({ event }) {
+    eventClassNames({ event, isStart, isEnd }) {
         const classesToAdd = [];
         classesToAdd.push("o_event");
+        if (isStart) {
+            classesToAdd.push("o_calendar_event_start");
+        }
+        if (isEnd) {
+            classesToAdd.push("o_calendar_event_end");
+        }
         const record = this.props.model.records[event.id];
         if (record) {
             const color = getColor(record.colorIndex);
             if (typeof color === "number") {
                 classesToAdd.push(`o_calendar_color_${color}`);
-            } else if (typeof color === "string") {
-                classesToAdd.push("o_calendar_color_custom");
-            } else {
+            } else if (typeof color !== "string") {
                 classesToAdd.push("o_calendar_color_0");
             }
 

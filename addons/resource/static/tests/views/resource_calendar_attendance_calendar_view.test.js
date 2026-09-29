@@ -46,8 +46,8 @@ test(`resource calendar week multi select creation`, async () => {
         context: { default_calendar_id: 1 },
     });
     await animationFrame();
-    const { drop, moveTo } = await drag(".fc-day[data-date='2025-01-01'] .fc-daygrid-day-events");
-    await moveTo(".fc-day[data-date='2025-01-03'] .fc-daygrid-day-events");
+    const { drop, moveTo } = await drag(".o_calendar_day[data-date='2025-01-01'] .o_calendar_day_events");
+    await moveTo(".o_calendar_day[data-date='2025-01-03'] .o_calendar_day_events");
     await animationFrame();
     await drop();
     await animationFrame();
@@ -88,8 +88,8 @@ test(`resource calendar multi create strips recurrency_until and uses per-day da
         context: { default_calendar_id: 1 },
     });
     await animationFrame();
-    const { drop, moveTo } = await drag(".fc-day[data-date='2025-01-01'] .fc-daygrid-day-events");
-    await moveTo(".fc-day[data-date='2025-01-03'] .fc-daygrid-day-events");
+    const { drop, moveTo } = await drag(".o_calendar_day[data-date='2025-01-01'] .o_calendar_day_events");
+    await moveTo(".o_calendar_day[data-date='2025-01-03'] .o_calendar_day_events");
     await animationFrame();
     await drop();
     await animationFrame();
@@ -135,10 +135,10 @@ test(`resource calendar week daygrid to timegrid`, async () => {
         resModel: "resource.calendar.attendance",
         type: "calendar",
     });
-    expect(".fc-timegrid-event").toHaveCount(0, {
+    expect(".o_calendar_column_event").toHaveCount(0, {
         message: "No not duration_based attendance exists at mount time",
     });
-    expect(".fc-daygrid-event").toHaveCount(1, {
+    expect(".o_calendar_row_event").toHaveCount(1, {
         message: "The preloaded duration_based attendance should appear in daygrid",
     });
 
@@ -177,10 +177,10 @@ test(`resource calendar week timegrid to daygrid`, async () => {
         resModel: "resource.calendar.attendance",
         type: "calendar",
     });
-    expect(".fc-timegrid-event").toHaveCount(1, {
+    expect(".o_calendar_column_event").toHaveCount(1, {
         message: "The preloaded time-based attendance should appear in timegrid",
     });
-    expect(".fc-daygrid-event").toHaveCount(0, {
+    expect(".o_calendar_row_event").toHaveCount(0, {
         message: "No duration_based attendance exists at mount time",
     });
 
@@ -209,13 +209,13 @@ test(`resource calendar week simple click on empty slot in timegrid`, async () =
     });
     await animationFrame();
     // the time slots are below the day columns, which receive the pointer events
-    const slotRect = queryRect(".fc-timegrid-slot-lane[data-time='10:00:00']");
-    const columnRect = queryRect(".fc-timegrid-col:eq(0)");
-    await click(".fc-timegrid-col:eq(0)", {
+    const slotRect = queryRect(".o_calendar_time_slot[data-time='10:00:00']");
+    const columnRect = queryRect(".o_calendar_lane:eq(0)");
+    await click(".o_calendar_lane:eq(0)", {
         position: { x: columnRect.x + columnRect.width / 2, y: slotRect.y + slotRect.height / 2 },
     });
     await animationFrame();
-    await waitFor(".o_cw_popover");
+    await waitFor(".o_calendar_popover");
     expect("div[name=hour_from] input").toHaveValue(10, { message: "Click origin" });
     expect("div[name=hour_to] input").toHaveValue(11, {
         message: "It should create a record of 1 hour by default",
@@ -287,7 +287,7 @@ test(`resource calendar week move recurrent event opens popover with multiple sa
     await animationFrame();
     await moveEventToTime(1, "2025-01-01 14:00:00");
     await animationFrame();
-    await waitFor(".o_cw_popover");
+    await waitFor(".o_calendar_popover");
     expect(".popover-footer .o-dropdown-caret:contains('Save')").toHaveCount(1, {
         message: "Save should be a dropdown (multiple options) for a recurrent record",
     });
@@ -335,7 +335,7 @@ test(`resource calendar move recurrent occurrence "This event" sends original da
     await animationFrame();
     await moveEventToTime(1, "2025-01-02 14:00:00");
     await animationFrame();
-    await waitFor(".o_cw_popover");
+    await waitFor(".o_calendar_popover");
     await click(".popover-footer .o-dropdown-caret:contains('Save')");
     await animationFrame();
     await click(".o-dropdown-item:contains('This event')");
@@ -381,7 +381,7 @@ test(`resource calendar move recurrent occurrence "This and following" sends ori
     await animationFrame();
     await moveEventToTime(1, "2025-01-03 14:00:00");
     await animationFrame();
-    await waitFor(".o_cw_popover");
+    await waitFor(".o_calendar_popover");
     await click(".popover-footer .o-dropdown-caret:contains('Save')");
     await animationFrame();
     await click(".o-dropdown-item:contains('This and following events')");
@@ -426,7 +426,7 @@ test(`resource calendar click virtual recurrent occurrence (no drag) "This event
     });
     await animationFrame();
     await clickEvent(1);
-    await waitFor(".o_cw_popover");
+    await waitFor(".o_calendar_popover");
     await click(".popover-footer .o-dropdown-caret:contains('Save')");
     await animationFrame();
     await click(".o-dropdown-item:contains('This event')");
@@ -471,7 +471,7 @@ test(`resource calendar click virtual recurrent occurrence (no drag) "This and f
     });
     await animationFrame();
     await clickEvent(1);
-    await waitFor(".o_cw_popover");
+    await waitFor(".o_calendar_popover");
     await click(".popover-footer .o-dropdown-caret:contains('Save')");
     await animationFrame();
     await click(".o-dropdown-item:contains('This and following events')");
@@ -509,7 +509,7 @@ test(`resource calendar drag source recurrent event "All events" writes the move
     await animationFrame();
     await moveEventToTime(1, "2025-01-02 14:00:00");
     await animationFrame();
-    await waitFor(".o_cw_popover");
+    await waitFor(".o_calendar_popover");
     await click(".popover-footer .o-dropdown-caret:contains('Save')");
     await animationFrame();
     await click(".o-dropdown-item:contains('All events')");
@@ -554,7 +554,7 @@ test(`resource calendar modify virtual occurrence (no drag) "All events" does no
     });
     await animationFrame();
     await clickEvent(1);
-    await waitFor(".o_cw_popover");
+    await waitFor(".o_calendar_popover");
     await contains("div[name=hour_from] input").edit(9);
     await animationFrame();
     await click(".popover-footer .o-dropdown-caret:contains('Save')");
@@ -588,7 +588,7 @@ test(`resource calendar week resize recurrent event opens popover with multiple 
     await animationFrame();
     await resizeEventToTime(1, "2025-01-01 16:00:00");
     await animationFrame();
-    await waitFor(".o_cw_popover");
+    await waitFor(".o_calendar_popover");
     expect(".popover-footer .o-dropdown-caret:contains('Save')").toHaveCount(1, {
         message: "Save should be a dropdown (multiple options) for a recurrent record",
     });
@@ -613,7 +613,7 @@ test(`resource calendar week select in timegrid`, async () => {
     await animationFrame();
     await selectTimeRange("2025-01-01 10:00:00", "2025-01-01 12:00:00");
     await animationFrame();
-    await waitFor(".o_cw_popover");
+    await waitFor(".o_calendar_popover");
     expect("div[name=hour_from] input").toHaveValue(10);
     expect("div[name=hour_to] input").toHaveValue(12);
     await click(".popover-footer .btn:contains('Discard')");

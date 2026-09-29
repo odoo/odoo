@@ -72,7 +72,7 @@ const calendarMountParams = {
 test("test Project Task Calendar Popover with task_stage_with_state_selection widget", async () => {
     await mountView(calendarMountParams);
 
-    await click(".fc-daygrid-event");
+    await click(".o_calendar_row_event");
 
     // Skipping setTimeout while clicking event in calendar for calendar popover to appear.
     // There is a timeout set in the useCalendarPopover.
@@ -222,10 +222,10 @@ test("test drag and drop a task to schedule in calendar view in month scale", as
     });
     expect(".o_event_to_schedule_draggable").toHaveCount(2);
     const { drop, moveTo } = await contains(".o_event_to_schedule_draggable:first").drag();
-    const dateCell = queryFirst(".fc-day.fc-day-today.fc-daygrid-day");
+    const dateCell = queryFirst(".o_calendar_day[aria-current=date]");
     expectedDate = luxon.DateTime.fromISO(dateCell.dataset.date);
     await moveTo(dateCell);
-    expect(queryFirst(".fc-highlight", { root: dateCell })).toHaveCount(1);
+    expect(queryFirst(".o_calendar_highlight", { root: dateCell })).toHaveCount(1);
     await drop();
     expect.verifySteps([
         "search_read",

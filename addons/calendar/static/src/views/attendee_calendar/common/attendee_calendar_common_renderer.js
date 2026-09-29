@@ -98,7 +98,7 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
             record &&
             this.env.searchModel?.context?.default_calendar_event_id === parseInt(event.id) &&
             !this.popover.isOpen &&
-            !el.classList.contains('fc-event-dragging')
+            !el.classList.contains("o_calendar_event_dragging")
         ) {
             this.openPopover(el, record);
         }

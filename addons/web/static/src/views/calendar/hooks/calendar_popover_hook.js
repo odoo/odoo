@@ -31,7 +31,7 @@ export function useCalendarPopover(component) {
     return {
         close,
         open(target, props, popoverClassToUse) {
-            fcPopover = target.closest(".fc-popover");
+            fcPopover = target.closest(".o_calendar_more_popover");
             popoverClass = popoverClassToUse;
             popover.open(target, props);
         },

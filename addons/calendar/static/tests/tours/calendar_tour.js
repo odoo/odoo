@@ -59,12 +59,12 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
             run: "click",
         },
         {
-            trigger: ".fc-col-header-cell.fc-day.fc-day-mon",
+            trigger: ".o_calendar_header_cell[aria-label=Monday]",
             content: "Check the day is properly displayed",
             run: "hover",
         },
         {
-            trigger: '.fc-time:contains("10:00")',
+            trigger: '.o_calendar_event_time:contains("10:00")',
             content: "Check the time is properly displayed",
             run: "click",
         },
@@ -77,11 +77,11 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
 
 const clickOnTheEvent = {
     content: "Click on the event (focus + waiting)",
-    trigger: '.fc-event .fc-event-main:contains("Test Event")',
+    trigger: '.o_calendar_event .o_calendar_event_main:contains("Test Event")',
     async run(actions) {
         await actions.click();
         await new Promise((r) => setTimeout(r, 1000));
-        const custom = document.querySelector(".o_cw_custom_highlight");
+        const custom = document.querySelector(".o_calendar_custom_highlight");
         if (custom) {
             custom.click();
         }
@@ -92,11 +92,11 @@ registry.category("web_tour.tours").add("test_calendar_delete_tour", {
     steps: () => [
         clickOnTheEvent,
         {
-            trigger: ".o_cw_popover",
+            trigger: ".o_calendar_popover",
         },
         {
             content: "Delete the event",
-            trigger: ".o_cw_popover_delete",
+            trigger: ".o_calendar_popover_delete",
             run: "click",
         },
         {
@@ -111,11 +111,11 @@ registry.category("web_tour.tours").add("test_calendar_decline_tour", {
     steps: () => [
         clickOnTheEvent,
         {
-            trigger: ".o_cw_popover",
+            trigger: ".o_calendar_popover",
         },
         {
             content: "Delete the event",
-            trigger: ".o_cw_popover_delete",
+            trigger: ".o_calendar_popover_delete",
             run: "click",
         },
         {
