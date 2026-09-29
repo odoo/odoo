@@ -15,11 +15,11 @@ class ResCompany(models.Model):
     def _update_l10n_ca_fiscal_position(self):
         """ Put the local fiscal position first, so that domestic_fiscal_position_id is set right. """
         for company in self.filtered(lambda c: c.root_id.chart_template == 'ca_2023'):
-            local_fp = self.env['account.fiscal.position'].with_company(company).search([('state_ids', 'in', company.state_id.id)], limit=1)
+            ca_fps = company.fiscal_position_ids.filtered(lambda fp: fp.country_id.code == 'CA')
+            local_fp = ca_fps.filtered(lambda fp: company.state_id in fp.state_ids)[:1]
             if not local_fp:
                 continue
 
-            ca_fps = company.fiscal_position_ids.filtered(lambda fp: fp.country_id.code == 'CA')
             local_fp.sequence = min(ca_fps.mapped('sequence')) - 1
 
 
