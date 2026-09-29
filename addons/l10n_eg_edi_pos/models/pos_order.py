@@ -37,6 +37,13 @@ class PosOrder(models.Model):
         copy=False,
     )
 
+    def _generate_pos_order_invoice(self):
+        # EXTENDS 'point_of_sale'
+        # Each e-receipt is its own fiscal document, so a single invoice cannot carry the QR of several.
+        if len(self) > 1 and self.filtered("l10n_eg_edi_pos_qr"):
+            raise UserError(self.env._("Orders sent to ETA as e-receipts must be invoiced one by one."))
+        return super()._generate_pos_order_invoice()
+
     def action_pos_order_paid(self):
         if (
             self.country_code == 'EG'
