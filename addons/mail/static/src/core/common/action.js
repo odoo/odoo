@@ -245,6 +245,10 @@ export class Action {
     actionPanelOpen({ keepPrevious } = {}) {
         if (this.actions) {
             if (this.actions.activeAction) {
+                if (this.actions.activeAction.id === this.id) {
+                    // Panel already open, do nothing.
+                    return;
+                }
                 if (keepPrevious) {
                     this.actions.actionStack.push(this.actions.activeAction);
                 } else {
