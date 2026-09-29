@@ -8,3 +8,5 @@ from . import test_utm
 from . import test_recruitment_interviewer
 from . import test_recruitment_allowed_user_ids
 from . import test_recruitment_mail
+from . import test_applicant_skills
+from . import test_recruitment_skills
