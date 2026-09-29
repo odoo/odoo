@@ -1,6 +1,7 @@
-import { Component, proxy } from "@odoo/owl";
-import { useOptionsSubEnv } from "@html_builder/utils/utils";
+import { HighlightThemeRowPlugin } from "@html_builder/core/building_blocks/highlight_theme_row_plugin";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
+import { useOptionsSubEnv } from "@html_builder/utils/utils";
+import { Component, proxy, usePlugin } from "@odoo/owl";
 
 export class DesignTab extends Component {
     static template = "mass_mailing.DesignTab";
@@ -8,6 +9,7 @@ export class DesignTab extends Component {
 
     setup() {
         useOptionsSubEnv(() => [this.env.editor.document.body]);
+        this.highlightThemeRow = usePlugin(HighlightThemeRowPlugin);
         this.state = proxy({
             fontsData: {},
         });

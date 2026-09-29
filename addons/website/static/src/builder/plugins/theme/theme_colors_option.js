@@ -1,7 +1,8 @@
-import { onMounted, onWillUnmount, signal } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { HighlightThemeRowPlugin } from "@html_builder/core/building_blocks/highlight_theme_row_plugin";
 import { useDomState } from "@html_builder/core/utils";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
+import { onMounted, onWillUnmount, signal, usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { ThemeColorsPreviewDialog } from "./theme_colors_preview_dialog";
 
@@ -13,7 +14,8 @@ export class ThemeColorsOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.palettes = this.getPalettes();
-        this.colorPresetToShow = this.env.colorPresetToShow;
+        this.highlightThemeRow = usePlugin(HighlightThemeRowPlugin);
+        this.colorPresetToShow = this.highlightThemeRow.colorPresetToShow();
         this.grays = this.dependencies.themeTab.getGrays();
         this.state = useDomState(() => ({
             presets: this.getPresets(),

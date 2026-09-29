@@ -1,4 +1,15 @@
-import { Component, onMounted, onPatched, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
+import { HighlightThemeRowPlugin } from "@html_builder/core/building_blocks/highlight_theme_row_plugin";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    proxy,
+    signal,
+    t,
+    useEffect,
+    usePlugin,
+    useProps,
+} from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
 import {
@@ -8,6 +19,9 @@ import {
     useVisibilityObserver,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
+
+const EXPAND_ANIMATION_DELAY = 150;
+const HIGHLIGHT_DURATION = 2000;
 
 export class BuilderRow extends Component {
     static template = "html_builder.BuilderRow";
@@ -21,6 +35,7 @@ export class BuilderRow extends Component {
         level: t.number().optional(),
         expand: t.boolean().optional(false),
         initialExpandAnim: t.boolean().optional(),
+        highlight: t.boolean().optional(false),
         extraLabelClass: t.string().optional(),
         observeCollapseContent: t.boolean().optional(false),
         disabled: t.boolean().optional(),
@@ -36,6 +51,10 @@ export class BuilderRow extends Component {
         useBuilderComponent(this.props);
         useVisibilityObserver(this.contentRef, useApplyVisibility(this.rootRef));
 
+        if (this.props.highlight) {
+            this.highlightThemeRow = usePlugin(HighlightThemeRowPlugin);
+        }
+
         this.state = proxy({
             expanded: this.props.expand,
         });
@@ -49,10 +68,16 @@ export class BuilderRow extends Component {
         let isMounted = false;
 
         onMounted(() => {
+            const highlight = this.props.highlight;
             if (this.props.initialExpandAnim) {
                 setTimeout(() => {
                     this.toggleCollapseContent();
-                }, 150);
+                    if (highlight) {
+                        this.highlightRow();
+                    }
+                }, EXPAND_ANIMATION_DELAY);
+            } else if (highlight) {
+                this.highlightRow();
             }
         });
 
@@ -112,6 +137,14 @@ export class BuilderRow extends Component {
     toggleCollapseContent() {
         this.state.expanded = !this.state.expanded;
         this.transition.shouldMount = this.state.expanded;
+    }
+
+    highlightRow() {
+        const rootEl = this.rootRef();
+        rootEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        rootEl.classList.add("o_hb_row_highlight");
+        setTimeout(() => rootEl.classList.remove("o_hb_row_highlight"), HIGHLIGHT_DURATION);
+        this.highlightThemeRow.targetRowId.set(null);
     }
 
     get displayCollapseContent() {

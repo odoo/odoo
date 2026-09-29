@@ -543,3 +543,11 @@ export async function toggleMobilePreview() {
     // will need one more animation frame to have their changes reflected
     await animationFrame();
 }
+
+export async function waitForThemeReveal() {
+    // Switching to another tab taks 400 ms.
+    await advanceTime(400);
+    await animationFrame();
+    // Unfolding a row takes 150 ms.
+    await advanceTime(150);
+}

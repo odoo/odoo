@@ -12,6 +12,7 @@ import {
     proxy,
     useProps,
     t,
+    usePlugin,
     useScope,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -19,6 +20,7 @@ import { _t } from "@web/core/l10n/translation";
 import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_utils";
 import { useService } from "@web/core/utils/hooks";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
+import { HighlightThemeRowPlugin } from "@html_builder/core/building_blocks/highlight_theme_row_plugin";
 import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
 import { BlockTab } from "@html_builder/sidebar/block_tab";
 import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
@@ -75,15 +77,14 @@ export class Builder extends Component {
     setup() {
         this.ThemeTab = this.props.getThemeTab?.();
         providePlugins([TextTruncateTooltipPlugin], { rootRef: this.builderSidebarRef });
+        providePlugins([HighlightThemeRowPlugin]);
+        this.highlightThemeRow = usePlugin(HighlightThemeRowPlugin);
         this.state = proxy({
             canUndo: false,
             canRedo: false,
             activeTab: this.props.onlyCustomizeTab ? "customize" : this.props.initialTab,
             pendingTab: undefined,
             currentOptionsContainers: undefined,
-            themeColorPresetToShow: null,
-            themeTargetRowId: null,
-            themeTargetContainerId: null,
         });
         this.invisibleElementsPanelState = proxy({
             invisibleEls: [],
@@ -315,10 +316,9 @@ export class Builder extends Component {
         this.switchTab(tab, { animated: false });
     }
 
-    setThemeReveal({ presetId = null, targetRowId = null, targetContainerId = null } = {}) {
-        this.state.themeColorPresetToShow = presetId;
-        this.state.themeTargetRowId = targetRowId;
-        this.state.themeTargetContainerId = targetContainerId;
+    setThemeReveal({ presetId = null, targetRowId = null } = {}) {
+        this.highlightThemeRow.colorPresetToShow.set(presetId);
+        this.highlightThemeRow.targetRowId.set(targetRowId);
     }
 
     updateOptionsForTab(tab) {
@@ -377,14 +377,6 @@ export class Builder extends Component {
         this.state.pendingTab = undefined;
     }
 
-    get themeTabProps() {
-        return {
-            colorPresetToShow: this.state.themeColorPresetToShow,
-            targetRowId: this.state.themeTargetRowId,
-            targetContainerId: this.state.themeTargetContainerId,
-        };
-    }
-
     undo() {
         this.editor.shared.operation.next(() => this.editor.shared.history.undo());
     }
@@ -412,20 +404,16 @@ export class Builder extends Component {
         return this.editor.resources["lower_panel_entries"] ?? [];
     }
 
-    editColorCombination(presetId) {
-        this.openThemeOption({ presetId });
+    editColorCombination(presetId, targetRowId = null) {
+        this.openThemeOption({ presetId, targetRowId });
     }
 
-    editThemeOption(targetRowId, targetContainerId) {
-        this.openThemeOption({ targetRowId, targetContainerId });
+    editThemeOption(targetRowId) {
+        this.openThemeOption({ targetRowId });
     }
 
-    openThemeOption({ presetId = null, targetRowId = null, targetContainerId = null } = {}) {
-        this.setThemeReveal({
-            presetId,
-            targetRowId,
-            targetContainerId,
-        });
+    openThemeOption({ presetId = null, targetRowId = null } = {}) {
+        this.setThemeReveal({ presetId, targetRowId });
         this.switchTab("theme", { animated: this.props.animateThemeTabSwitch });
     }
 
