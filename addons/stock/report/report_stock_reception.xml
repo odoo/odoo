@@ -10,11 +10,12 @@
                 <t t-foreach="range(len(docs))" t-as="index">
                     <t t-set="move" t-value="docs[index]"/>
                     <t t-set="qty" t-value="qtys[index]"/>
-                    <t t-set="source" t-value="move._get_source_document()"/>
+                    <t t-set="source" t-value="move.sudo()._get_source_document()"/>
+                    <t t-set="source" t-value="source and source.with_env(move.env)"/>
                     <t t-foreach="range(qty)" t-as="j">
                         <div class="o_label_page o_label_dymo">
                             <span t-out="move.product_id.display_name">Product Display Name</span> <br/>
-                            <span t-if="source" t-out="source.name">Source Name</span>
+                            <span t-if="source" t-out="source.sudo().name">Source Name</span>
                             <div class="address"
                                 t-if="move.picking_id and move.picking_id.partner_id"
                                 t-field="move.picking_id.partner_id"
@@ -62,21 +63,22 @@
             </div>
             <table t-if="sources_to_lines" class="o_report_reception_table table table-sm text-start">
                 <t t-foreach="sources_to_lines" t-as="source">
+                    <t t-set="source_info" t-value="sources_info[str(source)]"/>
                     <thead t-if="any(line['is_assigned'] for line in sources_to_lines[source])">
                         <tr class="bg-light">
                             <th>
-                                <span t-field="source[0].display_name" t-options="{'widget': 'barcode', 'width': 200, 'height': 30}">Display Name</span>
-                                <i t-if="source[0].priority == '1'" class="o_priority o_priority_star fa fa-star"/>
-                                <a name="source_link" href="#" t-att-res-model="source[0]._name" view-type="form" t-att-res-id="source[0].id">
-                                    <span t-out="source[0].display_name">DEMO_SOURCE_DISPLAY_NAME</span>
+                                <span t-out="source_info[0]['name']" t-options="{'widget': 'barcode', 'width': 200, 'height': 30}">Display Name</span>
+                                <i t-if="source_info[0].get('priority') == '1'" class="o_priority o_priority_star fa fa-star"/>
+                                <a name="source_link" href="#" t-att-res-model="source_info[0]['model']" view-type="form" t-att-res-id="source_info[0]['id']">
+                                    <span t-out="source_info[0]['name']">DEMO_SOURCE_DISPLAY_NAME</span>
                                 </a>
-                                <span t-if="len(source) > 1">
-                                    (<a name="origin_link" href="#" t-att-res-model="source[1]._name" view-type="form" t-att-res-id="source[1].id">
-                                    <span t-out="source[1].display_name">DEMO_ORIGIN_DISPLAY_NAME</span></a>)
+                                <span t-if="len(source_info) > 1">
+                                    (<a name="origin_link" href="#" t-att-res-model="source_info[1]['model']" view-type="form" t-att-res-id="source_info[1]['id']">
+                                    <span t-out="source_info[1]['name']">DEMO_ORIGIN_DISPLAY_NAME</span></a>)
                                 </span>
-                                <span t-if="source[0]._name == 'stock.picking' and source[0].partner_id">:
-                                    <a name="source_link" href="#" t-att-res-model="source[0].partner_id._name" t-att-res-id="source[0].partner_id.id" view-type="form">
-                                        <span t-out="source[0].partner_id.name">DEMO_PARTNER_NAME</span>
+                                <span t-if="source_info[0]['model'] == 'stock.picking' and source_info[0]['partner_id']">:
+                                    <a name="source_link" href="#" res-model="res.partner" t-att-res-id="source_info[0]['partner_id']" view-type="form">
+                                        <span t-out="source_info[0]['partner_name']">DEMO_PARTNER_NAME</span>
                                     </a>
                                 </span>
                             </th>
