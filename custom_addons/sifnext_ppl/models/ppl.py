@@ -10,17 +10,33 @@ class SifnextPPL(models.Model):
 
     name = fields.Char(default="New", readonly=True, copy=False, tracking=True, index=True)
     request_date = fields.Date(required=True, default=fields.Date.context_today, tracking=True)
+    vendor_id = fields.Many2one("sif.vendor", string="Vendor", tracking=True)
+    payment_term = fields.Selection(
+        [("langsung", "Langsung"), ("jatuh_tempo", "Jatuh Tempo")],
+        string="Tipe Pembayaran",
+        default="langsung",
+        required=True,
+        tracking=True,
+    )
+    due_date = fields.Date(string="Tanggal Jatuh Tempo", tracking=True)
+    batas_waktu = fields.Char(
+        string="Batas Waktu",
+        compute="_compute_batas_waktu",
+        store=True,
+    )
     applicant_id = fields.Many2one(
         "res.users", required=True, default=lambda self: self.env.user,
         readonly=True, tracking=True,
     )
-    unit_id = fields.Many2one(
-        "sifnext.unit",
-        string="Unit",
-        default=lambda self: self.env.user.unit_id,
+    department_id = fields.Many2one(
+        "hr.department",
+        string="Departemen",
+        default=lambda self: self.env.user.department_id,
         tracking=True,
         domain="[('company_id', '=', company_id)]",
-        help="Wajib untuk PPL baru. Dibiarkan kosong hanya pada PPL lama sebelum master Unit diterapkan.",
+        check_company=True,
+        ondelete="restrict",
+        help="Departemen pemohon yang memiliki anggaran dan menjadi dasar pelacakan jurnal.",
     )
     partner_id = fields.Many2one("res.partner", string="Penerima/Vendor", tracking=True)
     title = fields.Char(required=True, tracking=True)
@@ -87,6 +103,43 @@ class SifnextPPL(models.Model):
         "Nomor PPL harus unik dalam satu perusahaan.",
     )
 
+    payroll_batch_id = fields.Many2one(
+        "custom.payroll.batch",
+        string="Batch Payroll",
+        readonly=True,
+        copy=False,
+        ondelete="set null",
+        index=True,
+    )
+
+    @api.constrains("department_id", "company_id")
+    def _check_department_company(self):
+        for record in self:
+            if not record.department_id:
+                raise ValidationError(_("Departemen wajib diisi untuk PPL baru."))
+            if record.department_id.company_id != record.company_id:
+                raise ValidationError(_("Departemen PPL harus berasal dari perusahaan/cabang yang sama."))
+
+    @api.constrains("payment_term", "due_date")
+    def _check_due_date(self):
+        for record in self:
+            if record.payment_term == "jatuh_tempo" and not record.due_date:
+                raise ValidationError(_("Tanggal jatuh tempo wajib diisi untuk pembayaran Jatuh Tempo."))
+
+    def _check_finance_central_readonly(self):
+        if self.env.user.has_group("sif_keuangan.group_sif_keuangan_central_readonly"):
+            raise AccessError(_("Finance pusat memiliki akses baca saja pada data PPL."))
+
+    @api.depends("payment_term", "due_date")
+    def _compute_batas_waktu(self):
+        for record in self:
+            if record.payment_term == "langsung":
+                record.batas_waktu = "Langsung"
+            elif record.due_date:
+                record.batas_waktu = fields.Date.to_string(record.due_date)
+            else:
+                record.batas_waktu = "Jatuh Tempo"
+
     @api.depends("payment_method")
     def _compute_payment_source_domain(self):
         for record in self:
@@ -125,27 +178,36 @@ class SifnextPPL(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        self._check_finance_central_readonly()
         is_finance = self.env.user.has_group("sifnext_ppl.group_ppl_finance")
+        is_payroll_integration = (
+            self.env.context.get("ppl_payroll_integration")
+            and self.env.user.has_group("hr_payroll_custom.group_payroll_user")
+        )
         for vals in vals_list:
             applicant = self.env["res.users"].browse(vals.get("applicant_id", self.env.user.id))
-            if not is_finance and applicant != self.env.user:
+            if not is_finance and not is_payroll_integration and applicant != self.env.user:
                 raise AccessError(_("Pegawai hanya dapat membuat PPL atas nama sendiri."))
-            if not is_finance:
+            if not is_finance and not is_payroll_integration:
                 applicant = self.env.user
                 vals["applicant_id"] = applicant.id
                 vals["source_type"] = "manual"
-            unit = self.env["sifnext.unit"].browse(vals.get("unit_id") or applicant.unit_id.id)
-            if not unit:
-                raise ValidationError(_("Unit pemohon wajib ditentukan sebelum membuat PPL."))
             company = self.env["res.company"].browse(vals.get("company_id", self.env.company.id))
-            if unit.company_id != company:
-                raise ValidationError(_("Unit PPL harus berasal dari perusahaan yang sama."))
-            vals["unit_id"] = unit.id
+            department = self.env["hr.department"].browse(
+                vals.get("department_id") or applicant.department_id.id
+            ).exists()
+            if not department:
+                raise ValidationError(_("Departemen pemohon wajib ditentukan sebelum membuat PPL."))
+            if department.company_id != company:
+                raise ValidationError(_("Departemen PPL harus berasal dari perusahaan yang sama."))
+            if not department.sif_code:
+                raise ValidationError(_("Kode departemen wajib tersedia sebelum membuat nomor PPL."))
+            vals["department_id"] = department.id
             request_date = fields.Date.to_date(vals.get("request_date")) or fields.Date.context_today(self)
             sequence = self.env["ir.sequence"].next_by_code(
                 "sifnext.ppl", sequence_date=request_date,
             ) or "New"
-            vals["name"] = f"{unit.code}/{sequence}"
+            vals["name"] = f"{department.sif_code}/{sequence}"
         return super().create(vals_list)
 
     def _is_submitted_coa_update(self, commands):
@@ -167,6 +229,7 @@ class SifnextPPL(models.Model):
         return bool(commands)
 
     def write(self, vals):
+        self._check_finance_central_readonly()
         if "name" in vals and any(record.name != vals["name"] for record in self):
             raise UserError(_("Nomor PPL tidak dapat diubah."))
         workflow_fields = {
@@ -179,8 +242,8 @@ class SifnextPPL(models.Model):
             if vals["applicant_id"] != self.env.user.id:
                 raise AccessError(_("Pegawai tidak dapat mengubah pemohon PPL."))
         protected = {
-            "request_date", "applicant_id", "unit_id", "partner_id", "title", "description",
-            "source_type",
+            "request_date", "applicant_id", "department_id", "partner_id", "vendor_id",
+            "payment_term", "due_date", "title", "description", "source_type", "payroll_batch_id",
         }
         protected_values = {field: vals[field] for field in protected.intersection(vals)}
         for record in self.filtered(lambda item: item.state != "draft"):
@@ -213,6 +276,7 @@ class SifnextPPL(models.Model):
         return self.with_context(ppl_workflow_write=True).write(vals)
 
     def unlink(self):
+        self._check_finance_central_readonly()
         if any(record.state != "draft" for record in self):
             raise UserError(_("Hanya PPL Draft yang dapat dihapus."))
         return super().unlink()
@@ -251,11 +315,21 @@ class SifnextPPL(models.Model):
                     "id": self.applicant_id.id,
                     "name": self.applicant_id.name,
                 },
+                "vendor": {
+                    "id": self.vendor_id.id,
+                    "name": self.vendor_id.name,
+                } if self.vendor_id else None,
+                "department": {
+                    "id": self.department_id.id,
+                    "code": self.department_id.sif_code,
+                    "name": self.department_id.name,
+                } if self.department_id else None,
+                # Keep the old payload key temporarily for existing consumers.
                 "unit": {
-                    "id": self.unit_id.id,
-                    "code": self.unit_id.code,
-                    "name": self.unit_id.name,
-                } if self.unit_id else None,
+                    "id": self.department_id.id,
+                    "code": self.department_id.sif_code,
+                    "name": self.department_id.name,
+                } if self.department_id else None,
                 "partner": {
                     "id": self.partner_id.id,
                     "name": self.partner_id.name,
@@ -316,7 +390,7 @@ class SifnextPPL(models.Model):
             "ppl_id": self.id,
             "ppl_number": self.name,
             "company_id": self.company_id.id,
-            "unit_id": self.unit_id.id,
+            "department_id": self.department_id.id,
             "request_date": fields.Date.to_string(self.request_date),
             "currency_id": self.currency_id.id,
             "total_amount": self.total_amount,
@@ -404,7 +478,10 @@ class SifnextPPL(models.Model):
             'date': payload['ppl']['payment']['date'],
             'reference': payload['ppl']['title'],
             'source_document': payload['ppl']['number'],
-            'unit_dept': self.unit_id.journal_unit_dept if self.unit_id else 'pusat',
+            'unit_dept': self.department_id.sif_journal_unit_dept if self.department_id else 'pusat',
+            'company_id': self.company_id.id,
+            'department_id': self.department_id.id,
+            'unit_name': self.department_id.name if self.department_id else 'KANTOR',
             'lines': jurnal_lines,
         })
         return True
@@ -486,6 +563,8 @@ class SifnextPPL(models.Model):
         for record in self:
             if record.state != "approved":
                 raise UserError(_("Hanya PPL Disetujui yang dapat dibayar."))
+            if record.payment_term == "jatuh_tempo" and record.due_date and record.due_date > fields.Date.today():
+                raise UserError(_("PPL jatuh tempo belum mencapai batas waktu pembayaran (%s).") % record.due_date)
             if not record.payment_method or not record.payment_date or not record.payment_reference \
                     or not record.payment_source_account_id:
                 raise ValidationError(_("Metode, tanggal, referensi, dan sumber dana pembayaran wajib diisi."))
@@ -568,6 +647,7 @@ class SifnextPPLLine(models.Model):
     subtotal = fields.Monetary(compute="_compute_subtotal", store=True)
     currency_id = fields.Many2one(related="ppl_id.currency_id", store=True)
     company_id = fields.Many2one(related="ppl_id.company_id", store=True)
+    department_id = fields.Many2one(related="ppl_id.department_id", store=True, index=True)
     journal_account_id = fields.Many2one(
         "sif.coa",
         string="COA",
@@ -594,6 +674,7 @@ class SifnextPPLLine(models.Model):
             rka = self.env["sif.rka.budget"].search([
                 ("account_id", "=", line.journal_account_id.id),
                 ("tahun", "=", tahun),
+                ("company_id", "=", line.ppl_id.company_id.id),
             ], limit=1)
             line.rka_id = rka
 
@@ -614,6 +695,10 @@ class SifnextPPLLine(models.Model):
     )
     attachment_count = fields.Integer(compute="_compute_attachment_count", string="Jumlah Lampiran")
     ppl_state = fields.Selection(related="ppl_id.state", string="Status PPL")
+
+    def _check_finance_central_readonly(self):
+        if self.env.user.has_group("sif_keuangan.group_sif_keuangan_central_readonly"):
+            raise AccessError(_("Finance pusat memiliki akses baca saja pada detail PPL."))
 
     @api.depends("attachment_ids")
     def _compute_attachment_count(self):
@@ -651,6 +736,7 @@ class SifnextPPLLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        self._check_finance_central_readonly()
         if any(vals.get("journal_account_id") for vals in vals_list):
             if not self.env.user.has_group("sifnext_ppl.group_ppl_finance"):
                 raise AccessError(_("Hanya Finance yang dapat memilih COA."))
@@ -660,6 +746,7 @@ class SifnextPPLLine(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        self._check_finance_central_readonly()
         self._check_finance_account_access(vals)
         content_fields = {"description", "quantity", "unit_price", "attachment_ids"}
         if content_fields.intersection(vals) and any(line.ppl_id.state != "draft" for line in self):
@@ -667,6 +754,7 @@ class SifnextPPLLine(models.Model):
         return super().write(vals)
 
     def unlink(self):
+        self._check_finance_central_readonly()
         if any(line.ppl_id.state != "draft" for line in self):
             raise UserError(_("Detail hanya dapat dihapus pada status Draft."))
         return super().unlink()
@@ -697,6 +785,8 @@ class IrAttachment(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        if self.env.user.has_group("sif_keuangan.group_sif_keuangan_central_readonly"):
+            raise AccessError(_("Finance pusat memiliki akses baca saja pada lampiran PPL."))
         direct_line_ids = [
             vals.get("res_id")
             for vals in vals_list
@@ -708,9 +798,13 @@ class IrAttachment(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        if self.env.user.has_group("sif_keuangan.group_sif_keuangan_central_readonly"):
+            raise AccessError(_("Finance pusat memiliki akses baca saja pada lampiran PPL."))
         self._check_ppl_attachment_draft()
         return super().write(vals)
 
     def unlink(self):
+        if self.env.user.has_group("sif_keuangan.group_sif_keuangan_central_readonly"):
+            raise AccessError(_("Finance pusat memiliki akses baca saja pada lampiran PPL."))
         self._check_ppl_attachment_draft()
         return super().unlink()

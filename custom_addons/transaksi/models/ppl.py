@@ -96,7 +96,8 @@ class SifnextPPL(models.Model):
                 "ref_number": (self.name or "")[:19],
                 "remark": f"Multi Transfer Payroll {self.name}: {self.title or ''}"[:200],
                 "ppl_id": self.id,
-                "unit_id": self.unit_id.id if self.unit_id else False,
+                "company_id": self.company_id.id,
+                "department_id": self.department_id.id,
                 "line_ids": lines,
             }
             tx = self.env["transaksi.transaction"].create(tx_vals)
@@ -130,7 +131,8 @@ class SifnextPPL(models.Model):
                 "ref_number": (self.name or "")[:19],
                 "remark": f"Bayar PPL {self.name}: {self.title or ''}"[:200],
                 "ppl_id": self.id,
-                "unit_id": self.unit_id.id if self.unit_id else False,
+                "company_id": self.company_id.id,
+                "department_id": self.department_id.id,
             }
             tx = self.env["transaksi.transaction"].create(tx_vals)
             self.write({"transaction_id": tx.id})
@@ -161,6 +163,10 @@ class SifnextPPL(models.Model):
 
         if not self:
             raise UserError(_("Pilih minimal satu dokumen PPL untuk membuat transfer kolektif."))
+
+        companies = self.mapped("company_id")
+        if len(companies) != 1:
+            raise ValidationError(_("Transfer kolektif hanya dapat menggabungkan PPL dari satu perusahaan/cabang."))
 
         invalid_state = self.filtered(lambda p: p.state != "approved")
         if invalid_state:
@@ -214,10 +220,13 @@ class SifnextPPL(models.Model):
 
         source_accounts = self.mapped("payment_source_account_id")
         source_account_id = source_accounts[0].id if len(source_accounts) == 1 else False
+        departments = self.mapped("department_id")
 
         tx_vals = {
             "transfer_type": "multiple",
             "remark": f"Pembayaran Kolektif {len(self)} Dokumen PPL"[:200],
+            "company_id": companies.id,
+            "department_id": departments.id if len(departments) == 1 else False,
             "ppl_ids": [(6, 0, self.ids)],
             "line_ids": lines,
             "source_account_id": source_account_id,

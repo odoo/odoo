@@ -86,4 +86,18 @@
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('group_transaksi_finance')), (4, ref('group_transaksi_director')), (4, ref('group_transaksi_manager'))]"/>
     </record>
+
+    <record id="rule_transaksi_transaction_central_readonly" model="ir.rule">
+        <field name="name">Finance Pusat: baca seluruh transaksi cabang yang diizinkan</field>
+        <field name="model_id" ref="model_transaksi_transaction"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('sif_keuangan.group_sif_keuangan_central_readonly'))]"/>
+    </record>
+
+    <record id="rule_transaksi_transaction_line_central_readonly" model="ir.rule">
+        <field name="name">Finance Pusat: baca seluruh detail transaksi cabang yang diizinkan</field>
+        <field name="model_id" ref="model_transaksi_transaction_line"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('sif_keuangan.group_sif_keuangan_central_readonly'))]"/>
+    </record>
 </odoo>

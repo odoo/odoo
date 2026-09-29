@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Retain old COA XML IDs for existing journal, RKA, PPL, and asset references. -->
+        <record id="coa_11103" model="sif.coa">
+            <field name="code">11103</field>
+            <field name="name">BANK BNI</field>
+            <field name="account_type">asset</field>
+            <field name="parent_id" ref="coa_11100"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_11104" model="sif.coa">
+            <field name="code">11104</field>
+            <field name="name">BANK MANDIRI-829</field>
+            <field name="account_type">asset</field>
+            <field name="parent_id" ref="coa_11100"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_11105" model="sif.coa">
+            <field name="code">11105</field>
+            <field name="name">BANK BCA</field>
+            <field name="account_type">asset</field>
+            <field name="parent_id" ref="coa_11100"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_11106" model="sif.coa">
+            <field name="code">11106</field>
+            <field name="name">BANK MAYAPADA</field>
+            <field name="account_type">asset</field>
+            <field name="parent_id" ref="coa_11100"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_11207" model="sif.coa">
+            <field name="code">11207</field>
+            <field name="name">DEPOSITO BANK BTPNS</field>
+            <field name="account_type">asset</field>
+            <field name="parent_id" ref="coa_11200"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_11208" model="sif.coa">
+            <field name="code">11208</field>
+            <field name="name">DEPOSITO BANK BNI</field>
+            <field name="account_type">asset</field>
+            <field name="parent_id" ref="coa_11200"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_11209" model="sif.coa">
+            <field name="code">11209</field>
+            <field name="name">DEPOSITO BANK JATIM SYARIAH</field>
+            <field name="account_type">asset</field>
+            <field name="parent_id" ref="coa_11200"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_11210" model="sif.coa">
+            <field name="code">11210</field>
+            <field name="name">DEPOSITO MAYAPADA</field>
+            <field name="account_type">asset</field>
+            <field name="parent_id" ref="coa_11200"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_13008" model="sif.coa">
+            <field name="code">13008</field>
+            <field name="name">BUKTI POTONG PPH 22</field>
+            <field name="account_type">asset</field>
+            <field name="parent_id" ref="coa_13000"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_22001" model="sif.coa">
+            <field name="code">22001</field>
+            <field name="name">ASET PAJAK TANGGUHAN</field>
+            <field name="account_type">asset</field>
+            <field name="parent_id" ref="coa_22000"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_23007" model="sif.coa">
+            <field name="code">23007</field>
+            <field name="name">ASET HAK GUNA</field>
+            <field name="account_type">asset</field>
+            <field name="parent_id" ref="coa_23000"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_24007" model="sif.coa">
+            <field name="code">24007</field>
+            <field name="name">ASET HAK GUNA</field>
+            <field name="account_type">asset</field>
+            <field name="parent_id" ref="coa_24000"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_33014" model="sif.coa">
+            <field name="code">33014</field>
+            <field name="name">HUTANG YMH LAIN LAIN</field>
+            <field name="account_type">liability</field>
+            <field name="parent_id" ref="coa_33000"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_44000" model="sif.coa">
+            <field name="code">44000</field>
+            <field name="name">PENDAPATAN KOMPREHENSIF LAIN</field>
+            <field name="account_type">equity</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_44001" model="sif.coa">
+            <field name="code">44001</field>
+            <field name="name">PENDAPATAN KOMPREHENSIF LAIN</field>
+            <field name="account_type">equity</field>
+            <field name="parent_id" ref="coa_42000"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_70014" model="sif.coa">
+            <field name="code">70014</field>
+            <field name="name">KOMPENSASI PKWT</field>
+            <field name="account_type">expense</field>
+            <field name="parent_id" ref="coa_70000"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_72028" model="sif.coa">
+            <field name="code">72028</field>
+            <field name="name">BEBAN ASET HAK GUNA</field>
+            <field name="account_type">expense</field>
+            <field name="parent_id" ref="coa_70000"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_72029" model="sif.coa">
+            <field name="code">72029</field>
+            <field name="name">BIAYA MANAJEMEN</field>
+            <field name="account_type">expense</field>
+            <field name="parent_id" ref="coa_70000"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_72030" model="sif.coa">
+            <field name="code">72030</field>
+            <field name="name">BIAYA PROPOSAL PENAWARAN</field>
+            <field name="account_type">expense</field>
+            <field name="parent_id" ref="coa_70000"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_72031" model="sif.coa">
+            <field name="code">72031</field>
+            <field name="name">BIAYA RISET &amp; DEVELOPMENT</field>
+            <field name="account_type">expense</field>
+            <field name="parent_id" ref="coa_70000"/>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="coa_72032" model="sif.coa">
+            <field name="code">72032</field>
+            <field name="name">BIAYA INFRASTRUKTUR DIGITAL</field>
+            <field name="account_type">expense</field>
+            <field name="parent_id" ref="coa_70000"/>
+            <field name="active" eval="False"/>
+        </record>
+    </data>
+</odoo>

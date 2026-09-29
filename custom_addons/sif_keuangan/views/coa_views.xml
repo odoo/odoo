@@ -5,11 +5,12 @@
         <field name="model">sif.coa</field>
         <field name="arch" type="xml">
             <list string="Master COA">
-                <field name="code"/>
-                <field name="name"/>
-                <field name="account_type"/>
-                <field name="parent_id"/>
-                <field name="level"/>
+                <field name="code" string="Kode Akun"/>
+                <field name="name" string="Nama Akun"/>
+                <field name="account_type" string="Kategori Akun"/>
+                <field name="parent_id" string="Induk Akun"/>
+                <field name="opening_balance" string="Saldo Awal"/>
+                <field name="level" string="Level"/>
             </list>
         </field>
     </record>
@@ -26,10 +27,21 @@
                             <field name="name"/>
                             <field name="account_type"/>
                         </group>
+
                         <group>
                             <field name="parent_id"/>
                             <field name="level"/>
                         </group>
+                    </group>
+
+                    <group string="Saldo Awal">
+                        <field name="opening_balance"
+                            string="Saldo Awal"
+                            readonly="1"/>
+
+                        <field name="opening_balance_input"
+                            string="Input Saldo Awal"
+                            invisible="parent_id == False"/>
                     </group>
                 </sheet>
             </form>
@@ -61,5 +73,6 @@
         <field name="res_model">sif.coa</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_sif_coa_search"/>
+        <field name="limit">200</field>
     </record>
 </odoo>

@@ -63,7 +63,7 @@ class ProfitLossController(http.Controller):
         if has_comp:
             sub_title += f" vs {data.get('comp_date_from_display')} s/d {data.get('comp_date_to_display')}"
         if data.get('unit_name'):
-            sub_title += f" | Unit: {data.get('unit_name')}"
+            sub_title += f" | Departemen: {data.get('unit_name')}"
         worksheet.write(1, 0, sub_title, fmt_subtitle)
         worksheet.write(2, 0, f"Status: {'Hanya Jurnal Disetujui (Posted)' if data.get('target_move') == 'posted' else 'Semua Jurnal'}", fmt_subtitle)
 

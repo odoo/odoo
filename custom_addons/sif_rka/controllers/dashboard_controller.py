@@ -17,7 +17,10 @@ class SifRkaDashboardController(http.Controller):
             from odoo import fields
             tahun = str(fields.Date.today().year)
 
-        domain = [("tahun", "=", tahun)]
+        domain = [
+            ("rka_id.company_id", "=", request.env.company.id),
+            ("tahun", "=", tahun),
+        ]
         if coa_id:
             domain.append(("account_id", "=", int(coa_id)))
 
