@@ -228,3 +228,38 @@ class TestMultiCompany(TestHrCommon):
 
         # Fallback must pick the candidate of the matching company (company_b)
         self.assertEqual(account_unlinked.employee_id, employee_b)
+
+    def test_child_ids_multi_company(self):
+        self.res_users_hr_officer.write({
+            'company_ids': [(4, self.company_a.id), (4, self.company_b.id)],
+            'company_id': self.company_a.id,
+        })
+        manager_as_officer = self.employee_a.with_user(self.res_users_hr_officer)
+        self.assertFalse(
+            manager_as_officer.with_context(allowed_company_ids=self.company_a.ids).child_ids,
+            "Subordinates in companies the user cannot access should be hidden",
+        )
+        self.assertEqual(
+            manager_as_officer.with_context(allowed_company_ids=(self.company_a | self.company_b).ids).child_ids,
+            self.employee_b,
+        )
+
+    def test_search_child_ids_multi_company(self):
+        self.res_users_hr_officer.write({
+            'company_ids': [(4, self.company_a.id), (4, self.company_b.id)],
+            'company_id': self.company_a.id,
+        })
+        Employee = self.env['hr.employee'].with_user(self.res_users_hr_officer)
+        any_domain = [('child_ids', 'any', [('company_id', '=', self.company_b.id)])]
+        in_domain = [('child_ids', 'in', self.employee_b.ids)]
+
+        employee_company_a = Employee.with_context(allowed_company_ids=self.company_a.ids)
+        self.assertFalse(
+            employee_company_a.search(any_domain),
+            "Subordinates in companies the user cannot access should not be searchable",
+        )
+        self.assertFalse(employee_company_a.search(in_domain))
+
+        employee_all_companies = Employee.with_context(allowed_company_ids=(self.company_a | self.company_b).ids)
+        self.assertEqual(employee_all_companies.search(any_domain), self.employee_a)
+        self.assertEqual(employee_all_companies.search(in_domain), self.employee_a)
