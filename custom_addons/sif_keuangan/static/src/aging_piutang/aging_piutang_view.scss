@@ -11,18 +11,19 @@
 
     .o_report_main_title {
         color: #0F172A;
-        font-weight: 700;
+        font-weight: 800;
         font-size: 1.35rem;
         letter-spacing: -0.02em;
     }
 
     .o_report_meta_text {
         font-size: 0.8125rem;
-        color: #334155;
+        color: #1E293B;
+        font-weight: 500;
     }
 
     .o_report_filter_pill {
-        border: 1px solid #CBD5E1;
+        border: 1px solid #94A3B8;
         background-color: #FFFFFF;
         border-radius: 6px;
         padding: 2px 8px;
@@ -33,34 +34,39 @@
         transition: all 0.15s ease-in-out;
 
         &:hover {
-            border-color: #94A3B8;
+            border-color: #475569;
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
 
         .o_filter_icon {
-            color: #475569;
+            color: #334155;
             font-size: 0.85rem;
         }
 
         select {
             color: #0F172A;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.8125rem;
         }
     }
 
     .o_search_input, .o_custom_date_input {
         color: #0F172A;
-        font-weight: 500;
+        font-weight: 600;
         font-size: 0.8125rem;
+
+        &::placeholder {
+            color: #64748B;
+        }
     }
 
     /* View Switcher Icons */
     .o_view_switcher {
         .btn {
-            border-color: #CBD5E1;
+            border-color: #94A3B8;
             padding: 4px 10px;
             font-size: 0.875rem;
+            color: #334155;
             transition: all 0.15s ease-in-out;
 
             &.active {
@@ -85,11 +91,12 @@
 
         &:hover {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-color: #94A3B8;
         }
 
         .o_kpi_label {
             font-size: 0.75rem;
-            font-weight: 700;
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.04em;
             color: #334155;
@@ -106,7 +113,7 @@
         .o_kpi_subtext {
             font-size: 0.8125rem;
             color: #475569;
-            font-weight: 500;
+            font-weight: 600;
         }
     }
 
@@ -115,11 +122,11 @@
         display: inline-block;
         padding: 2px 7px;
         font-size: 0.75rem;
-        font-weight: 700;
+        font-weight: 800;
         font-variant-numeric: tabular-nums;
         color: #0F172A !important;
         background-color: #F1F5F9;
-        border: 1px solid #94A3B8;
+        border: 1px solid #64748B;
         border-radius: 4px;
         letter-spacing: 0.02em;
     }
@@ -127,68 +134,72 @@
     .o_wali_text {
         font-size: 0.75rem;
         color: #334155;
-        font-weight: 500;
+        font-weight: 600;
         margin-left: 4px;
+
+        strong {
+            color: #0F172A;
+        }
     }
 
-    /* Badges */
+    /* High-Contrast Badges */
     .o_badge_student {
         background-color: #EFF6FF;
         color: #1E3A8A !important;
         border: 1px solid #93C5FD;
-        font-weight: 600;
+        font-weight: 700;
     }
 
     .o_badge_customer {
         background-color: #F0FDF4;
         color: #14532D !important;
         border: 1px solid #86EFAC;
-        font-weight: 600;
+        font-weight: 700;
     }
 
     .o_badge_distributor {
         background-color: #FAF5FF;
         color: #581C87 !important;
         border: 1px solid #D8B4FE;
-        font-weight: 600;
+        font-weight: 700;
     }
 
     .o_badge_vendor {
         background-color: #F8FAFC;
         color: #0F172A !important;
-        border: 1px solid #94A3B8;
-        font-weight: 600;
+        border: 1px solid #64748B;
+        font-weight: 700;
     }
 
     .o_badge_success {
         background-color: #DCFCE7;
         color: #14532D !important;
         border: 1px solid #4ADE80;
-        font-weight: 700;
+        font-weight: 800;
     }
 
     .o_badge_info {
         background-color: #E0F2FE;
         color: #075985 !important;
         border: 1px solid #38BDF8;
-        font-weight: 700;
+        font-weight: 800;
     }
 
     .o_badge_warning {
         background-color: #FEF3C7;
         color: #78350F !important;
         border: 1px solid #FBBF24;
-        font-weight: 700;
+        font-weight: 800;
     }
 
     .o_badge_danger {
         background-color: #FEE2E2;
         color: #7F1D1D !important;
         border: 1px solid #F87171;
-        font-weight: 700;
+        font-weight: 800;
     }
 
-    /* Scrollable Container with smooth scrollbar */
+    /* Scrollable Container */
     .o_table_scroll_container {
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch;
@@ -202,11 +213,11 @@
             background: #F1F5F9;
         }
         &::-webkit-scrollbar-thumb {
-            background: #CBD5E1;
+            background: #94A3B8;
             border-radius: 4px;
         }
         &::-webkit-scrollbar-thumb:hover {
-            background: #94A3B8;
+            background: #64748B;
         }
     }
 
@@ -221,14 +232,14 @@
 
         thead {
             background-color: #F8FAFC;
-            border-bottom: 2px solid #94A3B8;
+            border-bottom: 2px solid #64748B;
 
             th {
                 color: #0F172A !important;
-                font-weight: 700;
+                font-weight: 800;
                 font-size: 0.75rem;
                 letter-spacing: 0.02em;
-                padding: 9px 10px;
+                padding: 10px 10px;
                 border-color: #CBD5E1;
                 white-space: nowrap;
                 vertical-align: middle;
@@ -287,16 +298,19 @@
             .o_col_partner {
                 white-space: normal;
                 min-width: 220px;
+                color: #0F172A !important;
             }
 
             .o_col_unit {
                 white-space: normal;
                 min-width: 140px;
+                color: #1E293B !important;
+                font-weight: 600;
             }
 
             .text-muted-num {
-                color: #94A3B8 !important;
-                font-weight: 400;
+                color: #64748B !important;
+                font-weight: 500;
             }
 
             .o_td_crit {
@@ -311,21 +325,22 @@
         }
 
         .o_table_grand_footer {
-            background-color: #0F172A;
-            color: #FFFFFF;
+            background-color: #0F172A !important;
+            color: #FFFFFF !important;
 
             td {
-                padding: 10px 10px;
+                padding: 11px 10px;
                 font-size: 0.8125rem;
                 border-color: #334155;
                 color: #FFFFFF !important;
                 white-space: nowrap;
+                font-weight: 800;
             }
 
             .o_td_grand_total {
                 background-color: #020617 !important;
                 color: #FFFFFF !important;
-                font-weight: 800;
+                font-weight: 900;
             }
         }
     }
@@ -346,20 +361,32 @@
                 width: 16px;
                 text-align: center;
                 cursor: pointer;
+                color: #0F172A;
             }
         }
 
         .o_line_row {
-            background-color: #FAFAFA;
-            border-bottom: 1px dashed #E2E8F0;
+            background-color: #F8FAFC;
+            border-bottom: 1px dashed #CBD5E1;
 
             &:hover {
-                background-color: #F8FAFC !important;
+                background-color: #F1F5F9 !important;
             }
 
             td {
-                padding: 6px 10px;
-                font-size: 0.785rem;
+                padding: 7px 10px;
+                font-size: 0.8125rem;
+                color: #1E293B !important;
+            }
+
+            a {
+                color: #0F172A !important;
+                font-weight: 700;
+                text-decoration: underline;
+
+                &:hover {
+                    color: #0284C7 !important;
+                }
             }
         }
     }
@@ -374,32 +401,33 @@
         cursor: pointer;
 
         &:hover {
-            border-color: #94A3B8;
+            border-color: #64748B;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
             transform: translateY(-1px);
         }
 
         .o_card_title {
-            font-weight: 700;
+            font-weight: 800;
             font-size: 0.875rem;
             color: #0F172A;
         }
 
         .o_card_date {
             font-size: 0.75rem;
-            color: #475569;
-            font-weight: 500;
+            color: #334155;
+            font-weight: 700;
         }
 
         .o_card_partner {
             font-size: 0.8125rem;
-            color: #334155;
-            font-weight: 600;
+            color: #0F172A;
+            font-weight: 700;
         }
 
         .o_card_unit {
             font-size: 0.75rem;
-            color: #64748B;
+            color: #475569;
+            font-weight: 600;
         }
 
         .o_card_amount {
@@ -417,12 +445,14 @@
 
     .o_report_footer_formula {
         font-size: 0.8125rem;
-        color: #334155;
+        color: #1E293B;
         background-color: #FFFFFF;
         border-color: #CBD5E1;
+        font-weight: 600;
 
         strong {
             color: #0F172A;
+            font-weight: 800;
         }
     }
 }
