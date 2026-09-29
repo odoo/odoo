@@ -67,8 +67,8 @@ class Home(http.Controller):
                 request.env.user._on_webclient_bootstrap()
             context = request.env['ir.http'].webclient_rendering_context()
 
-            # Add the browser_cache_secret here and not in session_info() to ensure that it is only in
-            # the webclient page, which is cache-control: "no-store" (see below)
+            # Add the browser_cache_secret here and not in session_info() so it is only returned
+            # by pages with cache-control: "no-store" (see below)
             # Reuse session security related fields, to change the key when a security event
             # occurs for the user, like a password or 2FA change.
             hmac_payload = request.env.user._session_token_get_values()  # already ordered
