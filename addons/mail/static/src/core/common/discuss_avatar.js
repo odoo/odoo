@@ -1,12 +1,15 @@
 import { getImStatusData, ImStatus } from "@mail/core/common/im_status";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 
-import { Component, Portal, t, useProps } from "@odoo/owl";
+import { Component, onMounted, onPatched, Portal, signal, t, useEffect, useProps } from "@odoo/owl";
 
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
 
 let nextId = 0;
+
+/** Avatar size the icons are designed for: icons shrink on smaller avatars. */
+const ICON_REFERENCE_SIZE = 32;
 
 export class DiscussAvatar extends Component {
     static template = "mail.DiscussAvatar";
@@ -17,7 +20,6 @@ export class DiscussAvatar extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             className: t.string().optional(""),
-            iconExtraTransform: t.string().optional(),
             imgRoundedClass: t.string().optional(),
             record: t.or([
                 t.instanceOf(this.store["discuss.channel.member"]),
@@ -32,6 +34,64 @@ export class DiscussAvatar extends Component {
         });
         this.isBrowserSafari = isBrowserSafari;
         this.uniqueId = `mail.DiscussAvatar.${nextId++}`;
+        /** Space between the icon and the cut out of the avatar, in icon pixels. */
+        this.iconMaskGap = 1.5;
+        this.rootRef = signal.ref();
+        this.iconRef = signal.ref();
+        this.glyphMaskRef = signal.ref();
+        this.rectMaskRef = signal.ref();
+        onMounted(() => this.updateIconMask());
+        onPatched(() => this.updateIconMask());
+        useEffect(() => {
+            const iconEl = this.iconRef();
+            if (!iconEl) {
+                return;
+            }
+            const resizeObserver = new ResizeObserver(() => this.updateIconMask());
+            resizeObserver.observe(iconEl);
+            return () => resizeObserver.disconnect();
+        });
+    }
+
+    get iconScale() {
+        return Math.min(1, this.props.size / ICON_REFERENCE_SIZE);
+    }
+
+    /**
+     * Fits the icon mask to the icon as rendered, so that it works whatever the icon (IM status,
+     * typing indicator, thread icon, ...) and its size.
+     */
+    updateIconMask() {
+        const rootEl = this.rootRef();
+        const iconEl = this.iconRef();
+        const glyphMaskEl = this.glyphMaskRef();
+        const rectMaskEl = this.rectMaskRef();
+        if (!rootEl || !iconEl || (!glyphMaskEl && !rectMaskEl)) {
+            return;
+        }
+        const rootRect = rootEl.getBoundingClientRect();
+        const iconRect = iconEl.getBoundingClientRect();
+        // client rects include transforms of ancestors, SVG user units are CSS pixels of the root
+        const ratio = rootRect.width / rootEl.offsetWidth || 1;
+        const x = (iconRect.left - rootRect.left) / ratio;
+        const y = (iconRect.top - rootRect.top) / ratio;
+        const width = iconRect.width / ratio;
+        const height = iconRect.height / ratio;
+        const scale = this.iconScale;
+        if (glyphMaskEl) {
+            // glyph starts at its x and is vertically centered on its y (dominant-baseline)
+            glyphMaskEl.setAttribute(
+                "transform",
+                `translate(${x}, ${y + height / 2}) scale(${scale})`
+            );
+            return;
+        }
+        const gap = this.iconMaskGap * scale;
+        rectMaskEl.setAttribute("x", x - gap);
+        rectMaskEl.setAttribute("y", y - gap);
+        rectMaskEl.setAttribute("width", width + 2 * gap);
+        rectMaskEl.setAttribute("height", height + 2 * gap);
+        rectMaskEl.setAttribute("rx", Math.min(width, height) / 2 + gap);
     }
 
     /** @returns {DiscussChannel|undefined} */
