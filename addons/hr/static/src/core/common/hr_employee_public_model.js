@@ -6,6 +6,7 @@ export class HrEmployeePublic extends Record {
     /** @type {number} */
     id;
     employee_id = fields.One("hr.employee");
+    employee_skill_ids = fields.Many("hr.employee.skill");
 }
 
 HrEmployeePublic.register();
