@@ -170,6 +170,34 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_combo_sides", {
     ],
 });
 
+registry.category("web_tour.tours").add("self_order_kiosk_combo_fixed_choice", {
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Test Fixed Combo"),
+        ...ProductPage.setupCombo([
+            {
+                product: "Variable Side 1",
+                attributes: [],
+            },
+        ]),
+        Utils.clickBtn("Order"),
+        ...CartPage.checkCombo("Test Fixed Combo", [
+            {
+                product: "Variable Side 1",
+                attributes: [],
+            },
+            {
+                product: "Fixed Side",
+                attributes: [],
+            },
+        ]),
+        Utils.clickBtn("Pay"),
+        Utils.clickBtn("Close"),
+        Utils.checkIsNoBtn("My Order"),
+    ],
+});
+
 registry.category("web_tour.tours").add("self_order_pricelist", {
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
