@@ -44,9 +44,9 @@ patch(PosStore.prototype, {
     },
     selectOrderLine(order, line) {
         super.selectOrderLine(order, line);
-        // Ensure the numpadMode should be `price` when the discount line is selected
+        // Ensure the numpadMode should be `Backspace` when the discount line is selected
         if (line?.isDiscountLine) {
-            this.numpadMode = "price";
+            this.numpadMode = "Backspace";
         }
     },
     getLinesToMerge(sourceOrder, destinationOrder) {
@@ -142,7 +142,7 @@ patch(PosStore.prototype, {
 
         if (lastDiscountLine && isGlobalDiscountBtnClicked) {
             order.selectOrderline(lastDiscountLine);
-            this.numpadMode = "price";
+            this.numpadMode = "Backspace";
         }
     },
 });
