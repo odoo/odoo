@@ -122,6 +122,8 @@ export class DomPlugin extends Plugin {
             ...this.systemAttributes.map((attr) => `[${attr}]`),
             ...this.systemStyleProperties.map((prop) => `[style*="${prop}"]`),
         ].join(",");
+        this.split = this.dependencies.split;
+        this.createBaseContainer = this.dependencies.baseContainer.createBaseContainer.bind(this);
     }
 
     // Shared
@@ -302,12 +304,12 @@ export class DomPlugin extends Plugin {
             isContentEditable(block) &&
             (isContentEditable(node) ||
                 (!node.isConnected && !closestElement(node, "[contenteditable]"))) &&
-            !this.dependencies.split.isUnsplittable(node) &&
+            !this.split.isUnsplittable(node) &&
             (node.nodeName === block.nodeName ||
                 (this.dependencies.baseContainer.isCandidateForBaseContainer(node) &&
                     this.dependencies.baseContainer.isCandidateForBaseContainer(block)) ||
                 block.nodeName === "PRE" ||
-                (block.nodeName === "DIV" && this.dependencies.split.isUnsplittable(block))) &&
+                (block.nodeName === "DIV" && this.split.isUnsplittable(block))) &&
             // If the selection anchorNode is the editable itself, the content
             // should not be unwrapped.
             !isEditionBoundary(selection.anchorNode, this.editable);
@@ -350,7 +352,7 @@ export class DomPlugin extends Plugin {
                 // container to extract and paste the text content of the list.
                 if (isListItemElement(container.firstChild)) {
                     const deepestBlock = closestBlock(firstLeaf(container.firstChild));
-                    this.dependencies.split.splitAroundUntil(deepestBlock, container.firstChild);
+                    this.split.splitAroundUntil(deepestBlock, container.firstChild);
                     container.firstElementChild.replaceChildren(...childNodes(deepestBlock));
                 }
                 containerFirstChild.replaceChildren(...childNodes(container.firstElementChild));
@@ -362,7 +364,7 @@ export class DomPlugin extends Plugin {
                 // to extract and paste the text content of the list.
                 if (isListItemElement(container.lastChild)) {
                     const deepestBlock = closestBlock(lastLeaf(container.lastChild));
-                    this.dependencies.split.splitAroundUntil(deepestBlock, container.lastChild);
+                    this.split.splitAroundUntil(deepestBlock, container.lastChild);
                     container.lastElementChild.replaceChildren(...childNodes(deepestBlock));
                 }
                 containerLastChild.replaceChildren(...childNodes(container.lastElementChild));
@@ -413,7 +415,7 @@ export class DomPlugin extends Plugin {
         // If all the Html have been isolated, We force a split of the parent element
         // to have the need new line in the final result
         if (!container.hasChildNodes()) {
-            if (this.dependencies.split.isUnsplittable(closestBlock(currentNode.nextSibling))) {
+            if (this.split.isUnsplittable(closestBlock(currentNode.nextSibling))) {
                 this.dependencies.lineBreak.insertLineBreakNode({
                     targetNode: currentNode.nextSibling,
                     targetOffset: 0,
@@ -422,10 +424,7 @@ export class DomPlugin extends Plugin {
                 // If we arrive here, the o_enter index should always be 0.
                 const parent = currentNode.nextSibling.parentElement;
                 const index = childNodes(parent).indexOf(currentNode.nextSibling);
-                this.dependencies.split.splitBlockNode({
-                    targetNode: parent,
-                    targetOffset: index,
-                });
+                this.split.splitBlockNode({ targetNode: parent, targetOffset: index });
             }
         }
 
@@ -441,12 +440,12 @@ export class DomPlugin extends Plugin {
                     !isEditionBoundary(currentNode, this.editable) &&
                     (!allowsParagraphRelatedElements(currentNode.parentElement) ||
                         (isListItemElement(currentNode.parentElement) &&
-                            !this.dependencies.split.isUnsplittable(nodeToInsert)))
+                            !this.split.isUnsplittable(nodeToInsert)))
                 ) {
-                    if (this.dependencies.split.isUnsplittable(currentNode.parentElement)) {
+                    if (this.split.isUnsplittable(currentNode.parentElement)) {
                         // If we have to insert an unsplittable element, we cannot afford to
                         // unwrap it we need to search for a more suitable spot to put it
-                        if (this.dependencies.split.isUnsplittable(nodeToInsert)) {
+                        if (this.split.isUnsplittable(nodeToInsert)) {
                             if (isEditionBoundary(currentNode.parentElement, this.editable)) {
                                 break;
                             }
@@ -467,7 +466,7 @@ export class DomPlugin extends Plugin {
                         (offset === 1 && !insertBefore) ||
                         (offset && isVisible(currentNode?.previousSibling))
                     ) {
-                        const [left, right] = this.dependencies.split.splitElement(
+                        const [left, right] = this.split.splitElement(
                             currentNode.parentElement,
                             offset
                         );
@@ -490,7 +489,7 @@ export class DomPlugin extends Plugin {
                 if (
                     isListItemElement(currentNode.parentElement) &&
                     isBlock(nodeToInsert) &&
-                    this.dependencies.split.isUnsplittable(nodeToInsert)
+                    this.split.isUnsplittable(nodeToInsert)
                 ) {
                     const br = this.document.createElement("br");
                     currentNode[
@@ -697,16 +696,14 @@ export class DomPlugin extends Plugin {
                 newCandidate.classList.add(extraClass);
             }
             if (this.dependencies.baseContainer.isCandidateForBaseContainer(newCandidate)) {
-                const baseContainer = this.dependencies.baseContainer.createBaseContainer({
-                    nodeName: newCandidate.nodeName,
-                });
+                const baseContainer = this.createBaseContainer({ nodeName: newCandidate.nodeName });
                 this.copyAttributes(newCandidate, baseContainer);
                 newCandidate = baseContainer;
             }
             return newCandidate;
         };
         let newCandidate = createNewCandidate();
-        this.dependencies.split.splitBlockSegments();
+        this.split.splitBlockSegments();
         const cursors = this.dependencies.selection.preserveSelection();
         let newEl;
         for (const block of this.getBlocksToSet()) {
