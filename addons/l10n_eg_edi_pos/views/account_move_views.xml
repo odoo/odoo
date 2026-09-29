@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_form_inherit_l10n_eg_edi_pos" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_eg_edi_pos</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_eg_edi_eta.view_move_form_inherit"/>
+        <field name="arch" type="xml">
+            <button name="action_post_sign_invoices" position="attributes">
+                <attribute name="invisible" separator="or" add="pos_order_count > 0"/>
+            </button>
+            <button name="action_l10n_eg_cancel_invoice" position="attributes">
+                <attribute name="invisible" separator="or" add="pos_order_count > 0"/>
+            </button>
+        </field>
+    </record>
+</odoo>
