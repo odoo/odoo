@@ -20,7 +20,7 @@
             'pos_adyen/static/tests/tours/**/*',
         ],
         'web.assets_unit_tests': [
-            'pos_adyen/static/tests/unit/data/**/*'
+            'pos_adyen/static/tests/unit/**/*'
         ],
     },
     'author': 'Odoo S.A.',
