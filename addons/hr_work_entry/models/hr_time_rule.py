@@ -390,7 +390,6 @@ class HrTimeRule(models.Model):
             'schedule':       defaultdict(Intervals),
             'leave':          defaultdict(Intervals),
             'public_leave':   defaultdict(Intervals),
-            'fully_flexible': defaultdict(Intervals),
         }
         empty_resource = self.env['resource.resource']
         sched_cache = {}
@@ -405,13 +404,10 @@ class HrTimeRule(models.Model):
                 p_dt_end = datetime.combine(p_stop, time.max, tzinfo=UTC)
                 period = Intervals([(p_dt_start.replace(tzinfo=None), p_dt_end.replace(tzinfo=None), version)])
 
-                if version._is_fully_flexible():
-                    # mark the employee as fully flexible for this period
-                    result['fully_flexible'][emp] |= period
-                    if not schedule_calendar:
-                        # no reference calendar provided: the employee's own (absent)
-                        # schedule would be the baseline -> nothing to compare against.
-                        continue
+                if version._is_fully_flexible() and not schedule_calendar:
+                    # no reference calendar provided: the employee's own (absent)
+                    # schedule would be the baseline -> nothing to compare against.
+                    continue
 
                 sched_cal = schedule_calendar or version.resource_calendar_id
                 leave_cal = version.resource_calendar_id
@@ -922,6 +918,11 @@ class HrTimeRule(models.Model):
             uses_schedule = bool(rule.calendar_source or rule.expected_hours)
 
             for employee in rule._get_applicable_employees(employees):
+
+                # fully flexible should not trigger any rule -> any time is valid
+                if employee.is_fully_flexible() and rule.working_hours_mode in ('schedule_day', 'schedule_week'):
+                    continue
+
                 emp_pipeline = pipeline_by_emp[employee]
                 rule_window = rule_window_by_emp[employee]
 
@@ -952,7 +953,6 @@ class HrTimeRule(models.Model):
                     - work_intervals['leave'][employee]
                     - work_intervals['public_leave'][employee]
                 )
-                fully_flex = work_intervals['fully_flexible'][employee]
                 period = rule.quantity_period or 'day'
 
                 by_period = defaultdict(list)
@@ -976,7 +976,7 @@ class HrTimeRule(models.Model):
                         datetime.combine(period_date, datetime.min.time())
                     )
                     period_window_iv = Intervals([(period_start, period_stop, self.env['resource.calendar'])])
-                    if rule.calendar_source == 'employee' and not (period_window_iv - fully_flex):
+                    if rule.calendar_source == 'employee' and not period_window_iv:
                         continue
                     schedule_in_window = schedule & rule_window & period_window_iv
                     ex, df = rule._evaluate_period(period_start, period_stop, period_items, schedule_in_window)
