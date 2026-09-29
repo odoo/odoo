@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, tools, _
+from odoo.tools import SQL
 
 
 class LunchCashmoveReport(models.Model):
@@ -24,7 +24,7 @@ class LunchCashmoveReport(models.Model):
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
 
-        self.env.cr.execute("""
+        self.env.cr.execute(SQL("""
             CREATE or REPLACE view %s as (
                 SELECT
                     lc.id as id,
@@ -41,11 +41,11 @@ class LunchCashmoveReport(models.Model):
                     lol.date as date,
                     lol.currency_id as currency_id,
                     lol.user_id as user_id,
-                    format('Order: %%s x %%s %%s', lol.quantity::text, lp.name->>'en_US', lol.display_toppings) as description
+                    format(%s, lol.quantity::text, lp.name->>'en_US', lol.display_toppings) as description
                 FROM lunch_order lol
                 JOIN lunch_product lp ON lp.id = lol.product_id
                 WHERE
                     lol.state in ('ordered', 'confirmed')
                     AND lol.active = True
             );
-        """ % self._table)
+        """, SQL.identifier(self._table), 'Order: %s x %s %s'))

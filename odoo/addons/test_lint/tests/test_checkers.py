@@ -117,16 +117,10 @@ class TestSqlLint(LintCase):
             cr.execute('select %s from thing' % name)
         """)
 
-        self.check_no_error("""
+        self.check_error("""
         def do_the_thing(self):
             self.env.cr.execute("select thing from %s" % self._table)
-        """, message="underscore-attributes are allowed")
-
-        self.check_no_error("""
-        def do_the_thing(self):
-            query = "select thing from %s"
-            self.env.cr.execute(query % self._table)
-        """, message="underscore-attributes are allowed")
+        """, message="underscore-attributes are not allowed")
 
     def test_fstring(self):
         self.check_error("""
@@ -144,10 +138,10 @@ class TestSqlLint(LintCase):
             cr.execute(f'select {name} from thing where field = %s', [value])
         """, message="probably has a good reason for the extra arg")
 
-        self.check_no_error("""
+        self.check_error("""
         def do_the_thing(self):
             self.env.cr.execute(f'select name from {self._table}')
-        """, message='underscore-attributes are allowable')
+        """, message='underscore-attributes are not allowed')
 
     def test_sql_injection_detection(self):
 
@@ -193,10 +187,10 @@ class TestSqlLint(LintCase):
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
         """)
 
-        self.check_no_error("""
+        self.check_error("""
         def test_function2(self):
             arg = 'bbb'
-            my_injection_variable= f"aaaaa{arg}aaa" #Uninferable
+            my_injection_variable= f"aaaaa{arg}aaa"
             self.env.cr.execute('select * from hello where id = %s' % my_injection_variable) #@
         """)
 
@@ -250,7 +244,7 @@ class TestSqlLint(LintCase):
         self.check_no_error("""
         def test_function10(self,arg):
             if_else_variable = "aaa" if arg else "bbb" # the two choice of a condition are constant, this is not injectable
-            self.env.cr.execute('select * from hello where id = %s' % if_else_variable) #@
+            self.env.cr.execute(f'select * from hello where id = {if_else_variable}') #@
         """)
 
         self.check_no_error("""
@@ -269,7 +263,7 @@ class TestSqlLint(LintCase):
             self.env.cr.execute(SQL('SELECT %s', SQL(',').join(SQL("%s AS a%s", d, d) for d in range(3))))
         """)
 
-        self.check_no_error("""
+        self.check_error("""
         def _search_phone_mobile_search(self, operator, value):
             condition = 'IS NULL' if operator == '=' else 'IS NOT NULL'
             query = '''
@@ -279,7 +273,7 @@ class TestSqlLint(LintCase):
                 AND model.mobile %s
             ''' % (self._table, condition, condition)
             self.env.cr.execute(query) #@
-        """)
+        """, message=r'% operator is not supported')
 
         self.check_error("""
         def test1(self):
@@ -296,7 +290,7 @@ class TestSqlLint(LintCase):
             self.env.cr.execute('query' + operator) #@
         """)
 
-        self.check_no_error("""
+        self.check_error("""
         def test3(self):
             self.env.cr.execute(f'{self._table}') #@
         """)

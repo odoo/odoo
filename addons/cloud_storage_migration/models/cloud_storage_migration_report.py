@@ -2,6 +2,7 @@
 import logging
 
 from odoo import models, fields, tools, api
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -30,7 +31,7 @@ class CloudStorageMigrationReport(models.Model):
     def init(self):
         """Initialize the SQL view for the cloud storage migration report."""
         tools.drop_view_if_exists(self.env.cr, self._table)
-        query = """
+        query = SQL("""
             CREATE OR REPLACE VIEW %s AS (
                 SELECT
                     im.id AS id,
@@ -62,7 +63,7 @@ class CloudStorageMigrationReport(models.Model):
                 ) AS grouped
                 INNER JOIN ir_model im ON im.model = grouped.res_model
             )
-        """ % self._table
+        """, SQL.identifier(self._table))
         self.env.cr.execute(query)
 
     @api.depends('res_model')

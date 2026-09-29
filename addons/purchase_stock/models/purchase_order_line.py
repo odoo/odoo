@@ -5,7 +5,8 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, api, Command, fields, models, _
 from odoo.fields import Domain
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools import SQL
+from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError
 
 
@@ -16,12 +17,12 @@ class PurchaseOrderLine(models.Model):
         modified_fields = ['qty_received_manual', 'qty_received_method']
         self.flush_recordset(fnames=['qty_received', *modified_fields])
         self.invalidate_recordset(fnames=modified_fields, flush=False)
-        query = f'''
-            UPDATE {self._table}
+        query = SQL('''
+            UPDATE %s
             SET qty_received_manual = qty_received, qty_received_method = 'manual'
-            WHERE id IN %(ids)s
-        '''
-        self.env.cr.execute(query, {'ids': self._ids or (None,)})
+            WHERE id IN %s
+        ''', SQL.identifier(self._table), self._ids or (None,))
+        self.env.execute_query(query)
         self.modified(modified_fields)
 
     qty_received_method = fields.Selection(selection_add=[('stock_moves', 'Stock Moves')],

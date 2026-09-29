@@ -198,10 +198,6 @@ class SQLInjectionLinter(ast.NodeVisitor):
             elif node.attr in ('select', 'subselect'):
                 # query.select(...)
                 rt = Tag.RETURN_SQL
-            elif node.attr in ('_table', '_table_sql'):
-                # assume these model attributes are safe
-                # TODO remove these
-                rt = Tag.SAFE_ARG
             else:
                 rt = self._result_type_from_name(node.attr)
         elif typ == Tag.TYPE_SQL and node.attr == 'identifier':  # ruff:ignore[if-with-same-arms]
@@ -265,26 +261,6 @@ class SQLInjectionLinter(ast.NodeVisitor):
                 if not probable_type:
                     return
         self.result_type = probable_type
-
-    def visit_BinOp(self, node):
-        self.visit(node.left)
-        ltyp = self.result_type
-        if ltyp == Tag.SAFE_ARG and isinstance(node.op, ast.Mod):
-            # TODO remove support for formatting like this
-            # "abc %s %s" % (..., ...)
-            if isinstance(node.right, ast.Tuple):
-                for elem in node.right.elts:
-                    self.visit(elem)
-                    if self.result_type != ltyp:
-                        ltyp = None
-                        # don't break, continue checking all items
-                self.result_type = ltyp
-            else:
-                self.visit(node.right)
-                # keep the result type
-            return
-        self.visit(node.right)
-        self.result_type = None
 
     # New scopes
 

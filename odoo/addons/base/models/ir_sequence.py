@@ -55,12 +55,12 @@ def _select_nextval(cr, seq_name):
 
 
 def _update_nogap(self, number_increment):
-    self.flush_recordset(['number_next'])
     number_next = self.number_next
-    self.env.cr.execute("SELECT number_next FROM %s WHERE id=%%s FOR UPDATE NOWAIT" % self._table, [self.id])
-    self.env.cr.execute("UPDATE %s SET number_next=number_next+%%s WHERE id=%%s " % self._table, (number_increment, self.id))
     self.invalidate_recordset(['number_next'])
+    self.env.cr.execute(SQL("SELECT number_next FROM %s WHERE id=%s FOR UPDATE NOWAIT", self._table_sql, self.id))
+    self.env.cr.execute(SQL("UPDATE %s SET number_next = number_next + %s WHERE id = %s", self._table_sql, number_increment, self.id))
     return number_next
+
 
 def _predict_nextval(self, seq_id):
     """Predict next value for PostgreSQL sequence without consuming it"""
