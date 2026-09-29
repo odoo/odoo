@@ -5,7 +5,10 @@
             <div t-if="o._l10n_pk_edi_pos_qr()" name="l10n_pk_edi_pos_qr_code">
                 <p>
                     <strong class="text-center">FBR QR Code</strong>
-                    <img class="d-block" t-att-src="o._l10n_pk_edi_pos_qr_code_src()"/>
+                    <span class="d-flex align-items-center">
+                        <img class="d-block me-3" t-att-src="o._l10n_pk_edi_pos_qr_code_src()"/>
+                        <img src="/l10n_pk_edi_pos/static/src/img/img_fbr_pos.png" alt="FBR POS Invoicing System" style="width: 1in; height: 1in; object-fit: contain;"/>
+                    </span>
                 </p>
             </div>
         </xpath>
