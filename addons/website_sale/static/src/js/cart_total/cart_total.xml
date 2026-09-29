@@ -52,11 +52,27 @@
                     <td
                         t-out="this.props.templateData.totalLabel"
                         colspan="2"
+                        class="fw-bold border-0 ps-0 pt-2 pb-2"
+                    />
+                    <td class="text-end border-0 px-0 pt-2 b-2">
+                        <strong
+                            t-out="this.formatPrice(this.state.totals.amount_total)"
+                            class="monetary_field"
+                            style="white-space: nowrap;"
+                        />
+                    </td>
+                </tr>
+            </tbody>
+            <tbody t-if="this.state.totals.amount_paid and not this.state.totals.is_paid">
+                <tr name="o_order_amount_paid" class="text-success">
+                    <td
+                        t-out="this.props.templateData.amountPaidLabel"
+                        colspan="2"
                         t-attf-class="fw-bold border-0 ps-0 pt-2 #{this.state.totals.tax_included ? 'pb-1' : 'pb-2'}"
                     />
                     <td t-attf-class="text-end border-0 px-0 pt-2 #{this.state.totals.tax_included ? 'pb-1' : 'pb-2'}">
                         <strong
-                            t-out="this.formatPrice(this.state.totals.amount_total)"
+                            t-out="this.formatPrice(this.state.totals.amount_paid)"
                             class="monetary_field"
                             style="white-space: nowrap;"
                         />

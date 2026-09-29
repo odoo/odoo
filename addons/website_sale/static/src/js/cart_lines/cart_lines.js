@@ -20,7 +20,7 @@ export class CartLines extends Component {
             accessories: [],
             is_quantity_view_active: false,
             is_wishlist_view_active: false,
-            is_uom_feature_enabled: false,
+            show_product_reference_price: false,
             is_accessories_view_active: false,
         });
 
@@ -63,7 +63,7 @@ export class CartLines extends Component {
         return {
             isQuantityViewActive: this.state.is_quantity_view_active,
             isWishlistViewActive: this.state.is_wishlist_view_active,
-            isUomFeatureEnabled: this.state.is_uom_feature_enabled,
+            showProductReferencePrice: this.state.show_product_reference_price,
             templateData: this.props.templateData,
         };
     }

@@ -8,7 +8,7 @@ export class CartLine extends Component {
     props = props({
         isQuantityViewActive: t.boolean(),
         isWishlistViewActive: t.boolean(),
-        isUomFeatureEnabled: t.boolean(),
+        showProductReferencePrice: t.boolean(),
         templateData: t.object(),
         line: t.object(),
     });
@@ -34,6 +34,10 @@ export class CartLine extends Component {
             && (
                 this.props.line.max_qunantity === undefined
                 || effectiveQuantity <= this.props.line.max_qunantity
+            )
+            && (
+                this.props.line.min_qunantity === undefined
+                || effectiveQuantity >= this.props.line.min_qunantity
             )
         ) {
             this.state.quantity = effectiveQuantity;

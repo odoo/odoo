@@ -140,22 +140,27 @@ class Cart(PaymentPortal):
                 self.env._("The given product does not exist therefore it cannot be added to cart.")
             )
 
-        if product.sudo().type == 'combo':
+        if product.sudo().type == "combo":
             combo_item_products = [
-                product for product in linked_products or [] if product.get('combo_item_id')
+                product for product in linked_products or [] if product.get("combo_item_id")
             ]
             combos_sudo = product.sudo().product_tmpl_id.combo_ids
-            selected_combos_sudo = request.env['product.combo.item'].sudo().browse([
-                combo_item['combo_item_id'] for combo_item in combo_item_products
-            ]).combo_id
-            if (
-                len(combo_item_products) != len(combos_sudo)
-                or set(selected_combos_sudo.ids) != set(combos_sudo.ids)
+            selected_combos_sudo = (
+                request
+                .env["product.combo.item"]
+                .sudo()
+                .browse([combo_item["combo_item_id"] for combo_item in combo_item_products])
+                .combo_id
+            )
+            if len(combo_item_products) != len(combos_sudo) or set(selected_combos_sudo.ids) != set(
+                combos_sudo.ids
             ):
-                raise UserError(self.env._(
-                    "The number of selected combo items must match the number of available"
-                    " combo choices."
-                ))
+                raise UserError(
+                    self.env._(
+                        "The number of selected combo items must match the number of available"
+                        " combo choices."
+                    )
+                )
 
         added_qty_per_line = {}
         values = order_sudo.with_context(skip_cart_verification=True)._cart_add(
@@ -570,9 +575,7 @@ class Cart(PaymentPortal):
         is_wishlist_view_active = request.env["website"].is_view_active(
             "website_sale.wishlist_cart_lines"
         )
-        is_base_uom_feature_enabled = request.env["res.groups"]._is_feature_enabled(
-            "product.group_show_uom_price"
-        )
+        show_product_reference_price = self.env.website.show_product_reference_price
         is_accessories_view_active = request.env["website"].is_view_active(
             "website_sale.suggested_products_list"
         )
@@ -582,7 +585,7 @@ class Cart(PaymentPortal):
             "cart_lines": [],
             "is_quantity_view_active": is_quantity_view_active,
             "is_wishlist_view_active": is_wishlist_view_active,
-            "is_uom_feature_enabled": is_base_uom_feature_enabled,
+            "show_product_reference_price": show_product_reference_price,
             "is_accessories_view_active": is_accessories_view_active,
             "accessories": self._cart_accessories() if is_accessories_view_active else [],
         }
@@ -622,6 +625,8 @@ class Cart(PaymentPortal):
             "alert_message": line._join_alert_messages(),
             "alert_level": line._get_max_alert_level(),
             "max_quantity": line._get_max_line_qty(),
+            "min_quantity": line._get_minimum_line_quantity(),
+            "min_qty_message": line._get_minimum_qty_reached_message(),
         }
 
         if line.product_type == "combo":
@@ -664,9 +669,9 @@ class Cart(PaymentPortal):
                 else False
             ),
             "amount_total": order_sudo.amount_total,
-            "tax_included": (
-                order_sudo.website_id.tax_display == "tax_included"
-            ),
+            "tax_included": (order_sudo.website_id.tax_display == "tax_included"),
+            "is_paid": order_sudo._is_paid(),
+            "amount_paid": order_sudo.amount_paid,
         }
 
     def _cart_accessories(self):

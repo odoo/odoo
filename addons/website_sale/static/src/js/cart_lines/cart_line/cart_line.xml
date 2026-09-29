@@ -163,7 +163,7 @@
             <span t-out="this.env.formatPrice(this.props.line.product_price)" style="white-space: nowrap;"/>
         </h6>
         <div
-            t-if="this.props.line.is_sellable and this.props.isUomFeatureEnabled and this.props.line.base_unit_price"
+            t-if="this.props.showProductReferencePrice and this.props.line.base_unit_price"
             class="cart_product_base_unit_price d-block text-muted text-end"
         >
             <small class="o_product_price_unit text-muted d-block">
@@ -198,6 +198,13 @@
 
     <t t-name="website_sale.CartLinesQuantity">
         <t t-set="showQuantitySelector" t-value="this.props.isQuantityViewActive"/>
+        <t t-set="minusButtonTitle">
+            <t
+                t-if="this.props.line.min_qunantity and this.state.quantity &lt;= this.props.line.min_qunantity"
+                t-out="this.props.line.min_qty_message"
+            />
+            <t t-else="">Remove one</t>
+        </t>
         <div
             t-attf-class="css_quantity input-group justify-content-end h-100"
             t-attf-name="{{ isMobile ? 'website_sale_cart_line_quantity_mobile' : 'website_sale_cart_line_quantity' }}"
@@ -206,8 +213,8 @@
                 <button
                     name="remove_quantity"
                     class="btn btn-link d-inline-block border border-end-0"
-                    aria-label="Remove one"
-                    title="Remove one"
+                    t-att-aria-label="minusButtonTitle"
+                    t-att-title="minusButtonTitle"
                     t-on-click="() => this.updateQuantity(this.state.quantity - 1)"
                 >
                     <i
