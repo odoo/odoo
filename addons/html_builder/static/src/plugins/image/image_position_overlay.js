@@ -185,11 +185,23 @@ export class ImagePositionOverlay extends Component {
         const iframeRect = this.iframeEl.getBoundingClientRect();
         const targetContainerRect = this.props.targetEl.getBoundingClientRect();
         const scale = this.getIframeContainerScale();
+        // Clamp to the iframe so the height never goes negative when the
+        // target is scrolled entirely out of view (above or below).
+        const visibleTop = Math.min(
+            Math.max(scale * targetContainerRect.top, 0),
+            iframeRect.height
+        );
+        const visibleBottom = Math.max(
+            Math.min(scale * targetContainerRect.bottom, iframeRect.height),
+            visibleTop
+        );
+        // scaledRect: target element visible in the iframe, so the cut-out
+        // doesn't overflow the iframe (e.g. in mobile preview).
         const scaledRect = new DOMRect(
-            scale * targetContainerRect.x,
-            scale * targetContainerRect.y,
+            iframeRect.left + scale * targetContainerRect.left,
+            iframeRect.top + visibleTop,
             scale * targetContainerRect.width,
-            scale * targetContainerRect.height
+            visibleBottom - visibleTop
         );
 
         // Make a cut-out in the overlay mask to highlight the editing element.
@@ -208,21 +220,11 @@ export class ImagePositionOverlay extends Component {
             this.builderOverlayContainerEl.style.clipPath = clipPath;
         }
 
-        // The overlay covers the whole iframe excluding the scrollbar.
-        Object.assign(this.overlayRef().style, {
-            left: `${iframeRect.left}px`,
-            top: `${iframeRect.top}px`,
-            height: `${this.props.editable.ownerDocument.body.clientHeight * scale}px`,
-            width: `${this.props.editable.ownerDocument.body.clientWidth * scale}px`,
-        });
-
         // The overlay content covers the editing element.
         Object.assign(this.overlayContentRef().style, {
             left: `${scaledRect.left}px`,
             top: `${scaledRect.top}px`,
         });
-        const overlayButtonsEl = this.overlayContentRef().querySelector(".o_we_overlay_buttons");
-        overlayButtonsEl.style.top = `${Math.max(0, -scaledRect.top)}px`;
         this.draggerRef().style.setProperty("width", `${scaledRect.width}px`, "important");
         this.draggerRef().style.setProperty("height", `${scaledRect.height}px`, "important");
 
