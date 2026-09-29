@@ -132,6 +132,10 @@ export class TablePlugin extends Plugin {
                 id: "mergeCells",
                 groupId: "table_cell_merge",
                 commandId: "mergeTableCells",
+                description: () =>
+                    this.isUnmergeCellsAvailable()
+                        ? _t("Unmerge selected table cell")
+                        : _t("Merge selected table cells"),
                 isActive: () => this.isUnmergeCellsAvailable(),
             },
         ],
