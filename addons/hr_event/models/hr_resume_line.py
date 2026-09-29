@@ -10,7 +10,7 @@ class HrResumeLine(models.Model):
         'event.event', string="Onsite Course", compute='_compute_event_id',
         store=True, readonly=True, index='btree_not_null',
         domain="[('registration_ids', 'any', [('partner_id.employee_ids', '=', employee_id)])]",
-        context={'hr_skills_event_add_employee': True},
+        context={'hr_event_add_employee': True},
     )
     course_type = fields.Selection(
         selection_add=[('onsite', 'Onsite')],

@@ -15,7 +15,7 @@ class TestOnsite(HttpCase):
         self.env['event.event'].create({
             'name': 'Test Event',
         })
-        self.start_tour("/odoo", 'hr_skills_event_onsite_tour', login='admin')
+        self.start_tour("/odoo", 'hr_event_onsite_tour', login='admin')
 
     def test_onsite_event_created_from_action(self):
         """ Ensure that an onsite event created from the Onsite action is visible in its kanban view. """
@@ -24,7 +24,7 @@ class TestOnsite(HttpCase):
             'name': 'Onsite Action Employee',
             'user_id': self.env.user.id,
         })
-        event = self.env['event.event'].with_context(hr_skills_event_add_employee=True).create({
+        event = self.env['event.event'].with_context(hr_event_add_employee=True).create({
             'name': 'Onsite Action Event',
         })
         self.assertEqual(
@@ -32,7 +32,7 @@ class TestOnsite(HttpCase):
             "The employee of the current user should be registered to the new event",
         )
         # The kanban of the action only shows the events having an employee registered
-        onsite_action = self.env.ref('hr_skills_event.event_training_onsite_action')
+        onsite_action = self.env.ref('hr_event.event_training_onsite_action')
         self.assertIn(
             event, self.env['event.event'].search(literal_eval(onsite_action.domain)),
             "The new event should appear in the onsite kanban view",
