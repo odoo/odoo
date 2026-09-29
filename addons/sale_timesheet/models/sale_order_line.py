@@ -191,7 +191,7 @@ class SaleOrderLine(models.Model):
             else:
                 # No related credit note: invoice exactly what is
                 # calculated for this period
-                qty_to_invoice = max(0.0, mapping.get(line.id, 0.0))
+                qty_to_invoice = mapping.get(line.id, 0.0)
             if qty_to_invoice:
                 line.qty_to_invoice = qty_to_invoice
             elif start_date or end_date:
