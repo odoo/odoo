@@ -7,6 +7,7 @@ import { getIframeInput } from "@html_editor/../tests/_helpers/iframe_input";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
+    waitForThemeReveal,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
@@ -98,4 +99,23 @@ test("should support colors defined using the color function", async () => {
     });
     await contains(".options-container button.o_we_color_preview").click();
     expect(".o_colorpicker_section button.o_color_button[data-color='#6632CD66']").toHaveCount(1);
+});
+
+test("highlights the color preset that was edited", async () => {
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker enabledTabs="['custom', 'theme']" styleAction="'background-color'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains("button.theme-tab").click();
+    await contains("[data-color='o_cc3'] + .o-hb-theme-tab-link").click();
+
+    await waitForThemeReveal();
+
+    expect(".hb-row:has(.o_cc3)").toHaveClass("o-hb-row-highlight");
+    expect(".hb-row.o-hb-row-highlight").toHaveCount(1);
+    expect(".hb-row:has(.o_cc3) + .hb-collapse-content [data-label='Background']").toHaveCount(1);
 });

@@ -94,7 +94,9 @@
                             </BuilderOptionsSection>
                             <BuilderOptionsSection title.translate="Color Presets">
                                 <t t-foreach="this.state.presets" t-as="preset" t-key="preset.id">
-                                    <BuilderRow t-slot-scope="row" initialExpandAnim="this.colorPresetToShow === preset.id">
+                                    <BuilderRow t-slot-scope="row"
+                                        initialExpandAnim="this.colorPresetToShow === preset.id"
+                                        highlight="this.colorPresetToShow === preset.id and !this.env.targetRowId">
                                         <div class="o_cc_preview_wrapper w-100" t-on-click="row.toggleCollapseContent">
                                             <div inert="" t-att-class="`o_cc${preset.id}`"
                                                 class="p-2 d-flex justify-content-between align-items-center ms-3">
@@ -148,7 +150,8 @@
                                                     actionParam="`o-cc${preset.id}-link`"
                                                     enabledTabs="['solid', 'custom']"/>
                                             </BuilderRow>
-                                            <BuilderRow label.translate="Primary Buttons">
+                                            <BuilderRow label.translate="Primary Buttons"
+                                                highlight="this.env.targetRowId === 'btn-primary'">
                                                 <BuilderColorPicker
                                                     action="'customizeWebsiteColor'"
                                                     actionParam="`o-cc${preset.id}-btn-primary`"
@@ -160,7 +163,8 @@
                                                     enabledTabs="['solid', 'custom']"
                                                     tooltip.translate="Border Color"/>
                                             </BuilderRow>
-                                            <BuilderRow label.translate="Secondary Buttons">
+                                            <BuilderRow label.translate="Secondary Buttons"
+                                                highlight="this.env.targetRowId === 'btn-secondary'">
                                                 <BuilderColorPicker
                                                     action="'customizeWebsiteColor'"
                                                     actionParam="`o-cc${preset.id}-btn-secondary`"

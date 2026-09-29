@@ -3,7 +3,7 @@
 
 <t t-name="website.ThemeShadowOption">
     <BuilderContext action="'customizeWebsiteVariable'">
-        <BuilderRow label.translate="Small" initialExpandAnim="this.env.targetRowId === 'shadow-sm'" tooltip.translate="Horizontal and Vertical offset">
+        <BuilderRow label.translate="Small" initialExpandAnim="this.env.targetRowId === 'shadow-sm'" highlight="this.env.targetRowId === 'shadow-sm'" tooltip.translate="Horizontal and Vertical offset">
             <BuilderNumberInput actionParam="'box-shadow-sm-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
             <BuilderNumberInput actionParam="'box-shadow-sm-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
             <t t-set-slot="collapse">
@@ -18,7 +18,7 @@
                 </BuilderRow>
             </t>
         </BuilderRow>
-        <BuilderRow label.translate="Normal" initialExpandAnim="this.env.targetRowId === 'shadow'" tooltip.translate="Horizontal and Vertical offset">
+        <BuilderRow label.translate="Normal" initialExpandAnim="this.env.targetRowId === 'shadow'" highlight="this.env.targetRowId === 'shadow'" tooltip.translate="Horizontal and Vertical offset">
             <BuilderNumberInput actionParam="'box-shadow-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
             <BuilderNumberInput actionParam="'box-shadow-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
             <t t-set-slot="collapse">
@@ -33,7 +33,7 @@
                 </BuilderRow>
             </t>
         </BuilderRow>
-        <BuilderRow label.translate="Large" initialExpandAnim="this.env.targetRowId === 'shadow-lg'" tooltip.translate="Horizontal and Vertical offset">
+        <BuilderRow label.translate="Large" initialExpandAnim="this.env.targetRowId === 'shadow-lg'" highlight="this.env.targetRowId === 'shadow-lg'" tooltip.translate="Horizontal and Vertical offset">
             <BuilderNumberInput actionParam="'box-shadow-lg-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
             <BuilderNumberInput actionParam="'box-shadow-lg-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
             <t t-set-slot="collapse">
