@@ -52,7 +52,6 @@ export class ColorPicker extends Component {
         applyColor: t.function(),
         applyColorPreview: t.function().optional(() => () => {}),
         applyColorResetPreview: t.function().optional(() => () => {}),
-        editColorCombination: t.function().optional(),
         setOnCloseCallback: t.function().optional(() => () => {}),
         setOperationCallbacks: t.function().optional(),
         enabledTabs: t.array().optional(["solid", "custom"]),
