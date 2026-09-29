@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sif_change_lock_date_form" model="ir.ui.view">
+        <field name="name">sif.change.lock.date.form</field>
+        <field name="model">sif.change.lock.date</field>
+        <field name="arch" type="xml">
+            <form string="Lock Journal Entries">
+                <!-- Top Warning Alert if Draft Entries Exist -->
+                <div class="alert alert-warning d-flex align-items-center justify-content-between mb-3" role="alert" invisible="not has_draft_entries">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-exclamation-triangle me-2 fs-5 text-warning" />
+                        <span>There are still draft entries in the period you want to lock. You should either post or delete them.</span>
+                    </div>
+                    <button name="action_review_draft_entries" type="object" class="btn btn-link text-info p-0 ms-3 fw-bold text-nowrap">
+                        <span>&#10148; Review</span>
+                    </button>
+                </div>
+
+                <div class="text-muted fst-italic mb-3">
+                    Lock transactions up to specific dates, inclusive
+                </div>
+
+                <group>
+                    <field name="company_id" invisible="1" />
+                    <field name="has_draft_entries" invisible="1" />
+                    
+                    <field name="sale_lock_date" string="Lock Sales" />
+                    <field name="purchase_lock_date" string="Lock Purchases" />
+                    
+                    <label for="tax_lock_date" string="Lock Tax Return" />
+                    <div class="d-flex align-items-center gap-2">
+                        <field name="tax_lock_date" class="oe_inline" />
+                        <span class="text-muted fst-italic small">after a tax closing</span>
+                    </div>
+                    
+                    <label for="user_lock_date" string="Lock Everything" />
+                    <div class="d-flex align-items-center gap-2">
+                        <field name="user_lock_date" class="oe_inline" />
+                        <span class="text-muted fst-italic small">but allow exceptions</span>
+                    </div>
+                </group>
+
+                <!-- Hard Lock Section (Irreversible Lock) -->
+                <div class="card p-3 my-3 border-danger bg-danger-subtle text-danger">
+                    <div class="fw-bold mb-2">
+                        Need an irreversible lock to ensure inalterability, for all users?
+                    </div>
+                    <group class="mb-0">
+                        <field name="fiscalyear_lock_date" string="Hard Lock" placeholder="Not locked" />
+                    </group>
+                </div>
+
+                <footer>
+                    <button string="Save" type="object" name="action_save_lock_dates" class="btn-primary" />
+                    <button string="Discard" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Window for Lock Journal Entries Modal -->
+    <record id="action_sif_change_lock_date" model="ir.actions.act_window">
+        <field name="name">Lock Journal Entries</field>
+        <field name="res_model">sif.change.lock.date</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_sif_change_lock_date_form" />
+    </record>
+
+</odoo>
