@@ -15,7 +15,6 @@ import {
 import { hover } from "@odoo/hoot-dom";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import { mockService, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime, serializeDate, today } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -218,12 +217,12 @@ test("activity with a summary layout", async () => {
 });
 
 test("call activity displays phone actions", async () => {
-    patchWithCleanup(browser, {
+    patchWithCleanup(window, {
         open(url) {
             expect.step(url);
         },
     });
-    patchWithCleanup(browser.navigator.clipboard, {
+    patchWithCleanup(window.navigator.clipboard, {
         async writeText(text) {
             expect.step(`copied: ${text}`);
         },

@@ -19,7 +19,6 @@ import { useLayoutEffect } from "@web/owl2/utils";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
-import { browser } from "@web/core/browser/browser";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -337,7 +336,7 @@ export function useMessageScrolling({
     const state = proxy({
         clear() {
             if (this.highlightedMessageId) {
-                browser.clearTimeout(timeout);
+                window.clearTimeout(timeout);
                 timeout = null;
                 this.highlightedMessageId = null;
             }
@@ -374,7 +373,7 @@ export function useMessageScrolling({
             }
             state.highlightedMessageId = message.id;
             state.initiated = false;
-            timeout = browser.setTimeout(() => this.clear(), duration);
+            timeout = window.setTimeout(() => this.clear(), duration);
         },
         initiated: false,
         /**
@@ -473,7 +472,7 @@ export function useMicrophoneVolume() {
             }
             let track;
             try {
-                const audioStream = await browser.navigator.mediaDevices.getUserMedia({
+                const audioStream = await window.navigator.mediaDevices.getUserMedia({
                     audio: store.settings.audioConstraints,
                 });
                 track = audioStream.getAudioTracks()[0];

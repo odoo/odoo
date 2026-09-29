@@ -1,6 +1,6 @@
 import { proxy } from "@odoo/owl";
 
-import { location, browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import {
     isAndroidApp,
     isDisplayStandalone,
@@ -14,7 +14,7 @@ async function getIosPwaPermission() {
     if (location.protocol !== "https:") {
         return "denied";
     }
-    const registration = await browser.navigator.serviceWorker?.getRegistration();
+    const registration = await window.navigator.serviceWorker?.getRegistration();
     return (await registration?.pushManager.permissionState()) ?? "prompt";
 }
 
@@ -45,7 +45,7 @@ export const notificationPermissionService = {
             } else if (isIOS()) {
                 permission = { state: "denied" };
             } else {
-                permission = await browser.navigator?.permissions?.query({
+                permission = await window.navigator?.permissions?.query({
                     name: "notifications",
                 });
             }
@@ -58,12 +58,12 @@ export const notificationPermissionService = {
                 isIosApp() || isAndroidApp()
                     ? "denied"
                     : this._normalizePermission(
-                          permission?.state ?? browser.Notification?.permission
+                          permission?.state ?? window.Notification?.permission
                       ),
             requestPermission: async () => {
-                if (browser.Notification && state.permission === "prompt") {
+                if (window.Notification && state.permission === "prompt") {
                     state.permission = this._normalizePermission(
-                        await browser.Notification.requestPermission()
+                        await window.Notification.requestPermission()
                     );
                     if (state.permission === "denied") {
                         notification.add(_t("Odoo will not send notifications on this device."), {

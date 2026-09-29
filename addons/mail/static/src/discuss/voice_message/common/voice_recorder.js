@@ -3,7 +3,6 @@ import { Component, onWillUnmount, proxy, types, useProps, useScope } from "@odo
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
-import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Mp3Encoder } from "./mp3_encoder";
@@ -119,7 +118,7 @@ export function useVoiceRecorder(params = {}, options = {}) {
         state.isActionPending = true;
         if (!microphone) {
             try {
-                const sourceWindow = options.rootRef?.()?.ownerDocument?.defaultView || browser;
+                const sourceWindow = options.rootRef?.()?.ownerDocument?.defaultView || window;
                 microphone = await sourceWindow.navigator.mediaDevices.getUserMedia({
                     audio: store.settings.audioConstraints,
                 });
@@ -139,11 +138,11 @@ export function useVoiceRecorder(params = {}, options = {}) {
         }
         state.elapsed = "00 : 00";
         state.recording = true;
-        audioContext = new browser.AudioContext();
+        audioContext = new window.AudioContext();
 
         await loadLamejs();
         await audioContext.audioWorklet.addModule("/discuss/voice/worklet_processor");
-        processor = new browser.AudioWorkletNode(audioContext, "processor");
+        processor = new window.AudioWorkletNode(audioContext, "processor");
         processor.port.onmessage = (e) => {
             if (state.recording && !startTimeStamp) {
                 startTimeStamp = e.timeStamp;

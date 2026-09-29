@@ -1,7 +1,6 @@
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 import { fields } from "@mail/model/export";
 
-import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
 ChannelMember.CANCEL_CALL_INVITE_DELAY = 30000;
@@ -32,7 +31,7 @@ const ChannelMemberPatch = {
     },
     cancelInvitationTimeout() {
         if (this.channel_id?.cancelRtcInvitationTimeout) {
-            browser.clearTimeout(this.channel_id.cancelRtcInvitationTimeout);
+            window.clearTimeout(this.channel_id.cancelRtcInvitationTimeout);
             this.channel_id.cancelRtcInvitationTimeout = undefined;
         }
     },
@@ -40,7 +39,7 @@ const ChannelMemberPatch = {
         if (this.channel_id.cancelRtcInvitationTimeout) {
             return;
         }
-        this.channel_id.cancelRtcInvitationTimeout = browser.setTimeout(() => {
+        this.channel_id.cancelRtcInvitationTimeout = window.setTimeout(() => {
             this.store.rtc.leaveCall(this.channel_id);
             this.channel_id.cancelRtcInvitationTimeout = undefined;
         }, ChannelMember.CANCEL_CALL_INVITE_DELAY);

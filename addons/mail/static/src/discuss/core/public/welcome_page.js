@@ -3,7 +3,6 @@ import { Component, proxy, signal, types, useProps } from "@odoo/owl";
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 
-import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 
@@ -77,8 +76,8 @@ export class WelcomePage extends Component {
         if (!this.store.self_user) {
             await this.store.self_guest?.updateGuestName(this.state.userName.trim());
         }
-        browser.localStorage.setItem("discuss_call_preview_join_mute", !this.state.hasMicrophone);
-        browser.localStorage.setItem(
+        window.localStorage.setItem("discuss_call_preview_join_mute", !this.state.hasMicrophone);
+        window.localStorage.setItem(
             "discuss_call_preview_join_video",
             Boolean(this.state.hasCamera)
         );

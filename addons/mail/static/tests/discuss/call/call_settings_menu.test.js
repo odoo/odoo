@@ -17,14 +17,13 @@ import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, keyDown, mockDate, test, expect } from "@odoo/hoot";
 import { getService, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
 import { isBrowserChrome } from "@web/core/browser/feature_detection";
 
 describe.current.tags("desktop");
 defineMailModels();
 
 test("Device selectors match a selected device by ID and kind", async () => {
-    patchWithCleanup(browser.navigator.mediaDevices, {
+    patchWithCleanup(window.navigator.mediaDevices, {
         enumerateDevices: async () => [
             {
                 deviceId: "default",
@@ -62,7 +61,7 @@ test("Device selectors match a selected device by ID and kind", async () => {
 });
 
 test("Renders the call settings", async () => {
-    patchWithCleanup(browser.navigator.mediaDevices, {
+    patchWithCleanup(window.navigator.mediaDevices, {
         enumerateDevices: () => {
             const deviceList = [
                 {
@@ -253,7 +252,7 @@ test("Adjust view dialog: each layout option and the prioritize-video toggle per
 });
 
 test("Changing inputs in Call Settings should pre-ask for browser permission", async () => {
-    patchWithCleanup(browser.navigator.mediaDevices, {
+    patchWithCleanup(window.navigator.mediaDevices, {
         enumerateDevices: () =>
             Promise.resolve([
                 {

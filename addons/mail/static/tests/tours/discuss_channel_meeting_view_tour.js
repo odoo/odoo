@@ -1,4 +1,3 @@
-import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
 /** Pathname of the channel invitation link, which holds the channel secret token. */
@@ -113,8 +112,8 @@ registry
     .add("discuss.meeting_view_tour", {
         steps: () => {
             // Avoid starting with mic/camera to prevent an unhandleable browser permission popup.
-            browser.localStorage.setItem("discuss_call_preview_join_mute", "true");
-            browser.localStorage.setItem("discuss_call_preview_join_video", "false");
+            window.localStorage.setItem("discuss_call_preview_join_mute", "true");
+            window.localStorage.setItem("discuss_call_preview_join_video", "false");
             return getMeetingViewTourSteps();
         },
     })

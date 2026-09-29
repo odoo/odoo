@@ -1,7 +1,5 @@
 import { closeStream } from "@mail/utils/common/misc";
 
-import { browser } from "@web/core/browser/browser";
-
 const FPS = 30; // Frames per second for the blurred background stream
 
 function drawAndBlurImageOnCanvas(image, blurAmount, canvas) {
@@ -28,9 +26,8 @@ export class BlurManager {
     rejectStreamPromise;
     resolveStreamPromise;
     selfieSegmentation = new window.SelfieSegmentation({
-        locateFile: (file) => {
-            return `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1/${file}`;
-        },
+        locateFile: (file) =>
+            `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation@0.1/${file}`,
     });
     /**
      * Promise or undefined, based on the input stream, resolved when selfieSegmentation has started painting on the canvas,
@@ -183,10 +180,10 @@ export class BlurManager {
         if (!this.isVideoDataLoaded) {
             return;
         }
-        browser.requestAnimationFrame(async () => {
+        window.requestAnimationFrame(async () => {
             await this._onFrame();
             if (!this.worker) {
-                browser.setTimeout(() => this._requestAnimationFrame(), Math.floor(1000 / FPS));
+                window.setTimeout(() => this._requestAnimationFrame(), Math.floor(1000 / FPS));
             }
         });
     }

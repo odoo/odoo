@@ -16,7 +16,6 @@ import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc"
 
 import { status, t, untrack, useEffect, useOnChange, useProps } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -150,9 +149,9 @@ const chatterPatch = {
                 if (!thread) {
                     return;
                 }
-                browser.clearTimeout(this.loadingAttachmentTimeout);
+                window.clearTimeout(this.loadingAttachmentTimeout);
                 if (thread.isLoadingAttachments) {
-                    this.loadingAttachmentTimeout = browser.setTimeout(
+                    this.loadingAttachmentTimeout = window.setTimeout(
                         () => (this.state.showAttachmentLoading = true),
                         DELAY_FOR_SPINNER
                     );
@@ -166,7 +165,7 @@ const chatterPatch = {
                         this.state.activePanel = CHATTER_PANEL.ATTACHMENT;
                     }
                 }
-                return () => browser.clearTimeout(this.loadingAttachmentTimeout);
+                return () => window.clearTimeout(this.loadingAttachmentTimeout);
             }
         );
         useOnChange(

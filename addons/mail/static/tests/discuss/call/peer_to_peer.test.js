@@ -1,7 +1,6 @@
 import { describe, expect } from "@odoo/hoot";
 import { waitUntil } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
-import { browser } from "@web/core/browser/browser";
 import { onRpc, mountWebClient } from "@web/../tests/web_test_helpers";
 import { defineMailModels, mockGetMedia, onlineTest } from "@mail/../tests/mail_test_helpers";
 import { PeerToPeer, STREAM_TYPE, UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
@@ -140,7 +139,7 @@ onlineTest("can broadcast a stream and control download", async () => {
     user2.p2p.connect(user2.id, channelId);
     user1.p2p.connect(user1.id, channelId);
     await user1.p2p.addPeer(user2.id);
-    const videoStream = await browser.navigator.mediaDevices.getUserMedia({
+    const videoStream = await window.navigator.mediaDevices.getUserMedia({
         video: true,
     });
     const videoTrack = videoStream.getVideoTracks()[0];

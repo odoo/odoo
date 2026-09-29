@@ -1,4 +1,3 @@
-import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
 export const AWAY_DELAY = 30 * 60 * 1000; // 30 minutes
@@ -33,7 +32,7 @@ export const imStatusService = {
             clearTimeout(becomeAwayTimeout);
             const awayTime = AWAY_DELAY - presence.getInactivityPeriod();
             if (awayTime > 0) {
-                becomeAwayTimeout = browser.setTimeout(() => updateBusPresence(), awayTime);
+                becomeAwayTimeout = window.setTimeout(() => updateBusPresence(), awayTime);
             }
         };
         bus_service.addEventListener("BUS:CONNECT", () => updateBusPresence(), { once: true });

@@ -15,7 +15,6 @@ import { Record, Store, makeStore } from "@mail/model/export";
 import { AND, fields, makeRecordFieldLocalId, normalizeManyCommands } from "@mail/model/misc";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
 
 const Markup = markup().constructor;
 
@@ -1520,7 +1519,7 @@ test("Fields updated from the local storage do not trigger another storage event
     }
     Message.register(localRegistry);
     const bodyLocalId = makeRecordFieldLocalId(Message.localId(1), "body");
-    patchWithCleanup(browser.localStorage, {
+    patchWithCleanup(window.localStorage, {
         setItem(key, value) {
             if (key === bodyLocalId) {
                 expect.step(`setItem ${JSON.parse(value).value}`);
@@ -1536,7 +1535,7 @@ test("Fields updated from the local storage do not trigger another storage event
     message.body = "2";
     expect(message.body).toBe("2");
     await expect.waitForSteps(["setItem 2"]);
-    browser.dispatchEvent(
+    window.dispatchEvent(
         new StorageEvent("storage", { key: bodyLocalId, newValue: toRawValue("3") })
     );
     await tick();

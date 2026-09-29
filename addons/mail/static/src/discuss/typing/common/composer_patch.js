@@ -3,7 +3,6 @@ import { Typing } from "@mail/discuss/typing/common/typing";
 import { rpc } from "@web/core/network/rpc";
 
 import { onWillDestroy } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { useDebounced } from "@web/core/utils/timing";
@@ -73,7 +72,7 @@ patch(Composer.prototype, {
         if (!this.typingNotified && value) {
             this.typingNotified = true;
             this.notifyIsTyping();
-            browser.setTimeout(() => (this.typingNotified = false), LONG_TYPING);
+            window.setTimeout(() => (this.typingNotified = false), LONG_TYPING);
         }
         this.stopTypingDebounced();
     },

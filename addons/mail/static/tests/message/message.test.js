@@ -46,7 +46,6 @@ import {
     withUser,
     getService,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { user } from "@web/core/user";
 import { getOrigin, url } from "@web/core/utils/urls";
@@ -2589,7 +2588,7 @@ test("chatter - font size unchanged when there is only emoji", async () => {
 });
 
 test("Copy Message Link", async () => {
-    patchWithCleanup(browser.navigator.clipboard, {
+    patchWithCleanup(window.navigator.clipboard, {
         writeText(text) {
             expect.step(text);
             super.writeText(text);

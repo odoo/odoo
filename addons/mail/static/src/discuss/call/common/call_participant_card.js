@@ -5,7 +5,6 @@ import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
 import { useHover } from "@mail/utils/common/hooks";
 import { extractAccentColor } from "@mail/utils/common/misc";
 import { isEventHandled } from "@web/core/utils/misc";
-import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import {
@@ -100,11 +99,11 @@ export class CallParticipantCard extends Component {
                     "--discuss-CallParticipantCard-talkingVolume",
                     logScaledVolume
                 );
-                frame = browser.requestAnimationFrame(update);
+                frame = window.requestAnimationFrame(update);
             };
             // Defer the read so this effect tracks isTalking, not volume.
-            frame = browser.requestAnimationFrame(update);
-            return () => browser.cancelAnimationFrame(frame);
+            frame = window.requestAnimationFrame(update);
+            return () => window.cancelAnimationFrame(frame);
         });
     }
 

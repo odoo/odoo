@@ -1,6 +1,5 @@
 import { Store } from "@mail/core/common/store_service";
 import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
-import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -74,7 +73,7 @@ const StorePatch = {
         super.onStarted(...arguments);
         try {
             // useful for synchronizing activity data between multiple tabs
-            this.activityBroadcastChannel = new browser.BroadcastChannel("mail.activity.channel");
+            this.activityBroadcastChannel = new window.BroadcastChannel("mail.activity.channel");
             this.activityBroadcastChannel.onmessage =
                 this._onActivityBroadcastChannelMessage.bind(this);
         } catch {

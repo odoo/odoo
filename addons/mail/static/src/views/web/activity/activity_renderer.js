@@ -4,7 +4,6 @@ import { ActivityRecord } from "@mail/views/web/activity/activity_record";
 
 import { Component, proxy, signal, types, useProps } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -195,7 +194,7 @@ export class ActivityRenderer extends Component {
     }
 
     setupStorageActiveColumns() {
-        const storageActiveColumnsList = browser.localStorage.getItem(this.storageKey)?.split(",");
+        const storageActiveColumnsList = window.localStorage.getItem(this.storageKey)?.split(",");
         const activeColumns = new Map();
         for (const activityType of this.props.activityTypes) {
             activeColumns.set(
@@ -211,7 +210,7 @@ export class ActivityRenderer extends Component {
     toggleDisplayColumn(typeId) {
         const activeColumns = this.storageActiveColumns();
         activeColumns.set(typeId, !activeColumns.get(typeId));
-        browser.localStorage.setItem(
+        window.localStorage.setItem(
             this.storageKey.join(","),
             [...activeColumns.keys()].filter((activityType) => activeColumns.get(activityType))
         );

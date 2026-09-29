@@ -1,6 +1,6 @@
 import { DiscussClientAction } from "@mail/core/public_web/discuss_app/client_action";
 import { WelcomePage } from "@mail/discuss/core/public/welcome_page";
-import { location, browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
 DiscussClientAction.components = { ...DiscussClientAction.components, WelcomePage };
@@ -9,8 +9,8 @@ patch(DiscussClientAction.prototype, {
         super.setup(...arguments);
         const url = new URL(location.href);
         url.searchParams.delete("email_token");
-        browser.history.replaceState(browser.history.state, null, url.toString());
-        browser.addEventListener("popstate", () => this.restoreDiscussThread(this.action()));
+        window.history.replaceState(window.history.state, null, url.toString());
+        window.addEventListener("popstate", () => this.restoreDiscussThread(this.action()));
     },
     /** @override */
     getActiveId() {
@@ -38,14 +38,14 @@ patch(DiscussClientAction.prototype, {
         // `setAsDiscussThread()` call, so the sidebar tab should be setup explicitlty.
         this.store.discuss.sidebarState.activeTab = channel.primaryMessagingMenuTab;
         if (this.store.is_welcome_page_displayed && channel.invitationLink) {
-            browser.history.replaceState(
-                browser.history.state,
+            window.history.replaceState(
+                window.history.state,
                 null,
                 `${new URL(channel.invitationLink).pathname}${location.search}`
             );
         } else if (this.store.isChannelTokenSecret) {
-            browser.history.replaceState(
-                browser.history.state,
+            window.history.replaceState(
+                window.history.state,
                 null,
                 `/discuss/channel/${channel.id}${location.search}`
             );

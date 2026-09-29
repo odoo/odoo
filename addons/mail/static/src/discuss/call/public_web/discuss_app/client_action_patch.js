@@ -1,6 +1,6 @@
 import { DiscussClientAction } from "@mail/core/public_web/discuss_app/client_action";
 
-import { location, browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
@@ -33,8 +33,8 @@ patch(DiscussClientAction.prototype, {
         }
     },
     async joinCallWithDefaultSettings() {
-        const mute = browser.localStorage.getItem("discuss_call_preview_join_mute") === "true";
-        const camera = browser.localStorage.getItem("discuss_call_preview_join_video") === "true";
+        const mute = window.localStorage.getItem("discuss_call_preview_join_mute") === "true";
+        const camera = window.localStorage.getItem("discuss_call_preview_join_video") === "true";
         await this.rtc.toggleCall(this.store.discuss.thread.channel, { audio: !mute, camera });
         await this.rtc.enterFullscreen();
     },
