@@ -1097,6 +1097,13 @@ class TestFlushSearch(TransactionCase):
         child.quantity = 25
         self.assertEqual(self.env['test_new_api.custom.table_query_sql'].search([]).sum_quantity, 25)
 
+    def test_avoid_infinite_loop_name_search(self):
+        with self.assertRaisesRegex(ValueError, "Unexpected infinite loop"):
+            # Crash rather than infinite loop
+            self.env['test_new_api.partner'].search([
+                ("display_name", "ilike", "test")
+            ])
+
 
 class TestDatePartNumber(TransactionCase):
     @classmethod

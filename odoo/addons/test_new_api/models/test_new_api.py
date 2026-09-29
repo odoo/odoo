@@ -257,6 +257,7 @@ class DiscussionPartner(models.Model):
     """
     _name = 'test_new_api.partner'
     _description = 'Discussion Partner'
+    _rec_name = "display_name"
 
     name = fields.Char(string='Name')
 
