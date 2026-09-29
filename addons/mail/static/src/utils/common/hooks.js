@@ -207,6 +207,21 @@ export function useHover(refs, { onHover, onAway, stateObserver } = {}) {
 }
 
 /**
+ * Calls `onIntent` when the element is about to be left clicked, on pointer down. Useful
+ * to start loading what the click opens.
+ *
+ * @param {import("@odoo/owl").Signal<Element>} ref
+ * @param {() => void} onIntent
+ */
+export function useIntent(ref, onIntent) {
+    useListener(ref, "pointerdown", (ev) => {
+        if (ev.button === 0) {
+            onIntent();
+        }
+    });
+}
+
+/**
  * Hook returning reactive scroll state for a given scrollable element.
  *
  * @param {import("@odoo/owl").Signal<Element>} ref - The ref of the scrollable element.

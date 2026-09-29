@@ -25,6 +25,7 @@ import {
     untrack,
     useOnChange,
     useProps,
+    useScope,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -48,6 +49,7 @@ export class Thread extends Component {
     static template = "mail.Thread";
 
     isFocused = signal(false);
+    scope = useScope();
     /** @type {Promise|undefined} */
     smoothScrollingPromise;
     /** @type {number} */
@@ -94,6 +96,8 @@ export class Thread extends Component {
             showJumpPresent: false,
             scrollTop: null,
         });
+        // before hooks depending on `mountedAndLoaded`, so they see it on mount
+        onMounted(() => (this.state.mountedAndLoaded = this.props.thread.isLoaded));
         /**
          * Bumped by `reset()`. Used as a dependency of the effect mirroring
          * `isLoaded` into `mountedAndLoaded` so the mirror is re-synced after a
@@ -517,7 +521,7 @@ export class Thread extends Component {
     }
 
     fetchInitialMessages() {
-        this.props.thread.fetchNewMessages({ routeParams: this.messageFetchRouteParams });
+        this.props.thread.fetchInitialMessages({ routeParams: this.messageFetchRouteParams });
     }
 
     get viewportEl() {
@@ -714,10 +718,18 @@ export class Thread extends Component {
         }
     }
 
+    /** Already loaded threads (e.g. prefetched) show their messages from the first render. */
+    get showLoadedContent() {
+        if (this.scope.status === 0 /* new */) {
+            return this.props.thread.isLoaded;
+        }
+        return this.state.mountedAndLoaded;
+    }
+
     get orderedMessages() {
         // ensure rendering observes resetCount to re-trigger the effect when reset() is called
         void this.resetCount();
-        const messages = this.state.mountedAndLoaded
+        const messages = this.showLoadedContent
             ? this.props.thread.messages
             : this.props.thread.phantomMessages;
         return this.props.order === "asc" ? [...messages] : [...messages].reverse();
@@ -733,7 +745,7 @@ export class Thread extends Component {
     }
 
     get loadMoreClass() {
-        return { [this.loadMoreBtnClass]: true, "opacity-0": !this.state.mountedAndLoaded };
+        return { [this.loadMoreBtnClass]: true, "opacity-0": !this.showLoadedContent };
     }
 
     get loadOlderWrapperAttClass() {
@@ -784,7 +796,7 @@ export class Thread extends Component {
 
     get showStartMessage() {
         return (
-            this.state.mountedAndLoaded &&
+            this.showLoadedContent &&
             !this.props.thread.loadOlder &&
             this.startMessageChannelTypes.includes(this.channel?.channel_type)
         );

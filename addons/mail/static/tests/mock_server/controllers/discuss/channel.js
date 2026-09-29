@@ -120,7 +120,9 @@ registerStoreHandler(
             domain: [],
             thread: channel,
         });
-        MailMessage.set_message_done(messages.map((message) => message.id));
+        if (!params.is_prefetch) {
+            MailMessage.set_message_done(messages.map((message) => message.id));
+        }
         const lastMessage = MailMessage._filter([
             ["model", "=", "discuss.channel"],
             ["res_id", "=", params.channel_id],
