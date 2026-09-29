@@ -176,7 +176,13 @@ class AccountMove(models.Model):
             return -self.direction_sign * sum(lines.mapped('price_subtotal'))
 
         def get_base_amount_reverse_charge():
-            return get_base_amounts_from_tag("K_12") + get_base_amounts_from_tag("K_31")
+            return get_base_amounts_from_tag("K_31")
+
+        def get_base_amount_outside_country():
+            # P_13_8 excludes the amounts already reported in P_13_5 (OSS) and P_13_9 (np II)
+            excluded_tags = get_tags('K_12') | get_tags('OSS_Base')
+            lines = self.line_ids.filtered(lambda line: line.tax_tag_ids & get_tags('K_11') and not line.tax_tag_ids & excluded_tags)
+            return -self.direction_sign * sum(lines.mapped('price_subtotal'))
 
         def compute_p_12(tag_names):
             """
@@ -281,6 +287,7 @@ class AccountMove(models.Model):
             'get_amounts_from_tag_in_PLN_currency': get_amounts_from_tag_in_PLN_currency,
             'get_base_amounts_from_tag': get_base_amounts_from_tag,
             'get_base_amount_reverse_charge': get_base_amount_reverse_charge,
+            'get_base_amount_outside_country': get_base_amount_outside_country,
             'invoice_type': ksef_type,
             'related_invoices': self._l10n_pl_edi_get_related_invoices(),
             'correction_info': correction_info,
