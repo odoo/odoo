@@ -2230,8 +2230,21 @@ export class PosStore extends WithLazyGetterTrap {
             this.dialog.add(RetryPrintPopup, {
                 message: failedReceipts,
                 canRetry: true,
-                retry: () => {
-                    this.printChanges(order, orderChange, reprint, retryPrinters);
+                retry: async () => {
+                    const isRetryPrinted = await this.printChanges(
+                        order,
+                        orderChange,
+                        reprint,
+                        retryPrinters
+                    );
+                    if (
+                        isRetryPrinted &&
+                        !isPrinted &&
+                        this.models["pos.order"].getBy("uuid", order.uuid)
+                    ) {
+                        order.updateLastOrderChange();
+                        this.syncAllOrders({ orders: [order] });
+                    }
                 },
             });
         }
