@@ -92,34 +92,33 @@
                         </tr>
                     </table>
 
-                    <!-- Tabel Matriks Aging 14 Kolom -->
+                    <!-- Tabel Matriks Aging 13 Kolom -->
                     <table class="table table-sm table-bordered" style="width: 100%; border-collapse: collapse; font-size: 7.8px; margin-bottom: 8px;">
                         <thead>
                             <tr style="background-color: #714B67; color: #FFFFFF; text-align: center; font-weight: bold;">
                                 <th rowspan="2" style="width: 3%; padding: 4px; vertical-align: middle; border: 1px solid #5A3552;">NO</th>
-                                <th rowspan="2" style="width: 16%; padding: 4px; vertical-align: middle; text-align: left; border: 1px solid #5A3552;">NAMA DEBITUR / MITRA / SISWA</th>
-                                <th rowspan="2" style="width: 7%; padding: 4px; vertical-align: middle; border: 1px solid #5A3552;">KLASIFIKASI</th>
-                                <th rowspan="2" style="width: 10%; padding: 4px; vertical-align: middle; text-align: left; border: 1px solid #5A3552;">UNIT KERJA</th>
-                                <th rowspan="2" style="width: 8%; padding: 4px; vertical-align: middle; border: 1px solid #5A3552;">WHATSAPP</th>
-                                <th rowspan="2" style="width: 7%; padding: 4px; vertical-align: middle; text-align: right; border: 1px solid #5A3552;">LANCAR</th>
+                                <th rowspan="2" style="width: 20%; padding: 4px; vertical-align: middle; text-align: left; border: 1px solid #5A3552;">NAMA DEBITUR / MITRA / SISWA</th>
+                                <th rowspan="2" style="width: 9%; padding: 4px; vertical-align: middle; border: 1px solid #5A3552;">KLASIFIKASI</th>
+                                <th rowspan="2" style="width: 12%; padding: 4px; vertical-align: middle; text-align: left; border: 1px solid #5A3552;">UNIT KERJA</th>
+                                <th rowspan="2" style="width: 8%; padding: 4px; vertical-align: middle; text-align: right; border: 1px solid #5A3552;">LANCAR</th>
                                 <th colspan="3" style="width: 18%; padding: 3px; border: 1px solid #5A3552; background-color: #633F5B;">MENUNGGAK REGULER (1 - 90 H)</th>
-                                <th colspan="4" style="width: 22%; padding: 3px; border: 1px solid #7F1D1D; background-color: #991B1B;">BREAKDOWN KRITIS (&gt; 90 HARI)</th>
-                                <th rowspan="2" style="width: 9%; padding: 4px; vertical-align: middle; text-align: right; border: 1px solid #5A3552;">TOTAL PIUTANG</th>
+                                <th colspan="4" style="width: 20%; padding: 3px; border: 1px solid #7F1D1D; background-color: #991B1B;">BREAKDOWN KRITIS (&gt; 90 HARI)</th>
+                                <th rowspan="2" style="width: 10%; padding: 4px; vertical-align: middle; text-align: right; border: 1px solid #5A3552;">TOTAL PIUTANG</th>
                             </tr>
                             <tr style="background-color: #633F5B; color: #FFFFFF; text-align: center; font-weight: bold;">
                                 <th style="width: 6%; padding: 3px; text-align: right; border: 1px solid #5A3552;">1 - 30 H</th>
                                 <th style="width: 6%; padding: 3px; text-align: right; border: 1px solid #5A3552;">31 - 60 H</th>
                                 <th style="width: 6%; padding: 3px; text-align: right; border: 1px solid #5A3552;">61 - 90 H</th>
-                                <th style="width: 5.5%; padding: 3px; text-align: right; border: 1px solid #7F1D1D; background-color: #991B1B;">91 - 120 H</th>
-                                <th style="width: 5.5%; padding: 3px; text-align: right; border: 1px solid #7F1D1D; background-color: #991B1B;">121 - 180 H</th>
-                                <th style="width: 5.5%; padding: 3px; text-align: right; border: 1px solid #7F1D1D; background-color: #991B1B;">181 - 365 H</th>
-                                <th style="width: 5.5%; padding: 3px; text-align: right; border: 1px solid #7F1D1D; background-color: #991B1B;">&gt; 365 H</th>
+                                <th style="width: 5%; padding: 3px; text-align: right; border: 1px solid #7F1D1D; background-color: #991B1B;">91 - 120 H</th>
+                                <th style="width: 5%; padding: 3px; text-align: right; border: 1px solid #7F1D1D; background-color: #991B1B;">121 - 180 H</th>
+                                <th style="width: 5%; padding: 3px; text-align: right; border: 1px solid #7F1D1D; background-color: #991B1B;">181 - 365 H</th>
+                                <th style="width: 5%; padding: 3px; text-align: right; border: 1px solid #7F1D1D; background-color: #991B1B;">&gt; 365 H</th>
                             </tr>
                         </thead>
                         <tbody>
                             <t t-if="not partners">
                                 <tr>
-                                    <td colspan="14" style="text-align: center; padding: 15px; color: #64748B;">
+                                    <td colspan="13" style="text-align: center; padding: 15px; color: #64748B;">
                                         Tidak ada data piutang untuk kriteria filter yang dipilih.
                                     </td>
                                 </tr>
@@ -139,7 +138,6 @@
                                     </td>
                                     <td style="text-align: center; padding: 3px; color: #334155;"><t t-esc="p['partner_type_label']"/></td>
                                     <td style="padding: 3px; text-align: left; color: #334155;"><t t-esc="p['unit_name']"/></td>
-                                    <td style="text-align: center; padding: 3px; color: #334155;"><t t-esc="p['phone'] or '-'"/></td>
                                     <td style="text-align: right; padding: 3px; color: #0F172A;">
                                         <t t-esc="format_rp(p['current']) if p['current'] > 0 else '-'"/>
                                     </td>
@@ -174,7 +172,7 @@
 
                             <!-- Grand Total Row -->
                             <tr style="background-color: #0F172A; color: #FFFFFF; font-weight: bold; border-top: 2px solid #000000; font-size: 8px;">
-                                <td colspan="5" style="padding: 5px; text-align: left; color: #FFFFFF;">TOTAL KESELURUHAN</td>
+                                <td colspan="4" style="padding: 5px; text-align: left; color: #FFFFFF;">TOTAL KESELURUHAN</td>
                                 <td style="text-align: right; padding: 5px; color: #FFFFFF;"><t t-esc="format_rp(totals.get('total_current'))"/></td>
                                 <td style="text-align: right; padding: 5px; color: #FFFFFF;"><t t-esc="format_rp(totals.get('total_b_1_30'))"/></td>
                                 <td style="text-align: right; padding: 5px; color: #FFFFFF;"><t t-esc="format_rp(totals.get('total_b_31_60'))"/></td>
