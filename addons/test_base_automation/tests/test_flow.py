@@ -1150,6 +1150,30 @@ action = {
             )
         self.assertEqual(e.exception.args[0], "Following child actions have warnings: Send Webhook Notification")
 
+    def test_150_on_write_recompute_without_write_access(self):
+        """ A user may trigger an automation on records they can only read,
+        through the recomputation of a stored field without compute_sudo. """
+        tag = self.env['test_base_automation.tag'].create({'name': 'Tag'})
+        record = self.env['base.automation.readonly.test'].create({'tag_id': tag.id})
+        create_automation(
+            self,
+            model_id=self.env['ir.model']._get_id('base.automation.readonly.test'),
+            trigger='on_create_or_write',
+            _actions={'state': 'code', 'code': "records.write({'name': 'Processed'})"},
+        )
+        self.assertFalse(record.date_automation_last)
+
+        # sanity check: user demo can read the record, but not write on it
+        self.assertTrue(record.with_user(self.user_demo).has_access('read'))
+        self.assertFalse(record.with_user(self.user_demo).has_access('write'))
+
+        tag.with_user(self.user_demo).name = 'New Tag'
+        # recompute 'tag_name' as user demo, like when flushing their request
+        record.with_user(self.user_demo).flush_model()
+        self.assertEqual(record.tag_name, 'New Tag')
+        self.assertEqual(record.name, 'Processed')
+        self.assertTrue(record.date_automation_last)
+
 
 @common.tagged('post_install', '-at_install')
 class TestCompute(common.TransactionCase):
