@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <t t-inherit="hr_skills.ResumeListRenderer.RecordRow" t-inherit-mode="extension">
+    <t t-inherit="hr.ResumeListRenderer.RecordRow" t-inherit-mode="extension">
         <xpath expr="//a[@id='external_link']" position="attributes">
             <attribute name="t-if">data.external_url &amp;&amp; !data.course_url</attribute>
         </xpath>

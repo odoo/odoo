@@ -12,6 +12,7 @@ export class HrEmployee extends Record {
     currency_id = fields.One("res.currency");
     department_id = fields.One("hr.department");
     employee_type_id = fields.One("hr.employee.type");
+    employee_skill_ids = fields.Many("hr.employee.skill");
     /** @type {string} */
     first_contract_date;
     /** @type {string} */
