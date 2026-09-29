@@ -5,7 +5,7 @@
         <field name="model">repair.order</field>
         <field name="inherit_id" ref="repair.view_repair_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_view_sale_order']" position="after">
+            <button name="%(repair.action_repair_move_lines)d" position="after">
                 <button
                     class="oe_stat_button" name="action_view_purchase_orders" type="object"
                     icon="credit_card" groups="purchase.group_purchase_user"
@@ -14,7 +14,7 @@
                         <field name="purchase_count" string="Purchase Orders" widget="statinfo"/>
                     </div>
                 </button>
-            </xpath>
+            </button>
         </field>
     </record>
 </odoo>
