@@ -18,7 +18,6 @@ import {
     useOnChange,
     useProps,
 } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
 
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
@@ -514,8 +513,8 @@ export class Thread extends Component {
 
     get viewportEl() {
         let viewportEl = this.scrollableRef();
-        if (viewportEl && viewportEl.clientHeight > browser.innerHeight) {
-            while (viewportEl && viewportEl.clientHeight > browser.innerHeight) {
+        if (viewportEl && viewportEl.clientHeight > window.innerHeight) {
+            while (viewportEl && viewportEl.clientHeight > window.innerHeight) {
                 viewportEl = viewportEl.parentElement;
             }
         }

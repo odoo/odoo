@@ -1,7 +1,6 @@
 import { Component, onWillStart, t, useListener, usePlugin, useProps, xml } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
 import { Tabs, Tab } from "@mail/core/common/tabs";
@@ -30,10 +29,10 @@ export class CallSettings extends Component {
         this.rtc = useService("discuss.rtc");
         this.microphoneVolume = useMicrophoneVolume();
         this.pttExtService = useService("discuss.ptt_extension");
-        useListener(browser, "keydown", (ev) => this._onKeyDown(ev), { capture: true });
-        useListener(browser, "keyup", (ev) => this._onKeyUp(ev), { capture: true });
+        useListener(window, "keydown", (ev) => this._onKeyDown(ev), { capture: true });
+        useListener(window, "keyup", (ev) => this._onKeyUp(ev), { capture: true });
         onWillStart(async () => {
-            if (!browser.navigator.mediaDevices) {
+            if (!window.navigator.mediaDevices) {
                 // zxing-js: isMediaDevicesSuported or canEnumerateDevices is false.
                 this.notification.add(
                     _t("Media devices unobtainable. SSL might not be set up properly."),

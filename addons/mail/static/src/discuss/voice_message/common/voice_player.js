@@ -9,7 +9,6 @@ import {
     useOnChange,
     useProps,
 } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 
@@ -117,7 +116,7 @@ export class VoicePlayer extends Component {
     }
 
     makeAudio() {
-        this.audioCtx = new browser.AudioContext();
+        this.audioCtx = new window.AudioContext();
         this.gainNode = this.audioCtx.createGain();
         this.gainNode.connect(this.audioCtx.destination);
         this.analyser = this.audioCtx.createAnalyser();

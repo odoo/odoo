@@ -1,6 +1,6 @@
 import { Store } from "@mail/core/common/store_service";
 
-import { location, browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Store} */
@@ -17,7 +17,7 @@ const StorePatch = {
         const url = new URL(base, location.origin);
         url.search = location.search;
         url.searchParams.delete("fullscreen");
-        browser.history.replaceState(browser.history.state, null, url);
+        window.history.replaceState(window.history.state, null, url);
     },
 };
 patch(Store.prototype, StorePatch);

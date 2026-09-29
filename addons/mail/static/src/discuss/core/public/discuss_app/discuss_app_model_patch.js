@@ -1,5 +1,5 @@
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
-import { location, browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -23,6 +23,6 @@ patch(DiscussApp.prototype, {
             url.pathname = "/discuss";
             url.searchParams.set("active_id", activeId);
         }
-        browser.history.pushState(browser.history.state, null, url.toString());
+        window.history.pushState(window.history.state, null, url.toString());
     },
 });

@@ -18,7 +18,6 @@ import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { advanceTime, freezeTime, keyDown, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
 
 defineMailModels();
 
@@ -103,7 +102,7 @@ test("Can push-to-talk", async () => {
     await advanceTime(PTT_RELEASE_DURATION);
     await contains(".o-discuss-CallParticipantCard .o-isTalking");
     // switching tab while PTT key still pressed then released on other tab should eventually release PTT
-    browser.dispatchEvent(new Event("blur"));
+    window.dispatchEvent(new Event("blur"));
     await advanceTime(PTT_RELEASE_DURATION + 1000);
     await contains(".o-discuss-CallParticipantCard:not(:has(.o-isTalking))");
     await click(".o-discuss-Call");

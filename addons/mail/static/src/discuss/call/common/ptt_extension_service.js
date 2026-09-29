@@ -2,7 +2,6 @@ import { parseVersion } from "@mail/utils/common/misc";
 
 import { markup, proxy } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 
@@ -48,7 +47,7 @@ export const pttExtensionHookService = {
             },
         });
 
-        browser.addEventListener("message", ({ data, origin, source }) => {
+        window.addEventListener("message", ({ data, origin, source }) => {
             const rtc = env.services["discuss.rtc"];
             if (
                 source !== window ||

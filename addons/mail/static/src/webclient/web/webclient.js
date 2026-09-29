@@ -1,4 +1,3 @@
-import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { WebClient } from "@web/webclient/webclient";
@@ -20,7 +19,7 @@ patch(WebClient.prototype, {
                 once: true,
             });
         }
-        if (browser.navigator.permissions) {
+        if (window.navigator.permissions) {
             let notificationPerm;
             const onPermissionChange = () => {
                 if (this._canSendNativeNotification) {
@@ -29,7 +28,7 @@ patch(WebClient.prototype, {
                     this._unsubscribePush();
                 }
             };
-            browser.navigator.permissions.query({ name: "notifications" }).then((perm) => {
+            window.navigator.permissions.query({ name: "notifications" }).then((perm) => {
                 notificationPerm = perm;
                 notificationPerm.addEventListener("change", onPermissionChange);
             });
@@ -44,7 +43,7 @@ patch(WebClient.prototype, {
      * @private
      */
     get _canSendNativeNotification() {
-        return browser.Notification?.permission === "granted";
+        return window.Notification?.permission === "granted";
     },
 
     /**
@@ -60,7 +59,7 @@ patch(WebClient.prototype, {
             return;
         }
         let subscription = await pushManager.getSubscription();
-        const previousEndpoint = browser.localStorage.getItem(`${USER_DEVICES_MODEL}_endpoint`);
+        const previousEndpoint = window.localStorage.getItem(`${USER_DEVICES_MODEL}_endpoint`);
         // This may occur if the subscription was refreshed by the browser,
         // but it may also happen if the subscription has been revoked or lost.
         if (!subscription) {
@@ -89,7 +88,7 @@ patch(WebClient.prototype, {
                 }
                 return;
             }
-            browser.localStorage.setItem(`${USER_DEVICES_MODEL}_endpoint`, subscription.endpoint);
+            window.localStorage.setItem(`${USER_DEVICES_MODEL}_endpoint`, subscription.endpoint);
         }
         const kwargs = subscription.toJSON();
         if (previousEndpoint && subscription.endpoint !== previousEndpoint) {
@@ -137,7 +136,7 @@ patch(WebClient.prototype, {
             endpoint: subscription.endpoint,
         });
         await subscription.unsubscribe();
-        browser.localStorage.removeItem(`${USER_DEVICES_MODEL}_endpoint`);
+        window.localStorage.removeItem(`${USER_DEVICES_MODEL}_endpoint`);
     },
 
     /**
@@ -147,7 +146,7 @@ patch(WebClient.prototype, {
      * @return {Promise<PushManager>}
      */
     async pushManager() {
-        const registration = await browser.navigator.serviceWorker?.getRegistration();
+        const registration = await window.navigator.serviceWorker?.getRegistration();
         return registration?.pushManager;
     },
 

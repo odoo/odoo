@@ -6,7 +6,6 @@ import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, runAllTimers, waitFor, waitForNone } from "@odoo/hoot-dom";
 
 import { makeMockServer, MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
 
 defineMailModels();
 describe.current.tags("desktop");
@@ -21,7 +20,7 @@ test("show warning when bus connection encounters issues", async () => {
     // The bus service listens to online/offline events. Prevent them to make the
     // test deterministic.
     for (const event of ["online", "offline"]) {
-        browser.addEventListener(
+        window.addEventListener(
             event,
             (ev) => {
                 ev.preventDefault();

@@ -1,7 +1,6 @@
 import { Store } from "@mail/core/common/store_service";
 import { fields, Record } from "@mail/model/export";
 
-import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { user } from "@web/core/user";
 import { rpc } from "@web/core/network/rpc";
@@ -51,7 +50,7 @@ export class ChannelMember extends Record {
         this.onChange(
             () => [this.isTyping],
             function onChangeIsTyping(isTyping) {
-                browser.clearTimeout(this.typingTimeoutId);
+                window.clearTimeout(this.typingTimeoutId);
                 if (isTyping) {
                     this.registerTypingTimeout();
                 }
@@ -61,7 +60,7 @@ export class ChannelMember extends Record {
         this.onChange(
             () => [this.is_typing_dt],
             function onChangeIsTypingDt(isTypingDt) {
-                browser.clearTimeout(this.typingTimeoutId);
+                window.clearTimeout(this.typingTimeoutId);
                 if (
                     !isTypingDt ||
                     DateTime.now().diff(isTypingDt).milliseconds > Store.OTHER_LONG_TYPING
@@ -134,7 +133,7 @@ export class ChannelMember extends Record {
     is_typing_dt = fields.Datetime();
     /** To be patched in test, to detect when this timeout is registered. */
     registerTypingTimeout() {
-        this.typingTimeoutId = browser.setTimeout(
+        this.typingTimeoutId = window.setTimeout(
             () => (this.isTyping = false),
             this.typingTimeoutDuration
         );
@@ -145,7 +144,7 @@ export class ChannelMember extends Record {
         },
         eager: true,
         onDelete() {
-            browser.clearTimeout(this.typingTimeoutId);
+            window.clearTimeout(this.typingTimeoutId);
         },
     });
     /** @type {number} */

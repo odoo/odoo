@@ -1,6 +1,5 @@
 import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
 import { Component, types, useApp, usePlugin, useProps, xml } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { registry } from "@web/core/registry";
@@ -126,7 +125,7 @@ export const mailPopoutService = {
                         height,
                     });
                 } else {
-                    externalWindow = browser.open(
+                    externalWindow = window.open(
                         "about:blank",
                         "_blank",
                         `popup=yes,width=${width},height=${height}`
@@ -164,7 +163,7 @@ export const mailPopoutService = {
             if (!externalWindow || externalWindow.closed) {
                 const hooks = popout.hooks;
                 hooks?.beforePopout?.();
-                externalWindow = browser.open("about:blank", "_blank", "popup=yes");
+                externalWindow = window.open("about:blank", "_blank", "popup=yes");
                 window.addEventListener("beforeunload", () => {
                     if (externalWindow && !externalWindow.closed) {
                         externalWindow.close();

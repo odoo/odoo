@@ -1,7 +1,5 @@
 import { Record, fields } from "@mail/model/export";
 
-import { browser } from "@web/core/browser/browser";
-
 export class ResUsersSettings extends Record {
     static _name = "res.users.settings";
 
@@ -33,11 +31,11 @@ export class ResUsersSettings extends Record {
         }
         const key = `${partnerId}_${guestId}`;
         if (this.volumeSettingsTimeouts.get(key)) {
-            browser.clearTimeout(this.volumeSettingsTimeouts.get(key));
+            window.clearTimeout(this.volumeSettingsTimeouts.get(key));
         }
         this.volumeSettingsTimeouts.set(
             key,
-            browser.setTimeout(
+            window.setTimeout(
                 this._onSaveVolumeSettingTimeout.bind(this, { key, partnerId, guestId, volume }),
                 5000
             )

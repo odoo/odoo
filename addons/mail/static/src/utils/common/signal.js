@@ -1,7 +1,5 @@
 import { computed, getScope, shallowEqual, signal } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
-
 /**
  * A computed that arms the timeout marking its own value stale, so a value
  * nobody reads schedules nothing and its scope drops the last timeout.
@@ -17,14 +15,14 @@ export function computedUntilStale(compute, msUntilStale, options) {
     const staleness = signal(0);
     const markStale = incrementFn(staleness);
     let timeout;
-    getScope()?.onDestroy(() => browser.clearTimeout(timeout));
+    getScope()?.onDestroy(() => window.clearTimeout(timeout));
     return computed(() => {
         void staleness();
-        browser.clearTimeout(timeout);
+        window.clearTimeout(timeout);
         const value = compute();
         const ms = msUntilStale(value);
         if (ms) {
-            timeout = browser.setTimeout(markStale, Math.ceil(ms));
+            timeout = window.setTimeout(markStale, Math.ceil(ms));
         }
         return value;
     }, options);

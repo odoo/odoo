@@ -1,6 +1,5 @@
 import { Component, onMounted, onWillUnmount, proxy, types, usePlugin, useProps } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
@@ -40,9 +39,9 @@ export class CallContextMenu extends Component {
                 return;
             }
             this.updateStats();
-            this.updateStatsTimeout = browser.setInterval(() => this.updateStats(), 3000);
+            this.updateStatsTimeout = window.setInterval(() => this.updateStats(), 3000);
         });
-        onWillUnmount(() => browser.clearInterval(this.updateStatsTimeout));
+        onWillUnmount(() => window.clearInterval(this.updateStatsTimeout));
     }
 
     get isSelf() {

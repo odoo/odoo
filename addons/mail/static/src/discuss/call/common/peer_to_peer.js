@@ -1,5 +1,4 @@
 import { rpc } from "@web/core/network/rpc";
-import { browser } from "@web/core/browser/browser";
 
 export const STREAM_TYPE = Object.freeze({
     AUDIO: "audio",
@@ -330,7 +329,7 @@ export class PeerToPeer extends EventTarget {
     }
     removePeer(id) {
         const recoverTimeoutId = this._recoverTimeouts.get(id);
-        browser.clearTimeout(recoverTimeoutId);
+        window.clearTimeout(recoverTimeoutId);
         this._recoverTimeouts.delete(id);
         const peer = this.peers.get(id);
         if (!peer) {
@@ -677,7 +676,7 @@ export class PeerToPeer extends EventTarget {
             Math.min(peer.connectRetryDelay * 1.5, MAXIMUM_RECONNECT_DELAY) + 1000 * Math.random();
         this._recoverTimeouts.set(
             id,
-            browser.setTimeout(async () => {
+            window.setTimeout(async () => {
                 const peer = this.peers.get(id);
                 this._recoverTimeouts.delete(id);
                 const connectionSuccess =

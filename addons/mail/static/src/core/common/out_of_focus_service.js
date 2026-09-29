@@ -1,7 +1,6 @@
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
 import { isAndroid } from "@web/core/browser/feature_detection";
-import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
@@ -83,7 +82,7 @@ export class OutOfFocusService {
     }
 
     async hasServiceWorkInstalledAndPushSubscriptionActive() {
-        const registration = await browser.navigator.serviceWorker?.getRegistration();
+        const registration = await window.navigator.serviceWorker?.getRegistration();
         if (registration) {
             const pushManager = await registration.pushManager;
             if (pushManager) {
@@ -166,7 +165,7 @@ export class OutOfFocusService {
     async _playSound() {
         // On Android with push notifications granted, suppress in-browser sound —
         // push notifications handle alerts there and respect the device's silent mode.
-        if (isAndroid() && browser.Notification?.permission === "granted") {
+        if (isAndroid() && window.Notification?.permission === "granted") {
             return;
         }
         if (

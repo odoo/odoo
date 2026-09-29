@@ -15,7 +15,6 @@ import { toRawValue } from "@mail/utils/common/local_storage";
 import { Settings } from "@mail/core/common/settings_model";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import { getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -173,7 +172,7 @@ test("call auto focus is 'off", async () => {
 });
 
 test("device input/output id", async () => {
-    patchWithCleanup(browser.navigator.mediaDevices, {
+    patchWithCleanup(window.navigator.mediaDevices, {
         enumerateDevices: () =>
             Promise.resolve([
                 {

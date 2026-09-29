@@ -1,4 +1,3 @@
-import { browser } from "@web/core/browser/browser";
 import { session } from "@web/session";
 
 const LOCAL_STORAGE_SUBVERSION = 1;
@@ -42,16 +41,16 @@ export class LocalStorageEntry {
         if (this.rawGet() !== null && this.get() === value) {
             return;
         }
-        browser.localStorage.setItem(this.key, toRawValue(value));
+        window.localStorage.setItem(this.key, toRawValue(value));
     }
     rawGet() {
-        return browser.localStorage.getItem(this.key);
+        return window.localStorage.getItem(this.key);
     }
     remove() {
         if (this.rawGet() === null) {
             return;
         }
-        browser.localStorage.removeItem(this.key);
+        window.localStorage.removeItem(this.key);
     }
 }
 
@@ -97,7 +96,7 @@ function onStorage(ev) {
  */
 export function subscribeToStorage(key, callback) {
     if (callbacksByKey.size === 0) {
-        browser.addEventListener("storage", onStorage);
+        window.addEventListener("storage", onStorage);
     }
     if (!callbacksByKey.has(key)) {
         callbacksByKey.set(key, new Set());
@@ -110,7 +109,7 @@ export function subscribeToStorage(key, callback) {
             callbacksByKey.delete(key);
         }
         if (callbacksByKey.size === 0) {
-            browser.removeEventListener("storage", onStorage);
+            window.removeEventListener("storage", onStorage);
         }
     };
 }
