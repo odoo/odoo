@@ -8,7 +8,7 @@
 
         <function model="stock.warehouse" name="write">
             <value model="stock.warehouse" eval="obj().env['stock.warehouse'].search([]).ids"/>
-            <value eval="{'subcontracting_to_resupply': True}"/>
+            <value eval="{'subcontracting_to_resupply': 'on_order'}"/>
         </function>
 
     </data>
