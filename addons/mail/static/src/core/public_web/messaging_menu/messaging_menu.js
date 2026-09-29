@@ -75,7 +75,15 @@ export class MessagingMenu extends Component {
                     return (
                         normalize(m.thread?.displayName).includes(normalizedTerms) ||
                         normalize(m.authorName).includes(normalizedTerms) ||
-                        normalize(m.inlineBody).includes(normalizedTerms)
+                        normalize(m.inlineBody).includes(normalizedTerms) ||
+                        (m?.started_poll_ids?.length &&
+                            m.poll?.option_ids.some((o) =>
+                                normalize(o.option_label).includes(normalizedTerms)
+                            )) ||
+                        (m?.ended_poll_ids?.length &&
+                            normalize(m.poll?.winning_option_id?.option_label).includes(
+                                normalizedTerms
+                            ))
                     );
                 }),
             deps: () => [this.filteredMessages()],
