@@ -41,7 +41,7 @@ class SurveyUser_Input(models.Model):
             ))
         resume_survey_by_ids = resume_lines.grouped(
             lambda resume_line: (resume_line.employee_id, resume_line.survey_id))
-        line_type = self.env.ref('hr_skills_survey.resume_type_certification', raise_if_not_found=False)
+        line_type = self.env.ref('hr_survey.resume_type_certification', raise_if_not_found=False)
 
         lines_to_create = []
         today = fields.Date.context_today(self)
