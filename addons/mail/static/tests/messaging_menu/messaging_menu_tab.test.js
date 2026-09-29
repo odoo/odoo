@@ -1072,3 +1072,35 @@ test("pressing a tab preloads its content only once, before the click is complet
     await pointerUp(".o-mail-MessagingMenu-tab[data-id='notification']");
     expect.verifySteps([]);
 });
+
+test("search on bookmark tab includes poll messages", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const messageIds = pyEnv["mail.message"].create(
+        [0, 1].map(() => ({
+            body: "",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+            bookmarked_partner_ids: [serverState.partnerId],
+        }))
+    );
+    const optionIds = pyEnv["mail.poll.option"].create([
+        { option_label: "pizza" },
+        { option_label: "burger" },
+    ]);
+    pyEnv["mail.poll"].create({
+        end_message_id: messageIds[1],
+        option_ids: optionIds,
+        poll_question: "what would you like to have?",
+        start_message_id: messageIds[0],
+        winning_option_id: optionIds[0],
+    });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.BOOKMARK);
+    await waitFor(".o-mail-MessagingMenuItem:count(2)");
+    await insertText(".o-mail-DiscussSearch input", "pizza");
+    await waitFor(".o-mail-MessagingMenuItem:count(2)");
+    await insertText(".o-mail-DiscussSearch input", "burger", { replace: true });
+    await waitFor(".o-mail-MessagingMenuItem:count(1)");
+});
