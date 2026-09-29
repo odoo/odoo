@@ -1455,6 +1455,25 @@ class TestDiscuss(HttpCase, MailCommon, TestRecipients):
         self.assertEqual(res["messages"], all_res["messages"])
         self.assertNotIn("count", res)
 
+    def test_message_fetch_exclude_ids(self):
+        record = self.test_record.with_user(self.user_employee)
+        messages = self.env["mail.message"]
+        for index in range(6):
+            messages += record.message_post(body=f"Message {index}", message_type="comment")
+        MailMessage = self.env["mail.message"].with_user(self.user_employee)
+        # messages known client-side are skipped, the page is the next closest messages
+        res = MailMessage._message_fetch([], thread=record, before=messages[5].id, exclude_ids=messages[3:5].ids, limit=2)
+        self.assertEqual(res["messages"], messages[1:3].sorted("id", reverse=True))
+        res = MailMessage._message_fetch([], thread=record, after=messages[0].id, exclude_ids=messages[1:3].ids, limit=2)
+        self.assertEqual(res["messages"], messages[3:5].sorted("id", reverse=True))
+        # without reference, the newest messages that are not known yet
+        res = MailMessage._message_fetch([], thread=record, exclude_ids=messages[4:].ids, limit=2)
+        self.assertEqual(res["messages"], messages[2:4].sorted("id", reverse=True))
+        # after 0 is a reference too: the oldest messages, not the newest ones
+        all_messages = MailMessage._message_fetch([], thread=record, limit=None)["messages"]
+        res = MailMessage._message_fetch([], thread=record, after=0, limit=2)
+        self.assertEqual(res["messages"], all_messages[-2:])
+
     @users("employee")
     def test_unlink_notification_message(self):
         message = self.test_record.with_user(self.user_admin).message_notify(

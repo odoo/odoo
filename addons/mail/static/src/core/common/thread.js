@@ -11,6 +11,7 @@ import {
 import { incrementFn } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { assignGetter } from "@mail/utils/common/misc";
+import { LIST_LOADER_EPOCH } from "@mail/utils/common/list_loader";
 
 import {
     Component,
@@ -159,7 +160,7 @@ export class Thread extends Component {
                 ]);
                 if (this.loadNewerState.isVisible && this.shouldTriggerLoadOnVisible) {
                     this.props.thread.fetchMoreMessages({
-                        epoch: "newer",
+                        epoch: LIST_LOADER_EPOCH.NEWER,
                         routeParams: this.messageFetchRouteParams,
                     });
                 }
@@ -616,7 +617,6 @@ export class Thread extends Component {
         this.messageHighlight?.clear();
         if (!immediate || this.props.thread.loadNewer) {
             await this.props.thread.loadAround({ routeParams: this.messageFetchRouteParams });
-            this.props.thread.loadNewer = false;
             this.state.showJumpPresent = false;
         }
         this.props.thread.scrollTop = immediate ? "bottom" : "bottom-smooth";

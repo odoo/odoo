@@ -976,3 +976,91 @@ test("Can only mention internal users in Log note", async () => {
     await waitFor(".o-mail-Message:eq(0):has(:text('@External Partner')):count(1)");
     await waitFor(".o-mail-Message:eq(0):not(:has(a.o_mail_redirect)):count(1)");
 });
+
+test("fetching new messages after posting does not skip messages posted in between", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Frodo" });
+    pyEnv["mail.message"].create({
+        body: "Before opening",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await waitFor(".o-mail-Message:count(1)");
+    // Posted by someone else while the chatter is open: not received from the bus.
+    pyEnv["mail.message"].create({
+        body: "Posted in between",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await click("button:text('Send message')");
+    await insertText(".o-mail-Composer-input", "Own message");
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    // New messages are fetched after posting.
+    await waitFor(".o-mail-Message:count(3)");
+    await waitFor(".o-mail-Message:eq(0):has(:text('Own message')):count(1)");
+    await waitFor(".o-mail-Message:eq(1):has(:text('Posted in between')):count(1)");
+    await waitFor(".o-mail-Message:eq(2):has(:text('Before opening')):count(1)");
+});
+
+test("loading more messages only excludes the known messages beyond the loaded ones", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Frodo" });
+    const messageIds = [];
+    for (let i = 0; i < 31; i++) {
+        messageIds.push(
+            pyEnv["mail.message"].create({
+                body: `Before opening ${i}`,
+                message_type: "comment",
+                model: "res.partner",
+                res_id: partnerId,
+            })
+        );
+    }
+    listenStoreFetch("/mail/thread/messages", { logParams: ["/mail/thread/messages"] });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await waitFor(".o-mail-Message:count(30)");
+    const threadParams = { thread_id: partnerId, thread_model: "res.partner" };
+    await waitStoreFetch([
+        ["/mail/thread/messages", { ...threadParams, fetch_params: { limit: 30 } }],
+    ]);
+    // Posted by someone else while the chatter is open: not received from the bus.
+    pyEnv["mail.message"].create({
+        body: "Posted in between",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await click("button:text('Send message')");
+    await insertText(".o-mail-Composer-input", "Own message");
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await waitFor(".o-mail-Message:count(32)");
+    await waitFor(".o-mail-Message:eq(0):has(:text('Own message')):count(1)");
+    await waitFor(".o-mail-Message:eq(1):has(:text('Posted in between')):count(1)");
+    // Newer messages from the newest fetched one, excluding the own message posted since.
+    const [ownMessageId] = pyEnv["mail.message"].search([["body", "ilike", "Own message"]]);
+    await waitStoreFetch([
+        [
+            "/mail/thread/messages",
+            {
+                ...threadParams,
+                fetch_params: { limit: 30, after: messageIds.at(-1), exclude_ids: [ownMessageId] },
+            },
+        ],
+    ]);
+    // Older messages from the oldest loaded one, no known message being older.
+    await click("button:text('Load More')");
+    await waitFor(".o-mail-Message:count(33)");
+    await waitFor(".o-mail-Message:eq(32):has(:text('Before opening 0')):count(1)");
+    await waitStoreFetch([
+        [
+            "/mail/thread/messages",
+            { ...threadParams, fetch_params: { limit: 30, before: messageIds[1] } },
+        ],
+    ]);
+    await waitForNone("button:text('Load More')");
+});
