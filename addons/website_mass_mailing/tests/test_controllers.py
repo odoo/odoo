@@ -41,6 +41,7 @@ class TestSnippets(odoo.tests.HttpCase):
     def test_subscribe_authenticated_links_partner(self):
         """Ensure subscription as authenticated user links partner to new mailing contact."""
         other_email = 'other@example.com'
+        self.new_mailing_list.is_public = True
         test_user = self.env['res.users'].create({
             'email': self.email_formatted,
             'group_ids': [Command.set([self.ref('base.group_portal')])],
