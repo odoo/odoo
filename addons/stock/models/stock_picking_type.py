@@ -224,13 +224,10 @@ class StockPickingType(models.Model):
     # Batch related fields
     # ==========================================================================
     count_picking_batch = fields.Integer(compute='_compute_picking_count')
-    auto_batch = fields.Boolean('Automatic Batches',
-        help="Automatically put pickings into batches as they are confirmed when possible.")
     batch_creation_type = fields.Selection([('manual', 'Manual Only'), ('auto', 'Automatic')],
         string='Batch Creation',
-        compute='_compute_batch_creation_type',
-        inverse='_inverse_batch_creation_type',
-        help=auto_batch._args__['help'])
+        default='manual',
+        help="Automatically put pickings into batches as they are confirmed when possible.")
     batch_group_by_partner = fields.Boolean('Contact', help="Automatically group batches by contacts.")
     batch_group_by_destination = fields.Boolean('Destination Country', help="Automatically group batches by destination country.")
     batch_group_by_src_loc = fields.Boolean('Group by Source Location',
@@ -406,15 +403,6 @@ class StockPickingType(models.Model):
                 record.count_picking_batch = count.get(record.id, 0)
         else:
             self.count_picking_batch = 0
-
-    @api.depends('auto_batch')
-    def _compute_batch_creation_type(self):
-        for picking_type in self:
-            picking_type.batch_creation_type = 'auto' if picking_type.auto_batch else 'manual'
-
-    def _inverse_batch_creation_type(self):
-        for picking_type in self:
-            picking_type.auto_batch = picking_type.batch_creation_type == 'auto'
 
     @api.depends('warehouse_id')
     def _compute_display_name(self):
@@ -702,11 +690,11 @@ class StockPickingType(models.Model):
 
     def _is_auto_batch_grouped(self):
         self.ensure_one()
-        return self.auto_batch and any(self[key] for key in self._get_batch_group_by_keys())
+        return self.batch_creation_type == 'auto' and any(self[key] for key in self._get_batch_group_by_keys())
 
     def _is_auto_wave_grouped(self):
         self.ensure_one()
-        return self.auto_batch and any(self[key] for key in self._get_wave_group_by_keys())
+        return self.batch_creation_type == 'auto' and any(self[key] for key in self._get_wave_group_by_keys())
 
     @api.model
     def _get_batch_group_by_keys(self):

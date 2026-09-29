@@ -272,7 +272,7 @@ class StockPicking(models.Model):
         })
 
     def _is_auto_batchable(self, picking=None):
-        """ Verifies if a picking can be put in a batch with another picking without violating auto_batch constrains.
+        """ Verifies if a picking can be put in a batch with another picking without violating automatic batch constrains.
         """
         res = super()._is_auto_batchable(picking)
         if not picking:
