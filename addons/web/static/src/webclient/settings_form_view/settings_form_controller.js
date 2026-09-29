@@ -1,4 +1,4 @@
-import { onMounted, onPatched, proxy, signal } from "@odoo/owl";
+import { onMounted, onPatched, proxy, signal, useOnChange } from "@odoo/owl";
 import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
@@ -23,15 +23,28 @@ export class SettingsFormController extends formView.Controller {
     setup() {
         super.setup();
         this.handleViewButton = useViewButtonHandler();
-        // only force the focus on touch devices on small screens
-        this.inputRef = useAutofocus({ ref: this.autofocusRef, mobile: this.ui.isSmall });
+        this.searchText = this.props.globalState?.settingsSearch || "";
+        // only force the focus on touch devices on small screens, unless a search is restored
+        this.inputRef = useAutofocus({
+            ref: this.autofocusRef,
+            mobile: this.ui.isSmall && !this.searchText,
+        });
+        useOnChange(
+            () => [this.inputRef()],
+            (input) => {
+                if (input) {
+                    input.value = this.searchText;
+                }
+            }
+        );
         this.state = proxy({ displayNoContent: false });
         this.searchState = proxy({
-            value: "",
+            value: normalize(this.searchText),
             clearSearch: () => {
                 if (this.inputRef()) {
                     this.inputRef().value = "";
                 }
+                this.searchText = "";
                 this.searchState.value = "";
             },
         });
@@ -65,11 +78,14 @@ export class SettingsFormController extends formView.Controller {
         onPatched(removeLocalStateGetter);
 
         this.searchBarToggler = useSearchBarToggler();
+        if (this.searchState.value) {
+            this.searchBarToggler.props.toggleSearchBar();
+        }
         this.initialApp = "module" in this.props.context ? this.props.context.module : "";
-        this.debounceSearch = useDebounced(
-            (value) => (this.searchState.value = normalize(value)),
-            500
-        );
+        this.debounceSearch = useDebounced((value) => {
+            this.searchText = value;
+            this.searchState.value = normalize(value);
+        }, 500);
     }
 
     get modelParams() {
@@ -110,6 +126,12 @@ export class SettingsFormController extends formView.Controller {
         if (dirty) {
             return this._confirmSave();
         }
+    }
+
+    getGlobalState() {
+        return {
+            settingsSearch: this.searchText,
+        };
     }
 
     //This is needed to avoid the auto save when unload
