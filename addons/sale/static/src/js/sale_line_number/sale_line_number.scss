@@ -19,7 +19,7 @@
         &.o_is_line_note {
             td.o_handle_cell + td {
                 position: relative;
-                padding-left: calc(var(--LineNumber-width) + #{$table-cell-padding-x-sm} * 3);
+                padding-left: calc(var(--LineNumber-width) + var(--o-bs-table-cell-padding-x-sm) * 3);
             }
         }
 
@@ -35,8 +35,8 @@
 
                 content: counter(sale_line_counter);
 
-                width: calc(var(--LineNumber-width) + #{$table-cell-padding-x-sm} * 2);
-                padding: $table-cell-padding-y-sm $table-cell-padding-x-sm;
+                width: calc(var(--LineNumber-width) + var(--o-bs-table-cell-padding-x-sm) * 2);
+                padding: var(--o-bs-table-cell-padding-y-sm) var(--o-bs-table-cell-padding-x-sm);
                 white-space: nowrap;
                 overflow: hidden;
 

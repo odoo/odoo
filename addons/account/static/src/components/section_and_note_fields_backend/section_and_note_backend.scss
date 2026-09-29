@@ -24,7 +24,7 @@ table.o_section_and_note_list_view {
             --table-bg-type: #{rgba($body-emphasis-color, .08)};
             --ListRenderer-data-row-focused-striped-bg: var(--table-bg-type);
 
-            font-weight: $font-weight-bolder;
+            font-weight: var(--o-bs-font-weight-bolder);
 
             &:where(:not(:empty)) {
                 /* When dragging, an empty tr is created we don't want */
@@ -41,7 +41,7 @@ table.o_section_and_note_list_view {
             --table-hover-bg: #{rgba($body-emphasis-color, .05)};
             --table-bg-type: #{rgba($body-emphasis-color, .03)};
 
-            font-weight: $font-weight-bold;
+            font-weight: var(--o-bs-font-weight-bold);
         }
 
         /* Check if next sibling is a section to apply a border-color. */
