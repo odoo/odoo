@@ -10,7 +10,8 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
-import { getService, makeTestApp, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, makeTestApp } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -28,7 +29,7 @@ test("Member list and Pinned Messages Panel menu are exclusive", async () => {
 
 test("subscribe to presence channels according to store data", async () => {
     let startBus;
-    patchWithCleanup(BusPlugin.prototype, {
+    patch(BusPlugin.prototype, {
         setup() {
             super.setup();
             startBus = () => this.start();

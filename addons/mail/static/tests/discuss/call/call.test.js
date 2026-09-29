@@ -53,7 +53,6 @@ import {
     getService,
     mockService,
     onRpc,
-    patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
 
@@ -123,7 +122,7 @@ test("show the recording indicator to all and the stop control to recorders", as
     await contains(".o-discuss-CallRecordingIndicator button:text('Stop recording')", { count: 0 });
     rtc.can_record_audio = true;
     await contains(".o-discuss-CallRecordingIndicator button:text('Stop recording')");
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         setRecording(options) {
             expect(options).toEqual({ audio: false, transcription: false, video: false });
             expect.step("stop recording");
@@ -143,7 +142,7 @@ test("recording is in the extended action menu", async () => {
 
 test("recording state echoes do not repeat the start notification", async () => {
     const rtc = await startCallWithRecordingPermissions();
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         addCallNotification({ id }) {
             if (id === "recording_started") {
                 expect.step("recording started");
@@ -219,7 +218,7 @@ test("start a recording alone in a call", async () => {
     const rtc = getService("discuss.rtc");
     rtc.can_record_audio = true;
     rtc.can_record_video = true;
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         SFU_CLIENT_STATE: { CONNECTED: "connected" },
         sfuClient: {
             state: "connected",
@@ -238,7 +237,7 @@ test("start a recording alone in a call", async () => {
 
 test("keep failed start and stop recording notifications distinct", async () => {
     const rtc = await startCallWithRecordingPermissions();
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         SFU_CLIENT_STATE: { CONNECTED: "connected" },
         sfuClient: {
             state: "connected",
@@ -262,7 +261,7 @@ test("keep failed start and stop recording notifications distinct", async () => 
 test("show a failure notification when stopping a recording request rejects", async () => {
     const rtc = await startCallWithRecordingPermissions();
     rtc.recordingState = { audio: true, transcription: false, video: true };
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         SFU_CLIENT_STATE: { CONNECTED: "connected" },
         sfuClient: {
             state: "connected",
@@ -277,7 +276,7 @@ test("show a failure notification when stopping a recording request rejects", as
 
 test("show a failure notification when starting a recording request rejects", async () => {
     const rtc = await startCallWithRecordingPermissions();
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         SFU_CLIENT_STATE: { CONNECTED: "connected" },
         sfuClient: {
             state: "connected",
@@ -312,7 +311,7 @@ test("recording stop notification persists until dismissed", async () => {
 test("partial recording requests stop only when no output remains", async () => {
     const rtc = await startCallWithRecordingPermissions();
     rtc.recordingState = { audio: true, transcription: true, video: false };
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         SFU_CLIENT_STATE: { CONNECTED: "connected" },
         sfuClient: {
             state: "connected",
@@ -340,7 +339,7 @@ test("partial recording requests stop only when no output remains", async () => 
 test("stopping cancels a recording request waiting for an SFU connection", async () => {
     const rtc = await startCallWithRecordingPermissions();
     rtc.p2pService.disconnect();
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         serverInfo: undefined,
         sfuClient: undefined,
         upgradeConnectionDebounce() {
@@ -363,7 +362,7 @@ test("stopping cancels a recording request waiting for an SFU connection", async
 
 test("a recording request expires when the SFU upgrade does not connect", async () => {
     const rtc = await startCallWithRecordingPermissions();
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         serverInfo: undefined,
         sfuClient: undefined,
     });
@@ -378,7 +377,7 @@ test("a recording request expires when the SFU upgrade does not connect", async 
 
 test("a cancelled recording request does not expire its replacement", async () => {
     const rtc = await startCallWithRecordingPermissions();
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         serverInfo: undefined,
         sfuClient: undefined,
         upgradeConnectionDebounce() {},
@@ -399,13 +398,13 @@ test("a cancelled recording request does not expire its replacement", async () =
 
 test("a recording request consumed by the SFU does not expire", async () => {
     const rtc = await startCallWithRecordingPermissions();
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         serverInfo: undefined,
         sfuClient: undefined,
         upgradeConnectionDebounce() {},
     });
     await rtc.setRecording({ audio: true, video: true });
-    patchWithCleanup(rtc, {
+    patch(rtc, {
         SFU_CLIENT_STATE: { CONNECTED: "connected" },
         sfuClient: {
             state: "connected",
@@ -870,12 +869,12 @@ test("join/leave sounds are only played on main tab", async () => {
     listenStoreFetch("/mail/messaging_menu/discuss.channel/load_more");
     const env1 = await start({ asTab: true });
     const env2 = await start({ asTab: true, waitUntilSubscribe: false });
-    patchWithCleanup(env1.services["mail.sound_effects"], {
+    patch(env1.services["mail.sound_effects"], {
         play(name) {
             expect.step(`tab1 - play - ${name}`);
         },
     });
-    patchWithCleanup(env2.services["mail.sound_effects"], {
+    patch(env2.services["mail.sound_effects"], {
         play(name) {
             expect.step(`tab2 - play - ${name}`);
         },
@@ -1877,7 +1876,7 @@ test("Shows warning badge on mic/camera on non-granted permission in meeting con
 test("only notified of a call disconnection when the server ends the session", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    patchWithCleanup(Rtc.prototype, {
+    patch(Rtc.prototype, {
         notifyServerDisconnect() {
             expect.step("notifyServerDisconnect");
             return super.notifyServerDisconnect(...arguments);
@@ -2347,7 +2346,7 @@ test("Access to Pinned Messages from Meeting Chat", async () => {
 
 test("show warning when blur hardware acceleration is not available", async () => {
     const pyEnv = await startServer();
-    patchWithCleanup(HTMLCanvasElement.prototype, {
+    patch(HTMLCanvasElement.prototype, {
         getContext(type) {
             if (type.includes("webgl")) {
                 return false;

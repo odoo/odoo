@@ -31,14 +31,8 @@ import {
     queryOne,
 } from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
-import {
-    Command,
-    getService,
-    onRpc,
-    patchWithCleanup,
-    serverState,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { Command, getService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import { rpc } from "@web/core/network/rpc";
 import { range } from "@web/core/utils/numbers";
@@ -96,7 +90,7 @@ test("messages still render when a reset strands mountedAndLoaded", async () => 
         res_id: channelId,
     });
     let thread;
-    patchWithCleanup(Thread.prototype, {
+    patch(Thread.prototype, {
         setup() {
             super.setup();
             thread = this;
@@ -250,7 +244,7 @@ test("auto-scroll on thread load when last read is a hidden notification", async
         new_message_separator: messageIds[100],
     });
     // Simulate a notification the thread hides, like a call in the meeting view.
-    patchWithCleanup(Message.prototype, {
+    patch(Message.prototype, {
         get notificationHidden() {
             return this.message_type === "notification" || super.notificationHidden;
         },
@@ -454,7 +448,7 @@ test("should scroll to top of new very long message rendered after the scroll is
             res_id: channelId,
         });
     }
-    patchWithCleanup(UseForwardRefsToParent.prototype, {
+    patch(UseForwardRefsToParent.prototype, {
         async registerRef(...args) {
             // Simulate a resize applying the scroll before the new message is rendered.
             await Promise.resolve();

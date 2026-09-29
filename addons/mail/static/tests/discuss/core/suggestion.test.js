@@ -10,7 +10,8 @@ import {
 import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { Command, getService, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import { Composer } from "@mail/core/common/composer";
 import { press } from "@odoo/hoot-dom";
@@ -20,7 +21,7 @@ defineMailModels();
 
 beforeEach(() => {
     // Simulate real user interactions
-    patchWithCleanup(Composer.prototype, {
+    patch(Composer.prototype, {
         isEventTrusted() {
             return true;
         },

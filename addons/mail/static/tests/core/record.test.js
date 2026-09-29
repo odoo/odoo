@@ -8,8 +8,8 @@ import {
     getService,
     mockService,
     mountWithCleanup,
-    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import { Record, Store, makeStore } from "@mail/model/export";
 import { AND, fields, makeRecordFieldLocalId, normalizeManyCommands } from "@mail/model/misc";
@@ -1519,7 +1519,7 @@ test("Fields updated from the local storage do not trigger another storage event
     }
     Message.register(localRegistry);
     const bodyLocalId = makeRecordFieldLocalId(Message.localId(1), "body");
-    patchWithCleanup(window.localStorage, {
+    patch(window.localStorage, {
         setItem(key, value) {
             if (key === bodyLocalId) {
                 expect.step(`setItem ${JSON.parse(value).value}`);
@@ -1730,7 +1730,7 @@ test("a patch cannot redeclare a computed", async () => {
         label = this.computed(() => "base");
     };
     Thread.register(localRegistry);
-    patchWithCleanup(Thread.prototype, {
+    patch(Thread.prototype, {
         setup() {
             super.setup();
             this.label = this.computed(() => "patched");
@@ -1776,7 +1776,7 @@ test("a computed does not recompute once its record is deleted", async () => {
 });
 
 test("writing on a computed is warned + ignored", async () => {
-    patchWithCleanup(console, { warn: (msg) => expect.step(msg) });
+    patch(console, { warn: (msg) => expect.step(msg) });
     (class Thread extends Record {
         static id = "name";
         name;

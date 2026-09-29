@@ -4,12 +4,8 @@ import { defineMailModels, start, startServer } from "@mail/../tests/mail_test_h
 
 import { expect, test } from "@odoo/hoot";
 
-import {
-    destroyApp,
-    getService,
-    patchWithCleanup,
-    serverState,
-} from "@web/../tests/web_test_helpers";
+import { destroyApp, getService, serverState } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 defineMailModels();
 
@@ -35,7 +31,7 @@ test("store.insert can delete record", async () => {
 });
 
 test("store.insert deletes record without creating it", async () => {
-    patchWithCleanup(Message, {
+    patch(Message, {
         new() {
             const message = super.new(...arguments);
             expect.step(`new-${message.id}`);
@@ -52,7 +48,7 @@ test("store.insert deletes record without creating it", async () => {
 });
 
 test("store.insert deletes record after relation created it", async () => {
-    patchWithCleanup(Message, {
+    patch(Message, {
         new() {
             const message = super.new(...arguments);
             expect.step(`new-${message.id}`);
@@ -101,8 +97,8 @@ test("store.insert different PY model having same JS model", async () => {
 
 test("no push notification while user is busy", async () => {
     await startServer();
-    patchWithCleanup(parent.document, { hasFocus: () => false });
-    patchWithCleanup(navigator.serviceWorker, {
+    patch(parent.document, { hasFocus: () => false });
+    patch(navigator.serviceWorker, {
         controller: {
             postMessage(data) {
                 expect.step(data);

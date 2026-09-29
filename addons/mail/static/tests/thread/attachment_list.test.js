@@ -11,7 +11,8 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockFetch, mockUserAgent } from "@odoo/hoot-mock";
-import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import { downloadFile } from "@web/core/network/download";
 import { getOrigin } from "@web/core/utils/urls";
@@ -493,7 +494,7 @@ test("download url of non-viewable binary file", async () => {
     await openDiscuss(channelId);
     await contains("[data-icon='download']");
 
-    patchWithCleanup(downloadFile, {
+    patch(downloadFile, {
         _download: (data) => {
             expect(data).toBe(
                 `${getOrigin()}/web/content/${attachmentId}?access_token=${attachmentId}&filename=test.o&download=true`

@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, press, queryFirst, tick } from "@odoo/hoot-dom";
-import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { serverState } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import {
     SIZES,
@@ -264,7 +265,7 @@ test("Post message when seeing old message should jump to present", async () => 
 
 test("when triggering jump to present, keeps showing old messages until recent ones are loaded", async () => {
     // make scroll behavior instantaneous.
-    patchWithCleanup(Element.prototype, {
+    patch(Element.prototype, {
         scrollIntoView() {
             return super.scrollIntoView(true);
         },

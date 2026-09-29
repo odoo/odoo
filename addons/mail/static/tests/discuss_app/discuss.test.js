@@ -48,10 +48,10 @@ import {
     makeServerError,
     mockService,
     onRpc,
-    patchWithCleanup,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { Settings } from "@mail/core/common/settings_model";
 import { toRawValue } from "@mail/utils/common/local_storage";
@@ -697,7 +697,7 @@ test("Can right-click on message to opens message actions dropdown", async () =>
         { name: "test" },
     ]);
     let lastOnContextMenuEv;
-    patchWithCleanup(Message.prototype, {
+    patch(Message.prototype, {
         onContextMenu(ev) {
             lastOnContextMenuEv = ev;
             expect.step("Message.onContextMenu");
@@ -1149,7 +1149,7 @@ test("auto-focus composer on opening thread", async () => {
 test("no out-of-focus notification on receiving self messages in chat", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
-    patchWithCleanup(document, {
+    patch(document, {
         set title(value) {
             const match = value.match(/^\((\d+)\) .*/);
             if (match) {
@@ -1188,7 +1188,7 @@ test("out-of-focus notif on needaction message in channel", async () => {
         ],
         channel_type: "channel",
     });
-    patchWithCleanup(document, {
+    patch(document, {
         set title(value) {
             const match = value.match(/^\((\d+)\) .*/);
             if (match) {
@@ -1229,7 +1229,7 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
         ],
         channel_type: "chat",
     });
-    patchWithCleanup(document, {
+    patch(document, {
         set title(value) {
             const match = value.match(/^\((\d+)\) .*/);
             if (match) {
@@ -1268,7 +1268,7 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
         ],
         channel_type: "channel",
     });
-    patchWithCleanup(document, {
+    patch(document, {
         set title(value) {
             const match = value.match(/^\((\d+)\) .*/);
             if (match) {
@@ -1316,7 +1316,7 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
             ],
         },
     ]);
-    patchWithCleanup(document, {
+    patch(document, {
         set title(value) {
             const match = value.match(/^\((\d+)\) .*/);
             if (match) {
@@ -1369,7 +1369,7 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
 
 test("new message in tab title has precedence over action name", async () => {
     const pyEnv = await startServer();
-    patchWithCleanup(document, {
+    patch(document, {
         set title(newTitle) {
             if (newTitle?.includes("General")) {
                 expect.step(newTitle);
@@ -1405,7 +1405,7 @@ test("new message in tab title has precedence over action name", async () => {
 
 test("out-of-focus notif takes new inbox messages into account", async () => {
     const pyEnv = await startServer();
-    patchWithCleanup(document, {
+    patch(document, {
         set title(newTitle) {
             if (newTitle === "(1) Odoo") {
                 expect.step(newTitle);
@@ -1441,7 +1441,7 @@ test("out-of-focus notif respects push subscription eligibility", async () => {
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Hagrid" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-    patchWithCleanup(OutOfFocusService.prototype, {
+    patch(OutOfFocusService.prototype, {
         async notify() {
             expect.step("notification handled");
             await super.notify(...arguments);
@@ -1479,7 +1479,7 @@ test("out-of-focus notif respects push subscription eligibility", async () => {
 
 test("out-of-focus notif on needaction message in group chat contributes only once", async () => {
     const pyEnv = await startServer();
-    patchWithCleanup(document, {
+    patch(document, {
         set title(newTitle) {
             if (newTitle === "(1) Odoo") {
                 expect.step(newTitle);
@@ -1523,7 +1523,7 @@ test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["discuss.channel"].create({ name: "general", channel_type: "channel" });
-    patchWithCleanup(OutOfFocusService.prototype, {
+    patch(OutOfFocusService.prototype, {
         _playSound() {
             expect.step("play_sound");
         },

@@ -15,14 +15,8 @@ import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { beforeEach, expect, describe, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { onWillUpdateProps } from "@odoo/owl";
-import {
-    Command,
-    getService,
-    onRpc,
-    patchWithCleanup,
-    serverState,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { Command, getService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import { Composer, MENTION_AMOUNT_WARNING } from "@mail/core/common/composer";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
@@ -36,7 +30,7 @@ defineMailModels();
 
 beforeEach(() => {
     // Simulate real user interactions
-    patchWithCleanup(Composer.prototype, {
+    patch(Composer.prototype, {
         isEventTrusted() {
             return true;
         },
@@ -456,13 +450,13 @@ test("select @ mention from the suggestion list being filtered", async () => {
     const filtering = Promise.withResolvers();
     const listRendered = Promise.withResolvers();
     let suggestionList;
-    patchWithCleanup(NavigableList.prototype, {
+    patch(NavigableList.prototype, {
         setup() {
             super.setup();
             suggestionList = this;
         },
     });
-    patchWithCleanup(DiscussAvatar.prototype, {
+    patch(DiscussAvatar.prototype, {
         setup() {
             super.setup();
             if (!this.env.inNavigableList) {

@@ -14,7 +14,7 @@ import {
 import { Composer } from "@mail/core/common/composer";
 import { Message } from "@mail/core/common/message";
 import { describe, expect, rightClick, test } from "@odoo/hoot";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
@@ -37,7 +37,7 @@ test("posting new message should only render relevant part", async () => {
     messageIds.pop(); // remove last as it might need re-render (it was the newest message before)
     let posting = false;
     prepareObserveRenders();
-    patchWithCleanup(Message.prototype, {
+    patch(Message.prototype, {
         setup() {
             const cb = () => {
                 if (posting) {
@@ -81,7 +81,7 @@ test("replying to message should only render relevant part", async () => {
     messageIds.pop(); // remove last as this is the one to be replied to
     let replying = false;
     prepareObserveRenders();
-    patchWithCleanup(Message.prototype, {
+    patch(Message.prototype, {
         setup() {
             const cb = () => {
                 if (replying) {
@@ -121,7 +121,7 @@ test("right-click message selection should only render relevant part", async () 
     messageIds.pop(); // remove last as this is the one to be right-clicking
     let rightClicking = false;
     prepareObserveRenders();
-    patchWithCleanup(Message.prototype, {
+    patch(Message.prototype, {
         setup() {
             const cb = () => {
                 if (rightClicking) {

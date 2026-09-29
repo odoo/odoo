@@ -26,7 +26,8 @@ import {
     queryFirst,
     resize,
 } from "@odoo/hoot-dom";
-import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { Call } from "@mail/discuss/call/common/call";
 import { INSET_MARGIN } from "@mail/discuss/call/common/stage/layout_engine";
 
@@ -448,7 +449,7 @@ test("several changes in the same task lay the stage out once", async () => {
     await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']");
     await contains(".o-discuss-CallParticipantCard[aria-label='Charlie'] video[type='camera']");
     let computationCount = 0;
-    patchWithCleanup(Call.prototype, {
+    patch(Call.prototype, {
         arrangeTiles() {
             computationCount += 1;
             return super.arrangeTiles();

@@ -12,7 +12,8 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, edit, expect, mockDate, press, runAllTimers, test } from "@odoo/hoot";
 
-import { Command, getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { Command, getService } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 defineMailModels();
 
@@ -84,7 +85,7 @@ test("bus subscription is refreshed when channel is joined", async () => {
     await openDiscuss();
     await runAllTimers(); // settle the bus subscriptions from start/openDiscuss
     await triggerHotkey("control+k");
-    patchWithCleanup(getService("mail.store"), {
+    patch(getService("mail.store"), {
         updateBusSubscription: () => expect.step("update_bus_subscription"),
     });
     await click(".o-mail-DiscussCommand:has(:text('Sales'))");
@@ -105,7 +106,7 @@ test("bus subscription is refreshed when channel is left", async () => {
     await contains(".o-mail-Discuss[data-active]");
     await runAllTimers(); // settle the bus subscriptions from start/openDiscuss
     await openDiscuss();
-    patchWithCleanup(getService("mail.store"), {
+    patch(getService("mail.store"), {
         updateBusSubscription: () => expect.step("update_bus_subscription"),
     });
     await contains(".o-mail-MessagingMenuItem");

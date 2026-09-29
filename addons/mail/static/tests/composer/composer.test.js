@@ -35,10 +35,10 @@ import {
     assignDialogTestEnv,
     mountWithCleanup,
     onRpc,
-    patchWithCleanup,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import { Composer } from "@mail/core/common/composer";
 import { edit, press, queryFirst } from "@odoo/hoot-dom";
@@ -51,7 +51,7 @@ defineMailModels();
 
 beforeEach(() => {
     // Simulate real user interactions
-    patchWithCleanup(Composer.prototype, {
+    patch(Composer.prototype, {
         isEventTrusted() {
             return true;
         },
@@ -949,7 +949,7 @@ test("Replying on a channel should focus composer initially", async () => {
 });
 
 test("removing attachment from composer should not delete it from template", async () => {
-    patchWithCleanup(MailComposerFormController.prototype, {
+    patch(MailComposerFormController.prototype, {
         setup() {
             if (!this.env.dialogData) {
                 useSubEnv({ dialogData: {} });
@@ -1462,9 +1462,9 @@ test("Can dismiss mail composer with 500+ active_ids", async () => {
     await openFormView("mail.compose.message", composerId, {
         context: { active_ids: [partnerId] },
     });
-    expect(env.dialogData).not.toBeEmpty()
+    expect(env.dialogData).not.toBeEmpty();
     // Dialog is closed without errors
-    await env.dialogData.dismiss()
+    await env.dialogData.dismiss();
 });
 
 test("composer reply-to message is restored on thread change", async () => {

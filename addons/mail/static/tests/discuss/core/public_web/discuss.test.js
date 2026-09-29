@@ -9,13 +9,8 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import {
-    Command,
-    mockService,
-    patchWithCleanup,
-    serverState,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { Command, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -40,8 +35,8 @@ test("open channel in discuss from push notification", async () => {
 });
 
 test("notify message to user as non member", async () => {
-    patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 500 });
-    patchWithCleanup(window, {
+    patch(WebsocketWorker, { OUTGOING_BATCH_DELAY: 500 });
+    patch(window, {
         Notification: class Notification {
             static get permission() {
                 return "granted";
