@@ -197,15 +197,6 @@ export class AgingPiutangView extends Component {
         }
     }
 
-    openWhatsApp(phone) {
-        if (!phone || phone === "-") return;
-        let clean = phone.replace(/[^0-9]/g, '');
-        if (clean.startsWith('0')) {
-            clean = '62' + clean.slice(1);
-        }
-        window.open(`https://wa.me/${clean}`, '_blank');
-    }
-
     onExportXLSX() {
         const queryParams = new URLSearchParams({
             as_of_date: this.state.filters.as_of_date || "",
