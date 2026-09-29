@@ -11,8 +11,8 @@ import {
 } from "../utils/dom";
 import {
     allowsParagraphRelatedElements,
+    isEditionBoundary,
     isContentEditable,
-    isContentEditableAncestor,
     isEmptyBlock,
     isListElement,
     isListItemElement,
@@ -35,6 +35,7 @@ import {
     descendants,
     firstLeaf,
     lastLeaf,
+    getConnectedParents,
 } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { childNodeIndex, nodeSize, rightPos } from "../utils/position";
@@ -45,30 +46,6 @@ import {
 } from "@html_editor/utils/base_container";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
-
-/**
- * Get distinct connected parents of nodes
- *
- * @param {Iterable} nodes
- * @returns {Set}
- */
-function getConnectedParents(nodes) {
-    const parents = new Set();
-    for (const node of nodes) {
-        if (node.isConnected && node.parentElement) {
-            parents.add(node.parentElement);
-        }
-    }
-    return parents;
-}
-
-// These elements should only have inline content (even if they have a `block`
-// display style, for example if they are in a flex)
-// NOTE: h1, h2, ..., p, pre already prevents wrapping their children into block
-const ONLY_ALLOW_INLINE_TAGS = new Set([
-    ...["a", "em", "strong", "small", "s", "cite", "q", "abbr", "data", "time", "code"],
-    ...["samp", "sub", "sup", "i", "b", "u", "mark", "bdi", "span", "label", "button"],
-]);
 
 /**
  * @typedef {Object} DomShared
@@ -92,7 +69,6 @@ const ONLY_ALLOW_INLINE_TAGS = new Set([
  * @typedef {((container: Element, block: Element) => container)[]} before_insert_processors
  * @typedef {((nodeToInsert: Node, container: HTMLElement) => nodeToInsert)[]} node_to_insert_processors
  *
- * @typedef {((el: HTMLElement) => boolean)[]} are_inlines_allowed_at_root_predicates
  * @typedef {((block: HTMLElement) => boolean)[]} is_retagging_safe_predicates
  * Allows to bypass the check in `isRetaggingSafe`, to handle the block in `on_will_set_tag_handlers`
  *
@@ -334,7 +310,7 @@ export class DomPlugin extends Plugin {
                 (block.nodeName === "DIV" && this.dependencies.split.isUnsplittable(block))) &&
             // If the selection anchorNode is the editable itself, the content
             // should not be unwrapped.
-            !this.isEditionBoundary(selection.anchorNode);
+            !isEditionBoundary(selection.anchorNode, this.editable);
 
         // Empty block must contain a br element to allow cursor placement.
         const firstLeafNode = firstLeaf(container);
@@ -462,7 +438,7 @@ export class DomPlugin extends Plugin {
                 // Split blocks at the edges if inserting new blocks (preventing
                 // <p><p>text</p></p> or <li><li>text</li></li> scenarios).
                 while (
-                    !this.isEditionBoundary(currentNode) &&
+                    !isEditionBoundary(currentNode, this.editable) &&
                     (!allowsParagraphRelatedElements(currentNode.parentElement) ||
                         (isListItemElement(currentNode.parentElement) &&
                             !this.dependencies.split.isUnsplittable(nodeToInsert)))
@@ -471,7 +447,7 @@ export class DomPlugin extends Plugin {
                         // If we have to insert an unsplittable element, we cannot afford to
                         // unwrap it we need to search for a more suitable spot to put it
                         if (this.dependencies.split.isUnsplittable(nodeToInsert)) {
-                            if (this.isEditionBoundary(currentNode.parentElement)) {
+                            if (isEditionBoundary(currentNode.parentElement, this.editable)) {
                                 break;
                             }
                             currentNode = currentNode.parentElement;
@@ -543,21 +519,7 @@ export class DomPlugin extends Plugin {
         textNode.remove();
         allInsertedNodes.push(...lastInsertedNodes);
         this.trigger("on_inserted_handlers", allInsertedNodes);
-        let insertedNodesParents = getConnectedParents(allInsertedNodes);
-        for (const parent of insertedNodesParents) {
-            if (
-                !this.areInlinesAllowedAtRoot(parent) &&
-                this.isEditionBoundary(parent) &&
-                allowsParagraphRelatedElements(parent) &&
-                !isPhrasingContent(parent)
-            ) {
-                // Ensure that edition boundaries do not have inline content.
-                this.wrapInlinesInBlocks(parent, {
-                    baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
-                });
-            }
-        }
-        insertedNodesParents = getConnectedParents(allInsertedNodes);
+        const insertedNodesParents = getConnectedParents(allInsertedNodes);
         for (const parent of insertedNodesParents) {
             if (
                 !isProtecting(parent) &&
@@ -590,7 +552,7 @@ export class DomPlugin extends Plugin {
                 : rightPos(lastInsertedNode);
         lastPosition = normalizeCursorPosition(lastPosition[0], lastPosition[1], "right");
 
-        if (!this.config.allowInlineAtRoot && this.isEditionBoundary(lastPosition[0])) {
+        if (!this.config.allowInlineAtRoot && isEditionBoundary(lastPosition[0], this.editable)) {
             // Correct the position if it happens to be in the editable root.
             lastPosition = getDeepestEditablePosition(...lastPosition);
         }
@@ -599,29 +561,6 @@ export class DomPlugin extends Plugin {
             { normalize: false }
         );
         return firstInsertedNodes.concat(insertedNodes).concat(lastInsertedNodes);
-    }
-
-    isEditionBoundary(node) {
-        if (!node) {
-            return false;
-        }
-        if (node === this.editable) {
-            return true;
-        }
-        return isContentEditableAncestor(node);
-    }
-
-    areInlinesAllowedAtRoot(node) {
-        if (ONLY_ALLOW_INLINE_TAGS.has(node.nodeName.toLowerCase())) {
-            return true;
-        }
-        const results = this.getResource("are_inlines_allowed_at_root_predicates")
-            .map((p) => p(node))
-            .filter((r) => r !== undefined);
-        if (!results.length) {
-            return this.config.allowInlineAtRoot;
-        }
-        return results.every((r) => r);
     }
 
     /**
