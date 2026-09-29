@@ -24,13 +24,13 @@ test("getNumpadButtons", async () => {
     await animationFrame();
     const receivedButtonsDisableStatue = productScreen
         .getNumpadButtons()
-        .filter((button) => ["quantity", "discount"].includes(button.value))
+        .filter((button) => ["quantity", "discount", "price", "-"].includes(button.value))
         .map((button) => button.disabled);
     expect(Math.abs(order.discountLines[0].priceIncl).toString()).toBe(
         (order.lines[0].priceIncl * 0.1).toPrecision(2)
     );
 
-    expect(receivedButtonsDisableStatue).toEqual([true, true]);
+    expect(receivedButtonsDisableStatue).toEqual([true, true, true, true]);
 
     await productScreen.addProductToOrder(product1);
     // Animation frame doesn't work here since the debounced function used to recompute
