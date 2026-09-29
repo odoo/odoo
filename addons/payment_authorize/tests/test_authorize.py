@@ -167,3 +167,10 @@ class AuthorizeTest(AuthorizeCommon):
             })
 
         self.assertEqual(call_order, ["tokenize", "void"])
+
+    def test_format_response_extracts_reason(self):
+        reason = "dummy reason"
+        response = AuthorizeAPI(self.authorize)._format_response(
+            {"transactionResponse": {"errors": [{"errorText": reason}]}}, "auth_only"
+        )
+        self.assertEqual(response["x_response_reason_text"], reason)
