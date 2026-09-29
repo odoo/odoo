@@ -1,5 +1,4 @@
 import logging
-import re
 import requests
 
 from urllib import parse
@@ -12,8 +11,6 @@ from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 from odoo.addons.l10n_fr_pdp.utils import drom_com_territories
 
 _logger = logging.getLogger(__name__)
-
-siren_siret_re = re.compile(r'^(\d{9}|\d{14})$')
 
 
 class ResPartner(models.Model):
@@ -116,19 +113,11 @@ class ResPartner(models.Model):
         if not self._peppol_is_french_partner():
             return None, None
 
-        candidates = [
-            self.additional_identifiers['FR_SIRET'] if self.additional_identifiers and siren_siret_re.match(self.additional_identifiers.get('FR_SIRET', '')) else '',
-            self.additional_identifiers['FR_SIREN'] if self.additional_identifiers and siren_siret_re.match(self.additional_identifiers.get('FR_SIREN', '')) else '',
-            self.company_registry if self.company_registry and siren_siret_re.match(self.company_registry) else '',
-            self._l10n_fr_get_siren_from_vat(),
-        ]
-        for identifier in candidates:
-            if not identifier:
-                continue
-            if len(identifier) == 9:
-                return 'siren', identifier
-            elif len(identifier) == 14:
-                return 'siret', identifier
+        siren_or_siret = self._l10n_fr_get_siret_or_siren()
+        if len(siren_or_siret) == 9:
+            return 'siren', siren_or_siret
+        elif len(siren_or_siret) == 14:
+            return 'siret', siren_or_siret
         return None, None
 
     @api.model
