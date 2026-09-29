@@ -996,11 +996,12 @@ export class ListPlugin extends Plugin {
             this.outdentLI(closestLI);
             return true;
         }
-        const [, newLI] = this.dependencies.split.splitElementBlock({
+        const splitResult = this.dependencies.split.splitElementBlock({
             ...params,
             blockToSplit: closestLI,
         });
-        if (newLI) {
+        if (splitResult.after) {
+            const newLI = splitResult.after;
             if (closestLI.classList.contains("o_checked")) {
                 removeClass(newLI, "o_checked");
             }
@@ -1008,7 +1009,7 @@ export class ListPlugin extends Plugin {
             this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
             this.adjustListPadding(newLI.parentElement);
         }
-        return true;
+        return splitResult;
     }
 
     /**
@@ -1363,15 +1364,17 @@ export class ListPlugin extends Plugin {
         }
         if (li) {
             // Helper li to split the list
-            const [, after] = this.dependencies.split.splitElementBlock({
+            const { after } = this.dependencies.split.splitElementBlock({
                 targetNode: blockEl,
                 targetOffset: nodeSize(blockEl),
                 blockToSplit: li,
             });
-            const [anchorNode, anchorOffset] = getDeepestEditablePosition(after, 0);
-            this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
-            // Fully outdent li to exit the list
-            this.liToBlocks(after);
+            if (after) {
+                const [anchorNode, anchorOffset] = getDeepestEditablePosition(after, 0);
+                this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+                // Fully outdent li to exit the list
+                this.liToBlocks(after);
+            }
         }
     }
 
