@@ -1128,6 +1128,199 @@ class TestHrVersion(TestHrCommon):
         no_location = self.env['hr.employee'].create({'name': 'No location'})
         self.assertEqual(no_location.version_id.address_id.commercial_partner_id, company_address)
 
+    def test_manager_is_versioned(self):
+        manager_1, manager_2, employee = self.env['hr.employee'].create([
+            {'name': 'Manager 1'},
+            {'name': 'Manager 2'},
+            {'name': 'Employee'},
+        ])
+        employee.write({'date_version': '2020-01-01', 'parent_id': manager_1.id})
+        old_version = employee.version_id
+        new_version = old_version.copy({'employee_id': employee.id, 'date_version': '2021-01-01', 'parent_id': manager_2.id})
+
+        self.assertEqual(old_version.parent_id, manager_1)
+        self.assertEqual(new_version.parent_id, manager_2)
+        self.assertEqual(employee.parent_id, manager_2, "The current version drives the employee's manager")
+        self.assertEqual(manager_2.child_ids, employee)
+        self.assertEqual(manager_2.child_count, 1)
+        self.assertFalse(manager_1.child_ids)
+
+    @freeze_time('2026-06-01')
+    def test_archive_manager_keeps_past_versions(self):
+        manager = self.env['hr.employee'].create({'name': 'Manager'})
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee', 'parent_id': manager.id, 'date_version': '2020-01-01',
+        })
+        past_version = employee.version_id
+        current_version = past_version.copy({'employee_id': employee.id, 'date_version': '2026-01-01'})
+        future_version = past_version.copy({'employee_id': employee.id, 'date_version': '2030-01-01'})
+        self.assertEqual(employee.current_version_id, current_version)
+        self.assertEqual((past_version | current_version | future_version).parent_id, manager)
+
+        manager.action_archive()
+        self.assertEqual(past_version.parent_id, manager, "Past versions keep their manager history")
+        self.assertFalse((current_version | future_version).parent_id)
+
+    def test_child_ids_cache_invalidation(self):
+        manager_1, manager_2 = self.env['hr.employee'].create([{'name': 'Manager 1'}, {'name': 'Manager 2'}])
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee', 'parent_id': manager_1.id, 'date_version': '2020-01-01',
+        })
+        self.assertEqual(manager_1.child_ids, employee)
+        self.assertEqual(manager_1.child_count, 1)
+
+        # Change of manager on the version
+        employee.version_id.parent_id = manager_2
+        self.assertFalse(manager_1.child_ids)
+        self.assertEqual(manager_1.child_count, 0)
+        self.assertEqual(manager_2.child_ids, employee)
+        self.assertEqual(manager_2.child_count, 1)
+
+        # Archiving and unarchiving the subordinate
+        employee.action_archive()
+        self.assertFalse(manager_2.child_ids)
+        employee.action_unarchive()
+        self.assertEqual(manager_2.child_ids, employee)
+
+        # A new current version with another manager, then its removal
+        new_version = employee.version_id.copy({
+            'employee_id': employee.id, 'date_version': '2021-01-01', 'parent_id': manager_1.id,
+        })
+        self.assertEqual(employee.current_version_id, new_version)
+        self.assertEqual(manager_1.child_ids, employee)
+        self.assertFalse(manager_2.child_ids)
+        new_version.unlink()
+        self.assertFalse(manager_1.child_ids)
+        self.assertEqual(manager_2.child_ids, employee)
+
+    def test_version_child_ids(self):
+        """Every version of a manager shows the employees whose current version has this manager."""
+        manager, other_manager = self.env['hr.employee'].create([{'name': 'Manager'}, {'name': 'Other Manager'}])
+        manager.date_version = '2020-01-01'
+        old_manager_version = manager.version_id
+        new_manager_version = old_manager_version.copy({'employee_id': manager.id, 'date_version': '2021-01-01'})
+        employee = self.env['hr.employee'].create({'name': 'Employee', 'parent_id': manager.id, 'date_version': '2020-01-01'})
+
+        self.assertEqual(old_manager_version.child_ids, employee)
+        self.assertEqual(new_manager_version.child_ids, employee)
+        self.assertEqual(manager.with_context(version_id=old_manager_version.id).child_ids, employee)
+        self.assertFalse(other_manager.version_id.child_ids)
+
+        # only the current version of the subordinate counts
+        employee.version_id.copy({'employee_id': employee.id, 'date_version': '2021-01-01', 'parent_id': other_manager.id})
+        self.assertFalse(new_manager_version.child_ids)
+        self.assertEqual(other_manager.version_id.child_ids, employee)
+
+        # only active subordinates, as on the employee
+        employee.action_archive()
+        self.assertFalse(other_manager.version_id.child_ids)
+        employee.action_unarchive()
+        self.assertEqual(other_manager.version_id.child_ids, employee)
+
+        # new records (onchange, form) get a value too
+        self.assertEqual(self.env['hr.version'].new({'employee_id': other_manager.id}).child_ids._origin, employee)
+        new_employee = self.env['hr.employee'].new({'name': 'New Employee'})
+        self.assertFalse(new_employee.child_ids)
+        self.assertFalse(new_employee.version_id.child_ids)
+        self.assertEqual(self.env['hr.employee'].new(origin=other_manager).version_id.child_ids._origin, employee)
+
+    def test_search_child_ids(self):
+        manager, employee, no_manager = self.env['hr.employee'].create([
+            {'name': 'Manager'}, {'name': 'Employee'}, {'name': 'No Manager'},
+        ])
+        employee.parent_id = manager
+        all_employees = manager | employee | no_manager
+        Version = self.env['hr.version']
+
+        self.assertEqual(self.env['hr.employee'].search([('child_ids', 'in', employee.ids)]), manager)
+        self.assertEqual(Version.search([('child_ids', 'in', employee.ids)]), manager.version_ids)
+        any_domain = [('child_ids', 'any', [('name', '=', 'Employee')])]
+        self.assertEqual(self.env['hr.employee'].search(any_domain), manager)
+        self.assertEqual(Version.search(any_domain), manager.version_ids)
+        no_child_domain = [('child_ids', '=', False), ('id', 'in', all_employees.ids)]
+        self.assertEqual(self.env['hr.employee'].search(no_child_domain), employee | no_manager)
+        self.assertEqual(
+            Version.search([('child_ids', '=', False), ('employee_id', 'in', all_employees.ids)]),
+            (employee | no_manager).version_ids,
+        )
+        self.assertEqual(
+            Version.search([('child_ids', 'not in', employee.ids), ('employee_id', 'in', all_employees.ids)]),
+            (employee | no_manager).version_ids,
+        )
+
+        # an archived subordinate is not a direct subordinate anymore
+        employee.action_archive()
+        self.assertFalse(Version.search([('child_ids', 'in', employee.ids)]))
+        self.assertEqual(
+            Version.search([('child_ids', '=', False), ('employee_id', 'in', all_employees.ids)]),
+            Version.search([('employee_id', 'in', all_employees.ids)]),
+        )
+
+    def test_version_child_ids_batched(self):
+        Employee = self.env['hr.employee']
+
+        def count_queries(nb_managers):
+            managers = Employee.create([{'name': f'Manager {i}'} for i in range(nb_managers)])
+            Employee.create([{'name': f'Employee {i}', 'parent_id': manager.id} for i, manager in enumerate(managers)])
+            versions = managers.version_id
+            self.env.invalidate_all()
+            queries_before = self.env.cr.sql_log_count
+            self.assertEqual(len(versions.child_ids), nb_managers)
+            return self.env.cr.sql_log_count - queries_before
+
+        self.assertEqual(count_queries(3), count_queries(30), "child_ids of versions is computed in batch")
+
+    def test_department_manager_updates_current_and_future_versions(self):
+        manager, new_manager, other_manager = self.env['hr.employee'].create([
+            {'name': 'Manager'}, {'name': 'New Manager'}, {'name': 'Other Manager'},
+        ])
+        department = self.env['hr.department'].create({'name': 'Dept', 'manager_id': manager.id})
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee', 'department_id': department.id, 'parent_id': manager.id, 'date_version': '2020-01-01',
+        })
+        past_version = employee.version_id
+        current_version = past_version.copy({'employee_id': employee.id, 'date_version': '2021-01-01'})
+        future_version = current_version.copy({'employee_id': employee.id, 'date_version': '2099-01-01'})
+        other_future_version = current_version.copy({
+            'employee_id': employee.id, 'date_version': '2100-01-01', 'parent_id': other_manager.id,
+        })
+        self.assertEqual(employee.current_version_id, current_version)
+        department.manager_id = new_manager
+        self.assertEqual(employee.parent_id, new_manager)
+        self.assertEqual(current_version.parent_id, new_manager, "The current version is updated")
+        self.assertEqual(future_version.parent_id, new_manager, "The future versions with the previous manager follow")
+        self.assertEqual(other_future_version.parent_id, other_manager, "A future version with another manager is kept")
+        self.assertEqual(past_version.parent_id, manager, "The past versions keep the history")
+
+    def test_coach_is_versioned(self):
+        manager, coach = self.env['hr.employee'].create([{'name': 'Manager'}, {'name': 'Coach'}])
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee', 'parent_id': manager.id, 'date_version': '2020-01-01',
+        })
+        old_version = employee.version_id
+        self.assertEqual(old_version.coach_id, manager, "The coach defaults to the manager")
+
+        new_version = employee.create_version({'date_version': '2021-01-01', 'coach_id': coach.id})
+        self.assertEqual(old_version.coach_id, manager)
+        self.assertEqual(new_version.coach_id, coach)
+        self.assertEqual(employee.coach_id, coach, "The current version drives the employee's coach")
+        self.assertEqual(employee.with_context(version_id=old_version.id).coach_id, manager)
+
+    @freeze_time('2026-06-01')
+    def test_archive_coach_keeps_past_versions(self):
+        coach = self.env['hr.employee'].create({'name': 'Coach'})
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee', 'coach_id': coach.id, 'date_version': '2020-01-01',
+        })
+        past_version = employee.version_id
+        current_version = employee.create_version({'date_version': '2026-01-01'})
+        future_version = employee.create_version({'date_version': '2030-01-01'})
+        self.assertEqual((past_version | current_version | future_version).coach_id, coach)
+
+        coach.action_archive()
+        self.assertEqual(past_version.coach_id, coach, "Past versions keep their coach history")
+        self.assertFalse((current_version | future_version).coach_id)
+
 
 @tagged('post_install', '-at_install')
 class TestHrVersionTracking(TestHrCommon, MailCase):
