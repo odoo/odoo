@@ -1580,7 +1580,14 @@ class MrpProduction(models.Model):
 
     def _prepare_stock_lot_values(self):
         self.ensure_one()
-        if self.product_id.lot_sequence_id:
+        lot_sequence = self.product_id.lot_sequence_id
+        default_sequence = self.env.ref('stock.sequence_production_lots', raise_if_not_found=False)
+        if (not lot_sequence or lot_sequence == default_sequence) and self.env['stock.lot'].search([
+            ('product_id', '=', self.product_id.id),
+            '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id),
+        ], limit=1):
+            name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
+        elif lot_sequence:
             name = self.product_id.lot_sequence_id.next_by_id()
         else:
             name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
