@@ -129,18 +129,18 @@
                     <t t-if="partner">
                         <table class="w-100">
                             <tbody>
-                            <tr>
-                                <td colspan="2">
-                                    <span t-out="partner.get('name')"/>,
-                                    <span t-if="partner['street']" t-out="partner['street']"/>
-                                </td>
-                            </tr>
-                                <tr t-if="partner['phone']">
-                                    <td class="text-start w-60">
+                                <tr>
+                                    <td colspan="2">
+                                        <span t-out="partner.get('name')"/>,
+                                        <span t-if="partner['street']" t-out="partner['street']"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td t-if="partner['phone']" class="text-start w-60">
                                         Tel <span t-out="partner['phone']"/>
                                     </td>
                                     <td class="text-end w-40" t-if="partner['vat']">
-                                        <t t-out="extra_data['partner_vat_label']"/>
+                                        <t t-out="extra_data['partner_vat_label'] + ' '"/>
                                         <t t-out="partner['vat']"/>
                                     </td>
                                 </tr>
@@ -150,14 +150,14 @@
                 </t>
                 <table class="w-100">
                     <tbody>
-                        <tr>
+                        <tr name="ticket_waiter">
                             <td class="text-start w-60" name="ticket">
                                 Ticket
                                 <t t-if="conditions['display_vat']">VAT </t>
                                 <t t-out="order['pos_reference']"/>
                             </td>
                             <td
-                                class="text-end w-40"
+                                class="text-end w-40 cashier-name"
                                 t-if="extra_data['cashier_name']"
                                 name="cashier_name"
                             >

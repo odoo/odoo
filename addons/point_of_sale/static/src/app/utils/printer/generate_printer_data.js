@@ -186,7 +186,9 @@ export class GeneratePrinterData {
             .filter((l) => !l.combo_parent_id)
             .map((line) => {
                 const productData = { ...line.product_id.raw };
-                // productData.display_name = line.getFullProductName();
+                if (line.isDiscountLine) {
+                    productData.display_name = line.getFullProductName();
+                }
                 return {
                     ...line.raw,
                     product_data: productData,

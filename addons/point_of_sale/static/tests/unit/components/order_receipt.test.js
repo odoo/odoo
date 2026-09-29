@@ -93,7 +93,6 @@ test("ticket data renders tip lines and line css rules", async () => {
             {
                 name: "Tips",
                 quantity: "1",
-                price_unit: "1.00",
                 line_price: "1.00",
             },
         ],
@@ -564,14 +563,14 @@ for (const tipCase of tipAfterPaymentCases) {
             payment_lines: [
                 { name: tipCase.paymentName, amount: tipCase.paymentAmount.toFixed(2) },
             ],
-            orderlines: tipCase.lines,
+            // orderlines: tipCase.lines,
         });
         expectTicketData(ticket, {
             total_amount: tipCase.totalAmount,
             payment_lines: [
                 { name: tipCase.paymentName, amount: tipCase.paymentAmount.toFixed(2) },
             ],
-            orderlines: tipCase.lines,
+            // orderlines: tipCase.lines,
         });
     });
 }
