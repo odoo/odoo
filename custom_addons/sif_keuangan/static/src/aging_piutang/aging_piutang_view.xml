@@ -203,7 +203,7 @@
                                     <div class="card border rounded-3 p-3 bg-white h-100 shadow-sm o_kpi_card">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                             <span class="o_kpi_label">Total Piutang Aktif</span>
-                                            <span class="badge bg-light text-dark border"><t t-esc="state.data.totals.partner_count" /> Debitur</span>
+                                            <span class="o_badge_doc_count"><t t-esc="state.data.totals.partner_count" /> Debitur</span>
                                         </div>
                                         <div class="o_kpi_value text-dark mb-1">
                                             <t t-esc="formatRp(state.data.totals.total_receivables)" />
@@ -293,12 +293,12 @@
                                         <table class="table table-hover table-bordered align-middle mb-0 o_aging_table o_tree_table">
                                             <thead>
                                                 <tr>
-                                                    <th rowspan="2" class="o_col_partner" style="min-width: 280px; text-align: left;">
+                                                    <th rowspan="2" class="o_col_partner" style="min-width: 320px; text-align: left;">
                                                         <span class="d-inline-flex align-items-center gap-1 cursor-pointer" t-on-click="() => this.onSort('partner_name')">
                                                             NAMA DEBITUR / NO. DOKUMEN <i class="fa fa-sort text-muted ms-1" />
                                                         </span>
                                                     </th>
-                                                    <th rowspan="2" class="o_col_unit" style="min-width: 140px; text-align: left;">UNIT KERJA / SEKOLAH</th>
+                                                    <th rowspan="2" class="o_col_unit" style="min-width: 150px; text-align: left;">UNIT KERJA / SEKOLAH</th>
                                                     <th rowspan="2" class="text-center" style="width: 95px; min-width: 95px;">TGL TERBIT</th>
                                                     <th rowspan="2" class="text-center" style="width: 95px; min-width: 95px;">JATUH TEMPO</th>
                                                     <th rowspan="2" class="text-end o_col_amt" style="width: 110px; min-width: 110px;">LANCAR (AT DATE)</th>
@@ -340,57 +340,57 @@
                                                     <!-- Partner Header Row -->
                                                     <tr class="o_partner_row fw-bold cursor-pointer" t-on-click="() => this.togglePartner(p.partner_key)">
                                                         <td class="o_col_partner">
-                                                            <div class="d-flex align-items-center">
+                                                            <div class="d-flex align-items-center flex-nowrap">
                                                                 <span class="o_fold_icon me-2 text-dark">
-                                                                    <i t-att-class="isPartnerUnfolded(p.partner_key) ? 'fa fa-caret-down fs-6' : 'fa fa-caret-right fs-6 text-muted'" />
+                                                                    <i t-att-class="isPartnerUnfolded(p.partner_key) ? 'fa fa-caret-down fs-6' : 'fa fa-caret-right fs-6 text-dark'" />
                                                                 </span>
-                                                                <span class="text-dark me-2"><t t-esc="p.partner_name" /></span>
+                                                                <span class="text-dark me-2 text-nowrap"><t t-esc="p.partner_name" /></span>
                                                                 <t t-if="p.student_id_number and p.student_id_number != '-'">
-                                                                    <span class="o_nim_badge me-1"><t t-esc="p.student_id_number" /></span>
+                                                                    <span class="o_nim_badge me-1 text-nowrap"><t t-esc="p.student_id_number" /></span>
                                                                 </t>
-                                                                <span t-att-class="'badge me-1 ' + (p.partner_type == 'student' ? 'o_badge_student' : (p.partner_type == 'customer' ? 'o_badge_customer' : (p.partner_type == 'distributor' ? 'o_badge_distributor' : 'o_badge_vendor')))">
+                                                                <span t-att-class="'badge me-1 text-nowrap ' + (p.partner_type == 'student' ? 'o_badge_student' : (p.partner_type == 'customer' ? 'o_badge_customer' : (p.partner_type == 'distributor' ? 'o_badge_distributor' : 'o_badge_vendor')))">
                                                                     <t t-esc="p.partner_type_label" />
                                                                 </span>
-                                                                <span class="badge bg-light text-secondary border fw-normal py-0 px-1" style="font-size: 0.7rem;">
+                                                                <span class="o_badge_doc_count text-nowrap">
                                                                     <t t-esc="p.doc_count" /> tagihan
                                                                 </span>
                                                             </div>
                                                         </td>
-                                                        <td class="text-dark fw-medium o_col_unit"><t t-esc="p.unit_name" /></td>
-                                                        <td class="text-center text-muted">-</td>
-                                                        <td class="text-center text-muted">-</td>
-                                                        <td class="text-end tabular-nums o_col_amt">
+                                                        <td class="text-dark fw-medium o_col_unit text-nowrap"><t t-esc="p.unit_name" /></td>
+                                                        <td class="text-center text-muted text-nowrap">-</td>
+                                                        <td class="text-center text-muted text-nowrap">-</td>
+                                                        <td class="text-end tabular-nums o_col_amt text-nowrap">
                                                             <span t-att-class="p.current &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.current)" /></span>
                                                         </td>
-                                                        <td class="text-end tabular-nums o_col_amt">
+                                                        <td class="text-end tabular-nums o_col_amt text-nowrap">
                                                             <span t-att-class="p.b_1_30 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_1_30)" /></span>
                                                         </td>
-                                                        <td class="text-end tabular-nums o_col_amt">
+                                                        <td class="text-end tabular-nums o_col_amt text-nowrap">
                                                             <span t-att-class="p.b_31_60 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_31_60)" /></span>
                                                         </td>
-                                                        <td class="text-end tabular-nums o_col_amt">
+                                                        <td class="text-end tabular-nums o_col_amt text-nowrap">
                                                             <span t-att-class="p.b_61_90 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_61_90)" /></span>
                                                         </td>
                                                         <t t-if="state.showBreakdown">
-                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt text-nowrap">
                                                                 <span t-att-class="p.b_91_120 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_91_120)" /></span>
                                                             </td>
-                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt text-nowrap">
                                                                 <span t-att-class="p.b_121_180 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_121_180)" /></span>
                                                             </td>
-                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt text-nowrap">
                                                                 <span t-att-class="p.b_181_365 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_181_365)" /></span>
                                                             </td>
-                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt text-nowrap">
                                                                 <span t-att-class="p.b_over_365 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_over_365)" /></span>
                                                             </td>
                                                         </t>
                                                         <t t-else="">
-                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt text-nowrap">
                                                                 <span t-att-class="p.b_over_90 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_over_90)" /></span>
                                                             </td>
                                                         </t>
-                                                        <td class="text-end fw-bold text-dark tabular-nums o_td_total">
+                                                        <td class="text-end fw-bold text-dark tabular-nums o_td_total text-nowrap">
                                                             <t t-esc="formatRp(p.total)" />
                                                         </td>
                                                     </tr>
@@ -400,19 +400,19 @@
                                                         <t t-foreach="p.lines" t-as="l" t-key="l.id">
                                                             <tr class="o_line_row">
                                                                 <td class="o_col_partner ps-4">
-                                                                    <div class="d-flex align-items-center ps-3">
+                                                                    <div class="d-flex align-items-center ps-3 flex-nowrap">
                                                                         <i class="fa fa-file-text-o text-muted me-2" style="font-size: 0.8rem;" />
-                                                                        <a href="javascript:void(0)" class="fw-semibold text-dark text-decoration-underline me-2" t-on-click.stop="() => this.openDocument(l)">
+                                                                        <a href="javascript:void(0)" class="fw-bold text-dark text-decoration-underline me-2 text-nowrap" t-on-click.stop="() => this.openDocument(l)">
                                                                             <t t-esc="l.doc_name" />
                                                                         </a>
-                                                                        <span class="text-muted small text-truncate" style="max-width: 220px;" t-att-title="l.description">
+                                                                        <span class="text-dark small text-nowrap" t-att-title="l.description">
                                                                             <t t-esc="l.description" />
                                                                         </span>
                                                                     </div>
                                                                 </td>
-                                                                <td class="text-dark fw-medium o_col_unit small"><t t-esc="l.unit_name" /></td>
-                                                                <td class="text-center text-dark small"><t t-esc="l.bill_date_display" /></td>
-                                                                <td class="text-center small">
+                                                                <td class="text-dark fw-medium o_col_unit small text-nowrap"><t t-esc="l.unit_name" /></td>
+                                                                <td class="text-center text-dark small text-nowrap"><t t-esc="l.bill_date_display" /></td>
+                                                                <td class="text-center small text-nowrap">
                                                                     <span class="fw-semibold text-dark"><t t-esc="l.due_date_display" /></span>
                                                                     <t t-if="l.overdue_days &gt; 0">
                                                                         <span t-att-class="'badge ms-1 ' + (l.overdue_days &gt; 90 ? 'o_badge_danger' : 'o_badge_warning')" style="font-size: 0.68rem;">
@@ -420,38 +420,38 @@
                                                                         </span>
                                                                     </t>
                                                                 </td>
-                                                                <td class="text-end tabular-nums o_col_amt small">
+                                                                <td class="text-end tabular-nums o_col_amt small text-nowrap">
                                                                     <span t-att-class="l.current &gt; 0 ? 'text-dark fw-semibold' : 'text-muted-num'"><t t-esc="formatRp(l.current)" /></span>
                                                                 </td>
-                                                                <td class="text-end tabular-nums o_col_amt small">
+                                                                <td class="text-end tabular-nums o_col_amt small text-nowrap">
                                                                     <span t-att-class="l.b_1_30 &gt; 0 ? 'text-dark fw-semibold' : 'text-muted-num'"><t t-esc="formatRp(l.b_1_30)" /></span>
                                                                 </td>
-                                                                <td class="text-end tabular-nums o_col_amt small">
+                                                                <td class="text-end tabular-nums o_col_amt small text-nowrap">
                                                                     <span t-att-class="l.b_31_60 &gt; 0 ? 'text-dark fw-semibold' : 'text-muted-num'"><t t-esc="formatRp(l.b_31_60)" /></span>
                                                                 </td>
-                                                                <td class="text-end tabular-nums o_col_amt small">
+                                                                <td class="text-end tabular-nums o_col_amt small text-nowrap">
                                                                     <span t-att-class="l.b_61_90 &gt; 0 ? 'text-dark fw-semibold' : 'text-muted-num'"><t t-esc="formatRp(l.b_61_90)" /></span>
                                                                 </td>
                                                                 <t t-if="state.showBreakdown">
-                                                                    <td class="text-end tabular-nums o_td_crit o_col_amt small">
+                                                                    <td class="text-end tabular-nums o_td_crit o_col_amt small text-nowrap">
                                                                         <span t-att-class="l.b_91_120 &gt; 0 ? 'text-dark fw-semibold' : 'text-muted-num'"><t t-esc="formatRp(l.b_91_120)" /></span>
                                                                     </td>
-                                                                    <td class="text-end tabular-nums o_td_crit o_col_amt small">
+                                                                    <td class="text-end tabular-nums o_td_crit o_col_amt small text-nowrap">
                                                                         <span t-att-class="l.b_121_180 &gt; 0 ? 'text-dark fw-semibold' : 'text-muted-num'"><t t-esc="formatRp(l.b_121_180)" /></span>
                                                                     </td>
-                                                                    <td class="text-end tabular-nums o_td_crit o_col_amt small">
+                                                                    <td class="text-end tabular-nums o_td_crit o_col_amt small text-nowrap">
                                                                         <span t-att-class="l.b_181_365 &gt; 0 ? 'text-dark fw-semibold' : 'text-muted-num'"><t t-esc="formatRp(l.b_181_365)" /></span>
                                                                     </td>
-                                                                    <td class="text-end tabular-nums o_td_crit o_col_amt small">
+                                                                    <td class="text-end tabular-nums o_td_crit o_col_amt small text-nowrap">
                                                                         <span t-att-class="l.b_over_365 &gt; 0 ? 'text-dark fw-semibold' : 'text-muted-num'"><t t-esc="formatRp(l.b_over_365)" /></span>
                                                                     </td>
                                                                 </t>
                                                                 <t t-else="">
-                                                                    <td class="text-end tabular-nums o_td_crit o_col_amt small">
+                                                                    <td class="text-end tabular-nums o_td_crit o_col_amt small text-nowrap">
                                                                         <span t-att-class="l.b_over_90 &gt; 0 ? 'text-dark fw-semibold' : 'text-muted-num'"><t t-esc="formatRp(l.b_over_90)" /></span>
                                                                     </td>
                                                                 </t>
-                                                                <td class="text-end fw-semibold text-dark tabular-nums o_td_total small">
+                                                                <td class="text-end fw-semibold text-dark tabular-nums o_td_total small text-nowrap">
                                                                     <t t-esc="formatRp(l.total)" />
                                                                 </td>
                                                             </tr>
@@ -463,21 +463,21 @@
                                             <t t-if="sortedPartners.length &gt; 0">
                                                 <tfoot class="o_table_grand_footer text-end fw-bold">
                                                     <tr>
-                                                        <td colspan="4" class="text-start ps-3">TOTAL KESELURUHAN</td>
-                                                        <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_current)" /></td>
-                                                        <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_1_30)" /></td>
-                                                        <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_31_60)" /></td>
-                                                        <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_61_90)" /></td>
+                                                        <td colspan="4" class="text-start ps-3 text-nowrap">TOTAL KESELURUHAN</td>
+                                                        <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_current)" /></td>
+                                                        <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_1_30)" /></td>
+                                                        <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_31_60)" /></td>
+                                                        <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_61_90)" /></td>
                                                         <t t-if="state.showBreakdown">
-                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_91_120)" /></td>
-                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_121_180)" /></td>
-                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_181_365)" /></td>
-                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_over_365)" /></td>
+                                                            <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_91_120)" /></td>
+                                                            <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_121_180)" /></td>
+                                                            <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_181_365)" /></td>
+                                                            <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_over_365)" /></td>
                                                         </t>
                                                         <t t-else="">
-                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_over_90)" /></td>
+                                                            <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_over_90)" /></td>
                                                         </t>
-                                                        <td class="tabular-nums o_td_grand_total"><t t-esc="formatRp(state.data.totals.total_receivables)" /></td>
+                                                        <td class="tabular-nums o_td_grand_total text-nowrap"><t t-esc="formatRp(state.data.totals.total_receivables)" /></td>
                                                     </tr>
                                                 </tfoot>
                                             </t>
@@ -494,9 +494,9 @@
                                             <thead>
                                                 <tr>
                                                     <th rowspan="2" class="text-center o_col_no" style="width: 36px; min-width: 36px;">NO</th>
-                                                    <th rowspan="2" class="o_col_partner" style="min-width: 180px; text-align: left;">NAMA DEBITUR / MITRA / SISWA</th>
+                                                    <th rowspan="2" class="o_col_partner" style="min-width: 320px; text-align: left;">NAMA DEBITUR / MITRA / SISWA</th>
                                                     <th rowspan="2" class="text-center o_col_badge" style="width: 100px; min-width: 100px;">KLASIFIKASI</th>
-                                                    <th rowspan="2" class="o_col_unit" style="min-width: 130px; text-align: left;">UNIT KERJA / SEKOLAH</th>
+                                                    <th rowspan="2" class="o_col_unit" style="min-width: 150px; text-align: left;">UNIT KERJA / SEKOLAH</th>
                                                     <th rowspan="2" class="text-end o_col_amt" style="width: 110px; min-width: 110px;">LANCAR</th>
                                                     <th colspan="3" class="text-center o_th_regular_group">MENUNGGAK REGULER (1 - 90 HARI)</th>
                                                     <t t-if="state.showBreakdown">
@@ -532,60 +532,63 @@
                                                 </t>
                                                 <t t-foreach="state.data.partners" t-as="p" t-key="p.partner_key">
                                                     <tr>
-                                                        <td class="text-center text-dark fw-medium o_col_no"><t t-esc="p_index + 1" /></td>
+                                                        <td class="text-center text-dark fw-medium o_col_no text-nowrap"><t t-esc="p_index + 1" /></td>
                                                         <td class="o_col_partner">
-                                                            <div class="fw-bold text-dark text-truncate" style="max-width: 240px;" t-att-title="p.partner_name"><t t-esc="p.partner_name" /></div>
-                                                            <div class="d-flex align-items-center gap-1 mt-1 flex-wrap">
+                                                            <div class="d-flex align-items-center gap-1 flex-nowrap">
+                                                                <span class="fw-bold text-dark text-nowrap me-2"><t t-esc="p.partner_name" /></span>
                                                                 <t t-if="p.student_id_number and p.student_id_number != '-'">
-                                                                    <span class="o_nim_badge"><t t-esc="p.student_id_number" /></span>
+                                                                    <span class="o_nim_badge text-nowrap me-1"><t t-esc="p.student_id_number" /></span>
                                                                 </t>
                                                                 <t t-if="p.parent_name and p.parent_name != '-'">
-                                                                    <span class="o_wali_text">Wali: <strong class="text-dark"><t t-esc="p.parent_name" /></strong></span>
+                                                                    <span class="o_wali_text text-nowrap me-1">Wali: <strong class="text-dark"><t t-esc="p.parent_name" /></strong></span>
                                                                 </t>
+                                                                <span class="o_badge_doc_count text-nowrap">
+                                                                    <t t-esc="p.doc_count" /> tagihan
+                                                                </span>
                                                             </div>
                                                         </td>
-                                                        <td class="text-center o_col_badge">
-                                                            <span t-att-class="'badge ' + (p.partner_type == 'student' ? 'o_badge_student' : (p.partner_type == 'customer' ? 'o_badge_customer' : (p.partner_type == 'distributor' ? 'o_badge_distributor' : 'o_badge_vendor')))">
+                                                        <td class="text-center o_col_badge text-nowrap">
+                                                            <span t-att-class="'badge text-nowrap ' + (p.partner_type == 'student' ? 'o_badge_student' : (p.partner_type == 'customer' ? 'o_badge_customer' : (p.partner_type == 'distributor' ? 'o_badge_distributor' : 'o_badge_vendor')))">
                                                                 <t t-esc="p.partner_type_label" />
                                                             </span>
                                                         </td>
-                                                        <td class="text-dark fw-medium o_col_unit"><t t-esc="p.unit_name" /></td>
-                                                        <td class="text-end tabular-nums o_col_amt">
+                                                        <td class="text-dark fw-medium o_col_unit text-nowrap"><t t-esc="p.unit_name" /></td>
+                                                        <td class="text-end tabular-nums o_col_amt text-nowrap">
                                                             <span t-att-class="p.current &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.current)" /></span>
                                                         </td>
-                                                        <td class="text-end tabular-nums o_col_amt">
+                                                        <td class="text-end tabular-nums o_col_amt text-nowrap">
                                                             <span t-att-class="p.b_1_30 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_1_30)" /></span>
                                                         </td>
-                                                        <td class="text-end tabular-nums o_col_amt">
+                                                        <td class="text-end tabular-nums o_col_amt text-nowrap">
                                                             <span t-att-class="p.b_31_60 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_31_60)" /></span>
                                                         </td>
-                                                        <td class="text-end tabular-nums o_col_amt">
+                                                        <td class="text-end tabular-nums o_col_amt text-nowrap">
                                                             <span t-att-class="p.b_61_90 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_61_90)" /></span>
                                                         </td>
 
                                                         <!-- Breakdown Columns -->
                                                         <t t-if="state.showBreakdown">
-                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt text-nowrap">
                                                                 <span t-att-class="p.b_91_120 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_91_120)" /></span>
                                                             </td>
-                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt text-nowrap">
                                                                 <span t-att-class="p.b_121_180 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_121_180)" /></span>
                                                             </td>
-                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt text-nowrap">
                                                                 <span t-att-class="p.b_181_365 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_181_365)" /></span>
                                                             </td>
-                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt text-nowrap">
                                                                 <span t-att-class="p.b_over_365 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_over_365)" /></span>
                                                             </td>
                                                         </t>
                                                         <t t-else="">
-                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt text-nowrap">
                                                                 <span t-att-class="p.b_over_90 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_over_90)" /></span>
                                                             </td>
                                                         </t>
 
                                                         <!-- Total Column -->
-                                                        <td class="text-end fw-bold text-dark tabular-nums o_td_total">
+                                                        <td class="text-end fw-bold text-dark tabular-nums o_td_total text-nowrap">
                                                             <t t-esc="formatRp(p.total)" />
                                                         </td>
                                                     </tr>
@@ -595,21 +598,21 @@
                                             <t t-if="state.data.partners.length &gt; 0">
                                                 <tfoot class="o_table_grand_footer text-end fw-bold">
                                                     <tr>
-                                                        <td colspan="4" class="text-start ps-3">TOTAL KESELURUHAN</td>
-                                                        <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_current)" /></td>
-                                                        <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_1_30)" /></td>
-                                                        <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_31_60)" /></td>
-                                                        <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_61_90)" /></td>
+                                                        <td colspan="4" class="text-start ps-3 text-nowrap">TOTAL KESELURUHAN</td>
+                                                        <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_current)" /></td>
+                                                        <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_1_30)" /></td>
+                                                        <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_31_60)" /></td>
+                                                        <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_61_90)" /></td>
                                                         <t t-if="state.showBreakdown">
-                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_91_120)" /></td>
-                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_121_180)" /></td>
-                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_181_365)" /></td>
-                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_over_365)" /></td>
+                                                            <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_91_120)" /></td>
+                                                            <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_121_180)" /></td>
+                                                            <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_181_365)" /></td>
+                                                            <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_over_365)" /></td>
                                                         </t>
                                                         <t t-else="">
-                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_over_90)" /></td>
+                                                            <td class="tabular-nums o_col_amt text-nowrap"><t t-esc="formatRp(state.data.totals.total_b_over_90)" /></td>
                                                         </t>
-                                                        <td class="tabular-nums o_td_grand_total"><t t-esc="formatRp(state.data.totals.total_receivables)" /></td>
+                                                        <td class="tabular-nums o_td_grand_total text-nowrap"><t t-esc="formatRp(state.data.totals.total_receivables)" /></td>
                                                     </tr>
                                                 </tfoot>
                                             </t>
@@ -627,9 +630,9 @@
                                                 <tr>
                                                     <th class="text-center o_col_no" style="width: 36px; min-width: 36px;">NO</th>
                                                     <th style="width: 140px; min-width: 140px; text-align: left;">NO. DOKUMEN</th>
-                                                    <th style="min-width: 180px; text-align: left;">NAMA DEBITUR / SISWA</th>
-                                                    <th style="min-width: 130px; text-align: left;">UNIT KERJA / SEKOLAH</th>
-                                                    <th style="min-width: 180px; text-align: left;">KETERANGAN / PERIODE</th>
+                                                    <th style="min-width: 220px; text-align: left;">NAMA DEBITUR / SISWA</th>
+                                                    <th style="min-width: 150px; text-align: left;">UNIT KERJA / SEKOLAH</th>
+                                                    <th style="min-width: 200px; text-align: left;">KETERANGAN / PERIODE</th>
                                                     <th class="text-center" style="width: 95px; min-width: 95px;">TGL TERBIT</th>
                                                     <th class="text-center" style="width: 95px; min-width: 95px;">JATUH TEMPO</th>
                                                     <th class="text-center" style="width: 105px; min-width: 105px;">HARI TERLAMBAT</th>
@@ -650,38 +653,40 @@
                                                 </t>
                                                 <t t-foreach="state.data.details" t-as="d" t-key="d.id">
                                                     <tr>
-                                                        <td class="text-center text-dark fw-medium o_col_no"><t t-esc="d_index + 1" /></td>
-                                                        <td>
+                                                        <td class="text-center text-dark fw-medium o_col_no text-nowrap"><t t-esc="d_index + 1" /></td>
+                                                        <td class="text-nowrap">
                                                             <a href="javascript:void(0)" class="fw-bold text-dark text-decoration-underline" t-on-click="() => this.openDocument(d)">
                                                                 <t t-esc="d.doc_name" />
                                                             </a>
                                                         </td>
-                                                        <td>
-                                                            <div class="fw-bold text-dark"><t t-esc="d.partner_name" /></div>
-                                                            <t t-if="d.parent_name and d.parent_name != '-'">
-                                                                <span class="o_wali_text">Wali: <strong class="text-dark"><t t-esc="d.parent_name" /></strong></span>
-                                                            </t>
+                                                        <td class="text-nowrap">
+                                                            <div class="d-flex align-items-center gap-1 flex-nowrap">
+                                                                <span class="fw-bold text-dark"><t t-esc="d.partner_name" /></span>
+                                                                <t t-if="d.parent_name and d.parent_name != '-'">
+                                                                    <span class="o_wali_text ms-1">Wali: <strong class="text-dark"><t t-esc="d.parent_name" /></strong></span>
+                                                                </t>
+                                                            </div>
                                                         </td>
-                                                        <td class="text-dark fw-medium"><t t-esc="d.unit_name" /></td>
-                                                        <td class="text-dark fw-medium"><t t-esc="d.description" /></td>
-                                                        <td class="text-center text-dark fw-medium"><t t-esc="d.bill_date_display" /></td>
-                                                        <td class="text-center text-dark fw-bold"><t t-esc="d.due_date_display" /></td>
-                                                        <td class="text-center">
+                                                        <td class="text-dark fw-medium text-nowrap"><t t-esc="d.unit_name" /></td>
+                                                        <td class="text-dark fw-medium text-nowrap"><t t-esc="d.description" /></td>
+                                                        <td class="text-center text-dark fw-medium text-nowrap"><t t-esc="d.bill_date_display" /></td>
+                                                        <td class="text-center text-dark fw-bold text-nowrap"><t t-esc="d.due_date_display" /></td>
+                                                        <td class="text-center text-nowrap">
                                                             <t t-if="d.overdue_days &lt;= 0">
-                                                                <span class="badge o_badge_success">Lancar</span>
+                                                                <span class="badge o_badge_success text-nowrap">Lancar</span>
                                                             </t>
                                                             <t t-else="">
-                                                                <span t-att-class="'badge ' + (d.overdue_days &gt; 90 ? 'o_badge_danger' : 'o_badge_warning')">
+                                                                <span t-att-class="'badge text-nowrap ' + (d.overdue_days &gt; 90 ? 'o_badge_danger' : 'o_badge_warning')">
                                                                     <t t-esc="d.overdue_days" /> Hari
                                                                 </span>
                                                             </t>
                                                         </td>
-                                                        <td class="text-center">
-                                                            <span t-att-class="'badge ' + (d.bucket_code == 'current' ? 'o_badge_success' : (d.bucket_code == '1_30' ? 'o_badge_info' : (d.bucket_code == '31_60' ? 'o_badge_warning' : 'o_badge_danger')))">
+                                                        <td class="text-center text-nowrap">
+                                                            <span t-att-class="'badge text-nowrap ' + (d.bucket_code == 'current' ? 'o_badge_success' : (d.bucket_code == '1_30' ? 'o_badge_info' : (d.bucket_code == '31_60' ? 'o_badge_warning' : 'o_badge_danger')))">
                                                                 <t t-esc="d.bucket_label" />
                                                             </span>
                                                         </td>
-                                                        <td class="text-end fw-bold text-dark tabular-nums o_td_total">
+                                                        <td class="text-end fw-bold text-dark tabular-nums o_td_total text-nowrap">
                                                             <t t-esc="formatRp(d.amount)" />
                                                         </td>
                                                     </tr>
@@ -691,8 +696,8 @@
                                             <t t-if="state.data.details.length &gt; 0">
                                                 <tfoot class="o_table_grand_footer text-end fw-bold">
                                                     <tr>
-                                                        <td colspan="9" class="text-start ps-3">TOTAL RINCIAN NOMINATIF</td>
-                                                        <td class="tabular-nums o_td_grand_total"><t t-esc="formatRp(state.data.totals.total_receivables)" /></td>
+                                                        <td colspan="9" class="text-start ps-3 text-nowrap">TOTAL RINCIAN NOMINATIF</td>
+                                                        <td class="tabular-nums o_td_grand_total text-nowrap"><t t-esc="formatRp(state.data.totals.total_receivables)" /></td>
                                                     </tr>
                                                 </tfoot>
                                             </t>
@@ -718,7 +723,7 @@
                                                  t-on-click="() => this.openDocument(d)">
                                                 <!-- Top Row: Description & Date -->
                                                 <div class="d-flex justify-content-between align-items-start mb-2">
-                                                    <div class="o_card_title text-truncate me-2" t-att-title="d.description">
+                                                    <div class="o_card_title me-2" t-att-title="d.description">
                                                         <t t-esc="d.description" />
                                                     </div>
                                                     <div class="o_card_date text-nowrap">
@@ -732,7 +737,7 @@
                                                         <t t-esc="d.bucket_label" />
                                                     </span>
                                                     <t t-if="d.overdue_days &gt; 0">
-                                                        <span class="badge bg-light text-secondary border" style="font-size: 0.7rem;">
+                                                        <span class="o_badge_doc_count" style="font-size: 0.7rem;">
                                                             Telat <t t-esc="d.overdue_days" />h
                                                         </span>
                                                     </t>
@@ -741,10 +746,10 @@
                                                 <!-- Bottom Row: Partner Info & Amount -->
                                                 <div class="d-flex justify-content-between align-items-end pt-2 border-top">
                                                     <div style="min-width: 0; max-width: 58%;">
-                                                        <div class="o_card_partner text-truncate" t-att-title="d.partner_name">
+                                                        <div class="o_card_partner" t-att-title="d.partner_name">
                                                             <t t-esc="d.doc_name" /> - <t t-esc="d.partner_name" />
                                                         </div>
-                                                        <div class="o_card_unit text-truncate" t-att-title="d.unit_name">
+                                                        <div class="o_card_unit" t-att-title="d.unit_name">
                                                             <t t-esc="d.unit_name" />
                                                         </div>
                                                     </div>
