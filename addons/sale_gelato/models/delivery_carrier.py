@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.sale_gelato import utils
@@ -18,6 +18,11 @@ class ProviderGelato(models.Model):
         required=True,
         default="normal",
     )
+
+    @api.depends("delivery_type")
+    def _compute_support_test_environment(self):
+        super()._compute_support_test_environment()
+        self.filtered(lambda carrier: carrier.delivery_type == "gelato").support_test_environment = False
 
     # === BUSINESS METHODS === #
 

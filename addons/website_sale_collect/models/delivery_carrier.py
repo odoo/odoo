@@ -16,6 +16,11 @@ class DeliveryCarrier(models.Model):
     )
     warehouse_ids = fields.Many2many(string="Stores", comodel_name="stock.warehouse")
 
+    @api.depends("delivery_type")
+    def _compute_support_test_environment(self):
+        super()._compute_support_test_environment()
+        self.filtered(lambda carrier: carrier.delivery_type == "in_store").support_test_environment = False
+
     def _compute_support_pickup_locations(self):
         in_store_dms = self.filtered(lambda dm: dm.delivery_type == "in_store")
         super(DeliveryCarrier, self - in_store_dms)._compute_support_pickup_locations()

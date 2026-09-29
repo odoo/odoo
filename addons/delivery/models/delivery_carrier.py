@@ -53,8 +53,10 @@ class DeliveryCarrier(models.Model):
         default="rate_and_ship",
     )
     prod_environment = fields.Boolean(
-        string="Environment", help="Set to True if your credentials are certified for production."
+        string="Environment", help="Set to True if your credentials are certified for production.",
+        compute="_compute_prod_environment", store=True
     )
+    support_test_environment = fields.Boolean(string="Test Environment", compute="_compute_support_test_environment")
     debug_logging = fields.Boolean(
         string="Debug logging", help="Log requests in order to ease debugging"
     )
@@ -202,6 +204,16 @@ class DeliveryCarrier(models.Model):
                         name=carrier.name,
                     )
                 )
+
+    @api.depends("delivery_type")
+    def _compute_support_test_environment(self):
+        for carrier in self:
+            carrier.support_test_environment = carrier.delivery_type not in ['fixed', 'base_on_rule']
+
+    @api.depends("support_test_environment")
+    def _compute_prod_environment(self):
+        for carrier in self:
+            carrier.prod_environment = not carrier.support_test_environment
 
     def _compute_weight_uom_name(self):
         self.weight_uom_name = self.env[

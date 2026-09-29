@@ -6,9 +6,6 @@
         <field name="model">delivery.carrier</field>
         <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
         <field name="arch" type="xml">
-            <button name="toggle_prod_environment" position="attributes">
-                <attribute name="invisible" separator=" or " add="delivery_type == 'gelato'"/>
-            </button>
             <button name="toggle_debug" position="attributes">
                 <attribute name="invisible" separator=" or " add="delivery_type == 'gelato'"/>
             </button>
