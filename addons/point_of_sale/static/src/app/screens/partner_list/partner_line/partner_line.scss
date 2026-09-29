@@ -4,7 +4,7 @@
         flex-wrap: wrap;
         align-items: center;
         padding: 12px 24px;
-        border-bottom: 1px solid $o-gray-300;
+        border-bottom: 1px solid var(--o-gray-300);
 
         td {
             border: 0;
@@ -28,8 +28,8 @@
 
     .partner-info {
         &.selected {
-            background-color: $o-component-active-bg;
-            color: $o-action;
+            background-color: var(--o-component-active-bg);
+            color: var(--o-action);
         }
     }
     
@@ -39,10 +39,10 @@
     &:hover i[data-icon='chevron_forward'] {
         transition: $transition-base;
         transform: translateX(.5rem);
-        color: $o-main-link-color;
+        color: var(--o-main-link-color);
     }
     &.selected {
-        background-color: $o-component-active-bg;
-        color: $o-action;
+        background-color: var(--o-component-active-bg);
+        color: var(--o-action);
     }
 }

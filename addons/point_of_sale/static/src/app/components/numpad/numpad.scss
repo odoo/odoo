@@ -54,13 +54,13 @@
   }
 
   &.active, &:active {
-    --border-color: var(--hover-bg, #{$o-component-active-border});
-    --btn-active-bg: var(--bg, #{$o-component-active-bg});
+    --border-color: var(--hover-bg, var(--o-component-active-border));
+    --btn-active-bg: var(--bg, var(--o-component-active-bg));
   }
 
   &:disabled {
     opacity: 1;
-    background-color: $o-gray-200;
+    background-color: var(--o-gray-200);
   }
 }
 

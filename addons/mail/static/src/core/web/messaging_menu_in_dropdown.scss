@@ -1,6 +1,6 @@
 .o-mail-MessagingMenuInDropdown {
     width: 475px;
-    height: Min(calc(#{ $o-dropdown-max-height } - 5px), 630px); /* -5px for borders */
+    height: Min(calc(var(--o-dropdown-max-height) - 5px), 630px); /* -5px for borders */
     background-color: var(--mail-MessagingMenu-bg, $o-webclient-background-color);
 }
 
@@ -20,6 +20,6 @@
 
 .o_web_client.o-mail-discuss-systray-menu-open .o_main_navbar {
     @include media-breakpoint-down(md) {
-        background-color: $o-navbar-background !important;
+        background-color: var(--o-navbar-background) !important;
     }
 }

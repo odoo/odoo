@@ -1,6 +1,6 @@
 .o_account_kanban .o_kanban_renderer {
-    --Card-padding-v: #{$o-kanban-dashboard-vpadding};
-    --Card-padding-h: #{$o-kanban-dashboard-hpadding};
+    --Card-padding-v: var(--o-kanban-dashboard-vpadding);
+    --Card-padding-h: var(--o-kanban-dashboard-hpadding);
 
     .o_kanban_record {
         container: account-journal-card / inline-size;
@@ -19,7 +19,7 @@
             font-size: 12px;
 
             &[data-icon="star"] {
-                color: $o-main-color-muted;
+                color: var(--o-main-color-muted);
                 &:hover {
                     color: gold;
                 }
