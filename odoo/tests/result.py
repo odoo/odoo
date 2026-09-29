@@ -143,7 +143,7 @@ class OdooTestResult(object):
 
     def addSubTest(self, test, subtest, err):
         if err is not None:
-            if issubclass(err[0], test.failureException):
+            if isinstance(err[0], type) and issubclass(err[0], test.failureException):
                 self.addFailure(subtest, err)
             else:
                 self.addError(subtest, err)
