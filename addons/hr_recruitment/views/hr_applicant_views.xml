@@ -4,7 +4,7 @@
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <list string="Applicants" class="o_search_matching_applicant" multi_edit="1" sample="1" decoration-danger="application_status == 'refused'" default_order="priority DESC">
+            <list string="Applicants" class="o_search_matching_applicant" multi_edit="1" sample="1" decoration-danger="application_status == 'refused'" default_order="priority DESC" default_group_by="stage_id">
                 <header>
                     <button
                         name="action_talent_pool_add_applicants"
@@ -248,7 +248,9 @@
             <pivot string="Job Applications" sample="1">
                 <field name="job_id" type="row"/>
                 <field name="stage_id" type="col"/>
+                <field name="message_bounce" invisible="1"/>
                 <field name="color" invisible="1"/>
+                <field name="probability" invisible="1"/>
             </pivot>
         </field>
     </record>
@@ -259,6 +261,9 @@
         <field name="arch" type="xml">
             <graph string="Cases By Stage and Estimates" sample="1">
                 <field name="stage_id"/>
+                <field name="message_bounce" invisible="1"/>
+                <field name="color" invisible="1"/>
+                <field name="probability" invisible="1"/>
             </graph>
         </field>
     </record>
@@ -348,7 +353,7 @@
                 color="recruiter_id"
                 event_limit="5"
                 hide_time="true"
-                quick_create="0"
+                create="0"
             >
                 <field name="partner_name"/>
                 <field name="job_id"/>
