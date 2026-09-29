@@ -181,8 +181,16 @@
                                     aria-label="What positioning?"
                                     aria-controls="selectPurposeMenu">
                                 <span class="d-flex align-items-center">
+<<<<<<< 28ac90563f7239aef8fea6f20494adbcdd104236
                                     <t t-if="this.state.selectedPositioning" t-out="this.state.selectedPositioning"/>
                                     <i class="oi ms-auto ps-2" data-icon="keyboard_arrow_down" role="img"/>
+||||||| 9c2fbe9bd8c418787fc9c44e41d91944f690c00b
+                                    <t t-if="this.state.selectedPositioning" t-out="this.state.selectedPositioning"/>
+                                    <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
+=======
+                                    <t t-out="this.state.selectedPositioning || this.state.formerSelectedPositioning"/>
+                                    <i class="fa fa-angle-down ms-auto ps-2" role="img"/>
+>>>>>>> 25e4a126018eb1c462bbfa8ef4b1dc22cda17796
                                 </span>
                             </button>
                             <div id="selectPurposeMenu" class="dropdown-menu border-0 shadow-lg show" role="menu" aria-labelledby="selectPurposeToggle">
