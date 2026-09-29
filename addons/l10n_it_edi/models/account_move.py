@@ -1024,11 +1024,19 @@ class AccountMove(models.Model):
             The maximum threshold is 400 Euro, except for the forfettario tax regime (RF19), which can
             issue simplified invoices without the amount limit.
 
-            Deprecated since 18.0: use `not _l10n_it_edi_is_simplified_checks`.
-            It will be removed in ``20.0``.
+            A simplified invoice is chosen automatically only when the move and partner
+            checks pass and the partner's address is incomplete: with a complete address
+            an ordinary invoice is preferred.
         """
         self.ensure_one()
-        return not self._l10n_it_edi_is_simplified_checks()
+        partner = self.commercial_partner_id
+        return (
+            not self._l10n_it_edi_is_simplified_checks()
+            and partner._l10n_it_edi_export_check([
+                'partner_address_missing',
+                'partner_simplified',
+            ]).keys() == {'l10n_it_edi_partner_address_missing'}
+        )
 
     def _l10n_it_edi_is_simplified_checks(self):
         """ Warnings can be ignored by setting `l10n_it_document_type == 'TD07'`
@@ -1037,16 +1045,6 @@ class AccountMove(models.Model):
         errors = {}
         build_error = self._l10n_it_edi_build_move_error
 
-        if wrong_partner_moves := self.filtered(lambda move:
-            not move.commercial_partner_id._l10n_it_edi_is_italian()
-            or move.commercial_partner_id._l10n_it_edi_is_public_administration()
-        ):
-            errors['l10n_it_edi_move_simplified_partner'] = build_error(self.env._(
-                "Simplified Invoices (TD07) can only be used with domestic partners"
-                " that do not belong to the Public Administration."
-                " Please issue an ordinary invoice instead."),
-                records=wrong_partner_moves,
-            )
         if wrong_amount_moves := self.filtered(lambda move:
             move.company_id.l10n_it_tax_system != 'RF19' and move.amount_total > 400
         ):
@@ -1060,15 +1058,6 @@ class AccountMove(models.Model):
                 "Simplified Invoices (TD07) cannot be used for self-invoices."
                 " Please issue an ordinary invoice instead."),
                 records=reverse_charge_moves,
-            )
-        if incomplete_address_moves := self.filtered(lambda move:
-            'l10n_it_edi_partner_address_missing' not in move.commercial_partner_id._l10n_it_edi_export_check()
-        ):
-            errors['l10n_it_edi_move_simplified_address_complete'] = build_error(self.env._(
-                "Simplified Invoices (TD07) are generally preferred when partner address"
-                " is incomplete, so please issue an ordinary invoice instead."),
-                records=incomplete_address_moves,
-                level='info',
             )
         return errors
 
@@ -2079,13 +2068,17 @@ class AccountMove(models.Model):
 
         companies = self.mapped("company_id")
         companies_partners = companies.mapped("partner_id")
-        moves_full = self.filtered(lambda m: not m._l10n_it_edi_is_simplified())
         moves_simplified = self.filtered(lambda m: m._l10n_it_edi_is_simplified())
+<<<<<<< f48dcd0fe416e51a966017e49ee36aea7108e81c
         moves_simplified_errors = {
             k: v
             for k, v in moves_simplified._l10n_it_edi_is_simplified_checks().items()
             if v.get('level') in ('error', 'warning')
         }
+||||||| bfac82a56c0b12f781baf363d5b6f9edcf5dcd96
+=======
+        moves_full = self - moves_simplified
+>>>>>>> 7801d7ebe919cf2c9e7b39d1ac8365d460e91ee5
 
         full = moves_full.mapped("commercial_partner_id").filtered(lambda p: p not in companies_partners)
         simplified = moves_simplified.mapped("commercial_partner_id").filtered(lambda p: p not in companies_partners | full)
@@ -2094,7 +2087,7 @@ class AccountMove(models.Model):
         return {
             **companies._l10n_it_edi_export_check(),
             **full._l10n_it_edi_export_check(['partner_address_missing']),
-            **simplified._l10n_it_edi_export_check(['partner_country_missing']),
+            **simplified._l10n_it_edi_export_check(['partner_country_missing', 'partner_simplified']),
             **(simplified | full)._l10n_it_edi_export_check(['partner_vat_codice_fiscale_missing']),
             **representatives._l10n_it_edi_export_check(['partner_vat_missing']),
             **self._l10n_it_edi_base_export_check(),
@@ -2258,9 +2251,11 @@ class AccountMove(models.Model):
         ''' Create the xml file content.
             :return:    The XML content as bytestring.
         '''
-        qweb_template_name = (
-            'l10n_it_edi.account_invoice_it_FatturaPA_export' if not self._l10n_it_edi_is_simplified()
-            else 'l10n_it_edi.account_invoice_it_simplified_FatturaPA_export')
+        document_type = self._l10n_it_edi_get_document_type()
+        if self._l10n_it_edi_is_simplified_document_type(document_type):
+            qweb_template_name = 'l10n_it_edi.account_invoice_it_simplified_FatturaPA_export'
+        else:
+            qweb_template_name = 'l10n_it_edi.account_invoice_it_FatturaPA_export'
         xml_content = self.env['ir.qweb']._render(qweb_template_name, {
             **self._l10n_it_edi_get_values(pdf_values),
             **self._l10n_it_edi_get_formatters()})
