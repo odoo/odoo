@@ -44,7 +44,6 @@
                 <field name="user_id" optional="hide" widget='many2one_avatar_user'/>
                 <field name="partner_id" readonly="1" optional="show"/>
                 <field name="picking_id" optional="hide"/>
-                <field name="sale_order_id" optional="hide"/>
                 <field name="location_id" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
                 <field name="state" optional="show" widget='badge'
@@ -73,8 +72,6 @@
                    <button name="action_repair_end" type="object" string="End Repair" class="btn-secondary" data-hotkey="x"
                             invisible="validate_button_style != 'secondary'"/>
                    <button name="action_assign" invisible="not reserve_visible" string="Reserve" type="object"/>
-                   <button name="action_create_sale_order" type="object" string="Quote" invisible="not can_create_sale_or_invoice"/>
-                   <button name="action_create_invoice" type="object" string="Invoice" invisible="not (can_create_sale_or_invoice or can_create_extra_invoice) or state != 'done'"/>
                    <button name="action_repair_cancel_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="z"/>
                    <button name="action_repair_cancel" string="Cancel" type="object" invisible="state in ('done', 'cancel')" data-hotkey="l"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
@@ -87,22 +84,6 @@
                             class="oe_stat_button"
                             icon="sync_alt"
                             invisible="not(move_ids or move_id) or state != 'done'"/>
-                        <!-- No groups attribute on the next button as "stock.group_stock_user" is needed for Repair, and as this group is granted 'sale.order' read/write accesses in sale_stock module (forcefully loaded as transitive dependency) -->
-                        <button name="action_view_sale_order" type="object" string="Sale Order" icon="attach_money" class="oe_stat_button" invisible="not sale_order_id">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="sale_order_id" widget="statinfo" nolabel="1" class="mr4"/>
-                                </span>
-                                <span class="o_stat_text">Sale Order</span>
-                            </div>
-                        </button>
-                        <button name="action_view_invoice"
-                            type="object"
-                            icon="edit_square"
-                            class="oe_stat_button"
-                            invisible="not invoice_count">
-                            <field name="invoice_count" widget="statinfo" string="Invoices"/>
-                        </button>
                     </div>
                     <div class="oe_title">
                         <label for="name"/>
@@ -114,8 +95,7 @@
                     <group>
                         <group>
                             <field name="allowed_lot_ids" invisible="1"/>
-                            <field name="repair_request" invisible="not sale_order_line_id"/>
-                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_identifier': True}" readonly="sale_order_id"/>
+                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_identifier': True}"/>
                             <field name="product_id" readonly="state in ['cancel', 'done']"/>
                             <label for="lot_id" invisible="tracking not in ['serial', 'lot']"/>
                             <div class="o_row" invisible="tracking not in ['serial', 'lot']">
@@ -128,7 +108,6 @@
                                 <field name="uom_id" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'"/>
                             </div>
                             <field name="picking_id" invisible="not picking_id" options="{'no_create': True}"/>
-                            <field name="under_warranty" readonly="state in ['cancel', 'done']"/>
                         </group>
                         <group>
                             <field name="schedule_date" readonly="state in ['done', 'cancel']"/>
@@ -269,7 +248,6 @@
                 <field name="name" string="Repair Order" filter_domain="['|', ('name', 'ilike', self), ('product_id', 'ilike', self)]"/>
                 <field name="product_id"/>
                 <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
-                <field name="sale_order_id"/>
                 <filter string="New" domain="[('state', '=', 'draft')]" name="filter_draft" />
                 <filter string="Confirmed" domain="[('state', '=', 'confirmed')]" name="filter_confirmed" />
                 <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
