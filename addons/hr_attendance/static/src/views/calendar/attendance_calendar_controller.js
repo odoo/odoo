@@ -52,6 +52,14 @@ export class AttendanceCalendarController extends CalendarController {
         return this.editRecord(record, context);
     }
 
+    async editRecord(record, context = {}) {
+        await super.editRecord(record, context);
+        if (this.model.hasEditDialog && record.id) {
+            // the attendance may have been deleted from the dialog
+            await this.model.load();
+        }
+    }
+
     get editRecordDefaultDisplayText() {
         return _t("New Attendance");
     }

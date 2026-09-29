@@ -23,6 +23,14 @@ export class AttendanceCalendarCommonRenderer extends CalendarCommonRenderer {
             businessHours: this.props.model.workingHours,
         };
     }
+
+    /**
+     * @override
+     * Open the attendance directly instead of the popover.
+     */
+    onClick(info) {
+        return this.onDblClick(info);
+    }
 }
 
 export class AttendanceCalendarRenderer extends CalendarRenderer {

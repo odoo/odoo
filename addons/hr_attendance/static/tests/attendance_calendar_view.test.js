@@ -15,6 +15,8 @@ import {
 import {
     clickAllDaySlot,
     clickDate,
+    clickEvent,
+    findEvent,
     selectAllDayRange,
     selectTimeRange,
 } from "@web/../tests/views/calendar/calendar_test_helpers";
@@ -72,7 +74,17 @@ class HrAttendance extends models.ServerModel {
     ];
     _views = {
         list: `<list><field name="employee_id"/><field name="check_in"/></list>`,
-        form: `<form><field name="check_in"/><field name="check_out"/><field name="employee_id"/></form>`,
+        form: `<form>
+            <field name="check_in"/>
+            <field name="check_out"/>
+            <field name="employee_id"/>
+            <footer>
+                <button string="Save" special="save" class="btn btn-primary" close="1"/>
+                <button special="cancel" class="btn-secondary" close="1"/>
+                <button string="Delete" name="unlink" type="object" class="btn btn-danger ms-auto"
+                    close="1" confirm="Are you sure you want to delete this attendance?"/>
+            </footer>
+        </form>`,
         calendar: `<calendar js_class="attendance_calendar_view"
                 date_start="check_in" date_stop="check_out" mode="week" show_unusual_days="True">
         </calendar>`,
@@ -226,4 +238,30 @@ test("smart button on the employee profile opens a calendar with that employee's
     const tuesday = getShadedHeight("2026-10-13");
     expect(monday).toBeGreaterThan(0);
     expect(tuesday).toBeGreaterThan(monday);
+});
+
+test("clicking an attendance opens its form dialog instead of the popover", async () => {
+    // Monday 12 Oct 2026, the day of the attendance
+    mockDate("2026-10-12 10:00:00");
+    await mountView({ type: "calendar", resModel: "hr.attendance", arch: calendarArch("week") });
+
+    await clickEvent(1);
+    await waitFor(".o_dialog .o_form_view");
+    expect(".o_cw_popover").toHaveCount(0);
+});
+
+test("deleting an attendance from its form dialog removes it from the calendar", async () => {
+    mockDate("2026-10-12 10:00:00");
+    onRpc("hr.attendance", "unlink", () => {
+        expect.step("unlink");
+    });
+    await mountView({ type: "calendar", resModel: "hr.attendance", arch: calendarArch("week") });
+    expect(findEvent(1)).not.toBe(null);
+
+    await clickEvent(1);
+    await contains(".o_dialog footer .btn-danger").click();
+    await contains(".o_dialog .modal-footer .btn-primary:contains(Ok)").click();
+    expect.verifySteps(["unlink"]);
+    expect(".o_dialog").toHaveCount(0);
+    expect(findEvent(1)).toBe(null);
 });
