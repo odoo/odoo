@@ -128,7 +128,15 @@ export class MessagingMenu extends Component {
                         normalize(htmlToTextContentInline(m.bodyPreview || "")).includes(
                             normalizedTerms
                         ) ||
-                        normalize(m.bodyTextContentInline).includes(normalizedTerms)
+                        normalize(m.bodyTextContentInline).includes(normalizedTerms) ||
+                        (m?.started_poll_ids?.length &&
+                            m.poll?.option_ids.some((o) =>
+                                normalize(o.option_label).includes(normalizedTerms)
+                            )) ||
+                        (m?.ended_poll_ids?.length &&
+                            normalize(m.poll?.winning_option_id?.option_label).includes(
+                                normalizedTerms
+                            ))
                     );
                 }),
             deps: () => [this.filteredMessages()],
