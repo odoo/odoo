@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
 from odoo.exceptions import ValidationError
 from odoo.tests import Form
+from odoo.tools import html2plaintext
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -1434,3 +1435,108 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(len(logged_messages), 2)
         self.assertIn('Twenty dollars no tax: Deleted line (quantity: 1.0)', logged_messages[0])
         self.assertIn('Ten dollars no tax: Ordered quantity: 2.0 → 1', logged_messages[1])
+
+    def test_pos_invoice_payment_method_bank_and_cash(self):
+        """ Test that an invoiced POS order displays the name of each payment method it
+        was paid with on the invoice payments widget and report. Bank payments go
+        through an account.payment, cash ones through an account.bank.statement.line.
+        """
+        self.pos_config_usd.open_ui()
+        order, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_jcb.id,
+                'to_invoice': True,
+            },
+            'line_data': [
+                {'product_id': self.twenty_dollars_no_tax.product_variant_id.id},
+                {'product_id': self.ten_dollars_no_tax.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.bank_payment_method.id, 'amount': 20},
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 10},
+            ],
+        })
+        invoice = order.account_move
+        self.assertTrue(invoice, "Invoice should be created for the paid POS order.")
+        self.assertEqual(invoice.payment_state, invoice._get_invoice_in_payment_state())
+        payments = invoice.invoice_payments_widget.get('content', [])
+        amount_by_method = {}
+        for payment in payments:
+            method_name = payment['pos_payment_name']
+            amount_by_method[method_name] = amount_by_method.get(method_name, 0) + payment['amount']
+        self.assertEqual(amount_by_method, {
+            self.bank_payment_method.name: 20.0,
+            self.cash_payment_method.name: 10.0,
+        })
+
+        report_html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
+        report_text = html2plaintext(report_html)
+        self.assertIn(f"using {self.bank_payment_method.name}", report_text)
+        self.assertIn(f"using {self.cash_payment_method.name}", report_text)
+
+    def test_pos_invoice_payment_method_after_session_closing(self):
+        """ Test that a POS order invoiced after session closing displays the payment method
+        name, resolved from the order itself since the reversal entry carries no payment.
+        """
+        self.pos_config_usd.open_ui()
+        order, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_jcb.id,
+                'to_invoice': False,
+            },
+            'line_data': [
+                {'product_id': self.twenty_dollars_no_tax.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.bank_payment_method.id, 'amount': 20},
+            ],
+        })
+        self.assertFalse(order.account_move)
+        session = self.pos_config_usd.current_session_id
+        session.close_session_from_ui()
+        self.assertEqual(session.state, 'closed')
+
+        order.action_pos_order_invoice()
+        invoice = order.account_move
+        self.assertTrue(invoice, "Invoice should be created after session closing.")
+        self.assertEqual(invoice.payment_state, 'paid')
+        payments = invoice.invoice_payments_widget.get('content', [])
+        self.assertTrue(payments)
+        for payment in payments:
+            self.assertEqual(payment['pos_payment_name'], self.bank_payment_method.name)
+
+        report_html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
+        self.assertIn(f"using {self.bank_payment_method.name}", html2plaintext(report_html))
+
+    def test_pos_invoice_payment_method_after_session_closing_split(self):
+        """ Test that a POS order with split payments invoiced after session closing does not
+        display ambiguous payment method names on reversal partial payments.
+        """
+        self.pos_config_usd.open_ui()
+        order, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_jcb.id,
+                'to_invoice': False,
+            },
+            'line_data': [
+                {'product_id': self.twenty_dollars_no_tax.product_variant_id.id},
+                {'product_id': self.ten_dollars_no_tax.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 10},
+                {'payment_method_id': self.bank_payment_method.id, 'amount': 20},
+            ],
+        })
+        self.assertFalse(order.account_move)
+        session = self.pos_config_usd.current_session_id
+        session.close_session_from_ui()
+        self.assertEqual(session.state, 'closed')
+
+        order.action_pos_order_invoice()
+        invoice = order.account_move
+        self.assertTrue(invoice, "Invoice should be created after session closing.")
+        self.assertEqual(invoice.payment_state, 'paid')
+        payments = invoice.invoice_payments_widget.get('content', [])
+        self.assertTrue(payments)
+        for payment in payments:
+            self.assertFalse(payment['pos_payment_name'], "Ambiguous split payment after closing should leave pos_payment_name unset.")

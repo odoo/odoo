@@ -524,6 +524,7 @@ class PosPaymentMethod(models.Model):
             'partner_id': partner.id if partner else None,
             'statement_id': session.bank_statement_id.id,
             'pos_session_id': session.id,
+            'pos_payment_method_id': self.id,
             'counterpart_account_id': destination_account.id,
             'payment_ref': message or _(
                 '%(payment_method)s POS session %(session)s',

@@ -67,9 +67,21 @@ class AccountMove(models.Model):
     def _prepare_payments_widget_reconciled_info(self, partial_info):
         # EXTENDS account.
         results = super()._prepare_payments_widget_reconciled_info(partial_info)
-        counterpart_line = partial_info['aml']
-        results['pos_payment_name'] = counterpart_line.move_id.sudo().pos_payment_ids[:1].payment_method_id.name
+        results['pos_payment_name'] = self._get_pos_payment_method_name(partial_info['aml'])
         return results
+
+    @api.model
+    def _get_pos_payment_method_name(self, counterpart_line):
+        counterpart_line = counterpart_line.sudo()
+        if pos_method := (
+            counterpart_line.payment_id.pos_payment_method_id
+            or counterpart_line.statement_line_id.pos_payment_method_id
+        ):
+            return pos_method.name
+        if order := counterpart_line.move_id.reversed_pos_order_id:
+            methods = order.payment_ids.payment_method_id
+            return methods.name if len(methods) == 1 else False
+        return False
 
     def _compute_amount(self):
         super()._compute_amount()
