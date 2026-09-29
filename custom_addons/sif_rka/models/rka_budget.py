@@ -1,5 +1,5 @@
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 
 
 MONTHS = [
@@ -22,6 +22,14 @@ class RkaBudget(models.Model):
     _name = 'sif.rka.budget'
     _description = 'Rencana Kerja dan Anggaran'
     _order = 'tahun desc, id desc'
+
+    company_id = fields.Many2one(
+        'res.company',
+        string='Perusahaan',
+        default=lambda self: self.env.company,
+        index=True,
+        ondelete='restrict',
+    )
 
     name = fields.Char(
         string='Nomor RKA',
@@ -129,10 +137,21 @@ class RkaBudget(models.Model):
         currency_field='currency_id'
     )
 
-    _account_tahun_unique = models.Constraint(
-        'UNIQUE(account_id, tahun)',
-        'RKA untuk Account dan Tahun tersebut sudah tersedia.'
+    _company_account_tahun_unique = models.Constraint(
+        'UNIQUE(company_id, account_id, tahun)',
+        'RKA untuk perusahaan, account, dan tahun tersebut sudah tersedia.'
     )
+
+    @api.model
+    def _journal_company_scope_domain(self, company):
+        main_company = self.env.ref('base.main_company')
+        if company == main_company:
+            return ['|', ('company_id', '=', False), ('company_id', '=', company.id)]
+        return [('company_id', '=', company.id)]
+
+    def _check_finance_central_readonly(self):
+        if self.env.user.has_group('sif_keuangan.group_sif_keuangan_central_readonly'):
+            raise AccessError('Finance pusat memiliki akses baca saja pada RKA.')
 
     @api.model
     def _search_dashboard_year(self, operator, value):
@@ -168,15 +187,28 @@ class RkaBudget(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        self._check_finance_central_readonly()
         records = self.env['sif.rka.budget']
 
         for vals in vals_list:
+            company = self.env['res.company'].browse(vals.get('company_id') or self.env.company.id).exists()
+            if not company or company not in self.env.companies:
+                raise ValidationError('Perusahaan/cabang RKA tidak valid atau tidak diizinkan.')
+            vals['company_id'] = company.id
+            existing = self.sudo().search([
+                ('company_id', '=', company.id),
+                ('account_id', '=', vals.get('account_id')),
+                ('tahun', '=', vals.get('tahun') or str(fields.Date.today().year)),
+            ], limit=1)
+            if existing:
+                raise ValidationError('RKA untuk perusahaan, account, dan tahun tersebut sudah tersedia.')
             if not vals.get('name') or vals.get('name') == 'New':
                 tahun = vals.get('tahun') or str(
                     fields.Date.today().year
                 )
 
-                last_rka = self.search(
+                # Keep document numbers unique across branches while budget rows are company-specific.
+                last_rka = self.sudo().search(
                     [('tahun', '=', tahun)],
                     order='id desc',
                     limit=1
@@ -202,6 +234,20 @@ class RkaBudget(models.Model):
             record._create_default_monthly_budget()
 
         return records
+
+    def write(self, vals):
+        self._check_finance_central_readonly()
+        for record in self:
+            company = self.env['res.company'].browse(vals.get('company_id') or record.company_id.id).exists()
+            if not company or company not in self.env.companies:
+                raise ValidationError('Perusahaan/cabang RKA tidak valid atau tidak diizinkan.')
+            if 'company_id' in vals and record.status != 'draft' and company != record.company_id:
+                raise ValidationError('Perusahaan/cabang RKA tidak dapat diubah setelah diajukan.')
+        return super().write(vals)
+
+    def unlink(self):
+        self._check_finance_central_readonly()
+        return super().unlink()
 
     def action_view_monthly_budget(self):
         self.ensure_one()
@@ -347,7 +393,7 @@ class RkaBudget(models.Model):
                         'Tahun anggaran tidak valid.'
                     )
 
-    @api.constrains('account_id', 'tahun')
+    @api.constrains('company_id', 'account_id', 'tahun')
     def _check_parent_rka(self):
         for record in self:
             parent_rka = record._get_parent_rka()
@@ -388,6 +434,7 @@ class RkaBudget(models.Model):
         return self.search([
             ('account_id', '=', parent_coa.id),
             ('tahun', '=', self.tahun),
+            ('company_id', '=', self.company_id.id),
         ], limit=1)
 
     @api.onchange('monthly_budget_ids', 'nilai')
@@ -435,7 +482,8 @@ class RkaBudget(models.Model):
 
     @api.depends(
         'account_id',
-        'tahun'
+        'tahun',
+        'company_id'
     )
     def _compute_realisasi(self):
         jurnal_line = self.env['sif.jurnal.line']
@@ -449,7 +497,7 @@ class RkaBudget(models.Model):
             tanggal_awal = f'{record.tahun}-01-01'
             tanggal_akhir = f'{record.tahun}-12-31'
 
-            lines = jurnal_line.search([
+            lines = jurnal_line.search(self._journal_company_scope_domain(record.company_id) + [
                 (
                     'account_id',
                     '=',
@@ -552,7 +600,7 @@ class RkaBudget(models.Model):
             'name': 'Detail Realisasi Tahunan',
             'res_model': 'sif.jurnal.line',
             'view_mode': 'list,form',
-            'domain': [
+            'domain': self._journal_company_scope_domain(self.company_id) + [
                 (
                     'account_id',
                     '=',
@@ -604,25 +652,29 @@ class RkaBudget(models.Model):
 
         tahun = int(tahun)
         tahun_sebelumnya = tahun - 1
+        company = self[:1].company_id if self else self.env.company
+        journal_company_domain = self._journal_company_scope_domain(company)
 
         rka_model = self.env['sif.rka.budget']
         jurnal_line = self.env['sif.jurnal.line']
 
         current_rka = rka_model.search([
+            ('company_id', '=', company.id),
             ('tahun', '=', str(tahun)),
         ])
 
         previous_rka = rka_model.search([
+            ('company_id', '=', company.id),
             ('tahun', '=', str(tahun_sebelumnya)),
         ])
 
-        current_lines = jurnal_line.search([
+        current_lines = jurnal_line.search(journal_company_domain + [
             ('state', '=', 'posted'),
             ('date', '>=', f'{tahun}-01-01'),
             ('date', '<=', f'{tahun}-12-31'),
         ])
 
-        previous_lines = jurnal_line.search([
+        previous_lines = jurnal_line.search(journal_company_domain + [
             ('state', '=', 'posted'),
             ('date', '>=', f'{tahun_sebelumnya}-01-01'),
             ('date', '<=', f'{tahun_sebelumnya}-12-31'),
@@ -808,9 +860,11 @@ class RkaBudget(models.Model):
         record = self[:1]
 
         if not record:
+            company = self[:1].company_id if self else self.env.company
             record = self.env[
                 'sif.rka.budget'
             ].search([
+                ('company_id', '=', company.id),
                 (
                     'tahun',
                     '=',
@@ -864,7 +918,10 @@ class RkaBudget(models.Model):
                 (self.env.ref('sif_rka.view_sif_rka_dashboard_month_list').id, 'list'),
             ],
             'search_view_id': self.env.ref('sif_rka.view_sif_rka_dashboard_month_search').id,
-            'domain': [('rka_id.tahun', '=', tahun)],
+            'domain': [
+                ('rka_id.company_id', '=', self.env.company.id),
+                ('rka_id.tahun', '=', tahun),
+            ],
             'target': 'current',
         }
 
@@ -897,7 +954,10 @@ class RkaBudget(models.Model):
         self.ensure_one()
         tahun = str(self.tahun or fields.Date.today().year)
         coa = self.account_id
-        domain = [('rka_id.tahun', '=', tahun)]
+        domain = [
+            ('rka_id.company_id', '=', self.company_id.id),
+            ('rka_id.tahun', '=', tahun),
+        ]
         if coa:
             domain.append(('rka_id.account_id', '=', coa.id))
         return {
@@ -915,7 +975,10 @@ class RkaBudget(models.Model):
 
     def action_view_top_3_pengeluaran(self):
         tahun = str(fields.Date.today().year)
-        all_rka = self.search([('tahun', '=', tahun)])
+        all_rka = self.search([
+            ('company_id', '=', self.env.company.id),
+            ('tahun', '=', tahun),
+        ])
         sorted_rka = all_rka.sorted(
             key=lambda r: r.realisasi, reverse=True
         )
@@ -932,10 +995,10 @@ class RkaBudget(models.Model):
     @api.model
     def action_open_integrated_dashboard(self):
         tahun = str(fields.Date.today().year)
-        monthly = self.env['sif.rka.budget.month'].search(
-            [('rka_id.tahun', '=', tahun)]
-        )
-        all_rka = self.search([('tahun', '=', tahun)])
+        all_rka = self.search([
+            ('company_id', '=', self.env.company.id),
+            ('tahun', '=', tahun),
+        ])
         sorted_rka = all_rka.sorted(
             key=lambda r: r.realisasi, reverse=True
         )
@@ -943,7 +1006,6 @@ class RkaBudget(models.Model):
         dashboard = self.env['sif.rka.dashboard.view'].create({
             'tahun': tahun,
             'display_mode': 'tahunan',
-            'monthly_ids': [(6, 0, monthly.ids)],
             'top3_ids': [(6, 0, top3.ids)],
             'rka_ids': [(6, 0, all_rka.ids)],
         })
@@ -968,6 +1030,29 @@ class SifRkaBudgetMonth(models.Model):
         required=True,
         ondelete='cascade'
     )
+    company_id = fields.Many2one(
+        related='rka_id.company_id',
+        string='Perusahaan',
+        store=True,
+        index=True,
+    )
+
+    def _check_finance_central_readonly(self):
+        if self.env.user.has_group('sif_keuangan.group_sif_keuangan_central_readonly'):
+            raise AccessError('Finance pusat memiliki akses baca saja pada anggaran bulanan RKA.')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        self._check_finance_central_readonly()
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self._check_finance_central_readonly()
+        return super().write(vals)
+
+    def unlink(self):
+        self._check_finance_central_readonly()
+        return super().unlink()
 
     account_id = fields.Many2one(
         related='rka_id.account_id',
@@ -1122,7 +1207,8 @@ class SifRkaBudgetMonth(models.Model):
     @api.depends(
         'account_id',
         'tahun',
-        'month'
+        'month',
+        'rka_id.company_id'
     )
     def _compute_realisasi(self):
         jurnal_line = self.env['sif.jurnal.line']
@@ -1155,7 +1241,10 @@ class SifRkaBudgetMonth(models.Model):
                 f'{tahun}-{bulan:02d}-{last_day}'
             )
 
-            lines = jurnal_line.search([
+            company_domain = self.env['sif.rka.budget']._journal_company_scope_domain(
+                record.rka_id.company_id,
+            )
+            lines = jurnal_line.search(company_domain + [
                 (
                     'account_id',
                     '=',
@@ -1247,7 +1336,9 @@ class SifRkaBudgetMonth(models.Model):
             ),
             'res_model': 'sif.jurnal.line',
             'view_mode': 'list,form',
-            'domain': [
+            'domain': self.env['sif.rka.budget']._journal_company_scope_domain(
+                self.rka_id.company_id,
+            ) + [
                 (
                     'account_id',
                     '=',
@@ -1339,14 +1430,6 @@ class SifRkaDashboardView(models.TransientModel):
         default=lambda self: str(fields.Date.today().year)
     )
 
-    monthly_ids = fields.Many2many(
-        'sif.rka.budget.month',
-        'sif_rka_dash_monthly_rel',
-        'dashboard_id',
-        'monthly_id',
-        string='Data Bulanan'
-    )
-
     top3_ids = fields.Many2many(
         'sif.rka.budget',
         'sif_rka_dash_top3_rel',
@@ -1371,7 +1454,7 @@ class SifRkaDashboardView(models.TransientModel):
     @api.depends('tahun')
     def _compute_name(self):
         for rec in self:
-            rec.name = f"Dashboard RKA — Tahun {rec.tahun}" if rec.tahun else "Dashboard RKA"
+            rec.name = f"Dashboard RKA Tahun {rec.tahun}" if rec.tahun else "Dashboard RKA"
 
     @api.depends('rka_ids')
     def _compute_totals(self):

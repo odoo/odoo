@@ -23,12 +23,13 @@ class SifRkaDashboardView(models.TransientModel):
     def _reload_dashboard(self):
         self.ensure_one()
         tahun = self.tahun or str(fields.Date.today().year)
-        all_rka = self.env['sif.rka.budget'].search([('tahun', '=', tahun)])
+        all_rka = self.env['sif.rka.budget'].search([
+            ('company_id', '=', self.env.company.id),
+            ('tahun', '=', tahun),
+        ])
         sorted_rka = all_rka.sorted(key=lambda r: r.realisasi, reverse=True)
         top3 = sorted_rka[:3]
-        monthly = self.env['sif.rka.budget.month'].search([('rka_id.tahun', '=', tahun)])
         self.write({
-            'monthly_ids': [(6, 0, monthly.ids)],
             'top3_ids': [(6, 0, top3.ids)],
             'rka_ids': [(6, 0, all_rka.ids)],
         })

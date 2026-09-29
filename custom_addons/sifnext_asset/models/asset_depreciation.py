@@ -1,5 +1,5 @@
-from odoo import fields, models
-from odoo.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import AccessError, UserError
 
 
 class SifnextAssetDepreciation(models.Model):
@@ -7,12 +7,23 @@ class SifnextAssetDepreciation(models.Model):
     _description = "SIFNEXT Asset Depreciation"
     _order = "depreciation_date, id"
 
+    def _check_finance_central_readonly(self):
+        if self.env.user.has_group("sif_keuangan.group_sif_keuangan_central_readonly"):
+            raise AccessError(_("Finance pusat memiliki akses baca saja pada jadwal penyusutan."))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        self._check_finance_central_readonly()
+        return super().create(vals_list)
+
     asset_id = fields.Many2one(
         "sifnext.asset",
         string="Aset",
         required=True,
         ondelete="cascade",
     )
+    company_id = fields.Many2one(related="asset_id.company_id", store=True, index=True)
+    department_id = fields.Many2one(related="asset_id.owner_department_id", store=True, index=True)
 
     depreciation_date = fields.Date(
         string="Tanggal Penyusutan",
@@ -67,6 +78,7 @@ class SifnextAssetDepreciation(models.Model):
     # =====================================================
 
     def action_post_depreciation(self):
+        self._check_finance_central_readonly()
 
         for record in self:
 
@@ -182,7 +194,10 @@ class SifnextAssetDepreciation(models.Model):
                 exp_account_id=asset.account_exp_id.id,
                 date=record.depreciation_date,
                 period_name=period_name,
-                unit_name=asset.owner_unit or "KANTOR",
+                unit_name=asset.owner_department_id.name,
+                company_id=asset.company_id.id,
+                department_id=asset.owner_department_id.id,
+                unit_dept=asset.owner_department_id.sif_journal_unit_dept,
             )
 
             # -------------------------------------------------
@@ -236,6 +251,7 @@ class SifnextAssetDepreciation(models.Model):
     # =====================================================
 
     def write(self, vals):
+        self._check_finance_central_readonly()
 
         for record in self:
 
@@ -263,6 +279,7 @@ class SifnextAssetDepreciation(models.Model):
     # =====================================================
 
     def unlink(self):
+        self._check_finance_central_readonly()
 
         for record in self:
 

@@ -8,6 +8,9 @@ class SifProfitLoss(models.AbstractModel):
     _name = 'sif.profit.loss'
     _description = 'Profit and Loss (Laba Rugi) Service & Engine'
 
+    def _company_scope_domain(self):
+        return ['|', ('company_id', '=', False), ('company_id', 'in', self.env.companies.ids)]
+
     @api.model
     def _default_date_from(self):
         return fields.Date.context_today(self).replace(month=1, day=1)
@@ -48,13 +51,13 @@ class SifProfitLoss(models.AbstractModel):
             date_to = (next_month - datetime.timedelta(days=next_month.day)).strftime('%Y-%m-%d')
 
         target_move = filters.get('target_move', 'posted')
-        unit_name_filter = (filters.get('unit_name') or '').strip()
+        unit_name_filter = (filters.get('unit_name') or filters.get('unit_id') or '').strip()
         comparison_type = filters.get('comparison_type', 'none') # 'none', 'last_month', 'last_year', 'custom'
         custom_comp_date_from = filters.get('custom_comp_date_from')
         custom_comp_date_to = filters.get('custom_comp_date_to')
 
         # 2. Dapatkan list unit kerja unik
-        distinct_units = self.env['sif.jurnal.entry'].search([
+        distinct_units = self.env['sif.jurnal.entry'].search(self._company_scope_domain() + [
             ('unit_name', '!=', False),
             ('unit_name', '!=', '')
         ]).mapped('unit_name')
@@ -82,7 +85,6 @@ class SifProfitLoss(models.AbstractModel):
         result_sections = self._merge_pl_sections(primary_data, comp_data, has_comparison)
 
         return {
-            'company_name': self.env.company.name or 'PT Konsulta Semen Gresik',
             'date_from': date_from,
             'date_to': date_to,
             'date_from_display': self._format_date_display(date_from),
@@ -96,6 +98,7 @@ class SifProfitLoss(models.AbstractModel):
             'target_move': target_move,
             'unit_name': unit_name_filter,
             'units_list': units_list,
+            'company_name': ' / '.join(self.env.companies.mapped('name')) or self.env.company.name,
             'sections': result_sections,
             'summary': {
                 'revenue_total': result_sections['revenue']['total'],
@@ -145,7 +148,7 @@ class SifProfitLoss(models.AbstractModel):
         Pendapatan (Income) = Credit - Debit
         Beban (Expense) = Debit - Credit
         """
-        domain = [
+        domain = self._company_scope_domain() + [
             ('date', '>=', date_from),
             ('date', '<=', date_to),
         ]
@@ -382,7 +385,7 @@ class SifProfitLossWizard(models.TransientModel):
         required=True,
         default='posted'
     )
-    unit_name = fields.Char(string='Unit Kerja')
+    unit_name = fields.Char(string='Departemen / Unit Lama')
     comparison_type = fields.Selection(
         [('none', 'Tanpa Komparasi'),
          ('last_month', 'Bulan Sebelumnya'),

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api, tools, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 
 class SifJurnalEntry(models.Model):
@@ -31,8 +31,20 @@ class SifJurnalEntry(models.Model):
         string='Partner / Rekanan',
         index=True
     )
+    company_id = fields.Many2one(
+        'res.company',
+        string='Perusahaan',
+        index=True,
+        ondelete='restrict',
+    )
+    department_id = fields.Many2one(
+        'hr.department',
+        string='Departemen',
+        check_company=True,
+        ondelete='restrict',
+    )
     unit_name = fields.Char(
-        string='Unit Kerja',
+        string='Unit Kerja (Legacy)',
         default='KANTOR'
     )
     source_type = fields.Selection([
@@ -100,8 +112,23 @@ class SifJurnalEntry(models.Model):
             rec.total_debit = sum(rec.line_ids.mapped('debit'))
             rec.total_credit = sum(rec.line_ids.mapped('credit'))
 
+    @api.constrains('company_id', 'department_id', 'source_type')
+    def _check_department_company(self):
+        for entry in self:
+            if entry.source_type == 'pendapatan' and not entry.department_id:
+                raise ValidationError(_('Jurnal Pendapatan wajib memiliki departemen.'))
+            if entry.department_id and not entry.company_id:
+                raise ValidationError(_('Perusahaan wajib diisi jika jurnal memiliki departemen.'))
+            if entry.department_id and entry.department_id.company_id != entry.company_id:
+                raise ValidationError(_('Departemen jurnal harus berasal dari perusahaan yang sama.'))
+
+    def _check_finance_central_readonly(self):
+        if self.env.user.has_group('sif_keuangan.group_sif_keuangan_central_readonly'):
+            raise AccessError(_('Finance pusat memiliki akses baca saja pada data Keuangan.'))
+
     @api.model_create_multi
     def create(self, vals_list):
+        self._check_finance_central_readonly()
         for vals in vals_list:
             if vals.get('name', _('New')) == _('New'):
                 seq = self.env['ir.sequence'].next_by_code('sif.jurnal.number')
@@ -121,6 +148,14 @@ class SifJurnalEntry(models.Model):
                             next_num = 1
                     vals['name'] = f"{prefix}{next_num:04d}"
         return super(SifJurnalEntry, self).create(vals_list)
+
+    def write(self, vals):
+        self._check_finance_central_readonly()
+        return super().write(vals)
+
+    def unlink(self):
+        self._check_finance_central_readonly()
+        return super().unlink()
 
     def action_post(self):
         for rec in self:
@@ -154,6 +189,9 @@ class SifJurnalEntry(models.Model):
                 'kwitansi_ref': getattr(ppl, 'kwitansi_ref', '') or getattr(ppl, 'receipt_number', ''),
                 'partner_id': partner_rec.id if partner_rec else False,
                 'unit_name': getattr(ppl, 'unit_name', '') or (ppl.department_id.name if hasattr(ppl, 'department_id') and ppl.department_id else 'KANTOR'),
+                'company_id': getattr(ppl, 'company_id', False).id if getattr(ppl, 'company_id', False) else False,
+                'department_id': getattr(ppl, 'department_id', False).id if getattr(ppl, 'department_id', False) else False,
+                'unit_dept': getattr(ppl, 'department_id', False).sif_journal_unit_dept if getattr(ppl, 'department_id', False) else False,
                 'source_type': 'ppl',
                 'lines': []
             }
@@ -209,9 +247,13 @@ class SifJurnalEntry(models.Model):
             'kwitansi_ref': vals.get('kwitansi_ref', ''),
             'partner_id': vals.get('partner_id', False),
             'unit_name': vals.get('unit_name', 'KANTOR'),
+            'company_id': vals.get('company_id') or False,
+            'department_id': vals.get('department_id') or False,
             'source_type': 'ppl',
             'line_ids': lines_command,
         }
+        if vals.get('unit_dept') and 'unit_dept' in self._fields:
+            entry_vals['unit_dept'] = vals['unit_dept']
 
         entry = self.sudo().create(entry_vals)
         if entry.line_ids:
@@ -225,7 +267,9 @@ class SifJurnalEntry(models.Model):
     def create_asset_purchase_journal(self, asset_name, asset_code, amount,
                                       asset_account_id, credit_account_id,
                                       date=False, unit_name='KANTOR',
-                                      vendor_name='', kwitansi=''):
+                                      vendor_name='', kwitansi='',
+                                      company_id=False, department_id=False,
+                                      unit_dept=False):
         txn_date = date or fields.Date.today()
         ref_label = f"Perolehan Aset: [{asset_code}] {asset_name}"
         if vendor_name:
@@ -246,21 +290,28 @@ class SifJurnalEntry(models.Model):
             })
         ]
 
-        entry = self.sudo().create({
+        entry_vals = {
             'date': txn_date,
             'ref': f"AST-BUY/{asset_code}",
             'kwitansi_ref': kwitansi,
             'unit_name': unit_name,
+            'company_id': company_id or False,
+            'department_id': department_id or False,
             'source_type': 'asset_buy',
             'line_ids': lines,
-        })
+        }
+        if unit_dept and 'unit_dept' in self._fields:
+            entry_vals['unit_dept'] = unit_dept
+        entry = self.sudo().create(entry_vals)
         entry.action_post()
         return entry
 
     @api.model
     def create_asset_depreciation_journal(self, asset_name, asset_code, amount,
                                           dep_account_id, exp_account_id,
-                                          date, period_name, unit_name='KANTOR'):
+                                          date, period_name, unit_name='KANTOR',
+                                          company_id=False, department_id=False,
+                                          unit_dept=False):
         desc = f"Penyusutan [{asset_code}] {asset_name} - Periode {period_name}"
         lines = [
             (0, 0, {
@@ -277,14 +328,19 @@ class SifJurnalEntry(models.Model):
             })
         ]
 
-        entry = self.sudo().create({
+        entry_vals = {
             'date': date or fields.Date.today(),
             'ref': f"DEP/{asset_code}/{period_name}",
             'kwitansi_ref': '',
             'unit_name': unit_name,
+            'company_id': company_id or False,
+            'department_id': department_id or False,
             'source_type': 'asset_depr',
             'line_ids': lines,
-        })
+        }
+        if unit_dept and 'unit_dept' in self._fields:
+            entry_vals['unit_dept'] = unit_dept
+        entry = self.sudo().create(entry_vals)
         entry.action_post()
         return entry
 
@@ -315,6 +371,18 @@ class SifJurnalLine(models.Model):
         related='entry_id.unit_name',
         string='Unit Kerja',
         store=True
+    )
+    company_id = fields.Many2one(
+        related='entry_id.company_id',
+        string='Perusahaan',
+        store=True,
+        index=True,
+    )
+    department_id = fields.Many2one(
+        related='entry_id.department_id',
+        string='Departemen',
+        store=True,
+        index=True,
     )
     kwitansi_ref = fields.Char(
         related='entry_id.kwitansi_ref',
@@ -375,6 +443,23 @@ class SifJurnalLine(models.Model):
         store=True
     )
 
+    def _check_finance_central_readonly(self):
+        if self.env.user.has_group('sif_keuangan.group_sif_keuangan_central_readonly'):
+            raise AccessError(_('Finance pusat memiliki akses baca saja pada data Keuangan.'))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        self._check_finance_central_readonly()
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self._check_finance_central_readonly()
+        return super().write(vals)
+
+    def unlink(self):
+        self._check_finance_central_readonly()
+        return super().unlink()
+
     @api.depends('debit', 'credit')
     def _compute_balance(self):
         for rec in self:
@@ -399,7 +484,9 @@ class SifBukuBesar(models.Model):
     entry_id = fields.Many2one('sif.jurnal.entry', string='Bukti Jurnal', readonly=True)
     entry_number = fields.Char(string='Bukti', readonly=True)
     date = fields.Date(string='Tanggal', readonly=True)
-    unit_name = fields.Char(string='Unit Kerja', readonly=True)
+    company_id = fields.Many2one('res.company', string='Perusahaan', readonly=True)
+    department_id = fields.Many2one('hr.department', string='Departemen', readonly=True)
+    unit_name = fields.Char(string='Unit Kerja (Legacy)', readonly=True)
     kwitansi_ref = fields.Char(string='Kwitansi', readonly=True)
     account_id = fields.Many2one('sif.coa', string='Akun', readonly=True)
     account_code = fields.Char(string='Kode Akun', readonly=True)
@@ -413,9 +500,6 @@ class SifBukuBesar(models.Model):
         ('cancel', 'Dibatalkan')
     ], string='Status', readonly=True)
 
-    def check_access_rights(self, operation='read', raise_exception=True):
-        return True
-
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
         table_name = self._table
@@ -426,6 +510,8 @@ class SifBukuBesar(models.Model):
                     l.entry_id AS entry_id,
                     e.name AS entry_number,
                     e.date AS date,
+                    e.company_id AS company_id,
+                    e.department_id AS department_id,
                     e.unit_name AS unit_name,
                     e.kwitansi_ref AS kwitansi_ref,
                     e.state AS state,
@@ -470,6 +556,8 @@ class SifBukuBesar(models.Model):
                     l.entry_id,
                     e.name,
                     e.date,
+                    e.company_id,
+                    e.department_id,
                     e.unit_name,
                     e.kwitansi_ref,
                     e.state,
@@ -479,22 +567,6 @@ class SifBukuBesar(models.Model):
             )
         """
         self.env.cr.execute(query)
-
-    def _register_hook(self):
-        super()._register_hook()
-        Access = self.env['ir.model.access'].sudo()
-        model_rec = self.env['ir.model'].sudo().search([('model', '=', self._name)], limit=1)
-        if model_rec and not Access.search([('model_id', '=', model_rec.id), ('group_id', '=', False)], limit=1):
-            Access.create({
-                'name': 'access_sif_buku_besar_auto_read',
-                'model_id': model_rec.id,
-                'group_id': False,
-                'perm_read': True,
-                'perm_write': False,
-                'perm_create': False,
-                'perm_unlink': False,
-            })
-
 
 class SifBukuBesarWizard(models.TransientModel):
     _name = 'sif.buku.besar.wizard'

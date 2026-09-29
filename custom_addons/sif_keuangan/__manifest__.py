@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Accounting',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Accounting',
     'summary': 'Pusat Jurnal & Buku Besar Terintegrasi PPL dan Aset',
     'author': 'SIFNEXT',
-    'depends': ['base', 'web', 'mail'],
+    'depends': ['base', 'web', 'mail', 'hr'],
     'data': [
         'security/security_groups.xml',
         'security/ir.model.access.csv',
         'data/sequence_data.xml',
         'data/sif_coa_data.xml',
+        'data/sif_coa_legacy_data.xml',
 
         'views/coa_views.xml',
         'views/vendor_views.xml',

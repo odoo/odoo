@@ -10,7 +10,7 @@
                 <field name="date"/>
                 <field name="submission_time" optional="show"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
-                <field name="unit_id"/>
+                <field name="department_id" string="Departemen"/>
                 <field name="transfer_type" widget="badge" decoration-primary="transfer_type == 'single'" decoration-info="transfer_type == 'multiple'"/>
                 <field name="recipient_bank" optional="show"/>
                 <field name="recipient_account" optional="show"/>
@@ -45,7 +45,7 @@
                                    decoration-danger="state == 'rejected'"/>
                         </div>
                         <div class="text-muted small mb-2">
-                            <span><field name="unit_id"/></span>
+                            <span><field name="department_id" string="Departemen"/></span>
                             <span class="ms-2">| <field name="date"/> <field name="submission_time"/></span>
                         </div>
                         <div class="d-flex justify-content-between align-items-center mt-2 border-top pt-2">
@@ -112,7 +112,10 @@
                         </group>
                         <group string="Identitas Pemohon">
                             <field name="user_id"/>
-                            <field name="unit_id" readonly="state != 'draft'"/>
+                            <field name="department_id" string="Departemen"
+                                   readonly="state != 'draft'"
+                                   domain="[('company_id', '=', company_id)]"
+                                   options="{'no_create': True}"/>
                             <field name="company_id" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
@@ -149,6 +152,7 @@
                                         <field name="rupiah" sum="Total Rupiah"/>
                                         <field name="line_notes" placeholder="Catatan Baris"/>
                                         <field name="ppl_id" optional="show" readonly="1" string="Sumber PPL"/>
+                                        <field name="department_id" optional="show" readonly="1" string="Departemen"/>
                                         <field name="currency_id" column_invisible="True"/>
                                     </list>
                                 </field>
@@ -231,7 +235,7 @@
                 <field name="recipient_account" string="Nomor Rekening"/>
                 <field name="recipient_name" string="Nama Pemilik Rekening"/>
                 <field name="user_id"/>
-                <field name="unit_id"/>
+                <field name="department_id" string="Departemen"/>
 
                 <filter name="filter_draft" string="Draf" domain="[('state', '=', 'draft')]"/>
                 <filter name="filter_pending" string="Menunggu Persetujuan" domain="[('state', 'in', ('submitted', 'verified'))]"/>
@@ -247,7 +251,7 @@
                 <group>
                     <filter name="group_by_state" string="Status" context="{'group_by': 'state'}"/>
                     <filter name="group_by_date" string="Bulan Pengajuan" context="{'group_by': 'date:month'}"/>
-                    <filter name="group_by_unit" string="Unit Kerja" context="{'group_by': 'unit_id'}"/>
+                    <filter name="group_by_department" string="Departemen" context="{'group_by': 'department_id'}"/>
                     <filter name="group_by_type" string="Tipe Transfer" context="{'group_by': 'transfer_type'}"/>
                 </group>
             </search>
