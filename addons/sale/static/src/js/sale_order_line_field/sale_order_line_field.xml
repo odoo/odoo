@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t
+        t-name="sale.SaleOrderLineListRenderer"
+        t-inherit="account.SectionAndNoteListRenderer"
+        t-inherit-mode="primary"
+    >
+        <tbody position="attributes">
+            <attribute name="t-attf-style">
+                --LineNumber-offset: {{this.props.list.offset}}
+            </attribute>
+        </tbody>
+    </t>
+
+    <t
         t-name="sale.ListRenderer.RecordRow"
         t-inherit="account.SectionAndNoteListRenderer.RecordRow"
         t-inherit-mode="primary"
