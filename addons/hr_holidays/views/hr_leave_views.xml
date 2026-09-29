@@ -407,7 +407,7 @@
                                                     '|',
                                                         ('allows_negative', '=', True),
                                                         '&amp;',
-                                                            ('virtual_remaining_leaves', '>', 0),
+                                                            ('display_virtual_remaining_leaves', '>', 0),
                                                             ('allows_negative', '=', False),
                                         ]"
                                         context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to, 'leave_date_from': date_from}"
@@ -599,7 +599,7 @@
                             '|',
                                 ('allows_negative', '=', True),
                                 '&amp;',
-                                    ('virtual_remaining_leaves', '&gt;', 0),
+                                    ('display_virtual_remaining_leaves', '&gt;', 0),
                                     ('allows_negative', '=', False),
                 ]</attribute>
             </field>
@@ -729,7 +729,7 @@
                             '|',
                                 ('allows_negative', '=', True),
                                 '&amp;',
-                                    ('virtual_remaining_leaves', '&gt;', 0),
+                                    ('display_virtual_remaining_leaves', '&gt;', 0),
                                     ('allows_negative', '=', False),
                 ]</attribute>
             </xpath>
