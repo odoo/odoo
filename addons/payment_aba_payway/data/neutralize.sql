@@ -1,3 +1,3 @@
 UPDATE payment_provider
-   SET payway_merchant_id = NULL,
-       payway_api_key = NULL;
+   SET aba_payway_merchant_id = NULL,
+       aba_payway_api_key = NULL;

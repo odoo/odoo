@@ -3,89 +3,59 @@
 import base64
 import hashlib
 import hmac
-import logging
+import json
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools.urls import urljoin
 
 from odoo.addons.payment_aba_payway import const
-
-_logger = logging.getLogger(__name__)
 
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
-    code = fields.Selection(selection_add=[("aba_payway", "ABA PayWay")], ondelete={"aba_payway": "set default"})
-    payway_merchant_id = fields.Char(
-        string="PayWay Merchant ID",
-        help="Enter your PayWay Merchant ID. You can find it in the email registered for your PayWay account.",
+    code = fields.Selection(
+        selection_add=[("aba_payway", "ABA PayWay")], ondelete={"aba_payway": "set default"},
+    )
+    aba_payway_merchant_id = fields.Char(
+        string="ABA PayWay Merchant ID",
+        help="The Merchant ID of the ABA PayWay account.",
         required_if_provider="aba_payway",
         copy=False,
     )
-    payway_api_key = fields.Char(
-        string="PayWay API Key",
-        help="Enter your production PayWay API Key. You can find it in the email registered for your PayWay account.",
-        groups="base.group_system",
+    aba_payway_api_key = fields.Char(
+        string="ABA PayWay API Key",
+        help="The API key of the ABA PayWay account.",
         required_if_provider="aba_payway",
         copy=False,
+        groups="base.group_system",
     )
 
-    # === COMPUTE METHODS ===#
+    # === COMPUTE METHODS === #
 
     def _get_supported_currencies(self):
         """Override of `payment` to return the supported currencies."""
         if self.code != "aba_payway":
             return super()._get_supported_currencies()
 
-        return super()._get_supported_currencies().filtered(lambda c: c.name in const.SUPPORTED_CURRENCIES)
-
-    # === BUSINESS METHODS === #
-
-    def _payway_get_api_url(self):
-        """Return the URL of the API corresponding to the selected PayWay environment.
-
-        :return: The API URL.
-        :rtype: str
-        """
-        if self.state == "enabled":
-            return "https://checkout.payway.com.kh"
-        return "https://checkout-sandbox.payway.com.kh"
-
-    def _payway_calculate_signature(self, data, keys=const.PURCHASE_PAYMENT_SECURE_HASH_KEYS):
-        """Compute the secure hash for the provided data according to the PayWay documentation.
-
-        The signature (hash) is computed following these steps:
-        1.  Concatenate the fields from `data` in the exact order specified by `keys`
-        2.  Apply HMAC-SHA512 encryption to the concatenated string using the ABA PayWay API Key (Public Key) as the secret.
-        3.  Base64 encode the resulting binary hash to produce the final signature string.
-
-        :param dict data: The data to hash.
-        :return: The calculated hash.
-        :rtype: str
-        """
-        data_to_sign = [str(data.get(k, "")) for k in keys]
-        signing_string = "".join(data_to_sign)
-        hmac_hash = hmac.new(self.payway_api_key.encode(), signing_string.encode(), hashlib.sha512).digest()
-        return base64.b64encode(hmac_hash).decode()
+        return (
+            super()
+            ._get_supported_currencies()
+            .filtered(lambda c: c.name in const.SUPPORTED_CURRENCIES)
+        )
 
     # === CONSTRAINT METHODS === #
 
-    @api.constrains("available_currency_ids", "state")
-    def _limit_available_currency_ids(self):
+    @api.constrains("available_currency_ids")
+    def _check_currency_is_supported(self):
         for provider in self.filtered(lambda p: p.code == "aba_payway"):
-            unsupported_currency_codes = [
-                currency.name
-                for currency in provider.available_currency_ids
-                if currency.name not in const.SUPPORTED_CURRENCIES
-            ]
-
-            if provider.available_currency_ids.filtered(lambda c: c.name not in const.SUPPORTED_CURRENCIES):
+            if provider.available_currency_ids.filtered(
+                lambda c: c.name not in const.SUPPORTED_CURRENCIES,
+            ):
                 raise ValidationError(
                     self.env._(
-                        "ABA PayWay does not support the following currencies: %(currencies)s.",
-                        currencies=", ".join(unsupported_currency_codes),
+                        "ABA PayWay only supports the following currencies: %s",
+                        ", ".join(const.SUPPORTED_CURRENCIES),
                     ),
                 )
 
@@ -98,11 +68,54 @@ class PaymentProvider(models.Model):
 
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
-    # === REQUEST HELPERS === #
+    # === BUSINESS METHODS === #
 
-    def _build_request_url(self, endpoint, **kwargs):
-        """Override of `payment` to build the request URL."""
-        if self.code != "aba_payway":
-            return super()._build_request_url(endpoint, **kwargs)
+    def _aba_payway_get_api_url(self):
+        """Return the URL of the API corresponding to the provider's state.
 
-        return urljoin(self._payway_get_api_url(), endpoint)
+        :return: The API URL.
+        :rtype: str
+        """
+        if self.is_live:
+            return "https://checkout.payway.com.kh"
+        return "https://checkout-sandbox.payway.com.kh"
+
+    def _aba_payway_calculate_signature(self, data, keys=const.PURCHASE_SIGNATURE_KEYS):
+        """Compute the signature of the provided data according to ABA PayWay's documentation.
+
+        The signature is computed by concatenating the values of the data for the given keys, in
+        the given order, hashing the result with HMAC-SHA512 using the API key as secret, and
+        encoding the hash in Base64.
+
+        :param dict data: The data to sign.
+        :param Iterable[str] keys: The keys of the values to sign, in the order in which they must
+                                   be concatenated.
+        :return: The signature.
+        :rtype: str
+        """
+        signing_string = "".join(_to_php_string(data.get(key)) for key in keys)
+        signature = hmac.new(
+            self.aba_payway_api_key.encode(), signing_string.encode(), hashlib.sha512,
+        ).digest()
+        return base64.b64encode(signature).decode()
+
+
+def _to_php_string(value):
+    """Convert a value to a string following PHP's type juggling rules.
+
+    ABA PayWay computes signatures from values converted to strings by PHP, which formats some
+    values differently from Python (e.g., `100.0` -> `'100'`, `None` -> `''`, `True` -> `'1'`).
+
+    :param value: The value to convert.
+    :return: The string representation of the value.
+    :rtype: str
+    """
+    if value is None or value is False:
+        return ""
+    if value is True:
+        return "1"
+    if isinstance(value, float) and value.is_integer():
+        return str(int(value))
+    if isinstance(value, dict | list):
+        return json.dumps(value, separators=(",", ":")).replace("/", "\\/")
+    return str(value)

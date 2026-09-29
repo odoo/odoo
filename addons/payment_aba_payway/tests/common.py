@@ -7,28 +7,41 @@ class AbaPaywayCommon(PaymentCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
         cls.aba_payway = cls._prepare_provider(
-            "aba_payway", update_values={"payway_merchant_id": "3002607", "payway_api_key": "pwFHCqoQZGmho4w6"},
-        )
-        cls.provider = cls.aba_payway
-        cls.amount = 2213
-        cls.currency_khr = cls._enable_currency("KHR")
-        cls.currency = cls.currency_khr
-        cls.payment_result_data = {"apv": "1764310810", "status": 0, "tran_id": "tx-20251128061000"}
-        cls.check_transaction_data = {
-            "data": {
-                "payment_status_code": 0,
-                "total_amount": 2213,
-                "original_amount": 2213,
-                "refund_amount": 0,
-                "discount_amount": 0.0,
-                "payment_amount": 2213,
-                "payment_currency": "KHR",
-                "apv": "1764310810",
-                "payment_status": "APPROVED",
-                "transaction_date": "2025-11-28 13:20:06",
+            "aba_payway",
+            update_values={
+                "aba_payway_merchant_id": "ec000002",
+                "aba_payway_api_key": "aba_payway_api_key",
             },
-            "status": {"code": "00", "message": "Success!", "tran_id": "tx-20251128061000"},
+        )
+        cls.payment_method_card = cls.aba_payway._get_pm_from_code("card")
+        cls.provider = cls.aba_payway
+        cls.payment_method_id = cls.payment_method_card.id
+        cls.amount = 2213
+        cls.currency = cls._enable_currency("KHR")
+        cls.webhook_payment_data_signature = (
+            "UP8bu1hTc26Lmbvypcsc1victE12EIG1H29w2bRF9b4Qibl4/DWOJaasgvyRUJ+/PWqrvBSBOXpcyBnT0Irl6w=="
+        )
+        cls.webhook_payment_data = {
+            "tran_id": cls.reference,
+            "apv": "544415",
+            "status": "0",
+            "return_params": "",
+            "original_amount": cls.amount,
+            "original_currency": cls.currency.name,
+            "payment_amount": cls.amount,
+            "payment_currency": cls.currency.name,
+            "total_amount": cls.amount,
+            "discount_amount": 0,
+            "transaction_date": "2026-08-03 13:57:20",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "phone": "",
+            "bank_ref": "100FT40074059022",
+            "payment_type": "ABA Pay",
+            "payer_account": "003471222",
+            "bank_name": "ABA Bank",
+            "card_source": "",
         }
-        cls.enriched_payment_result_data = cls.payment_result_data.copy()
-        cls.enriched_payment_result_data["data"] = cls.check_transaction_data["data"]

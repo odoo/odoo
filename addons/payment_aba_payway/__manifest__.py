@@ -5,19 +5,18 @@
     "category": "Accounting/Payment Providers",
     "sequence": 350,
     "summary": "A payment provider covering the Cambodian market.",
+    "description": " ",  # Non-empty string to avoid loading the README file.
     "depends": ["payment"],
     "data": [
-        'views/payment_form_templates.xml',
-        'views/payment_provider_views.xml',
-        'data/payment_provider_data.xml',
+        "data/payment_method_data.xml",
+        "data/payment_provider_data.xml",
+        "views/payment_provider_views.xml",
     ],
-    'assets': {
-        'web.assets_frontend': [
-            'payment_aba_payway/static/src/interactions/payment_form.js',
-        ],
-    },
     "post_init_hook": "post_init_hook",
     "uninstall_hook": "uninstall_hook",
+    "assets": {
+        "web.assets_frontend": ["payment_aba_payway/static/src/interactions/payment_form.js"],
+    },
     "author": "Odoo S.A.",
     "license": "LGPL-3",
 }
