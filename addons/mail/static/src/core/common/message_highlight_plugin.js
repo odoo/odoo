@@ -5,7 +5,8 @@ export const HIGHLIGHT_DURATION = 1500;
 
 /**
  * Highlights a message of the thread given in config, loading the messages
- * around it when needed, and scrolls to it.
+ * around it when needed. Components displaying the thread react to the
+ * highlighted message, for instance by scrolling to it.
  *
  * Config:
  * - `thread`: function returning the thread whose messages are highlighted.
@@ -21,22 +22,14 @@ export class MessageHighlightPlugin extends Plugin {
     state = proxy({
         /** @type {number|null} */
         highlightedMessageId: null,
+        /**
+         * Whether the highlighted message is older than the messages that were
+         * loaded when it was highlighted.
+         */
+        isOlderThanLoaded: false,
     });
     /** @type {number|null} */
     timeout = null;
-    /**
-     * Promise during highlight startup, i.e. highlight is initiated but isn't scrolling yet
-     * Useful to set correct starting condition to initiate scroll to highlight, like scroll to bottom.
-     *
-     * @type {Promise<void>|null}
-     */
-    startupPromise = null;
-    /** @type {(() => void)|null} */
-    resolveStartup = null;
-    /** @type {Promise<void>|null} Promise during scrolling to highlight */
-    scrollPromise = null;
-    /** @type {(() => void)|null} */
-    resolveScroll = null;
 
     setup() {
         onWillDestroy(() => window.clearTimeout(this.timeout));
@@ -50,11 +43,16 @@ export class MessageHighlightPlugin extends Plugin {
         this.state.highlightedMessageId = messageId;
     }
 
+    get isOlderThanLoaded() {
+        return this.state.isOlderThanLoaded;
+    }
+
     clear() {
         if (this.highlightedMessageId) {
             window.clearTimeout(this.timeout);
             this.timeout = null;
             this.highlightedMessageId = null;
+            this.state.isOlderThanLoaded = false;
         }
     }
 
@@ -66,9 +64,9 @@ export class MessageHighlightPlugin extends Plugin {
         if (!thread) {
             return;
         }
-        let messageScrollDirection;
+        let isOlderThanLoaded = false;
         if (message.notIn(thread.messages)) {
-            messageScrollDirection = message.id < thread.messages[0]?.id ? "top" : "bottom";
+            isOlderThanLoaded = message.id < thread.messages[0]?.id;
             await thread.loadAround({
                 messageId: message.id,
                 routeParams: this.messageFetchRouteParams ? this.messageFetchRouteParams() : {},
@@ -80,38 +78,8 @@ export class MessageHighlightPlugin extends Plugin {
             // Give some time for the state to update.
             await new Promise(setTimeout);
         }
-        thread.scrollTop = messageScrollDirection === "top" ? "bottom" : undefined;
-        if (thread.scrollTop === "bottom") {
-            this.startupPromise = new Promise((resolve) => (this.resolveStartup = resolve));
-            await this.startupPromise;
-            this.startupPromise = null;
-            this.resolveStartup = null;
-        }
+        this.state.isOlderThanLoaded = isOlderThanLoaded;
         this.highlightedMessageId = message.id;
         this.timeout = window.setTimeout(() => this.clear(), this.duration);
-    }
-
-    /**
-     * Scroll the element into view and expose a promise that will resolved
-     * once the scroll is done.
-     *
-     * @param {Element} el
-     */
-    scrollTo(el) {
-        this.resolveScroll?.();
-        const { promise: scrollPromise, resolve: resolveScroll } = Promise.withResolvers();
-        this.scrollPromise = scrollPromise;
-        this.resolveScroll = resolveScroll;
-        if ("onscrollend" in window) {
-            document.addEventListener("scrollend", resolveScroll, {
-                capture: true,
-                once: true,
-            });
-        } else {
-            // To remove when safari will support the "scrollend" event.
-            setTimeout(resolveScroll, 250);
-        }
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
-        return scrollPromise;
     }
 }
