@@ -126,3 +126,41 @@ class TestDeliveryCost(common.TransactionCase):
         picking._action_done()
         self.assertEqual(picking.carrier_price, 40.0)
         self.assertEqual(delivery_line.price_unit, picking.carrier_price)
+
+    def test_delivery_real_cost_locked_so_no_existing_line(self):
+        """Real shipping cost must be pushed onto a locked SO even when no
+        matching delivery line exists yet: the line has to be created through
+        the locked-order protection
+        """
+        self.env.user.groups_id += self.env.ref("sale.group_auto_done_setting")
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_18.id,
+            'partner_invoice_id': self.partner_18.id,
+            'partner_shipping_id': self.partner_18.id,
+            'order_line': [(0, 0, {
+                'name': 'PC Assemble + 2GB RAM',
+                'product_id': self.product_4.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_uom_unit.id,
+                'price_unit': 120.00,
+            })],
+        })
+
+        self.assertFalse(so.order_line.filtered('is_delivery'))
+        so.action_confirm()
+        self.assertTrue(so.locked)
+
+        # Validating the picking must create the delivery line and push the
+        # real cost onto the locked SO
+        picking = so.picking_ids[0]
+        picking.write({"carrier_id": self.delivery_carrier.id})
+        self.assertEqual(picking.carrier_id, self.delivery_carrier)
+        picking.move_ids[0].quantity = 1.0
+        picking.move_ids.picked = True
+        picking._action_done()
+        self.assertEqual(picking.carrier_price, 40.0)
+
+        self.assertTrue(so.order_line.filtered('is_delivery'))
+        delivery_line = so.order_line.filtered('is_delivery')
+        self.assertEqual(len(delivery_line), 1)
+        self.assertEqual(delivery_line.price_unit, picking.carrier_price)
