@@ -392,3 +392,19 @@ export function trapFocus(elements, backward = false) {
 
     focusableElements[nextIndex]?.focus();
 }
+
+/**
+ * Get distinct connected parents of nodes
+ *
+ * @param {Iterable} nodes
+ * @returns {Set}
+ */
+export function getConnectedParents(nodes) {
+    const parents = new Set();
+    for (const node of nodes) {
+        if (node.isConnected && node.parentElement) {
+            parents.add(node.parentElement);
+        }
+    }
+    return parents;
+}
