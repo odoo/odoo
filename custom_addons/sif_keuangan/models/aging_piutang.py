@@ -457,6 +457,7 @@ class SifAgingPiutang(models.AbstractModel):
                     'total': 0.0,
                     'doc_count': 0,
                     'max_overdue_days': 0,
+                    'lines': [],
                 }
 
             p_entry = partners_map[p_key]
@@ -464,6 +465,20 @@ class SifAgingPiutang(models.AbstractModel):
             p_entry['total'] += amt
             if item['overdue_days'] > p_entry['max_overdue_days']:
                 p_entry['max_overdue_days'] = item['overdue_days']
+
+            # Alokasi nilai baris per bucket untuk tree/drilldown
+            line_item = dict(item)
+            line_item['current'] = amt if b_code == 'current' else 0.0
+            line_item['b_1_30'] = amt if b_code == '1_30' else 0.0
+            line_item['b_31_60'] = amt if b_code == '31_60' else 0.0
+            line_item['b_61_90'] = amt if b_code == '61_90' else 0.0
+            line_item['b_over_90'] = amt if b_code in ('91_120', '121_180', '181_365', 'over_365') else 0.0
+            line_item['b_91_120'] = amt if b_code == '91_120' else 0.0
+            line_item['b_121_180'] = amt if b_code == '121_180' else 0.0
+            line_item['b_181_365'] = amt if b_code == '181_365' else 0.0
+            line_item['b_over_365'] = amt if b_code == 'over_365' else 0.0
+            line_item['total'] = amt
+            p_entry['lines'].append(line_item)
 
             # Tambahkan ke bucket partner & totals
             if b_code == 'current':
