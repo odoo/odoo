@@ -52,6 +52,14 @@
     $i: 1;
     @each $font-name in $-font-names {
         @include print-variable('font-number-#{$i}', $font-name);
+        // The page only loads the fonts it uses: the builder needs the URL to
+        // preview another one. Same URLs as in `font_urls_export.scss`.
+        $-font-config: map-get($o-theme-font-configs, $font-name);
+        @if map-get($-font-config, 'url') {
+            --font-url-#{$i}: "https://fonts.googleapis.com/css?family=#{unquote(map-get($-font-config, 'url'))}&display=swap&subset=latin,latin-ext,vietnamese";
+        } @else if map-get($-font-config, 'attachment') {
+            --font-url-#{$i}: "/web/content/#{map-get($-font-config, 'attachment')}/google-font-#{unquote(map-get($-font-config, 'name'))}";
+        }
         $i: $i + 1;
     }
 
@@ -182,6 +190,42 @@
         $custom-colors: append($custom-colors, $key);
     }
     @include print-variable('custom-colors', $custom-colors);
+
+    // 7) What the builder needs to preview color presets (see
+    // `color_preset_preview.js`): which of their colors are set, and the
+    // contrast ratio they are compiled with.
+    @include print-variable('min-contrast-ratio', $min-contrast-ratio);
+    // The small font size in rem (`--small-font-size` can be the em ratio).
+    @include print-variable('o-small-font-size', $o-small-font-size);
+    @for $index from 1 through length($o-color-combinations) {
+        $-set-keys: ();
+        @each $key in ('text', 'headings', 'h2', 'h3', 'h4', 'h5', 'h6', 'link', 'btn-primary', 'btn-primary-border', 'btn-secondary', 'btn-secondary-border') {
+            @if map-get($colors, 'o-cc#{$index}-#{$key}') {
+                $-set-keys: append($-set-keys, $key);
+            }
+        }
+        --o-cc#{$index}-set: '#{$-set-keys}';
+    }
+
+    // 8) Colors defined as another one (e.g. a preset background as
+    // 'o-color-4'), which follow it in the builder previews.
+    @each $name, $value in $o-color-palette {
+        @if index(('string', 'number'), type-of($value)) and (str-index($name, 'o-cc') == 1 or index(('body', 'input'), $name)) {
+            --o-ref-#{$name}: '#{use-cc-bg($value)}';
+        }
+    }
+    @each $name, $value in $o-theme-color-palette {
+        @if type-of($value) == 'string' {
+            --o-ref-#{$name}: '#{$value}';
+        }
+    }
+    // Primary and secondary are palette colors 1 and 2 by default.
+    @each $name, $color-name in ('primary': 'o-color-1', 'secondary': 'o-color-2') {
+        $-value: map-get($o-theme-color-palette, $name);
+        @if type-of($-value) == 'color' and $-value == map-get($o-color-palette, $color-name) {
+            --o-ref-#{$name}: '#{$color-name}';
+        }
+    }
 }
 
 @mixin body-image-bg-style() {
@@ -246,25 +290,42 @@ body {
     }
 }
 
+// The `--o-preview-*` variables are only set while editing, to preview theme
+// values before they are compiled (see `previewWebsiteVariables`). Without
+// them, the compiled value applies.
+//
+// A value that is not customized and equals its parent's (e.g. the h2 line
+// height and the headings one) follows the parent in the preview, as it does
+// after save: `$parent-expr` is then the fallback.
+@function o-preview-value($key, $value, $parent-value: null, $parent-expr: null) {
+    $fallback: inspect($value);
+    @if $parent-expr and not o-website-value($key) and $value == $parent-value {
+        $fallback: $parent-expr;
+    }
+    @return var(--o-preview-#{$key}, #{$fallback});
+}
+
+// Without a value, these compile to an ignored `font-weight: !important`, so
+// the preview only works once a value is set.
+@mixin o-bold-font-weight($key) {
+    $-weight: o-website-value($key);
+    b, strong {
+        font-weight: if($-weight, o-preview-value($key, $-weight), null) !important;
+    }
+}
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-    b, strong {
-        font-weight: o-website-value('headings-font-weight-bold') !important;
-    }
+    @include o-bold-font-weight('headings-font-weight-bold');
 }
 
 // Keep display-5/6 covered for Bootstrap/custom markup, even though the editor
 // only exposes display-1 through display-4.
 .display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
-    b, strong {
-        font-weight: o-website-value('display-font-weight-bold') !important;
-    }
+    @include o-bold-font-weight('display-font-weight-bold');
 }
 
 .btn {
-    b, strong {
-        font-weight: o-website-value('btn-font-weight-bold') !important;
-    }
+    @include o-bold-font-weight('btn-font-weight-bold');
 }
 
 // The position of this rule is important: it ensures that manually set
@@ -721,39 +782,505 @@ $heading-margin-bottoms: map-merge((
     "display-4": $display-4-margin-bottom,
 ), $heading-margin-bottoms);
 
+// The headings font follows the base one when not customized.
+$-headings-previews: (
+    'font': o-preview-value('headings-font', $headings-font-family, $o-theme-font, o-preview-value('font', $o-theme-font)),
+    'line-height': o-preview-value('headings-line-height', $headings-line-height),
+    'margin-top': o-preview-value('headings-margin-top', $headings-margin-top),
+    'margin-bottom': o-preview-value('headings-margin-bottom', $headings-margin-bottom),
+);
+// The font family is otherwise only set by Bootstrap's `%heading`.
 h1, h2, h3, h4, h5, h6 {
-    line-height: $headings-line-height;
-    margin-top: $headings-margin-top;
-    margin-bottom: $headings-margin-bottom;
+    font-family: map-get($-headings-previews, 'font');
+    line-height: map-get($-headings-previews, 'line-height');
+    margin-top: map-get($-headings-previews, 'margin-top');
+    margin-bottom: map-get($-headings-previews, 'margin-bottom');
 }
 @each $selector, $map-key in
 ("h2" "h2", "h3" "h3", "h4" "h4", "h5" "h5", "h6" "h6", ".display-1" "display-1",
 ".display-2" "display-2", ".display-3" "display-3", ".display-4" "display-4") {
+    $is-heading-tag: str-slice($selector, 1, 1) != '.';
     #{$selector} {
-        @if ($headings-font-family != map-get($heading-font-families, $map-key)) {
-            font-family: map-get($heading-font-families, $map-key);
-        }
-        @if ($headings-line-height != map-get($heading-line-heights, $map-key)) {
-            line-height: map-get($heading-line-heights, $map-key);
-        }
-        @if ($headings-margin-top != map-get($heading-margin-tops, $map-key)) {
-            margin-top: map-get($heading-margin-tops, $map-key);
-        }
-        @if ($headings-margin-bottom != map-get($heading-margin-bottoms, $map-key)) {
-            margin-bottom: map-get($heading-margin-bottoms, $map-key);
+        @each $key, $property, $values, $headings-value in
+        ('font' 'font-family' $heading-font-families $headings-font-family,
+        'line-height' 'line-height' $heading-line-heights $headings-line-height,
+        'margin-top' 'margin-top' $heading-margin-tops $headings-margin-top,
+        'margin-bottom' 'margin-bottom' $heading-margin-bottoms $headings-margin-bottom) {
+            $value: map-get($values, $map-key);
+            // Always set on h2-h6, which get the same value from the rule
+            // above anyway, so that previewing their own value works. Not on
+            // the display classes, which also go on other tags.
+            @if $is-heading-tag or $headings-value != $value {
+                #{$property}: o-preview-value('#{$map-key}-#{$key}', $value, $headings-value, map-get($-headings-previews, $key));
+            }
         }
     }
 }
 
 .btn {
     @if ($o-theme-buttons-font != $o-theme-font) {
-        font-family: $o-theme-buttons-font;
+        font-family: o-preview-value('buttons-font', $o-theme-buttons-font);
     }
 }
 
 // Texts
 p {
-    margin-top: $paragraph-margin-top;
+    margin-top: var(--o-preview-paragraph-margin-top, #{$paragraph-margin-top});
+    margin-bottom: var(--o-preview-paragraph-margin-bottom, #{$paragraph-margin-bottom});
+}
+
+// Theme preview of values that Bootstrap and html_editor compile: the same
+// rules again, reading `--o-preview-*` first (see above). Keep the order of
+// the original rules, as they override each other.
+
+@mixin o-preview-rfs($name, $value, $property: font-size) {
+    $val: rfs-value($value);
+    $fluid-val: rfs-fluid-value($value);
+    #{$property}: var(--o-preview-#{$name}, #{$fluid-val});
+    @if $val != $fluid-val {
+        @include _rfs-media-query-rule() {
+            #{$property}: var(--o-preview-#{$name}, #{$val});
+        }
+    }
+}
+
+:root {
+    --#{$prefix}font-sans-serif: #{o-preview-value('font', $font-family-sans-serif)};
+    @include o-preview-rfs('font-size-base', $font-size-base, --#{$prefix}body-font-size);
+    --#{$prefix}body-font-weight: #{o-preview-value('font-weight-normal', $font-weight-base)};
+}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-weight: o-preview-value('headings-font-weight', $headings-font-weight);
+}
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: map-get($-headings-previews, 'font');
+}
+b, strong {
+    font-weight: o-preview-value('font-weight-bolder', $font-weight-bolder);
+}
+.lead {
+    font-weight: o-preview-value('lead-font-weight', $lead-font-weight);
+}
+@for $index from 1 through 6 {
+    .display-#{$index} {
+        font-weight: o-preview-value('display-font-weight', $display-font-weight);
+    }
+}
+
+@mixin o-preview-button-size($suffix, $padding-y, $padding-x, $font-size, $border-radius) {
+    --#{$prefix}btn-padding-y: var(--o-preview-btn-padding-y#{$suffix}, #{$padding-y});
+    --#{$prefix}btn-padding-x: var(--o-preview-btn-padding-x#{$suffix}, #{$padding-x});
+    @include o-preview-rfs('btn-font-size#{$suffix}', $font-size, --#{$prefix}btn-font-size);
+    --#{$prefix}btn-border-radius: var(--o-preview-btn-border-radius#{$suffix}, #{$border-radius});
+}
+.btn {
+    // Unset (no custom buttons font), it stays empty so the button inherits.
+    --#{$prefix}btn-font-family: var(--o-preview-buttons-font, #{if($btn-font-family, inspect($btn-font-family), '')});
+    --#{$prefix}btn-font-weight: #{o-preview-value('btn-font-weight', $btn-font-weight)};
+    @include o-preview-button-size('', $btn-padding-y, $btn-padding-x, $btn-font-size, $btn-border-radius);
+}
+.btn-lg {
+    @include o-preview-button-size('-lg', $btn-padding-y-lg, $btn-padding-x-lg, $btn-font-size-lg, $btn-border-radius-lg);
+}
+.btn-sm {
+    @include o-preview-button-size('-sm', $btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
+}
+@each $color, $width in $o-btn-outline-border-width-defaults {
+    .btn-#{$color} {
+        border-width: var(--o-preview-btn-#{$color}-outline-border-width, #{$width});
+    }
+}
+
+@mixin o-preview-input-size($suffix, $padding-y, $padding-x, $font-size, $border-radius) {
+    padding: var(--o-preview-input-padding-y#{$suffix}, #{$padding-y}) var(--o-preview-input-padding-x#{$suffix}, #{$padding-x});
+    @include o-preview-rfs('input-font-size#{$suffix}', $font-size);
+    @include border-radius(var(--o-preview-input-border-radius#{$suffix}, #{$border-radius}), 0);
+}
+.form-control {
+    @include o-preview-input-size('', $input-padding-y, $input-padding-x, $input-font-size, $input-border-radius);
+    // Side-specific widths that differ from the global one are set with
+    // `!important` in `bootstrap_overridden.scss`.
+    @each $side, $width in (top: $input-border-top-width, right: $input-border-right-width, bottom: $input-border-bottom-width, left: $input-border-left-width) {
+        border-#{$side}-width: var(--o-preview-input-border-#{$side}-width, #{$width or $input-border-width});
+    }
+}
+.form-control-sm {
+    @include o-preview-input-size('-sm', $input-padding-y-sm, $input-padding-x-sm, $input-font-size-sm, $input-border-radius-sm);
+}
+.form-control-lg {
+    @include o-preview-input-size('-lg', $input-padding-y-lg, $input-padding-x-lg, $input-font-size-lg, $input-border-radius-lg);
+}
+.form-control-color {
+    padding: var(--o-preview-input-padding-y, #{$input-padding-y});
+}
+
+// The fluid (rfs) font sizes still apply without preview; a previewed size is
+// the desktop one at all widths.
+@each $selector, $name, $value in
+("h1, .h1" 'h1-font-size' $h1-font-size, "h2, .h2" 'h2-font-size' $h2-font-size,
+"h3, .h3" 'h3-font-size' $h3-font-size, "h4, .h4" 'h4-font-size' $h4-font-size,
+"h5, .h5" 'h5-font-size' $h5-font-size, "h6, .h6" 'h6-font-size' $h6-font-size) {
+    #{$selector} {
+        @include o-preview-rfs($name, $value);
+    }
+}
+@for $index from 1 through 4 {
+    .display-#{$index} {
+        @include o-preview-rfs('display-#{$index}-font-size', map-get($display-font-sizes, $index));
+    }
+}
+@for $index from 1 through 4 {
+    .display-#{$index}-fs {
+        @include o-preview-rfs('display-#{$index}-font-size', map-get($display-font-sizes, $index));
+    }
+}
+@each $index, $value in (1: $h1-font-size, 2: $h2-font-size, 3: $h3-font-size, 4: $h4-font-size, 5: $h5-font-size, 6: $h6-font-size) {
+    .h#{$index}-fs {
+        @include o-preview-rfs('h#{$index}-font-size', $value);
+    }
+}
+.o_small {
+    @include o-preview-rfs('small-font-size', $o-small-font-size);
+}
+
+// Rules gated on a previewed value, e.g. `html[style*="--o-preview-x:"] …`:
+// they only apply while the builder sets that value on the root, for values
+// whose compiled rule only exists when set, or that other compiled values
+// derive from. They do nothing on the saved site.
+
+// Values compiled from the base font size when not set themselves.
+$-font-size-base-headings: (1: $h1-font-size, 2: $h2-font-size, 3: $h3-font-size, 4: $h4-font-size, 5: $h5-font-size, 6: $h6-font-size);
+html[style*="--o-preview-font-size-base:"] {
+    @each $index, $value in $-font-size-base-headings {
+        @if not o-website-value('h#{$index}-font-size') {
+            h#{$index}, .h#{$index} {
+                font-size: var(--o-preview-h#{$index}-font-size, calc(var(--o-preview-font-size-base) * #{divide($value, $font-size-base)}));
+            }
+        }
+    }
+    @each $index, $value in $-font-size-base-headings {
+        @if not o-website-value('h#{$index}-font-size') {
+            .h#{$index}-fs {
+                font-size: var(--o-preview-h#{$index}-font-size, calc(var(--o-preview-font-size-base) * #{divide($value, $font-size-base)}));
+            }
+        }
+    }
+    .lead {
+        font-size: calc(var(--o-preview-font-size-base) * #{divide($lead-font-size, $font-size-base)});
+    }
+    .base-fs {
+        font-size: var(--o-preview-font-size-base);
+    }
+}
+// `$small-font-size` is compiled as a ratio of the base font size (in em),
+// which the builder computes.
+html[style*="--o-preview-small-font-ratio:"] {
+    small, .small, .o_small-fs {
+        font-size: calc(var(--o-preview-small-font-ratio) * 1em);
+    }
+}
+// Display values only compiled when they differ from the headings ones.
+@for $index from 1 through 4 {
+    @each $key, $property in ('font': font-family, 'line-height': line-height, 'margin-top': margin-top, 'margin-bottom': margin-bottom) {
+        html[style*="--o-preview-display-#{$index}-#{$key}:"] .display-#{$index} {
+            #{$property}: var(--o-preview-display-#{$index}-#{$key});
+        }
+    }
+}
+// Bold weights only compiled when set.
+@each $key, $selector in ('headings-font-weight-bold': 'h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6', 'display-font-weight-bold': '.display-1, .display-2, .display-3, .display-4, .display-5, .display-6', 'btn-font-weight-bold': '.btn') {
+    html[style*="--o-preview-#{$key}:"] {
+        #{$selector} {
+            b, strong {
+                font-weight: var(--o-preview-#{$key}) !important;
+            }
+        }
+    }
+}
+
+// Theme preview of the color presets. Their colors are compiled into many
+// derived ones (contrasts, button states), which the builder computes the same
+// way (see `color_preset_preview.js`) and sets as `--o-preview-o-cc<N>-*`. The
+// rules below only apply while such a value is set on the root: they are more
+// specific than the compiled `.o_cc<N>` ones (html_editor) and do nothing on
+// the saved site. Each rule is gated on the value it uses, as the builder only
+// sets the ones the compiled CSS declares. The builder previews all presets at
+// once, so that these rules keep the compiled order between presets (nested
+// presets).
+@function o-preview-cc-gate($index, $key) {
+    @return 'html[style*="--o-preview-o-cc#{$index}-#{$key}:"]';
+}
+@mixin o-preview-cc-scope($index, $key) {
+    $-gate: o-preview-cc-gate($index, $key);
+    // Same scope as `$o-color-extras-nesting-selector` in the compiled rules.
+    #{$-gate} .o_cc#{$index}, #{$-gate} .o_colored_level .o_cc#{$index} {
+        @content;
+    }
+}
+@mixin o-preview-button-variant($name) {
+    --#{$prefix}btn-color: var(#{$name}-color);
+    --#{$prefix}btn-bg: var(#{$name}-bg);
+    --#{$prefix}btn-border-color: var(#{$name}-border);
+    --#{$prefix}btn-hover-color: var(#{$name}-hover-color);
+    --#{$prefix}btn-hover-bg: var(#{$name}-hover-bg);
+    --#{$prefix}btn-hover-border-color: var(#{$name}-hover-border);
+    --#{$prefix}btn-focus-shadow-rgb: var(#{$name}-focus-rgb);
+    --#{$prefix}btn-active-color: var(#{$name}-active-color);
+    --#{$prefix}btn-active-bg: var(#{$name}-active-bg);
+    --#{$prefix}btn-active-border-color: var(#{$name}-active-border);
+    --#{$prefix}btn-disabled-color: var(#{$name}-disabled-color);
+    --#{$prefix}btn-disabled-bg: var(#{$name}-bg);
+    --#{$prefix}btn-disabled-border-color: var(#{$name}-border);
+}
+@mixin o-preview-button-outline-variant($name) {
+    --#{$prefix}btn-color: var(#{$name}-outline);
+    --#{$prefix}btn-border-color: var(#{$name}-outline);
+    --#{$prefix}btn-hover-color: var(#{$name}-outline-contrast);
+    --#{$prefix}btn-hover-bg: var(#{$name}-outline);
+    --#{$prefix}btn-hover-border-color: var(#{$name}-outline);
+    --#{$prefix}btn-focus-shadow-rgb: var(#{$name}-outline-rgb);
+    --#{$prefix}btn-active-color: var(#{$name}-outline-contrast);
+    --#{$prefix}btn-active-bg: var(#{$name}-outline);
+    --#{$prefix}btn-active-border-color: var(#{$name}-outline);
+    --#{$prefix}btn-disabled-color: var(#{$name}-outline);
+    --#{$prefix}btn-disabled-border-color: var(#{$name}-outline);
+}
+@for $index from 1 through length($o-color-combinations) {
+    $-cc: '--o-preview-o-cc#{$index}';
+    // `o-bg-color()`
+    #{o-preview-cc-gate($index, 'bg')} .o_cc#{$index} {
+        --background-color: var(#{$-cc}-bg);
+        --o-cc-bg: var(#{$-cc}-bg);
+        background-color: var(#{$-cc}-bg);
+    }
+    #{o-preview-cc-gate($index, 'text')} .o_cc#{$index} {
+        --color: var(#{$-cc}-text);
+        color: var(#{$-cc}-text);
+    }
+    @include o-preview-cc-scope($index, 'text-muted') {
+        .text-muted {
+            color: var(#{$-cc}-text-muted) !important;
+        }
+    }
+    @include o-preview-cc-scope($index, 'headings') {
+        h1, h2, h3, h4, h5, h6 {
+            color: var(#{$-cc}-headings);
+        }
+    }
+    @for $level from 2 through 6 {
+        @include o-preview-cc-scope($index, 'h#{$level}') {
+            h#{$level} {
+                color: var(#{$-cc}-h#{$level});
+            }
+        }
+    }
+    @include o-preview-cc-scope($index, 'link') {
+        a:not(.btn):where(:not(.o_cc)), .btn-link:where(:not(.o_cc)) {
+            color: var(#{$-cc}-link);
+
+            &:hover {
+                color: var(#{$-cc}-link-hover);
+            }
+        }
+    }
+    @each $type in ('primary', 'secondary') {
+        @include o-preview-cc-scope($index, 'btn-#{$type}-bg') {
+            .btn-fill-#{$type} {
+                @include o-preview-button-variant('#{$-cc}-btn-#{$type}');
+            }
+            .btn-outline-#{$type} {
+                @include o-preview-button-outline-variant('#{$-cc}-btn-#{$type}');
+            }
+        }
+    }
+    @include o-preview-cc-scope($index, 'btn-primary-bg') {
+        .nav-pills, .nav-tabs {
+            .nav-link.active,
+            .show > .nav-link {
+                background-color: var(#{$-cc}-btn-primary-bg);
+                color: var(#{$-cc}-btn-primary-color);
+            }
+        }
+        a.list-group-item {
+            color: var(#{$-cc}-btn-primary-bg);
+
+            &.active {
+                background-color: var(#{$-cc}-btn-primary-bg);
+                color: var(#{$-cc}-btn-primary-color);
+                border-color: var(#{$-cc}-btn-primary-bg);
+            }
+        }
+    }
+    // `o-add-gradient()`: `none` removes a saved gradient.
+    #{o-preview-cc-gate($index, 'bg-gradient')} .o_cc#{$index} {
+        background-image: var(#{$-cc}-bg-gradient);
+    }
+    #{o-preview-cc-gate($index, 'bg-gradient')}:not([style*="#{$-cc}-bg-gradient: none"]) .o_cc#{$index} {
+        background-color: rgba(0, 0, 0, 0);
+    }
+}
+// The first preset is also the body's (website's `bootstrap_overridden.scss`).
+// Colors Bootstrap compiles from it into other components are only updated on
+// save.
+#{o-preview-cc-gate(1, 'bg')} {
+    --#{$prefix}body-bg: var(--o-preview-o-cc1-bg);
+    --#{$prefix}body-bg-rgb: var(--o-preview-o-cc1-bg-rgb);
+    --#{$prefix}link-color: var(--o-preview-o-cc1-link);
+    --#{$prefix}link-color-rgb: var(--o-preview-o-cc1-link-rgb);
+    --#{$prefix}link-hover-color: var(--o-preview-o-cc1-body-link-hover);
+    --#{$prefix}link-hover-color-rgb: var(--o-preview-o-cc1-body-link-hover-rgb);
+}
+#{o-preview-cc-gate(1, 'text')} {
+    --#{$prefix}body-color: var(--o-preview-o-cc1-text);
+    --#{$prefix}body-color-rgb: var(--o-preview-o-cc1-text-rgb);
+}
+#{o-preview-cc-gate(1, 'headings')} {
+    --#{$prefix}heading-color: var(--o-preview-o-cc1-headings);
+}
+
+// Theme preview of the rest of the color system (palette, theme and gray
+// colors): same principle as the color presets, the builder computes and sets
+// all these values together with them (see `color_system_preview.js`).
+$-colors-gate: 'html[style*="--o-preview-colors:"]';
+$-preview-theme-colors: ();
+@each $name in ('primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark') {
+    @if map-has-key($theme-colors, $name) {
+        $-preview-theme-colors: append($-preview-theme-colors, $name);
+    }
+}
+#{$-colors-gate} {
+    @each $name in $-preview-theme-colors {
+        @each $suffix in ('', '-rgb', '-text-emphasis', '-bg-subtle', '-border-subtle') {
+            --#{$prefix}#{$name}#{$suffix}: var(--o-preview-#{$name}#{$suffix});
+        }
+    }
+    @for $index from 1 through 9 {
+        --#{$prefix}gray-#{$index * 100}: var(--o-preview-#{$index * 100});
+    }
+    @each $name in ('secondary-color', 'tertiary-color', 'secondary-bg', 'tertiary-bg') {
+        --#{$prefix}#{$name}: var(--o-preview-#{$name});
+        --#{$prefix}#{$name}-rgb: var(--o-preview-#{$name}-rgb);
+    }
+    --#{$prefix}focus-ring-color: var(--o-preview-focus-ring-color);
+    // The printed preset colors (html_editor), with the same fallbacks.
+    @for $index from 1 through length($o-color-combinations) {
+        $-cc: '--o-preview-o-cc#{$index}';
+        --o-cc#{$index}-bg: var(#{$-cc}-bg);
+        --o-cc#{$index}-text: var(#{$-cc}-text);
+        --o-cc#{$index}-headings: var(#{$-cc}-headings, var(#{$-cc}-text));
+        @for $level from 2 through 6 {
+            --o-cc#{$index}-h#{$level}: var(#{$-cc}-h#{$level}, var(#{$-cc}-headings, var(#{$-cc}-text)));
+        }
+        --o-cc#{$index}-link: var(#{$-cc}-link);
+        @each $type in ('primary', 'secondary') {
+            --o-cc#{$index}-btn-#{$type}: var(#{$-cc}-btn-#{$type}-bg);
+            --o-cc#{$index}-btn-#{$type}-text: var(#{$-cc}-btn-#{$type}-color);
+            --o-cc#{$index}-btn-#{$type}-border: var(#{$-cc}-btn-#{$type}-border);
+        }
+    }
+    @if index($-preview-theme-colors, 'success') {
+        --#{$prefix}form-valid-color: var(--o-preview-form-valid-color);
+        --#{$prefix}form-valid-border-color: var(--o-preview-form-valid-color);
+    }
+    @if index($-preview-theme-colors, 'danger') {
+        --#{$prefix}form-invalid-color: var(--o-preview-form-invalid-color);
+        --#{$prefix}form-invalid-border-color: var(--o-preview-form-invalid-color);
+    }
+}
+// web's `bg-variant()` and `text-emphasis-variant()` (grays, palette colors)
+// and the theme colors' `.text-*` (Bootstrap order: helpers, then web's).
+@mixin o-preview-bg-variant($parent, $name) {
+    #{$-colors-gate} #{$parent} {
+        --background-color: var(#{$name}-bg);
+        --color: var(#{$name}-color);
+        background-color: var(#{$name}-bg) !important;
+        color: var(#{$name}-color);
+    }
+    $-muted-gate: 'html[style*="#{$name}-muted:"]';
+    #{$-muted-gate} #{$parent} .text-muted, #{$-muted-gate} .o_colored_level #{$parent} .text-muted {
+        color: var(#{$name}-muted) !important;
+    }
+    #{$-colors-gate} a#{$parent}, #{$-colors-gate} button#{$parent} {
+        &:hover, &:focus {
+            --background-color: var(#{$name}-hover-bg);
+            --color: var(#{$name}-hover-color);
+            background-color: var(#{$name}-hover-bg) !important;
+            color: var(#{$name}-hover-color);
+        }
+    }
+}
+@mixin o-preview-text-variant($parent, $name) {
+    #{$-colors-gate} #{$parent} {
+        color: var(--o-preview-#{$name}) !important;
+    }
+    #{$-colors-gate} a#{$parent} {
+        &:hover, &:focus {
+            color: var(--o-preview-text-#{$name}-hover) !important;
+        }
+    }
+}
+@each $name in $-preview-theme-colors {
+    #{$-colors-gate} .text-bg-#{$name} {
+        color: var(--o-preview-text-bg-#{$name}) !important;
+    }
+    #{$-colors-gate} .link-#{$name} {
+        &:hover, &:focus {
+            color: RGBA(var(--o-preview-link-#{$name}-hover-rgb), var(--#{$prefix}link-opacity, 1)) !important;
+            text-decoration-color: RGBA(var(--o-preview-link-#{$name}-hover-rgb), var(--#{$prefix}link-underline-opacity, 1)) !important;
+        }
+    }
+}
+@for $index from 1 through 9 {
+    @include o-preview-bg-variant('.bg-#{$index * 100}', '--o-preview-bg-#{$index * 100}');
+    @include o-preview-text-variant('.text-#{$index * 100}', $index * 100);
+}
+@each $name in $-preview-theme-colors {
+    @include o-preview-text-variant('.text-#{$name}', $name);
+}
+@each $name in $-preview-theme-colors {
+    #{$-colors-gate} .btn-fill-#{$name} {
+        @include o-preview-button-variant('--o-preview-theme-btn-#{$name}');
+    }
+}
+@each $name in $-preview-theme-colors {
+    #{$-colors-gate} .btn-outline-#{$name} {
+        @include o-preview-button-outline-variant('--o-preview-theme-btn-#{$name}');
+    }
+}
+@for $index from 1 through 5 {
+    @include o-preview-bg-variant('.bg-o-color-#{$index}', '--o-preview-bg-o-color-#{$index}');
+    @include o-preview-text-variant('.text-o-color-#{$index}', 'o-color-#{$index}');
+}
+// `$component-active-bg`, the body and the inputs.
+#{$-colors-gate} {
+    .nav-pills {
+        --#{$prefix}nav-pills-link-active-bg: var(--o-preview-component-active-bg);
+        --#{$prefix}nav-pills-link-active-color: var(--o-preview-component-active-color);
+    }
+    .list-group {
+        --#{$prefix}list-group-active-bg: var(--o-preview-component-active-bg);
+        --#{$prefix}list-group-active-border-color: var(--o-preview-component-active-bg);
+        --#{$prefix}list-group-active-color: var(--o-preview-component-active-color);
+    }
+    .pagination {
+        --#{$prefix}pagination-active-bg: var(--o-preview-component-active-bg);
+        --#{$prefix}pagination-active-border-color: var(--o-preview-component-active-bg);
+        --#{$prefix}pagination-active-color: var(--o-preview-component-active-color);
+    }
+    .form-check-input:checked {
+        background-color: var(--o-preview-component-active-bg);
+        border-color: var(--o-preview-component-active-bg);
+    }
+    .progress, .progress-stacked {
+        --#{$prefix}progress-bar-bg: var(--o-preview-primary);
+    }
+    body {
+        background-color: var(--o-preview-body-fill);
+    }
+    .form-control:not(:disabled), .form-select:not(:disabled) {
+        background-color: var(--o-preview-input-bg);
+        color: var(--o-preview-input-color);
+    }
 }
 
 font[style*='background']:not(.text-gradient),

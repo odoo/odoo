@@ -435,18 +435,12 @@ $offcanvas-horizontal-width: $o-offcanvas-horizontal-width !default;
 $--enable-no-overflow-of-text-columns: false !default;
 
 // A side-specific "form field border width" is only applied if it differs
-// from the global border width that applies to all sides.
+// from the global border width that applies to all sides. The builder previews
+// it through `--o-preview-*` (see `website.scss`).
 .form-control {
-    @if $input-border-top-width != $input-border-width {
-        border-top-width: $input-border-top-width !important;
-    }
-    @if $input-border-right-width != $input-border-width {
-        border-right-width: $input-border-right-width !important;
-    }
-    @if $input-border-bottom-width != $input-border-width {
-        border-bottom-width: $input-border-bottom-width !important;
-    }
-    @if $input-border-left-width != $input-border-width {
-        border-left-width: $input-border-left-width !important;
+    @each $side, $width in (top: $input-border-top-width, right: $input-border-right-width, bottom: $input-border-bottom-width, left: $input-border-left-width) {
+        @if $width != $input-border-width {
+            border-#{$side}-width: if($width, var(--o-preview-input-border-#{$side}-width, #{$width}), null) !important;
+        }
     }
 }
