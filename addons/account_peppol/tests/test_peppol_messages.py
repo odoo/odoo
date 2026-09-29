@@ -514,6 +514,39 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertEqual(len(moves.ubl_cii_xml_id), 2)
         self.assertEqual(moves.mapped('peppol_move_state'), ['processing', 'processing'])
 
+    def test_peppol_multi_moves_without_email(self):
+        """In multi-sending, the invoices that would only be sent by email to a partner without
+        one are listed apart, but not the ones still sent by Peppol.
+        """
+        self.valid_partner.email = False
+        self.partner_a.write({'email': False, 'invoice_sending_method': 'email'})
+        self.partner_b.invoice_sending_method = 'email'
+        peppol_move = self.create_move(self.valid_partner)
+        no_email_move = self.create_move(self.partner_a)
+        email_move = self.create_move(self.partner_b)
+        moves = peppol_move + no_email_move + email_move
+        moves.action_post()
+        with mock_lookup_success('0208:0428759497'):
+            wizard = self.create_send_and_print(moves, default=True)
+        self.assertEqual(wizard.summary_data, {
+            "peppol": {
+                "count": 1,
+                "label": "by Peppol",
+                "moves": [{"id": peppol_move.id, "name": peppol_move.name, "partner_name": "Molly"}],
+            },
+            "email": {
+                "count": 1,
+                "label": "by Email",
+                "moves": [{"id": email_move.id, "name": email_move.name, "partner_name": "partner_b"}],
+            },
+            "email_missing": {
+                "count": 1,
+                "label": "without email address",
+                "moves": [{"id": no_email_move.id, "name": no_email_move.name, "partner_name": "partner_a"}],
+                "is_error": True,
+            },
+        })
+
     def test_silent_error_while_creating_xml(self):
         """When in multi/async mode, the generation of XML can fail silently (without raising).
         This needs to be reflected as an error and put the move in Peppol Error state.
