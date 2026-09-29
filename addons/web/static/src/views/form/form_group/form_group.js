@@ -20,7 +20,7 @@ class Group extends Component {
     }
 
     getItems() {
-        return this._getItems();
+        return this._getItems().filter(([, slot]) => !("isVisible" in slot) || slot.isVisible);
     }
 
     get allClasses() {
@@ -42,8 +42,7 @@ export class OuterGroup extends Group {
         const colSize = Math.max(1, Math.round(12 / nbCols));
 
         // Dispatch items across table rows
-        const items = super.getItems().filter(([k, v]) => !("isVisible" in v) || v.isVisible);
-        return items.map((item) => {
+        return super.getItems().map((item) => {
             const [slotName, slot] = item;
             const itemSpan = slot.itemSpan || 1;
             return {
@@ -72,37 +71,20 @@ export class InnerGroup extends Group {
         let reservedSpace = 0;
 
         // Dispatch items across table rows
-        const items = this.getItems();
-        while (items.length) {
-            const [slotName, slot] = items.shift();
-            if (!slot.isVisible) {
-                continue;
-            }
-
-            const { newline, itemSpan, noBox } = slot;
-            if (newline) {
+        for (const [slotName, slot] of this.getItems()) {
+            const itemSpan = slot.itemSpan || 1;
+            if (slot.newline || itemSpan + reservedSpace > maxCols) {
                 rows.push(currentRow);
                 currentRow = [];
                 reservedSpace = 0;
             }
 
-            const fullItemSpan = itemSpan || 1;
-
-            if (fullItemSpan + reservedSpace > maxCols) {
-                rows.push(currentRow);
-                currentRow = [];
-                reservedSpace = 0;
-            }
-
-            const isVisible = !("isVisible" in slot) || slot.isVisible;
-            currentRow.push({ ...slot, name: slotName, itemSpan, isVisible, noBox });
-            reservedSpace += itemSpan || 1;
-
-            // Allows to remove the line if the content is not visible instead of leaving an empty line.
-            currentRow.isVisible = currentRow.isVisible || isVisible;
+            currentRow.push({ ...slot, name: slotName });
+            reservedSpace += itemSpan;
         }
         rows.push(currentRow);
 
-        return rows;
+        // Remove the rows that ended up empty (e.g. a "newline" before the first visible item).
+        return rows.filter((row) => row.length);
     }
 }
