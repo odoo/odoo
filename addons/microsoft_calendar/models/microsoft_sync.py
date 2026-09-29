@@ -250,7 +250,10 @@ class MicrosoftCalendarSync(models.AbstractModel):
         Update Odoo events from Outlook recurrence and events.
         """
         # get the list of events to update ...
-        events_to_update = events.filter(lambda e: e.seriesMasterId == self.microsoft_id)
+        # seriesMasterId is specific to the synced calendar, like the id of `recurrence`
+        events_to_update = events.filter(lambda e: e.seriesMasterId == recurrence.id)
+        # event ids of another calendar than the recurrence one can't be used to update Outlook
+        is_other_calendar = recurrence.id != self.microsoft_id
         if self.end_type in ['count', 'forever']:
             events_to_update = list(events_to_update)[:MAX_RECURRENT_EVENT]
 
@@ -266,6 +269,8 @@ class MicrosoftCalendarSync(models.AbstractModel):
                 event_values = None
 
             if event_values:
+                if is_other_calendar:
+                    event_values.pop('microsoft_id', None)
                 # keep event values to update the recurrence later
                 if any(f for f in ('start', 'stop') if f in event_values):
                     rec_values[(self.id, event_values.get('start'), event_values.get('stop'))] = dict(
@@ -280,6 +285,9 @@ class MicrosoftCalendarSync(models.AbstractModel):
 
         # update the recurrence
         detached_events = self.with_context(dont_notify=True)._apply_recurrence(rec_values)
+        if is_other_calendar:
+            # an occurrence still linked to Outlook may only be missing from this calendar (e.g. declined)
+            detached_events = detached_events.filtered(lambda e: not e.microsoft_id)
         detached_events._cancel_microsoft()
 
         return update_events
