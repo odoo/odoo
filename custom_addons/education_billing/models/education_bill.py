@@ -360,6 +360,25 @@ class EducationBill(models.Model):
 
             payment_date = rec.payment_date or fields.Date.context_today(self)
 
+            # Resolusi departemen untuk integrasi Pendapatan
+            department = self.env['hr.department'].sudo().search([
+                ('company_id', '=', rec.company_id.id),
+                '|', ('name', '=', rec.school_id.name), ('sif_code', '=', rec.school_id.code)
+            ], limit=1)
+            if not department:
+                department = self.env['hr.department'].sudo().search([
+                    ('company_id', '=', rec.company_id.id),
+                ], limit=1)
+            if not department:
+                dept_code = (rec.school_id.code or 'EDU').strip().upper()[:8]
+                dept_class = 'univ' if rec.school_id.level == 'univ' else rec.school_id.level
+                department = self.env['hr.department'].sudo().create({
+                    'name': rec.school_id.name,
+                    'company_id': rec.company_id.id,
+                    'sif_code': dept_code,
+                    'sif_journal_unit_dept': dept_class if dept_class in ['sd', 'smp', 'sma', 'univ', 'pusat'] else 'pusat',
+                })
+
             # Buat entri di modul Pendapatan
             pendapatan_vals = {
                 'tanggal': payment_date,
@@ -367,6 +386,7 @@ class EducationBill(models.Model):
                 'category_id': rec.category_id.id,
                 'amount': rec.amount,
                 'unit_name': rec.school_id.name,
+                'department_id': department.id,
                 'source_partner_id': rec.student_id.partner_id.id if rec.student_id.partner_id else False,
                 'description': _('Pembayaran %s a.n %s (%s) - Kelas: %s') % (
                     rec.period_label,
