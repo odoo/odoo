@@ -1001,7 +1001,7 @@ class HrExpense(models.Model):
         match self.state:
             case 'draft':
                 return self.env.ref('hr_expense.mt_expense_reset')
-            case 'cancel':
+            case 'refused':
                 return self.env.ref('hr_expense.mt_expense_refused')
             case 'paid':
                 return self.env.ref('hr_expense.mt_expense_paid')
