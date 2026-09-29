@@ -23,7 +23,7 @@ import {
     ControlButtonsPopup,
 } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { pick } from "@web/core/utils/objects";
-import { unaccent } from "@web/core/utils/strings";
+import { escapeRegExp, unaccent } from "@web/core/utils/strings";
 import { CameraBarcodeScanner } from "@point_of_sale/app/screens/product_screen/camera_barcode_scanner";
 
 export class ProductScreen extends Component {
@@ -425,12 +425,23 @@ export class ProductScreen extends Component {
             ? this.getProductsByCategory(this.pos.selectedCategory)
             : this.products;
 
-        const filteredProducts = products.filter((p) => unaccent(p.searchString).includes(words));
+        // Build a RegExp word by word so that words separated by whitespace can
+        // match with a gap between them (e.g. "coca 600" matching
+        // "Coca Cola- Regular 600 ml").
+        const regex = new RegExp(
+            words
+                .split(/\s+/)
+                .filter(Boolean)
+                .map((word) => escapeRegExp(word))
+                .join(".*")
+        );
+
+        const filteredProducts = products.filter((p) => regex.test(unaccent(p.searchString)));
         return filteredProducts.sort((a, b) => {
             const nameA = unaccent(a.searchString);
             const nameB = unaccent(b.searchString);
             // Sort by match index, push non-matching items to the end, and use alphabetical order as a tiebreaker
-            return nameA.indexOf(words) - nameB.indexOf(words) || nameA.localeCompare(nameB);
+            return nameA.search(regex) - nameB.search(regex) || nameA.localeCompare(nameB);
         });
     }
 
@@ -477,12 +488,25 @@ export class ProductScreen extends Component {
     }
 
     loadProductFromDBDomain(searchProductWord) {
+        // Split on whitespace and join with '%' so that words separated by a gap
+        // can still match (e.g. "coca 600" matching "Coca Cola- Regular 600 ml").
+        // Escape the SQL LIKE special characters in each word so that user-typed
+        // '%'/'_' are searched for literally; '=ilike' is used instead of 'ilike'
+        // so the ORM doesn't wrap the pattern in extra '%'.
+        const pattern =
+            "%" +
+            searchProductWord
+                .split(/\s+/)
+                .filter(Boolean)
+                .map((word) => word.replace(/[\\%_]/g, "\\$&"))
+                .join("%") +
+            "%";
         return [
             "|",
             "|",
-            ["name", "ilike", searchProductWord],
-            ["default_code", "ilike", searchProductWord],
-            ["barcode", "ilike", searchProductWord],
+            ["name", "=ilike", pattern],
+            ["default_code", "=ilike", pattern],
+            ["barcode", "=ilike", pattern],
             ["available_in_pos", "=", true],
             ["sale_ok", "=", true],
         ];
