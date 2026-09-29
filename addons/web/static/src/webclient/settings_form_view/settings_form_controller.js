@@ -23,7 +23,12 @@ export class SettingsFormController extends formView.Controller {
     setup() {
         super.setup();
         this.handleViewButton = useViewButtonHandler();
-        this.searchText = this.props.globalState?.settingsSearch || "";
+        // saving settings reloads the page, so the search is kept in the sessionStorage
+        this.searchText =
+            this.props.globalState?.settingsSearch ||
+            sessionStorage.getItem("settings_search") ||
+            "";
+        sessionStorage.removeItem("settings_search");
         // only force the focus on touch devices on small screens, unless a search is restored
         this.inputRef = useAutofocus({
             ref: this.autofocusRef,
@@ -141,6 +146,7 @@ export class SettingsFormController extends formView.Controller {
     beforeVisibilityChange() {}
 
     async save() {
+        sessionStorage.setItem("settings_search", this.searchText);
         await this.handleViewButton({
             clickParams: {
                 name: "execute",
