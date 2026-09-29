@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.sql import column_exists, create_column
 
 
 class AccountMove(models.Model):
@@ -152,6 +153,17 @@ class AccountMove(models.Model):
     # -----------------------
     # CRUD, inherited methods
     # -----------------------
+
+    def _auto_init(self):
+        """Create the columns of the stored `l10n_my_edi_received_document_id` and `l10n_my_edi_document_type` fields to
+        avoid computing them for every existing move during the installation of the module: no received document exists yet.
+        """
+        if not column_exists(self.env.cr, 'account_move', 'l10n_my_edi_received_document_id'):
+            create_column(self.env.cr, 'account_move', 'l10n_my_edi_received_document_id', 'int4')
+        if not column_exists(self.env.cr, 'account_move', 'l10n_my_edi_document_type'):
+            create_column(self.env.cr, 'account_move', 'l10n_my_edi_document_type', 'varchar')
+
+        return super()._auto_init()
 
     def _post(self, soft=True):
         # EXTENDS 'account'
