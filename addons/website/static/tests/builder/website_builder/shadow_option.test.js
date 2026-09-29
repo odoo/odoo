@@ -1,8 +1,11 @@
-import { expect, test } from "@odoo/hoot";
+import { addBuilderOption } from "@html_builder/../tests/helpers";
+import { advanceTime, animationFrame, expect, test } from "@odoo/hoot";
+import { xml } from "@odoo/owl";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
+    waitForThemeReveal,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
@@ -34,4 +37,44 @@ test("bootstrap shadow controls in the theme tab of website builder", async () =
         '/website/static/src/scss/options/user_values.scss {"box-shadow-color":"#FF0000"}',
         "asset reload",
     ]);
+});
+
+test("expands and highlights the shadow size that was edited", async () => {
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<ShadowOption/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-label='Shadow'] .o_hb_select_toggle").click();
+    await contains(
+        ".o_popover .o_hb_select_dropdown_item:contains('Small') a.o_hb_theme_tab_link"
+    ).click();
+
+    await waitForThemeReveal();
+    expect(".o_hb_row[data-label='Small']").toHaveClass("o_hb_row_highlight");
+    expect(".o_hb_row[data-label='Small'] + .o_hb_collapse_content").toHaveCount(1);
+});
+
+test("cancels the targeted row reveal when leaving the theme tab early", async () => {
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<ShadowOption/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-label='Shadow'] .o_hb_select_toggle").click();
+    await contains(
+        ".o_popover .o_hb_select_dropdown_item:contains('Small') a.o_hb_theme_tab_link"
+    ).click();
+    // Switching to another tab takes 400 ms.
+    await advanceTime(400);
+    await animationFrame();
+
+    // Leave before the 150 ms expand delay of the targeted row elapses.
+    await contains("button[data-name='blocks']").click();
+    await advanceTime(150);
+    expect("button[data-name='blocks']").toHaveClass("active");
 });
