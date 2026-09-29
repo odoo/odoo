@@ -122,8 +122,8 @@ test(`mount a CalendarCommonPopover`, async () => {
     expect(`.o_popover_header`).toHaveText("Meeting");
     expect(`.o_card_record`).toHaveCount(1);
     expect(`.o_card_record div[name="description"]`).toHaveCount(1);
-    expect(`.o_popover_footer .o_cw_popover_edit`).toHaveCount(1);
-    expect(`.o_popover_footer .o_cw_popover_delete`).toHaveCount(1);
+    expect(`.o_popover_footer .o_calendar_popover_edit`).toHaveCount(1);
+    expect(`.o_popover_footer .o_calendar_popover_delete`).toHaveCount(1);
 });
 
 test(`date duration: is all day and is same day`, async () => {
@@ -218,14 +218,14 @@ test(`canDelete is true`, async () => {
     await start({
         model: { ...DEFAULT_MODEL, canDelete: true },
     });
-    expect(`.o_cw_popover_delete`).toHaveCount(1);
+    expect(`.o_calendar_popover_delete`).toHaveCount(1);
 });
 
 test(`canDelete is false`, async () => {
     await start({
         model: { ...DEFAULT_MODEL, canDelete: false },
     });
-    expect(`.o_cw_popover_delete`).toHaveCount(0);
+    expect(`.o_calendar_popover_delete`).toHaveCount(0);
 });
 
 test(`click on delete button`, async () => {
@@ -233,7 +233,7 @@ test(`click on delete button`, async () => {
         model: { ...DEFAULT_MODEL, canDelete: true },
         deleteRecord: () => expect.step("delete"),
     });
-    await click(`.o_cw_popover_delete`);
+    await click(`.o_calendar_popover_delete`);
     expect.verifySteps(["delete"]);
 });
 
@@ -241,7 +241,7 @@ test(`click on edit button`, async () => {
     await start({
         openRecord: () => expect.step("edit"),
     });
-    await click(`.o_cw_popover_edit`);
+    await click(`.o_calendar_popover_edit`);
     expect.verifySteps(["edit"]);
 });
 
@@ -258,6 +258,6 @@ test(`popover node with default body and footer`, async () => {
     });
     expect(`.o_popover_body`).toHaveCount(1);
     expect(`.o_popover_body`).toHaveText("July 16, 2021\n08:00 - 11:15\n(3 hours, 15 minutes)");
-    expect(`.o_popover_footer .o_cw_popover_edit`).toHaveCount(1);
-    expect(`.o_popover_footer .o_cw_popover_delete`).toHaveCount(1);
+    expect(`.o_popover_footer .o_calendar_popover_edit`).toHaveCount(1);
+    expect(`.o_popover_footer .o_calendar_popover_delete`).toHaveCount(1);
 });

@@ -42,7 +42,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
      */
     eventClassNames({ el, event }) {
         if (!event.extendedProps?.isActivity) {
-            return super.eventClassNames({ el, event });
+            return super.eventClassNames(...arguments);
         }
         const record = this.props.model.activities[event.id];
         return [
@@ -95,7 +95,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
                 /** @type {ReturnType<typeof import("./attendee_calendar_activity_list_popover_item").onViewMeetingType>["type"]} */
                 onViewMeeting: (ev, { eventAtRender }) => {
                     const el = document.querySelector(
-                        `.fc-event[data-event-id="${eventAtRender.id}"]`
+                        `.o_calendar_event[data-event-id="${eventAtRender.id}"]`
                     );
                     const record = this.props.model.records[eventAtRender.id];
                     if (el && record) {
@@ -104,7 +104,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
                     }
                 },
             },
-            `o_cw_popover o_cw_activity_popover card o_calendar_color_${activityEvent.colorIndex}`
+            `o_calendar_popover o_calendar_activity_popover card o_calendar_color_${activityEvent.colorIndex}`
         );
     },
 

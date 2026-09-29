@@ -8,8 +8,7 @@ import {
     useProps,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
-import { v6CalendarTheme } from "@web/views/calendar/calendar_theme_v6";
-import { withCompatOptions } from "@web/views/calendar/utils";
+import { odooCalendarTheme } from "@web/views/calendar/calendar_theme";
 
 /**
  * @param {import("@odoo/owl").Signal<HTMLElement>} ref
@@ -23,10 +22,7 @@ export function useFullCalendar(ref, params) {
     onMounted(() => {
         try {
             instance.set(
-                new FullCalendar.Calendar(
-                    ref(),
-                    withCompatOptions({ plugins: [v6CalendarTheme], ...params })
-                )
+                new FullCalendar.Calendar(ref(), { plugins: [odooCalendarTheme], ...params })
             );
             instance().render();
         } catch (e) {

@@ -1,13 +1,13 @@
-.o_cw_body .o_field_copy {
+.o_calendar_body .o_field_copy {
     max-width: calc(100% - 6rem);
     width: unset !important;
 }
 
-.o_cw_body .o_clipboard_button {
+.o_calendar_body .o_clipboard_button {
     padding-top: 0px !important;
 }
 
-.o_cw_body li:has(.o_field_html[name="description"]){
+.o_calendar_body li:has(.o_field_html[name="description"]){
     span:has(i) {
         align-self: flex-start;
     }
@@ -16,7 +16,7 @@
     }
 }
 
-.o_cw_activity_popover {
+.o_calendar_activity_popover {
     div:first-child {
         /* Remove popover focus outline. */
         /* NB: On open, popover auto-focus the first tabable element (cf useActiveElement hook). */
@@ -43,23 +43,23 @@
     }
 }
 
-.o_calendar_renderer .fc-event {
+.o_calendar_renderer .o_calendar_event {
     &:not(.o_event_dot) {
         &.o_attendee_status_active {
-            --o-bg-opacity: 1;
+            --o-calendar-bg-opacity: 1;
         }
 
         &.o_attendee_status_tentative {
-            --o-bg-opacity: .5;
+            --o-calendar-bg-opacity: .5;
         }
 
         &.o_attendee_status_alone,
         &.o_attendee_status_needsAction {
-            --o-bg-opacity: .5;
+            --o-calendar-bg-opacity: .5;
         }
 
         &.o_attendee_status_declined {
-            --o-bg-opacity: 0;
+            --o-calendar-bg-opacity: 0;
         }
     }
 
@@ -84,7 +84,7 @@
     }
 
     &.o_attendee_status_declined, &.o_event_striked {
-        .fc-event-main {
+        .o_calendar_event_main {
             text-decoration: line-through;
         }
     }
@@ -96,7 +96,7 @@
         @for $i from 1 through length($o-colors-complete) {
             $color: nth($o-colors-complete, $i);
             &.o_calendar_color_#{$i - 1} {
-                --fc-event-bg-color: #{mix($o-white, $color, 80%)};
+                --fc-event-color: #{mix($o-white, $color, 80%)};
             }
         }
     }
@@ -107,7 +107,7 @@
         inset: 0;
         display: block;
         z-index: 3;
-        background-color: color-mix(in srgb, var(--o-view-background-color) calc(var(--o-overlay-opacity) * 100%), transparent);
+        background-color: color-mix(in srgb, var(--o-view-background-color) calc(var(--o-calendar-overlay-opacity) * 100%), transparent);
     }
 }
 

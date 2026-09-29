@@ -39,35 +39,35 @@ beforeEach(() => {
 
 test(`mount a CalendarCommonRenderer`, async () => {
     await start();
-    expect(`.o_calendar_widget.fc`).toHaveCount(1);
+    expect(`.o_calendar_widget .o_calendar_fc_view`).toHaveCount(1);
 });
 
 test(`Day: mount a CalendarCommonRenderer`, async () => {
     await start({ model: { ...FAKE_MODEL, scale: "day" } });
-    expect(`.o_calendar_widget.fc .fc-timeGridDay-view`).toHaveCount(1);
+    expect(`.o_calendar_widget .o_calendar_fc_view_timeGridDay`).toHaveCount(1);
 });
 
 test(`Week: mount a CalendarCommonRenderer`, async () => {
     await start({ model: { ...FAKE_MODEL, scale: "week" } });
-    expect(`.o_calendar_widget.fc .fc-timeGridWeek-view`).toHaveCount(1);
+    expect(`.o_calendar_widget .o_calendar_fc_view_timeGridWeek`).toHaveCount(1);
 });
 
 test(`Month: mount a CalendarCommonRenderer`, async () => {
     await start({ model: { ...FAKE_MODEL, scale: "month" } });
-    expect(`.o_calendar_widget.fc .fc-dayGridMonth-view`).toHaveCount(1);
+    expect(`.o_calendar_widget .o_calendar_fc_view_dayGridMonth`).toHaveCount(1);
 });
 
 test(`Day: check week number`, async () => {
     await start({ model: { ...FAKE_MODEL, scale: "day" } });
-    expect(`.fc-week-number`).toHaveCount(1);
-    expect(`.fc-week-number`).toHaveText(/(Week )?28/);
+    expect(`.o_calendar_week_number_header`).toHaveCount(1);
+    expect(`.o_calendar_week_number_header`).toHaveText(/(Week )?28/);
 });
 
 test(`Day: check date`, async () => {
     await start({ model: { ...FAKE_MODEL, scale: "day" } });
-    expect(`.fc-col-header-cell.fc-day`).toHaveCount(1);
-    expect(`.fc-col-header-cell.fc-day:eq(0) .o_cw_day_name`).toHaveText("Friday");
-    expect(`.fc-col-header-cell.fc-day:eq(0) .o_cw_day_number`).toHaveText("16");
+    expect(`.o_calendar_header_cell`).toHaveCount(1);
+    expect(`.o_calendar_header_cell:eq(0) .o_calendar_day_name`).toHaveText("Friday");
+    expect(`.o_calendar_header_cell:eq(0) .o_calendar_day_number`).toHaveText("16");
 });
 
 test(`Day: click all day slot`, async () => {
@@ -121,23 +121,23 @@ test(`Day: click on event`, async () => {
 
 test(`Week: check week number`, async () => {
     await start({ model: { ...FAKE_MODEL, scale: "week" } });
-    expect(`.fc-scrollgrid-section-header .fc-timegrid-axis-cushion`).toHaveCount(1);
-    expect(`.fc-scrollgrid-section-header .fc-timegrid-axis-cushion`).toHaveText(/(Week )?28/);
+    expect(`.o_calendar_week_number_header`).toHaveCount(1);
+    expect(`.o_calendar_week_number_header`).toHaveText(/(Week )?28/);
 });
 
 test(`Week: check dates`, async () => {
     await start({ model: { ...FAKE_MODEL, scale: "week" } });
-    expect(`.fc-col-header-cell.fc-day`).toHaveCount(7);
-    expect(queryAllTexts(`.fc-col-header-cell .o_cw_day_name`)).toEqual([
-        "Sun",
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-        "Sat",
+    expect(`.o_calendar_header_cell`).toHaveCount(7);
+    expect(queryAllTexts(`.o_calendar_header_cell .o_calendar_day_name`)).toEqual([
+        "SUN",
+        "MON",
+        "TUE",
+        "WED",
+        "THU",
+        "FRI",
+        "SAT",
     ]);
-    expect(queryAllTexts`.fc-col-header-cell .o_cw_day_number`).toEqual([
+    expect(queryAllTexts`.o_calendar_header_cell .o_calendar_day_number`).toEqual([
         "11",
         "12",
         "13",
@@ -163,17 +163,17 @@ test("Week: check dates across a DST transition happening at local midnight (Afr
         initialDate: luxon.DateTime.local(2027, 4, 25),
     });
 
-    expect(`.fc-col-header-cell.fc-day`).toHaveCount(7);
-    expect(queryAllTexts(`.fc-col-header-cell .o_cw_day_name`)).toEqual([
-        "Sun",
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-        "Sat",
+    expect(`.o_calendar_header_cell`).toHaveCount(7);
+    expect(queryAllTexts(`.o_calendar_header_cell .o_calendar_day_name`)).toEqual([
+        "SUN",
+        "MON",
+        "TUE",
+        "WED",
+        "THU",
+        "FRI",
+        "SAT",
     ]);
-    expect(queryAllTexts`.fc-col-header-cell .o_cw_day_number`).toEqual([
+    expect(queryAllTexts`.o_calendar_header_cell .o_calendar_day_number`).toEqual([
         "25",
         "26",
         "27",
@@ -190,8 +190,9 @@ test(`Day: automatically scroll to 6am`, async () => {
     await animationFrame();
 
     const containerDimensions = findTimeGridScroller().getBoundingClientRect();
-    const dayStartDimensions = queryRect(`.fc-timegrid-slot[data-time="06:00:00"]:eq(0)`);
-    expect(Math.abs(dayStartDimensions.y - containerDimensions.y)).toBeLessThan(2);
+    const dayStartDimensions = queryRect(`.o_calendar_time_slot_label[data-time="06:00:00"]`);
+    // the time grid has a 15px gap on top to show the first time label
+    expect(Math.abs(dayStartDimensions.y - containerDimensions.y - 15)).toBeLessThan(2);
 });
 
 test(`Week: automatically scroll to 6am`, async () => {
@@ -200,11 +201,12 @@ test(`Week: automatically scroll to 6am`, async () => {
     await animationFrame();
 
     const containerDimensions = findTimeGridScroller().getBoundingClientRect();
-    const dayStartDimensions = queryRect(`.fc-timegrid-slot[data-time="06:00:00"]:eq(0)`);
-    expect(Math.abs(dayStartDimensions.y - containerDimensions.y)).toBeLessThan(2);
+    const dayStartDimensions = queryRect(`.o_calendar_time_slot_label[data-time="06:00:00"]`);
+    // the time grid has a 15px gap on top to show the first time label
+    expect(Math.abs(dayStartDimensions.y - containerDimensions.y - 15)).toBeLessThan(2);
 });
 
 test("Month: remove row when no day of current month", async () => {
     await start({ model: { ...FAKE_MODEL, scale: "month" } });
-    expect(".fc-day-other, .fc-day-disabled").toHaveCount(4);
+    expect(".o_calendar_day_other, [aria-disabled]").toHaveCount(4);
 });

@@ -4,7 +4,7 @@ import { stepUtils } from "@web_tour/tour_utils";
 // The end resize handle only shows on CSS :hover, which synthetic pointer events
 // don't trigger, so give it a grabbable box of its own.
 function revealResizeHandle() {
-    const resizer = this.anchor.querySelector(".fc-event-resizer-end");
+    const resizer = this.anchor.querySelector(".o_calendar_resizer_end");
     if (!resizer) {
         throw new Error("The leave event has no end resize handle");
     }
@@ -19,11 +19,11 @@ function revealResizeHandle() {
 }
 
 async function dragHandleToNextDay(helpers) {
-    const startCell = this.anchor.closest(".fc-daygrid-day[data-date]");
+    const startCell = this.anchor.closest(".o_calendar_day[data-date]");
     const nextDate = luxon.DateTime.fromISO(startCell.dataset.date)
         .plus({ days: 1 })
         .toFormat("yyyy-MM-dd");
-    const targetCell = `.fc-daygrid-day[data-date='${nextDate}']`;
+    const targetCell = `.o_calendar_day[data-date='${nextDate}']`;
     if (!document.querySelector(targetCell)) {
         throw new Error(`No day cell for ${nextDate} in the current month grid`);
     }
@@ -36,8 +36,8 @@ async function waitForExtendedLeave() {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     for (let i = 0; i < 50; i++) {
         await sleep(100);
-        const event = document.querySelector(".fc-daygrid-block-event");
-        const cell = document.querySelector(".fc-daygrid-day[data-date]");
+        const event = document.querySelector(".o_calendar_row_event");
+        const cell = document.querySelector(".o_calendar_day[data-date]");
         if (
             event &&
             cell &&
@@ -69,21 +69,21 @@ registry.category("web_tour.tours").add("time_off_resize_month_tour", {
         },
         {
             content: "Month grid is shown",
-            trigger: ".fc-dayGridMonth-view",
+            trigger: ".o_calendar_fc_view_dayGridMonth",
         },
         {
             content: "The full-day leave is a resizable all-day event",
-            trigger: ".fc-daygrid-block-event.fc-event-resizable",
+            trigger: ".o_calendar_row_event:has(.o_calendar_resizer_end)",
             run: revealResizeHandle,
         },
         {
             content: "Drag its end border onto the next day",
-            trigger: ".fc-daygrid-block-event.fc-event-resizable .fc-event-resizer-end",
+            trigger: ".o_calendar_row_event .o_calendar_resizer_end",
             run: dragHandleToNextDay,
         },
         {
             content: "The leave now spans two days",
-            trigger: ".fc-dayGridMonth-view",
+            trigger: ".o_calendar_fc_view_dayGridMonth",
             run: waitForExtendedLeave,
         },
     ],

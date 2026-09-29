@@ -3,7 +3,7 @@
 
     <t t-name="event.EventSlotCalendarCommonRenderer.event">
         <!-- Display end time and hide title on the full calendar library event. -->
-        <span t-if="!isTimeHidden" class="fc-time">
+        <span t-if="!isTimeHidden" class="o_calendar_event_time">
             <t t-out="startTime"/> - <t t-out="endTime"/>
         </span>
     </t>

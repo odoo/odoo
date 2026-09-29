@@ -143,7 +143,7 @@ test(`sync google calendar`, async () => {
     // select the partner filter
     await togglePartnerFilter("partner_ids", "Partner 4");
     // sync_data was called a first time without filter, event from google calendar was created twice
-    expect(`.fc-event`).toHaveCount(4, { message: "should display 3 events on the month" });
+    expect(`.o_calendar_event`).toHaveCount(4, { message: "should display 3 events on the month" });
     expect.verifySteps(["sync_data", "search_read"]);
 
     await contains(`.o_datetime_picker_header .o_next`).click();
@@ -155,7 +155,7 @@ test(`sync google calendar`, async () => {
 
     await contains(`.o_calendar_button_today`).click();
     expect.verifySteps(["sync_data", "search_read"]);
-    expect(`.fc-event`).toHaveCount(7, { message: "should now display 6 events on the month" });
+    expect(`.o_calendar_event`).toHaveCount(7, { message: "should now display 6 events on the month" });
 });
 
 test(`component is destroyed while sync google calendar`, async () => {

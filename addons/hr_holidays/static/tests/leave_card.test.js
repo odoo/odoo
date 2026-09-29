@@ -75,13 +75,13 @@ test("Test request creator buttons", async() => {
             context: user.context
         });
     await clickDate("2024-01-09");
-    await click(".o_cw_popover_link");
+    await click(".o_calendar_popover_link");
     await waitFor("button:contains(Delete Time Off)");
     await click(".btn-close");
     // the dialog covers the calendar
     await waitForNone(".modal");
     await clickDate("2024-01-10");
-    await click(".o_cw_popover_link");
+    await click(".o_calendar_popover_link");
     await waitFor("button:contains(Cancel Time Off)");
 })
 

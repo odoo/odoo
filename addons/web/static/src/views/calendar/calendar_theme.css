@@ -1,0 +1,409 @@
+/* ===  "odoo" palette of the FullCalendar theme (calendar_theme.js), forked from Monarch === */
+/* Defined on the root as the more-link popover and the dragged event are rendered in the body. */
+:root {
+    --o-calendar-background: var(--o-view-background-color);
+    --o-calendar-border: var(--border-color);
+    --o-calendar-faint: color-mix(in srgb, var(--gray-200) 50%, transparent);
+    --o-calendar-non-business: color-mix(in srgb, var(--o-gray-300) 50%, transparent);
+    --o-calendar-highlight: rgba(188, 232, 241, .3);
+    --o-calendar-neutral: rgba(208, 208, 208, .3);
+    --o-calendar-other-foreground: var(--gray-500);
+    --o-calendar-today: var(--o-calendar-today-background-color);
+    --o-calendar-today-foreground: var(--o-calendar-today-color);
+    --o-calendar-hover: color-mix(in srgb, var(--o-view-background-color) 75%, var(--o-action));
+    --o-calendar-hover-foreground: var(--emphasis-color);
+    --o-calendar-now: var(--danger);
+    --o-calendar-primary: var(--o-action);
+    --o-calendar-shadow: var(--o-shadow-color);
+    --o-calendar-divider-size: 15px;
+    --o-calendar-divider-opacity: .16;
+}
+
+/* ===  Theme rules that can't be expressed with the utility classes === */
+
+.o_calendar_event {
+    margin: 0 2px 1px;
+    border: var(--border-width) solid var(--o-calendar-event-border-color, var(--fc-event-color, var(--o-view-background-color)));
+    border-radius: var(--border-radius-sm);
+    background-color: var(--fc-event-color, var(--o-view-background-color));
+    color: var(--fc-event-contrast-color, var(--body-color));
+
+    &.o_calendar_column_event {
+        margin: 0 0 1px;
+    }
+
+    .o_calendar_event_main {
+        min-width: 0;
+        color: inherit;
+    }
+
+    /* Simulate the old UI (FC v4): the resizer at the bottom of the event is a "=" when hovered */
+    .o_calendar_resizer {
+        display: none;
+        z-index: 4;
+        color: var(--white);
+        text-align: center;
+        font-family: monospace;
+    }
+
+    &:hover .o_calendar_resizer {
+        display: block;
+    }
+
+    &.o_calendar_row_event .o_calendar_resizer {
+        width: 8px;
+
+        &.o_calendar_resizer_start {
+            inset-inline-start: -4px;
+        }
+
+        &.o_calendar_resizer_end {
+            inset-inline-end: -4px;
+        }
+    }
+
+    &.o_calendar_column_event .o_calendar_resizer {
+        height: 8px;
+
+        &.o_calendar_resizer_start {
+            top: -4px;
+        }
+
+        &.o_calendar_resizer_end {
+            bottom: -4px;
+        }
+    }
+
+    &.o_calendar_column_event:hover .o_calendar_resizer:after {
+        content: "=";
+        display: inline-block;
+        vertical-align: top;
+        line-height: 0;
+    }
+}
+
+.o_calendar_bg_event {
+    background-color: var(--fc-event-color, rgb(143, 223, 130));
+    opacity: .3;
+}
+
+.o_calendar_highlight {
+    background-color: var(--o-calendar-highlight);
+}
+
+.o_calendar_non_business {
+    background-color: var(--o-calendar-non-business);
+}
+
+.o_calendar_now_line {
+    border-top: var(--border-width) solid var(--o-calendar-now);
+}
+
+.o_calendar_more_link {
+    color: var(--link-color);
+}
+
+.o_calendar_more_popover {
+    /* keep the popover below the modals */
+    --fc-popover-z: calc(var(--o-bs-zindex-modal-backdrop) - 1);
+
+    min-width: 220px;
+
+    .o_calendar_day {
+        max-height: 500px;
+    }
+}
+
+/* Day number of the day headers and cells */
+.o_calendar_day_number,
+.o_calendar_day_top_number {
+    padding: var(--o-bs-spacer-1);
+    color: var(--o-calendar-day-number-color);
+    background: var(--o-calendar-day-number-bg, none);
+}
+
+.o_calendar_fc_view :is(.o_calendar_header_cell, .o_calendar_day)[aria-current=date] {
+    --o-calendar-day-number-bg: var(--o-calendar-today);
+    --o-calendar-day-number-color: var(--o-calendar-today-foreground);
+}
+
+.o_calendar_day_top_number {
+    line-height: calc(100% + var(--o-bs-spacer-1));
+    aspect-ratio: 1;
+}
+
+.o_calendar_day_other:not([aria-current=date]) .o_calendar_day_top {
+    --o-calendar-day-number-color: var(--o-calendar-other-foreground);
+
+    opacity: .8;
+}
+
+.o_calendar_disabled:not(.o_calendar_more_popover) {
+    background-color: var(--o-calendar-faint);
+}
+
+/* Time grid (day and week) */
+.o_calendar_fc_view_timeGridDay,
+.o_calendar_fc_view_timeGridWeek {
+    .o_calendar_day_number {
+        aspect-ratio: 1;
+
+        &:hover {
+            cursor: pointer;
+            opacity: 50%;
+        }
+    }
+
+    .o_calendar_header_cell[aria-current=date] .o_calendar_day_number {
+        border-radius: 50%;
+    }
+
+    /* The slot height is given by `slotMinHeight` */
+    .o_calendar_time_slot,
+    .o_calendar_time_slot_label {
+        font-size: .6rem;
+
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
+            font-size: .75rem;
+        }
+    }
+
+    /* Center the time label on its line */
+    .o_calendar_time_slot_label_inner {
+        transform: translateY(-50%);
+    }
+
+    /* Add a small gap on top of the time grid scroller to show the first time label (0:00) */
+    .o_calendar_all_day_divider + div > :first-child {
+        margin-top: 15px;
+
+        /* FullCalendar hides the top border of the first slot (in the first row), draw it back */
+        :first-child > .o_calendar_time_slot {
+            box-shadow: inset 0 var(--border-width) 0 var(--o-calendar-border);
+        }
+    }
+
+    /* Shadow below the "all day" row */
+    @media screen {
+        .o_calendar_all_day_divider:after {
+            position: absolute;
+            top: var(--border-width);
+            left: 0;
+            bottom: calc(-1 * var(--o-calendar-divider-size));
+            right: 0;
+            background: linear-gradient(0deg, transparent, color-mix(in srgb, var(--o-calendar-shadow) calc(var(--o-calendar-divider-opacity) * 100%), transparent));
+            pointer-events: none;
+            content: "";
+        }
+    }
+
+    .o_calendar_event {
+        /* Prevent events with similar color to visually overlap each other */
+        &:not(.o_event_allday):not(.o_homework_event) {
+            box-shadow: 0 0 0 1px var(--o-calendar-background);
+        }
+    }
+
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+        .o_calendar_day .o_calendar_row_event .o_calendar_event_main {
+            max-height: 1.2em;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    }
+}
+
+.o_calendar_fc_view_timeGridDay .o_calendar_day_number {
+    line-height: 1;
+}
+
+.o_calendar_fc_view_timeGridWeek {
+    .o_calendar_day_number {
+        @media screen and (min-width: 992px), print and (min-width: 190mm) {
+            font-size: 1.25rem;
+        }
+    }
+
+    /* The "now" line of the current day is extended to the whole week */
+    .o_calendar_lane .o_calendar_time_indicator_now {
+        position: absolute;
+        height: 1px;
+        background-color: var(--o-calendar-today);
+        opacity: .3;
+        transform: translateY(-100%);
+    }
+
+    .o_calendar_lane:nth-child(1) .o_calendar_time_indicator_now {
+        left: 0;
+        right: -600%;
+    }
+
+    .o_calendar_lane:nth-child(2) .o_calendar_time_indicator_now {
+        left: -100%;
+        right: -500%;
+    }
+
+    .o_calendar_lane:nth-child(3) .o_calendar_time_indicator_now {
+        left: -200%;
+        right: -400%;
+    }
+
+    .o_calendar_lane:nth-child(4) .o_calendar_time_indicator_now {
+        left: -300%;
+        right: -300%;
+    }
+
+    .o_calendar_lane:nth-child(5) .o_calendar_time_indicator_now {
+        left: -400%;
+        right: -200%;
+    }
+
+    .o_calendar_lane:nth-child(6) .o_calendar_time_indicator_now {
+        left: -500%;
+        right: -100%;
+    }
+
+    .o_calendar_lane:nth-child(7) .o_calendar_time_indicator_now {
+        left: -600%;
+        right: 0;
+    }
+
+    /* Dot at the start of the "now" line */
+    .o_calendar_now_line::before {
+        content: "";
+        position: absolute;
+        height: .75rem;
+        width: .75rem;
+        border: var(--border-width) solid var(--o-calendar-background);
+        border-radius: var(--border-radius-pill);
+        background-color: var(--o-calendar-today);
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Month and year */
+.o_calendar_fc_view_dayGridMonth,
+.o_calendar_fc_view_multiMonthYear {
+    .o_calendar_week,
+    .o_calendar_week_header {
+        flex: 0 0 4ch;
+        text-align: center;
+        line-height: var(--o-bs-line-height-sm);
+        font-size: var(--o-font-size-base-smaller);
+        opacity: .5;
+
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+            width: 3ch;
+        }
+    }
+
+    .o_calendar_week_header {
+        color: transparent;
+    }
+
+    .o_calendar_week_number {
+        background-color: var(--o-calendar-neutral);
+        opacity: .8;
+
+        @media screen and (max-width: 991.98px), print and (max-width: 189.98mm) {
+            font-size: .5rem;
+        }
+
+        @media screen and (min-width: 992px), print and (min-width: 190mm) {
+            padding: var(--o-bs-spacer-1);
+        }
+    }
+
+    .o_calendar_event_main:not(.o_homework_single):not(.o_homework_multi) {
+        line-height: 100%;
+    }
+}
+
+.o_calendar_fc_view_multiMonthYear {
+    --o-calendar-year-row-height: 2rem;
+    --o-calendar-year-header-height: calc(var(--o-font-size-base-smaller) * var(--body-line-height));
+
+    .o_calendar_day_top {
+        min-height: var(--o-calendar-year-row-height);
+        line-height: 1;
+
+        &:hover > .o_calendar_day_top_number {
+            --o-calendar-day-number-bg: var(--o-calendar-hover);
+            --o-calendar-day-number-color: var(--o-calendar-hover-foreground);
+        }
+    }
+
+    .o_calendar_header_cell, .o_calendar_day {
+        --border-color: transparent;
+    }
+
+    /* Keep the months height independent from the other months on the same line */
+    [role="listitem"] {
+        align-self: flex-start;
+    }
+
+    .o_calendar_week {
+        align-self: center;
+        cursor: default;
+    }
+
+    .o_calendar_month {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
+            max-width: 21rem;
+            margin-inline: auto;
+        }
+    }
+
+    /* Only keep the day number in the cells instead of stretching the rows over the */
+    /* aspect ratio FullCalendar forces (inline style and `!important` fill class) */
+    .o_calendar_month_body {
+        aspect-ratio: auto !important;
+
+        > [role="rowgroup"] {
+            position: static !important;
+        }
+    }
+
+    .o_calendar_month_title {
+        font-size: var(--o-bs-font-size-base);
+    }
+
+    .o_calendar_header_cell_inner {
+        line-height: var(--o-calendar-year-header-height);
+    }
+
+    /* FullCalendar keeps the title and the day headers of a single column month sticky until */
+    /* its last week (inline margins), guessing the week height from its aspect ratio */
+    .o_calendar_month_sticky {
+        --o-calendar-year-sticky-offset: calc(var(--o-calendar-year-row-height) + var(--o-calendar-year-header-height));
+
+        .o_calendar_month_header, .o_calendar_month_table_header {
+            background-color: var(--o-calendar-background);
+        }
+
+        .o_calendar_month_header {
+            margin-bottom: var(--o-calendar-year-sticky-offset) !important;
+        }
+
+        .o_calendar_month_table {
+            margin-top: calc(-1 * var(--o-calendar-year-sticky-offset)) !important;
+        }
+
+        .o_calendar_month_table_header {
+            margin-bottom: var(--o-calendar-year-row-height) !important;
+        }
+
+        .o_calendar_month_body {
+            margin-top: calc(-1 * var(--o-calendar-year-row-height)) !important;
+        }
+    }
+}
+
+/* Square selection of the days */
+.o_calendar_day.o-highlight {
+    background-color: var(--o-calendar-highlight) !important;
+
+    &[aria-disabled] {
+        background-image: repeating-linear-gradient(-45deg, transparent, var(--o-calendar-neutral) 25px, transparent 50px);
+    }
+}

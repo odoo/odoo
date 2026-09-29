@@ -34,8 +34,8 @@
 }
 
 .o_calendar_sidepanel_container {
-    --o-cw-filter-avatar-size: 20px;
-    --Avatar-size: var(--o-cw-filter-avatar-size);
+    --o-calendar-filter-avatar-size: 20px;
+    --Avatar-size: var(--o-calendar-filter-avatar-size);
 
     flex: 0 0 auto;
 
@@ -95,7 +95,7 @@
         @extend %o-html-layout-fill;
 
         .o_calendar_renderer {
-            .fc-view {
+            .o_calendar_fc_view {
                 border-top: 0;
             }
 

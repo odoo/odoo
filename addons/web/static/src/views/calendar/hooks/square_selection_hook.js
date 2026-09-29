@@ -4,9 +4,13 @@ import { shallowEqual } from "@web/core/utils/objects";
 import { closest } from "@web/core/utils/ui";
 import { useCallbackRecorder } from "@web/search/action_hook";
 
-const ROW_SELECTOR = ".fc-daygrid-row";
-const CELL_SELECTOR = `${ROW_SELECTOR} > .fc-daygrid-day`;
-const IGNORE_SELECTOR = [".fc-event", ".fc-more-link", ".fc-more-popover"].join(",");
+const ROW_SELECTOR = ".o_calendar_day_row";
+const CELL_SELECTOR = `${ROW_SELECTOR} > .o_calendar_day`;
+const IGNORE_SELECTOR = [
+    ".o_calendar_event",
+    ".o_calendar_more_link",
+    ".o_calendar_more_popover",
+].join(",");
 
 function getClosestCell(ctx) {
     const { pointer, ref } = ctx;

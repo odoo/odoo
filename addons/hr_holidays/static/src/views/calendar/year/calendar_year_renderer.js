@@ -64,7 +64,11 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
             });
             const props = this.getPopoverProps(date, leaves);
             props["records"] = mandatory_days_data.concat(props["records"]);
-            this.mandatoryDayPopover.open(target, props, "o_cw_popover_holidays o_cw_popover");
+            this.mandatoryDayPopover.open(
+                target,
+                props,
+                "o_calendar_popover_holidays o_calendar_popover"
+            );
         } else if (leaves.length) {
             this.openPopover(target, date, leaves);
         } else if (this.props.model.canCreate) {
@@ -76,7 +80,7 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
         this.popover.open(
             target,
             this.getPopoverProps(date, records),
-            "o_cw_popover_holidays o_cw_popover"
+            "o_calendar_popover_holidays o_calendar_popover"
         );
     }
 
@@ -92,13 +96,13 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
         }
 
         const css = `
-            .fc-event-start.${className} {
+            .o_calendar_event_start.${className} {
                 clip-path: polygon(${start}% 0%, 100% 0%, 100% 100%, ${start}% 100%);
             }
-            .fc-event-end.${className} {
+            .o_calendar_event_end.${className} {
                 clip-path: polygon(0% 0%, ${end}% 0%, ${end}% 100%, 0% 100%);
             }
-            .fc-event-start.fc-event-end.${className} {
+            .o_calendar_event_start.o_calendar_event_end.${className} {
                 clip-path: polygon(${start}% 0%, ${end}% 0%, ${end}% 100%, ${start}% 100%);
             }
         `;

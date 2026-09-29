@@ -45,7 +45,7 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
      * @override
      */
     eventClassNames({ el, event }) {
-        const classes = super.eventClassNames({ el, event });
+        const classes = super.eventClassNames(...arguments);
         const pastEventClass = classes.indexOf("o_past_event");
         if (pastEventClass != -1 && luxon.DateTime.now() <= event.end) {
             classes.splice(pastEventClass, 1);
@@ -92,7 +92,7 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
             record.startDelta = info.startDelta;
             record.endDelta = info.endDelta;
             this.openPopover(dropTarget, record);
-            this.highlightEvent(info.event, "fc-event-mirror");
+            this.highlightEvent(info.event, "o_calendar_event_mirror");
             this.popoverPromise.promise.then(() => {
                 this.props.model.load();
             });
@@ -119,7 +119,7 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
             record.delta = info.delta;
             record.isAllDay = info.event.allDay;
             this.openPopover(dropTarget, record);
-            this.highlightEvent(info.event, "fc-event-mirror");
+            this.highlightEvent(info.event, "o_calendar_event_mirror");
             this.popoverPromise.promise.then(() => {
                 this.props.model.load();
             });
@@ -137,7 +137,7 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
         const start = luxon.DateTime.fromJSDate(info.start);
         const end = luxon.DateTime.fromJSDate(info.end);
         this.popover.open(
-            info.jsEvent?.toElement ?? info.view.calendar.el.querySelector(".fc-event-mirror"),
+            info.jsEvent?.toElement ?? info.view.calendar.el.querySelector(".o_calendar_event_mirror"),
             {
                 ...this.getPopoverProps(null),
                 context: {
@@ -147,7 +147,7 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
                     default_hour_to: end.hour + end.minute / 60,
                 },
             },
-            `o_cw_popover card o_calendar_color_0`
+            `o_calendar_popover card o_calendar_color_0`
         );
     }
 

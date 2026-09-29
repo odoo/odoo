@@ -30,7 +30,9 @@ export class CalendarCommonPopover extends Component {
             window,
             "pointerdown",
             (e) => {
-                if (!e.target.closest(`.fc-event[data-event-id="${this.props.record.id}"]`)) {
+                if (
+                    !e.target.closest(`.o_calendar_event[data-event-id="${this.props.record.id}"]`)
+                ) {
                     e.preventDefault();
                 }
             },
@@ -58,7 +60,9 @@ export class CalendarCommonPopover extends Component {
             resId: this.resId,
             popoverNode: meta.popoverNode,
             readonly: this.readonly,
-            rootClass: `o_cw_popover o_calendar_color_${typeof color === "number" ? color : 0}`,
+            rootClass: `o_calendar_popover o_calendar_color_${
+                typeof color === "number" ? color : 0
+            }`,
             context: meta.context,
             reloadOnClose: () => this.props.model.load(),
             openRecord: this.props.openRecord,

@@ -34,12 +34,12 @@ test("test creation of todo from the calendar view", async () => {
             </calendar>
         `,
     });
-    expect(".fc-daygrid-event").toHaveCount(2, {
+    expect(".o_calendar_row_event").toHaveCount(2, {
         message: "The calendar view should have 2 todos with date_deadline set",
     });
 
     // click on today's cell to create a new todo
-    await contains(".fc-day-today").click();
+    await contains("[aria-current=date]").click();
     await animationFrame();
 
     expect(".o-calendar-quick-create").toBeVisible();
@@ -48,7 +48,7 @@ test("test creation of todo from the calendar view", async () => {
     await contains(`.o-calendar-quick-create--create-btn`).click();
     await animationFrame();
 
-    expect(".fc-daygrid-event").toHaveCount(3, {
+    expect(".o_calendar_row_event").toHaveCount(3, {
         message: "The calendar view should now have 3 todos with date_deadline set",
     });
 });

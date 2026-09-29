@@ -53,18 +53,18 @@ test("a time off in days ends on the day its exclusive bound closes", async () =
 
     // midnight on the 11th closes the 10th
     await clickDate("2024-01-09");
-    await waitFor(".o_cw_popover_holidays");
-    expect(queryAllTexts(".o_cw_popover_holidays .fw-bold")).toEqual(["January 9-10, 2024"]);
+    await waitFor(".o_calendar_popover_holidays");
+    expect(queryAllTexts(".o_calendar_popover_holidays .fw-bold")).toEqual(["January 9-10, 2024"]);
 
     // the popover covers the next days
     await closeCwPopOver();
     await clickDate("2024-01-10");
-    await waitFor(".o_cw_popover_holidays");
-    expect(".o_cw_popover_holidays .o_cw_popover_link").toHaveCount(1);
+    await waitFor(".o_calendar_popover_holidays");
+    expect(".o_calendar_popover_holidays .o_calendar_popover_link").toHaveCount(1);
 
     await closeCwPopOver();
     await clickDate("2024-01-11");
-    expect(".o_cw_popover_holidays").toHaveCount(0);
+    expect(".o_calendar_popover_holidays").toHaveCount(0);
 });
 
 test("time off covering the same days shares a group", async () => {
@@ -91,9 +91,9 @@ test("time off covering the same days shares a group", async () => {
 
     // the day request stops at midnight on the 10th, so both name the 9th alone
     await clickDate("2024-01-09");
-    await waitFor(".o_cw_popover_holidays");
-    expect(queryAllTexts(".o_cw_popover_holidays .fw-bold")).toEqual(["January 9, 2024"]);
-    expect(".o_cw_popover_holidays .o_cw_popover_link").toHaveCount(2);
+    await waitFor(".o_calendar_popover_holidays");
+    expect(queryAllTexts(".o_calendar_popover_holidays .fw-bold")).toEqual(["January 9, 2024"]);
+    expect(".o_calendar_popover_holidays .o_calendar_popover_link").toHaveCount(2);
 });
 
 test("a time off in hours ends inside the day it names", async () => {
@@ -111,9 +111,9 @@ test("a time off in hours ends inside the day it names", async () => {
     await mountYearCalendar();
 
     await clickDate("2024-01-09");
-    await waitFor(".o_cw_popover_holidays");
-    expect(queryAllTexts(".o_cw_popover_holidays .fw-bold")).toEqual(["January 9, 2024"]);
+    await waitFor(".o_calendar_popover_holidays");
+    expect(queryAllTexts(".o_calendar_popover_holidays .fw-bold")).toEqual(["January 9, 2024"]);
 
     await clickDate("2024-01-10");
-    expect(".o_cw_popover_holidays").toHaveCount(0);
+    expect(".o_calendar_popover_holidays").toHaveCount(0);
 });

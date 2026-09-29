@@ -1,27 +1,27 @@
-.o_cw_popover_link {
+.o_calendar_popover_link {
     margin-top: 6px;
 
     &[class*="o_calendar_color_"] {
-        --o-bg-opacity: 1;
+        --o-calendar-bg-opacity: 1;
 
         border-radius: var(--border-radius);
-        border-color: var(--o-cw-popover-color, var(--info));
+        border-color: var(--o-calendar-popover-color, var(--info));
         padding: 0 var(--o-bs-spacer-1);
-        background: RGBA(var(--o-cw-popover-color--subtle, #{to-rgb($info)}), var(--o-bg-opacity));
+        background: RGBA(var(--o-calendar-popover-color--subtle, #{to-rgb($info)}), var(--o-calendar-bg-opacity));
         font-weight: var(--o-bs-font-weight-normal);
 
         &:hover {
-            --o-bg-opacity: .5 !important;
+            --o-calendar-bg-opacity: .5 !important;
         }
 
         &.o_event_dot {
-            --o-bg-opacity: 0;
+            --o-calendar-bg-opacity: 0;
 
             &:before {
                 margin-right: var(--o-bs-spacer-1);
                 font-family: 'Material Symbols Outlined';
                 font-size: var(--o-font-size-base-smaller);
-                color: var(--o-cw-popover-color, var(--info));
+                color: var(--o-calendar-popover-color, var(--info));
                 content: '\f111';
             }
 
@@ -33,8 +33,8 @@
         $color-subtle: mix($o-white, $color, 55%);
 
         &.o_calendar_color_#{$i - 1} {
-            --o-cw-popover-color: #{$color};
-            --o-cw-popover-color--subtle: #{$color-subtle};
+            --o-calendar-popover-color: #{$color};
+            --o-calendar-popover-color--subtle: #{$color-subtle};
 
             color: color-contrast($color-subtle);
         }

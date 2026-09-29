@@ -198,7 +198,7 @@ test("Linked record rendering", async () => {
         res_model_id: modelId,
     });
     await mountView({ type: "calendar", resModel: "calendar.event", arch });
-    expect(".o_calendar_renderer .o_calendar_current .fc-view").toHaveCount(1);
+    expect(".o_calendar_renderer .o_calendar_current .o_calendar_fc_view").toHaveCount(1);
 
     await changeScale("week");
     await clickEvent(eventId);
@@ -262,27 +262,27 @@ test("Activity events rendering and popover", async () => {
 
     // Check activity events rendering (3 activity events: overdue, today and planned)
     // Done activities and other users activities are not displayed.
-    expect(".fc-event.o_activity_event").toHaveCount(3);
+    expect(".o_calendar_event.o_activity_event").toHaveCount(3);
     expect(
-        ".fc-daygrid-day[data-date='2016-12-11'] .o_activity_event:contains('Activity 1')"
+        ".o_calendar_day[data-date='2016-12-11'] .o_activity_event:contains('Activity 1')"
     ).toHaveCount(1);
     expect(
-        ".fc-daygrid-day[data-date='2016-12-12'] .o_activity_event:contains('2 pending activities')"
+        ".o_calendar_day[data-date='2016-12-12'] .o_activity_event:contains('2 pending activities')"
     ).toHaveCount(1);
     expect(
-        ".fc-daygrid-day[data-date='2016-12-13'] .o_activity_event:contains('Activity 5')"
+        ".o_calendar_day[data-date='2016-12-13'] .o_activity_event:contains('Activity 5')"
     ).toHaveCount(1);
     // Check activity calendar side panel filter
     expect(".o_calendar_sidepanel input#show_activities_checkbox").toHaveProperty("checked", true);
     await contains(".o_calendar_sidepanel input#show_activities_checkbox").click(); // Hide activities
     expect.verifySteps(["calendar_hide_activities"]); // Does not fetch activities
-    expect(".fc-event.o_activity_event").toHaveCount(0);
+    expect(".o_calendar_event.o_activity_event").toHaveCount(0);
     await contains(".o_calendar_sidepanel input#show_activities_checkbox").click(); // Show activities
     expect.verifySteps(["calendar_show_activities", "calendar_fetch_activities"]);
-    expect(".fc-event.o_activity_event").toHaveCount(3);
+    expect(".o_calendar_event.o_activity_event").toHaveCount(3);
     // Check activity popover rendering
     await clickEvent("activity-event-2016-12-12");
-    await waitFor(".o_cw_activity_popover .o-mail-ActivityListPopoverItem");
+    await waitFor(".o_calendar_activity_popover .o-mail-ActivityListPopoverItem");
     expect(queryAllTexts(".o-mail-ActivityListPopoverItem-name")).toEqual([
         "Activity 2",
         "Activity 3",
@@ -302,8 +302,8 @@ test("Activity events rendering and popover", async () => {
     expect.verifySteps(["action_reschedule_tomorrow", "calendar_fetch_activities"]);
     expect(a3_selector).toHaveCount(0);
     // Check activity popover auto closing (no activity left for the day) and calendar view update
-    expect(".o_cw_activity_popover").toHaveCount(0);
-    expect(".fc-event.o_activity_event").toHaveCount(2);
+    expect(".o_calendar_activity_popover").toHaveCount(0);
+    expect(".o_calendar_event.o_activity_event").toHaveCount(2);
     // Check activity records have been updated
     // Activity 2: Archived and set done
     // Activity 3: Rescheduled
@@ -376,7 +376,7 @@ test("Attendee filters: 'Meet with' calendar filters + 'My calendar' filter", as
     // deactivate calendars + no partner filters => no events.
     await toggleFilter("calendar_id", serverData.calendarIds[0]);
     await toggleFilter("calendar_id", serverData.calendarIds[1]);
-    expect(".fc-event:not(.o_activity_event)").toHaveCount(0);
+    expect(".o_calendar_event:not(.o_activity_event)").toHaveCount(0);
 
     // Check that "Partner 1" already has an inactive calendar.filter record.
     const [filter1Id] = pyEnv["calendar.filters"].search([
@@ -395,13 +395,13 @@ test("Attendee filters: 'Meet with' calendar filters + 'My calendar' filter", as
         `o_tag_color_${getColor(serverData.partnerId_1)}`  // tag color should match partner's.
     );
     expect(filter1.active).toBe(true);
-    expect(".fc-event:not(.o_activity_event)").toHaveCount(2);
+    expect(".o_calendar_event:not(.o_activity_event)").toHaveCount(2);
 
     // Deactivating an existing partner filter.
     await togglePartnerFilter("partner_ids", "Partner 1");
     await waitForNone(".o_calendar_filter[data-name=partner_ids] .o_tag");
     expect(filter1.active).toBe(false);
-    expect(".fc-event:not(.o_activity_event)").toHaveCount(0);
+    expect(".o_calendar_event:not(.o_activity_event)").toHaveCount(0);
 
     // Activating a new partner filter (calendar.filter record to create).
     const [filter2Id] = pyEnv["calendar.filters"].search([
@@ -420,5 +420,5 @@ test("Attendee filters: 'Meet with' calendar filters + 'My calendar' filter", as
         ["partner_id", "=", serverData.partnerId_2],
     ]);
     expect(filter2.active).toBe(true);
-    expect(".fc-event:not(.o_activity_event)").toHaveCount(1);
+    expect(".o_calendar_event:not(.o_activity_event)").toHaveCount(1);
 });

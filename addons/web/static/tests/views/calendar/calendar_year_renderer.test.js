@@ -24,11 +24,11 @@ preloadBundle("web.fullcalendar_lib");
 
 test(`mount a CalendarYearRenderer`, async () => {
     await start();
-    expect(`.fc-multimonth-month`).toHaveCount(12);
+    expect(`.o_calendar_month`).toHaveCount(12);
 
     // check "title format"
-    expect(`.fc-multimonth-title`).toHaveCount(12);
-    expect(queryAllTexts`.fc-multimonth-title`).toEqual([
+    expect(`.o_calendar_month_title`).toHaveCount(12);
+    expect(queryAllTexts`.o_calendar_month_title`).toEqual([
         "January 2021",
         "February 2021",
         "March 2021",
@@ -44,8 +44,8 @@ test(`mount a CalendarYearRenderer`, async () => {
     ]);
 
     // check day header format
-    expect(`.fc-multimonth-month:eq(0) .fc-col-header-cell`).toHaveCount(7);
-    expect(queryAllTexts`.fc-multimonth-month:eq(0) .fc-col-header-cell`).toEqual([
+    expect(`.o_calendar_month:eq(0) .o_calendar_header_cell`).toHaveCount(7);
+    expect(queryAllTexts`.o_calendar_month:eq(0) .o_calendar_header_cell`).toEqual([
         "S",
         "M",
         "T",
@@ -56,7 +56,7 @@ test(`mount a CalendarYearRenderer`, async () => {
     ]);
 
     // check showNonCurrentDates
-    expect(`:not(.fc-day-disabled) > * > * > .fc-daygrid-day-number`).toHaveCount(365);
+    expect(`:not([aria-disabled]) > * > * > .o_calendar_day_top_number`).toHaveCount(365);
 });
 
 test.tags("desktop");
@@ -124,7 +124,7 @@ test(`display correct column header for days, independent of the timezone`, asyn
     // if the first day of the week is Sunday.
     mockTimeZone(-9);
     await start();
-    expect(queryAllTexts`.fc-multimonth-month:eq(0) .fc-col-header-cell`).toEqual([
+    expect(queryAllTexts`.o_calendar_month:eq(0) .o_calendar_header_cell`).toEqual([
         "S",
         "M",
         "T",
@@ -137,5 +137,5 @@ test(`display correct column header for days, independent of the timezone`, asyn
 
 test("remove row when no day of current month", async () => {
     await start();
-    expect(".fc-day-other, .fc-day-disabled").toHaveCount(76);
+    expect(".o_calendar_day_other, [aria-disabled]").toHaveCount(76);
 });

@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add("time_off_graph_view_tour", {
             run: "click",
         },
         {
-            trigger: ".fc-daygrid-day-top",
+            trigger: ".o_calendar_day_top",
         },
         {
             content: "Open reporting menu",

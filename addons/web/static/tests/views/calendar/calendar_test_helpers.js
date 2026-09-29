@@ -259,7 +259,7 @@ async function waitForSelection() {
  * @returns {HTMLElement}
  */
 export function findAllDaySlot(date) {
-    return queryFirst(`.fc-daygrid-day[data-date="${date}"]`);
+    return queryFirst(`.o_calendar_day[data-date="${date}"]`);
 }
 
 /**
@@ -267,7 +267,9 @@ export function findAllDaySlot(date) {
  * @returns {HTMLElement}
  */
 export function findDateCell(date) {
-    return queryFirst(`.fc-day[data-date="${date}"]`);
+    return queryFirst(
+        `:is(.o_calendar_header_cell, .o_calendar_day, .o_calendar_lane)[data-date="${date}"]`
+    );
 }
 
 /**
@@ -283,14 +285,14 @@ export function findEvent(eventId) {
  * @returns {HTMLElement}
  */
 export function findDateColumn(date) {
-    return queryFirst(`.fc-col-header-cell.fc-day[data-date="${date}"]`);
+    return queryFirst(`.o_calendar_header_cell[data-date="${date}"]`);
 }
 
 /**
  * @returns {HTMLElement}
  */
 export function findTimeGridScroller() {
-    let scroller = queryFirst(`.fc-timegrid-slot-lane`);
+    let scroller = queryFirst(`.o_calendar_time_slot`);
     while (!["auto", "scroll"].includes(getComputedStyle(scroller).overflowY)) {
         scroller = scroller.parentElement;
     }
@@ -302,7 +304,7 @@ export function findTimeGridScroller() {
  * @returns {HTMLElement}
  */
 export function findTimeRow(time) {
-    return queryFirst(`.fc-timegrid-slot-lane[data-time="${time}"]`);
+    return queryFirst(`.o_calendar_time_slot[data-time="${time}"]`);
 }
 
 /**
@@ -312,7 +314,7 @@ export function findTimeRow(time) {
  * @returns {HTMLElement}
  */
 export function findTimeGridColumn(date) {
-    return queryFirst(`.fc-timegrid-col[data-date="${date}"]`);
+    return queryFirst(`.o_calendar_lane[data-date="${date}"]`);
 }
 
 /**
@@ -396,7 +398,7 @@ export async function clickEvent(eventId) {
 
 export function expandCalendarView() {
     // Expends Calendar view and FC too
-    let tmpElement = queryFirst(".fc");
+    let tmpElement = queryFirst(".o_calendar_widget");
     do {
         tmpElement = tmpElement.parentElement;
         tmpElement.classList.add("h-100");
@@ -419,7 +421,7 @@ export async function selectTimeRange(startDateTime, endDateTime) {
     const midTime = `${String(midHour).padStart(2, "0")}:00:00`;
 
     instantScrollTo(
-        queryFirst(`.fc-timegrid-slot-lane[data-time="${midTime}"]`, { visible: false })
+        queryFirst(`.o_calendar_time_slot[data-time="${midTime}"]`, { visible: false })
     );
 
     const startColumn = findTimeGridColumn(startDate);
@@ -619,10 +621,10 @@ export async function resizeEventToTime(eventId, dateTime) {
 
     instantScrollTo(eventEl);
 
-    await hover(`.fc-event-main:first`, { root: eventEl });
+    await hover(`.o_calendar_event_main:first`, { root: eventEl });
     await animationFrame();
 
-    const resizer = queryFirst(`.fc-event-resizer-end`, { root: eventEl });
+    const resizer = queryFirst(`.o_calendar_resizer_end`, { root: eventEl });
     Object.assign(resizer.style, {
         display: "block",
         height: "1px",
@@ -666,11 +668,13 @@ export async function resizeEventToDate(eventId, date, fromStart = false) {
 
     instantScrollTo(eventEl);
 
-    await hover(".fc-event-main", { root: eventEl });
+    await hover(".o_calendar_event_main", { root: eventEl });
     await animationFrame();
 
     // Show the resizer
-    const resizer = queryFirst(fromStart ? ".fc-event-resizer-start" : ".fc-event-resizer-end", {
+    const resizer = queryFirst(
+        fromStart ? ".o_calendar_resizer_start" : ".o_calendar_resizer_end",
+        {
         root: eventEl,
     });
     Object.assign(resizer.style, { display: "block", height: "1px", bottom: "0" });
