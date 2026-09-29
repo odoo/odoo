@@ -5,6 +5,7 @@ import {
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
+import { normalizeCSSColor } from "@web/core/utils/colors";
 
 defineWebsiteModels();
 
@@ -58,6 +59,16 @@ test("theme tab: a palette switch is previewed, undone, redone and written on sa
     await switchPalette();
     expect(".o_dialog").toHaveCount(0);
     expect(previewedColor()).toBe(PALETTE_COLOR);
+    // The presets' cards show the colors computed from it, e.g. the button
+    // text contrasting with the new first color.
+    const buttonText = queryFirst(":iframe html").style.getPropertyValue(
+        "--o-preview-o-cc1-btn-primary-color"
+    );
+    expect(buttonText).not.toBe("rgb(255, 255, 255)");
+    const cardButtonText = getComputedStyle(document.documentElement).getPropertyValue(
+        "--hb-cp-o-cc1-btn-primary-text"
+    );
+    expect(normalizeCSSColor(cardButtonText)).toBe(normalizeCSSColor(buttonText));
 
     await contains(".o-snippets-top-actions button[data-icon='undo']").click();
     expect(previewedColor()).toBe("");

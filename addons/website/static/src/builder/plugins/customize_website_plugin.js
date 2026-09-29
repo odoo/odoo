@@ -381,10 +381,28 @@ export class CustomizeWebsitePlugin extends Plugin {
         for (const [name, value] of aliases) {
             this.setRootProperty(`--o-preview-${name}`, value);
         }
-        if (url.includes("/options/colors/")) {
-            // The color pickers show the website colors.
-            setBuilderCSSVariables(getHtmlStyle(this.document));
-        }
+        // After the aliases: a variable change can change the colors computed
+        // from it.
+        this.updateBuilderColors();
+    }
+    /**
+     * Updates the website colors that the builder shows (e.g. the color
+     * pickers, the color presets' cards) with the previewed ones, when set
+     * (see `computeColorSystemPreview`, where the preset buttons' names
+     * differ).
+     */
+    updateBuilderColors() {
+        const style = getHtmlStyle(this.document);
+        const getPreviewName = (name) =>
+            name.replace(
+                /-btn-(primary|secondary)(-text)?$/,
+                (_, type, isText) => `-btn-${type}-${isText ? "color" : "bg"}`
+            );
+        setBuilderCSSVariables({
+            getPropertyValue: (property) =>
+                style.getPropertyValue(`--o-preview-${getPreviewName(property.slice(2))}`) ||
+                style.getPropertyValue(property),
+        });
     }
     setRootProperty(property, value) {
         // Also on the theme colors preview dialog, if open.
