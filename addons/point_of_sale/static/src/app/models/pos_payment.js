@@ -79,15 +79,13 @@ export class PosPayment extends Base {
 
     setAmount(value, currency = this.pos_order_id.currency) {
         this.pos_order_id.assertEditable();
+        const parsedValue = parseFloat(value) || 0;
 
-        if (currency != this.pos_order_id.currency) {
-            this.amount_currency = parseFloat(value) || 0;
-            this.amount = this.pos_order_id.currency.round(
-                this.currency.convertToDefaultCurrency(this.amount_currency)
-            );
+        if (currency === this.pos_order_id.currency) {
+            this.amount = this.amount_currency = this.pos_order_id.currency.round(parsedValue);
         } else {
-            this.amount = this.pos_order_id.currency.round(parseFloat(value) || 0);
-            this.amount_currency = this.currency.convert(this.amount);
+            this.amount_currency = parsedValue;
+            this.amount = this.pos_order_id.currency.convert(parsedValue, currency);
         }
     }
 

@@ -437,14 +437,14 @@ export class PosOrder extends PosOrderAccounting {
         if (!canSend) {
             return { status: false, data: message, size: "sm" };
         }
-        const totalAmountDue = this.getDefaultAmountDueToPayIn(payment_method);
+        const totalAmountDue = this.getDefaultAmountDueToPayIn(payment_method, args.currency);
         const newPaymentLine = this.models["pos.payment"].create({
             pos_order_id: this,
             payment_method_id: payment_method,
             foreign_currency_id: args.currency,
         });
         this.selectPaymentline(newPaymentLine);
-        newPaymentLine.setAmount(totalAmountDue);
+        newPaymentLine.setAmount(totalAmountDue, args.currency);
 
         if ((payment_method.payment_interface && !this.isRefund) || payment_method.useBankQrCode) {
             newPaymentLine.setPaymentStatus("pending");
@@ -991,12 +991,18 @@ export class PosOrder extends PosOrderAccounting {
         };
     }
 
+    get hasNoRemainingDueOrChange() {
+        return Boolean(!this.remainingDue && !this.change);
+    }
+
     get hasRemainingDue() {
         return this.totalDue < 0 ? this.remainingDue < 0 : this.remainingDue > 0;
     }
 
     get remainingDueAmount() {
-        return this.orderCurrency.convert(this.hasRemainingDue ? this.remainingDue : this.change);
+        return this.hasRemainingDue
+            ? this.getRemainingDueCurrency(this.orderCurrency)
+            : this.getChangeCurrency(this.orderCurrency);
     }
 
     get remainingDueLabel() {
