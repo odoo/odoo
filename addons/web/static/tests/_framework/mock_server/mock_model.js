@@ -133,6 +133,13 @@ function convertToOnChange(model, values, specification) {
         const field = model._fields[fname];
         if (isM2OField(field.type) && typeof val === "number") {
             values[fname] = getRelation(field).web_read(val, specification[fname].fields || {})[0];
+        } else if (isM2OField(field.type) && isObject(val)) {
+            // a many2one value can be given as the values of the co-record (e.g. the inverse field
+            // of a new x2many record): the server returns it as a web_read value if that co-record
+            // exists, and false otherwise, as a new record can't be represented client side
+            values[fname] = val.id
+                ? getRelation(field).web_read(val.id, specification[fname].fields || {})[0]
+                : false;
         } else if (isX2MField(field)) {
             const coModel = getRelation(field);
             for (const cmd of val) {
@@ -2243,6 +2250,9 @@ export class Model extends Array {
                 }
             }
             Object.assign(onchangeValues, defaultValues);
+            // on the first call, the server returns the values of all fields of the spec, so the
+            // values it received are part of the result as well
+            Object.assign(onchangeValues, pick(values, ...fieldsFromView));
         }
 
         const finalValues = { ...serverValues, ...onchangeValues, ...values };
@@ -2264,6 +2274,18 @@ export class Model extends Array {
         return {
             value: convertToOnChange(this, onchangeValues, fieldsSpec),
         };
+    }
+
+    /**
+     * @param {Record<string, any>[]} valuesList
+     * @param {MaybeIterable<string>} fieldNames
+     * @param {Record<string, any>} fieldsSpec
+     */
+    onchange_batch(valuesList, fieldNames, fieldsSpec) {
+        const kwargs = getKwArgs(arguments, "values_list", "field_names", "fields_spec");
+        ({ values_list: valuesList, field_names: fieldNames, fields_spec: fieldsSpec } = kwargs);
+
+        return valuesList.map((values) => this.onchange([], values, fieldNames, fieldsSpec));
     }
 
     /**
