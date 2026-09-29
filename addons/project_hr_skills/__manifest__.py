@@ -7,7 +7,7 @@
         Search project tasks according to the assignees' skills
     """,
     'category': 'Services/Project',
-    'depends': ['project', 'hr_skills'],
+    'depends': ['project', 'hr'],
     'auto_install': True,
     'data': [
         'views/project_task_views.xml',

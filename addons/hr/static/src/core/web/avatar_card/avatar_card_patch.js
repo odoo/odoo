@@ -1,8 +1,12 @@
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 
+import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { TagsList } from "@web/core/tags_list/tags_list";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
+
+Object.assign(AvatarCard.components, { BadgeTag, TagsList });
 
 patch(AvatarCard, {
     get allowedModels() {
@@ -30,6 +34,19 @@ const avatarCardPatch = {
             return false;
         }
         return user.allowedCompanies.map((c) => c.id).includes(this.employeeCompany.id);
+    },
+    /** @override */
+    get hasDetails() {
+        return this.skillTags.length > 0 || super.hasDetails;
+    },
+    get skillTags() {
+        return (
+            this.employee?.employee_skill_ids.map(({ id, display_name, color }) => ({
+                id,
+                text: display_name,
+                color,
+            })) ?? []
+        );
     },
     /** @override */
     get displayAvatar() {

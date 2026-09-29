@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import test_attendances
+from . import test_certification_activities
 from . import test_departure
+from . import test_employee_cv_report
+from . import test_employee_skill
 from . import test_lite_user_core
 from . import test_calendar_sync
 from . import test_hr_employee

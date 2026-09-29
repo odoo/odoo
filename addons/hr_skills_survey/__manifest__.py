@@ -11,7 +11,7 @@ Certification and Skills for HR
 
 This module adds certification to resume for employees.
         """,
-    'depends': ['hr_skills', 'survey'],
+    'depends': ['hr', 'survey'],
     'data': [
         'data/hr_resume_data.xml',
         'views/hr_templates.xml',

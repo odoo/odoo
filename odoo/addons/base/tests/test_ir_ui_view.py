@@ -5029,7 +5029,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'hr_recruitment_survey',
             'hr_referral',
             'hr_sign',
-            'hr_skills',
             'hr_skills_slides',
             'hr_timesheet',
             'hr_work_entry',

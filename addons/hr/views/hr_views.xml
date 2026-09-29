@@ -30,6 +30,27 @@
             sequence="3"/>
 
         <menuitem
+            id="hr_skill_learning_menu"
+            name="Learning"
+            parent="menu_hr_root"
+            groups="group_hr_user"
+            sequence="93"/>
+
+            <menuitem
+                id="hr_certification_menu"
+                name="Certifications"
+                action="action_server_hr_employee_skill_certification"
+                parent="hr_skill_learning_menu"
+                sequence="94"/>
+
+            <menuitem
+                id="menu_learnings_training_attendances"
+                name="Training Attendances"
+                action="hr_resume_lines_training_action"
+                parent="hr_skill_learning_menu"
+                sequence="95"/>
+
+        <menuitem
             id="hr_menu_hr_reports"
             name="Reporting"
             parent="menu_hr_root"
@@ -82,6 +103,14 @@
                 sequence="7"/>
 
             <menuitem
+                id="hr_skill_type_menu"
+                name="Skill Types"
+                action="hr_skill_type_action"
+                parent="menu_config_employee"
+                groups="group_hr_user"
+                sequence="7"/>
+
+            <menuitem
                 id="menu_view_employee_category_form"
                 name="Tags"
                 action="open_view_categ_form"
@@ -101,6 +130,21 @@
                     parent="menu_config_working_times"
                     name="Working Schedules"
                     sequence="10"/>
+
+            <menuitem
+                id="menu_human_resources_configuration_resume"
+                name="Resume"
+                parent="menu_human_resources_configuration"
+                groups="base.group_no_one"
+                sequence="15"/>
+
+                <menuitem
+                    id="hr_resume_line_type_menu"
+                    name="Sections"
+                    action="hr_resume_type_action"
+                    parent="menu_human_resources_configuration_resume"
+                    groups="base.group_no_one"
+                    sequence="3"/>
 
             <menuitem
                 id="menu_config_recruitment"
