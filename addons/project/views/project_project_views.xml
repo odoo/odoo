@@ -531,24 +531,31 @@
                         <t t-name="card">
                             <main class="o_project_kanban_main">
                                 <div class="d-flex gap-2 justify-content-between">
-                                    <div class="d-flex align-items-baseline gap-1 min-w-0 pe-4">
-                                        <field name="is_favorite" widget="project_is_favorite" nolabel="1"/>
+                                    <div class="d-flex align-items-baseline gap-1 min-w-0 w-100">
                                         <span class="text-truncate d-block fs-4 fw-bold" t-att-title="record.display_name.value"><field name="display_name"/></span>
+                                        <div class="d-flex ms-auto">
+                                            <t t-call="menu"/>
+                                            <field name="is_favorite" widget="project_is_favorite" nolabel="1"/>
+                                            <field t-if="record.last_update_status.value &amp;&amp; widget.editable &amp;&amp; !record.is_template.raw_value" name="last_update_status" widget="project_state_selection"/>
+                                            <i t-if="record.last_update_status.value &amp;&amp; !widget.editable" t-att-class="'oi oi-filled o_status_bubble o_color_bubble_' + record.last_update_color.value" data-icon="circle" t-att-title="record.last_update_status.value"/>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="o_project_kanban_body min-w-0">
-                                    <span name="partner_name" class="text-muted d-flex align-items-baseline" t-if="record.partner_id.value">
-                                        <i class="oi oi-filled me-2" data-icon="person" aria-label="Project Manager" title="Project Manager" data-tooltip="Project Manager"/><field class="text-truncate" name="partner_id"/>
+                                <div class="o_project_kanban_body min-w-0 d-flex flex-column align-items-start">
+                                    <span name="partner_name" class="d-flex align-items-baseline text-muted" t-if="record.partner_id.value" data-tooltip="Project Manager">
+                                        <i class="oi oi-filled me-2" data-icon="person" aria-label="Project Manager"/>
+                                        <field class="text-truncate" name="partner_id"/>
                                     </span>
-                                    <div t-if="record.date.raw_value or record.date_start.raw_value" class="text-muted d-flex align-items-baseline">
-                                        <i class="oi me-2" data-icon="schedule" title="Dates" data-tooltip="Planned Date"/>
+                                    <div t-if="record.date.raw_value or record.date_start.raw_value" class="d-flex align-items-baseline text-muted" data-tooltip="Planned Date">
+                                        <i class="oi me-2" data-icon="schedule" aria-label="Planned Date"/>
                                         <field name="date_start" widget="daterange" options="{'end_date_field': 'date'}"/>
                                     </div>
-                                    <div t-if="record.alias_email.value" class="text-muted text-truncate" t-att-title="record.alias_email.value">
-                                        <span class="oi me-2" data-icon="mail" aria-label="Domain Alias" title="Domain Alias"></span><field name="alias_email"/>
+                                    <div t-if="record.alias_email.value" class="text-muted text-truncate" data-tooltip="Domain Alias">
+                                        <i class="oi me-2" data-icon="mail" aria-label="Domain Alias"/>
+                                        <field name="alias_email"/>
                                     </div>
                                     <div class="d-flex gap-2 align-items-baseline text-muted text-truncate" name="action_view_tasks" type="object">
-                                        <i class="oi oi-filled" data-icon="task" title="Tasks" data-tooltip="Name of Tasks"/>
+                                        <i class="oi oi-filled" data-icon="task" title="Tasks"/>
                                         <span>
                                             <field name="open_task_count" class="o_value"/> <field name="label_tasks"/>
                                         </span>
@@ -558,12 +565,11 @@
                                         <t t-set="rating_value" t-value="record.rating_avg.raw_value"/>
                                         <t t-set="rating_mood" t-value="rating_value &gt;= 3.66 ? 'happy' : rating_value &gt;= 2.33 ? 'neutral' : 'unhappy'"/>
                                         <t t-set="rating_tooltip" t-value="{happy: 'Average Rating: Happy', neutral: 'Average Rating: Neutral', unhappy: 'Average Rating: Unhappy'}[rating_mood]"/>
-                                        <span class="d-flex gap-2 align-items-baseline">
+                                        <span class="d-flex gap-2 align-items-baseline" t-att-data-tooltip="rating_tooltip">
                                             <i class="oi"
                                                 t-att-data-icon="{happy: 'sentiment_satisfied', neutral: 'sentiment_neutral', unhappy: 'sentiment_sad'}[rating_mood]"
                                                 t-att-aria-label="rating_tooltip"
                                                 role="img"
-                                                t-att-data-tooltip="rating_tooltip"
                                             />
                                             <span class="d-flex" t-att-class="{happy: 'text-success', neutral: 'text-warning', unhappy: 'text-danger'}[rating_mood]">
                                                 <t t-if="record.rating_avg.raw_value % 1 == 0">
@@ -574,7 +580,7 @@
                                                 </t>/5</span>
                                         </span>
                                     </div>
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" class="my-2"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" class="mt-2"/>
                                 </div>
                             </main>
                             <footer>
@@ -588,14 +594,12 @@
                                         type="object"
                                         t-attf-title="#{record.milestone_count_reached.value} Milestones reached out of #{record.milestone_count.value}"
                                     >
-                                        <span class="oi oi-filled" data-icon="flag"/>
+                                        <span class="oi oi-filled" data-icon="label_important"/>
                                         <span><field name="milestone_count_reached"/>/<field name="milestone_count"/></span>
                                     </a>
                                 </div>
                                 <div class="d-flex ms-auto align-items-center gap-1">
                                     <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
-                                    <field t-if="record.last_update_status.value &amp;&amp; widget.editable &amp;&amp; !record.is_template.raw_value" name="last_update_status" widget="project_state_selection"/>
-                                    <i t-if="record.last_update_status.value &amp;&amp; !widget.editable" t-att-class="'oi oi-filled o_status o_status_bubble o_color_bubble_' + record.last_update_color.value" data-icon="circle" t-att-title="record.last_update_status.value"/>
                                 </div>
                             </footer>
                         </t>
