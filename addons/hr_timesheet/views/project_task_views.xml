@@ -183,8 +183,14 @@
                     <field name="allow_timesheets"/>
                     <field name="encode_uom_in_days" invisible="1"/>
                 </templates>
-                <xpath expr="//div[hasclass('o_project_deadline_wrap')]" position="after">
-                   <t name="allocated_hours" t-if="record.allocated_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
+                <xpath expr="//div[hasclass('o_project_rating_wrap')]" position="before">
+                    <t t-set="isTimesheetAvailable" t-value="record.allocated_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value"/>
+                </xpath>
+                <xpath expr="//div[hasclass('o_project_rating_wrap')]" position="attributes">
+                    <attribute name="t-if">isRatingAvailable and isTimesheetAvailable</attribute>
+                </xpath>
+                <xpath expr="//span[hasclass('o_project_rating')]" position="before">
+                   <t name="allocated_hours" t-if="isTimesheetAvailable" groups="hr_timesheet.group_hr_timesheet_user">
                         <t t-set="color" t-value="' text-success'"/>
                         <t t-set="color" t-value="' text-warning'" t-if="record.progress.raw_value &gt;= 0.8 and record.progress.raw_value &lt;= 1"/>
                         <t t-set="color" t-value="' text-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
