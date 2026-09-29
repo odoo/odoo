@@ -260,6 +260,59 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
         self.assertFalse(str(ptav_with_exclusion.id) in result['products'][0]['exclusions'])
         self.assertFalse(str(ptav_excluded.id) in result['products'][0]['exclusions'])
 
+    def test_exclusions_include_ptav_of_line_emptied_by_archived_value(self):
+        """
+        Test that a ptav whose value was archived, orphaning its attribute line, still gets a
+        key in the exclusions dict when it's part of the combination being checked. Otherwise
+        the frontend's unguarded exclusions[ptavId] lookup throws and takes the configurator
+        down.
+        """
+        # A value can only be archived (not deleted) while still used by an active variant.
+        engraving = self.env['product.attribute'].create({
+            'name': 'Engraving',
+            'create_variant': 'dynamic',
+            'value_ids': [Command.create({'name': 'custom text'})],
+        })
+        product_template = self.env['product.template'].create({
+            'name': 'Shirt',
+            'categ_id': self.product_category.id,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': self.color_attribute.id,
+                'value_ids': [Command.set([self.color_attribute_red.id])],
+            })],
+        })
+        variant = product_template.product_variant_ids
+        product_template.write({
+            'attribute_line_ids': [Command.create({
+                'attribute_id': engraving.id,
+                'value_ids': [Command.set(engraving.value_ids.ids)],
+            })],
+        })
+        dynamic_line = product_template.attribute_line_ids.filtered(lambda ptal: ptal.attribute_id == engraving)
+        dynamic_ptav = dynamic_line.product_template_value_ids
+
+        product_template.action_archive()
+        engraving.value_ids.unlink()
+        product_template.action_unarchive()
+
+        # The value is gone from the line, but the ptav stays active and usable.
+        self.assertFalse(dynamic_line.value_ids)
+        self.assertTrue(dynamic_ptav.ptav_active)
+        self.assertNotIn(dynamic_line, product_template.valid_product_template_attribute_line_ids)
+
+        self.authenticate('demo', 'demo')
+        ptav_ids = variant.product_template_attribute_value_ids.ids + [dynamic_ptav.id]
+        result = self.request_get_values(product_template, ptav_ids)
+        exclusions = result['products'][0]['exclusions']
+        # A combination naming the ptav must get a key for it, or the frontend's unguarded
+        # exclusions[ptavId] lookup throws.
+        self.assertIn(str(dynamic_ptav.id), exclusions)
+        self.assertEqual(exclusions[str(dynamic_ptav.id)], [])
+
+        # Not fabricated when the ptav isn't part of the checked combination.
+        result = self.request_get_values(product_template, variant.product_template_attribute_value_ids.ids)
+        self.assertNotIn(str(dynamic_ptav.id), result['products'][0]['exclusions'])
+
     def test_ptal_values_set_for_no_variant_atribute(self):
         '''
         Test that selected_attribute_value_id is set for attribute with only one variant and
