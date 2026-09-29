@@ -56,10 +56,10 @@ test("StateSelectionField in form view", async () => {
         resId: 1,
     });
 
-    expect(".o_field_widget.o_field_state_selection span.o_status.o_status_red").toHaveCount(1, {
+    expect(".o_field_widget.o_field_state_selection i.o_status.o_status_red").toHaveCount(1, {
         message: "should have one red status since selection is the second, blocked state",
     });
-    expect(".o_field_widget.o_field_state_selection span.o_status.o_status_green").toHaveCount(0, {
+    expect(".o_field_widget.o_field_state_selection i.o_status.o_status_green").toHaveCount(0, {
         message: "should not have one green status since selection is the second, blocked state",
     });
     expect(".o-dropdown--menu").toHaveCount(0, { message: "there should not be a dropdown" });
@@ -81,25 +81,25 @@ test("StateSelectionField in form view", async () => {
     expect(".o-dropdown--menu").toHaveCount(0, {
         message: "there should not be a dropdown anymore",
     });
-    expect(".o_field_widget.o_field_state_selection span.o_status.o_status_red").toHaveCount(0, {
+    expect(".o_field_widget.o_field_state_selection i.o_status.o_status_red").toHaveCount(0, {
         message: "should not have one red status since selection is the first, normal state",
     });
-    expect(".o_field_widget.o_field_state_selection span.o_status.o_status_green").toHaveCount(0, {
+    expect(".o_field_widget.o_field_state_selection i.o_status.o_status_green").toHaveCount(0, {
         message: "should not have one green status since selection is the first, normal state",
     });
-    expect(".o_field_widget.o_field_state_selection span.o_status").toHaveCount(1, {
+    expect(".o_field_widget.o_field_state_selection i.o_status").toHaveCount(1, {
         message: "should have one grey status since selection is the first, normal state",
     });
 
     expect(".o-dropdown--menu").toHaveCount(0, { message: "there should still not be a dropdown" });
-    expect(".o_field_widget.o_field_state_selection span.o_status.o_status_red").toHaveCount(0, {
+    expect(".o_field_widget.o_field_state_selection i.o_status.o_status_red").toHaveCount(0, {
         message: "should still not have one red status since selection is the first, normal state",
     });
-    expect(".o_field_widget.o_field_state_selection span.o_status.o_status_green").toHaveCount(0, {
+    expect(".o_field_widget.o_field_state_selection i.o_status.o_status_green").toHaveCount(0, {
         message:
             "should still not have one green status since selection is the first, normal state",
     });
-    expect(".o_field_widget.o_field_state_selection span.o_status").toHaveCount(1, {
+    expect(".o_field_widget.o_field_state_selection i.o_status").toHaveCount(1, {
         message: "should still have one grey status since selection is the first, normal state",
     });
 
@@ -116,10 +116,10 @@ test("StateSelectionField in form view", async () => {
     expect(".o-dropdown--menu").toHaveCount(0, {
         message: "there should not be a dropdown anymore",
     });
-    expect(".o_field_widget.o_field_state_selection span.o_status.o_status_red").toHaveCount(0, {
+    expect(".o_field_widget.o_field_state_selection i.o_status.o_status_red").toHaveCount(0, {
         message: "should not have one red status since selection is the third, done state",
     });
-    expect(".o_field_widget.o_field_state_selection span.o_status.o_status_green").toHaveCount(1, {
+    expect(".o_field_widget.o_field_state_selection i.o_status.o_status_green").toHaveCount(1, {
         message: "should have one green status since selection is the third, done state",
     });
 
@@ -129,10 +129,10 @@ test("StateSelectionField in form view", async () => {
     expect(".o-dropdown--menu").toHaveCount(0, {
         message: "there should still not be a dropdown anymore",
     });
-    expect(".o_field_widget.o_field_state_selection span.o_status.o_status_red").toHaveCount(0, {
+    expect(".o_field_widget.o_field_state_selection i.o_status.o_status_red").toHaveCount(0, {
         message: "should still not have one red status since selection is the third, done state",
     });
-    expect(".o_field_widget.o_field_state_selection span.o_status.o_status_green").toHaveCount(1, {
+    expect(".o_field_widget.o_field_state_selection i.o_status.o_status_green").toHaveCount(1, {
         message: "should still have one green status since selection is the third, done state",
     });
 });
@@ -176,9 +176,9 @@ test("StateSelectionField with readonly modifier", async () => {
     });
 
     expect(".o_field_state_selection").toHaveClass("o_readonly_modifier");
-    expect(".o_field_state_selection button").toHaveClass("o_disabled");
+    expect(".o_field_state_selection > span").toHaveCount(1);
     expect(".dropdown-menu:visible").not.toHaveCount();
-    await click(".o_field_state_selection span.o_status");
+    await click(".o_field_state_selection i.o_status");
     await animationFrame();
     expect(".dropdown-menu:visible").not.toHaveCount();
 });
@@ -220,7 +220,7 @@ test("StateSelectionField for list view with hide_label option", async () => {
         `,
     });
 
-    expect(".o_state_selection_cell .o_field_state_selection span.o_status").toHaveCount(10, {
+    expect(".o_state_selection_cell .o_field_state_selection i.o_status").toHaveCount(10, {
         message: "should have ten status selection widgets",
     });
     const selector =
@@ -234,7 +234,7 @@ test("StateSelectionField for list view with hide_label option", async () => {
     });
 
     expect(
-        ".o_state_selection_cell .o_field_state_selection[name=graph_type] span.o_status"
+        ".o_state_selection_cell .o_field_state_selection[name=graph_type] i.o_status"
     ).toHaveCount(5, { message: "should have five status selection widgets" });
     expect(
         ".o_state_selection_cell .o_field_state_selection[name=graph_type] span.o_status_label"
@@ -254,20 +254,20 @@ test("StateSelectionField in editable list view", async () => {
         `,
     });
 
-    expect(".o_state_selection_cell .o_field_state_selection span.o_status").toHaveCount(5, {
+    expect(".o_state_selection_cell .o_field_state_selection i.o_status").toHaveCount(5, {
         message: "should have five status selection widgets",
     });
     expect(
-        ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_red"
+        ".o_state_selection_cell .o_field_state_selection i.o_status.o_status_red"
     ).toHaveCount(1, { message: "should have one red status" });
     expect(
-        ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_green"
+        ".o_state_selection_cell .o_field_state_selection i.o_status.o_status_green"
     ).toHaveCount(1, { message: "should have one green status" });
     expect(".o-dropdown--menu").toHaveCount(0, { message: "there should not be a dropdown" });
 
     // Click on the status button to make the dropdown appear
     let cell = queryFirst("tbody td.o_state_selection_cell");
-    await click(".o_state_selection_cell .o_field_state_selection span.o_status");
+    await click(".o_state_selection_cell .o_field_state_selection i.o_status");
     await animationFrame();
     expect(cell.parentElement).not.toHaveClass("o_selected_row", {
         message: "should not be in edit mode since we clicked on the state selection widget",
@@ -280,14 +280,14 @@ test("StateSelectionField in editable list view", async () => {
     // Click on the first option, "Normal"
     await click(".o-dropdown--menu .dropdown-item");
     await animationFrame();
-    expect(".o_state_selection_cell .o_field_state_selection span.o_status").toHaveCount(5, {
+    expect(".o_state_selection_cell .o_field_state_selection i.o_status").toHaveCount(5, {
         message: "should still have five status selection widgets",
     });
     expect(
-        ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_red"
+        ".o_state_selection_cell .o_field_state_selection i.o_status.o_status_red"
     ).toHaveCount(0, { message: "should now have no red status" });
     expect(
-        ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_green"
+        ".o_state_selection_cell .o_field_state_selection i.o_status.o_status_green"
     ).toHaveCount(1, { message: "should still have one green status" });
     expect(".o-dropdown--menu").toHaveCount(0, { message: "there should not be a dropdown" });
     expect("tr.o_selected_row").toHaveCount(0, { message: "should not be in edit mode" });
@@ -299,19 +299,19 @@ test("StateSelectionField in editable list view", async () => {
     expect(cell.parentElement).toHaveClass("o_selected_row", {
         message: "should now be in edit mode",
     });
-    expect(".o_state_selection_cell .o_field_state_selection span.o_status").toHaveCount(5, {
+    expect(".o_state_selection_cell .o_field_state_selection i.o_status").toHaveCount(5, {
         message: "should still have five status selection widgets",
     });
     expect(
-        ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_red"
+        ".o_state_selection_cell .o_field_state_selection i.o_status.o_status_red"
     ).toHaveCount(0, { message: "should now have no red status" });
     expect(
-        ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_green"
+        ".o_state_selection_cell .o_field_state_selection i.o_status.o_status_green"
     ).toHaveCount(1, { message: "should still have one green status" });
     expect(".o-dropdown--menu").toHaveCount(0, { message: "there should not be a dropdown" });
 
     // Click on the third status button to make the dropdown appear
-    await click(".o_state_selection_cell .o_field_state_selection span.o_status:eq(2)");
+    await click(".o_state_selection_cell .o_field_state_selection i.o_status:eq(2)");
     await animationFrame();
     expect(".o-dropdown--menu").toHaveCount(1, { message: "there should be a dropdown" });
     expect(".o-dropdown--menu .dropdown-item").toHaveCount(3, {
@@ -324,28 +324,28 @@ test("StateSelectionField in editable list view", async () => {
     expect(".o-dropdown--menu").toHaveCount(0, {
         message: "there should not be a dropdown anymore",
     });
-    expect(".o_state_selection_cell .o_field_state_selection span.o_status").toHaveCount(5, {
+    expect(".o_state_selection_cell .o_field_state_selection i.o_status").toHaveCount(5, {
         message: "should still have five status selection widgets",
     });
     expect(
-        ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_red"
+        ".o_state_selection_cell .o_field_state_selection i.o_status.o_status_red"
     ).toHaveCount(0, { message: "should still have no red status" });
     expect(
-        ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_green"
+        ".o_state_selection_cell .o_field_state_selection i.o_status.o_status_green"
     ).toHaveCount(2, { message: "should now have two green status" });
     expect(".o-dropdown--menu").toHaveCount(0, { message: "there should not be a dropdown" });
 
     // save
     await click(".o_control_panel_main_buttons .o_list_button_save");
     await animationFrame();
-    expect(".o_state_selection_cell .o_field_state_selection span.o_status").toHaveCount(5, {
+    expect(".o_state_selection_cell .o_field_state_selection i.o_status").toHaveCount(5, {
         message: "should have five status selection widgets",
     });
     expect(
-        ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_red"
+        ".o_state_selection_cell .o_field_state_selection i.o_status.o_status_red"
     ).toHaveCount(0, { message: "should have no red status" });
     expect(
-        ".o_state_selection_cell .o_field_state_selection span.o_status.o_status_green"
+        ".o_state_selection_cell .o_field_state_selection i.o_status.o_status_green"
     ).toHaveCount(2, { message: "should have two green status" });
     expect(".o-dropdown--menu").toHaveCount(0, { message: "there should not be a dropdown" });
 });
@@ -364,7 +364,7 @@ test("StateSelectionField line stay in edit mode when StateSelectionField is ope
     });
 
     // Click on the status button to make the dropdown appear
-    await click(".o_state_selection_cell .o_field_state_selection span.o_status");
+    await click(".o_state_selection_cell .o_field_state_selection i.o_status");
     await animationFrame();
     expect(".o-dropdown--menu").toHaveCount(1, { message: "there should be a dropdown" });
     expect(".o-dropdown--menu .dropdown-item").toHaveCount(3, {
@@ -485,7 +485,7 @@ test("works when required in a readonly view", async () => {
     await click(".dropdown-item:eq(2)");
     await animationFrame();
     expect.verifySteps(["web_save"]);
-    expect(".o_field_state_selection span").toHaveClass("o_status_green");
+    expect(".o_field_state_selection i").toHaveClass("o_status_green");
 });
 
 test("StateSelectionField - hotkey handling when there are more than 3 options available", async () => {
