@@ -83,34 +83,38 @@ export class CodeBlockPlugin extends Plugin {
             isEmptyBlock(closestBlockNode)
         ) {
             // Remove the last empty block node within pre tag
-            const [beforeElement, afterElement] = this.dependencies.split.splitElementBlock({
+            const splitResult = this.dependencies.split.splitElementBlock({
                 targetNode,
                 targetOffset,
                 blockToSplit: closestBlockNode,
             });
-            const isPreBlock = beforeElement.nodeName === "PRE";
+            if (!splitResult.before || !splitResult.after) {
+                return splitResult;
+            }
+            const isPreBlock = splitResult.before.nodeName === "PRE";
             const baseContainer = isPreBlock
                 ? this.dependencies.baseContainer.createBaseContainer({
-                      children: [...afterElement.childNodes],
+                      children: [...splitResult.after.childNodes],
                   })
-                : afterElement;
+                : splitResult.after;
             if (isPreBlock) {
-                afterElement.replaceWith(baseContainer);
+                splitResult.after.replaceWith(baseContainer);
             } else {
-                beforeElement.remove();
-                closestPre.after(afterElement);
+                splitResult.before.remove();
+                closestPre.after(splitResult.after);
             }
             const dir = closestBlockNode.getAttribute("dir") || closestPre.getAttribute("dir");
             if (dir) {
                 baseContainer.setAttribute("dir", dir);
             }
             this.dependencies.selection.setCursorStart(baseContainer);
+            return true;
         } else {
             const lineBreak = this.document.createElement("br");
             targetNode.insertBefore(lineBreak, targetNode.childNodes[targetOffset]);
             this.dependencies.selection.setCursorEnd(lineBreak);
+            return { lineBreaks: [lineBreak] };
         }
-        return true;
     }
 
     handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {
