@@ -5753,3 +5753,46 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'amount': 1001.0, 'debit_move_id': line_2.id, 'credit_move_id': line_5.id},
             {'amount': 1002.0, 'debit_move_id': line_3.id, 'credit_move_id': line_4.id},
         ])
+
+    def test_reconcile_cash_basis_partial_tax_base_amount(self):
+        """ The base of a cash basis tax line must follow the paid part of the invoice. """
+        self.env.company.tax_exigibility = True
+        tax = self.cash_basis_tax_a_third_amount
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'line',
+                'account_id': self.company_data['default_account_revenue'].id,
+                'price_unit': 1000.0,
+                'quantity': 10.0,
+                'tax_ids': [Command.set(tax.ids)],
+            })],
+        })
+        refund = self.env['account.move'].create({
+            'move_type': 'out_refund',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'line',
+                'account_id': self.company_data['default_account_revenue'].id,
+                'price_unit': 1000.0,
+                'quantity': 2.0,
+                'tax_ids': [Command.set(tax.ids)],
+            })],
+        })
+        (invoice + refund).action_post()
+        (invoice + refund).line_ids\
+            .filtered(lambda x: x.account_id.account_type == 'asset_receivable')\
+            .reconcile()
+
+        # The refund covers 20% of the invoice, so both entries report 20% of the base.
+        caba_tax_lines = self._get_caba_moves(invoice + refund).line_ids\
+            .filtered('tax_repartition_line_id')\
+            .sorted('debit')
+        self.assertRecordValues(caba_tax_lines, [
+            {'debit': 0.0, 'credit': 666.67, 'tax_base_amount': 2000.0},
+            {'debit': 666.67, 'credit': 0.0, 'tax_base_amount': 2000.0},
+        ])
