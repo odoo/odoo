@@ -18,20 +18,25 @@ test("bootstrap shadow controls in the theme tab of website builder", async () =
         expect.step("asset reload");
         return "";
     });
+    onRpc("ir.ui.view", "save", () => true);
     await setupWebsiteBuilder("");
 
     await contains("#theme-tab").click();
-    await contains("[data-action-param='box-shadow-offset-x'] input").fill("100");
-    expect.waitForSteps([
-        '/website/static/src/scss/options/user_values.scss {"box-shadow-offset-x":"6.25rem"}',
-        "asset reload",
-    ]);
-
+    // The offsets are in the collapse of the shadow's row.
     await contains("div.hb-row-label:contains('Normal')").click();
-    await contains("div[data-label='Color'] button.o_we_color_preview").click();
+    await contains(
+        ".hb-row:has([data-action-param='box-shadow-offset-x']) input.o-hb-input-number"
+    ).edit("20");
+    expect(":iframe html").toHaveStyle({ "--box-shadow-offset-x": "1.25rem" }, { inline: true });
+
+    await contains("div[data-label='Normal'] button.o_we_color_preview").click();
     await contains("div.o_popover button.o_color_button[data-color='#FF0000']").click();
-    expect.waitForSteps([
-        '/website/static/src/scss/options/user_values.scss {"box-shadow-color":"#FF0000"}',
-        "asset reload",
+    expect(":iframe html").toHaveStyle({ "--box-shadow-color": "#FF0000" }, { inline: true });
+    // Previewed only: written on save, without a bundle reload.
+    expect.verifySteps([]);
+
+    await contains(".o-snippets-top-actions [data-action='save']").click();
+    await expect.waitForSteps([
+        '/website/static/src/scss/options/user_values.scss {"box-shadow-offset-x":"1.25rem","box-shadow-color":"#FF0000"}',
     ]);
 });

@@ -6,8 +6,10 @@
 const WHITE = { r: 255, g: 255, b: 255, a: 1 };
 const BLACK = { r: 0, g: 0, b: 0, a: 1 };
 
+let namedColorContext;
+
 /**
- * @param {string} cssColor hexadecimal or rgb()/rgba()
+ * @param {string} cssColor hexadecimal, rgb()/rgba() or a color name
  * @returns {{r: number, g: number, b: number, a: number}|null}
  */
 export function parseColor(cssColor) {
@@ -22,6 +24,12 @@ export function parseColor(cssColor) {
     if (rgba) {
         const [r, g, b, a = 1] = rgba;
         return { r, g, b, a };
+    }
+    // Sass prints some colors by their name (e.g. `white`).
+    if (/^[a-z]+$/i.test(cssColor) && CSS.supports("color", cssColor)) {
+        namedColorContext ??= document.createElement("canvas").getContext("2d");
+        namedColorContext.fillStyle = cssColor;
+        return parseColor(namedColorContext.fillStyle);
     }
     return null;
 }
@@ -333,7 +341,6 @@ function themeColorValues(name, color, env) {
  * @param {Object} options
  * @param {number} options.minContrastRatio
  * @param {string[]} options.themeColorNames the compiled theme colors
- * @param {boolean} options.isFullLayout
  * @returns {Object<string, string>}
  */
 export function computeColorSystemPreview(getColor, presets, options) {
@@ -395,7 +402,7 @@ export function computeColorSystemPreview(getColor, presets, options) {
     const componentActiveBg = presets[0]["btn-primary"] || themeColors.primary;
     const tertiaryBg = mix(colorContrast(bodyBg, constants), bodyBg, 10);
     const inputBg = getColor("input") || bodyBg;
-    const bodyFill = options.isFullLayout ? bodyBg : getColor("body");
+    const boxedBodyColor = getColor("body");
     Object.assign(values, prefixValues("", {
         "component-active-bg": componentActiveBg,
         "component-active-color": colorContrast(componentActiveBg, constants),
@@ -410,7 +417,10 @@ export function computeColorSystemPreview(getColor, presets, options) {
         "secondary-bg-rgb": toRgb(grays[200]),
         "tertiary-bg": tertiaryBg,
         "tertiary-bg-rgb": toRgb(tertiaryBg),
-        "body-fill": bodyFill && opaque(WHITE, bodyFill),
+        // The page background in the full and in the other layouts (the
+        // compiled CSS uses the one of its layout).
+        "body-fill": opaque(WHITE, bodyBg),
+        "boxed-body-fill": boxedBodyColor && opaque(WHITE, boxedBodyColor),
         "input-bg": inputBg,
         "input-color": bodyColor,
     }));

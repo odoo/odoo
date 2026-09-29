@@ -90,15 +90,18 @@
     </BuilderContext>
 </t>
 
-<!-- Resets website variables to the theme default (only visible after save). -->
+<!-- Resets website variables to the theme default.
+     Parameters are `t-call` attributes: a `t-call` body only runs where the
+     called template outputs it. No hover preview: it sits next to a slider. -->
 <t t-name="website.ThemeResetButton">
     <BuilderButton
         action="resetAction or 'resetWebsiteVariables'"
         actionParam="resetParam"
         actionValue="resetValue"
+        preview="false"
         icon="'close_small'"
         className="'btn-danger-color-hover'"
-        title.translate="Reset to default (visible after saving)"/>
+        title.translate="Reset to default"/>
 </t>
 
 <t t-name="website.ThemeParagraphOption">
@@ -112,19 +115,11 @@
         </BuilderRow>
         <BuilderRow label.translate="Font Size" action="'previewWebsiteFontSize'" preview="true">
             <BuilderRange actionParam="'font-size-base'" unit="'px'" saveUnit="'rem'" min="10" max="32" withNumberInput="true"/>
-            <t t-call="website.ThemeResetButton">
-                <t t-set="resetAction" t-value="'previewWebsiteFontSize'"/>
-                <t t-set="resetParam" t-value="'font-size-base'"/>
-                <t t-set="resetValue" t-value="''"/>
-            </t>
+            <t t-call="website.ThemeResetButton" resetAction="'previewWebsiteFontSize'" resetParam="'font-size-base'" resetValue="''"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" level="1">
                     <BuilderRange actionParam="'small-font-size'" unit="'px'" saveUnit="'rem'" min="8" max="24" withNumberInput="true"/>
-                    <t t-call="website.ThemeResetButton">
-                        <t t-set="resetAction" t-value="'previewWebsiteFontSize'"/>
-                        <t t-set="resetParam" t-value="'small-font-size'"/>
-                        <t t-set="resetValue" t-value="''"/>
-                    </t>
+                    <t t-call="website.ThemeResetButton" resetAction="'previewWebsiteFontSize'" resetParam="'small-font-size'" resetValue="''"/>
                 </BuilderRow>
             </t>
         </BuilderRow>
@@ -135,9 +130,7 @@
             fontVariable="'font'"/>
         <BuilderRow label.translate="Line Height" action="'previewWebsiteVariable'" preview="true">
             <BuilderRange actionParam="'body-line-height'" unit="'✕'" saveUnit="''" min="1" max="2.5" step="0.05" withNumberInput="true"/>
-            <t t-call="website.ThemeResetButton">
-                <t t-set="resetParam" t-value="['body-line-height']"/>
-            </t>
+            <t t-call="website.ThemeResetButton" resetParam="['body-line-height']"/>
         </BuilderRow>
         <BuilderRow label.translate="Space Above" action="'previewWebsiteVariable'" preview="true">
             <BuilderRange actionParam="'paragraph-margin-top'" unit="'px'" saveUnit="'px'" min="0" max="64" withNumberInput="true"/>
@@ -198,9 +191,7 @@
         <t t-set="subVariablesConfig" t-value="{'input-border-width': ['input-border-top-width', 'input-border-right-width', 'input-border-bottom-width', 'input-border-left-width']}"/>
         <BuilderRow label.translate="Border Width" action="'previewWebsiteSubVariables'" preview="true">
             <BuilderRange actionParam="{mainParam: 'input-border-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'" min="0" max="10" withNumberInput="true"/>
-            <t t-call="website.ThemeResetButton">
-                <t t-set="resetParam" t-value="['input-border-width', 'input-border-top-width', 'input-border-right-width', 'input-border-bottom-width', 'input-border-left-width']"/>
-            </t>
+            <t t-call="website.ThemeResetButton" resetParam="['input-border-width', 'input-border-top-width', 'input-border-right-width', 'input-border-bottom-width', 'input-border-left-width']"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Top" level="1">
                     <BuilderRange actionParam="{mainParam: 'input-border-top-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'" min="0" max="10" withNumberInput="true"/>

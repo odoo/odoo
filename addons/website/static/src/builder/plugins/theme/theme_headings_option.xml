@@ -34,9 +34,7 @@
         </BuilderRow>
         <BuilderRow label.translate="Font Size" tooltip.translate="Heading 1" action="'previewWebsiteVariable'" preview="true">
             <BuilderRange actionParam="'h1-font-size'" unit="'px'" saveUnit="'rem'" min="16" max="120" withNumberInput="true"/>
-            <t t-call="website.ThemeResetButton">
-                <t t-set="resetParam" t-value="['h1-font-size', 'h2-font-size', 'h3-font-size', 'h4-font-size', 'h5-font-size', 'h6-font-size', 'display-1-font-size', 'display-2-font-size', 'display-3-font-size', 'display-4-font-size']"/>
-            </t>
+            <t t-call="website.ThemeResetButton" resetParam="['h1-font-size', 'h2-font-size', 'h3-font-size', 'h4-font-size', 'h5-font-size', 'h6-font-size', 'display-1-font-size', 'display-2-font-size', 'display-3-font-size', 'display-4-font-size']"/>
             <t t-set-slot="collapse">
                 <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="heading_label + ' ' + depth">
@@ -57,9 +55,7 @@
         />
         <BuilderRow label.translate="Line Height" tooltip.translate="Heading 1" action="'previewWebsiteVariable'" preview="true">
             <BuilderRange actionParam="'headings-line-height'" unit="'✕'" saveUnit="''" min="0.8" max="2.5" step="0.05" withNumberInput="true"/>
-            <t t-call="website.ThemeResetButton">
-                <t t-set="resetParam" t-value="['headings-line-height', 'h2-line-height', 'h3-line-height', 'h4-line-height', 'h5-line-height', 'h6-line-height', 'display-1-line-height', 'display-2-line-height', 'display-3-line-height', 'display-4-line-height']"/>
-            </t>
+            <t t-call="website.ThemeResetButton" resetParam="['headings-line-height', 'h2-line-height', 'h3-line-height', 'h4-line-height', 'h5-line-height', 'h6-line-height', 'display-1-line-height', 'display-2-line-height', 'display-3-line-height', 'display-4-line-height']"/>
             <t t-set-slot="collapse">
                 <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="heading_label + ' ' + depth">

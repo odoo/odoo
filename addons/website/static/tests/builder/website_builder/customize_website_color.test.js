@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, queryFirst, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { addBuilderOption } from "@html_builder/../tests/helpers";
@@ -150,13 +150,19 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
         "input[name='hex_input']"
     );
     await contains(hexInputEl).edit("#77FF006E");
-    await expect.waitForSteps([
-        '/website/static/src/scss/options/colors/user_color_palette.scss {"o-cc1-bg":"#77FF006E"}',
-        '/website/static/src/scss/options/user_values.scss {"o-cc1-bg-gradient":"null"}',
-        "asset reload",
-    ]);
+    // The Theme tab colors are previewed, and only written on save.
+    // The first iframe is the website (the color picker has its own).
+    expect(queryFirst(":iframe html")).toHaveStyle({ "--o-cc1-bg": "#77FF006E" }, { inline: true });
+    expect.verifySteps([]);
     const colorPresetEl = document.querySelector("div .o_cc_preview_wrapper div");
     const presetElStyles = window.getComputedStyle(colorPresetEl, "::before");
     expect(presetElStyles.backgroundImage).toInclude("transparent.png");
     expect(presetElStyles.backgroundSize).toInclude("32px");
+
+    onRpc("ir.ui.view", "save", () => true);
+    await contains(".o-snippets-top-actions [data-action='save']").click();
+    await expect.waitForSteps([
+        '/website/static/src/scss/options/user_values.scss {"o-cc1-bg-gradient":"null"}',
+        '/website/static/src/scss/options/colors/user_color_palette.scss {"o-cc1-bg":"#77FF006E"}',
+    ]);
 });

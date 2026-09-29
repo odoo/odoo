@@ -155,7 +155,31 @@ const THEME_COLORS = ["primary", "secondary", "success", "info", "warning", "dan
  * @param {string} change.nullValue
  * @param {Object<string, string>} [cssValues] other preview-only values
  */
-export function previewColors(action, { colors, gradientColor, gradientValue, nullValue }, cssValues = {}) {
+export function previewColors(action, change, cssValues = {}) {
+    const { colors, gradientColor, gradientValue, nullValue } = change;
+    const customizeWebsite = action.dependencies.customizeWebsite;
+    const values = { ...computeColorPreviewValues(action, change), ...cssValues };
+    if (gradientColor) {
+        customizeWebsite.previewWebsiteVariables(
+            { [gradientColor]: gradientValue || nullValue },
+            nullValue,
+            { [gradientColor]: values[gradientColor] }
+        );
+    }
+    for (const [url, urlColors] of Object.entries(colors)) {
+        customizeWebsite.previewWebsiteVariables(urlColors, nullValue, values, url);
+    }
+}
+
+/**
+ * The preview-only values of `previewColors` for a change (all of them, even
+ * for no change).
+ *
+ * @param {BuilderAction} action
+ * @param {Object} change see `previewColors`
+ * @returns {Object<string, string>}
+ */
+export function computeColorPreviewValues(action, { colors, gradientColor, gradientValue, nullValue }) {
     const customizeWebsite = action.dependencies.customizeWebsite;
     const style = getHtmlStyle(action.document);
     const getURL = (name) =>
@@ -212,7 +236,6 @@ export function previewColors(action, { colors, gradientColor, gradientValue, nu
     const values = computeColorSystemPreview(getColor, presets, {
         minContrastRatio: parseFloat(getCSSVariableValue("min-contrast-ratio", style)),
         themeColorNames: THEME_COLORS.filter((name) => getCSSVariableValue(name, style)),
-        isFullLayout: getCSSVariableValue("layout", style) === "'full'",
     });
     // The preset gradients cover their background color (`none` hides a
     // saved one).
@@ -226,17 +249,7 @@ export function previewColors(action, { colors, gradientColor, gradientValue, nu
         values[name] =
             gradient === undefined ? savedGradient : gradient === nullValue ? savedGradient && "none" : gradient;
     }
-    Object.assign(values, cssValues);
-    if (gradientColor) {
-        customizeWebsite.previewWebsiteVariables(
-            { [gradientColor]: gradientValue || nullValue },
-            nullValue,
-            { [gradientColor]: values[gradientColor] }
-        );
-    }
-    for (const [url, urlColors] of Object.entries(colors)) {
-        customizeWebsite.previewWebsiteVariables(urlColors, nullValue, values, url);
-    }
+    return values;
 }
 
 /**
@@ -247,7 +260,11 @@ export class PreviewWebsiteColorAction extends CustomizeWebsiteColorAction {
     static id = "previewWebsiteColor";
     // Drop the parent's `preview = false` and blocking `withCustomHistory`.
     setup() {}
-    apply({ params: { mainParam: color, colorType, gradientColor, nullValue = "null" }, value }) {
+    async apply({
+        params: { mainParam: color, colorType, gradientColor, nullValue = "null" },
+        value,
+        isPreviewing,
+    }) {
         // Same split as the parent: a gradient resets the color and the other
         // way around.
         const gradientValue = gradientColor && isColorGradient(value) ? value : "";
@@ -261,5 +278,16 @@ export class PreviewWebsiteColorAction extends CustomizeWebsiteColorAction {
             gradientValue,
             nullValue,
         });
+        if (!isPreviewing) {
+            // The page's shapes carry the colors in their URL: update them
+            // from the previewed colors, in the same history step. Not on
+            // hover, as it also updates the custom snippets, which a hover
+            // revert would not undo.
+            await Promise.allSettled(
+                this.getResource("on_website_color_updated_handlers").map((handler) =>
+                    handler([color])
+                )
+            );
+        }
     }
 }

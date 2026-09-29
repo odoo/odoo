@@ -368,3 +368,36 @@ test("should mark default color as selected when it is selected", async () => {
     });
     expect(".o_color_button[data-color='900']").toHaveClass("selected");
 });
+
+test("previewing a theme color in its own picker does not move the colors", async () => {
+    // As a theme color's picker: the preview changes the color it is looked up
+    // in, and the revert happens later.
+    defineStyle(`:root { --o-color-1: #714B67; --600: #6C757D; }`);
+    const rootStyle = document.documentElement.style;
+    let revertPreview;
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "#714B67",
+                defaultTab: "custom",
+            },
+            applyColor() {},
+            applyColorPreview(color) {
+                rootStyle.setProperty("--o-color-1", `var(--${color})`);
+            },
+            applyColorResetPreview() {
+                revertPreview = () => rootStyle.removeProperty("--o-color-1");
+            },
+        },
+    });
+    const customColorsSelector = ".o_font_color_selector .o_colorpicker_section:first-child button";
+    expect(customColorsSelector).toHaveCount(0);
+
+    await hover(".o_colorpicker_section button[data-color='600']");
+    await hover(".o_font_color_selector .o_color_pick_area");
+    await animationFrame();
+    // The revert is pending: the previewed color is still the gray.
+    expect(rootStyle.getPropertyValue("--o-color-1")).toBe("var(--600)");
+    expect(customColorsSelector).toHaveCount(0);
+    revertPreview();
+});

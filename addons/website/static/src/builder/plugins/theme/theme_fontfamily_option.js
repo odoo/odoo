@@ -5,6 +5,7 @@ import { BuilderButton } from "@html_builder/core/building_blocks/builder_button
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
 import { FONT_VARIABLES_TO_RESET } from "../font/font_plugin";
+import { getParsedWeight } from "./theme_font_weight_option";
 import { useProps, t } from "@odoo/owl";
 
 export class ThemeFontFamilyOption extends BaseOptionComponent {
@@ -59,13 +60,15 @@ export class CustomizeWebsiteFontFamilyAction extends CustomizeWebsiteVariableAc
 
 export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteFontFamilyAction {
     static id = "previewWebsiteFontFamily";
+    static dependencies = ["customizeWebsite", "themeTab"];
     // Drop the parent's `preview = false` and blocking `withCustomHistory`.
     setup() {}
     /**
      * The page only loads the fonts it uses: load the previewed one, so that
-     * it renders and its weights are listed.
+     * it renders and its weights are known.
      *
-     * @returns {Promise<string|undefined>} the CSS font family
+     * @returns {Promise<{ family: string, weights: { value: number }[] }|undefined>}
+     *          the CSS font family and the font's weights
      */
     async load({ value }) {
         if (!value) {
@@ -73,7 +76,7 @@ export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteFontFamilyAc
         }
         const fontName = value.slice(1, -1);
         if (fontName === "SYSTEM_FONTS") {
-            return "var(--o-system-fonts)";
+            return { family: "var(--o-system-fonts)", weights: [] };
         }
         const style = getHtmlStyle(this.document);
         const fontCount = parseInt(getCSSVariableValue("number-of-fonts", style));
@@ -94,13 +97,54 @@ export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteFontFamilyAc
             }
             break;
         }
-        return `${value}, var(--o-system-fonts)`;
+        return {
+            family: `${value}, var(--o-system-fonts)`,
+            weights: await this.dependencies.themeTab.getFontWeights(value),
+        };
     }
     apply({ params, value, loadResult }) {
         this.dependencies.customizeWebsite.previewWebsiteVariables(
-            this.getVariablesToUpdate(params, value),
+            this.getVariablesToUpdate(params, value, loadResult?.weights),
             params.nullValue,
-            { [params.mainParam]: loadResult }
+            { [params.mainParam]: loadResult?.family }
         );
+    }
+    /**
+     * Keeps the font's weights that the new font has, and moves the others to
+     * its nearest weight (which keeps light <= regular <= bold). They are only
+     * reset when the new font's weights are unknown.
+     *
+     * @param {Object} params
+     * @param {string} value
+     * @param {{ value: number }[]} [weights] the new font's weights
+     */
+    getVariablesToUpdate(params, value, weights = []) {
+        const variables = super.getVariablesToUpdate(params, value);
+        if (!weights.length) {
+            return variables;
+        }
+        const customizeWebsite = this.dependencies.customizeWebsite;
+        const nullValue = params.nullValue ?? "null";
+        const values = weights.map((weight) => weight.value);
+        for (const name of FONT_VARIABLES_TO_RESET[params.mainParam] || []) {
+            // A weight set to "Auto" but not saved yet still shows the saved
+            // one.
+            const isPendingAuto = customizeWebsite.getPendingValue(name) === nullValue;
+            const weight =
+                !isPendingAuto && getParsedWeight(customizeWebsite.getWebsiteVariableValue(name));
+            if (!weight) {
+                // "Auto" stays.
+                continue;
+            }
+            if (values.includes(weight)) {
+                delete variables[name];
+            } else {
+                const nearest = values.reduce((best, candidate) =>
+                    Math.abs(candidate - weight) < Math.abs(best - weight) ? candidate : best
+                );
+                variables[name] = `${nearest}`;
+            }
+        }
+        return variables;
     }
 }

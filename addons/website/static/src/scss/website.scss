@@ -226,6 +226,40 @@
             --o-ref-#{$name}: '#{$color-name}';
         }
     }
+
+    // 9) What the builder previews for a reset (see `previewWebsiteVariables`):
+    // the value compiled without the user's one. A value that defaults to
+    // another one (e.g. the h2 line height to the headings one) is reset with
+    // it, so it shows that one's default.
+    @each $key in ('font-size-base', 'small-font-size', 'body-line-height', 'headings-line-height') {
+        @include print-variable('o-default-#{$key}', map-get($o-default-website-values, $key));
+    }
+    @each $level in (2, 3, 4, 5, 6) {
+        @include print-variable('o-default-h#{$level}-line-height', map-get($o-default-website-values, 'h#{$level}-line-height') or map-get($o-default-website-values, 'headings-line-height'));
+    }
+    @each $level in (1, 2, 3, 4) {
+        @include print-variable('o-default-display-#{$level}-line-height', map-get($o-default-website-values, 'display-#{$level}-line-height') or map-get($o-default-website-values, 'headings-line-height'));
+    }
+    $-heading-font-size-multipliers: (
+        1: $o-theme-h1-font-size-multiplier,
+        2: $o-theme-h2-font-size-multiplier,
+        3: $o-theme-h3-font-size-multiplier,
+        4: $o-theme-h4-font-size-multiplier,
+        5: $o-theme-h5-font-size-multiplier,
+        6: $o-theme-h6-font-size-multiplier,
+    );
+    @each $level, $multiplier in $-heading-font-size-multipliers {
+        @include print-variable('o-default-h#{$level}-font-size', map-get($o-default-website-values, 'h#{$level}-font-size') or $font-size-base * $multiplier);
+    }
+    // Same fallbacks as `$display-font-sizes`.
+    @each $level, $size in (1: 5rem, 2: 4.5rem, 3: 4rem, 4: 3.5rem) {
+        @include print-variable('o-default-display-#{$level}-font-size', map-get($o-default-website-values, 'display-#{$level}-font-size') or $size);
+    }
+    $-default-input-border-width: map-get($o-default-website-values, 'input-border-width') or $input-btn-border-width;
+    @include print-variable('o-default-input-border-width', $-default-input-border-width);
+    @each $side in ('top', 'right', 'bottom', 'left') {
+        @include print-variable('o-default-input-border-#{$side}-width', map-get($o-default-website-values, 'input-border-#{$side}-width') or $-default-input-border-width);
+    }
 }
 
 @mixin body-image-bg-style() {
@@ -1275,7 +1309,12 @@ $-preview-theme-colors: ();
         --#{$prefix}progress-bar-bg: var(--o-preview-primary);
     }
     body {
-        background-color: var(--o-preview-body-fill);
+        // Same layouts as the compiled one (see BOXED_BODY_BG_ODOO).
+        @if o-website-value('layout') != 'full' {
+            background-color: var(--o-preview-boxed-body-fill);
+        } @else {
+            background-color: var(--o-preview-body-fill);
+        }
     }
     .form-control:not(:disabled), .form-select:not(:disabled) {
         background-color: var(--o-preview-input-bg);

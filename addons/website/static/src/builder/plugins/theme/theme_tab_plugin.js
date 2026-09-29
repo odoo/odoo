@@ -5,7 +5,12 @@ import { withSequence } from "@html_editor/utils/resource";
 import { ThemeAdvancedOption } from "./theme_advanced_option";
 import { ThemeShadowOption } from "./theme_shadow_option";
 import { ThemeButtonOption } from "./theme_button_option";
-import { PreviewWebsiteColorAction, previewColors, ThemeColorsOption } from "./theme_colors_option";
+import {
+    computeColorPreviewValues,
+    PreviewWebsiteColorAction,
+    previewColors,
+    ThemeColorsOption,
+} from "./theme_colors_option";
 import { ThemeHeadingsOption } from "./theme_headings_option";
 import {
     CustomizeWebsiteFontFamilyAction,
@@ -29,7 +34,7 @@ import {
     convertRgbToHsl,
 } from "@web/core/utils/colors";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
+import { CustomizeWebsiteVariableAction, USER_VALUES_URL } from "../customize_website_plugin";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { ImageSize } from "@html_builder/plugins/image/image_size";
@@ -431,11 +436,45 @@ export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
     setup() {
         this.preview = false;
         this.dependencies.customizeWebsite.withCustomHistory(this);
+        // Undo/redo replays the wrapped `apply`, and the drop is its own
+        // preview step of the same history step: drop only here.
+        const applyWithHistory = this.apply;
+        this.apply = async (context) => {
+            if (context.loadResult && this.hasPreviewedColors()) {
+                this.dropColorPreview();
+            }
+            await applyWithHistory(context);
+        };
+    }
+    hasPreviewedColors() {
+        // Set by every color preview (see `computeColorSystemPreview`).
+        return !!getCSSVariableValue("o-preview-colors", getHtmlStyle(this.document));
+    }
+    /**
+     * Drops the previewed values that the server resets on a palette switch
+     * (see `make_scss_customization`), which would otherwise be written over
+     * the new palette on save, and the preview values computed from them.
+     */
+    dropColorPreview() {
+        const customizeWebsite = this.dependencies.customizeWebsite;
+        const getURL = (colorType) => customizeWebsite.getColorsCustomization({}, { colorType }).url;
+        customizeWebsite.dropPreview(
+            {
+                [getURL("")]: null,
+                [getURL("gray")]: null,
+                [getURL("theme")]: ["success", "info", "warning", "danger"],
+                [USER_VALUES_URL]: [1, 2, 3, 4, 5].map((index) => `o-cc${index}-bg-gradient`),
+            },
+            [
+                ...Object.keys(computeColorPreviewValues(this, { colors: {}, nullValue: "null" })),
+                ...Object.values(GRAY_PARAMS),
+            ]
+        );
     }
     async load() {
         const style = this.window.getComputedStyle(this.document.body);
         const hasCustomizedColors = getCSSVariableValue("has-customized-colors", style);
-        if (hasCustomizedColors && hasCustomizedColors !== "false") {
+        if ((hasCustomizedColors && hasCustomizedColors !== "false") || this.hasPreviewedColors()) {
             return new Promise((resolve) => {
                 this.services.dialog.add(ConfirmationDialog, {
                     body: _t(

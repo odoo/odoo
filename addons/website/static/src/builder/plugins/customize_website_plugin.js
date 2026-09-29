@@ -24,6 +24,7 @@ import { loadImage } from "@html_editor/utils/image_processing";
  * @property { CustomizeWebsitePlugin['customizeWebsiteColors'] } customizeWebsiteColors
  * @property { CustomizeWebsitePlugin['customizeWebsiteVariables'] } customizeWebsiteVariables
  * @property { CustomizeWebsitePlugin['previewWebsiteVariables'] } previewWebsiteVariables
+ * @property { CustomizeWebsitePlugin['dropPreview'] } dropPreview
  * @property { CustomizeWebsitePlugin['getPendingValue'] } getPendingValue
  * @property { CustomizeWebsitePlugin['copyPreviewTo'] } copyPreviewTo
  * @property { CustomizeWebsitePlugin['getColorsCustomization'] } getColorsCustomization
@@ -47,7 +48,7 @@ import { loadImage } from "@html_editor/utils/image_processing";
  */
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
-const USER_VALUES_URL = "/website/static/src/scss/options/user_values.scss";
+export const USER_VALUES_URL = "/website/static/src/scss/options/user_values.scss";
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
@@ -56,6 +57,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
         "previewWebsiteVariables",
+        "dropPreview",
         "getPendingValue",
         "copyPreviewTo",
         "getColorsCustomization",
@@ -120,14 +122,23 @@ export class CustomizeWebsitePlugin extends Plugin {
                 return true;
             }
         },
-        on_apply_history_commit_handlers: (commit) => {
+        // Like the DOM mutations, `ensureNewMutations` records what is applied
+        // or reverted as new changes (e.g. in the undo commit, which is what
+        // redo reverts).
+        on_apply_history_commit_handlers: (commit, { ensureNewMutations = false } = {}) => {
             for (const step of commit.data.themePreview || []) {
                 this.setPreviewState(step.next);
+                if (ensureNewMutations) {
+                    this.pendingPreviewSteps.push(step);
+                }
             }
         },
-        on_revert_history_commit_handlers: (commit) => {
+        on_revert_history_commit_handlers: (commit, { ensureNewMutations = false } = {}) => {
             for (const step of [...(commit.data.themePreview || [])].reverse()) {
                 this.setPreviewState(step.previous);
+                if (ensureNewMutations) {
+                    this.pendingPreviewSteps.push({ previous: step.next, next: step.previous });
+                }
             }
         },
         on_will_invalidate_pending_changes_handlers: () => {
@@ -260,8 +271,8 @@ export class CustomizeWebsitePlugin extends Plugin {
      *   aliases for values derived from the variables, which are not saved.
      * The SCSS customization is only written on save, in the file at `url`.
      *
-     * A reset (empty value or `nullValue`) removes the override, so it shows
-     * the last saved value rather than the default until save.
+     * A reset (empty value or `nullValue`) previews the default printed as
+     * `--o-default-<name>`, if any, else the last saved value.
      *
      * @param {Object<string, string>} variables
      * @param {string} [nullValue="null"]
@@ -272,6 +283,8 @@ export class CustomizeWebsitePlugin extends Plugin {
         const style = this.document.documentElement.style;
         const pending = this.pendingCustomizations[url] || {};
         const isSet = (value) => value && value !== nullValue;
+        const htmlStyle = getHtmlStyle(this.document);
+        const getDefault = (name) => getCSSVariableValue(`o-default-${name}`, htmlStyle);
         const aliasNames = new Set([...Object.keys(variables), ...Object.keys(cssValues)]);
         const previousState = {
             url,
@@ -288,17 +301,57 @@ export class CustomizeWebsitePlugin extends Plugin {
         const nextState = {
             url,
             variables: Object.entries(variables).map(([name, value]) =>
-                isSet(value) ? [name, value, value] : [name, nullValue, ""]
+                isSet(value) ? [name, value, value] : [name, nullValue, getDefault(name)]
             ),
             aliases: [...aliasNames].map((name) => [
                 name,
-                cssValues[name] ?? (isSet(variables[name]) ? variables[name] : ""),
+                cssValues[name] ?? (isSet(variables[name]) ? variables[name] : getDefault(name)),
             ]),
         };
         // The root is outside the observed editable: the step goes to the
         // history as commit data, which reverts hover previews and undo.
         this.setPreviewState(nextState);
         this.pendingPreviewSteps.push({ previous: previousState, next: nextState });
+    }
+    /**
+     * Drops previewed values, so that nothing is written for them on save
+     * (e.g. the ones a server-side reset covers), together with preview-only
+     * aliases. Like a preview, it is a history step.
+     *
+     * @param {Object<string, string[]|null>} namesByUrl the names to drop in
+     *        each file (`null`: all of them)
+     * @param {string[]} [aliasNames]
+     */
+    dropPreview(namesByUrl, aliasNames = []) {
+        const style = this.document.documentElement.style;
+        let aliases = aliasNames;
+        for (const [url, names] of Object.entries(namesByUrl)) {
+            const pending = this.pendingCustomizations[url] || {};
+            const droppedNames = (names || Object.keys(pending)).filter((name) => name in pending);
+            const step = {
+                previous: {
+                    url,
+                    variables: droppedNames.map((name) => [
+                        name,
+                        pending[name],
+                        style.getPropertyValue(`--${name}`),
+                    ]),
+                    aliases: aliases.map((name) => [
+                        name,
+                        style.getPropertyValue(`--o-preview-${name}`),
+                    ]),
+                },
+                next: {
+                    url,
+                    variables: droppedNames.map((name) => [name, undefined, ""]),
+                    aliases: aliases.map((name) => [name, ""]),
+                },
+            };
+            this.setPreviewState(step.next);
+            this.pendingPreviewSteps.push(step);
+            // The aliases go with the first step only.
+            aliases = [];
+        }
     }
     setPreviewState({ url, variables, aliases }) {
         const pending = (this.pendingCustomizations[url] ??= {});
@@ -1177,7 +1230,7 @@ export class PreviewWebsiteVariableAction extends CustomizeWebsiteVariableAction
 
 /**
  * Resets website variables to their theme default, through
- * `previewWebsiteVariables` (which shows the last saved values until save).
+ * `previewWebsiteVariables` (which previews the default).
  */
 export class ResetWebsiteVariablesAction extends BuilderAction {
     static id = "resetWebsiteVariables";
@@ -1200,8 +1253,12 @@ export class PreviewWebsiteFontSizeAction extends PreviewWebsiteVariableAction {
         const style = getHtmlStyle(this.document);
         const getSize = (name, printedName) => {
             const size = name === variable ? value : customizeWebsite.getPendingValue(name);
+            if (size && size !== nullValue) {
+                return parseFloat(size);
+            }
+            // A reset previews the default.
             return parseFloat(
-                size && size !== nullValue ? size : getCSSVariableValue(printedName, style)
+                getCSSVariableValue(size === undefined ? printedName : `o-default-${name}`, style)
             );
         };
         const ratio =
