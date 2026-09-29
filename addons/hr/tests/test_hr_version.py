@@ -10,8 +10,7 @@ from odoo.tools import mute_logger
 
 from odoo.addons.hr.models.hr_version import format_date_abbr
 from odoo.addons.hr.tests.common import TestHrCommon
-from odoo.addons.mail.tests.common import MailCase
-from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
 
 
 @tagged('post_install', '-at_install')
@@ -1066,51 +1065,103 @@ class TestHrVersion(TestHrCommon):
 
 
 @tagged('post_install', '-at_install')
-class TestHrVersionTracking(MailCase, TestHrCommon):
+class TestHrVersionTracking(TestHrCommon, MailCase):
 
-    def _last_employee_message(self, employee):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # tracking assertions need a lang to format the values
+        cls.env = cls.env(context={**cls.env.context, 'lang': 'en_US'})
+
+    def _get_employee_msgs(self, func):
+        """ Call func and return the messages it logged on employees. """
         self.flush_tracking()
-        return employee.message_ids.sorted('id')[-1]
+        with self.mock_mail_app():
+            func()
+            self.flush_tracking()
+        return self._new_msgs.filtered(lambda m: m.model == 'hr.employee')
 
-    @freeze_time('2026-10-01')
-    def test_version_changes_tracked_on_employee(self):
-        """ The changes of the versions are logged on the employee, whether they are written through the
-        employee or on the versions directly (automations, AI), and the creation of a version is logged with
-        its differences with the previous version. """
-        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
+    def _write_and_get_employee_msgs(self, records, vals):
+        """ Write vals on records and return the messages logged on employees. """
+        return self._get_employee_msgs(lambda: records.write(vals))
+
+    def _assert_employee_logs(self, msgs, expected):
+        """ Check msgs are exactly the expected (employee, first version, last version,
+        trackings) logs, trackings being given in the `assertTracking` format. """
+        self.assertEqual(len(msgs), len(expected))
+        for employee, first_version, last_version, trackings in expected:
+            label = self.env['hr.version']._get_version_update_log_message(first_version, last_version)
+            msg = msgs.filtered(lambda m: m.res_id == employee.id and label in m.body)
+            self.assertEqual(len(msg), 1, f"Expected a single message labelled {label} on {employee.name}")
+            self.assertTracking(msg, trackings, strict=True)
+
+    def test_version_tracked_on_creation(self):
+        """ The creation of a version is logged on the employee with its differences
+        with the previous version. """
         employee = self.env['hr.employee'].create({
-            'name': 'Tracked Employee',
-            'date_version': date(2026, 1, 1),
-            'contract_date_start': date(2026, 1, 1),
-            'contract_date_end': date(2026, 12, 31),
-            'wage': 2000,
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+            'private_city': 'A',
         })
-        first_version = employee.version_id
-        self.flush_tracking()
-
-        # A version written directly logs the same grouped message as through the employee
-        first_version.write({'wage': 2500})
-        message = self._last_employee_message(employee)
-        self.assertIn(f"As of {format_date_abbr(self.env, date(2026, 1, 1))} to {format_date_abbr(self.env, date(2026, 12, 31))}", message.body)
-        self.assertIn('Wage', message.body)
-
-        # A new version logs its creation and its differences with the previous version
-        second_version = self.env['hr.version'].create({
+        msg = self._get_employee_msgs(lambda: self.env['hr.version'].create({
             'employee_id': employee.id,
-            'date_version': date(2026, 11, 1),
-            'contract_date_start': date(2026, 1, 1),
-            'contract_date_end': date(2026, 12, 31),
-            'wage': 3000,
-        })
-        message = self._last_employee_message(employee)
-        self.assertIn(f"New employee record created at {format_date_abbr(self.env, date(2026, 11, 1))}", message.body)
-        self.assertIn('Wage', message.body)
+            'date_version': '2020-11-01',
+            'private_city': 'B',
+        }))
+        self.assertEqual(len(msg), 1)
+        self.assertIn(f"New employee record created at {format_date_abbr(self.env, date(2020, 11, 1))}", msg.body)
+        self.assertTracking(msg, [('private_city', 'char', 'A', 'B')], strict=True)
 
-        # The employee form applies a change to the next versions too: it writes them first, then the current
-        # version with all of them in the context, and the header covers them all
-        self.assertEqual(employee.version_id, first_version)
-        second_version.write({'wage': 3500})
-        self.flush_tracking()
-        employee.with_context(multi_update_version_ids=(first_version | second_version).ids).write({'wage': 3500})
-        message = self._last_employee_message(employee)
-        self.assertIn(f"As of {format_date_abbr(self.env, date(2026, 1, 1))} to {format_date_abbr(self.env, date(2026, 12, 31))}", message.body)
+    def test_version_write_tracking_intervals(self):
+        """ One message per interval of written versions with contiguous periods, showing
+        the changes of the first version of the interval. """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'contract_date_end': '2020-03-31',
+            'private_city': 'A',
+        })
+        v1 = employee.version_id
+        # New contract starting the day after the first one ends: contiguous with v1
+        v2 = employee.create_version({
+            'date_version': '2020-04-01',
+            'contract_date_start': '2020-04-01',
+            'contract_date_end': '2020-08-31',
+            'private_city': 'B',
+        })
+        v3 = employee.create_version({'date_version': '2020-06-01'})
+        # New contract after a gap: not contiguous with v3
+        v4 = employee.create_version({
+            'date_version': '2020-10-01',
+            'contract_date_start': '2020-10-01',
+            'contract_date_end': False,
+        })
+        other_employee = self.env['hr.employee'].create({'name': 'Jane Doe', 'private_city': 'Other'})
+
+        # Contiguous versions of different contracts: one message with v1's changes only
+        self._assert_employee_logs(self._write_and_get_employee_msgs(v1 | v2, {'private_city': 'X'}), [
+            (employee, v1, v2, [('private_city', 'char', 'A', 'X')]),
+        ])
+
+        # v1/v3 split by the unwritten v2, v3/v4 by the gap between contracts
+        other_version = other_employee.version_id
+        self._assert_employee_logs(self._write_and_get_employee_msgs(v1 | v3 | v4 | other_version, {'private_city': 'C'}), [
+            (employee, v1, v1, [('private_city', 'char', 'X', 'C')]),
+            (employee, v3, v3, [('private_city', 'char', 'B', 'C')]),
+            (employee, v4, v4, [('private_city', 'char', 'B', 'C')]),
+            (other_employee, other_version, other_version, [('private_city', 'char', 'Other', 'C')]),
+        ])
+
+    def test_version_write_tracking_skipped(self):
+        """ No employee message for templates or when skipped, and no duplicate when
+        writing from the employee. """
+        employee = self.env['hr.employee'].create({'name': 'John Doe', 'private_city': 'A'})
+        template = self.env['hr.version'].create({'name': 'Template', 'private_city': 'A'})
+
+        self.assertFalse(self._write_and_get_employee_msgs(template, {'private_city': 'B'}))
+        self.assertFalse(self._write_and_get_employee_msgs(
+            employee.version_id.with_context(skip_employee_tracking=True), {'private_city': 'B'}))
+        msg = self._write_and_get_employee_msgs(employee, {'private_city': 'C'})
+        self.assertEqual(len(msg), 1)
+        self.assertTracking(msg, [('private_city', 'char', 'B', 'C')], strict=True)

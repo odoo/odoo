@@ -881,6 +881,10 @@ class HrEmployee(models.Model):
         are in the future, the first one. Contract dates are not considered:
         the current version may be out of contract. Since "today" changes, the
         value is refreshed daily by :meth:`_cron_update_current_version_id`.
+
+        When the current version is replaced by a version with another
+        timezone, the timezone of the employee's user follows
+        (:meth:`_sync_user_tz`).
         """
         today = fields.Date.context_today(self)
         current_version_per_employee = {}
@@ -894,6 +898,7 @@ class HrEmployee(models.Model):
             order='employee_id, date_version desc',
         ):
             current_version_per_employee.setdefault(version.employee_id.id, version)
+        employees_tz_changed = self.env['hr.employee']
         for employee in self:
             new_current_version = False
             if version := current_version_per_employee.get(employee.id):
@@ -901,8 +906,22 @@ class HrEmployee(models.Model):
             elif employee.version_ids:
                 new_current_version = employee.version_ids[0]
             # To not trigger computed properties if still the same version
-            if employee.current_version_id != new_current_version:
+            previous_version = employee.current_version_id
+            if previous_version != new_current_version:
+                # Not for the first version: its default timezone must not override the one of the user
+                if previous_version and new_current_version and previous_version.tz != new_current_version.tz:
+                    employees_tz_changed |= employee
                 employee.current_version_id = new_current_version
+        employees_tz_changed._sync_user_tz()
+
+    def _sync_user_tz(self):
+        """Write the timezone of the current version of the employees on their user (same company)."""
+        for tz, employees in self.grouped(lambda employee: employee.current_version_id.tz).items():
+            users = employees.filtered(
+                lambda employee: employee.company_id == employee.user_id.company_id and employee.user_id.tz != tz
+            ).user_id
+            if tz and users:
+                users.write({'tz': tz})
 
     def _cron_update_current_version_id(self):
         """Recompute ``current_version_id`` of all active employees (daily cron).
@@ -910,7 +929,8 @@ class HrEmployee(models.Model):
         Needed because the current version depends on today's date: a future
         version only becomes current when this cron runs on or after its
         ``date_version``. The calendar and timezone of the employee's
-        ``resource_id`` follow the new current version (computed fields).
+        ``resource_id`` follow the new current version (computed fields), as
+        well as the timezone of the employee's user.
         """
         self.search([])._compute_current_version_id()
 
@@ -2418,10 +2438,10 @@ class HrEmployee(models.Model):
         "As of <date>" tracking message.
 
         Side effects: ``user_id`` syncs work contact/image/timezone
-        (:meth:`_sync_user`); ``tz`` is propagated to the linked user (same
-        company); changing ``work_contact_id`` moves the bank accounts to the new
-        partner (and untrusts them); ``resource_calendar_id`` updates the
-        resource's calendar when the written version is the current one;
+        (:meth:`_sync_user`); changing ``work_contact_id`` moves the bank
+        accounts to the new partner (and untrusts them);
+        ``resource_calendar_id`` updates the resource's calendar when the
+        written version is the current one;
         ``current_version_id`` always copies the new version's calendar onto
         the resource; ``department_id``/``user_id`` subscribe the
         user to the department's auto-subscription channels.
@@ -2439,13 +2459,6 @@ class HrEmployee(models.Model):
             self._remove_work_contact_id(user, vals.get('company_id'))
         if 'work_permit_expiration_date' in vals:
             vals['work_permit_scheduled_activity'] = False
-        if vals.get('tz'):
-            users_to_update = self.env['res.users']
-            for employee in self:
-                if employee.user_id and employee.company_id == employee.user_id.company_id and vals['tz'] != employee.user_id.tz:
-                    users_to_update |= employee.user_id
-            if users_to_update:
-                users_to_update.write({'tz': vals['tz']})
         if vals.get('departure_description'):
             for employee in self:
                 employee.message_post(body=self.env._(
@@ -2473,10 +2486,12 @@ class HrEmployee(models.Model):
         if version_vals:
             version_vals['last_modified_date'] = fields.Datetime.now()
             version_vals['last_modified_uid'] = self.env.uid
-            # hr.version.write() takes care of logging the grouped "As of <date>"
-            # tracking message on the employee's chatter itself, so this also
-            # works when the version is written directly (automations, AI, ...)
-            self.version_id.write(version_vals)
+            # The changes are already tracked by the employee itself
+            self.version_id.with_context(skip_employee_tracking=True).write(version_vals)
+
+            for employee in self:
+                version_sudo = employee.version_id.sudo()
+                employee._track_set_log_message(self.env['hr.version']._get_version_update_log_message(version_sudo, version_sudo))
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
             # When added to a department or changing user, subscribe to the channels auto-subscribed by department
