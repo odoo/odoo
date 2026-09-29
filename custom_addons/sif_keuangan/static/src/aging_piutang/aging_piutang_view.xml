@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sif_keuangan.AgingPiutangView" owl="1">
+        <div class="o_aging_piutang_app o_report_app d-flex flex-column h-100">
+
+            <!-- ================= TOP CONTROL BAR ================= -->
+            <div class="o_report_topbar px-3 px-md-4 py-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <!-- Left: Export & View Toggles -->
+                <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-sm btn-report-xlsx d-flex align-items-center gap-1 shadow-sm px-3"
+                            t-on-click="onExportXLSX"
+                            t-att-disabled="state.loading">
+                        <i class="fa fa-file-excel-o" />
+                        <span>Unduh Excel (XLSX)</span>
+                    </button>
+                    <button class="btn btn-sm btn-light border d-flex align-items-center gap-1 shadow-sm px-3"
+                            t-on-click="toggleBreakdown"
+                            t-att-title="'Tampilkan / Sembunyikan Rincian > 90 Hari'">
+                        <i t-att-class="state.showBreakdown ? 'fa fa-compress text-secondary' : 'fa fa-expand text-secondary'" />
+                        <span><t t-if="state.showBreakdown">Sederhanakan &gt;90 Hari</t><t t-else="">Breakdown &gt;90 Hari</t></span>
+                    </button>
+                </div>
+
+                <!-- Right: High-Precision Filters -->
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <!-- Search Input -->
+                    <div class="input-group input-group-sm rounded shadow-sm border bg-white" style="width: 200px;">
+                        <span class="input-group-text bg-transparent border-0 pe-1 text-muted">
+                            <i class="fa fa-search" />
+                        </span>
+                        <input type="text"
+                               class="form-control border-0 ps-1 bg-transparent o_search_input"
+                               placeholder="Cari debitur / no doc..."
+                               t-att-value="state.searchQuery"
+                               t-on-input="onSearchInput" />
+                        <t t-if="state.searchQuery">
+                            <button class="btn btn-sm btn-link text-muted p-0 pe-2" t-on-click="onResetSearch">
+                                <i class="fa fa-times" />
+                            </button>
+                        </t>
+                    </div>
+
+                    <!-- Unit Kerja Filter -->
+                    <t t-if="state.data and state.data.available_units and state.data.available_units.length > 0">
+                        <div class="o_report_filter_pill">
+                            <i class="fa fa-building-o o_filter_icon" />
+                            <select class="form-select form-select-sm border-0 bg-transparent shadow-none py-0"
+                                    style="width: auto; cursor: pointer;"
+                                    t-on-change="onUnitChange">
+                                <option value="">Semua Unit Kerja</option>
+                                <t t-foreach="state.data.available_units" t-as="u" t-key="u">
+                                    <option t-att-value="u" t-att-selected="state.filters.unit_name == u">
+                                        <t t-esc="u" />
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+                    </t>
+
+                    <!-- Partner Type Filter -->
+                    <div class="o_report_filter_pill">
+                        <i class="fa fa-users o_filter_icon" />
+                        <select class="form-select form-select-sm border-0 bg-transparent shadow-none py-0"
+                                style="width: auto; cursor: pointer;"
+                                t-on-change="onPartnerTypeChange">
+                            <option value="all" t-att-selected="state.filters.partner_type == 'all'">Semua Klasifikasi</option>
+                            <option value="student" t-att-selected="state.filters.partner_type == 'student'">Siswa &amp; Wali</option>
+                            <option value="customer" t-att-selected="state.filters.partner_type == 'customer'">Pelanggan Umum</option>
+                            <option value="distributor" t-att-selected="state.filters.partner_type == 'distributor'">Distributor</option>
+                            <option value="vendor" t-att-selected="state.filters.partner_type == 'vendor'">Vendor / Ekspedisi</option>
+                        </select>
+                    </div>
+
+                    <!-- Date Presets -->
+                    <div class="o_report_filter_pill">
+                        <i class="fa fa-calendar o_filter_icon" />
+                        <select class="form-select form-select-sm border-0 bg-transparent shadow-none py-0"
+                                style="width: auto; cursor: pointer;"
+                                t-on-change="onDatePresetChange">
+                            <option value="today" t-att-selected="state.datePreset == 'today'">Per Hari Ini</option>
+                            <option value="end_of_month" t-att-selected="state.datePreset == 'end_of_month'">Akhir Bulan Ini</option>
+                            <option value="end_of_last_month" t-att-selected="state.datePreset == 'end_of_last_month'">Akhir Bulan Lalu</option>
+                            <option value="end_of_year" t-att-selected="state.datePreset == 'end_of_year'">Akhir Tahun</option>
+                            <option value="custom" t-att-selected="state.datePreset == 'custom'">Tanggal Kustom...</option>
+                        </select>
+                    </div>
+
+                    <!-- Custom As-of Date -->
+                    <t t-if="state.datePreset == 'custom'">
+                        <input type="date"
+                               class="form-control form-control-sm border shadow-sm o_custom_date_input"
+                               style="width: 130px;"
+                               t-att-value="state.filters.as_of_date"
+                               t-on-change="onCustomDateChange" />
+                    </t>
+
+                    <!-- Comparison Mode -->
+                    <div class="o_report_filter_pill">
+                        <i class="fa fa-history o_filter_icon" />
+                        <select class="form-select form-select-sm border-0 bg-transparent shadow-none py-0"
+                                style="width: auto; cursor: pointer;"
+                                t-on-change="onComparisonChange">
+                            <option value="none" t-att-selected="state.filters.comparison_type == 'none'">Tanpa Pembanding</option>
+                            <option value="previous_month" t-att-selected="state.filters.comparison_type == 'previous_month'">vs. Bulan Lalu</option>
+                            <option value="previous_year" t-att-selected="state.filters.comparison_type == 'previous_year'">vs. Tahun Lalu</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= SCROLLABLE CONTENT ================= -->
+            <div class="o_report_content flex-grow-1 overflow-auto p-3 p-md-4">
+                <div class="container-fluid px-0 px-md-2">
+
+                    <!-- Loading State -->
+                    <t t-if="state.loading">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-secondary" role="status">
+                                <span class="visually-hidden">Memuat data...</span>
+                            </div>
+                            <div class="mt-2 text-muted small">Menghitung analisis umur piutang...</div>
+                        </div>
+                    </t>
+
+                    <t t-else="">
+                        <t t-if="state.data">
+                            <!-- Report Title Header -->
+                            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                                <div>
+                                    <h3 class="o_report_main_title mb-1">Aging Piutang (Analisis Umur Piutang)</h3>
+                                    <div class="o_report_meta_text">
+                                        <span class="fw-semibold text-dark"><t t-esc="state.data.company_name" /></span>
+                                        <span class="mx-2 text-muted">•</span>
+                                        <span>Posisi Cut-off: <strong class="text-dark"><t t-esc="state.data.as_of_date_display" /></strong></span>
+                                        <t t-if="state.filters.unit_name">
+                                            <span class="mx-2 text-muted">•</span>
+                                            <span>Unit: <strong class="text-dark"><t t-esc="state.filters.unit_name" /></strong></span>
+                                        </t>
+                                        <t t-if="state.filters.partner_type != 'all'">
+                                            <span class="mx-2 text-muted">•</span>
+                                            <span>Klasifikasi: <strong class="text-dark"><t t-esc="state.filters.partner_type.toUpperCase()" /></strong></span>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div class="text-end text-muted small">
+                                    Mata Uang: <strong>IDR (Rp)</strong>
+                                </div>
+                            </div>
+
+                            <!-- Summary KPI Cards -->
+                            <div class="row g-3 mb-4">
+                                <!-- Card 1: Total Piutang Aktif -->
+                                <div class="col-12 col-sm-6 col-xl-3">
+                                    <div class="card border rounded-3 p-3 bg-white h-100 shadow-sm o_kpi_card">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="o_kpi_label">Total Piutang Aktif</span>
+                                            <span class="badge bg-light text-dark border"><t t-esc="state.data.totals.partner_count" /> Debitur</span>
+                                        </div>
+                                        <div class="o_kpi_value text-dark mb-1">
+                                            <t t-esc="formatRp(state.data.totals.total_receivables)" />
+                                        </div>
+                                        <div class="o_kpi_subtext">
+                                            <t t-esc="state.data.totals.doc_count" /> dokumen tagihan terbuka
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card 2: Piutang Lancar -->
+                                <div class="col-12 col-sm-6 col-xl-3">
+                                    <div class="card border rounded-3 p-3 bg-white h-100 shadow-sm o_kpi_card">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="o_kpi_label">Lancar (Belum Jatuh Tempo)</span>
+                                            <span class="badge o_badge_success"><t t-esc="state.data.totals.current_ratio" />%</span>
+                                        </div>
+                                        <div class="o_kpi_value text-dark mb-1">
+                                            <t t-esc="formatRp(state.data.totals.total_current)" />
+                                        </div>
+                                        <div class="o_kpi_subtext">Jatuh tempo di masa depan</div>
+                                    </div>
+                                </div>
+
+                                <!-- Card 3: Menunggak Reguler 1-90 Hari -->
+                                <div class="col-12 col-sm-6 col-xl-3">
+                                    <div class="card border rounded-3 p-3 bg-white h-100 shadow-sm o_kpi_card">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="o_kpi_label">Menunggak 1 - 90 Hari</span>
+                                            <span class="badge o_badge_warning"><t t-esc="state.data.totals.overdue_ratio" />% Menunggak</span>
+                                        </div>
+                                        <div class="o_kpi_value text-dark mb-1">
+                                            <t t-esc="formatRp(state.data.totals.total_b_1_30 + state.data.totals.total_b_31_60 + state.data.totals.total_b_61_90)" />
+                                        </div>
+                                        <div class="o_kpi_subtext">Tahap pengingat awal &amp; SP-1</div>
+                                    </div>
+                                </div>
+
+                                <!-- Card 4: Menunggak Kritis >90 Hari -->
+                                <div class="col-12 col-sm-6 col-xl-3">
+                                    <div class="card border rounded-3 p-3 bg-white h-100 shadow-sm o_kpi_card">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="o_kpi_label">Kritis (&gt; 90 Hari)</span>
+                                            <span class="badge o_badge_danger"><t t-esc="state.data.totals.critical_ratio" />% Kritis</span>
+                                        </div>
+                                        <div class="o_kpi_value text-dark mb-1">
+                                            <t t-esc="formatRp(state.data.totals.total_b_over_90)" />
+                                        </div>
+                                        <div class="o_kpi_subtext text-danger fw-medium">Rekomendasi SP-2 / SP-3 / Write-off</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Comparison Bar (if comparison active) -->
+                            <t t-if="state.data.has_comparison and state.data.comparison">
+                                <div class="card border p-3 mb-4 rounded-3 bg-white shadow-sm">
+                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="fa fa-history text-secondary" />
+                                            <span class="fw-semibold text-dark">Komparasi vs Posisi <t t-esc="state.data.comparison.comp_date_display" />:</span>
+                                            <span class="text-dark ms-2">
+                                                Saldo Lalu: <strong class="text-dark tabular-nums"><t t-esc="formatRp(state.data.comparison.comp_total_receivables)" /></strong>
+                                            </span>
+                                        </div>
+                                        <div class="d-flex gap-4">
+                                            <div>
+                                                <span class="text-muted small">Perubahan Total: </span>
+                                                <strong t-att-class="state.data.comparison.diff_total &gt;= 0 ? 'text-danger tabular-nums' : 'text-success tabular-nums'">
+                                                    <t t-esc="formatRp(state.data.comparison.diff_total)" /> (<t t-esc="state.data.comparison.growth_total" />%)
+                                                </strong>
+                                            </div>
+                                            <div>
+                                                <span class="text-muted small">Perubahan Kritis (&gt;90H): </span>
+                                                <strong t-att-class="state.data.comparison.diff_over_90 &gt;= 0 ? 'text-danger tabular-nums' : 'text-success tabular-nums'">
+                                                    <t t-esc="formatRp(state.data.comparison.diff_over_90)" /> (<t t-esc="state.data.comparison.growth_over_90" />%)
+                                                </strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <!-- Navigation Tabs -->
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                <div class="btn-group shadow-sm">
+                                    <button class="btn btn-sm fw-semibold px-3 py-2"
+                                            t-att-class="state.activeTab == 'matrix' ? 'btn-dark' : 'btn-light border text-dark'"
+                                            t-on-click="() => this.setTab('matrix')">
+                                        <i class="fa fa-table me-1" /> Ringkasan Debitur (<t t-esc="state.data.partners.length" />)
+                                    </button>
+                                    <button class="btn btn-sm fw-semibold px-3 py-2"
+                                            t-att-class="state.activeTab == 'detail' ? 'btn-dark' : 'btn-light border text-dark'"
+                                            t-on-click="() => this.setTab('detail')">
+                                        <i class="fa fa-list-alt me-1" /> Daftar Tagihan Nominatif (<t t-esc="state.data.details.length" />)
+                                    </button>
+                                    <button class="btn btn-sm fw-semibold px-3 py-2"
+                                            t-att-class="state.activeTab == 'critical' ? 'btn-danger text-white' : 'btn-light border text-danger'"
+                                            t-on-click="() => this.setTab('critical')">
+                                        <i class="fa fa-exclamation-triangle me-1" /> Pantauan Kritis &gt; 90 Hari
+                                    </button>
+                                </div>
+
+                                <div class="text-muted small">
+                                    Semua nilai dalam Rupiah (Rp)
+                                </div>
+                            </div>
+
+                            <!-- ================= TAB 1: PIVOT MATRIX ================= -->
+                            <t t-if="state.activeTab == 'matrix'">
+                                <div class="card border rounded-3 overflow-hidden bg-white mb-4 shadow-sm">
+                                    <div class="table-responsive o_table_scroll_container">
+                                        <table class="table table-hover table-bordered align-middle mb-0 o_aging_table">
+                                            <thead>
+                                                <tr>
+                                                    <th rowspan="2" class="text-center o_col_no" style="width: 36px; min-width: 36px;">NO</th>
+                                                    <th rowspan="2" class="o_col_partner" style="min-width: 180px; text-align: left;">NAMA DEBITUR / MITRA / SISWA</th>
+                                                    <th rowspan="2" class="text-center o_col_badge" style="width: 100px; min-width: 100px;">KLASIFIKASI</th>
+                                                    <th rowspan="2" class="o_col_unit" style="min-width: 130px; text-align: left;">UNIT KERJA / SEKOLAH</th>
+                                                    <th rowspan="2" class="text-center o_col_phone" style="width: 110px; min-width: 110px;">NO. WHATSAPP</th>
+                                                    <th rowspan="2" class="text-end o_col_amt" style="width: 110px; min-width: 110px;">LANCAR</th>
+                                                    <th colspan="3" class="text-center o_th_regular_group">MENUNGGAK REGULER (1 - 90 HARI)</th>
+                                                    <t t-if="state.showBreakdown">
+                                                        <th colspan="4" class="text-center o_th_critical_group">BREAKDOWN MENUNGGAK KRITIS (&gt; 90 HARI)</th>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <th rowspan="2" class="text-end o_th_critical_single o_col_amt" style="width: 120px; min-width: 120px;">KRITIS (&gt; 90 HARI)</th>
+                                                    </t>
+                                                    <th rowspan="2" class="text-end o_th_total" style="width: 135px; min-width: 135px;">TOTAL PIUTANG</th>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-end o_col_amt" style="width: 95px; min-width: 95px;">1 - 30 HARI</th>
+                                                    <th class="text-end o_col_amt" style="width: 95px; min-width: 95px;">31 - 60 HARI</th>
+                                                    <th class="text-end o_col_amt" style="width: 95px; min-width: 95px;">61 - 90 HARI</th>
+                                                    <t t-if="state.showBreakdown">
+                                                        <th class="text-end o_th_crit_col o_col_amt" style="width: 95px; min-width: 95px;">91 - 120 HARI</th>
+                                                        <th class="text-end o_th_crit_col o_col_amt" style="width: 95px; min-width: 95px;">121 - 180 HARI</th>
+                                                        <th class="text-end o_th_crit_col o_col_amt" style="width: 95px; min-width: 95px;">181 - 365 HARI</th>
+                                                        <th class="text-end o_th_crit_col o_col_amt" style="width: 95px; min-width: 95px;">&gt; 365 HARI</th>
+                                                    </t>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-if="state.data.partners.length == 0">
+                                                    <tr>
+                                                        <td t-att-colspan="state.showBreakdown ? 14 : 11" class="text-center py-5 text-muted">
+                                                            <div class="py-3">
+                                                                <i class="fa fa-folder-open-o fa-2x mb-2 text-muted" /><br/>
+                                                                <span>Tidak ada data piutang untuk kriteria filter yang dipilih.</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-foreach="state.data.partners" t-as="p" t-key="p.partner_key">
+                                                    <tr>
+                                                        <td class="text-center text-dark fw-medium o_col_no"><t t-esc="p_index + 1" /></td>
+                                                        <td class="o_col_partner">
+                                                            <div class="fw-bold text-dark text-truncate" style="max-width: 240px;" t-att-title="p.partner_name"><t t-esc="p.partner_name" /></div>
+                                                            <div class="d-flex align-items-center gap-1 mt-1 flex-wrap">
+                                                                <t t-if="p.student_id_number and p.student_id_number != '-'">
+                                                                    <span class="o_nim_badge"><t t-esc="p.student_id_number" /></span>
+                                                                </t>
+                                                                <t t-if="p.parent_name and p.parent_name != '-'">
+                                                                    <span class="o_wali_text">Wali: <strong class="text-dark"><t t-esc="p.parent_name" /></strong></span>
+                                                                </t>
+                                                            </div>
+                                                        </td>
+                                                        <td class="text-center o_col_badge">
+                                                            <span t-att-class="'badge ' + (p.partner_type == 'student' ? 'o_badge_student' : (p.partner_type == 'customer' ? 'o_badge_customer' : (p.partner_type == 'distributor' ? 'o_badge_distributor' : 'o_badge_vendor')))">
+                                                                <t t-esc="p.partner_type_label" />
+                                                            </span>
+                                                        </td>
+                                                        <td class="text-dark fw-medium o_col_unit"><t t-esc="p.unit_name" /></td>
+                                                        <td class="text-center o_col_phone">
+                                                            <t t-if="p.phone and p.phone != '-'">
+                                                                <a href="javascript:void(0)" class="text-decoration-none text-success fw-bold small" t-on-click="() => this.openWhatsApp(p.phone)">
+                                                                    <i class="fa fa-whatsapp me-1" /><t t-esc="p.phone" />
+                                                                </a>
+                                                            </t>
+                                                            <t t-else="">-</t>
+                                                        </td>
+                                                        <td class="text-end tabular-nums o_col_amt">
+                                                            <span t-att-class="p.current &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.current)" /></span>
+                                                        </td>
+                                                        <td class="text-end tabular-nums o_col_amt">
+                                                            <span t-att-class="p.b_1_30 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_1_30)" /></span>
+                                                        </td>
+                                                        <td class="text-end tabular-nums o_col_amt">
+                                                            <span t-att-class="p.b_31_60 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_31_60)" /></span>
+                                                        </td>
+                                                        <td class="text-end tabular-nums o_col_amt">
+                                                            <span t-att-class="p.b_61_90 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_61_90)" /></span>
+                                                        </td>
+
+                                                        <!-- Breakdown Columns -->
+                                                        <t t-if="state.showBreakdown">
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                                <span t-att-class="p.b_91_120 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_91_120)" /></span>
+                                                            </td>
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                                <span t-att-class="p.b_121_180 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_121_180)" /></span>
+                                                            </td>
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                                <span t-att-class="p.b_181_365 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_181_365)" /></span>
+                                                            </td>
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                                <span t-att-class="p.b_over_365 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_over_365)" /></span>
+                                                            </td>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <td class="text-end tabular-nums o_td_crit o_col_amt">
+                                                                <span t-att-class="p.b_over_90 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_over_90)" /></span>
+                                                            </td>
+                                                        </t>
+
+                                                        <!-- Sticky Total Column -->
+                                                        <td class="text-end fw-bold text-dark tabular-nums o_td_total">
+                                                            <t t-esc="formatRp(p.total)" />
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                            <!-- Grand Total Footer -->
+                                            <t t-if="state.data.partners.length &gt; 0">
+                                                <tfoot class="o_table_grand_footer text-end fw-bold">
+                                                    <tr>
+                                                        <td colspan="5" class="text-start ps-3">TOTAL KESELURUHAN</td>
+                                                        <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_current)" /></td>
+                                                        <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_1_30)" /></td>
+                                                        <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_31_60)" /></td>
+                                                        <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_61_90)" /></td>
+                                                        <t t-if="state.showBreakdown">
+                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_91_120)" /></td>
+                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_121_180)" /></td>
+                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_181_365)" /></td>
+                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_over_365)" /></td>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <td class="tabular-nums o_col_amt"><t t-esc="formatRp(state.data.totals.total_b_over_90)" /></td>
+                                                        </t>
+                                                        <td class="tabular-nums o_td_grand_total"><t t-esc="formatRp(state.data.totals.total_receivables)" /></td>
+                                                    </tr>
+                                                </tfoot>
+                                            </t>
+                                        </table>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <!-- ================= TAB 2: DETAIL DOKUMEN ================= -->
+                            <t t-if="state.activeTab == 'detail'">
+                                <div class="card border rounded-3 overflow-hidden bg-white mb-4 shadow-sm">
+                                    <div class="table-responsive o_table_scroll_container">
+                                        <table class="table table-hover table-bordered align-middle mb-0 o_aging_table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center o_col_no" style="width: 36px; min-width: 36px;">NO</th>
+                                                    <th style="width: 140px; min-width: 140px; text-align: left;">NO. DOKUMEN</th>
+                                                    <th style="min-width: 180px; text-align: left;">NAMA DEBITUR / SISWA</th>
+                                                    <th style="min-width: 130px; text-align: left;">UNIT KERJA / SEKOLAH</th>
+                                                    <th style="min-width: 180px; text-align: left;">KETERANGAN / PERIODE</th>
+                                                    <th class="text-center" style="width: 95px; min-width: 95px;">TGL TERBIT</th>
+                                                    <th class="text-center" style="width: 95px; min-width: 95px;">JATUH TEMPO</th>
+                                                    <th class="text-center" style="width: 105px; min-width: 105px;">HARI TERLAMBAT</th>
+                                                    <th class="text-center" style="width: 130px; min-width: 130px;">KATEGORI UMUR</th>
+                                                    <th class="text-end o_th_total" style="width: 135px; min-width: 135px;">NOMINAL</th>
+                                                    <th class="text-center" style="width: 55px; min-width: 55px;">AKSI</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-if="state.data.details.length == 0">
+                                                    <tr>
+                                                        <td colspan="11" class="text-center py-5 text-muted">
+                                                            <div class="py-3">
+                                                                <i class="fa fa-file-text-o fa-2x mb-2 text-muted" /><br/>
+                                                                <span>Tidak ada rincian dokumen untuk filter yang dipilih.</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <t t-foreach="state.data.details" t-as="d" t-key="d.id">
+                                                    <tr>
+                                                        <td class="text-center text-dark fw-medium o_col_no"><t t-esc="d_index + 1" /></td>
+                                                        <td>
+                                                            <a href="javascript:void(0)" class="fw-bold text-dark text-decoration-underline" t-on-click="() => this.openDocument(d)">
+                                                                <t t-esc="d.doc_name" />
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <div class="fw-bold text-dark"><t t-esc="d.partner_name" /></div>
+                                                            <t t-if="d.parent_name and d.parent_name != '-'">
+                                                                <span class="o_wali_text">Wali: <strong class="text-dark"><t t-esc="d.parent_name" /></strong></span>
+                                                            </t>
+                                                        </td>
+                                                        <td class="text-dark fw-medium"><t t-esc="d.unit_name" /></td>
+                                                        <td class="text-dark fw-medium"><t t-esc="d.description" /></td>
+                                                        <td class="text-center text-dark fw-medium"><t t-esc="d.bill_date_display" /></td>
+                                                        <td class="text-center text-dark fw-bold"><t t-esc="d.due_date_display" /></td>
+                                                        <td class="text-center">
+                                                            <t t-if="d.overdue_days &lt;= 0">
+                                                                <span class="badge o_badge_success">Lancar</span>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <span t-att-class="'badge ' + (d.overdue_days &gt; 90 ? 'o_badge_danger' : 'o_badge_warning')">
+                                                                    <t t-esc="d.overdue_days" /> Hari
+                                                                </span>
+                                                            </t>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <span t-att-class="'badge ' + (d.bucket_code == 'current' ? 'o_badge_success' : (d.bucket_code == '1_30' ? 'o_badge_info' : (d.bucket_code == '31_60' ? 'o_badge_warning' : 'o_badge_danger')))">
+                                                                <t t-esc="d.bucket_label" />
+                                                            </span>
+                                                        </td>
+                                                        <td class="text-end fw-bold text-dark tabular-nums o_td_total">
+                                                            <t t-esc="formatRp(d.amount)" />
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <t t-if="d.phone and d.phone != '-'">
+                                                                <button class="btn btn-xs btn-outline-success p-1 px-2 rounded" title="Hubungi via WhatsApp" t-on-click="() => this.openWhatsApp(d.phone)">
+                                                                    <i class="fa fa-whatsapp" />
+                                                                </button>
+                                                            </t>
+                                                            <t t-else="">-</t>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                            <!-- Total Footer -->
+                                            <t t-if="state.data.details.length &gt; 0">
+                                                <tfoot class="o_table_grand_footer text-end fw-bold">
+                                                    <tr>
+                                                        <td colspan="9" class="text-start ps-3">TOTAL RINCIAN NOMINATIF</td>
+                                                        <td class="tabular-nums o_td_grand_total"><t t-esc="formatRp(state.data.totals.total_receivables)" /></td>
+                                                        <td />
+                                                    </tr>
+                                                </tfoot>
+                                            </t>
+                                        </table>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <!-- ================= TAB 3: KRITIS > 90 HARI ================= -->
+                            <t t-if="state.activeTab == 'critical'">
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-3">
+                                        <div class="card border rounded-3 p-3 bg-white shadow-sm o_kpi_card">
+                                            <div class="o_kpi_label">91 - 120 HARI (SP-2)</div>
+                                            <div class="o_kpi_value text-dark mt-1">
+                                                <t t-esc="formatRp(state.data.totals.total_b_91_120)" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card border rounded-3 p-3 bg-white shadow-sm o_kpi_card">
+                                            <div class="o_kpi_label">121 - 180 HARI (SP-3)</div>
+                                            <div class="o_kpi_value text-dark mt-1">
+                                                <t t-esc="formatRp(state.data.totals.total_b_121_180)" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card border rounded-3 p-3 bg-white shadow-sm o_kpi_card">
+                                            <div class="o_kpi_label">181 - 365 HARI (DIRAGUKAN)</div>
+                                            <div class="o_kpi_value text-dark mt-1">
+                                                <t t-esc="formatRp(state.data.totals.total_b_181_365)" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card border rounded-3 p-3 bg-white shadow-sm o_kpi_card">
+                                            <div class="o_kpi_label">&gt; 365 HARI (MACET TOTAL)</div>
+                                            <div class="o_kpi_value text-dark mt-1">
+                                                <t t-esc="formatRp(state.data.totals.total_b_over_365)" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card border rounded-3 overflow-hidden bg-white mb-4 shadow-sm">
+                                    <div class="card-header py-3 px-4 bg-light border-bottom">
+                                        <h6 class="fw-bold mb-0 text-dark"><i class="fa fa-exclamation-circle me-1 text-danger" /> Daftar Debitur dengan Tunggakan Kritis (&gt; 90 Hari)</h6>
+                                    </div>
+                                    <div class="table-responsive o_table_scroll_container">
+                                        <table class="table table-hover table-bordered align-middle mb-0 o_aging_table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center o_col_no" style="width: 36px; min-width: 36px;">NO</th>
+                                                    <th style="min-width: 200px; text-align: left;">NAMA DEBITUR / SISWA</th>
+                                                    <th style="min-width: 150px; text-align: left;">UNIT KERJA / SEKOLAH</th>
+                                                    <th class="text-center" style="width: 110px; min-width: 110px;">NO. WHATSAPP</th>
+                                                    <th class="text-end" style="width: 105px; min-width: 105px;">91 - 120 HARI</th>
+                                                    <th class="text-end" style="width: 105px; min-width: 105px;">121 - 180 HARI</th>
+                                                    <th class="text-end" style="width: 105px; min-width: 105px;">181 - 365 HARI</th>
+                                                    <th class="text-end" style="width: 105px; min-width: 105px;">&gt; 365 HARI</th>
+                                                    <th class="text-end o_th_total" style="width: 135px; min-width: 135px;">TOTAL KRITIS</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-set="crit_count" t-value="0" />
+                                                <t t-foreach="state.data.partners" t-as="p" t-key="p.partner_key">
+                                                    <t t-if="p.b_over_90 &gt; 0">
+                                                        <t t-set="crit_count" t-value="crit_count + 1" />
+                                                        <tr>
+                                                            <td class="text-center text-dark fw-medium o_col_no"><t t-esc="crit_count" /></td>
+                                                            <td>
+                                                                <div class="fw-bold text-dark"><t t-esc="p.partner_name" /></div>
+                                                                <div class="d-flex align-items-center gap-1 mt-1 flex-wrap">
+                                                                    <t t-if="p.student_id_number and p.student_id_number != '-'">
+                                                                        <span class="o_nim_badge"><t t-esc="p.student_id_number" /></span>
+                                                                    </t>
+                                                                    <t t-if="p.parent_name and p.parent_name != '-'">
+                                                                        <span class="o_wali_text">Wali: <strong class="text-dark"><t t-esc="p.parent_name" /></strong></span>
+                                                                    </t>
+                                                                </div>
+                                                            </td>
+                                                            <td class="text-dark fw-medium"><t t-esc="p.unit_name" /></td>
+                                                            <td class="text-center">
+                                                                <t t-if="p.phone and p.phone != '-'">
+                                                                    <a href="javascript:void(0)" class="text-decoration-none text-success fw-bold small" t-on-click="() => this.openWhatsApp(p.phone)">
+                                                                        <i class="fa fa-whatsapp me-1" /><t t-esc="p.phone" />
+                                                                    </a>
+                                                                </t>
+                                                                <t t-else="">-</t>
+                                                            </td>
+                                                            <td class="text-end tabular-nums"><span t-att-class="p.b_91_120 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_91_120)" /></span></td>
+                                                            <td class="text-end tabular-nums"><span t-att-class="p.b_121_180 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_121_180)" /></span></td>
+                                                            <td class="text-end tabular-nums"><span t-att-class="p.b_181_365 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_181_365)" /></span></td>
+                                                            <td class="text-end tabular-nums"><span t-att-class="p.b_over_365 &gt; 0 ? 'text-dark fw-bold' : 'text-muted-num'"><t t-esc="formatRp(p.b_over_365)" /></span></td>
+                                                            <td class="text-end fw-bold text-dark tabular-nums o_td_total"><t t-esc="formatRp(p.b_over_90)" /></td>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                                <t t-if="crit_count == 0">
+                                                    <tr>
+                                                        <td colspan="9" class="text-center py-5 text-success">
+                                                            <div class="py-3">
+                                                                <i class="fa fa-check-circle-o fa-2x mb-2 text-success" /><br/>
+                                                                <span class="fw-semibold">Kondisi Terjaga: Tidak ada piutang yang menunggak di atas 90 hari.</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <!-- Bottom Accounting Formula Footer -->
+                            <div class="mt-4 p-3 bg-white rounded-3 border shadow-sm text-center o_report_footer_formula">
+                                <strong>RUMUS AGING PIUTANG:</strong> Total Piutang Aktif = Saldo Lancar (≤ 0 Hari) + Menunggak Reguler (1 – 90 Hari) + Menunggak Kritis (&gt; 90 Hari)
+                            </div>
+
+                        </t>
+                    </t>
+
+                </div>
+            </div>
+
+        </div>
+    </t>
+
+</templates>
