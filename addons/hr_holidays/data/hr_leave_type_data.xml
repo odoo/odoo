@@ -549,6 +549,49 @@
         <field name="country_id" ref="base.jo"/>
     </record>
 
+<!-- KW : Kuwait -->
+    <record id="l10n_kw_leave_type_maternity_leave" model="hr.leave.type">
+        <field name="name">Maternity Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.kw"/>
+    </record>
+
+    <record id="l10n_kw_leave_type_study_leave" model="hr.leave.type">
+        <field name="name">Study Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.kw"/>
+    </record>
+
+    <record id="l10n_kw_leave_type_hajj_leave" model="hr.leave.type">
+        <field name="name">Hajj Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.kw"/>
+    </record>
+
+    <record id="l10n_kw_leave_type_compassionate_leave" model="hr.leave.type">
+        <field name="name">Compassionate Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.kw"/>
+    </record>
+
+    <record id="l10n_kw_leave_type_sick_leave" model="hr.leave.type">
+        <field name="name">Sick Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">both</field>
+        <field name="country_id" ref="base.kw"/>
+    </record>
+
+    <record id="l10n_kw_leave_type_annual_leave" model="hr.leave.type">
+        <field name="name">Annual Leave</field>
+        <field name="requires_allocation">yes</field>
+        <field name="leave_validation_type">both</field>
+        <field name="country_id" ref="base.kw"/>
+    </record>
+
 <!-- LU : Luxemburg -->
     <record id="l10n_lu_leave_type_situational_unemployment" model="hr.leave.type">
         <field name="name">Unemployment (Weather / Situational)</field>
