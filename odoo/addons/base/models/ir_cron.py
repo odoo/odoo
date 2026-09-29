@@ -109,6 +109,7 @@ class IrCron(models.Model):
         delegate=True, ondelete='restrict', required=True)
     cron_name = fields.Char('Name', compute='_compute_cron_name', store=True)
     user_id = fields.Many2one('res.users', string='Scheduler User', default=lambda self: self.env.user, required=True)
+    state = fields.Selection(related='ir_actions_server_id.state', inherited=True, default='code')
     active = fields.Boolean(default=True)
     interval_number = fields.Integer(default=1, help="Repeat every x.", required=True, aggregator='avg')
     interval_type = fields.Selection([('minutes', 'Minutes'),
@@ -139,14 +140,6 @@ class IrCron(models.Model):
         if os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
             self.env.cr.postcommit.add(self._notifydb)
         return super().create(vals_list)
-
-    @api.model
-    def default_get(self, fields):
-        # only 'code' state is supported for cron job so set it as default
-        model = self
-        if not model.env.context.get('default_state'):
-            model = model.with_context(default_state='code')
-        return super(IrCron, model).default_get(fields)
 
     def method_direct_trigger(self):
         """Run the CRON job in the current (HTTP) thread.
