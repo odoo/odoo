@@ -48,6 +48,34 @@ test("save on hiding tab", async () => {
     expect.verifySteps(["save"]);
 });
 
+test.tags("desktop");
+test("save on hiding tab updates the display name", async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+        },
+    ]);
+    Partner._views = {
+        form: `<form><field name="name"/></form>`,
+    };
+    onRpc("web_save", () => {
+        expect.step("save");
+    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(".o_breadcrumb").toHaveText("Xavier Lancer");
+
+    await fieldInput("name").edit("Mathiew Brown");
+    await hideTab();
+    await animationFrame();
+    expect.verifySteps(["save"]);
+    expect(".o_breadcrumb").toHaveText("Mathiew Brown");
+});
+
 test("save on hiding tab (not dirty)", async () => {
     onRpc("web_save", () => {
         expect.step("save");
