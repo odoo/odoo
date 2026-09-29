@@ -487,11 +487,25 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
             'name': 'test_invoice.xml',
         })
+<<<<<<< 0aa466781a79b56f9371b65451e1e70ad23194ce
         xml_tree = etree.fromstring(xml_attachment.raw.content)
         start_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
         end_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
         self.assertEqual(start_date.text, '20241201')
         self.assertEqual(end_date.text, '20241231')
+||||||| 20f5882e87e818e94a79ad07ac00530842d7045b
+        xml_tree = etree.fromstring(xml_attachment.raw)
+        start_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
+        end_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
+        self.assertEqual(start_date.text, '20241201')
+        self.assertEqual(end_date.text, '20241231')
+=======
+        xml_tree = etree.fromstring(xml_attachment.raw)
+        # The line has no dates: no invoicing period, the invoice date is exported as delivery date instead.
+        self.assertIsNone(xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod', self.namespaces))
+        actual_delivery_date = xml_tree.find('.//ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString', self.namespaces)
+        self.assertEqual(actual_delivery_date.text, '20241201')
+>>>>>>> b4e2c861eb174d2bd507446de9068fd072a67a1e
 
     def test_export_import_billing_dates(self):
         self.ensure_installed('accountant')
@@ -539,11 +553,8 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         line_end_dates = xml_tree.findall('.//ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
         self.assertEqual([value.text for value in line_end_dates], ['20241211', '20241226', '20241215'])
 
-        global_start_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
-        self.assertEqual(global_start_date.text, '20241119')
-
-        global_end_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
-        self.assertEqual(global_end_date.text, '20241226')
+        # One line has no dates: no invoicing period in the header.
+        self.assertIsNone(xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod', self.namespaces))
         line_vals = [
             {
                 'product_id': self.product_a.id,
