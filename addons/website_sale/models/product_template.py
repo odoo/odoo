@@ -1418,12 +1418,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_website_sale_search_fields(self, search_in_description=True):
-        search_fields = [
-            "name",
-            "variants_default_code",
-            "barcode",
-            "product_variant_ids.barcode",
-        ]
+        search_fields = ["name", "variants_default_code", "barcode", "product_variant_ids.barcode"]
         if search_in_description:
             search_fields.append("description_ecommerce")
         search_fields.extend((
@@ -1528,20 +1523,59 @@ class ProductTemplate(models.Model):
         search_term = self.env.context.get("search_term", "")
 
         for product, data in zip(self, results_data):
-            combination_info = product._get_combination_info(only_template=True)
-            values = product.attribute_line_ids.value_ids
-            data["attribute_value_ids"] = values.read(["id", "name"])
+            combination = self.env["product.template.attribute.value"]
+            if search_term:
+                values = product._get_attribute_values_from_search_term(search_term)
+                if values:
+                    combination = product._get_combination_from_attribute_values(values.ids)
+            combination_info = product._get_combination_info(
+                combination=combination, only_template=not combination
+            )
+            data["attribute_value_ids"] = product.attribute_line_ids.value_ids.read(["id", "name"])
             data["product_tag_ids"] = product.product_tag_ids.filtered(
                 "visible_to_customers"
             ).read(["name"])
             price = self._search_render_results_prices(mapping, combination_info)
             if price:
                 data["price"] = price
-            data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
+            if variant_id := combination_info["product_id"]:
+                data["image_url"] = "/web/image/product.product/%s/image_128" % variant_id
+            else:
+                data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
 
             if search_term:
                 data["website_url"] = product._get_product_url(query_params={"search": search_term})
         return results_data
+
+    def _get_combination_from_attribute_values(self, attribute_value_ids):
+        """Return the combination matching the given attribute values.
+
+        Attribute lines without a matching value fall back to their first active value, except
+        for `multi` attributes, for which no value is selected.
+
+        :param typing.Iterable[int] attribute_value_ids: The ids of the `product.attribute.value`
+            records to select.
+        :return: The matching combination.
+        :rtype: product.template.attribute.value
+        """
+        self.ensure_one()
+        return self.attribute_line_ids.mapped(
+            lambda ptal: (
+                (
+                    ptal.product_template_value_ids.filtered(
+                        lambda ptav: (
+                            ptav.ptav_active
+                            and ptav.product_attribute_value_id.id in attribute_value_ids
+                        )
+                    )[:1]
+                )
+                or (
+                    ptal.product_template_value_ids.filtered(
+                        lambda ptav: ptav.ptav_active and ptal.attribute_id.display_type != "multi"
+                    )[:1]
+                )
+            )
+        )
 
     def _get_attribute_values_from_search_term(self, search_term):
         """Return attribute values to preselect the matching product variant.
@@ -1565,7 +1599,7 @@ class ProductTemplate(models.Model):
 
         # Fall back to matching attribute values by name.
         search_words = search_term.lower().split()
-        values = self.attribute_line_ids.value_ids
+        values = self.attribute_line_ids.value_ids._without_no_variant_attributes()
         return values.filtered(
             lambda attribute_value: any(
                 word in (attribute_value.name or "").lower() for word in search_words
@@ -1989,13 +2023,14 @@ class ProductTemplate(models.Model):
         return data
 
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
-        if (
-            message_operation == "create"
-            and not self.env.user._is_internal()
-        ):
-            website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
-            if not website.with_context(website_id=website.id).is_view_active('website_sale.product_comment'):
-                return [(Domain.TRUE, 'write')]
+        if message_operation == "create" and not self.env.user._is_internal():
+            website = self.env.website or self.env["website"].browse(
+                self.env.context.get("host_id")
+            )
+            if not website.with_context(website_id=website.id).is_view_active(
+                "website_sale.product_comment"
+            ):
+                return [(Domain.TRUE, "write")]
         return super()._mail_get_operation_for_mail_message_operation(message_operation)
 
     @api.model
