@@ -12,7 +12,7 @@ class EventEvent(models.Model):
         # When creating an event considered as "onsite event" register
         # current employee as attendee of the event
         events = super().create(vals_list)
-        if self.env.context.get('hr_skills_event_add_employee'):
+        if self.env.context.get('hr_event_add_employee'):
             # Without an employee in the context the event comes from the onsite courses action, so we take the current one
             employee_id = self.env.context.get('default_employee_id') or self.env.user.employee_id.id
             if employee := self.env['hr.employee'].search([('id', '=', employee_id), ('work_contact_id', '!=', False)], limit=1):
