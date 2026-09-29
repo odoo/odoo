@@ -127,6 +127,38 @@ class ResPartner(models.Model):
         else:
             self.l10n_my_tin_validation_state = 'valid' if response.get('success') else 'invalid'
 
+    def action_search_tin(self):
+        """ Calling this action will reach our EDI proxy in order to search for the TIN based on the provided identification information. """
+        self.ensure_one()
+        if not self.l10n_my_identification_type or not self.l10n_my_identification_number:
+            raise UserError(self.env._('In order to search for the TIN, you must provide the ID Number and Type.'))
+
+        # Sudo to allow a user without access to the proxy user to search the TIN if needed.
+        proxy_user = self.env.company.sudo().l10n_my_edi_proxy_user_id
+        if not proxy_user:
+            raise UserError(self.env._("Please register for the E-Invoicing service in the settings first."))
+
+        response = proxy_user._l10n_my_edi_contact_proxy('api/l10n_my_edi/1/search_tin', params={
+            'identification_values': {
+                'id_type': self.l10n_my_identification_type,
+                'id_val': self.l10n_my_identification_number,
+            },
+        })
+
+        if response.get('success') and response.get('tin'):
+            self.l10n_my_edi_malaysian_tin = response['tin']  # Automatically populate the Malaysian TIN with the found TIN
+            self._message_log(body=self.env._("TIN search successful! Found TIN: %s") % response['tin'])
+        elif 'error' in response:
+            # No need to rollback, we don't want to be blocking on that.
+            ref = response['error']['reference']
+            if ref == 'invalid_search_parameters_or_multiple_tins':
+                self._message_log(body=self.env._("The ID Number or ID Type is invalid, or multiple TINs were found.\
+                                                   \nPlease check the identification information."))
+            elif ref == 'search_tin_not_found':
+                self._message_log(body=self.env._("No TIN found for the ID Number and ID Type. Please check the identification information."))
+        else:
+            self._message_log(body=self.env._("TIN search did not return a valid result."))
+
     def _l10n_my_edi_get_tin_for_myinvois(self):
         """ Helper to return the VAT number relevant to the situation. """
         self.ensure_one()
