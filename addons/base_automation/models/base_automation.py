@@ -782,7 +782,7 @@ class BaseAutomation(models.Model):
         automation_done[self] = records_done + records
 
         if records and 'date_automation_last' in records._fields:
-            records.date_automation_last = self.env.cr.now()
+            records.sudo().date_automation_last = self.env.cr.now()
 
         # prepare the contexts for server actions
         contexts = [
