@@ -126,6 +126,7 @@ export class Message extends Component {
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
         this.messageBody = signal.ref(HTMLDivElement);
         this.messageContentRef = signal.ref(HTMLDivElement);
+        this.richBodyRef = signal.ref(HTMLDivElement);
         this.messageActions = useMessageActions(this.messageActionsParams);
         this.shadowBody = signal.ref(HTMLDivElement);
         this.shadowRoot = signal(null, { type: t.ref(ShadowRoot) });
@@ -388,6 +389,56 @@ export class Message extends Component {
                 !this.isEditing && !isNoteVisual && !this.props.squashed,
             "flex-grow-1": this.isEditing,
             o_track: this.message.message_type === "tracking",
+        };
+    }
+
+    get richBodyAttClass() {
+        return {};
+    }
+
+    get headerAttClass() {
+        return { "mb-1": !this.message.isNote };
+    }
+
+    get contentContainerAttClass() {
+        return { "flex-row-reverse": this.isAlignedRight };
+    }
+
+    get textContentAttClass() {
+        return { "w-100": this.isEditing };
+    }
+
+    get bubbleColorAttClass() {
+        return {
+            "o-blue": this.message.bubbleColor === "blue",
+            "o-green": this.message.bubbleColor === "green",
+            "o-orange": this.message.bubbleColor === "orange",
+        };
+    }
+
+    get bubbleTailAttClass() {
+        return this.bubbleColorAttClass;
+    }
+
+    get bubbleAttClass() {
+        return {
+            "o-rounded-bubble": this.props.squashed,
+            "o-rounded-bottom-bubble": !this.props.squashed,
+            "o-rounded-start-bubble": !this.props.squashed && this.isAlignedRight,
+            "o-rounded-end-bubble": !this.props.squashed && !this.isAlignedRight,
+            ...this.bubbleColorAttClass,
+        };
+    }
+
+    get actionsAttClass() {
+        return {
+            "start-0": this.isAlignedRight,
+            "o-mt-0_5": this.message.bubbleColor && !this.isMobileOS,
+            "my-n2": !this.message.bubbleColor && !this.isMobileOS,
+            "gap-1": this.isMobileOS,
+            "mx-1": !this.isMobileOS,
+            invisible: !this.isActive() && !this.isMobileOS,
+            "o-expanded": this.optionsDropdown.isOpen,
         };
     }
 

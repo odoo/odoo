@@ -3,7 +3,7 @@ import { Message } from "@mail/core/common/message";
 import { convertBrToLineBreak } from "@mail/utils/common/format";
 import { useMaybePlugin } from "@mail/utils/common/hooks";
 
-import { signal, useOnChange } from "@odoo/owl";
+import { useOnChange } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
@@ -17,7 +17,6 @@ patch(Message.prototype, {
         this.state.showFullBody = false;
         this.state.isBodyClamped = false;
         this.portalChatterPlugin = useMaybePlugin(PortalChatterPlugin);
-        this.richBodyRef = signal.ref(HTMLDivElement);
         useOnChange(
             () => [this.richBodyRef()],
             (el) => {
@@ -47,6 +46,7 @@ patch(Message.prototype, {
     get richBodyAttClass() {
         const hasRating = this.displayRating && this.ratingValue;
         return {
+            ...super.richBodyAttClass,
             "o_line_clamp o_line_clamp_5": hasRating && !this.state.showFullBody,
         };
     },
