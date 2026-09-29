@@ -943,6 +943,38 @@ class TestProcRule(TransactionCase):
             {'location_id': warehouse.lot_stock_id.id, 'qty_to_order': 3},
         ])
 
+    def test_manual_qty_to_order_update(self):
+        """ Ensure that the 'qty_to_order_computed' for manual orderpoints are recomputed when the scheduler runs.
+        """
+        self.product.is_storable = True
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Manual orderpoint',
+            'product_id': self.product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+            'trigger': 'manual',
+        })
+        self.env.company.horizon_days = 5
+
+        with freeze_time('2026-01-01'):
+            stock_move = self.env['stock.move'].create({
+                'product_id': self.product.id,
+                'product_uom': self.product.uom_id.id,
+                'product_uom_qty': 10,
+                'location_id': self.ref('stock.stock_location_stock'),
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+                'date': '2026-01-10',
+            })
+            stock_move._action_confirm()
+            self.assertRecordValues(orderpoint, [{'qty_forecast': 0.0, 'qty_to_order': 0.0}])
+
+        with freeze_time('2026-01-10'):
+            orderpoint.invalidate_recordset()
+            self.assertRecordValues(orderpoint, [{'qty_forecast': -10.0, 'qty_to_order': 0.0}])
+
+            self.env['stock.rule'].run_scheduler()
+            self.assertRecordValues(orderpoint, [{'qty_forecast': -10.0, 'qty_to_order': 10.0}])
+
 
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):
