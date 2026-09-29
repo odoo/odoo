@@ -240,8 +240,11 @@ class EventEvent(models.Model):
     # ------------------------------------------------------------
 
     def copy(self, default=None):
-        res = super().copy(default=default)
-        res.copy_event_menus(self)
+        # copy with pending translations to match the behavior of website page copy
+        # avoiding issues with the main language version being overwritten depending on user language
+        self_ctx = self.with_context(check_translations=True)
+        res = super(EventEvent, self_ctx).copy(default=default)
+        res.copy_event_menus(self_ctx)
         return res
 
     def copy_event_menus(self, old_events):
