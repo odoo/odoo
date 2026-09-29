@@ -2650,6 +2650,65 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(picking_1.move_ids.move_line_ids.location_dest_id, child_a)
         self.assertEqual(picking_2.move_ids.move_line_ids.location_dest_id, child_b)
 
+    def test_package_level_quantity_split(self):
+        """
+        Ensure packing the same product with multiple order lines into shared packages
+        updates quantities accurately and validates without unnecessary backorders.
+        """
+        product = self.productA
+        package_1 = self.env['stock.quant.package'].create({'name': 'PACK01'})
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'location_dest_id': self.customer_location,
+            'move_ids': [
+                Command.create({
+                    'name': 'Line_1',
+                    'product_id': product.id,
+                    'product_uom_qty': 3.0,
+                    'product_uom': product.uom_id.id,
+                    'location_id': self.env.ref('stock.stock_location_stock').id,
+                    'location_dest_id': self.customer_location,
+                    'description_picking': 'Line_1',
+                }),
+                Command.create({
+                    'name': 'Line_2',
+                    'product_id': product.id,
+                    'product_uom_qty': 2.0,
+                    'product_uom': product.uom_id.id,
+                    'location_id': self.env.ref('stock.stock_location_stock').id,
+                    'location_dest_id': self.customer_location,
+                    'description_picking': 'Line_2',
+                }),
+            ]
+        })
+        picking.action_confirm()
+        pack_level_1 = self.env['stock.package_level'].create({
+            'picking_id': picking.id,
+            'package_id': package_1.id,
+            'location_id': package_1.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'company_id': picking.company_id.id,
+        })
+        ml1 = self.env['stock.move.line'].create({
+            'picking_id': picking.id, 'move_id': picking.move_ids[0].id, 'product_id': product.id,
+            'product_uom_id': product.uom_id.id, 'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id, 'package_id': package_1.id,
+            'result_package_id': package_1.id, 'quantity': 2.0,
+            'package_level_id': pack_level_1.id,
+        })
+        ml2 = self.env['stock.move.line'].create({
+            'picking_id': picking.id, 'move_id': picking.move_ids[1].id, 'product_id': product.id,
+            'product_uom_id': product.uom_id.id, 'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id, 'package_id': package_1.id,
+            'result_package_id': package_1.id, 'quantity': 1.0,
+            'package_level_id': pack_level_1.id,
+        })
+        self.env['stock.quant']._update_available_quantity(product, picking.location_id, 3.0, package_id=package_1)
+        pack_level_1.is_done = True
+        self.assertEqual(ml1.quantity, 2.0)
+        self.assertEqual(ml2.quantity, 1.0)
+
 
 @tagged('-at_install', 'post_install')
 class TestStockFlowPostInstall(TestStockCommon):
