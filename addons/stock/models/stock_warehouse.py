@@ -1014,7 +1014,7 @@ class StockWarehouse(models.Model):
                 'sequence': max_sequence + 1,
                 'company_id': self.company_id.id,
                 'auto_show_allocation_report': True,
-                'auto_batch': self.env.user.has_group('stock.group_stock_picking_batch'),
+                'batch_creation_type': 'auto' if self.env.user.has_group('stock.group_stock_picking_batch') else 'manual',
                 'batch_group_by_partner': self.env.user.has_group('stock.group_stock_picking_batch'),
             }, 'out_type_id': {
                 'name': _('Delivery Orders'),
@@ -1023,7 +1023,7 @@ class StockWarehouse(models.Model):
                 'sequence': max_sequence + 7,
                 'print_label': True,
                 'company_id': self.company_id.id,
-                'auto_batch': self.env.user.has_group('stock.group_stock_picking_batch'),
+                'batch_creation_type': 'auto' if self.env.user.has_group('stock.group_stock_picking_batch') else 'manual',
                 'batch_group_by_partner': self.env.user.has_group('stock.group_stock_picking_batch'),
             }, 'pack_type_id': {
                 'name': _('Pack'),
