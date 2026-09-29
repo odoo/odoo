@@ -67,6 +67,12 @@ class MassMailController(main.MassMailController):
             name = value
 
         mailing_list = MailingList.browse(int(list_id)).exists()
+        if mailing_list and not request.env.user._is_internal() and not mailing_list.is_public:
+            return {
+                'toast_type': 'danger',
+                'toast_content': _("Invalid mailing list."),
+            }
+
         subscription = ContactSubscription.search(
             [('list_id', '=', mailing_list.id), (f'contact_id.{fname}', '=', value)], limit=1)
         if not subscription:
