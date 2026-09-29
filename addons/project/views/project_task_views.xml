@@ -1044,9 +1044,11 @@
             <field name="arch" type="xml">
                 <list position="attributes">
                     <attribute name="default_group_by"/>
+                    <attribute name="multi_edit">1</attribute>
                 </list>
                 <field name="project_id" position="attributes">
                     <attribute name="column_invisible">0</attribute>
+                    <attribute name="readonly">0</attribute>
                 </field>
             </field>
         </record>
