@@ -43,7 +43,7 @@ export function logPosMessage(
             log.args = args.toString();
         }
     }
-    posLogger.log(log);
+    posLogger.log(log).catch((error) => console.warn("Failed to save the POS log:", error));
     if (persistToStorage) {
         try {
             const logs = JSON.parse(localStorage.getItem(IDB_ERROR_LOG_KEY) || "[]");
