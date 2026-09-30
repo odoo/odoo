@@ -32,3 +32,13 @@ The new `estate.property` model gives the application somewhere to store propert
 
 **Try it:** Upgrade `estate` and inspect the `estate_property` table. Compare its columns with the Python fields, then find an automatic field that was not declared in `estate_property.py`.
 
+## Chapter 4 - Security: a brief introduction
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/04_securityintro.html)
+
+A model does not become available to every user merely because it exists. This chapter adds an access row for `base.group_user`, granting internal users create, read, update, and delete access to properties. The manifest loads that row when the addon is installed or upgraded.
+
+The tutorial text shows the older `ir.model.access.csv` layout. This Odoo 20 checkout uses `security/ir.access.csv`, where the `operation` column lists the granted operations. The underlying idea is the same: permissions are data loaded by the module, and a menu alone does not grant model access.
+
+**Try it:** Upgrade `estate` and check that its missing-access warning is gone. Compare property access for an internal user with access for a user outside that group.
+
