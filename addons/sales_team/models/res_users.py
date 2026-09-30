@@ -23,7 +23,10 @@ class ResUsers(models.Model):
             user.crm_team_ids = user.crm_team_member_ids.crm_team_id
 
     def _search_crm_team_ids(self, operator, value):
-        return [('crm_team_member_ids.crm_team_id', operator, value)]
+        active_team_members = self.env['crm.team.member']._search([
+            ('crm_team_id', operator, value), ('active', '=', True)
+        ])
+        return [('crm_team_member_ids', 'in', active_team_members)]
 
     @api.depends('crm_team_member_ids.crm_team_id', 'crm_team_member_ids.create_date', 'crm_team_member_ids.active')
     def _compute_sale_team_id(self):
