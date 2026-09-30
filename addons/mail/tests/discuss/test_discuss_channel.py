@@ -1510,6 +1510,26 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertFalse(meeting.default_display_mode)
 
     @users("employee")
+    def test_only_owner_or_admin_can_update_avatar(self):
+        group = self.env["discuss.channel"]._create_group(users_to=self.user_employee | self.test_user)
+        self.assertEqual(group.self_member_id.sudo().channel_role, "owner")
+        self.assertFalse(group.with_user(self.test_user).self_member_id.sudo().channel_role)
+        self.assertTrue(group.can_self_edit_avatar)
+        self.assertFalse(group.with_user(self.test_user).can_self_edit_avatar)
+        with self.assertRaises(AccessError):
+            group.with_user(self.test_user).write({"image_128": BinaryBytes(b"<svg/>")})
+        group.with_user(self.user_employee).write({"image_128": BinaryBytes(b"<svg/>")})
+        self.assertEqual(group.image_128.content, b"<svg/>")
+        group.with_user(self.test_user).self_member_id.sudo().channel_role = "admin"
+        self.assertTrue(group.with_user(self.test_user).can_self_edit_avatar)
+        group.with_user(self.test_user).write({"image_128": False})
+        self.assertFalse(group.image_128)
+        # a database admin can change the avatar without having a role in the conversation
+        self.assertTrue(group.with_user(self.user_admin).can_self_edit_avatar)
+        group.with_user(self.user_admin).write({"image_128": BinaryBytes(b"<svg/>")})
+        self.assertEqual(group.image_128.content, b"<svg/>")
+
+    @users("employee")
     def test_chat_is_kept_when_its_correspondent_is_deleted(self):
         partner = self.env["res.partner"].sudo().create({"name": "Gone Correspondent"})
         chat = self.env["discuss.channel"]._get_or_create_chat(partner.ids)

@@ -95,10 +95,13 @@ export class DiscussContent extends Component {
     }
 
     get isThreadAvatarEditable() {
+        const channel = this.thread.channel;
         return (
-            !this.thread.channel?.parent_channel_id &&
+            !channel?.parent_channel_id &&
             this.thread.is_editable &&
-            ["channel", "group"].includes(this.thread.channel?.channel_type)
+            ["channel", "group"].includes(channel?.channel_type) &&
+            (["owner", "admin"].includes(channel.self_member_id?.channel_role) ||
+                this.store.self_user?.is_admin)
         );
     }
 

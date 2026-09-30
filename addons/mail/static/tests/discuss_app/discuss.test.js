@@ -1825,6 +1825,38 @@ test("Thread avatar is not editable in DM chat", async () => {
     await contains(".o-mail-DiscussContent-threadAvatar [data-icon='edit']", { count: 0 });
 });
 
+test("Thread avatar is only editable by channel owners and admins", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Member User" });
+    pyEnv["res.users"].create({
+        partner_id: partnerId,
+        login: "test_member",
+        password: "test_member",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+        name: "GroupChat",
+    });
+    await start({ authenticateAs: { login: "test_member", password: "test_member" } });
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussContent-threadName[title='GroupChat']");
+    await contains(".o-mail-DiscussContent-threadAvatar [data-icon='edit']", { count: 0 });
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { channel_role: "admin" });
+    await contains(".o-mail-DiscussContent-threadAvatar [data-icon='edit']");
+    pyEnv["discuss.channel.member"].write([memberId], { channel_role: "owner" });
+    await contains(".o-mail-DiscussContent-threadAvatar [data-icon='edit']");
+    pyEnv["discuss.channel.member"].write([memberId], { channel_role: false });
+    await contains(".o-mail-DiscussContent-threadAvatar [data-icon='edit']", { count: 0 });
+});
+
 test("Do not trigger channel name server update when it is unchanged", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
