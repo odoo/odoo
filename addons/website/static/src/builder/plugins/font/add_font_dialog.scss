@@ -1,0 +1,19 @@
+.o_website_add_font_dialog {
+    height: 50vh;
+
+    // The slot marks the span, but the background must cover the whole option.
+    a.dropdown-item:has(> .o_website_selected_font) {
+        background-color: var(--o-gray-200) !important;
+    }
+
+    // Fade the end of preview text that is clipped by the sample's width.
+    .o_website_font_preview_sample::after {
+        content: "";
+        position: absolute;
+        inset: 0 0 0 auto;
+        width: 80px;
+        border-radius: inherit;
+        pointer-events: none;
+        @include gradient-x(transparent, var(--o-gray-100), 0%, 75%);
+    }
+}

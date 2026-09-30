@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from unittest.mock import patch
 
 from werkzeug.urls import url_encode
 
@@ -784,10 +785,42 @@ class TestUi(HttpCaseWithWebsiteUser):
             'name': 'googleFontMetadata',
             'type': 'binary',
             'mimetype': 'application/json',
-            'raw': b'{"familyMetadataList":[{"family":"First test font"}, {"family":"Second test font"}]}',
+            'raw': json.dumps({'familyMetadataList': [
+                {'family': 'First test font', 'fonts': {'300': {}}},
+                {'family': 'Second test font', 'fonts': {'400': {}}},
+                {'family': 'Third test font', 'fonts': {'400i': {}}},
+            ]}).encode(),
             'public': True,
         })
-        self.start_tour(self.env['website'].get_client_action_url('/', True), "website_font_family", login="admin")
+        # The default proxy returns empty Google Fonts CSS. Serve local fonts
+        # under the fake names so the dialog can wait for actual font loads.
+        font_url = f'{self.base_url()}/web/static/fonts/google/Roboto'
+        font_css = '\n'.join(
+            f'@font-face {{ font-family: "{name}"; font-weight: {weight}; '
+            f'font-style: {style}; src: url("{font_url}/Roboto-{variant}.ttf"); }}'
+            for name, weight, style, variant in (
+                ('First test font', 300, 'normal', 'Light'),
+                ('Second test font', 400, 'normal', 'Regular'),
+                ('Third test font', 400, 'italic', 'Italic'),
+            )
+        )
+        original_fetch_proxy = self.fetch_proxy
+
+        def fetch_proxy(url):
+            if 'https://fonts.googleapis.com/css2?family=First%20test%20font' in url:
+                # Require the variants provided by the mocked font families.
+                if not all(variant in url for variant in (
+                    'family=First%20test%20font:ital,wght@0,300',
+                    'family=Third%20test%20font:ital,wght@1,400',
+                )):
+                    return self.make_fetch_proxy_response('', code=400)
+                response = self.make_fetch_proxy_response(font_css)
+                response['responseHeaders'].append({'name': 'content-type', 'value': 'text/css'})
+                return response
+            return original_fetch_proxy(url)
+
+        with patch.object(self, 'fetch_proxy', fetch_proxy):
+            self.start_tour(self.env['website'].get_client_action_url('/', True), "website_font_family", login="admin")
 
     def test_website_seo_notification(self):
         self.start_tour(self.env['website'].get_client_action_url("/", False), "website_seo_notification", login="admin")
