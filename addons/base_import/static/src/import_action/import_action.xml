@@ -43,11 +43,12 @@
                         columns="this.model.columns"
                         onFieldChanged.bind="this.onFieldChanged"
                         onFieldLanguageChanged.bind="this.onFieldLanguageChanged"
-                        onOptionChanged.bind="this.onOptionChanged"
+                        onErrorResolved.bind="this.onErrorResolved"
                         options="this.importOptions"
                         isFieldSet.bind="this.isFieldSet"
                         previewError="this.state.previewError"
                         importMessages="this.model.importMessages"
+                        resultNames="this.model.resultNames"
                         languagesInstalled="this.model.languagesInstalled"
                     />
                 </t>

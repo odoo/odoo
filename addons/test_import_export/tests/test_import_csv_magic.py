@@ -146,7 +146,7 @@ class TestNumberSeparators(common.TransactionCase):
                 ['1.62'], ['-1.62'], ['+1.62'], ['  +1.62  '], ['(1.62)'],
                 ["1'234'567,89"], ["1.234.567'89"]
             ],
-            ['value'], {}
+            ['value'], {}, [],
         )
         self.assertEqual(
             [d[0] for d in data],

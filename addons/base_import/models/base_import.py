@@ -19,6 +19,7 @@ import chardet
 from markupsafe import Markup, escape
 
 from odoo import api, fields, models
+from odoo.addons.base.models.ir_fields import ROW_REFERENCE
 from odoo.exceptions import UserError
 from odoo.tools import (
     DEFAULT_SERVER_DATE_FORMAT,
@@ -164,11 +165,11 @@ class Base_ImportImport(models.TransientModel):
           choose import options for the different errors.
 
           - Get file data and fields to import into (see :meth:`_convert_import_data`).
+          - Apply the corrections the user chose for the errors of the previous
+            run (see :meth:`_apply_import_resolutions`).
           - Parse date, float and binary data (see :meth:`_parse_import_data`).
           - Handle multiple mapping -> concatenate char/text/many2many columns
             mapped on the same field (see :meth:`_handle_multi_mapping`).
-          - Handle fallback values for boolean and selection fields, in case
-            input data does not match any allowed values (see :meth:`_handle_fallback_values`).
           - Load data (see ir.model "load" method).
           - Rollback transaction if test mode or if encountered error.
           - Save mapping if any import is successful to ease later mapping suggestions.
@@ -576,17 +577,9 @@ class Base_ImportImport(models.TransientModel):
             if not field:
                 continue
 
-            model = self.env[self.res_model]
-            field_path = field.split(LANGUAGE_SEPARATOR, 1)[0].split("/")
-            for field_name in field_path[:-1]:
-                current_field = model._fields.get(field_name)
-                if not current_field or not current_field.relational:
-                    break
-                model = self.env[current_field.comodel_name]
-            else:
-                current_field = model._fields.get(field_path[-1])
-                if current_field and current_field.type == 'html':
-                    html_columns.add(index)
+            current_field = self._get_import_field(field.split(LANGUAGE_SEPARATOR, 1)[0].split("/"))
+            if current_field and current_field.type == 'html':
+                html_columns.add(index)
 
         return html_columns
 
@@ -1336,9 +1329,9 @@ class Base_ImportImport(models.TransientModel):
             return False
 
     @api.model
-    def _parse_float_from_data(self, data, index, name, options):
-        for line in data:
-            line[index] = line[index].strip()
+    def _parse_float_from_data(self, data, index, name, options, messages):
+        for num, line in enumerate(data):
+            line[index] = raw_value = line[index].strip()
             if not line[index]:
                 continue
             thousand_separator, decimal_separator = self._infer_separators(line[index], options)
@@ -1356,7 +1349,14 @@ class Base_ImportImport(models.TransientModel):
             old_value = line[index]
             line[index] = self._remove_currency_symbol(line[index])
             if line[index] is False:
-                raise ImportValidationError(_("Column %(column)s contains incorrect values (value: %(value)s)", column=name, value=old_value), field=name)
+                messages.append({
+                    'type': 'error',
+                    'message': _("Column %(column)s contains incorrect values (value: %(value)s)", column=name, value=old_value),
+                    'record': num,
+                    'rows': {'from': num, 'to': num},
+                    'field': name,
+                    'value': raw_value,
+                })
 
     def _infer_separators(self, value, options):
         """ Try to infer the shape of the separators: if there are two
@@ -1387,14 +1387,17 @@ class Base_ImportImport(models.TransientModel):
         decimal_separator = options.get('float_decimal_separator', '.')
         return thousand_separator, decimal_separator
 
-    def _parse_import_data(self, data, import_fields, options):
+    def _parse_import_data(self, data, import_fields, options, messages):
         """ Lauch first call to :meth:`_parse_import_data_recursive` with an
         empty prefix. :meth:`_parse_import_data_recursive` will be run
         recursively for each relational field.
-        """
-        return self._parse_import_data_recursive(self.res_model, '', data, import_fields, options)
 
-    def _parse_import_data_recursive(self, model, prefix, data, import_fields, options):
+        :param list messages: errors on the values that cannot be parsed,
+            completed in place, their rows being the lines of ``data``
+        """
+        return self._parse_import_data_recursive(self.res_model, '', data, import_fields, options, messages)
+
+    def _parse_import_data_recursive(self, model, prefix, data, import_fields, options, messages):
         # Get fields of type date/datetime
         all_fields = self.env[model].fields_get()
         for name, field in all_fields.items():
@@ -1406,12 +1409,12 @@ class Base_ImportImport(models.TransientModel):
             # Also verify that the field name exactly match the import_field at the correct level.
             elif any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
                 # Recursive call with the relational as new model and add the field name to the prefix
-                self._parse_import_data_recursive(field['relation'], name + '/', data, import_fields, options)
+                self._parse_import_data_recursive(field['relation'], name + '/', data, import_fields, options, messages)
             elif field['type'] in ('float', 'monetary') and name in import_fields:
                 # Parse float, sometimes float values from file have currency symbol or () to denote a negative value
                 # We should be able to manage both case
                 index = import_fields.index(name)
-                self._parse_float_from_data(data, index, name, options)
+                self._parse_float_from_data(data, index, name, options, messages)
             elif field['type'] == 'binary' and field.get('attachment') and name in import_fields:
                 index = import_fields.index(name)
 
@@ -1558,31 +1561,42 @@ class Base_ImportImport(models.TransientModel):
         :rtype: dict(ids: list(int), messages: list({type, message, record}))
         """
         self.ensure_one()
+        skip = options.get('skip') or 0
         import_savepoint = self.env.cr.savepoint()
         try:
             try:
                 input_file_data, import_fields = self._convert_import_data(fields, options)
+                # the errors are reported with the raw values of the file
+                file_data = [list(line) for line in input_file_data]
+                file_fields = list(import_fields)
+                # before parsing, as an unparseable float aborts the whole import
+                record_overrides = self._apply_import_resolutions(
+                    import_fields, input_file_data, options.get('resolutions') or {}, skip)
                 # Parse date and float field
-                input_file_data = self._parse_import_data(input_file_data, import_fields, options)
+                parse_messages = []
+                input_file_data = self._parse_import_data(input_file_data, import_fields, options, parse_messages)
             except ImportValidationError as error:
                 return {'messages': [error.__dict__]}
+            if parse_messages:
+                for message in parse_messages:
+                    message['rows'] = {key: row + skip for key, row in message['rows'].items()}
+                return {'messages': parse_messages}
 
             _logger.info('importing %d rows...', len(input_file_data))
 
             binary_filenames = self._extract_binary_filenames(import_fields, input_file_data)
 
+            # the errors cannot be traced back to the file's values if parsing reshaped the data
+            if import_fields != file_fields or len(input_file_data) != len(file_data):
+                file_fields, file_data = list(import_fields), None
             import_fields, merged_data = self.with_context(import_options=options)._handle_multi_mapping(import_fields, input_file_data)
-
-            if options.get('fallback_values'):
-                merged_data = self._handle_fallback_values(import_fields, merged_data, options['fallback_values'])
 
             name_create_enabled_fields = options.pop('name_create_enabled_fields', {})
             import_limit = options.pop('limit', None)
             model = self.env[self.res_model].with_context(
                 import_file=True,
                 name_create_enabled_fields=name_create_enabled_fields,
-                import_set_empty_fields=options.get('import_set_empty_fields', []),
-                import_skip_records=options.get('import_skip_records', []),
+                import_record_overrides=record_overrides,
             )
             import_result = model.load(import_fields, merged_data, limit=import_limit)
             _logger.info('done importing data into model: %s', model._name)
@@ -1621,20 +1635,22 @@ class Base_ImportImport(models.TransientModel):
                         })
         if 'name' in import_fields:
             index_of_name = import_fields.index('name')
-            skipped = options.get('skip', 0)
             # pad front as data doesn't contain anythig for skipped lines
-            r = import_result['name'] = [''] * skipped
+            r = import_result['name'] = [''] * skip
             # only add names for the window being imported
-            r.extend(self._stringify_date_like_objects(x[index_of_name], options) for x in input_file_data[:import_limit])
+            r.extend(self._stringify_date_like_objects(x[index_of_name], options) for x in merged_data[:import_limit])
             # pad back (though that's probably not useful)
-            r.extend([''] * (len(input_file_data) - (import_limit or 0)))
+            r.extend([''] * (len(merged_data) - (import_limit or 0)))
         else:
             import_result['name'] = []
 
-        skip = options.get('skip', 0)
+        self._attach_record_errors(import_result['messages'], file_fields, file_data)
         # convert load's internal nextrow to the imported file's
         if import_result['nextrow']: # don't update if nextrow = 0 (= no nextrow)
             import_result['nextrow'] += skip
+        for message in import_result['messages']:
+            if isinstance(message.get('rows'), dict):
+                message['rows'] = {key: row + skip for key, row in message['rows'].items()}
         if binary_filenames:
             import_result['binary_filenames'] = binary_filenames
 
@@ -1758,74 +1774,145 @@ class Base_ImportImport(models.TransientModel):
 
         return import_fields, merged_data
 
-    def _handle_fallback_values(self, import_field, input_file_data, fallback_values):
+    def _get_import_field(self, names):
+        """ Return the field a mapped column points to, or ``None`` when the
+        path cannot be resolved (e.g. it ends on the ``.id`` pseudo-field).
+
+        :param list names: path of the column's mapping, without its language,
+            e.g. ``['order_line', 'product_id']``
         """
-        If there are fallback values, this method will replace the input file
-        data value if it does not match the possible values for the given field.
-        This is only valid for boolean and selection fields.
+        model = self.env[self.res_model]
+        for name in names[:-1]:
+            field = model._fields.get(name)
+            if not field or not field.relational:
+                return None
+            model = self.env[field.comodel_name]
+        return model._fields.get(names[-1])
 
-        .. note::
+    def _apply_import_resolutions(self, import_fields, input_file_data, resolutions, skip=0):
+        """ Apply the corrections the user chose for the errors reported by a
+        previous run of the import, listed per field along with the offending
+        value and the rows of the file they apply to, e.g.::
 
-            We can consider that we need to retrieve the selection values for
-            all the fields in fallback_values, as if they are present, it's because
-            there was already a conflict during first import run and user had to
-            select a fallback value for the field.
+            {
+                'state_id': [{'value': 'CA', 'rows': [2, 7], 'resolution': {'action': 'set', 'value': 5}}],
+                'name': [
+                    {'value': '', 'rows': [3], 'resolution': {'action': 'set', 'value': 'Azure'}},
+                    {'value': '', 'rows': [4], 'resolution': {'action': 'empty'}},
+                ],
+            }
 
-        :param list import_field: ordered list of field that have been matched to import data
-        :param list input_file_data: ordered list of values (list) that need to be imported in
-            the given import_fields
-        :param dict fallback_values:
+        A record picked for a relational field cannot be expressed in the file
+        data: the cell is replaced by a reference to its row and value, which is
+        returned along with the record, to be forwarded to the converters.
 
-            contains all the fields that have been tagged by the user to use a
-            specific fallback value in case the value to import does not match
-            values accepted by the field (selection or boolean) e.g.::
-
-                {
-                    'fieldName': {
-                        'fallback_value': fallback_value,
-                        'field_model': field_model,
-                        'field_type': field_type
-                    },
-                    'state': {
-                        'fallback_value': 'draft',
-                        'field_model': field_model,
-                        'field_type': 'selection'
-                    },
-                    'active': {
-                        'fallback_value': 'true',
-                        'field_model': field_model,
-                        'field_type': 'boolean'
-                    }
-                }
+        :param list import_fields: ordered list of the mapped fields
+        :param list input_file_data: rows to import, corrected in place
+        :param dict resolutions: corrections, per field path
+        :param int skip: number of rows of the file left out of ``input_file_data``
+        :returns: the record to use per field path and cell reference
+        :rtype: dict
         """
-        # add possible selection values into our fallback dictionary for fields of type "selection"
-        for field_string in fallback_values:
-            if fallback_values[field_string]['field_type'] != "selection":
+        if not resolutions:
+            return {}
+
+        model_fields = self.env[self.res_model]._fields
+
+        def is_o2m_column(mapped_field):
+            field = model_fields.get(mapped_field.split('/', 1)[0])
+            return field is not None and field.type == 'one2many'
+
+        o2m_indexes = {index for index, mapped_field in enumerate(import_fields) if is_o2m_column(mapped_field)}
+        other_indexes = [index for index in range(len(import_fields)) if index not in o2m_indexes]
+        # same rule as load(): lines holding only one2many values belong to the
+        # record above, and filling its columns there would split it
+        continuation_lines = {
+            num for num, line in enumerate(input_file_data)
+            if num and any(line[i] for i in o2m_indexes) and not any(line[i] for i in other_indexes)
+        } if o2m_indexes else set()
+
+        record_overrides = {}
+        for mapped_path, corrections in resolutions.items():
+            # a column mapped on 'relation/id' or 'relation/.id' still holds
+            # references of the relation, and is looked up under its path
+            names = mapped_path.split(LANGUAGE_SEPARATOR, 1)[0].split('/')
+            if len(names) > 1 and names[-1] in ('id', '.id'):
+                names = names[:-1]
+                field_path = '/'.join(names)
+            else:
+                field_path = mapped_path
+            row_corrections = {
+                (correction['value'], row - skip): correction['resolution']
+                for correction in corrections
+                for row in correction['rows']
+            }
+            corrected_values = {correction['value'] for correction in corrections}
+            field = self._get_import_field(names)
+            is_relational = field is not None and field.relational
+            overrides = {}
+            separator = ',' if field is not None and field.type in ('many2many', 'one2many') else None
+            # the same field may be mapped on several columns
+            for index, mapped_field in enumerate(import_fields):
+                if mapped_field.split(LANGUAGE_SEPARATOR, 1)[0] != mapped_path:
+                    continue
+                skipped_lines = set() if index in o2m_indexes else continuation_lines
+                for num, line in enumerate(input_file_data):
+                    cell = line[index]
+                    # translations and spreadsheet-typed dates or numbers are
+                    # never what an error was reported with
+                    if not isinstance(cell, str) or num in skipped_lines:
+                        continue
+                    # a one2many spread over several lines reports each cell as a whole
+                    if separator and not (cell in corrected_values or cell.strip() in corrected_values):
+                        values = cell.split(separator)
+                    else:
+                        values = [cell]
+                    kept = []
+                    for value in values:
+                        correction = row_corrections.get((value, num)) or row_corrections.get((value.strip(), num))
+                        if correction:
+                            if correction['action'] == 'empty':
+                                continue
+                            if is_relational:
+                                reference = f'{ROW_REFERENCE}{num}:{value.strip()}'
+                                overrides[reference] = correction['value']
+                                value = reference
+                            else:
+                                value = str(correction['value'])
+                        kept.append(value)
+                    line[index] = separator.join(kept) if separator else (kept[0] if kept else '')
+            if overrides:
+                record_overrides[field_path] = overrides
+
+        return record_overrides
+
+    def _attach_record_errors(self, messages, import_fields, input_file_data):
+        """ Point the errors raised on a whole record, such as a database
+        constraint, at the first of their fields that the file maps, along with
+        the value it holds on the offending line.
+
+        :param list messages: errors of the import, completed in place
+        :param list import_fields: ordered list of the mapped fields
+        :param list input_file_data: rows the import ran on, as the file holds
+            them, before any correction or parsing; ``None`` when they cannot
+            be told, in which case the errors are attached to a column only
+        """
+        for message in messages:
+            candidates = message.pop('fields', None) or ([message['field']] if message.get('field') else [])
+            rows = message.get('rows')
+            if 'value' in message or not candidates or not isinstance(rows, dict):
                 continue
-            field_path = field_string.split('/')
-            target_field = field_path[-1]
-            target_model = self.env[fallback_values[field_string]['field_model']]
-
-            selection_values = [value.lower() for (key, value) in target_model.fields_get([target_field])[target_field]['selection']]
-            fallback_values[field_string]['selection_values'] = selection_values
-
-        # check fallback values
-        for record_index, records in enumerate(input_file_data):
-            for column_index, value in enumerate(records):
-                field = import_field[column_index]
-
-                if field in fallback_values:
-                    fallback_value = fallback_values[field]['fallback_value']
-                    # Boolean
-                    if fallback_values[field]['field_type'] == "boolean":
-                        value = value if value.lower() in ('0', '1', 'true', 'false') else fallback_value
-                    # Selection
-                    elif fallback_values[field]['field_type'] == "selection" and value.lower() not in fallback_values[field]["selection_values"]:
-                        value = fallback_value if fallback_value != 'skip' else None  # don't set any value if we skip
-
-                    input_file_data[record_index][column_index] = value
-
-        return input_file_data
+            row = rows['from']
+            for name in candidates:
+                if name not in import_fields:
+                    continue
+                message['field'] = name
+                if input_file_data is None or not 0 <= row < len(input_file_data):
+                    break
+                value = input_file_data[row][import_fields.index(name)]
+                if isinstance(value, str):
+                    message['value'] = value
+                break
 
 _SEPARATORS = [' ', '/', '-', '.', '']
 _PATTERN_BASELINE = [

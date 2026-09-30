@@ -717,7 +717,7 @@ class test_convert_import_data(TransactionCase):
             ['name', 'parent_id/.id', 'parent_id/d', 'parent_id/f'],
             options
         )
-        result = import_wizard._parse_import_data(data, import_fields, options)
+        result = import_wizard._parse_import_data(data, import_fields, options, [])
         # Check if the data 5,69 as been correctly parsed.
         self.assertEqual(float(result[0][-1]), 5.69)
         self.assertEqual(str(result[0][-2]), '2017-10-12')
@@ -740,7 +740,7 @@ class test_convert_import_data(TransactionCase):
             ["0.000095"],
         ]
 
-        import_wizard._parse_float_from_data(test_data, 0, 'test-name', test_options)
+        import_wizard._parse_float_from_data(test_data, 0, 'test-name', test_options, [])
         self.assertEqual(test_data, expected_result)
 
     def test_filtered(self):
@@ -875,64 +875,542 @@ class test_convert_import_data(TransactionCase):
 
         self.assertItemsEqual(data, [data_row])
 
-    def test_set_empty_value_import(self):
-        partners_before = self.env['res.partner'].search([])
+    def test_resolutions_import(self):
+        """ Each error can be recovered from on the offending value only: the
+        other lines of the same column keep being imported as they were. """
+        partners = self.env['res.partner']
+        # 'Ambiguous' matches two partners: the value alone cannot say which
+        _ambiguous1, ambiguous2 = partners.create([
+            {'name': 'Ambiguous'},
+            {'name': 'Ambiguous'},
+        ])
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'res.partner',
             'file': BinaryBytes(b"""\
-foo,US\n
-foo1,Invalid Country\n
-foo2,US\n"""),
+foo,Ambiguous\n
+foo1,Unknown Parent\n
+foo2,Ambiguous\n"""),
+            'file_type': 'text/csv'
+        })
+
+        with RecordCapturer(self.env['res.partner'], []) as capture:
+            results = import_wizard.execute_import(
+                ['name', 'parent_id'],
+                [],
+                {
+                    'quoting': '"',
+                    'separator': ',',
+                    'resolutions': {
+                        'parent_id': [
+                            {'value': 'Ambiguous', 'rows': [0, 2], 'resolution': {'action': 'set', 'value': ambiguous2.id}},
+                            {'value': 'Unknown Parent', 'rows': [1], 'resolution': {'action': 'empty'}},
+                        ],
+                    },
+                }
+            )
+
+        self.assertEqual(results['messages'], [])
+        self.assertEqual(
+            [(partner.name, partner.parent_id) for partner in capture.records],
+            [('foo', ambiguous2), ('foo1', partners), ('foo2', ambiguous2)],
+        )
+
+    def test_resolutions_parsing_import(self):
+        """ A value that cannot even be parsed aborts the whole import, so its
+        correction has to be applied before parsing. """
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.float',
+            'file': BinaryBytes(b"""\
+1.5\n
+not a number\n
+2.5\n
+not a number\n"""),
+            'file_type': 'text/csv'
+        })
+        options = {
+            'quoting': '"',
+            'separator': ',',
+            'float_decimal_separator': '.',
+            'float_thousand_separator': ',',
+        }
+
+        # every row holding the value is reported, as the correction only applies to those
+        results = import_wizard.execute_import(['value'], [], dict(options))
+        self.assertEqual(
+            [(message['value'], message['rows']) for message in results['messages']],
+            [('not a number', {'from': 1, 'to': 1}), ('not a number', {'from': 3, 'to': 3})],
+        )
+
+        # the rows are the file's, whichever batch is being imported
+        results = import_wizard.execute_import(['value'], [], dict(options, skip=1))
+        self.assertEqual(
+            [message['rows'] for message in results['messages']],
+            [{'from': 1, 'to': 1}, {'from': 3, 'to': 3}],
+        )
+
+        with RecordCapturer(self.env['import.float'], []) as capture:
+            results = import_wizard.execute_import(['value'], [], dict(
+                options,
+                resolutions={'value': [
+                    {'value': 'not a number', 'rows': [1, 3], 'resolution': {'action': 'set', 'value': '4.5'}},
+                ]},
+            ))
+
+        self.assertEqual(results['messages'], [])
+        self.assertEqual(capture.records.mapped('value'), [1.5, 4.5, 2.5, 4.5])
+
+    def test_unparseable_numbers_reported_at_once(self):
+        """ Every unparseable number of the file is reported in the same run,
+        whichever its column. """
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.float',
+            'file': BinaryBytes(b"""\
+1.5,abc\n
+foo,2.5\n
+bar,3.5\n
+foo,def\n"""),
+            'file_type': 'text/csv'
+        })
+        results = import_wizard.execute_import(['value', 'value2'], [], {
+            'quoting': '"',
+            'separator': ',',
+            'float_decimal_separator': '.',
+            'float_thousand_separator': ',',
+        })
+        self.assertItemsEqual(
+            [(message['field'], message['value'], message['rows']) for message in results['messages']],
+            [
+                ('value', 'foo', {'from': 1, 'to': 1}),
+                ('value', 'foo', {'from': 3, 'to': 3}),
+                ('value', 'bar', {'from': 2, 'to': 2}),
+                ('value2', 'abc', {'from': 0, 'to': 0}),
+                ('value2', 'def', {'from': 3, 'to': 3}),
+            ],
+        )
+
+    def test_unparseable_date_cannot_be_recovered(self):
+        """ A date the file's format cannot parse is only reported. """
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.preview',
+            'file': BinaryBytes(b"""\
+foo,1,2026-01-30\n
+foo1,2,not a date\n"""),
+            'file_type': 'text/csv'
+        })
+        results = import_wizard.execute_import(
+            ['name', 'somevalue', 'date'],
+            [],
+            {'quoting': '"', 'separator': ',', 'date_format': '%Y-%m-%d'},
+        )
+        self.assertEqual(len(results['messages']), 1)
+        self.assertNotIn('value', results['messages'][0])
+
+    def test_record_error_on_its_column(self):
+        """ An error raised on a whole record is reported on one of its columns,
+        along with the value it holds, so that it can be recovered from too. """
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': BinaryBytes(b"""\
+foo,contact\n
+,contact\n
+,contact\n"""),
+            'file_type': 'text/csv'
+        })
+        options = {'quoting': '"', 'separator': ','}
+
+        with mute_logger('odoo.sql_db'):
+            results = import_wizard.execute_import(['name', 'type'], [], dict(options))
+
+        # the constraint spans 'name' and 'type': it lands on the former, the
+        # first of them, in the constraint's order, that the file maps
+        self.assertEqual(len(results['messages']), 2)
+        message = results['messages'][0]
+        self.assertEqual(message['message'], "Contacts require a name")
+        self.assertEqual((message['field'], message['value']), ('name', ''))
+        self.assertNotIn('fields', message)
+        self.assertEqual([message['rows']['from'] for message in results['messages']], [1, 2])
+
+        # each missing value is given its own
+        with RecordCapturer(self.env['res.partner'], []) as capture:
+            results = import_wizard.execute_import(['name', 'type'], [], dict(
+                options,
+                resolutions={'name': [
+                    {'value': '', 'rows': [1], 'resolution': {'action': 'set', 'value': 'bar'}},
+                    {'value': '', 'rows': [2], 'resolution': {'action': 'set', 'value': 'baz'}},
+                ]},
+            ))
+
+        self.assertEqual(results['messages'], [])
+        self.assertEqual([partner.name for partner in capture.records], ['foo', 'bar', 'baz'])
+
+        # the rows are the file's, whichever batch is being imported
+        with RecordCapturer(self.env['res.partner'], []) as capture:
+            results = import_wizard.execute_import(['name', 'type'], [], dict(
+                options,
+                skip=2,
+                resolutions={'name': [{'value': '', 'rows': [2], 'resolution': {'action': 'set', 'value': 'qux'}}]},
+            ))
+
+        self.assertEqual(results['messages'], [])
+        self.assertEqual(capture.records.mapped('name'), ['qux'])
+
+    def test_unique_error_corrects_only_its_row(self):
+        """ A value only offends as a duplicate of another line's: correcting it
+        leaves alone the line it was first imported with. """
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'export.unique',
+            'file': BinaryBytes(b"""\
+123\n
+123\n"""),
+            'file_type': 'text/csv'
+        })
+        options = {'quoting': '"', 'separator': ','}
+
+        with mute_logger('odoo.sql_db'):
+            results = import_wizard.execute_import(['value'], [], dict(options))
+        self.assertEqual(
+            [(message['field'], message['value'], message['unique'], message['rows']) for message in results['messages']],
+            [('value', '123', True, {'from': 1, 'to': 1})],
+        )
+
+        for correction, expected in (
+            ({'action': 'empty'}, [123, 0]),
+            ({'action': 'set', 'value': '456'}, [123, 456]),
+        ):
+            with self.subTest(correction=correction), RecordCapturer(self.env['export.unique'], []) as capture:
+                results = import_wizard.execute_import(['value'], [], dict(
+                    options,
+                    resolutions={'value': [{'value': '123', 'rows': [1], 'resolution': correction}]},
+                ))
+                self.assertEqual(results['messages'], [])
+                self.assertEqual(capture.records.mapped('value'), expected)
+            capture.records.unlink()
+
+    def test_record_picked_for_a_single_row(self):
+        """ A record picked for the value of a single row is not used for the
+        other rows holding the same value. """
+        partners = self.env['res.partner']
+        _ambiguous1, ambiguous2 = partners.create([
+            {'name': 'Ambiguous'},
+            {'name': 'Ambiguous'},
+        ])
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': BinaryBytes(b"""\
+foo,Ambiguous\n
+foo1,Ambiguous\n"""),
+            'file_type': 'text/csv'
+        })
+
+        results = import_wizard.execute_import(['name', 'parent_id'], [], {
+            'quoting': '"',
+            'separator': ',',
+            'resolutions': {
+                'parent_id': [
+                    {'value': 'Ambiguous', 'rows': [1], 'resolution': {'action': 'set', 'value': ambiguous2.id}},
+                ],
+            },
+        })
+
+        self.assertEqual(
+            [(message['value'], message['rows']) for message in results['messages']],
+            [('Ambiguous', {'from': 0, 'to': 0})],
+        )
+
+    def test_x2many_reports_every_offending_value(self):
+        """ Every reference of an x2many column fails on its own, so that the
+        whole column can be recovered from in a single run. """
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': BinaryBytes(b'''\
+foo,"Unknown Tag,Other Unknown Tag"\n
+foo1,"Yet Another Unknown Tag"\n'''),
             'file_type': 'text/csv'
         })
 
         results = import_wizard.execute_import(
-            ['name', 'country_id'],
+            ['name', 'category_id'],
             [],
-            {
-                'quoting': '"',
-                'separator': ',',
-                'import_set_empty_fields': ['country_id'],
-            }
+            {'quoting': '"', 'separator': ','},
         )
-        partners_now = self.env['res.partner'].search([]) - partners_before
-        self.assertEqual(len(results['ids']), 3, "should have imported the first 3 records in full, got %s" % results['ids'])
 
-        self.assertEqual(partners_now[0].name, 'foo', "New partner's name should be foo")
-        self.assertEqual(partners_now[0].country_id.id, self.env.ref('base.us').id, "Foo partner's country should be US")
+        self.assertEqual(
+            [(message['value'], message['rows']) for message in results['messages']],
+            [
+                ('Unknown Tag', {'from': 0, 'to': 0}),
+                ('Other Unknown Tag', {'from': 0, 'to': 0}),
+                ('Yet Another Unknown Tag', {'from': 1, 'to': 1}),
+            ],
+        )
 
-        self.assertEqual(partners_now[1].country_id.id, False, "foo1 partner's country should be False")
-
-        # if results empty, no errors
-        self.assertItemsEqual(results['messages'], [])
-
-    def test_skip_record_import(self):
-        partners_before = self.env['res.partner'].search([])
+    def test_o2m_reports_every_offending_line(self):
+        """ Every line of a one2many fails on its own, just like the references
+        of a many2many. """
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'res.partner',
-            'file': BinaryBytes(b"""\
-foo,US\n
-foo1,Invalid Country\n
-foo2,Invalid Country\n
-foo3,Invalid Country\n"""),
+            'file': BinaryBytes(b'''\
+foo,"Unknown Child,Other Unknown Child"\n'''),
             'file_type': 'text/csv'
         })
 
         results = import_wizard.execute_import(
-            ['name', 'country_id'],
+            ['name', 'child_ids'],
+            [],
+            {'quoting': '"', 'separator': ','},
+        )
+
+        self.assertEqual(
+            [message['value'] for message in results['messages']],
+            ['Unknown Child', 'Other Unknown Child'],
+        )
+
+    def test_x2many_resolutions_import(self):
+        """ The values of an x2many column are recovered from one by one, the
+        others of the same cell being imported as they were. """
+        known, picked = self.env['res.partner.category'].create([
+            {'name': 'Known Tag'},
+            {'name': 'Picked Tag'},
+        ])
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': BinaryBytes(b'''\
+foo,"Known Tag,Unknown Tag,Other Unknown Tag"\n'''),
+            'file_type': 'text/csv'
+        })
+
+        with RecordCapturer(self.env['res.partner'], []) as capture:
+            results = import_wizard.execute_import(
+                ['name', 'category_id'],
+                [],
+                {
+                    'quoting': '"',
+                    'separator': ',',
+                    'resolutions': {
+                        'category_id': [
+                            {'value': 'Unknown Tag', 'rows': [0], 'resolution': {'action': 'set', 'value': picked.id}},
+                            {'value': 'Other Unknown Tag', 'rows': [0], 'resolution': {'action': 'empty'}},
+                        ],
+                    },
+                },
+            )
+
+        self.assertEqual(results['messages'], [])
+        self.assertEqual(capture.records.category_id, known + picked)
+
+    def test_x2many_resolutions_on_external_ids(self):
+        """ A column mapped on the 'id' subfield of a relation still holds
+        references of that relation, which the corrections are applied to. """
+        tag, picked = self.env['res.partner.category'].create([
+            {'name': 'Known Tag'},
+            {'name': 'Picked Tag'},
+        ])
+        self.env['ir.model.data'].create({
+            'name': 'known_tag',
+            'module': 'base',
+            'model': 'res.partner.category',
+            'res_id': tag.id,
+        })
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': BinaryBytes(b'''\
+foo,"base.known_tag,base.missing_tag"\n
+foo1,"base.other_missing_tag"\n'''),
+            'file_type': 'text/csv'
+        })
+
+        with RecordCapturer(self.env['res.partner'], []) as capture:
+            results = import_wizard.execute_import(
+                ['name', 'category_id/id'],
+                [],
+                {
+                    'quoting': '"',
+                    'separator': ',',
+                    'resolutions': {
+                        'category_id/id': [
+                            {'value': 'base.missing_tag', 'rows': [0], 'resolution': {'action': 'empty'}},
+                            {'value': 'base.other_missing_tag', 'rows': [1], 'resolution': {'action': 'set', 'value': picked.id}},
+                        ],
+                    },
+                },
+            )
+
+        self.assertEqual(results['messages'], [])
+        self.assertEqual(
+            [(partner.name, partner.category_id) for partner in capture.records],
+            [('foo', tag), ('foo1', picked)],
+        )
+
+    def test_validation_error_without_value(self):
+        """ A validation error that cannot be traced back to a cell carries no
+        value, so that the import UI does not offer to correct one. """
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': BinaryBytes(b"foo\n"),
+            'file_type': 'text/csv'
+        })
+
+        results = import_wizard.execute_import([False], [], {'quoting': '"', 'separator': ','})
+
+        self.assertEqual(len(results['messages']), 1)
+        self.assertNotIn('value', results['messages'][0])
+
+    def test_resolutions_leave_o2m_lines_alone(self):
+        """ A correction of an empty value leaves alone the lines only adding
+        one2many values to the record above them, which would otherwise each
+        become a record of their own. """
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': BinaryBytes(b"""\
+,Child A\n
+,Child B\n"""),
+            'file_type': 'text/csv'
+        })
+
+        with RecordCapturer(self.env['res.partner'], [('parent_id', '=', False)]) as capture:
+            results = import_wizard.execute_import(
+                ['name', 'child_ids/name'],
+                [],
+                {
+                    'quoting': '"',
+                    'separator': ',',
+                    'resolutions': {'name': [{'value': '', 'rows': [0], 'resolution': {'action': 'set', 'value': 'Parent'}}]},
+                },
+            )
+
+        self.assertEqual(results['messages'], [])
+        self.assertEqual(capture.records.mapped('name'), ['Parent'])
+        self.assertItemsEqual(capture.records.child_ids.mapped('name'), ['Child A', 'Child B'])
+
+    def test_resolutions_on_o2m_lines(self):
+        """ A one2many spread over several lines takes each cell as a single
+        reference, which is then what the correction applies to. """
+        known, picked = self.env['res.partner'].create([
+            {'name': 'Known Child'},
+            {'name': 'Picked Child'},
+        ])
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': BinaryBytes(b'''\
+foo,"Known Child"\n
+,"Other, Unknown Child"\n'''),
+            'file_type': 'text/csv'
+        })
+        import_fields = ['name', 'child_ids']
+        options = {'quoting': '"', 'separator': ','}
+
+        results = import_wizard.execute_import(import_fields, [], dict(options))
+        self.assertEqual(
+            [(message['value'], message['rows']) for message in results['messages']],
+            [('Other, Unknown Child', {'from': 0, 'to': 1})],
+        )
+
+        # the value may be on any row of the record
+        with RecordCapturer(self.env['res.partner'], [('name', '=', 'foo')]) as capture:
+            results = import_wizard.execute_import(import_fields, [], dict(
+                options,
+                resolutions={'child_ids': [
+                    {'value': 'Other, Unknown Child', 'rows': [0, 1], 'resolution': {'action': 'set', 'value': picked.id}},
+                ]},
+            ))
+
+        self.assertEqual(results['messages'], [])
+        self.assertEqual(capture.records.child_ids, known + picked)
+
+    def test_resolution_on_deleted_record(self):
+        """ A record picked for a value that has been deleted since is not
+        linked: the value fails as if nothing had been picked. """
+        deleted = self.env['res.partner'].create({'name': 'Deleted'})
+        deleted_id = deleted.id
+        deleted.unlink()
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': BinaryBytes(b"foo,Unknown Parent\n"),
+            'file_type': 'text/csv'
+        })
+
+        results = import_wizard.execute_import(
+            ['name', 'parent_id'],
             [],
             {
                 'quoting': '"',
                 'separator': ',',
-                'import_skip_records': ['country_id']
-            }
+                'resolutions': {'parent_id': [
+                    {'value': 'Unknown Parent', 'rows': [0], 'resolution': {'action': 'set', 'value': deleted_id}},
+                ]},
+            },
         )
-        partners_now = self.env['res.partner'].search([]) - partners_before
 
-        self.assertEqual(len(results['ids']), 1, "should have imported the first record in full, got %s" % results['ids'])
-        self.assertEqual(partners_now.name, 'foo', "New partner's name should be foo")
-        # if results empty, no errors
-        self.assertItemsEqual(results['messages'], [])
+        self.assertEqual(
+            [(message['field'], message['value']) for message in results['messages']],
+            [('parent_id', 'Unknown Parent')],
+        )
+
+    def test_resolutions_on_empty_relational_value(self):
+        """ A record can be picked for an empty relational value too, although
+        an empty cell never reaches the converters. """
+        Related = self.env['import.m2o.required.related']
+        picked, deleted = Related.create([{}, {}])
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.m2o.required',
+            'file': BinaryBytes(b"rec1,\n"),
+            'file_type': 'text/csv'
+        })
+        import_fields = ['id', 'value']
+        options = {'quoting': '"', 'separator': ','}
+
+        with mute_logger('odoo.sql_db'):
+            results = import_wizard.execute_import(import_fields, [], dict(options))
+        self.assertEqual(
+            [(message['field'], message['value']) for message in results['messages']],
+            [('value', '')],
+        )
+
+        with RecordCapturer(self.env['import.m2o.required'], []) as capture:
+            results = import_wizard.execute_import(import_fields, [], dict(
+                options,
+                resolutions={'value': [{'value': '', 'rows': [0], 'resolution': {'action': 'set', 'value': picked.id}}]},
+            ))
+        self.assertEqual(results['messages'], [])
+        self.assertEqual(capture.records.value, picked)
+
+        # the record picked is gone: the empty value is reported again, for
+        # another one to be picked
+        deleted_id = deleted.id
+        deleted.unlink()
+        results = import_wizard.execute_import(import_fields, [], dict(
+            options,
+            resolutions={'value': [{'value': '', 'rows': [0], 'resolution': {'action': 'set', 'value': deleted_id}}]},
+        ))
+        self.assertEqual(
+            [(message['field'], message['value']) for message in results['messages']],
+            [('value', '')],
+        )
+
+    def test_record_error_on_reshaped_data(self):
+        """ When parsing reshapes the data, the rows of the errors no longer
+        point at the file's: the error is attached to its column, but with no
+        value, rather than with the value of an unrelated line. """
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': BinaryBytes(b"""\
+foo,contact\n
+,contact\n"""),
+            'file_type': 'text/csv'
+        })
+        Import = self.registry['base_import.import']
+        parse_import_data = Import._parse_import_data
+
+        def drop_first_line(self, data, import_fields, options, messages):
+            return parse_import_data(self, data, import_fields, options, messages)[1:]
+
+        with patch.object(Import, '_parse_import_data', drop_first_line), mute_logger('odoo.sql_db'):
+            results = import_wizard.execute_import(
+                ['name', 'type'], [], {'quoting': '"', 'separator': ','})
+
+        self.assertEqual(len(results['messages']), 1)
+        message = results['messages'][0]
+        self.assertEqual(message['field'], 'name')
+        self.assertNotIn('value', message)
 
     def test_multi_mapping(self):
         """ Test meant specifically for the '_handle_multi_mapping' that allows mapping multiple
