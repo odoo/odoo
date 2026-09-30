@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
@@ -132,6 +132,16 @@ class TestPartnerRoutingFields(AccountTestInvoicingCommon):
         })
         self.assertEqual(partner.routing_scheme, '0208')
         self.assertEqual(partner.routing_endpoint, '0477472701')
+
+    def test_routing_endpoint_be_vat_form(self):
+        """ Test that the scheme and endpoint are computed when adding a new partner with a BE VAT number in the form view. """
+        with Form(self.env['res.partner']) as partner_form:
+            partner_form.name = "BE partner"
+            partner_form.country_id = self.env.ref('base.be')
+            partner_form.vat = 'BE0477472701'
+            # Onchange test
+            self.assertEqual(partner_form.routing_scheme, '0208')
+            self.assertEqual(partner_form.routing_endpoint, '0477472701')
 
     def test_validate_fr_vat_routing_identifier(self):
         """ A France VAT (EAS 9957) used as routing scheme/endpoint is validated as a VAT:
