@@ -747,35 +747,24 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         self.assertRecordValues(svls, [{'value': 4809.92, 'remaining_value': 4809.92}])
         self.assertAlmostEqual(svls.unit_cost, 0.87452999)
 
-    @freeze_time('2024-01-01')
-    def test_exchange_rate_return_after_reception(self):
-        """ Buy a product valuated in real time (FIFO here, AVCO works the same way) in a
-        foreign currency, receive it, change the currency rate, then return the goods.
-
-        The rate change between the reception and the return should not be treated as a
-        realized currency gain/loss (it shouldn't hit the default currency exchange
-        journal); any adjustment belongs to the stock valuation flow instead.
-        """
-
-        stock_journal_id = self.test_product_order.categ_id.property_stock_journal.id
+    def _check_return_exchange_difference(self, rate_receipt, rate_return):
+        categ = self.test_product_order.categ_id
+        stock_journal_id = categ.property_stock_journal.id
         exchange_journal_id = self.env.company.currency_exchange_journal_id.id
-        stock_val_account = self.test_product_order.categ_id.property_stock_valuation_account_id
+        stock_val_account = categ.property_stock_valuation_account_id
+        stock_in_account = categ.property_stock_account_input_categ_id
+        # The fixture makes the valuation account reconcilable, which real charts of
+        # accounts do not; leaving it on routes the flow through another reconciliation.
         stock_val_account.reconcile = False
 
-        foreign_currency = self.other_currency
-        date_po_receipt = '2024-01-01'
-        rate_po_receipt = 2.0
+        date_receipt = '2024-01-01'
         date_return = '2024-02-01'
-        rate_return = 3.0
-
-        relevant_amls = self.env['account.move.line'].search([
-            ('journal_id', 'in', (stock_journal_id, exchange_journal_id)),
-        ], order='id asc')
-
+        foreign_currency = self.env.ref('base.EUR')
+        foreign_currency.active = True
         self.env['res.currency.rate'].create([
             {
-                'name': date_po_receipt,
-                'rate': rate_po_receipt,
+                'name': date_receipt,
+                'rate': rate_receipt,
                 'currency_id': foreign_currency.id,
                 'company_id': self.env.company.id,
             },
@@ -788,44 +777,37 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         ])
 
         purchase_order = self._create_purchase(
-            self.test_product_order, date_po_receipt, quantity=10, price_unit=100, currency=foreign_currency)
-        self._process_pickings(purchase_order.picking_ids, date=date_po_receipt)
+            self.test_product_order, date_receipt, quantity=10, price_unit=100, currency=foreign_currency)
         receipt = purchase_order.picking_ids
+        self._process_pickings(receipt, date=date_receipt)
 
-        # Return the goods we just received, at the new rate.
         with freeze_time(date_return):
-            stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
+            return_form = Form(self.env['stock.return.picking'].with_context(
                 active_ids=receipt.ids, active_id=receipt.id, active_model='stock.picking'))
-            stock_return_picking = stock_return_picking_form.save()
-            stock_return_picking.product_return_moves.quantity = 10.0
-            stock_return_picking_action = stock_return_picking.action_create_returns()
-            return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-            return_pick.move_ids.quantity = 10
-            return_pick.move_ids.picked = True
-            return_pick._action_done()
-
-        stock_val_account = self.test_product_order.categ_id.property_stock_valuation_account_id
-        stock_in_account = self.test_product_order.categ_id.property_stock_account_input_categ_id
+            return_wizard = return_form.save()
+            return_wizard.product_return_moves.quantity = 10.0
+            return_pick = self.env['stock.picking'].browse(return_wizard.action_create_returns()['res_id'])
+            self._process_pickings(return_pick, date=date_return)
 
         relevant_amls = self.env['account.move.line'].search([
             ('journal_id', 'in', (stock_journal_id, exchange_journal_id)),
-            ('date', '>=', date_po_receipt)
+            ('date', '>=', date_receipt),
         ], order='id asc')
+        exchange_move = relevant_amls.move_id.filtered(lambda m: m.journal_id.id == exchange_journal_id)
 
-        moves = relevant_amls.move_id
-        self.assertEqual(len(moves), 3, "There should be exactly 3 moves: Receipt, Return, and one Exchange Difference.")
+        self.assertEqual(len(relevant_amls.move_id), 3)
+        self.assertEqual(len(exchange_move), 1)
+        self.assertFalse(exchange_move.line_ids.filtered(lambda l: l.account_id == stock_val_account))
+        self.assertTrue(exchange_move.line_ids.filtered(lambda l: l.account_id == stock_in_account))
 
-        exchange_move = moves[2]
+    @freeze_time('2024-01-01')
+    def test_exchange_rate_return_after_reception(self):
+        """Check that returning goods bought in a foreign currency after the rate rose books
+        the exchange difference as a realized gain/loss instead of against inventory value."""
+        self._check_return_exchange_difference(rate_receipt=2.0, rate_return=3.0)
 
-        valuation_amls = relevant_amls.filtered(lambda l: l.account_id == stock_val_account)
-        self.assertEqual(
-            len(valuation_amls), 2
-        )
-
-        self.assertFalse(
-            exchange_move.line_ids.filtered(lambda l: l.account_id == stock_val_account)
-        )
-
-        self.assertTrue(
-            exchange_move.line_ids.filtered(lambda l: l.account_id == stock_in_account)
-        )
+    @freeze_time('2024-01-01')
+    def test_exchange_rate_return_after_reception_rate_drop(self):
+        """Check that returning goods bought in a foreign currency after the rate dropped books
+        the exchange difference as a realized gain/loss instead of against inventory value."""
+        self._check_return_exchange_difference(rate_receipt=3.0, rate_return=2.0)

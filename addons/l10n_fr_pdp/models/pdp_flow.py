@@ -28,7 +28,7 @@ FLOW_SENT_STATES = tuple(dict(FLOW_SENT_STATES_SELECTION))
 
 class PdpFlow(models.Model):
     _name = 'l10n.fr.pdp.reports.flow'
-    _description = 'French PDP Flow'
+    _description = 'French E-Reporting Flow'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'create_date desc'
 
@@ -40,8 +40,8 @@ class PdpFlow(models.Model):
         default='ready',
     )
     payload_id = fields.Many2one('ir.attachment', string="XML Payload", compute='_compute_payload_attachment')
-    transport_status = fields.Char(help="Raw status returned by the PDP transport API.")
-    transport_message = fields.Text(help="Additional message or error returned by the PDP transport API.")
+    transport_status = fields.Char(help="Raw status returned by the Approved Platform transport API.")
+    transport_message = fields.Text(help="Additional message or error returned by the Approved Platform transport API.")
     report_type = fields.Selection(
         selection=[('transaction', "Transaction"), ('payment', "Payment")],
         required=True,
@@ -159,9 +159,14 @@ class PdpFlow(models.Model):
         but it DOES NOT verify if move is eligible for flow 10
         """
         report_type = move.l10n_fr_pdp_flow_10_report_type
-        transaction = move if report_type == 'transaction' else move._l10n_fr_pdp_get_matched_transactions()[0]
         period_data = self._get_period_flow_properties(move.company_id, move.date, report_type)
-        operation_type = 'purchase' if transaction._l10n_fr_pdp_is_purchase() else 'sale'
+        if report_type == 'transaction':
+            operation_type = 'purchase' if move._l10n_fr_pdp_is_purchase() else 'sale'
+        elif matched_transactions := move._l10n_fr_pdp_get_matched_transactions():
+            operation_type = 'purchase' if matched_transactions[0]._l10n_fr_pdp_is_purchase() else 'sale'
+        else:
+            # The related transaction can already be out of scope when a sent payment needs an RE.
+            operation_type = move.l10n_fr_pdp_sent_in_flow_ids.sorted('id')[-1].operation_type
         return {
             'company_id': move.company_id.id,
             'period_start': period_data['period_start'],
@@ -355,7 +360,7 @@ class PdpFlow(models.Model):
         proxy_user = self.company_id.account_peppol_edi_user
         if not proxy_user:
             raise UserError(self.env._(
-                "No active PDP proxy user is configured for company %(company)s.",
+                "No active Approved Platform connection is configured for company %(company)s.",
                 company=self.company_id.display_name,
             ))
         return proxy_user
@@ -378,7 +383,7 @@ class PdpFlow(models.Model):
         )
         ppf_messages = result.get('ppf_messages') or []
         if not ppf_messages:
-            raise UserError(self.env._("The PDP proxy did not return a flow tracking identifier."))
+            raise UserError(self.env._("The Approved Platform did not return a flow tracking identifier."))
 
         proxy_message = ppf_messages[0]
         return {

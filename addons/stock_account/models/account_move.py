@@ -320,26 +320,24 @@ class AccountMoveLine(models.Model):
     def _inverse_product_id(self):
         super(AccountMoveLine, self.filtered(lambda l: l.display_type != 'cogs'))._inverse_product_id()
 
+    def _use_stock_account_for_exchange(self):
+        layers = self.move_id.sudo().stock_valuation_layer_ids
+        valued_moves = layers.stock_move_id
+        return_moves = valued_moves.returned_move_ids | valued_moves.origin_returned_move_id
+
+        return bool(
+            layers
+            and not return_moves
+            and self.product_id.categ_id.property_cost_method != 'standard'
+            and self.product_id.categ_id.property_valuation == 'real_time'
+        )
+
     def _get_exchange_journal(self, company):
-        if (
-            self and self.move_id.sudo().stock_valuation_layer_ids and
-            self.product_id.categ_id.property_cost_method != 'standard' and
-            self.product_id.categ_id.property_valuation == 'real_time'
-        ):
+        if self._use_stock_account_for_exchange():
             return self.product_id.categ_id.property_stock_journal
         return super()._get_exchange_journal(company)
 
     def _get_exchange_account(self, company, amount):
-        layers = self.move_id.sudo().stock_valuation_layer_ids if self else False
-
-        is_return_or_refund = layers and any(
-            layer.stock_move_id.returned_move_ids for layer in layers
-        )
-
-        if (
-            layers and not is_return_or_refund and
-            self.product_id.categ_id.property_cost_method != 'standard' and
-            self.product_id.categ_id.property_valuation == 'real_time'
-        ):
+        if self._use_stock_account_for_exchange():
             return self.product_id.categ_id.property_stock_valuation_account_id
         return super()._get_exchange_account(company, amount)

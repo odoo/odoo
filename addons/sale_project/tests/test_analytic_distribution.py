@@ -196,3 +196,39 @@ class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
             [(0, '=', 1)],
             "Domain should be (0, '=', 1) when analytic_distribution is missing."
         )
+
+    def test_payment_line_does_not_receive_project_analytic_distribution(self):
+        """
+        Ensure that when a payment is registered for a bill created from a project,
+        the payment's own journal items do not receive the project's analytic distribution.
+        """
+        self.project_global.account_id = self.analytic_account_sale
+
+        bill = self.env['account.move'].with_context(project_id=self.project_global.id).create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner.id,
+            'invoice_date': '2024-01-01',
+            'invoice_line_ids': [Command.create({
+                'quantity': 1,
+                'price_unit': 100,
+                'account_id': self.company_data['default_account_expense'].id,
+            })],
+        })
+        bill.action_post()
+
+        self.assertEqual(
+            bill.invoice_line_ids.analytic_distribution,
+            {str(self.analytic_account_sale.id): 100},
+            "The bill's journal items should receive the project's analytic distribution.",
+        )
+
+        payment_register = self.env['account.payment.register'].with_context(
+            active_model='account.move', active_ids=bill.ids, project_id=self.project_global.id,
+        ).create({})
+        payment = payment_register._create_payments()
+
+        self.assertFalse(
+            any(str(self.analytic_account_sale.id) in (line.analytic_distribution or {})
+                for line in payment.move_id.line_ids),
+            "The payment's journal items should not receive the project's analytic distribution.",
+        )

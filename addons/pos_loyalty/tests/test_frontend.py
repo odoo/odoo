@@ -1847,8 +1847,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
 
         expected_coupons = {
-            "test-card-0000": 125,
-            "new-card-0001": 250,
+            "test_card_0000": 125,
+            "new_card_0001": 250,
         }
 
         # Check if the expected coupon codes are present
@@ -1894,9 +1894,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
 
         self.assertTrue(len(program1.coupon_ids) == len(program2.coupon_ids) == len(program3.coupon_ids) == 1)
-        self.assertEqual(program1.coupon_ids.code, 'test-card-0000')
-        self.assertEqual(program2.coupon_ids.code, 'test-card-0001')
-        self.assertEqual(program3.coupon_ids.code, 'test-card-0002')
+        self.assertEqual(program1.coupon_ids.code, 'test_card_0000')
+        self.assertEqual(program2.coupon_ids.code, 'test_card_0001')
+        self.assertEqual(program3.coupon_ids.code, 'test_card_0002')
 
     def test_dont_grant_points_reward_order_lines(self):
         """
@@ -2884,7 +2884,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
 
         self.assertEqual(len(gift_card_program.coupon_ids), 1, "Gift card not generated")
-        self.assertEqual(gift_card_program.coupon_ids[0].code, "test-card-1234", "Gift card code not correct")
+        self.assertEqual(gift_card_program.coupon_ids[0].code, "test_card_1234", "Gift card code not correct")
         self.assertEqual(gift_card_program.coupon_ids[0].partner_id, partner, "Gift card partner id not correct")
 
     def test_combo_product_dont_grant_point(self):
@@ -3326,8 +3326,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
         codes = (programs['program_a'].coupon_ids | programs['program_b'].coupon_ids).mapped('code')
         self.assertEqual(len(codes), len(set(codes)), "gift card codes must be unique")
-        self.assertIn('test-card-0001', codes)
-        self.assertIn('test-card-0002', codes)
+        self.assertIn('test_card_0001', codes)
+        self.assertIn('test_card_0002', codes)
 
     def test_physical_gift_card_single_program_twice(self):
         """
@@ -3348,8 +3348,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
         codes = program.coupon_ids.mapped('code')
         self.assertEqual(len(codes), len(set(codes)), "gift card codes must be unique")
-        self.assertIn('test-card-0001', codes)
-        self.assertIn('test-card-0002', codes)
+        self.assertIn('test_card_0001', codes)
+        self.assertIn('test_card_0002', codes)
 
     def test_ewallet_tax_included_invoice(self):
         LoyaltyProgram = self.env['loyalty.program']

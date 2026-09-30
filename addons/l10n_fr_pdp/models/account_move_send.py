@@ -34,11 +34,16 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_peppol_document_params(self, partner, invoice, invoice_data):
         edi_user, document = super()._get_peppol_document_params(partner, invoice, invoice_data)
-        if edi_user and document and edi_user.proxy_type == 'pdp':
-            document.update({
-                'flow_number': 2,
-                'force_peppol_only': not invoice.company_id.l10n_fr_pdp_send_to_ppf,
-            })
+        if edi_user and edi_user.proxy_type == 'pdp':
+            if xml_file := invoice_data.get('ubl_cii_xml_attachment_values'):
+                if len(xml_file['raw']) > 10000000:
+                    invoice_data['error'] = self.env._("Invoice %s exceeds the size limit of 10 MB to be sent via Approved Platform.", invoice.name)
+                    return None, None
+            if document:
+                document.update({
+                    'flow_number': 2,
+                    'force_peppol_only': not invoice.company_id.l10n_fr_pdp_send_to_ppf,
+                })
         return edi_user, document
 
     # -------------------------------------------------------------------------
@@ -47,7 +52,7 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_peppol_what_is_peppol_alert(self, moves, moves_data, relevant_moves):
         alert = super()._get_peppol_what_is_peppol_alert(moves, moves_data, relevant_moves)
-        if relevant_moves.company_id.filtered(lambda c: c._peppol_is_french_company()):
+        if relevant_moves.company_id.filtered(lambda c: c._l10n_fr_pdp_uses_french_terminology()):
             alert['action'].update({
                 'tag': 'l10n_fr_pdp.what_is_pdp',
                 'name': self.env._("Why should I use E-Invoicing?"),
@@ -56,18 +61,18 @@ class AccountMoveSend(models.AbstractModel):
         return alert
 
     def _get_peppol_what_is_peppol_message(self, companies, moves, relevant_moves):
-        if relevant_moves.company_id.filtered(lambda c: c._peppol_is_french_company()):
-            return self.env._("You can send this invoice electronically via Approved Platform.")
+        if relevant_moves.company_id.filtered(lambda c: c._l10n_fr_pdp_uses_french_terminology()):
+            return self.env._("You can send this invoice electronically via the Approved Platform.")
         return super()._get_peppol_what_is_peppol_message(companies, moves, relevant_moves)
 
     def _get_peppol_partner_want_peppol_message(self, partners, relevant_moves):
-        french_regulated_moves = relevant_moves.filtered(
-            lambda m: (
-                m.company_id._peppol_is_french_company()
-                and m.partner_id.commercial_partner_id.with_company(m.company_id)._get_pdp_receiver_identification_info()[0] == 'pdp'
+        french_relevant_moves = relevant_moves.filtered(
+            lambda move: (
+                move.company_id._l10n_fr_pdp_uses_french_terminology()
+                and move.partner_id.commercial_partner_id in partners
             )
         )
-        if french_regulated_moves:
+        if french_relevant_moves:
             return self.env._("%s has requested electronic invoices reception via French E-Invoicing.", partners.display_name)
         return super()._get_peppol_partner_want_peppol_message(partners, relevant_moves)
 
@@ -79,7 +84,7 @@ class AccountMoveSend(models.AbstractModel):
         can_send = self.env['account_edi_proxy_client.user']._get_can_send_domain()
         if (
             len(companies) == 1
-            and companies._peppol_is_french_company()
+            and companies._l10n_fr_pdp_uses_french_terminology()
             and (companies.account_peppol_proxy_state not in can_send or companies._get_peppol_proxy_type() != 'pdp')
         ):
             config = self.env['res.config.settings'].sudo().create({'company_id': companies.id})
