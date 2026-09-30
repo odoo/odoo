@@ -15,12 +15,26 @@
     <record id="hr_leave_employee_report_view_graph" model="ir.ui.view">
         <field name="model">hr.leave.employee.report</field>
         <field name="arch" type="xml">
-            <graph disable_linking="True">
+            <graph>
                 <field name="color" invisible="1"/>
                 <field name="employee_id"/>
                 <field name="number_of_days" string="Number of Days" type='measure'/>
                 <field name="number_of_hours" string="Number of Hours" widget="float_time"/>
             </graph>
+        </field>
+    </record>
+
+    <record id="hr_leave_employee_report_view_list" model="ir.ui.view">
+        <field name="model">hr.leave.employee.report</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0" action="action_open_record" type="object">
+                <field name="employee_id"/>
+                <field name="number_of_days" string="Number of Days" sum="Remaining Days" width="110px"/>
+                <field name="number_of_hours" string="Number of Hours" sum="Remaining Hours" width="120px"/>
+                <field name="work_entry_type_id"/>
+                <field name="state"/>
+                <field name="description"/>
+            </list>
         </field>
     </record>
 
@@ -84,7 +98,7 @@
     <record id="action_hr_leave_employee_report" model="ir.actions.act_window">
         <field name="name">Time Off Per Employee Analysis</field>
         <field name="res_model">hr.leave.employee.report</field>
-        <field name="view_mode">pivot,graph</field>
+        <field name="view_mode">pivot,graph,list</field>
         <field name="search_view_id" ref="hr_leave_employee_report_filter"/>
         <field name="context">{
             'search_default_filter_working_schedule_aligned_date_from': 1,
