@@ -324,4 +324,12 @@
             </t>
         </xpath>
     </template>
+
+    <template id="account_payment.payment_status" inherit_id="payment.payment_status">
+        <xpath expr="//div[hasclass('o_payment_status_pending')]//p" position="replace">
+            <t t-if="tx._should_create_payment()">$0</t>
+            <p else="">Your order is being processed.</p>
+        </xpath>
+    </template>
+
 </odoo>
