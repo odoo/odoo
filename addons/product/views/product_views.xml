@@ -40,7 +40,6 @@
             <form string="Product">
                 <sheet name="product_form">
                     <field name='product_variant_count' invisible='1'/> <!-- drives many invisible/readonly conditions throughout this form -->
-                    <field name='is_product_variant' invisible='1'/> <!-- drives invisible conditions throughout this form -->
                     <field name='attribute_line_ids' invisible='1'/> <!-- kept for has_configurable_attributes/valid_product_template_attribute_line_ids computes -->
                     <field name="company_id" invisible="1"/> <!-- technical company field driving cost_currency_id compute and multi-company logic -->
                     <div class="oe_button_box" name="button_box">
@@ -103,7 +102,6 @@
                                         string=""
                                         invisible="not product_tooltip"
                                     />
-                                    <field name="show_qty_update_button" invisible="1"/> <!-- drives invisible on the qty update action link and qty_available field below -->
                                     <field name="is_storable" invisible="type != 'consu' or is_storable"/>
                                     <label for="is_storable" invisible="type != 'consu'  or not is_storable"/>
                                     <div name="tracking_and_qty_no_stock" class="o_row w-100" invisible="type != 'consu' or not is_storable">
@@ -173,7 +171,6 @@
                                         placeholder="Visible to all"/>
                                     <field name="currency_id" invisible="1"/> <!-- currency for the list_price monetary widget in this group -->
                                     <field name="cost_currency_id" invisible="1"/> <!-- currency for the standard_price monetary widget in this group -->
-                                    <field name="product_variant_id" invisible="1"/> <!-- read by the uom_ids field context (product_id/default_product_id) above -->
                                 </group>
                             </group>
                             <group name="internal_notes" string="Internal Notes">

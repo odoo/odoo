@@ -80,8 +80,6 @@
                     <field name="is_signed" string="Signed" optional="hide" groups="stock.group_stock_sign_delivery"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user" readonly="state in ['cancel', 'done']"/>
                     <field name="scheduled_date" optional="show" widget="relative_date" invisible="state in ('done', 'cancel')" readonly="1"/>
-                    <field name="picking_type_code" column_invisible="True"/> <!-- drives invisible/decoration on products_availability below -->
-                    <field name="products_availability_state" column_invisible="True" options='{"lazy": true}'/> <!-- drives decoration-success/warning/danger on products_availability below -->
                     <field name="products_availability" options='{"lazy": true}'
                         optional="hide"
                         invisible="picking_type_code not in ('outgoing', 'internal') or state not in ['confirmed', 'waiting', 'assigned']"
@@ -315,7 +313,6 @@
                                 invisible="state in ('done', 'cancel') or not date_deadline"
                                 decoration-danger="date_deadline and date_deadline &lt; current_date"
                                 decoration-bf="date_deadline and date_deadline &lt; current_date"/>
-                            <field name="products_availability_state" invisible="1"/> <!-- drives decoration-success/warning/danger on products_availability below -->
                             <field name="products_availability"
                                 invisible="picking_type_code not in ('outgoing', 'internal') or state not in ['confirmed', 'waiting', 'assigned']"
                                 decoration-success="state == 'assigned' or products_availability_state == 'available'"
@@ -348,12 +345,8 @@
                                     <field name="location_dest_id" column_invisible="True"/> <!-- used in default_location_dest_id context for embedded operations -->
                                     <field name="partner_id" column_invisible="True" readonly="state == 'done'"/> <!-- used as default_partner_id/address_in_id context, not shown as a column -->
                                     <field name="picking_code" column_invisible="True"/> <!-- drives has_tracking-based invisible on lot_ids below -->
-                                    <field name="show_details_visible" column_invisible="True"/> <!-- drives invisible on lot_ids and action_show_details button -->
                                     <field name="additional" column_invisible="True"/> <!-- drives readonly on product_id and uom_id -->
-                                    <field name="move_lines_count" column_invisible="True"/> <!-- drives readonly on product_id -->
-                                    <field name="is_locked" column_invisible="True"/> <!-- used by decoration-muted on this list -->
                                     <field name="is_storable" column_invisible="True"/> <!-- provides default_is_storable context for product_id -->
-                                    <field name="has_tracking" column_invisible="True"/> <!-- drives invisible on lot_ids below -->
                                     <column>
                                         <field
                                             name="product_id"
@@ -379,11 +372,9 @@
                                     <field name="forecasted_location_id" optional="hide" groups="stock.group_stock_multi_locations"/>
                                     <field name="date" optional="hide"/>
                                     <field name="date_deadline" optional="hide"/>
-                                    <field name="is_quantity_done_editable" column_invisible="True"/> <!-- drives readonly on quantity field below -->
                                     <field name="show_quant" column_invisible="True"/> <!-- read by stock_move_line_x2_many_field.js to decide quant display -->
                                     <field name="show_lots_text" column_invisible="True"/> <!-- kept for stock.move.line list rendering of lot info -->
                                     <field name="show_lots_m2o" column_invisible="True"/> <!-- kept for stock.move.line list rendering of lot info -->
-                                    <field name="is_initial_demand_editable" column_invisible="True"/> <!-- drives readonly on product_uom_qty below -->
                                     <field name="display_import_lot" column_invisible="True"/> <!-- kept for lot import/assign serial UI logic -->
                                     <field name="has_lines_without_result_package" column_invisible="True"/> <!-- read by stock_package_m2m.js to show the "None" tag -->
                                     <field name="package_ids" optional="show" widget="package_m2m" groups="stock.group_tracking_lot" width="200px" readonly="1"/>

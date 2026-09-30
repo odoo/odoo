@@ -52,7 +52,6 @@
                 <field name="resource_ref" options="{'model_field': 'res_model_id', 'no_create': True}" invisible="not resource_ref"/>
                 <button name="action_open_record" type="object" icon="open_in_new" invisible="not resource_ref" title="Open Record"/>
                 <field name="res_id" string="ID"/>
-                <field name="has_active" column_invisible="True"/> <!-- drives invisible="not has_active" on is_active and the archived filter -->
                 <field name="execution_details" column_invisible="True"/> <!-- used by privacy_lookup_wizard.execution_details compute, not shown as a column -->
                 <field name="is_active" widget="boolean_toggle" invisible="is_unlinked or not has_active"/>
                 <field name="is_unlinked" column_invisible="True"/> <!-- drives invisible on is_active and the Delete button -->

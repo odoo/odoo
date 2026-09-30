@@ -1063,7 +1063,6 @@
                                 <field name="journal_id" groups="base.group_no_one" readonly="invoice_count != 0 and state == 'sale'"/>
                                 <field name="invoice_status" invisible="state != 'sale'" groups="base.group_no_one"/>
                                 <!-- test_event_configurator -->
-                                <field name="invoice_status" invisible="1" groups="!base.group_no_one"/> <!-- Kept so invoice_status is saved/available when group_no_one is disabled, mirroring the visible field above -->
                             </group>
                             <group name="sale_shipping" string="Shipping">
                                 <field name="incoterm" options="{'no_open': True, 'no_create': True}"/>

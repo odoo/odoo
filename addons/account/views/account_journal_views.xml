@@ -17,7 +17,6 @@
                     <field name="default_account_id" optional="show"/>
                     <field name="active" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                    <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/> <!-- loads company_id in mono-company mode so record color/check_company work without a visible column -->
                 </list>
             </field>
         </record>
@@ -110,7 +109,6 @@
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>
                                     <group name="bank_account_number" invisible="type != 'bank'">
-                                        <field name="company_partner_id" invisible="1"/> <!-- feeds the default_partner_id context on bank_account_id below -->
                                         <field name="bank_account_id" string="Bank Account Number" context="{'default_partner_id': company_partner_id}"/>
                                         <field name="bank_bic" invisible="not bank_account_id"/>
                                         <field name="bank_statements_source" widget="radio" required="type == 'bank'"  groups="account.group_account_basic"/>
@@ -125,8 +123,6 @@
                                 <field name="available_payment_method_ids" invisible="1"/> <!-- loads the journal-level set that the payment-method lines relate to and filter payment_method_id against -->
                                 <field name="inbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'inbound'}">
                                     <list string="Payment Methods" editable="bottom">
-                                        <field name="available_payment_method_ids" column_invisible="True"/> <!-- feeds the ('id','in',available_payment_method_ids) part of payment_method_id's domain -->
-                                        <field name="payment_type" column_invisible="True"/> <!-- feeds the ('payment_type','=?',payment_type) part of payment_method_id's domain -->
                                         <field name="company_id" column_invisible="True"/> <!-- provides check_company for payment_account_id in this list -->
                                         <field name="sequence" widget="handle"/>
                                         <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
@@ -142,8 +138,6 @@
                             <page id="outbound_payment_settings" string="Outgoing Payments" name="page_outgoing_payments" invisible="type not in ['cash', 'bank', 'credit']">
                                     <field name="outbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'outbound'}">
                                         <list string="Payment Methods" editable="bottom">
-                                            <field name="available_payment_method_ids" column_invisible="True"/> <!-- feeds the ('id','in',available_payment_method_ids) part of payment_method_id's domain -->
-                                            <field name="payment_type" column_invisible="True"/> <!-- feeds the ('payment_type','=?',payment_type) part of payment_method_id's domain -->
                                             <field name="company_id" column_invisible="True"/> <!-- provides check_company for payment_account_id in this list -->
                                             <field name="sequence" widget="handle"/>
                                             <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
@@ -155,7 +149,6 @@
                                                    groups="account.group_account_readonly"/>
                                         </list>
                                     </field>
-                                    <field name="selected_payment_method_codes" invisible="1"/> <!-- drives the check_printing invisible modifier in account_check_printing's journal-form inherit -->
                                     <group name="outgoing_payment" />
                             </page>
                             <page name="advanced_settings" string="Advanced Settings">
@@ -166,7 +159,6 @@
                                     </group>
                                     <group string="Emails" name="group_email_alias"
                                            invisible="type not in ('general', 'sale', 'purchase', 'cash', 'credit', 'bank')">
-                                        <field name="display_alias_fields" invisible="1"/> <!-- drives the invisible="(not) display_alias_fields" modifiers on the alias config rows below -->
                                         <div class="o_row" colspan="2" invisible="display_alias_fields">
                                             <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button">
                                                 <i class="o_button_icon oi me-2" data-icon="east"/> Configure Alias Domain

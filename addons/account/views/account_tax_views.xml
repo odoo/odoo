@@ -51,8 +51,6 @@
                     <field name="use_in_tax_closing"
                            optional="hidden"
                            invisible="repartition_type == 'base'"/>
-                    <field name="company_id" column_invisible="True"/> <!-- provides check_company for account_id in this repartition list -->
-                    <field name="tag_ids_domain" column_invisible="True"/> <!-- feeds the domain="tag_ids_domain" on the tag_ids column above -->
                 </list>
             </field>
         </record>
@@ -192,7 +190,6 @@
             <field name="model">account.tax</field>
             <field name="arch" type="xml">
                 <form string="Account Tax">
-                    <field name="company_id" invisible="1"/> <!-- exposed for check_company on account/tax_group domains; the visible copy is behind groups="base.group_multi_company" -->
                     <sheet>
                     <group>
                         <group>
@@ -218,7 +215,6 @@
                     <notebook>
                         <page string="Definition" name="definition">
                             <group invisible="amount_type == 'group'">
-                                <field name="country_code" invisible="1"/> <!-- drives "country_code != 'XX'" modifiers in l10n tax-form inherits (l10n_in, l10n_it, l10n_ee, ...) -->
                                 <group string="Distribution for Invoices" class="mw-100">
                                     <field name="invoice_repartition_line_ids" nolabel="1" colspan="2" context="{'default_document_type': 'invoice'}"/>
                                 </group>

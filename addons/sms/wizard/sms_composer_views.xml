@@ -27,12 +27,10 @@
                 <sheet>
                     <group>
                         <field name="composition_mode" invisible="1"/> <!-- drives invisible on body/footer buttons and read in Python compute/send logic -->
-                        <field name="comment_single_recipient" invisible="1"/> <!-- drives invisible on recipient_single_description div and body fields -->
                         <field name="res_id" invisible="1"/> <!-- target record id, used by computes and action_send_sms -->
                         <field name="res_ids" invisible="1"/> <!-- target record ids for mass mode, used by computes and action_send_sms -->
                         <field name="res_model" invisible="1"/> <!-- target model, drives template_id domain and used in computes/send logic -->
                         <field name="mass_force_send" invisible="1"/> <!-- flag set/read in action_send_sms_mass_now -->
-                        <field name="recipient_single_valid" invisible="1"/> <!-- drives invisible on alert div, body fields and Send buttons -->
                         <field name="recipient_single_number" invisible="1"/> <!-- kept for onchange/compute of recipient_single_number_itf and numbers -->
                         <field name="number_field_name" invisible="1"/> <!-- kept for compute of recipient_single_number/numbers and used in action_send_sms -->
                         <field name="numbers" invisible="1"/> <!-- kept for compute of sanitized_numbers -->

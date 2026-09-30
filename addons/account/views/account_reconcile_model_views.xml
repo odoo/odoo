@@ -36,7 +36,6 @@
                         <field name="trigger" widget="statusbar"/>
                     </header>
                     <field name="active" invisible="1"/> <!-- loaded so the record can be archived/unarchived from the form -->
-                    <field name="company_id" invisible="1"/> <!-- read by the line_ids default="{'default_company_id': self.company_id}" below -->
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button type="object" name="action_reconcile_stat" string="Journal Entries"
@@ -98,7 +97,6 @@
                                            default="{'default_model_id': self, 'default_company_id': self.company_id}"
                                            nolabel="1">
                                         <list editable="bottom">
-                                            <field name="company_id" column_invisible="True"/> <!-- scopes the check_company=True domains of account_id/tax_ids in this list -->
 
                                             <field name="sequence"
                                                    widget="handle"/>

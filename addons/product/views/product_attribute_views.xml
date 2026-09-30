@@ -18,7 +18,6 @@
         <field name="model">product.attribute</field>
         <field name="arch" type="xml">
             <form string="Product Attribute">
-            <field name="number_related_products" invisible="1"/> <!-- drives invisible/readonly on button_box, create_variant and value_ids buttons below -->
             <sheet>
                 <widget
                     name="web_ribbon"
@@ -158,7 +157,6 @@
                     <group>
                         <field name="ptav_active" readonly="1" invisible="ptav_active"/>
                         <field name="name"/>
-                        <field name="display_type" invisible="1"/> <!-- drives invisible on html_color/image below -->
                         <field name="html_color" invisible="display_type != 'color' or image"/>
                         <field name="image" invisible="display_type != 'color' or not image" widget="image" options="{'size': [70, 70]}"/>
                         <field name="excluded_value_ids" widget="many2many_tags" options="{'no_create': True}" />

@@ -12,7 +12,6 @@
             <field name="arch" type="xml">
                 <form string="Journal Item" create="false">
                     <sheet>
-                        <field name="company_id" invisible="1"/> <!-- drives the account_id domain [company_ids, parent_of, company_id] on this form -->
                         <field name="parent_state" invisible="1"/> <!-- drives the readonly modifier on amount_currency (parent_state != 'draft') -->
                         <group>
                             <field name="name"/>
@@ -43,8 +42,6 @@
                                         <label for="full_reconcile_id"/>
                                         <div>
                                             <field name="full_reconcile_id" invisible="not full_reconcile_id"/>
-                                            <field name="matched_debit_ids" invisible="1"/> <!-- drives the invisible modifier on the group/button (not matched_debit_ids and not matched_credit_ids) -->
-                                            <field name="matched_credit_ids" invisible="1"/> <!-- drives the invisible modifier on the group/button (not matched_debit_ids and not matched_credit_ids) -->
                                             <button name="open_reconcile_view"
                                                 class="oe_link"
                                                 type="object"
@@ -68,7 +65,6 @@
                                 </group>
                             </page>
                             <page string="Analytic Lines" name="analytic_lines" groups="analytic.group_analytic_accounting">
-                                <field name="date" invisible="1"/> <!-- feeds the analytic_line_ids context (default_date, default_general_account_id) -->
                                 <field name="analytic_line_ids" context="{'list_view_ref':'analytic.view_account_analytic_line_tree', 'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
                             </page>
                             <page string="Accounting documents" name="page_accounting_documents">
@@ -190,15 +186,11 @@
                     <field name="matching_number" string="Matching" readonly="1" optional="show"/>
                     <field name="residual_at_date" sum="Total Residual" string="Residual" optional="hide" readonly="1" invisible="not is_account_reconcile"/>
                     <field name="residual_currency_at_date" sum="Total Residual in Currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile" groups="base.group_multi_currency"/>
-                    <field name="move_type" column_invisible="True"/> <!-- drives the readonly modifier on partner_id (move_type != 'entry') -->
-                    <field name="parent_state" column_invisible="True"/> <!-- drives decoration-info on this list (parent_state == 'draft') -->
                     <field name="account_type" column_invisible="True"/> <!-- technical field kept for reconciliation logic / inheriting overrides -->
                     <field name="statement_line_id" column_invisible="True"/> <!-- technical origin field kept for bank-statement lines -->
                     <field name="company_currency_id" column_invisible="True"/> <!-- currency for the residual/balance monetary columns -->
                     <field name="is_same_currency" column_invisible="True"/> <!-- drives invisible on amount_currency/currency_id/residual columns (is_same_currency) -->
-                    <field name="is_account_reconcile" column_invisible="True"/> <!-- drives invisible on residual columns (not is_account_reconcile) -->
                     <field name="sequence" column_invisible="True"/> <!-- technical order field kept for reordering -->
-                    <field name="parent_state" column_invisible="True"/> <!-- drives decoration-info on this list (parent_state == 'draft') -->
                     <field name="deductible_percentage" optional="hide"/>
                     <groupby name="partner_id">
                         <button name="edit" type="edit" icon="edit" icon_class="oi-filled"/>
@@ -412,7 +404,6 @@
                     <field name="date_maturity" string="Invoice Due Date" readonly="1" optional="hide"/>
                     <field name="discount_date" string="Discount Date" optional="hide"/>
                     <field name="payment_date" readonly="1"/>
-                    <field name="company_id" column_invisible="True"/> <!-- technical company field kept for check_company / inheriting overrides -->
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                     <field name="journal_id" readonly="1" options='{"no_open":True}' optional="hide"/>
                     <field name="move_name" string="Journal Entry" widget="open_move_widget"/>
@@ -424,10 +415,7 @@
                     <field name="residual_currency_at_date" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile" groups="base.group_multi_currency"/>
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide" string="Currency" readonly="1" invisible="is_same_currency"/>
                     <field name="company_currency_id" column_invisible="True"/> <!-- currency for the residual monetary columns -->
-                    <field name="move_type" column_invisible="True"/> <!-- drives the readonly modifier on partner_id (move_type != 'entry') -->
                     <field name="is_same_currency" column_invisible="True"/> <!-- drives invisible on currency_id/residual_currency columns (is_same_currency) -->
-                    <field name="is_account_reconcile" column_invisible="True"/> <!-- drives invisible on residual columns (not is_account_reconcile) -->
-                    <field name="parent_state" column_invisible="True"/> <!-- drives decoration-info on this list (parent_state == 'draft') -->
                     <groupby name="partner_id">
                         <button name="edit" type="edit"/>
                     </groupby>
@@ -633,7 +621,6 @@
                            optional="hide"
                     />
                     <field name="move_type" column_invisible="context.get('default_move_type', True)"/>
-                    <field name="abnormal_amount_warning" column_invisible="1"/> <!-- drives decoration-warning on the amount_total_in_currency_signed column -->
                     <field name="abnormal_date_warning" column_invisible="1"/> <!-- drives decoration-warning on the invoice_date columns -->
                     <field name="invoice_partner_display_name" column_invisible="1"/> <!-- read by the partner_field widget (partner_field.js) -->
                   </list>
@@ -1068,37 +1055,15 @@
                         <!--test-tags .test_01_account_tour -->
                         <field name="move_type" invisible="1" force_save="1"/> <!-- drives the many move_type-based modifiers on this form; persisted via force_save -->
                         <field name="payment_state" invisible="1" force_save="1"/> <!-- drives payment_state-based ribbon/button modifiers; persisted via force_save -->
-                        <field name="invoice_filter_type_domain" invisible="1"/> <!-- feeds the type_tax_use domain on tax_ids fields (=? parent.invoice_filter_type_domain) -->
-                        <field name="suitable_journal_ids" invisible="1"/> <!-- feeds the journal_id domain [id, in, suitable_journal_ids] (model field def) -->
                         <field name="currency_id" invisible="1" readonly="state in ['cancel', 'posted']"/> <!-- currency for monetary fields; drives currency_id == company_currency_id modifiers -->
-                        <field name="company_currency_id" invisible="1"/> <!-- drives currency comparison modifiers (currency_id == company_currency_id) -->
-                        <field name="commercial_partner_id" invisible="1"/> <!-- feeds default_partner_id context on bank/reconcile widgets -->
-                        <field name="bank_partner_id" invisible="1"/> <!-- feeds default_partner_id context and partner_bank_id domain -->
-                        <field name="display_qr_code" invisible="1"/> <!-- drives the invisible on qr_code_method (not display_qr_code) -->
-                        <field name="show_reset_to_draft_button" invisible="1"/> <!-- drives the invisible on the Reset to Draft / cancel-request buttons -->
                         <field name="expected_currency_rate" invisible="1"/> <!-- drives the invisible on the currency-rate refresh button (invoice_currency_rate == expected_currency_rate) -->
 
-                        <field name="invoice_has_outstanding" invisible="1"/> <!-- drives the invisible on the outstanding-credits section (not invoice_has_outstanding) -->
-                        <field name="is_move_sent" invisible="1"/> <!-- drives send-button invisible and partner_bank_id readonly (is_move_sent) -->
-                        <field name="invoice_pdf_report_id" invisible="1"/> <!-- drives the invisible on the print/send buttons (invoice_pdf_report_id) -->
-                        <field name="need_cancel_request" invisible="1"/> <!-- drives the invisible on the cancel-request button (not need_cancel_request) -->
-                        <field name="has_reconciled_entries" invisible="1"/> <!-- drives the invisible on the Reconciled Items stat button -->
-                        <field name="restrict_mode_hash_table" invisible="1"/> <!-- drives the invisible on the hash/inalterability info (not restrict_mode_hash_table) -->
-                        <field name="inalterable_hash" invisible="1"/> <!-- drives readonly on name/payment_reference and hash-info invisible -->
                         <field name="country_code" invisible="1"/> <!-- related company fiscal country code, used by localization overrides of this view -->
-                        <field name="display_inactive_currency_warning" invisible="1"/> <!-- drives the inactive-currency warning and post-button invisible -->
                         <field name="statement_line_id" invisible="1"/> <!-- technical origin field for bank-statement entries (used by account_accountant) -->
-                        <field name="statement_id" invisible="1"/> <!-- related statement of statement_line_id, kept for bank-statement entries -->
                         <field name="origin_payment_id" invisible="1"/> <!-- drives the invisible on the Payment stat button (not origin_payment_id) -->
-                        <field name="tax_country_id" invisible="1"/> <!-- feeds the country_id filter of the tax_ids/tax_tag_ids domains -->
                         <field name="tax_calculation_rounding_method" invisible="1"/> <!-- read by the tax_totals widget / account_tax.js rounding helper -->
                         <field name="tax_cash_basis_created_move_ids" invisible="1"/> <!-- drives the invisible on the Cash Basis Entries stat button -->
-                        <field name="quick_edit_mode" invisible="1"/> <!-- drives quick-encoding invisible/readonly modifiers on date and payment fields -->
                         <field name="invoice_cash_rounding_id" invisible="1"/> <!-- read/updated by the tax_totals widget (tax_totals.js) -->
-                        <field name="hide_post_button" invisible="1"/> <!-- drives the invisible on the Post button (hide_post_button) -->
-                        <field name="quick_encoding_vals" invisible="1"/> <!-- feeds the quick_encoding_vals context on invoice_line_ids -->
-                        <field name="show_delivery_date" invisible="1"/> <!-- drives the invisible on delivery_date (not show_delivery_date) -->
-                        <field name="is_being_sent" invisible="1"/> <!-- drives the invisible on the print/send buttons (is_being_sent) -->
                         <field name="show_update_fpos" invisible="1"/> <!-- drives the invisible on the fiscal-position update button (not show_update_fpos) -->
 
                         <div class="oe_title">
@@ -1256,7 +1221,6 @@
                                         <div name="currency_conversion_div"
                                              class="d-flex gap-1 text-muted"
                                              invisible="currency_id == company_currency_id">
-                                            <field name="company_currency_id" invisible="1"/> <!-- drives the enclosing div invisible (currency_id == company_currency_id) -->
                                             <field name="invoice_currency_rate" invisible="1"/> <!-- rate_field read by the account_currency_exchange_rate widget below -->
                                             <widget name="account_currency_exchange_rate" readonly="state != 'draft'" options="{'rate_field': 'invoice_currency_rate'}"/>
                                             <div
@@ -1614,14 +1578,12 @@
                                                 ]"/>
 
                                         <!-- Others fields -->
-                                        <field name="tax_line_id" column_invisible="True"/> <!-- drives readonly on account_id (... or tax_line_id ...) in this list -->
                                         <field name="company_currency_id" column_invisible="True"/> <!-- company currency for the debit/credit/balance monetary columns -->
                                         <field name="display_type" force_save="1" column_invisible="True"/> <!-- drives the many display_type column modifiers here; persisted via force_save -->
                                         <field name="company_id" column_invisible="True"/> <!-- feeds account/tax domains (company_ids, parent_of, company_id) in this list -->
                                         <field name="sequence" column_invisible="True"/> <!-- drives the list default_order="sequence, id" -->
                                         <field name="id" column_invisible="True"/> <!-- drives the list default_order="sequence, id" -->
                                         <field name="account_internal_group" column_invisible="True"/> <!-- related account_id.internal_group, kept for onchange/localization overrides -->
-                                        <field name="account_type" column_invisible="True"/> <!-- drives readonly on account_id (account_type in asset_receivable/liability_payable) -->
                                     </list>
                                     <!-- Form view to cover mobile use -->
                                     <form>

@@ -37,11 +37,8 @@
                     <group>
                         <group>
                             <field name="active" invisible="1"/> <!-- drives the web_ribbon "Archived" invisible="active" modifier above -->
-                            <field name="company_id" invisible="1"/> <!-- feeds the parent.company_id domains on account_src_id/account_dest_id in the Account Mapping list/form -->
-                            <field name="states_count" invisible="1"/> <!-- drives the "states_count == 0" part of state_ids' invisible modifier -->
                             <field name="company_country_id" invisible="1"/> <!-- related company fiscal country kept available to inheriting fiscal-position views -->
                             <field name="fiscal_country_codes" invisible="1"/> <!-- drives "'XX' not in fiscal_country_codes" modifiers in l10n fiscal-position inherits (l10n_ar, l10n_gr_edi, ...) -->
-                            <field name="foreign_vat_header_mode" invisible="1"/> <!-- drives the foreign-VAT alert div's invisible modifiers at the top of the form -->
                             <field name="name"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
