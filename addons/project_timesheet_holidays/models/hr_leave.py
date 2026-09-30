@@ -125,6 +125,15 @@ class HrLeave(models.Model):
         self._check_missing_global_leave_timesheets()
         return res
 
+    def _move_validate_leave_to_confirm(self):
+        """ Remove the timesheets of the leaves sent back to approval, they are regenerated on validation """
+        res = super()._move_validate_leave_to_confirm()
+        timesheets = self.sudo().timesheet_ids
+        timesheets.write({'holiday_id': False})
+        timesheets.unlink()
+        self._check_missing_global_leave_timesheets()
+        return res
+
     def _force_cancel(self, *args, **kwargs):
         super()._force_cancel(*args, **kwargs)
         # override this method to reevaluate timesheets after the leaves are updated via force cancel
