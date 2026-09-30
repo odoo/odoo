@@ -171,6 +171,7 @@ class CalendarEvent(models.Model):
         compute='_compute_calendar_id', store=True, readonly=False, ondelete='cascade',
         domain=lambda self: self._get_calendar_id_domain())
     calendar_color = fields.Integer(related='calendar_id.color')
+    calendar_is_displayed = fields.Boolean(string="Display Calendar", compute='_compute_calendar_is_displayed')
     description = fields.Html('Description',
         help="""When synchronization with an external calendar is active, this description is synchronized \
         with the one of the associated meeting in that external calendar. Any update will be propagated there \
@@ -350,6 +351,13 @@ class CalendarEvent(models.Model):
             ("user_id", "=", self.env.uid),
             ("access_role", "in", ["writer", "owner"]),
         ])
+
+    @api.depends_context('uid')
+    @api.depends('user_id')
+    def _compute_calendar_is_displayed(self):
+        # If the user only has one calendar, there is no need to show the calendar field in the form on their events
+        for event in self:
+            event.calendar_is_displayed = event.user_id != self.env.user or len(self.env.user.writable_calendar_ids) > 1
 
     @api.depends("attendee_ids")
     def _compute_should_show_status(self):
