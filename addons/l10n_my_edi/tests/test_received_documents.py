@@ -76,6 +76,58 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
         return self.env['myinvois.document'].search([('myinvois_external_uuid', 'in', uuids)]).invoice_ids
 
     @freeze_time('2024-08-15 10:00:00')
+    def test_received_number_does_not_change_own_sequence(self):
+        self._sync([[self._document_data('DOC1', internal_id='INV/2024/00147')]])
+        document = self.env['myinvois.document'].create({
+            'company_id': self.company_data['company'].id,
+            'currency_id': self.env.ref('base.MYR').id,
+            'journal_id': self.company_data['default_journal_purchase'].id,
+            'move_type': 'in_invoice',
+            'myinvois_issuance_date': '2024-07-11',
+        })
+        self.assertEqual(document.name, document._get_starting_sequence()[:-5] + '00001')
+
+    @freeze_time('2024-08-15 10:00:00')
+    def test_received_document_cannot_be_deleted(self):
+        self._sync([[self._document_data('DOC1')]])
+        document = self._get_received_bills(['DOC1']).l10n_my_edi_received_document_id
+        for state in ('received', 'cancelled'):
+            document.myinvois_state = state
+            with self.assertRaisesRegex(UserError, 'Archive it instead'):
+                document.unlink()
+        document.action_archive()
+        self.assertFalse(document.active)
+
+    @freeze_time('2024-08-15 10:00:00')
+    def test_supplier_vat_does_not_override_malaysian_tin(self):
+        self.partner_a.l10n_my_edi_malaysian_tin = 'C9999999999'
+        self._sync([[self._document_data('DOC1')]])
+        supplier = self._get_received_bills(['DOC1']).partner_id
+        self.assertNotEqual(supplier, self.partner_a)
+        self.assertEqual(supplier._l10n_my_edi_get_tin_for_myinvois(), 'C2584563201')
+
+    @freeze_time('2024-08-15 10:00:00')
+    def test_sync_shorter_window(self):
+        wizard = self.env['myinvois.document.sync.wizard'].create({
+            'month': '2024-07-01',
+            'journal_id': self.company_data['default_journal_purchase'].id,
+            'date_from': '2024-07-10',
+            'date_to': '2024-07-11',
+        })
+        with patch(CONTACT_PROXY_METHOD, return_value={'documents': [], 'page_count': 1}) as mock:
+            wizard.button_sync()
+        self.assertEqual(mock.call_args.kwargs['params'], {
+            'date_from': '2024-07-10T00:00:00+08:00',
+            'date_to': '2024-07-11T23:59:59+08:00',
+            'page': 1,
+        })
+        for start, end in [('2024-07-11', '2024-07-10'), ('2024-06-30', '2024-07-01'), ('2024-07-31', '2024-08-01')]:
+            wizard.write({'date_from': start, 'date_to': end})
+            with patch(CONTACT_PROXY_METHOD) as mock, self.assertRaisesRegex(UserError, 'within the selected month'):
+                wizard.button_sync()
+            mock.assert_not_called()
+
+    @freeze_time('2024-08-15 10:00:00')
     def test_sync_creates_draft_bills(self):
         """ Each new valid document becomes a draft bill with a single line holding its total. """
         action, calls = self._sync([[
