@@ -1,5 +1,5 @@
 import { EffectPlugin } from "@web/core/effects/effect_plugin";
-import { useMessageScrolling } from "@mail/utils/common/hooks";
+import { propSignal, useMessageScrolling } from "@mail/utils/common/hooks";
 import { useSubEnv } from "@web/owl2/utils";
 
 import {
@@ -36,7 +36,9 @@ export class Discuss extends Component {
         this.store = useService("mail.store");
         this.props = useProps({
             hasSidebar: t.boolean().optional(true),
-            thread: t.instanceOf(this.store["mail.thread"]).optional(),
+        });
+        this.channel = propSignal("channel", t.instanceOf(this.store["discuss.channel"]), {
+            optional: true,
         });
         this.menuState = computed(() => this.store.discuss.sidebarState);
         this.messageHighlight = useMessageScrolling({ thread: () => this.thread });
@@ -91,6 +93,6 @@ export class Discuss extends Component {
     }
 
     get thread() {
-        return this.props.thread || this.store.discuss.thread;
+        return this.channel?.()?.thread || this.store.discuss.thread;
     }
 }
