@@ -11,6 +11,3 @@ class ResCompany(models.Model):
         **company_default_for('stock_account_production_cost_id', 'product.category', 'property_stock_account_production_cost_id'),
         check_company=True,
     )
-
-    def _get_inventory_valuation_products_domain(self):
-        return super()._get_inventory_valuation_products_domain() + [('is_kits', '=', False)]
