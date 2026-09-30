@@ -467,3 +467,9 @@ class CalendarEvent(models.Model):
         # specifically first (e.g.: mass selection from a list view) before deleting the calendar.
         self.write({'google_id': False})
         return super()._before_calendar_cascade_unlink()
+
+    def _creation_message(self):
+        if self.env.context.get('imported_from_google'):
+            doc_name = self.env['ir.model']._get(self._name).name
+            return _('%s imported from Google', doc_name)
+        return super()._creation_message()
