@@ -5,7 +5,6 @@
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
             <list string="Analytic Items" multi_edit="1" js_class="analytic_list">
-                <field name="company_id" column_invisible="True"/> <!-- provides currency_id (related=company_id.currency_id) for the amount monetary column; visible copy is gated on group_multi_company -->
                 <field name="date" optional="show"/>
                 <field name="name"/>
                 <field name="account_id" optional="show"/>
@@ -73,7 +72,6 @@
         <field name="priority">1</field>
         <field name="arch" type="xml">
             <form string="Analytic Item">
-            <field name="company_id" invisible="1"/> <!-- provides currency_id (related=company_id.currency_id) for the amount monetary field; visible copy is gated on group_multi_company -->
             <sheet>
                 <group>
                     <group name="analytic_item" string="Analytic Item">

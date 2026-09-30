@@ -111,7 +111,6 @@
                 <form string="Purchase Order" class="o_purchase_order">
                 <header>
                     <field name="locked" invisible="1"/> <!-- drives invisible/readonly on Locked badge, order_line and cancel/lock/unlock buttons -->
-                    <field name="lock_confirmed_po" invisible="1"/> <!-- drives invisible on the Lock button -->
                     <button name="action_rfq_send" invisible="state != 'draft'" string="Send RFQ" type="object" context="{'send_rfq':True}" class="oe_highlight" data-hotkey="g"/>
                     <button name="button_confirm" type="object" invisible="state != 'sent'" string="Confirm Order" context="{'validate_analytic': True}" class="oe_highlight" id="bid_confirm" data-hotkey="q"/>
                     <button name="button_approve" type="object" invisible="state != 'to approve'" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager" data-hotkey="z"/>
@@ -165,7 +164,6 @@
                             <div class="o_field_statinfo">
                                 <span class="o_stat_text">Price Comparison</span>
                             </div>
-                            <field name="show_comparison" invisible="1"/> <!-- drives invisible on the Price Comparison button above -->
                         </button>
                     </div>
                     <div class="badge rounded-pill text-bg-secondary float-end fs-6 border-0"
@@ -244,7 +242,6 @@
                             <div class="position-relative document_tax_mode">
                                 <field name="document_tax_mode" class="overlap_badge_tab tax_mode_badge d-none d-md-block" widget="document_tax_mode_selector" nolabel="True"  readonly="state != 'draft'"/>
                             </div>
-                            <field name="tax_country_id" invisible="1"/> <!-- provides parent.tax_country_id for tax_ids domain in order_line -->
                             <field name="order_line"
                                 widget="product_label_section_and_note_field_o2m"
                                 mode="list,kanban"
@@ -264,8 +261,6 @@
                                     <field name="display_type" column_invisible="True"/> <!-- drives required/readonly of product_id, uom_id, date_planned and section/note rendering -->
                                     <field name="company_id" column_invisible="True"/> <!-- used in product_id context/domain and tax_ids domain -->
                                     <field name="currency_id" column_invisible="True"/> <!-- currency for monetary fields in this list -->
-                                    <field name="state" column_invisible="True"/> <!-- drives readonly on product_id/uom_id/tax_ids in this list -->
-                                    <field name="product_type" column_invisible="True"/> <!-- used by purchase_stock inherited view to make qty_received readonly for consumables -->
                                     <field name="invoice_lines" column_invisible="True"/> <!-- kept for invoice matching shown in the line form's Invoices tab -->
                                     <field name="technical_price_unit" column_invisible="True"/> <!-- used to detect manual price_unit edits and skip auto-recompute -->
                                     <field name="sequence" widget="handle"/>
@@ -313,7 +308,6 @@
                                 </list>
                                 <form string="Purchase Order Line">
                                         <field name="tax_calculation_rounding_method" invisible="1"/> <!-- used elsewhere to pick per-line vs total tax display -->
-                                        <field name="state" invisible="1"/> <!-- drives readonly on product_id/uom_id/tax_ids below -->
                                         <field name="display_type" invisible="1"/> <!-- drives the invisible group and section/note labels below -->
                                         <field name="company_id" invisible="1"/> <!-- related field, dependency of price_unit/date_planned/name compute -->
                                         <group invisible="display_type">
@@ -332,7 +326,6 @@
                                                         required="not display_type and not is_downpayment"
                                                         widget="many2one_uom" options="{'no_create': True, 'no_open': True}"/>
                                                 </div>
-                                                <field name="qty_received_method" invisible="1"/> <!-- drives readonly on qty_received below -->
                                                 <field name="qty_received" string="Received Quantity" invisible="parent.state != 'purchase'" readonly="qty_received_method != 'manual'"/>
                                                 <field name="qty_invoiced" string="Billed Quantity" invisible="parent.state != 'purchase'"/>
                                                 <field name="price_unit"/>
@@ -689,7 +682,6 @@
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
                     <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="1"/>
                     <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'purchase']"/> <!-- currency for amount_total/amount_untaxed monetary widgets -->
-                    <field name="state" column_invisible="True"/> <!-- drives decoration-muted on this list -->
                     <field name="amount_total_cc" sum="Total amount" widget="monetary" optional="hide"/>
                     <field name="company_currency_id" column_invisible="True"/> <!-- currency for amount_total_cc monetary widget -->
                     <field name="receipt_status" optional="hide" widget="badge"

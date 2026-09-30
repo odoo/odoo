@@ -5,8 +5,6 @@
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
             <list string="Move Lines" create="0" default_order="date desc, id desc" action="action_open_reference" type="object" duplicate="0">
-                <field name="location_usage" column_invisible="True"/> <!-- drives decoration-muted on location_id and quantity -->
-                <field name="location_dest_usage" column_invisible="True"/> <!-- drives decoration-muted on location_dest_id and quantity -->
                 <field name="date"/>
                 <field name="reference" string="Reference" class="fw-bolder"
                        column_invisible="context.get('no_reference', False)"
@@ -48,8 +46,6 @@
                 <header>
                     <button class="btn-primary" name="action_put_in_pack" type="object" string="Put in Pack" groups="stock.group_tracking_lot"/>
                 </header>
-                <field name="tracking" column_invisible="True"/> <!-- drives readonly on lot_id/lot_name -->
-                <field name="state" column_invisible="True"/> <!-- drives decoration-muted on the list and readonly on quant_id -->
                 <field name="company_id" column_invisible="True"/> <!-- loaded regardless of base.group_multi_company for the force_save company_id column below -->
                 <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="id"/>
                 <field name="picking_id" required="1" readonly="id"
@@ -71,8 +67,6 @@
                 <field name="uom_id" options="{'no_create': True}" widget="many2one_uom"
                     groups="uom.group_uom" readonly="1" force_save="1"/>
                 <field name="company_id" groups="base.group_multi_company" force_save="1"/>
-                <field name="is_locked" column_invisible="True"/> <!-- drives readonly on quant_id -->
-                <field name="picking_location_id" column_invisible="True"/> <!-- used in quant_id's domain to restrict location_id child_of picking_location_id -->
             </list>
         </field>
     </record>
@@ -121,12 +115,10 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done"/>
                 </header>
                 <sheet>
-                    <field name="company_id" invisible="1"/> <!-- kept loaded for multi-company record access, not shown on this read-only form -->
                     <field name="picking_id" invisible="1"/> <!-- used in lot_id's context as active_picking_id -->
                     <field name="location_id" invisible="1"/> <!-- ensures the field is loaded even when stock.group_stock_multi_locations hides the visible one below -->
                     <field name="location_dest_id" invisible="1"/> <!-- ensures the field is loaded even when stock.group_stock_multi_locations hides the visible one below -->
                     <field name="package_id" invisible="1"/> <!-- ensures the field is loaded even when stock.group_tracking_lot hides the visible one below -->
-                    <field name="tracking" invisible="1"/> <!-- drives invisible on lot_id/lot_name -->
                     <field name="picked" invisible="1"/> <!-- kept loaded for record state, not shown on this read-only form -->
                     <group>
                         <group>
