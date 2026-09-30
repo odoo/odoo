@@ -73,7 +73,7 @@ beforeEach(() => {
 });
 
 after(() => {
-    TourInteractive.observer.disconnect();
+    TourInteractive.current?.stop();
 });
 
 defineModels([Tour, TourStep]);
@@ -275,8 +275,7 @@ test("pointer is added on top of overlay's stack", async () => {
     expect(`.o-overlay-item`).toHaveCount(2);
     // the pointer should be after the dialog
     expect(".o-overlay-item:eq(0) .modal").toHaveCount(1);
-    await animationFrame();
-    expect(".o-overlay-item:eq(1) .o_tour_pointer").toHaveCount(1);
+    await waitFor(".o-overlay-item:eq(1) .o_tour_pointer");
 
     await contains(".modal .a").click();
     await animationFrame();
