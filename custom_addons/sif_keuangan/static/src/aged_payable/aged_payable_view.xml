@@ -76,16 +76,11 @@
                     <!-- Filter 5: Posted vs All Entries -->
                     <div class="o_report_filter_pill d-flex align-items-center gap-1 px-2 py-1 bg-light rounded border">
                         <select class="form-select form-select-sm border-0 bg-transparent shadow-none py-0 px-1 fw-semibold text-dark"
-                                style="width: auto; cursor: pointer; appearance: none; -webkit-appearance: none; -moz-appearance: none;"
+                                style="width: auto; cursor: pointer;"
                                 t-on-change="onTargetMoveChange">
                             <option value="posted" t-att-selected="state.filters.target_move == 'posted'">Posted Entries</option>
                             <option value="all" t-att-selected="state.filters.target_move == 'all'">All Entries</option>
                         </select>
-                    </div>
-
-                    <!-- Currency indicator -->
-                    <div class="badge bg-secondary text-white px-2 py-1">
-                        In .Rp
                     </div>
                 </div>
             </div>

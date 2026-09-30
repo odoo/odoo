@@ -208,8 +208,10 @@ class SifnextPPL(models.Model):
                 "sifnext.ppl", sequence_date=request_date,
             ) or "New"
             p_term = vals.get("payment_term", "langsung")
-            prefix = "BILL/PPL" if p_term == "jatuh_tempo" else "PPL"
-            vals["name"] = f"{prefix}/{department.sif_code}/{sequence}"
+            if p_term == "jatuh_tempo":
+                vals["name"] = sequence.replace("PPL/", "BILL/PPL/", 1)
+            else:
+                vals["name"] = sequence
         return super().create(vals_list)
 
     def _is_submitted_coa_update(self, commands):

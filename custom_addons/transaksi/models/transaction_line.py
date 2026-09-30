@@ -30,9 +30,22 @@ class TransaksiTransactionLine(models.Model):
         string="No.",
         default=1,
     )
-    bank_name = fields.Char(
+    bank_id = fields.Many2one(
+        "transaksi.bank.master",
         string="Bank Penerima",
     )
+    bank_name = fields.Char(
+        string="Bank Penerima",
+        compute="_compute_bank_name",
+        store=True,
+        readonly=False,
+    )
+
+    @api.depends("bank_id")
+    def _compute_bank_name(self):
+        for line in self:
+            if line.bank_id:
+                line.bank_name = line.bank_id.name
     destination_account = fields.Char(
         string="Nomor Rekening Tujuan",
         required=True,

@@ -20,7 +20,6 @@
         'views/balance_sheet_views.xml',
         'views/profit_loss_views.xml',
         'views/aging_report_views.xml',
-        'views/lock_date_views.xml',
         'views/menu_views.xml',
 
         'reports/general_ledger_report.xml',

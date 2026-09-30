@@ -287,10 +287,24 @@ class TransaksiTransaction(models.Model):
     )
 
     # --- Mode Transfer Tunggal (Single) ---
-    single_bank_name = fields.Char(
+    single_bank_id = fields.Many2one(
+        "transaksi.bank.master",
         string="Bank Penerima",
         tracking=True,
     )
+    single_bank_name = fields.Char(
+        string="Bank Penerima",
+        compute="_compute_single_bank_name",
+        store=True,
+        readonly=False,
+        tracking=True,
+    )
+
+    @api.depends("single_bank_id")
+    def _compute_single_bank_name(self):
+        for rec in self:
+            if rec.single_bank_id:
+                rec.single_bank_name = rec.single_bank_id.name
     single_destination_account = fields.Char(
         string="Nomor Rekening Tujuan",
         tracking=True,
@@ -418,6 +432,74 @@ class TransaksiTransaction(models.Model):
             else:
                 rec.total_rupiah = sum(rec.line_ids.mapped("rupiah"))
 
+    @api.onchange("sender_account_id", "single_bank_name", "transfer_category", "line_ids")
+    def _onchange_bank_category_check(self):
+        for rec in self:
+            sender_bank = (rec.sender_bank_name or "").strip().lower()
+            if not sender_bank:
+                continue
+
+            recipient_bank = False
+            if rec.transfer_type == "single":
+                recipient_bank = (rec.single_bank_name or "").strip().lower()
+            elif rec.line_ids:
+                banks = set(filter(None, [b.strip().lower() for b in rec.line_ids.mapped("bank_name") if b]))
+                if len(banks) == 1:
+                    recipient_bank = list(banks)[0]
+
+            if not recipient_bank:
+                continue
+
+            if rec.transfer_category == "interbank" and sender_bank == recipient_bank:
+                return {
+                    "warning": {
+                        "title": _("Bank Pengirim & Penerima Sama"),
+                        "message": _(
+                            "Bank pengirim dan penerima sama (%s).\n"
+                            "Untuk transfer ke bank yang sama, disarankan beralih ke Mutasi Antar Rekening."
+                        ) % rec.sender_bank_name,
+                    }
+                }
+            elif rec.transfer_category == "inhouse" and sender_bank != recipient_bank:
+                return {
+                    "warning": {
+                        "title": _("Bank Pengirim & Penerima Berbeda"),
+                        "message": _(
+                            "Bank pengirim (%s) dan penerima (%s) berbeda.\n"
+                            "Untuk transfer antar bank berbeda, disarankan beralih ke Mutasi Antar Bank."
+                        ) % (rec.sender_bank_name, rec.single_bank_name or "lainnya"),
+                    }
+                }
+
+    @api.constrains("transfer_category", "sender_account_id", "single_bank_name", "line_ids")
+    def _check_bank_category_matching(self):
+        for rec in self:
+            sender_bank = (rec.sender_bank_name or "").strip().lower()
+            if not sender_bank:
+                continue
+
+            recipient_bank = False
+            if rec.transfer_type == "single":
+                recipient_bank = (rec.single_bank_name or "").strip().lower()
+            elif rec.line_ids:
+                banks = set(filter(None, [b.strip().lower() for b in rec.line_ids.mapped("bank_name") if b]))
+                if len(banks) == 1:
+                    recipient_bank = list(banks)[0]
+
+            if not recipient_bank:
+                continue
+
+            if rec.transfer_category == "interbank" and sender_bank == recipient_bank:
+                raise ValidationError(
+                    _("Bank pengirim dan penerima sama (%s). Untuk transfer ke bank yang sama, silakan gunakan menu Mutasi Antar Rekening.")
+                    % rec.sender_bank_name
+                )
+            elif rec.transfer_category == "inhouse" and sender_bank != recipient_bank:
+                raise ValidationError(
+                    _("Bank pengirim (%s) dan penerima (%s) berbeda. Untuk transfer antar bank berbeda, silakan gunakan menu Mutasi Antar Bank.")
+                    % (rec.sender_bank_name, rec.single_bank_name or "lainnya")
+                )
+
     @api.constrains("ref_number")
     def _check_ref_number(self):
         for rec in self:
@@ -494,6 +576,7 @@ class TransaksiTransaction(models.Model):
         for rec in self:
             if rec.transfer_type == "single":
                 vals = {
+                    "bank_id": rec.single_bank_id.id if rec.single_bank_id else False,
                     "bank_name": rec.single_bank_name or False,
                     "destination_account": rec.single_destination_account or "",
                     "account_holder_name": rec.single_account_holder_name or False,

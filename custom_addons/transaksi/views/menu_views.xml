@@ -19,6 +19,7 @@
         <field name="view_mode">list,form</field>
         <field name="domain">[('transfer_category', '=', 'inhouse')]</field>
         <field name="context">{'default_transfer_category': 'inhouse'}</field>
+        <field name="search_view_id" ref="view_transaksi_transaction_search"/>
     </record>
 
     <record id="action_transaksi_transaction_interbank" model="ir.actions.act_window">
@@ -27,6 +28,7 @@
         <field name="view_mode">list,form</field>
         <field name="domain">[('transfer_category', '=', 'interbank')]</field>
         <field name="context">{'default_transfer_category': 'interbank'}</field>
+        <field name="search_view_id" ref="view_transaksi_transaction_search"/>
     </record>
 
     <!-- Menu Item 1: Mutasi Antar Rekening -->
@@ -43,19 +45,30 @@
               action="action_transaksi_transaction_interbank"
               sequence="20"/>
 
-    <!-- Top Navbar Menu: Data Rekening -->
-    <menuitem id="menu_transaksi_bank_account"
-              name="Data Rekening"
+    <!-- Top Navbar Menu: Data Bank -->
+    <menuitem id="menu_transaksi_data_bank_root"
+              name="Data Bank"
               parent="menu_transaksi_root"
-              action="action_transaksi_bank_account"
               sequence="30"/>
+
+    <menuitem id="menu_transaksi_bank_master"
+              name="Daftar Bank"
+              parent="menu_transaksi_data_bank_root"
+              action="action_transaksi_bank_master"
+              sequence="10"/>
+
+    <menuitem id="menu_transaksi_bank_account"
+              name="Daftar Rekening"
+              parent="menu_transaksi_data_bank_root"
+              action="action_transaksi_bank_account"
+              sequence="20"/>
 
     <!-- Submenu: Persetujuan (Approval) -->
     <menuitem id="menu_transaksi_approval"
               name="Antrean Persetujuan"
               parent="menu_transaksi_root"
               groups="transaksi.group_transaksi_finance,transaksi.group_transaksi_director,transaksi.group_transaksi_manager,base.group_erp_manager,base.group_system"
-              sequence="20"/>
+              sequence="40"/>
 
     <!-- Actions for approval filters -->
     <record id="action_transaksi_transaction_to_verify" model="ir.actions.act_window">

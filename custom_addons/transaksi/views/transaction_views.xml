@@ -108,7 +108,6 @@
                     </div>
                     <group>
                         <group string="Informasi Pengajuan">
-                            <field name="transfer_category" widget="radio" options="{'horizontal': true}" readonly="state != 'draft'"/>
                             <field name="transfer_type" widget="radio" options="{'horizontal': true}" readonly="state != 'draft'"/>
                             <field name="date" readonly="state != 'draft'"/>
                             <field name="submission_time" placeholder="HH:MM (misal: 14:30)" readonly="state != 'draft'"/>
@@ -131,7 +130,7 @@
                             <div invisible="transfer_type != 'single'">
                                 <group string="Detail Rekening Penerima Tunggal">
                                     <group>
-                                        <field name="single_bank_name" placeholder="Contoh: Bank Mandiri, BCA, BRI..." readonly="state != 'draft'" required="transfer_type == 'single'"/>
+                                        <field name="single_bank_id" options="{'no_create': false}" readonly="state != 'draft'" required="transfer_type == 'single'"/>
                                         <field name="single_destination_account" placeholder="Nomor rekening penerima..." readonly="state != 'draft'" required="transfer_type == 'single'"/>
                                         <field name="single_account_holder_name" placeholder="Nama pemilik rekening sesuai buku tabungan..." readonly="state != 'draft'"/>
                                         <field name="single_country_id" readonly="state != 'draft'"/>
@@ -150,7 +149,7 @@
                                     <list editable="bottom">
                                         <field name="currency_id" invisible="1"/>
                                         <field name="sequence" widget="handle"/>
-                                        <field name="bank_name" placeholder="Bank Penerima"/>
+                                        <field name="bank_id" string="Bank Penerima" options="{'no_create': false}"/>
                                         <field name="destination_account" placeholder="Nomor Rekening"/>
                                         <field name="account_holder_name" placeholder="Nama Pemilik Rekening"/>
                                         <field name="transfer_method"/>
@@ -254,12 +253,11 @@
                 <filter name="filter_single" string="Transfer Tunggal" domain="[('transfer_type', '=', 'single')]"/>
                 <filter name="filter_multiple" string="Transfer Massal" domain="[('transfer_type', '=', 'multiple')]"/>
 
-                <group string="Group By">
-                    <filter name="group_by_state" string="Status" domain="[]" context="{'group_by': 'state'}"/>
-                    <filter name="group_by_date" string="Bulan Pengajuan" domain="[]" context="{'group_by': 'date:month'}"/>
-                    <filter name="group_by_department" string="Departemen" domain="[]" context="{'group_by': 'department_id'}"/>
-                    <filter name="group_by_type" string="Tipe Transfer" domain="[]" context="{'group_by': 'transfer_type'}"/>
-                </group>
+                <separator/>
+                <filter name="group_by_state" string="Status" domain="[]" context="{'group_by': 'state'}"/>
+                <filter name="group_by_date" string="Bulan Pengajuan" domain="[]" context="{'group_by': 'date:month'}"/>
+                <filter name="group_by_department" string="Departemen" domain="[]" context="{'group_by': 'department_id'}"/>
+                <filter name="group_by_type" string="Tipe Transfer" domain="[]" context="{'group_by': 'transfer_type'}"/>
             </search>
         </field>
     </record>

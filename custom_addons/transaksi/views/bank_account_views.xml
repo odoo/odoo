@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- =================================================== -->
+    <!-- DAFTAR BANK (MASTER BANK)                           -->
+    <!-- =================================================== -->
+    <record id="view_transaksi_bank_master_list" model="ir.ui.view">
+        <field name="name">transaksi.bank.master.list</field>
+        <field name="model">transaksi.bank.master</field>
+        <field name="arch" type="xml">
+            <list string="Daftar Bank">
+                <field name="name" string="Nama Bank"/>
+                <field name="code" string="Kode Bank"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_transaksi_bank_master_form" model="ir.ui.view">
+        <field name="name">transaksi.bank.master.form</field>
+        <field name="model">transaksi.bank.master</field>
+        <field name="arch" type="xml">
+            <form string="Daftar Bank">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="Contoh: BCA, BNI, Mandiri, BRI..."/>
+                            <field name="code" placeholder="Contoh: 014"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_transaksi_bank_master" model="ir.actions.act_window">
+        <field name="name">Daftar Bank</field>
+        <field name="res_model">transaksi.bank.master</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- =================================================== -->
+    <!-- DAFTAR REKENING                                     -->
+    <!-- =================================================== -->
     <record id="view_transaksi_bank_account_list" model="ir.ui.view">
         <field name="name">transaksi.bank.account.list</field>
         <field name="model">transaksi.bank.account</field>
         <field name="arch" type="xml">
-            <list string="Data Rekening Bank">
-                <field name="bank_name"/>
+            <list string="Daftar Rekening">
+                <field name="bank_id" string="Bank"/>
                 <field name="account_number"/>
                 <field name="account_holder"/>
                 <field name="name" string="Alias / Label"/>
@@ -19,7 +64,7 @@
         <field name="name">transaksi.bank.account.form</field>
         <field name="model">transaksi.bank.account</field>
         <field name="arch" type="xml">
-            <form string="Data Rekening Bank">
+            <form string="Daftar Rekening">
                 <sheet>
                     <div class="oe_title">
                         <label for="name" string="Nama / Alias Rekening"/>
@@ -27,7 +72,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="bank_name" placeholder="BCA / BNI / Mandiri / BRI..."/>
+                            <field name="bank_id" options="{'no_create': False}"/>
                             <field name="account_number"/>
                             <field name="account_holder"/>
                         </group>
@@ -47,16 +92,16 @@
         <field name="arch" type="xml">
             <search string="Cari Data Rekening">
                 <field name="name"/>
-                <field name="bank_name"/>
+                <field name="bank_id"/>
                 <field name="account_number"/>
                 <field name="account_holder"/>
-                <filter string="Nama Bank" name="group_bank" domain="[]" context="{'group_by': 'bank_name'}"/>
+                <filter string="Nama Bank" name="group_bank" domain="[]" context="{'group_by': 'bank_id'}"/>
             </search>
         </field>
     </record>
 
     <record id="action_transaksi_bank_account" model="ir.actions.act_window">
-        <field name="name">Data Rekening</field>
+        <field name="name">Daftar Rekening</field>
         <field name="res_model">transaksi.bank.account</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="view_transaksi_bank_account_search"/>
