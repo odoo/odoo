@@ -234,8 +234,11 @@ class ThreadController(http.Controller):
         if not thread:
             raise NotFound()
         partner, guest = request.env["res.partner"]._get_current_persona()
-        if thread_model == "discuss.channel" and not partner and not guest:
-            raise NotFound()
+        if thread_model == "discuss.channel":
+            if not partner and not guest:
+                raise NotFound()
+            if thread.channel_type != "chat":
+                thread._find_or_create_member_for_self()
         if not self._get_thread_with_access(thread_model, thread_id, mode="write"):
             thread = thread.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False)
         # sudo: mail.thread - users can post on accessible threads

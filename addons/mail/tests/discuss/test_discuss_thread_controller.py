@@ -102,3 +102,19 @@ class TestDiscussThreadController(MailControllerThreadCommon):
                 test_emails(self.user_admin, True, partner_emails),
             ),
         )
+
+    def test_channel_auto_join_on_message_post(self):
+        """Test that non-member employees and guests become members when posting a message."""
+        channel = self.env["discuss.channel"].create(
+            {"name": "Public Channel", "group_public_id": None}
+        )
+
+        for pseudo_user, member_field, member in [
+            (self.user_employee, "partner_id", self.user_employee.partner_id),
+            (self.guest, "guest_id", self.guest),
+        ]:
+            self.assertNotIn(member, channel.channel_member_ids[member_field])
+            self._authenticate_pseudo_user(pseudo_user)
+            self._message_post(channel, {"body": "hello"}, {})
+            channel.invalidate_recordset(["channel_member_ids"])
+            self.assertIn(member, channel.channel_member_ids[member_field])
