@@ -288,7 +288,7 @@ class SifnextPPL(models.Model):
             "payment_dest_bank", "payment_dest_account_number", "payment_dest_account_name",
         }
         if payment_fields.intersection(vals):
-            if not self.env.user.has_group("sifnext_ppl.group_ppl_finance"):
+            if not self.env.is_superuser() and not self.env.user.has_group("sifnext_ppl.group_ppl_finance"):
                 raise AccessError(_("Hanya Keuangan yang dapat mengisi data pembayaran."))
             if any(record.state != "approved" for record in self):
                 raise UserError(_("Data pembayaran hanya dapat diisi pada PPL Disetujui."))
@@ -311,11 +311,11 @@ class SifnextPPL(models.Model):
                 raise ValidationError(_("Nilai setiap detail PPL harus lebih dari nol."))
 
     def _check_finance_group(self):
-        if not self.env.user.has_group("sifnext_ppl.group_ppl_finance"):
+        if not self.env.is_superuser() and not self.env.user.has_group("sifnext_ppl.group_ppl_finance"):
             raise AccessError(_("Hanya Finance yang dapat melakukan tindakan ini."))
 
     def _check_group(self, xmlid, message):
-        if not self.env.user.has_group(xmlid):
+        if not self.env.is_superuser() and not self.env.user.has_group(xmlid):
             raise AccessError(_(message))
 
     def _prepare_integration_payload(self):
@@ -754,7 +754,7 @@ class SifnextPPLLine(models.Model):
     def _check_finance_account_access(self, vals):
         if "journal_account_id" not in vals:
             return
-        if not self.env.user.has_group("sifnext_ppl.group_ppl_finance"):
+        if not self.env.is_superuser() and not self.env.user.has_group("sifnext_ppl.group_ppl_finance"):
             raise AccessError(_("Hanya Finance yang dapat memilih atau mengubah COA."))
         for line in self:
             if line.ppl_id.state not in ("draft", "submitted"):
@@ -764,7 +764,7 @@ class SifnextPPLLine(models.Model):
     def create(self, vals_list):
         self._check_finance_central_readonly()
         if any(vals.get("journal_account_id") for vals in vals_list):
-            if not self.env.user.has_group("sifnext_ppl.group_ppl_finance"):
+            if not self.env.is_superuser() and not self.env.user.has_group("sifnext_ppl.group_ppl_finance"):
                 raise AccessError(_("Hanya Finance yang dapat memilih COA."))
         parent_ids = {vals.get("ppl_id") for vals in vals_list if vals.get("ppl_id")}
         if parent_ids and any(ppl.state != "draft" for ppl in self.env["sifnext.ppl"].browse(parent_ids)):
