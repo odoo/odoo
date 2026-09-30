@@ -29,7 +29,7 @@
             </field>
             <field name="smtp_authentication_info" position="after">
                 <widget name="documentation_link" path="/applications/general/email_communication/email_servers.html?highlight=outgoing email server#use-a-default-from-email-address"
-                    invisible="smtp_authentication != 'gmail'" label="Read More"/>
+                    invisible="smtp_authentication != 'gmail'" label="Read More" hide-icon="True"/>
             </field>
             <xpath expr="//field[@name='smtp_user']" position="attributes">
                 <attribute name="required" separator="or" add="smtp_authentication == 'gmail'"/>

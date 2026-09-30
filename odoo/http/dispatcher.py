@@ -23,6 +23,7 @@ from werkzeug.exceptions import default_exceptions as werkzeug_default_exception
 
 from odoo.exceptions import UserError
 from odoo.tools import exception_to_unicode
+from odoo.release import documentation_url
 
 from .response import Response
 from .session import (
@@ -50,12 +51,12 @@ CORS_MAX_AGE = 60 * 60 * 24  # 1 day
 SAFE_HTTP_METHODS = ('GET', 'HEAD', 'OPTIONS', 'TRACE')
 """ The HTTP methods that do not require a CSRF validation. """
 
-MISSING_CSRF_WARNING = """\
+MISSING_CSRF_WARNING = f"""\
 No CSRF validation token provided for path %r
 
 Odoo URLs are CSRF-protected by default (when accessed with unsafe
 HTTP methods). See
-https://www.odoo.com/documentation/latest/developer/reference/addons/http.html#csrf
+{documentation_url}/developer/reference/addons/http.html#csrf
 for more details.
 
 * if this endpoint is accessed through Odoo via py-QWeb form, embed a CSRF

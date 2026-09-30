@@ -2,7 +2,7 @@ import { Component, t, usePlugin, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { _t } from "@web/core/l10n/translation";
-import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
+import { DocumentationLink } from "@web/core/documentation_link/documentation_link";
 
 export class ImportDataSidepanel extends Component {
     static template = "ImportDataSidepanel";
