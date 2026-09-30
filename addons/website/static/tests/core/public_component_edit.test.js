@@ -1,7 +1,8 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { Component, onWillStart, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { Interaction } from "@web/public/interaction";
 import { startInteractions } from "@web/../tests/public/helpers";
 import { switchToEditMode } from "../helpers";
 
@@ -85,4 +86,60 @@ test(`edit owl components are not neutered in edit mode`, async () => {
             </owl-root>
         </owl-component>
     `);
+});
+
+test(`an interaction mounting a component crashing in onWillStart does not break edit mode`, async () => {
+    expect.errors(1);
+    class CrashingComponent extends Component {
+        static template = xml`<div>crash</div>`;
+        setup() {
+            onWillStart(() => {
+                throw new Error("crash in willStart");
+            });
+        }
+    }
+    class TestInteraction extends Interaction {
+        static selector = ".test";
+        start() {
+            this.mountComponent(this.el, CrashingComponent);
+        }
+    }
+    registry.category("public.interactions.edit").add("test.interaction", {
+        Interaction: TestInteraction,
+    });
+
+    const { core } = await startInteractions(`<div class="test"></div>`);
+
+    await switchToEditMode(core);
+    await core.isReady;
+    expect.verifyErrors(["crash in willStart"]);
+    expect(core.owlApp.destroyed).not.toBe(true);
+    expect(".test owl-root").toHaveCount(0);
+});
+
+test(`an interaction mounting a component crashing in setup does not break edit mode`, async () => {
+    expect.errors(1);
+    class CrashingComponent extends Component {
+        static template = xml`<div>crash</div>`;
+        setup() {
+            throw new Error("crash in setup");
+        }
+    }
+    class TestInteraction extends Interaction {
+        static selector = ".test";
+        start() {
+            this.mountComponent(this.el, CrashingComponent);
+        }
+    }
+    registry.category("public.interactions.edit").add("test.interaction", {
+        Interaction: TestInteraction,
+    });
+
+    const { core } = await startInteractions(`<div class="test"></div>`);
+
+    await switchToEditMode(core);
+    await core.isReady;
+    expect.verifyErrors(["crash in setup"]);
+    expect(core.owlApp.destroyed).not.toBe(true);
+    expect(".test owl-root").toHaveCount(0);
 });

@@ -61,21 +61,44 @@ class InteractionService {
     }
 
     prepareRoot(el, C, props, position = "beforeend") {
-        const root = this.owlApp.createRoot(C, { props, env: this.env });
         const rootEl = document.createElement("owl-root");
         rootEl.setAttribute("contenteditable", "false");
         rootEl.dataset.oeProtected = "true";
         rootEl.style.display = "contents";
+        const { promise, resolve, reject } = Promise.withResolvers();
+        let mounted = false;
+        const destroy = () => {
+            root.destroy();
+            rootEl.remove();
+        };
+        const onError = (error) => {
+            if (mounted) {
+                throw error;
+            }
+            destroy();
+            reject(error);
+        };
+        const root = this.owlApp.createRoot(C, { props, env: this.env, onError });
         el.insertAdjacentElement(position, rootEl);
         return {
             C,
             root,
             el: rootEl,
-            mount: () => root.mount(rootEl),
-            destroy: () => {
-                root.destroy();
-                rootEl.remove();
+            mount: () => {
+                root.mount(rootEl).then(
+                    (component) => {
+                        mounted = true;
+                        resolve(component);
+                    },
+                    (error) => {
+                        // Error thrown before onError registration (e.g. in setup)
+                        destroy();
+                        reject(error);
+                    }
+                );
+                return promise;
             },
+            destroy,
         };
     }
 
