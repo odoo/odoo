@@ -138,23 +138,23 @@ test(`sync google calendar`, async () => {
         type: "calendar",
         resModel: 'calendar.event',
     });
-    expect.verifySteps(["sync_data", "search_read"]);
+    expect.verifySteps(["sync_data", "search_read", "search_read"]);
 
     // select the partner filter
     await togglePartnerFilter("partner_ids", "Partner 4");
     // sync_data was called a first time without filter, event from google calendar was created twice
     expect(`.o_calendar_event`).toHaveCount(4, { message: "should display 3 events on the month" });
-    expect.verifySteps(["sync_data", "search_read"]);
+    expect.verifySteps(["sync_data", "search_read", "search_read"]);
 
     await contains(`.o_datetime_picker_header .o_next`).click();
     await contains(`.o_datetime_picker .o_date_item_cell`).click();
-    expect.verifySteps(["sync_data", "search_read"]);
+    expect.verifySteps(["sync_data", "search_read", "search_read"]);
 
     await changeScale("month");
-    expect.verifySteps(["sync_data", "search_read"]);
+    expect.verifySteps(["sync_data", "search_read", "search_read"]);
 
     await contains(`.o_calendar_button_today`).click();
-    expect.verifySteps(["sync_data", "search_read"]);
+    expect.verifySteps(["sync_data", "search_read", "search_read"]);
     expect(`.o_calendar_event`).toHaveCount(7, { message: "should now display 6 events on the month" });
 });
 
@@ -183,12 +183,12 @@ test(`component is destroyed while sync google calendar`, async () => {
     expect.verifySteps([]);
 
     await switchView("calendar");
-    expect.verifySteps(["sync_data"]);
+    expect.verifySteps(["sync_data", "search_read"]);
 
     await switchView("calendar");
-    expect.verifySteps(["sync_data"]);
+    expect.verifySteps(["sync_data", "search_read"]);
 
-    deferred.resolve();
+    deferred.resolve({ status: "need_refresh" });
     await animationFrame();
     expect.verifySteps(["search_read"]);
 });
