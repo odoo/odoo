@@ -366,6 +366,20 @@ test("should be able to unlink an icon", async () => {
     expect(".my_link").toHaveCount(0);
 });
 
+test("should hide title replace icon on popover for an icon link", async () => {
+    const { el } = await setupEditor(
+        `<p>[<span class="oi" data-icon="local_bar" contenteditable="false"></span>]</p>`
+    );
+    await waitFor(".o-we-toolbar");
+    await click('.o-we-toolbar button[name="link"]');
+    await expectElementCount(".o-we-linkpopover", 1);
+    await contains(".o-we-linkpopover input.o_we_href_input_link").edit("http://test.com/");
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<a href="http://test.com/" class="o_link_in_selection">\ufeff<span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>\ufeff[]</a>\ufeff</p>`
+    );
+    expect(".o-we-linkpopover .o_we_replace_title_btn").toHaveCount(0);
+});
+
 test("icon toolbar when only an icon is selected", async () => {
     await setupEditor(
         `<p>[<span class="oi" data-icon="local_bar" contenteditable="false"></span>]</p>`
