@@ -11,15 +11,25 @@ import { useAutoresize } from "@web/core/utils/autoresize";
  */
 export function useProductAndLabelAutoresize(ref, options = {}) {
     useAutoresize(ref, { 
-        onMounted: productAndLabelResizeTextArea, 
         onResize: productAndLabelResizeTextArea,
         ...options,
     });
 }
 
+const pendingHeightUpdates = new Map();
+let flushScheduled = false;
+
+function flushHeightUpdates() {
+    for (const [element, height] of pendingHeightUpdates) {
+        element.style.height = height;
+    }
+    pendingHeightUpdates.clear();
+    flushScheduled = false;
+}
+
 export function productAndLabelResizeTextArea(textarea, options = {}) {
-    const style = window.getComputedStyle(textarea);
     if (options.targetParentName) {
+        const style = window.getComputedStyle(textarea);
         let target = textarea.parentElement;
         while (target) {
             if (target.getAttribute("name") === options.targetParentName) {
@@ -29,8 +39,13 @@ export function productAndLabelResizeTextArea(textarea, options = {}) {
                 const childHeight = child.style.height || style.lineHeight;
                 return total + parseFloat(childHeight);
             }, 0);
-            target.style.height = `${totalParentHeight}px`;
+            pendingHeightUpdates.set(target, `${totalParentHeight}px`);
             target = target.parentElement;
+        }
+
+        if (!flushScheduled) {
+            flushScheduled = true;
+            queueMicrotask(flushHeightUpdates);
         }
     }
 }
