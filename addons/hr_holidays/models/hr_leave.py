@@ -361,7 +361,8 @@ class HrLeave(models.Model):
             if not leave.employee_id or is_multi_employee or not leave.work_entry_type_requires_allocation or not leave.work_entry_type_id.time_off_selectable:
                 continue
 
-            remaining = leave.virtual_remaining_leaves
+            # the leave must not count against its own balance
+            remaining = leave.with_context(ignored_leave_ids=leave._origin.ids).virtual_remaining_leaves
             is_hour = leave.work_entry_type_id.unit_of_measure == 'hour'
             request_amount = leave.number_of_hours if is_hour else leave.number_of_days
             max_excess = leave.work_entry_type_id.max_allowed_negative if leave.work_entry_type_id.allows_negative else 0
@@ -801,7 +802,8 @@ class HrLeave(models.Model):
         return domain
 
     # so that when we consider allocated work entry types for employees that don't have allocations, it doesn't revert back to a generic one
-    @api.onchange('employee_id', 'request_date_from', 'request_date_to')
+    # dates are not a trigger, the user choice is kept and checked on save
+    @api.onchange('employee_id')
     def _onchange_work_entry_type_id(self):
         for holiday in self:
             if not holiday.work_entry_type_id.requires_allocation:
@@ -1317,20 +1319,26 @@ class HrLeave(models.Model):
             else:
                 leave.attachment_is_visible = False
 
-    @api.depends('employee_id', 'work_entry_type_id')
+    @api.depends('employee_id', 'work_entry_type_id', 'request_date_from')
+    @api.depends_context('ignored_leave_ids')
     def _compute_leaves(self):
-        date_from = fields.Date.from_string(self.env.context['default_request_date_from']) if 'default_request_date_from' in self.env.context else fields.Date.context_today(self)
-        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from)[0]
+        default_date = fields.Date.from_string(self.env.context['default_request_date_from']) if 'default_request_date_from' in self.env.context else fields.Date.context_today(self)
+        # only allocations running on the leave start date count, like the save check
+        leaves_by_date = defaultdict(lambda: self.env['hr.leave'])
         for leave in self:
-            virtual_remaining_leaves = 0
-            max_leaves = 0
-            primary_unit = 'hours' if leave.work_entry_type_id.unit_of_measure == 'hour' else 'days'
-            for allocation, allocation_dict in employee_days_per_allocation[leave.employee_id][leave.work_entry_type_id].items():
-                if allocation and (not allocation.date_to or allocation.date_to >= date_from):
-                    max_leaves += allocation_dict[f'{primary_unit}_max_leaves']
-                    virtual_remaining_leaves += allocation_dict[f'{primary_unit}_virtual_remaining_leaves']
-            leave.virtual_remaining_leaves = virtual_remaining_leaves
-            leave.max_leaves = max_leaves
+            leaves_by_date[leave.request_date_from or default_date] |= leave
+        for date_from, leaves in leaves_by_date.items():
+            employee_days_per_allocation = leaves.employee_id._get_consumed_leaves(leaves.work_entry_type_id, date_from)[0]
+            for leave in leaves:
+                virtual_remaining_leaves = 0
+                max_leaves = 0
+                primary_unit = 'hours' if leave.work_entry_type_id.unit_of_measure == 'hour' else 'days'
+                for allocation, allocation_dict in employee_days_per_allocation[leave.employee_id][leave.work_entry_type_id].items():
+                    if allocation and allocation.date_from <= date_from and (not allocation.date_to or allocation.date_to >= date_from):
+                        max_leaves += allocation_dict[f'{primary_unit}_max_leaves']
+                        virtual_remaining_leaves += allocation_dict[f'{primary_unit}_virtual_remaining_leaves']
+                leave.virtual_remaining_leaves = virtual_remaining_leaves
+                leave.max_leaves = max_leaves
 
     def _inverse_supported_attachment_ids(self):
         for holiday in self:
