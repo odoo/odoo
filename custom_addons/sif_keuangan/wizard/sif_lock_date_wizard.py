@@ -23,11 +23,6 @@ class SifChangeLockDateWizard(models.TransientModel):
         default=lambda self: self.env.company.purchase_lock_date,
         help='Kunci transaksi pembelian dan pengadaan PPL pada atau sebelum tanggal ini (inklusif).'
     )
-    tax_lock_date = fields.Date(
-        string='Lock Tax Return',
-        default=lambda self: self.env.company.tax_lock_date,
-        help='Kunci transaksi perpajakan setelah penutupan pajak (tax closing).'
-    )
     user_lock_date = fields.Date(
         string='Lock Everything',
         default=lambda self: self.env.company.user_lock_date,
@@ -48,10 +43,10 @@ class SifChangeLockDateWizard(models.TransientModel):
         compute='_compute_draft_entries'
     )
 
-    @api.depends('company_id', 'sale_lock_date', 'purchase_lock_date', 'tax_lock_date', 'user_lock_date', 'fiscalyear_lock_date')
+    @api.depends('company_id', 'sale_lock_date', 'purchase_lock_date', 'user_lock_date', 'fiscalyear_lock_date')
     def _compute_draft_entries(self):
         for rec in self:
-            dates = [d for d in [rec.sale_lock_date, rec.purchase_lock_date, rec.tax_lock_date, rec.user_lock_date, rec.fiscalyear_lock_date] if d]
+            dates = [d for d in [rec.sale_lock_date, rec.purchase_lock_date, rec.user_lock_date, rec.fiscalyear_lock_date] if d]
             if not dates or not rec.company_id:
                 rec.has_draft_entries = False
                 rec.draft_entry_count = 0
@@ -67,7 +62,7 @@ class SifChangeLockDateWizard(models.TransientModel):
 
     def action_review_draft_entries(self):
         self.ensure_one()
-        dates = [d for d in [self.sale_lock_date, self.purchase_lock_date, self.tax_lock_date, self.user_lock_date, self.fiscalyear_lock_date] if d]
+        dates = [d for d in [self.sale_lock_date, self.purchase_lock_date, self.user_lock_date, self.fiscalyear_lock_date] if d]
         max_date = max(dates) if dates else fields.Date.today()
         return {
             'name': _('Jurnal Masih Draft (Perlu Diposting / Dihapus)'),
@@ -96,7 +91,6 @@ class SifChangeLockDateWizard(models.TransientModel):
         self.company_id.write({
             'sale_lock_date': self.sale_lock_date,
             'purchase_lock_date': self.purchase_lock_date,
-            'tax_lock_date': self.tax_lock_date,
             'user_lock_date': self.user_lock_date,
             'fiscalyear_lock_date': self.fiscalyear_lock_date,
         })
