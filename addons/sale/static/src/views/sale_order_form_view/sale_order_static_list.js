@@ -47,8 +47,7 @@ export class SaleOrderFormStaticList extends StaticList {
 
         const linesById = {};
         const sectionLinesData = {};
-        // handle section line's changes
-        const commands = [x2ManyCommands.update(record.resId || record._virtualId, changes)];
+        const commands = [];
         const orderChanges = {
             order_id: {
                 ...this._parent._getChanges(),
