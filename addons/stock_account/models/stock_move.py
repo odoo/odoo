@@ -323,7 +323,7 @@ class StockMove(models.Model):
             if not move._is_out():
                 continue
             if correction_quantity:
-                previous_qty = move.quantity - correction_quantity
+                previous_qty = move._quantity_sml() - correction_quantity
                 if previous_qty:
                     ratio = correction_quantity / previous_qty if previous_qty else 0
                     move.value += ratio * move.value
