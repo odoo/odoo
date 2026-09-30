@@ -7,11 +7,13 @@ import {
     beforeEach,
     describe,
     expect,
+    getFixture,
     press,
     queryFirst,
     test,
     waitFor,
     waitForNone,
+    waitUntil,
 } from "@odoo/hoot";
 import { Component, onMounted, onPatched, proxy, xml } from "@odoo/owl";
 import {
@@ -30,7 +32,8 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 import { TourInteractive } from "@web_tour/tour_interactive/tour_interactive";
-import { TourPointer } from "@web_tour/tour_pointer/tour_pointer";
+import { TourInteractiveObserver } from "@web_tour/tour_interactive/tour_interactive_observer";
+import { TourPointer, pointerState } from "@web_tour/tour_pointer/tour_pointer";
 import { Tour, TourStep } from "./tour_models";
 
 describe.current.tags("desktop");
@@ -99,7 +102,7 @@ beforeEach(() => {
 });
 
 after(() => {
-    TourInteractive.observer.disconnect();
+    TourInteractive.current?.stop();
 });
 
 test("registering test tour after service is started doesn't auto-start the tour", async () => {
@@ -385,8 +388,8 @@ test("Tour backward when the pointed element disappear", async () => {
     expect(".o_tour_pointer").toHaveCount(1);
 
     await contains("button.fool").click();
-    await animationFrame();
-    expect(".o_tour_pointer").toHaveCount(1);
+    await waitUntil(() => pointerState.trigger === queryFirst("button.foo"));
+    await waitFor(".o_tour_pointer");
 
     await contains("button.foo").click();
     await animationFrame();
@@ -445,8 +448,8 @@ test("Tour backward when the pointed element disappear and ignore warn step", as
     expect(".o_tour_pointer").toHaveCount(1);
 
     await contains("button.fool").click();
-    await animationFrame();
-    expect(".o_tour_pointer").toHaveCount(1);
+    await waitUntil(() => pointerState.trigger === queryFirst("button.foo"));
+    await waitFor(".o_tour_pointer");
 
     await contains("button.foo").click();
     await animationFrame();
@@ -458,6 +461,89 @@ test("Tour backward when the pointed element disappear and ignore warn step", as
     expect.verifySteps(["Step 'button.foo' ignored.", "Step 'button.foo' ignored."]);
 });
 
+test("Lost tour goes backward as soon as a previous trigger is back", async () => {
+    Tour._records = [{ name: "tour1" }];
+    registry.category("web_tour.tours").add("tour1", {
+        steps: () => [
+            { trigger: "button.foo", run: "click" },
+            { trigger: "button.bar", run: "click" },
+        ],
+    });
+
+    class Dummy extends Component {
+        state = proxy({ page: "foo" });
+        static template = xml`
+            <button class="other w-100" t-on-click="() => { this.state.page = 'other'; }">Other</button>
+            <button class="back w-100" t-on-click="() => { this.state.page = 'foo'; }">Back</button>
+            <button class="foo w-100" t-if="this.state.page === 'foo'" t-on-click="() => { this.state.page = 'bar'; }">Foo</button>
+            <button class="bar w-100" t-if="this.state.page === 'bar'">Bar</button>
+        `;
+    }
+
+    await mountWithCleanup(Dummy);
+
+    await getService("tour_service").startTour("tour1", { mode: "manual" });
+    await waitUntil(() => pointerState.trigger === queryFirst("button.foo"));
+
+    await contains("button.foo").click();
+    await waitUntil(() => pointerState.trigger === queryFirst("button.bar"));
+
+    await contains("button.other").click();
+    await waitForNone(".o_tour_pointer");
+
+    await contains("button.back").click();
+    await waitUntil(() => pointerState.trigger === queryFirst("button.foo"));
+
+    await contains("button.foo").click();
+    await waitUntil(() => pointerState.trigger === queryFirst("button.bar"));
+    await contains("button.bar").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("Tour only looks for a previous trigger among the last actions when going backward", async () => {
+    Tour._records = [{ name: "tour1" }];
+    const pages = [...Array(TourInteractive.MAX_BACKWARD_ACTIONS + 1).keys()].map((i) => i + 1);
+    registry.category("web_tour.tours").add("tour1", {
+        steps: () => [
+            { trigger: "button.first", run: "click" },
+            ...pages.map((page) => ({ trigger: `button.page${page}`, run: "click" })),
+        ],
+    });
+
+    class Dummy extends Component {
+        state = proxy({ page: 0 });
+        pages = pages;
+        static template = xml`
+            <button class="first w-100" t-on-click="() => { this.state.page = 1; }">First</button>
+            <button class="away w-100" t-on-click="() => { this.state.page = 0; }">Away</button>
+            <button class="back w-100" t-on-click="() => { this.state.page = 5; }">Back</button>
+            <t t-foreach="this.pages" t-as="page" t-key="page">
+                <button t-if="this.state.page === page" t-attf-class="page{{page}} w-100" t-on-click="() => { this.state.page = page + 1; }">Page</button>
+            </t>
+        `;
+    }
+
+    await mountWithCleanup(Dummy);
+
+    await getService("tour_service").startTour("tour1", { mode: "manual" });
+    await waitUntil(() => pointerState.trigger === queryFirst("button.first"));
+    await contains("button.first").click();
+    for (const page of pages.slice(0, -1)) {
+        await waitUntil(() => pointerState.trigger === queryFirst(`button.page${page}`));
+        await contains(`button.page${page}`).click();
+    }
+    await waitUntil(() => pointerState.trigger === queryFirst(`button.page${pages.at(-1)}`));
+
+    await contains("button.away").click();
+    await waitForNone(".o_tour_pointer");
+    await animationFrame();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
+
+    await contains("button.back").click();
+    await waitUntil(() => pointerState.trigger === queryFirst("button.page5"));
+});
 test("Tour started by the URL", async () => {
     Tour._records = [
         {
@@ -636,8 +722,8 @@ test("validating edit step on autocomplete by selecting autocomplete item (valid
     expect(".o_tour_pointer").toHaveCount(1);
     await contains(".o-autocomplete--input").click();
     await contains(".o-autocomplete--dropdown-item:first-child").click();
-    await animationFrame();
-    expect(".o_tour_pointer").toHaveCount(1);
+    await waitUntil(() => pointerState.trigger === queryFirst(".o_form_button_save"));
+    await waitFor(".o_tour_pointer");
     await contains(".o_form_button_save").click();
     await animationFrame();
     expect(".o_tour_pointer").toHaveCount(0);
@@ -673,14 +759,12 @@ test("validating click on autocomplete item by pressing Enter", async () => {
     await waitFor(".o_tour_pointer_tip");
     expect(".o_tour_pointer_tip").toHaveCount(1);
     await contains(".o-autocomplete--input").click();
-    await animationFrame();
-    expect(".o_tour_pointer_tip").toHaveCount(1);
+    await waitFor(".o_tour_pointer_tip");
     await press("Enter");
-    await animationFrame();
-    expect(".o_tour_pointer_tip").toHaveCount(1);
+    await waitUntil(() => pointerState.trigger === queryFirst(".o_form_button_save"));
+    await waitFor(".o_tour_pointer_tip");
     await contains(".o_form_button_save").click();
-    await animationFrame();
-    expect(".o_tour_pointer_tip").toHaveCount(0);
+    await waitForNone(".o_tour_pointer_tip");
 });
 
 test("Tour don't backward when dropdown loading", async () => {
@@ -734,8 +818,7 @@ test("Tour don't backward when dropdown loading", async () => {
     def.resolve();
 
     await waitFor(".o-autocomplete--dropdown-item:eq(1)");
-    await animationFrame();
-    expect(".o_tour_pointer_tip").toHaveCount(1);
+    await waitFor(".o_tour_pointer_tip");
     await contains(".o-autocomplete--dropdown-item:eq(1)").click();
     await animationFrame();
     expect(".o_tour_pointer_tip").toHaveCount(1);
@@ -822,19 +905,17 @@ test("Don't backward when action manager is busy", async () => {
     await animationFrame();
 
     await contains("button.fool").click();
-    await animationFrame();
-    expect(".o_tour_pointer").toHaveCount(0);
+    await waitForNone(".o_tour_pointer");
 
     await contains("button.foo").click();
-    await animationFrame();
-    expect(".o_tour_pointer").toHaveCount(1);
+    await waitUntil(() => pointerState.trigger === queryFirst("button.bar"));
+    await waitFor(".o_tour_pointer");
 
     comp.env.bus.trigger("ACTION_MANAGER:UI-UPDATED");
 
     await contains("button.fool").click();
-    await animationFrame();
-    await animationFrame();
-    expect(".o_tour_pointer").toHaveCount(1);
+    await waitUntil(() => pointerState.trigger === queryFirst("button.foo"));
+    await waitFor(".o_tour_pointer");
 
     await contains("button.foo").click();
     await animationFrame();
@@ -983,4 +1064,212 @@ test("avoid rendering loop of pointer", async () => {
     expect(patchCount).toBe(3);
     await animationFrame();
     expect(patchCount).toBe(3);
+});
+
+test("robot mode logs an error and removes the pointer when a step times out", async () => {
+    Tour._records = [{ name: "tour_robot_timeout" }];
+    registry.category("web_tour.tours").add("tour_robot_timeout", {
+        steps: () => [{ trigger: "button.inc", run: "click" }],
+    });
+    patchWithCleanup(console, {
+        error: (msg) => {
+            if (typeof msg === "string" && msg.startsWith("Robot: no progress")) {
+                expect.step("timeout");
+            }
+        },
+    });
+    const state = proxy({ disabled: false });
+    class Root extends Component {
+        static template = xml`<button class="inc" t-att-disabled="this.state.disabled">+</button>`;
+        setup() {
+            this.state = state;
+        }
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_timeout", {
+        mode: "manual",
+        robot: true,
+    });
+    state.disabled = true;
+    await waitFor(".o_tour_pointer");
+
+    await advanceTime(10000);
+    await animationFrame();
+    expect.verifySteps(["timeout"]);
+    expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("failed drop goes back to the drag action", async () => {
+    Tour._records = [{ name: "tour_dnd" }];
+    registry.category("web_tour.tours").add("tour_dnd", {
+        steps: () => [
+            { trigger: ".drag-src", run: "drag_and_drop .drop-zone" },
+            { trigger: "button.done", run: "click" },
+        ],
+    });
+
+    const state = proxy({ blocked: true });
+    class Root extends Component {
+        static template = xml`
+            <div class="drag-src" style="width: 50px; height: 50px;">Drag</div>
+            <div class="drop-zone" t-att-style="'width: 100px; height: 100px;' + (this.state.blocked ? 'pointer-events: none;' : '')">Zone</div>
+            <button class="done w-100">Done</button>
+        `;
+        setup() {
+            this.state = state;
+        }
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_dnd", { mode: "manual" });
+    await waitUntil(() => pointerState.trigger === queryFirst(".drag-src"));
+
+    let dragActions = await contains(".drag-src").drag();
+    await waitUntil(() => pointerState.trigger === queryFirst(".drop-zone"));
+    await dragActions.moveTo("button.done");
+    await dragActions.drop();
+    await waitUntil(() => pointerState.trigger === queryFirst(".drag-src"));
+
+    state.blocked = false;
+    await animationFrame();
+    dragActions = await contains(".drag-src").drag();
+    await waitUntil(() => pointerState.trigger === queryFirst(".drop-zone"));
+    await dragActions.moveTo(".drop-zone");
+    await dragActions.drop();
+    await waitUntil(() => pointerState.trigger === queryFirst("button.done"));
+
+    await contains("button.done").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("edit step on autocomplete as last step can be validated by selecting an item", async () => {
+    Tour._records = [{ name: "last_autocomplete_tour" }];
+    registry.category("web_tour.tours").add("last_autocomplete_tour", {
+        steps: () => [{ trigger: ".o-autocomplete--input", run: "edit A" }],
+    });
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    getService("tour_service").startTour("last_autocomplete_tour", { mode: "manual" });
+    await waitFor(".o_tour_pointer");
+
+    await contains(".o-autocomplete--input").click();
+    await contains(".o-autocomplete--dropdown-item:first-child").click();
+    await waitUntil(() => tourConsumed.includes("last_autocomplete_tour"));
+    expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("finished tour is released and no longer listens to the bus", async () => {
+    Tour._records = [{ name: "release_tour" }];
+    registry.category("web_tour.tours").add("release_tour", {
+        steps: () => [{ trigger: "button.foo", run: "click" }],
+    });
+
+    class Root extends Component {
+        static template = xml`<button class="foo w-100">Foo</button>`;
+    }
+
+    const comp = await mountWithCleanup(Root);
+    await getService("tour_service").startTour("release_tour", { mode: "manual" });
+    await waitFor(".o_tour_pointer");
+    const tour = TourInteractive.current;
+
+    await contains("button.foo").click();
+    await waitUntil(() => tourConsumed.includes("release_tour"));
+    expect(TourInteractive.current).toBe(null);
+
+    comp.env.bus.trigger("ACTION_MANAGER:UPDATE");
+    expect(tour.isBusy).toBe(false);
+});
+
+test("trigger is only looked for again once the DOM changed or the periodic check fired", async () => {
+    Tour._records = [{ name: "search_flag_tour" }];
+    registry.category("web_tour.tours").add("search_flag_tour", {
+        steps: () => [{ trigger: "button.bar", run: "click" }],
+    });
+    let searches = 0;
+    patchWithCleanup(TourInteractive.prototype, {
+        track() {
+            searches++;
+            return super.track(...arguments);
+        },
+    });
+    const state = proxy({ showBar: false, value: 0 });
+    class Root extends Component {
+        static template = xml`
+            <span class="value" t-out="this.state.value"/>
+            <button class="bar w-100" t-if="this.state.showBar">Bar</button>
+        `;
+        setup() {
+            this.state = state;
+        }
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("search_flag_tour", { mode: "manual" });
+    await animationFrame();
+    await animationFrame();
+    const initialSearches = searches;
+    expect(initialSearches).toBeGreaterThan(0);
+
+    await animationFrame();
+    await animationFrame();
+    await animationFrame();
+    expect(searches).toBe(initialSearches);
+
+    state.value++;
+    await animationFrame();
+    await animationFrame();
+    await animationFrame();
+    expect(searches).toBe(initialSearches + 1);
+
+    await advanceTime(TourInteractiveObserver.CHECK_INTERVAL);
+    await animationFrame();
+    expect(searches).toBe(initialSearches + 2);
+
+    state.showBar = true;
+    await waitFor(".o_tour_pointer");
+});
+
+test("a change inside a shadow root added after the start triggers a new search", async () => {
+    Tour._records = [{ name: "shadow_tour" }];
+    registry.category("web_tour.tours").add("shadow_tour", {
+        steps: () => [{ trigger: ".host:shadow button.bar", run: "click" }],
+    });
+    let searches = 0;
+    patchWithCleanup(TourInteractive.prototype, {
+        track() {
+            searches++;
+            return super.track(...arguments);
+        },
+    });
+    class Root extends Component {
+        static template = xml`<div class="o_root"/>`;
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("shadow_tour", { mode: "manual" });
+    await animationFrame();
+
+    const host = document.createElement("div");
+    host.classList.add("host");
+    const shadowRoot = host.attachShadow({ mode: "open" });
+    const wrapper = document.createElement("div");
+    wrapper.append(host);
+    getFixture().append(wrapper);
+    await animationFrame();
+    await animationFrame();
+    const searchesBeforeShadowChange = searches;
+
+    shadowRoot.innerHTML = `<span>Changed</span>`;
+    await animationFrame();
+    await animationFrame();
+    await animationFrame();
+    expect(searches).toBe(searchesBeforeShadowChange + 1);
 });
