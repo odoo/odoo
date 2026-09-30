@@ -62,3 +62,13 @@ The Available filter selects properties in New or Offer Received state. Group By
 
 **Try it:** Create properties in two postcodes. Search by name, apply Available, and group by postcode. Remove a field from a view in your local experiment and check whether its database column still exists.
 
+## Chapter 7 - Relations between models
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/07_relations.html)
+
+Properties now connect to property types, tags, buyers, salespeople, and offers. A property has one type (`Many2one`), many tags (`Many2many`), and many offers (`One2many`). An offer points back to exactly one property through its required `property_id` field. Reusing `res.partner` for buyers and `res.users` for salespeople avoids creating duplicate contact and user models.
+
+The new type and tag models have configuration menus and access rights. Offers have views and access rights but no separate menu because they are entered from a property's Offers tab. The salesperson defaults to the current user, while the buyer is left blank when a property is duplicated.
+
+**Try it:** Create a type and a tag, assign them to a property, and add an offer from its Offers tab. Inspect the offer's `property_id` to see how Odoo connected the records.
+
