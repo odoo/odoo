@@ -2836,3 +2836,33 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertRecordValues(sale_order.order_line, [
             {'product_id': self.new_product.id, 'product_uom_qty': 0, 'qty_delivered': 3}
         ])
+
+    def test_to_refund_return_qty_delivered(self):
+        """ Ensure that qty_delivered is properly updated on the Sale
+        Order Lines corresponding to a Delivery that has been returned,
+        even when the move_ids of the Delivery have to_refund False
+        """
+        # Create and confirm Sale Order with deliverable Product
+        product = self.env['product.product'].create({
+            'name': 'The Monado',
+            'is_storable': True,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_uom_qty': 5.0,
+            })],
+        })
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.order_line[0].qty_delivered, 0)
+
+        delivery = sale_order.picking_ids
+        delivery.move_ids.write({'quantity': 5, 'to_refund': False})
+        delivery.button_validate()
+        self.assertEqual(sale_order.order_line[0].qty_delivered, 5)
+
+        delivery_return = delivery._create_return()
+        delivery_return.move_ids.write({'product_uom_qty': 5})
+        delivery_return.button_validate()
+        self.assertEqual(sale_order.order_line[0].qty_delivered, 0)
