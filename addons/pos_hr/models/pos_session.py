@@ -92,11 +92,5 @@ class PosSession(models.Model):
             vals['employee_id'] = extras['employee_id']
         return vals
 
-    def get_cash_in_out_list(self):
-        cash_in_out_list = super().get_cash_in_out_list()
-        if self.config_id.module_pos_hr:
-            for cash_in_out in cash_in_out_list:
-                cash_move = self.env['account.bank.statement.line'].browse(cash_in_out['id'])
-                if cash_move.employee_id:
-                    cash_in_out['cashier_name'] = cash_move.partner_id.name
-        return cash_in_out_list
+    def _get_cash_move_cashier_name(self, cash_move):
+        return cash_move.employee_id.name or super()._get_cash_move_cashier_name(cash_move)
