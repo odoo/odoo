@@ -1304,6 +1304,7 @@ class PosOrder(models.Model):
                         'name': f"{product.name} x {line.qty}",
                         'quantity': abs(line.qty),
                         'product_uom_id': line.product_id.uom_id.id,
+                        'pos_order_line_id': line.id,
                     },
                     'metadata': {
                         'line': line,
@@ -1322,6 +1323,7 @@ class PosOrder(models.Model):
                         'extra_tax_data': self.env['account.tax']._export_base_line_extra_tax_data(base_line),
                         'product_id': product.id,
                         'product_uom_id': base_line['uom_id'].id,
+                        'pos_order_line_id': line.id,
                     },
                     'metadata': {
                         'line': line,

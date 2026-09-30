@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { range } from "@web/core/utils/numbers";
 import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
+import { formatDate } from "@web/core/l10n/dates";
 
 patch(PosOrderline.prototype, {
     get pickingType() {
@@ -17,6 +18,7 @@ patch(PosOrderline.prototype, {
             .map((lotLine) => ({
                 id: lotLine.id,
                 text: lotLine.lot_name,
+                expiration_date: lotLine.expiration_date,
             }))
             .concat(range(nExtraLines).map(() => ({ text: "" })));
         return isAllowOnlyOneLot ? [tempLines[0]] : tempLines;
@@ -54,6 +56,7 @@ patch(PosOrderline.prototype, {
         for (const newLotLine of newPackLotLines) {
             this.models["pos.pack.operation.lot"].create({
                 lot_name: newLotLine.lot_name,
+                expiration_date: newLotLine.expiration_date || false,
                 pos_order_line_id: this,
             });
         }
@@ -126,6 +129,9 @@ patch(PosOrderline.prototype, {
 
     get packLotLines() {
         const trackingStr = this.product_id.tracking === "lot" ? _t("Lot") : _t("SN");
-        return this.pack_lot_ids?.map((l) => `${trackingStr} ${l.lot_name}`);
+        return this.pack_lot_ids?.map((l) => {
+            const dateStr = l.expiration_date ? formatDate(l.expiration_date) : "";
+            return `${trackingStr} ${l.lot_name}${dateStr ? " - " + dateStr : ""}`;
+        });
     },
 });
