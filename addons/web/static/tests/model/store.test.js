@@ -1,5 +1,6 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { computed } from "@odoo/owl";
+import { animationFrame, describe, expect, test } from "@odoo/hoot";
+import { Component, computed, onPatched, useEffect, xml } from "@odoo/owl";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { toCommands } from "@web/model/store/commands";
 import { fields } from "@web/model/store/fields";
@@ -16,7 +17,7 @@ class Partner extends Model {
     tag_ids = fields.Many2many("res.partner.tag", { inverse: "partner_ids" });
 
     get label() {
-        return `[${this.id}] ${this.name}`;
+        return `[${this.id}] ${this.name()}`;
     }
 }
 
@@ -37,7 +38,7 @@ class Order extends Model {
     tag_ids = fields.Many2many("res.partner.tag");
 
     get total() {
-        return this.line_ids.reduce((sum, line) => sum + line.qty * line.price, 0);
+        return this.line_ids().reduce((sum, line) => sum + line.qty() * line.price(), 0);
     }
 }
 
@@ -71,14 +72,36 @@ function loadOrder(store) {
 }
 
 describe("declarations", () => {
-    test("fields are accessors, class members work", () => {
+    test("fields are called to read, set to write, class members work", () => {
         const store = makeStore();
         const partner = store.create("res.partner", { name: "Alice" });
-        expect(partner.name).toBe("Alice");
-        expect(partner.label).toBe("[virtual_1] Alice");
+        expect(partner.name()).toBe("Alice");
+        partner.name.set("Alice B.");
+        expect(partner.name()).toBe("Alice B.");
+        expect(partner.label).toBe("[virtual_1] Alice B.");
         expect(partner).toBeInstanceOf(Partner);
         // records carry no own string keys: fields live on the prototype
         expect(Object.keys(partner)).toEqual([]);
+        // assigning a field is an error, not a silent shadowing
+        expect(() => {
+            partner.name = "Bob";
+        }).toThrow();
+    });
+
+    test("a field signal is stable and can be passed around", () => {
+        const store = makeStore();
+        const [alice, bob] = store.load("res.partner", [
+            { id: 1, name: "Alice" },
+            { id: 2, name: "Bob" },
+        ]);
+        expect(alice.name).toBe(alice.name);
+        expect(alice.name).not.toBe(bob.name);
+        // e.g. what t-model receives: a function with a `set` method
+        const name = alice.name;
+        name.set("Alice B.");
+        expect(alice.name()).toBe("Alice B.");
+        const upper = computed(() => name().toUpperCase());
+        expect(upper()).toBe("ALICE B.");
     });
 
     test("server definitions are merged under JS declarations", () => {
@@ -96,7 +119,7 @@ describe("declarations", () => {
         expect(partnerFields.email.type).toBe("char");
         // models known only from the server get a generic class
         const country = store.create("res.country", { code: "BE" });
-        expect(country.code).toBe("BE");
+        expect(country.code()).toBe("BE");
     });
 
     test("inverses come from the get_definitions format", () => {
@@ -123,7 +146,7 @@ describe("declarations", () => {
             { id: 1, name: "Parent", child_ids: [] },
             { id: 2, name: "Child", parent_id: 1 },
         ]);
-        expect(parent.child_ids).toEqual([child]);
+        expect(parent.child_ids()).toEqual([child]);
     });
 
     test("extension classes are chained like _inherit", () => {
@@ -131,7 +154,7 @@ describe("declarations", () => {
             static _name = "x.thing";
             name = fields.Char();
             get label() {
-                return this.name;
+                return this.name();
             }
         }
         class ThingA extends Thing {
@@ -153,7 +176,7 @@ describe("declarations", () => {
         expect(thing.label).toBe("t+a+b");
         expect(thing).toBeInstanceOf(ThingA);
         expect(thing).toBeInstanceOf(ThingB);
-        expect([thing.color, thing.size]).toEqual(["red", 3]);
+        expect([thing.color(), thing.size()]).toEqual(["red", 3]);
     });
 
     test("class fields must be field declarations", () => {
@@ -170,33 +193,33 @@ describe("identity and loading", () => {
         const store = makeStore();
         const partner = store.load("res.partner", { id: 1, name: "Alice" });
         expect(store.load("res.partner", { id: 1, tag_ids: [] })).toBe(partner);
-        expect(partner.name).toBe("Alice");
-        expect(partner.tag_ids).toEqual([]);
+        expect(partner.name()).toBe("Alice");
+        expect(partner.tag_ids()).toEqual([]);
         expect(store.records("res.partner")).toEqual([partner]);
     });
 
     test("unknown ids become stubs, filled when loaded", () => {
         const store = makeStore();
         const order = store.load("sale.order", { id: 1, partner_id: 5 });
-        const bob = order.partner_id;
+        const bob = order.partner_id();
         expect(bob).toBe(store.get("res.partner", 5));
-        expect(bob.name).toBe(undefined);
+        expect(bob.name()).toBe(undefined);
         expect(store.records("res.partner")).toEqual([]);
         store.load("res.partner", { id: 5, name: "Bob" });
-        expect(order.partner_id).toBe(bob);
-        expect(bob.name).toBe("Bob");
+        expect(order.partner_id()).toBe(bob);
+        expect(bob.name()).toBe("Bob");
         expect(store.records("res.partner")).toEqual([bob]);
     });
 
     test("web_read values: many2one objects and x2many lists", () => {
         const store = makeStore();
         const order = loadOrder(store);
-        expect(order.partner_id.name).toBe("Bob");
-        expect(order.line_ids.map((line) => line.product)).toEqual(["Desk", "Chair"]);
-        expect(order.line_ids[0].order_id).toBe(order);
+        expect(order.partner_id().name()).toBe("Bob");
+        expect(order.line_ids().map((line) => line.product())).toEqual(["Desk", "Chair"]);
+        expect(order.line_ids()[0].order_id()).toBe(order);
         expect(order.total).toBe(300);
         expect(store.isDirty(order)).toBe(false);
-        expect(store.isDirty(order.line_ids[0])).toBe(false);
+        expect(store.isDirty(order.line_ids()[0])).toBe(false);
     });
 });
 
@@ -208,103 +231,81 @@ describe("relations", () => {
             { id: 2, name: "Bob", order_ids: [] },
         ]);
         const order = store.create("sale.order", { name: "SO", partner_id: 1 });
-        expect(alice.order_ids).toEqual([order]);
-        order.partner_id = bob;
-        expect(alice.order_ids).toEqual([]);
-        expect(bob.order_ids).toEqual([order]);
+        expect(alice.order_ids()).toEqual([order]);
+        order.partner_id.set(bob);
+        expect(alice.order_ids()).toEqual([]);
+        expect(bob.order_ids()).toEqual([order]);
     });
 
     test("moving a line to another order through the one2many", () => {
         const store = makeStore();
         const order1 = loadOrder(store);
         const order2 = store.load("sale.order", { id: 2, line_ids: [] });
-        const [desk, chair] = order1.line_ids;
-        order2.line_ids = [...order2.line_ids, desk];
-        expect(desk.order_id).toBe(order2);
-        expect(order1.line_ids).toEqual([chair]);
+        const [desk, chair] = order1.line_ids();
+        order2.line_ids.set([...order2.line_ids(), desk]);
+        expect(desk.order_id()).toBe(order2);
+        expect(order1.line_ids()).toEqual([chair]);
     });
 
     test("many2many inverse", () => {
         const store = makeStore();
         const partner = store.load("res.partner", { id: 1, tag_ids: [] });
         const [vip, stub] = store.load("res.partner.tag", [{ id: 1, partner_ids: [] }, { id: 2 }]);
-        partner.tag_ids = [vip, stub];
-        expect(vip.partner_ids).toEqual([partner]);
+        partner.tag_ids.set([vip, stub]);
+        expect(vip.partner_ids()).toEqual([partner]);
         // a list that is not loaded is left alone
-        expect(stub.partner_ids).toBe(undefined);
-        partner.tag_ids = [stub];
-        expect(vip.partner_ids).toEqual([]);
+        expect(stub.partner_ids()).toBe(undefined);
+        partner.tag_ids.set([stub]);
+        expect(vip.partner_ids()).toEqual([]);
     });
 
     test("one2many lists that are not loaded are left alone", () => {
         const store = makeStore();
         const order = store.load("sale.order", { id: 1, name: "SO1" });
         const line = store.create("sale.order.line", { order_id: order });
-        expect(line.order_id).toBe(order);
-        expect(order.line_ids).toBe(undefined);
+        expect(line.order_id()).toBe(order);
+        expect(order.line_ids()).toBe(undefined);
     });
 });
 
 describe("reactivity", () => {
-    test("field mode: a computation only depends on the fields it reads", () => {
+    test("per field: a computation only depends on the fields it reads", () => {
         const store = makeStore();
         const order = store.load("sale.order", { id: 1, name: "SO1", partner_id: 5 });
         let runs = 0;
         const name = computed(() => {
             runs++;
-            return order.name;
+            return order.name();
         });
         expect(name()).toBe("SO1");
-        order.partner_id = 6;
+        order.partner_id.set(6);
         expect(name()).toBe("SO1");
         expect(runs).toBe(1);
-        order.name = "SO1b";
+        order.name.set("SO1b");
         expect(name()).toBe("SO1b");
         expect(runs).toBe(2);
     });
 
-    test("record, model and none modes", () => {
-        class ByRecord extends Model {
-            static _name = "x.by.record";
-            static _reactivity = "record";
-            a = fields.Char();
-            b = fields.Char();
-        }
-        class ByModel extends Model {
-            static _name = "x.by.model";
+    test("per model: one subscription for all records of the model", () => {
+        class Product extends Model {
+            static _name = "product.product";
             static _reactivity = "model";
-            a = fields.Char();
+            name = fields.Char();
         }
-        class Untracked extends Model {
-            static _name = "x.untracked";
-            static _reactivity = "none";
-            a = fields.Char();
-        }
-        const store = new RecordStore({ models: [ByRecord, ByModel, Untracked] });
-        const [r1, r2] = store.load("x.by.record", [{ id: 1 }, { id: 2 }]);
-        const [m1, m2] = store.load("x.by.model", [{ id: 1 }, { id: 2 }]);
-        const [u1] = store.load("x.untracked", [{ id: 1, a: "x" }]);
-        const runs = { record: 0, model: 0, none: 0 };
-        const counted = (key, read) =>
-            computed(() => {
-                runs[key]++;
-                return read();
-            });
-        const byRecord = counted("record", () => r1.a);
-        const byModel = counted("model", () => m1.a);
-        const untracked = counted("none", () => u1.a);
-        byRecord();
-        byModel();
-        untracked();
-
-        r1.b = "changed"; // same record, other field
-        r2.a = "changed"; // other record
-        m2.a = "changed"; // other record, same model
-        u1.a = "changed";
-        byRecord();
-        byModel();
-        untracked();
-        expect(runs).toEqual({ record: 2, model: 2, none: 1 });
+        const store = new RecordStore({ models: [Product] });
+        const [desk, chair] = store.load("product.product", [
+            { id: 1, name: "Desk" },
+            { id: 2, name: "Chair" },
+        ]);
+        let runs = 0;
+        const name = computed(() => {
+            runs++;
+            return desk.name();
+        });
+        name();
+        chair.name.set("Armchair");
+        name();
+        expect(runs).toBe(2);
     });
 
     test("records() reacts to creations and deletions", () => {
@@ -316,7 +317,7 @@ describe("reactivity", () => {
             return store.records("res.partner").length;
         });
         expect(count()).toBe(1);
-        store.get("res.partner", 1).name = "Alice B.";
+        store.get("res.partner", 1).name.set("Alice B.");
         expect(count()).toBe(1);
         expect(runs).toBe(1);
         const bob = store.create("res.partner", { name: "Bob" });
@@ -330,7 +331,7 @@ describe("reactivity", () => {
         const order = loadOrder(store);
         const dirty = computed(() => store.isDirty(order));
         expect(dirty()).toBe(false);
-        order.name = "SO1b";
+        order.name.set("SO1b");
         expect(dirty()).toBe(true);
         store.discard(order);
         expect(dirty()).toBe(false);
@@ -341,36 +342,36 @@ describe("change tracking", () => {
     test("local writes are changes, server loads are not", () => {
         const store = makeStore();
         const order = loadOrder(store);
-        order.name = "SO1b";
+        order.name.set("SO1b");
         expect(store.isDirty(order)).toBe(true);
         // a server value under a local change: the change keeps showing
         store.load("sale.order", { id: 1, name: "SO1 (server)" });
-        expect(order.name).toBe("SO1b");
+        expect(order.name()).toBe("SO1b");
         store.discard(order);
-        expect(order.name).toBe("SO1 (server)");
+        expect(order.name()).toBe("SO1 (server)");
         expect(store.isDirty(order)).toBe(false);
     });
 
     test("untracked models write directly", () => {
         const store = makeStore();
         const partner = store.load("res.partner", { id: 1, name: "Alice" });
-        partner.name = "Alice B.";
-        expect(partner.name).toBe("Alice B.");
+        partner.name.set("Alice B.");
+        expect(partner.name()).toBe("Alice B.");
         expect(store.isDirty(partner)).toBe(false);
     });
 
     test("discard restores the record and its lines", () => {
         const store = makeStore();
         const order = loadOrder(store);
-        const [desk, chair] = order.line_ids;
-        desk.qty = 10;
+        const [desk, chair] = order.line_ids();
+        desk.qty.set(10);
         store.delete(chair);
         const lamp = store.create("sale.order.line", { order_id: order, product: "Lamp" });
-        expect(order.line_ids).toEqual([desk, lamp]);
+        expect(order.line_ids()).toEqual([desk, lamp]);
 
         store.discard(order);
-        expect(order.line_ids).toEqual([desk, chair]);
-        expect(desk.qty).toBe(1);
+        expect(order.line_ids()).toEqual([desk, chair]);
+        expect(desk.qty()).toBe(1);
         expect(store.get("sale.order.line", 12)).toBe(chair);
         expect(store.get("sale.order.line", lamp.id)).toBe(null);
         expect(store.isDirty(order)).toBe(false);
@@ -379,7 +380,7 @@ describe("change tracking", () => {
     test("deletions stay pending until acknowledged", () => {
         const store = makeStore();
         const order = loadOrder(store);
-        const chair = order.line_ids[1];
+        const chair = order.line_ids()[1];
         store.delete(chair);
         expect(store.get("sale.order.line", 12)).toBe(null);
         expect(store.isDirty(chair)).toBe(true);
@@ -411,8 +412,8 @@ describe("commands", () => {
     test("existing record: UPDATE, CREATE and DELETE from the diff", () => {
         const store = makeStore();
         const order = loadOrder(store);
-        const [desk, chair] = order.line_ids;
-        desk.qty = 3;
+        const [desk, chair] = order.line_ids();
+        desk.qty.set(3);
         store.delete(chair);
         const lamp = store.create("sale.order.line", {
             order_id: order,
@@ -433,7 +434,7 @@ describe("commands", () => {
     test("many2many as LINK and UNLINK", () => {
         const store = makeStore();
         const order = store.load("sale.order", { id: 1, tag_ids: [1, 2] });
-        order.tag_ids = [store.get("res.partner.tag", 2), store.get("res.partner.tag", 3, true)];
+        order.tag_ids.set([store.get("res.partner.tag", 2), store.get("res.partner.tag", 3, true)]);
         expect(toCommands(order).vals).toEqual({
             tag_ids: [
                 [3, 1],
@@ -445,12 +446,12 @@ describe("commands", () => {
     test("ack keeps edits made during the save", () => {
         const store = makeStore();
         const order = loadOrder(store);
-        const desk = order.line_ids[0];
-        order.name = "A";
+        const desk = order.line_ids()[0];
+        order.name.set("A");
         const { version } = toCommands(order);
         // edits while the save is in flight
-        order.name = "B";
-        desk.qty = 2;
+        order.name.set("B");
+        desk.qty.set(2);
         store.ack(order, version);
         expect(store.isDirty(order)).toBe(true);
         expect(toCommands(order).vals).toEqual({ name: "B", line_ids: [[1, 11, { qty: 2 }]] });
@@ -468,8 +469,8 @@ describe("commands", () => {
         store.load("sale.order", { id: 42, name: "SO/0042" });
         expect(store.get("sale.order", 42)).toBe(order);
         expect(store.isNew(order)).toBe(false);
-        expect(line.order_id).toBe(order);
-        expect(order.name).toBe("SO/0042");
+        expect(line.order_id()).toBe(order);
+        expect(order.name()).toBe("SO/0042");
         expect(toCommands(order).vals).toEqual({});
     });
 });
@@ -481,20 +482,20 @@ describe("drafts", () => {
         const draft = store.draft();
         const draftOrder = draft.own(order);
         expect(draftOrder).not.toBe(order);
-        expect(draftOrder.name).toBe("SO1");
-        draftOrder.name = "Draft";
-        expect(order.name).toBe("SO1");
+        expect(draftOrder.name()).toBe("SO1");
+        draftOrder.name.set("Draft");
+        expect(order.name()).toBe("SO1");
         expect(draft.isDirty()).toBe(true);
         expect(store.isDirty(order)).toBe(false);
         // changes in the parent show through fields the draft did not touch
-        order.partner_id = 6;
-        expect(draftOrder.partner_id.id).toBe(6);
+        order.partner_id.set(6);
+        expect(draftOrder.partner_id().id).toBe(6);
 
         draft.commit();
-        expect(order.name).toBe("Draft");
+        expect(order.name()).toBe("Draft");
         expect(store.isDirty(order)).toBe(true);
         expect(draft.isDirty()).toBe(false);
-        expect(draftOrder.name).toBe("Draft");
+        expect(draftOrder.name()).toBe("Draft");
     });
 
     test("relations inside a draft are draft records", () => {
@@ -502,16 +503,16 @@ describe("drafts", () => {
         const order = loadOrder(store);
         const draft = store.draft();
         const draftOrder = draft.get("sale.order", 1);
-        const draftDesk = draftOrder.line_ids[0];
-        expect(draftDesk).not.toBe(order.line_ids[0]);
-        expect(draftDesk.order_id).toBe(draftOrder);
+        const draftDesk = draftOrder.line_ids()[0];
+        expect(draftDesk).not.toBe(order.line_ids()[0]);
+        expect(draftDesk.order_id()).toBe(draftOrder);
 
         draft.create("sale.order.line", { order_id: draftOrder, product: "Lamp" });
-        expect(draftOrder.line_ids.map((l) => l.product)).toEqual(["Desk", "Chair", "Lamp"]);
-        expect(order.line_ids.length).toBe(2);
+        expect(draftOrder.line_ids().map((l) => l.product())).toEqual(["Desk", "Chair", "Lamp"]);
+        expect(order.line_ids().length).toBe(2);
 
         draft.discard();
-        expect(draftOrder.line_ids.map((l) => l.product)).toEqual(["Desk", "Chair"]);
+        expect(draftOrder.line_ids().map((l) => l.product())).toEqual(["Desk", "Chair"]);
     });
 
     test("commit creates draft records in the parent, with their relations", () => {
@@ -525,12 +526,12 @@ describe("drafts", () => {
             price: 20,
         });
         draft.commit();
-        const lamp = order.line_ids[2];
-        expect(lamp.product).toBe("Lamp");
-        expect(lamp.order_id).toBe(order);
+        const lamp = order.line_ids()[2];
+        expect(lamp.product()).toBe("Lamp");
+        expect(lamp.order_id()).toBe(order);
         expect(store.isNew(lamp)).toBe(true);
         // the draft's object now reads through to the parent record
-        expect(draftLamp.price).toBe(20);
+        expect(draftLamp.price()).toBe(20);
         expect(toCommands(order).vals).toEqual({
             line_ids: [[0, lamp.id, { product: "Lamp", qty: 1, price: 20 }]],
         });
@@ -540,34 +541,34 @@ describe("drafts", () => {
         const store = makeStore();
         const order = loadOrder(store);
         const level1 = store.draft();
-        level1.own(order).name = "level 1";
+        level1.own(order).name.set("level 1");
         const level2 = level1.draft();
         const order2 = level2.own(order);
-        expect(order2.name).toBe("level 1");
+        expect(order2.name()).toBe("level 1");
 
-        order2.name = "level 2";
+        order2.name.set("level 2");
         level2.discard();
-        expect(level1.own(order).name).toBe("level 1");
+        expect(level1.own(order).name()).toBe("level 1");
 
-        order2.name = "level 2";
+        order2.name.set("level 2");
         level2.commit();
-        expect(level1.own(order).name).toBe("level 2");
-        expect(order.name).toBe("SO1");
+        expect(level1.own(order).name()).toBe("level 2");
+        expect(order.name()).toBe("SO1");
         level1.commit();
-        expect(order.name).toBe("level 2");
+        expect(order.name()).toBe("level 2");
     });
 
     test("computations on a draft record see draft and parent changes", () => {
         const store = makeStore();
         const order = loadOrder(store);
         const draftOrder = store.draft().own(order);
-        const name = computed(() => draftOrder.name);
+        const name = computed(() => draftOrder.name());
         expect(name()).toBe("SO1");
-        order.name = "from parent";
+        order.name.set("from parent");
         expect(name()).toBe("from parent");
-        draftOrder.name = "from draft";
+        draftOrder.name.set("from draft");
         expect(name()).toBe("from draft");
-        expect(order.name).toBe("from parent");
+        expect(order.name()).toBe("from parent");
     });
 });
 
@@ -582,11 +583,97 @@ describe("indexes", () => {
         const store = new RecordStore({ models: [Product] });
         store.load("product.product", [{ id: 1, name: "Desk", barcode: "111" }]);
         const desk = store.getBy("product.product", "barcode", "111");
-        expect(desk.name).toBe("Desk");
-        desk.barcode = "222";
+        expect(desk.name()).toBe("Desk");
+        desk.barcode.set("222");
         expect(store.getBy("product.product", "barcode", "111")).toBe(null);
         expect(store.getBy("product.product", "barcode", "222")).toBe(desk);
         store.delete(desk);
         expect(store.getBy("product.product", "barcode", "222")).toBe(null);
+    });
+});
+
+describe("components", () => {
+    test("a component re-renders when a field it read changes, not for other fields", async () => {
+        const store = makeStore();
+        const partner = store.load("res.partner", { id: 1, name: "Alice", tag_ids: [] });
+        class PartnerCard extends Component {
+            static template = xml`<div class="name" t-out="this.partner.name()"/>`;
+            partner = partner;
+            setup() {
+                onPatched(() => expect.step("patched"));
+            }
+        }
+        await mountWithCleanup(PartnerCard);
+        expect(".name").toHaveText("Alice");
+
+        partner.name.set("Bob");
+        await animationFrame();
+        expect(".name").toHaveText("Bob");
+        expect.verifySteps(["patched"]);
+
+        partner.tag_ids.set([1]);
+        await animationFrame();
+        expect.verifySteps([]);
+    });
+
+    test("useEffect re-runs when a field it read changes", async () => {
+        const store = makeStore();
+        const partner = store.load("res.partner", { id: 1, name: "Alice", tag_ids: [] });
+        class Watcher extends Component {
+            static template = xml`<div/>`;
+            setup() {
+                useEffect(() => expect.step(`name: ${partner.name()}`));
+            }
+        }
+        await mountWithCleanup(Watcher);
+        expect.verifySteps(["name: Alice"]);
+
+        partner.name.set("Bob");
+        await animationFrame();
+        expect.verifySteps(["name: Bob"]);
+
+        partner.tag_ids.set([1]);
+        await animationFrame();
+        expect.verifySteps([]);
+    });
+
+    test("t-model binds an input to a field", async () => {
+        const store = makeStore();
+        const partner = store.load("res.partner", { id: 1, name: "Alice" });
+        class PartnerEditor extends Component {
+            static template = xml`<input t-model="this.partner.name"/>`;
+            partner = partner;
+        }
+        await mountWithCleanup(PartnerEditor);
+        expect("input").toHaveValue("Alice");
+
+        await contains("input").edit("Bob");
+        expect(partner.name()).toBe("Bob");
+
+        partner.name.set("Carol");
+        await animationFrame();
+        expect("input").toHaveValue("Carol");
+    });
+
+    test("a component on a draft record sees draft changes only", async () => {
+        const store = makeStore();
+        const order = loadOrder(store);
+        const draft = store.draft();
+        const draftOrder = draft.own(order);
+        class OrderTitle extends Component {
+            static template = xml`<div class="title" t-out="this.order.name()"/>`;
+            order = draftOrder;
+        }
+        await mountWithCleanup(OrderTitle);
+        expect(".title").toHaveText("SO1");
+
+        draftOrder.name.set("Draft title");
+        await animationFrame();
+        expect(".title").toHaveText("Draft title");
+        expect(order.name()).toBe("SO1");
+
+        draft.discard();
+        await animationFrame();
+        expect(".title").toHaveText("SO1");
     });
 });
