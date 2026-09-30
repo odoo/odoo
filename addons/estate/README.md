@@ -12,3 +12,13 @@ This first commit contains only this README. Before creating the addon, it helps
 
 **Try it:** Find an existing addon in the repository. Locate its manifest, a model file, and a view file. Decide which of those would store a property's price and which would display it.
 
+## Chapter 2 - A new application
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/02_newapp.html)
+
+An Odoo addon needs a Python package and a manifest before Odoo can discover it. This chapter adds `__init__.py` and `__manifest__.py` to `estate`. The manifest gives the addon a name, declares its dependency on `base`, and sets `application=True` so it appears under the Apps filter.
+
+The addon is an empty shell at this point. It can be installed, but it has no model or menu yet. That separation makes it easier to see what the manifest does before business features are added.
+
+**Try it:** Enable developer mode, update the Apps list, and install Real Estate. Notice that the app appears in the list even though it has no main menu yet.
+
