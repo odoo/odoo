@@ -24,6 +24,10 @@ export class UrlField extends Component {
         return this.props.record.data[this.props.name] || "";
     }
 
+    isReadonly() {
+        return this.props.readonly;
+    }
+
     get formattedHref() {
         let value = this.props.record.data[this.props.name];
         if (value && !this.props.websitePath) {

@@ -11,6 +11,7 @@ from odoo import Command, _, api, fields, models
 from odoo.exceptions import LockError, UserError
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools import BinaryBytes
+from odoo.release import documentation_url
 
 from odoo.addons.l10n_in.models.account_invoice import EDI_CANCEL_REASON
 
@@ -103,7 +104,7 @@ class AccountMove(models.Model):
                 'action': {
                     'name': _("Documentation"),
                     'type': 'ir.actions.act_url',
-                    'url': 'https://www.odoo.com/documentation/saas-19.1/applications/finance/fiscal_localizations/india.html#gsp-configuration',
+                    'url': f'{documentation_url}/applications/finance/fiscal_localizations/india.html#gsp-configuration',
                 }
             }
             move.l10n_in_warning = l10n_in_warning
