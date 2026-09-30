@@ -1881,6 +1881,49 @@ test("Thread avatar is not editable in DM chat", async () => {
     await waitForNone(".o-mail-DiscussContent-threadAvatar [data-icon='edit']");
 });
 
+test("Thread info is only editable by channel owners and admins", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Member User" });
+    pyEnv["res.users"].create({
+        partner_id: partnerId,
+        login: "test_member",
+        password: "test_member",
+    });
+    const [channelId, groupId] = ["channel", "group"].map((channel_type) =>
+        pyEnv["discuss.channel"].create({
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type,
+            description: `${channel_type} description`,
+            group_public_id: false,
+            name: `${channel_type} name`,
+        })
+    );
+    await start({ authenticateAs: { login: "test_member", password: "test_member" } });
+    for (const threadId of [channelId, groupId]) {
+        await openDiscuss(threadId);
+        await waitFor(".o-mail-DiscussContent-threadName:disabled:count(1)");
+        await waitFor(".o-mail-DiscussContent-threadDescription:disabled:count(1)");
+        await waitForNone(".o-mail-DiscussContent-threadAvatar [data-icon='edit']");
+        const [memberId] = pyEnv["discuss.channel.member"].search([
+            ["channel_id", "=", threadId],
+            ["partner_id", "=", partnerId],
+        ]);
+        for (const channel_role of ["admin", "owner"]) {
+            pyEnv["discuss.channel.member"].write([memberId], { channel_role });
+            await waitFor(".o-mail-DiscussContent-threadName:enabled:count(1)");
+            await waitFor(".o-mail-DiscussContent-threadDescription:enabled:count(1)");
+            await waitFor(".o-mail-DiscussContent-threadAvatar [data-icon='edit']:count(1)");
+        }
+        pyEnv["discuss.channel.member"].write([memberId], { channel_role: false });
+        await waitFor(".o-mail-DiscussContent-threadName:disabled:count(1)");
+        await waitFor(".o-mail-DiscussContent-threadDescription:disabled:count(1)");
+        await waitForNone(".o-mail-DiscussContent-threadAvatar [data-icon='edit']");
+    }
+});
+
 test("Do not trigger channel name server update when it is unchanged", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({

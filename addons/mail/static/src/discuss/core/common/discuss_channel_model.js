@@ -170,7 +170,7 @@ export class DiscussChannel extends Record {
         return this.allowDescriptionTypes.includes(this.channel_type);
     }
     get allowEditDescription() {
-        return this.thread.is_editable && !this.isReadonlyForSelf;
+        return this.thread.is_editable && this.canSelfEditInfo;
     }
     get allowedToLeaveChannelTypes() {
         return ["channel", "group"];
@@ -190,7 +190,7 @@ export class DiscussChannel extends Record {
         return (
             this.allowedToRenameChannelTypes.includes(this.channel_type) &&
             this.thread.is_editable &&
-            !this.isReadonlyForSelf
+            this.canSelfEditInfo
         );
     }
 
@@ -900,6 +900,10 @@ export class DiscussChannel extends Record {
     }
     get isReadonlyForSelf() {
         return this.is_readonly && !this.selfHasAdminRights;
+    }
+    /** Whether self can change the name, description and avatar, see DiscussChannel.write. */
+    get canSelfEditInfo() {
+        return !["channel", "group"].includes(this.channel_type) || this.selfHasAdminRights;
     }
 
     /** @returns {import("models").ChannelMember[]} */

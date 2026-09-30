@@ -649,14 +649,15 @@ class DiscussChannel(models.Model):
             and (
                 failing_channels := self.filtered(
                     lambda channel: (
-                        channel.is_readonly and not channel.can_self_edit_readonly_channel
+                        channel.channel_type in ("channel", "group")
+                        and not channel.can_self_edit_readonly_channel
                     ),
                 )
             )
         ):
-            raise UserError(
+            raise AccessError(
                 self.env._(
-                    "You do not have the rights to change the name, description or avatar as a regular member of these read-only channels: %(channels)s.",
+                    "Only channel owners, channel administrators or database admins can change the name, description or avatar of: %(channels)s.",
                     channels=failing_channels.mapped("display_name"),
                 ),
             )
