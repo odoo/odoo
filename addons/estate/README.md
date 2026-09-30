@@ -104,3 +104,15 @@ A Python constraint handles the more involved rule: once a selling price is nonz
 
 **Try it:** Enter a negative expected price, a zero offer, and a selling price below 90% of the expected price. Compare the errors with a duplicate property type name.
 
+## Chapter 11 - Add the sprinkles
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/11_sprinkles.html)
+
+This chapter makes the existing workflow easier to scan and use. Property states appear in a status bar; colored tags and row decorations highlight important records. Offer and tag lists can be edited inline, the availability column can be shown when needed, and the Available filter is selected by default. Searching living area now means “at least this much area.”
+
+Ordering also becomes deliberate: newer properties come first, higher offers come first, tags sort by name, and property types can be reordered with a drag handle. A property type form shows its properties and an Offers count. The count opens an action filtered to offers for that type through a stored related field.
+
+Buttons, garden details, and offer editing are shown only when relevant. These view rules guide data entry; Python actions and constraints remain responsible for enforcing the business rules.
+
+**Try it:** Reorder property types, assign a tag color, search for a minimum living area, and open a type's Offers count. Compare what the UI hides with what the server still validates.
+
