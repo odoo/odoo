@@ -407,3 +407,40 @@ class TestKeysCertificates(TransactionCase):
         self.assertTrue(leaf_record.private_key_id)
         self.assertFalse(unrelated_record)
         self.assertEqual(len(leaf_record._get_certificate_chain()), 1)
+
+    def test_certificate_password_update(self):
+        """ Test that updating a saved PKCS12 certificate's password does not throw a TypeError. """
+        root_key, int_key, leaf_key = self._generate_keys(3)
+
+        # Build the chain (Root -> Intermediate -> Leaf)
+        root_cert = self._build_test_cert("PKCS12 Root CA", "PKCS12 Root CA", root_key)
+        int_cert = self._build_test_cert("PKCS12 Intermediate CA", "PKCS12 Root CA", int_key, root_key,
+                                         root_key.public_key())
+        leaf_cert = self._build_test_cert("PKCS12 Leaf", "PKCS12 Intermediate CA", leaf_key, int_key,
+                                          int_key.public_key())
+
+        # Create a password-protected PKCS12 binary archive
+        password = "password"
+        p12_der = pkcs12.serialize_key_and_certificates(
+            name=b"test_pkcs12_bundle",
+            key=leaf_key,
+            cert=leaf_cert,
+            cas=[int_cert, root_cert],
+            encryption_algorithm=serialization.BestAvailableEncryption(password.encode()),
+        )
+
+        leaf_record = self.env['certificate.certificate'].create({
+            'name': 'Test PKCS12 Password Update',
+            'content': BinaryBytes(p12_der),
+            'pkcs12_password': password,
+        })
+
+        # Update the certificate record to trigger the `write` method loop.
+        leaf_record.write({
+            'pkcs12_password': password,
+            'name': 'Updated Test PKCS12 Password',
+        })
+
+        # Assert the write operation succeeded without exceptions
+        self.assertEqual(leaf_record.name, 'Updated Test PKCS12 Password')
+        self.assertEqual(leaf_record.pkcs12_password, password)
