@@ -327,10 +327,11 @@ class MyInvoisDocument(models.Model):
         self.ensure_one()
         if not self.myinvois_issuance_date:
             return SQL("FALSE")
-        condition = SQL("journal_id = %s AND name != '/'", self.journal_id.id)
+        condition = SQL("journal_id = %s AND name != '/' AND NOT is_received_document", self.journal_id.id)
 
         if not relaxed:
             domain = [('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', '', False)), ('journal_id', '=', self.journal_id.id), ('is_consolidated_invoice', '=', self.is_consolidated_invoice)]
+            domain += [('is_received_document', '=', False)]
             if self.journal_id.refund_sequence:
                 refund_types = ('out_refund', 'in_refund')
                 domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
@@ -383,6 +384,8 @@ class MyInvoisDocument(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_check(self):
         for document in self:
+            if document.is_received_document:
+                raise UserError(document.env._("You cannot delete a received MyInvois document. Archive it instead."))
             if document.myinvois_state in ["in_progress", "valid", "rejected"]:
                 raise UserError(document.env._('You cannot delete a document that is active on MyInvois.\nYou must cancel it first.'))
 
@@ -692,7 +695,6 @@ class MyInvoisDocument(models.Model):
             "update_forbidden": self.env._("You do not have the permission to update this invoice."),
             "search_date_invalid": self.env._("The search params are invalid."),  # Should never happen
             "search_too_frequent": self.env._("MyInvois only allows one search every 5 seconds per company. Please try again in a few seconds."),
-            "search_rate_limit_exceeded": self.env._("MyInvois is receiving too many searches at the moment. Please try again in a minute."),
             'document_not_found': self.env._('The document provided in the request does not exist.'),  # Should never happen
             'submission_too_large': self.env._('The submission is too large, try to send fewer invoices at once.'),
             'action_forbidden': self.env._('Permission to do this action has not been granted. Please ensure that Odoo has sufficient permissions on the MyInvois platform.'),
@@ -1642,6 +1644,8 @@ class MyInvoisDocument(models.Model):
         partners = partners.sorted(lambda p: bool(p.parent_id))
         for tin_field in ('l10n_my_edi_malaysian_tin', 'vat'):
             for partner in partners:
+                if tin_field == 'vat' and partner.l10n_my_edi_malaysian_tin:
+                    continue
                 if partner[tin_field] in tins:
                     partners_per_tin.setdefault(partner[tin_field], partner.commercial_partner_id)
 
