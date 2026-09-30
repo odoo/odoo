@@ -267,7 +267,7 @@
                     list-style: none;
 
                     a {
-                        padding: $dropdown-item-padding-y*2 $dropdown-item-padding-x;
+                        padding: $dropdown-item-padding-y*2 var(--o-bs-dropdown-item-padding-x);
                         font-family: $font-family-base;
                         text-decoration: none;
                         line-height: 1.2;
@@ -276,7 +276,7 @@
                             background-color: transparent !important;
                             color: map-get($grays, '600') !important;
                             cursor: default;
-                            padding: $dropdown-item-padding-y*4 $dropdown-item-padding-x;
+                            padding: $dropdown-item-padding-y*4 var(--o-bs-dropdown-item-padding-x);
                             font-style: italic;
                             font-size: .5em;
                         }
@@ -286,8 +286,8 @@
 
             .dropdown-item, .custom-ui-autocomplete .ui-menu-item a {
                 &:hover, &:active, &.ui-state-active {
-                    background-color: $dropdown-link-hover-bg;
-                    color: $dropdown-link-color;
+                    background-color: var(--o-bs-dropdown-link-hover-bg);
+                    color: var(--o-bs-dropdown-link-color);
                 }
             }
         }
@@ -371,7 +371,7 @@
                 transition: box-shadow 0.22s ease;
 
                 &:focus-visible, &.selected {
-                    box-shadow: 0 0 0 1px $card-bg, 0 0 0 3px map-get($theme-colors, "primary");
+                    box-shadow: 0 0 0 1px var(--o-bs-card-bg), 0 0 0 3px map-get($theme-colors, "primary");
                 }
 
                 @media (min-height: 800px) {
@@ -494,7 +494,7 @@
                 /* Keep the first six themes visible without scrolling on most */
                 /* screens. */
                 aspect-ratio: 16 / 10.7;
-                background: $card-bg;
+                background: var(--o-bs-card-bg);
                 transition:
                     transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
                     box-shadow 0.22s,
@@ -519,7 +519,7 @@
 
             .o_configurator_theme_preview_loader {
                 z-index: 1;
-                background: $card-bg;
+                background: var(--o-bs-card-bg);
                 color: adjust-color-to-background($text-muted, $card-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark));
                 font-size: 1.5rem;
                 transition: opacity 0.2s ease;
@@ -532,7 +532,7 @@
             }
 
             .o_configurator_theme_preview_iframe {
-                background: $card-bg;
+                background: var(--o-bs-card-bg);
                 transform-origin: top left;
                 transform: scale(var(--o-configurator-iframe-scale, 1));
                 visibility: hidden;

@@ -87,7 +87,7 @@ li {
 @include media-breakpoint-down(sm) {
    .o_self_footer {
        .btn-lg, .btn-group-lg > .btn {
-           padding: $input-btn-padding-y $input-btn-padding-x !important;
+           padding: var(--o-bs-input-btn-padding-y) var(--o-bs-input-btn-padding-x) !important;
            font-size: 1.1rem;
        }
    }
@@ -167,7 +167,7 @@ li {
     }
 
     .kiosk-p-btn-lg {
-      padding: $input-btn-padding-y-lg $input-btn-padding-x-lg !important;
+      padding: var(--o-bs-input-btn-padding-y-lg) var(--o-bs-input-btn-padding-x-lg) !important;
       font-size: 1.25rem;
     }
 
