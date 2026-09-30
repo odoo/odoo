@@ -37,3 +37,19 @@ class TestPointOfSaleFlow(CommonPosTest):
             "The work contact of an employee allowed on the config must always be loaded, "
             "regardless of the limited partner loading count",
         )
+
+    def test_cash_in_out_has_no_partner(self):
+        employee = self.env['hr.employee'].sudo().create({
+            'name': 'Test Employee',
+            'company_id': self.company.id,
+        })
+        self.pos_config_usd.write({'module_pos_hr': True})
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+        session.set_opening_control(0, False)
+        session.try_cash_in_out('out', 10, 'Deposit', employee.work_contact_id.id, employee_id=employee.id)
+
+        cash_move = session.bank_statement_line_ids
+        self.assertFalse(cash_move.partner_id)
+        self.assertFalse(cash_move.move_id.line_ids.partner_id)
+        self.assertEqual(session.get_cash_in_out_list()[0]['cashier_name'], 'Test Employee')
