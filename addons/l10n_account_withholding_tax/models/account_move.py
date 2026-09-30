@@ -43,12 +43,10 @@ class AccountMove(models.Model):
 
             if move.is_invoice(include_receipts=True):
                 for line in move.line_ids.filtered(lambda l: l.tax_ids):
-                    withholding_taxes = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.is_withholding_tax)
-                    if not withholding_taxes:
+                    if not line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.is_withholding_tax):
                         continue
                     base_line = AccountTax._prepare_base_line_for_taxes_computation(
                         line,
-                        tax_ids=withholding_taxes,
                         price_unit=line.price_unit,
                         quantity=line.quantity,
                         currency_id=move.currency_id,
