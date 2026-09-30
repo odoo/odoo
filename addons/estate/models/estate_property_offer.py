@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_compare
 
 
 class EstatePropertyOffer(models.Model):
@@ -35,6 +36,28 @@ class EstatePropertyOffer(models.Model):
             if offer.date_deadline:
                 start_date = fields.Date.to_date(offer.create_date) or fields.Date.today()
                 offer.validity = (offer.date_deadline - start_date).days
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        property_ids = {vals['property_id'] for vals in vals_list if vals.get('property_id')}
+        properties = self.env['estate.property'].browse(list(property_ids))
+        highest_prices = {
+            property_record.id: max(property_record.offer_ids.mapped('price'), default=0.0)
+            for property_record in properties
+        }
+        for vals in vals_list:
+            property_record = properties.filtered(lambda record: record.id == vals.get('property_id'))
+            if not property_record:
+                continue
+            if property_record.state in ('offer_accepted', 'sold', 'cancelled'):
+                raise UserError(self.env._('A closed property cannot receive offers.'))
+            price = vals.get('price', 0.0)
+            if float_compare(price, highest_prices[property_record.id], precision_digits=2) < 0:
+                raise UserError(self.env._('An offer must not be lower than an existing offer.'))
+            highest_prices[property_record.id] = max(price, highest_prices[property_record.id])
+        offers = super().create(vals_list)
+        offers.mapped('property_id').write({'state': 'offer_received'})
+        return offers
 
     def action_accept(self):
         self.ensure_one()

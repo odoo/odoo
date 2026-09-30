@@ -116,3 +116,13 @@ Buttons, garden details, and offer editing are shown only when relevant. These v
 
 **Try it:** Reorder property types, assign a tag color, search for a minimum living area, and open a type's Offers count. Compare what the UI hides with what the server still validates.
 
+## Chapter 12 - Inheritance
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/12_inheritance.html)
+
+Inheritance lets an addon add behavior without replacing Odoo's existing models. An `@api.ondelete` method now prevents deletion of a property once it enters an active or completed workflow; New and Cancelled properties remain deletable. Offer creation also checks the current highest price and changes the property to Offer Received.
+
+The addon extends `res.users` with a relation to properties assigned to that salesperson. An inherited user form adds a Properties tab after Preferences and shows only New or Offer Received properties. The original user model and form still belong to Odoo; our addon contributes only the extension.
+
+**Try it:** Create an offer, try a lower one, and try deleting the property. Then open the salesperson's user form and compare its Properties tab with the property's `user_id`.
+
