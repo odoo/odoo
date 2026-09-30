@@ -90,6 +90,10 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                 '_text': f"#{code}#{default_content}",
             })
 
+        # [BR-FR-MAP-18] EN16931 caps the Note (BT-22) to 1024 characters.
+        for note in document_node['cbc:Note']:
+            note['_text'] = note['_text'][:1024]
+
         # Règles de gestion G1.52
         if vals['document_type'] == 'credit_note':
             document_node['cac:BillingReference'] = {
