@@ -67,6 +67,10 @@ export class AccrualLevels extends Component {
         }).toLocaleString({ month: "long" });
     }
 
+    setHoveredMilestone(id) {
+        this.state.hoveredMilestoneId = id;
+    }
+
     getNewMilestoneClass(id) {
         return this.state.newMilestoneIds.includes(id) ? "" : "new";
     }
