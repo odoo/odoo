@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy, usePlugin } from "@odoo/owl";
+import { Component, computed, onWillStart, proxy, usePlugin } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { useService } from "@web/core/utils/hooks";
 
@@ -9,6 +9,10 @@ export class AccountDashboardKpis extends Component {
     static components = {
         AccountDashboardKpiCard,
     };
+
+    hasInvoiceLayoutCard = computed(() =>
+        this.state.cards.some((card) => card.is_invoice_layout_card)
+    );
 
     setup() {
         this.orm = useService("orm");
