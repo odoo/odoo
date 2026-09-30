@@ -2433,11 +2433,12 @@ class MrpProduction(models.Model):
         })
         finished_moves.filtered(lambda x: x.state == 'done').date = now
         for production in self:
-            production.write({
+            production.with_context(force_date=True).write({
                 'date_finished': now,
                 'priority': '0',
                 'is_locked': True,
                 'state': 'done',
+                **({'date_start': now} if production.date_start > now else {}),
             })
 
         # It is prudent to reserve any quantity that has become available to the backorder
