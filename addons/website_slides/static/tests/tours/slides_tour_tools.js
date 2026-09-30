@@ -57,7 +57,7 @@ const clickOnAddTagDropdown = (prefix) => [
     },
     {
         content: "eLearning: click on tag dropdown",
-        trigger: `${prefix} .modal [data-id="0"] button.o_select_menu_toggler`,
+        trigger: `${prefix} .modal [data-label="Tag"] button.o_select_menu_toggler`,
         run: "click",
     },
     {
@@ -132,7 +132,7 @@ var addArticleToSection = function (sectionName, pageName, backend) {
         },
         {
             content: "eLearning: click on tags",
-            trigger: prefix + "[data-id='1'] .o_select_menu_toggler",
+            trigger: prefix + "[data-label='Tags'] .o_select_menu_toggler",
             run: "click",
         },
         {
@@ -368,7 +368,7 @@ var addNewCourseTag = function (courseTagName, backend) {
         },
         {
             content: "eLearning: click on tag group dropdown",
-            trigger: prefix + '[data-id="1"] button.o_select_menu_toggler',
+            trigger: prefix + '[data-label="Tag Group"] button.o_select_menu_toggler',
             run: "click",
         },
         {
