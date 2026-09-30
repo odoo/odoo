@@ -45,14 +45,14 @@
 </template>
 <template id="s_blog_posts_single_full" name="Single Blog Post Full">
     <t t-set="is_single_record" t-value="True"/>
-    <t t-set="snippet_extra_classes" t-value="'s_blog_post_single_full o_cc o_cc5'"/>
+    <t t-set="snippet_extra_classes" t-value="'s_blog_post_single_full'"/>
     <t t-call="website_blog.s_blog_posts">
         <t t-call="website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data"/>
     </t>
 </template>
 <template id="s_blog_posts_single_circle" name="Single Blog Post Circle">
     <t t-set="is_single_record" t-value="True"/>
-    <t t-set="snippet_extra_classes" t-value="'s_blog_post_single_circle o_cc o_cc2'"/>
+    <t t-set="snippet_extra_classes" t-value="'s_blog_post_single_circle'"/>
     <t t-set="container_classes" t-value="'o_container_small'"/>
     <t t-call="website_blog.s_blog_posts">
         <t t-call="website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data"/>
