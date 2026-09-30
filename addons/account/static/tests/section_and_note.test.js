@@ -105,7 +105,7 @@ onRpc("onchange_batch", ({ args }) => {
     return recordsList.map((record) => ({
         id: false,
         virtual_id: false,
-        result: { value: record.changes },
+        result: { value: record.values },
     }));
 });
 
