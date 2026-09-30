@@ -51,6 +51,8 @@
 <t t-name="web.SearchPanelContent">
     <div class="o_search_panel flex-grow-0 flex-shrink-0 h-100 pb-5 px-2 bg-view overflow-auto position-relative"
          t-att-class="this.env.searchModel.searchPanelInfo.className"
+         t-on-mouseover="this.onTreeMouseOver"
+         t-on-mouseleave="this.clearTreeHover"
          t-custom-ref="root">
         <div t-if="!this.env.isSmall" class="d-flex align-items-center pt-2">
             <button class="btn btn-light btn-sm ms-auto" t-on-click="this.toggleSidebar">
