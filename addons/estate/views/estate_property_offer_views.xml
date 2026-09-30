@@ -10,6 +10,8 @@
                 <field name="date_deadline"/>
                 <field name="partner_id"/>
                 <field name="status"/>
+                <button name="action_accept" type="object" icon="fa-check" title="Accept"/>
+                <button name="action_refuse" type="object" icon="fa-times" title="Refuse"/>
             </list>
         </field>
     </record>
@@ -17,7 +19,10 @@
         <field name="name">estate.property.offer.view.form</field>
         <field name="model">estate.property.offer</field>
         <field name="arch" type="xml">
-            <form><sheet><group>
+            <form><header>
+                <button name="action_accept" type="object" string="Accept" class="btn-primary"/>
+                <button name="action_refuse" type="object" string="Refuse"/>
+            </header><sheet><group>
                 <field name="price"/>
                 <field name="validity"/>
                 <field name="date_deadline"/>

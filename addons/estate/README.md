@@ -84,3 +84,13 @@ The garden onchange fills in an area of 10 and a North orientation when Garden i
 
 **Try it:** Change a property's living area, add two offers, and edit an offer's deadline. Observe which other values change.
 
+## Chapter 9 - Ready for some action?
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/09_actions.html)
+
+Buttons can call public model methods through `type="object"`. Property actions now mark a property Sold or Cancelled, and offer actions accept or refuse an offer. These actions make the workflow more than a manual change to a selection field.
+
+Accepting an offer copies its buyer and price onto the property and changes the property to Offer Accepted. The server rejects a second accepted offer and incompatible terminal transitions. The checks live in Python so they also apply when an action is called outside the visible form.
+
+**Try it:** Add two offers, accept one, and inspect the property's buyer, selling price, and state. Try accepting the other offer or cancelling a sold property and read the resulting error.
+
