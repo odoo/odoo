@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tools
 import odoo
-from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.exceptions import ValidationError
+from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 
 # TODO-PARP: Move tests and remove File

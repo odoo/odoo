@@ -4,11 +4,11 @@ import odoo
 
 from odoo import Command
 from odoo.addons.pos_hr.tests.test_frontend import TestPosHrHttpCommon
-from odoo.addons.point_of_sale.tests.test_res_config_settings import TestConfigureShops
+from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestConfigureShopsPoSHR(TestPosHrHttpCommon, TestConfigureShops):
+class TestConfigureShopsPoSHR(TestPosHrHttpCommon, TestPoSCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     def test_properly_deleting_pos_hr_group_all_members(self):

@@ -1,6 +1,9 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import Command
-from odoo.addons.point_of_sale.tests.common import CommonPosTest, TestPoSCommon
 from odoo.tests.common import tagged
+from odoo.addons.point_of_sale.tests.common import CommonPosTest, TestPoSCommon
+
 
 # TODO-PARP: Move tests and remove File
 

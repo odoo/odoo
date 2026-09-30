@@ -1511,3 +1511,85 @@ class TestPointOfSaleFlow(CommonPosTest):
             order.amount_total + refund.amount_total, 0.0,
             msg="The totals of an order and of its refund should cancel each other.",
         )
+
+    def test_available_children_categories(self):
+        parent_categ = self.env['pos.category'].create({
+            'name': 'Parent Category',
+        })
+        children_categs = self.env['pos.category'].create([{
+            'name': 'Child Category 1',
+            'parent_id': parent_categ.id,
+        }, {
+            'name': 'Child Category 2',
+            'parent_id': parent_categ.id,
+        }])
+        self.env['product.product'].create([{
+            'name': 'parent product',
+            'pos_categ_ids': [(6, 0, [parent_categ.id])],
+            'available_in_pos': True,
+        }, {
+            'name': 'child product 1',
+            'pos_categ_ids': [(6, 0, [parent_categ.id, children_categs[0].id])],
+            'available_in_pos': True,
+        }, {
+            'name': 'child product 2',
+            'pos_categ_ids': [(6, 0, [parent_categ.id, children_categs[1].id])],
+            'available_in_pos': True,
+        }])
+        self.pos_config_usd.write({
+            'limit_categories': True,
+            'iface_available_categ_ids': [(6, 0, [parent_categ.id, children_categs[1].id])],
+        })
+        self.pos_config_usd.open_ui()
+        loaded_data = self.pos_config_usd.current_session_id.load_data({'only_records': True})
+        category_id = [category['id'] for category in loaded_data['pos.category']]
+        self.assertNotIn(children_categs[0].id, category_id, "Child category is unavailable and shouldn't appear in the POS")
+        self.assertIn(children_categs[1].id, category_id, "Child category is available and should appear in the POS")
+
+    def test_available_product_uom_ids(self):
+        # Making sure that all of the non-special products that are included in the `load_data` are the ones created in this method.
+        self.env['product.template'].search([]).write({'is_favorite': False})
+
+        self.env['ir.config_parameter'].sudo().set_str('point_of_sale.limited_product_count', '2')
+        uom = self.env['uom.uom'].create({
+            'name': 'Random UOM',
+            'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
+        })
+        product_one, product_two, product_three = self.env['product.product'].create([{
+            'name': "product_one",
+            'available_in_pos': True,
+            'is_favorite': True,
+        },
+        {
+            'name': "product_two",
+            'available_in_pos': True,
+            'is_favorite': True,
+        },
+        {
+            'name': "product_three",
+            'available_in_pos': True,
+        }])
+
+        _, _, product_uom_three = self.env['product.uom'].create([{
+            'barcode': "product_one_barcode",
+            'uom_id': uom.id,
+            'product_id': product_one.id,
+        },
+        {
+            'barcode': "product_two_barcode",
+            'uom_id': uom.id,
+            'product_id': product_two.id,
+        },
+        {
+            'barcode': "product_three_barcode",
+            'uom_id': uom.id,
+            'product_id': product_three.id,
+        },
+        ])
+
+        self.env['product.template'].flush_model()
+        self.pos_config_usd.open_ui()
+        loaded_data = self.pos_config_usd.current_session_id.load_data({'only_records': True})
+        loaded_product_uoms = [loaded_product_uom['id'] for loaded_product_uom in loaded_data['product.uom']]
+
+        self.assertNotIn(product_uom_three.id, loaded_product_uoms, f"Product UOM {product_uom_three} shouldn't be loaded as its product {product_three} is not included in the results")

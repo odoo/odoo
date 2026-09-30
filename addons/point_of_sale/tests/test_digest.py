@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.point_of_sale.tests.common import CommonPosTest
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
 from odoo.tools import mute_logger
 from odoo.tests import tagged
+from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 
 # TODO-PARP: Move tests and remove File

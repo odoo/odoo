@@ -1,6 +1,7 @@
-from unittest.mock import patch
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
+from unittest.mock import patch
 
 from odoo.addons.point_of_sale.models.pos_payment_method import PosPaymentMethod
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon

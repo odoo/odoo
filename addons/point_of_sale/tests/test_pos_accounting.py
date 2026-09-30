@@ -188,6 +188,8 @@ class TestPosAccounting(AccountTestInvoicingCommon):
                 (4, self.bank_pm.id),
             ],
         })
+        # 1 company currency = 2.0 fx currency (latest rate of setup_other_currency)
+        self.fx_currency = self.setup_other_currency('EUR')
 
     def get_pos_session(self, config=None):
         config = config or self.pos_config
@@ -252,6 +254,13 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             order_ctx = order.with_context({'generate_pdf': False})
             order_ctx._process_saved_order(False)
         return order
+
+    def _fx_payment(self, pm, amount=10.6):
+        return [[pm, {
+            'amount': amount,
+            'foreign_currency_id': self.fx_currency.id,
+            'amount_currency': amount * 2,
+        }]]
 
     def test_cash_closing_data_do_not_take_into_account_invoiced_order(self):
         session = self.open_pos_session()
@@ -2155,3 +2164,73 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(session.sale_move_ids.journal_id, closing_journal)
         self.assertEqual(session.sale_move_ids.move_type, 'out_invoice')
         self.assertEqual(session.sale_move_ids.amount_total, 10.6)
+
+    def test_invoiced_order_paid_in_foreign_cash(self):
+        session = self.open_pos_session()
+        order = self.create_pos_order(
+            payment_method=self._fx_payment(self.cash_pm),
+            products=[[self.product_6, {}]],
+            extra_data={'partner_id': self.partner_1.id, 'to_invoice': True},
+        )
+        invoice = order.account_move
+        term_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        self.assertEqual(term_lines.currency_id, invoice.currency_id, "payment_term lines must stay in the document currency")
+        self.assertEqual(invoice.amount_total, 10.6)
+        self.assertEqual(invoice.amount_residual, 0.0)
+        self.assertIn(invoice.payment_state, ('paid', 'in_payment'))
+
+        st_line = self.env['account.bank.statement.line'].search([('pos_session_id', '=', session.id)])
+        self.assertEqual(st_line.amount, 10.6)
+        self.assertEqual(st_line.amount_currency, 21.2)
+        self.assertEqual(st_line.foreign_currency_id, self.fx_currency)
+        self.close_session()
+
+    def test_invoiced_order_paid_in_foreign_bank(self):
+        session = self.open_pos_session()
+        order = self.create_pos_order(
+            payment_method=self._fx_payment(self.bank_pm),
+            products=[[self.product_6, {}]],
+            extra_data={'partner_id': self.partner_1.id, 'to_invoice': True},
+        )
+        invoice = order.account_move
+        term_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        self.assertEqual(term_lines.currency_id, invoice.currency_id)
+        self.assertEqual(invoice.amount_residual, 0.0)
+
+        payment = self.env['account.payment'].search([('pos_session_id', '=', session.id)])
+        self.assertEqual(payment.currency_id, self.fx_currency)
+        self.assertEqual(payment.amount, 21.2)
+        self.close_session()
+
+    def test_session_closing_with_foreign_cash_payment(self):
+        session = self.open_pos_session()
+        self.create_pos_order(
+            payment_method=self._fx_payment(self.cash_pm),
+            products=[[self.product_6, {}]],
+        )
+        self.close_session()
+        move = session.move_ids
+        term_lines = move.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        self.assertEqual(term_lines.currency_id, move.currency_id)
+        self.assertEqual(move.amount_residual, 0.0)
+        self.assertTrue(all(line.reconciled for line in term_lines))
+
+    def test_cash_out_keeps_its_sign(self):
+        session = self.open_pos_session()
+        session.try_cash_in_out('out', 10, 'test out', False)
+        st_line = self.env['account.bank.statement.line'].search([('pos_session_id', '=', session.id)])
+        self.assertEqual(st_line.amount, -10)
+        self.close_session(amount=-10)
+
+    def test_refund_in_foreign_cash(self):
+        session = self.open_pos_session()
+        order = self.create_pos_order(
+            payment_method=self._fx_payment(self.cash_pm, amount=-10.6),
+            products=[[self.product_6, {'qty': -1, 'price_subtotal': -self.product_6.lst_price}]],
+            extra_data={'partner_id': self.partner_1.id, 'to_invoice': True},
+        )
+        st_line = self.env['account.bank.statement.line'].search([('pos_session_id', '=', session.id)])
+        self.assertEqual(st_line.amount, -10.6, "a refund must take cash out of the drawer")
+        self.assertEqual(st_line.amount_currency, -21.2)
+        self.assertEqual(order.account_move.amount_residual, 0.0)
+        self.close_session(amount=-10.6)

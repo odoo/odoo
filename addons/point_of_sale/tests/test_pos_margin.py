@@ -1,3 +1,5 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -16,7 +18,6 @@ class TestPosMargin(TestPoSCommon):
         super(TestPosMargin, self).setUp()
         self.config = self.basic_config
         self.uom_unit = self.env.ref('uom.product_uom_unit')
-
 
     def test_positive_margin(self):
         """
