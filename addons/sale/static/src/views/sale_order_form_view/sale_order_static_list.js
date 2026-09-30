@@ -45,52 +45,53 @@ export class SaleOrderFormStaticList extends StaticList {
             return false;
         }
 
-        const linesById = {};
-        const sectionLinesData = {};
-        // handle section line's changes
         const commands = [x2ManyCommands.update(record.resId || record._virtualId, changes)];
-        const orderChanges = {
-            order_id: {
-                ...this._parent._getChanges(),
-                ...(!this._parent.isNew && { id: this._parent.resId }),
-            },
-        };
 
-        for (const sectionLine of sectionLines) {
+        const recordsList = sectionLines.map((sectionLine) => {
             const qtyField = this.isSection(sectionLine) ? "section_qty" : "product_uom_qty";
-            const lineId = sectionLine.resId || sectionLine._virtualId;
-            linesById[lineId] = sectionLine;
-            sectionLinesData[lineId] = {
-                ids: sectionLine.resId ? [sectionLine.resId] : [],
-                changes: {
-                    ...sectionLine._getChanges(),
-                    [qtyField]: sectionLine.data[qtyField] * ratio,
+            const id = sectionLine.resId || sectionLine._virtualId;
+
+            const lineChanges = {
+                ...sectionLine._getChanges(),
+                order_id: {
+                    ...this._parent._getChanges(),
+                    ...(!this._parent.isNew && { id: this._parent.resId }),
                 },
-                changed_fields: [qtyField],
+                [qtyField]: sectionLine.data[qtyField] * ratio,
             };
-            commands.push(
-                x2ManyCommands.update(lineId, {
-                    [qtyField]: sectionLine.data[qtyField] * ratio,
-                })
-            );
-        }
+
+            // update the line's quantity field
+            commands.push(x2ManyCommands.update(id, { [qtyField]: lineChanges[qtyField] }));
+
+            return {
+                id: sectionLine.resId || false,
+                changes: lineChanges,
+                field_names: [qtyField],
+                virtual_id: sectionLine._virtualId,
+            };
+        });
 
         const fieldsSpec = getFieldsSpec(this.activeFields, this.fields, this.evalContext, {
             withInvisible: true,
         });
 
-        const results = await this.model.orm.call("sale.order", "batch_onchange_sol", [
-            sectionLinesData,
-            orderChanges,
+        const responses = await this.model.orm.call("sale.order.line", "onchange_batch", [
+            recordsList,
             fieldsSpec,
         ]);
 
-        commands.push(
-            ...Object.entries(results).map(([lineId, values]) => {
-                const id = linesById[lineId].resId || linesById[lineId]._virtualId;
-                return x2ManyCommands.update(id, values);
-            })
-        );
+        for (const { id, virtual_id, result } of responses) {
+            if (result.warning) {
+                this.model._displayOnchangeWarning(result.warning);
+            }
+
+            const lineId = id || virtual_id;
+            const values = result.value;
+
+            if (values) {
+                commands.push(x2ManyCommands.update(lineId, values));
+            }
+        }
 
         await this._applyCommands(commands);
         return true;

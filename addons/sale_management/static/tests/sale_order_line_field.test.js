@@ -474,18 +474,15 @@ test("Editing a subsection's quantity applies the ratio to its line and recomput
     SaleOrderLine._records.find(record => record.name === "Sec3-sub2").section_qty = 2;
     SaleOrderLine._records.find(record => record.name === "Sec3-sub2-r1").product_uom_qty = 3;
 
-    onRpc("batch_onchange_sol", ({ args }) => {
-        expect.step("batch_onchange_sol");
-        const [sectionLinesData] = args;
+    onRpc("onchange_batch", ({ args }) => {
+        expect.step("onchange_batch");
+        const [recordsList] = args;
 
-        expect(Object.keys(sectionLinesData)).toEqual(["11"], {
-            message: "Only the subsection's own line should be part of the batch onchange call",
-        });
-        expect(sectionLinesData[11].changes.product_uom_qty).toEqual(6, {
+        expect(recordsList.find(record => record.id === 11).changes.product_uom_qty).toEqual(6, {
             message: "Sec3-sub2-r1's quantity should be doubled (ratio 4/2 applied to the subsection)",
         });
 
-        return { 11: { price_subtotal: 42 } };
+        return [{ id: 11, virtual_id: false, result: {value: { price_subtotal: 42 }} }];
     });
 
     onRpc("web_save", ({ args }) => {
@@ -514,5 +511,5 @@ test("Editing a subsection's quantity applies the ratio to its line and recomput
     await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("4");
     await clickSave();
 
-    expect.verifySteps(["batch_onchange_sol", "web_save"]);
+    expect.verifySteps(["onchange_batch", "web_save"]);
 });
