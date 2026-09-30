@@ -592,8 +592,9 @@ class Project(models.Model):
         analytic_accounts_to_delete = self.env['account.analytic.account']
         tasks = self.with_context(active_test=False).tasks
         for project in self:
-            if project.analytic_account_id and not project.analytic_account_id.line_ids:
-                analytic_accounts_to_delete |= project.analytic_account_id
+            account = project.analytic_account_id
+            if account and not account.line_ids and not (account.with_context(active_test=False).project_ids - self):
+                analytic_accounts_to_delete |= account
         result = super(Project, self).unlink()
         tasks.unlink()
         analytic_accounts_to_delete.unlink()
