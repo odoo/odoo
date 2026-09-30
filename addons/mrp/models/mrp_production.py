@@ -1103,13 +1103,14 @@ class MrpProduction(models.Model):
             to_update = self.filtered(lambda p: p.state == 'done')
             to_update._track_add({production.id: {'date_finished': production.date_finished} for production in to_update})
 
+        confirmed_productions = self.filtered(lambda p: p.state == 'confirmed') if 'date_start' in vals else self.env['mrp.production']
         res = super(MrpProduction, self).write(vals)
 
         for production in self:
             if 'date_start' in vals and not self.env.context.get('force_date', False):
                 if production.state in ['done', 'cancel']:
                     raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
-                if production.is_planned:
+                if production.is_planned and not (production in confirmed_productions and production.state == 'progress'):
                     production._unplan_workorders()
             if vals.get('date_start'):
                 production.move_raw_ids.write({'date': production.date_start, 'date_deadline': production.date_start})
