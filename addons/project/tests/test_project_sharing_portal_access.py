@@ -187,3 +187,30 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         task = self.env["project.task"].with_user(self.user_portal).with_context(default_project_id=self.project_portal.id).create({'name': 'Task created by portal_user'})
         self.assertIn(self.user_portal.partner_id, task.sudo().message_partner_ids)
         self.assertIn(self.user_projectmanager.partner_id, task.sudo().message_partner_ids)
+
+
+@tagged('post_install', '-at_install')
+class TestProjectSharingSessionInfo(HttpCase, TestProjectSharingCommon):
+
+    def _get_session_info(self):
+        response = self.url_open(f'/my/projects/{self.project_portal.id}/project_sharing')
+        self.assertEqual(response.status_code, 200)
+        return json.loads(search(r'odoo\.__session_info__ = (.*);', response.text).group(1))
+
+    def test_portal_can_advanced_edit_in_session_info(self):
+        password = 'chell_portal_user'
+        self.user_portal.password = password
+        collaborator = self.project_portal.collaborator_ids.filtered(
+            lambda collaborator: collaborator.partner_id == self.user_portal.partner_id,
+        )
+        self.assertTrue(collaborator, "the portal user should be a collaborator of the project")
+
+        self.authenticate(self.user_portal.login, password)
+        for access_mode, can_advanced_edit in [('view', False), ('edit', False), ('advanced_edit', True)]:
+            with self.subTest(access_mode=access_mode):
+                collaborator.access_mode = access_mode
+                self.assertEqual(
+                    self._get_session_info()['portal_can_advanced_edit'], can_advanced_edit,
+                    "The project sharing kanban hides its quick create based on this flag, "
+                    "since the quick create assigns the stage of the column it is opened from.",
+                )
