@@ -2,6 +2,7 @@ import { test, expect } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import {
+    deleteBackward,
     insertText,
     setFontSize,
     setFontSizeClassName,
@@ -9,9 +10,12 @@ import {
 } from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { press } from "@odoo/hoot-dom";
+import { animationFrame, press } from "@odoo/hoot-dom";
 import { getContent } from "../_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
+import { expectElementCount } from "../_helpers/ui_expectations";
+import { getIframeInput } from "../_helpers/iframe_input";
+import { contains } from "@web/../tests/web_test_helpers";
 
 test("should change the font size of a few characters", async () => {
     await testEditor({
@@ -302,4 +306,47 @@ test("should apply font-size to single selected cell", async () => {
             </tbody></table>
         `),
     });
+});
+
+test.tags("mobile");
+test("should update toolbar font size when applying and removing it on a collapsed selection on mobile", async () => {
+    const { el, editor } = await setupEditor("<p>[]<br></p>");
+
+    await expectElementCount(".o-we-toolbar", 1);
+    const fontSizeInputEl = await getIframeInput(
+        ".o-we-toolbar [name='font_size'] iframe.o_font_size_selector_iframe",
+        "input[name='font_size_input']"
+    );
+    expect(fontSizeInputEl).toHaveValue(14);
+
+    await contains(fontSizeInputEl).click();
+    await expectElementCount(".o_font_size_selector_menu .dropdown-item:contains('21')", 1);
+    await contains(".o_font_size_selector_menu .dropdown-item:contains('21')").click();
+    await animationFrame();
+    expect(fontSizeInputEl).toHaveValue(21);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+
+    await press(["ctrl", "space"]);
+    await animationFrame();
+    expect(fontSizeInputEl).toHaveValue(14);
+
+    await contains(fontSizeInputEl).click();
+    await expectElementCount(".o_font_size_selector_menu .dropdown-item:contains('21')", 1);
+    await contains(".o_font_size_selector_menu .dropdown-item:contains('21')").click();
+    await animationFrame();
+    expect(fontSizeInputEl).toHaveValue(21);
+
+    await insertText(editor, "a");
+    await animationFrame();
+    expect(getContent(el)).toBe(`<p><span class="h2-fs">a[]</span></p>`);
+    expect(fontSizeInputEl).toHaveValue(21);
+
+    deleteBackward(editor);
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+    expect(fontSizeInputEl).toHaveValue(21);
 });
