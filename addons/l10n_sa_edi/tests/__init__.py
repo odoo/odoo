@@ -4,3 +4,4 @@
 from . import common
 from . import test_edi_zatca
 from . import test_invoice
+from . import test_portal_address

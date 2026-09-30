@@ -1,6 +1,7 @@
 import re
 
 from odoo.http import request
+from odoo.tools import str2bool
 
 from odoo.addons.account.controllers.portal import PortalAccount
 
@@ -40,10 +41,11 @@ class L10nSAPortalAccount(PortalAccount):
         ]
 
         for field in check_fields:
-            field_val = address_values.get(field)
-            if not field_val and address_values['vat']:
-                missing_fields.add(field)
-                error_messages.append(request.env._("%s needs to be filled since the VAT is filled", request.env['res.partner']._fields[field].string))
+            field_val = address_values.get(field)  # None if the field isn't rendered in the form
+            if not field_val:
+                if address_values.get('vat'):
+                    missing_fields.add(field)
+                    error_messages.append(request.env._("%s needs to be filled since the VAT is filled", request.env['res.partner']._fields[field].string))
                 continue
 
             if not re.fullmatch(r"\d{4}", field_val):
@@ -58,6 +60,7 @@ class L10nSAPortalAccount(PortalAccount):
         return invalid_fields, missing_fields, error_messages
 
     def _create_or_update_address(self, partner_sudo, address_type='billing', use_delivery_as_billing=False, **form_data):
+        use_delivery_as_billing = str2bool(use_delivery_as_billing or 'false')
         partner_sudo, url = super()._create_or_update_address(partner_sudo, address_type, use_delivery_as_billing, **form_data)
 
         if not self._is_sa_company() or (address_type != 'billing' and not use_delivery_as_billing):
