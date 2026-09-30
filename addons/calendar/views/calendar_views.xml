@@ -250,6 +250,7 @@
                                     <field name="user_id" widget="many2one_avatar_user" readonly="not user_can_edit"/>
                                     <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}" readonly="not user_can_edit"/>
                                     <field name="calendar_id" invisible="user_id != uid" readonly="not user_can_edit or recurrence_id and recurrence_update != 'all_events'" options="{'no_open': True}"/>
+                                    <field name="calendar_owner" string="Calendar Owner"/>
                                     <field name="description"
                                         string="Calendar description"
                                         options="{'height': 120}"
@@ -425,7 +426,7 @@
                 </div>
                 <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                     <i class="oi" data-icon="calendar_today" title="Calendar"/>
-                    <field name="calendar_id" nolabel="1" class="w-100" options="{'no_open': True}" placeholder="No calendar"/>
+                    <field name="calendar_id" string="Calendar" nolabel="1" class="w-100" options="{'no_open': True}" placeholder="No calendar"/>
                 </div>
                 <div class="o_outlined d-flex align-items-start mb-2 gap-2">
                     <i class="oi oi-filled" data-icon="sticky_note_2" title="Notes"/>
@@ -474,7 +475,8 @@
                 <field name="partner_id" string="Organizer" options="{'icon': 'person'}"/>
                 <field name="calendar_id" filters="1" write_model="calendar.user" write_field="calendar_id"
                        filter_field="is_filter_checked" color="filter_color" options="{'icon': 'calendar_today', 'no_open': True}"
-                       string="Calendar" invisible="user_id != uid"/>
+                       string="Calendar" readonly="user_id != uid" invisible="not calendar_id"/>
+                <field name="calendar_owner" string="Calendar owner" options="{'icon': 'account_circle'}" invisible="not calendar_owner or calendar_owner == user_id"/>
                 <field name="description" class="text-wrap" invisible="not display_description" options="{'icon': 'sticky_note_2', 'icon_class': 'oi-filled'}"/>
             </calendar>
         </field>
