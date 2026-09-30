@@ -1884,6 +1884,10 @@ class DiscussChannel(models.Model):
         """ Return the channel types that load members lazily. """
         return ["channel", "group"]
 
+    def _role_allowed_channel_types(self):
+        """ Return the channel types whose members can have a channel role. """
+        return ["channel", "group"]
+
     def channel_rename(self, name):
         self.ensure_one()
         self.write({'name': name})

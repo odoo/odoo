@@ -23,6 +23,17 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         relation: "im_livechat.expertise",
     });
 
+    create() {
+        const idOrIds = super.create(...arguments);
+        // members can be created before the channel type is set: compute their role afterwards
+        this.env["discuss.channel.member"]._compute_channel_role(
+            this.browse(idOrIds)
+                .filter(isLivechatChannel)
+                .flatMap((channel) => channel.channel_member_ids)
+        );
+        return idOrIds;
+    }
+
     action_unfollow(idOrIds) {
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];

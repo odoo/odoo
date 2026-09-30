@@ -283,7 +283,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                         "discuss.channel": [{"id": discuss_channel.id, "member_count": 2}],
                         "discuss.channel.member": [
                             {
-                                "channel_role": False,
+                                "channel_role": "owner",
                                 "create_date": fields.Datetime.to_string(member_emp.create_date),
                                 "id": member_emp.id,
                                 "invitation_sent_dt": False,
