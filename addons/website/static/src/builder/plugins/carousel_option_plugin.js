@@ -316,7 +316,7 @@ export class CarouselOptionPlugin extends Plugin {
      * @param {Array<HTMLElement>} itemEls the reordered items
      * @param {String} optionName
      */
-    reorderCarouselItems(activeItemEl, itemEls, optionName) {
+    reorderCarouselItems(activeItemEl, itemEls, optionName, prom) {
         if (optionName === "Carousel") {
             const carouselEl = activeItemEl.closest(".carousel");
 
@@ -333,6 +333,7 @@ export class CarouselOptionPlugin extends Plugin {
 
             // Activate the active slide.
             this.dependencies.builderOptions.setNextTarget(activeItemEl);
+            prom.resolve();
         }
     }
 }
