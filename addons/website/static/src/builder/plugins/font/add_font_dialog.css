@@ -1,0 +1,34 @@
+.o_website_add_font_dialog {
+    /* The slot marks the span, but the background must cover the whole
+       option. */
+    a.dropdown-item:has(> .o_website_selected_font) {
+        background-color: var(--o-gray-200) !important;
+    }
+
+    .o_website_font_preview_text {
+        min-height: 1.5em;
+        padding-block: 0.25em;
+        /* Keep horizontal clipping without cutting tall glyphs vertically. */
+        overflow-x: clip;
+        line-height: normal;
+    }
+
+    /* Fade the end of preview text that is clipped by the sample's width. */
+    .o_website_font_preview_sample::after {
+        content: "";
+        position: absolute;
+        inset: 0 0 0 auto;
+        width: 80px;
+        border-radius: inherit;
+        background-image: linear-gradient(
+            to right,
+            transparent 0%,
+            var(--o-gray-100) 75%
+        );
+        pointer-events: none;
+    }
+
+    .o_website_font_preview_size {
+        min-width: 5rem;
+    }
+}
