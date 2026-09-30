@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, useProps } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -12,6 +12,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 export class AccrualLevels extends Component {
     static template = "hr_holidays.AccrualLevels";
     props = useProps(standardFieldProps);
+    hoveredMilestoneId = signal(false);
 
     setup() {
         this.orm = useService("orm");
@@ -50,10 +51,10 @@ export class AccrualLevels extends Component {
 
     get durationTypes() {
         return {
-            'day': _t('day(s)'),
-            'month': _t('month(s)'),
-            'year': _t('year(s)'),
-            'hour': _t('hour(s)')
+            day: _t("day(s)"),
+            month: _t("month(s)"),
+            year: _t("year(s)"),
+            hour: _t("hour(s)"),
         };
     }
 
