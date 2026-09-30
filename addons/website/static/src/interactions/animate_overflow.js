@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
-import { getScrollingElement } from "@web/core/utils/scrolling";
 
 export class AnimateOverflow extends Interaction {
     static selector = "#wrapwrap";
@@ -25,7 +24,7 @@ export class AnimateOverflow extends Interaction {
     };
 
     setup() {
-        this.scrollingElement = getScrollingElement(this.el.ownerDocument);
+        this.scrollingElement = this.el.ownerDocument.scrollingElement;
         const animatedElements = this.el.querySelectorAll(".o_animate");
         // Fix for "transform: none" not overriding keyframe transforms on
         // some iPhone using Safari. Note that all animated elements are checked

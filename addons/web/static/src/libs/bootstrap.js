@@ -1,5 +1,3 @@
-import { compensateScrollbar, getScrollingElement } from "@web/core/utils/scrolling";
-
 /**
  * The bootstrap library extensions and fixes should be done here to avoid
  * patching in place.
@@ -102,40 +100,5 @@ if (window.Dropdown) {
      */
     Dropdown.prototype._detectNavbar = function () {
         return false;
-    };
-}
-
-if (window.Modal) {
-    /* Bootstrap modal scrollbar compensation on non-body */
-    const bsAdjustDialogFunction = Modal.prototype._adjustDialog;
-    Modal.prototype._adjustDialog = function () {
-        const document = this._element.ownerDocument;
-
-        this._scrollBar.reset();
-        document.body.classList.remove("modal-open");
-
-        const scrollable = getScrollingElement(document);
-        if (document.body.contains(scrollable)) {
-            compensateScrollbar(scrollable, true);
-        }
-
-        this._scrollBar.hide();
-        document.body.classList.add("modal-open");
-
-        return bsAdjustDialogFunction.apply(this, arguments);
-    };
-
-    const bsResetAdjustmentsFunction = Modal.prototype._resetAdjustments;
-    Modal.prototype._resetAdjustments = function () {
-        const document = this._element.ownerDocument;
-
-        this._scrollBar.reset();
-        document.body.classList.remove("modal-open");
-
-        const scrollable = getScrollingElement(document);
-        if (document.body.contains(scrollable)) {
-            compensateScrollbar(scrollable, false);
-        }
-        return bsResetAdjustmentsFunction.apply(this, arguments);
     };
 }

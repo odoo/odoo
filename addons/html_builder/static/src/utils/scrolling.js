@@ -3,8 +3,6 @@
 // header at the top of the page, the wrapwrap,...) which are not considered in
 // the `@web/core/utils/scrolling` utils.
 
-import { getScrollingElement } from "@web/core/utils/scrolling";
-
 /**
  * Determines if an element is scrollable.
  *
@@ -101,7 +99,7 @@ export function scrollTo(el, options = {}) {
         Array.from(scrollable.querySelectorAll("iframe")).find((node) =>
             node.contentDocument.contains(el)
         );
-    const topLevelScrollable = getScrollingElement(scrollDocument);
+    const topLevelScrollable = scrollDocument.scrollingElement;
 
     function _computeScrollTop() {
         if (el === "#top" || el.id === "top") {

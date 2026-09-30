@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { useDragAndDrop } from "@html_editor/utils/drag_and_drop";
-import { closestScrollableY, getScrollingElement, isScrollableY } from "@web/core/utils/scrolling";
+import { closestScrollableY, isScrollableY } from "@web/core/utils/scrolling";
 import { closest, touching } from "@web/core/utils/ui";
 import { clamp } from "@web/core/utils/numbers";
 import { rowSize } from "@html_builder/utils/grid_layout_utils";
@@ -183,8 +183,7 @@ export class DragAndDropPlugin extends Plugin {
 
         const scrollingElement = () => {
             let scrollingElement =
-                this.dependencies.dropzone.getDropRootElement() ||
-                getScrollingElement(this.document);
+                this.dependencies.dropzone.getDropRootElement() || this.document.scrollingElement;
             if (!isScrollableY(scrollingElement)) {
                 scrollingElement = closestScrollableY(this.iframe) ?? scrollingElement;
             }

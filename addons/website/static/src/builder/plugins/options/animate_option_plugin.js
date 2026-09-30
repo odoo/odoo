@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
-import { getScrollingElement } from "@web/core/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { AnimateText } from "./animate_text";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -101,7 +100,7 @@ export class AnimateOptionPlugin extends Plugin {
     };
 
     setup() {
-        this.scrollingElement = getScrollingElement(this.document);
+        this.scrollingElement = this.document.scrollingElement;
     }
 
     canHaveScrollEffect(el) {
@@ -495,7 +494,7 @@ export class SetAnimationModeAction extends BuilderAction {
     static dependencies = ["animateOption"];
     setup() {
         this.animationWithFadein = ["onAppearance", "onScroll"];
-        this.scrollingElement = getScrollingElement(this.document);
+        this.scrollingElement = this.document.scrollingElement;
     }
     // todo: to remove after having the commit of louis
     isApplied() {

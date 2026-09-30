@@ -1,7 +1,7 @@
 import { Component, onMounted, onWillDestroy, proxy, signal, useProps, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Tooltip } from "@web/core/tooltip/tooltip";
-import { closestScrollableY, getScrollingElement, isScrollableY } from "@web/core/utils/scrolling";
+import { closestScrollableY, isScrollableY } from "@web/core/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { closest } from "@web/core/utils/ui";
 import { useDragAndDrop } from "@html_editor/utils/drag_and_drop";
@@ -173,9 +173,7 @@ export class BlockTab extends Component {
 
         const scrollingElement = () => {
             let scrollingElement =
-                this.shared.dropzone.getDropRootElement() ||
-                getScrollingElement(this.document) ||
-                this.editable.querySelector(".o_savable");
+                this.shared.dropzone.getDropRootElement() || this.document.scrollingElement;
             if (!isScrollableY(scrollingElement)) {
                 scrollingElement =
                     closestScrollableY(this.document.defaultView.frameElement) ?? scrollingElement;

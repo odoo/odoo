@@ -5,7 +5,7 @@ import {
 } from "@website/../tests/builder/website_helpers";
 import { contains } from "@web/../tests/web_test_helpers";
 import { queryOne } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 
 defineWebsiteModels();
 
@@ -82,6 +82,28 @@ test("Toggle the overlays when clicking on an option element", async () => {
     expect(".oe_overlay").toHaveCount(2);
     expect(".oe_overlay.oe_active").toHaveCount(1);
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .col-lg-3");
+});
+
+test("Hide the overlays while the page is scrolling", async () => {
+    await setupWebsiteBuilder(`
+        <section>
+            <div class="container">
+                <p>TEST</p>
+            </div>
+        </section>
+    `);
+    await contains(":iframe section").click();
+    expect(".oe_overlay.oe_active").not.toHaveClass("o_overlay_hidden");
+    expect(".o_overlay_options").not.toHaveClass("d-none");
+
+    queryOne(":iframe body").ownerDocument.defaultView.dispatchEvent(new Event("scroll"));
+    await animationFrame();
+    expect(".oe_overlay.oe_active").toHaveClass("o_overlay_hidden");
+    expect(".o_overlay_options").toHaveClass("d-none");
+
+    await advanceTime(250);
+    expect(".oe_overlay.oe_active").not.toHaveClass("o_overlay_hidden");
+    expect(".o_overlay_options").not.toHaveClass("d-none");
 });
 
 test("Refresh the overlays when their target size changes", async () => {

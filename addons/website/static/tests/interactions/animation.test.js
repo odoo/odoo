@@ -9,6 +9,17 @@ beforeEach(enableTransitions);
 
 describe.current.tags("interaction_dev");
 
+test("animation listens to the document scroll by default", async () => {
+    const { core } = await startInteractions(`
+        <div id="wrapwrap">
+            <div class="o_anim_fade_in o_animate">Animated</div>
+        </div>
+    `);
+    const { interaction } = core.interactions[0];
+    expect(interaction.scrollingElement).toBe(document.scrollingElement);
+    expect(interaction.scrollingTarget).toBe(window);
+});
+
 test("onAppearance animation starts once visible", async () => {
     const { core } = await startInteractions(`
         <div id="wrapwrap" style="overflow: scroll; max-height: 100%;">
