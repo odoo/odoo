@@ -597,12 +597,15 @@ class AccountMove(models.Model):
                 if not move.name or not G1_05_RE.match(move.name):
                     yield self.env._("Move name is not valid%s.", ref_move)
                 for tax in move.invoice_line_ids.tax_ids.flatten_taxes_hierarchy():
+                    if tax.amount_type == 'fixed' and tax.amount >= 0 and not tax.price_include:
+                        continue  # An additional fixed charge is an amount, not a VAT percentage.
                     is_valid_oss_rate = (
                         tax._l10n_fr_pdp_is_oss()
                         and tax.amount_type == 'percent'
                         and 0 <= tax.amount <= 100
                     )
-                    if not is_valid_oss_rate and tax.amount not in VALID_PDP_TAX_RATES:
+                    # Reject other fixed taxes even if their amount matches an allowed VAT rate.
+                    if tax.amount_type == 'fixed' or (tax.amount not in VALID_PDP_TAX_RATES and not is_valid_oss_rate):
                         yield self.env._(
                             "Tax %(tax)s is not supported by French e-reporting%(ref_move)s.",
                             tax=tax.display_name,
