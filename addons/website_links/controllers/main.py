@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http
@@ -8,7 +7,7 @@ from odoo.http import request
 class WebsiteUrl(http.Controller):
     @http.route('/website_links/new', type='jsonrpc', auth='user', methods=['POST'])
     def create_shorten_url(self, **post):
-        if 'url' not in post or post['url'] == '':
+        if not post.get('url'):
             return {'error': 'empty_url'}
         return request.env['link.tracker'].search_or_create([post]).read()
 
@@ -26,8 +25,7 @@ class WebsiteUrl(http.Controller):
         new_code = request.env['link.tracker.code'].search_count([('code', '=', post['new_code']), ('link_id', '=', link_id)])
         if new_code > 0:
             return new_code.read()
-        else:
-            return request.env['link.tracker.code'].create({'code': post['new_code'], 'link_id': link_id})[0].read()
+        return request.env['link.tracker.code'].create({'code': post['new_code'], 'link_id': link_id})[0].read()
 
     @http.route('/website_links/recent_links', type='jsonrpc', auth='user')
     def recent_links(self, **post):
@@ -40,7 +38,6 @@ class WebsiteUrl(http.Controller):
         if code:
             return request.render("website_links.graphs", {
                 "can_create_link_tracker_code": request.env['link.tracker.code'].has_access('create'),
-                **code.link_id.read()[0]
+                **code.link_id.read()[0],
             })
-        else:
-            return request.redirect('/', code=301)
+        return request.redirect('/', code=301)
