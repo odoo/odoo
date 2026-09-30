@@ -81,21 +81,53 @@ class InteractionService {
     }
 
     prepareRoot(el, C, props, position = "beforeend") {
-        const root = this.owlApp.createRoot(C, { props, env: this.env });
         const rootEl = document.createElement("owl-root");
         rootEl.setAttribute("contenteditable", "false");
         rootEl.dataset.oeProtected = "true";
         rootEl.style.display = "contents";
+        const {
+            promise: mountPromise,
+            resolve: resolveMount,
+            reject: rejectMount,
+        } = Promise.withResolvers();
+        let mounted = false;
+        const destroy = () => {
+            root.destroy();
+            rootEl.remove();
+        };
+        const onError = (error) => {
+            // Never rethrow: Owl would then destroy the whole app (and every
+            // other root). Only destroy the failing root, and report the error
+            // through the mount promise (if the component is still being
+            // mounted), or as an unhandled rejection.
+            destroy();
+            if (mounted) {
+                Promise.reject(error);
+            } else {
+                rejectMount(error);
+            }
+        };
+        const root = this.owlApp.createRoot(C, { props, env: this.env, onError });
         el.insertAdjacentElement(position, rootEl);
         return {
             C,
             root,
             el: rootEl,
-            mount: () => root.mount(rootEl),
-            destroy: () => {
-                root.destroy();
-                rootEl.remove();
+            mount: () => {
+                root.mount(rootEl).then(
+                    (component) => {
+                        mounted = true;
+                        resolveMount(component);
+                    },
+                    (error) => {
+                        // Error thrown before onError registration (e.g. in setup)
+                        destroy();
+                        rejectMount(error);
+                    }
+                );
+                return mountPromise;
             },
+            destroy,
         };
     }
 
