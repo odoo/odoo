@@ -7,6 +7,7 @@
     'depends': ['base', 'web'],
     'auto_install': True,
     'data': [
+        'data/ir_config_parameter_data.xml',
         'views/menus.xml',
     ],
     'assets': {
