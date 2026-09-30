@@ -842,6 +842,54 @@ class TestLotValuation(TestStockValuationCommon):
         move._action_done()
         self.assertEqual(move.quantity, 2)
 
+    def test_partial_return_keeps_remaining_lot_cost(self):
+        """A partial return is subtracted from the returned lot only."""
+        categ = self.env['product.category'].create({'name': 'AVCO serial'})
+        categ.property_cost_method = 'average'
+        product = self.env['product.product'].create({
+            'name': 'serial avco',
+            'is_storable': True,
+            'tracking': 'serial',
+            'categ_id': categ.id,
+            'standard_price': 100,
+        })
+        product.lot_valuated = True
+        lot_s1, lot_s2, lot_s3 = self.env['stock.lot'].create([
+            {'name': 'S1', 'product_id': product.id},
+            {'name': 'S2', 'product_id': product.id},
+            {'name': 'S3', 'product_id': product.id},
+        ])
+        self._make_in_move(product, 1, 100, lot_ids=[lot_s1])
+        self._make_in_move(product, 1, 100, lot_ids=[lot_s2])
+        self._make_in_move(product, 1, 400, lot_ids=[lot_s3])
+        out_move = self._make_out_move(product, 2, create_picking=True, lot_ids=[lot_s1, lot_s2])
+        self.assertEqual(len(out_move.stock_valuation_layer_ids), 2)
+
+        return_wizard = Form(self.env['stock.return.picking'].with_context(
+            active_id=out_move.picking_id.id, active_model='stock.picking',
+        )).save()
+        return_wizard.product_return_moves.quantity = 1
+        return_picking = return_wizard._create_return()
+        return_move = return_picking.move_ids
+        return_move.move_line_ids.unlink()
+        return_move.move_line_ids = [Command.create({
+            'location_id': return_move.location_id.id,
+            'location_dest_id': return_move.location_dest_id.id,
+            'quantity': 1,
+            'product_id': product.id,
+            'lot_id': lot_s2.id,
+        })]
+        return_move.picked = True
+        return_picking._action_done()
+
+        self.assertEqual(product.standard_price, 250)
+        moves = out_move | return_move
+        self.assertEqual(product._compute_average_price(0, 1, moves), 100)
+        self.assertEqual(
+            product.with_context(value_invoiced=0)._compute_average_price(0, 1, moves),
+            100,
+        )
+
     def test_lot_svl_zero_standard_price(self):
         self.product1.standard_price = 0
         self._make_in_move(self.product1, 10, 0, lot_ids=[self.lot1])
