@@ -152,9 +152,15 @@ export default class OrderPaymentValidation {
         this.pos.data.localUnsyncedPaidOrderUuids.add(this.order.uuid);
 
         try {
-            // 1. Save order to server.
-            const syncOrderResult = await this.pos.syncAllOrders({ throw: true });
-            if (!syncOrderResult) {
+            // 1.1 Send to preparation before saving.
+            // When printers are configed, this will also call syncAllOrders so the next call will bail early
+            await this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
+                orderDone: true,
+            });
+
+            // 1.2 Save order to server. Nothing left to push when the call above synced it.
+            const syncOrderResult = (await this.pos.syncAllOrders({ throw: true })) || [this.order];
+            if (!this.order.isSynced) {
                 return false;
             }
 
@@ -208,10 +214,6 @@ export default class OrderPaymentValidation {
     async afterOrderValidation() {
         // Always show the next screen regardless of error since pos has to
         // continue working even offline.
-        await this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
-            orderDone: true,
-        });
-
         if (this.canPrintReceipt) {
             this.pos.ticketPrinter.printOrderReceipt({ order: this.order });
         }

@@ -38,6 +38,10 @@ export class FeedbackScreen extends Component {
             this.waitFor = Promise.withResolvers();
             onMounted(async () => {
                 try {
+                    await this.pos.checkPreparationStateAndSentOrderInPreparation(
+                        this.currentOrder,
+                        { orderDone: true }
+                    );
                     const validation = new OrderPaymentValidation({
                         pos: this.pos,
                         orderUuid: this.props.orderUuid,
