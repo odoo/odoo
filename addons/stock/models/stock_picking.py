@@ -11,7 +11,7 @@ from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError
 from odoo.fields import Domain, Command
 from odoo.tools import format_datetime, format_date, groupby, OrderedSet
-from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.tools.float_utils import float_compare
 
 
 class StockPicking(models.Model):
@@ -1166,13 +1166,12 @@ class StockPicking(models.Model):
         pickings_without_lots = self.browse()
         products_without_lots = self.env['product.product']
         pickings_without_moves = self.filtered(lambda p: not p.move_ids and not p.move_line_ids)
-        precision_digits = self.env['decimal.precision'].precision_get('Product Unit')
 
         no_quantities_done_ids = set()
         pickings_without_quantities = self.env['stock.picking']
         for picking in self:
             has_pick = any(move.picked and move.state not in ('done', 'cancel') for move in picking.move_ids)
-            if all(float_is_zero(move.quantity, precision_digits=precision_digits) for move in picking.move_ids.filtered(lambda m: m.state not in ('done', 'cancel') and (not has_pick or m.picked))):
+            if all(move.uom_id.compare(move.quantity, 0.0) <= 0 for move in picking.move_ids if move.state not in ('done', 'cancel') and (not has_pick or move.picked)):
                 pickings_without_quantities |= picking
 
         pickings_using_lots = self.filtered(lambda p: p.picking_type_id.use_create_lots or p.picking_type_id.use_existing_lots)
@@ -1361,7 +1360,7 @@ class StockPicking(models.Model):
         :rtype: str
         """
         return _(
-            "Transfer trouble alert! Validating a zero quantity transfer? You're not moving invisible goods around are you?\n"
+            "Transfer trouble alert! Validating a zero or negative quantity transfer? You're not moving invisible goods around are you?\n"
             "Set some quantities and let's get moving!"
         )
 
