@@ -1013,12 +1013,12 @@ export class SelfOrder extends Reactive {
         const pricelist = order.preset_id?.pricelist_id || this.config.pricelist_id;
         const productVariant = product || productTemplate.product_variant_ids[0];
         const price = productTemplate.getPrice(pricelist, 1, 0, false, productVariant);
-        const taxesData = (productVariant || productTemplate).getTaxDetails({
-            overridedValues: {
-                price,
-                fiscalPosition: order.fiscal_position_id || false,
-            },
-        });
+        const overridedValues = { price, fiscalPosition: order.fiscal_position_id || false };
+        if (productTemplate.type === "combo") {
+            // Ignore taxes for combo parent lines
+            overridedValues.tax_ids = [];
+        }
+        const taxesData = (productVariant || productTemplate).getTaxDetails({ overridedValues });
         return { pricelist_price: price, ...taxesData };
     }
     getProductDisplayPrice(productTemplate, product) {
