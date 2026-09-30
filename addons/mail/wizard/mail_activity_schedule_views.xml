@@ -6,12 +6,7 @@
             <field name="model">mail.activity.schedule</field>
             <field name="arch" type="xml">
                 <form>
-                    <field name="activity_category" invisible="1"/> <!-- read by JS Activity widgets for upload_file category checks -->
                     <field name="company_id" invisible="1"/> <!-- used in _get_plan_available_base_domain to filter plan_available_ids -->
-                    <field name="has_error" invisible="1"/> <!-- drives invisible on error alert div and Save/Mark Done/Schedule buttons -->
-                    <field name="is_batch_mode" invisible="1"/> <!-- drives invisible on the phone number block (phonecall activities, single record only) -->
-                    <field name="has_warning" invisible="1"/> <!-- drives invisible on the warning alert div -->
-                    <field name="plan_has_user_on_demand" invisible="1"/> <!-- drives invisible on plan_on_demand_user_id/plan_on_demand_role_id -->
                     <field name="res_ids" invisible="1"/> <!-- used by action_schedule_activities/_get_applied_on_records to resolve target records -->
                     <field name="plan_available_ids" invisible="1"/> <!-- drives invisible on plan_id widget and feeds its domain -->
                     <sheet class="o_mail_activity_schedule_wizard">

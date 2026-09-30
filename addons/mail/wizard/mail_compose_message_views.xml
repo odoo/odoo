@@ -12,7 +12,6 @@
                         <field name="author_id" invisible="1"/><!-- editable compute persisted on send; never shown to the user -->
                         <field name="auto_delete" invisible="1"/><!-- editable compute controlling mail deletion; submitted to server on send -->
                         <field name="auto_delete_keep_log" invisible="1"/><!-- editable compute controlling log keeping; submitted to server on send -->
-                        <field name="composition_batch" invisible="1"/><!-- drives Send/Log/Schedule button modifiers and scheduled_date visibility below -->
                         <field name="composition_comment_option" invisible="1"/><!-- drives partner_ids invisible/required modifiers; also read by mail_composer_form.js -->
                         <field name="composition_mode" invisible="1"/><!-- master mode flag driving most modifiers in this form (comment vs mass_mail) -->
                         <field name="email_layout_xmlid" invisible="1"/><!-- editable compute (email layout) persisted on send; never shown -->
@@ -26,7 +25,6 @@
                         <field name="notify_author_mention" invisible="1"/><!-- editable compute persisted on send; never shown -->
                         <field name="notify_skip_followers" invisible="1"/><!-- editable compute persisted on send; never shown -->
                         <field name="parent_id" invisible="1"/><!-- parent message context; drives model/res_ids computes, persisted on send -->
-                        <field name="partner_ids_all_have_email" invisible="1"/><!-- drives Send/Log/Schedule button visibility in the footer -->
                         <field name="record_alias_domain_id" invisible="1"/><!-- editable compute persisted on send (monorecord comment mode); never shown -->
                         <field name="record_company_id" invisible="1"/><!-- editable compute persisted on send (monorecord comment mode); never shown -->
                         <field name="render_model" invisible="1"/><!-- referenced by body dynamic_placeholder_model_reference_field option below -->
@@ -35,7 +33,6 @@
                         <field name="res_ids" invisible="1"/><!-- read by mail_composer_form.js / attachment selector to build resIds -->
                         <field name="scheduled_date" invisible="1"/><!-- drives Send/Log/Schedule button modifiers; a second visible occurrence lives in the footer -->
                         <field name="subtype_id" invisible="1"/><!-- editable compute driving subtype_is_log; persisted on send -->
-                        <field name="subtype_is_log" invisible="1"/><!-- drives To/Cc label and Send/Log button modifiers; also read by mail_composer_form.js -->
                         <field name="use_exclusion_list" invisible="1"/><!-- blacklist toggle persisted on send; never shown -->
                         <!-- visible wizard -->
                         <field name="email_from"
@@ -74,7 +71,6 @@
                             required="reply_to_mode != 'update'"/>
                         <field name="attachment_links" nolabel="1" colspan="2" invisible="not attachment_links"/>
                     </group>
-                    <field name="can_edit_body" invisible="1"/><!-- drives readonly on body fields below and invisible on the attachment_ids selector in the footer -->
                     <div invisible="composition_mode == 'mass_mail'">
                         <field name="body" widget="html_composer_message" class="oe-bordered-editor"
                             placeholder="Write your message here..." readonly="not can_edit_body" force_save="1"

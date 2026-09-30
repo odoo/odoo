@@ -7,7 +7,6 @@
             <form string="Relocate your stock">
                 <group>
                     <field name="quant_ids" invisible="1"/> <!-- source recordset feeding the wizard's computes and passed to action_relocate_quants -->
-                    <field name="company_id" invisible="1"/> <!-- used for company filtering in dest_location_id domain and dest_package_id_domain compute -->
                     <field name="dest_location_id" string="To Location" options="{'no_create': True}" context="{'show_empty': True}"/>
                     <field name="dest_package_id_domain" invisible="1"/> <!-- feeds the domain of the visible dest_package_id field -->
                     <field name="dest_package_id" string="To Package" widget="package_m2o" context="{'show_src_package': 1}" groups="stock.group_tracking_lot" readonly="is_multi_location"/>

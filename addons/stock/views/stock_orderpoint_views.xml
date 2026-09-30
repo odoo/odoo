@@ -29,8 +29,6 @@
                 <field name="active" column_invisible="True"/> <!-- needed so archived records loaded via the Archived filter behave correctly in this editable list -->
                 <field name="company_id" column_invisible="True"/> <!-- used by check_company domain restrictions on location_id/route_id/product_id -->
                 <field name="product_category_id" column_invisible="True"/> <!-- needed to render group headers when the list is grouped by Category -->
-                <field name="product_tmpl_id" column_invisible="True"/> <!-- related field kept loaded for product_id domain/consistency, not directly displayed -->
-                <field name="unwanted_replenish" column_invisible="True"/> <!-- drives invisible on the two action_product_forecast_report buttons -->
                 <field name="route_id_placeholder" column_invisible="True"/> <!-- Needed for the placeholder widget -->
                 <field name="replenishment_uom_id_placeholder" column_invisible="True"/> <!-- Needed for the placeholder widget -->
                 <field name="product_id" readonly="product_id" force_save="1" context="{'default_is_storable': True}"/>

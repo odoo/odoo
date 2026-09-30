@@ -27,14 +27,6 @@
                     <field name="custom_user_amount" invisible="1" /> <!-- captures manual amount edits, read by _compute_amount to detect custom user input -->
                     <field name="custom_user_currency_id" invisible="1" /> <!-- currency paired with custom_user_amount for manual amount edits -->
 
-                    <field name="show_partner_bank_account" invisible="1"/> <!-- drives invisible on partner_bank_id -->
-                    <field name="require_partner_bank_account" invisible="1"/> <!-- drives required on partner_bank_id -->
-                    <field name="available_journal_ids" invisible="1"/> <!-- provides the domain values for journal_id -->
-                    <field name="available_payment_method_line_ids" invisible="1"/> <!-- provides the domain values for payment_method_line_id -->
-                    <field name="available_partner_bank_ids" invisible="1"/> <!-- provides the domain values for partner_bank_id -->
-                    <field name="company_currency_id" invisible="1"/> <!-- drives currency_conversion_div visibility and read by account_currency_exchange_rate widget -->
-                    <field name="hide_writeoff_section" invisible="1"/> <!-- drives visibility of the early-payment alert and writeoff section -->
-                    <field name="writeoff_is_exchange_account" invisible="1"/> <!-- drives invisible on writeoff_label and its label -->
                     <field name="untrusted_bank_ids" invisible="1"/> <!-- feeds untrusted_payments_count alert; opened via action_open_untrusted_bank_accounts -->
                     <field name="missing_account_partners" invisible="1"/> <!-- drives the missing-account warning alert; opened via action_open_missing_account_partners -->
 
@@ -120,7 +112,6 @@
                                            groups="base.group_multi_currency"/>
                                 </div>
                                 <div name="currency_conversion_div" class="d-flex gap-1 text-muted" invisible="company_currency_id == (currency_id if currency_id != company_currency_id else (source_currency_id or company_currency_id))">
-                                    <field name="company_currency_id" invisible="1"/> <!-- read by the account_currency_exchange_rate widget below -->
                                     <field name="exchange_rate" invisible="1"/> <!-- rate_field feeding the account_currency_exchange_rate widget below -->
                                     <widget name="account_currency_exchange_rate" readonly="1" options="{'rate_field': 'exchange_rate'}"/>
                                 </div>
@@ -135,7 +126,6 @@
                             <field name="communication"
                                    invisible="not can_edit_wizard or (can_group_payments and not group_payment)"/>
                         </group>
-                        <field name="qr_code" invisible="1"/> <!-- drives visibility of the QR code block below; the visible copy renders the value -->
                         <div invisible="not qr_code" colspan="2" class="text-center d-none d-md-block">
                             <field name="qr_code"/>
                         </div>

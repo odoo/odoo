@@ -169,21 +169,12 @@
                     <sheet>
                         <!-- Invisible fields -->
                         <field name="id" invisible="1"/> <!-- drives the 'not id' guard on the Cancel button visibility -->
-                        <field name="is_sent" invisible="1"/> <!-- drives visibility of Reject/Request Cancel/Mark as Sent buttons and the Cancel guard -->
-                        <field name="need_cancel_request" invisible="1"/> <!-- drives visibility of the Request Cancel button -->
                         <field name="is_reconciled" invisible="1"/> <!-- drives the state badge decoration in the header -->
                         <field name="is_matched" invisible="1"/> <!-- technical reconciliation flag kept for header/state logic -->
-                        <field name="payment_method_code" invisible="1"/> <!-- drives visibility of Mark/Unmark as Sent buttons -->
-                        <field name="show_partner_bank_account" invisible="1"/> <!-- drives invisible on the partner_bank_id fields -->
-                        <field name="require_partner_bank_account" invisible="1"/> <!-- drives required on the partner_bank_id fields -->
-                        <field name="available_payment_method_line_ids" invisible="1"/> <!-- provides the domain values for payment_method_line_id -->
-                        <field name="available_partner_bank_ids" invisible="1"/> <!-- provides available partner bank accounts for the partner_bank_id widget -->
                         <field name="country_code" invisible="1"/> <!-- related company fiscal country code, used by localization overrides of this view -->
                         <field name="partner_type" invisible="1"/> <!-- drives invisible on the Customer/Vendor partner_id and partner_bank_id fields -->
-                        <field name="reconciled_invoices_type" invisible="1"/> <!-- drives the Invoice vs Credit Note label on the invoices stat button -->
                         <field name="company_id" invisible="1"/> <!-- company context feeding related fields (company_currency_id) and journal domain -->
                         <field name="paired_internal_transfer_payment_id" invisible="1"/> <!-- technical pointer to the paired transfer payment, kept for localization/onchange -->
-                        <field name="available_journal_ids" invisible="1"/> <!-- provides the domain values for journal_id -->
                         <field name="currency_id" invisible="1"/> <!-- currency for the amount monetary field; also shown under group_multi_currency -->
 
                         <div class="oe_button_box" name="button_box">
@@ -303,7 +294,6 @@
                                         required="require_partner_bank_account"/>
                             </group>
                             <group class="d-none d-md-block">
-                                <field name="qr_code" invisible="1"/> <!-- drives visibility of the QR code block below; the visible copy renders the value -->
                                 <div invisible="not qr_code" colspan="2" class="text-center">
                                     <field name="qr_code" widget="html"/>
                                 </div>
