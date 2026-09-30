@@ -12,6 +12,7 @@
         'l10n_latam_invoice_document',
         'account_debit_note',
         'account',
+        'l10n_account_withholding_tax',
     ],
     'auto_install': ['account'],
     'data': [
