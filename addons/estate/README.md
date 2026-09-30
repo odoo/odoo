@@ -146,3 +146,12 @@ Cards are grouped by property type by default. Dragging records is disabled so m
 
 **Try it:** Switch to kanban and compare cards in New, Offer Received, Offer Accepted, and Sold states. Change a property's type and observe which group contains its card.
 
+## Chapter 15 - The final word
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/15_final_word.html)
+
+The finished application connects the ideas from the earlier chapters: models hold property data, access rules decide who can use it, views present it, actions move it through a workflow, and constraints keep it valid. Inheritance extends Odoo's users, while `estate_account` adds optional invoicing without changing the base estate dependency list.
+
+This chapter makes no addon code changes. The code review and lint corrections were kept with the commits that introduced the relevant files, so each chapter remains a coherent checkpoint. The complete workflow runs from a property and accepted offer to a draft customer invoice.
+
+**Try it:** Follow that workflow from start to finish. Then explore the [Odoo Runbot](https://runbot.odoo.com/) and look for another app using the same model, view, action, and status-bar ideas.
