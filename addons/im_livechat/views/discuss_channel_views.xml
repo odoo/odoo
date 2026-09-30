@@ -77,24 +77,26 @@
             <field name="model">discuss.channel</field>
             <field name="arch" type="xml">
                 <kanban js_class="im_livechat.discuss_channel_kanban" class="o_kanban_mobile" sample="1" quick_create="false" create="False" default_order="create_date desc">
+                    <field name="country_id"/>
                     <templates>
                         <t t-name="card">
                             <div class="d-flex">
                                 <div class="d-flex flex-column">
-                                    <field class="fw-bolder" name="livechat_customer_history_ids" widget="im_livechat.one2many_names"/>
-                                    <span class="fw-bold">Date: <field name="create_date" class="fw-normal"/></span>
-                                    <span class="fw-bold">Duration: <field class="d-inline fw-normal" name="duration" widget="float_time" options="{'show_seconds': true}"/></span>
-                                    <span class="fw-bold">Messages: <field name="message_count" class="fw-normal"/></span>
+                                    <span class="d-flex gap-1 mb-1 fs-4 fw-bold">
+                                        <t t-if="record.country_id.raw_value">
+                                            <span t-att-data-tooltip="record.country_id.value">
+                                                <field name="country_flag" widget="image_url" class="o_country_flag"/>
+                                            </span>
+                                        </t>
+                                        <field name="livechat_customer_history_ids" widget="im_livechat.one2many_names"/>
+                                    </span>
+                                    <span class="ms-n1"><i class="oi oi-fw oi-filled me-2 text-primary" data-icon="calendar_today" role="img" aria-label="Date" /><field name="create_date"/> (<field class="d-inline" name="duration" widget="float_time" options="{'show_seconds': true}"/>)</span>
+                                    <span class="ms-n1"><i class="oi oi-fw oi-filled me-2 text-primary" data-icon="chat_bubble" role="img" aria-label="Messages" /><field name="message_count" class="fw-bold"/> Messages</span>
+                                    <span t-if="record.livechat_rating_feedback.raw_value" class="ms-n1 text-muted fst-italic text-truncate">
+                                        <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="format_quote" role="img" aria-label="Feedback"/><field name="livechat_rating_feedback"/>
+                                    </span>
                                     <field name="livechat_failure" invisible="1"/>
                                     <field name="livechat_is_escalated" invisible="1"/>
-                                    <span t-if="record.livechat_is_escalated.raw_value or record.livechat_failure.raw_value" class="fw-bold">
-                                        Status:
-                                        <span class="fw-normal">
-                                            <t t-if="record.livechat_is_escalated.raw_value">Escalated</t>
-                                            <t t-elif="record.livechat_failure.raw_value === 'no_failure'">Success</t>
-                                            <t t-else="" t-out="record.livechat_failure.value"/>
-                                        </span>
-                                    </span>
                                 </div>
                                 <field name="livechat_rating" invisible="1"/>
                                 <img
@@ -109,9 +111,6 @@
                                 />
                             </div>
                             <footer class="pt-0">
-                                <t t-if="record.country_id.raw_value">
-                                    <span class="fw-bold">Country: </span><field string="Country" name="country_id"/>
-                                </t>
                                 <field name="livechat_agent_partner_ids" widget="many2many_avatar_user" class="ms-auto me-1"/>
                             </footer>
                         </t>

@@ -172,6 +172,7 @@ class DiscussChannel(models.Model):
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages', groups='im_livechat.im_livechat_group_manager')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
+    country_flag = fields.Char(related="country_id.image_url", string="Country Flag")
     livechat_failure = fields.Selection(
         selection=[
             ("no_answer", "Never Answered"),
@@ -190,6 +191,7 @@ class DiscussChannel(models.Model):
         string="Livechat Rating Text",
         falsy_value_label="Not Rated Yet",
     )
+    livechat_rating_feedback = fields.Text("Livechat Rating Feedback")
     livechat_rating_percentage = fields.Float(
         string="Rating (%)",
         aggregator="avg",
@@ -777,7 +779,7 @@ class DiscussChannel(models.Model):
         user, guest = self.env["res.users"]._get_current_persona()
         rated_partner = self.sudo().livechat_agent_partner_ids[:1]
         # sudo: discuss.channel - visitor giving a rating to the session is allowed
-        self.sudo().write({"livechat_rating": str(rate)})
+        self.sudo().write({"livechat_rating": str(rate), "livechat_rating_feedback": reason})
         rating_url = f"/rating/static/src/img/rating_{rate}.png"
         rating_body = Markup(
             """<div class="o_mail_notification o_hide_author">"""
