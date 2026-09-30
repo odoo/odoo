@@ -2864,3 +2864,30 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertRecordValues(sale_order.order_line, [
             {'product_id': self.new_product.id, 'product_uom_qty': 0, 'qty_delivered': 3}
         ])
+
+    def test_change_linked_sale_order_on_internal_transfer(self):
+        """Test that changing the sale order linked to an internal transfer does
+        not change the link of the sale order with respect to other pickings.
+        """
+        warehouse = self.company_data['default_warehouse']
+        sale_orders = self._get_new_sale_order(product=self.new_product) | self._get_new_sale_order(product=self.new_product)
+        internal_transfer = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.int_type_id.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.new_product.id,
+                'product_uom_qty': 1,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': warehouse.lot_stock_id.id,
+            })],
+        })
+        internal_transfer.sale_id = sale_orders[0]
+        internal_transfer.action_confirm()
+        internal_transfer.sale_id = sale_orders[1]
+        sale_orders.action_confirm()
+        self.assertRecordValues((sale_orders.picking_ids | internal_transfer).sorted('id'), [
+            {'picking_type_code': 'internal', 'sale_id': sale_orders[1].id},
+            {'picking_type_code': 'outgoing', 'sale_id': sale_orders[0].id},
+            {'picking_type_code': 'outgoing', 'sale_id': sale_orders[1].id},
+        ])
