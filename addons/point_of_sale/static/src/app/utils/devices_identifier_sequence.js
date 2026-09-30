@@ -1,5 +1,6 @@
 export default class DeviceIdentifierSequence {
     static uniqueDeviceIdentifierKey = `${odoo.access_token}-unique_device_identifier`;
+    static previousDeviceIdentifierKey = `${odoo.access_token}-previous_device_identifier`;
 
     constructor({ orm }) {
         this.orm = orm;
