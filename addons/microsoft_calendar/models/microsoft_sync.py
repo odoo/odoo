@@ -136,7 +136,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
 
     @api.model
     def _create_from_microsoft(self, microsoft_event, vals_list):
-        return self.with_context(dont_notify=True, skip_contact_description=True).create(vals_list)
+        return self.with_context(dont_notify=True, skip_contact_description=True, microsoft_calendar_from_sync=True).create(vals_list)
 
     def _sync_odoo2microsoft(self):
         if not self:
