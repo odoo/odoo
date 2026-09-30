@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================= -->
+    <!-- 1. CLIENT ACTION INTERAKTIF AGING PIUTANG (SATU LAYAR PENUH)      -->
+    <!-- ================================================================= -->
+    <record id="action_sif_aging_piutang_client" model="ir.actions.client">
+        <field name="name">Aging Piutang (Umur Piutang)</field>
+        <field name="tag">sif_keuangan.aging_piutang</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- ================================================================= -->
+    <!-- 2. POPUP WIZARD FILTER (FALLBACK & RESTORE CUT-OFF)               -->
+    <!-- ================================================================= -->
+    <record id="view_sif_aging_piutang_wizard_form" model="ir.ui.view">
+        <field name="name">sif.aging.piutang.wizard.form</field>
+        <field name="model">sif.aging.piutang.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Filter Laporan Aging Piutang">
+                <sheet>
+                    <group>
+                        <group string="Tanggal &amp; Unit Kerja">
+                            <field name="as_of_date"/>
+                            <field name="unit_name"/>
+                        </group>
+                        <group string="Klasifikasi &amp; Umur">
+                            <field name="partner_type"/>
+                            <field name="bucket"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_open_client_action" string="Buka Laporan Interaktif" type="object" class="btn-primary" icon="fa-television"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sif_aging_piutang_wizard" model="ir.actions.act_window">
+        <field name="name">Aging Piutang</field>
+        <field name="res_model">sif.aging.piutang.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
