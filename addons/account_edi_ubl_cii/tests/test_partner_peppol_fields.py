@@ -3,7 +3,7 @@
 from contextlib import contextmanager
 from unittest.mock import patch
 
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 
@@ -120,3 +120,13 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
         })
         self.assertEqual(partner.peppol_eas, '0208')
         self.assertEqual(partner.peppol_endpoint, '0477472701')
+
+    def test_peppol_endpoint_be_vat_form(self):
+        """ Test that the eas and endpoint are computed when adding a new partner with a BE VAT number in the form view. """
+        with Form(self.env['res.partner']) as partner_form:
+            partner_form.name = "BE partner"
+            partner_form.country_id = self.env.ref('base.be')
+            partner_form.vat = 'BE0477472701'
+            # Onchange test
+            self.assertEqual(partner_form.peppol_eas, '0208')
+            self.assertEqual(partner_form.peppol_endpoint, '0477472701')
