@@ -38,7 +38,7 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(len(debit_line), 1)
         self.assertEqual(debit_line.debit, 50.0)
         self.assertEqual(debit_line.credit, 0)
-        product._invalidate_cache()
+        product.invalidate_model()
 
         # Set price to 6.0
         product.standard_price = 6.0
@@ -560,7 +560,7 @@ class TestStockValuation(TestStockValuationCommon):
 
         self.assertEqual(move2.value, 220.0)  # after correction, the move should be valued at 11@20
         self.assertEqual(move2.quantity, 11.0)
-        product2._invalidate_cache()
+        product2.invalidate_model()
         product2.standard_price = 20.0
 
         closing_move = self.env['account.move'].browse(move2.company_id.action_close_stock_valuation()['res_id'])
@@ -583,7 +583,7 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(move3.remaining_qty, 0.0)
         self.assertEqual(product2.standard_price, 20.0)
         self.assertEqual(product2.qty_available, 0)
-        product2._invalidate_cache()
+        product2.invalidate_model()
         product2.standard_price = 20.0
 
         closing_move = self.env['account.move'].browse(move2.company_id.action_close_stock_valuation()['res_id'])
@@ -1172,7 +1172,7 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertAlmostEqual(move1.value, 50)
         self.assertAlmostEqual(product.qty_available, 5)
         self.assertAlmostEqual(product.total_value, 50)
-        product._invalidate_cache()
+        product.invalidate_model()
 
         move2 = self.env['stock.move'].create({
             'location_id': self.supplier_location.id,
@@ -1192,7 +1192,7 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertAlmostEqual(move2.value, 200)
         self.assertAlmostEqual(product.qty_available, 15)
         self.assertAlmostEqual(product.total_value, 250)
-        product._invalidate_cache()
+        product.invalidate_model()
 
         self._set_quantity(move1, 15)
 
@@ -1413,7 +1413,7 @@ class TestStockValuation(TestStockValuationCommon):
 
         self.assertEqual(move2.value, -100.0)
         self.assertEqual(move2.remaining_qty, 0.0)  # unused in average move
-        product._invalidate_cache()
+        product.invalidate_model()
 
         # send 10 products again
         move3 = self._make_out_move(product, 10)
@@ -2186,7 +2186,7 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertAlmostEqual(move1.value, 180.0)
         self.assertAlmostEqual(move1.remaining_qty, 12.0)
         self.assertAlmostEqual(product.total_value, 180.0)
-        product._invalidate_cache()
+        product.invalidate_model()
 
         # Sell the 12 units
         move2 = self.env['stock.move'].create({
@@ -2202,7 +2202,7 @@ class TestStockValuation(TestStockValuationCommon):
         move2.picked = True
         move2._action_done()
 
-        move1._invalidate_cache()
+        move1.invalidate_model()
         self.assertAlmostEqual(move1.remaining_qty, 0.0)
         self.assertAlmostEqual(product.total_value, 0.0)
 

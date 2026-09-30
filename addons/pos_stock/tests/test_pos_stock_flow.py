@@ -1300,7 +1300,7 @@ class TestPosStockFlow(CommonPosStockTest):
         make_payment.check()
         self.assertEqual(refund_order.state, 'paid')
 
-        order._invalidate_cache()
+        order.invalidate_model()
         self.assertEqual(set(order.picking_ids.mapped('state')), {'cancel'})
         self.assertFalse(refund_order.picking_ids)
 
@@ -1401,8 +1401,8 @@ class TestPosStockFlow(CommonPosStockTest):
         make_payment.check()
         self.assertEqual(refund_order.state, 'paid')
 
-        order._invalidate_cache()
-        picking._invalidate_cache()
+        order.invalidate_model()
+        picking.invalidate_model()
 
         # Original picking should still exist and stay reserved (ready)
         self.assertEqual(picking.state, 'assigned')
@@ -1414,12 +1414,12 @@ class TestPosStockFlow(CommonPosStockTest):
         )
 
         # product2 move should be reduced from 3 to 2 (1 unit refunded)
-        product2_move._invalidate_cache()
+        product2_move.invalidate_model()
         self.assertEqual(product2_move.product_uom_qty, 2.0)
         self.assertIn(product2_move.state, ('draft', 'confirmed', 'assigned'))
 
         # product3 move should be unchanged (not refunded)
-        product3_move._invalidate_cache()
+        product3_move.invalidate_model()
         self.assertEqual(product3_move.product_uom_qty, 2.0)
         self.assertIn(product3_move.state, ('draft', 'confirmed', 'assigned'))
 
@@ -1514,7 +1514,7 @@ class TestPosStockFlow(CommonPosStockTest):
         make_payment.check()
         self.assertEqual(refund_order.state, 'paid')
 
-        picking._invalidate_cache()
+        picking.invalidate_model()
 
         # Picking should still be active (C not refunded)
         self.assertIn(picking.state, ('draft', 'confirmed', 'assigned'))
