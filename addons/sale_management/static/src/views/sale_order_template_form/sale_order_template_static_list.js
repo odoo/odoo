@@ -40,8 +40,7 @@ export class SaleOrderTemplateFormStaticList extends StaticList {
             return false;
         }
 
-        // handle section line's changes
-        const commands = [x2ManyCommands.update(record.resId || record._virtualId, changes)];
+        const commands = [];
 
         for (const sectionLine of sectionLines) {
             const qtyField = this.isSection(sectionLine) ? "section_qty" : "product_uom_qty";
