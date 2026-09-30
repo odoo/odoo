@@ -16,7 +16,7 @@
                     <span class="oi" data-icon="info" t-att-title="this.props.info"/>
                 </t>
                 <t t-if="this.labelString and this.props.documentation">
-                    <DocumentationLink path="this.props.documentation" icon="'help'"/>
+                    <DocumentationLink path="this.props.documentation" label="''"/>
                 </t>
                 <t t-if="this.displayCompanyDependentIcon">
                     <span class="oi oi-lg" data-icon="business" title="Values set here are company-specific."/>

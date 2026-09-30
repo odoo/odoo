@@ -24,6 +24,7 @@ import {
     useProps,
 } from "@odoo/owl";
 import wUtils from "@website/js/utils";
+import { DocumentationLink } from "@web/core/documentation_link/documentation_link";
 
 // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
 // Javascript \b is not unicode aware, and words beginning or ending by accents won't match \b
@@ -446,6 +447,7 @@ class MetaKeywords extends Component {
     static template = "website.MetaKeywords";
     static components = {
         Keyword,
+        DocumentationLink,
     };
     props = useProps({});
 

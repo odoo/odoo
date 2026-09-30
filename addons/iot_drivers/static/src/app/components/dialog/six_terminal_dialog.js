@@ -63,7 +63,7 @@ export class SixTerminalDialog extends Component {
 
         <Dialog
             name="'Configure a Six Terminal'"
-            help="'https://www.odoo.com/documentation/latest/applications/sales/point_of_sale/payment_methods/terminals/six.html'"
+            help="'/applications/sales/point_of_sale/payment_methods/terminals/six.html'"
             btnName="'Configure'">
             <t t-set-slot="body">
                 <div class="alert alert-info fs-6" role="alert">

@@ -59,7 +59,7 @@ export class DatabaseDialog extends Component {
 
         <Dialog
             name="'Configure Odoo Database'"
-            help="'https://www.odoo.com/documentation/latest/applications/general/iot/connect.html'"
+            help="'/applications/general/iot/connect.html'"
             btnName="'Configure'">
             <t t-set-slot="body">
                 <div class="alert alert-warning fs-6 pb-0" role="alert" t-if="!this.store.base().server_status">

@@ -67,8 +67,7 @@
                         <setting string="Kiosk Mode" company_dependent="1" help="Define the way the user will be identified by the application.">
                             <field name="attendance_kiosk_mode" widget="radio" options="{'horizontal': True}"/>
                             <div>
-                                <a href="https://www.odoo.com/documentation/latest/applications/hr/attendances/hardware.html"
-                                    target="_blank"><i class="oi oi-fw" data-icon="arrow_forward"/>Installation Manual</a>
+                                <widget name="documentation_link" path="/applications/hr/attendances/hardware.html" label="Installation Manual" />
                             </div>
                         </setting>
                         <setting string="Display Time" company_dependent="1" help="Choose how long the greeting message will be displayed.">

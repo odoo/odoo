@@ -2,6 +2,7 @@ import { EditHeadBodyDialog } from "../edit_head_body_dialog/edit_head_body_dial
 import { Component, proxy, useProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
+import { DocumentationLink } from "@web/core/documentation_link/documentation_link";
 
 /**
  * Represents the warning overlay that appears when the user opens the ResourceEditor
@@ -9,6 +10,7 @@ import { useService } from "@web/core/utils/hooks";
  */
 export class ResourceEditorWarningOverlay extends Component {
     static template = "website.ResourceEditorWarningOverlay";
+    static components = { DocumentationLink };
     props = useProps({});
 
     /**

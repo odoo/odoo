@@ -9,6 +9,7 @@ import { UpdateDialog } from "./components/dialog/update_dialog.js";
 import { DeviceDialog } from "./components/dialog/device_dialog.js";
 import { SixTerminalDialog } from "./components/dialog/six_terminal_dialog.js";
 import { LoadingFullScreen } from "./components/loading_full_screen.js";
+import { DocumentationLink } from "@web/core/documentation_link/documentation_link.js";
 
 const { Component, xml, onWillStart, signal, computed } = owl;
 
@@ -22,6 +23,7 @@ export class Homepage extends Component {
         DeviceDialog,
         SixTerminalDialog,
         LoadingFullScreen,
+        DocumentationLink,
     };
 
     store = useStore();
@@ -173,7 +175,7 @@ export class Homepage extends Component {
                 <FooterButtons />
                 <div class="d-flex justify-content-center gap-2 mt-2" t-if="!this.store.base().is_access_point_up">
                     <a href="https://www.odoo.com/fr_FR/help" target="_blank" class="link-primary">Help</a>
-                    <a href="https://www.odoo.com/documentation/latest/applications/general/iot.html" target="_blank" class="link-primary">Documentation</a>
+                    <DocumentationLink path="'/applications/general/iot.html'" label="'Documentation'" hideIcon="true" />
                 </div>
             </div>
         </div>

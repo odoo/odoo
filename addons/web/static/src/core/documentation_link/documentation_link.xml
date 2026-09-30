@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.DocumentationLink">
+        <a t-att-href="this.url" t-att-class="this.classes" target="_blank">
+            <span t-out="this.label()" />
+            <i
+                t-if="!this.props.hideIcon"
+                class="oi"
+                t-att-class="{'ps-1': this.label().length > 0}"
+                data-icon="help" aria-hidden="true"
+            ></i>
+        </a>
+    </t>
+</templates>

@@ -93,7 +93,7 @@ export class DebuggingToolsDialog extends Component {
     <t t-translation="off">
         <Dialog
             name="'Debugging Tools'"
-            help="'https://www.odoo.com/documentation/latest/applications/general/iot/iot_advanced/ssh_connect.html'"
+            help="'/applications/general/iot/iot_advanced/ssh_connect.html'"
             btnName="'Debugging Tools'">
             <t t-set-slot="body">
                 <h6>Remote Debug</h6>

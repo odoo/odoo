@@ -16,6 +16,7 @@ This modules only contains the enabling framework. The actual devices drivers
 are found in other modules that must be installed separately.
 
 """,
+    'depends': ['web'],
     'assets': {
         'iot_drivers.assets': [  # dummy asset name to make sure it does not load outside of IoT homepage
             'iot_drivers/static/**/*',

@@ -67,10 +67,10 @@
             <div class="o_crm_pls_tooltip_footer d-flex justify-content-between text-muted fs-xs mt-3 px-2">
                 <span t-if="isSampleData" class="text-primary fw-bold">Close opportunities to get insights.</span>
                 <span t-else="">Computed by Odoo AI using your data.</span>
-                <a role="button" class="ms-2 btn-link"
-                    href="https://www.odoo.com/documentation/latest/applications/sales/crm/track_leads/lead_scoring.html#predictive-lead-scoring" target="_blank">
-                    <i class="oi pe-1" data-icon="info"/>Learn More
-                </a>
+                <DocumentationLink
+                  path="'/applications/sales/crm/track_leads/lead_scoring.html#predictive-lead-scoring'"
+                  label.translate="'Learn More'"
+                />
             </div>
         </div>
     </t>
