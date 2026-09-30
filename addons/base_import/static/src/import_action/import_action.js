@@ -185,9 +185,10 @@ export class ImportAction extends Component {
         return this.state.numRows > 100;
     }
 
-    async onOptionChanged(name, value, fieldName = null) {
+    async onOptionChanged(name, value) {
         this.model.block();
-        const result = await this.model.setOption(name, value, fieldName);
+        this.model.clearErrors();
+        const result = await this.model.setOption(name, value);
         if (result) {
             const { res, error } = result;
             if (!error && res.num_rows) {
@@ -295,6 +296,10 @@ export class ImportAction extends Component {
 
     onFieldLanguageChanged(column, language) {
         this.model.setColumnLanguage(column, language);
+    }
+
+    onErrorResolved(error, resolution) {
+        this.model.setErrorResolution(error, resolution);
     }
 
     isFieldSet(column) {
