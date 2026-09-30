@@ -12,6 +12,61 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
     # EXPORT: NODES
     # -------------------------------------------------------------------------
 
+    def _ubl_add_notes_nodes(self, vals):
+        super()._ubl_add_notes_nodes(vals)
+
+        # [BR-FR-MAP-18] EN16931 caps the Note (BT-22) to 1024 characters.
+        for note in vals['document_node']['cbc:Note']:
+            if isinstance(note['_text'], str):
+                note['_text'] = note['_text'][:1024]
+
+    def _ubl_get_partner_address_node(self, vals, partner):
+        # EXTENDS account.edi.ubl
+        node = super()._ubl_get_partner_address_node(vals, partner)
+
+        # [BR-FR-MAP-17/BR-FR-MAP-19] EN16931 caps these address lines to 255 characters (postal code: 10).
+        for field in ('cbc:StreetName', 'cbc:AdditionalStreetName', 'cbc:CityName', 'cbc:CountrySubentity'):
+            if isinstance(node[field]['_text'], str):
+                node[field]['_text'] = node[field]['_text'][:255]
+
+        if (
+            (postal_zone_node := node['cbc:PostalZone'])
+            and isinstance(postal_zone_node['_text'], str)
+        ):
+            postal_zone_node['_text'] = postal_zone_node['_text'][:10]
+
+        return node
+
+    def _ubl_add_line_item_name_description_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_line_item_name_description_nodes(vals)
+
+        # [BR-FR-MAP-17] EN16931 caps the Item name (BT-153) to 255 characters.
+        item_name_node = vals['item_node'].get('cbc:Name')
+        if item_name_node and isinstance(item_name_node['_text'], str):
+            item_name_node['_text'] = item_name_node['_text'][:255]
+
+    def _ubl_get_allowance_charge_early_payment_node(self, vals, early_payment_values):
+        # EXTENDS account.edi.ubl
+        node = super()._ubl_get_allowance_charge_early_payment_node(vals, early_payment_values)
+        self._ubl_truncate_allowance_charge_reason(node)
+        return node
+
+    def _ubl_get_allowance_charge_global_discount_node(self, vals, global_discount_values):
+        # EXTENDS account.edi.ubl
+        node = super()._ubl_get_allowance_charge_global_discount_node(vals, global_discount_values)
+        self._ubl_truncate_allowance_charge_reason(node)
+        return node
+
+    def _ubl_truncate_allowance_charge_reason(self, node):
+        # [BR-FR-MAP-18] EN16931 caps the document level allowance/charge reason (BT-120, BT-127) to 1024 characters.
+
+        if (
+            (allowance_charge_reason_node := node['cbc:AllowanceChargeReason'])
+            and isinstance(allowance_charge_reason_node['_text'], str)
+        ):
+            allowance_charge_reason_node['_text'] = allowance_charge_reason_node['_text'][:1024]
+
     def _line_nodes_filter_base_lines(self, vals, filter_function=None):
         # Early payment discount lines should not appear as lines but as allowances/charges.
         # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
