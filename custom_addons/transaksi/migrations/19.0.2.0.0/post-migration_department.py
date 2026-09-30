@@ -90,27 +90,24 @@ def migrate(cr, version):
         cr.execute("ALTER TABLE transaksi_transaction DROP COLUMN IF EXISTS unit_id")
 
     if _table_exists(cr, "sifnext_unit"):
-        if not _table_exists(cr, "sifnext_legacy_unit_backup"):
-            raise RuntimeError(
-                "Cannot remove sifnext_unit: the legacy unit backup table is missing."
+        if _table_exists(cr, "sifnext_legacy_unit_backup"):
+            cr.execute(
+                """
+                SELECT COUNT(*)
+                  FROM sifnext_unit AS legacy
+                  LEFT JOIN sifnext_legacy_unit_backup AS backup
+                    ON backup.unit_id = legacy.id
+                 WHERE backup.unit_id IS NULL
+                """
             )
-        cr.execute(
-            """
-            SELECT COUNT(*)
-              FROM sifnext_unit AS legacy
-              LEFT JOIN sifnext_legacy_unit_backup AS backup
-                ON backup.unit_id = legacy.id
-             WHERE backup.unit_id IS NULL
-            """
-        )
-        unbacked_units = cr.fetchone()[0]
-        if unbacked_units:
-            raise RuntimeError(
-                "Cannot remove sifnext_unit: %s legacy units are not backed up."
-                % unbacked_units
-            )
-        cr.execute("DROP TABLE sifnext_unit")
-        _logger.info("Removed legacy sifnext_unit table after department migration.")
+            unbacked_units = cr.fetchone()[0]
+            if not unbacked_units:
+                cr.execute("DROP TABLE sifnext_unit CASCADE")
+                _logger.info("Removed legacy sifnext_unit table after department migration.")
+            else:
+                _logger.warning("Kept legacy sifnext_unit table: %s units not backed up.", unbacked_units)
+        else:
+            _logger.warning("Kept legacy sifnext_unit table: sifnext_legacy_unit_backup table missing.")
 
     _logger.info(
         "Migrated bank-transfer departments: %s mapped, %s assigned to company fallback, %s mixed-PPL headers kept without one department.",
