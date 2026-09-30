@@ -115,6 +115,9 @@
             'point_of_sale/static/src/backend/test_epos/*',
             'point_of_sale/static/src/app/utils/init_lna.js',
             'point_of_sale/static/src/backend/pos_open_ui_button/*',
+            'point_of_sale/static/src/backend/print_receipt/*',
+            'point_of_sale/static/src/app/utils/printer/base_printer.js',
+            'point_of_sale/static/src/app/utils/printer/epson_printer.js',
         ],
         'web.assets_backend_lazy': [
             'point_of_sale/static/src/backend/views/pivot/*',
@@ -141,6 +144,7 @@
             'web/static/src/core/errors/error_handlers.js',
             'web/static/src/core/dialog/dialog.scss',
             'point_of_sale/static/src/backend/views/**/*',
+            'point_of_sale/static/src/backend/print_receipt/**/*',
 
             'point_of_sale/static/src/customer_display/**/*',
             ('remove', 'point_of_sale/static/src/customer_display/root.js'),
