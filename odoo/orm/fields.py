@@ -1816,14 +1816,23 @@ class Field[T]:
                 self._update_cache(record, value)
             else:
                 recs = record if self.recursive else self._to_prefetch(record)
-                try:
-                    self.compute_value(recs)
-                    fallback_single = False
-                except (AccessError, MissingError):
-                    fallback_single = True
-                if fallback_single:
-                    self.compute_value(record)
-                    recs = record
+
+                # at most three iterations
+                recs0 = recs
+                while True:
+                    try:
+                        self.compute_value(recs)
+                        break
+                    except (AccessError, MissingError):
+                        if len(recs) == 1:
+                            raise
+                        if recs is recs0:  # first iteration only
+                            recs = recs.exists()._filtered_access('read')
+                            (recs0 - recs).invalidate_recordset()
+                            if record not in recs or len(recs) == len(recs0):
+                                raise
+                        else:  # second iteration only
+                            recs = record
 
                 missing_recs_ids = tuple(self._cache_missing_ids(recs))
                 if missing_recs_ids:
