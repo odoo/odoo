@@ -5,6 +5,8 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { initLNA, getLNATargetAddressSpace } from "@point_of_sale/app/utils/init_lna";
 
+const PRINTER_FIELDS = ["printer_ip", "name", "printer_type", "use_lna", "paper_size"];
+
 const EPSON_ERRORS = {
     DeviceNotFound: _t(
         "Check the printer configuration for the 'Device ID' setting.\nIt should be set to: 'local_printer'"
@@ -47,11 +49,7 @@ export class TestEPos extends Component {
 
     async getPrinterDataEPos(printer_id) {
         if (printer_id) {
-            const response = await this.orm.read(
-                "pos.printer",
-                [printer_id],
-                ["printer_ip", "name", "printer_type", "use_lna", "paper_size"]
-            );
+            const response = await this.orm.read("pos.printer", [printer_id], PRINTER_FIELDS);
             return response[0];
         } else {
             const data = this.props.record.data;
@@ -67,8 +65,11 @@ export class TestEPos extends Component {
     }
 
     async _testSinglePrinter() {
+        const { record } = this.props;
+        // Kanban: the printer fields are not loaded, read them by id
+        const loaded = PRINTER_FIELDS.every((field) => field in record.data);
         try {
-            await this._printTo();
+            await this._printTo(loaded ? null : record.resId);
         } catch {
             this.notification.add(
                 _t("You need to add an IP address or choose an IoT device before testing."),
