@@ -387,6 +387,15 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 "When displaying newest product templates, 16 unique templates should be shown",
             )
 
+            product_tag = self.env['product.tag'].create({'name': 'Some tag'})
+            self.product_tmpls.product_variant_ids.product_tag_ids += product_tag
+            no_variants = dyn_filter._prepare_values(search_domain=['hide_variants', ('all_product_tag_ids', 'in', [product_tag.id])])
+            self.assertEqual(
+                len({p['product_template_id'] for p in no_variants}),
+                16,
+                "When displaying newest product templates, 16 unique templates should be shown",
+            )
+
         products = self.computer_case.product_variant_ids[:16]
         now = datetime.now()
         for i, product in enumerate(products):
