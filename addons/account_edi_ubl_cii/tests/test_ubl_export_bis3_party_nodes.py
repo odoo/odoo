@@ -151,11 +151,11 @@ class TestUblExportBis3PartyNodes(TestUblBis3Common, TestUblCiiBECommon):
     def test_party_nodes_lu(self):
         # LU: VAT preferred (carries the country prefix) in PartyLegalEntity with no schemeID.
         partner = self._make_customer(
-            'base.lu', vat='LU12345613', routing_identifier='9938:12345613',
+            'base.lu', vat='LU12345613', routing_identifier='9938:LU12345613',
         )
         self._assert_schematron_party(
             self._generate_party_nodes(partner),
-            endpoint=('9938', '12345613'),
+            endpoint=('9938', 'LU12345613'),
             legal_entity=(None, 'LU12345613'),
             tax_scheme=[('LU12345613', 'VAT')],
         )
@@ -187,11 +187,11 @@ class TestUblExportBis3PartyNodes(TestUblBis3Common, TestUblCiiBECommon):
     def test_party_nodes_generic_vat_it(self):
         # Generic VAT country (IT): VAT in both PartyLegalEntity (no schemeID) and PartyTaxScheme.
         partner = self._make_customer(
-            'base.it', vat='IT12345670017', routing_identifier='0211:12345670017',
+            'base.it', vat='IT12345670017', routing_identifier='0211:IT12345670017',
         )
         self._assert_schematron_party(
             self._generate_party_nodes(partner),
-            endpoint=('0211', '12345670017'),
+            endpoint=('0211', 'IT12345670017'),
             legal_entity=('0211', 'IT12345670017'),
             tax_scheme=[('IT12345670017', 'VAT')],
         )
