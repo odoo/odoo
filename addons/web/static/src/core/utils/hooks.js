@@ -255,9 +255,11 @@ export function useOwnedDialogs(options = {}) {
  */
 export class BackButtonManager {
     _boundOnPopstate = this._onPopstate.bind(this);
+    _boundOnNavigate = this._onNavigate.bind(this);
     _boundPerformLatestBackAction = this._performLatestBackAction.bind(this);
     _cleanupPending = false;
     _listeners = new Map();
+    _navigating = false;
     _trapState = {
         nextState: router.current,
         skipRouteChange: true,
@@ -298,7 +300,9 @@ export class BackButtonManager {
 
     _activate() {
         this._cleanupPending = false;
+        this._navigating = false;
         window.addEventListener("popstate", this._boundOnPopstate);
+        window.navigation?.addEventListener("navigate", this._boundOnNavigate);
         if (!history.state?.trapState) {
             router.skipLoad = true;
             history.pushState(this._trapState, "");
@@ -316,7 +320,9 @@ export class BackButtonManager {
             }
             this._cleanupPending = false;
             window.removeEventListener("popstate", this._boundOnPopstate);
-            if (history.state?.trapState) {
+            window.navigation?.removeEventListener("navigate", this._boundOnNavigate);
+            // Do not go back while the page is reloading or leaving to another page.
+            if (history.state?.trapState && !this._navigating) {
                 router.skipLoad = true;
                 history.back();
             }
@@ -329,6 +335,12 @@ export class BackButtonManager {
         }
         const fn = [...this._listeners.values()].at(-1);
         fn(...args);
+    }
+
+    _onNavigate(ev) {
+        if (!ev.destination.sameDocument && ev.downloadRequest === null) {
+            this._navigating = true;
+        }
     }
 
     _onPopstate() {
