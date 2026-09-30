@@ -13,7 +13,6 @@ import { Poll } from "@mail/core/common/poll";
 import { PollResult } from "@mail/core/common/poll_result";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { groupAttachments } from "@mail/utils/common/attachments";
-import { htmlToTextContentInline } from "@mail/utils/common/format";
 
 import {
     Component,
@@ -106,6 +105,8 @@ export class Message extends Component {
         );
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = proxy({
+            // The actions are only rendered once needed, as they are costly.
+            actionsRendered: false,
             isHovered: false,
             isClicked: false,
             expandOptions: false,
@@ -399,7 +400,7 @@ export class Message extends Component {
         return (
             this.message.subtype_id?.description &&
             this.message.subtype_id.description.toLowerCase() !==
-                htmlToTextContentInline(this.message.body || "").toLowerCase()
+                this.message.bodyTextContentInline.toLowerCase()
         );
     }
 
@@ -428,7 +429,7 @@ export class Message extends Component {
             this.state.isHovered ||
             this.state.isClicked ||
             this.emojiPicker?.isOpen ||
-            Boolean(this.moreAction()?.isActive)
+            (this.state.actionsRendered && Boolean(this.moreAction()?.isActive))
         );
     }
 
@@ -451,6 +452,7 @@ export class Message extends Component {
     }
 
     onMouseenter() {
+        this.state.actionsRendered = true;
         this.state.isHovered = true;
     }
 
@@ -494,6 +496,7 @@ export class Message extends Component {
             if (this.state.isClicked) {
                 this.state.isClicked = false;
             } else {
+                this.state.actionsRendered = true;
                 this.state.isClicked = true;
                 document.body.addEventListener(
                     "click",

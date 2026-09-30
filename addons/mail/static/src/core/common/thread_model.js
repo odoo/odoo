@@ -620,6 +620,16 @@ export class Thread extends Record {
         });
     }
 
+    /**
+     * Fetches the messages to show when the thread is opened.
+     *
+     * @param {Object} [options]
+     * @param {MessageRouteParams} [options.routeParams]
+     */
+    async fetchInitialMessages({ routeParams = {} } = {}) {
+        return this.fetchNewMessages({ routeParams });
+    }
+
     getFetchNewMessagesAfter() {
         return this.isLoaded ? this.newestPersistentMessage?.id : undefined;
     }
@@ -664,10 +674,19 @@ export class Thread extends Record {
      * @param {MessageRouteParams} [options.routeParams]
      */
     async loadAround({ messageId, routeParams = {} } = {}) {
-        if (
-            this.status === "loading" ||
-            (this.isLoaded && this.messages.some(({ id }) => id === messageId))
-        ) {
+        const oldestId = this.oldestPersistentMessage?.id;
+        const newestId = this.newestPersistentMessage?.id;
+        const hasTarget =
+            messageId !== undefined &&
+            oldestId !== undefined &&
+            (messageId >= oldestId || !this.loadOlder) &&
+            (messageId <= newestId || (!this.loadNewer && this.channel?.self_member_id));
+        const isFullyLoaded =
+            this.channel?.self_member_id &&
+            !this.loadOlder &&
+            !this.loadNewer &&
+            !this.hasLoadingFailed;
+        if (this.status === "loading" || (this.isLoaded && (hasTarget || isFullyLoaded))) {
             return;
         }
         this.isLoaded = false;

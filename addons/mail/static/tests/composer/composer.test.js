@@ -9,6 +9,7 @@ import {
     dragenterFiles,
     dropFiles,
     focus,
+    hover,
     inputFiles,
     insertText,
     onRpcBefore,
@@ -943,6 +944,7 @@ test("Replying on a channel should focus composer initially", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click("[title='Expand']");
     await click(".o-dropdown-item:contains('Reply')");
     await contains(".o-mail-Composer-input:focus");
@@ -1462,9 +1464,9 @@ test("Can dismiss mail composer with 500+ active_ids", async () => {
     await openFormView("mail.compose.message", composerId, {
         context: { active_ids: [partnerId] },
     });
-    expect(env.dialogData).not.toBeEmpty()
+    expect(env.dialogData).not.toBeEmpty();
     // Dialog is closed without errors
-    await env.dialogData.dismiss()
+    await env.dialogData.dismiss();
 });
 
 test("composer reply-to message is restored on thread change", async () => {
@@ -1491,6 +1493,7 @@ test("composer reply-to message is restored on thread change", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Reply')");
     await contains(".o-mail-Composer:contains('Replying to')");
@@ -1866,6 +1869,7 @@ test("Post message trims outer whitespaces and newlines", async () => {
     expect(".o-mail-Message-richBody").toHaveInnerHTML(
         "I am &nbsp;the &nbsp; &nbsp;night<br><br><br><br>I am &nbsp;Batman"
     );
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer-input", {

@@ -90,19 +90,13 @@ export async function mailChatterMessageActionsInvisibleWhenNotHovered() {
         res_id: partnerId,
         message_type: "comment",
     });
-    const isNodeVisible = (selector) => {
-        const { visibility } = getComputedStyle(queryFirst(selector));
-        return visibility === "visible";
-    };
     await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message-actions.invisible");
     await contains(".o-mail-Message-actions button", { count: 2 });
-    expect(isNodeVisible(".o-mail-Message-actions button:eq(0)")).toBe(false);
-    expect(isNodeVisible(".o-mail-Message-actions button:eq(1)")).toBe(false);
+    await contains(".o-mail-Message-actions button[title]", { count: 0 });
     await hover(".o-mail-Message");
     await contains(".o-mail-Message-actions:not(.invisible)");
     await contains(".o-mail-Message-actions button", { count: 2 });
-    expect(isNodeVisible(".o-mail-Message-actions button:eq(0)")).toBe(true);
-    expect(isNodeVisible(".o-mail-Message-actions button:eq(1)")).toBe(true);
+    await contains(".o-mail-Message-actions button[title]", { count: 2 });
 }

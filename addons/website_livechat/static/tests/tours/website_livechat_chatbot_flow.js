@@ -53,13 +53,20 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 trigger: '.o-livechat-root:shadow button:text("I\'d like to buy the software")',
                 run: "click",
             },
+            waitForMessage("Can you give us your email please?"),
+            {
+                // the thread is persisted in the process, wait for it to settle as the
+                // messages are re-rendered, and hover after that to render the actions
+                trigger:
+                    ".o-livechat-root:shadow .o-mail-ChatWindow .o-mail-Message[data-persistent]:text('I\\'d like to buy the software')",
+                run: "hover",
+            },
             {
                 // check selected option is posted and reactions are available since
                 // the thread has been persisted in the process
                 trigger:
                     ".o-livechat-root:shadow .o-mail-ChatWindow .o-mail-Message:has(.o-mail-Message-actions [title='Add a Reaction']):text('I\\'d like to buy the software')",
             },
-            waitForMessage("Can you give us your email please?"),
             ...postMessage("No, you won't get my email!"),
             waitForMessage(
                 "'No, you won't get my email!' does not look like a valid email. Can you please try again?"

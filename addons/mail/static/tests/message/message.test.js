@@ -75,6 +75,7 @@ test("Start edition on click edit", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer-input", { value: "Hello world" });
@@ -100,6 +101,7 @@ test("edit a message with styling keeps the styling", async () => {
     await openDiscuss(channelId);
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Composer-html.odoo-editor-editable strong:contains('Hello world')");
@@ -127,6 +129,7 @@ test("edit a message styling", async () => {
     await contains(".o-mail-Message[data-persistent] em:contains(Hello world)", {
         count: 0,
     });
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await focus(".o-mail-Message .o-mail-Composer-html.odoo-editor-editable");
@@ -168,11 +171,13 @@ test("Can only edit one message at a time", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message:has(:text('Goodbye!'))");
     await click(".o-mail-Message [title='Expand']", {
         parent: [".o-mail-Message:has(:text('Goodbye!'))"],
     });
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Composer-input", { value: "Goodbye!" });
+    await hover(".o-mail-Message:has(:text('Hello!'))");
     await click(".o-mail-Message [title='Expand']", {
         parent: [".o-mail-Message:has(:text('Hello!'))"],
     });
@@ -202,12 +207,14 @@ test("Edit message (mobile)", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Edit')");
     await contains(".o-mail-Message.o-editing .o-mail-Composer-input", { value: "Hello world" });
     await click("button:text('Discard editing')");
     await contains(".o-mail-Message.o-editing .o-mail-Composer", { count: 0 });
     await contains(".o-mail-Message-content:text('Hello world')");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
@@ -251,6 +258,7 @@ test("Editing message keeps the mentioned roles", async () => {
     await click(".o-mail-Composer-suggestion strong", { text: "admin" });
     await press("Enter");
     await contains(".o-mail-Message .o-discuss-mention", { text: "@admin" });
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer-input", { value: "@admin" });
@@ -275,12 +283,14 @@ async function canEditMessageCommentInChatter({ isMacOS = false } = {}) {
     }
     await start();
     await openFormView("res.partner", partnerId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer.o-focused");
     await webContains(".o-mail-Message .o-mail-Composer-input").edit("edited message");
     await click(".o-mail-Message button:text('save')");
     await contains(".o-mail-Message-content:text('edited message (edited)')");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(
@@ -298,6 +308,7 @@ async function canEditMessageCommentInChatter({ isMacOS = false } = {}) {
     ]);
     await contains(".o-mail-Message-content:text('edited again (edited)')");
     // save without change should keep (edited)
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer.o-focused");
@@ -341,6 +352,7 @@ test("Can edit message using full composer", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Composer");
@@ -371,6 +383,7 @@ test("Full composer opens with the message's live edited content", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Composer");
@@ -393,6 +406,7 @@ test("Editing a message written with the full composer offers to reopen it", asy
     });
     await start();
     await openFormView("res.partner", partnerId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer-input:disabled");
@@ -414,6 +428,7 @@ test("Basic list of edit message actions in chatter", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer.o-focused");
@@ -437,6 +452,7 @@ test("Cursor is at end of composer input on edit", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     const textarea = queryFirst(".o-mail-Composer-input");
@@ -460,6 +476,7 @@ test("Stop edition on click cancel", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await click(".o-mail-Message button:text('cancel')");
@@ -481,6 +498,7 @@ test("Stop edition on press escape", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     triggerHotkey("Escape", false);
@@ -502,6 +520,7 @@ test("Stop edition on click save", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await click(".o-mail-Message button:text('save')");
@@ -523,6 +542,7 @@ test("Stop edition on press enter", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     triggerHotkey("Enter", false);
@@ -544,6 +564,7 @@ test("Do not stop edition on click away when clicking on emoji", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await click(".o-mail-Composer button[title='Add Emojis']");
@@ -567,6 +588,7 @@ test("Edit and click save", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", { replace: true });
@@ -591,15 +613,18 @@ test("Do not call server on save if no changes", async () => {
     onRpcBefore("/mail/message/update_content", () => expect.step("update_content"));
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await click(".o-mail-Message button:text('save')");
     await expect.waitForSteps([]);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", " - updated");
     await click(".o-mail-Message button:text('save')");
     await expect.waitForSteps(["update_content"]);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await click(".o-mail-Message button:text('save')");
@@ -622,6 +647,7 @@ test("Update the link previews when a message is edited", async () => {
     onRpcBefore("/mail/link_preview", (args) => expect.step("link_preview"));
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", "http://odoo.com", {
@@ -647,6 +673,7 @@ test("Scroll bar to the top when edit starts", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer-input");
@@ -677,6 +704,7 @@ test("[text composer] mentions and special mentions are kept when editing messag
             ["a.o-discuss-mention:text('@everyone')"],
         ],
     });
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", " abc");
@@ -717,6 +745,7 @@ test("mentions and special mentions are kept when editing message", async () => 
             ["a.o-discuss-mention:text('@everyone')"],
         ],
     });
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer-html", {
@@ -774,6 +803,7 @@ test("can add new mentions when editing message", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", " @");
@@ -831,6 +861,7 @@ test("edit message with multiple mentions keeps the links", async () => {
     ]);
     await start();
     await openFormView("res.partner", serverState.partnerId);
+    await hover(".o-mail-Message:eq(0)");
     await click(".o-mail-Message:eq(0) [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message:eq(0) .o-mail-Composer-input", " with edit");
@@ -841,6 +872,7 @@ test("edit message with multiple mentions keeps the links", async () => {
     await contains('.o-mail-Message:eq(0) a.o_mail_redirect[data-oe-id="123"]', {
         text: "@Test Partner",
     });
+    await hover(".o-mail-Message:eq(1)");
     await click(".o-mail-Message:eq(1) [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message:eq(1) .o-mail-Composer-input", " with edit");
@@ -921,6 +953,7 @@ test("Updating the parent message of a reply also updates the visual of the repl
     });
     await start();
     await openDiscuss(channelId);
+    await hover(":nth-child(1 of .o-mail-Message)");
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", "Goodbye World", {
@@ -944,10 +977,12 @@ test("Deleting parent message of a reply should adapt reply visual", async () =>
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Reply')");
     await insertText(".o-mail-Composer-input", "FooBarFoo");
     triggerHotkey("Enter", false);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Delete')");
     await click(".modal button:text('Delete')");
@@ -968,10 +1003,12 @@ test("Can open emoji picker after edit mode", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await click(".o-mail-Message button:text('save')");
     await contains(".o-mail-Message:has(:text('Hello world'))");
+    await hover(".o-mail-Message");
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu [title='Toggle Emoji Picker']");
     await contains(".o-EmojiPicker");
@@ -991,6 +1028,7 @@ test("Can add a reaction", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu [title='Toggle Emoji Picker']");
     await click(".o-Emoji:text('😅')");
@@ -1012,6 +1050,7 @@ test("Can add a reaction (small but desktop)", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click("[title='Add a Reaction']");
     await click(".o-Emoji", { text: "😅" });
     await contains(".o-mail-MessageReaction", { text: "😅1" });
@@ -1031,6 +1070,7 @@ test("Can remove a reaction", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button:text('😅')");
     await click(".o-mail-MessageReaction");
@@ -1097,6 +1137,7 @@ test("Reaction summary", async () => {
         const userId = pyEnv["res.users"].create({ partner_id });
         pyEnv["res.partner"].create({ name, user_ids: [Command.link(userId)] });
         await withUser(userId, async () => {
+            await hover(".o-mail-Message");
             await click(".o-mail-Message-actions [title='Add a Reaction']");
             await click(".o-mail-QuickReactionMenu button:text('😅')");
             await waitFor(`.o-mail-MessageReaction:text(😅 ${idx + 1})`, {
@@ -1124,9 +1165,11 @@ test("Select already reacted emoji from quick reaction removes the reaction on m
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message-actions [title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button:text('😅')");
     await contains(".o-mail-MessageReaction:text('😅 1')");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message-actions [title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button:text('😅')");
     await contains(".o-mail-MessageReaction", { count: 0 });
@@ -1451,6 +1494,7 @@ test("click on message edit button should open edit composer", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer");
@@ -1667,6 +1711,7 @@ test("Can delete a message", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", "", { replace: true });
@@ -1705,6 +1750,7 @@ test("Message in message delete dialog should be read-only", async () => {
     await contains(".o-mail-MessageReaction");
     await contains(".o-mail-MessageReaction:text(😅 1)");
     const messageActionsSelector = ".o-mail-Message-actions";
+    await hover(".o-mail-Message");
     await contains(`${messageActionsSelector} [title='Add a Reaction']`);
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Delete')");
@@ -1737,6 +1783,7 @@ test("Clear message body should not open message delete dialog if it has attachm
     onRpcBefore("/mail/message/update_content", () => expect.step("update_content"));
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", "", { replace: true });
@@ -1758,6 +1805,7 @@ test("Clear message body and remove attachments should open message delete dialo
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", "", { replace: true });
@@ -1793,6 +1841,7 @@ test("Can remove saved attachments while editing a message", async () => {
     onRpcBefore("/mail/message/update_content", () => expect.step("update_content"));
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(
@@ -1983,8 +2032,10 @@ test("Can download all files of a message", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
+    await hover(":nth-child(1 of .o-mail-Message)");
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
     await contains(".o-dropdown-item:contains('Download Files')");
+    await hover(":nth-child(2 of .o-mail-Message)");
     await click(":nth-child(2 of .o-mail-Message) [title='Expand']");
     await contains(".o-dropdown-item:contains('Download Files')", { count: 0 });
 });
@@ -2182,6 +2233,7 @@ test("delete all attachments of message without content should mark message as d
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Delete')");
     await click(".modal button:text('Delete')");
@@ -2325,6 +2377,7 @@ test("Mark as unread", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Mark as Unread')");
     await contains(".o-mail-Thread-newMessage");
@@ -2406,6 +2459,7 @@ test("Message actions for 'email_outgoing' messages", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
+    await hover(".o-mail-Message");
     await contains(".o-mail-Message-actions button", { count: 2 });
     await contains(".o-mail-Message-actions button[title='Add a Reaction']");
     await contains(".o-mail-Message-actions button[title='Expand']");
@@ -2466,6 +2520,7 @@ test("Can edit a message only containing an attachment", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message.o-editing .o-mail-Composer-input");
@@ -2485,9 +2540,11 @@ test("Click on view reactions shows the reactions on the message", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button:text('😅')");
     await contains(".o-mail-MessageReaction:text('😅 1')");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('View Reactions')");
     await contains(".o-mail-MessageReactionMenu:has(:text('😅 1'))");
@@ -2612,8 +2669,10 @@ test("Copy Message Link", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 2 });
+    await hover(".o-mail-Message:eq(0)");
     await click(".o-mail-Message:eq(0) [title='Expand']");
     await contains(".o-dropdown-item:contains('Copy Message Link')", { count: 0 });
+    await hover(".o-mail-Message:eq(1)");
     await click(".o-mail-Message:eq(1) [title='Expand']");
     await click(".o-dropdown-item:contains('Copy Message Link')");
     const link = url(`/mail/message/${messageId_2}`);
@@ -2636,6 +2695,7 @@ test("deleted message should not have translate feature", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message:contains('not empty')");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await contains(".dropdown-menu");
     await contains(".dropdown-item:contains('Translate')");
@@ -2647,6 +2707,7 @@ test("deleted message should not have translate feature", async () => {
     await animationFrame(); // in case some extra rendering for expand
     if (queryFirst(".o-mail-Message [title='Expand']")) {
         // Translate could hide itself in 'Expand' menu
+        await hover(".o-mail-Message");
         await click(".o-mail-Message [title='Expand']");
         await contains(".dropdown-menu");
         await animationFrame(); // in case some rendering
@@ -2774,6 +2835,7 @@ test("should delete link preview along with message", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-LinkPreviewCard");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Delete')");
     await click(".modal button:text('Delete')");
@@ -2831,6 +2893,7 @@ test("(edited) label is not included in editor when editing an already-edited me
     composerService.setHtmlComposer();
     await openDiscuss(channelId);
     // First edit to produce an "(edited)" label in the body
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await focus(".o-mail-Message  .o-mail-Composer-html.odoo-editor-editable");
@@ -2844,6 +2907,7 @@ test("(edited) label is not included in editor when editing an already-edited me
     await click(".o-mail-Message button:text('save')");
     await contains(".o-mail-Message-content:text('Hello world (edited)')");
     // Open editor again — assert (edited) is NOT inside the editable
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await focus(".o-mail-Message .o-mail-Composer-html.odoo-editor-editable");
@@ -2877,10 +2941,12 @@ test("Do not call server on save if body only differs by HTML comments", async (
     });
     await start();
     await openFormView("res.partner", serverState.partnerId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await click(".o-mail-Message button:text('save')");
     // Real edit next, so the final step also proves the earlier save was a no-op.
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", " edited");

@@ -574,7 +574,7 @@ export class Composer extends Component {
         const attachments = this.props.composer.attachments;
         return (
             !this.state.active ||
-            (isHtmlEmpty(this.props.composer.composerHtml) && attachments.length === 0) ||
+            (this.props.composer.isComposerHtmlEmpty && attachments.length === 0) ||
             attachments.some(({ uploading }) => Boolean(uploading))
         );
     }
@@ -899,7 +899,7 @@ export class Composer extends Component {
 
     get canProcessMessage() {
         return (
-            !isHtmlEmpty(this.props.composer.composerHtml) ||
+            !this.props.composer.isComposerHtmlEmpty ||
             this.props.composer.attachments.length > 0 ||
             (this.message && this.message.attachment_ids.length > 0)
         );

@@ -2,6 +2,7 @@ import { describe, test } from "@odoo/hoot";
 import {
     click,
     contains,
+    hover,
     onRpcBefore,
     openDiscuss,
     start,
@@ -35,6 +36,7 @@ test("message translation in livechat (agent is member)", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
+    await hover(".o-mail-Message");
     await click("[title='Expand']");
     await contains(".o-dropdown-item:contains('Translate')");
 });
@@ -58,6 +60,7 @@ test("message translation in livechat (agent is not member)", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
+    await hover(".o-mail-Message");
     await click("[title='Expand']");
     await contains(".o-dropdown-item:contains('Translate')");
 });
@@ -105,6 +108,7 @@ test("click 'translate' on message prompts for auto-translate of new messages", 
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Translate')");
     await contains(".o_notification_body span:contains('Auto-translate future messages?')");
@@ -125,6 +129,9 @@ test("click 'translate' on message prompts for auto-translate of new messages", 
     );
     await contains(
         ".o-mail-Message-body:text('The weather is nice today! (Translated from: Italian)')"
+    );
+    await hover(
+        ".o-mail-Message:contains('The weather is nice today! (Translated from: Italian)')"
     );
     await click(
         ".o-mail-Message:contains('The weather is nice today! (Translated from: Italian)') [title='Expand']"

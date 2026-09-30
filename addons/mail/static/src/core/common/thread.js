@@ -76,7 +76,8 @@ export class Thread extends Component {
         this.ui = useService("ui");
         this.state = proxy({
             isReplyingTo: false,
-            mountedAndLoaded: false,
+            // Already loaded threads show their messages on mount, instead of a render later.
+            mountedAndLoaded: this.props.thread.isLoaded,
             showJumpPresent: false,
             scrollTop: null,
         });
@@ -508,7 +509,7 @@ export class Thread extends Component {
     }
 
     fetchInitialMessages() {
-        this.props.thread.fetchNewMessages({ routeParams: this.messageFetchRouteParams });
+        this.props.thread.fetchInitialMessages({ routeParams: this.messageFetchRouteParams });
     }
 
     get viewportEl() {

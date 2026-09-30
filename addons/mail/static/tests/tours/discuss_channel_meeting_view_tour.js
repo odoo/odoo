@@ -39,8 +39,12 @@ function getMeetingViewTourSteps({ isPublicPage = false } = {}) {
         },
         { trigger: ".o-mail-Meeting [title='Chat']:not(:has(.badge))" },
         {
-            trigger: ".o-mail-Message[data-persistent]:contains('Hello everyone!')",
-            run: "hover && click .o-mail-Meeting .o-mail-Message-actions button[title='Expand']",
+            trigger: ".o-mail-Meeting .o-mail-Message[data-persistent]:contains('Hello everyone!')",
+            run: "hover",
+        },
+        {
+            trigger: ".o-mail-Meeting .o-mail-Message-actions button[title='Expand']",
+            run: "click",
         },
         {
             trigger: ".o-dropdown-item:contains('Mark as Unread')",

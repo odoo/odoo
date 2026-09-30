@@ -2,6 +2,7 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     openDiscuss,
     start,
     startServer,
@@ -42,6 +43,7 @@ test("poll creation should be disabled during message editing", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Composer button[title='More Actions']");
     await contains(".o-dropdown-item:text('Create Poll')");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await click(".o-mail-Message .o-mail-Composer button[title='More Actions']");

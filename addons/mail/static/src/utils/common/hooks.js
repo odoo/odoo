@@ -208,6 +208,21 @@ export function useHover(refs, { onHover, onAway, stateObserver } = {}) {
 }
 
 /**
+ * Calls `onIntent` when the element is about to be left clicked, on pointer down. Useful
+ * to start loading what the click opens.
+ *
+ * @param {import("@odoo/owl").Signal<Element>} ref
+ * @param {() => void} onIntent
+ */
+export function useIntent(ref, onIntent) {
+    useListener(ref, "pointerdown", (ev) => {
+        if (ev.button === 0) {
+            onIntent();
+        }
+    });
+}
+
+/**
  * Hook returning reactive scroll state for a given scrollable element.
  *
  * @param {import("@odoo/owl").Signal<Element>} ref - The ref of the scrollable element.
@@ -1022,7 +1037,24 @@ export function useRightClickMenu(
             delete rootRef()?.dataset.rightClicking;
         },
     });
+    const everOpened = signal(false);
+    let pendingPosition;
+    const openAt = (el, { left, top }) => {
+        Object.assign(el.style, { left, top });
+        dropdownState.open();
+    };
+    useEffect(() => {
+        const el = anchor();
+        if (el && pendingPosition) {
+            const position = pendingPosition;
+            pendingPosition = undefined;
+            untrack(() => openAt(el, position));
+        }
+    });
     const res = {
+        get everOpened() {
+            return everOpened();
+        },
         get menuProps() {
             return {
                 anchorRef: anchor,
@@ -1044,10 +1076,13 @@ export function useRightClickMenu(
                 return false;
             }
             rootRef().dataset.rightClicking = true;
-            const el = anchor();
-            el.style.left = ev.clientX + "px";
-            el.style.top = ev.clientY + "px";
-            dropdownState.open();
+            const position = { left: ev.clientX + "px", top: ev.clientY + "px" };
+            if (anchor()) {
+                openAt(anchor(), position);
+            } else {
+                pendingPosition = position;
+                everOpened.set(true);
+            }
             ev.preventDefault();
             return true;
         },
