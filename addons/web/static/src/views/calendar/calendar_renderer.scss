@@ -430,7 +430,7 @@
             }
 
             .o-fc-week, .o-fc-week-header {
-                line-height: $line-height-sm;
+                line-height: var(--o-bs-line-height-sm);
                 font-size: var(--o-font-size-base-smaller);
                 opacity: .5;
                 @include media-breakpoint-down(md) {
@@ -444,7 +444,7 @@
 
             .fc-daygrid-body tr {
                 .fc-daygrid-week-number {
-                    line-height: $line-height-sm;
+                    line-height: var(--o-bs-line-height-sm);
                     font-size: var(--o-font-size-base-smaller);
                     opacity: .8;
 
@@ -585,7 +585,7 @@
                         justify-content: start;
 
                         h2 {
-                            font-size: $font-size-base;
+                            font-size: var(--o-bs-font-size-base);
                         }
                     }
 

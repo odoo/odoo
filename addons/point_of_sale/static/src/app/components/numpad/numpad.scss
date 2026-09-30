@@ -33,19 +33,19 @@
 
   &:where(:not(.modal-body .numpad-button, .table-selector .numpad-button)) {
     &:first-child {
-      border-radius: $btn-border-radius 0 0 0 !important;
+      border-radius: var(--o-bs-btn-border-radius) 0 0 0 !important;
     }
 
     &:nth-child(4) {
-      border-radius: 0 $btn-border-radius 0 0 !important;
+      border-radius: 0 var(--o-bs-btn-border-radius) 0 0 !important;
     }
 
     &:nth-last-child(4) {
-      border-radius: 0 0 0 $btn-border-radius !important;
+      border-radius: 0 0 0 var(--o-bs-btn-border-radius) !important;
     }
 
     &:last-child {
-      border-radius: 0 0 $btn-border-radius 0 !important;
+      border-radius: 0 0 var(--o-bs-btn-border-radius) 0 !important;
     }
   }
 
