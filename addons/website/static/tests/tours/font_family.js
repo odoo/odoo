@@ -70,17 +70,46 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Select a Google font in the list",
-            trigger: ".modal .dropdown-item:contains('Second test font')",
+            content: "Select a Google font previewed in its own font",
+            trigger: `.modal .dropdown-item:has(> span[style*='font-family: "Second test font"'][style*='font-size: 1rem'])`,
             run: "click",
         },
         {
-            content: "Check that the preview of the selected font is displayed in the modal",
-            trigger: ".modal:contains('Preview of Second test font')",
+            content: "Check that the preview input is displayed",
+            trigger: ".modal #font_preview_text[placeholder='Type here to preview text']",
         },
         {
             content: "Check that the 3 previews are correctly set in the modal",
-            trigger: `.modal div[style='font-family: "Second test font";']:count(3)`,
+            trigger:
+                ".modal .o_website_font_preview_sample div[style*='Second test font']:count(3)",
+        },
+        {
+            content: "Edit the text of all font previews",
+            trigger: ".modal #font_preview_text",
+            run: "edit Sample text",
+        },
+        {
+            content: "Check that all font previews use the edited text",
+            trigger: ".modal .o_website_font_preview_sample span:contains('Sample text'):count(3)",
+        },
+        {
+            content: "Change the font preview size",
+            trigger: ".modal #font_preview_size",
+            run: "select 32",
+        },
+        {
+            content: "Check that all font previews use the selected size",
+            trigger:
+                ".modal .o_website_font_preview_sample span[style*='font-size: 32px']:count(3)",
+        },
+        {
+            content: "Close the font dialog",
+            trigger: ".modal button.btn-secondary:contains('Discard')",
+            run: "click",
+        },
+        {
+            content: "Check that the font dialog is closed",
+            trigger: "body:not(:has(.o_website_add_font_dialog))",
         },
     ]
 );
