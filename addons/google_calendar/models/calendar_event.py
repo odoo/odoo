@@ -324,7 +324,13 @@ class CalendarEvent(models.Model):
                         reminder_type=alarm_type_label,
                         duration=duration,
                     )
-                commands += [(0, 0, {'duration': duration, 'interval': interval, 'name': name, 'alarm_type': alarm_type})]
+                alarm = self.env['calendar.alarm'].create({
+                    'duration': duration,
+                    'interval': interval,
+                    'name': name,
+                    'alarm_type': alarm_type,
+                })
+                commands += [(4, alarm.id)]
         return commands
 
     def action_mass_archive(self, recurrence_update_setting):
