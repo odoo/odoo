@@ -133,6 +133,9 @@ class ResPartner(models.Model):
             else:
                 do_eu_check = True
 
+        if not prefixed_country and 'EU_PREFIX' in country.country_group_codes and country.code != 'RO':
+            prefixed_country = EU_EXTRA_VAT_CODES.get(country.code, country.code)
+
         code_to_check = prefixed_country or country.code
         vat = self._format_vat_number(code_to_check, vat)
 
