@@ -42,7 +42,7 @@ async function performAction(trigger, action) {
     }
 }
 
-async function waitForTrigger(trigger) {
+async function waitForTrigger(trigger, signal) {
     if (!trigger) {
         return;
     }
@@ -54,7 +54,7 @@ async function waitForTrigger(trigger) {
                 const triggerEl = document.querySelector(trigger);
                 return isVisible(triggerEl) && triggerEl;
             }
-        });
+        }, signal);
     } catch (error) {
         throw new MacroError("Trigger", `ERROR during find trigger:\n${error.message}`, {
             cause: error,
@@ -62,13 +62,17 @@ async function waitForTrigger(trigger) {
     }
 }
 
-export async function waitUntil(predicate) {
+export async function waitUntil(predicate, signal) {
     const result = predicate();
     if (result) {
         return Promise.resolve(result);
     }
     let handle;
     return new Promise((resolve) => {
+        if (signal?.aborted) {
+            return resolve();
+        }
+        signal?.addEventListener("abort", () => resolve());
         const runCheck = () => {
             const result = predicate();
             if (result) {
@@ -85,6 +89,8 @@ export async function waitUntil(predicate) {
 export class Macro {
     currentIndex = 0;
     isComplete = false;
+    isPlaying = false;
+    nextIndex = null;
     constructor(descr) {
         try {
             assertType(descr, macroSchema);
@@ -107,16 +113,35 @@ export class Macro {
         await this.advance();
     }
 
+    async play(index) {
+        if (!Number.isInteger(index) || index < 0) {
+            throw new Error(`Macro.play() expects a step index, got ${index}`);
+        }
+        if (this.isPlaying) {
+            this.nextIndex = index;
+            this.controller.abort();
+            return;
+        }
+        this.currentIndex = index;
+        await this.advance();
+    }
+
     async advance() {
         if (this.isComplete || this.currentIndex >= this.steps.length) {
             this.stop();
             return;
         }
+        this.isPlaying = true;
+        this.controller = new AbortController();
+        const { signal } = this.controller;
         try {
             const step = this.steps[this.currentIndex];
             const timeoutDelay = step.timeout || this.timeout || 10000;
             const executeStep = async () => {
-                const trigger = await waitForTrigger(step.trigger);
+                const trigger = await waitForTrigger(step.trigger, signal);
+                if (signal.aborted) {
+                    return;
+                }
                 const result = await performAction(trigger, step.action);
                 await this.onStep({ step, trigger, index: this.currentIndex });
                 return result;
@@ -130,7 +155,9 @@ export class Macro {
             };
             // If falsy action result, it means the action worked properly.
             // So we can proceed to the next step.
-            const actionResult = await Promise.race([executeStep(), launchTimer()]);
+            const actionResult = await (Number.isFinite(timeoutDelay)
+                ? Promise.race([executeStep(), launchTimer()])
+                : executeStep());
             if (actionResult) {
                 this.stop();
                 return;
@@ -139,7 +166,12 @@ export class Macro {
             this.stop(error);
             return;
         }
-        this.currentIndex++;
+        if (this.isComplete) {
+            return;
+        }
+        this.isPlaying = false;
+        this.currentIndex = this.nextIndex ?? this.currentIndex + 1;
+        this.nextIndex = null;
         await this.advance();
     }
 
@@ -148,6 +180,8 @@ export class Macro {
             return;
         }
         this.isComplete = true;
+        this.isPlaying = false;
+        this.controller?.abort();
         if (error) {
             const step = this.steps[this.currentIndex];
             this.onError({ error, step, index: this.currentIndex });
