@@ -1153,3 +1153,29 @@ test(`Custom filter with "&"" as value`, async function () {
     expect(getFacetTexts()).toEqual([`Foo contains &`]);
     expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "&"]]);
 });
+
+test("search_default activates inner filter", async () => {
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Foo">
+                    <filter string="Abcd" name="abcd" domain="[('foo', '=', 'abcd')]"/>
+                    <filter string="Qsdf" name="qsdf" domain="[('foo', '=', 'qsdf')]"/>
+                </filter>
+            </search>
+        `,
+        context: {
+            search_default_abcd: 1,
+        },
+    });
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Foo");
+    expect(searchBar.env.searchModel.domain).toEqual([["foo", "=", "abcd"]]);
+    expect(isItemSelected("Foo")).toBe(true);
+    expect(isOptionSelected("Foo", "Abcd")).toBe(true);
+    expect(getFacetTexts()).toEqual(["Abcd"]);
+});
