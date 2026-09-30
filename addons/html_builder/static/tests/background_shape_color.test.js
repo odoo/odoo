@@ -19,6 +19,7 @@ const RGB_GREEN = "rgb(0, 255, 0)";
 const HEX_RED = "#ff0000";
 const HEX_BLUE = "#0000ff";
 const HEX_GREEN = "#00ff00";
+const HEX_RED_SUBTLE = "#ff1a1a";
 const HEX_O_CC_4 = "#383e45";
 const HEX_O_CC_5 = "#f0f0f0";
 
@@ -164,7 +165,7 @@ test("Flipped Connections shape takes previous element's background color", asyn
     expect(shapeData.flip.includes("y")).toBe(true);
 });
 
-test("Connections shape uses contrasting color when neighbor has same background", async () => {
+test("Connections shape uses a subtle shade when neighbor has same background", async () => {
     const { waitSidebarUpdated } = await setupHTMLBuilder(
         `
         ${getNoBgShapeSection1(RGB_RED)}
@@ -179,10 +180,10 @@ test("Connections shape uses contrasting color when neighbor has same background
     expect(":iframe #section1 .o_we_shape").toHaveCount(1);
     const shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
     expect(shapeData.shape).toBe("html_builder/Connections/01");
-    expect(shapeData.colors.c5).toBe(HEX_O_CC_5);
+    expect(shapeData.colors.c5).toBe(HEX_RED_SUBTLE);
 });
 
-test("Connections shape takes color when neighbor has same background", async () => {
+test("Connections shape takes neighbor's color when snippet has a background image", async () => {
     onRpc("/html_editor/get_image_info", () => ({}));
     const { waitSidebarUpdated } = await setupHTMLBuilder(
         `
