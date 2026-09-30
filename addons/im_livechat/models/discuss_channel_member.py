@@ -10,6 +10,7 @@ from odoo.addons.mail.tools.discuss import Store
 class DiscussChannelMember(models.Model):
     _inherit = 'discuss.channel.member'
 
+    channel_role = fields.Selection(compute="_compute_channel_role", store=True, readonly=False)
     livechat_member_history_ids = fields.One2many("im_livechat.channel.member.history", "member_id")
     livechat_member_type = fields.Selection(
         [("agent", "Agent"), ("visitor", "Visitor"), ("bot", "Chatbot")],
@@ -70,6 +71,21 @@ class DiscussChannelMember(models.Model):
                 ),
             )
         return members
+
+    @api.depends("channel_id.channel_type", "livechat_member_type", "partner_id.user_ids.active")
+    def _compute_channel_role(self):
+        """Live chat roles are deduced from the member type: active agents own
+        the conversation while visitors and bots are regular members. This way,
+        features based on channel roles also apply to live chats."""
+        for member in self.filtered(lambda m: m.channel_id.channel_type == "livechat"):
+            is_owner = member.livechat_member_type == "agent" and member.partner_id.user_ids.filtered("active")
+            member.channel_role = "owner" if is_owner else False
+
+    @api.constrains("channel_role", "channel_id")
+    def _check_channel_role_supported(self):
+        super(
+            DiscussChannelMember, self.filtered(lambda m: m.channel_id.channel_type != "livechat")
+        )._check_channel_role_supported()
 
     @api.depends("livechat_member_history_ids.livechat_member_type")
     def _compute_livechat_member_type(self):

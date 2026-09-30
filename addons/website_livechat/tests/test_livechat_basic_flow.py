@@ -212,7 +212,7 @@ class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
                 ),
                 "discuss.channel.member": [
                     {
-                        "channel_role": False,
+                        "channel_role": "owner",
                         "create_date": fields.Datetime.to_string(operator_member.create_date),
                         "id": operator_member.id,
                         "invitation_sent_dt": False,
