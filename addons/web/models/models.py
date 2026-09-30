@@ -2174,16 +2174,32 @@ class Base(models.AbstractModel):
         assert False, "unreachable"
 
     @api.model
-    def onchange_batch(self, values_list: list[dict], field_names: list[str], fields_spec: dict) -> list[dict]:
-        """
-        Apply onchange to a batch of new records.
-        This method only supports new records, so ``self`` must be empty.
+    def onchange_batch(self, records_list: list[dict], fields_spec: dict) -> list[dict]:
+        """Apply onchange to a batch of saved and virtual records.
+
+        ``records_list`` is a list of dictionaries with the following shape::
+
+            {
+                "id": int | False,
+                "changes": dict,
+                "field_names": list[str],
+                "virtual_id": str | False,
+            }
+
+        Saved records are identified by ``id``, while virtual records are identified by
+        ``virtual_id``. Both identifiers are passed back unchanged in the corresponding result.
         """
         assert not self, "self must be empty"
 
         return [
-            self.onchange(values, field_names, fields_spec)
-            for values in values_list
+            {
+                "id": record["id"],
+                "virtual_id": record["virtual_id"],
+                "result": self.browse(record["id"]).onchange(
+                    record["changes"], record["field_names"], fields_spec
+                ),
+            }
+            for record in records_list
         ]
 
     def onchange(self, values: dict, field_names: list[str], fields_spec: dict):
