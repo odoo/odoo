@@ -187,17 +187,10 @@ const discussChannelPatch = {
             this.sub_channel_ids.forEach((c) => (c.isLocallyPinned = false));
         }
         if (!this.self_member_id?.is_pinned && !this.isLocallyPinned && this.discussAppAsThread) {
-            if (this.store.discuss.isActive) {
-                const newChannel = this.store.messagingMenu.channelTab.channels.find(
-                    (channel) => channel.self_member_id?.is_pinned
-                );
-                if (newChannel) {
-                    newChannel.setAsDiscussThread();
-                } else {
-                    this.store.discuss.thread = undefined;
-                }
-            } else {
-                this.store.discuss.thread = undefined;
+            this.store.discuss.thread = undefined;
+            const sidebarState = this.store.discuss.sidebarState;
+            if (this.store.discuss.isActive && sidebarState.activeTab) {
+                sidebarState.selectTab(sidebarState.activeTab);
             }
         }
     },
