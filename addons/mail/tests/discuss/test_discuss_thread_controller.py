@@ -71,7 +71,8 @@ class TestDiscussThreadController(TestThreadControllerCommon):
             (
                 test_partners(self.user_public, True, members),
                 test_partners(self.guest, True, members),
-                test_partners(self.user_portal, True, members),
+                # portal user becomes a member by posting, so they are not filtered out of partner_ids
+                test_partners(self.user_portal, True, members | self.user_portal.partner_id),
                 test_partners(self.user_employee, True, partners),
                 test_partners(self.user_demo, True, partners),
                 test_partners(self.user_admin, True, partners),
@@ -108,3 +109,19 @@ class TestDiscussThreadController(TestThreadControllerCommon):
                 test_emails(self.user_admin, True, partner_emails),
             ),
         )
+
+    def test_channel_auto_join_on_message_post(self):
+        """Test that non-member employees and guests become members when posting a message."""
+        channel = self.env["discuss.channel"].create(
+            {"name": "Public Channel", "group_public_id": None}
+        )
+
+        for auth_kwargs, member_field, member in [
+            ({"user": self.user_employee}, "partner_id", self.user_employee.partner_id),
+            ({"guest": self.guest}, "guest_id", self.guest),
+        ]:
+            self.assertNotIn(member, channel.channel_member_ids[member_field])
+            self._authenticate_user(**auth_kwargs)
+            self._message_post(channel, {"body": "hello"}, {})
+            channel.invalidate_recordset(["channel_member_ids"])
+            self.assertIn(member, channel.channel_member_ids[member_field])
