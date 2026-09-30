@@ -23,5 +23,14 @@
         <xpath expr="//span[hasclass('o_file_name')]" position="after">
             <i class="oi oi-filled mx-1 invisible align-items-center d-inline-flex" data-icon="edit"/>
         </xpath>
+        <xpath expr="//FileSettings" position="attributes">
+            <attribute name="rename.bind">this.onFileRename</attribute>
+            <attribute name="toggleInlinePreview.bind">this.toggleInlinePreview</attribute>
+            <attribute name="remove.bind">this.onFileRemove</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('alert-info')]" position="attributes">
+            <!-- With the settings overlay, the preview replaces the file box -->
+            <attribute name="t-if">!this.isPreviewShown or !this.hasSettingsOverlay</attribute>
+        </xpath>
     </t>
 </templates>

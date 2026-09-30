@@ -1,4 +1,5 @@
-import { proxy, signal } from "@odoo/owl";
+import { onWillDestroy, proxy, signal, useListener } from "@odoo/owl";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useLayoutEffect } from "@web/owl2/utils";
 import {
     applyObjectPropertyDifference,
@@ -7,6 +8,7 @@ import {
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
 import { ReadonlyEmbeddedFileComponent } from "@html_editor/others/embedded_components/core/file/readonly_file";
+import { RenameDialog } from "./rename_dialog";
 
 export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
     static template = "html_editor.EmbeddedFile";
@@ -33,11 +35,44 @@ export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
             },
             () => [this.localState.editFileName]
         );
+
+        this.hasSettingsOverlay = !!this.env.editorShared?.showFileSettingsOverlay;
+        this.dropdown = useDropdownState();
+        useListener(this.props.host, "pointerenter", () => {
+            if (this.isPreviewShown) {
+                this.env.editorShared?.showFileSettingsOverlay?.(this.props.host, {
+                    isOverlay: true,
+                    dropdown: this.dropdown,
+                    fileModel: this.fileModel,
+                    // Not reactive: the overlay props are read when it opens.
+                    // This is fine since it only opens while the preview is
+                    // shown, and toggling the preview closes it.
+                    isPreviewInline: this.state.isPreviewInline,
+                    download: this.download.bind(this),
+                    rename: this.onFileRename.bind(this),
+                    toggleInlinePreview: this.toggleInlinePreview.bind(this),
+                    remove: this.onFileRemove.bind(this),
+                    host: this.props.host,
+                });
+            }
+        });
+        useListener(this.props.host, "pointerleave", (e) => {
+            if (this.dropdown.isOpen || e.relatedTarget?.closest(".file-overlay")) {
+                return;
+            }
+            this.hideSettingsOverlay();
+        });
+
+        onWillDestroy(() => this.hideSettingsOverlay());
+    }
+
+    hideSettingsOverlay() {
+        this.env.editorShared?.hideFileSettingsOverlay?.(this.props.host);
     }
 
     onBlurNameInput(ev) {
         this.localState.editFileName = false;
-        this.renameFile();
+        this.renameFile(this.nameInput()?.value);
     }
 
     onFocusFileName(ev) {
@@ -53,14 +88,43 @@ export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
         } else {
             ev.preventDefault();
         }
-        if (this.renameFile()) {
+        if (this.renameFile(this.nameInput()?.value)) {
             this.localState.editFileName = false;
             this.env.editorShared?.setSelectionAfter(this.props.host);
         }
     }
+    onFileRename() {
+        if (!this.isPreviewShown) {
+            // The file name is visible: edit it in place, as when clicking on
+            // it.
+            this.onFocusFileName();
+            return;
+        }
+        // The preview replaces the file box: use a dialog.
+        this.dialogService.add(RenameDialog, {
+            filename: this.fileModel.filename,
+            rename: this.renameFile.bind(this),
+        });
+    }
+    onFileRemove() {
+        this.env.editorShared?.remove(this.props.host);
+    }
+    toggleInlinePreview() {
+        this.state.isPreviewInline = !this.state.isPreviewInline;
+        this.env.editorShared?.setSelectionAfter(this.props.host);
+        this.hideSettingsOverlay();
+        // The preview is toggled from the settings dropdown, which takes the
+        // focus out of the editable. Give it back, so that the HTML field
+        // commits this change before the file name input can get the focus:
+        // that commit restores the editable selection, which would blur it.
+        this.env.editorShared?.focusEditable();
+    }
 
-    renameFile() {
-        let newName = this.nameInput()?.value || "";
+    /**
+     * @param {string} [newName]
+     * @returns {boolean} whether the name is valid
+     */
+    renameFile(newName = "") {
         if (!newName.length) {
             return false;
         }
