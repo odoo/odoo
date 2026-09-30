@@ -1,6 +1,4 @@
 /* Variables */
-$o-cw-filter-avatar-size: 20px;
-
 /* Animations */
 @keyframes backgroundfade {
     from {
@@ -46,7 +44,8 @@ $o-cw-filter-avatar-size: 20px;
 }
 
 .o_calendar_sidepanel_container {
-    --Avatar-size: #{$o-cw-filter-avatar-size};
+    --o-cw-filter-avatar-size: 20px;
+    --Avatar-size: var(--o-cw-filter-avatar-size);
 
     flex: 0 0 auto;
 
