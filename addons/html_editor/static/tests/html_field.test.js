@@ -1,4 +1,5 @@
 import { HtmlField } from "@html_editor/fields/html_field";
+import { FilePlugin } from "@html_editor/main/media/file_plugin";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
 import {
@@ -6,6 +7,7 @@ import {
     getEmbeddedProps,
 } from "@html_editor/others/embedded_component_utils";
 import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
+import { EmbeddedFilePlugin } from "@html_editor/others/embedded_components/plugins/embedded_file_plugin/embedded_file_plugin";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { canRenderAsHTML } from "@html_editor/utils/sanitize";
 import { Wysiwyg } from "@html_editor/wysiwyg";
@@ -42,6 +44,7 @@ import {
     mountView,
     mountViewInDialog,
     onRpc,
+    patchWithCleanup,
     serverState,
     toggleActionMenu,
     toggleMenuItem,
@@ -3007,4 +3010,62 @@ test("should not render xml template as html in specific invalid cases", async (
         var isValid = canRenderAsHTML(xmlString);
         expect(isValid).toBe(expected);
     }
+});
+
+test("embedded file name stays editable after toggling its inline preview twice", async () => {
+    patchWithCleanup(HtmlField.prototype, {
+        getConfig() {
+            const config = super.getConfig();
+            config.Plugins = [
+                ...config.Plugins.filter((P) => P !== FilePlugin),
+                EmbeddedFilePlugin,
+            ];
+            return config;
+        },
+    });
+    const fileProps = {
+        fileData: { id: 1, name: "file.txt", filename: "file.txt", mimetype: "text/plain" },
+    };
+    Partner._records = [
+        {
+            id: 1,
+            txt: `<p>first</p><div data-embedded="file" data-embedded-props='${JSON.stringify(
+                fileProps
+            )}'></div><p>last</p>`,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html" options="{'embedded_components': True}"/>
+            </form>`,
+    });
+    await waitFor('[data-embedded="file"] .o_file_name:contains("file.txt")');
+    setSelectionInHtmlField("p:first-child");
+
+    await click('[data-embedded="file"] .file-options-button');
+    await animationFrame();
+    await click(".file-inline-preview-button");
+    await animationFrame();
+    expect('[data-embedded="file"] iframe.o_file_preview_iframe').toHaveCount(1);
+    // The file box is replaced by the preview: the menu is in an overlay.
+    await hover('[data-embedded="file"]');
+    await animationFrame();
+    await click(".file-overlay .file-options-button");
+    await animationFrame();
+    await click(".file-inline-preview-button");
+    await animationFrame();
+    expect('[data-embedded="file"] iframe.o_file_preview_iframe').toHaveCount(0);
+
+    // The preview was toggled from the overlay, outside of the editable, so
+    // the field still has to commit that change. That commit restores the
+    // editable selection: it must not happen once the name input is focused,
+    // or it would blur it.
+    await click('[data-embedded="file"] .o_file_name_container');
+    await animationFrame();
+    expect('[data-embedded="file"] input').toBeVisible();
+    expect('[data-embedded="file"] input').toBeFocused();
 });

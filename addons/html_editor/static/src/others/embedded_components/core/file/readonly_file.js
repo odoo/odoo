@@ -10,14 +10,17 @@ import {
 import { StateFileModel } from "@html_editor/others/embedded_components/core/file/state_file_model";
 import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
 import { Component, proxy, t, useProps } from "@odoo/owl";
+import { FileSettings } from "./file_settings";
 
 export class ReadonlyEmbeddedFileComponent extends Component {
     static components = {
         EmbeddedComponentToolbar,
         EmbeddedComponentToolbarButton,
+        FileSettings,
     };
     props = useProps({
         fileData: t.object(),
+        isPreviewInline: t.boolean().optional(false),
         host: t.object(),
     });
     static template = "html_editor.ReadonlyEmbeddedFile";
@@ -26,9 +29,14 @@ export class ReadonlyEmbeddedFileComponent extends Component {
         this.dialogService = useService("dialog");
         this.state = proxy({
             fileData: { ...this.props.fileData },
+            isPreviewInline: this.props.isPreviewInline,
         });
         this.fileModel = new StateFileModel(this.state);
         this.attachmentViewer = useFileViewer();
+    }
+
+    get isPreviewShown() {
+        return this.state.isPreviewInline && this.fileModel.isViewable;
     }
 
     /**
