@@ -512,7 +512,6 @@ download._download = (options) => {
                 data.append(key, value);
             });
         }
-        data.append("token", "dummy-because-api-expects-one");
         if (odoo.csrf_token) {
             data.append("csrf_token", odoo.csrf_token);
         }
