@@ -2813,6 +2813,7 @@ class MrpProduction(models.Model):
                 bom_line.product_id,
                 bom_qty / ratio,
                 bom_line.uom_id,
+                operation_id=bom_line.operation_id.id,
                 bom_line=bom_line
             )
             raw_moves_values.append(raw_move_vals)
