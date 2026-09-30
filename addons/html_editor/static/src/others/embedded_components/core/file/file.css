@@ -12,4 +12,13 @@
     input[type="text"] {
         width: 190px;
     }
+
+    &:has(iframe) {
+        display: block;
+        width: 100%;
+    }
+    iframe.o_file_preview_iframe {
+        margin-top: 6px;
+        margin-bottom: 6px;
+    }
 }

@@ -16,9 +16,26 @@
                 <EmbeddedComponentToolbar>
                     <t t-set-slot="buttons"/>
                 </EmbeddedComponentToolbar>
+                <FileSettings fileModel="this.fileModel" isPreviewInline="this.state.isPreviewInline"
+                    host="this.props.host"
+                    download.bind="this.download"
+                    rename="this.onFileRename?.bind(this)"
+                    toggleInlinePreview="this.toggleInlinePreview?.bind(this)"
+                    remove="this.onFileRemove?.bind(this)"
+                />
             </span>
         </xpath>
-       
+ 
+        <xpath expr="//span[hasclass('alert-info')]" position="replace">
+            <t t-if="this.state.isPreviewInline and this.fileModel.isViewable">
+                <iframe class="o_pdfview_iframe o_file_preview_iframe"
+                    t-att-alt="this.fileModel.filename"
+                    t-att-src="this.fileModel.downloadUrl.replace('&amp;download=true', '')"
+                    t-att-name="this.fileModel.filename"
+                />
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
     </t>
 
 </templates>

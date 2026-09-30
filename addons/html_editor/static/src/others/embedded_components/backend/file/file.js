@@ -1,4 +1,4 @@
-import { proxy, signal } from "@odoo/owl";
+import { proxy, signal, usePlugin } from "@odoo/owl";
 import { useLayoutEffect } from "@web/owl2/utils";
 import {
     applyObjectPropertyDifference,
@@ -7,11 +7,14 @@ import {
     useEmbeddedState,
 } from "@html_editor/others/embedded_component_utils";
 import { ReadonlyEmbeddedFileComponent } from "@html_editor/others/embedded_components/core/file/readonly_file";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { RenameDialog } from "./rename_dialog";
 
 export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
     static template = "html_editor.EmbeddedFile";
 
     nameInput = signal.ref();
+    dialog = usePlugin(DialogPlugin);
 
     setup() {
         super.setup();
@@ -53,9 +56,23 @@ export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
             this.env.editorShared?.setSelectionAfter(this.props.host);
         }
     }
+    onFileRename() {
+        this.dialog.add(RenameDialog, {
+            filename: this.fileModel.filename,
+            rename: this.renameFile.bind(this),
+        });
+    }
+    onFileRemove() {
+        this.env.editorShared?.remove(this.props.host);
+    }
+    toggleInlinePreview() {
+        this.state.isPreviewInline = !this.state.isPreviewInline;
+        this.env.editorShared?.setSelectionAfter(this.props.host);
+        this.settingsOverlay?.close();
+    }
 
-    renameFile() {
-        let newName = this.nameInput()?.value || "";
+    renameFile(filename) {
+        let newName = filename || this.nameInput()?.value || "";
         if (!newName.length) {
             return false;
         }
