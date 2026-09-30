@@ -289,7 +289,7 @@ been taken for this time off type. Changing it now would affect existing employe
         work_entry_types = self.env['hr.work.entry.type'].search([])
         return [('id', 'in', work_entry_types.filtered(is_valid).ids)]
 
-    @api.depends_context('uid', 'employee_id', 'default_employee_id', 'leave_date_from', 'default_date_from')
+    @api.depends_context('uid', 'employee_id', 'default_employee_id', 'leave_date_from', 'default_date_from', 'ignored_leave_ids')
     def _compute_leaves(self):
         employee = self.env['hr.employee']._get_contextual_employee()
         # This is a workaround to save the date value in context for next triggers
