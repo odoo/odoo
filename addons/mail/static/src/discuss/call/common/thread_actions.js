@@ -36,9 +36,9 @@ registerThreadAction("camera-call", {
 registerThreadAction("call-settings", {
     actionPanelComponent: CallSettings,
     actionPanelComponentProps: () => ({ isCompact: true }),
-    condition: ({ channel, owner, store }) =>
+    condition: ({ ancestors, channel, owner, store }) =>
         channel?.allowCalls &&
-        (owner.props.chatWindow?.isOpen || store.inPublicPage) &&
+        (ancestors.inChatWindow || store.inPublicPage) &&
         !owner.isDiscussSidebarChannelActions,
     icon: "settings",
     iconClass: "oi-filled oi-fw",

@@ -2,9 +2,9 @@ import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { _t } from "@web/core/l10n/translation";
 
 registerThreadAction("hr-view-profile", {
-    condition: ({ channel, owner }) =>
+    condition: ({ ancestors, channel, owner }) =>
         channel?.channel_type === "chat" &&
-        owner.props.chatWindow?.isOpen &&
+        ancestors.inChatWindow &&
         channel.correspondent?.partner_id?.employeeId &&
         !owner.isDiscussSidebarChannelActions,
     icon: "badge",

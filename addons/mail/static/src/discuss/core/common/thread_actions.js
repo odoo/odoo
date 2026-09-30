@@ -20,10 +20,7 @@ registerThreadAction("pinned-messages", {
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOuterClass: "o-discuss-PinnedMessagesPanel bg-inherit",
     availableOffline: true,
-    condition: ({ channel, owner }) =>
-        channel &&
-        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
-        !owner.isDiscussSidebarChannelActions,
+    condition: ({ channel, owner }) => channel && !owner.isDiscussSidebarChannelActions,
     icon: "push_pin",
     name: ({ action }) => (action.isActive ? _t("Hide Pinned Messages") : _t("Pinned Messages")),
     sequence: 20,
@@ -122,10 +119,9 @@ registerThreadAction("notification-settings", {
     dropdownComponent: NotificationSettings,
     dropdownComponentProps: ({ channel }) => ({ channel }),
     dropdownTrigger: ({ owner }) => !owner.isDiscussContent,
-    condition: ({ channel, owner, store }) =>
-        channel && store.self_user && (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
-    setup({ owner }) {
-        if (!owner.props.chatWindow) {
+    condition: ({ channel, store }) => channel && store.self_user,
+    setup({ ancestors }) {
+        if (!ancestors.inChatWindow) {
             this.popover = usePopover(NotificationSettings, {
                 onClose: () => this.actionPanelClose(),
                 position: "bottom-end",
@@ -148,9 +144,7 @@ registerThreadAction("attachments", {
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     availableOffline: true,
     condition: ({ owner, channel }) =>
-        channel?.hasAttachmentPanel &&
-        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
-        !owner.isDiscussSidebarChannelActions,
+        channel?.hasAttachmentPanel && !owner.isDiscussSidebarChannelActions,
     icon: "attach_file",
     name: _t("Attachments"),
     sequence: 10,
@@ -176,23 +170,20 @@ registerThreadAction("invite-people", {
             );
         }
     },
-    actionPanelOuterClass: ({ ancestors, owner, store }) =>
+    actionPanelOuterClass: ({ ancestors, store }) =>
         attClassObjectToString({
             "o-discuss-ChannelInvitation border": true,
-            "bg-inherit": owner.props.chatWindow,
+            "bg-inherit": ancestors.inChatWindow,
             [store.discussDropdownMenuClass(ancestors)]: !ancestors.inMeetingView,
         }),
     condition: ({ channel, owner }) =>
-        channel &&
-        !owner.env.pipWindow &&
-        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
-        !(owner.isDiscussContent && channel?.hasMemberList),
+        channel && !owner.env.pipWindow && !(owner.isDiscussContent && channel?.hasMemberList),
     icon: "person_add",
     name: _t("Invite People"),
     sequence: 20,
     sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 20),
-    setup({ ancestors, owner }) {
-        if (!owner.props.chatWindow && !ancestors.inMeetingView) {
+    setup({ ancestors }) {
+        if (!ancestors.inChatWindow && !ancestors.inMeetingView) {
             this.popover = usePopover(ChannelInvitation, {
                 onClose: () => this.actionPanelClose(),
                 popoverClass: this.actionPanelOuterClass,
@@ -231,9 +222,7 @@ registerThreadAction("member-list", {
     actionPanelOuterClass: "o-discuss-ChannelMemberList bg-inherit",
     availableOffline: true,
     condition: ({ owner, channel }) =>
-        channel?.hasMemberList &&
-        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
-        !owner.isDiscussSidebarChannelActions,
+        channel?.hasMemberList && !owner.isDiscussSidebarChannelActions,
     icon: "group",
     name: _t("Members"),
     sequence: 30,
@@ -338,7 +327,7 @@ registerThreadAction("delete-thread", {
             });
         }
     },
-    sequence: ({ owner }) => (owner.props.chatWindow ? 50 : 40),
+    sequence: ({ ancestors }) => (ancestors.inChatWindow ? 50 : 40),
     sequenceGroup: 40,
     tags: [ACTION_TAGS.DANGER],
 });
