@@ -4,7 +4,7 @@
     'name': "Report Engine: Paper Muncher",
     'summary': "Paper Muncher Engine",
     'description': """
-This module is the implementation of the odoo's
+This module is the implementation of Odoo's
 in house rendering engine called Paper Muncher.
 
 learn more about it here:

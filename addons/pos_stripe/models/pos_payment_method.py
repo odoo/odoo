@@ -12,7 +12,7 @@ class PosPaymentMethod(models.Model):
         return super()._get_terminal_provider_selection() + [('stripe', 'Stripe')]
 
     # Stripe
-    stripe_serial_number = fields.Char(help='[Serial number of the stripe terminal], for example: WSC513105011295', copy=False)
+    stripe_serial_number = fields.Char(help='[Serial number of the Stripe terminal], for example: WSC513105011295', copy=False)
 
     @api.model
     def _load_pos_data_fields(self, config):

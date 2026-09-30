@@ -15,7 +15,7 @@ class PaymentProvider(models.Model):
         selection_add=[("asiapay", "AsiaPay")], ondelete={"asiapay": "set default"}
     )
     asiapay_brand = fields.Selection(
-        string="Asiapay Brand",
+        string="AsiaPay Brand",
         help="The brand associated to your AsiaPay account.",
         selection=[
             ("paydollar", "PayDollar"),

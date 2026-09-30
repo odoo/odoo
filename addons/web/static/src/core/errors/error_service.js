@@ -30,7 +30,7 @@ export class UncaughtError extends Error {
 }
 
 export class UncaughtClientError extends UncaughtError {
-    constructor(message = "Uncaught Javascript Error") {
+    constructor(message = "Uncaught JavaScript Error") {
         super(message);
     }
 }

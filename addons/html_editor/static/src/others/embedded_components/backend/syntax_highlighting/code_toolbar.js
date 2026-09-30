@@ -6,8 +6,8 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 export const LANGUAGES = {
     plaintext: "Plain Text",
     markdown: "Markdown",
-    javascript: "Javascript",
-    typescript: "Typescript",
+    javascript: "JavaScript",
+    typescript: "TypeScript",
     jsdoc: "JSDoc",
     java: "Java",
     python: "Python",

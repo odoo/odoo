@@ -4,7 +4,7 @@
     'name': 'Google Users',
     'category': 'Hidden/Tools',
     'description': """
-The module adds google user in res user.
+The module adds a Google user in res.users.
 ========================================
 """,
     'depends': ['base_setup'],

@@ -17,19 +17,19 @@ export const FIELD_NAMES = [
         placeholder: "https://www.facebook.com/Odoo",
     },
     {
-        displayName: _t("Github Account"),
+        displayName: _t("GitHub Account"),
         iconClass: "oi_github",
         name: "social_github",
         placeholder: "https://github.com/odoo",
     },
     {
-        displayName: _t("Linkedin Account"),
+        displayName: _t("LinkedIn Account"),
         iconClass: "oi_linkedin",
         name: "social_linkedin",
         placeholder: "https://www.linkedin.com/company/odoo",
     },
     {
-        displayName: _t("Youtube Account"),
+        displayName: _t("YouTube Account"),
         iconClass: "oi_youtube",
         name: "social_youtube",
         placeholder: "https://www.youtube.com/user/OpenERPonline",
@@ -41,7 +41,7 @@ export const FIELD_NAMES = [
         placeholder: "https://www.instagram.com/explore/tags/odoo/",
     },
     {
-        displayName: _t("Tiktok Account"),
+        displayName: _t("TikTok Account"),
         iconClass: "oi_tiktok",
         name: "social_tiktok",
         placeholder: "https://www.tiktok.com/@odoo",

@@ -248,7 +248,7 @@ test("changing languages in a code block changes its highlighting", async () => 
             highlightedPre({ value: "some code", language: "plaintext" }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
         stepFunction: async () => {
-            await changeLanguage(queryOne("textarea"), "Plain Text", "Javascript");
+            await changeLanguage(queryOne("textarea"), "Plain Text", "JavaScript");
         },
         contentAfterEdit:
             '<p data-selection-placeholder=""><br></p>' +
@@ -574,7 +574,7 @@ test("can switch between code blocks without issues", async () => {
         editor
     );
     // Action 5: change the language of first textarea.
-    await changeLanguage(textarea1, "Plain Text", "Javascript");
+    await changeLanguage(textarea1, "Plain Text", "JavaScript");
     await compareHighlightedContent(
         getContent(editor.editable),
         unformat(
@@ -846,7 +846,7 @@ test("multiple ctrl+z in a highlighted code block undo changes in the block and 
     // Change the language -> code gets highlighted.
     actions.push("language: change the language to javascript and highlight the code");
     const textarea = queryOne("textarea");
-    await changeLanguage(textarea, "Plain Text", "Javascript"); // <wrapper><highlight><pre>some code</pre></highlight></wrapper><p>hello!</p>
+    await changeLanguage(textarea, "Plain Text", "JavaScript"); // <wrapper><highlight><pre>some code</pre></highlight></wrapper><p>hello!</p>
     await compareHighlightedContent(
         getContent(editor.editable),
         unformat(`
@@ -1247,7 +1247,7 @@ test("should keep textarea focused when changing code block language", async () 
     await click(textarea);
     expect(editor.document.activeElement).toBe(textarea);
     const from = "Plain Text";
-    const to = "Javascript";
+    const to = "JavaScript";
     // Wait until the language selector button is available in the toolbar
     await waitFor(`.o_code_toolbar button[name='language'][title='${from}']`);
     const dropdownButton = document.querySelector(

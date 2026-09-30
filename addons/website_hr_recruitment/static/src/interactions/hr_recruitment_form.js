@@ -55,7 +55,7 @@ export class HrRecruitmentForm extends Interaction {
         const linkedin_regex = /^(https?:\/\/)?([\w\.]*)linkedin\.com\/in\/(.*?)(\/.*)?$/;
         const isLinkedinValid = !linkedin_regex.test(linkedin) && linkedin !== "";
         if (isLinkedinValid) {
-            const message = _t("The profile that you gave us doesn't seems like a linkedin profile");
+            const message = _t("The profile that you gave us doesn't seem like a LinkedIn profile");
             this.showWarningMessage(this.linkedinInputEl, this.linkedinMessageEl, message);
         } else {
             this.hideWarningMessage(this.linkedinInputEl, this.linkedinMessageEl);

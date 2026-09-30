@@ -81,7 +81,7 @@ const socialMediaInfo = new Map(
             iconDataIcon: "oi_google",
         },
         whatsapp: {
-            label: _t("Whatsapp"),
+            label: _t("WhatsApp"),
             iconDataIcon: "oi_whatsapp",
             extraHostnameRegex: /(^|\.)wa\.me$/,
         },
@@ -107,7 +107,7 @@ const socialMediaInfo = new Map(
             iconDataIcon: "oi_threads",
         },
         paypal: {
-            label: _t("Paypal"),
+            label: _t("PayPal"),
             iconDataIcon: "oi_paypal",
         },
     })

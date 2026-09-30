@@ -111,7 +111,7 @@ registry.category("services").add("google_maps", {
                             resolve(key);
                         } else {
                             if (!editableMode && user.isAdmin) {
-                                const message = _t("Cannot load google map.");
+                                const message = _t("Cannot load Google Maps.");
                                 const urlTitle = _t("Check your configuration.");
                                 notification.add(
                                     markup`<div>
