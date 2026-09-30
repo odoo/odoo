@@ -559,7 +559,7 @@ class PosSession(models.Model):
                 'amount': cash_move.amount,
                 'id': cash_move.id,
                 'date': cash_move.create_date,
-                'cashier_name': cash_move.partner_id.name,
+                'cashier_name': self._get_cash_move_cashier_name(cash_move),
             })
         return cash_in_out_list
 
@@ -751,6 +751,9 @@ class PosSession(models.Model):
             ))
         return True
 
+    def _get_cash_move_cashier_name(self, cash_move):
+        return cash_move.create_uid.name
+
     def try_cash_in_out(self, _type, amount, reason, partner_id):
         if not self.env.user._has_cash_move_permission():
             raise AccessError(_("You don't have the access rights to perform a cash in/out."))
@@ -762,13 +765,12 @@ class PosSession(models.Model):
 
         message = f'{self.name}-{_type}-{reason}'
         signed_amount = amount * sign
-        partner = self.env['res.partner'].browse(partner_id)
+        # partner_id is the cashier, not the counterpart of the cash move
         cash_pm._create_payment_line(
             self,
             signed_amount,
             cash_pm.journal_id.suspense_account_id,
             message,
-            partner,
         )
 
     def delete_cash_in_out(self, absl_id, partner_id):
@@ -777,7 +779,7 @@ class PosSession(models.Model):
         absl = self.env['account.bank.statement.line'].browse(absl_id).sudo()
         if absl not in self.sudo().bank_statement_line_ids:
             raise AccessError(_("You cannot delete a cash move that is not linked to this session."))
-        cashier_name = absl.partner_id.name
+        cashier_name = self._get_cash_move_cashier_name(absl)
         amount = absl.amount
         action = (cashier_name + ': ' if cashier_name else '') + str(amount)
         absl.unlink()
