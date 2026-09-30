@@ -602,6 +602,7 @@ export class ImageStrategyPlugin extends Plugin {
     }
 
     extractImageDimensions(referenceNode) {
+        // TODO EGGMAIL: consider img with QWEB-defined src
         const styleInfo = this.getStyleInfo(referenceNode);
         const attributes = {};
         const style = {};
