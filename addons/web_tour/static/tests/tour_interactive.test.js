@@ -30,7 +30,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
-import { TourInteractive } from "@web_tour/tour_interactive/tour_interactive";
+import { TourEngine } from "@web_tour/tour_engine/tour_engine";
 import { TourPointer, pointerState } from "@web_tour/tour_pointer/tour_pointer";
 import { Tour, TourStep } from "./tour_models";
 
@@ -100,7 +100,7 @@ beforeEach(() => {
 });
 
 after(() => {
-    TourInteractive.current?.stop();
+    TourEngine.current?.stop();
 });
 
 test("registering test tour after service is started doesn't auto-start the tour", async () => {
@@ -351,7 +351,13 @@ test("manual tour with alternative trigger", async () => {
     await contains(".button4").click();
     await contains(".button5").click();
     await contains(".button2").click();
-    expect.verifySteps(["click", "click", "click", "click", "tour succeeded"]);
+    expect.verifySteps([
+        "[1/4] Tour tour_des_flandres_2 → Step .button, .button2",
+        "[2/4] Tour tour_des_flandres_2 → Step body:not(:visible), .button4, .button3",
+        "[3/4] Tour tour_des_flandres_2 → Step .interval1, .interval2, .button5",
+        "[4/4] Tour tour_des_flandres_2 → Step button:contains(hellow):enabled, button:contains(youpi)",
+        "tour succeeded",
+    ]);
 });
 
 test("Tour backward when the pointed element disappear", async () => {
@@ -466,7 +472,7 @@ test("Tour backward only once when no previous trigger is found, and retries on 
     });
 
     let backwardCount = 0;
-    patchWithCleanup(TourInteractive.prototype, {
+    patchWithCleanup(TourEngine.prototype, {
         backward() {
             backwardCount++;
             return super.backward();
@@ -1040,13 +1046,12 @@ test("robot mode logs an error and removes the pointer when a step times out", a
     registry.category("web_tour.tours").add("tour_robot_timeout", {
         steps: () => [{ trigger: "button.inc", run: "click" }],
     });
-    patchWithCleanup(console, {
-        error: (msg) => {
-            if (typeof msg === "string" && msg.startsWith("Robot: no progress")) {
-                expect.step("timeout");
-            }
-        },
-    });
+    const onFailure = (msg) => {
+        if (typeof msg === "string" && msg.startsWith("FAILED:")) {
+            expect.step("timeout");
+        }
+    };
+    patchWithCleanup(console, { error: onFailure, warn: onFailure });
     const state = proxy({ disabled: false });
     class Root extends Component {
         static template = xml`<button class="inc" t-att-disabled="this.state.disabled">+</button>`;
@@ -1147,11 +1152,11 @@ test("finished tour is released and no longer listens to the bus", async () => {
     const comp = await mountWithCleanup(Root);
     await getService("tour_service").startTour("release_tour", { mode: "manual" });
     await waitFor(".o_tour_pointer");
-    const tour = TourInteractive.current;
+    const tour = TourEngine.current;
 
     await contains("button.foo").click();
     await waitUntil(() => tourConsumed.includes("release_tour"));
-    expect(TourInteractive.current).toBe(null);
+    expect(TourEngine.current).toBe(null);
 
     comp.env.bus.trigger("ACTION_MANAGER:UPDATE");
     expect(tour.isBusy).toBe(false);

@@ -26,31 +26,24 @@ Odoo Web tours.
         ],
         'web.assets_unit_tests': [
             ('include', 'web_tour.recorder'),
-            ('include', 'web_tour.automatic'),
-            ('include', 'web_tour.interactive'),
+            ('include', 'web_tour.engine'),
             'web_tour/static/tests/tour_models.js',
             'web_tour/static/tests/*.test.js',
         ],
         "web.assets_tests": [
             'web_tour/static/src/tour_helpers/tour_helpers.js',
-            ('include', 'web_tour.automatic')
+            ('include', 'web_tour.engine')
         ],
         'web_tour.common': [
             'web/static/lib/hoot-dom/**/*',
-            'web_tour/static/src/tour_step.js',
         ],
         'web_tour.helpers': [
             ('include', 'web_tour.common'),
             'web_tour/static/src/tour_helpers/**/*',
         ],
-        'web_tour.interactive': [
+        'web_tour.engine': [
             ('include', 'web_tour.helpers'),
-            'web_tour/static/src/tour_interactive/**/*',
-        ],
-        'web_tour.automatic': [
-            ('include', 'web_tour.helpers'),
-            'web_tour/static/src/tour_automatic/tour_automatic.js',
-            'web_tour/static/src/tour_automatic/tour_step_automatic.js',
+            'web_tour/static/src/tour_engine/**/*',
         ],
         'web_tour.recorder': [
             ('include', 'web_tour.common'),
