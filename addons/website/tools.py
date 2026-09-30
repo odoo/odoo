@@ -234,3 +234,8 @@ def create_image_attachment(env, image_path, image_name):
         'url': Attachments.get_base_url() + image_path,
     })
     return img
+
+
+def is_draft_active(record):
+    """Effective active state in draft preview: ``active_draft`` when set, else ``active``."""
+    return bool(record.active_draft) if record.active_draft != -1 else record.active
