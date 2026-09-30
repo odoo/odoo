@@ -48,9 +48,9 @@
                     <span t-out="this.fireCourseBtnText"></span>
                 </button>
                 <button
-                    class="button w-50 btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
+                    class="reprint-btn button w-50 btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                     t-on-click="() => this.doReprintOrder.call()"
-                    t-elif="!this.ui.isSmall and this.pos.ticketPrinter.hasPreparationPrinters and this.currentOrder.lastPrints.length"
+                    t-elif="!this.ui.isSmall and this.pos.ticketPrinter.hasPreparationPrinters and this.currentOrder.prep_order_ids.length"
                     t-att-disabled="this.doReprintOrder.status === 'loading'">
                     Reprint
                 </button>
