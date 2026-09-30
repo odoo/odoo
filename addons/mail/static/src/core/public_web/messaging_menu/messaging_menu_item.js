@@ -33,9 +33,6 @@ export class MessagingMenuItem extends Component {
     isMobileOS = isMobileOS;
     root = signal();
 
-    // needed for thread actions (owner.props.chatWindow).
-    props = useProps();
-
     setup() {
         super.setup();
         this.ancestors = useAncestors({ inMessagingMenu: true });

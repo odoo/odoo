@@ -1,13 +1,4 @@
-import {
-    Component,
-    computed,
-    proxy,
-    shallowEqual,
-    signal,
-    types,
-    useOnChange,
-    useProps,
-} from "@odoo/owl";
+import { Component, computed, proxy, shallowEqual, signal, types, useOnChange } from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
@@ -35,8 +26,6 @@ export class DiscussContent extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        // `this.props` is read by thread actions (e.g. `owner.props.chatWindow`).
-        this.props = useProps({});
         this.channel = propSignal("channel", types.instanceOf(this.store["discuss.channel"]), {
             optional: true,
         });
