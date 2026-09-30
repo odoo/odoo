@@ -300,9 +300,15 @@ class ProductTemplate(models.Model):
         # the other companies default taxes which the user may not have access to.
         other_companies = self.env['res.company'].sudo().search(['!', ('id', 'child_of', self.env.companies.ids)])
         if other_companies and products:
-            products_without_company = products.filtered(lambda p: not p.company_id).sudo()
+            products_without_company = products.filtered(lambda p: not p.company_id and p.type != 'combo').sudo()
             products_without_company._force_default_tax(other_companies)
         return products
+
+    def write(self, vals):
+        res = super().write(vals)
+        if vals.get('type') == 'combo':
+            self.sudo().write({'taxes_id': [Command.clear()], 'supplier_taxes_id': [Command.clear()]})
+        return res
 
     def _get_list_price(self, price):
         """ Get the product sales price from a public price based on taxes defined on the product """
