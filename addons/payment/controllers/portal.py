@@ -5,7 +5,7 @@ import urllib.parse
 from werkzeug.exceptions import BadRequest, Forbidden, NotFound
 
 from odoo import http
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
@@ -370,9 +370,15 @@ class PaymentPortal(portal.CustomerPortal):
         """
         # Prepare the create values.
         provider_sudo = self.env["payment.provider"].sudo().browse(provider_id)
+        if not provider_sudo.active or (
+            not provider_sudo.is_published and not self.env.user._is_internal()
+        ):
+            raise ValidationError(self.env._("This payment provider is not available."))
         tokenize = False
         if flow in ["redirect", "direct"]:  # Direct payment or payment with redirection
             payment_method_sudo = self.env["payment.method"].sudo().browse(payment_method_id)
+            if payment_method_sudo.provider_id != provider_sudo:
+                raise ValidationError(self.env._("This payment method is not available."))
             token_id = None
             tokenize = bool(
                 # Don't tokenize if the user tried to force it through the browser's developer tools
