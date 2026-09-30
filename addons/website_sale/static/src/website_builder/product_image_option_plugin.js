@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseProductPageAction } from "./product_page_option_plugin";
 
 export class ProductImageOptionPlugin extends Plugin {
     static id = "productImageOption";
@@ -15,7 +16,12 @@ export class ProductImageOptionPlugin extends Plugin {
              * Removes the image in the back-end
              */
             RemoveMediaAction,
+            /*
+             * Replaces the video in the back-end
+             */
+            ReplaceVideoAction,
         },
+        content_not_editable_selectors: ".o_wsale_product_images [data-embedded='video']",
     };
 }
 
@@ -53,6 +59,38 @@ export class RemoveMediaAction extends BuilderAction {
         } else {
             el.remove();
         }
+    }
+}
+/*
+ * Replaces the video in the back-end
+ */
+export class ReplaceVideoAction extends BaseProductPageAction {
+    static id = "replaceVideo";
+    static dependencies = [...super.dependencies, "media"];
+    setup() {
+        super.setup();
+        this.canTimeout = false;
+    }
+    async load({ editingElement: el }) {
+        return new Promise((resolve) => {
+            const onClose = this.dependencies.media.openMediaDialog({
+                node: el,
+                visibleTabs: ["VIDEOS"],
+                save: (videoEl, [video]) => resolve(video),
+            });
+            onClose.then(() => resolve());
+        });
+    }
+    async apply({ editingElement: el, loadResult: video }) {
+        if (!video) {
+            return BuilderAction.cancelReload;
+        }
+        const wrapper = el.closest("[data-oe-model='product.image']");
+        await this.services.orm.write(
+            "product.image",
+            [parseInt(wrapper.dataset.oeId)],
+            await this.getVideoValues(video)
+        );
     }
 }
 

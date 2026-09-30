@@ -1134,8 +1134,15 @@
         <div
             t-if="product_image._name == 'product.image' and product_image.video_url"
             t-att-class="image_classes + ' ratio ratio-16x9'"
+            t-att-data-oe-model="product_image._name"
+            t-att-data-oe-id="product_image.id"
+            data-oe-readonly="1"
         >
-            <div data-embedded="video" t-attf-data-embedded-props='{"src": "#{product_image.video_url}"}'/>
+            <div
+                data-embedded="video"
+                data-name.translate="Video"
+                t-attf-data-embedded-props='{"src": "#{product_image.video_url}"}'
+            />
         </div>
         <div
             t-elif="len(product_images) == 1 and website.product_page_image_layout != 'grid'"
@@ -1195,7 +1202,8 @@
                 <t t-if="len(product_images) > 1">
                     <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-bs-slide="prev">
                         <i
-                            class="oi oe_unmovable border bg-white text-900" data-icon="chevron_backward"
+                            class="oi oe_unmovable oe_unremovable border bg-white text-900"
+                            data-icon="chevron_backward"
                             role="img"
                             aria-label="Previous"
                             title="Previous"
@@ -1203,7 +1211,8 @@
                     </a>
                     <a class="carousel-control-next" href="#o-carousel-product" role="button" data-bs-slide="next">
                         <i
-                            class="oi oe_unmovable border bg-white text-900" data-icon="chevron_forward"
+                            class="oi oe_unmovable oe_unremovable border bg-white text-900"
+                            data-icon="chevron_forward"
                             role="img"
                             aria-label="Next"
                             title="Next"

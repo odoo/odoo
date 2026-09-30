@@ -466,3 +466,24 @@ class TestWebsiteSaleRemoveImage(HttpCase):
         )
         self.assertFalse(self.template.image_1920)
         self.assertFalse(self.product.image_1920)
+
+    def test_website_sale_reorder_and_remove_product_video(self):
+        self.env["product.product"].create({"product_tmpl_id": self.template.id})
+        video = self.env["product.image"].create([
+            {
+                "name": "Test Video",
+                "video_url": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                "product_tmpl_id": self.template.id,
+            },
+            {
+                "name": "Test Image",
+                "image_1920": _create_image(),
+                "product_tmpl_id": self.template.id,
+            },
+        ])[0]
+        self.start_tour(
+            self.env["website"].get_client_action_url("/shop?search=Test Remove Image"),
+            "website_sale.reorder_and_remove_product_video",
+            login="admin",
+        )
+        self.assertFalse(video.exists())
