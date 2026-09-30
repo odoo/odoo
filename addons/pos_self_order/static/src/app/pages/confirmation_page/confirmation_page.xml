@@ -49,7 +49,7 @@
                     Download your receipt here
                 </span>
                 <button class="btn btn-lg btn-primary w-100 w-md-auto" t-on-click="this.backToHome">
-                    <span t-if="!this.confirmedOrder?.uiState?.receiptReady" class="spinner-border"/>
+                    <span t-if="!this.confirmedOrder?.uiState?.receiptReady || !this.state.receiptPrinted" class="spinner-border"/>
                     <t t-elif="this.selfOrder.config.self_ordering_mode === 'kiosk'">Close</t>
                     <t t-else="">Ok</t>
                 </button>
