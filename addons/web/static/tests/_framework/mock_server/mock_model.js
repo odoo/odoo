@@ -2311,11 +2311,13 @@ export class Model extends Array {
      * @param {MaybeIterable<string>} fieldNames
      * @param {Record<string, any>} fieldsSpec
      */
-    onchange_batch(valuesList, fieldNames, fieldsSpec) {
-        const kwargs = getKwArgs(arguments, "values_list", "field_names", "fields_spec");
-        ({ values_list: valuesList, field_names: fieldNames, fields_spec: fieldsSpec } = kwargs);
+    onchange_batch(recordsList, fieldsSpec) {
+        const kwargs = getKwArgs(arguments, "records_list", "fields_spec");
+        ({ records_list: recordsList, fields_spec: fieldsSpec } = kwargs);
 
-        return valuesList.map((values) => this.onchange([], values, fieldNames, fieldsSpec));
+        return recordsList.map((record) =>
+            this.onchange([], record.values, record.field_names, fieldsSpec)
+        );
     }
 
     /**
