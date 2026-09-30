@@ -576,3 +576,6 @@ class ProductProduct(models.Model):
         ):
             return True
         return super()._can_return_content(field_name, access_token)
+
+    def _get_default_price_info(self, **kwargs):
+        return self.product_tmpl_id._get_default_price_info(product=self, **kwargs)

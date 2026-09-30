@@ -33,25 +33,25 @@ class ProductTemplate(models.Model):
 
         return prices
 
-    def _get_additional_combination_info(
+    def _get_price_info(
         self, product_or_template, quantity, uom, website, pricelist, fiscal_position, **kwargs
     ):
-        combination_info = super()._get_additional_combination_info(
+        price_info = super()._get_price_info(
             product_or_template, quantity, uom, website, pricelist, fiscal_position, **kwargs
         )
+
         if (
-            website
-            and website.company_id.country_code == 'AR'
+            website.company_id.country_code == 'AR'
             and website.l10n_ar_website_sale_show_both_prices
             and website.tax_display == 'tax_included'
         ):
             # Store the tax-excluded price in the res for use in showing both prices
-            combination_info['l10n_ar_price_tax_excluded'] = self._apply_taxes_to_price(
-                combination_info['raw_pricelist_price'],
-                website.currency_id,
-                product_taxes=combination_info['product_taxes'],
-                taxes=combination_info['taxes'],
+            price_info['l10n_ar_price_tax_excluded'] = product_or_template._apply_taxes_to_price(
+                price_info['untaxed_price'],
+                price_info['currency'],
+                product_taxes=price_info['product_taxes'],
+                taxes=price_info['taxes'],
                 tax_display='total_excluded',
             )
 
-        return combination_info
+        return price_info
