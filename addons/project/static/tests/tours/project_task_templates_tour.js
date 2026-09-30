@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add("project_task_templates_tour", {
             run: "click",
         },
         {
-            trigger: '.dropdown-menu button.dropdown-item:contains("Template")',
+            trigger: '.dropdown-menu .dropdown-item:contains("Template")',
             run: "click",
             content: "Create a task with the template",
         },

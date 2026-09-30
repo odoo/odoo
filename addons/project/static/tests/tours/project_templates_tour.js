@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add("project_templates_tour", {
             run: "click",
         },
         {
-            trigger: '.dropdown-menu button.dropdown-item:contains("Project Template")',
+            trigger: '.dropdown-menu .dropdown-item:contains("Project Template")',
             run: "click",
             content: "Create a project from the template",
         },
@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add("project_templates_tour", {
         },
         {
             content: "Lets Create a second project from the template",
-            trigger: '.dropdown-menu button.dropdown-item:contains("Project Template")',
+            trigger: '.dropdown-menu .dropdown-item:contains("Project Template")',
             run: "click",
         },
         {
