@@ -632,6 +632,7 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.lot1.standard_price, 10)
         self.assertEqual(self.product.standard_price, 12)
 
+<<<<<<< f141381d42357732e89cfbe70407ecc74a3da0e1
     def test_lot_valuation_at_date_fully_consumed_lot(self):
         """
         Stock report at date should show correct value for lot valuated
@@ -749,3 +750,51 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertEqual(self.lot1.total_value, 60)
         self.assertEqual(self.lot1.avg_cost, 30)
         self.assertEqual(self.lot1.standard_price, 30)
+||||||| e0d3d4ea57c3b57f9f1e5f4ea89157f3940e4997
+    def test_lot_svl_zero_standard_price(self):
+        self.product1.standard_price = 0
+        self._make_in_move(self.product1, 10, 0, lot_ids=[self.lot1])
+        self._make_in_move(self.product1, 10, 10, lot_ids=[self.lot2])
+        out_move = self._make_out_move(self.product1, 1, lot_ids=[self.lot1])
+        self.assertEqual(out_move.stock_valuation_layer_ids[0].value, 0)
+=======
+    def test_partial_return_keeps_remaining_lot_cost(self):
+        """A partial return is subtracted from the returned lot only."""
+        self._make_in_move(self.product1, 1, 100, lot_ids=[self.lot1])
+        self._make_in_move(self.product1, 1, 100, lot_ids=[self.lot2])
+        self._make_in_move(self.product1, 1, 400, lot_ids=[self.lot3])
+        out_move = self._make_out_move(self.product1, 2, create_picking=True, lot_ids=[self.lot1, self.lot2])
+        self.assertEqual(len(out_move.stock_valuation_layer_ids), 2)
+
+        return_wizard = Form(self.env['stock.return.picking'].with_context(
+            active_id=out_move.picking_id.id, active_model='stock.picking',
+        )).save()
+        return_wizard.product_return_moves.quantity = 1
+        return_picking = return_wizard._create_return()
+        return_move = return_picking.move_ids
+        return_move.move_line_ids.unlink()
+        return_move.move_line_ids = [Command.create({
+            'location_id': return_move.location_id.id,
+            'location_dest_id': return_move.location_dest_id.id,
+            'quantity': 1,
+            'product_id': self.product1.id,
+            'lot_id': self.lot2.id,
+        })]
+        return_move.picked = True
+        return_picking._action_done()
+
+        self.assertEqual(self.product1.standard_price, 250)
+        moves = out_move | return_move
+        self.assertEqual(self.product1._compute_average_price(0, 1, moves), 100)
+        self.assertEqual(
+            self.product1.with_context(value_invoiced=0)._compute_average_price(0, 1, moves),
+            100,
+        )
+
+    def test_lot_svl_zero_standard_price(self):
+        self.product1.standard_price = 0
+        self._make_in_move(self.product1, 10, 0, lot_ids=[self.lot1])
+        self._make_in_move(self.product1, 10, 10, lot_ids=[self.lot2])
+        out_move = self._make_out_move(self.product1, 1, lot_ids=[self.lot1])
+        self.assertEqual(out_move.stock_valuation_layer_ids[0].value, 0)
+>>>>>>> 49f918db4aaccade7618313113fb36ec411f928e
