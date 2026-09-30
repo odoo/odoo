@@ -373,23 +373,86 @@ export class FormatPlugin extends Plugin {
         const cursor = this.dependencies.selection.preserveSelection();
         const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
         const selectedTextNodes = /** @type { Text[] } **/ (
-            this.dependencies.selection
-                .getTargetedNodes()
-                .filter(
-                    (n) =>
-                        (!systemNodesSelector || !closestElement(n, systemNodesSelector)) &&
-                        this.dependencies.selection.areNodeContentsFullySelected(n) &&
-                        ((isTextNode(n) && (isVisibleTextNode(n) || isZWS(n))) ||
-                            (n.nodeName === "BR" &&
-                                (isFakeLineBreak(n) ||
-                                    previousLeaf(n, closestBlock(n))?.nodeName === "BR"))) &&
-                        isContentEditable(n)
-                )
+            this.dependencies.selection.getTargetedNodes().filter((n) => {
+                if (systemNodesSelector && closestElement(n, systemNodesSelector)) {
+                    return false;
+                }
+                if (!this.dependencies.selection.areNodeContentsFullySelected(n)) {
+                    return false;
+                }
+
+                if (n.nodeName === "T") {
+                    return true;
+                }
+
+                if (!isContentEditable(n)) {
+                    return false;
+                }
+
+                if (isTextNode(n)) {
+                    return isVisibleTextNode(n) || isZWS(n);
+                }
+                if (n.nodeName === "BR") {
+                    return (
+                        isFakeLineBreak(n) || previousLeaf(n, closestBlock(n))?.nodeName === "BR"
+                    );
+                }
+                return false;
+            })
         );
+<<<<<<< fada838fb708065e4cc91e93c199277fe9a9a2c9
         const unformattedTextNodes = selectedTextNodes.filter(
             (n) =>
                 !formattedNodes.has(n) &&
                 (this.checkPredicates("is_formattable_node_predicates", n) ?? true)
+||||||| 25cdbf4f6a18b57176a18702e96e10391b3896e1
+        const unformattedTextNodes = selectedTextNodes.filter((n) => {
+            if (!(this.checkPredicates("is_formattable_node_predicates", n) ?? true)) {
+                return false;
+            }
+            const listItem = closestElement(n, "li");
+            if (listItem && this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
+                if (formatName === "setFontSizeClassName") {
+                    return !listItem.classList.contains(formatProps?.className);
+                } else if (formatName === "fontSize") {
+                    return !listItem.style.fontSize;
+                }
+            }
+            return true;
+        });
+
+        const tagetedFieldNodes = new Set(
+            this.dependencies.selection
+                .getTargetedNodes()
+                .map((node) => closestElement(node, PROTECTED_QWEB_SELECTOR))
+                .filter((node) => node && this.dependencies.selection.isNodeEditable(node))
+=======
+        const unformattedTextNodes = selectedTextNodes.filter((n) => {
+            if (!(this.checkPredicates("is_formattable_node_predicates", n) ?? true)) {
+                return false;
+            }
+            const listItem = closestElement(n, "li");
+            if (listItem && this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
+                if (formatName === "setFontSizeClassName") {
+                    return !listItem.classList.contains(formatProps?.className);
+                } else if (formatName === "fontSize") {
+                    return !listItem.style.fontSize;
+                }
+            }
+            return true;
+        });
+
+        const tagetedFieldNodes = new Set(
+            this.dependencies.selection
+                .getTargetedNodes()
+                .map((node) => closestElement(node, PROTECTED_QWEB_SELECTOR))
+                .filter(
+                    (node) =>
+                        node &&
+                        this.dependencies.selection.isNodeEditable(node) &&
+                        node.nodeName !== "T"
+                )
+>>>>>>> 6a419874a5e4f41cf95250b49182b18dce5a8971
         );
         const formatSpec = formatsSpecs[formatName];
         for (const node of unformattedTextNodes) {
@@ -497,7 +560,7 @@ export class FormatPlugin extends Plugin {
                             formatProps
                         );
                     }
-                } else if (formatName !== "fontSize" || formatProps.size !== undefined) {
+                } else if (formatName !== "fontSize" || formatProps.size) {
                     formatSpec.addStyle(
                         getOrCreateSpan(node, inlineAncestors, cursor),
                         formatProps

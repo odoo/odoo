@@ -198,6 +198,7 @@ test("should not apply background color on an uneditable selected cell in a tabl
     });
 });
 
+<<<<<<< fada838fb708065e4cc91e93c199277fe9a9a2c9
 test("should not apply font tag to t nodes (protects if else nodes separation)", async () => {
     await testEditor({
         contentBefore: unformat(`[
@@ -229,6 +230,39 @@ test("should not apply font tag to t nodes (protects if else nodes separation)",
     });
 });
 
+||||||| 25cdbf4f6a18b57176a18702e96e10391b3896e1
+test("should not apply font tag to t nodes (protects if else nodes separation)", async () => {
+    await testEditor({
+        contentBefore: unformat(`[
+            <p>
+                <t t-if="object.partner_id.parent_id">
+                   <t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>
+                </t>
+                <t t-else="">
+                    <t t-out="object.partner_id.name or ''">Brandon Freeman</t>
+                </t>
+            </p>
+        ]`),
+        stepFunction: setColor("red", "color"),
+        contentAfter: unformat(`[
+            <p>
+                <t t-if="object.partner_id.parent_id">
+                    <t t-out="object.partner_id.parent_id.name or ''" style="color: red;">
+                        Azure Interior
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-out="object.partner_id.name or ''" style="color: red;">
+                        Brandon Freeman
+                    </t>
+                </t>
+            </p>
+        ]`),
+    });
+});
+
+=======
+>>>>>>> 6a419874a5e4f41cf95250b49182b18dce5a8971
 test("should remove font tag after removing font color (1)", async () => {
     await testEditor({
         contentBefore: '<p><font style="color: rgb(255, 0, 0);">[abcabc]</font></p>',
