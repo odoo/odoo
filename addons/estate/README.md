@@ -94,3 +94,13 @@ Accepting an offer copies its buyer and price onto the property and changes the 
 
 **Try it:** Add two offers, accept one, and inspect the property's buyer, selling price, and state. Try accepting the other offer or cancelling a sold property and read the resulting error.
 
+## Chapter 10 - Constraints
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/10_constraints.html)
+
+The workflow now needs data rules that apply no matter how a record is created. PostgreSQL constraints require positive expected and offer prices, allow a zero but not negative selling price, and prevent duplicate type or tag names. Odoo 20 declares these rules with `models.Constraint`.
+
+A Python constraint handles the more involved rule: once a selling price is nonzero, it must be at least 90% of the expected price. It checks both price fields and uses Odoo's float comparison helpers. Keeping this rule on the model protects records created through imports and RPC calls as well as forms.
+
+**Try it:** Enter a negative expected price, a zero offer, and a selling price below 90% of the expected price. Compare the errors with a duplicate property type name.
+
