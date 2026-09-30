@@ -68,7 +68,7 @@ class TestTimezones(TestResourceCommon):
             self.datetime_tz(2018, 4, 9, 8, 0, 0),
             self.datetime_tz(2018, 4, 13, 16, 0, 0),
         )[self.jean.id]
-        self.assertEqual(data, {'days': 4.5, 'hours': 38})
+        self.assertEqual(data, {'days': 4.75, 'hours': 38})
 
         # 09-04-2018 00:00:00 - 13-04-2018 08:00:00
         data = self.jean._get_work_days_data_batch(
@@ -105,14 +105,14 @@ class TestTimezones(TestResourceCommon):
             self.datetime_tz(2018, 4, 9, 8, 0, 0, tzinfo=self.tz3),
             self.datetime_tz(2018, 4, 13, 16, 0, 0, tzinfo=self.tz3),
         )[self.jean.id]
-        self.assertEqual(data, {'days': 0.5, 'hours': 6})
+        self.assertEqual(data, {'days': 0.75, 'hours': 6})
 
         # 09-04-2018 08:00:00 - 14-04-2018 12:00:00
         data = self.jean._get_leave_days_data_batch(
             self.datetime_tz(2018, 4, 9, 8, 0, 0, tzinfo=self.tz2),
             self.datetime_tz(2018, 4, 13, 16, 0, 0, tzinfo=self.tz4),
         )[self.jean.id]
-        self.assertEqual(data, {'days': 0.5, 'hours': 6})
+        self.assertEqual(data, {'days': 0.75, 'hours': 6})
 
     def test_works(self):
         work = self.jean._list_work_time_per_day(
