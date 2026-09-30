@@ -76,6 +76,7 @@ class TestPdpUser(TestL10nFrPdpCommon):
         # When the company does not have a 0225 peppol EAS set we should still suggest
         # an identifier in the wizard.
         self.env.company.partner_id.write({
+            'vat': 'FR12000000000',
             'peppol_eas': '0002',
             'peppol_endpoint': '123456789',
             'company_registry': '000000000',
@@ -180,7 +181,7 @@ class TestPdpUser(TestL10nFrPdpCommon):
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
             self.assertEqual(self.env.company.account_peppol_proxy_state, 'receiver')
 
-    def test_peppol_pdp_unqiue_constraint(self):
+    def test_peppol_pdp_unique_constraint(self):
         """Test that we can either have a PDP or a Peppol user per company (and per edi mode)"""
         self.assertRecordValues(self.proxy_user, [{
             'active': True,
