@@ -136,6 +136,24 @@ test("sequence", async () => {
     expect(".overlayed").toHaveCount(0);
 });
 
+test("sequence is incremented based on last overlay", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+
+    class MyComp extends Component {
+        static template = xml``;
+        static props = ["*"];
+    }
+
+    getService("overlay").add(MyComp, {});
+    getService("overlay").add(MyComp, {});
+    getService("overlay").add(MyComp, {}, { sequence: 60 });
+    getService("overlay").add(MyComp, {});
+    await animationFrame();
+
+    const sequences = Object.values(getService("overlay").overlays).map((o) => o.sequence);
+    expect(sequences).toEqual([50, 50.001, 60, 60.001]);
+});
+
 test("allow env as option", async () => {
     await mountWithCleanup(MainComponentsContainer);
 
