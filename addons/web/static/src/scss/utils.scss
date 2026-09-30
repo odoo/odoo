@@ -209,6 +209,151 @@
     margin-top: 0;
 }
 
+<<<<<<< 5630a25cbed8b8ffaa290edc812beab7396b6b7d
+||||||| d3a1fcb9bc2529a1fb94ca32cf5ece5c836a64a3
+// Emulate dropdown links
+@mixin o-kanban-dashboard-dropdown-link($link-padding-gap: $o-dropdown-hpadding) {
+    padding: 0;
+
+    > a {
+        margin: auto auto auto (-$link-padding-gap);
+        padding: 3px $link-padding-gap;
+        color: $dropdown-link-color;
+        display: block;
+        border-radius: var(--#{$prefix}dropdown-item-border-radius, 0);
+
+        &:hover {
+            background-color: $dropdown-link-hover-bg;
+            color: $dropdown-link-hover-color;
+        }
+    }
+
+    &:last-child {
+        margin-bottom: 5px;
+    }
+}
+
+// No content helper
+@mixin o-nocontent-empty {
+    pointer-events: auto;
+    max-width: 650px;
+    margin: auto;
+    padding: 15px;
+    z-index: 1000;
+    text-align: center;
+    color: $body-color;
+    font-size: 115%;
+
+    > p:first-of-type {
+        margin-top: 0;
+        color: $headings-color;
+        font-weight: bold;
+        font-size: 125%;
+    }
+
+    a {
+        cursor: pointer;
+    }
+}
+
+%o-nocontent-init-image {
+    content: "";
+    display: block;
+    margin: auto;
+    background-size: cover;
+}
+
+%o-nocontent-empty-document {
+    @extend %o-nocontent-init-image;
+    width: 120px;
+    height: 80px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background: transparent url(/web/static/img/empty_folder.svg) no-repeat center;
+}
+
+// Sample data
+@mixin o-sample-data-disabled {
+    opacity: 0.06;
+    pointer-events: none;
+    user-select: none;
+}
+
+=======
+// Emulate a dropdown link
+@mixin o-kanban-dashboard-dropdown-link-style($link-padding-gap: $o-dropdown-hpadding) {
+    margin: auto auto auto (-$link-padding-gap);
+    padding: 3px $link-padding-gap;
+    color: $dropdown-link-color;
+    display: block;
+    border-radius: var(--#{$prefix}dropdown-item-border-radius, 0);
+
+    &:hover {
+        background-color: $dropdown-link-hover-bg;
+        color: $dropdown-link-hover-color;
+    }
+}
+
+// Emulate dropdown links
+@mixin o-kanban-dashboard-dropdown-link($link-padding-gap: $o-dropdown-hpadding) {
+    padding: 0;
+
+    > a {
+        @include o-kanban-dashboard-dropdown-link-style($link-padding-gap);
+    }
+
+    &:last-child {
+        margin-bottom: 5px;
+    }
+}
+
+// No content helper
+@mixin o-nocontent-empty {
+    pointer-events: auto;
+    max-width: 650px;
+    margin: auto;
+    padding: 15px;
+    z-index: 1000;
+    text-align: center;
+    color: $body-color;
+    font-size: 115%;
+
+    > p:first-of-type {
+        margin-top: 0;
+        color: $headings-color;
+        font-weight: bold;
+        font-size: 125%;
+    }
+
+    a {
+        cursor: pointer;
+    }
+}
+
+%o-nocontent-init-image {
+    content: "";
+    display: block;
+    margin: auto;
+    background-size: cover;
+}
+
+%o-nocontent-empty-document {
+    @extend %o-nocontent-init-image;
+    width: 120px;
+    height: 80px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background: transparent url(/web/static/img/empty_folder.svg) no-repeat center;
+}
+
+// Sample data
+@mixin o-sample-data-disabled {
+    opacity: 0.06;
+    pointer-events: none;
+    user-select: none;
+}
+
+>>>>>>> 38605010d3fb1917643b366635315c9c9169a9b8
 // ----------------------------------------------------------------------------
 // CSS Variables
 // ----------------------------------------------------------------------------
