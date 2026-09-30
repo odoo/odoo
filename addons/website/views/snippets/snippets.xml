@@ -213,6 +213,9 @@
             <t t-snippet="website.s_countdown" string="Countdown" group="content">
                 <keywords>celebration, launch</keywords>
             </t>
+            <t t-snippet="website.s_countdown_experiment" string="Countdown (Experimental)" group="content" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg">
+                <keywords>countdown, timer, experimental, CSS, SVG, comparison</keywords>
+            </t>
             <t t-snippet="website.s_numbers_lite" string="Numbers Lite" group="content">
                 <keywords>statistics, stats, KPIs, metrics, highlights, figures, achievements, milestones, data, results, trends, counts, counters, compact, simple</keywords>
             </t>
@@ -646,6 +649,7 @@
             -->
             <t t-snippet="website.s_website_form" string="Form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" t-forbid-sanitize="form"/>
             <t t-snippet="website.s_countdown" string="Countdown" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg"/>
+            <t t-snippet="website.s_countdown_experiment" string="Countdown (Experimental)" t-thumbnail="/website/static/src/img/snippets_thumbs/s_countdown.svg"/>
             <t t-snippet="website.s_embed_code" string="Embed Code" t-thumbnail="/website/static/src/img/snippets_thumbs/s_embed_code.svg" t-forbid-sanitize="true"/>
             <t t-if="debug or not google_maps_api_key" t-snippet="website.s_map" string="Map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_map.svg"/>
             <t t-if="debug or google_maps_api_key" t-snippet="website.s_google_map" string="Google Map" t-thumbnail="/website/static/src/img/snippets_thumbs/s_google_map.svg"/>

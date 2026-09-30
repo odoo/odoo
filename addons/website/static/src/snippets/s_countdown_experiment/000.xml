@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website.s_countdown_experiment.unit">
+        <div class="o_countdown_experiment_unit" contenteditable="false">
+            <t t-if="isCss">
+                <span t-if="hasBackground" class="o_countdown_experiment_background" aria-hidden="true"/>
+                <span t-if="hasProgress" class="o_countdown_experiment_rings" aria-hidden="true">
+                    <span t-if="hasTrack" class="o_countdown_experiment_ring o_countdown_experiment_track"/>
+                    <span class="o_countdown_experiment_ring o_countdown_experiment_progress"/>
+                </span>
+            </t>
+            <svg t-else="" class="o_countdown_experiment_svg"
+                viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+                <circle t-if="hasBackground" class="o_countdown_experiment_background"
+                    cx="50" cy="50" t-att-r="backgroundRadius"/>
+                <circle t-if="hasTrack" class="o_countdown_experiment_track"
+                    cx="50" cy="50" r="45"
+                    t-att-stroke-width="strokeWidth"/>
+                <circle t-if="hasProgress" class="o_countdown_experiment_progress"
+                    cx="50" cy="50" r="45"
+                    t-att-stroke-width="strokeWidth" pathLength="1"
+                    transform="rotate(-90 50 50)"/>
+            </svg>
+            <span class="o_countdown_experiment_number"/>
+            <span class="o_countdown_experiment_label"/>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,160 @@
+.s_countdown_experiment {
+    .s_countdown_wrapper, .o_template_circle {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .o_template_circle {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .o_countdown_experiment_unit {
+        position: relative;
+        width: var(--countdown-experiment-size);
+        flex: 0 1 var(--countdown-experiment-size);
+        min-width: 0;
+        max-width: 100%;
+        aspect-ratio: 1;
+        container-type: inline-size;
+        color: inherit;
+        font-family: Arial, sans-serif;
+        font-weight: normal;
+        font-style: normal;
+        font-variant-numeric: normal;
+        letter-spacing: normal;
+        line-height: 1;
+        text-transform: none;
+    }
+
+    .o_countdown_experiment_svg, .o_countdown_experiment_rings, .o_countdown_experiment_ring {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    &[data-renderer="css"] {
+        .o_countdown_experiment_background {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: var(--countdown-experiment-background-size);
+            height: var(--countdown-experiment-background-size);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: var(--countdown-experiment-background-color);
+        }
+
+        .o_countdown_experiment_rings {
+            mask-image: radial-gradient(circle closest-side,
+                transparent calc(var(--countdown-experiment-ring-inner) - 0.5px),
+                black calc(var(--countdown-experiment-ring-inner) + 0.5px),
+                black calc(var(--countdown-experiment-ring-outer) - 0.5px),
+                transparent calc(var(--countdown-experiment-ring-outer) + 0.5px));
+        }
+
+        .o_countdown_experiment_track {
+            background: var(--countdown-experiment-progress-color);
+        }
+
+        .o_countdown_experiment_progress {
+            background: conic-gradient(
+                var(--countdown-experiment-progress-color) calc(var(--countdown-experiment-progress) * 1turn),
+                transparent 0turn);
+        }
+
+        &[data-layout-background="inner"]:not([data-progress-bar-weight="thin"]):not([data-progress-bar-style="none"]) {
+            .o_countdown_experiment_unit {
+                isolation: isolate;
+            }
+
+            .o_countdown_experiment_background {
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                transform: none;
+                border-radius: 0;
+                mask-image: radial-gradient(circle closest-side,
+                    black calc(var(--countdown-experiment-ring-inner) - 0.5px),
+                    transparent calc(var(--countdown-experiment-ring-inner) + 0.5px));
+            }
+
+            .o_countdown_experiment_rings {
+                mix-blend-mode: plus-lighter;
+            }
+        }
+    }
+
+    .o_countdown_experiment_track {
+        opacity: 0.2;
+    }
+
+    &:not([data-renderer="css"]) {
+        .o_countdown_experiment_background {
+            fill: var(--countdown-experiment-background-color);
+        }
+
+        .o_countdown_experiment_track, .o_countdown_experiment_progress {
+            fill: none;
+            stroke: var(--countdown-experiment-progress-color);
+            stroke-linecap: butt;
+        }
+
+        .o_countdown_experiment_progress {
+            stroke-dasharray: var(--countdown-experiment-progress) 1;
+        }
+    }
+
+    .o_countdown_experiment_number, .o_countdown_experiment_label {
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        white-space: nowrap;
+        color: inherit;
+    }
+
+    .o_countdown_experiment_number {
+        top: 50%;
+        font-size: 25cqw;
+        direction: ltr #{"/* rtl:ltr */"};
+    }
+
+    .o_countdown_experiment_label {
+        top: calc(200% / 3);
+        font-size: calc(100cqw / 12);
+    }
+
+    &.s_countdown_title_hidden .s_countdown_title {
+        display: none !important;
+    }
+
+    @include media-breakpoint-up(lg) {
+        &.s_countdown_title_left {
+            > .container, > .container-fluid, > .o_container_small {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .s_countdown_title {
+                width: 25%;
+                padding-right: 0.5rem;
+            }
+        }
+    }
+}
+
+.o_savable .s_countdown_experiment.s_countdown_enable_preview {
+    &.hide-countdown {
+        .s_countdown_wrapper, .s_countdown_title {
+            display: none !important;
+        }
+    }
+
+    .s_countdown_end_message {
+        display: initial !important;
+    }
+}

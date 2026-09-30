@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template
+    id="s_countdown_experiment"
+    name="Countdown (Experimental)"
+    inherit_id="website.s_countdown"
+    primary="True"
+>
+    <xpath expr="//section" position="attributes">
+        <attribute name="t-attf-class">s_countdown_experiment pt48 pb48 #{titleClass}</attribute>
+        <attribute name="data-renderer">svg</attribute>
+        <attribute name="t-att-data-progress-bar-color"/>
+        <attribute name="data-progress-bar-color">currentColor</attribute>
+    </xpath>
+    <xpath expr="//div[hasclass('s_countdown_title')]/h2/span" position="replace">
+        <span class="h3-fs">Experimental countdown</span>
+    </xpath>
+</template>
+
+<asset id="website.s_countdown_experiment_000_xml" name="Countdown Experiment 000 XML">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_countdown_experiment/000.xml</path>
+</asset>
+
+<asset id="website.s_countdown_experiment_001_scss" name="Countdown Experiment 001 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_countdown_experiment/001.scss</path>
+</asset>
+
+</odoo>

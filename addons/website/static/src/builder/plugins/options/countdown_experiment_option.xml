@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t
+    t-name="website.CountdownExperimentOption"
+    t-inherit="website.CountdownOption"
+    t-inherit-mode="primary"
+>
+    <xpath expr="//BuilderRow[@label.translate='Layout']" position="replace">
+        <BuilderRow label.translate="Renderer">
+            <BuilderSelect dataAttributeAction="'renderer'">
+                <BuilderSelectItem dataAttributeActionValue="'css'">CSS</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'svg'">SVG</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </xpath>
+    <xpath expr="//t[BuilderRow[@label.translate='Size']]" position="attributes">
+        <attribute name="t-if"/>
+    </xpath>
+    <xpath expr="//BuilderRow[@label.translate='Round Corners']" position="replace"/>
+    <xpath expr="//t[BuilderRow[@label.translate='Label']]" position="replace"/>
+    <xpath expr="//BuilderRow[@label.translate='Font Monospace']" position="replace"/>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <countdown_experiment_option selector=".s_countdown_experiment"/>
+    </xpath>
+</t>
+
+</templates>
