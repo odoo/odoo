@@ -1,4 +1,5 @@
 from odoo.tests.common import TransactionCase, new_test_user, tagged
+from odoo.exceptions import AccessError
 
 
 @tagged("post_install", "-at_install")
@@ -9,6 +10,20 @@ class TestResUsersCalendars(TransactionCase):
         super().setUpClass()
         cls.user = new_test_user(cls.env, login="ru_user", groups="base.group_user")
         cls.other = new_test_user(cls.env, login="ru_other", groups="base.group_user")
+        cls.admin = new_test_user(cls.env, login="ru_admin", groups="base.group_system")
+
+    def test_admin_unlink_user_bypasses_calendar_rules(self):
+        """Administrators must be able to delete users without being blocked by calendar rules."""
+        target_user = new_test_user(self.env, login="target_delete", groups="base.group_user")
+
+        self.assertTrue(target_user.calendar_user_ids, "Target user must have calendar records.")
+
+        with self.assertRaises(AccessError):
+            target_user.with_user(self.other).unlink()
+
+        target_user.with_user(self.admin).unlink()
+
+        self.assertFalse(target_user.exists())
 
     def test_new_user_has_one_owned_primary_calendar(self):
         """Each new user should own one primary calendar."""
