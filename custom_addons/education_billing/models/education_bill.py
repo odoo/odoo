@@ -311,18 +311,45 @@ class EducationBill(models.Model):
             else:
                 rec.period_label = f"Biaya Pendidikan {rec.year or ''}".strip()
 
+    def _check_lock_dates(self, custom_date=None):
+        for rec in self:
+            comp = rec.company_id or self.env.company
+            target_date = custom_date or rec.bill_date or rec.payment_date or fields.Date.context_today(rec)
+            if comp and target_date and hasattr(comp, 'check_lock_date'):
+                comp.check_lock_date(target_date, lock_type='sales')
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            company = self.env['res.company'].browse(vals.get('company_id') or self.env.company.id).exists()
+            target_date = fields.Date.to_date(vals.get('bill_date')) or fields.Date.today()
+            if company and hasattr(company, 'check_lock_date'):
+                company.check_lock_date(target_date, lock_type='sales')
             if vals.get('name', 'New') == 'New':
                 vals['name'] = self.env['ir.sequence'].next_by_code('education.bill') or 'New'
         return super(EducationBill, self).create(vals_list)
+
+    def write(self, vals):
+        if any(k in vals for k in ['bill_date', 'payment_date', 'amount', 'state', 'company_id']):
+            self._check_lock_dates()
+            if 'bill_date' in vals:
+                new_date = fields.Date.to_date(vals['bill_date'])
+                self._check_lock_dates(custom_date=new_date)
+            elif 'payment_date' in vals:
+                new_date = fields.Date.to_date(vals['payment_date'])
+                self._check_lock_dates(custom_date=new_date)
+        return super().write(vals)
+
+    def unlink(self):
+        self._check_lock_dates()
+        return super().unlink()
 
     # ---------------------------------------------------------
     # WORKFLOW ACTIONS
     # ---------------------------------------------------------
     def action_publish_bill(self):
         """Draft -> Unpaid (Tagihan Diterbitkan)"""
+        self._check_lock_dates()
         for rec in self:
             if rec.state != 'draft':
                 raise UserError(_('Hanya tagihan berstatus Draft yang dapat diterbitkan.'))
@@ -333,6 +360,7 @@ class EducationBill(models.Model):
 
     def action_submit_payment(self):
         """Unpaid / Rejected -> Waiting Verification (Staf / Siswa upload bukti bayar)"""
+        self._check_lock_dates()
         for rec in self:
             if rec.state not in ('unpaid', 'rejected', 'draft'):
                 raise UserError(_('Tagihan tidak dalam status yang dapat mengajukan verifikasi.'))
@@ -349,6 +377,7 @@ class EducationBill(models.Model):
         Waiting Verification / Unpaid -> Verified (Lunas)
         Otomatis membuat record di `pendapatan.pendapatan` & auto-post ke `sif.jurnal.entry`
         """
+        self._check_lock_dates()
         for rec in self:
             if rec.state not in ('waiting_verification', 'unpaid'):
                 raise UserError(_('Hanya tagihan berstatus Menunggu Verifikasi atau Belum Dibayar yang dapat diverifikasi.'))
