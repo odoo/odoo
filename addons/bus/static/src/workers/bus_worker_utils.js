@@ -74,14 +74,14 @@ export class Logger {
     static gcInterval = null;
     static instances = [];
     _db;
+    _dbPromise;
 
     static async gcOutdatedLogs() {
         const threshold = Date.now() - Logger.LOG_TTL;
         for (const logger of this.instances) {
             try {
-                await logger._ensureDatabaseAvailable();
+                const transaction = await logger._getTransaction("readwrite");
                 await new Promise((res, rej) => {
-                    const transaction = logger._db.transaction("logs", "readwrite");
                     const store = transaction.objectStore("logs");
                     const req = store
                         .index("timestamp")
@@ -112,14 +112,13 @@ export class Logger {
     }
 
     async _ensureDatabaseAvailable() {
-        if (this._db) {
-            return;
-        }
-        return new Promise((res, rej) => {
+        this._dbPromise ||= new Promise((res, rej) => {
             const request = indexedDB.open(this._name, 1);
             request.onsuccess = (event) => {
-                this._db = event.target.result;
-                res();
+                const db = event.target.result;
+                db.onclose = () => this._resetDatabase(db);
+                this._db = db;
+                res(db);
             };
             request.onupgradeneeded = (event) => {
                 if (!event.target.result.objectStoreNames.contains("logs")) {
@@ -129,13 +128,37 @@ export class Logger {
                     store.createIndex("timestamp", "timestamp", { unique: false });
                 }
             };
-            request.onerror = rej;
+            request.onerror = (event) => {
+                this._dbPromise = null;
+                rej(event);
+            };
         });
+        return this._dbPromise;
+    }
+
+    _resetDatabase(db) {
+        if (this._db === db) {
+            this._db = null;
+            this._dbPromise = null;
+        }
+    }
+
+    async _getTransaction(mode, retry = true) {
+        const db = await this._ensureDatabaseAvailable();
+        try {
+            return db.transaction("logs", mode);
+        } catch (error) {
+            if (!retry || error.name !== "InvalidStateError") {
+                throw error;
+            }
+            // The browser may close the connection at any time (e.g. storage pressure).
+            this._resetDatabase(db);
+            return this._getTransaction(mode, false);
+        }
     }
 
     async log(message) {
-        await this._ensureDatabaseAvailable();
-        const transaction = this._db.transaction("logs", "readwrite");
+        const transaction = await this._getTransaction("readwrite");
         const store = transaction.objectStore("logs");
         const addRequest = store.add({ timestamp: Date.now(), message });
         return new Promise((res, rej) => {
@@ -146,8 +169,7 @@ export class Logger {
 
     async getLogs() {
         await Logger.gcOutdatedLogs();
-        await this._ensureDatabaseAvailable();
-        const transaction = this._db.transaction("logs", "readonly");
+        const transaction = await this._getTransaction("readonly");
         const store = transaction.objectStore("logs");
         const request = store.getAll();
         return new Promise((res, rej) => {
