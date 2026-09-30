@@ -1,4 +1,3 @@
-import { ChatGPTTranslatePlugin } from "@html_editor/main/chatgpt/chatgpt_translate_plugin";
 import { ColorPlugin } from "@html_editor/main/font/color_plugin";
 import { CORE_PLUGINS } from "@html_editor/plugin_sets";
 import { EmojiPlugin } from "@html_editor/main/emoji_plugin";
@@ -19,7 +18,6 @@ import { ProtectedNodePlugin } from "@html_editor/core/protected_node_plugin";
 
 export const MAIL_CORE_PLUGINS = [
     ...CORE_PLUGINS,
-    ChatGPTTranslatePlugin,
     ColorPlugin,
     EmojiPlugin,
     FeffPlugin,
