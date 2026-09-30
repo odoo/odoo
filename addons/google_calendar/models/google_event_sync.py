@@ -439,7 +439,7 @@ class GoogleEventSync(models.AbstractModel):
 
     @api.model
     def _create_from_google(self, gevents, calendar, vals_list):
-        return self.create(vals_list)
+        return self.with_context(google_calendar_from_sync=True).create(vals_list)
 
     @api.model
     def _get_sync_partner(self, emails):
