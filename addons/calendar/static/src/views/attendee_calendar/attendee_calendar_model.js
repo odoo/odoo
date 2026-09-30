@@ -123,6 +123,7 @@ export class AttendeeCalendarModel extends CalendarModel {
     async loadFilterSection(fieldName, filterInfo, previousSection) {
         const result = await super.loadFilterSection(fieldName, filterInfo, previousSection);
         if (result?.fieldName === "calendar_id") {
+            result.label = _t("My Calendars");  // Override the string from the field definition ("Calendar").
             result?.filters?.forEach(f => {
                 if (f.isPrimary) {
                     // reuse existing canRemove field on parent component
