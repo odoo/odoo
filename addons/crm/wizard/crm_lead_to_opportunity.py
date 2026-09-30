@@ -35,7 +35,7 @@ class Lead2OpportunityPartner(models.TransientModel):
         ('nothing', 'Do not link to a customer')
     ], string='Related Customer', compute='_compute_action', readonly=False, store=True, compute_sudo=False)
     lead_id = fields.Many2one('crm.lead', 'Associated Lead', required=True)
-    company_id = fields.Many2one('res.company', string='Company', related='partner_id.company_id')
+    company_id = fields.Many2one('res.company', string='Company', related='lead_id.company_id')
     duplicated_lead_ids = fields.Many2many(
         'crm.lead', string='Opportunities', context={'active_test': False},
         compute='_compute_duplicated_lead_ids', readonly=False, store=True, compute_sudo=False)
