@@ -626,6 +626,35 @@ describe("Related Model", () => {
         expect(models["pos.order.line"].getBy("uuid", line.uuid)).toBe(line);
     });
 
+    test("Local lines must stay linked when the order gets its server id", async () => {
+        await makeMockServer();
+        const models = getRelatedModelsInstance(false);
+        const order = models["pos.order"].create({ total: 30 });
+        const line = models["pos.order.line"].create({
+            order_id: order,
+            full_product_name: "Line 1",
+        });
+
+        // Someone starts the server sync.
+        // In the meantime a local line is created.
+        const localLine = models["pos.order.line"].create({
+            order_id: order,
+            full_product_name: "Line 2",
+        });
+
+        // server data arrives without the new local line "Line 2".
+        const serverData = {
+            "pos.order": [{ id: 200, lines: [22], uuid: order.uuid }],
+            "pos.order.line": [{ id: 22, order_id: 200, uuid: line.uuid }],
+        };
+
+        models.connectNewData(serverData);
+
+        expect(order.id).toBe(200);
+        expect(order.lines.length).toBe(2);
+        expect(localLine.order_id).toBe(order);
+    });
+
     test("Disallow record id update", async () => {
         await makeMockServer();
         const models = getRelatedModelsInstance(false);

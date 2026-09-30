@@ -753,11 +753,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                             });
 
                             // Remove olds references (id string -> id number)
+                            const previousId = existingRecord.id;
                             recordStore.remove(existingRecord);
                             existingRecord[RAW_SYMBOL] = rawData;
                             recordStore.add(existingRecord);
                             if (dataToConnect) {
                                 modelInstance._connectRecords(existingRecord, dataToConnect);
+                            }
+                            if (previousId !== existingRecord.id) {
+                                this._relinkChildren(existingRecord, previousId);
                             }
                             record = existingRecord;
                             uiState = newUiState;
@@ -844,6 +848,22 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 this._addItem(ownerRecord, field, recordToConnect, aggregatedUpdates);
                 this._addItem(recordToConnect, inverse, ownerRecord, aggregatedUpdates);
             }
+        }
+
+        _relinkChildren(record, previousId) {
+            const aggregatedUpdates = new AggregatedUpdates();
+            for (const field of Object.values(getFields(record.model.name))) {
+                const inverse = inverseMap.get(field);
+                if (field.dummy || !X2MANY_TYPES.has(field.type) || inverse?.type !== "many2one") {
+                    continue;
+                }
+                for (const child of record[field.name] || []) {
+                    if (child[RAW_SYMBOL][inverse.name] === previousId) {
+                        this._connect(inverse, child, record, aggregatedUpdates);
+                    }
+                }
+            }
+            aggregatedUpdates.fireEventAndDirty();
         }
 
         _disconnect(field, ownerRecord, recordOrId, aggregatedUpdates) {
