@@ -1295,6 +1295,36 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             'withholding_net_residual_amount_currency': 0.00,
         }])
 
+    def test_withhold_on_base_including_affecting_tax(self):
+        """ Test that the bill withholds on the base the payment uses, whatever the preceding tax """
+        withholding_tax = self.percent_tax(-3, type_tax_use="purchase", sequence=20, is_withholding_tax=True, withholding_sequence_id=self.withholding_sequence.id)
+        cases = (
+            (self.percent_tax(18, type_tax_use="purchase", include_base_amount=True), 2000.0, 2360.0, 70.80),
+            (self.percent_tax(21, type_tax_use="purchase", price_include_override='tax_included'), 1210.0, 1000.0, 30.00),
+        )
+        for vat_tax, price_unit, base_amount, amount in cases:
+            with self.subTest(vat_tax=vat_tax.name):
+                bill = self.env['account.move'].create({
+                    'move_type': 'in_invoice',
+                    'partner_id': self.partner_a.id,
+                    'invoice_date': '2026-06-01',
+                    'invoice_line_ids': [Command.create({
+                        'product_id': self.product_a.id,
+                        'price_unit': price_unit,
+                        'tax_ids': [Command.set((vat_tax + withholding_tax).ids)],
+                    })],
+                })
+                bill.action_post()
+                self.assertRecordValues(bill, [{'withholding_total_amount_currency': amount}])
+
+                payment_register = self.env['account.payment.register']\
+                    .with_context(active_model='account.move', active_ids=bill.ids)\
+                    .create({})
+                self.assertRecordValues(payment_register.withholding_line_ids, [{
+                    'base_amount': base_amount,
+                    'amount': amount,
+                }])
+
     def test_payment_register_with_empty_currency(self):
         withholding_tax = self.percent_tax(
             -1,
