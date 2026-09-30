@@ -136,3 +136,13 @@ Real estate management can be useful without Invoicing. The separate `estate_acc
 
 **Try it:** Install `estate_account`, accept an offer, mark the property Sold, and find the draft invoice. Check both line amounts and compare the installed dependencies of `estate` and `estate_account`.
 
+## Chapter 14 - A brief history of QWeb
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/14_qwebintro.html)
+
+A kanban view uses a QWeb `card` template to render each property. The new view shows the property name, expected price, and tags. It shows the best offer when the state is Offer Received and the selling price after an offer has been accepted. The `state` field is loaded for those `t-if` conditions even though it is not displayed as its own line.
+
+Cards are grouped by property type by default. Dragging records is disabled so moving a card cannot silently change its type. The property action now offers both list and kanban views over the same records.
+
+**Try it:** Switch to kanban and compare cards in New, Offer Received, Offer Accepted, and Sold states. Change a property's type and observe which group contains its card.
+

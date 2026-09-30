@@ -3,7 +3,7 @@
     <record id="estate_property_action" model="ir.actions.act_window">
         <field name="name">Properties</field>
         <field name="res_model">estate.property</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="context">{'search_default_available': 1}</field>
     </record>
     <record id="estate_property_view_list" model="ir.ui.view">
@@ -22,6 +22,30 @@
                 <field name="selling_price"/>
                 <field name="date_availability" optional="hide"/>
             </list>
+        </field>
+    </record>
+    <record id="estate_property_view_kanban" model="ir.ui.view">
+        <field name="name">estate.property.view.kanban</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="property_type_id" records_draggable="false">
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="o_estate_property_card">
+                            <strong><field name="name"/></strong>
+                            <div>Expected price: <field name="expected_price"/></div>
+                            <div t-if="record.state.raw_value == 'offer_received'">
+                                Best offer: <field name="best_price"/>
+                            </div>
+                            <div t-if="record.state.raw_value == 'offer_accepted' or record.state.raw_value == 'sold'">
+                                Selling price: <field name="selling_price"/>
+                            </div>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
     <record id="estate_property_view_form" model="ir.ui.view">
