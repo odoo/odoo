@@ -3,7 +3,8 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-function turnstileErrorHandler(env, error) {
+/** @type {import("registries").ErrorHandler} */
+function turnstileErrorHandler({ error }) {
     const dialog = useService("dialog");
     if (error.message.includes("Turnstile Error")) {
         dialog.add(ErrorDialog, {

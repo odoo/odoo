@@ -26,12 +26,11 @@ declare module "registries" {
 
     export type DialogsRegistryItemShape = typeof Component;
 
-    export type EffectsRegistryItemShape = (env: OdooEnv, params: object) => ({ Component: typeof Component, props: object } | undefined);
+    export type EffectsRegistryItemShape = (params: object) => ({ Component: typeof Component, props: object } | undefined);
 
     export type ErrorDialogsRegistryItemShape = typeof Component;
 
-    export type ErrorHandlersRegistryItemShape = (env: OdooEnv, error: Error, originalError: Error) => boolean;
-
+    export type ErrorHandler = (info: { error: Error, originalError: Error }) => boolean | void;
 
     export interface FavoriteMenuRegistryItemShape {
         Component: typeof Component;
@@ -87,7 +86,7 @@ declare module "registries" {
         dialogs: DialogsRegistryItemShape;
         effetcs: EffectsRegistryItemShape;
         error_dialogs: ErrorDialogsRegistryItemShape;
-        error_handlers: ErrorHandlersRegistryItemShape;
+        error_handlers: ErrorHandler;
         favoriteMenu: FavoriteMenuRegistryItemShape;
         formatters: FormattersRegistryItemShape;
         form_compilers: FormCompilersRegistryItemShape;

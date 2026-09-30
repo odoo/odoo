@@ -15,7 +15,8 @@ import { QuestionPageListRenderer } from "./question_page_list_renderer";
  */
 
 class SurveySaveError extends Error {}
-function SurveySaveErrorHandler(env, error, originalError) {
+/** @type {import("registries").ErrorHandler} */
+function SurveySaveErrorHandler({ originalError }) {
     const notification = useService("notification");
     if (originalError instanceof SurveySaveError) {
         notification.add(originalError.message, {

@@ -12,12 +12,9 @@ window.addEventListener("beforeunload", () => {
 
 /**
  * Handles the errors trigger after the before unload event.
- *
- * @param {OdooEnv} env
- * @param {UncaughError} error
- * @returns {boolean}
+ * @type {import("registries").ErrorHandler}
  */
-function beforeUnloadHandler(env, error) {
+function beforeUnloadHandler({ error }) {
     if (isUnloadingPage) {
         error.event.preventDefault();
         return true;

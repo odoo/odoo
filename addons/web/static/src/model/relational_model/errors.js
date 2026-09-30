@@ -13,7 +13,9 @@ export class FetchRecordError extends Error {
         this.resIds = resIds;
     }
 }
-function fetchRecordErrorHandler(env, error, originalError) {
+
+/** @type {import("registries").ErrorHandler} */
+function fetchRecordErrorHandler({ originalError }) {
     const notification = useService("notification");
     if (originalError instanceof FetchRecordError) {
         notification.add(originalError.message, { sticky: true, type: "danger" });
