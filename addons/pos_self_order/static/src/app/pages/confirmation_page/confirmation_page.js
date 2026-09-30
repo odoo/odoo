@@ -18,6 +18,7 @@ export class ConfirmationPage extends Component {
         this.state = useState({
             onReload: true,
             payment: this.props.screenMode === "pay",
+            receiptPrinted: false,
         });
 
         onMounted(() => {
@@ -27,6 +28,7 @@ export class ConfirmationPage extends Component {
                 }, 30000);
             }
         });
+
         useLayoutEffect(
             () => {
                 if (
@@ -38,8 +40,12 @@ export class ConfirmationPage extends Component {
                 }
 
                 const printReceipts = async () => {
-                    await this.printOrder();
-                    await this.printOrderChanges();
+                    try {
+                        await this.printOrder();
+                        await this.printOrderChanges();
+                    } finally {
+                        this.state.receiptPrinted = true;
+                    }
                 };
 
                 printReceipts();
