@@ -373,18 +373,32 @@ export class FormatPlugin extends Plugin {
         const cursor = this.dependencies.selection.preserveSelection();
         const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
         const selectedTextNodes = /** @type { Text[] } **/ (
-            this.dependencies.selection
-                .getTargetedNodes()
-                .filter(
-                    (n) =>
-                        (!systemNodesSelector || !closestElement(n, systemNodesSelector)) &&
-                        this.dependencies.selection.areNodeContentsFullySelected(n) &&
-                        ((isTextNode(n) && (isVisibleTextNode(n) || isZWS(n))) ||
-                            (n.nodeName === "BR" &&
-                                (isFakeLineBreak(n) ||
-                                    previousLeaf(n, closestBlock(n))?.nodeName === "BR"))) &&
-                        isContentEditable(n)
-                )
+            this.dependencies.selection.getTargetedNodes().filter((n) => {
+                if (systemNodesSelector && closestElement(n, systemNodesSelector)) {
+                    return false;
+                }
+                if (!this.dependencies.selection.areNodeContentsFullySelected(n)) {
+                    return false;
+                }
+
+                if (n.nodeName === "T") {
+                    return true;
+                }
+
+                if (!isContentEditable(n)) {
+                    return false;
+                }
+
+                if (isTextNode(n)) {
+                    return isVisibleTextNode(n) || isZWS(n);
+                }
+                if (n.nodeName === "BR") {
+                    return (
+                        isFakeLineBreak(n) || previousLeaf(n, closestBlock(n))?.nodeName === "BR"
+                    );
+                }
+                return false;
+            })
         );
         const unformattedTextNodes = selectedTextNodes.filter(
             (n) =>
@@ -497,7 +511,7 @@ export class FormatPlugin extends Plugin {
                             formatProps
                         );
                     }
-                } else if (formatName !== "fontSize" || formatProps.size !== undefined) {
+                } else if (formatName !== "fontSize" || formatProps.size) {
                     formatSpec.addStyle(
                         getOrCreateSpan(node, inlineAncestors, cursor),
                         formatProps

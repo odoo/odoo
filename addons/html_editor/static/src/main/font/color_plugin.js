@@ -15,6 +15,7 @@ import {
     isVisibleTextNode,
     isWhitespace,
     isZWS,
+    PROTECTED_QWEB_SELECTOR,
 } from "@html_editor/utils/dom_info";
 import {
     ancestors,
@@ -206,7 +207,7 @@ export class ColorPlugin extends Plugin {
                 .getTargetedNodes()
                 .filter(
                     (node) =>
-                        this.dependencies.selection.isNodeEditable(node) &&
+                        (!isTextNode(node) || this.dependencies.selection.isNodeEditable(node)) &&
                         node.nodeName !== "T" &&
                         this.dependencies.selection.areNodeContentsFullySelected(node)
                 );
@@ -298,7 +299,19 @@ export class ColorPlugin extends Plugin {
             .map((node) => findTopMostDecoration(node));
         selectedNodes = [...new Set(selectedNodes)];
 
+        // Field nodes not already colored by an override (e.g. QWeb `t`
+        // elements) are wrapped in a <font> so the color survives QWeb
+        // compilation.
+        const targetedFieldNodes = new Set(
+            this.dependencies.selection
+                .getTargetedNodes()
+                .map((node) => closestElement(node, PROTECTED_QWEB_SELECTOR))
+                .filter((node) => node && !coloredNodes.has(node))
+        );
+
         const alreadyWithinFont = new Set();
+        const nodesToColor = [...selectedNodes, ...targetedFieldNodes];
+
         const getFonts = (selectedNodes) =>
             selectedNodes.flatMap((node) => {
                 // The node is already within a newly created font so we filter
@@ -412,17 +425,23 @@ export class ColorPlugin extends Plugin {
                         fillEmpty(font);
                     }
                 } else {
-                    font = []; // Ignore non-text or invisible text nodes.
+                    // Ignore non-text or invisible text nodes.
+                    font =
+                        node.nodeType === Node.ELEMENT_NODE &&
+                        node.matches(PROTECTED_QWEB_SELECTOR) &&
+                        this.dependencies.selection.isNodeEditable(node)
+                            ? node
+                            : [];
                 }
                 return font;
             });
 
-        let fonts = getFonts(selectedNodes);
+        let fonts = getFonts(nodesToColor);
         // Dirty fix as the previous call could have unconnected elements
         // because of the `splitAroundUntil`. Another call should provide he
         // correct list of fonts.
         if (!fonts.every((font) => font.isConnected)) {
-            fonts = getFonts(selectedNodes);
+            fonts = getFonts(nodesToColor);
         }
 
         // Color the selected <font>s and remove uncolored fonts.
