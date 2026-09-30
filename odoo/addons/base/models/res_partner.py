@@ -54,6 +54,10 @@ EU_EXTRA_VAT_CODES_INV = frozendict({v: k for k, v in EU_EXTRA_VAT_CODES.items()
 
 PK_VAT = re.compile(r'[a-zA-Z\d]{7,8}|\d{13}')
 
+# Countries where a national tax ID is also accepted in the VAT field
+# and is not valid with a country prefix, so we don't add one.
+EU_VAT_UNPREFIXED = ['RO', 'HU', 'DE']
+
 _lt = LazyTranslate(__name__)
 _ref_vat = frozendict({
     'al': 'ALJ91402501L',
@@ -1487,6 +1491,10 @@ class ResPartner(models.Model):
                 raise ValidationError(msg)
             else:
                 return '', code_to_check
+
+        if not vat_prefix and country in eu_prefix_country_group.country_ids and country.code not in EU_VAT_UNPREFIXED:
+            return self._run_vat_checks(country, country.code + vat, partner_name, validation)
+
         return vat_to_return, code_to_check
 
     @api.model
