@@ -30,8 +30,8 @@ def include_partner_addresses(tx_sudo):
     partner_addresses = {}
     if tx_sudo.billing_partner_id:
         partner_addresses["billingAddress"] = format_partner_address(tx_sudo.billing_partner_id)
-    if tx_sudo.shipping_partner_id:
-        partner_addresses["deliveryAddress"] = format_partner_address(tx_sudo.shipping_partner_id)
+    if tx_sudo.delivery_partner_id:
+        partner_addresses["deliveryAddress"] = format_partner_address(tx_sudo.delivery_partner_id)
     return partner_addresses
 
 

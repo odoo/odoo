@@ -247,11 +247,3 @@ class PaymentTransaction(models.Model):
     def _get_invoices_to_notify(self):
         """ Return the invoices on which to log payment-related messages. """
         return self.invoice_ids
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        for values in vals_list:
-            print("dupa")
-        txs = super().create(vals_list)
-
-        return txs

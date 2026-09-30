@@ -215,12 +215,6 @@ def get_language_code(lang, mapping, fallback="en"):
 # Partner values formatting
 
 
-def include_partner_addresses(tx_sudo):
-    """Include the billing and delivery addresses of the related document to the payload of the
-    API request.
-    """
-
-
 def format_partner_address(address1="", address2=""):
     """Format a two-parts partner address into a one-line address string.
 

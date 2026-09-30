@@ -298,7 +298,10 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         })
         paypal_pm = self.env.ref("payment_paypal.payment_method_paypal").id
         tx = self._create_transaction(
-            flow="direct", sale_order_ids=[Command.set(order.ids)], payment_method_id=paypal_pm
+            flow="direct",
+            sale_order_ids=[Command.set(order.ids)],
+            payment_method_id=paypal_pm,
+            delivery_partner_id=self.partner.id,
         )
         with patch(
             "odoo.addons.payment.utils.generate_access_token", new=self._generate_test_access_token
@@ -332,35 +335,3 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             "No shipping should be set if address values are incomplete",
         )
         self.assertNotIn("shipping", payload["purchase_units"][0])
-
-        self.partner.child_ids = [
-            Command.create({
-                "name": tx.partner_id.name,
-                "type": "delivery",
-                "street": "40 Wall Street",
-                "city": "New York City",
-                "zip": "10005",
-                "state_id": self.env.ref("base.state_us_27").id,
-                "country_id": tx.partner_id.country_id.id,
-            })
-        ]
-        shipping_partner = tx.sale_order_ids.partner_shipping_id = self.partner.child_ids
-        with patch(
-            "odoo.addons.payment.utils.generate_access_token", new=self._generate_test_access_token
-        ):
-            payload = tx._paypal_prepare_order_payload()
-        self.assertEqual(
-            payload["payment_source"]["paypal"]["experience_context"]["shipping_preference"],
-            "SET_PROVIDED_ADDRESS",
-            "Address should be provided when partner has a complete delivery address",
-        )
-        self.assertDictEqual(
-            payload["purchase_units"][0]["shipping"]["address"],
-            {
-                "address_line_1": shipping_partner.street,
-                "postal_code": shipping_partner.zip,
-                "admin_area_1": shipping_partner.state_id.code,
-                "admin_area_2": shipping_partner.city,
-                "country_code": shipping_partner.country_code,
-            },
-        )

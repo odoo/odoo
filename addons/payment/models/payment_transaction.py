@@ -157,7 +157,7 @@ class PaymentTransaction(models.Model):
     billing_partner_id = fields.Many2one(
         string="Billing Address", comodel_name="res.partner", readonly=True
     )
-    shipping_partner_id = fields.Many2one(
+    delivery_partner_id = fields.Many2one(
         string="Shipping Address", comodel_name="res.partner", readonly=True
     )
     # Duplicated partner values allowing to keep a record of them, should they be later updated.

@@ -57,6 +57,9 @@ class PaymentTransaction(models.Model):
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         query_string_params = urls.url_encode({"tx_ref": self.reference})
         return_url = f"{urljoin(base_url, const.PAYMENT_RETURN_ROUTE)}?{query_string_params}"
+        street_and_number = payment_utils.format_partner_address(
+            self.billing_partner_id.street, self.billing_partner_id.street2
+        )
         return {
             # Dummy basket item as it is required in Iyzico.
             "basketItems": [
@@ -69,7 +72,7 @@ class PaymentTransaction(models.Model):
                 }
             ],
             "billingAddress": {
-                "address": self.billing_partner_id.address,
+                "address": street_and_number,
                 "contactName": self.billing_partner_id.name,
                 "city": self.billing_partner_id.city,
                 "country": self.billing_partner_id.country_id.name,

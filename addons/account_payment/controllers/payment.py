@@ -69,22 +69,6 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         return tx_sudo._get_processing_values()
 
-    def _create_transaction(self, *args, **kwargs):
-        """ Override of `payment` to fill in the billing and shipping addresses from the invoice.
-
-        This is only done as a fallback: flows that already know their billing/shipping partner
-        (e.g. sale) set `billing_partner_id`/`shipping_partner_id` themselves through
-        `custom_create_values` and are left untouched.
-        """
-        tx_sudo = super()._create_transaction(*args, **kwargs)
-        if not tx_sudo.billing_partner_id and not tx_sudo.shipping_partner_id and tx_sudo.invoice_ids:
-            invoice_sudo = tx_sudo.invoice_ids[:1]
-            tx_sudo.with_context(payment_safe_write=True).write({
-                'billing_partner_id': invoice_sudo.partner_id.id,
-                'shipping_partner_id': invoice_sudo.partner_shipping_id.id,
-            })
-        return tx_sudo
-
     # Payment overrides
 
     @route()
@@ -164,3 +148,19 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 'access_token': invoice_sudo.access_token,
             })
         return form_values
+
+    def _create_transaction(self, *args, **kwargs):
+        """ Override of `payment` to fill in the billing and delivery addresses from the invoice.
+
+        This is only done as a fallback: flows that already know their billing/delivery partner
+        (e.g. sale) set `billing_partner_id`/`delivery_partner_id` themselves through
+        `custom_create_values` and are left untouched.
+        """
+        tx_sudo = super()._create_transaction(*args, **kwargs)
+        if not tx_sudo.billing_partner_id and not tx_sudo.delivery_partner_id and tx_sudo.invoice_ids:
+            invoice_sudo = tx_sudo.invoice_ids[:1]
+            tx_sudo.with_context(payment_safe_write=True).write({
+                'billing_partner_id': invoice_sudo.partner_id.id,
+                'delivery_partner_id': invoice_sudo.partner_shipping_id.id,
+            })
+        return tx_sudo

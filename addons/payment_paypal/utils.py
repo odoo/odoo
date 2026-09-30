@@ -42,10 +42,10 @@ def format_shipping_address(tx_sudo):
     """
     address_vals = {}
 
-    if not tx_sudo.shipping_partner_id:
+    if not tx_sudo.delivery_partner_id:
         return address_vals
 
-    partner_shipping = tx_sudo.shipping_partner_id
+    partner_shipping = tx_sudo.delivery_partner_id
     if (
         partner_shipping.street
         and partner_shipping.city

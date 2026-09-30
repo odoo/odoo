@@ -52,8 +52,8 @@ def include_shipping_address(tx_sudo):
     """
     tx_sudo.ensure_one()
 
-    if tx_sudo.shipping_partner_id:
-        return format_shipping_address(tx_sudo.shipping_partner_id)
+    if tx_sudo.delivery_partner_id:
+        return format_shipping_address(tx_sudo.delivery_partner_id)
 
     return {}
 
