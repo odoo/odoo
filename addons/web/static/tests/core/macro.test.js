@@ -250,3 +250,118 @@ test("macro timeout if element is not visible", async () => {
     await waitForMacro();
     expect.verifySteps(["TIMEOUT step failed to complete within 1000 ms."]);
 });
+
+test("playing without a step index throws", async () => {
+    const macro = new Macro({
+        name: "test",
+        steps: [{ action: () => expect.step("a") }],
+        onError: ({ error }) => expect.step(error.message),
+    });
+    await expect(macro.play()).rejects.toThrow("Macro.play() expects a step index, got undefined");
+    await expect(macro.play(-1)).rejects.toThrow("Macro.play() expects a step index, got -1");
+    expect.verifySteps([]);
+});
+
+test("playing an index interrupts the step waiting for its trigger", async () => {
+    await mountWithCleanup(TestComponent);
+    const macro = new Macro({
+        name: "test",
+        steps: [
+            { trigger: "button.never", action: () => expect.step("a") },
+            { action: () => expect.step("b") },
+            { action: () => expect.step("c") },
+        ],
+        onComplete: () => expect.step("complete"),
+    });
+    macro.start();
+    await animationFrame();
+    expect.verifySteps([]);
+
+    macro.play(2);
+    await waitForMacro();
+    expect.verifySteps(["c", "complete"]);
+});
+
+test("playing an index from a step jumps to it once the step is done", async () => {
+    const macro = new Macro({
+        name: "test",
+        steps: [
+            {
+                action: () => {
+                    expect.step("a");
+                    macro.play(2);
+                },
+            },
+            { action: () => expect.step("b") },
+            { action: () => expect.step("c") },
+        ],
+    });
+    macro.start();
+    await waitForMacro();
+    expect.verifySteps(["a", "c"]);
+});
+
+test("playing a previous index from a trigger goes back to it", async () => {
+    await mountWithCleanup(TestComponent);
+    let goneBack = false;
+    const macro = new Macro({
+        name: "test",
+        steps: [
+            { action: () => expect.step("a") },
+            {
+                trigger: () => {
+                    if (!goneBack) {
+                        goneBack = true;
+                        macro.play(0);
+                        return false;
+                    }
+                    return true;
+                },
+                action: () => expect.step("b"),
+            },
+        ],
+    });
+    macro.start();
+    await waitForMacro();
+    expect.verifySteps(["a", "a", "b"]);
+});
+
+test("stopping a macro stops waiting for the trigger", async () => {
+    await mountWithCleanup(TestComponent);
+    const macro = new Macro({
+        name: "test",
+        steps: [
+            {
+                trigger: () => {
+                    expect.step("check");
+                    return false;
+                },
+            },
+        ],
+        onComplete: () => expect.step("complete"),
+    });
+    macro.start();
+    await animationFrame();
+    macro.stop();
+    expect.verifySteps(["check", "check"]);
+    await animationFrame();
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
+test("a step with an infinite timeout never times out", async () => {
+    await mountWithCleanup(TestComponent);
+    const button = queryOne("button.inc");
+    button.classList.add("d-none");
+    new Macro({
+        name: "test",
+        timeout: Infinity,
+        steps: [{ trigger: "button.inc", action: () => expect.step("visible") }],
+        onError: ({ error }) => expect.step(error.message),
+    }).start();
+    await advanceTime(100_000);
+    expect.verifySteps([]);
+    button.classList.remove("d-none");
+    await waitForMacro();
+    expect.verifySteps(["visible"]);
+});
