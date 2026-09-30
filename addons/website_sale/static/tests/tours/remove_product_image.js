@@ -83,3 +83,38 @@ registerWebsitePreviewTour("website_sale.remove_main_product_image_with_variant"
         trigger: ".o_customize_tab:not(:has([data-container-title='Image']))",
     },
 ]);
+registerWebsitePreviewTour("website_sale.reorder_and_remove_product_video", {}, () => [
+    ...enterEditModeOfTestProduct(),
+    {
+        content: "Show the slide of the product video",
+        trigger: ":iframe .carousel-indicators li[data-bs-slide-to='1']",
+        run: "click",
+    },
+    {
+        content: "Click on the product video",
+        trigger: ":iframe #o-carousel-product .carousel-item.active [data-embedded='video']",
+        run: "click",
+    },
+    {
+        content: "Move the video to the last position",
+        trigger: ".o_customize_tab [data-action-id='setPosition'][data-action-value='last']",
+        run: "click",
+    },
+    {
+        content: "Check that the video is the last media",
+        trigger: ":iframe .carousel-indicators li:last-child .o_product_video_thumb",
+    },
+    {
+        content: "Check that the video slide is shown",
+        trigger: ":iframe .carousel-item.active:last-child [data-embedded='video']",
+    },
+    {
+        content: "Remove the video",
+        trigger: ".o_customize_tab [data-action-id='removeMedia']",
+        run: "click",
+    },
+    {
+        content: "Check that the video is removed",
+        trigger: ":iframe .carousel-indicators:not(:has(.o_product_video_thumb))",
+    },
+]);
