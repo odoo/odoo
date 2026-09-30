@@ -1,7 +1,7 @@
 .o_field_percent_pie {
     .o_pie {
         --PercentPieField-color-active: #{$o-action};
-        --PercentPieField-color-static: #{rgba(#000, .15)};
+        --PercentPieField-color-static: #{map-get($grays, '300')};
 
         height: var(--PercentPieField-size, #{$font-size-lg});
         aspect-ratio: 1;
