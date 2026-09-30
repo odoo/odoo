@@ -1,31 +1,69 @@
 .o-discuss-ChannelMember {
-    &.o-offline {
-        opacity: 33%;
+    --discuss-ChannelMember-hoverBg: color-mix(in srgb, var(--gray-100), var(--gray-200));
+    --discuss-ChannelMember-offlineOpacity: 33%;
 
-        &.cursor-pointer:hover, &[data-right-clicking] {
-            opacity: 75%;
+    .o-discuss-ChannelMember-content,
+    .o-discuss-ChannelMember-actions {
+        background-color: var(--discuss-ChannelMember-partBg, transparent);
+        opacity: var(--discuss-ChannelMember-partOpacity, 100%);
+    }
+
+    /* Keep the "..." legible on a dimmed offline row. */
+    .o-discuss-ChannelMember-actions:hover {
+        --discuss-ChannelMember-ellipsisOpacity: 100%;
+    }
+    .o-discuss-ellipsisButton {
+        opacity: var(--discuss-ChannelMember-ellipsisOpacity, 100%);
+        &:hover, &:active, &:focus-visible, &.show {
+            --discuss-ChannelMember-ellipsisOpacity: 100%;
         }
     }
 
-    &.cursor-pointer:hover:not(:has(.o-discuss-ChannelMember-actions:hover)),
-    &.o-active:not(:has(.o-discuss-ChannelMember-actions:hover)),
-    &[data-right-clicking]:not(:has(.o-discuss-ChannelMember-actions:hover)) {
-        background-color: var(--discuss-ChannelMember-hoverBg, color-mix(in srgb, var(--gray-100), var(--gray-200)));
+    &.o-offline {
+        --discuss-ChannelMember-ellipsisOpacity: var(--discuss-ChannelMember-offlineOpacity);
+
+        .o-discuss-ChannelMember-content {
+            --discuss-ChannelMember-partOpacity: var(--discuss-ChannelMember-offlineOpacity);
+        }
+
+        &.cursor-pointer:not(.o-actions-open) {
+            .o-discuss-ChannelMember-content:hover,
+            .o-discuss-ChannelMember-content:hover ~ .o-discuss-ChannelMember-actions {
+                --discuss-ChannelMember-partOpacity: 75%;
+            }
+
+            .o-discuss-ChannelMember-content:hover ~ .o-discuss-ChannelMember-actions {
+                --discuss-ChannelMember-ellipsisOpacity: 100%;
+            }
+        }
+
+        &[data-right-clicking] {
+            .o-discuss-ChannelMember-content,
+            .o-discuss-ChannelMember-actions {
+                --discuss-ChannelMember-partOpacity: 75%;
+            }
+
+            .o-discuss-ChannelMember-actions {
+                --discuss-ChannelMember-ellipsisOpacity: 100%;
+            }
+        }
     }
+    &.cursor-pointer .o-discuss-ChannelMember-content:hover,
+    &.cursor-pointer .o-discuss-ChannelMember-content:hover ~ .o-discuss-ChannelMember-actions,
+    &:is(.o-active, [data-right-clicking]) .o-discuss-ChannelMember-content,
+    &:is(.o-active, [data-right-clicking]) .o-discuss-ChannelMember-actions {
+        --discuss-ChannelMember-partBg: var(--discuss-ChannelMember-hoverBg);
+    }
+    &.o-offline.o-active .o-discuss-ChannelMember-actions,
+    &.o-offline.o-actions-open.cursor-pointer .o-discuss-ChannelMember-content:hover ~ .o-discuss-ChannelMember-actions {
+        --discuss-ChannelMember-partBg: color-mix(in srgb, var(--discuss-ChannelMember-hoverBg) var(--discuss-ChannelMember-offlineOpacity), transparent);
+    }
+
     &:hover .o-discuss-ChannelMember-actions {
         display: flex !important;
     }
-}
-
-/* Keep the "..." legible on a dimmed offline row: move the dimming to the siblings. */
-.o-discuss-ChannelMember-actions .o-discuss-ellipsisButton {
-    &:hover, &:active, &:focus-visible, &.show {
-        .o-discuss-ChannelMember.o-offline:has(&) {
-            opacity: 100%;
-
-            > *:not(.o-discuss-ChannelMember-actions) {
-                opacity: 33%;
-            }
-        }
+    &:is(.o-active, [data-right-clicking]):not(:hover, .o-actions-open, .o-mobile) .o-discuss-ChannelMember-content {
+        border-start-end-radius: var(--border-radius-lg);
+        border-end-end-radius: var(--border-radius-lg);
     }
 }
