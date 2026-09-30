@@ -802,8 +802,8 @@ describe("select columns on cross over", () => {
                 stepFunction: bold,
                 contentAfterEdit:
                     '<table class="o_selected_table"><tbody><tr>' +
-                    '<td class="o_selected_td"><strong>[ab</strong></td>' +
-                    '<td class="o_selected_td"><strong>cd]</strong></td>' +
+                    '<td class="o_selected_td"><strong>a[b</strong></td>' +
+                    '<td class="o_selected_td"><strong>c]d</strong></td>' +
                     "<td>ef</td>" +
                     "</tr></tbody></table>",
             });
@@ -820,9 +820,9 @@ describe("select columns on cross over", () => {
                 stepFunction: bold,
                 contentAfterEdit:
                     '<table class="o_selected_table"><tbody><tr>' +
-                    '<td class="o_selected_td"><strong>[ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>a[b</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
-                    '<td class="o_selected_td"><strong>ef]</strong></td>' +
+                    '<td class="o_selected_td"><strong>e]f</strong></td>' +
                     "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
             });
         });
@@ -851,7 +851,7 @@ describe("select columns on cross over", () => {
                 contentAfterEdit:
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
-                    '<td class="o_selected_td"><strong>[ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>a[b</strong></td>' +
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr>" +
@@ -861,7 +861,7 @@ describe("select columns on cross over", () => {
                     "<td>ef</td>" +
                     "</tr>" +
                     "<tr>" +
-                    '<td class="o_selected_td"><strong>ab]</strong></td>' +
+                    '<td class="o_selected_td"><strong>a]b</strong></td>' +
                     "<td>cd</td>" +
                     "<td>ef</td>" +
                     "</tr>" +
@@ -893,13 +893,13 @@ describe("select columns on cross over", () => {
                 contentAfterEdit:
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
-                    '<td class="o_selected_td"><strong>[ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>a[b</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     "<td>ef</td>" +
                     "</tr>" +
                     "<tr>" +
                     '<td class="o_selected_td"><strong>ab</strong></td>' +
-                    '<td class="o_selected_td"><strong>cd]</strong></td>' +
+                    '<td class="o_selected_td"><strong>c]d</strong></td>' +
                     "<td>ef</td>" +
                     "</tr>" +
                     "<tr>" +
@@ -935,7 +935,7 @@ describe("select columns on cross over", () => {
                 contentAfterEdit:
                     '<table class="o_selected_table"><tbody>' +
                     "<tr>" +
-                    '<td class="o_selected_td"><strong>[ab</strong></td>' +
+                    '<td class="o_selected_td"><strong>a[b</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
                     '<td class="o_selected_td"><strong>ef</strong></td>' +
                     "</tr>" +
@@ -947,7 +947,7 @@ describe("select columns on cross over", () => {
                     "<tr>" +
                     '<td class="o_selected_td"><strong>ab</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
-                    '<td class="o_selected_td"><strong>ef]</strong></td>' +
+                    '<td class="o_selected_td"><strong>e]f</strong></td>' +
                     "</tr>" +
                     "</tbody></table>",
             });
