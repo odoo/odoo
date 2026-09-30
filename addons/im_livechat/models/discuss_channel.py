@@ -988,6 +988,9 @@ class DiscussChannel(models.Model):
     def _types_allowing_unfollow(self):
         return super()._types_allowing_unfollow() + ["livechat"]
 
+    def _role_allowed_channel_types(self):
+        return super()._role_allowed_channel_types() + ["livechat"]
+
     def livechat_join_channel_needing_help(self):
         """Join a live chat for which help was requested.
 

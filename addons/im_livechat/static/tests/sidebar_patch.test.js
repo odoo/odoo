@@ -7,7 +7,7 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
-import { advanceTime, describe, test, tick } from "@odoo/hoot";
+import { advanceTime, describe, expect, test, tick } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 
@@ -175,6 +175,44 @@ test("Change livechat status from the dropdown of the chat actions", async () =>
     await contains(".o-livechat-LivechatStatusSelection .active:text('Looking for help')");
     await click(".o-livechat-LivechatStatusSelection button:text('In progress')");
     await contains(needHelpLabel, { count: 0 });
+});
+
+test("Advanced settings are not available in live chats", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+        ],
+        channel_type: "channel",
+    });
+    const livechatId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({
+                guest_id: pyEnv["mail.guest"].create({ name: "Visitor 11" }),
+                livechat_member_type: "visitor",
+            }),
+        ],
+        channel_type: "livechat",
+    });
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["channel_id", "=", livechatId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    expect(selfMember.channel_role).toBe("owner");
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await click("[title='Channel Actions']");
+    await waitFor(".o-dropdown-item:text('Advanced Settings'):count(1)");
+    await click(".o-mail-DiscussApp-sidebar");
+    await waitForNone(".o-dropdown-item");
+    // agents are owners of their live chats, but advanced settings are limited to channels and
+    // groups
+    await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
+    await click("[title='Chat Actions']");
+    await waitFor(".o-dropdown-item:text('Close Conversation'):count(1)");
+    expect(".o-dropdown-item:text('Advanced Settings')").toHaveCount(0);
 });
 
 test("Message unread counter", async () => {
