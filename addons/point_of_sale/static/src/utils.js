@@ -177,6 +177,7 @@ export function isValidEmail(email) {
     return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+// TODO master: remove, moved to @point_of_sale/app/utils/init_lna
 // Checks whether an ip address is on the local network. So one of the ranges:
 // 10.0.0.0 - 10.255.255.255
 // 127.0.0.0 - 127.255.255.255
