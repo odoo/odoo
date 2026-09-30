@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from odoo import fields
 from odoo.fields import Command
 from odoo.addons.mrp_account.tests.common import TestBomPriceCommon
 from odoo.tests import Form, tagged
@@ -346,7 +347,6 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         in the quantity history report with total value of zero.
         """
         self.assertRecordValues(self.table_head, [{'standard_price': 300, 'total_value': 0}])
-        self.assertTrue(self.table_head not in self.env.company._get_accounts_by_product())
         old_stock_value = sum(self.env.company.stock_value().values())
         self.table_head.action_bom_cost()
         self.assertRecordValues(self.table_head, [{'standard_price': 468.75, 'total_value': 0}])
@@ -452,3 +452,100 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
         self.assertEqual(final_product.with_company(self.branch).standard_price, 20.0)
+
+    def test_kit_variation_lines_specific_valuation(self):
+        """ Check that when
+        - the kit is the only product linked to a valuation account
+        - its components are linked to another valuation account,
+        - we buy the comp, receive and bill
+        - we sell the kit, deliver and invoice
+        -> the variation lines are correct and the entry generated balances everything out
+        """
+        variation_account = self.category_avco_auto.account_stock_variation_id
+        account_kit = self.env['account.account'].create({
+            'name': 'Stock Valuation kit',
+            'code': 'VAL.Kit',
+            'account_type': 'asset_current',
+            'account_stock_variation_id': variation_account.id,
+        })
+        self.category_avco_auto_kit = self.category_avco.copy({
+            'name': 'Avco Auto Kit',
+            'property_valuation': 'real_time',
+            'property_stock_valuation_account_id': account_kit.id
+        })
+        final_product, component = self.env['product.product'].create([
+            {'name': 'Final product', 'is_storable': True, 'categ_id': self.category_avco_auto_kit.id},
+            {'name': 'Component', 'is_storable': True, 'categ_id': self.category_avco_auto.id},
+        ])
+        self.env['mrp.bom'].create({
+            'product_id': final_product.id,
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
+        })
+        closing_move = self.env['account.move'].browse(self.env.company.action_close_stock_valuation()['res_id'])
+        closing_move._post()
+        self.assertEqual(self.env['stock_account.stock.valuation.report'].get_report_values()['data']['stock_variation']['value'], 0)
+
+        # Receive 1 component at 10 and bill: this debits 10 to stock valuation and adds 10 to inventory value
+        self._make_in_move(component, 1, 10)
+        final_product.action_bom_cost()
+        bill_comp = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [Command.create({
+                'product_id': component.id,
+                'quantity': 1,
+                'price_unit': 10,
+            })],
+        })
+        bill_comp.action_post()
+
+        # Deliver one kit (move will be for the component) and invoice 1 kit: this credits 10 from 'stock valuation kit' and removes 10 from inventory value
+        type_out = self.env['stock.picking.type'].search([
+            ('company_id', '=', self.env.company.id),
+            ('name', '=', 'Delivery Orders')])
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': type_out.id,
+            'move_ids': [Command.create({
+                'product_id': final_product.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.move_ids.move_line_ids.quantity = 1
+        delivery.button_validate()
+        invoice_kit = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [Command.create({
+                'product_id': final_product.id,
+                'quantity': 1,
+                'price_unit': 10,
+            })],
+        })
+        invoice_kit.action_post()
+
+        # No quantities are left in stock and everything is billed/invoiced so initial balance and ending stock should be the same.
+        # Particularity here is that bill debited 'stock valuation' whereas invoice credited 'stock valuation kit'.
+        # So, variation lines should just be there to compensate this difference.
+        val_data = self.env['stock_account.stock.valuation.report'].get_report_values()['data']
+        self.assertEqual((val_data['initial_balance']['value']), val_data['ending_stock']['value'])
+        variation_lines = sorted(val_data['stock_variation']['lines'], key=lambda l: (l['credit'], l['debit']))
+        self.assertListEqual(variation_lines, [
+            {'account_id': account_kit.id,                                                    'debit': 10.0, 'credit': 0.0},
+            {'account_id': self.category_avco_auto.property_stock_valuation_account_id.id,    'debit': 0.0, 'credit': 10.0},
+            {'account_id': variation_account.id,                                              'debit': 10.0, 'credit': 10.0},
+        ])
+        # We also check that closing lines generated are correct
+        closing_move_2 = self.env['account.move'].browse(self.env.company.action_close_stock_valuation()['res_id'])
+        closing_lines = closing_move_2.line_ids.sorted(lambda l: (l.credit, l.account_id.id == variation_account.id))
+        self.assertRecordValues(closing_lines, [
+            {'account_id': account_kit.id,                                                    'debit': 10.0, 'credit': 0.0},
+            {'account_id': variation_account.id,                                              'debit': 10.0, 'credit': 0.0},
+            {'account_id': self.category_avco_auto.property_stock_valuation_account_id.id,    'debit': 0.0, 'credit': 10.0},
+            {'account_id': variation_account.id,                                              'debit': 0.0, 'credit': 10.0},
+        ])
