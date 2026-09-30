@@ -287,7 +287,7 @@ class ChannelController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])
         if not channel:
             raise NotFound()
-        if channel.is_readonly and not channel.can_self_edit_readonly_channel:
+        if channel.is_readonly and not channel.self_has_admin_rights:
             raise AccessError(
                 self.env._(
                     "Only channel owners and admins can create threads in a read-only channel.",
@@ -368,9 +368,9 @@ class ChannelController(http.Controller):
         self_channel_role = channel.self_member_id.sudo().channel_role
         if not self_channel_role == "owner" and not request.env.user.has_group("base.group_system"):
             raise AccessError(self.env._("Only the channel owner or DB admins can modify member roles."))
+        # owners, themselves included, lose ownership only by leaving
         if (
             channel_member.sudo().channel_role == "owner"
-            and channel_member != channel.self_member_id
             and not request.env.user.has_group("base.group_system")
         ):
             raise AccessError(
