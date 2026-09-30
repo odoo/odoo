@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 registerThreadAction("hr-view-profile", {
     condition: ({ channel, owner }) =>
         channel?.channel_type === "chat" &&
-        owner.props.chatWindow?.isOpen &&
+        owner.env.inChatWindow &&
         channel.correspondent?.partner_id?.employeeId &&
         !owner.isDiscussSidebarChannelActions,
     icon: "badge",

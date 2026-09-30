@@ -8,7 +8,7 @@ export const expandDiscussSequenceQuick = 0;
 registerThreadAction("expand-discuss", {
     condition: ({ channel, owner, store }) =>
         channel &&
-        owner.props.chatWindow?.isOpen &&
+        owner.env.inChatWindow &&
         !store.env.services.ui.isSmall &&
         !owner.isDiscussSidebarChannelActions,
     icon: "expand_content",
