@@ -1173,7 +1173,7 @@ class TestChannelInternals(MailCommon, HttpCase):
     def test_channel_command_help_in_channel(self):
         """Ensures the command '/help' works in a channel"""
         channel = self.env["discuss.channel"].browse(self.test_channel.ids)
-        channel.name = "<strong>R&D</strong>"
+        channel.sudo().name = "<strong>R&D</strong>"
 
         def notifications():
             self.env.cr.execute("SELECT currval('mail_message_id_seq')")
@@ -1523,6 +1523,70 @@ class TestChannelInternals(MailCommon, HttpCase):
             meeting.with_user(self.test_user).write({"default_display_mode": False})
         meeting.with_user(self.user_employee).write({"default_display_mode": False})
         self.assertFalse(meeting.default_display_mode)
+
+    @users("employee")
+    def test_only_owner_or_admin_can_update_info(self):
+        group = self.env["discuss.channel"]._create_group(users_to=self.user_employee | self.test_user)
+        channel = self.env["discuss.channel"]._create_channel(name="Channel", group_id=None)
+        channel._add_members(users=self.test_user)
+        for conversation in (group, channel):
+            with self.subTest(channel_type=conversation.channel_type):
+                self.assertEqual(conversation.self_member_id.sudo().channel_role, "owner")
+                as_member = conversation.with_user(self.test_user)
+                self.assertFalse(as_member.self_member_id.sudo().channel_role)
+                for vals in (
+                    {"name": "Member Name"},
+                    {"description": "Member Description"},
+                    {"image_128": BinaryBytes(b"<svg/>")},
+                ):
+                    with self.assertRaises(AccessError):
+                        as_member.write(vals)
+                with self.assertRaises(AccessError):
+                    as_member.channel_rename("Member Name")
+                with self.assertRaises(AccessError):
+                    as_member.channel_change_description("Member Description")
+                conversation.write({"image_128": BinaryBytes(b"<svg/>")})
+                self.assertEqual(conversation.image_128.content, b"<svg/>")
+                as_member.self_member_id.sudo().channel_role = "admin"
+                as_member.write(
+                    {"name": "Admin Name", "description": "Admin Description", "image_128": False},
+                )
+                self.assertEqual(conversation.name, "Admin Name")
+                self.assertEqual(conversation.description, "Admin Description")
+                self.assertFalse(conversation.image_128)
+                # a database admin can change the info without having a role in the conversation
+                as_db_admin = conversation.with_user(self.user_admin)
+                as_db_admin.write({"name": "DB Admin Name", "image_128": BinaryBytes(b"<svg/>")})
+                self.assertEqual(conversation.name, "DB Admin Name")
+                self.assertEqual(conversation.image_128.content, b"<svg/>")
+        # chats have no roles: both correspondents can change the info
+        chat = self.env["discuss.channel"]._get_or_create_chat(self.test_user.partner_id.ids)
+        chat.with_user(self.test_user).write({"description": "Chat Description"})
+        self.assertEqual(chat.description, "Chat Description")
+
+    @users("employee")
+    def test_parent_owner_or_admin_can_update_sub_channel_info(self):
+        group = self.env["discuss.channel"]._create_group(users_to=self.user_employee | self.test_user)
+        channel = self.env["discuss.channel"]._create_channel(name="Channel", group_id=None)
+        channel._add_members(users=self.test_user)
+        for conversation in (group, channel):
+            with self.subTest(channel_type=conversation.channel_type):
+                sub_channel = conversation.with_user(self.test_user)._create_sub_channel()
+                self.assertEqual(sub_channel.self_member_id.sudo().channel_role, "owner")
+                # owner of the parent but not a member of the sub-channel
+                as_parent_owner = sub_channel.with_user(self.user_employee)
+                self.assertFalse(as_parent_owner.self_member_id)
+                as_parent_owner.channel_rename("Parent Owner Name")
+                self.assertEqual(sub_channel.name, "Parent Owner Name")
+                # regular member of both the parent and the sub-channel
+                sub_channel._add_members(users=self.user_employee)
+                conversation.self_member_id.sudo().channel_role = False
+                self.assertFalse(as_parent_owner.self_member_id.sudo().channel_role)
+                with self.assertRaises(AccessError):
+                    as_parent_owner.channel_rename("Member Name")
+                conversation.self_member_id.sudo().channel_role = "admin"
+                as_parent_owner.channel_rename("Parent Admin Name")
+                self.assertEqual(sub_channel.name, "Parent Admin Name")
 
     @users("employee")
     def test_chat_is_kept_when_its_correspondent_is_deleted(self):
