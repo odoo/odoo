@@ -7,7 +7,7 @@
     </div>
     <div class="mb-3 row">
         <div class="col-11 offset-1" t-attf-style="font-family: '{{previewFontName}}';">
-            <input t-if="previewFontName" class="w-100 border-0 bg-transparent" t-model.proxy="this.state.previewText" t-attf-style="font-weight: {{previewWeight}};"/>
+            <input t-if="previewFontName" class="w-100 border-0 bg-transparent" t-model.proxy="this.state.previewText" t-on-input="this.onPreviewTextInput" t-attf-style="font-weight: {{previewWeight}};"/>
             <input t-else="" class="w-100 border-0 bg-transparent" readonly="1" t-attf-style="font-weight: {{previewWeight}};"/>
         </div>
     </div>
@@ -41,7 +41,12 @@
                     </div>
                     <div class="col-form-label col-md-8 o_field_widget">
                         <div class="o_input_dropdown">
-                            <GoogleFontAutoComplete id="'google_font'" value="this.state.googleFontFamily" placeholder.translate="Select a Google Font..." sources="this.getGoogleFontList"/>
+                            <GoogleFontAutoComplete id="'google_font'" value="this.state.googleFontFamily" placeholder.translate="Select a Google Font..." sources="this.getGoogleFontList">
+                                <t t-set-slot="font" t-slot-scope="fontOption">
+                                    <span t-att-class="{ o_website_selected_font: fontOption.label === this.state.googleFontFamily }"
+                                        t-att-style="fontOption.data.style" t-out="fontOption.label"/>
+                                </t>
+                            </GoogleFontAutoComplete>
                             <span class="o_dropdown_button" />
                         </div>
                     </div>

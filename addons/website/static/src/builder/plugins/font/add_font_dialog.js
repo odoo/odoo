@@ -7,19 +7,101 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Switch } from "@html_editor/components/switch/switch";
 
+const FONT_PREVIEW_BATCH_SIZE = 8;
+
 class GoogleFontAutoComplete extends AutoComplete {
+    // Keep loaded options and scroll positions until the dialog is closed.
+    fontLists = new Map();
+
     get dropdownOptions() {
+        const options = super.dropdownOptions;
         return {
-            ...super.dropdownOptions,
+            ...options,
             position: "bottom-fit",
+            onPositioned: (listEl, solution) => {
+                options.onPositioned?.(listEl, solution);
+                if (this.restoreScrollTop !== undefined) {
+                    listEl.scrollTop = this.restoreScrollTop;
+                    this.restoreScrollTop = undefined;
+                }
+                const loadMore = () => {
+                    if (listEl.scrollTop + listEl.clientHeight >= listEl.scrollHeight - 150) {
+                        this.loadMoreFonts();
+                    }
+                };
+                listEl.onscroll = loadMore;
+                loadMore();
+            },
         };
     }
 
-    onInput(ev) {
-        super.onInput(ev);
-        if (this.listRef()) {
-            this.listRef().scrollTop = 0;
+    async loadSources(useInput) {
+        const requestId = (this.fontRequestId || 0) + 1;
+        this.fontRequestId = requestId;
+        if (this.activeFontList && this.listRef()) {
+            this.activeFontList.scrollTop = this.listRef().scrollTop;
         }
+        // Reopen the search that contained the selected font.
+        const term = useInput ? this.inputRef().value.trim() : this.selectedFontTerm || "";
+        const cachedList = this.fontLists.get(term);
+        if (cachedList) {
+            const source = this.makeSource(this.props.sources[0]);
+            source.options = cachedList.options;
+            this.sources.splice(0, this.sources.length, source);
+            this.state.activeSourceOption = null;
+            this.activeFontList = cachedList;
+            this.restoreScrollTop = cachedList.scrollTop;
+            return;
+        }
+        this.activeFontList = undefined;
+        await super.loadSources(useInput);
+        if (requestId === this.fontRequestId) {
+            const list = {
+                term,
+                options: this.sources[0].options,
+                nextOffset: FONT_PREVIEW_BATCH_SIZE,
+                hasMore: true,
+                scrollTop: 0,
+            };
+            this.fontLists.set(term, list);
+            this.activeFontList = list;
+            this.loadMoreFonts();
+        }
+    }
+
+    async loadMoreFonts() {
+        const list = this.activeFontList;
+        if (!list || this.loadingFontList === list || !list.hasMore || !this.isOpened) {
+            return;
+        }
+        this.loadingFontList = list;
+        try {
+            const options = await this.props.sources[0].options(
+                list.term, list.nextOffset
+            );
+            if (list !== this.activeFontList || !this.isOpened) {
+                return;
+            }
+            list.nextOffset += FONT_PREVIEW_BATCH_SIZE;
+            list.hasMore = options.hasMore;
+            list.options.push(...options.map((option) => this.makeOption(option)));
+        } finally {
+            if (this.loadingFontList === list) {
+                this.loadingFontList = undefined;
+            }
+        }
+    }
+
+    selectOption(option) {
+        this.selectedFontTerm = this.activeFontList?.term;
+        super.selectOption(option);
+    }
+
+    close() {
+        if (this.activeFontList && this.listRef()) {
+            this.activeFontList.scrollTop = this.listRef().scrollTop;
+        }
+        super.close();
     }
 }
 
@@ -89,9 +171,14 @@ export class AddFontDialog extends Component {
         previewText: _t("The quick brown fox jumps over the lazy dog."),
     });
     fileInput = signal.ref();
+    fontLoads = new Map();
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
+        this.googleFontListPromise = rpc("/website/google_font_metadata").then((data) => {
+            this.googleFontList = data.familyMetadataList.map((font) => font.family);
+        });
+        this.firstFontsPromise = this.googleFontListPromise.then(() => this.loadFontOptions("", 0));
     }
 
     async onClickSave() {
@@ -112,25 +199,64 @@ export class AddFontDialog extends Component {
     get getGoogleFontList() {
         return [
             {
-                options: async (term) => {
-                    if (!this.googleFontList) {
-                        await rpc("/website/google_font_metadata").then((data) => {
-                            this.googleFontList = data.familyMetadataList.map(
-                                (font) => font.family
-                            );
-                        });
-                    }
-                    const lowerCaseTerm = term.toLowerCase();
-                    const filtered = this.googleFontList.filter((value) =>
-                        value.toLowerCase().includes(lowerCaseTerm)
-                    );
-                    return filtered.map((fontFamilyName) => ({
-                        label: fontFamilyName,
-                        onSelect: () => this.onGoogleFontSelect(fontFamilyName),
-                    }));
-                },
+                optionSlot: "font",
+                options: (term, offset = 0) =>
+                    term || offset ? this.loadFontOptions(term, offset) : this.firstFontsPromise,
             },
         ];
+    }
+    async loadFontOptions(term, offset) {
+        await this.googleFontListPromise;
+        const filtered = this.googleFontList.filter((fontFamilyName) =>
+            fontFamilyName.toLowerCase().includes(term.toLowerCase())
+        );
+        const fontFamilies = filtered.slice(offset, offset + FONT_PREVIEW_BATCH_SIZE);
+        const fontsToLoad = fontFamilies.filter(
+            (fontFamilyName) => !this.fontLoads.has(fontFamilyName)
+        );
+        if (fontsToLoad.length) {
+            const linkEl = document.createElement("link");
+            linkEl.rel = "stylesheet";
+            const families = fontsToLoad.map((fontFamilyName) =>
+                `family=${encodeURIComponent(fontFamilyName)}`
+            ).join("&");
+            // Only download the glyphs needed by the names in this batch.
+            linkEl.href = `https://fonts.googleapis.com/css2?${families}&text=${encodeURIComponent(fontsToLoad.join(""))}&display=swap`;
+            linkEl.dataset.fontPreview = true;
+            const cssReady = new Promise((resolve) => {
+                linkEl.onload = () => resolve(true);
+                linkEl.onerror = () => resolve(false);
+                document.head.appendChild(linkEl);
+            });
+            for (const fontFamilyName of fontsToLoad) {
+                this.fontLoads.set(fontFamilyName, cssReady.then(async (ready) => {
+                    if (!ready) {
+                        return false;
+                    }
+                    try {
+                        const faces = await document.fonts.load(
+                            `14px ${JSON.stringify(fontFamilyName)}`, fontFamilyName
+                        );
+                        return !!faces.length;
+                    } catch {
+                        return false;
+                    }
+                }));
+            }
+        }
+        // The stylesheet can load before its font files, so wait for both.
+        const loaded = await Promise.all(fontFamilies.map((fontFamilyName) =>
+            this.fontLoads.get(fontFamilyName)
+        ));
+        const options = fontFamilies
+            .filter((fontFamilyName, index) => loaded[index])
+            .map((fontFamilyName) => ({
+                label: fontFamilyName,
+                data: { style: `font-family: ${JSON.stringify(fontFamilyName)}` },
+                onSelect: () => this.onGoogleFontSelect(fontFamilyName),
+            }));
+        options.hasMore = offset + FONT_PREVIEW_BATCH_SIZE < filtered.length;
+        return options;
     }
     async onGoogleFontSelect(fontFamily) {
         this.fileInput().value = "";
@@ -147,20 +273,31 @@ export class AddFontDialog extends Component {
             // Google fonts server returns a 400 status code if family is not valid.
             if (result.ok) {
                 const linkId = `previewFont${fontFamily}`;
-                if (!document.querySelector(`link[id='${linkId}']`)) {
-                    const linkEl = document.createElement("link");
+                let linkEl = document.getElementById(linkId);
+                if (!linkEl) {
+                    linkEl = document.createElement("link");
                     linkEl.id = linkId;
-                    linkEl.setAttribute("href", result.url);
                     linkEl.setAttribute("rel", "stylesheet");
                     linkEl.dataset.fontPreview = true;
                     document.head.appendChild(linkEl);
                 }
+                linkEl.href = `${result.url}&text=${encodeURIComponent(this.state.previewText + fontFamily)}`;
+                this.previewFontLinkEl = linkEl;
+                this.fullPreviewFontUrl = result.url;
+                this.previewFontIsSubset = true;
                 this.state.googleFontFamily = fontFamily;
             } else {
                 this.state.googleFontFamily = undefined;
             }
         } catch (error) {
             console.error(error);
+        }
+    }
+    onPreviewTextInput() {
+        if (this.state.googleFontFamily && this.previewFontIsSubset) {
+            // Allow arbitrary preview text after the first edit.
+            this.previewFontLinkEl.href = this.fullPreviewFontUrl;
+            this.previewFontIsSubset = false;
         }
     }
     async onUploadChange(e) {
