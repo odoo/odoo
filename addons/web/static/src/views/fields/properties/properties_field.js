@@ -625,7 +625,10 @@ export class PropertiesField extends Component {
 
         if (newType === "separator" && oldType !== "separator") {
             // unfold automatically the new separator
-            await this._toggleSeparators([propertyDefinition.name], propertyDefinition.fold_by_default);
+            await this._toggleSeparators(
+                [propertyDefinition.name],
+                propertyDefinition.fold_by_default
+            );
             // layout has been changed, move the definition popover
             this.movePopoverToProperty = propertyDefinition.name;
         } else if (oldType === "separator" && newType !== "separator") {
@@ -634,7 +637,10 @@ export class PropertiesField extends Component {
                 (property, index) => index < propertyIndex && property.type === "separator"
             );
             if (previousSeperator) {
-                await this._toggleSeparators([previousSeperator.name], propertyDefinition.fold_by_default);
+                await this._toggleSeparators(
+                    [previousSeperator.name],
+                    propertyDefinition.fold_by_default
+                );
             }
             // layout has been changed, move the definition popover
             this.movePopoverToProperty = propertyDefinition.name;
