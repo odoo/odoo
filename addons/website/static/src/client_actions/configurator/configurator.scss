@@ -229,9 +229,19 @@
                         opacity:0;
                     }
 
-                    &:hover, &.show, &:has([data-bs-toggle]:focus-visible) {
-                        padding-right: 1.3rem !important;
+                    [data-bs-toggle] {
+                        transition: margin-right 300ms ease;
+                    }
 
+                    // Keep room for the arrow, which is outside of the toggle box. The toggle is
+                    // `w-100`: fit it to its content instead, as a width computed from the
+                    // growing dropdown can round below the text width and wrap it.
+                    &:hover [data-bs-toggle], &.show [data-bs-toggle], [data-bs-toggle]:focus-visible {
+                        margin-right: 1.3rem;
+                        width: auto !important;
+                    }
+
+                    &:hover, &.show, [data-bs-toggle]:focus-visible {
                         [data-icon="keyboard_arrow_down"] {
                             transition: all 300ms ease 100ms;
                             opacity:1;
