@@ -23,6 +23,7 @@ import { loadImage } from "@html_editor/utils/image_processing";
  * @typedef { Object } CustomizeWebsiteShared
  * @property { CustomizeWebsitePlugin['customizeWebsiteColors'] } customizeWebsiteColors
  * @property { CustomizeWebsitePlugin['customizeWebsiteVariables'] } customizeWebsiteVariables
+ * @property { CustomizeWebsitePlugin['previewWebsiteVariables'] } previewWebsiteVariables
  * @property { CustomizeWebsitePlugin['loadTemplateKey'] } loadTemplateKey
  * @property { CustomizeWebsitePlugin['makeSCSSCusto'] } makeSCSSCusto
  * @property { CustomizeWebsitePlugin['toggleTemplate'] } toggleTemplate
@@ -43,6 +44,7 @@ import { loadImage } from "@html_editor/utils/image_processing";
  */
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
+const USER_VALUES_URL = "/website/static/src/scss/options/user_values.scss";
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
@@ -50,6 +52,7 @@ export class CustomizeWebsitePlugin extends Plugin {
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
+        "previewWebsiteVariables",
         "loadTemplateKey",
         "makeSCSSCusto",
         "toggleTemplate",
@@ -69,6 +72,7 @@ export class CustomizeWebsitePlugin extends Plugin {
     resources = {
         builder_actions: {
             CustomizeWebsiteVariableAction,
+            PreviewWebsiteVariableAction,
             CustomizeWebsiteSubVariablesAction,
             CustomizeWebsiteColorAction,
             SwitchThemeAction,
@@ -91,6 +95,60 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }),
         on_ready_to_save_document_handlers: this.onSave.bind(this),
+
+        // Previewed values (see `previewWebsiteVariables`) are history commit
+        // data: each step holds the previous and next state to apply.
+        history_commit_data_properties: ["themePreview"],
+        pending_history_commit_data_processors: (data) =>
+            this.pendingPreviewSteps.length
+                ? { ...data, themePreview: [...this.pendingPreviewSteps] }
+                : data,
+        on_committed_to_history_handlers: () => {
+            this.pendingPreviewSteps = [];
+        },
+        has_history_commit_changes_predicates: (commit) => {
+            if (commit.data.themePreview?.length) {
+                return true;
+            }
+        },
+        // Like the DOM mutations, `ensureNewMutations` records what is applied
+        // or reverted as new changes (e.g. in the undo commit, which is what
+        // redo reverts).
+        on_apply_history_commit_handlers: (commit, { ensureNewMutations = false } = {}) => {
+            for (const step of commit.data.themePreview || []) {
+                this.setPreviewState(step.next);
+                if (ensureNewMutations) {
+                    this.pendingPreviewSteps.push(step);
+                }
+            }
+        },
+        on_revert_history_commit_handlers: (commit, { ensureNewMutations = false } = {}) => {
+            for (const step of [...(commit.data.themePreview || [])].reverse()) {
+                this.setPreviewState(step.previous);
+                if (ensureNewMutations) {
+                    this.pendingPreviewSteps.push({ previous: step.next, next: step.previous });
+                }
+            }
+        },
+        on_will_invalidate_pending_changes_handlers: () => {
+            for (const step of this.pendingPreviewSteps.reverse()) {
+                this.setPreviewState(step.previous);
+            }
+            this.pendingPreviewSteps = [];
+        },
+        on_pending_changes_unstashed_handlers: (stashedCommit) => {
+            this.pendingPreviewSteps.push(...(stashedCommit.data.themePreview || []));
+        },
+        save_point_history_commit_data_processors: (data) => ({
+            ...data,
+            themePreview: [...this.pendingPreviewSteps],
+        }),
+        on_savepoint_restored_handlers: (savePoint) => {
+            for (const step of savePoint.data.themePreview) {
+                this.setPreviewState(step.next);
+            }
+            this.pendingPreviewSteps.push(...savePoint.data.themePreview);
+        },
     };
 
     async onSave() {
@@ -101,6 +159,10 @@ export class CustomizeWebsitePlugin extends Plugin {
                 disable: [...this.viewsToDisableOnSave],
                 reset_view_arch: false,
             });
+        }
+        if (Object.keys(this.pendingVariables).length) {
+            // No bundle reload: the iframe is reloaded after save.
+            await this.makeSCSSCusto(USER_VALUES_URL, this.pendingVariables);
         }
     }
     cache = {};
@@ -124,6 +186,10 @@ export class CustomizeWebsitePlugin extends Plugin {
      */
     pendingThemeRequests = [];
     variablesToCustomize = {};
+    /** @type {Object<string, string>} values to write in `user_values.scss` on save */
+    pendingVariables = {};
+    /** Preview steps not committed to the history yet. */
+    pendingPreviewSteps = [];
     colorsToCustomize = {};
     resolves = {};
     getPendingThemeRequests() {
@@ -179,14 +245,52 @@ export class CustomizeWebsitePlugin extends Plugin {
             await this.reloadBundles();
         }
     }
+    /**
+     * Previews website variables by overriding their printed value inline on
+     * the iframe root, where both `getWebsiteVariableValue` and the compiled
+     * CSS read it. Only works for the variables the compiled CSS reads through
+     * `var()`. The SCSS customization is only written on save.
+     *
+     * A reset (empty value) removes the override: the last saved value shows
+     * until save.
+     *
+     * @param {Object<string, string>} variables
+     * @param {string} [nullValue="null"]
+     */
+    previewWebsiteVariables(variables, nullValue = "null") {
+        const style = this.document.documentElement.style;
+        const step = { previous: {}, next: {} };
+        for (const [name, value] of Object.entries(variables)) {
+            step.previous[name] = {
+                pending: this.pendingVariables[name],
+                inline: style.getPropertyValue(`--${name}`),
+            };
+            step.next[name] = { pending: value || nullValue, inline: value || "" };
+        }
+        // The root is outside the observed editable: the step goes to the
+        // history as commit data, which reverts hover previews and undo.
+        this.setPreviewState(step.next);
+        this.pendingPreviewSteps.push(step);
+    }
+    setPreviewState(state) {
+        const style = this.document.documentElement.style;
+        for (const [name, { pending, inline }] of Object.entries(state)) {
+            if (pending === undefined) {
+                delete this.pendingVariables[name];
+            } else {
+                this.pendingVariables[name] = pending;
+            }
+            if (inline) {
+                style.setProperty(`--${name}`, inline);
+            } else {
+                style.removeProperty(`--${name}`);
+            }
+        }
+    }
     debouncedSCSSVariablesCusto = debounce(async (nullValue) => {
         const variables = this.variablesToCustomize;
         this.variablesToCustomize = {};
-        await this.makeSCSSCusto(
-            "/website/static/src/scss/options/user_values.scss",
-            variables,
-            nullValue
-        );
+        await this.makeSCSSCusto(USER_VALUES_URL, variables, nullValue);
     }, 0);
     async customizeWebsiteColors(
         colors = {},
@@ -973,6 +1077,22 @@ export class CustomizeWebsiteVariableAction extends BuilderAction {
             {
                 [variable]: value,
             },
+            nullValue
+        );
+    }
+}
+
+/**
+ * Same as `customizeWebsiteVariable`, but previewed live and only written on
+ * save. For the variables the compiled CSS reads through `var()`.
+ */
+export class PreviewWebsiteVariableAction extends CustomizeWebsiteVariableAction {
+    static id = "previewWebsiteVariable";
+    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
+    setup() {}
+    apply({ params: { mainParam: variable, nullValue = "null" }, value }) {
+        this.dependencies.customizeWebsite.previewWebsiteVariables(
+            { [variable]: value },
             nullValue
         );
     }
