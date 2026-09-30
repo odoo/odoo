@@ -3370,6 +3370,22 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertEqual(len(order), 1)
         self.assertTrue(order.account_move)
 
+    def test_cash_in_out_has_no_partner(self):
+        """The cashier is not the counterpart of a cash move: it must not be set as
+        partner on the statement line nor on its journal items."""
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+        session.set_opening_control(0, False)
+        session.try_cash_in_out('in', 10, 'Float', self.env.user.partner_id.id, {'translatedType': 'in'})
+
+        cash_move = session.statement_line_ids
+        self.assertFalse(cash_move.partner_id)
+        self.assertFalse(cash_move.move_id.line_ids.partner_id)
+        self.assertEqual(session.get_cash_in_out_list()[0]['cashier_name'], self.env.user.name)
+
+        session.delete_cash_in_out(cash_move.id, self.env.user.partner_id.id)
+        self.assertIn(f'{self.env.user.name}: 10.0', session.message_ids[0].body)
+
     def test_close_session_cash_out_without_accounting_rights(self):
         """A PoS manager without any accounting group cashes out, then closes
         the session with the counted cash matching the expected cash: the
