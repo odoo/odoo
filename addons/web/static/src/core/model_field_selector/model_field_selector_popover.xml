@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ModelFieldSelectorPopover">
+        <div class="o_model_field_selector_popover d-flex flex-column" tabindex="-1" t-ref="root" t-on-keydown="onInputKeydown">
+            <div class="border-bottom p-2 text-dark fw-bolder">
+                <div class="d-flex justify-content-between align-items-center">
+                    <t t-if="state.page.previousPage">
+                        <i class="o_model_field_selector_popover_prev_page btn btn-link oi oi-arrow-left ms-n2 text-dark"
+                           data-tooltip="Previous"
+                           role="img"
+                           aria-label="Previous"
+                           t-on-click="() => this.goToPreviousPage()"
+                        />
+                    </t>
+                    <div class="o_model_field_selector_popover_title px-2 text-truncate">
+                        <t t-esc="state.page.title"/>
+                    </div>
+                    <i class="o_model_field_selector_popover_close btn btn-link me-n2 fa fa-times text-dark"
+                       data-tooltip="Close"
+                       role="img"
+                       aria-label="Close"
+                       t-on-click="() => props.close()"
+                    />
+                </div>
+                <t t-if="props.showSearchInput">
+                    <div class="o_model_field_selector_popover_search mt-1">
+                        <input type="text"
+                               placeholder='Search...'
+                               class="o_input p-1 border rounded-1 bg-view"
+                               t-att-value="state.page.query"
+                               t-on-input="(ev) => this.debouncedSearchFields(ev.target.value)" />
+                    </div>
+                </t>
+            </div>
+            <div class="o_model_field_selector_popover_body overflow-auto">
+                <ul class="o_model_field_selector_popover_page list-unstyled mb-0">
+                    <t t-foreach="fieldNames" t-as="fieldName" t-key="fieldName">
+                        <t t-set="fieldDef" t-value="state.page.fieldDefs[fieldName]" />
+                        <li class="o_model_field_selector_popover_item d-flex border-bottom" t-att-class="{ 'active': fieldName === state.page.focusedFieldName }" t-att-data-name="fieldName">
+                            <button t-attf-class="o_model_field_selector_popover_item_name btn btn-light flex-fill border-0 rounded-0 text-break text-start fw-normal" t-on-click="() => this.selectField(fieldDef)">
+                                <t t-esc="fieldDef.string" />
+                                <t t-if="fieldDef.record_name"> (<t t-esc="fieldDef.record_name" />)</t>
+                                <div t-if="props.isDebugMode" class="o_model_field_selector_popover_item_title text-break text-muted small"><t t-esc="fieldName"/> (<t t-esc="fieldDef.type"/>)</div>
+                            </button>
+                            <t t-if="this.canFollowRelationFor(fieldDef)">
+                                <t t-set="label">
+                                    <t t-if="fieldDef.relation">Relation to follow</t>
+                                    <t t-else="">Show options</t>
+                                </t>
+                                <button class="o_model_field_selector_popover_item_relation btn btn-light border-0 border-start rounded-0"
+                                    t-att-data-tooltip="label"
+                                    t-att-aria-label="label"
+                                    t-on-click.stop="() => this.followRelation(fieldDef)"
+                                >
+                                    <i class="oi oi-chevron-right o_model_field_selector_popover_relation_icon" role="img"/>
+                                </button>
+                            </t>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <div t-if="showDebugInput" class="o_model_field_selector_popover_footer border-top py-1 px-2">
+                <input type="text" class="o_model_field_selector_debug o_input"
+                    t-att-value="state.page.path"
+                    t-on-change="(ev) => this.loadNewPath(ev.target.value)"
+                    t-on-keydown="onDebugInputKeydown"
+                    t-on-input="(ev) => this.props.update(ev.target.value, null, true)"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

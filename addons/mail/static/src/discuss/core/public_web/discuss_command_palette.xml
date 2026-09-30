@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussCommand">
+        <div class="o-mail-DiscussCommand o_command_default d-flex align-items-center ps-3 pe-4" t-att-class="{ 'o-uiSmall': ui.isSmall }">
+            <i t-if="props.channel" class="fa-fw opacity-75 text-muted me-2" t-att-class="props.channel.parent_channel_id ? 'fa fa-comments-o' : props.channel.discussAppCategory?.icon ?? 'oi oi-user opacity-0'"/>
+            <i t-elif="props.persona" class="oi fa-fw oi-user opacity-75 text-muted me-2"/>
+            <img class="o-mail-DiscussCommand-img rounded-3 me-2 object-fit-cover shadow-sm" t-if="props.imgUrl" t-att-src="props.imgUrl" t-att-class="{ 'o-uiSmall': ui.isSmall }"/>
+            <ImStatus t-if="props.persona" className="'me-1'" persona="props.persona"/>
+            <span class="o-mail-DiscussCommand-nameContainer pe-1 text-ellipsis d-flex align-items-center fw-bold" t-att-class="{ 'o-action': props.action }">
+                <t t-if="props.channel?.parent_channel_id">
+                    <span class="text-truncate flex-shrink-0 opacity-75 mw-50 small" t-esc="props.channel?.parent_channel_id.displayName"/>
+                    <i class="oi oi-chevron-right o-xsmaller mx-1"/>
+                </t>
+                <t t-slot="name" />
+            </span>
+            <span t-if="props.persona and props.persona.email" class="text-truncate text-muted smaller opacity-75" t-out="'- ' + props.persona.email" t-att-title="props.persona.email"/>
+            <i t-if="props.action?.icon" class="o-mail-DiscussCommand-actionIcon fa fa-fw opacity-75 o-action" t-attf-class="{{ props.action.icon }}"/>
+            <span t-if="props.action?.searchValueSuffix" class="o-action fw-bold" t-esc="props.searchValue"/>
+            <span class="flex-grow-1"/>
+            <div t-if="props.counter > 0">
+                <span t-attf-class="badge rounded-pill o-discuss-badge ms-3 me-1 fw-bold shadow-sm" t-esc="props.counter"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mail.CreateChannelDialog">
+        <Dialog size="'sm'" title.translate="New Channel" contentClass="'o-mail-CreateChannelDialog'" bodyClass="'py-0'">
+            <div class="d-flex flex-column" t-on-keydown="onKeydown">
+                <span class="ms-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="fa fa-hashtag"/> Channel name</span>
+                <input type="text" class="form-control" t-att-class="{ 'is-invalid': state.isInvalid }" placeholder="Channel name" t-model="state.name" tabindex="1"/>
+                <div class="invalid-feedback">Channel must have a name.</div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary me-2" t-att-disabled="!state.name or state.name.trim().length === 0" t-on-click="onClickConfirm">Create Channel</button>
+                <button class="btn btn-secondary me-2" t-on-click="props.close">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+
+<t t-name="mail.CreateChatDialog">
+    <Dialog size="'md'" title.translate="Make Chat" contentClass="'o-mail-CreateChatDialog'" bodyClass="'py-0'">
+        <div class="d-flex flex-column flex-grow-1 bg-inherit w-100">
+            <div class="d-flex align-items-center px-0 mb-1 gap-1">
+                <span class="ms-2 my-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="oi oi-user-plus"/> Invite people</span>
+            </div>
+            <ChannelInvitation state="invitePeopleState"/>
+        </div>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary me-2" t-on-click="onClickConfirm" t-esc="createText"/>
+            <button class="btn btn-secondary me-2" t-on-click="props.close">Cancel</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

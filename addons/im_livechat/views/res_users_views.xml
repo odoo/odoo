@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <!-- Update Preferences form !-->
+        <record id="res_users_form_view_simple_modif" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.im_livechat</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='outgoing_mail_server_type']" position="after">
+                    <field name="has_access_livechat" invisible="1"/>
+                    <field name="livechat_username" string="Livechat Name" invisible="not has_access_livechat"/>
+                    <field name="livechat_lang_ids" string="Spoken Languages"
+                           options="{'no_create': True, 'no_edit': True, 'no_create_edit': True}"
+                           widget="many2many_tags"
+                           invisible="not has_access_livechat"/>
+                    <field name="livechat_expertise_ids" string="Expertise"
+                           widget="many2many_tags"
+                           options="{'no_create': True}"
+                           invisible="not has_access_livechat"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Update user form !-->
+        <record id="res_users_form_view" model="ir.ui.view">
+            <field name="name">res.users.form.im_livechat</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='outgoing_mail_server_type']" position="after">
+                    <field name="has_access_livechat" invisible="1"/>
+                    <field name="livechat_username" string="Livechat Name" invisible="not has_access_livechat"/>
+                    <field name="livechat_lang_ids" string="Spoken Languages"
+                           options="{'no_create': True, 'no_edit': True}"
+                           widget="many2many_tags"
+                           invisible="not has_access_livechat"/>
+                    <field name="livechat_expertise_ids" string="Expertise"
+                           widget="many2many_tags"
+                           options="{'no_create': True}"
+                           invisible="not has_access_livechat"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

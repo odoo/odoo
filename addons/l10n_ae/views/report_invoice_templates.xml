@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_ae_report_invoice_document" inherit_id="l10n_gcc_invoice.l10n_gcc_report_invoice_document" primary="True">
+        <!-- Titles -->
+        <t name="credit_note_title" position="replace">
+            <t name="credit_note_title">Tax Credit Note</t>
+        </t>
+        <t name="credit_note_title_ar" position="replace">
+            <t name="credit_note_title_ar">إشعار دائن ضريبي</t>
+        </t>
+        <t name="credit_note_title_en" position="replace">
+            <t name="credit_note_title_en">Tax Credit Note</t>
+        </t>
+        <!-- End Titles -->
+        <!-- Invoice table -->
+        <th name="th_taxes" position="after">
+            <t t-if="display_taxes">
+                <th name="th_vat_amount" class="text-end">
+                    <span name="th_vat_amount_span_ar" t-if="display_in_ar" t-translation="off">مبلغ الضريبة<br/></span>
+                    <span name="th_vat_amount_span_en" t-if="display_in_en" t-translation="off">VAT Amount<br/></span>
+                    <span name="th_vat_amount_span">VAT Amount</span>
+                </th>
+            </t>
+        </th>
+        <th name="th_subtotal" position="after">
+            <t t-if="o.currency_id != o.company_currency_id">
+                <th name="th_subtotal_curr" class="text-end">
+                    <span name="th_subtotal_curr_span_ar" t-if="display_in_ar" t-translation="off">(<span t-field="o.company_currency_id"/>) المبلغ<br/></span>
+                    <span name="th_subtotal_curr_span_en" t-if="display_in_en" t-translation="off" dir="ltr">Amount (<span t-field="o.company_currency_id"/>)<br/></span>
+                    <span name="th_subtotal_curr_span">Amount (<span t-field="o.company_currency_id"/>)</span>
+                </th>
+            </t>
+        </th>
+        <td name="td_taxes" position="after">
+            <t t-if="display_taxes">
+                <td name="td_vat_amount" class="text-end">
+                    <span t-if="not hide_prices" name="td_vat_amount_span" t-field="line.l10n_gcc_invoice_tax_amount"/>
+                </td>
+            </t>
+        </td>
+        <td name="td_subtotal" position="after">
+            <t t-if="o.currency_id != o.company_currency_id">
+                <td name="td_subtotal_curr" class="text-end">
+                    <span name="td_subtotal_curr_excl_span" class="text-nowrap" t-if="o.company_price_include == 'tax_excluded' and not hide_prices"
+                          t-out="line.price_subtotal * 1 / o.invoice_currency_rate"
+                          t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+                    <span name="td_subtotal_curr_incl_span" class="text-nowrap" t-if="o.company_price_include == 'tax_included' and not hide_prices"
+                          t-out="line.price_total * 1 / o.invoice_currency_rate"
+                          t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+                </td>
+            </t>
+        </td>
+        <td name="td_subtotal_grouped" position="before">
+            <td name="td_vat_amount_grouped" t-attf-class="text-end">
+                <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details)" t-out="grouped_line['l10n_gcc_invoice_tax_amount']"  t-options='{"widget": "monetary", "display_currency": o.currency_id}' class="text-nowrap">4.05</span>
+            </td>
+        </td>
+        <td name="td_subtotal_grouped" position="after">
+            <td name="th_subtotal_curr_grouped" class="text-end" t-if="o.currency_id != o.company_currency_id">
+                <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details) and o.company_price_include == 'tax_excluded'" class="text-nowrap" t-out="grouped_line['price_subtotal'] * 1 / o.invoice_currency_rate" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>27.00</span>
+                <span t-if="(grouped_line.get('display_type') in ('line_section', 'line_subsection') or hide_details) and o.company_price_include == 'tax_included'" class="text-nowrap" t-out="grouped_line['price_total'] * 1 / o.invoice_currency_rate" t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>27.00</span>
+            </td>
+        </td>
+        <xpath expr="//span[@t-out='section_subtotal']/.." position="attributes">
+            <attribute name="colspan">2</attribute>
+        </xpath>
+        <xpath expr="//t[@t-elif=&quot;line.display_type in ('line_section', 'line_subsection')&quot;]//span[@t-out='section_subtotal']/.." position="after">
+            <td colspan="1" class="text-end o_price_total" t-if="o.currency_id != o.company_currency_id">
+                <span class="text-nowrap"
+                      t-out="section_subtotal * 1 / o.invoice_currency_rate"
+                      t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
+            </td>
+        </xpath>
+        <!-- End Invoice table -->
+        <t t-set="show_exchange_rate" position="attributes">
+            <attribute name="t-value">1</attribute>
+        </t>
+    </template>
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_ae.l10n_ae_report_invoice_document'"
+               t-call="l10n_ae.l10n_ae_report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

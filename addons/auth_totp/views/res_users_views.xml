@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="res_users_view_search">
+        <field name="name">res.users.view.search.inherit.auth.totp</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="totp_enabled" string="Two-factor authentication Enabled" domain="[('totp_enabled','!=',False)]"/>
+                <filter name="totp_disabled" string="Two-factor authentication Disabled" domain="[('totp_enabled','=',False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_totp_form">
+        <field name="name">user form: add totp status</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='auth']" position="after">
+                <div name="auth_2fa" class="d-flex mt-3">
+                    <div class="col-7 col-sm-6 col-lg-3 d-flex flex-column">
+                        <label for="totp_enabled" string="Two-factor Authentication" class="o_form_label"/>
+                        <span class="text-muted">
+                            Recommended for extra security.
+                        </span>
+                    </div>
+                    <field name="totp_enabled" invisible="1"/>
+                    <button invisible="totp_enabled or id != uid" name="action_totp_enable_wizard"
+                        type="object" class="btn btn-secondary h-100 my-auto" string="Enable 2FA"/>
+                    <div invisible="totp_enabled or id == uid" name="div_action_totp_enable_wizard" class="h-100 d-flex flex-wrap align-items-center my-auto">
+                        <i class="fa fa-remove text-danger"/>
+                        <span class="fw-bold ms-1">
+                            Disabled
+                        </span>
+                    </div>
+                    <!-- Admin must be able to deactivate the 2FA, if the user is no longer able to use it. -->
+                    <div invisible="not totp_enabled" class="h-100 d-flex flex-wrap align-items-center my-auto">
+                        <i class="fa fa-check text-success"/>
+                        <span class="fw-bold ms-1 me-2">
+                            Enabled
+                        </span>
+                        <button name="action_totp_disable" type="object" class="btn btn-secondary h-100">
+                            Disable
+                        </button>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_totp_field">
+        <field name="name">users preference: totp</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='auth']" position="after">
+                <div class="d-flex mt-3">
+                    <div class="col-7 col-sm-6 col-lg-3 d-flex flex-column">
+                        <label for="totp_enabled" string="Two-factor Authentication" class="o_form_label"/>
+                        <span class="text-muted">
+                            Recommended for extra security.
+                        </span>
+                    </div>
+                    <field name="totp_enabled" invisible="1"/>
+                    <button invisible="totp_enabled" name="action_totp_enable_wizard"
+                        type="object" class="btn btn-secondary h-100 my-auto" string="Enable 2FA"/>
+                    <div invisible="not totp_enabled" class="h-100 d-flex flex-wrap align-items-center my-auto">
+                        <i class="fa fa-check text-success"/>
+                        <span class="fw-bold ms-1 me-2">
+                            Enabled
+                        </span>
+                        <button name="action_totp_disable" type="object" class="btn btn-secondary h-100">
+                            Disable
+                        </button>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.MessageInReply">
+        <div class="o-mail-MessageInReply" t-attf-class="{{ props.class }}">
+            <small class="o-mail-MessageInReply-core o-mail-Message-bubble o-muted border position-relative d-flex px-2 py-1 rounded-start-0 o-rounded-end-bubble d-inline-flex" t-att-class="{
+                'o-blue': props.message.parent_id.bubbleColor === 'blue',
+                'o-green': props.message.parent_id.bubbleColor === 'green',
+                'o-orange': props.message.parent_id.bubbleColor === 'orange',
+            }">
+                <span class="d-inline-flex align-items-center" t-att-class="{ 'cursor-pointer': props.onClick }" t-on-click="() => this.props.onClick?.()">
+                    <t t-if="!props.message.parent_id.isEmpty">
+                        <img class="o-mail-MessageInReply-avatar me-2 rounded object-fit-cover" t-att-src="authorAvatarUrl" t-att-title="props.message.parent_id.authorName" alt="Avatar"/>
+                        <span class="o-mail-MessageInReply-content overflow-hidden smaller">
+                            <b class="o-mail-MessageInReply-author o-fw-600"><t t-out="props.message.parent_id.authorName"/></b>:
+                            <span class="o-mail-MessageInReply-message ms-1 text-break">
+                                <t t-if="!props.message.parent_id.isBodyEmpty">
+                                    <t t-out="props.message.parent_id.inlineBody"/>
+                                    <em t-if="props.message.parent_id.edited" class="smaller fw-bold text-500"> (edited)</em>
+                                </t>
+                                <t t-elif="props.message.parent_id.attachment_ids.length > 0">
+                                    <span class="me-2 fst-italic">Click to see the attachments</span>
+                                    <i class="fa fa-image"/>
+                                </t>
+                            </span>
+                        </span>
+                    </t>
+                    <i t-else="">Original message was deleted</i>
+                </span>
+            </small>
+        </div>
+    </t>
+</templates>

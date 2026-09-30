@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="mail.discuss_notification_settings_action" model="ir.actions.client">
+            <field name="name">Notifications</field>
+            <field name="tag">mail.discuss_notification_settings_action</field>
+            <field name="target">new</field>
+            <field name="context">{"dialog_size": "medium", "footer": false}</field>
+        </record>
+        <record id="mail.discuss_call_settings_action" model="ir.actions.client">
+            <field name="name">Voice &amp; Video Settings</field>
+            <field name="tag">mail.discuss_call_settings_action</field>
+            <field name="target">new</field>
+            <field name="context">{'dialog_size': 'medium', 'footer': false}</field>
+        </record>
+    </data>
+</odoo>

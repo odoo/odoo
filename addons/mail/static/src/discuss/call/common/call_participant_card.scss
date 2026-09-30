@@ -1,0 +1,145 @@
+.o-discuss-CallParticipantCard {
+    color: white;
+    aspect-ratio: 16/9;
+
+    &.o-isTalking {
+        outline: 4px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+        outline-offset: -4px;
+
+        &.o-inset {
+            box-shadow: inset 0 0 0 map-get($spacers, 1)/2 var(--discuss-talkingColor, $o-discuss-talkingColor);
+        }
+    }
+
+    &.o-inset {
+        height: 20%;
+        max-height: 125px !important;
+        right: 1vh;
+        bottom: 1vh;
+        position: absolute !important;
+        cursor: move !important;
+
+        &.o-small {
+            width: 30%;
+            left: 0;
+            top: 0;
+        }
+
+        .o-mail-ChatWindow & {
+            bottom: 5vh;
+        }
+
+        .o-discuss-CallParticipantCard-avatar img {
+            max-height: #{"min(70%, 70px)"};
+            max-width: #{"min(70%, 70px)"};
+        }
+    }
+}
+
+.o-discuss-CallParticipantCard-avatar:not(.o-minimized) {
+    background-color: var(--o-discuss-CallParticipantCard-avatarBgColor, #{$o-gray-800});
+    &.o-isRemoteVideo {
+        background: linear-gradient(180deg, #144173 0%, #082647 30%, #133c68 60%, #082647 90%);
+        background-size: 200% 200%;
+        animation: gradientAnimation 5s ease-in-out infinite alternate;
+        filter: blur(2px);
+    }
+    @keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 100%;
+    }
+}
+}
+
+.o-discuss-CallParticipantCard-avatar img {
+    max-height: #{"min(100%, 100px)"}; // interpolated as not supported by Sass
+    max-width: #{"min(100%, 100px)"};
+    aspect-ratio: 1;
+    border: none;
+
+    &.o-isTalking {
+        outline: 4px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+        outline-offset: -4px;
+    }
+
+    &.o-isInvitation:not(:hover) {
+        animation: o-discuss-CallParticipantCard-avatarImag_borderPulse 3s linear infinite;
+    }
+
+    &.o-isInvitation:hover {
+        border: solid map-get($theme-colors, 'danger');
+    }
+}
+
+@keyframes o-discuss-CallParticipantCard-avatarImag_borderPulse {
+    0% { border: solid white }
+    20% { border: solid $gray-600 }
+    35% { border: solid $gray-100 }
+    50% { border: solid $gray-600 }
+    70% { border: solid $gray-100 }
+    85% { border: solid $gray-700 }
+}
+
+.o-discuss-CallParticipantCard-iconBlackBg {
+    background-color: rgba(0, 0, 0, 0.75);
+    opacity: 75%;
+}
+
+.o-discuss-CallParticipantCard-overlay {
+    margin: Min(5%, map-get($spacers, 2));
+
+    &.o-proportional-container {
+        container-type: inline-size;
+        .o-proportional-text {
+            font-size: #{"min(1rem, 40cqw)"};
+            &.o-video-text {
+                font-size: 5cqw;
+            }
+            &.o-discuss-CallParticipantCard-overlayBottomName {
+                font-size: #{"min(0.8rem, 40cqw)"};
+            }
+        }
+    }
+}
+
+.o-discuss-CallParticipantCard-overlayBottomName {
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.o-discuss-CallParticipantCard-overlay-replayButton {
+    background-color: $o-gray-900;
+    &:hover {
+        background-color: $o-gray-700;
+    }
+    &:active {
+        background-color: $o-gray-800;
+    }
+}
+
+.o-discuss-CallParticipantCard-contextButton {
+    margin: Min(5%, map-get($spacers, 2));
+    background-color: black;
+    aspect-ratio: 1;
+    color: #F9FAFB !important;
+
+    &:hover {
+        background-color: #4b4b4b;
+    }
+
+    &:active {
+        background-color: #707070 !important;
+    }
+}
+
+.o-discuss-CallParticipantCard-contextMenu {
+    width: 200px;
+    background-color: $o-mail-CallMenu-bgColor;
+    border-color: $o-mail-CallMenu-bgColor-lighter;
+    color: rgba(white, 0.9);
+}

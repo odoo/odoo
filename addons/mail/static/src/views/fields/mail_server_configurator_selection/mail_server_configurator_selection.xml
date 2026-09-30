@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <div t-name="mail.MailServerConfiguratorSelection" class="d-flex flex-row">
+        <t t-if="readonly">
+            <span t-esc="string" t-att-raw-value="value" />
+        </t>
+        <t t-else="">
+            <select
+                class="o_input pe-3 me-3"
+                t-att-class="{'w-auto': value !== 'default'}"
+                t-on-change="(event) => this.onOptionChange(event.target.value)">
+                <option
+                    t-foreach="options" t-as="option" t-key="option[0]"
+                    class="text-black"
+                    t-att-selected="option[0] === value"
+                    t-att-value="option[0]"
+                    t-out="option[1]"
+                />
+            </select>
+            <button t-if="value !== 'default' and isServerConfigured"
+                class="btn btn-link o_mail_server_configurator_selection_test_connection py-0"
+                t-on-click="() => this.onTestConnection()">
+                <div t-if="!this.state.connectionFailed">
+                    <i class="fa fa-check"/> Emails sent via <t t-out="string"/>
+                </div>
+                <div t-else="" class="text-danger">
+                    Connection failed
+                </div>
+                <div>
+                    <i class="fa fa-plug"/> Test Connection
+                </div>
+            </button>
+        </t>
+    </div>
+</templates>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="transifex.CodeTranslationListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <xpath expr="." position="inside">
+            <button type="button" class="btn btn-primary" t-on-click="onClickReloadCodeTranslations">Reload</button>
+        </xpath>
+    </t>
+</templates>

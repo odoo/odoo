@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_departure_wizard_view_form" model="ir.ui.view">
+            <field name="name">hr.departure.wizard.view.form</field>
+            <field name="model">hr.departure.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group id="info">
+                                <field name="employee_ids" widget="many2many_tags"/>
+                                <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                                <field name="departure_date"/>
+                            </group>
+                            <group id="action">
+                                <div class="o_td_label" id="activities_label">
+                                    <span class="o_form_label o_hr_form_label cursor-default">Close Activities</span>
+                                </div>
+                                <div class="column" id="activities">
+                                    <div>
+                                        <field name="set_date_end"/><label for="set_date_end" string="Contract"/>
+                                    </div>
+                                    <div invisible="not is_user_employee">
+                                        <field name="remove_related_user"/>
+                                        <label for="remove_related_user" string="Related User"/>
+                                    </div>
+                                </div>
+                                <div class="column" id="info"/>
+                            </group>
+                        </group>
+                        <group>
+                            <div id="detailed_reason" colspan="2">
+                                <span class="o_form_label o_hr_form_label cursor-default">Detailed Reason</span>
+                                <field name="departure_description" placeholder="Give more details about the reason of archiving the employee."/>
+                            </div>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_register_departure" string="Apply" type="object" class="oe_highlight" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

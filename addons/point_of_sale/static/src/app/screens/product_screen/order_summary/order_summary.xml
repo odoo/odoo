@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.OrderSummary">
+		<OrderDisplay order="currentOrder" t-slot-scope="scope">
+			<t t-set="line" t-value="scope.line" />
+			<Orderline line="line"
+				onClick="(ev, duration) => this.clickLine(ev, line)"
+				onLongPress="(ev, duration) => this.onOrderlineLongPress(ev, line)">
+				<t t-set-slot="pack-lot-icon">
+					<i t-if="line.getProduct()?.product_tmpl_id?.isTracked()"
+						t-on-click.stop="() => this.editPackLotLines(line)" role="img"
+						t-attf-class="{{ line.hasValidProductLot() ? 'text-success' : 'text-danger'}} fa fa-list line-lot-icon ms-1"
+						t-attf-title="{{ line.hasValidProductLot() ? 'Valid product lot' : 'Invalid product lot'}}" />
+				</t>
+			</Orderline>
+			<t t-set-slot="details" />
+		</OrderDisplay>
+    </t>
+</templates>

@@ -1,0 +1,52 @@
+.html-history-dialog .history-container {
+    --border-color: #3C3E4B;
+}
+
+.html-history-dialog {
+    .history-view-top-bar {
+        background-color: rgba(27, 161, 228, 0.1);
+        border-bottom: 1px solid #385f7f;
+        .text-info {
+            --color: #FFFFFF;
+        }
+    }
+    .history-view-inner {
+        background-color: rgb(27, 29, 38);
+        border-color: rgba(27, 161, 228, 0.2);
+    }
+    .history-container {
+        --border-color: #ddd;
+        margin-left: 240px;
+        .o_notebook_content {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-top: 0;
+        }
+        .nav {
+            padding-left: 24px;
+        }
+        removed {
+            background-color: #8d1d1d;
+            opacity: 1;
+            color: #d58f8f;
+        }
+        added {
+            background-color: #1e4506;
+            color: #bbd9bb;
+        }
+    }
+    .revision-list {
+        .btn {
+            color: #999;
+            &:hover {
+                background-color: rgba($primary, .40);
+            }
+            &.targeted {
+                color: #c3c3c3;
+            }
+            &.selected {
+                color: #fff;
+            }
+        }
+    }
+}

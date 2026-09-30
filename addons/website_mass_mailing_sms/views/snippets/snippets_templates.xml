@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippets" inherit_id="website.snippets">
+    <xpath expr="//t[@id='mass_mailing_newsletter_sms_notifications_hook']" position="replace">
+        <t t-snippet="website_mass_mailing_sms.s_newsletter_sms_notifications" string="Newsletter SMS Notifications" t-forbid-sanitize="form" group="contact_and_forms">
+            <keywords>updates, digest, bulletin, announcements, notifications, communication, promotional, sms, alert, dialog, prompt, subscription, subscribe, news</keywords>
+        </t>
+    </xpath>
+</template>
+
+<template id="s_newsletter_subscribe_form" inherit_id="website_mass_mailing.s_newsletter_subscribe_form" primary="True">
+    <xpath expr="//div[contains(@t-attf-class, 's_newsletter_subscribe_form')]" position="attributes">
+        <attribute name="t-attf-class" add="s_subscription_list" remove="s_newsletter_list" separator=" "/>
+    </xpath>
+    <xpath expr="//input" position="attributes">
+        <attribute name="type" add="tel" remove="email" separator=" "/>
+        <attribute name="name" add="mobile" remove="email" separator=" "/>
+        <attribute name="placeholder">+1 555-555-1234</attribute>
+    </xpath>
+</template>
+
+<template id="s_newsletter_block_sms_template" groups="base.group_user">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2 class="h4-fs">Always First.</h2>
+            <p class="text-muted">Be the first to find out all the latest news, products, and trends.</p>
+        </div>
+        <t t-snippet-call="website_mass_mailing_sms.s_newsletter_subscribe_form">
+            <t t-set="_contentClasses" t-value="'col-lg-5 offset-lg-1'"/>
+        </t>
+    </div>
+</template>
+
+<template id="s_newsletter_sms_notifications" name="SMS Notifications">
+    <section class="s_newsletter_sms_notifications s_newsletter_list pt64 pb64 o_colored_level o_cc o_cc2" data-name="SMS Notifications" data-list-id="0">
+        <div class="container">
+            <div class="row o_grid_mode" data-row-count="7">
+                <div class="o_grid_item o_grid_item_image o_grid_item_image_contain g-height-6 g-col-lg-8 col-lg-8 col-8 offset-lg-0 offset-2 order-lg-0" style="order: 0; z-index: 0; grid-area: 2 / 1 / 8 / 9;">
+                    <img src="/html_editor/shape/website_mass_mailing_sms/s_newsletter_sms_notifications.svg?c1=o-color-1&amp;c2=o-color-5&amp;c4=o-color-4" alt="" class="img img-fluid"/>
+                </div>
+                <div class="o_grid_item o_cc o_cc1 g-col-lg-4 g-height-7 col-lg-4 order-lg-0 rounded" style="order: 1; z-index: 1; grid-area: 1 / 5 / 8 / 9; --grid-item-padding-y: 64px; --grid-item-padding-x: 24px;">
+                    <h2 class="h3-fs" style="text-align: center;">Stay in the Loop !<br/>Get the latest updates</h2>
+                    <p style="text-align: center;">Be the first to find out all the latest new, products and trends.</p>
+                    <t t-snippet-call="website_mass_mailing_sms.s_newsletter_subscribe_form">
+                        <t t-set="thank_you_message">
+                            <p class="h6-fs d-flex flex-column mt-4 text-center text-success"><i class="fa fa-check-circle-o fa-lg" role="img"/> Thanks for registering!</p>
+                        </t>
+                        <t t-set="_wrapClasses" t-value="'d-flex flex-column gap-1'"/>
+                        <t t-set="_inputClasses" t-value="'text-center'"/>
+                    </t>
+                </div>
+                <div class="o_grid_item g-height-6 o_grid_item_image o_grid_item_image_contain g-col-lg-8 col-lg-8 d-lg-block d-none o_snippet_mobile_invisible" style="z-index: 0; grid-area: 2 / 5 / 8 / 13;" data-invisible="1">
+                    <img src="/html_editor/shape/website_mass_mailing_sms/s_newsletter_sms_notifications.svg?c1=o-color-1&amp;c2=o-color-5&amp;c4=o-color-4" alt="" class="img img-fluid"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

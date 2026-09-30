@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_work_orders" model="ir.actions.act_window">
+            <field name="name">Work Orders</field>
+            <field name="res_model">mrp.workorder</field>
+            <field name="view_mode">list,form,pivot,graph,calendar</field>
+            <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
+            <field name="domain">[('state', 'not in', ('done', 'cancel'))]</field>
+            <field name="context">{'search_default_workcenter_id': active_id}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No work orders to do!
+                </p><p>
+                    Work orders are operations to do as part of a manufacturing order.
+                    Operations are defined in the bill of materials or added in the manufacturing order directly.
+                </p>
+            </field>
+        </record>
+
+        <!-- Work Centers -->
+        <record id="mrp_workcenter_tree_view" model="ir.ui.view">
+            <field name="name">mrp.workcenter.list</field>
+            <field name="model">mrp.workcenter</field>
+            <field name="arch" type="xml">
+                <list string="Work Center" multi_edit="1">
+                    <field name="company_id" column_invisible="True"/>
+                    <field name="sequence" widget="handle"/>
+                    <field name="name" optional="show"/>
+                    <field name="code" optional="show"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'no_create': True, 'color_field': 'color'}" optional="show"/>
+                    <field name="alternative_workcenter_ids" widget="many2many_tags" optional="show"/>
+                    <field name="productive_time" optional="hide"/>
+                    <field name="costs_hour" optional="show"/>
+                    <field name="time_efficiency" optional="show"/>
+                    <field name="oee_target" optional="show"/>
+                    <field name="time_start" optional="hide"/>
+                    <field name="time_stop" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                    <field name="active" column_invisible="True"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="mrp_workcenter_view_kanban" model="ir.ui.view">
+            <field name="name">mrp.workcenter.kanban</field>
+            <field name="model">mrp.workcenter</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="card">
+                            <field name="name" class="fw-bolder"/>
+                            <field t-if="record.code.raw_value" name="code"/>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="oee_pie_view" model="ir.ui.view">
+            <field name="name">mrp.workcenter.productivity.graph</field>
+            <field name="model">mrp.workcenter.productivity</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <graph string="Workcenter Productivity" type="pie" sample="1">
+                    <field name="loss_id"/>
+                    <field name="duration" type="measure" string="Duration (minutes)"/>
+                </graph>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="mrp_workcenter_productivity_report_oee">
+            <field name="name">Overall Equipment Effectiveness</field>
+            <field name="res_model">mrp.workcenter.productivity</field>
+            <field name="view_id" ref="oee_pie_view"/>
+            <field name="view_mode">graph,pivot,list,form</field>
+            <field name="domain">[('workcenter_id','=',active_id)]</field>
+            <field name="context">{'search_default_thismonth':True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Overall Equipment Effectiveness: no working or blocked time
+                </p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="mrp_workcenter_productivity_report_blocked">
+            <field name="name">Productivity Losses</field>
+            <field name="res_model">mrp.workcenter.productivity</field>
+            <field name="view_mode">list,form,graph,pivot</field>
+            <field name="context">{'search_default_availability': '1',
+                                   'search_default_performance': '1',
+                                   'search_default_quality': '1',
+                                   'default_workcenter_id': active_id,
+                                   'search_default_workcenter_id': [active_id]}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                No productivity loss for this equipment
+              </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="mrp_workorder_workcenter_report">
+            <field name="name">Work Orders Performance</field>
+            <field name="res_model">mrp.workorder</field>
+            <field name="domain">[('workcenter_id','=', active_id),('state','=','done')]</field>
+            <field name="view_mode">graph,pivot,list,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new work orders performance
+              </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="mrp_workorder_report">
+            <field name="name">Work Orders Analysis</field>
+            <field name="res_model">mrp.workorder</field>
+            <field name="path">work-orders-analysis</field>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_workcenter': 1,
+                                   'search_default_ready': True,
+                                   'search_default_blocked': True,
+                                   'search_default_progress': True,}</field>
+            <field name="view_mode">graph,pivot,list,form</field>
+            <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new work orders performance
+              </p>
+            </field>
+        </record>
+
+        <!-- Workcenter Kanban view-->
+        <record model="ir.ui.view" id="mrp_workcenter_kanban">
+            <field name="name">mrp.workcenter.kanban</field>
+            <field name="model">mrp.workcenter</field>
+            <field name="arch" type="xml">
+                <kanban highlight_color="color" class="o_workcenter_kanban" create="0" can_open="0" sample="0">
+                    <field name="workorder_count"/>
+                    <field name="working_state"/>
+                    <field name="oee_target"/>
+                    <templates>
+                        <t t-name="menu">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5 role="menuitem" class="o_kanban_card_manage_title">
+                                            <span>Actions</span>
+                                        </h5>
+                                        <div role="menuitem" name="plan_order">
+                                            <a name="action_work_order" type="object">Plan Orders</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5 role="menuitem" class="o_kanban_card_manage_title">
+                                            <span>Reporting</span>
+                                        </h5>
+                                        <div role="menuitem">
+                                            <a name="%(mrp_workcenter_productivity_report_oee)d" type="action">OEE</a>
+                                        </div>
+                                        <div role="menuitem">
+                                            <a name="%(mrp_workorder_workcenter_report)d" type="action" context="{'search_default_thisyear':True}">
+                                                Performance
+                                            </a>
+                                        </div>
+                                        <div role="menuitem">
+                                            <a name="action_work_order" type="object" context="{'search_default_waiting': 1}">Waiting Availability</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                    <div role="menuitem" aria-haspopup="true" class="col-8">
+                                        <field name="color" widget="kanban_color_picker"/>
+                                    </div>
+                                    <div role="menuitem" class="col-4">
+                                        <a type="open">Settings</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-name="card">
+                            <div class="ms-1">
+                                <div style="display: inline-block" name="wc_stages">
+                                    <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status float-end"
+                                        title="No workorder currently in progress. Click to mark work center as blocked."
+                                        aria-label="No workorder currently in progress. Click to mark work center as blocked."
+                                        invisible="working_state in ('blocked', 'done')"/>
+                                    <a name="unblock" type="object" class=" o_status o_status_red float-end"
+                                        title="Workcenter blocked, click to unblock."
+                                        aria-label="Workcenter blocked, click to unblock."
+                                        invisible="working_state in ('normal', 'done')"/>
+                                    <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_green float-end"
+                                        title="Work orders in progress. Click to block work center."
+                                        aria-label="Work orders in progress. Click to block work center."
+                                        invisible="working_state in ('normal', 'blocked')"/>
+                                </div>
+                                <field name="name" class="fw-bold fs-4 ms-2"/>
+                            </div>
+                            <div class="row mt-3 pb-3">
+                                <div class="col-6">
+                                    <div class="btn-group p-1" name="o_wo">
+                                        <button t-if="record.workorder_count.raw_value &gt; 0" class="btn btn-primary" name="action_work_order" type="object" context="{'search_default_ready': 1, 'search_default_progress': 1, 'desktop_list_view': 1, 'search_default_workcenter_id': id}">
+                                            <span>WORK ORDERS</span>
+                                        </button>
+                                        <button t-if="record.workorder_count.raw_value &lt;= 0" class="btn btn-warning" name="action_work_order_alternatives" type="object">
+                                            <span>PLAN ORDERS</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="row" t-if="record.workorder_ready_count.raw_value &gt; 0">
+                                        <a name="action_work_order" class="col-8" type="object" context="{'search_default_ready': 1, 'desktop_list_view': 1}">
+                                            To Launch
+                                        </a>
+                                        <field name="workorder_ready_count" class="col-4 text-end"/>
+                                    </div>
+                                    <div class="row" t-if="record.workorder_progress_count.raw_value &gt; 0">
+                                        <a name="action_work_order" class="col-8" type="object" context="{'search_default_progress': 1, 'desktop_list_view': 1}">
+                                            In Progress
+                                        </a>
+                                        <field name="workorder_progress_count" class="col-4 text-end"/>
+                                    </div>
+                                    <div class="row" t-if="record.workorder_late_count.raw_value &gt; 0">
+                                        <a name="action_work_order" class="col-8" type="object" context="{'search_default_late': 1, 'desktop_list_view': 1}">
+                                            Late
+                                        </a>
+                                        <field name="workorder_late_count" class="col-4 text-end"/>
+                                    </div>
+                                    <div class="row" t-if="record.oee.raw_value &gt; 0">
+                                        <a name="%(mrp_workcenter_productivity_report_oee)d" class="col-6" type="action">
+                                            OEE
+                                        </a>
+                                        <div class="col-6">
+                                            <span t-att-class="record.oee_target.raw_value and (record.oee.raw_value &lt; record.oee_target.raw_value) and 'text-danger d-flex float-end fw-bolder' or (record.oee.raw_value &gt; record.oee_target.raw_value) and 'text-success d-flex float-end fw-bolder' or 'text-warning d-flex float-end fw-bolder'">
+                                                <field name="oee" digits="[42, 0]"/>%
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-auto">
+                                <field name="kanban_dashboard_graph" graph_type="bar" widget="workcenter_dashboard_graph"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="mrp_workcenter_view" model="ir.ui.view">
+            <field name="name">mrp.workcenter.form</field>
+            <field name="model">mrp.workcenter</field>
+            <field name="arch" type="xml">
+                <form string="Work Center">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <field name="has_routing_lines" invisible="1"/>
+                            <button type="object"
+                                name="action_show_operations"
+                                invisible="not has_routing_lines"
+                                context="{'default_workcenter_id': id}"
+                                class="oe_stat_button" icon="fa-cog">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Operations</span>
+                                </div>
+                            </button>
+                            <button name="%(mrp_workcenter_productivity_report_oee)d" type="action" class="oe_stat_button" icon="fa-pie-chart">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value"><field name="oee" nolabel="1"/>%</span>
+                                    <span class="o_stat_text">OEE</span>
+                                </div>
+                            </button>
+                            <button name="%(mrp_workcenter_productivity_report_blocked)d" type="action" class="oe_stat_button" icon="fa-bar-chart">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value"><field name="blocked_time" nolabel="1"/> Hours</span>
+                                    <span class="o_stat_text">Lost</span>
+                                </div>
+                            </button>
+                            <button name="%(action_mrp_workcenter_load_report_graph)d" type="action" class="oe_stat_button" icon="fa-bar-chart"
+                                context="{'search_default_workcenter_id': id,
+                                          'search_default_ready': True,
+                                          'search_default_waiting': True,
+                                          'search_default_pending': True,
+                                          'search_default_progress': True}">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value"><field name="workcenter_load" nolabel="1"/> Minutes</span>
+                                    <span class="o_stat_text">Load</span>
+                                </div>
+                            </button>
+                            <button name="%(mrp_workorder_report)d" type="action" class="oe_stat_button" icon="fa-bar-chart" context="{'search_default_workcenter_id': id, 'search_default_thisyear': True}">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value"><field name="performance" nolabel="1"/>%</span>
+                                    <span class="o_stat_text">Performance</span>
+                                </div>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <group>
+                            <group>
+                                <field name="active" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="name" string="Work Center Name" required="True"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field
+                                    name="alternative_workcenter_ids"
+                                    widget="many2many_tags"
+                                />
+                            </group>
+                            <group>
+                                <field name="code"/>
+                                <field name="resource_calendar_id" required="1"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="General Information" name="general_info">
+                                <group>
+                                    <group string="Production Information" name="capacity">
+                                        <label for="time_efficiency"/>
+                                        <div class="o_row">
+                                            <field name="time_efficiency"/> %
+                                        </div>
+                                        <label for="oee_target"/>
+                                        <div class="o_row">
+                                            <field name="oee_target"/> %
+                                        </div>
+                                        <label for="time_start"/>
+                                        <div>
+                                            <field name="time_start" widget="float_time" class="oe_inline"/> minutes
+                                        </div>
+                                        <label for="time_stop"/>
+                                        <div>
+                                            <field name="time_stop" widget="float_time" class="oe_inline"/> minutes
+                                        </div>
+                                    </group>
+                                    <group string="Costing Information" name="costing">
+                                        <label for="costs_hour"/>
+                                        <div id="costs_hour">
+                                            <field name="costs_hour" widget="monetary" class="oe_inline"/> per workcenter
+                                        </div>
+                                    </group>
+                                </group>
+                                <separator string="Description"/>
+                                <field name="note" nolabel="1" placeholder="Description of the work center..."/>
+                            </page>
+                            <page string="Product Capacities" name="capacity">
+                                <field name="capacity_ids" context="{'default_workcenter_id': id}">
+                                    <list editable="bottom">
+                                        <field name="product_id" widget="stock.forced_placeholder" placeholder="All Products" decoration-it="not product_id"/>
+                                        <field name="capacity"/>
+                                        <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom" readonly="product_id != False"/>
+                                        <field name="time_start" widget="float_time"/>
+                                        <field name="time_stop" widget="float_time"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_mrp_workcenter_search" model="ir.ui.view">
+            <field name="name">mrp.workcenter.search</field>
+            <field name="model">mrp.workcenter</field>
+            <field name="arch" type="xml">
+                <search string="Search for mrp workcenter">
+                    <field name="name" string="Work Center" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                    <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                    <group>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="mrp_workcenter_action" model="ir.actions.act_window">
+            <field name="name">Work Centers</field>
+            <field name="path">workcenters</field>
+            <field name="res_model">mrp.workcenter</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="view_id" ref="mrp_workcenter_tree_view"/>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'list', 'view_id': ref('mrp_workcenter_tree_view')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('mrp_workcenter_view_kanban')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('mrp_workcenter_view')})]"/>
+            <field name="search_view_id" ref="view_mrp_workcenter_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new work center
+              </p><p>
+                Manufacturing operations are processed at Work Centers. A Work Center can be composed of
+                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.
+              </p>
+            </field>
+        </record>
+
+        <record id="mrp_workcenter_kanban_action" model="ir.actions.act_window">
+            <field name="name">Work Centers Overview</field>
+            <field name="path">work-centers</field>
+            <field name="res_model">mrp.workcenter</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="view_id" ref="mrp_workcenter_kanban"/>
+            <field name="search_view_id" ref="view_mrp_workcenter_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new work center
+              </p><p>
+                Manufacturing operations are processed at Work Centers. A Work Center can be composed of
+                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.
+                They can be defined via the configuration menu.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_view_resource_search_mrp"
+            action="mrp_workcenter_action"
+            groups="group_mrp_routings"
+            parent="menu_mrp_configuration"
+            sequence="90"/>
+
+    <record id="oee_loss_form_view" model="ir.ui.view">
+        <field name="name">mrp.workcenter.productivity.loss.form</field>
+        <field name="model">mrp.workcenter.productivity.loss</field>
+        <field name="arch" type="xml">
+            <form string="Workcenter Productivity Loss">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="loss_id" options="{'no_open': True, 'no_create': True}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="oee_loss_tree_view" model="ir.ui.view">
+        <field name="name">mrp.workcenter.productivity.loss.list</field>
+        <field name="model">mrp.workcenter.productivity.loss</field>
+        <field name="arch" type="xml">
+            <list string="Workcenter Productivity Loss" editable='bottom'>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="loss_type" string="Category"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_mrp_workcenter_productivity_loss_kanban" model="ir.ui.view">
+        <field name="name">mrp.workcenter.productivity.loss.kanban</field>
+        <field name="model">mrp.workcenter.productivity.loss</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <div>
+                            <strong>Reason: </strong><field name="name"/>
+                        </div>
+                        <div>
+                            <strong>Effectiveness Category: </strong><field name="loss_type"/>
+                        </div>
+                        <div class="d-flex">
+                            <strong>Is a Blocking Reason? </strong>
+                            <field name="manual" class="ms-auto" widget="boolean"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="oee_loss_search_view" model="ir.ui.view">
+        <field name="name">mrp.workcenter.productivity.loss.search</field>
+        <field name="model">mrp.workcenter.productivity.loss</field>
+        <field name="arch" type="xml">
+            <search string="Operations">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="oee_search_view" model="ir.ui.view">
+        <field name="name">mrp.workcenter.productivity.search</field>
+        <field name="model">mrp.workcenter.productivity</field>
+        <field name="arch" type="xml">
+            <search string="Operations">
+                <field name="workcenter_id"/>
+                <field name="loss_id"/>
+                <separator/>
+                <filter name="availability" string="Availability Losses" domain="[('loss_type','=','availability')]"/>
+                <filter name="performance" string="Performance Losses" domain="[('loss_type','=','performance')]"/>
+                <filter name="quality" string="Quality Losses" domain="[('loss_type','=','quality')]"/>
+                <filter name="productive" string="Fully Productive" domain="[('loss_type','=','productive')]"/>
+                <filter name="filter_date_start" string="Date" date="date_start"/>
+                <separator/>
+                <group>
+                    <filter string="User" name="user" context="{'group_by': 'create_uid'}"/>
+                    <filter string='Workcenter' name="workcenter_group" context="{'group_by': 'workcenter_id'}"/>
+                    <filter string="Loss Reason" name="loss_group" context="{'group_by': 'loss_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="oee_form_view" model="ir.ui.view">
+        <field name="name">mrp.workcenter.productivity.form</field>
+        <field name="model">mrp.workcenter.productivity</field>
+        <field name="priority">5</field>
+        <field name="arch" type="xml">
+            <form string="Workcenter Productivity">
+                <group>
+                    <group>
+                        <field name="production_id"/>
+                        <field  name="workorder_id"/>
+                        <field name="workcenter_id"/>
+                        <field name="loss_id"/>
+                        <field name="company_id" invisible="1"/>
+                    </group><group>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="duration"/>
+                        <field name="company_id"/>
+                    </group>
+                    <field name="description"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="oee_tree_view" model="ir.ui.view">
+        <field name="name">mrp.workcenter.productivity.list</field>
+        <field name="model">mrp.workcenter.productivity</field>
+        <field name="arch" type="xml">
+            <list string="Workcenter Productivity">
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="workcenter_id"/>
+                <field name="user_id"/>
+                <field name="loss_id"/>
+                <field name="duration" string="Duration (minutes)" sum="Duration"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="oee_graph_view" model="ir.ui.view">
+        <field name="name">mrp.workcenter.productivity.graph</field>
+        <field name="model">mrp.workcenter.productivity</field>
+        <field name="arch" type="xml">
+            <graph string="Workcenter Productivity" sample="1">
+                <field name="workcenter_id"/>
+                <field name="loss_id"/>
+                <field name="duration" type="measure" string="Duration (minutes)"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="oee_pivot_view" model="ir.ui.view">
+        <field name="name">mrp.workcenter.productivity.pivot</field>
+        <field name="model">mrp.workcenter.productivity</field>
+        <field name="arch" type="xml">
+            <pivot string="Workcenter Productivity" sample="1">
+                <field name="date_start" type="row" interval="day"/>
+                <field name="loss_type" type="col"/>
+                <field name="duration" type="measure" string="Duration (minutes)"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="mrp_workcenter_productivity_report">
+        <field name="name">Overall Equipment Effectiveness</field>
+        <field name="res_model">mrp.workcenter.productivity</field>
+        <field name="path">equipement-effectiveness</field>
+        <field name="view_mode">graph,pivot,list,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_workcenter_group': 1, 'search_default_loss_group': 2, 'create':False,'edit':False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Overall Equipment Effectiveness: no working or blocked time
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_mrp_workcenter_productivity_report"
+          parent="menu_mrp_reporting"
+          action="mrp_workcenter_productivity_report"
+          groups="group_mrp_routings"
+          sequence="12"/>
+    </data>
+</odoo>

@@ -1,0 +1,24 @@
+.o-hb-input-base {
+    .popover & {
+        --o-hb-field-input-bg: var(--o-hb-field-input-bg-popover, #{$o-we-fg-lighter});
+    }
+    @extend %o-hb-input-base;
+}
+
+.o-hb-input-prefix {
+    margin-left: -3px;
+    margin-right: 3px;
+
+    font-size: $o-we-font-size-xs;
+    color: var(--o-hb-field-color, #{$o-we-sidebar-content-field-color});
+}
+
+.o-hb-input-transparent {
+    appearance: none;
+    margin-right: $o-we-sidebar-content-field-clickable-spacing * 0.5;
+    padding: 0;
+    border: none;
+
+    background: none;
+    color: inherit;
+}

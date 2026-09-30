@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="mail.MailComposerAttachmentSelector">
+        <FileUploader multiUpload="true" onUploaded.bind="onFileUploaded">
+            <t t-set-slot="toggler">
+                <button class="btn btn-light w-auto" data-hotkey="a" title="Add Attachment">
+                    <i class="fa fa-fw fa-paperclip"/>
+                </button>
+            </t>
+        </FileUploader>
+    </t>
+</templates>

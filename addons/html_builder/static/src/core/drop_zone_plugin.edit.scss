@@ -1,0 +1,61 @@
+.oe_drop_zone {
+    background: $o-we-dropzone-bg-color;
+    animation: dropZoneInsert 1s linear 0s infinite alternate;
+
+    &.oe_insert {
+        position: relative;
+        width: 100%;
+        border-radius: $border-radius-lg;
+        outline: $o-we-dropzone-border-width dashed $o-we-dropzone-accent-color;
+        outline-offset: -$o-we-dropzone-border-width;
+        z-index: 2000; // TODO use $o-we-overlay-zindex instead
+    }
+
+    &.o_dropzone_highlighted {
+        filter: brightness(1.5);
+        transition: 200ms;
+    }
+}
+
+.oe_drop_zone:not(.oe_grid_zone) {
+    &.oe_insert {
+        min-width: $o-we-dropzone-size;
+        height: $o-we-dropzone-size;
+        min-height: $o-we-dropzone-size;
+        margin: (-$o-we-dropzone-size/2) 0;
+        padding: 0;
+
+        &.oe_vertical {
+            width: $o-we-dropzone-size;
+            float: left;
+            margin: 0 (-$o-we-dropzone-size/2);
+        }
+    }
+
+    &.oe_sanitized_drop_zone {
+        position: absolute;
+        top: 0px;
+        height: 100%;
+        padding: 15px;
+        margin: 0px;
+        backdrop-filter: blur(15px);
+        background-color: rgba($o-we-bg-lighter, 0.15);
+        color: white;
+        outline-color: $o-we-bg-lighter;
+        z-index: 1999; // TODO
+
+        > p {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: calc(100% - 30px);
+            text-shadow: 0px 0px 4px black;
+            font-size: 20px;
+        }
+    }
+}
+
+// TODO for mass_mailing only ?
+body.oe_dropzone_active .note-editable {
+    overflow: hidden;
+}

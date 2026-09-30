@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_hr_employee_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='hr_settings']" position="before">
+                <page string="Badges" name="received_badges" invisible="not user_id">
+                    <field name="has_badges" invisible="1"/>
+                    <div class="o_field_nocontent" invisible="has_badges">
+                        <div class="o_nocontent_help">
+                            <p class="o_view_nocontent_neutral_face"></p>
+                            <p>
+                                There are no badges for this employee.<br/>
+                                It's time to allow the first one.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <field name="badge_ids" mode="kanban" />
+                        <div class="d-flex justify-content-center">
+                            <button class="mt-2 grant_badge_btn o_kanban_renderer o_kanban_record o-kanban-button-new btn btn-link py-3" string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/>
+                        </div>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_public_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.public.view.form.inherit</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
+        <field name="arch" type="xml">
+
+            <page name="resume" position="after">
+                <page string="Badges" name="received_badges" invisible="not user_id">
+                    <field name="has_badges" invisible="1"/>
+                    <div class="o_field_nocontent" invisible="has_badges">
+                        <div class="o_nocontent_help">
+                            <p class="o_view_nocontent_neutral_face"></p>
+                            <p>
+                                There are no badges for this employee.<br/>
+                                It's time to allow the first one.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <field name="badge_ids" mode="kanban" widget="many2many"/>
+                        <div class="d-flex justify-content-center">
+                            <button class=" mt-2 grant_badge_btn o_kanban_renderer o_kanban_record o-kanban-button-new btn btn-link py-3" string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/>
+                        </div>
+                    </div>
+                </page>
+            </page>
+
+        </field>
+    </record>
+
+</odoo>

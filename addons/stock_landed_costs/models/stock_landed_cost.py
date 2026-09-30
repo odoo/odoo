@@ -1,0 +1,388 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from collections import defaultdict
+
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_is_zero
+
+
+SPLIT_METHOD = [
+    ('equal', 'Equal'),
+    ('by_quantity', 'By Quantity'),
+    ('by_current_cost_price', 'By Current Cost'),
+    ('by_weight', 'By Weight'),
+    ('by_volume', 'By Volume'),
+]
+
+
+class StockLandedCost(models.Model):
+    _name = 'stock.landed.cost'
+    _description = 'Stock Landed Cost'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'date desc, id desc'
+
+    def _default_account_journal_id(self):
+        """Take the journal configured in the company, else fallback on the stock journal."""
+        ProductCategory = self.env['product.category']
+        return self.env.company.lc_journal_id or ProductCategory._fields['property_stock_journal'].get_company_dependent_fallback(ProductCategory)
+
+    name = fields.Char(
+        'Name', default=lambda self: _('New'),
+        copy=False, readonly=True, tracking=True)
+    date = fields.Date(
+        'Date', default=fields.Date.context_today,
+        copy=False, required=True, tracking=True)
+    target_model = fields.Selection(
+        [('picking', 'Transfers')], string="Apply On",
+        required=True, default='picking',
+        copy=False)
+    picking_ids = fields.Many2many(
+        'stock.picking', string='Transfers',
+        copy=False)
+    cost_lines = fields.One2many(
+        'stock.landed.cost.lines', 'cost_id', 'Cost Lines',
+        copy=True)
+    valuation_adjustment_lines = fields.One2many(
+        'stock.valuation.adjustment.lines', 'cost_id', 'Valuation Adjustments',)
+    description = fields.Text(
+        'Item Description')
+    amount_total = fields.Monetary(
+        'Total', compute='_compute_total_amount',
+        store=True, tracking=True)
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('done', 'Posted'),
+        ('cancel', 'Cancelled')], 'State', default='draft',
+        copy=False, readonly=True, tracking=True)
+    account_move_id = fields.Many2one(
+        'account.move', 'Journal Entry',
+        index='btree_not_null',
+        copy=False, readonly=True)
+    account_journal_id = fields.Many2one(
+        'account.journal', 'Account Journal',
+        required=True, default=lambda self: self._default_account_journal_id())
+    company_id = fields.Many2one('res.company', string="Company", required=True, default=lambda self: self.env.company)
+    vendor_bill_id = fields.Many2one(
+        'account.move', 'Vendor Bill', copy=False, domain=[('move_type', '=', 'in_invoice')], index='btree_not_null')
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
+
+    @api.depends('cost_lines.price_unit')
+    def _compute_total_amount(self):
+        for cost in self:
+            cost.amount_total = sum(line.price_unit for line in cost.cost_lines)
+
+    @api.onchange('target_model')
+    def _onchange_target_model(self):
+        if self.target_model != 'picking':
+            self.picking_ids = False
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('stock.landed.cost')
+        return super().create(vals_list)
+
+    def unlink(self):
+        self.button_cancel()
+        return super().unlink()
+
+    def _track_subtype(self, init_values):
+        if 'state' in init_values and self.state == 'done':
+            return self.env.ref('stock_landed_costs.mt_stock_landed_cost_open')
+        return super()._track_subtype(init_values)
+
+    def button_cancel(self):
+        if any(cost.state == 'done' for cost in self):
+            raise UserError(
+                _('Validated landed costs cannot be cancelled, but you could create negative landed costs to reverse them'))
+        return self.write({'state': 'cancel'})
+
+    def button_validate(self):
+        self._check_can_validate()
+        cost_without_adjusment_lines = self.filtered(lambda c: not c.valuation_adjustment_lines)
+        if cost_without_adjusment_lines:
+            cost_without_adjusment_lines.compute_landed_cost()
+        if not self._check_sum():
+            raise UserError(_('Cost and adjustments lines do not match. You should maybe recompute the landed costs.'))
+
+        for cost in self:
+            cost = cost.with_company(cost.company_id)
+            move = self.env['account.move']
+            move_vals = {
+                'journal_id': cost.account_journal_id.id,
+                'date': cost.date,
+                'ref': cost.name,
+                'line_ids': [],
+                'move_type': 'entry',
+            }
+            for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
+                product = line.move_id.product_id
+                # Products with manual inventory valuation are ignored because they do not need to create journal entries.
+                if product.valuation != "real_time":
+                    continue
+                # `remaining_qty` is negative if the move is out and delivered proudcts that were not
+                # in stock.
+
+                remaining_qty = line.move_id.remaining_qty
+                move_vals['line_ids'] += line._create_accounting_entries(remaining_qty)
+
+            # batch standard price computation avoid recompute quantity_svl at each iteration
+
+            # products = self.env['product.product'].browse(p.id for p in cost_to_add_byproduct.keys()).with_company(cost.company_id)
+            # for product in products:  # iterate on recordset to prefetch efficiently quantity_svl
+            #     if not product.uom_id.is_zero(product.quantity_svl):
+            #         product.sudo().with_context(disable_auto_svl=True).standard_price += cost_to_add_byproduct[product] / product.quantity_svl
+            #     if product.lot_valuated:
+            #         for lot, value in cost_to_add_bylot[product].items():
+            #             if product.uom_id.is_zero(lot.quantity_svl):
+            #                 continue
+            #             lot.sudo().with_context(disable_auto_svl=True).standard_price += value / lot.quantity_svl
+
+            # We will only create the accounting entry when there are defined lines (the lines will be those linked to products of real_time valuation category).
+            cost_vals = {'state': 'done'}
+            if move_vals.get("line_ids"):
+                move = move.create(move_vals)
+                cost_vals.update({'account_move_id': move.id})
+            cost.write(cost_vals)
+            if cost.account_move_id:
+                move._post()
+            cost.valuation_adjustment_lines.move_id._set_value()
+        return True
+
+    def get_valuation_lines(self):
+        self.ensure_one()
+        lines = []
+
+        for move in self._get_targeted_move_ids():
+            # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
+            if move.product_id.cost_method not in ('fifo', 'average') or move.state == 'cancel' or not move.quantity:
+                continue
+            qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+
+            vals = {
+                'product_id': move.product_id.id,
+                'move_id': move.id,
+                'quantity': qty,
+                'former_cost': move._get_value(),
+                'weight': move.product_id.weight * qty,
+                'volume': move.product_id.volume * qty
+            }
+            lines.append(vals)
+
+        if not lines:
+            target_model_descriptions = dict(self._fields['target_model']._description_selection(self.env))
+            raise UserError(_("You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with FIFO or average costing method.", target_model_descriptions[self.target_model]))
+        return lines
+
+    def compute_landed_cost(self):
+        AdjustementLines = self.env['stock.valuation.adjustment.lines']
+        AdjustementLines.search([('cost_id', 'in', self.ids)]).unlink()
+
+        towrite_dict = {}
+        for cost in self.filtered(lambda cost: cost._get_targeted_move_ids()):
+            cost = cost.with_company(cost.company_id)
+            rounding = cost.currency_id.rounding
+            total_qty = 0.0
+            total_cost = 0.0
+            total_weight = 0.0
+            total_volume = 0.0
+            total_line = 0.0
+            all_val_line_values = cost.get_valuation_lines()
+            for val_line_values in all_val_line_values:
+                for cost_line in cost.cost_lines:
+                    val_line_values.update({'cost_id': cost.id, 'cost_line_id': cost_line.id})
+                    self.env['stock.valuation.adjustment.lines'].create(val_line_values)
+                total_qty += val_line_values.get('quantity', 0.0)
+                total_weight += val_line_values.get('weight', 0.0)
+                total_volume += val_line_values.get('volume', 0.0)
+
+                former_cost = val_line_values.get('former_cost', 0.0)
+                # round this because former_cost on the valuation lines is also rounded
+                total_cost += cost.currency_id.round(former_cost)
+
+                total_line += 1
+
+            for line in cost.cost_lines:
+                value_split = 0.0
+                for valuation in cost.valuation_adjustment_lines:
+                    value = 0.0
+                    if valuation.cost_line_id and valuation.cost_line_id.id == line.id:
+                        if line.split_method == 'by_quantity' and total_qty:
+                            per_unit = (line.price_unit / total_qty)
+                            value = valuation.quantity * per_unit
+                        elif line.split_method == 'by_weight' and total_weight:
+                            per_unit = (line.price_unit / total_weight)
+                            value = valuation.weight * per_unit
+                        elif line.split_method == 'by_volume' and total_volume:
+                            per_unit = (line.price_unit / total_volume)
+                            value = valuation.volume * per_unit
+                        elif line.split_method == 'equal':
+                            value = (line.price_unit / total_line)
+                        elif line.split_method == 'by_current_cost_price' and total_cost:
+                            per_unit = (line.price_unit / total_cost)
+                            value = valuation.former_cost * per_unit
+                        else:
+                            value = (line.price_unit / total_line)
+
+                        if rounding:
+                            value = tools.float_round(value, precision_rounding=rounding, rounding_method='HALF-UP')
+                            value_split += value
+
+                        if valuation.id not in towrite_dict:
+                            towrite_dict[valuation.id] = value
+                        else:
+                            towrite_dict[valuation.id] += value
+                rounding_diff = cost.currency_id.round(line.price_unit - value_split)
+                if not cost.currency_id.is_zero(rounding_diff):
+                    towrite_dict[max(towrite_dict.keys())] += rounding_diff
+        for key, value in towrite_dict.items():
+            AdjustementLines.browse(key).write({'additional_landed_cost': value})
+        return True
+
+    def _get_targeted_move_ids(self):
+        return self.picking_ids.move_ids
+
+    def _check_can_validate(self):
+        if any(cost.state != 'draft' for cost in self):
+            raise UserError(_('Only draft landed costs can be validated'))
+        for cost in self:
+            if not cost._get_targeted_move_ids():
+                target_model_descriptions = dict(self._fields['target_model']._description_selection(self.env))
+                raise UserError(_('Please define %s on which those additional costs should apply.', target_model_descriptions[cost.target_model]))
+
+    def _check_sum(self):
+        """ Check if each cost line its valuation lines sum to the correct amount
+        and if the overall total amount is correct also """
+        for landed_cost in self:
+            total_amount = sum(landed_cost.valuation_adjustment_lines.mapped('additional_landed_cost'))
+            if not landed_cost.currency_id.is_zero(total_amount - landed_cost.amount_total):
+                return False
+
+            val_to_cost_lines = defaultdict(lambda: 0.0)
+            for val_line in landed_cost.valuation_adjustment_lines:
+                val_to_cost_lines[val_line.cost_line_id] += val_line.additional_landed_cost
+            if any(not landed_cost.currency_id.is_zero(cost_line.price_unit - val_amount)
+                   for cost_line, val_amount in val_to_cost_lines.items()):
+                return False
+        return True
+
+
+class StockLandedCostLines(models.Model):
+    _name = 'stock.landed.cost.lines'
+    _description = 'Stock Landed Cost Line'
+
+    name = fields.Char('Description')
+    cost_id = fields.Many2one(
+        'stock.landed.cost', 'Landed Cost',
+        required=True, index=True, ondelete='cascade')
+    product_id = fields.Many2one('product.product', 'Product', required=True)
+    price_unit = fields.Monetary('Cost', required=True)
+    split_method = fields.Selection(
+        SPLIT_METHOD,
+        string='Split Method',
+        required=True,
+        help="Equal: Cost will be equally divided.\n"
+             "By Quantity: Cost will be divided according to product's quantity.\n"
+             "By Current cost: Cost will be divided according to product's current cost.\n"
+             "By Weight: Cost will be divided depending on its weight.\n"
+             "By Volume: Cost will be divided depending on its volume.")
+    account_id = fields.Many2one('account.account', 'Account')
+    currency_id = fields.Many2one('res.currency', related='cost_id.currency_id')
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        self.name = self.product_id.name or ''
+        self.split_method = self.product_id.product_tmpl_id.split_method_landed_cost or self.split_method or 'equal'
+        self.price_unit = self.product_id.standard_price or 0.0
+        accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
+        self.account_id = accounts_data['expense']
+
+
+class StockValuationAdjustmentLines(models.Model):
+    _name = 'stock.valuation.adjustment.lines'
+    _description = 'Valuation Adjustment Lines'
+
+    name = fields.Char(
+        'Description', compute='_compute_name', store=True)
+    cost_id = fields.Many2one(
+        'stock.landed.cost', 'Landed Cost',
+        ondelete='cascade', required=True, index=True)
+    cost_line_id = fields.Many2one(
+        'stock.landed.cost.lines', 'Cost Line', readonly=True)
+    move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True)
+    product_id = fields.Many2one('product.product', 'Product', required=True)
+    quantity = fields.Float(
+        'Quantity', default=1.0,
+        digits=0, required=True)
+    weight = fields.Float(
+        'Weight', default=1.0,
+        digits='Stock Weight')
+    volume = fields.Float(
+        'Volume', default=1.0, digits='Volume')
+    former_cost = fields.Monetary(
+        'Original Value')
+    additional_landed_cost = fields.Monetary(
+        'Additional Landed Cost')
+    final_cost = fields.Monetary(
+        'New Value', compute='_compute_final_cost',
+        store=True)
+    currency_id = fields.Many2one('res.currency', related='cost_id.company_id.currency_id')
+
+    @api.depends('cost_line_id.name', 'product_id.code', 'product_id.name')
+    def _compute_name(self):
+        for line in self:
+            name = '%s - ' % (line.cost_line_id.name if line.cost_line_id else '')
+            line.name = name + (line.product_id.code or line.product_id.name or '')
+
+    @api.depends('former_cost', 'additional_landed_cost')
+    def _compute_final_cost(self):
+        for line in self:
+            line.final_cost = line.former_cost + line.additional_landed_cost
+
+    def _create_accounting_entries(self, remaining_qty):
+        # TDE CLEANME: product chosen for computation ?
+        cost_product = self.cost_line_id.product_id
+        if not cost_product:
+            return False
+        accounts = self.product_id.product_tmpl_id.get_product_accounts()
+
+        debit_account_id = (accounts.get('stock_valuation') and accounts['stock_valuation'].id) or False
+        credit_account_id = self.cost_line_id.account_id.id or cost_product._get_product_accounts()['expense'].id
+
+        if not credit_account_id:
+            raise UserError(_('Please configure Stock Expense Account for product: %s.', cost_product.name))
+
+        return self._create_account_move_line(credit_account_id, debit_account_id, remaining_qty)
+
+    def _prepare_account_move_line_values(self):
+        return {
+            'name': self.name,
+            'product_id': self.product_id.id,
+            'quantity': 0,
+        }
+
+    def _create_account_move_line(self, credit_account_id, debit_account_id, remaining_qty):
+        """ In real time the vendor bill for landed costs only balance the COGS account.
+        We should credit what remains in stock and debit the stock valuation account.
+        """
+        AccountMoveLine = []
+        if not remaining_qty:
+            return AccountMoveLine
+        base_line = self._prepare_account_move_line_values()
+        debit_line = dict(base_line, account_id=debit_account_id)
+        credit_line = dict(base_line, account_id=credit_account_id)
+        diff = self.additional_landed_cost * (remaining_qty / self.quantity)
+        if diff > 0:
+            debit_line['debit'] = diff
+            credit_line['credit'] = diff
+        else:
+            # negative cost, reverse the entry
+            debit_line['credit'] = -diff
+            credit_line['debit'] = -diff
+        AccountMoveLine.append([0, 0, debit_line])
+        AccountMoveLine.append([0, 0, credit_line])
+
+        return AccountMoveLine

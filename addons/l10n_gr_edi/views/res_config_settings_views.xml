@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_form_inherit_l10n_gr_edi" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_gr_edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="after">
+                <block id="l10n_gr_edi_settings"
+                       title="Electronic Invoicing - myDATA"
+                       invisible="country_code != 'GR'">
+
+                    <setting id="l10n_gr_edi_aade_settings"
+                             company_dependent="1"
+                             help="Get your credentials from myDATA and enter them here to connect and generate electronic invoices."
+                             string="myDATA Credentials">
+                        <div class="row">
+                            <label class="col-lg-6 o_light_label" for="l10n_gr_edi_aade_id"/>
+                            <field name="l10n_gr_edi_aade_id"/>
+                        </div>
+                        <div class="row">
+                            <label class="col-lg-6 o_light_label" for="l10n_gr_edi_aade_key"/>
+                            <field name="l10n_gr_edi_aade_key"/>
+                        </div>
+                        <div class="row">
+                            <label class="col-lg-6 o_light_label" for="l10n_gr_edi_branch_number"/>
+                            <field name="l10n_gr_edi_branch_number"/>
+                        </div>
+                    </setting>
+
+                    <setting id="l10n_gr_edi_test_env_setting" class="mt-3"
+                             help="Activate test environment for sending classifications to myDATA">
+                        <field name="l10n_gr_edi_test_env"/>
+                    </setting>
+
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

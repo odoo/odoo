@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_res_partner_filter_inherit_calendar" model="ir.ui.view">
+        <field name="name">res.partner.view.search.inherit.calendar</field>
+        <field name="model">res.partner</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+                <filter name="type_company" position="after">
+                    <filter string="My Team" name="type_team" domain="[('employee_ids.department_id.manager_id.user_id', '=', uid)]"/>
+                </filter>
+        </field>
+    </record>
+</odoo>

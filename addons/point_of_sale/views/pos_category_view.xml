@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_pos_category_form_view" model="ir.ui.view">
+        <field name="name">pos.category.form</field>
+        <field name="model">pos.category</field>
+        <field name="arch" type="xml">
+            <form string="Pos Product Categories">
+                <sheet>
+                    <field name="image_512" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" class="o_text_overflow" placeholder="e.g. Soft Drinks" required="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="parent_id" class="o_text_overflow"/>
+                        </group>
+                        <group name="sequence">
+                            <field name="color" widget="color_picker" />
+                        </group>
+                        <div name="available_between" class="row col-lg-12" invisible="1">
+                            <span class="text-900 fw-bold">Available between
+                                <span class="col-lg-4 o_light_label">
+                                    <a class="o-tooltip"><sup title="Only works for online and self order">?</sup></a>
+                                </span>
+                                <field name="hour_after" class="oe_inline text-center" widget="float_time"/> and <field name="hour_until" class="oe_inline text-center" widget="float_time"/></span>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="product_pos_category_tree_view" model="ir.ui.view">
+        <field name="name">pos.category.list</field>
+        <field name="model">pos.category</field>
+        <field name="arch" type="xml">
+            <list string="Product Product Categories">
+                <field name="sequence" widget="handle"/>
+                <field name="display_name" string="PoS Product Category"/>
+                <field name="parent_id" optional="hide"/>
+                <field name="color" widget="color_picker" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pos_category_kanban" model="ir.ui.view">
+        <field name="name">pos.category.kanban</field>
+        <field name="model">pos.category</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="card" class="row g-0">
+                        <aside class="col-4">
+                            <field name="image_128" widget="image" alt="Category" options="{'size': [100, 100], 'img_class': 'h-100'}"/>
+                        </aside>
+                        <main class="col ms-4">
+                            <field name="name" class="fw-bolder fs-5"/>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="product_pos_category_action" model="ir.actions.act_window">
+        <field name="name">PoS Product Categories</field>
+        <field name="res_model">pos.category</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new category
+            </p><p>
+                Categories are used to browse your products through the
+                touchscreen interface.
+            </p>
+        </field>
+    </record>
+
+</odoo>

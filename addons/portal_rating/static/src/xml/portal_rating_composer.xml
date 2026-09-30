@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <!--
+        Popup Rating Composer Widget
+        It can also be used to modify a message
+    -->
+    <t t-name="portal_rating.PopupComposer">
+        <div t-if="widget.options['display_composer']" class="modal fade" id="ratingpopupcomposer" tabindex="-1" role="dialog" aria-labelledby="ratingpopupcomposerlabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content bg-white">
+                    <div class="modal-header">
+                        <span class="modal-title o_rating_popup_composer_label h5-fs" id="ratingpopupcomposerlabel">
+                            <t t-if="widget.options['default_message_id']">
+                                Modify your review
+                            </t>
+                            <t t-else="">
+                                Write a review
+                            </t>
+                        </span>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="o_portal_chatter_composer"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

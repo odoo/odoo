@@ -1,0 +1,41 @@
+<odoo>
+    <template id="portal_my_details_fields" inherit_id="account.portal_my_details">
+        <xpath expr="//t[@t-if='invoice_edi_formats']" position="after">
+            <t t-if="partner_sudo.country_id.code == 'MY'">
+                <div class="clearfix" />
+                <t t-if="len(l10n_my_identification_types) > 1">
+                    <div class="mb-3 col-xl-6">
+                        <label class="col-form-label" for="l10n_my_identification_type">ID Type</label>
+                        <select name="l10n_my_identification_type" class="form-select">
+                            <option value="">select...</option>
+                            <option
+                                t-foreach="l10n_my_identification_types"
+                                t-as="type"
+                                t-att-value="type"
+                                t-att-selected="(l10n_my_identification_type or partner_sudo.l10n_my_identification_type) == type"
+                                t-out="type_value"
+                            />
+                        </select>
+                    </div>
+                    <div t-attf-class="mb-3 col-xl-6">
+                        <label class="col-form-label label-optional" for="l10n_my_identification_number">ID Number</label>
+                        <input type="text" name="l10n_my_identification_number" t-attf-class="form-control" t-att-value="l10n_my_identification_number or partner_sudo.l10n_my_identification_number" />
+                    </div>
+                </t>
+                <div t-attf-class="mb-3 col-xl-6">
+                    <label class="col-form-label label-optional" for="l10n_my_edi_industrial_classification">Ind. Classification</label>
+                    <select name="l10n_my_edi_industrial_classification" t-attf-class="form-select">
+                        <option value="">select...</option>
+                        <option
+                            t-foreach="l10n_my_edi_industrial_classifications"
+                            t-as="industrial_classification"
+                            t-att-value="industrial_classification.id"
+                            t-att-selected="industrial_classification.id == int(l10n_my_edi_industrial_classification) if l10n_my_edi_industrial_classification else industrial_classification.id == partner_sudo.l10n_my_edi_industrial_classification.id"
+                            t-out="industrial_classification.name"
+                        />
+                    </select>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

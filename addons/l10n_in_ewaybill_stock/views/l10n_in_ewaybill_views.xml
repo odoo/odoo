@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_in_ewaybill_stock_inherit" model="ir.ui.view">
+        <field name="name">l10n.in.ewaybill.stock.form.inherit</field>
+        <field name="model">l10n.in.ewaybill</field>
+        <field name="inherit_id" ref="l10n_in_ewaybill.l10n_in_ewaybill_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_reset_to_pending']" position="after">
+                <button name="action_set_to_challan"
+                        string="Use as Challan"
+                        type="object"
+                        invisible="state != 'pending' or not picking_id"
+                        data-hotkey="d"/>
+            </xpath>
+            <xpath expr="//button[@name='action_print']" position="attributes">
+                <attribute name="invisible">state not in ['generated', 'challan']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="invisible">state == 'challan'</attribute>
+            </xpath>
+            <xpath expr="//group[@name='document_details']" position="after">
+                <group name="fiscal_position"
+                       string="Fiscal Position"
+                       readonly="state != 'pending'"
+                       invisible="not picking_id">
+                    <group>
+                        <field name="fiscal_position_id"/>
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='document_date']" position="attributes">
+                <attribute name="invisible">
+                    picking_id and supply_type == 'I'
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='type_id']" position="attributes">
+                <attribute name="domain">
+                    [
+                        ('allowed_supply_type', 'in', (supply_type == 'I' and 'in' or 'out', 'both')),
+                        ('code', '!=', 'CHL')
+                    ] if not picking_id else [
+                        ('allowed_supply_type', 'in', (supply_type == 'I' and 'in' or 'out', 'both')),
+                        ('code', '=', 'CHL')
+                    ]
+                </attribute>
+            </xpath>
+            <xpath expr="//group[@name='cancel_ewaybill']" position="after">
+                <notebook invisible="not picking_id">
+                        <page string="Item Details">
+                            <field name="move_ids"
+                                   mode="list,kanban"
+                                   force_save="1"
+                                   readonly="state != 'pending'">
+                                <list editable="bottom" create="0" delete="0">
+                                    <field name="company_currency_id" column_invisible="1"/> <!-- To display the currency symbol  -->
+                                    <field name="product_id" readonly="1"/>
+                                    <field name="description_picking" string="Description" help="Max 100-character description is allowed" readonly="1"/>
+                                    <field name="quantity" string="Quantity" readonly="1"/>
+                                    <field name="ewaybill_price_unit" string="Unit Price"/>
+                                    <field name="ewaybill_tax_ids" widget="many2many_tax_tags"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+            </xpath>
+            <xpath expr="//field[@name='type_id']" position="after">
+                <field name="type_description"
+                       invisible="sub_type_code != '8'"
+                       required="sub_type_code == '8'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

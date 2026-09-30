@@ -1,0 +1,32 @@
+table.o_builder_matrix {
+    table-layout: fixed;
+    max-width: 100%;
+
+    td, th {
+        text-align: center;
+
+        > :is(div, button) {
+            width: 100% !important;
+        }
+
+        > div {
+            padding: 0;
+            border-radius: 0;
+        }
+
+
+        .btn {
+            padding: unset;
+        }
+
+        .o-hb-input-number, .o-hb-input-base {
+            margin-right: 0;
+            padding: 1px 3px;
+            border-radius: 0;
+        }
+
+        &:last-child {
+            width: 28px;
+        }
+    }
+}

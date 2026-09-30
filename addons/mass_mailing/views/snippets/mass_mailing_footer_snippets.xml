@@ -1,0 +1,124 @@
+<odoo>
+<template id="s_mail_block_footer_social" name="Social + Footer">
+    <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-name="Footer Center" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <div class="o_not_editable">
+                        <a t-att-href="company_id.website or '#'" target="_blank">
+                            <img t-if="company_id.logo or user_id.company_id.logo"
+                                class="img img-fluid o_editable_media mx-auto"
+                                style="width: 25% !important;"
+                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
+                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"/>
+                        </a>
+                    </div>
+                    <div class="o_mail_footer_social pb16" style="text-align: center">
+                        <t t-call="mass_mailing.social_links"/>
+                    </div>
+                    <p style="text-align: center"><t t-if="company_id"><strong>© <t t-out="company_id.partner_id.name"/></strong><br/><t t-out="company_id.partner_id._display_address()"/><br/></t>You're seeing this because you've shopped with us or joined our mailing list.</p>
+                    <p style="text-align: center"><a class="btn btn-link" role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mail_block_footer_social_left" name="Social + Footer">
+    <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general pt16 pb16" data-name="Footer Left" data-vxml="001">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-12">
+                    <p t-if="company_id"><strong>© <t t-out="company_id.partner_id.name"/></strong><br/><t t-out="company_id.partner_id._display_address()"/></p>
+                    <div class="o_mail_footer_social pb16">
+                        <t t-call="mass_mailing.social_links"/>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12">
+                    <p class="text-muted">You're seeing this because you've shopped with us or joined our mailing list.</p>
+                    <p><a class="btn btn-link" role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mail_block_footer_one_liner" name="Social + Footer + Separator">
+    <section class="s_footer_one_liner o_mail_block_footer o_mail_snippet_general pt16 pb16" data-name="One Liner">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <p class="mb-0"><t t-if="company_id"><strong>© <t t-out="company_id.partner_id.name"/></strong><br/></t>You're seeing this because you've shopped with us or joined our mailing list. <a class="btn btn-link" role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>
+                </div>
+            </div>
+            <div class="s_hr o_mail_snippet_general pt8 pb8">
+                <hr class="w-75 mx-auto" style="border-top-color: rgb(156, 156, 148);"/>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-12">
+                    <p><font t-out="company_id.partner_id._display_address()"/></p>
+                </div>
+                <div class="col-md-6 col-12">
+                    <div class="o_mail_footer_social pb16" style="text-align: right">
+                        <t t-call="mass_mailing.social_links"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mail_block_footer_social_and_logo" name="Social + Logo">
+    <section class="o_mail_snippet_general pt16 pb16">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-12">
+                    <div class="o_not_editable">
+                        <a t-att-href="company_id.website or '#'" target="_blank">
+                            <img t-if="company_id.logo or user_id.company_id.logo"
+                                class="img img-fluid o_editable_media"
+                                style="width: 80% !important"
+                                t-attf-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"
+                                t-attf-data-original-src="/web/image/res.company/{{ company_id.id if company_id.id else user_id.company_id.id }}/logo"/>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-8 col-12">
+                    <div class="o_mail_footer_social pb16" style="text-align: right">
+                        <t t-call="mass_mailing.social_links"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <p><t t-if="company_id"><strong>© <t t-out="company_id.partner_id.name"/></strong><br/><t t-out="company_id.partner_id._display_address()"/><br/></t>You're seeing this because you've shopped with us or joined our mailing list. <a class="btn btn-link" role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="social_links">
+
+    <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
+
+    <p class="mb-0">
+        <a t-att-href="social_links.get('social_facebook')" t-attf-style="{{optionalTextStyle}}" aria-label="Facebook" title="Facebook">
+            <span class="fa fa-facebook"></span>
+        </a>&amp;nbsp;&amp;nbsp;
+        <a t-att-href="social_links.get('social_linkedin')" t-attf-style="margin-left:10px; {{optionalTextStyle or ''}}" aria-label="LinkedIn" title="LinkedIn">
+            <span class="fa fa-linkedin"></span>
+        </a>&amp;nbsp;&amp;nbsp;
+        <a t-att-href="social_links.get('social_twitter')" t-attf-style="margin-left:10px; {{optionalTextStyle or ''}}" aria-label="X" title="X">
+            <span class="fa fa-twitter"></span>
+        </a>&amp;nbsp;&amp;nbsp;
+        <a t-att-href="social_links.get('social_instagram')" t-attf-style="margin-left:10px; {{optionalTextStyle or ''}}" aria-label="Instagram" title="Instagram">
+            <span class="fa fa-instagram"></span>
+        </a>&amp;nbsp;&amp;nbsp;
+        <a t-att-href="social_links.get('social_tiktok')" t-attf-style="margin-left:10px; {{optionalTextStyle or ''}}" aria-label="TikTok" title="TikTok">
+            <span class="fa fa-tiktok"></span>
+        </a>
+    </p>
+
+</template>
+</odoo>

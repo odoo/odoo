@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="hr_attendance.CardLayout">
+    <div class="o_attendance_background d-flex flex-column h-100">
+        <t t-if="env.isSmall">
+            <div class="p-2 d-flex justify-content-between">
+                <button
+                    t-on-click="props.kioskReturn"
+                    class="o_hr_attendance_back_button btn btn-secondary rounded-pill"
+                    t-if="this.props.fromTrialMode">
+                    <i class="oi oi-chevron-left" role="img" aria-label="Go back" title="Go back"/>
+                </button>
+                <t t-call="hr_attendance.companyHeader" t-if="this.props.activeDisplay != 'settings'">
+                    <t t-set="companyImageUrl" t-value="this.props.companyImageUrl"/>
+                    <t t-set="companyName" t-value="this.props.companyName"/>
+                </t>
+            </div>
+            <div class="o_hr_kiosk_mode_top d-flex flex-column-reverse flex-sm-row justify-content-between mx-4 my-3" t-if="this.props.activeDisplay != 'settings'">
+                <div class="o_hr_kiosk_mode_top_time d-flex flex-column-reverse flex-sm-row align-items-center justify-content-center mt-2 mt-sm-0">
+                    <span class="me-0 me-sm-2 display-6" t-esc="state.time"/>
+                    <div class="d-flex flex-sm-column gap-1 gap-sm-0 small">
+                        <span t-esc="state.dayOfWeek"/>
+                        <span t-esc="state.date"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="p-2 d-flex justify-content-between">
+                <div class="m-2">
+                    <button
+                        t-on-click="props.kioskReturn"
+                        class="o_hr_attendance_back_button btn btn-secondary rounded-pill"
+                        t-if="this.props.fromTrialMode">
+                        <i class="oi oi-chevron-left" role="img" aria-label="Go back" title="Go back"/>
+                    </button>
+                </div>
+                <div class="o_hr_kiosk_mode_top d-flex flex-column-reverse flex-sm-row justify-content-between mx-4 my-3" t-if="this.props.activeDisplay != 'settings'">
+                    <div class="o_hr_kiosk_mode_top_time d-flex flex-column-reverse flex-sm-row align-items-center justify-content-center mt-2 mt-sm-0">
+                        <span class="me-0 me-sm-2 display-6" t-esc="state.time"/>
+                        <div class="d-flex flex-sm-column gap-1 gap-sm-0 small">
+                            <span t-esc="state.dayOfWeek"/>
+                            <span t-esc="state.date"/>
+                        </div>
+                    </div>
+                </div>
+                <t t-call="hr_attendance.companyHeader" t-if="this.props.activeDisplay != 'settings'">
+                    <t t-set="companyImageUrl" t-value="this.props.companyImageUrl"/>
+                    <t t-set="companyName" t-value="this.props.companyName"/>
+                </t>
+            </div>
+        </t>
+        <div t-attf-class="o_hr_attendance_kiosk_mode d-flex flex-column w-100 h-100 {{props.kioskModeClasses}} overflow-auto px-3">
+            <t t-slot="default" />
+        </div>
+    </div>
+</t>
+
+</templates>

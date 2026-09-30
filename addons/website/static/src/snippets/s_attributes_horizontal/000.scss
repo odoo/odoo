@@ -1,0 +1,10 @@
+.s_attributes_horizontal {
+    .s_attributes_horizontal_img {
+        &.float-start {
+            margin-inline-end: var(--s_attributes_horizontal_margin, #{map-get($spacers, 3)}) !important;
+        }
+        &.float-end {
+            margin-inline-start: var(--s_attributes_horizontal_margin, #{map-get($spacers, 3)}) !important;
+        }
+    }
+}

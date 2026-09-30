@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_expense_approve_duplicate_view_form" model="ir.ui.view">
+        <field name="model">hr.expense.approve.duplicate</field>
+        <field name="arch" type="xml">
+            <form string="Expense Validate Duplicate">
+                <p>The following approved expenses have similar employee, amount and category than some expenses of this report. Please verify this report does not contain duplicates.</p>
+                <field name="expense_ids" nolabel="1">
+                    <list>
+                        <field name="date" readonly="1" />
+                        <field name="employee_id" readonly="1" widget="many2one_avatar_employee"/>
+                        <field name="product_id" readonly="1" />
+                        <field name="total_amount" readonly="1" />
+                        <field name="name" readonly="1" />
+                        <field name="manager_id" readonly="1" widget="many2one_avatar_user"/>
+                        <field name="approval_date" readonly="1" />
+                    </list>
+                </field>
+                <footer>
+                    <button string="Refuse" class="btn-primary" name="action_refuse" type="object" invisible="not expense_ids" data-hotkey="q" />
+                    <button string="Approve" class="btn-secondary" name="action_approve" type="object" invisible="not expense_ids" data-hotkey="w" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+           </form>
+        </field>
+    </record>
+
+    <record id="hr_expense_approve_duplicate_action" model="ir.actions.act_window">
+        <field name="name">Validate Duplicate Expenses</field>
+        <field name="res_model">hr.expense.approve.duplicate</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_expense_approve_duplicate_view_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

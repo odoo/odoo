@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_report_withholding_tax" model="account.report">
+        <field name="name">Withholding Return</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.sa"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_withholding_tax_base" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="tax_report_withholding_tax_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_withholding_tax_line_rent" model="account.report.line">
+                <field name="name"> 1. Rent (5%)</field>
+                <field name="hierarchy_level">1</field>
+                <field name="code">sa_1w</field>
+                <field name="foldable">True</field>
+                <field name="expression_ids">
+                    <record id="tax_report_withholding_tax_line_rent_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_1w_g.base + sa_1w_d.base</field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_rent_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_1w_g.tax + sa_1w_d.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_withholding_tax_line_rent_g" model="account.report.line">
+                        <field name="name">a. Gross</field>
+                        <field name="code">sa_1w_g</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_rent_g_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">1(B)_W_G</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_rent_g_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-1(T)_W_G</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_rent_d" model="account.report.line">
+                        <field name="name">b. Deducted</field>
+                        <field name="code">sa_1w_d</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_rent_d_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">1(B)_W_D</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_rent_d_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-1(T)_W_D</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_withholding_tax_line_at_af_mf" model="account.report.line">
+                <field name="name"> 2. Air tickets, Air freight and Maritime freight (5%)</field>
+                <field name="hierarchy_level">1</field>
+                <field name="code">sa_2w</field>
+                <field name="foldable">True</field>
+                <field name="expression_ids">
+                    <record id="tax_report_withholding_tax_line_at_af_mf_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_2w_g.base + sa_2w_d.base</field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_at_af_mf_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_2w_g.tax + sa_2w_d.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_withholding_tax_line_at_af_mf_g" model="account.report.line">
+                        <field name="name">a. Gross</field>
+                        <field name="code">sa_2w_g</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_at_af_mf_g_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">2(B)_W_G</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_at_af_mf_g_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-2(T)_W_G</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_at_af_mf_d" model="account.report.line">
+                        <field name="name">b. Deducted</field>
+                        <field name="code">sa_2w_d</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_at_af_mf_d_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">2(B)_W_D</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_at_af_mf_d_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-2(T)_W_D</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_withholding_tax_line_technical_and_consulting_services" model="account.report.line">
+                <field name="name">3. Technical and consulting services and international telecommunication services (5%)</field>
+                <field name="hierarchy_level">1</field>
+                <field name="code">sa_3w</field>
+                <field name="foldable">True</field>
+                <field name="expression_ids">
+                    <record id="tax_report_withholding_tax_line_technical_and_consulting_services_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_3w_g.base + sa_3w_d.base</field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_technical_and_consulting_services_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_3w_g.tax + sa_3w_d.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_withholding_tax_line_technical_and_consulting_services_g" model="account.report.line">
+                        <field name="name">a. Gross</field>
+                        <field name="code">sa_3w_g</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_technical_and_consulting_services_g_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3(B)_W_G</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_technical_and_consulting_services_g_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-3(T)_W_G</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_technical_and_consulting_services_d" model="account.report.line">
+                        <field name="name">b. Deducted</field>
+                        <field name="code">sa_3w_d</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_technical_and_consulting_services_d_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">3(B)_W_D</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_technical_and_consulting_services_d_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-3(T)_W_D</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_withholding_tax_line_dividends" model="account.report.line">
+                <field name="name">4. Dividends (5%)</field>
+                <field name="hierarchy_level">1</field>
+                <field name="code">sa_4w</field>
+                <field name="foldable">True</field>
+                <field name="expression_ids">
+                    <record id="tax_report_withholding_tax_line_dividends_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_4w_g.base + sa_4w_d.base</field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_dividends_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_4w_g.tax + sa_4w_d.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_withholding_tax_line_dividends_g" model="account.report.line">
+                        <field name="name">a. Gross</field>
+                        <field name="code">sa_4w_g</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_dividends_g_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">4(B)_W_G</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_dividends_g_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-4(T)_W_G</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_dividends_d" model="account.report.line">
+                        <field name="name">b. Deducted</field>
+                        <field name="code">sa_4w_d</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_dividends_d_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">4(B)_W_D</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_dividends_d_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-4(T)_W_D</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_withholding_tax_line_interest" model="account.report.line">
+                <field name="name">5. Interest on loan, insurance and reinsurance premium (5%)</field>
+                <field name="hierarchy_level">1</field>
+                <field name="code">sa_5w</field>
+                <field name="foldable">True</field>
+                <field name="expression_ids">
+                    <record id="tax_report_withholding_tax_line_interest_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_5w_g.base + sa_5w_d.base</field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_interest_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_5w_g.tax + sa_5w_d.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_withholding_tax_line_interest_g" model="account.report.line">
+                        <field name="name">a. Gross</field>
+                        <field name="code">sa_5w_g</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_interest_g_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">5(B)_W_G</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_interest_g_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-5(T)_W_G</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_interest_d" model="account.report.line">
+                        <field name="name">b. Deducted</field>
+                        <field name="code">sa_5w_d</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_interest_d_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">5(B)_W_D</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_interest_d_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-5(T)_W_D</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_withholding_tax_line_royalties" model="account.report.line">
+                <field name="name">6. Royalty (15%)</field>
+                <field name="hierarchy_level">1</field>
+                <field name="code">sa_6w</field>
+                <field name="foldable">True</field>
+                <field name="expression_ids">
+                    <record id="tax_report_withholding_tax_line_royalties_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_6w_g.base + sa_6w_d.base</field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_royalties_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_6w_g.tax + sa_6w_d.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_withholding_tax_line_royalties_g" model="account.report.line">
+                        <field name="name">a. Gross</field>
+                        <field name="code">sa_6w_g</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_royalties_g_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">6(B)_W_G</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_royalties_g_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6(T)_W_G</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_royalties_d" model="account.report.line">
+                        <field name="name">b. Deducted</field>
+                        <field name="code">sa_6w_d</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_royalties_d_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">6(B)_W_D</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_royalties_d_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6(T)_W_D</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_withholding_tax_line_other_payments" model="account.report.line">
+                <field name="name">7. Any other payments (15%)</field>
+                <field name="hierarchy_level">1</field>
+                <field name="code">sa_7w</field>
+                <field name="foldable">True</field>
+                <field name="expression_ids">
+                    <record id="tax_report_withholding_tax_line_other_payments_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_7w_g.base + sa_7w_d.base</field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_other_payments_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_7w_g.tax + sa_7w_d.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_withholding_tax_line_other_payments_g" model="account.report.line">
+                        <field name="name">a. Gross</field>
+                        <field name="code">sa_7w_g</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_other_payments_g_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">7(B)_W_G</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_other_payments_g_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-7(T)_W_G</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_other_payments_d" model="account.report.line">
+                        <field name="name">b. Deducted</field>
+                        <field name="code">sa_7w_d</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_other_payments_d_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">7(B)_W_D</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_other_payments_d_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-7(T)_W_D</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_withholding_tax_line_management_fees" model="account.report.line">
+                <field name="name">8. Management fees (20%)</field>
+                <field name="hierarchy_level">1</field>
+                <field name="code">sa_8w</field>
+                <field name="foldable">True</field>
+                <field name="expression_ids">
+                    <record id="tax_report_withholding_tax_line_management_fees_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_8w_g.base + sa_8w_d.base</field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_management_fees_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_8w_g.tax + sa_8w_d.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_withholding_tax_line_management_fees_g" model="account.report.line">
+                        <field name="name">a. Gross</field>
+                        <field name="code">sa_8w_g</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_management_fees_g_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">8(B)_W_G</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_management_fees_g_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-8(T)_W_G</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_management_fees_d" model="account.report.line">
+                        <field name="name">b. Deducted</field>
+                        <field name="code">sa_8w_d</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_withholding_tax_line_management_fees_d_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">8(B)_W_D</field>
+                            </record>
+                            <record id="tax_report_withholding_tax_line_management_fees_d_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-8(T)_W_D</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_withholding_tax_line_total" model="account.report.line">
+                <field name="name">9. Total</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">sa_9w</field>
+                <field name="expression_ids">
+                    <record id="tax_report_withholding_tax_line_total_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_1w.base + sa_2w.base + sa_3w.base + sa_4w.base + sa_5w.base + sa_6w.base + sa_7w.base + sa_8w.base</field>
+                    </record>
+                    <record id="tax_report_withholding_tax_line_total_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">sa_1w.tax + sa_2w.tax + sa_3w.tax + sa_4w.tax + sa_5w.tax + sa_6w.tax + sa_7w.tax + sa_8w.tax</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

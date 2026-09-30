@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.SelectionField">
+        <t t-if="props.readonly">
+            <span t-esc="string" t-att-raw-value="value" />
+        </t>
+        <t t-else="">
+            <SelectMenu autoSort="false" class="'border-0'" menuClass="'o_field_selection_menu w-auto'" value="value" choices="choices" onSelect.bind="onChange" placeholder="props.placeholder" id="props.id" searchable="!isBottomSheet" />
+        </t>
+    </t>
+
+</templates>

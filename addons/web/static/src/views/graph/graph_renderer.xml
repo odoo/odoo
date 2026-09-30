@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.GraphRenderer.CustomTooltip">
+        <div class="o_graph_custom_tooltip popover show px-2 py-1 pe-none mw-100 position-absolute">
+            <table class="overflow-hidden m-0">
+                <thead>
+                    <tr>
+                        <th class="o_measure align-baseline border-0" t-esc="measure" />
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="tooltipItems" t-as="tooltipItem" t-key="tooltipItem_index">
+                        <td>
+                            <span class="o_square badge p-2 rounded-0 align-middle me-2" t-attf-style="background-color: {{ tooltipItem.boxColor }}"> </span>
+                            <small class="o_label d-inline-block text-truncate align-middle smaller" t-attf-style="max-width: {{ maxWidth }}" t-esc="tooltipItem.label" />
+                        </td>
+                        <td class="o_value ps-2 text-end fw-bolder">
+                            <small class="smaller">
+                                <t t-out="tooltipItem.value"/>
+                                <t t-if="mode === 'pie' and tooltipItem.percentage">
+                                    (<t t-esc="tooltipItem.percentage" />%)
+                                </t>
+                            </small>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="web.GraphRenderer">
+        <div t-att-class="'o_graph_renderer o_renderer h-100 d-flex flex-column border-top ' + props.class" t-ref="root">
+            <t t-if="model.data.exceeds">
+                <div class="alert alert-info text-center o_graph_alert m-3 mb-2" role="status">
+                    There are too many data. The graph only shows a sample. Use the filters to refine the scope.
+                    <a class="o_graph_load_all_btn" href="#" t-on-click="() => this.loadAll()">
+                        Load everything anyway.
+                    </a>
+                </div>
+            </t>
+            <div class="d-flex d-print-none gap-1 flex-shrink-0 mt-2 mx-3 mb-3 overflow-x-auto">
+                <t t-call="{{ props.buttonTemplate }}"/>
+            </div>
+            <div t-if="model.hasData()" class="o_graph_canvas_container flex-grow-1 position-relative px-3 pb-3" t-ref="container">
+                <canvas t-custom-click="(ev, isMiddleClick) => this.onGraphClicked(ev, isMiddleClick)" t-ref="canvas" />
+            </div>
+        </div>
+    </t>
+
+</templates>

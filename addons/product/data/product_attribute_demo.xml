@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <!-- Brand -->
+    <record id="pa_brand" model="product.attribute">
+        <field name="name">Brand</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="pav_brand_adidas" model="product.attribute.value">
+        <field name="name">Adidas</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_apple" model="product.attribute.value">
+        <field name="name">Apple</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_ariel" model="product.attribute.value">
+        <field name="name">Ariel</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_canon" model="product.attribute.value">
+        <field name="name">Canon</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_cocacola" model="product.attribute.value">
+        <field name="name">Coca-Cola</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_colgate" model="product.attribute.value">
+        <field name="name">Colgate</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_dell" model="product.attribute.value">
+        <field name="name">Dell</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_dove" model="product.attribute.value">
+        <field name="name">Dove</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_dyson" model="product.attribute.value">
+        <field name="name">Dyson</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_gillette" model="product.attribute.value">
+        <field name="name">Gillette</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_h_m" model="product.attribute.value">
+        <field name="name">H&amp;M</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_head_shoulders" model="product.attribute.value">
+        <field name="name">Head &amp; Shoulders</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_loreal" model="product.attribute.value">
+        <field name="name">L'Oréal</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_lenovo" model="product.attribute.value">
+        <field name="name">Lenovo</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_levis" model="product.attribute.value">
+        <field name="name">Levi's</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_LG" model="product.attribute.value">
+        <field name="name">LG</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_maybelline" model="product.attribute.value">
+        <field name="name">Maybelline</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_montblanc" model="product.attribute.value">
+        <field name="name">Montblanc</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_nestle" model="product.attribute.value">
+        <field name="name">Nestlé</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_new_balance" model="product.attribute.value">
+        <field name="name">New Balance</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_nike" model="product.attribute.value">
+        <field name="name">Nike</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_nikon" model="product.attribute.value">
+        <field name="name">Nikon</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_nivea" model="product.attribute.value">
+        <field name="name">Nivea</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_olay" model="product.attribute.value">
+        <field name="name">Olay</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_oral_b" model="product.attribute.value">
+        <field name="name">Oral-B</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_panasonic" model="product.attribute.value">
+        <field name="name">Panasonic</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_pantene" model="product.attribute.value">
+        <field name="name">Pantene</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_pepsi" model="product.attribute.value">
+        <field name="name">Pepsi</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_philips" model="product.attribute.value">
+        <field name="name">Philips</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_puma" model="product.attribute.value">
+        <field name="name">Puma</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_rayban" model="product.attribute.value">
+        <field name="name">Ray-Ban</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_reebok" model="product.attribute.value">
+        <field name="name">Reebok</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_rolex" model="product.attribute.value">
+        <field name="name">Rolex</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_samsung" model="product.attribute.value">
+        <field name="name">Samsung</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_sony" model="product.attribute.value">
+        <field name="name">Sony</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_tide" model="product.attribute.value">
+        <field name="name">Tide</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_underarmour" model="product.attribute.value">
+        <field name="name">Under Armour</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_uniqlo" model="product.attribute.value">
+        <field name="name">Uniqlo</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_whirlpool" model="product.attribute.value">
+        <field name="name">Whirlpool</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+    <record id="pav_brand_zara" model="product.attribute.value">
+        <field name="name">Zara</field>
+        <field name="attribute_id" ref="product.pa_brand"/>
+    </record>
+
+    <!-- Size -->
+    <record id="pa_size" model="product.attribute">
+        <field name="name">Size</field>
+        <field name="sequence">20</field>
+        <field name="display_type">pills</field>
+        <field name="create_variant">always</field>
+    </record>
+    <record id="pav_size_xs" model="product.attribute.value">
+        <field name="name">XS</field>
+        <field name="sequence">0</field>
+        <field name="attribute_id" ref="pa_size"/>
+    </record>
+    <record id="pav_size_s" model="product.attribute.value">
+        <field name="name">S</field>
+        <field name="sequence">1</field>
+        <field name="attribute_id" ref="pa_size"/>
+    </record>
+    <record id="pav_size_m" model="product.attribute.value">
+        <field name="name">M</field>
+        <field name="sequence">2</field>
+        <field name="attribute_id" ref="pa_size"/>
+    </record>
+    <record id="pav_size_l" model="product.attribute.value">
+        <field name="name">L</field>
+        <field name="sequence">3</field>
+        <field name="attribute_id" ref="pa_size"/>
+    </record>
+    <record id="pav_size_xl" model="product.attribute.value">
+        <field name="name">XL</field>
+        <field name="sequence">4</field>
+        <field name="attribute_id" ref="pa_size"/>
+    </record>
+    <record id="pav_size_2xl" model="product.attribute.value">
+        <field name="name">2XL</field>
+        <field name="default_extra_price">2</field>
+        <field name="sequence">5</field>
+        <field name="attribute_id" ref="pa_size"/>
+    </record>
+    <record id="pav_size_3xl" model="product.attribute.value">
+        <field name="name">3XL</field>
+        <field name="default_extra_price">3</field>
+        <field name="sequence">6</field>
+        <field name="attribute_id" ref="pa_size"/>
+    </record>
+    <record id="pav_size_4xl" model="product.attribute.value">
+        <field name="name">4XL</field>
+        <field name="default_extra_price">4</field>
+        <field name="sequence">7</field>
+        <field name="attribute_id" ref="pa_size"/>
+    </record>
+    <record id="pav_size_5xl" model="product.attribute.value">
+        <field name="name">5XL</field>
+        <field name="default_extra_price">5</field>
+        <field name="sequence">8</field>
+        <field name="attribute_id" ref="pa_size"/>
+    </record>
+
+    <!-- Colors -->
+    <record id="pa_color" model="product.attribute">
+        <field name="name">Color</field>
+        <field name="display_type">color</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="pav_color_white" model="product.attribute.value">
+        <field name="name">White</field>
+        <field name="html_color">#FAFAFA</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="pav_color_black" model="product.attribute.value">
+        <field name="name">Black</field>
+        <field name="html_color">#1C1C1C</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">2</field>
+    </record>
+    <record id="pav_color_gray" model="product.attribute.value">
+        <field name="name">Gray</field>
+        <field name="html_color">#B0B0B0</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">3</field>
+    </record>
+    <record id="pav_color_brown" model="product.attribute.value">
+        <field name="name">Brown</field>
+        <field name="html_color">#8B5E3C</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">4</field>
+    </record>
+    <record id="pav_color_beige" model="product.attribute.value">
+        <field name="name">Beige</field>
+        <field name="html_color">#EAE0D5</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">5</field>
+    </record>
+    <record id="pav_color_red" model="product.attribute.value">
+        <field name="name">Red</field>
+        <field name="html_color">#E63946</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">6</field>
+    </record>
+    <record id="pav_color_blue" model="product.attribute.value">
+        <field name="name">Blue</field>
+        <field name="html_color">#457B9D</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">7</field>
+    </record>
+    <record id="pav_color_green" model="product.attribute.value">
+        <field name="name">Green</field>
+        <field name="html_color">#2A9D8F</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">8</field>
+    </record>
+    <record id="pav_color_yellow" model="product.attribute.value">
+        <field name="name">Yellow</field>
+        <field name="html_color">#F4D35E</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">9</field>
+    </record>
+    <record id="pav_color_orange" model="product.attribute.value">
+        <field name="name">Orange</field>
+        <field name="html_color">#F38E1E</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">10</field>
+    </record>
+    <record id="pav_color_pink" model="product.attribute.value">
+        <field name="name">Pink</field>
+        <field name="html_color">#C08081</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">11</field>
+    </record>
+    <record id="pav_color_purple" model="product.attribute.value">
+        <field name="name">Purple</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="html_color">#8E4585</field>
+        <field name="sequence">12</field>
+        <field name="default_extra_price">6</field>
+        <field name="image" type="base64" file="product/static/img/purple.png"/>
+    </record>
+    <record id="pav_color_cyan" model="product.attribute.value">
+        <field name="name">Cyan</field>
+        <field name="html_color">#6EEBFF</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">13</field>
+    </record>
+    <record id="pav_color_teal" model="product.attribute.value">
+        <field name="name">Teal</field>
+        <field name="html_color">#3AAFA9</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">14</field>
+    </record>
+    <record id="pav_color_navy" model="product.attribute.value">
+        <field name="name">Navy</field>
+        <field name="html_color">#264653</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">15</field>
+    </record>
+    <record id="pav_color_gold" model="product.attribute.value">
+        <field name="name">Gold</field>
+        <field name="html_color">#FFD86F</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">16</field>
+    </record>
+    <record id="pav_color_silver" model="product.attribute.value">
+        <field name="name">Silver</field>
+        <field name="html_color">#D8D8D8</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">17</field>
+    </record>
+    <record id="pav_color_maroon" model="product.attribute.value">
+        <field name="name">Maroon</field>
+        <field name="html_color">#6D2932</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="image" type="base64" file="product/static/img/maroon.png"/>
+        <field name="default_extra_price">5</field>
+        <field name="sequence">18</field>
+    </record>
+    <record id="pav_color_olive" model="product.attribute.value">
+        <field name="name">Olive</field>
+        <field name="html_color">#A4A644</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">19</field>
+    </record>
+    <record id="pav_color_tan" model="product.attribute.value">
+        <field name="name">Tan</field>
+        <field name="html_color">#D8B08C</field>
+        <field name="attribute_id" ref="pa_color"/>
+        <field name="sequence">20</field>
+    </record>
+
+    <!-- Height -->
+    <record id="pa_height" model="product.attribute">
+        <field name="name">Height</field>
+        <field name="sequence">40</field>
+        <field name="display_type">select</field>
+    </record>
+    <record id="pav_height_45" model="product.attribute.value">
+        <field name="name">45</field>
+        <field name="attribute_id" ref="pa_height"/>
+    </record>
+    <record id="pav_height_85" model="product.attribute.value">
+        <field name="name">85</field>
+        <field name="attribute_id" ref="pa_height"/>
+    </record>
+    <record id="pav_height_100" model="product.attribute.value">
+        <field name="name">100</field>
+        <field name="attribute_id" ref="pa_height"/>
+    </record>
+
+    <!-- Length -->
+    <record id="pa_length" model="product.attribute">
+        <field name="name">Length</field>
+        <field name="sequence">50</field>
+        <field name="display_type">pills</field>
+        <field name="create_variant">dynamic</field>
+    </record>
+    <record id="pav_length_120" model="product.attribute.value">
+        <field name="name">120</field>
+        <field name="attribute_id" ref="pa_length"/>
+    </record>
+    <record id="pav_length_140" model="product.attribute.value">
+        <field name="name">140</field>
+        <field name="default_extra_price">20</field>
+        <field name="attribute_id" ref="pa_length"/>
+    </record>
+    <record id="pav_length_160" model="product.attribute.value">
+        <field name="name">160</field>
+        <field name="default_extra_price">30</field>
+        <field name="attribute_id" ref="pa_length"/>
+    </record>
+    <record id="pav_length_custom" model="product.attribute.value">
+        <field name="name">Custom</field>
+        <field name="attribute_id" ref="pa_length"/>
+        <field name="default_extra_price">50</field>
+        <field name="is_custom">True</field>
+    </record>
+
+    <!-- Duration -->
+    <record id="pa_duration" model="product.attribute">
+        <field name="name">Duration</field>
+        <field name="display_type">select</field>
+        <field name="create_variant">no_variant</field>
+        <field name="sequence">60</field>
+    </record>
+    <record id="pav_duration_month_1" model="product.attribute.value">
+        <field name="name">1 month</field>
+        <field name="attribute_id" ref="pa_duration"/>
+    </record>
+    <record id="pav_duration_month_6" model="product.attribute.value">
+        <field name="name">6 months</field>
+        <field name="attribute_id" ref="pa_duration"/>
+    </record>
+    <record id="pav_duration_year_1" model="product.attribute.value">
+        <field name="name">1 year</field>
+        <field name="attribute_id" ref="pa_duration"/>
+    </record>
+    <record id="pav_duration_year_2" model="product.attribute.value">
+        <field name="name">2 years</field>
+        <field name="attribute_id" ref="pa_duration"/>
+    </record>
+    <record id="pav_duration_year_3" model="product.attribute.value">
+        <field name="name">3 years</field>
+        <field name="attribute_id" ref="pa_duration"/>
+    </record>
+
+    <!-- Fabric -->
+    <record id="pa_fabric" model="product.attribute">
+        <field name="name">Fabric</field>
+        <field name="sequence">80</field>
+        <field name="display_type">color</field>
+        <field name="create_variant">always</field>
+    </record>
+    <record id="pav_fabric_linen" model="product.attribute.value">
+        <field name="name">Linen</field>
+        <field name="sequence">1</field>
+        <field name="image" type="base64" file="product/static/img/linen.png"/>
+        <field name="attribute_id" ref="pa_fabric"/>
+    </record>
+    <record id="pav_fabric_velvet" model="product.attribute.value">
+        <field name="name">Velvet</field>
+        <field name="sequence">2</field>
+        <field name="image" type="base64" file="product/static/img/velvet.png"/>
+        <field name="attribute_id" ref="pa_fabric"/>
+    </record>
+    <record id="pav_fabric_leather" model="product.attribute.value">
+        <field name="name">Leather</field>
+        <field name="sequence">3</field>
+        <field name="image" type="base64" file="product/static/img/leather.png"/>
+        <field name="attribute_id" ref="pa_fabric"/>
+    </record>
+    <record id="pav_fabric_wood" model="product.attribute.value">
+        <field name="name">Wood</field>
+        <field name="sequence">4</field>
+        <field name="image" type="base64" file="product/static/img/wood.png"/>
+        <field name="attribute_id" ref="pa_fabric"/>
+    </record>
+    <record id="pav_fabric_glass" model="product.attribute.value">
+        <field name="name">Glass</field>
+        <field name="sequence">5</field>
+        <field name="default_extra_price">50</field>
+        <field name="image" type="base64" file="product/static/img/glass.png"/>
+        <field name="attribute_id" ref="pa_fabric"/>
+    </record>
+    <record id="pav_fabric_metal" model="product.attribute.value">
+        <field name="name">Metal</field>
+        <field name="sequence">6</field>
+        <field name="image" type="base64" file="product/static/img/metal.png"/>
+        <field name="attribute_id" ref="pa_fabric"/>
+    </record>
+
+    <!-- Legs Material -->
+    <record id="pa_legs" model="product.attribute">
+        <field name="name">Legs</field>
+        <field name="sequence">90</field>
+    </record>
+    <record id="pav_legs_steel" model="product.attribute.value">
+        <field name="name">Steel</field>
+        <field name="attribute_id" ref="pa_legs"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="pav_legs_aluminium" model="product.attribute.value">
+        <field name="name">Aluminium</field>
+        <field name="attribute_id" ref="pa_legs"/>
+        <field name="sequence">2</field>
+    </record>
+    <record id="pav_legs_wood" model="product.attribute.value">
+        <field name="name">Wood</field>
+        <field name="attribute_id" ref="pa_legs"/>
+        <field name="sequence">3</field>
+    </record>
+    <record id="pav_legs_custom" model="product.attribute.value">
+        <field name="name">Custom</field>
+        <field name="attribute_id" ref="pa_legs"/>
+        <field name="is_custom">True</field>
+        <field name="sequence">4</field>
+    </record>
+
+    <!-- Options -->
+    <record id="pa_options" model="product.attribute">
+        <field name="name">Options</field>
+        <field name="display_type">multi</field>
+        <field name="create_variant">no_variant</field>
+        <field name="sequence">110</field>
+    </record>
+    <record id="pav_options_drawers" model="product.attribute.value">
+        <field name="name">Drawers</field>
+        <field name="default_extra_price">250</field>
+        <field name="attribute_id" ref="pa_options"/>
+    </record>
+    <record id="pav_options_file_cabinets" model="product.attribute.value">
+        <field name="name">File cabinets</field>
+        <field name="default_extra_price">300</field>
+        <field name="attribute_id" ref="pa_options"/>
+    </record>
+    <record id="pav_options_under_desk_pedestals" model="product.attribute.value">
+        <field name="name">Under-desk pedestals</field>
+        <field name="default_extra_price">75</field>
+        <field name="attribute_id" ref="pa_options"/>
+    </record>
+    <record id="pav_options_overhead_shelves" model="product.attribute.value">
+        <field name="name">Overhead shelves</field>
+        <field name="default_extra_price">225</field>
+        <field name="attribute_id" ref="pa_options"/>
+    </record>
+
+    <!-- Customization -->
+    <record id="pa_customization" model="product.attribute">
+        <field name="name">Customization</field>
+        <field name="create_variant">no_variant</field>
+        <field name="sequence">120</field>
+    </record>
+    <record id="pav_custom" model="product.attribute.value">
+        <field name="name">Custom</field>
+        <field name="default_extra_price">25</field>
+        <field name="attribute_id" ref="product.pa_customization"/>
+        <field name="is_custom">True</field>
+    </record>
+
+    <!-- Shoe Size -->
+    <record id="pa_shoe_size" model="product.attribute">
+        <field name="name">Shoes size</field>
+        <field name="create_variant">no_variant</field>
+        <field name="display_type">pills</field>
+    </record>
+
+    <record id="pav_shoe_size_39" model="product.attribute.value">
+        <field name="name">39</field>
+        <field name="attribute_id" ref="pa_shoe_size"/>
+    </record>
+
+    <record id="pav_shoe_size_40" model="product.attribute.value">
+        <field name="name">40</field>
+        <field name="attribute_id" ref="pa_shoe_size"/>
+    </record>
+
+    <record id="pav_shoe_size_41" model="product.attribute.value">
+        <field name="name">41</field>
+        <field name="attribute_id" ref="pa_shoe_size"/>
+    </record>
+
+    <record id="pav_shoe_size_42" model="product.attribute.value">
+        <field name="name">42</field>
+        <field name="attribute_id" ref="pa_shoe_size"/>
+    </record>
+
+    <record id="pav_shoe_size_43" model="product.attribute.value">
+        <field name="name">43</field>
+        <field name="attribute_id" ref="pa_shoe_size"/>
+    </record>
+
+</odoo>

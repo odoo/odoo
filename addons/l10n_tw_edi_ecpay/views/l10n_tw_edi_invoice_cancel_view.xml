@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_tw_edi_invoice_cancel_form" model="ir.ui.view">
+        <field name="name">l10n_tw_edi.invoice.cancel.form</field>
+        <field name="model">l10n_tw_edi.invoice.cancel</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="invoice_id"/>
+                    <field name="reason"/>
+                </group>
+                <footer>
+                    <button string="Cancel Invoice" name="button_request_cancel" type="object" default_focus="1" class="btn-primary"/>
+                    <button string="Close" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

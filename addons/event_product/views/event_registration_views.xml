@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="view_event_registration_ticket_tree" model="ir.ui.view">
+        <field name="name">event.registration.list.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_tree" />
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="sale_status" optional="show" widget="badge"
+                    decoration-success="sale_status == 'sold'"
+                    decoration-danger="sale_status == 'to_pay'"
+                    invisible="not sale_status" />
+            </field>
+        </field>
+    </record>
+
+    <record id="event_registration_view_graph" model="ir.ui.view">
+        <field name="name">event.registration.graph.inherit.event.sale</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_graph"/>
+        <field name="arch" type="xml">
+            <field name="event_id" position="after">
+                <field name="sale_status" />
+            </field>
+        </field>
+    </record>
+
+    <record id="event_registration_ticket_view_form" model="ir.ui.view">
+        <field name="name">event.registration.form.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="before">
+                <widget name="web_ribbon" title="Sold" bg_color="text-bg-success"
+                    invisible="sale_status != 'sold'"/>
+                <widget name="web_ribbon" title="Not Sold" bg_color="text-bg-info"
+                    invisible="not sale_status or sale_status in ('sold', 'free') or not id"/>
+            </xpath>
+             <group name="utm_link" position="before">
+                <group string="Transaction" name="transaction" groups="base.group_no_one" />
+            </group>
+        </field>
+    </record>
+
+</data></odoo>

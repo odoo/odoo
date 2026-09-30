@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="discuss_call_history_view_tree" model="ir.ui.view">
+            <field name="name">discuss.call.history.view.list</field>
+            <field name="model">discuss.call.history</field>
+            <field name="arch" type="xml">
+                <list string="Call History" sample="1">
+                    <field name="channel_id"/>
+                    <field name="start_dt"/>
+                    <field name="end_dt"/>
+                    <field name="duration_hour" widget="float_time" options="{'displaySeconds': True}"/>
+                </list>
+            </field>
+        </record>
+        <record id="discuss_call_history_view_form" model="ir.ui.view">
+            <field name="name">discuss.call.history.view.form</field>
+            <field name="model">discuss.call.history</field>
+            <field name="arch" type="xml">
+                <form string="Call History">
+                    <group class="oe_form_field">
+                        <field name="channel_id"/>
+                        <field name="start_dt"/>
+                        <field name="end_dt"/>
+                        <field name="duration_hour" widget="float_time" options="{'displaySeconds': True}"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="discuss_call_history_action" model="ir.actions.act_window">
+            <field name="name">Call History</field>
+            <field name="res_model">discuss.call.history</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{"create": False}</field>
+        </record>
+        <menuitem
+            action="discuss_call_history_action"
+            id="discuss_call_history_menu"
+            name="Call History"
+            parent="discuss_technical"
+            sequence="15"
+        />
+    </data>
+</odoo>

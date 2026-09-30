@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <template id="redirect_form">
+        <!-- Mercado Pago generates a unique URL for each payment request. -->
+        <form t-att-action="api_url" method="get">
+            <t t-foreach="url_params" t-as="param">
+                <input type="hidden" t-att-name="param" t-att-value="url_params[param]" />
+            </t>
+        </form>
+    </template>
+
+    <template id="inline_form">
+        <div t-attf-id="o_mercado_pago_brick_container_{{provider_sudo.id}}_{{pm_sudo.id}}"/>
+    </template>
+
+    <!-- Variables description:
+        - 'error_message' - The reason of the error.
+        - 'provider_url' - The URL to the Mercado Pago provider.
+    -->
+    <template id="authorization_error">
+        <t t-call="portal.frontend_layout">
+            <div class="wrap">
+                <div class="container">
+                    <h1>An error occurred</h1>
+                    <p>An error occurred while linking your Mercado Pago account with Odoo.</p>
+                    <p><t t-out="error_message"/></p>
+                    <a t-att-href="provider_url" class="btn btn-primary mt-2">
+                        Back to the Mercado Pago provider
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
+</odoo>

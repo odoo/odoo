@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.ChatHub">
+    <div class="o-mail-ChatHub d-print-none">
+
+        <t t-set="visibleChatWindows" t-value="chatHub.compact ? chatHub.opened.filter(({ bypassCompact }) => bypassCompact) : chatHub.opened "/>
+        <t t-foreach="visibleChatWindows" t-as="cw" t-key="cw.localId">
+            <ChatWindow chatWindow="cw" t-if="cw.canShow" right="chatHub.BUBBLE_START + chatHub.BUBBLE + (chatHub.BUBBLE_OUTER*2) + (visibleChatWindows.length - cw_index - 1) * (chatHub.WINDOW + chatHub.WINDOW_INBETWEEN * 2)"/>
+        </t>
+        <div class="o-mail-ChatHub-bubbles position-fixed d-flex flex-column align-content-start justify-content-end align-items-center" t-attf-style="top: {{position.top}}; left: {{position.left}}; right: {{position.right}}; --mail-ChatHub-bubbles-bottom: {{position.bottom}}" t-att-class="{ 'o-liftUp': busMonitoring.hasConnectionIssues, 'o-mobile': isMobileOS }" t-ref="bubbles">
+            <div class="d-flex flex-column align-content-start justify-content-end align-items-center gap-1">
+                <Dropdown t-if="(chatHub.showConversations and !chatHub.compact) or position.dragged" state="options" position="'top-end'" menuClass="'m-0 mb-1 ' + store.discussDropdownMenuClass(this)">
+                    <button class="o-mail-ChatHub-bubbleBtn btn o-mail-ChatHub-optionsBtn bg-100 mt-1" t-att-class="{ 'opacity-0': !bubblesHover.isHover and !position.dragged and !options.isOpen and !isMobileOS, 'o-bubblesHover': (bubblesHover.isHover or position.dragged) and !isMobileOS, 'o-active': bubblesHover.isHover or options.isOpen }" title="Chat Options"><i class="oi oi-ellipsis-h"/></button>
+                    <t t-set-slot="content">
+                        <ActionList actions="optionActions" dropdown="true"/>
+                    </t>
+                </Dropdown>
+                <t t-if="store.chatHub.compact and chatHub.showConversations" t-call="mail.ChatHub.compactButton"/>
+                <t t-else="">
+                    <t t-foreach="chatHub.folded.slice(0, chatHub.maxFolded)" t-as="cw" t-key="cw.localId">
+                        <ChatBubble t-if="cw.canShow" chatWindow="cw"/>
+                    </t>
+                    <div class="o-mail-ChatHub-extraActions"/>
+                    <t t-if="chatHub.showConversations and chatHub.folded.length > chatHub.maxFolded" t-call="mail.ChatHub.hiddenButton"/>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.ChatHub.compactButton">
+    <!-- In dropdown to keep same layout as other items-->
+    <Dropdown manual="true">
+        <div class="o-mail-ChatHub-bubbleBtn o-mail-ChatHub-compact o-mail-ChatBubble justify-content-center">
+            <div t-if="compactCounter > 0" class="o-mail-ChatHub-hiddenBtnCounter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow">
+                <t t-out="compactCounter"/>
+            </div>
+            <button class="o-mail-ChatHub-bubbleBtn btn fs-2 shadow" t-on-click="expand">
+                <i class="o-mail-ChatHub-hiddenBtnIcon d-flex justify-content-center align-items-center btn rounded-circle shadow-sm fa fa-comments"/>
+            </button>
+        </div>
+    </Dropdown>
+</t>
+
+<t t-name="mail.ChatHub.hiddenButton">
+    <Dropdown t-if="chatHub.folded.length > chatHub.maxFolded" state="more" position="'left-middle'" menuClass="'o-mail-ChatHub-hiddenMenu mx-1 my-0 bg-100 ' + store.discussDropdownMenuClass(this)" manual="true">
+        <div class="o-mail-ChatBubble o-mail-ChatHub-hiddenBtn justify-content-center" t-att-class="{ 'o-active': more.isOpen }" t-on-click="() => store.chatHub.compact = true" t-ref="more-button">
+            <div t-if="hiddenCounter > 0" class="o-mail-ChatHub-hiddenBtnCounter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow">
+                <t t-out="hiddenCounter"/>
+            </div>
+            <button class="o-mail-ChatHub-bubbleBtn btn outline-0 shadow">
+                <span class="o-mail-ChatHub-hiddenBtnIcon d-flex justify-content-center align-items-center btn rounded-circle shadow-sm fs-2" t-att-class="{ 'o-active': more.isOpen }">+<t t-esc="chatHub.folded.slice(chatHub.maxFolded).length"/></span>
+            </button>
+        </div>
+        <t t-set-slot="content">
+            <ul class="m-0 p-0 overflow-auto o-scrollbar-thin bg-100" role="menu" t-ref="more-menu">
+                <t t-foreach="chatHub.folded.slice(chatHub.maxFolded)" t-as="cw" t-key="cw.localId">
+                    <li class="o-mail-ChatHub-hiddenItem gap-2 px-2 py-1" role="menuitem" t-att-name="cw.displayName" t-on-click="() => cw.open({ focus: true })">
+                        <img class="o-mail-ChatHub-hiddenAvatar rounded-circle object-fit-cover" t-att-src="cw.thread?.avatarUrl" alt="Thread image" draggable="false"/>
+                        <p class="text-truncate fw-bold mb-0" t-esc="cw.displayName"/>
+                        <div t-if="cw.thread?.importantCounter > 0" class="o-mail-ChatHub-hiddenCounter badge rounded-pill fw-bold o-discuss-badge" style="padding: 3px 6px">
+                            <t t-out="cw.thread?.importantCounter"/>
+                        </div>
+                        <button class="o-mail-ChatHub-hiddenClose o-mail-ChatBubble-close d-flex align-items-center rounded" t-on-click.stop="() => cw.close()">
+                            <i class="oi oi-close"/>
+                        </button>
+                    </li>
+                </t>
+            </ul>
+        </t>
+    </Dropdown>
+</t>
+
+</templates>

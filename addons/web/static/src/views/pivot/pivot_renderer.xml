@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.PivotRenderer">
+        <div>
+            <t t-call="{{ props.buttonTemplate }}"/>
+            <div t-if="model.hasData() and model.metaData.activeMeasures.length" t-att-class="env.isSmall ? 'table-responsive' : ''" class="o_pivot mx-3">
+                <table
+                    class="table-hover table table-sm table-bordered table-borderless"
+                    t-att-class="{ o_enable_linking: !model.metaData.disableLinking }"
+                    t-ref="table"
+                >
+                    <thead>
+                        <tr t-foreach="table.headers" t-as="row" t-key="'header_' + row_index" class="border-top-0">
+                            <t t-foreach="row" t-as="cell" t-key="'header_row_' + cell_index">
+                                <t t-if="cell.measure" t-call="web.PivotMeasure"/>
+                                <t t-elif="cell.isLeaf !== undefined">
+                                    <t t-call="web.PivotHeader.title">
+                                        <t t-set="isXAxis" t-value="true"/>
+                                        <t t-set="isInHead" t-value="true"/>
+                                    </t>
+                                </t>
+                                <th t-else="" t-att-colspan="cell.width" t-att-rowspan="cell.height" class="border-0 bg-100 fw-normal" t-att-class="{ 'border-0': cell_index != 0 }"/>
+                            </t>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="table.rows" t-as="row" t-key="'row_' + row_index">
+                            <t t-call="web.PivotHeader.title">
+                                <t t-set="cell" t-value="row"/>
+                                <t t-set="isXAxis" t-value="false"/>
+                                <t t-set="isInHead" t-value="false"/>
+                            </t>
+                            <t t-foreach="row.subGroupMeasurements" t-as="cell" t-key="'row_cell_' + cell_index">
+                                <td class="o_pivot_cell_value bg-100" t-att-class="{
+                                        o_empty: cell.value === undefined,
+                                        'cursor-pointer': cell.value !== undefined and !model.metaData.disableLinking,
+                                        'fw-bold': cell.isBold,
+                                    }" t-custom-click.synthetic="(ev, isMiddleClick) => this.onOpenView(cell, isMiddleClick)"
+                                    t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
+                                    <t t-if="cell.value !== undefined">
+                                        <div t-if="model.metaData.measures[cell.measure].type === 'boolean'" class="o_value">
+                                            <CheckBox disabled="true" value="cell.value" />
+                                        </div>
+                                        <div t-else="" class="o_value">
+                                            <t t-set="formattedValue" t-value="getFormattedValue(cell)"/>
+                                            <span t-att-data-tooltip="formattedValue.help">
+                                                <t t-esc="formattedValue.value"/>
+                                                <sup
+                                                    t-if="formattedValue.currencies"
+                                                    class="p-1 fw-bolder text-info"
+                                                    t-on-mouseover.stop="(ev) => this.openMultiCurrencyPopover(ev, formattedValue.rawValue, formattedValue.currencies)"
+                                                    t-on-touchstart.stop="(ev) => this.openMultiCurrencyPopover(ev, formattedValue.rawValue, formattedValue.currencies)"
+                                                >?</sup>
+                                            </span>
+                                        </div>
+                                    </t>
+                                </td>
+                            </t>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <PivotDropdown state="dropdown.state" manual="true">
+                <t t-set-slot="content">
+                    <t t-call="web.PivotHeader.menu"/>
+                </t>
+            </PivotDropdown>
+        </div>
+    </t>
+
+    <t t-name="web.PivotHeader.menu">
+        <t t-set="currentGroup" t-value="null"/>
+        <t t-foreach="groupByItems" t-as="item" t-key="item.id">
+            <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                <div class="dropdown-divider" role="separator"/>
+            </t>
+            <t t-if="item.fieldType === 'properties'">
+                <PropertiesGroupByItem item="item" onGroup.bind="onGroupBySelected"/>
+            </t>
+            <t t-elif="item.options">
+                <Dropdown>
+                    <button class="o_menu_item" t-esc="item.description"/>
+                    <t t-set-slot="content">
+                        <t t-set="subGroup" t-value="null"/>
+                        <t t-foreach="item.options" t-as="option" t-key="option.id">
+                            <t t-if="subGroup !== null and subGroup !== option.groupNumber">
+                                <div class="dropdown-divider" role="separator"/>
+                            </t>
+                            <DropdownItem class="'o_item_option'"
+                                t-esc="option.description"
+                                onSelected="() => this.onGroupBySelected({ itemId: item.id, optionId: option.id})"
+                            />
+                            <t t-set="subGroup" t-value="option.groupNumber"/>
+                        </t>
+                    </t>
+                </Dropdown>
+            </t>
+            <t t-else="">
+                <DropdownItem class="'o_menu_item'"
+                    t-esc="item.description"
+                    onSelected="() => this.onGroupBySelected({ itemId: item.id })"
+                />
+            </t>
+            <t t-set="currentGroup" t-value="item.groupNumber"/>
+        </t>
+        <t t-if="!hideCustomGroupBy and fields.length">
+            <div t-if="groupByItems.length" role="separator" class="dropdown-divider"/>
+            <CustomGroupByItem fields="fields" onAddCustomGroup.bind="onAddCustomGroupBy"/>
+        </t>
+    </t>
+
+    <t t-name="web.PivotHeader.title">
+        <t t-set="padding" t-value="5 + cell.indent * 30"/>
+        <th
+            class="bg-view text-nowrap cursor-pointer fw-normal user-select-none"
+            t-att-colspan="isXAxis ? cell.width : undefined"
+            t-att-rowspan="isXAxis ? cell.height : undefined"
+            t-att-class="{
+                o_pivot_header_cell_closed: cell.isLeaf,
+                o_pivot_header_cell_opened: !cell.isLeaf,
+                'border-top': isInHead,
+            }"
+            t-attf-style="{{
+                isXAxis
+                    ? undefined
+                    : l10n.direction === 'ltr'
+                        ? 'padding-left: ' + padding + 'px;'
+                        : 'padding-right: ' + padding + 'px;'
+            }}"
+            t-att-data-tooltip="cell.label"
+            t-attf-data-tooltip-position="{{ l10n.direction === 'ltr' ? 'right' : 'left' }}"
+            t-on-pointerdown.capture.stop.synthetic=""
+            t-on-click.stop.synthetic="(ev) => this.onHeaderClick(ev, cell, isXAxis)"
+        >
+            <i t-attf-class="fa fa-{{ cell.isLeaf ? 'plus-square' : 'minus-square-o' }} me-1"/>
+            <span t-esc="cell.title"/>
+        </th>
+    </t>
+
+    <t t-name="web.PivotMeasure">
+        <th class="bg-view text-muted text-center text-nowrap fw-normal o_pivot_measure_row cursor-pointer user-select-none" t-att-colspan="cell.width" t-att-rowspan="cell.height" t-att-class="{
+                o_pivot_sort_order_asc: cell.order === 'asc',
+                o_pivot_sort_order_desc: cell.order === 'desc',
+            }" t-on-click.prevent="() => this.onMeasureClick(cell)" t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
+            <t t-esc="cell.title"/>
+            <i t-if="cell.order === 'asc' || cell.order ==='desc'" t-attf-class="fa fa-caret-{{ cell.order === 'asc' ? 'up' : 'down' }} ms-1"/>
+        </th>
+    </t>
+
+</templates>

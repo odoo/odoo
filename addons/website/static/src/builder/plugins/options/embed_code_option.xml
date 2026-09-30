@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.EmbedCodeOption">
+    <BuilderRow label.translate="Code">
+        <BuilderButton action="'editCode'" preview="false"
+                type="'success'"
+                className="'o_we_edit_code o_we_no_toggle'"
+                title.translate="Edit embedded code">
+            Edit
+        </BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="Alignment">
+        <BuilderButtonGroup>
+            <BuilderButton className="'fa fa-fw fa-align-left'" title.translate="Left" classAction="'text-start'"/>
+            <BuilderButton className="'fa fa-fw fa-align-center'" title.translate="Center" classAction="'text-center'"/>
+            <BuilderButton className="'fa fa-fw fa-align-right'" title.translate="Right" classAction="'text-end'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+</templates>

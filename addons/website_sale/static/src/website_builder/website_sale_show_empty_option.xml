@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale.ShowEmptyOption">
+        <BuilderContext action="'websiteConfig'">
+            <BuilderRow label.translate="Show Empty" tooltip.translate="Show the button even if the Cart/Wishlist is empty" id="'show_empty_opt'">
+                <BuilderButton title.translate="Shopping Cart" icon="'fa-shopping-cart'"
+                    className="'o_btn_show_empty_cart flex-grow-1'"
+                    actionParam="{ views: ['!website_sale.header_hide_empty_cart_link'] }"/>
+            </BuilderRow>
+        </BuilderContext>
+    </t>
+
+</templates>

@@ -1,0 +1,194 @@
+// TODO define these variables elsewhere.
+$o-we-overlay-zindex: ($zindex-fixed + $zindex-modal-backdrop) / 2 !default;
+$o-we-zindex: $o-we-overlay-zindex + 1 !default;
+
+.o_snippet {
+    // No root because can be dragged and dropped and the helper is in the body.
+    position: relative;
+    z-index: $o-we-zindex;
+    width: 77px;
+    background-color: $o-we-sidebar-blocks-content-snippet-bg;
+
+    &.o_draggable_dragging {
+        transform: rotate(-3deg) scale(1.2);
+        box-shadow: 0 5px 25px -10px black;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .o_snippet_thumbnail {
+        width: 100%;
+        overflow: hidden;
+
+        .o_snippet_thumbnail_img {
+            width: 100%;
+            padding-top: 65%;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+    }
+
+    &:not(:hover):not(.o_disabled):not(.o_to_install) {
+        background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .9);
+
+        .o_snippet_thumbnail {
+            filter: saturate(.7);
+            opacity: .9;
+        }
+    }
+}
+
+.o_block_tab {
+    background-color: $o-we-sidebar-blocks-content-bg;
+    padding: map-get($spacers, 2);
+    height: 100%; // give enough space for tips pointing at snippets after a snippet search
+    z-index: 1;
+
+
+    .o_snippets_container, .o_snippets_container_header {
+        padding-bottom: $o-we-sidebar-blocks-content-spacing;
+    }
+
+    .o_snippets_container_header {
+        position: sticky;
+        top: 0;
+        background-color: $o-we-sidebar-blocks-content-bg;
+        padding-top: $o-we-sidebar-blocks-content-spacing;
+        z-index: 1;
+    }
+
+    .o_snippets_container_body {
+        display: flex; // Needed for too long snippet names
+        flex-wrap: wrap;
+        margin-left: -$o-we-sidebar-blocks-content-snippet-spacing;
+        z-index: 0;
+        position: relative;
+
+        &.o_snippets_container_body_row_cols_2 {
+            .o_snippet {
+                width: 50%;
+            }
+            .o_snippet_thumbnail_img {
+                padding-top: 45%;
+                background-size: contain;
+                background-position: center top;
+            }
+        }
+
+        .o_snippet {
+            flex: 0 0 auto;
+            width: percentage(1 / 3);
+            background-clip: padding-box;
+            border-left: $o-we-sidebar-blocks-content-snippet-spacing solid transparent;
+            margin-bottom: $o-we-sidebar-blocks-content-snippet-spacing;
+            user-select: none;
+            @include o-grab-cursor;
+
+            .o_snippet_thumbnail_title {
+                @include o-text-overflow(block);
+                white-space: normal;
+                padding: $o-we-sidebar-blocks-content-spacing / 2;
+                text-align: center;
+            }
+
+            .o_snippet_thumbnail_area {
+                position: absolute;
+                inset: 0;
+                background: transparent;
+                border: none;
+                cursor: inherit;
+
+                &:focus-visible {
+                    border: $o-we-border-width * 2 solid $o-we-color-success;
+                    outline: none;
+                    box-shadow: none;
+                }
+            }
+
+            &.o_disabled {
+                pointer-events: initial;
+
+                .o_snippet_undroppable {
+                    @include o-position-absolute(8px, 6px, auto, auto);
+                }
+            }
+
+            &.o_disabled, &.o_to_install {
+                cursor: default;
+                background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .2);
+
+                .o_snippet_thumbnail_img {
+                    opacity: .4;
+                    filter: saturate(0) blur(1px);
+                }
+            }
+        }
+    }
+
+    #snippet_custom_content .o_snippet {
+        display: flex;
+        width: 100%;
+
+        .o_snippet_thumbnail,
+        .rename-delete-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .o_snippet_thumbnail {
+            min-width: 0; // Ensure text-overflow on flex children
+        }
+
+        .o_snippet_thumbnail_title {
+            white-space: nowrap;
+        }
+
+        .o_snippet_thumbnail_img {
+            flex-shrink: 0;
+            width: 41px;
+            height: 30px; // 82x60 -> 41x30
+            padding: 0;
+        }
+
+        // TODO improve the following rules later
+        .rename-delete-buttons button {
+            // @extend %we-generic-link;
+            padding-left: $o-we-sidebar-content-field-button-group-button-spacing;
+            padding-right: $o-we-sidebar-content-field-button-group-button-spacing;
+        }
+
+        &:not(:hover, :focus-within), &.o_disabled:hover {
+            .rename-delete-buttons button {
+                display: none;
+            }
+        }
+
+        .rename-input {
+            // @extend %we-generic-text-input;
+            display: flex;
+            cursor: pointer;
+
+            input {
+                cursor: text;
+            }
+
+            button {
+                // @extend %we-generic-clickable;
+                cursor: pointer;
+                flex: 1 1 auto;
+                padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
+                line-height: 17px;
+                text-align: center;
+            }
+        }
+    }
+}
+
+.modal-open:has(.o_block_tab) {
+    .o_snippet {
+        // --bs-modal-zindex + 1 so that dragged snippets are visible if the
+        // builder is in a modal
+        z-index: 1056;
+    }
+}

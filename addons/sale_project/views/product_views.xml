@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_form_view_invoice_policy_inherit_sale_project" model="ir.ui.view">
+        <field name="name">product.template.inherit.sale.projectform</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="invoice_policy" position="attributes">
+                <attribute name="invisible" separator="or" add="type == 'service'"/>
+            </field>
+            <field name="service_tracking" position="attributes">
+                <attribute name="invisible" remove="1" separator="or"/>
+            </field>
+            <field name="service_tracking" position="after">
+                <div class="o_td_label d-inline-flex" invisible="service_tracking != 'task_global_project'">
+                    <label for='project_id'/>
+                </div>
+                <field name="project_id" context="{'default_allow_billable': True}" invisible="service_tracking != 'task_global_project'" nolabel="1" placeholder="Defined on quotation"/>
+                <div class="o_td_label d-inline-flex" invisible="service_tracking not in ['task_in_project', 'project_only']">
+                    <label for='project_template_id'/>
+                </div>
+                <field name="project_template_id" context="{'active_test': False, 'default_allow_billable': True, 'default_is_template': True}" invisible="service_tracking not in ['task_in_project', 'project_only']" nolabel="1" placeholder="Empty project"/>
+                <div class="o_td_label d-inline-flex"
+                    invisible="not project_id or service_tracking != 'task_global_project'">
+                    <label for="task_template_id" />
+                </div>
+                <!-- field for project manager -->
+                <field name="task_template_id"
+                    groups="project.group_project_manager"
+                    context="{'default_is_template': True, 'default_project_id': project_id or project_template_id}"
+                    invisible="not project_id or service_tracking != 'task_global_project'"
+                    nolabel="1" />
+                <!-- field for non-project manager -->
+                <field name="task_template_id"
+                    groups="!project.group_project_manager"
+                    options="{'no_open': True, 'no_create_edit': True, 'no_create': True}"
+                    invisible="not project_id or service_tracking != 'task_global_project'"
+                    nolabel="1" />
+                <field name="service_policy"
+                    string="Invoicing Policy"
+                    invisible="type != 'service' or sale_ok == False"
+                    required="type == 'service' and sale_ok == True"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- TODO: remove me in master -->
+    <record id="product_template_form_view_inherit_sale_project" model="ir.ui.view">
+        <field name="name">product.template.sale.project.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale.product_template_form_view"/>
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <field name="type" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_product_form_view_inherit_sale_project" model="ir.ui.view">
+        <field name="name">product.product.sale.project.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <field name="type" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

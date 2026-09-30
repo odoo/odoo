@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website.ThemePreviewForm.ControlPanel.BreadCrumbs">
+        <t t-set="breadcrumb" t-value="breadcrumbs.slice(-1)[0] || {}"/>        
+        <div class="o_breadcrumb d-flex gap-1">
+            <div class="active d-flex flex-column">
+                <h4 class="mb-0"><t t-call="web.Breadcrumb.Name"/></h4>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.ThemePreviewForm.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
+        <xpath expr="//*[hasclass('o_control_panel')]" position="attributes">
+            <attribute name="class" remove="pb-3" add="pb-2" separator=" "/>
+        </xpath>
+        <xpath expr="//*[hasclass('o_control_panel_main_buttons')]" position="inside">
+            <button class="o_switch_theme btn btn-secondary d-none d-md-inline-block me-1" t-on-click.stop="this.back">
+                <i class="oi oi-arrow-left" role="img" aria-label="Go Back"/>
+            </button>
+        </xpath>
+        <xpath expr="//*[hasclass('o_control_panel_actions')]" position="attributes">
+            <attribute name="class" remove="justify-content-lg-around" add="justify-content-sm-end flex-grow-1 flex-shrink-1 flex-basis-sm-0" separator=" "/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_control_panel_navigation')]" position="replace">
+            <div class="o_control_panel_switch_device d-none d-lg-flex" role="group">
+                <div class="btn-group">
+                    <input class="btn-check" id="themeViewerDesktop" type="radio" name="viewer" data-mode='desktop' autocomplete="off" checked="checked"/>
+                    <label class="btn btn-secondary" for="themeViewerDesktop" t-on-click="this.onDesktopClick">
+                        <i class="fa fa-fw fa-desktop" role="img" aria-label="Desktop"/>
+                    </label>
+                    <input class="btn-check"  id="themeViewerMobile" type="radio" name="viewer" data-mode='mobile' autocomplete="off"/>
+                    <label class="btn btn-secondary" for="themeViewerMobile" t-on-click="this.onMobileClick">
+                        <i class="fa fa-fw fa-mobile" role="img" aria-label="Mobile"/>
+                    </label>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-else]/Breadcrumbs" position="replace">
+            <t t-call="website.ThemePreviewForm.ControlPanel.BreadCrumbs"/>
+        </xpath>
+    </t>
+
+    <t t-name="website.ThemePreviewFormController" t-inherit="web.FormView" t-inherit-mode="primary">
+        <xpath expr="//Layout" position="inside">
+            <t t-set-slot="layout-actions">
+                <ViewButton className="'btn btn-primary o_use_theme'"
+                            clickParams="{type: 'object', name: 'button_choose_theme'}"
+                            record="this.model.root">
+                    <t t-set-slot="contents">Use this theme</t>
+                </ViewButton>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="website.ThemePreviewKanban.ControlPanel.BreadCrumbs">
+            <div class="o_breadcrumb d-flex gap-1">
+                <div class="active d-flex flex-column">
+                    <div class="fw-bold text-truncate">Pick a Theme</div>
+                    <div class="text-muted small">Don't worry, you can switch later.</div>
+                </div>
+            </div>
+    </t>
+
+    <t t-name="website.ThemePreviewKanban.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
+        <xpath expr="//*[hasclass('o_control_panel')]" position="attributes">
+            <attribute name="class" remove="pb-3" add="pb-2" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-else]/Breadcrumbs" position="replace">
+            <t t-call="website.ThemePreviewKanban.ControlPanel.BreadCrumbs"/>
+        </xpath>
+        <xpath expr="//div[hasclass('o_control_panel_actions')]" position="replace"/>
+        <xpath expr="//div[hasclass('o_control_panel_navigation')]" position="replace">
+            <a class="btn btn-secondary align-self-center" t-on-click="this.close" aria-label="Close" data-tooltip="Close">
+                <i class="oi oi-close" role="img" aria-label="close"/>
+            </a>
+        </xpath>
+    </t>
+</templates>

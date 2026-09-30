@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_document_type_form" model="ir.ui.view">
+        <field name="name">l10n_latam.document.type.form</field>
+        <field name="model">l10n_latam.document.type</field>
+        <field name="arch" type="xml">
+            <form string="Document Type" create="0" edit="0">
+                <group>
+                    <field name='code'/>
+                    <field name="name"/>
+                    <field name='doc_code_prefix'/>
+                    <field name='report_name'/>
+                    <field name='internal_type'/>
+                    <field name='country_id'/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_document_type_tree" model="ir.ui.view">
+        <field name="name">l10n_latam.document.type.list</field>
+        <field name="model">l10n_latam.document.type</field>
+        <field name="arch" type="xml">
+            <list string="Document Type" decoration-muted="(not active)" create="0" edit="0">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="doc_code_prefix"/>
+                <field name='report_name'/>
+                <field name='internal_type'/>
+                <field name='country_id'/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_document_type_filter" model="ir.ui.view">
+        <field name="name">l10n_latam.document.type.filter</field>
+        <field name="model">l10n_latam.document.type</field>
+        <field name="arch" type="xml">
+            <search string="Document Type">
+                <field name="name"/>
+                <field name="code"/>
+                <field name='internal_type'/>
+                <field name='country_id'/>
+                <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active document types"/>
+                <filter name="inactive" string="Archived" domain="[('active','=',False)]" help="Show archived document types"/>
+                <group>
+                    <filter string="Internal Type" name="group_by_internal_type" context="{'group_by':'internal_type'}"/>
+                    <filter string="Localization" name="group_by_localization" context="{'group_by':'country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_document_type">
+        <field name="name">Document Types</field>
+        <field name="res_model">l10n_latam.document.type</field>
+        <field name="domain">['|', ('active', '=', True), ('active', '=', False)]</field>
+        <field name="context">{"search_default_active":1}</field>
+    </record>
+
+    <menuitem action="action_document_type" id="menu_document_type" sequence="20" parent="account.account_account_menu"/>
+
+</odoo>

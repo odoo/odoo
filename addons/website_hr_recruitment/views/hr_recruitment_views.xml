@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_recruitment_tree_url" model="ir.ui.view" >
+        <field name="name">hr.recruitment.list.inherit.url</field>
+        <field name="model">hr.recruitment.source</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_recruitment_source_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='medium_id']" position="after">
+                <field name="url" widget="RecruitmentCopyClipboardChar" class="o_website_hr_recruitment_field_CopyClipboardURL" options="{'displayed_value': 'URL'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_job_form_website_published_button" model="ir.ui.view" >
+        <field name="name">hr.job.form.inherit.published.button</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <field name="is_published" widget="website_redirect_button"/>
+            </div>
+            <label name="no_of_recruitment_label" position="before">
+                <field name="website_published" string="Published" widget="boolean_toggle"/>
+            </label>
+            <group name="hiring_process" position="inside">
+                <field name="website_id" placeholder="All websites" options="{'no_create': True}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="website.group_multi_website"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_hr_job_form_inherit_website" model="ir.ui.view">
+        <field name="name">hr.job.form</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <field name="description" position="attributes">
+                <attribute name="placeholder">e.g. Summarize the position in one or two lines that will be displayed on the Jobs list page...</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_hr_job_tree_inherit_website" model="ir.ui.view">
+        <field name="name">hr.job.list</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_job_view_tree_inherit"/>
+        <field name="arch" type="xml">
+            <field name="no_of_employee" position="before">
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+            </field>
+            <xpath expr="//field[@name='alias_id']" position="before">
+                <field name="is_published" string="Published"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

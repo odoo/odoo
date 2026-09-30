@@ -1,0 +1,75 @@
+/* EVENT BADGE : CARD USED IN ALL FORMATS */
+
+.o_event_badge_report_page_break {
+    page-break-after:always;
+}
+
+.o_event_badge_height {
+    height: 148mm;
+}
+
+.o_event_badge_ticket_wrapper {
+    background-color: white;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    border: solid 1px #939393;
+    margin: 16px 8px;
+    padding: 10px 0px 0px;
+    font-size: 1.2rem;
+    box-shadow: -3px 3px 9px 0px rgba(0,0,0,0.51);
+    height: 138mm;
+
+    .o_event_badge_font_faded {
+        color: #939393;
+    }
+
+    .o_event_badge_font_small {
+        @include font-size(.8rem);
+    }
+
+    .o_event_badge_logo {
+        max-height: 84px;
+        max-width: 174px;
+    }
+}
+
+.o_event_badge_ticket_center_vertically {
+    top: 50%;
+    -moz-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+/* EVENT BADGE : A4 FOLDABLE (A4_french_fold) */
+
+.o_event_foldable_badge_container {
+
+    .o_event_foldable_badge_left_quarter {
+        border-right: .75mm dotted lightgray;
+    }
+
+    .o_event_foldable_badge_bottom_row {
+        border-top: .75mm dotted black;
+        margin-top: .25mm;
+        .o_event_foldable_badge_bottom_left {
+            .o_event_foldable_badge_answer {
+                border-radius: 6px;
+            }
+        }
+    }
+
+    .o_event_foldable_badge_instructions {
+        background-color: white;
+        .o_event_foldable_badge_step {
+            position: absolute;
+            padding: 3px 5px;
+            margin-top: 5mm;
+            margin-left: 5mm;
+            border-radius: 50%;
+            background-color: black;
+            color: white;
+        }
+    }
+}

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="crm_lead_merge_summary" name="crm_lead_merge_summary">
+    <div class="crm_lead_merge_summary">
+        <t t-foreach="opportunities" t-as="lead">
+            <div>
+                <span>Merged the Lead/Opportunity</span>
+                <span class="fw-bold" t-field="lead.name"/>
+                <span>into this one.</span>
+            </div>
+            <blockquote class="border-start" data-o-mail-quote="1">
+                <div t-if="lead.expected_revenue">
+                    <span>Expected Revenues:</span>
+                    <span t-if="lead.expected_revenue">
+                        <span t-if="lead.company_currency" t-field="lead.expected_revenue"
+                            t-options='{"widget": "monetary", "display_currency": lead.company_currency}'/>
+                        <span t-else="" t-out="lead.expected_revenue"/>
+                        <span t-if="lead.recurring_revenue" groups="crm.group_use_recurring_revenues"> + </span>
+                    </span>
+                    <span t-if="lead.recurring_revenue" groups="crm.group_use_recurring_revenues">
+                        <span t-if="lead.company_currency" t-field="lead.recurring_revenue"
+                            t-options='{"widget": "monetary", "display_currency": lead.company_currency}'/>
+                        <span t-else="" t-out="lead.recurring_revenue"/>
+                        <span t-field="lead.recurring_plan.name"/>
+                    </span>
+                </div>
+                <div t-elif="lead.recurring_revenue" groups="crm.group_use_recurring_revenues">
+                    <span t-if="lead.company_currency" t-field="lead.recurring_revenue"
+                        t-options='{"widget": "monetary", "display_currency": lead.company_currency}'/>
+                    <span t-else="" t-out="lead.recurring_revenue"/>
+                    <span t-field="lead.recurring_plan.name"/>
+                </div>
+                <div t-if="lead.probability">
+                    Probability: <span t-field="lead.probability"/>%
+                </div>
+                <div>
+                    Type: <span t-field="lead.type"/>
+                </div>
+                <div t-if="lead.type != 'lead'">
+                    Stage: <span t-field="lead.stage_id"/>
+                </div>
+                <div t-if="lead.priority">
+                    Priority: <span t-field="lead.priority"/>
+                </div>
+                <div t-if="lead.lost_reason_id">
+                    Lost Reason: <span t-field="lead.lost_reason_id"/>
+                </div>
+                <div>
+                    Created on: <span t-field="lead.create_date"/>
+                </div>
+                <div t-if="lead.date_automation_last">
+                    Last Automation: <span t-field="lead.date_automation_last"/>
+                </div>
+                <div t-if="lead.date_deadline">
+                    Expected Closing: <span t-field="lead.date_deadline"/>
+                </div>
+                <div t-if="not is_html_empty(lead.description)">
+                    Notes: <span t-field="lead.description"/>
+                </div>
+                <div t-if="lead.lang_id" name="lang_id">
+                    Language: <span t-field="lead.lang_id"/>
+                </div>
+                <div t-if="lead.referred" name="referred">
+                    Referred By: <span t-field="lead.referred"/>
+                </div>
+                <div t-if="lead.tag_ids" name="tag_ids" class="d-flex flex-row">
+                    Tags:
+                    <div class="ms-2 d-flex flex-row">
+                        <div t-foreach="lead.tag_ids" t-as="tag" t-esc="tag.name"
+                            t-attf-class="badge rounded-pill o_tag o_tag_color_#{tag.color} d-inline-block"/>
+                    </div>
+                </div>
+                <div t-if="lead.user_id" class="mt-3">
+                    Salesperson: <span t-field="lead.user_id"/>
+                </div>
+                <div t-if="lead.team_id">
+                    Sales Team: <span t-field="lead.team_id"/>
+                </div>
+                <div name="company" groups="base.group_multi_company">
+                    Company: <span t-field="lead.company_id"/>
+                </div>
+                <div>
+                    <div class="mt-3"
+                            t-if="lead.contact_name or lead.partner_name or lead.phone or lead.email_from or lead.website">
+                        <div class="fw-bold">
+                            Contact Details:
+                        </div>
+                        <div t-if="lead.contact_name">
+                            Contact: <span t-field="lead.contact_name"/>
+                        </div>
+                        <div t-if="lead.partner_name">
+                            Company Name: <span t-field="lead.partner_name"/>
+                        </div>
+                        <div t-if="lead.phone">
+                            Phone: <span t-field="lead.phone"/>
+                        </div>
+                        <div t-if="lead.email_from">
+                            Email: <span t-field="lead.email_from"/>
+                        </div>
+                        <div t-if="lead.email_cc">
+                            Email cc: <span t-field="lead.email_cc"/>
+                        </div>
+                        <div t-if="lead.website">
+                            Website: <span t-field="lead.website"/>
+                        </div>
+                        <div t-if="lead.function">
+                            Job Position: <span t-field="lead.function"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3"
+                        t-if="lead.street or lead.street2 or lead.zip or lead.city or lead.state_id or lead.country_id"
+                        name="address">
+                    <div class="fw-bold">
+                        Address:
+                    </div>
+                    <div t-if="lead.street" t-field="lead.street"/>
+                    <div t-if="lead.street2" t-field="lead.street2"/>
+                    <div t-if="lead.zip" t-field="lead.zip"/>
+                    <div t-if="lead.city" t-field="lead.city"/>
+                    <div t-if="lead.state_id" t-field="lead.state_id"/>
+                    <div t-if="lead.country_id" t-field="lead.country_id"/>
+                </div>
+                <div class="mt-3" name="marketing"
+                        t-if="lead.campaign_id or lead.medium_id or lead.source_id">
+                    <div class="fw-bold">
+                        Marketing:
+                    </div>
+                    <div t-if="lead.campaign_id">
+                        Campaign: <span t-field="lead.campaign_id"/>
+                    </div>
+                    <div t-if="lead.medium_id">
+                        Medium: <span t-field="lead.medium_id"/>
+                    </div>
+                    <div t-if="lead.source_id">
+                        Source: <span t-field="lead.source_id"/>
+                    </div>
+                </div>
+                <t t-set="lead_followers" t-value="merged_followers and merged_followers.get(lead.id)"/>
+                <div class="mt-3 mb-3" name="merged_followers" t-if="lead_followers">
+                    <div>
+                        The contacts below have been added as followers of this lead
+                        because they have been contacted less than 30 days ago on
+                        <span class="fw-bold" t-esc="lead.name"/>.
+                    </div>
+                    <ul>
+                      <li t-foreach="lead_followers" t-as="follower">
+                        <t t-esc="follower.partner_id.name"/>
+                        <t t-if="follower.partner_id.email">
+                            (<t t-esc="follower.partner_id.email"/>)
+                        </t>
+                      </li>
+                    </ul>
+                </div>
+                <t t-set="properties" t-value="lead._format_properties()"/>
+                <div t-if="properties" class="mt-3 mb-3">
+                    <div class="fw-bold">
+                        Properties
+                    </div>
+                    <ul class="p-0">
+                        <li t-foreach="properties" t-as="property"
+                            class="d-flex flex-row align-items-center">
+                            <t t-esc="property['label']"/>:
+                            <div t-if="'values' in property"
+                                class="ms-2 d-flex flex-row"> <!-- Tags -->
+                                <div t-foreach="property['values']" t-as="tag" t-esc="tag['name']"
+                                    t-attf-class="badge rounded-pill o_tag o_tag_color_#{tag.get('color', 0)} d-inline-block me-2"/>
+                            </div>
+                            <div t-else="" class="ms-2" t-esc="property['value']"/>
+                        </li>
+                    </ul>
+                </div>
+            </blockquote>
+        </t>
+    </div>
+</template>
+
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.NotificationWowl">
+        <div t-on-mouseenter="freeze" t-on-mouseleave="refresh" t-attf-class="o_notification {{props.className}} d-flex mb-2 position-relative rounded shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+            <span t-attf-class="o_notification_bar bg-{{props.type}} rounded-start"/>
+            <div class="w-100 py-2 ps-3 pe-5 border border-start-0 rounded-end text-break">
+                <button type="button" class="o_notification_close btn-close position-absolute top-0 end-0 mt-2 me-2" aria-label="Close" t-on-click="close"/>
+                <div class="o_notification_body d-flex align-items-center">
+                    <span class="me-auto o_notification_content w-100">
+                        <!-- TODO-IPB: at the end, title has to be removed, but the change is too important to do all in once now -->
+                        <t t-if="props.title"><t t-out="props.title"/>. </t>
+                        <t t-out="props.message"/>
+                    </span>
+                    <div t-if="props.buttons.length" class="o_notification_buttons justify-content-end w-50">
+                        <button t-foreach="props.buttons" t-as="button" type="button" t-key="button_index" t-attf-class="btn btn-link" t-on-click="button.onClick">
+                            <t t-if="button.icon">
+                                <i t-if="button.icon.indexOf('fa-') === 0" role="img" t-att-aria-label="button.name" t-att-title="button.name" t-attf-class="fa fa-fw {{button.icon}} me-1"/>
+                                <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
+                            </t>
+                            <span class="fw-bolder" t-esc="button.name"/>
+                        </button>
+                    </div>
+                </div>
+                <div t-ref="autoclose_progress_bar"  t-attf-class="o_notification_progress opacity-75 bg-{{props.type}}"></div>
+            </div>
+        </div>
+    </t>
+
+</templates>

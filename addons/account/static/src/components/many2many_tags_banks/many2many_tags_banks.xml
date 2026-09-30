@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="FieldMany2ManyTagsBanksTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_tag_badge_text')]" position="before">
+            <span class="me-1">
+                <i t-if="tag.allowOutPayment" class="fa fa-shield text-success" data-tooltip="Trusted"/>
+                <i t-else="" class="fa fa-exclamation-circle text-danger" data-tooltip="Untrusted"/>
+            </span>
+        </xpath>
+    </t>
+
+    <t t-name="account.FieldMany2ManyTagsBanks" t-inherit="web.Many2ManyTagsField" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_field_many2many_selection')]" position="inside">
+            <button
+                aria-label="Internal link"
+                class="btn btn-link text-action o_dropdown_button px-1 py-0 oi oi-arrow-right"
+                data-tooltip="Internal link"
+                draggable="false"
+                tabindex="-1"
+                type="button"
+                t-on-click="this.openBanksListView"
+            />
+        </xpath>
+    </t>
+</templates>

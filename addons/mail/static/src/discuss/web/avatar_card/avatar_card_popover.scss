@@ -1,0 +1,28 @@
+.o_card_avatar {
+    img {
+        height: 60px;
+        aspect-ratio: 1;
+    }
+
+    .o_card_avatar_im_status {
+        bottom: -4px;
+        right: -4px;
+        border-radius: 2rem;
+        height: 18px;
+        width: 18px;
+    }
+}
+
+.o_avatar_card {
+    --card-bg: #{$popover-bg};
+    --card-border-color: #{$popover-border-color};
+
+    max-width: 380px;
+    @media screen  and (max-width: 480px) {
+        max-width: 90vw;
+    }
+}
+
+.o_popover:has(.o_card_avatar) {
+    --popover-border-color: #{$secondary};
+}

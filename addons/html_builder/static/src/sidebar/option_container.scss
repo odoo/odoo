@@ -1,0 +1,58 @@
+.options-container {
+    background-color: $o-we-bg-lighter;
+
+    .options-container-header {
+        --o-hb-btn-has-icon-paddingX: #{map-get($spacers, 1)};
+
+        background-color: $o-we-bg-light;
+
+        .o-hb-image-size-info {
+            margin-left: 8px;
+        }
+    }
+
+    &:where(:not(:first-of-type)) .options-container-header {
+        box-shadow: inset 0 1px 0 $o-we-bg-lighter;
+    }
+
+    .options-container-label {
+        color: $o-we-fg-light;
+        font-size: $o-we-font-size-lg;
+
+        &-actionable:hover {
+            color: $o-we-fg-lighter
+        }
+    }
+
+    div:has(> input.o_we_large) {
+        width: 100%;
+    }
+
+    @include o-input-number-no-arrows();
+
+    .o_we_table_wrapper {
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+
+        table {
+            border-collapse: separate;
+            border-spacing: $o-hb-row-spacing $o-hb-row-spacing;
+        }
+    }
+
+    .o-hb-image-size-info {
+        background-color: $o-we-bg-darker;
+    }
+
+    .hb-row-content .o-hb-image-size-info {
+        font-size: 0.9em;
+    }
+}
+
+.o_we_img_animate {
+    padding-top: 10px;
+    &:hover img {
+        content: image-set(var(--animate-src));
+    }
+}

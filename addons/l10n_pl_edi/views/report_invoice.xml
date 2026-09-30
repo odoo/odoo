@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[hasclass('invoice_main')]" position="after">
+            <div t-if="o.l10n_pl_edi_status == 'accepted'" class="row avoid-page-break-inside">
+                <div class="col-3" id="ksef_verification_code">
+                    <div class="qrcode me-3" id="ksef_qr_code">
+                        <img t-att-src="image_data_uri(o._l10n_pl_edi_generate_qr())"/>
+                    </div>
+                    <span class="center" id="ksef_number">
+                        <t t-if="o.l10n_pl_edi_number" t-out="o.l10n_pl_edi_number"/>
+                    </span>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.TranscriptSender">
+        <div class="o-livechat-TranscriptSender">
+            <div class="input-group">
+                <input t-ref="input" t-on-keydown="onKeydown" t-model="state.email" t-att-disabled="isInputDisabled" type="text" class="form-control" t-att-class="{'bg-view': !isInputDisabled}" placeholder="mail@example.com" />
+                <button class="btn btn-primary" type="button" data-action="sendTranscript" t-att-disabled="isButtonDisabled" t-on-click="onClickSend">
+                    <i class="fa" t-att-class="{
+                        'fa-circle-o-notch fa-spin': state.status === STATUS.SENDING,
+                        'fa-check': state.status === STATUS.SENT,
+                        'fa-paper-plane': state.status === STATUS.IDLE,
+                        'fa-repeat': state.status === STATUS.FAILED,
+                    }" />
+                </button>
+            </div>
+            <div class="form-text ms-1">
+                <t t-if="state.status === STATUS.SENT">The conversation was sent.</t>
+                <t t-elif="state.status === STATUS.FAILED">An error occurred. Please try again.</t>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,506 @@
+<odoo>
+    <data>
+        <menuitem id="menu_main" name="Discussions" sequence="20" parent="base.menu_tests"/>
+
+        <menuitem id="menu_sub" name="Discussions" parent="menu_main" sequence="10"/>
+
+        <record id="action_discussions" model="ir.actions.act_window">
+            <field name="name">Discussions</field>
+            <field name="res_model">test_orm.discussion</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="menu_discussions" action="action_discussions" parent="menu_sub" sequence="10"/>
+
+        <record id="action_messages" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">test_orm.message</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="menu_messages" action="action_messages" parent="menu_sub" sequence="20"/>
+
+        <record id="action_multi" model="ir.actions.act_window">
+            <field name="name">Multi</field>
+            <field name="res_model">test_orm.multi</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="menu_multi" action="action_multi" parent="menu_sub"/>
+
+        <menuitem id="menu_config" name="Configuration" parent="menu_main" sequence="20"/>
+
+        <record id="action_categories" model="ir.actions.act_window">
+            <field name="name">Categories</field>
+            <field name="res_model">test_orm.category</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="menu_categories" action="action_categories" parent="menu_config"/>
+
+        <!-- Discussion form view -->
+        <record id="discussion_form" model="ir.ui.view">
+            <field name="name">discussion form view</field>
+            <field name="model">test_orm.discussion</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                <form string="Discussion">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <!--
+                                Bug if the view contains at least 5 fields.
+                                The order of the dic values changes and the _check_author constraint raise.
+                                <field name="categories" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            -->
+                            <field name="moderator"/>
+                        </group>
+                        <notebook>
+                            <page string="Messages">
+                                <field name="messages">
+                                    <list string="Messages">
+                                        <field name="name"/>
+                                        <field name="body"/>
+                                        <field name="important"/>
+                                    </list>
+                                    <form string="Message">
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="author"/>
+                                            <field name="size"/>
+                                            <field name="important"/>
+                                        </group>
+                                        <label for="body"/>
+                                        <field name="body"/>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Emails">
+                                <field name="important_emails">
+                                    <list name="Important Messages">
+                                        <field name="name"/>
+                                        <field name="body"/>
+                                        <field name="important"/>
+                                        <field name="email_to"/>
+                                    </list>
+                                    <form string="Important Message">
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="author"/>
+                                            <field name="size"/>
+                                            <field name="important"/>
+                                            <field name="email_to"/>
+                                        </group>
+                                        <label for="body"/>
+                                        <field name="body"/>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Participants">
+                                <field name="participants" widget="many2many">
+                                    <list string="Participants">
+                                        <field name="display_name"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="message_concat"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Discussion form view with editable list -->
+        <record id="discussion_form_2" model="ir.ui.view">
+            <field name="name">discussion form view</field>
+            <field name="model">test_orm.discussion</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="Discussion">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="categories" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        </group>
+                        <notebook>
+                            <page string="Messages">
+                                <field name="messages">
+                                    <list name="Messages" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="author"/>
+                                        <field name="body" required="1"/>
+                                        <field name="size"/>
+                                        <field name="has_important_sibling"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="Participants">
+                                <field name="participants"/>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="message_concat"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_discussions_2" model="ir.actions.act_window">
+            <field name="name">Discussions 2</field>
+            <field name="res_model">test_orm.discussion</field>
+            <field name="view_ids" eval="[Command.clear(),
+                          (0,0,{'view_mode':'list'}),
+                          (0,0,{'view_mode':'form', 'view_id': ref('discussion_form_2')})]"/>
+        </record>
+        <menuitem id="menu_discussions_2" action="action_discussions_2" parent="menu_sub" sequence="10"/>
+
+        <!-- Discussion form view with embedded list -->
+        <record id="discussion_form_3" model="ir.ui.view">
+            <field name="name">discussion form view</field>
+            <field name="model">test_orm.discussion</field>
+            <field name="priority" eval="11"/>
+            <field name="arch" type="xml">
+                <form string="Discussion">
+                    <sheet>
+                        <group>
+                            <field name="name" context="{'generate_dummy_message': True}"/>
+                        </group>
+                        <group>
+                            <field name="messages" />
+                            <field name="important_messages">
+                                <list string="Important messages">
+                                    <field name="name"/>
+                                    <field name="author"/>
+                                    <field name="size"/>
+                                </list>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_discussions_3" model="ir.actions.act_window">
+            <field name="name">Discussions 3</field>
+            <field name="res_model">test_orm.discussion</field>
+            <field name="view_ids" eval="[Command.clear(),
+                          (0,0,{'view_mode':'list'}),
+                          (0,0,{'view_mode':'form', 'view_id': ref('discussion_form_3')})]"/>
+        </record>
+        <menuitem id="menu_discussions_3" action="action_discussions_3" parent="menu_sub" sequence="11"/>
+
+
+        <!-- Message list view -->
+        <record id="message_tree" model="ir.ui.view">
+            <field name="name">message list view</field>
+            <field name="model">test_orm.message</field>
+            <field name="arch" type="xml">
+                <list string="Messages">
+                    <field name="name"/>
+                    <field name="author"/>
+                    <field name="size"/>
+                    <field name="important"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Message form view -->
+        <record id="message_form" model="ir.ui.view">
+            <field name="name">message form view</field>
+            <field name="model">test_orm.message</field>
+            <field name="arch" type="xml">
+                <form string="Message">
+                    <sheet>
+                        <group>
+                            <field name="discussion"/>
+                            <field name="name"/>
+                            <field name="author"/>
+                            <field name="size"/>
+                            <field name="attributes"/>
+                        </group>
+                        <label for="body"/>
+                        <field name="body"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Category list view -->
+        <record id="category_tree" model="ir.ui.view">
+            <field name="name">category list view</field>
+            <field name="model">test_orm.category</field>
+            <field name="arch" type="xml">
+                <list string="Categories">
+                    <field name="display_name"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Category form view -->
+        <record id="category_form" model="ir.ui.view">
+            <field name="name">category form view</field>
+            <field name="model">test_orm.category</field>
+            <field name="arch" type="xml">
+                <form string="Category">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="parent"/>
+                            <field name="root_categ"/>
+                            <field name="dummy"/>
+                            <field name="color"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Multi list view -->
+        <record id="multi_tree" model="ir.ui.view">
+            <field name="name">multi list view</field>
+            <field name="model">test_orm.multi</field>
+            <field name="arch" type="xml">
+                <list string="Multi">
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Multi form view -->
+        <record id="multi_form" model="ir.ui.view">
+            <field name="name">multi form view</field>
+            <field name="model">test_orm.multi</field>
+            <field name="arch" type="xml">
+                <form string="Multi">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner"/>
+                        </group>
+                        <label for="lines"/>
+                        <field name="lines">
+                            <list string="Lines">
+                                <field name="name"/>
+                                <field name="partner"/>
+                            </list>
+                            <form string="Lines">
+                                <group>
+                                    <field name="name"/>
+                                    <field name="partner"/>
+                                </group>
+                                <field name="tags">
+                                    <list string="Tags" editable="bottom">
+                                        <field name="name"/>
+                                    </list>
+                                </field>
+                            </form>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Multi form view -->
+        <record id="model_parent_form" model="ir.ui.view">
+            <field name="name">model parent form view</field>
+            <field name="model">test_orm.model_parent_m2o</field>
+            <field name="arch" type="xml">
+                <form string="Model Parent">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="cost"/>
+                        </group>
+                        <label for="child_ids"/>
+                        <field name="child_ids">
+                            <list string="Children" editable="bottom">
+                                <field name="name"/>
+                                <field name="cost"/>
+                            </list>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="model_shared_cache_compute_parent_view_form" model="ir.ui.view">
+            <field name="name">model_shared_cache_compute_parent_view_form</field>
+            <field name="model">test_orm.model_shared_cache_compute_parent</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="total_amount"/>
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="parent_id"/>
+                                    <field name="amount"/>
+                                    <field name="user_id"/>
+                                </list>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- compute_editable view -->
+        <record id="compute_editable_form" model="ir.ui.view">
+            <field name="name">test_orm.compute_editable.form</field>
+            <field name="model">test_orm.compute_editable</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="precision_rounding"/>
+                        <field name="line_ids" mode="list">
+                            <list editable="bottom">
+                                <field name="value"/>
+                                <field name="edit"/>
+                                <field name="count"/>
+                                <field name="one_compute"/>
+                            </list>
+                            <form>
+                                <!-- this view makes sure that field "same" is not considered -->
+                                <field name="value"/>
+                                <field name="edit"/>
+                                <field name="count"/>
+                                <field name="one_compute"/>
+                            </form>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- python expression in view and groups -->
+        <record id="view_model_some_access" model="ir.ui.view">
+            <field name="name">Test attrs and groups</field>
+            <field name="model">test_orm.model.some_access</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="a" readonly="not d" groups="base.group_erp_manager"/>
+                    <field name="a" readonly="not k" groups="base.group_public"/>  <!-- valid from 'ir.model.access': 'base.group_public' -->
+                    <field name="b" readonly="not d" groups="base.group_system"/>
+                    <field name="c" readonly="d" groups="base.group_erp_manager,base.group_system"/>
+                    <field name="d" readonly="a" groups="base.group_portal"/>
+                    <field name="d" readonly="e"/>
+                    <field name="f" readonly="e"/>
+                    <field name="f" readonly="e" groups="base.group_system"/>
+                    <field name="f" readonly="e" groups="base.group_user"/>
+                    <field name="h" readonly="g"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model_some_access_tree" model="ir.ui.view">
+            <field name="name">Test attrs and groups list</field>
+            <field name="model">test_orm.model.some_access</field>
+            <field name="arch" type="xml">
+                <list string="Test python expression in list" decoration-muted="a == 1">
+                    <field name="b"/>
+                    <field name="c"/>
+                    <field name="d" decoration-warning="c"/>
+                    <groupby name="g_id">
+                        <button string="Action" type="object" name="action_full" invisible="ab != 1"/>
+                    </groupby>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_model_all_access" model="ir.ui.view">
+            <field name="name">Test attrs and groups</field>
+            <field name="model">test_orm.model.all_access</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="ab" readony="cd" groups="base.group_system"/>
+                    <field name="cd" readonly="ab"/>
+                    <field name="cd" readonly="ab" groups="base.group_system"/>
+                    <field name="cd" readonly="ab" groups="!base.group_system"/>
+                    <div invisible="ef">stuff</div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model_no_access" model="ir.ui.view">
+            <field name="name">Test attrs and groups</field>
+            <field name="model">test_orm.model.no_access</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="ab" readony="cd" groups="base.group_system"/>
+                    <field name="cd" readonly="ab"/>
+                    <field name="cd" readonly="ab" groups="base.group_system"/>
+                    <field name="cd" readonly="ab" groups="!base.group_system"/>
+                    <field name="ab" readonly="cd"/>  <!-- allowed because they are no access rights -->
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model2_some_access" model="ir.ui.view">
+            <field name="name">Test attrs and groups_sub</field>
+            <field name="model">test_orm.model2.some_access</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="g_id" groups="base.group_erp_manager"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model_model_active_field_tree" model="ir.ui.view">
+            <field name="name">Test Active List</field>
+            <field name="model">test_orm.model_active_field</field>
+            <field name="arch" type="xml">
+                <list editable='bottom' decoration-muted="not active">
+                    <field name="active"/>
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="children_ids" widget="many2many_tags"/>
+                    <field name="all_children_ids" widget="many2many_tags"/>
+                    <field name="relatives_ids" widget="many2many_tags"/>
+                    <field name="all_relatives_ids" widget="many2many_tags"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_model_model_active_field_search" model="ir.ui.view">
+            <field name="name">Test Active Search</field>
+            <field name="model">test_orm.model_active_field</field>
+            <field name="arch" type="xml">
+                <search string="Search Active Test">
+                    <field name="name" string="By name" filter_domain="[('name', 'ilike', self)]"/>
+                    <field name="parent_id" string="On parent (child_of)" filter_domain="[('parent_id', 'child_of', self)]"/>
+                    <separator/>
+                    <field name="children_ids" string="Children (one2many)"/>
+                    <field name="all_children_ids" string="All Children (one2many)"/>
+                    <separator/>
+                    <field name="relatives_ids" string="Relatives (many2many)"/>
+                    <field name="all_relatives_ids" string="All Relatives (many2many)"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_tests_active" model="ir.actions.act_window">
+            <field name="name">Active Tests</field>
+            <field name="res_model">test_orm.model_active_field</field>
+            <field name="view_mode">list</field>
+            <field name="search_view_id" ref="view_model_model_active_field_search"/>
+        </record>
+        <menuitem id="menu_active" name="Active Test" action="action_tests_active" parent="menu_main" sequence="12"/>
+
+        <record id="view_form_onchange_partial_view" model="ir.ui.view">
+            <field name="name">Onchange partial view: missing company_id field</field>
+            <field name="model">test_orm.onchange.partial.view</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="name"/>
+                    <field name="currency_id"/>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

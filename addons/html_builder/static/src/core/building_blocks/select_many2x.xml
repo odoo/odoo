@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<!-- TODO: support more features from the previous implementation: "callWith", "filterInModel", "filterInField", "nullText" -->
+
+<t t-name="html_builder.SelectMany2X">
+    <SelectMenu
+        choices="this.filteredSearchResult().map(e => ({ value: e, label: e.display_name  }))"
+        onSelect="props.select"
+        onNavigated.bind="onNavigated"
+        menuRef="menuRef"
+        onOpened.bind="onOpened"
+        onClosed.bind="onClosed"
+        searchPlaceholder.translate="Search for records..."
+        onInput.bind="onInput"
+        class="'o-hb-selectMany2X-wrapper min-w-0'"
+        menuClass="'o-hb-select-dropdown o-hb-selectMany2X-dropdown'"
+        togglerClass="'o-hb-selectMany2X-toggle btn-secondary'"
+    >
+        <t t-out="props.message"/>
+        <t t-set-slot="bottomArea" t-slot-scope="select">
+            <a
+                t-if="state.hasMore"
+                t-on-click="() => this.searchMore(select.data.searchValue)"
+                class="'o-dropdown-item dropdown-item o-navigable o_we_m2o_search_more'"
+                title="Search to show more records"
+            >
+                Search more...
+            </a>
+            <SelectMany2XCreate t-if="!!state.nameToCreate" name="state.nameToCreate" create="this.props.create"/>
+        </t>
+    </SelectMenu>
+</t>
+
+<t t-name="html_builder.SelectMany2XCreate">
+    <a t-on-click="create" class="o-dropdown-item dropdown-item o-navigable o_we_m2o_create">
+        Create "<t t-out="props.name"/>"
+    </a>
+</t>
+
+</templates>

@@ -1,0 +1,84 @@
+.o_field_analytic_distribution {
+
+    height: auto;
+
+    .analytic_distribution_placeholder {
+        height: 1.5em;
+        color: grey;
+        opacity: 1;
+    }
+
+    .o_input_dropdown {
+        flex: 1 0 20px;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover {
+            .o_dropdown_button {
+                display: unset;
+            }
+        }
+
+        .o_dropdown_button {
+            display: none;
+        }
+    }
+
+    .badge {
+        margin: 1px 2px 1px 0;
+        border: none;
+        padding-left: 0.6em;
+        padding-right: 0.6em;
+        min-width: unset;
+
+        .o_delete {
+            padding-left: 4px;
+        }
+
+        .o_tag_badge_text {
+            @include o-text-overflow(inline-block);
+            max-width: 200px;
+        }
+    }
+
+    .analytic_distribution_popup {
+        min-width: 400px;
+        max-width: $o-form-sheet-min-width;
+        max-height: 50vh;
+        // this ensures that analytic distribution widget does not cover "new model" or "search more" modals
+        z-index: $zindex-modal - 1;
+        white-space: nowrap;
+        cursor: default;
+
+        .o_input {
+            border-width: 0;
+            cursor: pointer;
+        }
+        .o_analytic_account_name {
+            width: 320px !important;
+        }
+        .o_analytic_percentage {
+            width: 45px !important;
+        }
+        .o_analytic_status_invalid {
+            background-color: $o-danger;
+            margin-left:8px;
+        }
+        .o_analytic_status_ok {
+            background-color: $o-success;
+            margin-left:8px;
+        }
+        tr:hover {
+            outline: none !important;
+        }
+        .numeric_column_width {
+            max-width: 105px;
+            // width: 88px;
+        }
+        .w-20px {
+            width: 20px;
+        }
+    }
+}

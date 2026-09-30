@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report_ge" model="account.report">
+        <field name="name">VAT Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ge"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_base" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="tax_report_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_line_taxable_supplies" model="account.report.line">
+                <field name="name">Annex A - Part I: Output (taxable supplies)</field>
+                <field name="name@ka">დანართი A - ნაწილი I: გამომავალი (დასაბეგრი მარაგები)</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_standard_supplies" model="account.report.line">
+                        <field name="name">1. Supply of goods and/or provision of services in exchange for remuneration</field>
+                        <field name="name@ka">1. ანაზღაურების სანაცვლოდ საქონლის მიწოდება ან/და მომსახურების გაწევა</field>
+                        <field name="code">ge_1</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_standard_supplies_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-1(B)</field>
+                            </record>
+                            <record id="tax_report_line_standard_supplies_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-1(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_special_scheme" model="account.report.line">
+                        <field name="name">1.1 VAT on transactions taxable under a special scheme (margin)</field>
+                        <field name="name@ka">1.1 დღგ, სპეციალური სქემით (მარჟით) დასაბეგრ ოპერაციებზე</field>
+                        <field name="code">ge_2</field>
+                        <field name="hierarchy_level">5</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_special_scheme_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-2(B)</field>
+                            </record>
+                            <record id="tax_report_line_special_scheme_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-2(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_advance" model="account.report.line">
+                        <field name="name">2. Amount paid before delivery of goods and/or provision of services (advances)</field>
+                        <field name="name@ka">2. საქონლის მიწოდებამდე ან/და მომსახურების გაწევამდე ანაზღაურებული თანხა</field>
+                        <field name="code">ge_3</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_advance_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-3(B)</field>
+                            </record>
+                            <record id="tax_report_line_advance_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-3(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_free_supply" model="account.report.line">
+                        <field name="name">3. Free supply of goods, if VAT is fully or partially included in the cost of these goods or the expenditure incurred on them</field>
+                        <field name="name@ka">3. საქონლის უსასყიდლოდ მიწოდება, თუ ამ საქონელზე ან მასზე გაწეულ ხარჯზე დღგ სრულად ან ნაწილობრივ არის ჩათვლილი</field>
+                        <field name="code">ge_4</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_free_supply_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-4(B)</field>
+                            </record>
+                            <record id="tax_report_line_free_supply_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-4(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_inventory_shortage" model="account.report.line">
+                        <field name="name">4. Inventory shortage</field>
+                        <field name="name@ka">4. საქონლის დანაკლისი</field>
+                        <field name="code">ge_5</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_inventory_shortage_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-5(B)</field>
+                            </record>
+                            <record id="tax_report_line_inventory_shortage_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-5(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_free_services" model="account.report.line">
+                        <field name="name">5. Providing services free of charge for the personal benefit of the hired person or for a purpose other than the purpose of his/her own work</field>
+                        <field name="name@ka">5. უსასყიდლოდ მომსახურების გაწევა დაქირავებული პირის პირადი სარგებლობისთვის ან საკუთარი საქმიანობის მიზნიდან განსხვავებული მიზნით</field>
+                        <field name="code">ge_6</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_free_services_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6(B)</field>
+                            </record>
+                            <record id="tax_report_line_free_services_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-6(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_building" model="account.report.line">
+                        <field name="name">6. Use of a self-constructed building/structure as a fixed asset, where the right to input VAT deduction would be fully or partially restricted if acquired from a third party</field>
+                        <field name="name@ka">6. საკუთარი წარმოების შენობის/ნაგებობის ძირითად საშუალებად გამოყენება თუ სხვა პირისგან შეძენის შემთხვევაში სრულად ან ნაწილობრივ შეიზღუდებოდა ჩათვლის უფლება</field>
+                        <field name="code">ge_7</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_building_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-7(B)</field>
+                            </record>
+                            <record id="tax_report_line_building_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-7(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_building_repairs" model="account.report.line">
+                        <field name="name">6.1 Carrying out repairs of own fixed assets (buildings/structures), where the right to input VAT deduction would be fully or partially restricted if such services were acquired from a third party</field>
+                        <field name="name@ka">6.1 საკუთარი ძირითადი საშუალების (შენობის/ნაგებობის) რემონტის განხორციელება, თუ ამ მომსახურების სხვა პირისგან შეძენის შემთხვევაში სრულად ან ნაწილობრივ შეიზღუდებოდა ჩათვლის</field>
+                        <field name="code">ge_8</field>
+                        <field name="hierarchy_level">4</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_building_repairs_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-8(B)</field>
+                            </record>
+                            <record id="tax_report_line_building_repairs_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-8(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_barter" model="account.report.line">
+                        <field name="name">7. Barter transaction for the exchange of goods/services</field>
+                        <field name="name@ka">7. საქონლის/მომსახურების გაცვლის (ბარტერული) ოპერაცია</field>
+                        <field name="code">ge_9</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_barter_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-9(B)</field>
+                            </record>
+                            <record id="tax_report_line_barter_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-9(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_retention_of_goods" model="account.report.line">
+                        <field name="name">7.1 Retention of goods in own ownership after cessation of economic activity, or goods remaining in stock upon deregistration for VAT, where input VAT on such goods or related expenses has been fully or partially deducted</field>
+                        <field name="name@ka">7.1 ეკონომიკური საქმიანობის შეწყვეტის შემდეგ საქონლის საკუთარ მფლობელობაში დატოვება ან დღგ-ის რეგისტრაციის გაუქმების შემთხვევაში ნაშთად დარჩენილი საქონელი, თუ ამ საქონელზე ან მასზე გაწეულ ხარჯზე დღგ სრულად ან ნაწილობრივ არის ჩათვლილი</field>
+                        <field name="code">ge_10</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_retention_of_goods_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-10(B)</field>
+                            </record>
+                            <record id="tax_report_line_retention_of_goods_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-10(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_other_taxable" model="account.report.line">
+                        <field name="name">8. Other taxable transaction</field>
+                        <field name="name@ka">8. სხვა დასაბეგრი ოპერაციები</field>
+                        <field name="code">ge_11</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_other_taxable_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-11(B)</field>
+                            </record>
+                            <record id="tax_report_line_other_taxable_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-11(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_supply_part3" model="account.report.line">
+                        <field name="name">9. Supply of goods and/or provision of services to persons specified in Part 3 of Article 172 of the Tax Code of Georgia</field>
+                        <field name="name@ka">9. საქონლის მიწოდება ან/და მომსახურების გაწევა საქართველოს საგადასახადო კოდექსის 172-ე მუხლის მე-3 ნაწილით გათვალისწინებულ პირთათვის 00</field>
+                        <field name="code">ge_12</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_supply_part3_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-12(B)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_supply_natural_gas" model="account.report.line">
+                        <field name="name">10. Supply of natural gas to thermal power plants</field>
+                        <field name="name@ka">10. თბოელექტროსადგურებისათვის ბუნებრივი აირის მიწოდება</field>
+                        <field name="code">ge_13</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_supply_natural_gas_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-13(B)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_supply_part1" model="account.report.line">
+                        <field name="name">11. Supply of goods and/or provision of services in the cases provided for in Part 1 of Article 172 of the Tax Code of Georgia</field>
+                        <field name="name@ka">11. საქონლის მიწოდება ან/და მომსახურების გაწევა საქართველოს საგადასახადო კოდექსის 172-ე მუხლის პირველი ან მეორე ნაწილით გათვალისწინებულ შემთხვევაში</field>
+                        <field name="code">ge_14</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_supply_part1_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-14(B)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_supply_international" model="account.report.line">
+                        <field name="name">12. The value of goods/services supplied within the framework of projects provided for by individual international agreements</field>
+                        <field name="name@ka">12. ცალკეული საერთაშორისო ხელშეკრულებებით გათვალისწინებული პროექტის ფარგლებში მიწოდებული საქონელი ან/და გაწეული მომსახურება</field>
+                        <field name="code">ge_15</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_supply_international_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-15(B)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_other_exempt" model="account.report.line">
+                        <field name="name">13. Other transactions exempt from VAT on goods, identified as a result of inventory by the tax authority</field>
+                        <field name="name@ka">13. ჩათვლის უფლებით დღგ-სგან გათავისუფლებული სხვა ოპერაციები მათ შორის: საგადასახადო ორგანოს მიერ ინვერტარიზაციის შედეგად გამოვლენილი სასაქონლო- მატერიალური ფასეულობების დანაკლისი</field>
+                        <field name="code">ge_16</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_other_exempt_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-16(B)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_export" model="account.report.line">
+                        <field name="name">14. Export / re-export (customs value)</field>
+                        <field name="name@ka">14. საქონლის მიწოდება საქართველოს ფარგლების გარეთ (საქონლის ექსპორტი/რეექსპორტი)</field>
+                        <field name="code">ge_17</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_export_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-17(B)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_financial_operations" model="account.report.line">
+                        <field name="name">14.1 Financial operations/financial services</field>
+                        <field name="name@ka">14.1 ფინანსური ოპერაციები/ფინანსური მომსახურება</field>
+                        <field name="code">ge_18</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_financial_operations_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-18(B)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_immovable_property" model="account.report.line">
+                        <field name="name">14.2 Supply of immovable property (land plot)</field>
+                        <field name="name@ka">14.2 უძრავი ნივთის (მიწის ნაკვეთის) მიწოდება</field>
+                        <field name="code">ge_19</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_immovable_property_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-19(B)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_other_exempt_no_deduction" model="account.report.line">
+                        <field name="name">14.3 Other operations exempt without the right of deduction</field>
+                        <field name="name@ka">14.3 ჩათვლის უფლების გარეშე გათავისუფლებული სხვა ოპერაციები</field>
+                        <field name="code">ge_20</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_other_exempt_no_deduction_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-20(B)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_total_sales" model="account.report.line">
+                        <field name="name">15. Total sales VAT</field>
+                        <field name="name@ka">15. გაყიდვების დღგ-ს ჯამი</field>
+                        <field name="code">ge_001</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_total_sales_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_1.base+ge_2.base+ge_3.base+ge_4.base+ge_5.base+ge_6.base+ge_7.base+ge_8.base+ge_9.base+ge_10.base+ge_11.base+ge_12.base+ge_13.base+ge_14.base+ge_15.base+ge_16.base+ge_17.base+ge_18.base+ge_19.base+ge_20.base</field>
+                            </record>
+                            <record id="tax_report_line_total_sales_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_1.tax+ge_2.tax+ge_3.tax+ge_4.tax+ge_5.tax+ge_6.tax+ge_7.tax+ge_8.tax+ge_9.tax+ge_10.tax+ge_11.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_reverse_charge" model="account.report.line">
+                <field name="name">Annex A - Part II: Reverse charge VAT (output)</field>
+                <field name="name@ka">უკუდაბეგვრის წესით დარიცხული დღგ</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_reverse_charge_non_resident" model="account.report.line">
+                        <field name="name">1. Services from non-resident (no PE)</field>
+                        <field name="name@ka">საქართველოს ტერიტორიაზე საანგარიშო პერიოდში მიღებული მომსახურება, დასაბეგრი პირისგან, რომელიც არ არის დაფუძნებული ან ჩვეულებრივ არ ცხოვრობს საქართველოში, ან საქართველოში არ გააჩნია ფიქსირებული დაწესებულება, რომელიც მონაწილეობს ამ მომსახურების გაწევაში</field>
+                        <field name="code">ge_21</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_reverse_charge_non_resident_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">21(B)</field>
+                            </record>
+                            <record id="tax_report_line_reverse_charge_non_resident_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-21(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_reverse_charge_foreign_goods" model="account.report.line">
+                        <field name="name">2. Foreign goods purchased from a person in a customs warehouse</field>
+                        <field name="name@ka">საბაჟო საწყობში საგადასახადო კოდექსის 1641-ე მუხლის მე-4 ნაწილით გათვალისწინებულ შემთხვევაში პირისგან შეძენილი უცხოური საქონელი, რომელიც თავისუფალ მიმოქცევაში გაშვების საბაჟო პროცედურაში ექცევა</field>
+                        <field name="code">ge_22</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_reverse_charge_foreign_goods_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">22(B)</field>
+                            </record>
+                            <record id="tax_report_line_reverse_charge_foreign_goods_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-22(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_reverse_charge_fiz" model="account.report.line">
+                        <field name="name">3. Foreign goods purchased from a FIZ enterprise and placed under the customs procedure</field>
+                        <field name="name@ka">საგადასახადო კოდექსის 1641-ე მუხლის მე-5 ნაწილით გათვალისწინებულ შემთხვევაში თიზ-ის საწარმოსგან შეძენილი უცხოური საქონელი, რომელიც თავისუფალ მიმოქცევაში გაშვების საბაჟო პროცედურაში ექცევა</field>
+                        <field name="code">ge_23</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_reverse_charge_fiz_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">23(B)</field>
+                            </record>
+                            <record id="tax_report_line_reverse_charge_fiz_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-23(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_reverse_charge_total" model="account.report.line">
+                        <field name="name">4. Total RC VAT charged</field>
+                        <field name="name@ka">სულ</field>
+                        <field name="code">ge_002</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_reverse_charge_total_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_21.base+ge_22.base+ge_23.base</field>
+                            </record>
+                            <record id="tax_report_line_reverse_charge_total_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_21.tax+ge_22.tax+ge_23.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_deductible_vat" model="account.report.line">
+                <field name="name">Annex A - Part III: Deductible (input) VAT</field>
+                <field name="name@ka">დღგ-ის ჩასათვლელი თანხა</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_deductible_vat_registered" model="account.report.line">
+                        <field name="name">1. Purchases from Georgian VAT-registered suppliers</field>
+                        <field name="name@ka">საქართველოს ტერიტორიაზე სხვა დასაბეგრი პირისგან საქონლის /მომსახურების შეძენისთვის გადახდილი / გადასახდელი დღგ</field>
+                        <field name="code">ge_24</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_deductible_vat_registered_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">24(B)</field>
+                            </record>
+                            <record id="tax_report_line_deductible_vat_registered_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">24(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_deductible_vat_import" model="account.report.line">
+                        <field name="name">2. VAT paid/payable on import of goods</field>
+                        <field name="name@ka">საქონლის იმპორტისას გადახდილი /გადასახდელი დღგ</field>
+                        <field name="code">ge_25</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_deductible_vat_import_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">25(B)</field>
+                            </record>
+                            <record id="tax_report_line_deductible_vat_import_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">25(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_deductible_vat_import_tax_authority" model="account.report.line">
+                        <field name="name">3. VAT accrued on the import of goods based on the decision of the tax authority</field>
+                        <field name="name@ka">საგადასახადო ორგანოს გადაწყვეტილების საფუძველზე საქონლის იმპორტთან დაკავშირებით დარიცხული დღგ</field>
+                        <field name="code">ge_26</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_deductible_vat_import_tax_authority_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">26(B)</field>
+                            </record>
+                            <record id="tax_report_line_deductible_vat_import_tax_authority_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">26(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_deductible_vat_reverse_charge" model="account.report.line">
+                        <field name="name">4. VAT, charged by reverse charge</field>
+                        <field name="name@ka">დღგ, დარიცხული უკუდაბეგვრის წესით </field>
+                        <field name="code">ge_27</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_deductible_vat_reverse_charge_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">27(B)</field>
+                            </record>
+                            <record id="tax_report_line_deductible_vat_reverse_charge_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">27(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_deductible_vat_rc_mechanism" model="account.report.line">
+                        <field name="name">4.1 VAT reflected in the calculation of the VAT amount accrued under the reverse charge mechanism</field>
+                        <field name="name@ka">უკუდაბეგვრის წესით დარიცხული დღგ-ის თანხის გაანგარიშებაში ასახული დღგ</field>
+                        <field name="code">ge_28</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_deductible_vat_rc_mechanism_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                                <field name="figure_type">monetary</field>
+                            </record>
+                            <record id="tax_report_line_deductible_vat_rc_mechanism_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable</field>
+                                <field name="figure_type">monetary</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_deductible_vat_retaining_fixed_assets" model="account.report.line">
+                        <field name="name">5. In case of retaining fixed assets in one's own possession after the cessation of economic activity or cancellation of VAT payer registration</field>
+                        <field name="name@ka">ეკონომიკური საქმიანობის შეწყვეტის შემდეგ ძირითადი საშუალებების საკუთარ მფლობელობაში დატოვების ან დღგ-ის გადამხდელის რეგისტრაციის გაუქმების შემთხვევაში, ნაშთად არსებულ ძირითად საშუალებასთან მიმართებაში, ამ ოპერაციებთან დაკავშირებით დარიცხული დღგ-ის ჩასათვლელი თანხა ამ ინსტრუქციით გათვალისწინებული წესის შესაბამისად</field>
+                        <field name="code">ge_29</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_deductible_vat_retaining_fixed_assets_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">29(B)</field>
+                            </record>
+                            <record id="tax_report_line_deductible_vat_retaining_fixed_assets_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">29(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_deductible_vat_self_produced_building" model="account.report.line">
+                        <field name="name">6. The deductible amount of VAT accrued (payable) in case of using a self-produced building/structure as a fixed asset</field>
+                        <field name="name@ka">საკუთარი წარმოების შენობა-ნაგებობის ძირითად საშუალებად გამოყენების შემთხვევაში დარიცხული (გადასახდელი) დღგ-ის ჩასათვლელი თანხა</field>
+                        <field name="code">ge_30</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_deductible_vat_self_produced_building_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">30(B)</field>
+                            </record>
+                            <record id="tax_report_line_deductible_vat_self_produced_building_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">30(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_deductible_vat_repairs_own_means" model="account.report.line">
+                        <field name="name">6.1 The deductible amount of VAT accrued (payable) in case of repairs of one's own fixed asset (building/structure) carried out by one's own means</field>
+                        <field name="name@ka">საკუთარი ძალებით განხორციელებული ძირითადი საშუალების (შენობის/ნაგებობის) რემონტის შემთხვევაში დარიცხული (გადასახდელი) დღგ-ის ჩასათვლელი თანხა</field>
+                        <field name="code">ge_31</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_deductible_vat_repairs_own_means_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">31(B)</field>
+                            </record>
+                            <record id="tax_report_line_deductible_vat_repairs_own_means_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">31(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_deductible_vat_barter" model="account.report.line">
+                        <field name="name">7. VAT accrued in case of goods/services exchange (barter) operation</field>
+                        <field name="name@ka">დღგ, დარიცხული საქონლის/მომსახურების გაცვლის (ბარტერული) ოპერაციის შემთხვევაში</field>
+                        <field name="code">ge_32</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_deductible_vat_barter_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">32(B)</field>
+                            </record>
+                            <record id="tax_report_line_deductible_vat_barter_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">32(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_deductible_vat_auction" model="account.report.line">
+                        <field name="name">8. VAT paid on goods purchased through auction or enforcement proceedings</field>
+                        <field name="name@ka">დღგ, გადახდილი საქართველოს საგადასახადო კოდექსის 1611 მუხლით გათვალისწინებულ შემთხვევებში1 მუხლით გათვალისწინებულ შემთხვევებში </field>
+                        <field name="code">ge_33</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_deductible_vat_auction_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">33(B)</field>
+                            </record>
+                            <record id="tax_report_line_deductible_vat_auction_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">33(T)</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_deductible_vat_total" model="account.report.line">
+                        <field name="name">9. Total deductible VAT</field>
+                        <field name="name@ka">სულ</field>
+                        <field name="code">ge_003</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_deductible_vat_total_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_24.base+ge_25.base+ge_26.base+ge_27.base+ge_28.base+ge_29.base+ge_30.base+ge_31.base+ge_32.base+ge_33.base</field>
+                            </record>
+                            <record id="tax_report_line_deductible_vat_total_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_24.tax+ge_25.tax+ge_26.tax+ge_27.tax+ge_28.tax+ge_29.tax+ge_30.tax+ge_31.tax+ge_32.tax+ge_33.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_line_net_vat" model="account.report.line">
+                <field name="name">Net VAT calculation</field>
+                <field name="name@ka">წმინდა დღგ-ს გაანგარიშება</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="tax_report_line_total_output_vat" model="account.report.line">
+                        <field name="name">1. Total output VAT</field>
+                        <field name="name@ka">მთლიანი გამომავალი დღგ</field>
+                        <field name="code">ge_34</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_total_output_vat_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_001.base+ge_002.base</field>
+                            </record>
+                            <record id="tax_report_line_total_output_vat_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_001.tax+ge_002.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_line_net_vat_payable" model="account.report.line">
+                        <field name="name">2. Net VAT payable to budget</field>
+                        <field name="name@ka">ბიუჯეტში გადასახდელი წმინდა დღგ</field>
+                        <field name="code">ge_35</field>
+                        <field name="hierarchy_level">3</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_net_vat_payable_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_34.base-ge_003.base</field>
+                            </record>
+                            <record id="tax_report_line_net_vat_payable_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ge_34.tax-ge_003.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

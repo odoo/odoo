@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CalendarFilterSection">
+        <div t-if="section.filters.length gt 0 or section.canAddFilter"
+             class="o_calendar_filter d-flex flex-column gap-1 mt-3 mb-2"
+             t-att-data-name="section.fieldName"
+        >
+            <t t-if="section.label">
+                <div
+                    class="o_calendar_filter_items_checkall o-checkbox form-check w-100"
+                    data-value="section"
+                >
+                    <input
+                        type="checkbox"
+                        name="select-all"
+                        class="form-check-input"
+                        t-attf-id="o_calendar_filter_{{nextFilterId}}"
+                        t-att-checked="isAllActive"
+                        t-att-disabled="section.filters.length === 0"
+                        t-on-change="(ev) => this.onAllFilterInputChange(ev)"
+                    />
+                    <label
+                        class="d-flex align-items-center"
+                        type="button"
+                        t-on-click.stop.prevent="() => this.toggleSection(ev)"
+                    >
+                        <span class="o_cw_filter_label fw-bolder text-truncate flex-grow-1" t-esc="section.label"/>
+                        <i
+                            class="o_cw_filter_collapse_icon fa ms-1"
+                            t-attf-class="fa-caret-{{ state.collapsed ? 'left' : 'down' }}"
+                        />
+                    </label>
+                </div>
+            </t>
+            <t t-if="!state.collapsed">
+                <div class="o_calendar_filter_items d-flex flex-column gap-1">
+                    <t t-foreach="getSortedFilters()" t-as="filter" t-key="filter.value">
+                        <t t-set="filterId" t-value="nextFilterId"/>
+                        <t t-call="{{ constructor.subTemplates.filter }}"/>
+                    </t>
+                </div>
+                <AutoComplete t-if="section.canAddFilter" t-props="autoCompleteProps">
+                    <t t-set-slot="option" t-slot-scope="optionScope">
+                        <t t-if="optionScope.data.id and section.avatar.field">
+                            <img class="rounded me-1 o_avatar" t-attf-src="/web/image/{{ section.avatar.model }}/{{ optionScope.data.id }}/{{ section.avatar.field }}"/>
+                        </t>
+                        <t t-esc="optionScope.label" />
+                    </t>
+                </AutoComplete>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.CalendarFilterSection.filter">
+        <div
+            class="o_calendar_filter_item o-checkbox form-check position-relative w-100 cursor-pointer"
+            t-att-class="getFilterColor(filter)"
+            t-att-data-value="filter.value"
+        >
+            <input
+                type="checkbox"
+                name="selection"
+                class="o_cw_filter_input_bg form-check-input"
+                t-att-style="filter.colorIndex and typeof filter.colorIndex !== 'number' ? `border-color: ${filter.colorIndex}; background-color: ${filter.colorIndex};` : ''"
+                t-attf-id="o_calendar_filter_item_{{filterId}}"
+                t-att-checked="filter.active"
+                t-on-change="(ev) => this.onFilterInputChange(filter, ev)"
+            />
+            <label
+                class="d-flex align-items-center gap-1"
+                t-attf-for="o_calendar_filter_item_{{filterId}}"
+            >
+                <t t-if="section.hasAvatar and filter.hasAvatar">
+                    <img
+                        class="o_cw_filter_avatar o_avatar rounded"
+                        t-attf-src="/web/image/{{ section.avatar.model }}/{{ filter.value }}/{{ section.avatar.field }}"
+                        alt="Avatar"
+                    />
+                </t>
+                <span
+                    class="o_cw_filter_title flex-grow-1 text-truncate lh-base"
+                    t-esc="filter.label"
+                />
+                <span t-if="filter.aggregatedValue" t-esc="filter.aggregatedValue"/>
+            </label>
+            <t t-if="filter.canRemove">
+                <button
+                    class="o_remove btn position-absolute top-0 end-0 py-0 p-1 bg-view text-body transition-base"
+                    role="img"
+                    title="Remove this favorite from the list"
+                    aria-label="Remove this favorite from the list"
+                    t-on-click="(ev) => this.onFilterRemoveBtnClick(filter, ev)"
+                >
+                    <i class="oi oi-close"/>
+                </button>
+            </t>
+        </div>
+    </t>
+
+</templates>

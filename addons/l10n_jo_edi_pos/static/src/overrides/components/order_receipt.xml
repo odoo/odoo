@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="inside">
+            <div class="text-center" t-if="order.l10n_jo_edi_pos_error">RECEIPT WITHOUT FISCAL VALUE</div>
+        </xpath>
+    </t>
+
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[contains(@class, 'after-footer')]" position="after">
+            <t t-if="order.l10n_jo_edi_pos_qr">
+                <div class="text-center">--------------------------------</div>
+                <div class="pos-receipt-order-data mb-2">
+                    JoFotara QR code
+                </div>
+                <div class="mt-3">
+                    <img t-att-src="order.l10nJoEdiPosQrSrc()" class="pos-receipt-qrcode"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

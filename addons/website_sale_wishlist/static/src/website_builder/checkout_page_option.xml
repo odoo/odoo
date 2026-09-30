@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale_wishlist.checkoutPageOption" t-inherit="website_sale.checkoutPageOption" t-inherit-mode="extension">
+    <BuilderContext action="'websiteConfig'" position="inside">
+        <BuilderRow label.translate="Add to Wishlist">
+            <BuilderCheckbox actionParam="{views: ['website_sale_wishlist.product_cart_lines']}"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>

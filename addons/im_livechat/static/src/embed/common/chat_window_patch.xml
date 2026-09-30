@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
+        <xpath expr="//*[@name='thread content']" position="replace">
+           <FeedbackPanel t-if="props.chatWindow.livechatStep === CW_LIVECHAT_STEP.FEEDBACK" onClickClose="() => this.close()" onClickNewSession="() => this.onClickNewSession()" thread="thread"/>
+           <t t-else="">
+            <t>$0</t>
+           </t>
+        </xpath>
+        <xpath expr="//*[@t-ref='needactionCounter']" position="replace">
+            <t t-if="!thread?.chatbot">$0</t>
+        </xpath>
+        <xpath expr="//*[hasclass('o-mail-ChatWindow-header')]" position="attributes">
+            <attribute name="t-attf-style" add="color: {{ livechatService.options.title_color }}; --o-mail-livechat-btn-color: {{ livechatService.options.title_color }}; background-color: {{ livechatService.options.header_background_color }} !important;" separator=" "/>
+        </xpath>
+        <xpath expr="//*[@t-ref='composerDisabledContainer']" position="inside">
+            <button t-if="showGiveFeedbackBtn" class="btn btn-link p-0" title="Give your feedback" t-on-click="() => this.onClickFeedback()">Continue</button>
+        </xpath>
+        <xpath expr="//*[@t-ref='composerDisabledContainer']" position="attributes">
+            <attribute name="t-attf-class" add="{{ showGiveFeedbackBtn ? 'px-2' : '' }}" separator=" "/>
+        </xpath>
+    </t>
+</templates>

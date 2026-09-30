@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quadrant" name="Quadrant">
+    <section class="s_quadrant">
+        <div class="container-fluid">
+            <div class="row o_grid_mode" data-row-count="14">
+                <div class="o_grid_item o_grid_item_image g-col-lg-6 g-height-7 col-lg-6 d-lg-block d-none o_snippet_mobile_invisible order-lg-0" style="order: 1; z-index: 1; grid-area: 1 / 1 / 8 / 7; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px;">
+                    <img class="img img-fluid" src="/web/image/website.s_quadrant_default_image_1" alt=""/>
+                </div>
+                <div class="o_grid_item o_grid_item_image g-col-lg-6 g-height-7 col-lg-6 order-lg-0" style="order: 2; z-index: 2; grid-area: 1 / 7 / 8 / 13; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px;">
+                    <img class="img img-fluid" src="/web/image/website.s_quadrant_default_image_2" alt=""/>
+                </div>
+                <div class="o_grid_item o_grid_item_image g-col-lg-6 g-height-7 col-lg-6 order-lg-0" style="order: 4; z-index: 3; grid-area: 8 / 1 / 15 / 7; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px;">
+                    <img class="img img-fluid" src="/web/image/website.s_quadrant_default_image_3" alt=""/>
+                </div>
+                <div class="o_grid_item o_grid_item_image g-col-lg-6 g-height-7 col-lg-6 d-lg-block d-none o_snippet_mobile_invisible order-lg-0" style="order: 5; z-index: 4; grid-area: 8 / 7 / 15 / 13; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px;">
+                    <img class="img img-fluid" src="/web/image/website.s_quadrant_default_image_4" alt=""/>
+                </div>
+                <div class="o_grid_item g-col-lg-6 g-height-8 col-lg-6 o_cc o_cc1 rounded justify-content-center order-lg-0" style="order: 3; z-index: 5; grid-area: 4 / 4 / 12 / 10; --grid-item-padding-y: 32px; --grid-item-padding-x: 32px;">
+                    <h2 style="text-align: center;">Understanding the Innovation</h2>
+                    <p class="lead" style="text-align: center;">Explore how our cutting-edge solutions redefine industry standards. To achieve excellence, we focus on what truly matters to our customers. <br/><br/> Begin by identifying their needs and exceed their expectations.</p>
+                    <p style="text-align: center;">
+                        <a t-att-href="cta_btn_href" class="btn btn-primary btn-lg o_translate_inline"><t t-out="cta_btn_text">Discover</t></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<!-- Assets -->
+<asset id="website.s_quadrant_000_scss" name="Quadrant 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_quadrant/000.scss</path>
+</asset>
+
+</odoo>

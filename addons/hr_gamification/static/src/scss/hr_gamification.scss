@@ -1,0 +1,35 @@
+// the nocontent helper in fields for hr employee gamification badge view form
+.o_field_nocontent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 200px;
+    width: 100%;
+
+    .o_nocontent_help {
+        @include o-nocontent-empty;
+
+        .o_view_nocontent_neutral_face:before {
+            @extend %o-nocontent-init-image;
+            width: 120px;
+            height: 140px;
+            background: transparent url(/web/static/img/neutral_face.svg) no-repeat center;
+        }
+    }
+}
+
+.user-badge {
+    transition: transform 1s ease, box-shadow 1s ease;
+}
+
+.user-badge-lift {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+}
+
+.grant_badge_btn {
+    border-radius: 0.5rem !important;
+    width: 18rem;
+}

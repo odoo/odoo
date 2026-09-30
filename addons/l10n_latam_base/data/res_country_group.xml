@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="latam" model="res.country.group">
+            <field name="name">Latin America Identification</field>
+            <field name="code">LATAMID</field>
+            <field name="country_ids" eval="[Command.set([
+                ref('base.ar'),ref('base.br'),ref('base.cl'),ref('base.co'),
+                ref('base.ec'),ref('base.pe'),ref('base.uy'),ref('base.gt')])]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_stock_return_picking_form_inherit_stock_account" model="ir.ui.view">
+            <field name="name">stock.return.picking.stock.account.form</field>
+            <field name="inherit_id" ref="stock.view_stock_return_picking_form"/>
+            <field name="model">stock.return.picking</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_return_moves']/list" position="inside">
+                    <field name="to_refund" groups="base.group_no_one" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

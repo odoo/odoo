@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web.DropdownItem">
+    <t
+      t-tag="props.tag ?? (props.attrs and props.attrs.href ? 'a' : 'span')"
+      class="o-dropdown-item dropdown-item o-navigable"
+      t-att-class="props.class"
+      t-on-click.stop="onClick"
+      t-on-mouseenter="() => this.dropdownControl.closeChildren()"
+      role="menuitem"
+      tabindex="0"
+      t-att="props.attrs"
+    >
+      <t t-slot="default" />
+    </t>
+  </t>
+
+  <!-- In this file instead of in its own file as expected, because it must
+  be defined after the template it inherits from -->
+  <t t-name="web.CheckboxItem" t-inherit="web.DropdownItem" t-inherit-mode="primary">
+    <xpath expr="//t[@role='menuitem']" position="attributes">
+      <attribute name="role">menuitemcheckbox</attribute>
+      <attribute name="t-att-aria-checked">props.checked ? 'true' : 'false'</attribute>
+    </xpath>
+  </t>
+
+</templates>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Progress Bar" id="s_progress_bar">
+    <div class="s_progress_bar s_progress_bar_label_inline mb-2" data-display="inline" data-vcss="001">
+        <h4 class="h6-fs">We are almost done!</h4>
+        <div class="s_progress_bar_wrapper d-flex gap-2">
+            <div class="progress" role="progressbar" aria-label="Progress bar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar overflow-visible" style="width: 80%; min-width: 3%">
+                    <span class="s_progress_bar_text small">80%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<asset id="website.s_progress_bar_001_scss" name="Progress bar 001 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_progress_bar/001.scss</path>
+</asset>
+
+</odoo>

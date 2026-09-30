@@ -1,0 +1,38 @@
+.o-livechat-LivechatStatusLabel-Sidebar {
+    --bg-opacity: .1;
+    --border-color: transparent;
+
+    &.bg-info {
+        --background-color: RGBA(#{to-rgb($purple)}, var(--bg-opacity));
+    }
+
+    .o-mail-DiscussSidebarChannel.o-active &,
+    .o-mail-DiscussSidebarChannel &:hover,
+    .o-mail-DiscussSidebarChannel &:focus-visible {
+        --bg-opacity: 1;
+    }
+
+    .o-mail-DiscussSidebarChannel.o-active & {
+        --border-opacity: .75;
+    }
+
+    .o-mail-DiscussSidebarChannel:hover &.bg-warning {
+        --background-color: #{mix($o-webclient-background-color, $warning, 80%)};
+    }
+    .o-mail-DiscussSidebarChannel:hover &.bg-info {
+        --background-color: #{mix($o-webclient-background-color, $purple, 80%)};
+    }
+
+    .o-mail-DiscussSidebarChannel.o-active &.bg-warning {
+        --background-color: #{mix($o-webclient-background-color, $warning, 70%)};
+        --border-color: #{rgba($warning, 0.75)};
+    }
+    .o-mail-DiscussSidebarChannel.o-active &.bg-info {
+        --background-color: #{mix($o-webclient-background-color, $purple, 90%)};
+        --border-color: #{rgba($indigo, 0.75)};
+    }
+}
+
+.o-livechat-LivechatStatusLabel-icon.o-inDiscussSidebar {
+    background-color: $white;
+}

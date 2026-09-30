@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account.TaxAutoComplete" t-inherit="web.AutoComplete">
+        <xpath expr="//t[@t-out='option.label']" position="replace">
+            <t t-if="option.data.record.tax_scope">
+                <div class="tax_autocomplete_grid">
+                    <div t-out="option.label"/>
+                    <div t-esc="option.data.record.tax_scope" class="text-muted"/>
+                </div>
+            </t>
+            <t t-else="">
+                <span t-out="option.label"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,23 @@
+.o_notify_stock {
+    text-align: left;
+
+    small {
+        i {
+            width: 12px;
+            height: 12px;
+        }
+    }
+}
+
+.o_wsale_stock_badge {
+    --badge-font-size: #{$font-size-base * .65};
+    margin-bottom: var(--o-wsale-card-info-description-margin-bottom, #{map-get($spacers, 2)});
+
+    :where(.o_wsale_products_opt_layout_list.o_wsale_products_opt_design_cards) & {
+        margin-top: var(--o-wsale-card-info-gap);
+    }
+
+    :where(.o_wsale_products_opt_has_rating) &{
+        margin-top: var(--o-wsale-card-info-description-margin-bottom, #{map-get($spacers, 2)});
+    }
+}

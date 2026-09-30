@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <template id="todo_user_onboarding">
+<h1>
+    <span style="font-size: 36px; color: #374151">Hey <t t-out="object.name"/> &amp;#128075; <br />
+    Welcome to the To-do app! </span>
+</h1>
+<p>
+    <span style="font-size: 14px;">
+        Use it to manage your work, take notes on the go, and create tasks based on them.
+    </span>
+</p>
+<p><br /></p>
+<h3>Using the editor</h3>
+<hr />
+<p>
+    <span style="font-size: 14px;">This private to-do is for you to play around with.</span>
+    <br />
+    <span style="font-size: 14px;">Ready to give it a spin?</span>
+</p>
+<p>
+    <span style="font-size: 14px;">Try the following</span>
+</p>
+<ul class="o_checklist">
+    <li id="checkId-948702291173">
+        <span style="font-size: 14px;">Check this box to indicate it's done</span>
+    </li>
+    <li id="checkId-140908257281">
+        <span style="font-size: 14px;">Click anywhere, and just start typing</span>
+    </li>
+    <li id="checkId-441216037148">
+        <span style="font-size: 14px;">Press Ctrl+Z/⌘+Z to undo any change</span>
+    </li>
+    <li id="checkId-980463482772">
+        <span style="font-size: 14px;">
+            Select text to
+            <font style="background-color: #017E84; color: white">Highlight</font>,
+            <span style="text-decoration-line: line-through;">strikethrough</span>
+            or
+            <span style="font-weight: bolder;">style</span>
+            <span style="font-style: italic; text-decoration-line: underline;">it</span>
+        </span>
+    </li>
+    <li id="checkId-152369821198">
+        <span style="font-size: 14px;">
+            Below this list, try
+            <span style="font-weight: bolder;">commands</span>
+            by
+            <span style="font-weight: bolder;">
+                <font style="color: #017E84">typing</font>
+            </span>
+            "<span style="font-weight: bolder;">/</span>"
+        </span>
+    </li>
+    <li class="oe-nested" id="checkId-947916154443">
+        <ul class="o_checklist">
+            <li id="checkId-1422510558483">
+                <span style="font-size: 14px;">
+                    Add a checklist
+                    (/<span style="font-style: italic;">checklist</span>)
+                </span>
+            </li>
+            <li id="checkId-109605733655">
+                <span style="font-size: 14px;">
+                    Add a separator
+                    (/<span style="font-style: italic;">separator</span>)
+                </span>
+            </li>
+            <li id="checkId-1518315885641">
+                <span style="font-size: 14px;">
+                    Use
+                    /<span style="font-style: italic;">heading</span>
+                    to convert a text into a title
+                </span>
+            </li>
+        </ul>
+    </li>
+</ul>
+<p><br /></p>
+
+<h3>Who has access to what?</h3>
+<hr />
+<p>
+    <span style="font-size: 14px;">
+        By default, to-dos are only visible to you. You can share them with other users by adding them as
+        <span>
+            <font style="font-weight: bolder;" class="text-o-color-2">assignees</font>.
+        </span>
+    </span>
+    <br/>
+    <img class="img-fluid d-none d-sm-block" src="/project_todo/static/img/todo_access.png" alt="todo-access"/>
+</p>
+<p><br /></p>
+
+<h3>Organize your to-dos however you want</h3>
+<hr />
+<p>
+    <span style="font-size: 14px;">
+        Customize the stages from the
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">Kanban view</font>
+        </span>
+        to reflect your preferred workflow.
+    </span>
+</p>
+<p><br /></p>
+
+<h3 class="fw-bolder">Enhance Your To-Dos with Shortcuts &amp;#9889;</h3>
+<hr/>
+<p>
+    <span style="font-size: 14px;">
+        Use these keywords in the title to streamline your to-dos:
+    </span>
+    <br/>
+    <ul>
+        <li>
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">#tags:</font>
+            </span>
+            Add tags to categorize the to-do
+        </li>
+        <li>
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">@user:</font>
+            </span>
+            Assign the to-do to a specific user
+        </li>
+        <li>
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">!:</font>
+            </span>
+            Mark the to-do as medium priority
+        </li>
+        <li>
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">!!:</font>
+            </span>
+            Mark the to-do as high priority
+        </li>
+        <li>
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">!!!:</font>
+            </span>
+            Mark the to-do as urgent
+        </li>
+    </ul>
+    <br/>
+    <span style="font-size: 14px;">
+        Ensure you follow the correct format and order. For example: Send invitations #event @Mitchell !
+    </span>
+</p>
+<p><br/></p>
+
+<h3 class="fw-bolder">Manage your to-dos and assigned tasks from a single place</h3>
+<hr />
+<p>
+    <span style="font-size: 14px;">
+        Access your personal pipeline with your to-dos and assigned tasks by going to the Project app and clicking
+        <span>
+            <font style="font-weight: bolder;" class="text-o-color-2">My Tasks</font>.
+        </span>
+    </span>
+    <br/>
+    <br/>
+    <span style="font-size: 14px;">
+        There, your to-dos are listed as
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">private tasks.</font>
+        </span>
+        Any task you create privately will also be included in your to-dos. Essentially, they are interchangeable.
+    </span>
+</p>
+<p><br /></p>
+
+<h3>Convert to-dos into tasks</h3>
+<hr />
+<p>
+    <span style="font-size: 14px;">
+        If you want to assign your to-do to a specific project, open the ⚙️ menu and click
+        <span>
+            <font style="font-weight: bolder;" class="text-o-color-2">Convert to Task</font>.
+        </span>
+        This action will make it visible to other users.
+    </span>
+    <br/>
+    <img class="img-fluid d-none d-sm-block" src="/project_todo/static/img/convert_todo.png" alt="convert-todo"/>
+</p>
+<p><br /></p>
+
+<h3>Create to-dos from anywhere</h3>
+<hr />
+<p>
+    <span style="font-size: 14px;">
+        Wherever you are, use the magic keyboard shortcut to add yourself a reminder &amp;#128161;
+    </span>
+    <br/>
+    <ul>
+        <li>
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">Alt + Shift + T</font>
+            </span>
+            (Windows/Linux)
+        </li>
+        <li>
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">Ctrl + Shift + T</font>
+            </span>
+            (MacOs)
+        </li>
+    </ul>
+</p>
+    </template>
+
+</data></odoo>

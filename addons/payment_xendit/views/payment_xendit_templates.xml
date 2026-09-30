@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="get"/>
+    </template>
+
+    <!-- Emptied but kept for backward compatibility: existing databases still point to this view
+         through the noupdate `inline_form_view_id` on the provider record, which prevents deleting
+         it (`ondelete='restrict'`). It is never rendered (see `_should_build_inline_form`). -->
+    <template id="inline_form">
+        <t/>
+    </template>
+
+</odoo>

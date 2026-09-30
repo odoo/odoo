@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="lunch.ListRenderer">
+        <div class="o_lunch_content d-flex flex-column flex-md-row h-100 overflow-auto">
+            <t t-call="lunch.WebListRenderer"/>
+        </div>
+        <LunchDashboard openOrderLine.bind="openOrderLine"/>
+    </t>
+
+    <t t-name="lunch.WebListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary" owl="1">
+        <ActionHelper position="after">
+            <t t-call="lunch.NoContentHelper"/>
+        </ActionHelper>
+    </t>
+</templates>

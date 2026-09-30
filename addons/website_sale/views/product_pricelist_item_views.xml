@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_pricelist_item_form" model="ir.ui.view">
+        <field name="name">product.pricelist.item.view.form.inherit</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="inherit_id" ref="sale.product_pricelist_item_form"/>
+        <field name="arch" type="xml">
+            <div id="discount_price_warning" position="after">
+                <div>On the website original price is crossed out.</div>
+            </div>
+            <div id="formula_fixed_price_warning" position="replace">
+                <div>
+                    For formula or fixed pricing, the original price isn’t shown in
+                    sale orders or checkout.
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

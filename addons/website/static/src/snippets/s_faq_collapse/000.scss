@@ -1,0 +1,115 @@
+.s_faq_collapse:not([data-vcss]) {
+    .accordion .card {
+        .card-header {
+            cursor: pointer;
+            display: inline-block;
+            width: 100%;
+            position: relative;
+            padding: .5em 1em;
+            padding-left: 2.25em;
+            border-radius: 0;
+            outline: none;
+            &:before {
+                content: '\f056';
+                font-family: 'FontAwesome';
+                color: $gray-600;
+                position: absolute;
+                margin-left: -1.5em;
+            }
+            &.collapsed:before {
+                content: '\f055';
+            }
+            &:hover,
+            &:focus {
+                text-decoration: none;
+            }
+        }
+        .s_faq_collapse_right_icon {
+            padding-left: 1em;
+            &:before {
+                position: static;
+                float: right;
+                margin-left: 0;
+            }
+            & + div .card-body {
+                padding-left: 1em;
+            }
+        }
+        .card-body {
+            padding: 1em;
+            padding-left: 2.25em;
+        }
+    }
+    .card-body p:last-child,
+    .card-body ul:last-child {
+        margin-bottom: 0;
+    }
+    &.s_faq_collapse_light {
+        .accordion .card {
+            border-left: 0;
+            border-right: 0;
+            border-radius: 0;
+            .card-header {
+                background-color: transparent;
+                &:before {
+                    content:'\f068';
+                }
+                &.collapsed:before {
+                    content:'\f067';
+                }
+            }
+            .s_faq_collapse_right_icon {
+                padding-left: 0;
+            }
+            .card-header + div .card-body {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+    }
+    &.s_faq_collapse_big {
+        .accordion .card {
+            border: 0;
+            .card-header {
+                background-color: transparent;
+                @include font-size($font-size-lg * 1.5);
+                &:before {
+                    content:'\f068';
+                }
+                &.collapsed:before {
+                    content:'\f067';
+                }
+            }
+            .s_faq_collapse_right_icon {
+                padding-left: 0;
+            }
+            .card-header + div .card-body {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+    }
+    &.s_faq_collapse_boxed {
+        .accordion .card {
+            border: 0;
+            margin: $btn-padding-y-lg 0;
+            &:first-child {
+                margin-top: 0;
+            }
+            &:last-child {
+                margin-bottom: 0;
+            }
+            .card-header {
+                border: 0;
+            }
+            .card-header.collapsed {
+                background-color: transparent;
+            }
+            .collapse.show, .collapsing {
+                .card-body {
+                    background-color: rgba(0, 0, 0, 0.03) !important;
+                }
+            }
+        }
+    }
+}

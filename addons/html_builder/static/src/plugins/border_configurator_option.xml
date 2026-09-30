@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BorderConfiguratorOption">
+    <BuilderRow label="props.label">
+        <BuilderNumberInput action="props.action" actionParam="{ mainParam: getStyleActionParam('width'), extraClass: props.withBSClass and 'border' }" unit="'px'" min="0" composable="true"/>
+        <BuilderSelect action="props.action" actionParam="getStyleActionParam('style')" t-if="state.hasBorder">
+            <BuilderSelectItem title.translate="Solid" actionValue="'solid'"><div class="o-hb-border-preview" style="border-style: solid;"/></BuilderSelectItem>
+            <BuilderSelectItem title.translate="Dashed" actionValue="'dashed'"><div class="o-hb-border-preview" style="border-style: dashed;"/></BuilderSelectItem>
+            <BuilderSelectItem title.translate="Dotted" actionValue="'dotted'"><div class="o-hb-border-preview" style="border-style: dotted;"/></BuilderSelectItem>
+            <BuilderSelectItem title.translate="Double" actionValue="'double'"><div class="o-hb-border-preview" style="border-style: double; border-left: none; border-right: none;"/></BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderColorPicker action="props.action" actionParam="getStyleActionParam('color')"
+            t-if="state.hasBorder"
+            enabledTabs="['solid', 'custom']"
+        />
+    </BuilderRow>
+
+    <!-- TODO: handle the dependency with border_width_opt bg_color_opt-->
+    <BuilderRow t-if="props.withRoundCorner" label.translate="Round Corners">
+        <BuilderNumberInput action="props.action" actionParam="{ mainParam: getStyleActionParam('radius'), extraClass: props.withBSClass and 'rounded' }" unit="'px'" min="0" composable="true"/>
+    </BuilderRow>
+</t>
+
+</templates>

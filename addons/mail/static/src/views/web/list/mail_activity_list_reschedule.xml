@@ -1,0 +1,36 @@
+<templates xml:space="preserve">
+    <span t-name="mail.MailActivityListRescheduleDropdown">
+        <Dropdown>
+            <button class="btn btn-link p-0 text-dark" type="button">
+                <i class="fa fa-calendar o_button_icon"/> <span class="o_dropdown_title">Reschedule</span>
+            </button>
+
+            <t t-set-slot="content">
+                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, targetDays.today.actionName)">
+                    <div class="d-flex justify-content-between">
+                        <span>
+                            <i class="oi oi-schedule-today me-1"/> Today
+                        </span>
+                        <span t-out="targetDays.today.displayDay" class="ms-2 text-muted"/>
+                    </div>
+                </DropdownItem>
+                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, targetDays.tomorrow.actionName)">
+                    <div class="d-flex justify-content-between">
+                        <span>
+                            <i class="oi oi-schedule-tomorrow me-1"/> Tomorrow
+                        </span>
+                        <span t-out="targetDays.tomorrow.displayDay" class="ms-2 text-muted"/>
+                    </div>
+                </DropdownItem>
+                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, targetDays.nextWeek.actionName)">
+                    <div class="d-flex justify-content-between">
+                        <span>
+                            <i class="oi oi-schedule-later me-1"/> Next Week
+                        </span>
+                        <span t-out="targetDays.nextWeek.displayDay" class="ms-2 text-muted"/>
+                    </div>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </span>
+</templates>

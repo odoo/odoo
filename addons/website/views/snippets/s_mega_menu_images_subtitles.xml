@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_mega_menu_images_subtitles" name="Menu - images &amp; subtitles" groups="base.group_user">
+    <section class="s_mega_menu_images_subtitles pt16 pb16 o_colored_level o_cc o_cc1">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-4 py-2">
+                    <nav class="nav flex-column w-100">
+                        <t t-call="website.s_mega_menu_images_subtitles_item"
+                            _img_src.f="/web/image/website.s_mega_menu_images_subtitles_default_image_1"
+                            _title.translate="About us"
+                            _text.translate="Discover our culture and our values"/>
+                        <t t-call="website.s_mega_menu_images_subtitles_item"
+                            _img_src.f="/web/image/website.s_mega_menu_images_subtitles_default_image_2"
+                            _title.translate="Customers"
+                            _text.translate="They trust us since years"/>
+                        <t t-call="website.s_mega_menu_images_subtitles_item"
+                            _img_src.f="/web/image/website.s_mega_menu_images_subtitles_default_image_3"
+                            _title.translate="Services"
+                            _text.translate="Find the perfect solution for you"/>
+                    </nav>
+                </div>
+                <div class="col-12 col-lg-4 py-2">
+                    <nav class="nav flex-column w-100">
+                        <t t-call="website.s_mega_menu_images_subtitles_item"
+                            _img_src.f="/web/image/website.s_mega_menu_images_subtitles_default_image_4"
+                            _title.translate="Blog"
+                            _text.translate="Latests news and case studies"/>
+                        <t t-call="website.s_mega_menu_images_subtitles_item"
+                            _img_src.f="/web/image/website.s_mega_menu_images_subtitles_default_image_5"
+                            _title.translate="Events"
+                            _text.translate="Our seminars and trainings for you"/>
+                        <t t-call="website.s_mega_menu_images_subtitles_item"
+                            _img_src.f="/web/image/website.s_mega_menu_images_subtitles_default_image_6"
+                            _title.translate="Help center"
+                            _text.translate="Contact us for any issue or question"/>
+                    </nav>
+                </div>
+                <div class="col-12 col-lg-4 py-2">
+                    <img src="/web/image/website.s_mega_menu_images_subtitles_default_image_7" class="mb-3 rounded shadow img-fluid" alt=""/>
+                    <h4>The team</h4>
+                    <p class="text-muted small">
+                        Created in 2021, the company is young and dynamic. Discover the composition of the team and their skills.
+                    </p>
+                    <a href="#" class="btn btn-primary">Discover our team</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mega_menu_images_subtitles_item">
+    <a href="#" class="nav-link px-2 rounded text-wrap" data-name="Menu Item">
+        <div class="d-flex">
+            <img t-att-src="_img_src" class="me-3 rounded shadow" alt=""/>
+            <div class="flex-grow-1">
+                <h4 class="mt-0 mb-0" t-out="_title"/>
+                <span class="small"><t t-out="_text"/></span>
+            </div>
+        </div>
+    </a>
+</template>
+
+<asset id="website.s_mega_menu_images_subtitles_000_scss" name="Menu - images &amp; subtitles 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_mega_menu_images_subtitles/000.scss</path>
+</asset>
+
+</odoo>

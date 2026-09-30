@@ -1,0 +1,29 @@
+.o_popover {
+	> .popover-arrow {
+		--safety-margin: calc((var(--popover-arrow-width) / 4) - 1px);
+		--position-min: var(--safety-margin);
+		--position-center: calc(50% - var(--popover-arrow-width) / 2);
+		--position-max: calc(100% - var(--popover-arrow-width) - var(--safety-margin));
+		transition: opacity var(--animation-time), transform var(--animation-time);
+		opacity: 1;
+	}
+
+	&[data-popper-placement^="top"] > .popover-arrow.sucked {
+		opacity: 0;
+		transform: translateY(-100%);
+	}
+	&[data-popper-placement^="right"] > .popover-arrow.sucked {
+		opacity: 0;
+		/*rtl:ignore*/
+		transform: translateX(100%);
+	}
+	&[data-popper-placement^="bottom"] > .popover-arrow.sucked {
+		opacity: 0;
+		transform: translateY(100%);
+	}
+	&[data-popper-placement^="left"] > .popover-arrow.sucked {
+		opacity: 0;
+		/*rtl:ignore*/
+		transform: translateX(-100%);
+	}
+}

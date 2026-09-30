@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="discuss.ChannelInvitation-selectableItem" t-inherit-mode="extension">
+        <xpath expr="//*[@name='selectablePartnerName']" position="inside">
+            <span t-if="props.thread?.channel_type === 'livechat' and selectablePartner.user_livechat_username" t-esc="selectablePartner.user_livechat_username" class="text-truncate text-muted smaller mx-2"/>
+            <span t-if="props.thread?.channel_type === 'livechat' and selectablePartner.is_in_call" class="flex-shrink-0 opacity-75 smaller mx-2">
+                <i class="fa fa-volume-up o-discuss-inCallIconColor me-1"/>
+                <span class="o-discuss-ChannelInvitation-inCallTextColor">in a call</span>
+            </span>
+        </xpath>
+        <xpath expr="//*[@name='selectablePartnerDetail']" position="inside">
+            <div t-if="props.thread?.channel_type === 'livechat' and selectablePartner.lang_name" class="d-flex flex-wrap align-items-center gap-1">
+                <span class="d-flex text-start fs-6 gap-1">
+                    <span class="badge rounded text-bg-primary" t-esc="selectablePartner.lang_name"/>
+                    <t t-foreach="selectablePartner.livechat_languages" t-as="language" t-key="language_index">
+                        <span class="badge rounded text-bg-primary" t-esc="language"/>
+                    </t>
+                </span>
+                <span class="d-flex text-start fs-6 gap-1">
+                    <i t-if="selectablePartner.livechat_expertise.length" class="fa fa-fw fa-graduation-cap" title="Expertise"/>
+                    <t t-foreach="selectablePartner.livechat_expertise" t-as="expertise" t-key="expertise_index">
+                        <span class="badge rounded text-bg-info bg-opacity-75 o-text-white" t-esc="expertise"/>
+                    </t>
+                </span>
+            </div>
+        </xpath>
+    </t>
+</templates>

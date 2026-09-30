@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+        <record id="hr_badge_form_view" model="ir.ui.view">
+            <field name="name">gamification.badge.form.inherit</field>
+            <field name="model">gamification.badge</field>
+            <field name="inherit_id" ref="gamification.badge_form_view"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="object" name="get_granted_employees" invisible="granted_count == 0" icon="fa-user">
+                        <field name="granted_employees_count" string="Granted" widget="statinfo"/>
+                    </button>
+                </div>
+            </field>
+        </record>
+
+        <record id="view_current_badge_form" model="ir.ui.view">
+            <field name="name">gamification.badge.user.form</field>
+            <field name="model">gamification.badge.user</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="row flex-column-reverse flex-lg-row">
+                        <div class="col-12 col-lg-9">
+                            <div class="mb-2">
+                                <h1>
+                                    <field
+                                        name="badge_id"
+                                        string="Badge Name"
+                                        options="{'no_open': True}"
+                                        readonly="1"
+                                        class="oe_inline"
+                                    />
+                                </h1>
+                                <p class="d-flex align-items-center"> Granted by
+                                    <field
+                                        class="m-0 mx-1"
+                                        name="create_uid"
+                                        options="{'no_open': True}"
+                                        widget="many2one_avatar_user"
+                                    /> on <field class="m-0 mx-1"
+                                    name="create_date" widget="datetime"
+                                    options="{'show_time': false}" />
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-3 d-flex justify-content-center align-items-start">
+                            <field
+                                name="badge_id"
+                                nolabel="1"
+                                class="oe_avatar"
+                                widget="image"
+                                options="{'preview_image': 'image_1024'}"
+                            />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <field
+                            name="comment"
+                            placeholder="Describe what they did and why it matters (will be public)"
+                            readonly="not has_edit_delete_access"
+                            string="Description"
+                            rows="5"
+                        />
+                    </div>
+                    <footer>
+                        <div class="d-flex justify-content-between w-100">
+                            <div>
+                                <button
+                                    class="btn-primary me-1"
+                                    data-hotkey="q"
+                                    invisible="not has_edit_delete_access"
+                                    string="Save"
+                                    special="save"
+                                />
+                                <button string="Discard" special="cancel" data-hotkey="x" class="btn-secondary" />
+                            </div>
+                            <button
+                                class="btn-danger w-fit"
+                                confirm="Are you sure you want to delete this granted badge?"
+                                name="unlink"
+                                invisible="not has_edit_delete_access"
+                                type="object"
+                                string="Delete"
+                            />
+                        </div>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="goals_menu_groupby_action2" model="ir.actions.act_window">
+            <field name="res_model">gamification.goal</field>
+            <field name="name">Goals History</field>
+            <field name="view_mode">list,kanban</field>
+            <field name="context">{'search_default_group_by_user': True, 'search_default_group_by_definition': True}</field>
+            <field name="domain">[('challenge_id.challenge_category', '=', 'hr')]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new goal
+                </p><p>
+                    A goal is defined by a user and a goal type.
+                    Goals can be created automatically by using challenges.
+                </p>
+            </field>
+        </record>
+
+
+        <record id="challenge_list_action2" model="ir.actions.act_window">
+            <field name="name">Challenges</field>
+            <field name="res_model">gamification.challenge</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="domain">[('challenge_category', '=', 'hr')]</field>
+            <field name="context">{'search_default_inprogress':True, 'default_inprogress':True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new challenge
+                </p><p>
+                    Assign a list of goals to chosen users to evaluate them.
+                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.
+                    The goals are created for the specified users or member of the group.
+                </p>
+            </field>
+        </record>
+        <record id="challenge_list_action2_view1" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="challenge_list_action2"/>
+            <field name="view_id" ref="gamification.view_challenge_kanban"/>
+        </record>
+        <record id="challenge_list_action2_view2" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="challenge_list_action2"/>
+            <field name="view_id" ref="gamification.challenge_form_view"/>
+        </record>
+
+        <menuitem id="menu_hr_gamification" parent="hr.menu_human_resources_configuration" name="Challenges" sequence="100"/>
+
+        <menuitem id="gamification_badge_menu_hr" parent="menu_hr_gamification" action="gamification.badge_list_action" />
+        <menuitem id="gamification_challenge_menu_hr" parent="menu_hr_gamification" action="challenge_list_action2" groups="hr.group_hr_user"/>
+        <menuitem id="gamification_goal_menu_hr" parent="menu_hr_gamification" action="goals_menu_groupby_action2" groups="hr.group_hr_user"/>
+
+</odoo>

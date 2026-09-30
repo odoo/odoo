@@ -1,0 +1,31 @@
+$o-kanban-attachement-image-size: 80px;
+
+.o_kanban_renderer {
+    .o_kanban_record.o_kanban_attachment {
+        --KanbanRecord-padding-h: #{map-get($spacers, 0)};
+        --KanbanRecord-padding-v: #{map-get($spacers, 0)};
+
+        .o_kanban_image {
+            width: $o-kanban-attachement-image-size;
+
+            .o_kanban_image_wrapper {
+                min-height: $o-kanban-attachement-image-size;
+            }
+
+            .o_attachment_image {
+                width: $o-kanban-attachement-image-size;
+                height: $o-kanban-attachement-image-size;
+            }
+
+            .o_image {
+                width: $o-kanban-attachement-image-size*0.7;
+                height: $o-kanban-attachement-image-size*0.7;
+            }
+        }
+
+        .o_kanban_details_wrapper {
+            min-height: $o-kanban-attachement-image-size;
+            padding: $o-kanban-inside-vgutter $o-kanban-inside-hgutter;
+        }
+    }
+}

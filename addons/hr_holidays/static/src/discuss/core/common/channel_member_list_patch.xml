@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="discuss.channel_member" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='displayName']" position="inside">
+            <span t-if="member.partner_id?.outOfOfficeDateEndText" class="text-warning smaller ms-2 text-truncate fw-bold opacity-75">
+                <t t-esc="member.partner_id.outOfOfficeDateEndText"/>
+            </span>
+        </xpath>
+    </t>
+</templates>

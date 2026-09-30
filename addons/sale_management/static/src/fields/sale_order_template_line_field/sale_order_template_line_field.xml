@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t
+        t-name="sale_management.ListRenderer.RecordRow"
+        t-inherit="account.SectionAndNoteListRenderer.RecordRow"
+        t-inherit-mode="primary"
+    >
+        <t t-name="composition_button" position="after">
+            <DropdownItem
+                onSelected="() => this.toggleIsOptional(record)"
+                attrs="{ 'class': disableOptionalButton ? 'disabled' : '' }"
+            >
+                <i class="me-1 fa fa-fw fa-list"/>
+                <span t-if="record.data.is_optional">Unset Optional</span>
+                <span t-else="">Set Optional</span>
+            </DropdownItem>
+        </t>
+    </t>
+
+</templates>

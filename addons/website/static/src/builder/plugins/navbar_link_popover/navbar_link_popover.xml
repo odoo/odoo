@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="website.navbarLinkPopover" t-inherit="html_editor.linkPopover">
+        <xpath expr="//div[@data-prevent-closing-overlay]" position="attributes">
+            <attribute name="style"/>
+        </xpath>
+        <xpath expr="//a[hasclass('o_we_url_link')]" position="attributes">
+            <attribute name="class" add="me-3" separator=" "/>
+        </xpath>
+        <xpath expr="//a[@title='Edit Link']" position="after">
+            <button type="button"
+                    class="js_edit_menu btn btn-sm btn-primary"
+                    t-on-click="onClickEditMenu" title="Edit Menu">
+                Edit Menu
+            </button>
+        </xpath>
+    </t>
+
+</templates>

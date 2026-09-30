@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.SocialMediaOption">
+    <BuilderRow label.translate="Title Position">
+        <BuilderSelect applyTo="'.s_share_title, .s_social_media_title'">
+            <BuilderSelectItem classAction="'d-block'">Top</BuilderSelectItem>
+            <BuilderSelectItem classAction="''">Left</BuilderSelectItem>
+            <BuilderSelectItem classAction="'d-none'">None</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Layout">
+        <BuilderSelect applyTo="'.fa'">
+            <BuilderSelectItem classAction="'rounded shadow-sm'">Square</BuilderSelectItem>
+            <BuilderSelectItem classAction="'rounded-empty-circle shadow-sm'">Circle</BuilderSelectItem>
+            <BuilderSelectItem classAction="'rounded-circle shadow-sm'">Disk</BuilderSelectItem>
+            <BuilderSelectItem classAction="'fa-stack'">None</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Size">
+        <BuilderSelect applyTo="'.fa'">
+            <BuilderSelectItem classAction="''">Small</BuilderSelectItem>
+            <BuilderSelectItem classAction="'fa-2x'">Medium</BuilderSelectItem>
+            <BuilderSelectItem classAction="'fa-3x'">Big</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Color">
+        <BuilderCheckbox classAction="'no_icon_color'" inverseAction="true"/>
+    </BuilderRow>
+</t>
+
+</templates>

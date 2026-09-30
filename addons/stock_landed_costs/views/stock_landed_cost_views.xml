@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- STOCK.LANDED.COST -->
+        <record id='view_stock_landed_cost_form' model='ir.ui.view'>
+            <field name="name">stock.landed.cost.form</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="arch" type="xml">
+                <form string="Landed Costs">
+                    <field name="company_id" invisible="1"/>
+                    <header>
+                        <button name="button_validate" string="Validate" invisible="state != 'draft'" class="oe_highlight" type="object"/>
+                        <button name="button_cancel" string="Cancel" invisible="state != 'draft'" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Landed Cost"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date" readonly="state == 'done'"/>
+                                <field name="target_model" widget="radio" invisible="1" readonly="state == 'done'"/>
+                                <field name="picking_ids" widget="many2many_tags" 
+                                    options="{'no_create_edit': True}" invisible="target_model != 'picking'" readonly="state == 'done'"
+                                    domain="[('company_id', '=', company_id), '|', ('move_ids.is_in', '!=', False), ('move_ids.is_out', '!=', False)]"/>
+                            </group>
+                            <group>
+                                <label for="account_journal_id" string="Journal"/>
+                                <field name="account_journal_id" nolabel="1" readonly="state == 'done'"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="account_move_id" invisible="not account_move_id"/>
+                                <field name="vendor_bill_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Additional Costs" name="additional_costs">
+                                <field name="cost_lines" readonly="state == 'done'">
+                                    <form string="Cost Lines">
+                                        <group>
+                                            <group>
+                                                <field name="product_id"
+                                                    domain="[('landed_cost_ok', '=', True)]"
+                                                    context="{'default_landed_cost_ok': True}"/>
+                                                <field name="price_unit"/>
+                                                <field name="currency_id" invisible="1"/>
+                                            </group>
+                                            <group>
+                                                <field name="split_method"/>
+                                                <field name="account_id" options="{'no_create': True}"/>
+                                            </group>
+                                        </group>
+                                        <label for="name"/>
+                                        <field name="name"/>
+                                    </form>
+                                    <list string="Cost Lines" editable="bottom">
+                                        <field name="product_id"
+                                            domain="[('landed_cost_ok', '=', True)]"
+                                            context="{'default_landed_cost_ok': True, 'default_type': 'service'}"/>
+                                        <field name="name"/>
+                                        <field name="account_id" options="{'no_create': True}"/>
+                                        <field name="split_method"/>
+                                        <field name="price_unit"/>
+                                        <field name="currency_id" column_invisible="True"/>
+                                    </list>
+                                </field>
+                                <group class="oe_subtotal_footer">
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="amount_total"/>
+                                    <button colspan="2" name="compute_landed_cost" string="Compute" type="object" class="float-end btn-secondary" invisible="state != 'draft'"/>
+                                </group>
+                            </page>
+                            <page string="Valuation Adjustments" name="valuation_adjustments">
+                                <field name="valuation_adjustment_lines" readonly="state == 'done'">
+                                    <form string="Valuation Adjustments">
+                                        <group>
+                                            <group>
+                                                <field name="product_id"/>
+                                                <field name="quantity"/>
+                                            </group>
+                                            <group>
+                                                <field name="currency_id" invisible="1"/>
+                                                <field name="former_cost"/>
+                                                <field name="additional_landed_cost"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                    <list string="Valuation Adjustments" editable="bottom" create="0">
+                                        <field name="cost_line_id" readonly="1"/>
+                                        <field name="product_id" readonly="1"/>
+                                        <field name="weight" readonly="1" optional="hide"/>
+                                        <field name="volume" readonly="1" optional="hide"/>
+                                        <field name="quantity" readonly="1"/>
+                                        <field name="currency_id" column_invisible="True"/>
+                                        <field name="former_cost" readonly="1"/>
+                                        <field name="final_cost" readonly="1"/>
+                                        <field name="additional_landed_cost"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id='view_stock_landed_cost_tree' model='ir.ui.view'>
+            <field name="name">stock.landed.cost.list</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="arch" type="xml">
+                <list string="Landed Costs" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+                    <field name="name" decoration-bf="1"/>
+                    <field name="date" readonly="state == 'done'"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state == 'draft'"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
+                </list>
+            </field>
+        </record>
+
+        <record id='view_stock_landed_cost_tree2' model='ir.ui.view'>
+            <field name="name">stock.landed.cost.list</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <list string="Landed Costs">
+                    <field name="name"/>
+                    <field name="date" readonly="state == 'done'"/>
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="amount_total" widget="monetary"/>
+                    <field name="state"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </list>
+            </field>
+        </record>
+
+        <record id='stock_landed_cost_view_kanban' model='ir.ui.view'>
+            <field name="name">stock.landed.cost.kanban</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="card">
+                            <div class="row mb-1">
+                                <field name="name" class="col-6 fw-bolder"/>
+                                <div class="col-6">
+                                    <field name="state" class="float-end badge text-bg-secondary"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <i class="fa fa-clock-o" title="Date" role="img" aria-label="Date"/><field name="date"/>
+                                </div>
+                                <field name="account_journal_id" class="col-6 text-end" readonly="state == 'done'"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_stock_landed_cost_search" model="ir.ui.view">
+            <field name="name">stock.landed.cost.search</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="arch" type="xml">
+                <search string="Landed Costs">
+                    <field name="name" string="Name"/>
+                    <field name="picking_ids" string="Picking"/>
+                    <separator/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                    <separator/>
+                    <filter string="Date" name="date" date="date"/>
+                    <separator/>
+                    <filter invisible="1" string="My Activities" name="filter_activities_my"
+                        domain="[('activity_user_id', '=', uid)]"/>
+                    <separator invisible="1"/>
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
+                        domain="[('my_activity_date_deadline', '&lt;', 'today')]"
+                        help="Show all records whose next activity date is past"/>
+                    <filter invisible="1" string="Today Activities" name="activities_today"
+                        domain="[('my_activity_date_deadline', '=', 'today')]"/>
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                        domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
+                    <group>
+                        <filter string="Status" name="status" context="{'group_by': 'state'}"/>
+                        <filter string="Date" name="group_by_month" context="{'group_by': 'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id='action_stock_landed_cost' model='ir.actions.act_window'>
+            <field name="name">Landed Costs</field>
+            <field name="res_model">stock.landed.cost</field>
+            <field name="path">landed-costs</field>
+            <field name="view_mode">list,form,kanban</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new landed cost
+                </p><p>
+                    Landed costs allow you to include additional costs (shipment, insurance, customs duties, etc) into the cost of the product.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_stock_landed_cost" name="Landed Costs" parent="stock.menu_stock_adjustments" id="menu_stock_landed_cost" sequence="115"/>
+    </data>
+</odoo>

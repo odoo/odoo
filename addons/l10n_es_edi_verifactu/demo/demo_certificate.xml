@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="test_certificate_juridical_person" model="certificate.certificate">
+        <field name="name">Demo Veri*Factu certificate</field>
+        <field name="content" type="base64" file="l10n_es_edi_verifactu/demo/certificates/Certificado_RPJ_A39200019_CERTIFICADO_ENTIDAD_PRUEBAS_5_Pre.p12"/>
+        <field name="pkcs12_password">1234</field>
+        <field name="scope">verifactu</field>
+        <field name="company_id" ref="base.demo_company_es"/>
+    </record>
+</odoo>

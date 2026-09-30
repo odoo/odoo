@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays.TimeOffCalendarSidePanel" t-inherit="web.CalendarSidePanel" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_calendar_sidebar')]" position="inside">
+            <div class="o_calendar_filter mt-4">
+                <h5>Legend</h5>
+                <div class="d-flex flex-column">
+                    <span class="align-middle"><img class="o_calendar_filter_plain" src="/hr/static/src/img/icons/plain.svg"/> Validated</span>
+                    <span class="align-middle"><img class="o_calendar_filter_hatched" src="/hr/static/src/img/icons/hatched.svg"/> To Approve</span>
+                    <span class="align-middle"><img class="o_calendar_filter_line" src="/hr/static/src/img/icons/line.svg"/> Refused</span>
+                </div>
+
+                <div class="d-flex flex-column mt-4" t-if="leaveState.mandatoryDays.length">
+                    <h5>Mandatory Days</h5>
+                    <ul class="ps-0">
+                        <li t-foreach="leaveState.mandatoryDays" t-as="mandatoryDay" t-key="mandatoryDay.id" class="mt-2 list-unstyled">
+                            <strong
+                                    t-esc="getFormattedDateSpan(mandatoryDay.start, mandatoryDay.end)"
+                                    t-att-class="'hr_mandatory_day_'+mandatoryDay.colorIndex"/>
+                            : <t t-esc="mandatoryDay.title"/>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="d-flex flex-column mt-4" t-if="leaveState.bankHolidays.length">
+                    <h5>Public Holidays</h5>
+                    <ul class="ps-0">
+                        <li t-foreach="leaveState.bankHolidays" t-as="bankHoliday" t-key="bankHoliday.id" class="mt-2 list-unstyled">
+                            <strong
+                                    t-esc="getFormattedDateSpan(bankHoliday.start, bankHoliday.end)"/>
+                            : <t t-esc="bankHoliday.title"/>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t
+        t-name="sale_pdf_quote_builder.QuotationDocumentX2ManyField"
+        t-inherit-mode="primary"
+        t-inherit="web.X2ManyField"
+    >
+        <xpath expr="//div[hasclass('o_cp_buttons')]/*" position="before">
+            <UploadButton
+                formData="formData"
+                allowedMIMETypes="allowedMIMETypes"
+                load.bind="() => this.props.record.load()"
+                uploadRoute="uploadRoute"
+            />
+        </xpath>
+    </t>
+</templates>

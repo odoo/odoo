@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_attribute_category_design" model="product.attribute.category">
+        <field name="name">Design</field>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="product_attribute_category_duration" model="product.attribute.category">
+        <field name="name">Duration</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="product_attribute_category_options" model="product.attribute.category">
+        <field name="name">Options</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="product.pa_duration" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_duration"/>
+    </record>
+
+    <record id="product.pa_options" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_options"/>
+    </record>
+
+    <record id="product.pa_size" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_general_features"/>
+    </record>
+
+    <record id="product.pa_fabric" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_design"/>
+    </record>
+
+    <record id="product_attribute_category_dimensions" model="product.attribute.category">
+        <field name="name">Dimensions</field>
+        <field name="sequence">7</field>
+    </record>
+
+    <record id="product.pa_legs" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_design"/>
+    </record>
+    <record id="product.pa_color" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_design"/>
+    </record>
+
+    <record id="product.pa_brand" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_general_features"/>
+    </record>
+
+    <record id="product.pa_height" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_dimensions"/>
+    </record>
+
+    <record id="product.pa_length" model="product.attribute">
+        <field name="category_id" ref="product_attribute_category_dimensions"/>
+    </record>
+
+    <function model="product.product" name="write">
+        <value model="product.product" search="[('product_tmpl_id', '=', ref('product.product_product_6_product_template'))]"/>
+        <value eval="{'barcode': ''}"/>
+    </function>
+    <record id="product_6_length_template_attribute_line" model="product.template.attribute.line">
+        <field name="product_tmpl_id" ref="product.product_product_6_product_template"/>
+        <field name="attribute_id" ref="product.pa_height"/>
+        <field
+            name="value_ids"
+            eval="[Command.set([
+                ref('product.pav_height_45'),
+                ref('product.pav_height_85'),
+                ref('product.pav_height_100'),
+        ])]"/>
+    </record>
+    <function model="product.product" name="write">
+        <value model="product.product" search="[
+        ('product_tmpl_id', '=', ref('product.product_product_6_product_template')),
+        ('product_template_attribute_value_ids.product_attribute_value_id', '=', ref('product.pav_height_45'))
+        ]"/>
+        <value eval="{'barcode': '6016478556509'}"/>
+    </function>
+
+</odoo>

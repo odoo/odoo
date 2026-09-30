@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ActivityCell">
+        <div class="h-100 cursor-pointer p-1 d-flex flex-column justify-content-between" t-on-click="onClick">
+            <div class="d-flex position-relative" t-ref="content">
+                <div class="position-absolute text-truncate px-2 w-100" t-out="displayedSummaries"/>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-4 px-2">
+                <div class="o-mail-ActivityCell-deadline" t-out="reportingDateFormatted"/>
+                <div class="d-flex justify-content-end">
+                    <div t-if="props.userAssignedIds" class="d-flex justify-content-start">
+                        <Avatar t-if="props.userAssignedIds.length > 0"
+                                resModel="'res.users'" resId="props.userAssignedIds[0]"
+                                displayName="''" noSpacing="true"/>
+                        <Avatar t-if="props.userAssignedIds.length > 1"
+                                resModel="'res.users'" resId="props.userAssignedIds[1]"
+                                displayName="''" noSpacing="true"/>
+                        <t t-set="nAdditionalAssignee"
+                            t-value="props.userAssignedIds.length - 2"/>
+                        <span t-if="nAdditionalAssignee > 0">+<t t-out="nAdditionalAssignee"/></span>
+                    </div>
+                    <div t-else=""/>
+                    <div t-if="props.attachmentsInfo and ongoingActivityCount == 0"
+                        class="d-flex w-100 justify-content-center gap-1 px-2">
+                        <a t-attf-href="/web/content/#{props.attachmentsInfo.most_recent_id}?download=true" t-on-click.stop=""
+                            t-out="props.attachmentsInfo.most_recent_name"
+                            class="d-inline-block text-truncate" style="max-width: 120px;"/>
+                        <div t-if="props.attachmentsInfo.count > 1" class="text-nowrap">
+                            +<t t-out="props.attachmentsInfo.count - 1"/>
+                        </div>
+                    </div>
+                    <div t-if="totalActivityCount > 1"
+                        class="o-mail-ActivityCell-counter badge bg-light rounded-pill border-0 m-1 me-0">
+                        <t t-if="totalActivityCount == ongoingActivityCount or ongoingActivityCount == 0"
+                            t-out="totalActivityCount"/>
+                        <t t-else="">
+                            <t t-out="ongoingActivityCount"/> / <t t-out="totalActivityCount"/>
+                        </t>
+                    </div>
+                    <div t-else=""/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

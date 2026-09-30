@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="badge_user_kanban_view" model="ir.ui.view" >
+        <field name="name">Badge User Kanban View</field>
+        <field name="model">gamification.badge.user</field>
+        <field name="arch" type="xml">
+            <kanban action="action_open_badge" type="object">
+                <field name="create_date"/>
+                <templates>
+                    <t t-name="card" class="row g-0">
+                        <t t-name="card" class="g-0 row ps-2">
+                            <div class="col">
+                                <field class="fw-bold fs-5" type="open" name="badge_name"/>
+                                <div>
+                                    Granted on <t t-esc="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('D')"/>
+                                    <div class="d-flex align-items-center">
+                                        By
+                                        <field class="m-0 mx-1 oe_inline" name="create_uid" options="{'no_open': True}" widget="many2one_avatar_user"/>
+                                        <field name="create_uid" options="{'no_open': True}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <field name="badge_id" widget="image" options="{'preview_image': 'image_1024'}" t-att-alt="record.badge_name.value" />
+                            </div>
+                            <field class="mt-1 o_badge_content text-muted" name="comment"/>
+                        </t>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+</data></odoo>

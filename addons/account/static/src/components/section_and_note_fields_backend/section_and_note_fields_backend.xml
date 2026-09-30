@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="account.SectionAndNoteListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//table" position="attributes">
+            <attribute name="class" add="o_section_and_note_list_view" separator=" "/>
+        </xpath>
+    </t>
+    <t t-name="account.SectionAndNoteListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow">
+        <xpath expr="//td[hasclass('o_list_record_remove')]" position="attributes">
+            <attribute name="t-if">!isSection(record)</attribute>
+        </xpath>
+        <xpath expr="//td[hasclass('o_list_record_remove')]" position="after">
+            <td t-else="" class="o_list_section_options w-print-0 p-print-0 text-center">
+                <Dropdown position="'bottom-end'" t-if="!props.readonly">
+                    <button class="btn d-table-cell border-0 py-0 px-1 cursor-pointer">
+                        <i class="fa fa-ellipsis-v"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-if="this.isSectionInPage(record)">
+                            <DropdownItem onSelected="() => this.addRowInSection(record, false)">
+                                <i class="me-1 fa fa-fw fa-plus"/><span>Add a line</span>
+                            </DropdownItem>
+                            <t t-if="this.isTopSection(record)">
+                                <t t-if="props.subsections">
+                                    <DropdownItem onSelected="() => this.addRowInSection(record, true)">
+                                        <i class="me-1 fa fa-fw fa-level-down"/><span>Add a subsection</span>
+                                    </DropdownItem>
+                                </t>
+                            </t>
+                            <DropdownItem
+                                t-if="props.hidePrices"
+                                onSelected="() => this.toggleCollapse(record, 'collapse_prices')"
+                                attrs="{ 'class': disablePricesButton ? 'disabled' : '' }"
+                            >
+                                <i class="me-1 fa fa-fw" t-att-class="hidePrices ? 'fa-eye' : 'fa-eye-slash'"/>
+                                <span t-if="hidePrices">Show Prices</span>
+                                <span t-else="">Hide Prices</span>
+                            </DropdownItem>
+                            <t t-name="composition_button">
+                                <DropdownItem
+                                    t-if="props.hideComposition"
+                                    onSelected="() => this.toggleCollapse(record, 'collapse_composition')"
+                                    attrs="{ 'class': disableCompositionButton ? 'disabled' : '' }"
+                                >
+                                    <i class="me-1 fa fa-fw" t-att-class="hideComposition ? 'fa-eye' : 'fa-eye-slash'"/>
+                                    <span t-if="hideComposition">Show Composition</span>
+                                    <span t-else="">Hide Composition</span>
+                                </DropdownItem>
+                            </t>
+                            <DropdownItem onSelected="() => this.addNoteInSection(record)">
+                                <i class="me-1 fa fa-fw fa-sticky-note-o"/><span>Add a note</span>
+                            </DropdownItem>
+                            <DropdownItem t-if="this.hasPreviousSection(record)" onSelected="() => this.moveSectionUp(record)">
+                                <i class="me-1 fa fa-fw fa-arrow-up"/><span>Move Up</span>
+                            </DropdownItem>
+                            <t t-set="nextSectionInPage" t-value="this.isNextSectionInPage(record)"/>
+                            <t t-set="moveDownItemAttrs" t-value="nextSectionInPage ? {} : { 'data-tooltip': this.disabledMoveDownItemTooltip }"/>
+                            <t t-set="moveDownItemDefaultProps" t-value="{ attrs: moveDownItemAttrs, class: { 'text-muted': !nextSectionInPage } }"/>
+                            <DropdownItem t-if="this.hasNextSection(record)" t-props="moveDownItemDefaultProps" onSelected="() => this.moveSectionDown(record)">
+                                <i class="me-1 fa fa-fw fa-arrow-down"/><span>Move Down</span>
+                            </DropdownItem>
+                            <DropdownItem onSelected="() => this.duplicateSection(record)">
+                                <i class="me-1 fa fa-fw fa-clone"/><span>Duplicate</span>
+                            </DropdownItem>
+                            <t t-if="hasDeleteButton">
+                                <DropdownItem onSelected="() => this.deleteSection(record)" class="'text-danger'">
+                                    <i class="me-1 fa fa-fw fa-trash"/><span>Delete</span>
+                                </DropdownItem>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <DropdownItem onSelected="() => this.expandPager()" attrs="{ 'data-tooltip': this.showAllItemsTooltip }">
+                                <i class="me-1 fa fa-fw fa-expand"/><span>Show all lines</span>
+                            </DropdownItem>
+                        </t>
+                    </t>
+                </Dropdown>
+            </td>
+        </xpath>
+    </t>
+
+    <t t-name="account.SectionAndNoteText">
+        <t t-component="componentToUse" t-props="props"/>
+    </t>
+
+</templates>

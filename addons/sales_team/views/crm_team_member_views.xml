@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="crm_team_member_view_search" model="ir.ui.view">
+        <field name="name">crm.team.member.view.search</field>
+        <field name="model">crm.team.member</field>
+        <field name="arch" type="xml">
+            <search string="Sales Person">
+                <field name="user_id"/>
+                <field name="crm_team_id"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Sales Team" name="groupby_crm_team_id" context="{'group_by': 'crm_team_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_tree" model="ir.ui.view">
+        <field name="name">crm.team.member.view.list</field>
+        <field name="model">crm.team.member</field>
+        <field name="arch" type="xml">
+            <list string="Sales Men" sample="1">
+                <field name="crm_team_id"/>
+                <field name="user_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_tree_from_team" model="ir.ui.view">
+        <field name="name">crm.team.member.view.list.from.team</field>
+        <field name="model">crm.team.member</field>
+        <field name="inherit_id" ref="sales_team.crm_team_member_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='crm_team_id']" position="replace">
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_kanban" model="ir.ui.view">
+        <field name="name">crm.team.member.view.kanban</field>
+        <field name="model">crm.team.member</field>
+        <field name="arch" type="xml">
+            <kanban quick_create="false"
+                group_create="0"
+                records_draggable="0"
+                sample="1"
+                default_group_by="crm_team_id"
+                class="o_crm_team_member_kanban">
+                <field name="active"/>
+                <templates>
+                    <t t-name="card" class="flex-row mb-3">
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <aside>
+                            <field name="user_id" widget="image" options="{'preview_image': 'avatar_128'}" class="o_image_64_cover" alt="Avatar"/>
+                        </aside>
+                        <main class="ms-3">
+                            <field name="user_id" class="fw-bold fs-5"/>
+                            <a type="open" class="nav-link p-0"><field name="crm_team_id"/></a>
+                            <div class="d-flex align-items-baseline text-break">
+                                <i class="fa fa-envelope me-1" role="img" aria-label="Email" title="Email"/><field name="email"/>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_kanban_from_team" model="ir.ui.view">
+        <field name="name">crm.team.member.view.kanban.from.team</field>
+        <field name="model">crm.team.member</field>
+        <field name="inherit_id" ref="sales_team.crm_team_member_view_kanban"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='crm_team_id']" position="replace">
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_form" model="ir.ui.view">
+        <field name="name">crm.team.member.view.form</field>
+        <field name="model">crm.team.member</field>
+        <field name="arch" type="xml">
+            <form string="Sales Men" js_class="crm_team_form">
+                <field name="active" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="is_membership_multi" invisible="1"/>
+                <field name="member_warning" invisible="1"/>
+                <field name="user_in_teams_ids" invisible="1"/>
+                <field name="user_company_ids" invisible="1"/>
+                <sheet>
+                    <div class="alert alert-info text-center d-flex flex-wrap justify-content-center gap-1" role="alert"
+                        invisible="not member_warning">
+                        <field name="member_warning" class="w-auto"/>
+                        Working in multiple teams?
+                        <button name="crm_team_activate_multi_membership" type="button" class="btn btn-link p-0 lh-1">
+                            Activate "Multi-team"
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="image_1920" widget='image' class="float-start pe-3"
+                        invisible="not user_id" nolabel="1"
+                        options='{"preview_image": "image_128", "size": [130,130], "img_class": "rounded border"}'/>
+                    <h1 class="d-flex">
+                        <field name="user_id" class="flex-grow-1" placeholder="e.g. John Doe"
+                            options="{'no_quick_create': True}"/>
+                    </h1>
+                    <group name="crm_team_id">
+                        <field id="crm_team_id" name="crm_team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
+                    </group>
+                    <group name="member_partner_info">
+                        <div class="d-flex flex-column flex-grow-1">
+                            <div colspan="2" class="d-flex align-items-baseline" invisible="not user_id">
+                                <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
+                                <field name="email" nolabel="1"/>
+                            </div>
+                            <div colspan="2" class="d-flex align-items-baseline" invisible="not user_id">
+                                <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
+                                <field name="phone" nolabel="1"/>
+                            </div>
+                            <div colspan="2" class="d-flex align-items-baseline" invisible="not user_id" groups="base.group_multi_company">
+                                <i class="fa fa-fw me-1 fa-building text-primary" title="Company"/>
+                                <field name="company_id"/>
+                            </div>
+                        </div>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_team_member_view_form_from_team" model="ir.ui.view">
+        <field name="name">crm.team.member.view.form.from.team</field>
+        <field name="model">crm.team.member</field>
+        <field name="inherit_id" ref="sales_team.crm_team_member_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//div[@name='crm_team_id']" position="replace"/> -->
+            <xpath expr="//group[@name='crm_team_id']" position="replace"/>
+            <xpath expr="//group[@name='member_partner_info']/div" position="attributes">
+                <attribute name="class">px-0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_team_member_action" model="ir.actions.act_window">
+        <field name="name">Team Members</field>
+        <field name="res_model">crm.team.member</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new salesman
+            </p><p>
+                Link salespersons to sales teams.
+            </p>
+        </field>
+    </record>
+
+</data></odoo>

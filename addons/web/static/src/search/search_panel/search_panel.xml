@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="web.SearchPanel">
+    <t t-if="env.isSmall">
+        <t t-call="web.SearchPanel.Small" />
+    </t>
+    <t t-else="">
+        <t t-if="state.sidebarExpanded" t-call="web.SearchPanel.Regular" />
+        <t t-else="" t-call="web.SearchPanel.Sidebar" />
+    </t>
+</t>
+
+<t t-name="web.SearchPanel.Sidebar">
+    <div class="bg-view h-100 o_search_panel_sidebar cursor-pointer d-print-none" t-on-click="toggleSidebar">
+        <t t-set="categories" t-value="getCategorySelection()" />
+        <t t-set="filters" t-value="getFilterSelection()" />
+        <div class="d-flex">
+            <button class="btn btn-light btn-sm m-1 mb-2 p-2">
+                <i class="oi oi-fw oi-panel-right fa-flip-horizontal"/>
+            </button>
+            <div class="o_search_panel_current_selection text-truncate mx-auto">
+                <t t-if="!categories.length and !filters.length">
+                    All
+                </t>
+                <t t-else="">
+                    <t t-foreach="categories" t-as="category" t-key="category_index">
+                        <span class="o_search_panel_category mb-2">
+                            <i t-if="category.icon"
+                                t-attf-class="o_search_panel_section_icon fa {{ category.icon }} fa-rotate-90 mb-2"
+                                t-att-style="category.color and ('color: ' + category.color)"
+                            />
+                            <t t-esc="category.values.join(' / ')" />
+                        </span>
+                    </t>
+                    <t t-foreach="filters" t-as="filter" t-key="filter_index">
+                        <span class="o_search_panel_filter mb-2">
+                            <i t-if="filter.icon"
+                                t-attf-class="o_search_panel_section_icon fa {{ filter.icon }} fa-rotate-90 mb-2"
+                                t-att-style="filter.color and ('color: ' + filter.color)"
+                            />
+                            <t t-esc="filter.values.join(', ')" />
+                        </span>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="web.SearchPanelContent">
+    <div class="o_search_panel flex-grow-0 flex-shrink-0 h-100 pb-5 bg-view overflow-auto position-relative"
+         t-att-class="env.searchModel.searchPanelInfo.className"
+         t-attf-class="#{env.isSmall ? 'px-3' : 'pe-1 ps-3'}"
+         t-ref="root">
+        <button t-if="!env.isSmall" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-1" t-on-click="toggleSidebar">
+            <i class="oi oi-fw oi-panel-right fa-flip-horizontal"/>
+        </button>
+        <div t-if="!sections or sections.length === 0" class="o_search_panel_empty_state me-3">
+            <button class="btn mt-2 w-100 overflow-visible">
+                <div class="d-flex align-items-center me-2 ms-auto">All</div>
+            </button>
+        </div>
+        <section t-foreach="sections" t-as="section" t-key="section.id"
+            t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
+            >
+            <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase cursor-default">
+                <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2"
+                    t-att-style="section.color and ('color: ' + section.color)"
+                />
+                <b t-esc="section.description"/>
+            </header>
+            <t t-call="web.SearchPanel.Section"/>
+        </section>
+    </div>
+    <div class="h-100">
+        <span class="o_search_panel_resize" t-on-click.stop.prevent="" t-on-pointerdown.stop.prevent="_onStartResize"/>
+    </div>
+</t>
+
+<t t-name="web.SearchPanel.Section">
+    <div t-if="section.errorMsg" class="alert alert-warning">
+        <span><t t-esc="section.errorMsg"/></span>
+    </div>
+    <ul t-else="" class="list-group d-block o_search_panel_field px-2 px-md-0">
+        <t t-if="section.type === 'category'" t-call="{{ constructor.subTemplates.category }}">
+            <t t-set="values" t-value="section.rootIds"/>
+        </t>
+        <t t-elif="section.groups">
+            <li
+                t-foreach="section.sortedGroupIds" t-as="groupId" t-key="groupId"
+                class="o_search_panel_filter_group list-group-item p-0 border-0"
+                t-att-class="groupId_last? 'mb-0' : 'mb-3'"
+                >
+                <!-- TODO: this is a workaround for issue https://github.com/odoo/owl/issues/695 (remove when solved) -->
+                <t t-set="_section" t-value="section"/>
+                <t t-set="group" t-value="section.groups.get(groupId)"/>
+                <header class="o_search_panel_group_header pb-1">
+                    <div class="form-check w-100">
+                        <!-- TODO: "indeterminate" could not be set in the template and had to be set in
+                            JS manually. See https://github.com/odoo/owl/issues/713 (adapt when solved)
+                        -->
+                        <input type="checkbox"
+                            class="form-check-input"
+                            t-attf-id="{{ section.id }}_input_{{ groupId }})"
+                            t-on-click="() => this.toggleFilterGroup(section.id, group)"
+                        />
+                        <label
+                            t-attf-for="{{ section.id }}_input_{{ groupId }})"
+                            class="o_search_panel_label form-check-label d-flex align-items-center justify-content-between w-100 cursor-pointer"
+                            t-att-class="{ o_with_counters: group.enableCounters }"
+                            t-att-title="group.tooltip or false"
+                            >
+                            <span class="o_search_panel_label_title text-truncate"
+                                  t-attf-class="{{ group.color_index ? 'o_tag o_badge badge rounded-pill o_tag_color_' + group.color_index : ''}}">
+                                <t t-esc="group.name"/>
+                            </span>
+                        </label>
+                    </div>
+                </header>
+                <ul class="list-group d-block">
+                    <t t-call="{{ constructor.subTemplates.filtersGroup }}">
+                        <t t-set="values" t-value="group.values"/>
+                        <t t-set="isChildList" t-value="true"/>
+                        <!-- TODO: this is a workaround for issue https://github.com/odoo/owl/issues/695 (remove when solved) -->
+                        <t t-set="section" t-value="_section"/>
+                    </t>
+                </ul>
+            </li>
+            <ul t-if="section.groups.get(false)" class="list-group d-block">
+                <t t-call="{{ constructor.subTemplates.filtersGroup }}">
+                    <t t-set="group" t-value="section.groups.get(false)"/>
+                    <t t-set="values" t-value="group.values"/>
+                    <!-- TODO: this is a workaround for issue https://github.com/odoo/owl/issues/695 (remove when solved) -->
+                    <t t-set="section" t-value="section"/>
+                </t>
+            </ul>
+        </t>
+        <t t-else="" t-call="{{ constructor.subTemplates.filtersGroup }}">
+            <t t-set="values" t-value="section.values"/>
+        </t>
+    </ul>
+</t>
+
+<t t-name="web.SearchPanel.Regular" t-inherit="web.SearchPanelContent" t-inherit-mode="primary"/>
+
+<t t-name="web.SearchPanel.Small">
+    <div
+        class="o_search_panel w-100 overflow-visible"
+        t-ref="root"
+        >
+        <div class="d-flex overflow-auto align-items-center px-2 border-top">
+            <div t-if="!sections or sections.length === 0" class="o_search_panel_empty_state me-3">
+                <button class="btn w-100">
+                    <div class="d-flex align-items-center me-2 ms-auto">All</div>
+                </button>
+            </div>
+            <Dropdown t-foreach="sections" t-as="section" t-key="section.id" state="getDropdownState(section.id)" menuClass="'my-2 mx-1'" onOpened.bind="updateGroupHeadersChecked">
+                <span class="btn btn-secondary my-2 mx-1 o-dropdown-caret">
+                    <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2"
+                        t-att-style="section.color and ('color: ' + section.color)"
+                    />
+                    <b class="pe-2" t-if="section.type !== 'category' || !state.active[section.id]" t-esc="section.description"/>
+                    <b class="pe-2" t-else="" t-esc="section.values.get(section.activeValueId)['display_name']"/>
+                </span>
+                <t t-set-slot="content">
+                    <div t-attf-class="o_search_panel_{{ section.type }}" class="o_search_panel_section">
+                        <t t-call="web.SearchPanel.Section"/>
+                    </div>
+                    <div t-if="section.type !== 'category' and hasSelection(section.id)" class="text-end">
+                        <a href="#" title="Clear All" class="btn btn-link text-nowrap text-uppercase" t-on-click="() => this.clearSelection(section.id)">CLEAR ALL</a>
+                    </div>
+                </t>
+            </Dropdown>
+            <a href="#" t-if="hasSelection()" title="Clear All" class="btn btn-link text-nowrap text-uppercase" t-on-click="() => this.clearSelection()">CLEAR ALL</a>
+        </div>
+    </div>
+</t>
+
+<t t-name="web.SearchPanel.Category">
+    <t t-foreach="values" t-as="valueId" t-key="valueId">
+        <t t-set="value" t-value="section.values.get(valueId)"/>
+        <li class="o_search_panel_category_value list-group-item py-1 cursor-pointer border-0 pe-0"
+            t-att-class="isChildList ? env.isSmall ? '' : 'o_treeEntry' : 'ps-0'"
+            >
+            <header
+                class="list-group-item list-group-item-action d-flex align-items-center px-0 py-lg-0 border-0"
+                t-att-class="{'active text-black fw-bold': state.active[section.id] === valueId}"
+                t-on-click="() => this.toggleCategory(section, value)"
+                >
+                <div
+                    class="o_search_panel_label d-flex align-items-center overflow-hidden w-100 cursor-pointer mb-0"
+                    t-att-class="{'o_with_counters': section.enableCounters }"
+                    t-att-data-tooltip="value.display_name"
+                    >
+                    <button class="o_toggle_fold btn p-0 px-1 flex-shrink-0 text-center">
+                        <i
+                            t-if="value.childrenIds.length"
+                            class="fa"
+                            t-att-class="{
+                                'fa-caret-down' : state.expanded[section.id][valueId],
+                                'fa-caret-right':  !state.expanded[section.id][valueId]
+                            }"
+                            />
+                    </button>
+                    <span
+                        class="o_search_panel_label_title text-truncate"
+                        t-att-class="{'fw-bold' : value.bold}"
+                        t-esc="value.display_name"
+                        />
+                </div>
+                <small t-if="section.enableCounters and value.__count gt 0"
+                    class="o_search_panel_counter text-muted mx-2 fw-bold"
+                    t-esc="value.__count"
+                />
+            </header>
+            <ul t-if="value.childrenIds.length and state.expanded[section.id][valueId]"
+                class="list-group d-block"
+                >
+                <t t-call="{{ constructor.subTemplates.category }}">
+                    <t t-set="values" t-value="value.childrenIds"/>
+                    <t t-set="isChildList" t-value="true"/>
+                </t>
+            </ul>
+        </li>
+    </t>
+</t>
+
+<t t-name="web.SearchPanel.FiltersGroup">
+    <li t-foreach="[...values.keys()]" t-as="valueId" t-key="valueId"
+        class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 cursor-pointer"
+        t-att-class="{ 'ps-2' : isChildList }"
+        >
+        <t t-set="value" t-value="values.get(valueId)"/>
+        <div class="form-check w-100">
+            <input type="checkbox"
+                t-attf-id="{{ section.id }}_input_{{ valueId }}"
+                t-att-checked="state.active[section.id][valueId]"
+                class="form-check-input"
+                t-on-click="ev => this.toggleFilterValue(section.id, valueId, ev)"
+            />
+            <label class="o_search_panel_label form-check-label d-flex align-items-center justify-content-between w-100 cursor-pointer"
+                t-attf-for="{{ section.id }}_input_{{ valueId }}"
+                t-att-title="(group and group.tooltip) or false">
+                <span class="o_search_panel_label_title text-truncate" t-esc="value.display_name"/>
+                <span t-if="section.enableCounters and value.__count gt 0"
+                    class="o_search_panel_counter text-muted mx-2 small"
+                    t-esc="value.__count"
+                />
+            </label>
+        </div>
+    </li>
+</t>
+
+</templates>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+            Integrate Livechat in Common Frontend for Website
+            Template registering all the assets required to execute the Livechat from a page containing Odoo
+        -->
+        <template id="loader" inherit_id="website.layout" name="Livechat : include loader on Website">
+            <xpath expr="//head">
+                <t t-if="not no_livechat and website and website.channel_id">
+                    <script>
+                        <t t-call="im_livechat.loader">
+                            <t t-set="info" t-value="website._get_livechat_channel_info()"/>
+                        </t>
+                    </script>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

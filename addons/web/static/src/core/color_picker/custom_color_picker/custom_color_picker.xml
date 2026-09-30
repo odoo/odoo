@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="web.CustomColorPicker">
+    <div class="o_colorpicker_widget" t-ref="el" t-on-click="onClick" t-on-keydown="onKeydown" >
+        <div class="d-flex justify-content-between align-items-stretch mb-2">
+            <div t-ref="colorPickerArea"
+                    role="application"
+                    aria-label="Saturation and brightness color picker."
+                    aria-roledescription="Use up and down arrow keys to adapt the brightness. Use left and right arrow keys to adapt the saturation. Press the Control or Command key at the same time to have finer control."
+                    aria-activedescendant="picker_pointer"
+                    class="o_color_pick_area position-relative w-75"
+                    t-att-style="props.noTransparency ? 'width: 89%;' : None"
+                    t-on-pointerdown="onPointerDownPicker">
+                <div t-ref="colorPickerPointer" id="picker_pointer" class="o_picker_pointer rounded-circle p-1 position-absolute" tabindex="0" t-on-keydown="onPickerKeydown"/>
+            </div>
+            <div t-ref="colorSlider" class="o_color_slider position-relative" t-on-pointerdown="onPointerDownSlider">
+                <div t-ref="colorSliderPointer" class="o_slider_pointer" tabindex="0" t-on-keydown="onSliderKeydown" role="slider" aria-label="Hue" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="360"/>
+            </div>
+            <div t-ref="opacitySlider" class="o_opacity_slider position-relative" t-if="!props.noTransparency" t-on-pointerdown="onPointerDownOpacitySlider">
+                <div t-ref="opacitySliderPointer" class="o_opacity_pointer" tabindex="0" t-on-keydown="onOpacitySliderKeydown" role="slider" aria-label="Opacity" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100"/>
+            </div>
+        </div>
+        <div class="o_color_picker_inputs d-flex justify-content-between mb-2" t-on-change="debouncedOnChangeInputs">
+            <t t-set="input_classes" t-value="'p-0 border-0 text-center font-monospace bg-transparent'" />
+
+            <div class="o_hex_div d-flex align-items-baseline me-1">
+                <input type="text" t-attf-class="o_hex_input {{input_classes}}" data-color-method="hex" size="1"
+                    t-on-input="onHexColorInput"/>
+                <label class="flex-grow-0 ms-1 mb-0">hex</label>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

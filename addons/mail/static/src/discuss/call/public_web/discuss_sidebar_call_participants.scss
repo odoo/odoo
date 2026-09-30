@@ -1,0 +1,47 @@
+.o-mail-DiscussSidebarCallParticipants-avatar.o-isTalking {
+    outline: 3px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+    outline-offset: -2px;
+}
+
+.o-mail-DiscussSidebarCallParticipants-expandBtn {
+    aspect-ratio: 1;
+    transform: translateY(50%);
+    opacity: 75%;
+
+    .o-mail-DiscussSidebarCallParticipants:hover & {
+        opacity: 100%;
+    }
+
+    &:hover {
+        background-color: $gray-300;
+    }
+}
+
+.o-mail-DiscussSidebarCallParticipants-name {
+    color: $black;
+    opacity: 60%;
+
+    &.o-isTalking {
+        opacity: 100%;
+    }
+}
+
+.o-mail-DiscussSidebarCallParticipants-status {
+    &.o-compact {
+        bottom: - map-get($spacers, 1);
+        right: - map-get($spacers, 1);
+
+        span {
+            padding: map-get($spacers, 1) / 2;
+        }
+
+        .o-live {
+            font-size: 0.5rem;
+        }
+    }
+
+    .o-live {
+        font-size: 0.6rem;
+        padding: map-get($spacers, 1) / 2;
+    }
+}

@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@id='newsletter_snippet']" position="replace"/>
+</template>
+
+<template id="snippets" inherit_id="website.snippets">
+    <xpath expr="//t[@id='mass_mailing_newsletter_block_hook']" position="replace">
+        <t t-snippet="website_mass_mailing.s_newsletter_block" string="Newsletter Block" t-forbid-sanitize="form" group="contact_and_forms">
+            <keywords>form, updates, digest, bulletin, announcements, notifications, communication, email, modal, alert, dialog, prompt, pop-up, subscription</keywords>
+        </t>
+    </xpath>
+    <xpath expr="//t[@id='mass_mailing_newsletter_box_hook']" position="replace">
+        <t t-snippet="website_mass_mailing.s_newsletter_box" string="Newsletter Box" t-forbid-sanitize="form" group="contact_and_forms">
+            <keywords>updates, digest, bulletin, announcements, notifications, communication, promotional, email, alert, dialog, prompt, subscription, subscribe, mailing-list, news, box, image, picture</keywords>
+        </t>
+    </xpath>
+    <xpath expr="//t[@id='mass_mailing_newsletter_centered_hook']" position="replace">
+        <t t-snippet="website_mass_mailing.s_newsletter_centered" string="Newsletter Centered" t-forbid-sanitize="form" group="contact_and_forms">
+            <keywords>updates, digest, bulletin, announcements, notifications, communication, promotional, email, alert, dialog, prompt, subscription, subscribe, mailing-list, news</keywords>
+        </t>
+    </xpath>
+    <xpath expr="//t[@id='mass_mailing_newsletter_grid_hook']" position="replace">
+        <t t-snippet="website_mass_mailing.s_newsletter_grid" string="Newsletter Grid" t-forbid-sanitize="form" group="contact_and_forms">
+            <keywords>updates, digest, bulletin, announcements, notifications, communication, promotional, email, alert, dialog, prompt, subscription, subscribe, mailing-list, news, grid, image, picture</keywords>
+        </t>
+    </xpath>
+    <xpath expr="//t[@id='mass_mailing_newsletter_popup_hook']" position="replace">
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" string="Newsletter Popup" t-forbid-sanitize="form" group="contact_and_forms" label="Popup"/>
+    </xpath>
+    <xpath expr="//t[@id='mass_mailing_newsletter_benefits_popup_hook']" position="replace">
+        <t t-snippet="website_mass_mailing.s_newsletter_benefits_popup" string="Newsletter Benefits" t-forbid-sanitize="form" group="contact_and_forms" label="Popup"/>
+    </xpath>
+    <xpath expr="//t[@id='mass_mailing_newsletter_hook']" position="replace">
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" string="Newsletter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg" t-forbid-sanitize="form" t-grid-column-span="5"/>
+    </xpath>
+</template>
+
+<!--
+Users upgraded from a version lower than 16.0 may have those blocks in their
+database, without the s_newsletter_list class. See fixNewsletterListClass.
+-->
+<template id="s_newsletter_subscribe_form" name="Newsletter">
+    <div t-attf-class="s_newsletter_subscribe_form s_newsletter_list js_subscribe #{_contentClasses}" data-vxml="001" data-list-id="0" data-name="Newsletter Form">
+        <div class="js_subscribed_wrap d-none">
+            <t t-if="thank_you_message" t-out="thank_you_message"/>
+            <p t-else="" class="h4-fs text-center text-success"><i class="fa fa-check-circle-o" role="img"/> Thanks for registering!</p>
+        </div>
+        <div class="js_subscribe_wrap">
+            <div t-attf-class="{{_wrap_classes or 'input-group'}}">
+                <input type="email" name="email" t-attf-class="s_newsletter_subscribe_form_input js_subscribe_value form-control #{_input_classes}" placeholder="Email Address"/>
+                <a role="button" href="#" t-attf-class="js_subscribe_btn o_submit {{_btn_classes or 'btn btn-primary'}}">Subscribe</a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!--
+Users upgraded from a version lower than 16.0 may have those blocks in their
+database, without the s_newsletter_list class. See fixNewsletterListClass.
+-->
+<template id="s_newsletter_block" name="Newsletter Block">
+    <section class="s_newsletter_block s_newsletter_list o_cc o_cc2 pt64 pb64" data-list-id="0">
+        <div class="container">
+            <t t-call="website_mass_mailing.s_newsletter_block_default_template"/>
+        </div>
+    </section>
+</template>
+
+<template id="s_newsletter_block_default_template" groups="base.group_user">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2 class="h4-fs">Subscribe to our newsletter</h2>
+            <p class="text-muted">Get all the latest news, blog posts and product updates from our company, delivered directly to your inbox.</p>
+        </div>
+        <div class="col-lg-5 offset-lg-1">
+            <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"/>
+        </div>
+    </div>
+</template>
+
+<template id="s_newsletter_box" name="Newsletter Box">
+    <section class="s_newsletter_box s_newsletter_list o_colored_level pt64 pb64 o_cc o_cc2" data-name="Newsletter Box" data-list-id="0" data-oe-shape-data="{'shape':'html_builder/Blobs/04_001','colors':{'c5':'o-color-5'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}">
+        <div class="o_we_shape o_html_builder_Blobs_04_001" style="background-image: url('/html_editor/shape/html_builder/Blobs/04_001.svg?c5=o-color-5');"/>
+        <div class="container">
+            <div class="row s_nb_column_fixed s_col_no_bgcolor">
+                <div class="s_media_list_item col-lg-7 offset-lg-4 pt16 pb16" data-name="Box">
+                    <div class="s_col_no_resize s_col_no_bgcolor o_cc o_cc1 row g-0 align-items-center flex-row-reverse rounded overflow-hidden shadow-sm">
+                        <div class="s_media_list_img_wrapper col-lg-4 align-self-stretch">
+                            <img src="/web/image/website.library_image_07" class="s_media_list_img h-100 w-100 object-fit-cover" alt=""/>
+                        </div>
+                        <div class="s_media_list_body col-lg-8 p-3 p-md-5">
+                            <h4>Don't miss our upcoming updates</h4>
+                            <p class="text-muted">Get all the latest news, blog posts and product updates from our company, delivered directly to your inbox.</p>
+                            <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form">
+                                <t t-set="_input_classes" t-valuef="s_newsletter_subscribe_form_input_small"/>
+                                <t t-set="thank_you_message">
+                                    <p class="h6-fs text-success">Thanks for registering!</p>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_newsletter_centered" name="Newsletter Centered">
+    <section class="s_newsletter_centered s_newsletter_list o_colored_level pt72 pb72" data-list-id="0" data-oe-shape-data="{'shape':'html_builder/Bold/15','colors':{'c5':'o-color-1'},'flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}" data-name="Newsletter Centered">
+        <div class="o_we_shape o_html_builder_Bold_15" style="background-image: url('/html_editor/shape/html_builder/Bold/15.svg?c5=o-color-1');"/>
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-lg-6 offset-lg-3 pt16 pb16" data-name="Card">
+                        <div class="s_card card o_cc o_cc1 my-0" data-vxml="001" data-snippet="s_card" data-name="Card">
+                            <div class="card-body p-md-5">
+                                <p class="h1-fs" style="text-align: center;">&#9993;&#65039;</p>
+                                <h3 class="card-title" style="text-align: center;">Subscribe to our newsletter</h3>
+                                <p class="card-text text-muted" style="text-align: center;">Get all the latest news, blog posts and product updates from our company, delivered directly to your inbox.</p>
+                                <p><br/></p>
+                                <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form">
+                                    <t t-set="_inputClasses" t-value="'o_subscribe_input'"/>
+                                    <t t-set="_wrapClasses" t-value="'input-group justify-content-center'"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+</template>
+
+<template id="s_newsletter_grid" name="Newsletter Grid">
+    <section class="s_newsletter_grid s_newsletter_list o_colored_level pt64 pb64" data-name="Newsletter Grid" data-list-id="0">
+        <div class="container">
+            <div class="row o_grid_mode" data-row-count="9">
+                <div class="o_grid_item o_grid_item_image g-col-lg-5 g-height-6 col-lg-5" style="z-index: 1; grid-area: 1 / 1 / 7 / 6;">
+                    <h2 class="h1-fs">Subscribe to our newsletter</h2>
+                    <p class="lead">Be the first to find out all the latest new, products and trends.</p>
+                    <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form">
+                        <t t-set="thank_you_message">
+                            <p class="h5-fs mt-4 text-success"><i class="fa fa-check-circle-o" role="img"/> Thanks for registering!</p>
+                        </t>
+                        <t t-set="_wrapClasses" t-value="'input-group input-group-lg'"/>
+                    </t>
+                </div>
+                <div class="o_grid_item o_grid_item_image g-height-5 g-col-lg-2 col-lg-2 d-lg-block d-none o_snippet_mobile_invisible" style="z-index: 3; grid-area: 5 / 8 / 10 / 10;" data-invisible="1">
+                    <img class="img img-fluid rounded" src="/web/image/website.s_newsletter_grid_default_image_1" alt=""/>
+                </div>
+                <div class="o_grid_item o_grid_item_image g-col-lg-3 g-height-9 col-lg-3 d-lg-block d-none o_snippet_mobile_invisible" style="z-index: 4; grid-area: 1 / 10 / 10 / 13;" data-invisible="1">
+                    <img class="img img-fluid rounded" src="/web/image/website.s_newsletter_grid_default_image_2" alt=""/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_newsletter_block_form_template" groups="base.group_user">
+    <section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+        <div class="container o_container_small">
+            <form id="newsletter_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required"
+                  data-mark="*" data-model_name="mailing.contact" data-success-mode="message" hide-change-model="true">
+                <div class="s_website_form_rows row s_col_no_bgcolor">
+                    <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_model_required" data-type="char" data-name="Field">
+                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 250px" for="mailing_sub1">
+                                <span class="s_website_form_label_content">Name</span>
+                                <span class="s_website_form_mark"> *</span>
+                            </label>
+                            <div t-if="request.env['mailing.contact']._is_name_split_activated()" class="col-sm row">
+                                <div class="col-sm-6">
+                                    <input id="mailing_sub1" type="text" class="form-control s_website_form_input"
+                                           name="first_name" placeholder="First Name" required="1"/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control s_website_form_input"
+                                           name="last_name" placeholder="Last Name" required="1"/>
+                                </div>
+                            </div>
+                            <div t-else="" class="col-sm">
+                                <input id="mailing_sub1" type="text" class="form-control s_website_form_input" name="name" required="1" placeholder="John Smith"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_model_required" data-type="email" data-name="Field">
+                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 250px" for="mailing_sub2">
+                                <span class="s_website_form_label_content">Email</span>
+                                <span class="s_website_form_mark"> *</span>
+                            </label>
+                            <div class="col-sm">
+                                <input id="mailing_sub2" type='email' class='form-control s_website_form_input' name="email" placeholder="johnsmith@example.com"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_model_required" data-type="many2many" data-name="Field">
+                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                            <label class="col-sm-auto s_website_form_label" style="width: 250px" for="mailing_list_">
+                                <span class="s_website_form_label_content">Subscribe to</span>
+                                <span class="s_website_form_mark"> *</span>
+                            </label>
+                            <div class="col-sm">
+                                <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" data-name="list_ids" data-display="horizontal">
+                                    <t t-foreach="request.env['mailing.list'].search([('is_public', '=', True)])" t-as="record">
+                                        <div class="checkbox col-12 col-lg-4 col-md-6">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="s_website_form_input form-check-input" name="list_ids"
+                                                    t-attf-id="mailing_list_#{record.id}" t-att-value="record.id" required="1"/>
+                                                <label class="form-check-label s_website_form_check_label" t-attf-for="mailing_list_#{record.id}">
+                                                    <t t-out="record.name"/>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="boolean" data-name="Field">
+                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                            <label class="col-sm-auto s_website_form_label" style="width: 250px;" for="mailing_sub3">
+                                <span class="s_website_form_label_content">I agree to receive updates</span>
+                                <span class="s_website_form_mark"> *</span>
+                            </label>
+                            <div class="col-sm">
+                                <div class="form-check">
+                                    <input type="checkbox" value="Yes" class="s_website_form_input form-check-input" name="I want to be kept updated"
+                                           id="mailing_sub3" required="1"/>
+                                </div>
+                                <div class="s_website_form_field_description small form-text text-muted">
+                                    We send one weekly newsletter per list and always try to keep it interesting. You can unsubscribe at any time.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="s_website_form_submit s_website_form_no_submit_label col-12 mb-0 py-2 text-end" data-name="Submit Button">
+                        <div style="width: 250px;" class="s_website_form_label"/>
+                        <span id="s_website_form_result"></span>
+                        <a href="#" role="button" class="btn btn-primary ms-auto ms-lg-0 s_website_form_send">Subscribe</a>
+                    </div>
+                </div>
+            </form>
+            <div class="s_website_form_end_message d-none">
+                <div class="oe_structure">
+                    <section class="s_text_block pt64 pb64 o_colored_level o_cc o_cc2 text-center" data-snippet="s_text_block">
+                        <div class="container">
+                            <i class="fa fa-paper-plane fa-2x mb-3 rounded-circle text-bg-success" role="presentation"/>
+                            <h1 class="fw-bolder">Thank you for subscribing!</h1>
+                            <p class="lead">You will now be informed about the latest news.</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_newsletter_subscribe_popup" name="Newsletter Popup">
+    <div class="s_popup o_newsletter_popup o_snippet_invisible" data-name="Newsletter Popup" data-vcss="001" data-invisible="1">
+        <div class="modal fade s_popup_middle o_newsletter_modal"
+             style="background-color: var(--black-50) !important;"
+             data-show-after="5000" data-display="afterDelay" data-consents-duration="7"
+             data-bs-focus="false" data-bs-backdrop="false" tabindex="-1" role="dialog">
+            <div class="modal-dialog d-flex">
+                <div class="modal-content oe_structure">
+                    <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">&#215;</div>
+                    <section class="s_text_block oe_img_bg o_bg_img_center pt88 pb64" data-snippet="s_text_block" data-name="Text"
+                             style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 0 100%;">
+                        <div class="container s_allow_columns">
+                            <div class="row">
+                                <div class="col-lg-12 bg-black-50">
+                                    <h2 style="text-align: center;">Always <b>First</b>.</h2>
+                                    <p style="text-align: center;">Be the first to find out all the latest news,<br/> products, and trends.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                        <div class="container">
+                            <div class="row s_nb_column_fixed g-0">
+                                <div class="col-lg-8 offset-lg-2 pt32 pb32">
+                                    <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"/>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Extend default mass_mailing snippets with website feature -->
+
+<template id="s_mail_block_footer_social" inherit_id="mass_mailing.s_mail_block_footer_social">
+    <xpath expr='//a[@href="/unsubscribe_from_list"]' position="after">
+        <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
+    </xpath>
+</template>
+
+<template id="s_mail_block_footer_social_left" inherit_id="mass_mailing.s_mail_block_footer_social_left">
+    <xpath expr='//a[@href="/unsubscribe_from_list"]' position="after">
+        <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
+    </xpath>
+</template>
+
+</odoo>

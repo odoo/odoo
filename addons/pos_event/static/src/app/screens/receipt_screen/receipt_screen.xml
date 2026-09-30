@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_event.ReceiptScreen" t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_payment_successful')]" position="inside">
+            <t t-if="this.currentOrder.eventRegistrations.length > 0">
+                <h2 class="mt-3">Event Registrations</h2>
+                <div class="o-event-button buttons mb-3 d-flex gap-1">
+                    <button class="o-event-full button print btn btn-md btn-secondary w-50 py-3" t-on-click="() => doPrintEventFull.call()">
+                        <i t-attf-class="fa {{doPrintEventFull.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Full Page Ticket
+                    </button>
+                    <button class="o-event-badge button print btn btn-md btn-secondary w-50 py-3" t-on-click="() => doPrintEventBadge.call()">
+                        <i t-attf-class="fa {{doPrintEventBadge.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Badge
+                    </button>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

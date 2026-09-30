@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+  xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+  xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+  <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0</cbc:CustomizationID>
+  <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+  <cbc:ID>Correction1</cbc:ID>
+  <cbc:IssueDate>2017-11-13</cbc:IssueDate>
+  <cbc:DueDate>2017-12-01</cbc:DueDate>
+  <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+  <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+
+  <cac:InvoiceLine>
+    <cbc:ID>1</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="DAY">1</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR"/>
+    <cac:Item>
+      <cbc:Description>Empty line extension amount</cbc:Description>
+      <cbc:Name>Item empty</cbc:Name>
+    </cac:Item>
+  </cac:InvoiceLine>
+
+  <cac:InvoiceLine>
+    <cbc:ID>2</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="DAY">1</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">0</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>Zero line extension amount</cbc:Description>
+      <cbc:Name>Item zero</cbc:Name>
+    </cac:Item>
+  </cac:InvoiceLine>
+
+  <cac:InvoiceLine>
+    <cbc:ID>3</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="DAY">1</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="EUR">1000</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>Non zero line extension amount</cbc:Description>
+      <cbc:Name>Item with price</cbc:Name>
+    </cac:Item>
+  </cac:InvoiceLine>
+
+</Invoice>

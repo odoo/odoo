@@ -1,0 +1,50 @@
+// = Search Bar
+// ============================================================================
+
+.o_searchview_facet {
+    @keyframes animate {
+        from {
+            opacity: .5;
+            transform: translateY(20%);
+        }
+    }
+
+    animation: animate .25s ease-out;
+
+    .btn, .btn:focus {
+        // Boostrap plays around with the z-index of buttons, but this is not needed here
+        // It was causing issues with the hotkey overlay
+        z-index: 0;
+    }
+
+    .o_facet_value {
+        max-width: $o-search-bar-facet-value-width;
+
+        @include media-breakpoint-down(md) {
+            max-width: $o-search-bar-facet-value-width / 2;
+        }
+    }
+}
+
+.o_searchview_autocomplete {
+    .o-dropdown-item {
+        align-items: center;
+        display: flex;
+        padding-left: 25px;
+
+        &.o_indent {
+            padding-left: 50px;
+        }
+
+        a {
+            color: inherit;
+
+            &.o_expand {
+                display: flex;
+                justify-content: center;
+                width: 25px;
+                @include o-position-absolute($left: 0);
+            }
+        }
+    }
+}

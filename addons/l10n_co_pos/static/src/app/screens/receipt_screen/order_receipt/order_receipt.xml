@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_co_pos.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('before-footer')]" position="inside">
+            <t t-if="order.name !== false">
+                <div style="word-wrap:break-word;" class="pt-3"><t t-out="order.name"/></div>
+            </t>
+        </xpath>
+    </t>
+</templates>

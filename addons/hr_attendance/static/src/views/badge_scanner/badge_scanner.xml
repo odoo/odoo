@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr.BadgeScannerTemplate">
+        <div class="o_hr_barcode_bg o_home_menu_background">
+            <div class="o_hr_barcode_main container d-flex flex-column h-100 h-sm-auto bg-view shadow">
+                <div class="d-flex align-items-center justify-content-between my-3">
+                    <a href="#" class="btn btn-light" t-on-click.prevent="() => this.onClickBack()">
+                        <i class="oi oi-chevron-left fa-lg"></i>
+                    </a>
+                    <span class="fs-2 me-auto ms-2">Scan Badge</span>
+                </div>
+                <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+                    <BarcodeScanner onBarcodeScanned="(barcode) => this.onBarcodeScanned(barcode)" />
+                    <div class="my-5 text-center">
+                        <h5 class="mt8 text-muted">Scan or Tap your badge</h5>
+                        <t t-if="employee">
+                            <h4 class="text-primary mt-3">For <t t-out="employee[0].name"/></h4>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

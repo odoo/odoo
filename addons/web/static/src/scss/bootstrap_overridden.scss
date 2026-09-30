@@ -1,0 +1,315 @@
+///
+/// This file is a copy of the bootstrap _variables.scss file where all the
+/// left-untouched variables definition have been removed.
+///
+
+//
+// Color system
+//
+
+//Restore BS4 Colors
+$blue: #007bff !default;
+$pink: #e83e8c !default;
+$green: #28a745 !default;
+$cyan: #17a2b8 !default;
+//End Restore BS4 Colors
+
+// All of those are BS default
+$white:    $o-white !default;
+$gray-100: $o-gray-100 !default;
+$gray-200: $o-gray-200 !default;
+$gray-300: $o-gray-300 !default;
+$gray-400: $o-gray-400 !default;
+$gray-500: $o-gray-500 !default;
+$gray-600: $o-gray-600 !default;
+$gray-700: $o-gray-700 !default;
+$gray-800: $o-gray-800 !default;
+$gray-900: $o-gray-900 !default;
+
+$black:    $o-black !default;
+
+$primary: $o-brand-primary !default;
+$secondary: $gray-300 !default;
+$dark: $o-gray-900 !default;
+
+$success: $o-success !default;
+$info: $o-info !default;
+$warning: $o-warning !default;
+$danger: $o-danger !default;
+
+
+// The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
+// See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
+$min-contrast-ratio: 3 !default;
+
+// Options
+//
+// Quickly modify global styling by enabling or disabling optional features.
+$enable-smooth-scroll: false !default;
+
+// Prefix for :root CSS variables
+$variable-prefix: '' !default;
+
+// Restore negative margins disabled in BS5 by default
+$enable-negative-margins: true !default;
+
+// Enable CSS Grid classes
+$enable-cssgrid: true !default;
+
+// Disable BS5's dark mode until we actually use it for our own dark mode implementation
+$enable-dark-mode: false !default;
+
+// Spacing
+$spacer: $o-spacer !default;
+
+// Body
+//
+// Settings for the `<body>` element.
+
+$body-bg: $o-webclient-background-color !default;
+$body-color: $o-main-text-color !default;
+
+// Links
+//
+// Style anchor elements.
+
+$link-color: $o-main-link-color !default;
+$link-decoration: none !default;
+$link-hover-decoration: none !default;
+$link-shade-percentage: 30% !default;
+
+// Muted
+//
+// Style .text-muted elements
+
+$text-muted: $o-main-color-muted !default;
+
+// Grid columns
+//
+// Set the number of columns and specify the width of the gutters.
+
+$grid-gutter-width: $o-horizontal-padding * 2 !default;
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+$border-color: $o-gray-300 !default;
+
+$border-radius: $o-border-radius !default;
+$border-radius-sm: $o-border-radius-sm !default;
+$border-radius-lg: $o-border-radius-lg !default;
+
+$component-active-color: $o-component-active-color !default;
+$component-active-bg: $o-component-active-bg !default;
+
+$caret-width: 4px !default;
+
+// Typography
+//
+// Font, line-height, and color for body text, headings, and more.
+
+// Desired weights, not necessarily matching the final result on screen.
+// Check primary_variables.scss for more info.
+$font-weight-normal: $o-font-weight-normal !default;
+$font-weight-bold: $o-font-weight-medium !default;
+
+$font-family-sans-serif: $o-font-family-sans-serif !default;
+
+$font-size-base: $o-font-size-base !default;
+$font-size-sm: $o-font-size-base-small !default;
+$small-font-size: $font-size-sm !default;
+
+$line-height-base: $o-line-height-base !default;
+$line-height-sm: $o-line-height-sm !default;
+$line-height-lg: $o-line-height-lg !default;
+
+$h1-font-size: $font-size-base * 2.0 !default;
+$h2-font-size: $font-size-base * 1.5 !default;
+$h3-font-size: $font-size-base * 1.3 !default;
+$h4-font-size: $font-size-base * 1.2 !default;
+$h5-font-size: $font-size-base * 1.1 !default;
+
+$headings-font-family: $o-headings-font-family !default;
+$headings-font-weight: $font-weight-bold !default;
+$headings-color: $o-main-headings-color !default;
+
+// Tables
+//
+// Customizes the `.table` component with basic values, each used across all table variations.
+
+$table-bg: transparent !default;
+$table-striped-color: inherit !default;
+$table-striped-bg-factor: 0.01 !default;
+$table-hover-bg-factor: .055 !default;
+$table-border-color: $border-color !default;
+$table-group-separator-color: $gray-200 !default;
+$table-cell-padding-x: .75rem !default;
+$table-cell-padding-y: .75rem !default;
+$table-cell-padding-x-sm: $o-table-cell-padding-x-sm !default;
+$table-cell-padding-y-sm: $o-table-cell-padding-y-sm !default;
+$table-striped-order: even !default;
+
+$table-active-bg-factor: .05 !default;
+$table-active-color: $headings-color !default;
+$table-th-font-weight: $headings-font-weight !default;
+
+// Buttons + Forms
+//
+// Shared variables that are reassigned to `$input-` and `$btn-` specific variables.
+
+$input-btn-padding-y: o-to-rem(5) !default;
+$input-btn-padding-x: o-to-rem(10) !default;
+
+$input-btn-padding-y-sm: o-to-rem(3) !default;
+$input-btn-padding-x-sm: o-to-rem(8) !default;
+
+$input-btn-padding-y-lg: o-to-rem(6) !default;
+$input-btn-padding-x-lg: o-to-rem(12) !default;
+
+// Buttons
+//
+// For each of Bootstrap's buttons, define text, background, and border color.
+
+$btn-font-weight: $font-weight-bold !default;
+$btn-disabled-opacity: $o-opacity-disabled !default;
+$btn-border-radius-lg: $border-radius !default;
+
+// Dropdowns
+//
+// Dropdown menu container and contents.
+
+$dropdown-border-color: $border-color !default;
+
+$dropdown-link-color: $o-main-text-color !default;
+$dropdown-link-hover-color: $black !default;
+$dropdown-link-hover-bg: rgba($black, 0.08) !default;
+
+$dropdown-link-active-color: $black !default;
+$dropdown-link-active-bg: transparent !default;
+
+$dropdown-link-disabled-color: $o-main-color-muted !default;
+
+$dropdown-item-padding-y: $o-dropdown-vpadding !default;
+$dropdown-item-padding-x: $o-dropdown-hpadding !default;
+
+// List group
+
+$list-group-bg: $o-view-background-color !default;
+$list-group-hover-bg: $dropdown-link-hover-bg !default;
+
+$list-group-active-color: $o-list-group-active-color !default;
+$list-group-active-bg: $o-list-group-active-bg !default;
+$list-group-action-hover-color: $gray-900 !default;
+
+// Breadcrumbs
+
+$breadcrumb-item-padding-x: $o-breadcrumb-item-padding-x !default;
+
+// Z-index master list
+
+// Change the z-index of the modal-backdrop elements to be equal to the
+// modal elements' ones. Bootstrap does not support multi-modals, and without
+// this rule all the modal-backdrops are below all the opened modals.
+// Indeed, bootstrap forces them to a lower z-index as the modal-backdrop
+// element (unique in their supported cases) might be put after the modal
+// element (if the modal is already in the DOM, hidden, then opened). This
+// cannot happen in odoo though as modals are not hidden but removed from
+// the DOM and are always put at the end of the body when opened.
+//
+// TODO the following code was disabled because it is saas-incompatible
+//
+// $zindex-modal-backdrop: $zindex-modal;
+
+// Navs
+
+$nav-tabs-link-active-bg: $white !default;
+
+$nav-pills-border-radius: 0 !default;
+$nav-pills-link-active-color: $white !default;
+$nav-pills-link-active-bg: $o-brand-primary !default;
+
+// Tooltips
+
+$tooltip-font-size: $font-size-sm !default;
+$tooltip-max-width: 400px !default;
+$tooltip-color: $o-gray-200 !default;
+$tooltip-opacity: 1 !default;
+
+// Popovers
+
+$popover-bg: $white !default;
+$popover-border-color: $border-color !default;
+$popover-border-radius: $border-radius !default;
+$popover-arrow-color: var(--popover-arrow-color, #{$popover-bg}) !default;
+$popover-arrow-outer-color: $popover-border-color !default;
+
+// Toasts
+
+$toast-max-width: 320px !default;
+$toast-padding-x: 1.5rem !default;
+$toast-padding-y: 0.5rem !default;
+$toast-font-size: $font-size-base !default;
+$toast-background-color: rgba($white, .7) !default;
+$toast-header-background-color: $toast-background-color !default;
+
+// Modals
+
+// Padding applied to the modal body
+$modal-inner-padding: $o-horizontal-padding !default;
+$modal-footer-margin-between: 1px !default;
+
+$modal-lg: $o-modal-lg !default;
+$modal-md: $o-modal-md !default;
+
+$modal-content-border-radius: $border-radius !default;
+$modal-content-bg: $o-view-background-color !default;
+
+$modal-scale-transform: none !default;
+
+// Breadcrumbs
+
+$breadcrumb-padding-y: 0 !default;
+$breadcrumb-padding-x: 0 !default;
+$breadcrumb-margin-bottom: 0 !default;
+
+$breadcrumb-bg: $o-control-panel-background-color !default;
+
+// Code
+
+$code-color: $o-main-code-color!default;
+
+// User input typically entered via keyboard
+
+$kbd-color: $o-gray-700 !default;
+$kbd-bg: $o-gray-100 !default;
+$kbd-box-shadow: 0px 1px 1px rgba($o-black, 0.2), inset 0px -1px 1px 1px rgba($o-gray-200, 0.8), inset 0px 2px 0px 0px rgba($o-white, 0.8) !default;
+
+// Input
+$input-bg: $o-input-bg !default;
+$input-focus-border-color: $o-brand-primary !default;
+$form-check-input-checked-color: $o-brand-lightsecondary !default;
+$form-check-input-checked-border-color: $o-brand-primary !default;
+$form-check-input-checked-bg-color: $o-brand-primary !default;
+$form-switch-checked-color: $white !default;
+$form-switch-focus-color: mix($o-success, $input-bg) !default;
+
+$form-range-thumb-bg: $primary !default;
+$form-range-thumb-focus-box-shadow: 0 0 0 1px $o-brand-primary !default;
+
+// Badge
+$badge-color: inherit !default;
+$badge-padding-y: 0.25em !default;
+$badge-padding-x: 0.82em !default;
+
+// Placeholder color
+$input-placeholder-color: mix($gray-400, $gray-500) !default;
+
+// Card
+$card-bg: $o-view-background-color !default;
+$card-spacer-y: $spacer !default; // BS Default
+$card-cap-padding-y: $card-spacer-y !default;
+
+.user-select-none {
+    -webkit-user-select: none !important; // not included in BS by default
+}

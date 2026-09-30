@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <!-- FORUM MENUS -->
+    <menuitem
+        name="Forum"
+        id="menu_website_forum_global"
+        parent="website.menu_website_global_configuration"
+        sequence="170"
+        groups="website.group_website_designer"/>
+
+    <menuitem
+        id="menu_forum_global"
+        parent="menu_website_forum_global"
+        name="Forums"
+        action="forum_forum_action"
+        sequence="10"/>
+    <menuitem
+        id="menu_forum_rank_global"
+        parent="menu_website_forum_global"
+        name="Ranks"
+        action="gamification.gamification_karma_ranks_action"
+        sequence="20"/>
+    <menuitem
+        id="menu_forum_tag_global"
+        parent="menu_website_forum_global"
+        name="Tags"
+        action="forum_tag_action"
+        sequence="30"/>
+    <menuitem
+        id="menu_forum_badges"
+        parent="menu_website_forum_global"
+        name="Badges"
+        action="gamification.badge_list_action"
+        sequence="40"/>
+    <menuitem
+        id="menu_forum_post_reasons"
+        parent="menu_website_forum_global"
+        name="Close Reasons"
+        action="forum_post_reason_action"
+        sequence="50"/>
+
+    <!-- WEBSITE MENUS -->
+    <menuitem
+        id="menu_forum_post_pages"
+        parent="website.menu_content"
+        sequence="80"
+        name="Forum Posts"
+        action="forum_post_action"/>
+
+</data></odoo>

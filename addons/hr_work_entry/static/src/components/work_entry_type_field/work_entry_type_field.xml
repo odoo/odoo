@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="hr_work_entry.Many2OneWorkEntryTypeField">
+        <div class="d-flex align-items-center gap-1">
+            <t t-if="m2oProps.value !== false">
+                <WorkEntryType data="state.data"/>
+            </t>
+            <Many2One t-props="m2oProps" cssClass="'w-100'">
+                <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                    <div class="o_avatar_many2x_autocomplete d-flex align-items-center">
+                        <WorkEntryType data="autoCompleteItemScope.record" className="'me-1'"/>
+                        <t t-out="autoCompleteItemScope.label"/>
+                    </div>
+                </t>
+            </Many2One>
+        </div>
+    </t>
+
+    <t t-name="hr_work_entry.WorkEntryType">
+        <div class="o_calendar_renderer o_radio_item position-relative cursor-pointer d-flex gap-1 align-items-center"
+             t-att-class="props.className"
+             style="background-color: inherit;">
+            <span class="small rounded-3 d-flex justify-content-center" t-esc="state.data?.display_code || ' '"
+                  t-attf-class="o_calendar_color_#{state.data?.color || 0}"
+                  style="background-color: rgb(var(--o-event-bg--subtle-rgb)); width: 5ch; height:23px; padding: 2px;"/>
+        </div>
+    </t>
+</templates>

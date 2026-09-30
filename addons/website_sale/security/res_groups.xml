@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Feature groups -->
+    <record id="group_show_uom_price" model="res.groups">
+        <field name="name">UOM Price Display for eCommerce</field>
+    </record>
+
+    <record id="group_product_price_comparison" model="res.groups">
+        <field name="name">Comparison Price</field>
+    </record>
+
+    <record id="group_product_feed" model="res.groups">
+        <field name="name">Product Feed</field>
+    </record>
+
+    <!-- Security groups -->
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[
+            Command.link(ref('account.group_delivery_invoice_address')),
+        ]"/>
+    </record>
+
+    <record id="sales_team.group_sale_manager" model="res.groups">
+        <field name="implied_ids" eval="[
+            Command.link(ref('website.group_website_restricted_editor')),
+        ]"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <div t-name="hr_holidays.LeaveStatsComponent" class="o_leave_stats">
+        <div t-if="state.employee and state.leaves.length !== 0" id="o_leave_stats_employee" class="sub_table px-3 py-2 mb-3">
+            <div>
+                <div class="d-flex">
+                    <div class="mx-1">
+                        <KanbanMany2OneAvatarEmployeeField
+                            record="this.props.record"
+                            name="'employee_id'"
+                        />
+                    </div>
+                    <div class="o_hr_leave_subtitle">
+                        <t t-esc="state.employee.display_name"/>'s summary (<t t-esc="thisYear"/>)
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-column mb-1">
+                <div t-foreach="state.leaves" t-as="leave" t-key="leave.id" class="d-flex mb-2 gap-1">
+                    <span class="col-3 fw-bold" t-esc="leave.holiday_status_id.display_name"/>
+                    <div t-if="leave.leave_type_request_unit == 'hour'" class="d-flex gap-2 col-6 flex-wrap">
+                        <span t-esc="leave.date_from"/>
+                        <span t-esc="leave.hour_from" class="fst-italic"/>
+                        <i class="fa fa-long-arrow-right my-1" aria-label="Arrow icon" title="Arrow"/>
+                        <span t-esc="leave.hour_to" class="fst-italic"/>
+                    </div>
+                    <div t-else="" class="col-6 d-flex gap-2 flex-wrap">
+                        <span t-esc="leave.date_from"/>
+                        <i class="fa fa-long-arrow-right my-1" aria-label="Arrow icon" title="Arrow"/>
+                        <span t-esc="leave.date_to"/>
+                    </div>
+                    <div class="col-3 flex-wrap">
+                    (
+                        <span t-if="leave.leave_type_request_unit == 'hour'"><t t-esc="leave.number_of_hours"/> hours</span>
+                        <span t-else=""><t t-esc="leave.number_of_days"/> days</span>
+                    )
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div t-if="state.department and state.departmentLeaves.length !== 0" id="o_leave_stats_department" class="sub_table px-3 py-2">
+            <div class="o_horizontal_separator o_hr_leave_subtitle d-flex align-items-center justify-content-between">
+                <div>
+                    <span t-if="state.has_parent_department" class="mx-1">.../</span>
+                    <span t-esc="state.department_name"/>
+                    <span>'s summary in this period</span>
+                </div>
+            </div>
+            <div class="d-flex flex-column mb-1">
+                <div t-foreach="state.departmentLeaves" t-as="leave" t-key="leave.id" class="d-flex flex-column mb-2">
+                    <div class=" d-flex my-1 gap-1">
+                        <div class="col-3 d-flex">
+                            <KanbanMany2OneAvatarEmployeeField
+                                record="{'data' : {'employee_id': leave.employee_id}, 'fields': this.props.record.fields}"
+                                name="'employee_id'" relation="'hr.employee.public'"
+                            />
+                            <span t-esc="leave.employee_id.display_name" class="mx-1 fw-bold"/>
+                        </div>
+                        <div t-if="leave.leave_type_request_unit == 'hour'" class="d-flex gap-2 col-6 flex-wrap">
+                            <span t-esc="leave.date_from"/>
+                            <span t-esc="leave.hour_from" class="fst-italic"/>
+                            <i class="fa fa-long-arrow-right my-1" aria-label="Arrow icon" title="Arrow"/>
+                            <span t-esc="leave.hour_to" class="fst-italic"/>
+                        </div>
+                        <div t-else="" class="col-6 d-flex gap-2 flex-wrap">
+                            <span t-esc="leave.date_from"/>
+                            <i class="fa fa-long-arrow-right my-1" aria-label="Arrow icon" title="Arrow"/>
+                            <span t-esc="leave.date_to"/>
+                        </div>
+                        <div class="col-3 flex-wrap">
+                            (
+                            <span t-if="leave.leave_type_request_unit == 'hour'"><t t-esc="leave.number_of_hours"/> hours</span>
+                            <span t-else=""><t t-esc="leave.number_of_days"/> days</span>
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</templates>

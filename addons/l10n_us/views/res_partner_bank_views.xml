@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_bank_form_inherit_l10n_us" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='clearing_number']" position="attributes">
+                <attribute name="nolabel">1</attribute>
+            </xpath>
+            <field name="clearing_number" position="before">
+                <label for="clearing_number" invisible="show_aba_routing"/>
+                <label for="clearing_number" string="ABA/Routing" invisible="not show_aba_routing"/>
+            </field>
+            <field name="currency_id" position="after">
+                <field name="l10n_us_bank_account_type" invisible="country_code != 'US'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

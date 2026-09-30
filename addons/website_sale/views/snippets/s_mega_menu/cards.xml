@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template
+        id="website_sale.s_mega_menu_cards"
+        name="eCommerce: Menu - Cards"
+        groups="base.group_user"
+    >
+        <section class="s_mega_menu_cards pt16 pb16 o_colored_level o_cc o_cc1">
+            <div class="container">
+                <nav class="row">
+                    <t
+                        t-foreach="request.env['product.public.category'].search([
+                            ('parent_id', '=', False), ('has_published_products', '=', True),
+                        ], limit=8)"
+                        t-as="category"
+                    >
+                        <div class="col-12 col-lg-3">
+                            <a
+                                t-att-href="'/shop/category/%s' % category.id"
+                                class="nav-link rounded text-wrap text-center p-3"
+                            >
+                                <div class="mb-3 rounded shadow" style="height:80px">
+                                    <img
+                                        t-if="category.image_1920"
+                                        t-att-src="image_data_uri(category.image_1920)"
+                                        class="img-fluid w-100 h-100 object-fit-cover"
+                                        alt=""
+                                    />
+                                </div>
+                                <h4 t-esc="category.name"/>
+                            </a>
+                        </div>
+                    </t>
+                </nav>
+            </div>
+        </section>
+    </template>
+
+</odoo>

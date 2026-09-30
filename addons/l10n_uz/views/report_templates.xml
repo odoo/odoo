@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_uz_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="uz_company_registry_external_layout" t-out="uz_company_registry_external_layout"/>
+        </xpath>
+    </template>
+    <template id="l10n_uz_external_layout_bold" inherit_id="web.external_layout_bold">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="uz_company_registry_external_layout" t-out="uz_company_registry_external_layout"/>
+        </xpath>
+    </template>
+    <template id="l10n_uz_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="uz_company_registry_external_layout" t-out="uz_company_registry_external_layout"/>
+        </xpath>
+    </template>
+    <template id="l10n_uz_external_layout_striped" inherit_id="web.external_layout_striped">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="uz_company_registry_external_layout" t-out="uz_company_registry_external_layout"/>
+        </xpath>
+    </template>
+    <template id="l10n_uz_external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="uz_company_registry_external_layout" t-out="uz_company_registry_external_layout"/>
+        </xpath>
+    </template>
+    <template id="l10n_uz_external_layout_wave" inherit_id="web.external_layout_wave">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-if="uz_company_registry_external_layout" t-out="uz_company_registry_external_layout"/>
+        </xpath>
+    </template>
+    <template id="l10n_uz_external_layout_folder" inherit_id="web.external_layout_folder">
+        <xpath expr="//div[hasclass('o_folder_company_info')]" position="after">
+            <t t-if="uz_company_registry_external_layout" t-out="uz_company_registry_external_layout"/>
+        </xpath>
+    </template>
+</odoo>

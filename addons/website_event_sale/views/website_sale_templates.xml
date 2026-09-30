@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="index_topbar" inherit_id="website_event.index_topbar">
+        <xpath expr="//div[hasclass('o_wevent_search')]" position="before">
+            <t t-call="website_sale.pricelist_list">
+                <t t-set="_classes" t-valuef="d-none d-lg-inline me-2"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- If the sale order line concerns an event, we want the "product" link to point to the event itself and not to the product on the ecommerce -->
+    <template id="cart_line_product_link_inherit_website_event_sale" inherit_id="website_sale.cart_line_product_link" name="Event Shopping Cart Line Product Link">
+        <xpath expr="//a" position="attributes">
+            <attribute name="t-attf-href"/>
+            <attribute name="t-att-href">
+                line.event_id and ('/event/%s/register' % slug(line.event_id)) or line.product_id.website_url
+            </attribute>
+        </xpath>
+    </template>
+
+    <!-- If the sale order line concerns an event, we want to show an additional line with the event name even on small screens -->
+    <template id="cart_summary_inherit_website_event_sale" inherit_id="website_sale.cart_summary_content">
+        <xpath expr="//td[@name='website_sale_cart_summary_product_name']/span" position="after">
+            <span t-if="line.event_slot_id" class="text-muted" t-out="line.event_slot_id.display_name"/>
+        </xpath>
+    </template>
+
+    <template id="event_confirmation" inherit_id="website_sale.confirmation">
+        <div id="order_name" position="after">
+            <t t-if="events">
+                <section class="card" t-foreach="events" t-as="event">
+                    <t t-set="attendees" t-value="attendee_ids_per_event.get(event, [])"/>
+                    <div class="s_nb_column_fixed s_col_no_bgcolor o_wevent_index o_wevent_sale_event">
+                        <t t-set="opt_event_description_cover_top" t-value="is_view_active('website_event.opt_event_description_cover_top')"/>
+                        <t t-call="website.record_cover">
+                            <t t-set="_record" t-value="event"/>
+                            <t t-set="use_filters" t-value="True"/>
+                            <t t-set="use_size" t-value="True"/>
+                            <t t-set="use_text_align" t-value="True"/>
+                            <t t-set="additionnal_classes" t-value="'o_wevent_event_main_cover o_wevent_event_main_cover_top overflow-hidden h-auto'"/>
+
+                            <a class="text-decoration-none" t-att-href="event.event_url or event.website_url">
+                                <div t-if="not event.is_multi_slots" t-attf-class="o_wevent_event_date position-absolute shadow-sm o_not_editable">
+                                    <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="o_wevent_event_month"/>
+                                    <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
+                                </div>
+
+                                <div class="container d-flex flex-grow-1 h-100 w-100">
+                                    <div id="o_wevent_event_main_cover_content" class="d-flex flex-column align-items-baseline w-100 p-3">
+                                        <span t-if="event.is_participating" class="badge text-bg-success o_wevent_badge">
+                                            <i class="fa fa-check me-2" role="img"/>Registered
+                                        </span>
+                                        <div class="w-100 mt-auto">
+                                            <h2 t-field="event.name" itemprop="name" placeholder="Event Title" class="mt-3"/>
+                                            <p class="lead" t-field="event.subtitle" placeholder="Event Subtitle"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </t>
+                        <t t-set="event_attendees" t-value="attendee_ids_per_event.get(event, [])"/>
+                        <div t-if="event_attendees or not event.is_multi_slots" class="m-3">
+                            <t t-if="event_attendees and not event.is_multi_slots">
+                                <t t-call="website_event.registration_ticket_access">
+                                    <t t-set="attendees" t-value="event_attendees"/>
+                                </t>
+                            </t>
+                            <div t-elif="event_attendees" t-foreach="event_attendees" t-as="slot" class="mb-4">
+                                <div t-attf-class="d-flex flex-column flex-md-row justify-content-between mt-2">
+                                    <div class="mb-3">
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <b>Start</b>
+                                            </div>
+                                            <div class="col-auto ps-0">
+                                                <span t-out="slot.start_datetime"
+                                                    t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-auto">
+                                                <b>End</b>
+                                            </div>
+                                            <div class="col-auto ps-0">
+                                                <span t-out="slot.end_datetime"
+                                                    t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <span t-if="website_visitor_timezone != event.date_tz" class="small">(<t t-out="event.date_tz"/>)</span>
+                                        </div>
+                                    </div>
+                                    <div t-if="event_attendees[slot]">
+                                        <t t-call="website_event.registration_ticket_access" attendees="event_attendees[slot]"/>
+                                    </div>
+                                </div>
+                                <t t-call="website_event.event_calendar_links">
+                                    <t t-set="iCal_url" t-value="urls_per_event.get(event.id, {}).get(slot.id, {}).get('iCal_url', '')"/>
+                                    <t t-set="google_url" t-value="urls_per_event.get(event.id, {}).get(slot.id, {}).get('google_url', '')"/>
+                                </t>
+                            </div>
+                            <div t-if="not event.is_multi_slots" class="row my-3">
+                                <t t-call="website_event.event_calendar_links">
+                                    <t t-set="iCal_url" t-value="urls_per_event.get(event.id, {}).get('iCal_url', '')"/>
+                                    <t t-set="google_url" t-value="urls_per_event.get(event.id, {}).get('google_url', '')"/>
+                                </t>
+                            </div>
+                            <t t-call="website_event.event_confirmation_end_page_hook"/>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </div>
+    </template>
+
+</odoo>

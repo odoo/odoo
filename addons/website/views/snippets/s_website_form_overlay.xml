@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_website_form_overlay" name="Form Overlay">
+    <section class="s_website_form_overlay pt64 pb64 oe_img_bg o_bg_img_center o_colored_level" style="background-image: url('/web/image/website.s_website_form_overlay_default_image');">
+        <div class="o_we_bg_filter bg-black-50"/>
+        <div class="container">
+            <div class="row">
+                <div class="o_cc o_cc1 col-lg-6 offset-lg-6 rounded px-3 px-lg-4 pt40 pb16">
+                    <h2>Send us a message</h2>
+                    <p class="lead">Get in touch with your customers to provide them with better service. You can modify the form fields to gather more precise information.</p>
+                    <t t-snippet-call="website.s_website_form"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

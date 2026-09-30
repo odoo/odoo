@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+    <!-- EVENT.TYPE VIEWS -->
+    <record model="ir.ui.view" id="view_event_type_form">
+        <field name="name">event.type.form</field>
+        <field name="model">event.type</field>
+        <field name="arch" type="xml">
+            <form string="Event Category">
+               <sheet>
+                    <div class="oe_title" name="event_type_title">
+                        <label for="name" string="Event Template"/>
+                        <h1><field name="name" placeholder="e.g. Online Conferences" class="mb-2"/></h1>
+                    </div>
+                   <group>
+                       <group>
+                           <field name="default_timezone" class="w-100"/>
+                           <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
+                       </group>
+                       <group>
+                           <label for="has_seats_limitation" string="Limit Registrations"/>
+                           <div>
+                               <field name="has_seats_limitation"/>
+                               <span invisible="not has_seats_limitation" required="not has_seats_limitation">
+                                   to <field name="seats_max" class="oe_inline o_input_9ch"/>
+                                   Attendees
+                               </span>
+                           </div>
+                       </group>
+                   </group>
+
+                   <notebook>
+                       <page string="Tickets" name="page_tickets">
+                           <field name="event_type_ticket_ids"
+                                  class="w-100"
+                                  context="{
+                                     'list_view_ref': 'event.event_type_ticket_view_tree_from_type',
+                                     'form_view_ref': 'event.event_type_ticket_view_form_from_type'
+                                  }"
+                           />
+                       </page>
+                       <page string="Communication" name="event_type_communication">
+                           <field name="event_type_mail_ids" class="w-100">
+                               <list string="Communication" editable="bottom">
+                                   <field name="template_ref" options="{'no_quick_create': True}" context="{'filter_template_on_event': True, 'default_model': 'event.registration'}" widget="EventMailTemplateReferenceField"/>
+                                   <field name="interval_nbr" readonly="interval_unit == 'now'"/>
+                                   <field name="interval_unit"/>
+                                    <field name="interval_type"/>
+                               </list>
+                           </field>
+                       </page>
+                        <page string="Questions" name="page_questions">
+                            <field name="question_ids" class="w-100" domain="[('is_reusable', '=', True)]" context="{'list_view_ref': 'event.event_question_view_list_add'}">
+                                <list sample="1">
+                                    <field name="title"/>
+                                    <field name="is_mandatory_answer" string="Mandatory"/>
+                                    <field name="once_per_order" string="Once per Order"/>
+                                    <field name="question_type" />
+                                    <field name="answer_ids" widget="many2many_tags" invisible="question_type != 'simple_choice'"/>
+                                    <field name="is_default" optional="hide"/>
+                                    <field name="is_reusable" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                       <page string="Notes" name="notes">
+                           <group>
+                                <label for="note" string="Note" />
+                                <br />
+                                <field nolabel="1" colspan="2" name="note" 
+                                    placeholder="Add some internal notes (to do lists, contact info, ...)" />
+                                <label for="ticket_instructions" string="Ticket Instructions" />
+                                <br />
+                                <field nolabel="1" colspan="2" name="ticket_instructions" 
+                                    placeholder="e.g. How to get to your event, door closing time, ..." />
+                            </group>
+                       </page>
+                   </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_event_type_tree">
+        <field name="name">event.type.list</field>
+        <field name="model">event.type</field>
+        <field name="arch" type="xml">
+            <list string="Event Template" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="event_type_view_search" model="ir.ui.view">
+        <field name="name">event.type.search</field>
+        <field name="model">event.type</field>
+        <field name="arch" type="xml">
+            <search string="Event Templates">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_event_type">
+        <field name="name">Event Templates</field>
+        <field name="res_model">event.type</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an Event Template
+            </p><p>
+                Event Templates combine configurations you use often and are
+                usually based on the types of events you organize (e.g. "Workshop",
+                "Roadshow", "Online Webinar", etc).
+            </p>
+        </field>
+    </record>
+
+    <record id="menu_event_type" model="ir.ui.menu">
+        <field name="action" ref="event.action_event_type"/>
+    </record>
+</data></odoo>

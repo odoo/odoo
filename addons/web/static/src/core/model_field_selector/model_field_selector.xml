@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web._ModelFieldSelector">
+        <div class="o_model_field_selector d-flex" aria-atomic="true" t-att-class="props.readonly ? 'o_read_mode' : 'o_edit_mode o_input'" t-on-click="(ev) => this.openPopover(ev.currentTarget)">
+            <div class="o_model_field_selector_value flex-grow-1 h-100" tabindex="0" t-att-data-tooltip="state.displayNames.join(' > ')" data-tooltip-position="top">
+                <t t-foreach="state.displayNames" t-as="displayName" t-key="displayName_index">
+                    <t t-if="!displayName_first">
+                        <i class="oi oi-chevron-right m-1" role="img" aria-label="Followed by" data-tooltip="Followed by" />
+                    </t>
+                    <span t-attf-class="o_model_field_selector_chain_part mb-1 #{props.readonly ? 'border-0 fw-bolder' : 'px-1'} text-nowrap">
+                        <t t-esc="displayName" />
+                    </span>
+                </t>
+            </div>
+            <div t-if="!props.readonly and state.isInvalid" class="o_model_field_selector_controls ms-2" tabindex="0">
+                <i class="fa fa-exclamation-triangle text-warning o_model_field_selector_warning" role="alert"  aria-label="Invalid field chain" data-tooltip="Invalid field chain"/>
+            </div>
+            <div t-if="!props.readonly and props.allowEmpty and state.displayNames.length" class="o_model_field_selector_controls ms-2" tabindex="0">
+                <i class="fa fa-times" t-on-click.stop="clear" aria-label="Clear" data-tooltip="Clear"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

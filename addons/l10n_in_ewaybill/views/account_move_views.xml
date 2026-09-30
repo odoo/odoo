@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="invoice_form_inherit_l10n_in_ewaybill" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.in.ewaybill</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_request_cancel']" position="after">
+                <button name="action_l10n_in_ewaybill_create" 
+                        string="Create e-Waybill"
+                        class="oe_highlight"
+                        type="object"
+                        invisible="
+                            country_code != 'IN'
+                            or not l10n_in_ewaybill_feature_enabled
+                            or state != 'posted'
+                            or l10n_in_ewaybill_ids
+                            or move_type in ('entry', 'out_refund')"
+                        groups="account.group_account_invoice"
+                        data-hotkey="e"/>
+            </xpath>
+            <xpath expr="//sheet/div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_open_l10n_in_ewaybill"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        type="object"
+                        invisible="country_code != 'IN' or not l10n_in_ewaybill_ids or move_type in ('entry', 'out_refund')"
+                        groups="account.group_account_invoice">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">e-Waybill</span>
+                        </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_list_inherit_l10n_in_ewaybill" model="ir.ui.view">
+        <field name="name">account.move.list.inherit.l10n.in.ewaybill</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='move_sent_values']" position="after">
+                <field name="l10n_in_ewaybill_name" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

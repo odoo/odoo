@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_stock_valuation" model="ir.actions.client">
+        <field name="name">Inventory Valuation</field>
+        <field name="tag">stock_valuation_report</field>
+        <field name="res_model">stock_account.stock.valuation.report</field>
+        <field name="path">stock-valuation-closing</field>
+        <field name="context">{'model': 'stock_account.stock.valuation.report'}</field>
+    </record>
+</odoo>

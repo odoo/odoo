@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.LivechatCommandDialog">
+        <ActionPanel title="props.title" icon="props.icon" resizable="false">
+            <div class="input-group my-2 shadow-sm">
+                <div class="o-livechat-LivechatCommandDialog-form form-control bg-view p-0" aria-autocomplete="list">
+                    <input type="text" class="border-0 h-100 rounded px-2" accesskey="Q" t-att-placeholder="props.placeholderText" t-on-keydown="onKeydown" t-ref="autofocus" t-model="state.inputText"/>
+                </div>
+                <button class="btn btn-primary" t-on-click="executeCommand" t-att-disabled="!state.inputText" t-out="props.title"/>
+            </div>
+        </ActionPanel>
+    </t>
+</templates>

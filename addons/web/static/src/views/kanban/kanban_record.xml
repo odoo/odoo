@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanRecord">
+        <article
+            role="link"
+            t-att-class="getRecordClasses()"
+            t-att-data-id="props.record.id"
+            t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
+            t-custom-click="onGlobalClick"
+            t-on-touchstart="onTouchStart"
+            t-on-touchmove="onTouchMoveOrCancel"
+            t-on-touchcancel="onTouchMoveOrCancel"
+            t-on-touchend="onTouchEnd"
+            t-ref="root">
+                <span t-if="props.selectionAvailable" class="o_record_selection_tooltip d-none position-absolute p-2 rounded-3 start-50 top-50">Click to select</span>
+                <t t-call="{{ this.templates[this.constructor.KANBAN_CARD_ATTRIBUTE] }}" t-call-context="this.renderingContext"/>
+                <t t-call="{{ this.constructor.menuTemplate }}"/>
+        </article>
+    </t>
+
+    <t t-name="web.KanbanRecordMenu">
+        <div t-if="showMenu" class="o_dropdown_kanban bg-transparent position-absolute end-0 top-0 w-auto">
+            <Dropdown menuClass="'o-dropdown--kanban-record-menu'" position="'bottom-end'">
+                <button class="btn o-no-caret rounded-0 px-1" title="Dropdown menu">
+                    <span class="oi oi-ellipsis-v"/>
+                </button>
+                <t t-set-slot="content">
+                    <KanbanDropdownMenuWrapper>
+                        <t t-call="{{ this.templates[this.constructor.KANBAN_MENU_ATTRIBUTE] }}" t-call-context="renderingContext"/>
+                    </KanbanDropdownMenuWrapper>
+                </t>
+            </Dropdown>
+        </div>
+    </t>
+</templates>

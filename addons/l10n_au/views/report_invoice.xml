@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <t name="invoice_title" position="replace">
+            <t name="invoice_title">Tax Invoice</t>
+        </t>
+        <t name="draft_invoice_title" position="replace">
+            <t name="draft_invoice_title">Draft Tax Invoice</t>
+        </t>
+        <t name="cancelled_invoice_title" position="replace">
+            <t name="cancelled_invoice_title">Cancelled Tax Invoice</t>
+        </t>
+        <t name="credit_note_title" position="replace">
+            <t name="credit_note_title">Tax Credit Note</t>
+        </t>
+        <t name="draft_credit_note_title" position="replace">
+            <t name="draft_credit_note_title">Draft Tax Credit Note</t>
+        </t>
+        <t name="cancelled_credit_note_title" position="replace">
+            <t name="cancelled_credit_note_title">Cancelled Tax Credit Note</t>
+        </t>
+        <t name="vendor_credit_note_title" position="replace">
+            <t name="vendor_credit_note_title">Tax Vendor Credit Note</t>
+        </t>
+        <t name="vendor_bill_title" position="replace">
+            <t name="vendor_bill_title">Tax Vendor Bill</t>
+        </t>
+        <t name="proforma_invoice_title" position="replace">
+            <t name="proforma_invoice_title">Proforma Tax Invoice</t>
+        </t>
+        <t name="draft_proforma_invoice_title" position="replace">
+            <t name="draft_proforma_invoice_title">Draft Proforma Tax Invoice</t>
+        </t>
+        <t name="cancelled_proforma_invoice_title" position="replace">
+            <t name="cancelled_proforma_invoice_title">Cancelled Proforma Tax Invoice</t>
+        </t>
+        <t name="proforma_credit_note_title" position="replace">
+            <t name="proforma_credit_note_title">Proforma Tax Credit Note</t>
+        </t>
+        <t name="draft_proforma_credit_note_title" position="replace">
+            <t name="draft_proforma_credit_note_title">Draft Proforma Tax Credit Note</t>
+        </t>
+        <t name="cancelled_proforma_credit_note_title" position="replace">
+            <t name="cancelled_proforma_credit_note_title">Cancelled Proforma Tax Credit Note</t>
+        </t>
+        <t name="proforma_vendor_credit_note_title" position="replace">
+            <t name="proforma_vendor_credit_note_title">Proforma Tax Vendor Credit Note</t>
+        </t>
+        <t name="proforma_vendor_bill_title" position="replace">
+            <t name="proforma_vendor_bill_title">Proforma Tax Vendor Bill</t>
+        </t>
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_au.report_invoice_document'"
+               t-call="l10n_au.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

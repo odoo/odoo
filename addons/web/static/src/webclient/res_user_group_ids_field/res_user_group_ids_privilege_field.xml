@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.ResUserGroupIdsPrivilegeField">
+    <div class="d-flex justify-content-between w-100" t-att-class="{'o_is_implied': this.isImplied, 'o_is_disjoint': this.isDisjoint}">
+        <SelectionField t-if="type == 'selection'" t-props="props" placeholder="impliedGroupDisplayName"/>
+        <BooleanField t-else="" t-props="props"/>
+        <button t-if="isDebug" t-att-class="infoButtonClassnames" type="button" t-on-click="onClickInfoButton" tabindex="-1"/>
+    </div>
+</t>
+
+</templates>

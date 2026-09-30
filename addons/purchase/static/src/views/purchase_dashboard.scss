@@ -1,0 +1,42 @@
+.o_purchase_dashboard {
+    .purchase-dashboard-card {
+        @include media-breakpoint-up(lg) {
+            &.o_purchase_dashboard_card_top {
+                --btn-border-radius: #{$btn-border-radius} #{$btn-border-radius} 0 0;
+            }
+
+            &.o_purchase_dashboard_card_bottom {
+                --btn-border-radius: 0 0 #{$btn-border-radius} #{$btn-border-radius};
+            }
+
+            &.o_purchase_dashboard_card_sole {
+                --btn-border-radius: #{$btn-border-radius};
+            }
+        }
+
+        width: 100%;
+        height: 100%;
+
+        &:where(:not(.o_no_hover):hover) {
+            text-decoration: underline;
+        }
+
+        &:active {
+            border: none;
+        }
+    }
+
+    .o_no_hover {
+        pointer-events: none;
+    }
+
+    .o_priority_star {
+        color: yellow;
+    }
+}
+
+.o_purchase_dashboard_list_view .o_list_renderer {
+    @include media-breakpoint-up(md) {
+        height: auto;
+    }
+}

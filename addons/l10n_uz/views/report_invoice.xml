@@ -1,0 +1,19 @@
+<odoo>
+    <template id="l10n_uz_report_invoice_document" inherit_id="account.report_invoice_document">
+        <t t-call="web.external_layout" position="before">
+            <t t-set="uz_company_registry_external_layout">
+                <li t-if="o.company_id.company_registry and o.company_id.account_fiscal_country_id.code == 'UZ'">
+                    VAT Registry (VAT ID): <span t-field="o.company_id.company_registry"/>
+                </li>
+            </t>
+        </t>
+        <xpath expr="//div[hasclass('invoice_main')]" position="before">
+            <t t-set="address">
+                <t t-out="address"/>
+                <t t-if="o.partner_id.company_registry and o.company_id.account_fiscal_country_id.code == 'UZ'">
+                    VAT Registry (VAT ID): <span t-field="o.partner_id.company_registry"/>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>

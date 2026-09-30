@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+<!-- Global Leave Types -->
+    <record id="leave_type_paid_time_off" model="hr.leave.type">
+        <field name="name">Paid Time Off</field>
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">False</field>
+        <field name="leave_validation_type">both</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="leave_notif_subtype_id" ref="mt_leave"/>
+        <field name="allocation_notif_subtype_id" ref="mt_leave_allocation"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="icon_id" ref="hr_holidays.icon_14"/>
+        <field name="color">2</field>
+        <field name="company_id" eval="False"/> <!-- Explicitely set to False for it to be available to all companies -->
+        <field name="country_id" eval="False"/> <!-- Explicitely set to False for it to be available to all countries -->
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="leave_type_sick_time_off" model="hr.leave.type">
+        <field name="name">Sick Time Off</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_notif_subtype_id" ref="mt_leave_sick"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="support_document">True</field>
+        <field name="hide_on_dashboard">True</field>
+        <field name="icon_id" ref="hr_holidays.icon_21"/>
+        <field name="color">3</field>
+        <field name="company_id" eval="False"/> <!-- Explicitely set to False for it to be available to all companies -->
+        <field name="country_id" eval="False"/> <!-- Explicitely set to False for it to be available to all countries -->
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="leave_type_compensatory_days" model="hr.leave.type">
+        <field name="name">Compensatory Days</field>
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_validation_type">manager</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">day</field>
+        <field name="leave_notif_subtype_id" ref="mt_leave"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="icon_id" ref="hr_holidays.icon_4"/>
+        <field name="color">4</field>
+        <field name="company_id" eval="False"/> <!-- Explicitely set to False for it to be available to all companies -->
+        <field name="country_id" eval="False"/> <!-- Explicitely set to False for it to be available to all countries -->
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="leave_type_unpaid" model="hr.leave.type">
+        <field name="name">Unpaid</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">both</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">hour</field>
+        <field name="hide_on_dashboard">True</field>
+        <field name="unpaid" eval="True"/>
+        <field name="leave_notif_subtype_id" ref="mt_leave_unpaid"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="icon_id" ref="hr_holidays.icon_28"/>
+        <field name="color">5</field>
+        <field name="company_id" eval="False"/> <!-- Explicitely set to False for it to be available to all companies -->
+        <field name="country_id" eval="False"/> <!-- Explicitely set to False for it to be available to all countries -->
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="holiday_status_eto" model="hr.leave.type">
+        <field name="name">Extra Time Off</field>
+        <field name="employee_requests">False</field>
+        <field name="requires_allocation">True</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="hide_on_dashboard">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="sequence">4</field>
+        <field name="country_id" eval="False"/>
+    </record>
+
+    <record id="holiday_status_extra_hours" model="hr.leave.type">
+        <field name="name">Extra Hours</field>
+        <field name="request_unit">hour</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">manager</field>
+        <field name="active" eval="True"/>
+        <field name="hide_on_dashboard">True</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" eval="False"/>
+        <field name="icon_id" ref="hr_holidays.icon_4"/>
+        <field name="sequence">5</field>
+    </record>
+
+<!-- AE : United Arab Emirates -->
+    <record id="l10n_ae_leave_type_sick_leave_50" model="hr.leave.type">
+        <field name="name">Sick Leave 50%</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="support_document">True</field>
+        <field name="icon_id" ref="hr_holidays.icon_21"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.ae"/>
+    </record>
+
+    <record id="l10n_ae_leave_type_sick_leave_0" model="hr.leave.type">
+        <field name="name">Sick Leave 0%</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="support_document">True</field>
+        <field name="icon_id" ref="hr_holidays.icon_21"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.ae"/>
+    </record>
+
+<!-- BE : Belgium -->
+    <record id="l10n_be_leave_type_small_unemployment" model="hr.leave.type">
+        <field name="name">Small Unemployment</field>
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="l10n_be_leave_type_maternity" model="hr.leave.type">
+        <field name="name">Maternity Time Off</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="icon_id" ref="hr_holidays.icon_17"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="l10n_be_leave_type_unpredictable" model="hr.leave.type">
+        <field name="name">Unpredictable Reason</field>
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="l10n_be_leave_type_training" model="hr.leave.type">
+        <field name="name">Training Time Off</field>
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="icon_id" ref="hr_holidays.icon_26"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="l10n_be_leave_type_extra_legal" model="hr.leave.type">
+        <field name="name">Extra Legal Time Off</field>
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="icon_id" ref="hr_holidays.icon_4"/>
+        <field name="company_id" eval="False"/>
+        <field name="sequence">6</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="l10n_be_leave_type_recovery" model="hr.leave.type">
+        <field name="name">Recovery Bank Holiday</field>
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">True</field>
+        <field name="request_unit">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="l10n_be_leave_type_european" model="hr.leave.type">
+        <field name="name">European Time Off</field>
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="icon_id" ref="hr_holidays.icon_14"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="l10n_be_leave_type_credit_time" model="hr.leave.type">
+        <field name="name">Credit Time</field>
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" eval="ref('hr_holidays.mt_leave')"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="l10n_be_leave_type_work_accident" model="hr.leave.type">
+        <field name="name">Work Accident Time Off</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="l10n_be_leave_type_strike" model="hr.leave.type">
+        <field name="name">Strike</field>
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="l10n_be_leave_type_sick_leave_without_certificate" model="hr.leave.type">
+        <field name="name">Sick Leave Without Certificate</field>
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="l10n_be_leave_type_small_unemployment_birth" model="hr.leave.type">
+        <field name="name">Brief Holiday (Birth)</field>
+        <field name="requires_allocation">yes</field>
+        <field name="employee_requests">yes</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+<!-- CH: Switzerland -->
+
+    <record id="l10n_ch_swissdec_unpaid_lt" model="hr.leave.type">
+        <field name="name">Unpaid leave</field>
+        <field name="employee_requests">False</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="request_unit">half_day</field>
+        <field name="company_id" eval="False"/>
+        <field name="sequence">1</field>
+        <field name="color">1</field>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+
+    <record id="l10n_ch_swissdec_illness_lt" model="hr.leave.type">
+        <field name="name">Illness leave</field>
+        <field name="employee_requests">False</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="request_unit">half_day</field>
+        <field name="sequence">2</field>
+        <field name="company_id" eval="False"/>
+        <field name="color">2</field>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+
+    <record id="l10n_ch_swissdec_accident_lt" model="hr.leave.type">
+        <field name="name">Accident leave</field>
+        <field name="employee_requests">False</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="request_unit">half_day</field>
+        <field name="sequence">3</field>
+        <field name="company_id" eval="False"/>
+        <field name="color">3</field>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+
+    <record id="l10n_ch_swissdec_maternity_lt" model="hr.leave.type">
+        <field name="name">Maternity / Paternity leave</field>
+        <field name="employee_requests">False</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="request_unit">half_day</field>
+        <field name="sequence">4</field>
+        <field name="company_id" eval="False"/>
+        <field name="color">4</field>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+
+    <record id="l10n_ch_swissdec_military_lt" model="hr.leave.type">
+        <field name="name">Military leave</field>
+        <field name="employee_requests">False</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="request_unit">half_day</field>
+        <field name="sequence">4</field>
+        <field name="company_id" eval="False"/>
+        <field name="color">5</field>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+
+    <record id="l10n_ch_swissdec_interruption_of_work_lt" model="hr.leave.type">
+        <field name="name">Interruption of Work</field>
+        <field name="employee_requests">False</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="request_unit">day</field>
+        <field name="sequence">5</field>
+        <field name="company_id" eval="False"/>
+        <field name="color">6</field>
+        <field name="country_id" ref="base.ch"/>
+    </record>
+
+<!-- EG: Egypt -->
+    <record id="l10n_eg_leave_type_marriage" model="hr.leave.type">
+        <field name="name">Marriage Leave</field>
+        <field name="requires_allocation">False</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+
+    <record id="l10n_eg_leave_type_maternity" model="hr.leave.type">
+        <field name="name">Maternity Leave</field>
+        <field name="requires_allocation">False</field>
+        <field name="country_id" ref="base.eg"/>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="l10n_eg_leave_type_hajj" model="hr.leave.type">
+        <field name="name">Hajj Leave</field>
+        <field name="requires_allocation">False</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+
+    <record id="l10n_eg_leave_type_death" model="hr.leave.type">
+        <field name="name">Death Leave</field>
+        <field name="requires_allocation">False</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+
+    <record id="l10n_eg_leave_type_paid_sick_time_off" model="hr.leave.type">
+        <field name="name">Paid Sick time off</field>
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">no</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+
+    <record id="l10n_eg_leave_type_sick_leave_75" model="hr.leave.type">
+        <field name="name">Sick Leave (75% Paid)</field>
+        <field name="requires_allocation">True</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+
+    <record id="l10n_eg_leave_type_sick_leave_unpaid" model="hr.leave.type">
+        <field name="name">Sick Leave (UnPaid)</field>
+        <field name="requires_allocation">False</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+
+<!-- HK : Hong Kong -->
+    <record id="l10n_hk_leave_type_annual_leave" model="hr.leave.type">
+        <field name="name">HK Annual Leaves</field>
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.hk"/>
+    </record>
+
+    <record id="l10n_hk_leave_type_compensation_leave" model="hr.leave.type">
+        <field name="name">HK Compensation Leaves</field>
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.hk"/>
+    </record>
+
+    <record id="l10n_hk_leave_type_sick_leave" model="hr.leave.type">
+        <field name="name">HK Sick Leaves</field>
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="support_document">True</field>
+        <field name="icon_id" ref="hr_holidays.icon_21"/>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.hk"/>
+    </record>
+
+    <record id="l10n_hk_leave_type_sick_leave_80" model="hr.leave.type">
+        <field name="name">HK Sick Leaves 80%</field>
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="support_document">True</field>
+        <field name="icon_id" ref="hr_holidays.icon_21"/>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.hk"/>
+    </record>
+
+    <record id="l10n_hk_leave_type_unpaid_leave" model="hr.leave.type">
+        <field name="name">HK Unpaid Leaves</field>
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.hk"/>
+    </record>
+
+    <record id="l10n_hk_leave_type_marriage_leave" model="hr.leave.type">
+        <field name="name">HK Marriage Leaves</field>
+        <field name="requires_allocation">False</field>
+        <field name="support_document">True</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.hk"/>
+    </record>
+
+    <record id="l10n_hk_leave_type_maternity_leave" model="hr.leave.type">
+        <field name="name">HK Maternity Leaves</field>
+        <field name="requires_allocation">False</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.hk"/>
+    </record>
+
+    <record id="l10n_hk_leave_type_maternity_leave_80" model="hr.leave.type">
+        <field name="name">HK Maternity Leaves 80%</field>
+        <field name="requires_allocation">False</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.hk"/>
+    </record>
+
+    <record id="l10n_hk_leave_type_paternity_leave" model="hr.leave.type">
+        <field name="name">HK Paternity Leaves</field>
+        <field name="requires_allocation">False</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.hk"/>
+    </record>
+
+    <record id="l10n_hk_leave_type_paternity_leave_80" model="hr.leave.type">
+        <field name="name">HK Paternity Leaves 80%</field>
+        <field name="requires_allocation">False</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.hk"/>
+    </record>
+
+    <record id="l10n_hk_leave_type_compassionate_leave" model="hr.leave.type">
+        <field name="name">HK Compassionate Leaves</field>
+        <field name="requires_allocation">False</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.hk"/>
+    </record>
+
+    <record id="l10n_hk_leave_type_examination_leave" model="hr.leave.type">
+        <field name="name">HK Examination Leaves</field>
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.hk"/>
+    </record>
+
+<!-- ID : Indonesia -->
+    <record id="l10n_id_leave_type_annual_leave" model="hr.leave.type">
+        <field name="name">ID Annual Leaves</field>
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.id"/>
+    </record>
+
+    <record id="l10n_id_leave_type_sick_leave" model="hr.leave.type">
+        <field name="name">ID Sick Leaves</field>
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="support_document">True</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.id"/>
+    </record>
+
+    <record id="l10n_id_leave_type_unpaid_leave" model="hr.leave.type">
+        <field name="name">ID Unpaid Leaves</field>
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.id"/>
+    </record>
+
+    <record id="l10n_id_leave_type_marriage_leave" model="hr.leave.type">
+        <field name="name">ID Marriage Leaves</field>
+        <field name="requires_allocation">False</field>
+        <field name="support_document">True</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.id"/>
+    </record>
+
+    <record id="l10n_id_leave_type_maternity_leave" model="hr.leave.type">
+        <field name="name">ID Maternity Leaves</field>
+        <field name="requires_allocation">False</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.id"/>
+    </record>
+
+    <record id="l10n_id_leave_type_paternity_leave" model="hr.leave.type">
+        <field name="name">ID Paternity Leaves</field>
+        <field name="requires_allocation">False</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.id"/>
+    </record>
+
+    <record id="l10n_id_leave_type_bereavement_leave" model="hr.leave.type">
+        <field name="name">ID Bereavement Leaves</field>
+        <field name="requires_allocation">False</field>
+        <field name="company_id" eval="False" />
+        <field name="country_id" ref="base.id"/>
+    </record>
+
+<!-- JO : Jordan -->
+    <record id="l10n_jo_leave_type_unpaid_sick" model="hr.leave.type">
+        <field name="name">Sick Leave (Unpaid)</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+
+    <record id="l10n_jo_leave_type_maternity" model="hr.leave.type">
+        <field name="name">Maternity Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+
+    <record id="l10n_jo_leave_type_pilgrimage" model="hr.leave.type">
+        <field name="name">Pilgrimage Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+
+    <record id="l10n_jo_leave_type_paternity" model="hr.leave.type">
+        <field name="name">Paternity Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+
+    <record id="l10n_jo_leave_type_study" model="hr.leave.type">
+        <field name="name">Study Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.jo"/>
+    </record>
+
+<!-- LU : Luxemburg -->
+    <record id="l10n_lu_leave_type_situational_unemployment" model="hr.leave.type">
+        <field name="name">Unemployment (Weather / Situational)</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">hour</field>
+        <field name="unpaid" eval="True"/>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave_unpaid"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="icon_id" ref="hr_holidays.icon_28"/>
+        <field name="color">5</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+
+<!-- MX : Mexico -->
+    <record id="l10n_mx_leave_type_work_risk_imss" model="hr.leave.type">
+        <field name="name">Work risk (IMSS)</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">day</field>
+        <field name="unpaid" eval="True"/>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave_unpaid"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="icon_id" ref="hr_holidays.icon_28"/>
+        <field name="color">5</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.mx"/>
+    </record>
+
+    <record id="l10n_mx_leave_type_maternity_imss" model="hr.leave.type">
+        <field name="name">Maternity (IMSS)</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">day</field>
+        <field name="unpaid" eval="True"/>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave_unpaid"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="icon_id" ref="hr_holidays.icon_17"/>
+        <field name="color">5</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.mx"/>
+    </record>
+
+    <record id="l10n_mx_leave_type_disability_due_to_illness_imss" model="hr.leave.type">
+        <field name="name">Disability due to illness (IMSS)</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">day</field>
+        <field name="unpaid" eval="True"/>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave_unpaid"/>
+        <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="icon_id" ref="hr_holidays.icon_21"/>
+        <field name="color">5</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.mx"/>
+    </record>
+
+<!-- SA : Saudi Arabia -->
+    <record id="l10n_sa_leave_type_sick_leave_100" model="hr.leave.type">
+        <field name="name">Sick Leave (100% Paid)</field>
+        <field name="requires_allocation">yes</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="l10n_sa_leave_type_sick_leave_75" model="hr.leave.type">
+        <field name="name">Sick Leave (75% Paid)</field>
+        <field name="requires_allocation">yes</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="l10n_sa_leave_type_sick_leave_0" model="hr.leave.type">
+        <field name="name">Sick Leave (UnPaid)</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="l10n_sa_leave_type_marriage" model="hr.leave.type">
+        <field name="name">Marriage Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="l10n_sa_leave_type_maternity" model="hr.leave.type">
+        <field name="name">Maternity Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="l10n_sa_leave_type_iddah" model="hr.leave.type">
+        <field name="name">Iddah Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="l10n_sa_leave_type_hajj" model="hr.leave.type">
+        <field name="name">Hajj Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="l10n_sa_leave_type_paternity" model="hr.leave.type">
+        <field name="name">Paternity Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="l10n_sa_leave_type_study" model="hr.leave.type">
+        <field name="name">Study Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="l10n_sa_leave_type_emergency" model="hr.leave.type">
+        <field name="name">Emergency Leave</field>
+        <field name="requires_allocation">no</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="country_id" ref="base.sa"/>
+    </record>
+
+<!-- SK : Slovakia -->
+    <record id="l10n_sk_leave_type_maternity" model="hr.leave.type">
+        <field name="name">Maternity Time Off</field>
+        <field name="requires_allocation">False</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="request_unit">half_day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.sk"/>
+    </record>
+
+<!-- PL : Poland -->
+    <record id="l10n_pl_leave_type_sick_leave" model="hr.leave.type">
+        <field name="name">PL Sick Leaves 80% </field>
+        <field name="requires_allocation">no</field>
+        <field name="request_unit">half_day</field>
+        <field name="support_document">True</field>
+        <field name="icon_id" ref="hr_holidays.icon_21"/>
+        <field name="color">6</field>
+        <field name="company_id" eval="False"/>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+</data></odoo>

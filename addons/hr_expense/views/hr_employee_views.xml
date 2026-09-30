@@ -1,0 +1,36 @@
+<odoo>
+    <data>
+        <record id="hr_employee_view_form_inherit_expense" model="ir.ui.view">
+            <field name="name">hr.employee.view.form.expense</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='managers']" position="inside">
+                    <field name="expense_manager_id" placeholder="Auto-validation" string="Expense" context="{'default_company_id': company_id}" widget="many2one_avatar_user"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_employee_tree_inherit_expense" model="ir.ui.view">
+            <field name="name">hr.employee.list.expense</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='work_location_id']" position="after">
+                    <field name="expense_manager_id" placeholder="Auto-validation" optional="hide" widget="many2one_avatar_user"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_employee_search_view" model="ir.ui.view">
+            <field name="name">hr.employee.search.view</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//separator[@name='managers_groupby_separator']" position="before">
+                    <filter name="group_expense_manager" string="Expense Approver" context="{'group_by': 'expense_manager_id'}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

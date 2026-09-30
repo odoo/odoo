@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_countdown" name="Countdown">
+    <section class="s_countdown pt48 pb48"
+        data-display="dhms" data-end-action="nothing" data-size="175"
+        t-att-data-end-time="datetime.datetime.now().timestamp() + 228307"
+        data-layout="circle" data-layout-background="none"
+        data-progress-bar-style="surrounded" data-progress-bar-weight="thin"
+        data-text-color="o-color-1" data-layout-background-color="400" data-progress-bar-color="o-color-1">
+        <div class="container">
+            <div class="s_countdown_canvas_wrapper text-center d-flex justify-content-center">
+                <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">2</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Days</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 0 1 146.0226550063448 34.80596474923991" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+                </div>
+                <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">16</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Hours</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 1 1 19.30049945197547 126.87500000000003" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+                </div>
+                <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">30</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Minutes</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 0 1 87.5 166.25" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+                </div>
+                <div class="s_countdown_canvas_flex" style="width: 25%; max-width: 175px;">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="175" height="175" class="w-100" viewBox="0 0 175 175"><defs></defs><g><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="43.75px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="87.5" text-anchor="middle" dominant-baseline="central">45</text><text fill="var(--o-color-1)" stroke="none" font-family="Arial" font-size="14.583333333333334px" font-style="normal" font-weight="normal" text-decoration="normal" x="87.5" y="116.66666666666667" text-anchor="middle" dominant-baseline="central">Seconds</text><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 166.25 87.5 A 78.75 78.75 0 1 1 166.24996062500327 87.42125001312495" stroke-miterlimit="10" stroke-width="5" stroke-opacity="0.2" stroke-dasharray=""></path><path fill="none" stroke="var(--o-color-1)" paint-order="fill stroke markers" d=" M 87.5 8.75 A 78.75 78.75 0 1 1 8.75 87.50000000000001" stroke-miterlimit="10" stroke-width="5" stroke-dasharray=""></path></g></svg>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<asset id="website.s_countdown_000_xml" name="Countdown 000 XML">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_countdown/000.xml</path>
+</asset>
+
+</odoo>

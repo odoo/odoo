@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.GoogleMapsDescription">
+    <div class="description">
+        <font>Visit us:</font>
+        <span>Our office is located in the northeast of Brussels. TEL (555) 432 2365</span>
+    </div>
+</t>
+
+<t t-name="website.GoogleMapsOption">
+    <BuilderRow label.translate="Address" preview="false">
+        <input
+            type="text"
+            class="o_we_large"
+            t-att-value="state.formattedAddress"
+            placeholder.translate="e.g. De Brouckere, Brussels, Belgium"
+            t-ref="inputRef"
+        />
+    </BuilderRow>
+    <BuilderRow label.translate="Marker Style">
+        <BuilderSelect dataAttributeAction="'pinStyle'">
+            <BuilderSelectItem dataAttributeActionValue="''">Default</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'flat'">Flat</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Type" preview="false">
+        <BuilderSelect action="'resetMapColor'" dataAttributeAction="'mapType'">
+            <BuilderSelectItem dataAttributeActionValue="'ROADMAP'" id="'roadmap_opt'">RoadMap</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'TERRAIN'">Terrain</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'SATELLITE'">Satellite</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'HYBRID'">Hybrid</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="&#8985; Style" preview="false" t-if="this.isActiveItem('roadmap_opt')">
+        <BuilderSelect dataAttributeAction="'mapColor'">
+            <BuilderSelectItem dataAttributeActionValue="">
+                <Img src="'/website/static/src/snippets/s_google_map/img/thumbs/map-default.jpg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'lightMonoMap'">
+                <Img src="'/website/static/src/snippets/s_google_map/img/thumbs/map-lightMono.jpg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'cupertinoMap'">
+                <Img src="'/website/static/src/snippets/s_google_map/img/thumbs/map-cupertino.jpg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'retroMap'">
+                <Img src="'/website/static/src/snippets/s_google_map/img/thumbs/map-retro.jpg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'cobaltMap'">
+                <Img src="'/website/static/src/snippets/s_google_map/img/thumbs/map-cobalt.jpg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'flatMap'">
+                <Img src="'/website/static/src/snippets/s_google_map/img/thumbs/map-flat.jpg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'blueMap'">
+                <Img src="'/website/static/src/snippets/s_google_map/img/thumbs/map-blue.jpg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'lillaMap'">
+                <Img src="'/website/static/src/snippets/s_google_map/img/thumbs/map-lilla.jpg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'carMap'">
+                <Img src="'/website/static/src/snippets/s_google_map/img/thumbs/map-caramello.jpg'"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'bwMap'">
+                <Img src="'/website/static/src/snippets/s_google_map/img/thumbs/map-bw.jpg'"/>
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Zoom" preview="false">
+        <BuilderNumberInput dataAttributeAction="'mapZoom'" default="12" step="1" min="0" max="22"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Description" preview="false">
+        <BuilderCheckbox action="'showDescription'"/>
+    </BuilderRow>
+</t>
+
+</templates>

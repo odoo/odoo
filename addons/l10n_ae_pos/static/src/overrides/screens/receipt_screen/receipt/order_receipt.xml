@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <t t-set="show_title" position="after">
+            <t t-set="show_title" t-if="order.isAECompany()" t-value="order.state !== 'draft'"/>
+        </t>
+        <t t-set="show_simplified_title" position="after">
+            <t t-set="show_simplified_title" t-if="order.isAECompany()" t-value="!order.partner_id?.is_company"/>
+        </t>
+    </t>
+</templates>

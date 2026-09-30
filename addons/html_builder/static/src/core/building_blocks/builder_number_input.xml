@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderNumberInput">
+    <BuilderComponent>
+        <BuilderTextInputBase
+            t-props="textInputBaseProps"
+            inputRef="inputRef"
+            value="displayValue"
+            classes="'o-hb-input-field-number justify-content-end'"
+            inputClasses="props.inputClasses ? `o-hb-input-number text-end ${props.inputClasses}` : 'o-hb-input-number text-end'"
+            commit="commit"
+            preview="preview"
+            onKeydown.bind="onKeydown"
+            >
+            <span class="o-hb-input-field-unit" t-out="props.unit"/>
+        </BuilderTextInputBase>
+    </BuilderComponent>
+</t>
+
+</templates>

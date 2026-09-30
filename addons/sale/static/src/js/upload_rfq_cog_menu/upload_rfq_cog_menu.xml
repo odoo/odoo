@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="upload_rfq_cog_menu.QuotationRequestUploader">
+        <FileUploader
+            multiUpload="true"
+            onUploaded.bind="onFileUploaded"
+            onUploadComplete.bind="onUploadComplete"
+        >
+            <t t-set-slot="toggler">
+                <span class="mx-3 cursor-pointer">Upload Request For Quotation</span>
+            </t>
+        </FileUploader>
+    </t>
+</templates>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.TipReceipt">
+        <div class="pos-receipt">
+            <ReceiptHeader order="props.order" />
+            <div class="pos-payment-terminal-receipt">
+                <pre t-esc="data" />
+            </div>
+            <br/>
+
+
+            <div class="subtotal">
+                <span>Subtotal</span>
+                <div class="pos-receipt-right-align"><t t-esc="total"/></div>
+            </div>
+            <br/>
+
+            <div class="tip">
+                <span>Tip:</span>
+                <div class="pos-receipt-right-align">________________________</div>
+            </div>
+            <br/>
+
+            <div class="total">
+                <span>Total:</span>
+                <div class="pos-receipt-right-align">________________________</div>
+            </div>
+            <br/>
+            <br/>
+
+            <div class="signature">
+                <div>______________________________________________</div>
+                <div>Signature</div>
+            </div>
+        </div>
+    </t>
+
+</templates>

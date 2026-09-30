@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.ModelMany2Many">
+    <BuilderComponent>
+        <BasicMany2Many
+            model="state.searchModel"
+            limit="props.limit"
+            domain="props.domain"
+            fields="props.fields"
+            selection="domState.selection"
+            setSelection="setSelection.bind(this)"
+            create="create.bind(this)"
+        />
+    </BuilderComponent>
+</t>
+
+</templates>

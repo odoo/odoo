@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<odoo>
+
+<record id="event_pages_tree_view" model="ir.ui.view">
+    <field name="name">Event Pages List</field>
+    <field name="model">event.event</field>
+    <field name="priority">99</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="event.view_event_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr="//list" position="attributes">
+            <attribute name="js_class">website_pages_list</attribute>
+            <attribute name="type">object</attribute>
+            <attribute name="action">open_website_url</attribute>
+        </xpath>
+
+        <field name="address_id" position="attributes">
+            <attribute name="optional">hide</attribute>
+        </field>
+        <field name="date_end" position="attributes">
+            <attribute name="optional">hide</attribute>
+        </field>
+        <field name="seats_used" position="attributes">
+            <attribute name="optional">hide</attribute>
+        </field>
+
+        <field name="name" position="after">
+            <field name="website_url"/>
+        </field>
+        <field name="stage_id" position="before">
+            <field name="is_seo_optimized"/>
+            <field name="is_published"/>
+
+            <field name="website_id" position="move"/>
+        </field>
+    </field>
+</record>
+
+<record id="event_pages_kanban_view" model="ir.ui.view">
+    <field name="name">Event Pages Kanban</field>
+    <field name="model">event.event</field>
+    <field name="priority">99</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="event.view_event_kanban"/>
+    <field name="arch" type="xml">
+        <xpath expr="//kanban" position="attributes">
+            <attribute name="js_class">website_pages_kanban</attribute>
+            <attribute name="type">object</attribute>
+            <attribute name="action">open_website_url</attribute>
+            <!--
+            TODO a bit bad (why grouping by responsible user?) but we want
+            website views to be reachable by any internal user and those
+            apparently cannot access stage_id... maybe they should be able to?
+            This should be reviewed in master. This was mostly made to avoid
+            runbot "errors".
+            See WEBSITE_RECORDS_VIEWS_ACCESS_RIGHTS.
+            -->
+            <attribute name="default_group_by">user_id</attribute>
+        </xpath>
+        <xpath expr="//kanban" position="inside">
+            <field name="website_url" invisible="1"/>
+        </xpath>
+        <xpath expr="//main" position="inside">
+            <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">
+                <i class="fa fa-globe me-1" title="Website"/>
+                <field name="website_id"/>
+            </div>
+        </xpath>
+        <xpath expr="//main" position="inside">
+            <div class="d-flex border-top mt-2 pt-2">
+                <field name="is_published" widget="boolean_toggle"/>
+                <t t-if="record.is_published.raw_value">Published</t>
+                <t t-else="">Not Published</t>
+            </div>
+        </xpath>
+    </field>
+</record>
+
+<record id="action_event_pages_list" model="ir.actions.act_window">
+    <field name="name">Event Pages</field>
+    <field name="res_model">event.event</field>
+    <field name="path">event-pages</field>
+    <field name="view_mode">list,kanban</field>
+    <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'list', 'view_id': ref('event_pages_tree_view')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('event_pages_kanban_view')}),
+    ]"/>
+    <field name="context">{'create_action': 'website_event.event_event_action_add'}</field>
+</record>
+
+<menuitem id="menu_event_pages"
+    parent="website.menu_content"
+    sequence="40"
+    name="Events"
+    action="action_event_pages_list"/>
+
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="nemhandel_response_view_move_form" model="ir.ui.view">
+        <field name="name">nemhandel.response.view.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_dk_nemhandel.l10n_dk_nemhandel_view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='other_info']" position="inside">
+                <group string="Nemhandel info"
+                        name="accounting_info_group"
+                        invisible="not nemhandel_message_uuid"
+                        groups="base.group_no_one">
+                    <label for="nemhandel_move_state"/>
+                    <div>
+                        <a class="oe_link fw-bold" type="object" name="action_open_nemhandel_reponses">
+                            <field name="nemhandel_move_state"/>
+                        </a>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

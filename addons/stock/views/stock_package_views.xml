@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_package_view_search" model="ir.ui.view">
+        <field name="name">stock.package.search</field>
+        <field name="model">stock.package</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <search string="Package">
+                <field name="name" string="Package Name"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                <field name="package_type_id"/>
+                <filter string="In internal locations" name="internal" domain="['|', ('location_id.usage', '=', 'internal'), ('location_id', '=', False)]" groups="stock.group_stock_multi_locations"/>
+                <filter string="Main Packages" name="main_packages" domain="[('package_dest_id', '=', False)]"/>
+                <group>
+                   <filter string='Location' name="location" domain="[]" context="{'group_by' : 'location_id'}" groups="stock.group_stock_multi_locations"/>
+                   <filter string='Package Type' name="package_type" domain="[]" context="{'group_by' : 'package_type_id'}"/>
+               </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="stock_package_view_form" model="ir.ui.view" >
+        <field name="name">stock.package.form</field>
+        <field name="model">stock.package</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <form string="Package">
+                <header>
+                    <button name="unpack" string="Unpack" type="object"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_view_picking"
+                        string="Package Transfers" type="object"
+                        widget="statinfo" icon="oi-arrows-v"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Package Reference"/>
+                        <h1><field name="name" class="oe_inline" required="0" placeholder="e.g. PACK0000007"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="package_type_id"/>
+                            <field name='owner_id' groups="stock.group_tracking_owner"/>
+                            <field name="location_id" options="{'no_create': True}"/>
+                            <field name="parent_package_id" domain="[('id', '!=', id), '|', ('location_id', '=', location_id), ('location_id', '=', False)]" widget="package_m2o" context="{'show_src_package': 1}"/>
+                        </group>
+                        <group>
+                            <field name='company_id' groups="base.group_multi_company"/>
+                            <field name="pack_date"/>
+                        </group>
+                    </group>
+                    <separator string="Content"/>
+                    <field name="contained_quant_ids">
+                        <list>
+                            <field name="product_id"/>
+                            <field name="package_id" widget="package_m2o" context="{'show_src_package': 1}"/>
+                            <field name="lot_id" groups="stock.group_production_lot"/>
+                            <field name="quantity"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
+                        </list>
+                        <kanban class="o_kanban_mobile">
+                            <templates>
+                                <t t-name="card">
+                                    <field name="product_id" class="fw-bold"/>
+                                    <field name="lot_id"/>
+                                    <div class="d-flex">
+                                        <field name="quantity"/>
+                                        <field class="mx-2" name="product_uom_id" groups="uom.group_uom"/>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_package_view_list" model="ir.ui.view" >
+        <field name="name">stock.package.list</field>
+        <field name="model">stock.package</field>
+        <field eval="10" name="priority"/>
+        <field name="arch" type="xml">
+            <list string="Package" sample="1">
+                <field name="name" string="Package Name"/>
+                <field name="parent_package_id" string="Container" widget="package_m2o" context="{'show_src_package': 1}"/>
+                <field name="package_type_id"/>
+                <field name="location_id" options="{'no_create': True}"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="stock_package_view_list_editable" model="ir.ui.view">
+        <field name="name">stock.package.list.editable</field>
+        <field name="model">stock.package</field>
+        <field name="arch" type="xml">
+            <list create="0" editable="bottom" js_class="stock_add_package_list_view" open_form_view="1">
+                <header>
+                    <button class="btn-primary" name="action_put_in_pack" type="object" string="Put in Pack"/>
+                    <button class="btn-secondary" name="action_remove_package" type="object" string="Remove"/>
+                </header>
+                <field name="name" string="Package"/>
+                <field name="package_type_id"/>
+                <field name="json_popover" widget="popover_widget" nolabel="1" invisible="not json_popover" width="18px"/>
+                <field name="location_dest_id" options="{'no_create': True}"/>
+                <field name="parent_package_id" string="Origin Container" readonly="1"/>
+                <field name="package_dest_id" domain="[('id', '!=', id), '|', '|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', parent_package_id), ('location_dest_id', '=', location_dest_id)]"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="stock_package_view_add_list" model="ir.ui.view">
+        <field name="name">stock.package.add.package.list</field>
+        <field name="model">stock.package</field>
+        <field name="arch" type="xml">
+            <list create="0">
+                <field name="name" string="Package"/>
+                <field name="parent_package_id" string="Container" context="{'show_src_package': 1}" widget="package_m2o"/>
+                <field name="package_type_id" string="Type" optional="hide"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                <field name="content_description" width="500px"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="stock_package_view_kanban" model="ir.ui.view">
+        <field name="name">stock.package.kanban</field>
+        <field name="model">stock.package</field>
+        <field name="arch" type="xml">
+            <kanban sample="1" group_create="0">
+                <templates>
+                    <t t-name="card" class="row g-0">
+                        <field name="name" class="col-6 fw-bold fs-5"/>
+                        <field name="package_type_id" class="col-6"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_package_view" model="ir.actions.act_window">
+        <field name="name">Packages</field>
+        <field name="res_model">stock.package</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="view_id" ref="stock_package_view_list"/>
+        <field name="context">{
+            'search_default_location': True,
+            'search_default_internal': True,
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new package
+            </p><p>
+                Packages are usually created via transfers (during pack operation) and can contain different products.
+                Once created, the whole package can be moved at once, or products can be unpacked and moved as single units again.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_package" name="Packages" parent="menu_stock_inventory_control" action="action_package_view" groups="stock.group_tracking_lot" sequence="102"/>
+</odoo>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.DynamicSnippetOption">
+    <t t-set="dynamicFilters" t-value="Object.values(dynamicOptionParams.dynamicFilters)"/>
+    <t t-set="snippetModel" t-value="dynamicOptionParams.domState.snippetModel"/>
+    <t t-set="templateKey" t-value="dynamicOptionParams.domState.templateKey"/>
+    <t t-set="filteredTemplates" t-value="dynamicOptionParams.getFilteredTemplates()"/>
+    <t t-set="isSingleMode" t-value="dynamicOptionParams.domState.isSingleMode"/>
+    <t t-set="numberOfRecords" t-value="dynamicOptionParams.domState.numberOfRecords"/>
+    <t t-set="modelNameFilter" t-value="dynamicOptionParams.modelNameFilter"/>
+    <!-- Single record filter options -->
+    <BuilderRow label.translate="Model" t-if="!modelNameFilter and isSingleMode">
+        <BuilderSelect action="'dynamicModel'" preview="false" id="'model_opt'"></BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Record" t-if="isSingleMode">
+        <BuilderMany2One
+            model="snippetModel"
+            action="'dynamicRecord'"
+            id="'record_opt'"
+            domain="[['is_published', '=', true]]"
+            allowUnselect="false"
+            fields="['id', 'name']"
+        />
+    </BuilderRow>
+    <!-- Multi record & common options -->
+    <BuilderRow id="filter_opt_row" label.translate="Filter" t-if="!!dynamicOptionParams.showFilterOption()">
+        <BuilderSelect action="'dynamicFilter'" preview="false" id="'filter_opt'">
+            <t t-foreach="dynamicFilters" t-as="filter" t-key="filter.id">
+                <BuilderSelectItem actionParam="filter" t-out="filter.name" title="filter.help || ''"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow id="template_opt_row" label.translate="Template" t-if="!modelNameFilter and filteredTemplates.length > 1">
+        <BuilderSelect action="'dynamicSnippetTemplate'" preview="false" id="'template_opt'">
+            <t t-foreach="filteredTemplates" t-as="template" t-key="template.key">
+                <t t-if="template.thumb">
+                    <BuilderSelectItem actionParam="template">
+                        <Img src="template.thumb" alt="template.name" svgCheck="false"/>
+                    </BuilderSelectItem>
+                </t>
+                <t t-else="">
+                    <BuilderSelectItem actionParam="template" t-out="template.name"/>
+                </t>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Cover Image" t-if="isSingleMode and !!showCoverImage?.()">
+        <BuilderButtonGroup>
+            <BuilderButton title.translate="Left" classAction="'s_dynamic_snippet_cover_left'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+            <BuilderButton title.translate="Right" classAction="''" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow id="number_of_records_opt_row" label.translate="Fetched Elements" t-if="!!dynamicOptionParams.domState.filterId or isSingleMode">
+        <BuilderSelect action="'numberOfRecords'" preview="false" id="'number_of_records_opt'">
+            <t t-foreach="['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16']" t-as="value" t-key="value">
+                <BuilderSelectItem actionParam="value" t-out="value"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Section Title" t-if="!isSingleMode">
+        <BuilderButtonGroup applyTo="'.s_dynamic_snippet_title'">
+            <BuilderButton label.translate="Top" classAction="dynamicOptionParams.getSnippetTitleClasses('top')"/>
+            <BuilderButton label.translate="Left" classAction="dynamicOptionParams.getSnippetTitleClasses('left')"/>
+            <BuilderButton label.translate="None" title.translate="No title" classAction="dynamicOptionParams.getSnippetTitleClasses('none')"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+</templates>

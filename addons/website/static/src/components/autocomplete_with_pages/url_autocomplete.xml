@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.UrlAutoComplete">
+        <AutoCompleteWithPages
+            input="inputRef"
+            onInput.bind="onInput"
+            menuCssClass="dropdownClass"
+            menuPositionOptions="dropdownOptions"
+            sources="sources"
+            targetDropdown="props.targetDropdown"
+        >
+            <t t-set-slot="option" t-slot-scope="optionScope">
+                <div t-att-class="{
+                    'fw-bold text-capitalize p-2': optionScope.data.separator,
+                }">
+                    <t t-if="optionScope.data.icon and optionScope.data.icon.length">
+                        <img t-att-src="optionScope.data.icon" width="24px" height="24px" class="me-2 rounded"/>
+                    </t>
+                    <t t-out="optionScope.label"/>
+                </div>
+            </t>
+        </AutoCompleteWithPages>
+    </t>
+</templates>

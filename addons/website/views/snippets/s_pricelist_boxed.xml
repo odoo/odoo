@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_pricelist_boxed" name="Pricelist Boxed">
+    <section class="s_pricelist_boxed pt72 pb72 o_colored_level parallax s_parallax_is_fixed s_parallax_no_overflow_hidden" data-scroll-background-ratio="1">
+        <span class="s_parallax_bg oe_img_bg o_bg_img_center" style="background-image: url('/web/image/website.s_pricelist_boxed_default_background');"/>
+        <div class="container">
+            <div class="row">
+                <div class="offset-lg-2 col-lg-8 rounded px-3 px-md-5 pt48 pb48 o_cc o_cc1" data-name="Menu">
+                    <div class="row">
+                        <div class="col-lg-12" data-name="Menu Heading">
+                            <h2 style="text-align:center;">Our Menu</h2>
+                            <p class="lead" style="text-align:center;">Savor our fresh, local cuisine with a modern twist.<br/>Deliciously crafted for every taste!</p>
+                        </div>
+                        <div class="s_pricelist_boxed_section col-lg-12 pt48" data-name="Menu Section">
+                            <h3>✽&#160;&#160;Pizzas</h3>
+                            <ul class="list-unstyled m-0">
+                                <t t-call="website.s_pricelist_boxed_item">
+                                    <t t-set="name">Margherita</t>
+                                    <t t-set="price">$12.00</t>
+                                    <t t-set="description">Classic pizza with fresh mozzarella, San Marzano tomatoes, and basil leaves, drizzled with extra virgin olive oil.</t>
+                                </t>
+                                <t t-call="website.s_pricelist_boxed_item">
+                                    <t t-set="name">Quattro Stagioni</t>
+                                    <t t-set="price">$14.50</t>
+                                    <t t-set="description">A delicious mix of four toppings: mushrooms, artichokes, ham, and olives, all on a bed of mozzarella and tomato sauce.</t>
+                                </t>
+                                <t t-call="website.s_pricelist_boxed_item">
+                                    <t t-set="name">Diavola</t>
+                                    <t t-set="price">$13.50</t>
+                                    <t t-set="description">Spicy pepperoni paired with fiery chili flakes, mozzarella, and tomato sauce for a flavorful kick.</t>
+                                </t>
+                            </ul>
+                        </div>
+                        <div class="s_pricelist_boxed_section col-lg-12 pt48" data-name="Menu Section">
+                            <h3>✽&#160;&#160;Pastas</h3>
+                            <ul class="list-unstyled m-0">
+                                <t t-call="website.s_pricelist_boxed_item">
+                                    <t t-set="name">Spaghetti Carbonara</t>
+                                    <t t-set="price">$15.00</t>
+                                    <t t-set="description">Traditional Roman dish with creamy egg, crispy pancetta, and Pecorino Romano, topped with black pepper.</t>
+                                </t>
+                                <t t-call="website.s_pricelist_boxed_item">
+                                    <t t-set="name">Penne all'Arrabbiata</t>
+                                    <t t-set="price">$13.00</t>
+                                    <t t-set="description">Penne pasta tossed in a spicy tomato and garlic sauce with a hint of chili peppers, finished with fresh parsley.</t>
+                                </t>
+                                <t t-call="website.s_pricelist_boxed_item">
+                                    <t t-set="name">Lasagna al Forno</t>
+                                    <t t-set="price">$16.00</t>
+                                    <t t-set="description">Layers of pasta, rich meat ragu, béchamel sauce, and melted mozzarella, baked to perfection.</t>
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_pricelist_boxed_item">
+    <li class="s_pricelist_boxed_item mt-4" data-name="Menu Item">
+        <p class="s_pricelist_boxed_item_title d-flex align-items-baseline fw-bold">
+            <span class="d-flex flex-grow-1 align-items-center">
+                <span t-out="name" class="s_pricelist_boxed_item_name"/>
+                <span class="s_pricelist_boxed_item_line flex-grow-1 ms-2 border-top"/>
+            </span>
+            <span t-out="price" class="s_pricelist_boxed_item_price ms-auto ps-3"/>
+        </p>
+        <p t-if="description" t-out="description" class="s_pricelist_boxed_item_description d-block mt-2 pe-5 text-muted o_small"/>
+    </li>
+</template>
+
+</odoo>

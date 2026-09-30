@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussContent" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='root']" position="before">
+            <div t-if="ui.isSmall and store.discuss.activeTab === 'inbox' and store.self.main_user_id?.notification_type === 'inbox'" class="w-100 border-bottom" t-call="mail.DiscussContent.mobileTopbar" t-ref="mobileTopbar"/>
+        </xpath>
+        <xpath expr="//*[@t-ref='main']" position="inside">
+            <t t-if="!ui.isSmall" t-call="mail.Discuss.loading"/>
+        </xpath>
+        <xpath expr="//*[@name='thread']" position="inside">
+            <t t-if="!ui.isSmall" t-call="mail.Discuss.loading"/>
+        </xpath>
+    </t>
+    <t t-name="mail.DiscussContent.mobileTopbar">
+        <div class="btn-group d-flex w-100 p-1">
+            <t t-call="mail.MobileMailbox" >
+                <t t-set="mailbox" t-value="store.inbox"/>
+            </t>
+            <t t-call="mail.MobileMailbox">
+                <t t-set="mailbox" t-value="store.starred"/>
+            </t>
+            <t t-call="mail.MobileMailbox">
+                <t t-set="mailbox" t-value="store.history"/>
+            </t>
+        </div>
+    </t>
+</templates>

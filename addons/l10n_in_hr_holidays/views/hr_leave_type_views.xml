@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_leave_type_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.leave.type.form.inherit</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='configuration']//label[@for='support_document']" position="after">
+                <label for="l10n_in_is_sandwich_leave" class="me-4"
+                    string="Sandwich Leaves" invisible="country_code and country_code != 'IN'"/>
+                <label for="l10n_in_is_limited_to_optional_days" class="me-4"
+                    string="Limited to Optional Holidays" invisible="country_code and country_code != 'IN'"/>
+            </xpath>
+            <xpath expr="//group[@name='configuration']//field[@name='support_document']" position="after">
+                <field name="l10n_in_is_sandwich_leave" class="mb-2" nolabel="1"
+                    invisible="country_code and country_code != 'IN'"/>
+                <field name="l10n_in_is_limited_to_optional_days" class="mb-2" nolabel="1"
+                    invisible="country_code and country_code != 'IN'"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

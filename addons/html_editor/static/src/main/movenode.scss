@@ -1,0 +1,82 @@
+
+/* Element widget */
+.oe-sidewidget-move {
+    position: absolute;
+    opacity: 0.6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(white, 0.4);
+    color: #6e727a;
+    border-radius: 3px;
+    padding: 2px 3px;
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    right: 5px;
+    top: 0px;
+}
+.oe-sidewidget-move:hover {
+    opacity: 1;
+}
+
+/* Element widget drag & drop zone */
+.oe-dropzone-box {
+    position: absolute;
+}
+$oe-dropzone-size-inside: 2px;
+$oe-dropzone-size-outside: 1px;
+$oe-dropzone-size: $oe-dropzone-size-outside + $oe-dropzone-size-inside;
+.oe-dropzone-box-side {
+    position: absolute;
+
+    &.oe-dropzone-box-side-north {
+        width: 100%;
+        height: 50%;
+        top: -($oe-dropzone-size-outside);
+    }
+    &.oe-dropzone-box-side-south {
+        width: 100%;
+        height: 50%;
+        bottom: -($oe-dropzone-size-outside);
+    }
+    &.oe-dropzone-box-side-east {
+        height: 100%;
+        width: ($oe-dropzone-size);
+        right: -($oe-dropzone-size-outside);
+    }
+    &.oe-dropzone-box-side-west {
+        height: 100%;
+        width: ($oe-dropzone-size);
+        left: -($oe-dropzone-size-outside);
+    }
+}
+.debug {
+    .oe-dropzone-box {
+        background: rgba(255, 0, 0, 0.3);
+    }
+    .oe-dropzone-box-side {
+        background: rgb(255, 166, 0);
+    }
+    .oe-dropzone-hook {
+        background: rgba(255, 0, 132, 0.2);
+    }
+}
+.oe-dropzone-hook {
+    position: absolute;
+}
+[data-oe-local-overlay-id=oe-dropzones-container] {
+    opacity: 0.3;
+}
+[data-oe-local-overlay-id=oe-widget-hooks-container] {
+    opacity: 0.3;
+}
+[data-oe-local-overlay-id=oe-dropzone-hint-container] {
+    pointer-events: none;
+}
+.oe-current-drop-hint {
+    position: absolute;
+    background: rgba(0, 136, 255, 0.508);
+}
+.oe-editor-dragging {
+    pointer-events: none;
+}

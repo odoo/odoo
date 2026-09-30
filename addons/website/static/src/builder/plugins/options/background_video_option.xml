@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.BackgroundVideoOption">
+    <BuilderRow t-if="isActiveItem('toggle_bg_video_id')" label.translate="Video" level="1" preview="false">
+        <BuilderButton title.translate="Edit video" type="'success'" action="'replaceBgVideo'">Replace</BuilderButton>
+        <BuilderButton title.translate="Remove video" icon="'oi-close'" action="'removeBgVideo'"/>
+    </BuilderRow>
+</t>
+
+</templates>

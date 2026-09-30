@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_floating_blocks" name="Floating Cards">
+    <section class="s_floating_blocks pt32 pb32 o_cc o_cc2">
+        <div class="container">
+            <div class="d-flex flex-column gap-5">
+                <div class="s_floating_blocks_wrapper s_floating_blocks_wrapper_shadow d-contents rounded-4">
+
+                    <section
+                        data-name="Card"
+                        class="s_floating_blocks_block s_col_no_resize position-sticky py-5 py-lg-0 d-flex o_cc o_cc5 oe_img_bg o_bg_img_center o_background_video"
+                        data-bg-video-src="https://player.vimeo.com/video/329369394?autoplay=1&amp;muted=1&amp;autopause=0&amp;controls=0&amp;loop=1"
+                        style="background-image: url('/web/image/website.s_floating_blocks_3')"
+                        >
+                        <div class="o_we_bg_filter bg-black-25"/>
+                        <div class="container-fluid align-self-end align-self-lg-center">
+                            <div class="s_floating_blocks_block_grid oe_unremovable row mx-0 o_grid_mode" data-row-count="8">
+                                <div class="o_grid_item g-height-4 g-col-lg-8 col-lg-8 order-lg-0" style="z-index: 1; grid-area: 1 / 1 / 5 / 9;">
+                                    <p class="lead">Introducing</p>
+                                    <h2 class="display-4-fs">Your New <br class="d-none d-lg-inline"/>
+                                        Workspace
+                                    </h2>
+                                </div>
+
+                                <div class="o_grid_item g-height-2 g-col-lg-4 col-lg-4" style="z-index: 2; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px; grid-area: 7 / 1 / 9 / 5;">
+                                    <a href="" title="" role="button" class="btn btn-lg btn-secondary">Shop Desks</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        data-name="Card"
+                        class="s_floating_blocks_block s_col_no_resize position-sticky parallax py-5 py-lg-0 d-flex o_cc o_cc5"
+                        data-scroll-background-ratio="-2"
+                        >
+                        <span class="s_parallax_bg oe_img_bg o_bg_img_center" style="background-image: url('/web/image/website.s_floating_blocks_1'); background-position: top center"/>
+                        <div class="o_we_bg_filter bg-black-25"/>
+                        <div class="container-fluid align-self-start align-self-lg-center">
+                            <div class="s_floating_blocks_block_grid oe_unremovable row mx-0 o_grid_mode" data-row-count="8">
+                                <div class="o_grid_item g-height-4 g-col-lg-8 col-lg-8 order-lg-0" style="z-index: 1; grid-area: 1 / 1 / 5 / 9;">
+                                    <p class="lead">Sofas made to last.</p>
+                                    <h2 class="display-4-fs">Jump Into <br class="d-none d-lg-inline"/>
+                                        Comfort!
+                                    </h2>
+                                </div>
+                                <div class="o_grid_item g-height-2 g-col-lg-4 col-lg-4" style="z-index: 2; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px; grid-area: 7 / 1 / 9 / 5;">
+                                    <a href="#" title="" role="button" class="btn btn-lg btn-secondary">Shop Sofas</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section
+                        data-name="Card"
+                        class="s_floating_blocks_block s_col_no_resize position-sticky parallax py-5 py-lg-0 d-flex o_cc o_cc5"
+                        data-scroll-background-ratio="-2"
+                        >
+                        <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_floating_blocks_2'); background-position: 50% 50%;" />
+                        <div class="container-fluid align-self-start align-self-lg-center">
+                            <div class="s_floating_blocks_block_grid oe_unremovable row mx-0 o_grid_mode" data-row-count="8">
+                                <div class="o_grid_item g-height-4 g-col-lg-8 col-lg-8 order-lg-0" style="z-index: 1; grid-area: 1 / 1 / 5 / 9;">
+                                    <h2 class="display-4-fs">Get things sorted</h2>
+                                    <p>Looking for a quick and easy way to organize repeat orders?<br/>
+                                        It's just one of the ways we support our members.
+                                    </p>
+                                </div>
+                                <div class="o_grid_item g-height-2 g-col-lg-4 col-lg-4" style="z-index: 2; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px; grid-area: 7 / 1 / 9 / 5;">
+                                    <a href="#" title="" role="button" class="btn btn-lg btn-secondary">Contact Us</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<!-- Assets -->
+<asset id="website.s_floating_blocks_000_scss" name="Floating Blocks 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_floating_blocks/000.scss</path>
+</asset>
+
+</odoo>

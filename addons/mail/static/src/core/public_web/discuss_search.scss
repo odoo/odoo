@@ -1,0 +1,20 @@
+.o-mail-DiscussSearch-searchBtn {
+    padding-top: map-get($spacers, 1) + map-get($spacers, 2) / 2; // so that button is square like other items
+    padding-bottom: map-get($spacers, 1) + map-get($spacers, 2) / 2; // so that button is square like other items
+}
+
+.o-mail-DiscussSearch-inputContainer {
+    &, & input {
+        background-color: $o-view-background-color !important;
+    }
+
+    &:has(.o-mail-DiscussSearch-inputClickable:hover) {
+        &, & input {
+            background-color: mix($gray-100, $gray-200) !important;
+        }
+    }
+}
+
+.o-mail-DiscussSearch {
+    padding-top: var(--DiscussSearch-padding-top, #{map-get($spacers, 1)});
+}

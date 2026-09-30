@@ -1,0 +1,27 @@
+.o_mail_snippet_general .s_rating{
+    padding-left: 0!important;
+    padding-right: 0!important;
+}
+
+.s_rating[data-vcss="001"] {
+    &.s_rating_inline {
+        display: flex;
+        align-items: center;
+        // compatibility with a previously used snippets that no longer
+        // included the "s_rating_title" class on its title.
+        // By targeting the first child, we ensure that the styles are
+        // applied correctly even without the "s_rating_title" class.
+        .s_rating_title, > :first-child {
+            margin: 0;
+            margin-right: 0.5em;
+        }
+        .s_rating_icons {
+            margin-left: auto;
+        }
+    }
+    &.s_rating_no_title {
+        .s_rating_title, > :first-child {
+            display: none;
+        }
+    }
+}

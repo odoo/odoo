@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!-- Snippet -->
+<template id="s_events" name="Events">
+    <t t-call="website.s_dynamic_snippet_template">
+        <t t-set="snippet_name" t-value="'s_events'"/>
+        <t t-set="snippet_classes" t-value="'s_event_upcoming_snippet %s' % snippet_extra_classes"/>
+        <t t-set="main_page_url" t-value="'/event'"/>
+        <t t-set="custom_template_data" t-valuef='{"events_event_time_active":true, "events_event_location_active":true}'/>
+        <t t-out="0"/>
+    </t>
+</template>
+<!-- Multi record snippets -->
+<template id="s_events_picture" name="Events Picture">
+    <t t-set="snippet_extra_classes" t-value="'s_event_event_picture'"/>
+    <t t-call="website_event.s_events">
+        <t t-call="website_event.s_event_upcoming_snippet_preview_data"/>
+    </t>
+</template>
+<template id="s_events_card" name="Events Card">
+    <t t-set="snippet_extra_classes" t-value="'s_event_event_card'"/>
+    <t t-call="website_event.s_events">
+        <t t-call="website_event.s_event_upcoming_snippet_card_preview_data"/>
+    </t>
+</template>
+<!-- Single record snippets -->
+<template id="s_events_single_offset" name="Single Event Offset">
+    <t t-set="is_single_record" t-value="True"/>
+    <t t-set="snippet_extra_classes" t-value="'s_event_event_single_offset'"/>
+    <t t-set="content_classes" t-value="'o_cc o_cc5 bg-transparent'"/>
+    <t t-call="website_event.s_events">
+        <t t-call="website_event.s_dynamic_snippet_events_single_offset_preview_data"/>
+    </t>
+</template>
+<template id="s_events_single_entry" name="Single Event Entry">
+    <t t-set="is_single_record" t-value="True"/>
+    <t t-set="snippet_extra_classes" t-value="'s_event_event_single_entry'"/>
+    <t t-set="content_classes" t-value="'o_cc o_cc5 bg-transparent'"/>
+    <t t-call="website_event.s_events">
+        <t t-call="website_event.s_dynamic_snippet_events_single_entry_preview_data"/>
+    </t>
+</template>
+<template id="s_events_single_card" name="Single Event Card">
+    <t t-set="is_single_record" t-value="True"/>
+    <t t-set="snippet_extra_classes" t-value="'s_event_event_single_card'"/>
+    <t t-set="content_classes" t-value="'o_cc o_cc5 bg-transparent'"/>
+    <t t-call="website_event.s_events">
+        <t t-call="website_event.s_dynamic_snippet_events_single_card_preview_data"/>
+    </t>
+</template>
+<template id="s_events_single_badge" name="Single Event Badge">
+    <t t-set="is_single_record" t-value="True"/>
+    <t t-set="snippet_extra_classes" t-value="'s_event_event_single_badge'"/>
+    <t t-call="website_event.s_events">
+        <t t-call="website_event.s_dynamic_snippet_events_single_badge_preview_data"/>
+    </t>
+</template>
+<template id="s_events_single_aside" name="Single Event Aside">
+    <t t-set="is_single_record" t-value="True"/>
+    <t t-set="snippet_extra_classes" t-value="'s_event_event_single_aside'"/>
+    <t t-call="website_event.s_events">
+        <t t-call="website_event.s_dynamic_snippet_events_single_aside_preview_data"/>
+    </t>
+</template>
+
+<!-- Multi record templates-->
+<!-- Picture Layout -->
+<template id="dynamic_filter_template_event_event_picture" name="Picture Layout" priority="5">
+    <div t-foreach="records" t-as="data" class="s_events_event w-100" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4">
+        <t t-set="record" t-value="data['_record']._set_tz_context()"/>
+        <a class="s_events_event_cover position-relative d-flex align-items-center rounded overflow-hidden text-decoration-none ratio ratio-1x1"
+           t-att-href="data['call_to_action_url']">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="record"/>
+                <t t-set="_resize_height" t-value="512"/>
+                <t t-set="_resize_width" t-value="512"/>
+                <t t-set="use_filters" t-value="True"/>
+                <t t-set="additionnal_classes" t-value="'h-100 w-100 bg-600 position-absolute'"/>
+            </t>
+
+            <div class="text-center w-100 h-100 px-3 d-flex flex-column justify-content-center flex-grow-1">
+                <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                <h3 class="text-white" t-field="record.name"/>
+                <time t-att-datetime="record.date_begin" class="text-white text-center">
+                    <span t-out="record.date_begin"
+                          t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/>
+                    <span t-if="events_event_time_active" class="s_events_event_time">
+                        - <span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
+                        (<span t-out="record.date_tz.replace('_', ' ')"/>)
+                    </span>
+                    <div class="d-flex justify-content-center" t-if="events_event_location_active" t-field="record.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
+                </time>
+            </div>
+        </a>
+    </div>
+</template>
+<!-- Card Layout -->
+<template id="dynamic_filter_template_event_event_card" name="Card Layout" priority="10">
+    <t t-foreach="records" t-as="data" data-extra-classes="g-3" data-column-classes="col-12 col-sm-6 col-lg-4 col-xxl-3">
+        <t t-set="record" t-value="data['_record']._set_tz_context()"/>
+        <a t-att-href="data['call_to_action_url']" class="s_events_event card h-100 text-decoration-none">
+            <div class="s_events_event_cover">
+                <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="record"/>
+                    <t t-set="_resize_height" t-value="512"/>
+                    <t t-set="_resize_width" t-value="512"/>
+
+                    <div class="s_events_event_date position-absolute bg-white shadow-sm text-dark">
+                        <span t-field="record.date_begin" t-options="{'format': 'LLL', 'tz_name': record.date_tz}"
+                            class="s_events_event_month fw-bold text-uppercase"/>
+                        <span t-field="record.date_begin" t-options="{'format': 'dd', 'tz_name': record.date_tz}"
+                            class="s_events_event_day fw-light lh-1"/>
+                    </div>
+                </t>
+            </div>
+            <div class="card-body d-flex flex-column gap-2 justify-content-between">
+                <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
+                <div>
+                    <div t-if="events_event_time_active" class="s_events_event_time mb-1 small fw-bold">
+                        <span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
+                        (<span t-out="record.date_tz.replace('_', ' ')"/>)
+                    </div>
+                    <h5 class="text-truncate" t-field="record.name"/>
+                    <small class="text-muted" t-field="record.subtitle"/>
+                </div>
+                <div class="mt-2 fw-bold" t-if="events_event_location_active" t-field="record.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
+            </div>
+        </a>
+    </t>
+</template>
+
+<!-- Single record templates -->
+<!-- Offset Layout -->
+<template id="dynamic_filter_template_event_event_single_offset" name="Solo Offset">
+    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12" data-content-classes="o_cc o_cc5 bg-transparent">
+        <t t-set="data" t-value="records[0]"/>
+        <t t-set="record" t-value="data['_record']"/>
+        <t t-set="bg" t-value="record._get_background()"/>
+        <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
+        <div class="w-100 rounded" t-att-style="'background-image: ' + bg + '; background-size: cover; background-position: center;'">
+            <div class="position-absolute w-100 h-100 rounded bg-black-50"/>
+            <div class="position-relative p-4 p-lg-5">
+                <div class="py-lg-5">
+                    <h2 t-field="record.name"/>
+                    <p class="lead" t-field="record.subtitle"/>
+                </div>
+                <div class="o_cc o_cc5 position-lg-absolute top-100 start-50 w-100 d-flex flex-wrap gap-4 w-xl-75 mt-3 mt-lg-0 mx-0 px-4 py-4 py-lg-3 rounded">
+                    <div t-if="events_event_time_active" class="me-lg-5 order-1 order-lg-0">
+                        <p class="mb-2 fw-bold">Time</p>
+                        <span>
+                            <i class="fa fa-clock-o me-2" role="img"/>
+                            <span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
+                        </span>
+                    </div>
+                    <div t-if="events_event_location_active" class="order-1 order-lg-0">
+                        <p class="mb-2 fw-bold">Location</p>
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-map-marker me-2" role="img"/>
+                            <span t-field="record.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true', 'null_text': 'Online event'}"/>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap align-items-center justify-content-lg-end w-100 w-lg-auto ms-lg-auto order-0">
+                        <p class="h4-fs mb-0 me-3" t-out="record.date_begin" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/>
+                        <div class="d-none d-lg-block ps-3 border-start">
+                            <a t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']" class="btn btn-primary">Register</a>
+                        </div>
+                    </div>
+                    <a t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']" class="d-lg-none btn btn-primary w-100 mt-3 order-1">Register</a>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+<!-- Entry Layout -->
+<template id="dynamic_filter_template_event_event_single_entry" name="Solo Entry">
+    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12" data-content-classes="o_cc o_cc5 bg-transparent">
+        <t t-set="data" t-value="records[0]"/>
+        <t t-set="record" t-value="data['_record']"/>
+        <t t-set="bg" t-value="record._get_background()"/>
+        <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
+        <div class="w-100 rounded" t-att-style="'background-image: ' + bg + '; background-size: cover; background-position: center;'">
+            <div class="position-absolute w-100 h-100 rounded bg-black-50"/>
+            <div class="position-relative d-flex flex-column gap-5 w-100 h-100 p-4 p-lg-5">
+                <div class="d-flex flex-column flex-lg-row gap-lg-5">
+                    <div class="flex-grow-1 order-1 order-lg-0">
+                        <h2 t-field="record.name"/>
+                        <p class="lead" t-field="record.subtitle"/>
+                    </div>
+                    <p class="h3-fs text-end">
+                        <span class="" t-out="record.date_begin" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/>
+                        <span class="text-nowrap" t-if="events_event_time_active">at <span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/></span>
+                    </p>
+                </div>
+                <div class="d-flex flex-column flex-md-row align-items-md-center gap-3 gap-md-5">
+                    <div class="flex-grow-1 order-1 order-md-0">
+                        <a t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']" class="btn btn-lg btn-primary w-100 w-lg-auto text-nowrap">Register Now</a>
+                    </div>
+                    <div t-if="events_event_location_active" class="d-flex align-items-center fs-5">
+                        <i class="fa fa-map-marker me-2" role="img"/>
+                        <span t-field="record.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true', 'null_text': 'Online event'}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+<!-- Card Layout -->
+<template id="dynamic_filter_template_event_event_single_card" name="Solo Card">
+    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12" data-content-classes="o_cc o_cc5 bg-transparent">
+        <t t-set="data" t-value="records[0]"/>
+        <t t-set="record" t-value="data['_record']"/>
+        <t t-set="bg" t-value="record._get_background()"/>
+        <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
+        <div class="w-100 rounded" t-att-style="'background-image: ' + bg + '; background-size: cover; background-position: center;'">
+            <div class="position-absolute w-100 h-100 rounded bg-black-50"/>
+            <div class="position-relative d-flex align-items-center justify-content-between gap-4 flex-wrap flex-md-nowrap w-100 h-100 p-4 p-lg-5">
+                <div>
+                    <h2 t-field="record.name"/>
+                    <p class="lead" t-field="record.subtitle"/>
+                </div>
+                <div class="s_card card o_cc o_cc1 w-100 w-md-auto border-0 shadow" data-snippet="s_card" data-name="Card" data-vxml="001">
+                    <div class="card-body p-4">
+                        <strong>Date</strong>
+                        <p><i class="fa fa-calendar me-2" role="img"/><span t-out="record.date_begin" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/></p>
+                        <div t-if="events_event_time_active" class="s_events_event_time">
+                            <strong>Time</strong>
+                            <p><i class="fa fa-clock-o me-2" role="img"/><span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/></p>
+                        </div>
+                        <div t-if="events_event_location_active">
+                            <strong>Location</strong>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fa fa-map-marker me-2" role="img"/>
+                                <span t-field="record.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true', 'null_text': 'Online event'}"/>
+                            </div>
+                        </div>
+                        <a t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']" class="btn btn-primary w-100"><t t-out="cta_btn_text">Register<i class="fa fa-long-arrow-right ms-2" role="img"/></t></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+<!-- CTA Badge Layout -->
+<template id="dynamic_filter_template_event_event_single_badge" name="Solo Badge">
+    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12 text-center">
+        <t t-set="data" t-value="records[0]"/>
+        <t t-set="record" t-value="data['_record']"/>
+        <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
+        <div class="text-center">
+            <a t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">
+                <span class="s_cta_badge o_cc o_cc1 d-inline-flex align-items-center justify-content-center flex-wrap gap-3 my-3 border rounded py-2 px-3 text-break" style="border-radius: 32px !important;" data-snippet="s_cta_badge">
+                    <t t-if="events_event_location_active">
+                        <img t-if="record.country_id" t-att-src="record.country_id.image_url"/>
+                        <i t-else="" class="fa fa-calendar text-primary"/>
+                    </t>
+                    <strong class="text-nowrap" t-field="record.name"/>
+                    <span class="text-muted text-nowrap">
+                        <span t-out="record.date_begin" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/>
+                        <span t-if="events_event_time_active" class="s_events_event_time">
+                            - <span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
+                        </span>
+                    </span>
+                    <span class="text-primary text-nowrap">Register Now <i class="fa fa-long-arrow-right"/></span>
+                </span>
+            </a>
+        </div>
+    </t>
+</template>
+<!-- Aside Layout -->
+<template id="dynamic_filter_template_event_event_single_aside" name="Solo Aside">
+    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12">
+        <t t-set="data" t-value="records[0]"/>
+        <t t-set="record" t-value="data['_record']"/>
+        <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
+        <div class="s_dynamic_snippet_content_position row">
+            <div class="col-12 col-lg-6 d-flex d-lg-block flex-column align-content-center align-items-start order-2 order-lg-1">
+                <h2 t-field="record.name"/>
+                <p class="lead" t-field="record.subtitle"/>
+                <a class="btn btn-primary w-100 w-sm-auto mt-4 mt-lg-0 order-last order-lg-auto" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">Register Now <i class="fa fa-long-arrow-right" role="presentation"/></a>
+                <div class="d-flex flex-wrap mt-lg-5">
+                    <div class="me-5 mb-3">
+                        <p class="text-muted">Date</p>
+                        <span><i class="fa fa-calendar me-2" role="img"/><span t-out="record.date_begin" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/></span>
+                        <span t-if="events_event_time_active">at <span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/></span>
+                    </div>
+                    <div t-if="events_event_location_active">
+                        <p class="text-muted">Location</p>
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-map-marker me-2" role="img"/>
+                            <span t-field="record.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true', 'null_text': 'Online event'}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 order-1 order-lg-2 h-auto mb-4 mb-lg-0">
+                <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="record"/>
+                    <t t-set="additionnal_classes" t-value="'ratio ratio-16x9 rounded overflow-hidden'"/>
+                </t>
+            </div>
+        </div>
+    </t>
+</template>
+
+<!--ASSETS-->
+
+<asset id="website_event.s_events_000_scss" name="Event 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website_event/static/src/snippets/s_events/000.scss</path>
+</asset>
+
+</odoo>

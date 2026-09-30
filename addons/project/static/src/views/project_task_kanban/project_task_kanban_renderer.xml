@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="project.ProjectTaskKanbanRenderer" t-inherit="web.KanbanRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_kanban_stages_nocontent')]" position="attributes">
+            <attribute name="t-if">props.list.groups.length === 0 &amp;&amp; !props.hideKanbanStagesNocontent</attribute>
+        </xpath>
+    </t>
+</templates>

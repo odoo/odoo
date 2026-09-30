@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_form_inherit_l10n_tr_nilvera_edispatch" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='zip']" position="after">
+                <field name="fiscal_country_codes" invisible="1"/>
+                <field name="l10n_tr_nilvera_edispatch_customs_zip" placeholder="Customs ZIP" invisible="'TR' not in fiscal_country_codes or country_code == 'TR'"/>
+            </xpath>
+            <xpath expr="//notebook/page[@name='contact_addresses']/field[@name='child_ids']/form/sheet//field[@name='zip']" position="after">
+                <field name="country_code" invisible="1"/>
+                <field name="fiscal_country_codes" invisible="1"/>
+                <field name="l10n_tr_nilvera_edispatch_customs_zip" placeholder="Customs ZIP" invisible="'TR' not in fiscal_country_codes or country_code == 'TR'"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

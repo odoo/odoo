@@ -1,0 +1,182 @@
+:root {
+    @include media-breakpoint-up(lg) {
+        // Allow to handle root font size whether or not the website is installed
+        --bs-root-font-size: #{$o-attendance-font-size-root-lg};
+        --root-font-size: #{$o-attendance-font-size-root-lg};
+    }
+
+    @include media-breakpoint-up(xxl) {
+        --bs-root-font-size: #{$o-attendance-font-size-root-xxl};
+        --root-font-size: #{$o-attendance-font-size-root-xxl};
+    }
+
+    // UW
+    @media (min-width: 2560px) {
+        --bs-root-font-size: #{$o-attendance-font-size-root-uw};
+        --root-font-size: #{$o-attendance-font-size-root-uw};
+    }
+
+    //4K
+    @media screen and (min-width: 3839px), (min-height: 3839px) {
+        --bs-root-font-size: #{$o-attendance-font-size-root-4k};
+        --root-font-size: #{$o-attendance-font-size-root-4k};
+    }
+}
+
+.o_hr_attendance_kiosk_mode {
+    --kiosk-searchBar-height: 70px;
+    --kiosk-searchBar-height--mobile: 110px;
+    --kiosk-sidebar-width: 320px;
+}
+
+.o_hr_attendance_kiosk_company_image {
+    max-height: 10vh;
+    @include media-breakpoint-up(sm) {
+        max-height: 7 vh;
+    }
+}
+
+.o_mobile_barcode {
+    width: max-content;
+    top: -200%;
+}
+
+.o_hr_attendance_install_btn {
+    transform: scale(0.75);
+    left: 115%;
+    top: -200%;
+}
+
+.o_hr_kiosk_sidebar {
+    height: calc(100dvh - var(--kiosk-searchBar-height));
+    min-width: var(--kiosk-sidebar-width);
+}
+
+.o_hr_kiosk_manual_selection {
+    height: calc(100dvh - var(--kiosk-searchBar-height));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-rows: max-content;
+    
+    img {
+        width:4rem;
+    }
+
+    @include media-breakpoint-down(md) {
+        height: calc(100dvh - var(--kiosk-searchBar-height--mobile));
+    }
+}
+
+
+.o_hr_attendance_kiosk_card {
+    min-width: 75%;
+    @include media-breakpoint-up(md) {
+        min-width: 50%;
+    }
+    @include media-breakpoint-up(xl) {
+        min-width: 35%;
+    }
+}
+
+.o_hr_attendance_kiosk_mode {
+    .o_pager_counter {
+        min-width: max-content;
+    }
+}
+
+.o_hr_kiosk_url_media{
+    a{
+        width: 100% !important;
+    }
+}
+.o_attendance_form .o_content{
+    overflow: hidden !important;
+}
+// Shared with web client and login screen
+.o_attendance_background{
+    background: {
+        size: cover;
+        attachment: fixed;
+        color: var(--homeMenu-bg-color, #{$o-gray-200});
+        image: var(--homeMenu-bg-image, url("/hr_attendance/static/img/background-light.svg"));
+    }
+}
+
+.o_hr_attendance_kiosk_body {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.o_select_employee{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    @include media-breakpoint-down(sm){
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+.o_select_employee_display {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+
+    &:focus-within {
+        border-color: $input-focus-border-color;
+        box-shadow: 0 0 0 0.25rem rgba($primary, 0.25);
+    }
+
+    img {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 0.5rem;
+    }
+}
+
+.o_select_employee_option {
+    width: 100%;
+    position: relative;
+    .o-autocomplete--input {
+        width: 100%;
+        font-family: $input-font-family;
+        @include font-size($input-font-size);
+        font-weight: $input-font-weight;
+        line-height: $input-line-height;
+        color: $input-color;
+        border: 0px;
+        appearance: none;
+        @include transition($input-transition);
+
+        &:focus {
+            outline: none; // remove default blue outline
+        }
+    }
+
+    .o-autocomplete--dropdown-menu {
+        position: absolute !important;
+        width:110%;
+        left:-5% !important;
+        top:42px !important;
+        max-height: 300px!important;
+        overflow-y: auto;
+        .dropdown-item {
+            padding: map-get($spacers, 2);
+            font-size: $input-font-size;
+        }
+    }
+
+    .o-autocomplete--dropdown-item a[aria-selected="true"]{
+        background-color: #f0f0f0 !important;
+    }
+
+    .dropdown-caret-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+}

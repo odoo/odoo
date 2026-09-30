@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_event.ProductCard" t-inherit="point_of_sale.ProductCard" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('product-img')]" position="before">
+            <t t-set="availableSeats" t-value="this.totalTicketSeats" />
+            <t t-set="futureSlots" t-value="this.totalFutureSlots" />            
+            <div t-if="displayRemainingSeats" class="shadow-sm m-1 py-1 px-2 z-1 rounded position-absolute top-0 end-0 bg-white">
+                <t t-if="isEventMultiSlot">
+                    <span t-if="futureSlots > 0">
+                        <t t-esc="futureSlots" /> <t t-if="futureSlots > 1">slots</t><t t-else="">slot</t>
+                    </span>
+                    <span t-else="">No slots</span>
+                </t>
+                <t t-else="">
+                    <span t-if="availableSeats > 0">
+                        <t t-esc="availableSeats" /> left
+                    </span>
+                    <span t-elif="availableSeats === 0">Unlimited</span>
+                    <span t-else="">Sold out</span>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>

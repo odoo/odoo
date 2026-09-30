@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        name="Project"
+        id="menu_main_pm"
+        groups="group_project_manager,group_project_user"
+        web_icon="project,static/description/icon.png"
+        sequence="70"
+    >
+        <menuitem
+            name="Projects"
+            id="menu_projects"
+            action="open_view_project_all"
+            sequence="1"
+        />
+        <menuitem
+            name="Projects"
+            id="menu_projects_group_stage"
+            action="open_view_project_all_group_stage"
+            groups="project.group_project_stages"
+            sequence="1"
+        />
+        <menuitem
+            name="Tasks"
+            id="menu_project_management"
+            sequence="2"
+        >
+            <menuitem
+                name="My Tasks"
+                id="menu_project_management_my_tasks"
+                action="action_view_my_task"
+                sequence="1"
+            />
+            <menuitem
+                name="All Tasks"
+                id="menu_project_management_all_tasks"
+                action="action_view_all_task"
+                sequence="2"
+            />
+        </menuitem>
+        <menuitem
+            name="Reporting"
+            id="menu_project_report"
+            sequence="99"
+        >
+            <menuitem
+                name="Tasks Analysis"
+                id="menu_project_report_task_analysis"
+                action="project.action_project_task_user_tree"
+                sequence="10"
+            />
+            <menuitem
+                name="Customer Ratings"
+                id="rating_rating_menu_project"
+                action="rating_rating_action_project_report"
+                sequence="51"
+            />
+
+        </menuitem>
+        <menuitem
+            name="Configuration"
+            id="menu_project_config"
+            groups="project.group_project_manager"
+            sequence="100"
+        >
+            <menuitem
+                name="Settings"
+                id="project_config_settings_menu_action"
+                action="project_config_settings_action"
+                groups="base.group_system"
+                sequence="0"
+            />
+            <menuitem
+                name="Projects"
+                id="menu_projects_config_group_stage"
+                action="open_view_project_all_config_group_stage"
+                groups="project.group_project_stages"
+                sequence="5"
+            />
+            <menuitem
+                name="Projects"
+                id="menu_projects_config"
+                action="open_view_project_all_config"
+                sequence="5"
+            />
+            <menuitem
+                name="Project Stages"
+                id="menu_project_config_project_stage"
+                action="project_project_stage_configure"
+                groups="project.group_project_stages"
+                sequence="9"
+            />
+            <menuitem
+                name="Task Stages"
+                id="menu_project_config_project"
+                action="open_task_type_form"
+                groups="base.group_no_one"
+                sequence="10"
+            />
+            <menuitem
+                name="Tags"
+                id="menu_project_tags_act"
+                action="project_tags_action"
+            />
+            <menuitem
+                name="Project Roles"
+                id="project_menu_config_project_roles"
+                action="project_roles_action"
+            />
+            <menuitem
+                name="Activity Types"
+                id="project_menu_config_activity_type"
+                action="mail_activity_type_action_config_project_types"
+            />
+            <menuitem
+                name="Activity Plans"
+                id="mail_activity_plan_menu_config_project"
+                action="mail_activity_plan_action_config_project_task_plan"
+            />
+        </menuitem>
+    </menuitem>
+</odoo>

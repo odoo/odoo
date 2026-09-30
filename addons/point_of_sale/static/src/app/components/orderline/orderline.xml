@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.Orderline">
+        <t t-set="vals" t-value="lineScreenValues" />
+        <li t-ref="root" t-if="line.order_id" t-att-class="lineContainerClasses" class="orderline">
+            <div t-if="vals.productImage" class="o_line_container d-flex align-items-center justify-content-center">
+                <img t-attf-style="border-radius: 1rem;" t-att-src="vals.productImage"/>
+            </div>
+            <div class="d-flex flex-column w-100" t-att-class="lineClasses">
+                <div class="line-details d-flex justify-content-between" t-att-class="{ 'align-items-center' : vals.isReceipt }">
+                    <div class="product-name d-flex flex-grow-1 pe-2 text-truncate" t-att-class="{ 'align-items-center' : vals.isReceipt }">
+                        <span class="qty d-inline-block fw-bolder" t-attf-class="{{ vals.isReceipt ? 'pe-2' : 'px-1' }}">
+                            <t t-esc="vals.unitPart"/>
+                            <small t-if="vals.decimalPart" t-out="vals.decimalPart" class="fw-normal" style="font-size: 85%;" />
+                        </span>
+                        <span class="text-wrap d-inline">
+                            <t t-esc="vals.name" /><br/>
+                            <small t-if="vals.attributeString" t-out="vals.attributeString" class="attribute-line fst-italic" />
+                        </span>
+                    </div>
+                    <div t-if="vals.price" t-out="vals.price" class="product-price price" t-attf-class="{{ vals.isReceipt ? 'font-monospace' : 'fw-bolder' }}"
+                    />
+                    <div t-if="vals.taxGroup" t-esc="vals.taxGroup" class="text-end" style="width: 2rem"/>
+                </div>
+                <ul class="info-list d-flex flex-column mb-0 ms-2" t-att-style="vals.isReceipt and 'font-size: 75%;'" t-att-class="infoListClasses">
+                    <li class="price-per-unit" t-if="vals.displayPriceUnit" t-out="vals.displayPriceUnit" />
+                    <li t-if="vals.discount" class="price-per-unit">
+                        <i class="fa fa-tag pe-1"/><em><t t-esc="vals.discount" />% </em> discount off on <t t-esc="vals.noDiscountPrice"/>
+                    </li>
+                    <li t-if="line.customer_note" class="customer-note w-100 rounded text-break bg-opacity-25" t-att-class="{'bg-warning text-warning p-2': vals.isDisplay}">
+                        <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
+                        <t t-esc="line.customer_note" />
+                    </li>
+                    <div t-if="vals.internalNote" class="internal-note-container d-flex gap-2 flex-wrap">
+                        <TagsList tags="vals.internalNote" />
+                    </div>
+                    <li t-if="vals.lotLines" class="row flex-wrap w-100 m-0">
+                        <div class="col-auto" t-attf-class="{{ vals.isReceipt ? 'p-0' : 'px-1' }}">
+                            <t t-slot="pack-lot-icon" />
+                        </div>
+                        <div class="col ps-0">
+                            <li class="lot-number" t-foreach="vals.lotLines" t-as="lot" t-key="lot_index" t-esc="lot" />
+                        </div>
+                    </li>
+                    <t t-slot="default" />
+                </ul>
+            </div>
+        </li>
+    </t>
+</templates>

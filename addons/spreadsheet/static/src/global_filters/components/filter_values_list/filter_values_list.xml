@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="spreadsheet_dashboard.FilterValuesList">
+        <div class="d-flex flex-column o-filter-values">
+            <div t-foreach="state.filtersAndValues"
+                    t-as="item"
+                    t-key="item_index"
+                    class="d-flex o-filter-item align-items-center"
+                    t-att-class="env.isSmall ? 'dropdown-item' : ''"
+                    t-att-data-id="item.globalFilter.id">
+                <div class="me-1 w-25">
+                    <t t-esc="getTranslatedFilterLabel(item.globalFilter)"/>
+                </div>
+                <t t-set="operators" t-value="getOperators(item.globalFilter)"/>
+                <div t-if="!operators?.length" class="w-25 me-3"/>
+                <select t-else="" class="o_input w-25 pe-3 me-3 text-truncate" t-on-change="(ev) => this.updateOperator(item, ev.target.value)">
+                    <t t-foreach="operators" t-as="operator" t-key="operator">
+                        <option class="text-black" t-att-value="operator" t-att-selected="item.value?.operator === operator" t-esc="getOperatorLabel(operator)" />
+                    </t>
+                </select>
+                <FilterValue filter="item.globalFilter"
+                                model="props.model"
+                                setGlobalFilterValue="(id, value) => this.setGlobalFilterValue(item, value)"
+                                globalFilterValue="item.value"/>
+                <div class="o-filter-clear">
+                    <button t-if="filterHasClearButton(item)"
+                        class="btn btn-link px-2 text-danger fs-4"
+                        t-on-click="() => this.clearFilter(item.globalFilter.id)">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="o-filter-values-footer d-flex mt-3 pt-3 border-top gap-1">
+            <button class="btn btn-primary" t-on-click="onConfirm">Filter</button>
+            <button t-if="props.openFiltersEditor"
+                    class="btn btn-secondary o-edit-global-filters"
+                    t-on-click="props.openFiltersEditor">
+                Edit
+            </button>
+            <button class="btn btn-secondary" t-on-click="onDiscard">Discard</button>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_l10n_es_edi_verifactu_document_form" model="ir.ui.view">
+            <field name="name">l10n_es_edi_verifactu.document.form</field>
+            <field name="model">l10n_es_edi_verifactu.document</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group name="main_group">
+                            <group name="left_column">
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="document_type"/>
+                                <field name="json_attachment_filename" invisible="1"/>  <!-- needed as `filename` attribute below -->
+                                <field name="json_attachment_base64" widget="binary" filename="json_attachment_filename"/>
+                            </group>
+                            <group name="right_column">
+                                <field name="chain_index"/>
+                                <field name="state"/>
+                                <field name="response_csv"/>
+                            </group>
+                            <group name="bottom" colspan="2">
+                                <field name="errors"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,316 @@
+{
+  "version": "18.4.14",
+  "sheets": [
+    {
+      "id": "sheet1",
+      "name": "Dashboard",
+      "colNumber": 7,
+      "rowNumber": 41,
+      "rows": {
+        "5": { "size": 48 },
+        "21": { "size": 44 },
+        "22": { "size": 35 },
+        "23": { "size": 34 },
+        "24": { "size": 34 },
+        "25": { "size": 34 },
+        "26": { "size": 34 },
+        "27": { "size": 34 },
+        "28": { "size": 34 },
+        "29": { "size": 34 },
+        "30": { "size": 34 },
+        "31": { "size": 34 }
+      },
+      "cols": {
+        "0": { "size": 259 },
+        "1": { "size": 112 },
+        "2": { "size": 112 },
+        "3": { "size": 46 },
+        "4": { "size": 257 },
+        "5": { "size": 112 },
+        "6": { "size": 112 }
+      },
+      "merges": [],
+      "cells": {
+        "A6": "[Monthly Sales](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\",\"not in\",[\"draft\",\"cancel\",\"sent\"]]],\"context\":{\"group_by\":[],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date:day\"],\"graph_order\":null,\"graph_stacked\":true,\"graph_cumulated\":false},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+        "A22": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"website_id\",\"!=\",false],[\"state\",\"in\",[\"sale\",\"done\"]]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"order_reference\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Online Sales Analysis\"})",
+        "A23": "=_t(\"Products\")",
+        "B23": "=_t(\"Units\")",
+        "C23": "=_t(\"Revenue\")",
+        "E22": "[Top Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"state\",\"not in\",[\"draft\",\"cancel\",\"sent\"]]],\"context\":{\"group_by\":[],\"pivot_measures\":[\"order_reference\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"categ_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})",
+        "E23": "=_t(\"Categories\")",
+        "F23": "=_t(\"Units\")",
+        "G23": "=_t(\"Revenue\")"
+      },
+      "styles": {
+        "A6": 1,
+        "A22": 1,
+        "E22": 1,
+        "A23": 2,
+        "E23": 2,
+        "B23:C23": 3,
+        "F23:G23": 3
+      },
+      "formats": {},
+      "borders": {
+        "A22:C22": 1,
+        "A6:G6": 1,
+        "E22:G22": 1,
+        "A23:C23": 2,
+        "A7:G7": 2,
+        "E23:G23": 2,
+        "A24:C24": 3,
+        "E24:G24": 3,
+        "A25:C32": 4,
+        "E25:G32": 4,
+        "A33:C33": 5,
+        "E33:G33": 5
+      },
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [
+        {
+          "id": "a761d77e-17d1-4d7a-ac85-5494c07dd360",
+          "width": 209,
+          "height": 106,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Carts", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!E2",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D2",
+            "humanize": false
+          },
+          "offset": { "x": 0, "y": 9 },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "7db1cb48-a155-4984-b8dd-de155db2b65f",
+          "width": 209,
+          "height": 106,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Orders", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!E3",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D3",
+            "humanize": false
+          },
+          "offset": { "x": 220, "y": 9 },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "1bfef494-7090-4263-8e07-83f14f43c0e7",
+          "width": 209,
+          "height": 106,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Abandoned Carts", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!E4",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D4",
+            "humanize": false
+          },
+          "offset": { "x": 441, "y": 9 },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "79d91c01-7aeb-4845-aa82-5a41895b74af",
+          "width": 209,
+          "height": 106,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Total Revenue", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "baseline": "Data!E5",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!D5",
+            "humanize": false
+          },
+          "offset": { "x": 661, "y": 9 },
+          "col": 0,
+          "row": 0
+        },
+        {
+          "id": "7792afad-3707-4c60-ae72-10f9c9bf1363",
+          "width": 1010,
+          "height": 346,
+          "tag": "chart",
+          "data": {
+            "type": "line",
+            "dataSetsHaveTitle": false,
+            "dataSets": [
+              { "dataRange": "Data!C8:C15", "yAxisId": "y" }
+            ],
+            "legendPosition": "none",
+            "labelRange": "Data!A8:A15",
+            "title": {},
+            "labelsAsText": true,
+            "stacked": false,
+            "aggregated": false,
+            "cumulative": true,
+            "fillArea": true
+          },
+          "offset": { "x": 0, "y": 162.61328125 },
+          "col": 0,
+          "row": 0
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "795f40fb-7598-4275-b0a8-549499781f22",
+      "name": "Data",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {},
+      "cols": {},
+      "merges": [],
+      "cells": {
+        "A1": "=_t(\"KPI\")",
+        "A2": "=_t(\"Carts\")",
+        "A3": "=_t(\"Orders\")",
+        "A4": "=_t(\"Abandoned Carts\")",
+        "A5": "=_t(\"Revenue\")",
+        "A8": "=EDATE(TODAY(),-B8)",
+        "A9": "=EDATE(TODAY(),-B9)",
+        "A10": "=EDATE(TODAY(),-B10)",
+        "A11": "=EDATE(TODAY(),-B11)",
+        "A12": "=EDATE(TODAY(),-B12)",
+        "A13": "=EDATE(TODAY(),-B13)",
+        "A14": "=EDATE(TODAY(),-B14)",
+        "A15": "=EDATE(TODAY(),-B15)",
+        "B1": "=_t(\"Current\")",
+        "B2": "5786",
+        "B3": "3982",
+        "B4": "=B2-B3",
+        "B5": "59568",
+        "B8": "7",
+        "B9": "6",
+        "B10": "5",
+        "B11": "4",
+        "B12": "3",
+        "B13": "2",
+        "B14": "1",
+        "B15": "0",
+        "C1": "=_t(\"Previous\")",
+        "C2": "4578",
+        "C3": "2545",
+        "C4": "=C2-C3",
+        "C5": "49802",
+        "C8": "156470",
+        "C9": "85155",
+        "C10": "59117",
+        "C11": "156863",
+        "C12": "110368",
+        "C13": "90088",
+        "C14": "165450",
+        "C15": "389601",
+        "D1": "=_t(\"Current\")",
+        "D2": "=FORMAT.LARGE.NUMBER(B2)",
+        "D3": "=FORMAT.LARGE.NUMBER(B3)",
+        "D4": "=FORMAT.LARGE.NUMBER(B4)",
+        "D5": "=FORMAT.LARGE.NUMBER(B5)",
+        "E1": "=_t(\"Previous\")",
+        "E2": "=FORMAT.LARGE.NUMBER(C2)",
+        "E3": "=FORMAT.LARGE.NUMBER(C3)",
+        "E4": "=FORMAT.LARGE.NUMBER(C4)",
+        "E5": "=FORMAT.LARGE.NUMBER(C5)"
+      },
+      "styles": { "A1:E1": 4, "D2:E5": 5 },
+      "formats": { "A8:A15": 1, "C8:C15": 2, "B3:E3": 2, "B5:E5": 2 },
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    }
+  ],
+  "styles": {
+    "1": { "fontSize": 16, "bold": true },
+    "2": { "textColor": "#434343", "bold": true, "fontSize": 11 },
+    "3": {
+      "textColor": "#434343",
+      "bold": true,
+      "fontSize": 11,
+      "align": "center"
+    },
+    "4": { "bold": true },
+    "5": { "fillColor": "#EFEFEF" }
+  },
+  "formats": { "1": "mmmm yyyy", "2": "[$$]#,##0" },
+  "borders": {
+    "1": {
+      "bottom": { "style": "thin", "color": "#CCCCCC" }
+    },
+    "2": {
+      "top": { "style": "thin", "color": "#CCCCCC" }
+    },
+    "3": {
+      "bottom": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "4": {
+      "top": { "style": "thick", "color": "#FFFFFF" },
+      "bottom": { "style": "thick", "color": "#FFFFFF" }
+    },
+    "5": {
+      "top": { "style": "thick", "color": "#FFFFFF" }
+    }
+  },
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {},
+  "pivotNextId": 9,
+  "customTableStyles": {},
+  "globalFilters": [],
+  "lists": {},
+  "listNextId": 1,
+  "chartOdooMenusReferences": {}
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="res_users_view_form" model="ir.ui.view">
+            <field name="name">res.users.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <!-- add state field in header -->
+                <xpath expr="//header" position="inside">
+                    <button string="Send an Invitation Email"
+                                type="object" name="action_reset_password" context="{'create_user': 1}"
+                                invisible="state != 'new'"/>
+                    <field name="state" widget="statusbar"/>
+                </xpath>
+                <xpath expr="//div[@name='auth']" position="inside">
+                    <button string="Send Password Reset"
+                            type="object" name="action_reset_password"
+                            invisible="id == uid or state != 'active'" class="btn btn-secondary h-100 ms-2 my-auto"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_users_state_tree" model="ir.ui.view">
+            <field name="name">res.users.list.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_tree"/>
+            <field name="arch" type="xml">
+                <list position="inside">
+                    <field name="state" widget="badge" optional="hide"
+                        decoration-info="state == 'new'" decoration-success="state == 'active'"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="action_send_password_reset_instructions" model="ir.actions.server">
+            <field name="name">Send Password Reset Instructions</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="group_ids" eval="[(4, ref('base.group_erp_manager'))]"/>
+            <field name="binding_model_id" ref="base.model_res_users" />
+            <field name="state">code</field>
+            <field name="code">records.action_reset_password()</field>
+        </record>
+
+</odoo>

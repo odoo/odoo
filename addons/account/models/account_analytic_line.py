@@ -1,0 +1,184 @@
+# -*- coding: utf-8 -*-
+
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
+from odoo.tools import Query, SQL
+
+
+class AccountAnalyticLine(models.Model):
+    _inherit = 'account.analytic.line'
+    _description = 'Analytic Line'
+
+    product_id = fields.Many2one(
+        'product.product',
+        string='Product',
+        check_company=True,
+        index='btree_not_null',
+    )
+    product_category = fields.Many2one(related='product_id.categ_id')
+    general_account_id = fields.Many2one(
+        'account.account',
+        string='Financial Account',
+        ondelete='restrict',
+        check_company=True,
+        compute='_compute_general_account_id', store=True, readonly=False,
+        index='btree_not_null',
+    )
+    journal_id = fields.Many2one(
+        'account.journal',
+        string='Financial Journal',
+        check_company=True,
+        readonly=True,
+        related='move_line_id.journal_id',
+        store=True,
+    )
+    partner_id = fields.Many2one(
+        readonly=False,
+        compute="_compute_partner_id",
+        store=True,
+    )
+    move_line_id = fields.Many2one(
+        'account.move.line',
+        string='Journal Item',
+        ondelete='cascade',
+        index=True,
+        check_company=True,
+    )
+    code = fields.Char(size=8)
+    ref = fields.Char(string='Ref.')
+    category = fields.Selection(selection_add=[('invoice', 'Customer Invoice'), ('vendor_bill', 'Vendor Bill')])
+    analytic_profitability = fields.Selection(
+        string='Profitability',
+        selection=[
+            ('uncategorized', 'Uncategorized'),
+            ('revenue', 'Revenue'),
+            ('loss', 'Loss'),
+        ],
+        compute='_compute_analytic_profitability',
+        search='_search_analytic_profitability',
+    )
+
+    @api.depends('move_line_id')
+    def _compute_general_account_id(self):
+        for line in self:
+            line.general_account_id = line.move_line_id.account_id
+
+    @api.constrains('move_line_id', 'general_account_id')
+    def _check_general_account_id(self):
+        for line in self:
+            if line.move_line_id and line.general_account_id != line.move_line_id.account_id:
+                raise ValidationError(_('The journal item is not linked to the correct financial account'))
+
+    @api.depends('move_line_id.partner_id')
+    def _compute_partner_id(self):
+        for line in self:
+            line.partner_id = line.move_line_id.partner_id or line.partner_id
+
+    @api.depends('general_account_id', 'category', 'amount')
+    def _compute_analytic_profitability(self):
+        # Please keep this method aligned with _field_to_sql
+        for line in self:
+            account_type = line.general_account_id.account_type or ''
+            if (
+                account_type.split('_')[0] == 'expense'
+                or account_type in ['asset_current', 'asset_non_current', 'asset_fixed']
+                or (not account_type and line.category not in ['invoice', 'other'])
+                or (not account_type and line.category == 'other' and line.amount < 0)
+            ):
+                line.analytic_profitability = 'loss'
+            elif (
+                account_type.split('_')[0] == 'income'
+                or (not account_type and line.category == 'other' and line.amount > 0)
+            ):
+                line.analytic_profitability = 'revenue'
+            else:
+                line.analytic_profitability = 'uncategorized'
+
+    @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
+    def on_change_unit_amount(self):
+        if not self.product_id:
+            return {}
+
+        prod_accounts = self.product_id.product_tmpl_id.with_company(self.company_id)._get_product_accounts()
+        unit = self.product_uom_id
+        account = prod_accounts['expense']
+        if not unit:
+            unit = self.product_id.uom_id
+
+        # Compute based on pricetype
+        amount_unit = self.product_id._price_compute('standard_price', uom=unit)[self.product_id.id]
+        amount = amount_unit * self.unit_amount or 0.0
+        result = (self.currency_id.round(amount) if self.currency_id else round(amount, 2)) * -1
+        self.amount = result
+        self.general_account_id = account
+        self.product_uom_id = unit
+
+    @api.model
+    def view_header_get(self, view_id, view_type):
+        if self.env.context.get('account_id'):
+            return _(
+                "Entries: %(account)s",
+                account=self.env['account.analytic.account'].browse(self.env.context['account_id']).name
+            )
+        return super().view_header_get(view_id, view_type)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        analytic_lines = super().create(vals_list)
+        analytic_lines.move_line_id._update_analytic_distribution()
+        return analytic_lines
+
+    def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None) -> SQL:
+        # Please keep this method aligned with _compute_analytic_profitability
+        if field_expr != 'analytic_profitability':
+            return super()._field_to_sql(alias, field_expr, query)
+
+        account_alias = query.left_join(alias, 'general_account_id', 'account_account', 'id', 'account_account')
+
+        return SQL("""
+            CASE
+                WHEN (
+                    SPLIT_PART(%(account_type)s, '_', 1) = 'expense'
+                    OR %(account_type)s IN ('asset_current', 'asset_non_current', 'asset_fixed')
+                    OR (%(account_type)s IS NULL AND %(analytic_line_category)s NOT IN ('invoice', 'other'))
+                    OR (%(account_type)s IS NULL AND %(analytic_line_category)s = 'other' AND %(analytic_line_amount)s < 0)
+                ) THEN 'loss'
+                WHEN (
+                    SPLIT_PART(%(account_type)s, '_', 1) = 'income'
+                    OR (%(account_type)s IS NULL AND %(analytic_line_category)s = 'other' AND %(analytic_line_amount)s > 0)
+                ) THEN 'revenue'
+                ELSE 'uncategorized'
+            END
+        """,
+            account_type=SQL.identifier(account_alias, 'account_type'),
+            analytic_line_category=SQL.identifier(alias, 'category'),
+            analytic_line_amount=SQL.identifier(alias, 'amount'),
+        )
+
+    def _search_analytic_profitability(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+
+        query = Query(self.env, alias='account_analytic_line', table=SQL.identifier('account_analytic_line'))
+        query.add_where(SQL("%(profitability)s IN %(val)s",
+            profitability=self._field_to_sql('account_analytic_line', 'analytic_profitability', query=query),
+            val=tuple(value),
+        ))
+        lines = self.browse(query)
+
+        return [('id', 'in', lines.ids)]
+
+    def write(self, vals):
+        affected_move_lines = self.move_line_id
+        res = super().write(vals)
+        if any(field in vals for field in ['amount', 'move_line_id'] + self._get_plan_fnames()):
+            if 'move_line_id' in vals:
+                affected_move_lines |= self.move_line_id
+            affected_move_lines._update_analytic_distribution()
+        return res
+
+    def unlink(self):
+        affected_move_lines = self.move_line_id
+        res = super().unlink()
+        affected_move_lines._update_analytic_distribution()
+        return res

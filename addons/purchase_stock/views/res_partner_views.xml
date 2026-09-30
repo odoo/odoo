@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_partner_view_purchase_buttons_inherit" model="ir.ui.view">
+            <field name="name">res.partner.purchase.stock.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="purchase.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='purchase_order_count']/.." position="after">
+                    <button class="oe_stat_button" name="%(action_purchase_vendor_delay_report)d" type="action"
+                        groups="purchase.group_purchase_user"
+                        icon="fa-truck"
+                        context="{'search_default_partner_id': id}"
+                        invisible="on_time_rate &lt; 0">
+                        <div class="o_form_field o_stat_info">
+                            <div class="o_row" >
+                                <span class="o_stat_value">
+                                    <field string="On-time Rate" name="on_time_rate" digits="[42, 0]"/>
+                                </span>
+                                <span class="o_stat_value">%</span>
+                            </div>
+                            <span class="o_stat_text">On-time Rate</span>
+                        </div>
+                    </button>
+                </xpath>
+                <xpath expr="//field[@name='buyer_id']" position="before">
+                    <label for="group_rfq"/>
+                    <div name="group_rfq_container">
+                        <field name="group_rfq" class="oe_inline"/>
+                        <span name="group_on_span" invisible="group_rfq != 'week'">
+                            On
+                            <field name="group_on" class="oe_inline"/>
+                        </span>
+                    </div>
+                </xpath>
+            </field>
+    </record>
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_job_survey_inherit" model="ir.ui.view">
+        <field name="name">hr.job.form.inherit</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
+        <field name="arch" type="xml">
+            <field name="interviewer_ids" position="after">
+                <label for="survey_id"/>
+                <div>
+                    <field name="survey_id"
+                        context="{'default_access_mode': 'token'}"
+                        domain="[('survey_type', '=', 'recruitment')]"/>
+                </div>
+            </field>
+        </field>
+    </record>
+    <record id="view_hr_job_kanban_inherit" model="ir.ui.view">
+        <field name="name">hr.job.kanban.inherit</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="survey_id"/>
+            </xpath>
+            <xpath expr="//div[@name='menu_view_applications']" position="after">
+                <div role="menuitem" t-if="record.survey_id.raw_value">
+                    <a name="action_test_survey" type="object" title="Display Interview Form">Interviews</a>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='menu_new_applications']" position="after">
+                <div role="menuitem" t-if="!record.survey_id.raw_value">
+                    <a name="action_new_survey" type="object" title="Display Interview Form">Interview Form</a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

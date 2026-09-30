@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanView">
+        <div t-attf-class="{{ className }} {{ hasSelectedRecords ? 'o_kanban_selection_active' : 'o_kanban_selection_available' }}" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
+                <t t-set-slot="control-panel-create-button">
+                    <button t-if="canCreate and props.showButtons" type="button" t-att-disabled="isNewButtonDisabled" class="btn btn-primary o-kanban-button-new" accesskey="c" t-on-click="() => this.createRecord()" data-bounce-button="">
+                        New
+                    </button>
+                </t>
+                <t t-set-slot="layout-buttons">
+                    <t t-if="props.showButtons" t-call="{{ props.buttonTemplate }}"/>
+                </t>
+                <t t-set-slot="control-panel-always-buttons">
+                    <t t-foreach="headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
+                        <MultiRecordViewButton
+                            t-if="button.display === 'always'"
+                            list="model.root"
+                            className="button.className"
+                            clickParams="button.clickParams"
+                            defaultRank="'btn-secondary'"
+                            domain="props.domain"
+                            icon="button.icon"
+                            string="button.string"
+                            title="button.title"
+                            attrs="button.attrs"
+                        />
+                    </t>
+                </t>
+                <t t-set-slot="control-panel-selection-actions">
+                    <div t-if="hasSelectedRecords" class="o_selection_container d-flex gap-1 w-100 w-md-auto">
+                       <SelectionBox root="this.model.root"/>
+                        <t t-if="!env.isSmall">
+                            <t t-foreach="headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
+                                <MultiRecordViewButton
+                                    t-if="button.display !== 'always'"
+                                    list="model.root"
+                                    className="button.className"
+                                    clickParams="button.clickParams"
+                                    defaultRank="'btn-secondary'"
+                                    domain="props.domain"
+                                    icon="button.icon"
+                                    string="button.string"
+                                    title="button.title"
+                                    attrs="button.attrs"
+                                />
+                            </t>
+                            <t t-if="props.info.actionMenus">
+                                <ActionMenus t-props="this.actionMenuProps"/>
+                            </t>
+                        </t>
+                    </div>
+                </t>
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu t-if="!hasSelectedRecords"/>
+                    <CogMenu t-elif="env.isSmall and (props.info.actionMenus or headerButtons.length)" t-props="this.actionMenuProps" hasSelectedRecords="hasSelectedRecords">
+                        <t t-foreach="headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
+                            <DropdownItem class="'o-dropdown-item-unstyled-button'">
+                                <MultiRecordViewButton
+                                    t-if="button.display !== 'always'"
+                                    list="model.root"
+                                    className="button.className"
+                                    clickParams="button.clickParams"
+                                    defaultRank="'btn-secondary'"
+                                    domain="props.domain"
+                                    icon="button.icon"
+                                    string="button.string"
+                                    title="button.title"
+                                    attrs="button.attrs"
+                                />
+                            </DropdownItem>
+                        </t>
+                    </CogMenu>
+                </t>
+                <t t-set-slot="layout-actions">
+                    <SearchBar toggler="searchBarToggler" autofocus="firstLoad"/>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <t t-if="!hasSelectedRecords" t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                </t>
+                <t t-component="props.Renderer" t-if="model.isReady"
+                    list="model.root"
+                    archInfo="props.archInfo"
+                    Compiler="props.Compiler"
+                    readonly="props.readonly"
+                    forceGlobalClick="props.forceGlobalClick"
+                    deleteRecord.bind="deleteRecord"
+                    openRecord.bind="openRecord"
+                    noContentHelp="props.info.noContentHelp"
+                    scrollTop.bind="scrollTop"
+                    canQuickCreate="canQuickCreate"
+                    quickCreateState="quickCreateState"
+                    progressBarState="progressBarState"
+                />
+            </Layout>
+        </div>
+    </t>
+
+    <t t-name="web.KanbanView.Buttons"/>
+
+</templates>

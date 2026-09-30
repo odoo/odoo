@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<odoo>
+
+<record id="website_controller_pages_form_view" model="ir.ui.view">
+    <field name="name">website.controller.page.form</field>
+    <field name="model">website.controller.page</field>
+    <field name="arch" type="xml">
+        <form string="Website Model Page Settings">
+            <sheet>
+                <group col="2" string="Page Details">
+                    <group colspan="1" string="Page">
+                        <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                        <field name="name"/>
+                        <label for="name_slugified" string="URL"/>
+                        <div>
+                            <span>/model/</span>
+                            <field name="name_slugified" nolabel="1" class="d-inline bg-300" force_save="True"/>
+                            <span invisible="name_slugified" class="bg-300">...</span>
+                        </div>
+                        <field name="website_published" />
+                    </group>
+                    <group colspan="1" string="Settings">
+                        <field name="model_id" readonly="id"/>
+                        <field name="model" invisible="1" />
+                        <field name="record_domain" widget="domain" options="{'in_dialog': True, 'model': 'model'}"/>
+                        <field name="default_layout"/>
+                    </group>
+                </group>
+                <notebook groups="base.group_no_one">
+                    <page string="View">
+                        <group>
+                            <field name="view_id" context="{'display_website': True}"/>
+                            <field name="name"/>
+                        </group>
+                    </page>
+                    <page string="Menus">
+                        <label for="menu_ids" string="Related Menu Items"/>
+                        <field name="menu_ids"/>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="website_controller_pages_tree_view" model="ir.ui.view">
+    <field name="name">website.controller.page.list</field>
+    <field name="model">website.controller.page</field>
+    <field name="priority">99</field>
+    <field name="arch" type="xml">
+        <list>
+            <field name="name" string="Page Title"/>
+            <!-- website_id should be shown only in multi website environment
+            when the group is enabled, but we need the field to be there all the
+            time for `PageRendererMixin`'s `recordFilter' to be able to filter
+            correctly. -->
+            <field name="website_id" column_invisible="True"/>
+            <field name="website_id" groups="website.group_multi_website"/>
+            <field name="url_demo"/>
+            <field name="is_published" widget="boolean_toggle"/>
+        </list>
+    </field>
+</record>
+
+<record id="website_controller_pages_kanban_view" model="ir.ui.view">
+    <field name="name">website.controller.page.kanban</field>
+    <field name="model">website.controller.page</field>
+    <field name="arch" type="xml">
+        <kanban class="o-website-controller-page-kanban">
+            <t t-name="card">
+                <field name="website_published" invisible="1" />
+                <widget name="web_ribbon" text="Published" invisible="not website_published" />
+                <widget name="web_ribbon" text="Unpublished" invisible="website_published" bg_color="text-bg-danger" />
+                    <div data-section="data" class="d-flex align-items-center">
+                        <div class="fw-bold me-2" data-section="title"><field name="name"/></div>
+                        <div data-section="name">
+                            <div invisible="website_id">On all websites</div>
+                            <div invisible="not website_id"><span class="me-1">On:</span><field name="website_id"/></div>
+                        </div>
+                    </div>
+                     <div class="d-md-flex align-items-center gap-3" data-section="more-info">
+                        <i class="fa fa-2x fa-arrow-right text-primary" title="URL" />
+                        <field name="url_demo" widget="url" />
+                    </div>
+            </t>
+        </kanban>
+    </field>
+</record>
+
+<record id="website_controller_pages_search_view" model="ir.ui.view">
+    <field name="name">website.controller.page.search</field>
+    <field name="model">website.controller.page</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="model" filter_domain="[('model','=', self)]" string="Model"/>
+            <group colspan="4">
+                <filter string="Model" name="page_model" domain="[]" context="{'group_by':'model'}"/>
+                <filter string="Website" name="page_website_id" domain="[]" context="{'group_by':'website_id'}"/>
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="action_website_controller_pages_list" model="ir.actions.act_window">
+    <field name="name">Website Model Pages</field>
+    <field name="res_model">website.controller.page</field>
+    <field name="view_mode">list,kanban,form</field>
+</record>
+
+<menuitem id="menu_website_controller_pages_list"
+    parent="menu_content"
+    sequence="10"
+    name="Model Pages"
+    groups="base.group_no_one"
+    action="action_website_controller_pages_list"
+    active="False" />
+
+</odoo>

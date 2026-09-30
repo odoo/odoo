@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="total" inherit_id="website_sale.total">
+        <tr name="o_order_total_untaxed" position="attributes">
+            <attribute name="t-attf-class" add="#{'d-none' if website.company_id.country_code == 'BR' else ''}" separator=" "/>
+        </tr>
+        <tr name="o_order_total_taxes" position="attributes">
+            <attribute name="t-attf-class" add="#{'d-none' if website.company_id.country_code == 'BR' else ''}" separator=" "/>
+        </tr>
+        <tr name="o_order_total" position="attributes">
+            <attribute name="t-attf-class" add="#{'border-top' if website.company_id.country_code != 'BR' else ''}" separator=" "/>
+        </tr>
+    </template>
+
+</odoo>

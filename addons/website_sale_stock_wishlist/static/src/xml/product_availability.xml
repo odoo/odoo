@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="website_sale_stock_wishlist.product_availability" inherit_id="website_sale_stock.product_availability">
+        <div
+            t-if="is_storable and !free_qty and !allow_out_of_stock_order and !prevent_zero_price_sale"
+            id="stock_wishlist_message"
+            t-attf-class="availability_message_#{product_template} my-2 d-flex align-items-center flex-column flex-md-row"
+        >
+            <button
+                t-if="!is_in_wishlist"
+                id="wsale_save_for_later_button"
+                type="button"
+                class="btn btn-outline-primary text-nowrap o_add_wishlist_dyn"
+                t-att-data-product-product-id="product_id"
+                t-att-data-product-template-id="product_id"
+                data-action="o_wishlist"
+            >
+                <i class="fa fa-heart-o me-2"/>Add to wishlist
+            </button>
+            <div id="wsale_added_to_your_wishlist_alert" t-att-class="is_in_wishlist ? '' : 'd-none'">
+                <div class="btn btn-outline-primary disabled">
+                    <i class="fa fa-heart me-2"/>Added to your wishlist
+                </div>
+            </div>
+
+        </div>
+    </t>
+</templates>

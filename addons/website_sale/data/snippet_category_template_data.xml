@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="dynamic_filter_template_product_public_category_default">
+        <t t-foreach="records" t-as="category">
+            <t t-set="is_parent" t-value="category['id'] == parentCategoryId"/>
+            <div
+                t-if="not is_parent or includeParent"
+                name="category_item"
+                class="s_dynamic_category_item position-relative bg-black overflow-hidden oe_unremovable oe_unmovable"
+                t-att-data-category-id="category['id']"
+                t-attf-style="grid-row: span {{ 4 if is_parent else size }}; grid-column: span {{ 2 if is_parent and colSpanTwo else 1 }}"
+                role="article"
+            >
+                <div class="overflow-hidden">
+                    <img
+                        name="category_image"
+                        loading="lazy"
+                        t-att-src="category['cover_image']"
+                        alt="Category Image"
+                        class="o_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
+                    />
+                    <div t-if="category.get('unpublished')" class="o_ribbon_right small text-bg-light">Unpublished</div>
+                </div>
+                <div
+                    name="category_overlay"
+                    t-attf-class="p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between {{alignmentClass}}"
+                >
+                    <h3 class="h4" t-out="category['name']"/>
+                    <a
+                        name="category_button"
+                        role="button"
+                        t-attf-href="/shop/category/{{category['id']}}"
+                        class="s_dynamic_category_button btn btn-primary align-self-start oe_unremovable"
+                        t-out="buttonText"
+                    />
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template
+        id="dynamic_filter_template_product_public_category_clickable_items"
+        inherit_id="website_sale.dynamic_filter_template_product_public_category_default"
+        primary="True"
+    >
+        <div name="category_item" position="attributes">
+            <attribute name="class" add="opacity-trigger-hover" separator=" "/>
+        </div>
+        <div name="category_overlay" position="attributes">
+            <attribute name="t-attf-class" add="z-0" separator=" "/>
+        </div>
+        <h3 class="h4" position="before">
+            <span
+                class="o_category_filter position-absolute start-0 top-0 end-0 bottom-0 bg-black-25 transition-base z-n1"
+                aria-hidden="true"
+            />
+        </h3>
+        <h3 class="h4" position="attributes">
+            <attribute name="class" add="mb-0" separator=" "/>
+        </h3>
+        <img name="category_image" position="attributes">
+            <attribute name="class" add="transition-base" separator=" "/>
+        </img>
+        <a name="category_button" position="attributes">
+            <attribute
+                name="class"
+                add="stretched-link h-0 p-0 opacity-0 o_not_editable o_not-animable"
+                separator=" "
+            />
+        </a>
+        <a name="category_button" position="after">
+            <p class="s_dynamic_category_arrow position-absolute end-0 bottom-0 mb-3 me-3">
+                <i class="oi oi-arrow-right fa-lg"/>
+            </p>
+        </a>
+    </template>
+
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_mrp_workorder">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div class="row">
+                        <div class="col-7">
+                            <h2><span t-field="o.name">Laptop model X</span></h2>
+                        </div>
+                        <div class="col-5">
+                            <span class="text-end">
+                                <span t-field="o.production_id.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:350px;height:60px'}">12345678901</span>
+                            </span>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row mt32 mb32">
+                        <div class="col-3">
+                            <strong>Responsible:</strong><br/>
+                            <span t-field="o.production_id.user_id">Marc Demo</span>
+                        </div>
+                        <div class="col-3">
+                            <strong>Manufacturing Order:</strong><br/>
+                            <span t-field="o.production_id.name">RAM</span>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row mt32 mb32">
+                        <div class="col-3">
+                            <strong>Finished Product:</strong><br/>
+                            <span t-field="o.product_id">Laptop</span>
+                        </div>
+                        <div class="col-3">
+                            <strong>Quantity to Produce:</strong><br/>
+                            <span t-field="o.qty_production">2</span>
+                            <span t-field="o.product_uom_id.name" groups="uom.group_uom">Unit</span>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <t t-call="mrp.report_mrp_production_components" t-if="o.move_raw_ids"/>
+
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</odoo>

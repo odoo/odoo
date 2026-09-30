@@ -1,0 +1,209 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * l10n_it
+#
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-30 19:07+0000\n"
+"PO-Revision-Date: 2025-11-19 16:32+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19-l10n/"
+"l10n_it/it/>\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: l10n_it
+#: model:ir.model,name:l10n_it.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Modello piano dei conti"
+
+#. module: l10n_it
+#: model:ir.model,name:l10n_it.model_account_report_expression
+msgid "Accounting Report Expression"
+msgstr "Espressione rendiconto contabile"
+
+#. module: l10n_it
+#: model:ir.model.fields,field_description:l10n_it.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_it.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_it.field_account_report_expression__display_name
+#: model:ir.model.fields,field_description:l10n_it.field_account_tax__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: l10n_it
+#: model:ir.model,name:l10n_it.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr "Mixin codici fiscali ETA"
+
+#. module: l10n_it
+#: model:ir.model.fields,field_description:l10n_it.field_account_tax__l10n_it_exempt_reason
+msgid "Exoneration"
+msgstr "Esenzione"
+
+#. module: l10n_it
+#: model:ir.model.fields,help:l10n_it.field_account_tax__l10n_it_exempt_reason
+msgid "Exoneration type"
+msgstr "Tipo esenzione"
+
+#. module: l10n_it
+#: model:ir.model.fields,field_description:l10n_it.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_it.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_it.field_account_report_expression__id
+#: model:ir.model.fields,field_description:l10n_it.field_account_tax__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_it
+#. odoo-python
+#: code:addons/l10n_it/models/account_tax.py:0
+msgid ""
+"If the tax amount is 0%, you must enter the exoneration code and the related "
+"legal notes."
+msgstr ""
+"Se l'importo della tassa è 0%, è necessario inserire il codice di esenzione "
+"e le relative note legali."
+
+#. module: l10n_it
+#: model:ir.model,name:l10n_it.model_account_move
+msgid "Journal Entry"
+msgstr "Registrazione contabile"
+
+#. module: l10n_it
+#. odoo-python
+#: code:addons/l10n_it/models/account_tax.py:0
+msgid "Split Payment is not compatible with exoneration of kind 'N6'"
+msgstr "Lo Split Payment non è compatibile con l'esenzione di tipo 'N6'"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n1
+msgid "[N1] Escluse ex art. 15"
+msgstr "[N1] Escluse ex art. 15"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n2_1
+msgid ""
+"[N2.1] Non soggette ad IVA ai sensi degli artt. Da 7 a 7-septies del DPR "
+"633/72"
+msgstr ""
+"[N2.1] Non soggette ad IVA ai sensi degli artt. Da 7 a 7-septies del DPR "
+"633/72"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n2_2
+msgid "[N2.2] Non soggette - altri casi"
+msgstr "[N2.2] Non soggette - altri casi"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n3_1
+msgid "[N3.1] Non imponibili - esportazioni"
+msgstr "[N3.1] Non imponibili - esportazioni"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n3_2
+msgid "[N3.2] Non imponibili - cessioni intracomunitarie"
+msgstr "[N3.2] Non imponibili - cessioni intracomunitarie"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n3_3
+msgid "[N3.3] Non imponibili - cessioni verso San Marino"
+msgstr "[N3.3] Non imponibili - cessioni verso San Marino"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n3_4
+msgid ""
+"[N3.4] Non imponibili - operazioni assimilate alle cessioni all'esportazione"
+msgstr ""
+"[N3.4] Non imponibili - operazioni assimilate alle cessioni all'esportazione"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n3_5
+msgid "[N3.5] Non imponibili - a seguito di dichiarazioni d'intento"
+msgstr "[N3.5] Non imponibili - a seguito di dichiarazioni d'intento"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n3_6
+msgid ""
+"[N3.6] Non imponibili - altre operazioni che non concorrono alla formazione "
+"del plafond"
+msgstr ""
+"[N3.6] Non imponibili - altre operazioni che non concorrono alla formazione "
+"del plafond"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n4
+msgid "[N4] Esenti"
+msgstr "[N4] Esenti"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n5
+msgid "[N5] Regime del margine / IVA non esposta in fattura"
+msgstr "[N5] Regime del margine / IVA non esposta in fattura"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_1
+msgid ""
+"[N6.1] Inversione contabile - cessione di rottami e altri materiali di "
+"recupero"
+msgstr ""
+"[N6.1] Inversione contabile - cessione di rottami e altri materiali di "
+"recupero"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_2
+msgid "[N6.2] Inversione contabile - cessione di oro e argento puro"
+msgstr "[N6.2] Inversione contabile - cessione di oro e argento puro"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_3
+msgid "[N6.3] Inversione contabile - subappalto nel settore edile"
+msgstr "[N6.3] Inversione contabile - subappalto nel settore edile"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_4
+msgid "[N6.4] Inversione contabile - cessione di fabbricati"
+msgstr "[N6.4] Inversione contabile - cessione di fabbricati"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_5
+msgid "[N6.5] Inversione contabile - cessione di telefoni cellulari"
+msgstr "[N6.5] Inversione contabile - cessione di telefoni cellulari"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_6
+msgid "[N6.6] Inversione contabile - cessione di prodotti elettronici"
+msgstr "[N6.6] Inversione contabile - cessione di prodotti elettronici"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_7
+msgid ""
+"[N6.7] Inversione contabile - prestazioni comparto edile esettori connessi"
+msgstr ""
+"[N6.7] Inversione contabile - prestazioni comparto edile esettori connessi"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_8
+msgid "[N6.8] Inversione contabile - operazioni settore energetico"
+msgstr "[N6.8] Inversione contabile - operazioni settore energetico"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_9
+msgid "[N6.9] Inversione contabile - altri casi"
+msgstr "[N6.9] Inversione contabile - altri casi"
+
+#. module: l10n_it
+#: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n7
+msgid ""
+"[N7] IVA assolta in altro stato UE (prestazione di servizi di "
+"telecomunicazioni, tele-radiodiffusione ed elettronici ex art. 7-octies, "
+"comma 1 lett. a, b, art. 74-sexies DPR 633/72)"
+msgstr ""
+"[N7] IVA assolta in altro stato UE (prestazione di servizi di "
+"telecomunicazioni, tele-radiodiffusione ed elettronici ex art. 7-octies, "
+"comma 1 lett. a, b, art. 74-sexies DPR 633/72)"

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.PropertyDefinition">
+        <div class="o_field_property_definition o_field_widget o_form_view d-block" t-ref="propertyDefinition">
+            <div class="d-flex justify-content-between px-3 border-bottom">
+                <div t-if="!env.isSmall" class="border-end py-1">
+                    <button
+                        t-attf-class="btn btn-link ps-0 {{this.isFirst ? 'disabled' : ''}}"
+                        t-on-click="() => this.onPropertyMove('up')" title="Move this Property up">
+                        <i class="oi oi-chevron-up ms-2"/>
+                    </button>
+                    <button
+                        t-attf-class="btn btn-link pe-3 {{this.isLast ? 'disabled' : ''}}"
+                        t-on-click="() => this.onPropertyMove('down')" title="Move this Property down">
+                        <i class="oi oi-chevron-down ms-2"/>
+                    </button>
+                </div>
+                <button t-else="" class="btn oi oi-arrow-left my-2" t-on-click="() => this.props.close()"/>
+                <button
+                    t-if="!props.readonly and props.canChangeDefinition"
+                    class="btn pe-0 text-danger float-end o_field_property_definition_delete"
+                    title="Remove Property"
+                    t-on-click="props.onDelete">
+                    <i class="fa fa-trash"/> Delete
+                </button>
+            </div>
+            <div class="o_modal_container p-3 o_inner_group grid">
+                <div class="d-contents mb-3 mb-sm-0">
+                    <label class="o_form_label align-self-center text-900">Label</label>
+                    <h6 t-if="props.readonly" t-out="state.propertyDefinition.string"
+                        class="text-truncate"/>
+                    <input
+                        class="o_input o_field_property_definition_header"
+                        type="text"
+                        required=""
+                        placeholder="Property Name"
+                        autocomplete="off"
+                        t-model="state.propertyDefinition.string"
+                        t-on-change="onPropertyLabelChange"
+                        t-on-keypress="onPropertyLabelKeypress"
+                    />
+                </div>
+                <div class="d-contents mb-3 mb-sm-0">
+                    <label t-att-for="getUniqueDomID('type')"
+                        class="o_form_label align-self-center text-900">
+                        Field Type
+                    </label>
+                    <div class="o_field_property_definition_type">
+                        <div
+                            t-if="props.readonly"
+                            class="d-flex align-items-center mb-2">
+                            <img class="me-3"
+                                t-attf-src="/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png"/>
+                            <span t-out="state.typeLabel"/>
+                        </div>
+                        <Dropdown t-else="" menuClass="'o_field_property_definition_type_menu'">
+                            <button class="btn btn-link d-flex p-0 w-100" t-att-title="state.typeLabel">
+                                <div class="o_input_dropdown w-100 o_field_property_dropdown">
+                                    <img t-attf-src="/web/static/src/views/fields/properties/icons/{{state.propertyDefinition.type}}.png"
+                                        class="position-relative z-1 me-n4"/>
+                                    <input type="text" class="dropdown text-start w-100 o_input py-1 align-middle"
+                                        t-att-id="getUniqueDomID('type')"
+                                        t-att-value="state.typeLabel" readonly=""/>
+                                    <span class="o_dropdown_button" />
+                                </div>
+                            </button>
+                            <t t-set-slot="content">
+                                <t t-foreach="availablePropertyTypes" t-as="option" t-key="option[0]">
+                                    <t t-if="option[0] === 'monetary' and !this.defaultCurrencyField">
+                                        <DropdownItem closingMode="'none'">
+                                            <div class="d-flex align-items-center text-muted" data-tooltip="Not possible to create monetary field because there is no currency on current model.">
+                                                <img class="me-2" t-attf-src="/web/static/src/views/fields/properties/icons/{{option[0]}}.png"/>
+                                                <span t-out="option[1]"/>
+                                            </div>
+                                        </DropdownItem>
+                                    </t>
+                                    <t t-else="">
+                                        <DropdownItem onSelected.bind="() => this.onPropertyTypeChange(option[0])">
+                                            <div class="d-flex align-items-center">
+                                                <img class="me-2" t-attf-src="/web/static/src/views/fields/properties/icons/{{option[0]}}.png"/>
+                                                <span t-out="option[1]"/>
+                                            </div>
+                                        </DropdownItem>
+                                    </t>
+                                </t>
+                            </t>
+                        </Dropdown>
+                    </div>
+                </div>
+                <!-- Add / remove selection labels -->
+                <div t-if="state.propertyDefinition.type === 'selection'" class="d-contents mb-3 mb-sm-0">
+                    <label class="o_form_label text-900">Values</label>
+                    <PropertyDefinitionSelection
+                        readonly="props.readonly || !props.canChangeDefinition"
+                        canChangeDefinition="props.canChangeDefinition"
+                        default="state.propertyDefinition.default || ''"
+                        options="state.propertyDefinition.selection || []"
+                        onOptionsChange.bind="onSelectionOptionChange"
+                        onDefaultOptionChange.bind="onDefaultChange"
+                    />
+                </div>
+                <div t-if="state.propertyDefinition.type === 'tags'" class="d-contents mb-3 mb-sm-0">
+                    <label t-att-for="getUniqueDomID('tags')" class="o_form_label text-900">Tags</label>
+                    <PropertyTags
+                        id="getUniqueDomID('tags')"
+                        selectedTags="propertyTagValues"
+                        tags="state.propertyDefinition.tags || []"
+                        readonly="props.readonly"
+                        canChangeTags="props.canChangeDefinition"
+                        deleteAction="'tags'"
+                        onTagsChange.bind="onTagsChange"/>
+                </div>
+                <div t-if="state.propertyDefinition.type === 'many2one' || state.propertyDefinition.type === 'many2many'" class="o_field_property_definition_model d-contents mb-3 mb-sm-0">
+                    <label t-att-for="getUniqueDomID('model')" class="o_form_label align-self-center text-900">Model</label>
+                    <span t-if="props.readonly">
+                        <t t-if="state.resModelDescription" t-out="state.resModelDescription"/>
+                    </span>
+                    <ModelSelector
+                        t-else=""
+                        id="getUniqueDomID('model')"
+                        value="state.resModelDescription"
+                        onModelSelected.bind="onModelChange"
+                    />
+                </div>
+                <div t-if="(state.propertyDefinition.type === 'many2one' || state.propertyDefinition.type === 'many2many')
+                    and state.propertyDefinition.comodel and state.propertyDefinition.comodel.length" class="o_field_property_definition_domain d-contents mb-3 mb-sm-0">
+                    <label class="o_form_label text-900">Domain</label>
+                    <div>
+                        <DomainSelector
+                            resModel="state.propertyDefinition.comodel"
+                            domain="state.propertyDefinition.domain || '[]'"
+                            readonly="props.readonly"
+                            update.bind="onDomainChange"
+                            isDebugMode="!!env.debug"
+                            className="'d-inline-block me-2'"
+                        />
+                        <div t-if="state.matchingRecordsCount !== undefined" class="d-inline-block">
+                            <i class="oi oi-arrow-right" role="img" title="Domain"/>
+                            <button class="btn btn-sm btn-secondary" type="button"
+                                t-on-click.stop="onButtonDomainClick">
+                                <t t-out="state.matchingRecordsCount"/> record(s)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div t-if="state.propertyDefinition.type === 'monetary'" class="o_field_property_definition_currency_field d-contents mb-3 mb-sm-0">
+                    <label t-att-for="getUniqueDomID('currency_field')" class="o_form_label text-900">Currency field</label>
+                    <div>
+                        <select class="o_input" t-att-value="this.state.propertyDefinition.currency_field" t-on-change="(ev) => this.onCurrencyFieldUpdate(ev.target.value)">
+                            <t t-foreach="this.currencyFields" t-as="currencyField" t-key="currencyField.name">
+                                <option t-att-value="currencyField.name" t-out="currencyField.string"/>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+                <div t-if="!['tags', 'selection', 'separator'].includes(state.propertyDefinition.type)
+                    and (!['many2one', 'many2many'].includes(state.propertyDefinition.type)
+                    || (state.propertyDefinition.comodel and state.propertyDefinition.comodel.length))"
+                    class="o_field_property_definition_value d-contents mb-3 mb-sm-0">
+                    <label t-att-for="getUniqueDomID('default')" class="o_form_label align-self-center text-900">
+                        <t t-if="state.propertyDefinition.type === 'boolean'">Default State</t>
+                        <t t-else="">Default Value</t>
+                    </label>
+                    <PropertyValue
+                        id="getUniqueDomID('default')"
+                        readonly="props.readonly"
+                        canChangeDefinition="props.canChangeDefinition"
+                        type="state.propertyDefinition.type"
+                        string="state.propertyDefinition.string"
+                        value="state.propertyDefinition.default"
+                        comodel="state.propertyDefinition.comodel || ''"
+                        currencyField="state.propertyDefinition.currency_field || ''"
+                        domain="state.propertyDefinition.domain || '[]'"
+                        context="props.context"
+                        onChange.bind="onDefaultChange"
+                        record="props.record"
+                    />
+                </div>
+                <t t-if="state.propertyDefinition.type !== 'separator'">
+                    <div class="o_field_property_definition_suffix d-contents mb-3 mb-sm-0">
+                        <label class="o_form_label align-self-center text-900">Suffix</label>
+                        <input
+                            class="o_input"
+                            type="text"
+                            placeholder=""
+                            autocomplete="off"
+                            t-model="state.propertyDefinition.suffix"
+                            t-on-change="onSuffixChange"
+                        />
+                    </div>
+                </t>
+                <div t-if="state.propertyDefinition.type !== 'separator'"
+                    class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
+                    <label t-att-for="getUniqueDomID('kanban')" class="o_form_label align-self-center text-900">
+                        Display in Cards
+                        <sup class="text-info" title="Whether or not this Property Field is displayed in the Calendar, Cards &amp; Kanban views">?</sup>
+                    </label>
+                    <CheckBox
+                        id="getUniqueDomID('kanban')"
+                        value="props.propertyDefinition.view_in_cards"
+                        disabled="props.readonly"
+                        onChange.bind="onViewInKanbanChange"
+                    />
+                </div>
+                <div t-else="" class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
+                    <t t-set="separatorId" t-value="getUniqueDomID('separator')"/>
+                    <label t-att-for="separatorId" class="o_form_label align-self-center text-900">
+                        Default State
+                    </label>
+                    <div class="o_field_property_definition_fold text-nowrap d-inline-flex w-100 align-items-baseline">
+                        <label class="form-check o_radio_item p-0">
+                            <input type="radio" class="form-check-input o_radio_input" t-att-checked="!state.propertyDefinition.fold_by_default" t-attf-name="{{separatorId}}_separator" t-attf-id="{{separatorId}}_open" t-on-change="() => this.onFoldByDefaultChange(false)"/>
+                            <label class="form-check-label o_form_label ms-1" t-attf-for="{{separatorId}}_open">Open</label>
+                        </label>
+                        <label class="form-check o_radio_item">
+                            <input type="radio" class="form-check-input o_radio_input" t-att-checked="!!state.propertyDefinition.fold_by_default" t-attf-name="{{separatorId}}_separator" t-attf-id="{{separatorId}}_fold" t-on-change="() => this.onFoldByDefaultChange(true)"/>
+                            <label class="form-check-label o_form_label ms-1" t-attf-for="{{separatorId}}_fold">Fold</label>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

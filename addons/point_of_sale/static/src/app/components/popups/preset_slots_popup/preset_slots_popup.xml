@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.PresetSlotsPopup">
+        <Dialog size="'xl'" title.translate="Select a preset">
+            <div>
+                <div class="d-flex align-items-center gap-2">
+                    <button t-foreach="timedPresets"
+                        t-as="preset"
+                        t-key="preset.id"
+                        class="btn btn-lg flex-grow-1"
+                        t-attf-class="{{ preset.id === state.selectedPresetId ? 'btn-primary' : 'btn-secondary' }}"
+                        t-on-click="() => state.selectedPresetId = preset.id"
+                        t-esc="preset.name" />
+                </div>
+                <div t-foreach="timedPresets"
+                    t-as="preset"
+                    t-key="preset.id"
+                    t-attf-class="{{ preset.id === state.selectedPresetId ? '' : 'd-none' }}">
+                    <div class="d-flex w-100 flex-wrap gap-2 mt-2">
+                        <button class="btn flex-grow-1"
+                            t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate"
+                            t-attf-class="{{ state.selectedDate === sqlDate ? 'btn-primary' : 'btn-secondary' }}"
+                            t-att-class="{'o_colorlist_item_color_transparent_6': Object.values(preset.availabilities[sqlDate]).length === 0}"
+                            t-on-click="() => state.selectedDate = sqlDate"
+                            t-esc="formatDate(sqlDate)" />
+                    </div>
+                    <hr/>
+                    <div class="w-100 mt-3">
+                        <div t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate" class="row">
+                            <t t-set="slotByPeriod" t-value="Object.entries(this.getSlotsForDate(preset, sqlDate))"/>
+                            <div t-foreach="slotByPeriod"
+                                t-as="entries"
+                                t-key="entries[0]"
+                                t-att-class="{'d-none': state.selectedDate !== sqlDate}"
+                                t-attf-class="{{`col-${12 / slotByPeriod.length}`}}">
+                                <span class="fs-6" t-esc="this.getPeriodName(entries[0])" />
+                                <div class="d-flex flex-wrap gap-1">
+                                    <button t-foreach="entries[1]"
+                                        t-as="slot"
+                                        t-key="slot_index"
+                                        class="btn preset-slot-button"
+                                        t-attf-class="{{getSlotColor(slot, preset)}}"
+                                        t-on-click="() => this.confirm(slot, preset)">
+                                            <span t-esc="slot.datetime.toFormat('HH:mm')" />
+                                    </button>
+                                </div>
+                            </div>
+                            <div t-if="state.selectedDate === sqlDate and Object.values(preset.availabilities[sqlDate]).length === 0" class="w-100 mt-2">
+                                <div class="alert alert-warning" role="alert">
+                                    No slot available for this day
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="() => this.props.close()">Continue</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

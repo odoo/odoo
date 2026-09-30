@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="stock.StockListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <ActionHelper position="replace">
+            <t t-if="showNoContentHelper">
+                <StockActionHelper noContentHelp="props.noContentHelp"/>
+            </t>
+        </ActionHelper>
+    </t>
+
+    <t t-name="stock.StockActionHelper">
+        <div class="o_view_nocontent">
+            <div t-on-click="handler" class="o_nocontent_help">
+                <t t-out="props.noContentHelp"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_production_subcontracting_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.subcontracting.form.view</field>
+        <field name="model">mrp.production</field>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view" />
+        <field name="arch" type="xml" >
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">subcontracting_production_form</attribute>
+            </xpath>
+            <xpath expr="//header" position="replace">
+                <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="replace"/>
+            <xpath expr="//div[hasclass('oe_title')]" position="replace"/>
+            <xpath expr="//div[@name='qty']" position="replace">
+                <div class="o_row g-0 d-flex" name="qty">
+                    <field name="product_qty" readonly="state == 'done'"/>
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='action_generate_bom']" position="replace"/>
+            <xpath expr="//field[@name='is_outdated_bom']" position="replace"/>
+            <xpath expr="//button[@name='action_update_bom']" position="replace"/>
+            <xpath expr="//div[@name='date_start']" position="replace"/>
+            <xpath expr="//label[@name='start_date']" position="replace"/>
+            <xpath expr="//label[@name='scheduled_date']" position="replace"/>
+            <xpath expr="//field[@name='date_deadline']" position="replace"/>
+            <xpath expr="//field[@name='components_availability']" position="replace"/>
+            <xpath expr="//field[@name='user_id']" position="replace"/>
+            <xpath expr="//page[@name='operations']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='lot_producing_ids']" position="attributes">
+                <attribute name="invisible">product_tracking in ('none', False)</attribute>
+            </xpath>
+            <xpath expr="//page[@name='miscellaneous']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='move_byproduct_ids']" position="replace"/>
+            <xpath expr="//field[@name='forecast_availability']" position="replace"/>
+            <xpath expr="//field[@name='workorder_ids']" position="replace"/>
+
+            <xpath expr="//field[@name='move_finished_ids']" position="replace"/>
+            <xpath expr="//chatter" position="replace"/>
+        </field>
+    </record>
+
+    <record id="mrp_production_subcontracting_portal_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.subcontracting.portal.form.view</field>
+        <field name="model">mrp.production</field>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="inherit_id" ref="mrp_production_subcontracting_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='lot_producing_ids']" position="attributes">
+                <attribute name="domain">[('id', '=', False)]</attribute>
+                <attribute name="options">{'no_create_edit': True, 'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_raw_ids']" position="replace">
+                <field name="bom_product_ids" invisible="1"/>
+                <field name="move_line_raw_ids" force_save="1"
+                    context="{'list_view_ref': 'mrp_subcontracting.mrp_subcontracting_portal_stock_move_line_tree_view', 'default_company_id': company_id, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'bom_product_ids': bom_product_ids}"
+                    />
+            </xpath>
+            <xpath expr="//field[@name='forecasted_issue']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="mrp_production_subcontracting_tree_view" model="ir.ui.view">
+        <field name="name">mrp.production.subcontracting.list</field>
+        <field name="model">mrp.production</field>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="replace"/>
+            <xpath expr="//list" position="attributes">
+                <attribute name="create">0</attribute>
+                <attribute name="js_class">subcontracting_production_list</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="incoming_picking"/>
+            </xpath>
+            <xpath expr="//field[@name='activity_exception_decoration']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="mrp_production_subcontracting_filter" model="ir.ui.view">
+        <field name="name">mrp.production.subcontracting.select</field>
+        <field name="model">mrp.production</field>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="inherit_id" ref="mrp.view_mrp_production_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="name" string="Incoming transfer" filter_domain="[('incoming_picking.name', 'ilike', self)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

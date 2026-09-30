@@ -1,0 +1,23 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import logging
+from pathlib import Path
+
+from odoo.modules import Manifest
+from . import lint_case
+import re
+_logger = logging.getLogger(__name__)
+
+import_orm_re = re.compile(r'^(from|import)\s+odoo\.orm', flags=re.MULTILINE)
+
+
+class TestDunderinit(lint_case.LintCase):
+
+    def test_addons_orm_import(self):
+        """ Test that odoo.orm is not imported in Odoo modules"""
+
+        for manifest in Manifest.all_addon_manifests():
+            module_path = Path(manifest.path)
+            for path in module_path.rglob("**/*.py"):
+                if import_orm_re.search(path.read_text()):
+                    self.fail(f"Do not import directly from odoo.orm, use odoo.(api,fields,models): {path}")

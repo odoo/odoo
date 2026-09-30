@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.DocModel">
+    <div t-if="!state.error" class="o-doc-model position-relative d-flex flex-nowrap flex-fill flex-column p-3">
+        <h2 class="w-100 mb-2 mt-2" t-out="this.state.model?.name ?? ''"></h2>
+        <DocTable data="state.modelData"/>
+
+        <h3 class="mt-3 mb-2" id="fields">Fields</h3>
+        <DocLoadingIndicator
+            isLoaded="this.state.model and this.state.model.fields != null and this.state.fields.data"
+            class="'o-fade-in'"
+        >
+            <DocTable data="this.state.fields.data" activeIndex="this.state.fields.activeIndex"/>
+        </DocLoadingIndicator>
+
+        <h3 class="mt-3 mb-2" id="methods">Methods</h3>
+        <DocLoadingIndicator
+            isLoaded="this.state.methods and this.state.methods.length > 0"
+            class="'o-fade-in position-relative'"
+        >
+            <DocMethod
+                t-foreach="state.methods"
+                t-as="method"
+                t-key="method.model + '/' + method.name"
+                t-if="isModuleActive(method.module)"
+                method="method"
+                class="modelStore.activeMethod === method.name ? 'o-doc-active' : ''"
+            />
+        </DocLoadingIndicator>
+        <div style="min-height: 30vh"/>
+    </div>
+
+    <aside t-if="!ui.isSmall and !state.error" class="o-doc-model-aside overflow-auto position-sticky d-block flex-fill bg-default pt-2 pb-2 ps-3 pe-3 border-start">
+        <div
+            class="d-flex flex-nowrap w-100 cursor-pointer text-capitalize align-items-center"
+            t-on-click="() => this.state.showModulesFilter = !this.state.showModulesFilter"
+            role="button"
+        >
+            <div class="icon-btn ps-1" role="button" t-att-class="{ o_collapsed: !state.showModulesFilter}">
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </div>
+            <h3 class="ms-2">Modules</h3>
+        </div>
+        <t t-if="this.state.showModulesFilter">
+            <span>
+                <a class="me-1" href="#" t-on-click="() => this.toggleAllModules(true)">
+                    Select all
+                </a>
+                <a href="#" t-on-click="() => this.toggleAllModules(false)">
+                    Deselect all
+                </a>
+            </span>
+            <div
+                t-foreach="state.modules"
+                t-as="module"
+                t-key="module"
+                class="d-flex flex-nowrap align-items-center mb-2 cursor-pointer btn o-doc-module-checks"
+                t-on-click="() => this.setActiveModules([module], !this.state.activeModules[module])"
+            >
+                <input class="me-1" type="checkbox" t-att-id="module" t-att-checked="state.activeModules[module]"/>
+                <label class="text-truncate" t-att-for="module" t-out="module" t-on-click.prevent=""></label>
+            </div>
+        </t>
+
+        <h3 class="mt-2">On This Page</h3>
+        <a
+            t-foreach="state.methods"
+            t-as="method"
+            t-key="method.model + '/' + method.name"
+            t-out="method.name"
+            t-if="isModuleActive(method.module)"
+            t-att-href="'#' + method.name"
+            class="d-block w-100 text-truncate"
+        >
+        </a>
+    </aside>
+
+    <div
+        t-if="state.error and !modelStore.activeModel"
+        class="d-flex flex-nowrap align-items-center justify-content-center w-100 h-100"
+    >
+        <DocErrorDialog
+            name="modelStore.error.name"
+            status="modelStore.error.status"
+            traceback="modelStore.error.traceback"
+        />
+    </div>
+</t>
+
+</templates>

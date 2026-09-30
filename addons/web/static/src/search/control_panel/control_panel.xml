@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ControlPanel">
+        <div class="o_control_panel d-flex flex-column gap-3 px-3 pt-2 pb-3" t-ref="root" data-command-category="actions">
+            <Transition t-if="!env.isSmall" visible="state.embeddedInfos.showEmbedded" name="'o-fade'" t-slot-scope="transition" leaveDuration="500">
+                <div class="o_embedded_actions d-flex flex-wrap w-100 align-items-center justify-content-center gap-2" t-att-class="transition.className">
+                    <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
+                        <t t-if="_isEmbeddedActionVisible(action)">
+                            <button class="btn btn-secondary o_draggable"
+                                    t-att-class="{ 'active': state.embeddedInfos.currentEmbeddedAction?.id === action.id}"
+                                    t-on-click="() => this.onEmbeddedActionClick(action)"
+                                    t-att-data-id="action.id"
+                            >
+                                <span t-out="action.name"/>
+                            </button>
+                        </t>
+                    </t>
+                    <t t-call="web.embeddedActionsDropdown" />
+                </div>
+            </Transition>
+            <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-2 gap-lg-3 flex-grow-1">
+                <div class="o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 h-lg-100">
+                    <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none" t-on-keydown="onMainButtonsKeydown">
+                        <t t-slot="control-panel-create-button"/>
+                        <t t-slot="layout-buttons"/>
+                        <t t-slot="control-panel-always-buttons"/>
+                        <Dropdown t-if="env.isSmall" menuClass="'o-control-panel-adaptive-dropdown'" onOpened.bind="dropdownifyButtons">
+                            <button class="btn btn-secondary o-control-panel-adaptive-dropdown" title="More">
+                                <i class="oi oi-fw oi-ellipsis-v" />
+                            </button>
+                            <t t-set-slot="content">
+                                <t t-slot="control-panel-create-button"/>
+                                <t t-slot="layout-buttons"/>
+                                <t t-slot="control-panel-always-buttons"/>
+                            </t>
+                        </Dropdown>
+                    </div>
+                    <t t-if="env.config.noBreadcrumbs">
+                        <section class="o_control_panel_breadcrumbs_actions d-contents d-print-none">
+                            <t t-slot="control-panel-additional-actions"/>
+                            <t t-slot="control-panel-status-indicator" />
+                        </section>
+                    </t>
+                    <t t-elif="env.isSmall">
+                        <!--
+                            Here be dragons...
+                            REFACTORME: this `t-portal` introduces an implicit
+                            dependency between the ControlPanel and the NavBar,
+                            which the impact is only mitigated by the fallback
+                            below. This is a call to refactor the breadcrumbs
+                            management to allow the proper instanciation of the
+                            Breadcrumbs component in the NavBar.
+                        -->
+                        <div class="o_fallback_breadcrumbs d-contents"/>
+                        <Breadcrumbs breadcrumbs="breadcrumbs" t-portal="'.o_navbar_breadcrumbs, .o_fallback_breadcrumbs'"/>
+                        <section class="o_control_panel_breadcrumbs_actions d-contents">
+                            <t t-slot="control-panel-additional-actions"/>
+                            <t t-slot="control-panel-status-indicator" />
+                        </section>
+                    </t>
+                    <t t-else="">
+                        <Breadcrumbs breadcrumbs="breadcrumbs">
+                            <t t-set-slot="breadcrumb-status-indicator">
+                                <t t-slot="control-panel-status-indicator" />
+                            </t>
+                            <t t-set-slot="breadcrumb-additional-actions">
+                                <t t-slot="control-panel-additional-actions"/>
+                            </t>
+                        </Breadcrumbs>
+                    </t>
+                    <div t-if="!env.isSmall" class="me-auto"/> <!-- Spacer -->
+                </div>
+
+                <div class="o_control_panel_actions d-empty-none d-flex align-items-center justify-content-start justify-content-lg-around order-2 order-lg-1 w-100 mw-100 w-lg-auto">
+                    <t t-if="display.layoutActions" t-slot="layout-actions"/>
+                    <t t-slot="control-panel-selection-actions"/>
+                </div>
+
+                <div class="o_control_panel_navigation d-flex flex-wrap flex-md-nowrap justify-content-end gap-1 gap-xl-3 order-1 order-lg-2 flex-grow-1">
+                    <t t-if="state.embeddedInfos.embeddedActions?.length and env.isSmall">
+                        <t t-call="web.embeddedActionsDropdown" />
+                    </t>
+                    <div t-if="pagerProps and pagerProps.total > 0" class="o_cp_pager text-nowrap " role="search">
+                        <Pager t-props="pagerProps"/>
+                    </div>
+                    <button t-if="state.embeddedInfos.embeddedActions?.length and !env.isSmall" name="embedded_actions" class="btn btn-secondary"
+                            t-att-class="{active: state.embeddedInfos.showEmbedded}"
+                            t-on-click="onClickShowEmbedded"
+                            title="View related documents">
+                        <i class="fa fa-sliders" />
+                    </button>
+                    <t t-if="env.config.viewSwitcherEntries?.length > 1">
+                        <div t-if="env.isSmall" class="o_cp_switch_buttons btn-group d-print-none">
+                            <Dropdown menuClass="{o_cp_switch_buttons: true, o_custom_bottom_sheet: true }">
+                                <button class="btn btn-secondary">
+                                    <t t-set="activeView" t-value="env.config.viewSwitcherEntries.find((view) => view.active)"/>
+                                    <i class="oi-fw" t-att-class="activeView.icon"/>
+                                </button>
+                                <t t-set-slot="content">
+                                    <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
+                                        <DropdownItem onSelected="() => this.switchView(view.type)" class="view.active ? 'selected' : ''">
+                                            <i class="oi-fw" t-att-class="view.icon"/>
+                                            <span class="ms-1" t-out="view.name"/>
+                                        </DropdownItem>
+                                    </t>
+                                </t>
+                            </Dropdown>
+                        </div>
+                        <nav t-else="" class="o_cp_switch_buttons d-print-none d-inline-flex btn-group">
+                            <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
+                                <button class="btn btn-secondary o_switch_view "
+                                    t-attf-class="o_{{view.type}} {{view.active ? 'active' : ''}}"
+                                    t-att-data-tooltip="view.name"
+                                    t-custom-click="(ev, isMiddleClick) => this.switchView(view.type, isMiddleClick)"
+                                    t-att-aria-label="view.name + ' View'"
+                                >
+                                    <i class="oi-fw" t-att-class="view.icon" />
+                                </button>
+                            </t>
+                        </nav>
+                    </t>
+                    <t t-slot="control-panel-navigation-additional"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.embeddedActionsDropdown">
+        <Dropdown menuClass="'o_embedded_actions_dropdown_menu'">
+            <button name="openEmbeddedActions" class="btn btn-secondary">
+                <i class="fa fa-fw fa-sliders"/>
+            </button>
+            <t t-set-slot="content">
+                <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
+                    <DropdownItem
+                        class="this.getDropdownClass(action)"
+                        onSelected="() => this.env.isSmall ? this.onEmbeddedActionClick(action) : this._setVisibility(action.id)"
+                        closingMode="'none'"
+                    >
+                        <div class="d-flex p-0 pe-1 align-items-center justify-content-between">
+                            <span t-out="action.name"/>
+                            <i t-if="action.is_deletable" class="o_icon_right btn btn-link text-danger p-0 position-absolute end-0 fa fa-trash-o" title="Delete item" t-on-click.stop="() => this.openConfirmationDialog(action)" />
+                        </div>
+                    </DropdownItem>
+                </t>
+                <div role="separator" class="dropdown-divider"/>
+                <AccordionItem class="'o_save_current_view'" description.translate="Save View">
+                    <div class="px-2 py-2">
+                        <input type="text"
+                            t-ref="newActionNameRef"
+                            class="o_input mb-2"
+                            t-model.trim="state.embeddedInfos.newActionName"
+                        />
+                        <CheckBox value="state.embeddedInfos.newActionIsShared" onChange.bind="_onShareCheckboxChange">
+                            <span data-tooltip="Make this embedded action available to other users">Shared</span>
+                        </CheckBox>
+                    </div>
+                    <div class="px-3 py-2">
+                        <button class="o_save_favorite btn btn-primary w-100" t-on-click="_saveNewAction">
+                            Save
+                        </button>
+                    </div>
+                </AccordionItem>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

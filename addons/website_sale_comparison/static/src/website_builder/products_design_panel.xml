@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t
+    t-name="website_sale_comparison.ProductsDesignPanel"
+    t-inherit="website_sale.ProductsDesignPanel"
+    t-inherit-mode="extension"
+>
+    <BuilderButton id="'wsale_products_opt_add_to_cart'" position="after">
+        <BuilderButton
+            t-if="props.recordName === 'shop_opt_products_design_classes'"
+            title.translate="Compare"
+            icon="'fa-exchange'"
+            classAction="'o_wsale_products_opt_has_comparison'"
+        />
+        <span/><!-- Spacer -->
+    </BuilderButton>
+</t>
+
+</templates>

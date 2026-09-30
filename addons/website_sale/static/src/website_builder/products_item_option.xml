@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale.ProductsItemOptionPlugin">
+        <div t-attf-class="o_wsale_soptions_menu_sizes {{domState.displaySizeOption ? '' : 'd-none'}}">
+            <BuilderRow label.translate="Size">
+                <BuilderButtonGroup action="'setItemSize'">
+                    <table t-ref="table" t-on-mouseenter="_onTableMouseEnter" t-on-mouseleave="_onTableMouseLeave">
+                        <t t-foreach="[0, 1, 2, 3]" t-as="i" t-key="i">
+                            <tr>
+                                <t t-foreach="[...Array(this.maxWidth).keys()]" t-as="j" t-key="j">
+                                    <td t-on-mouseover="()=>this._onTableCellMouseOver(i, j)" t-on-click="()=>this._onTableCellMouseClick(i, j)">
+                                        <BuilderButton preview="false" actionValue="[i, j]" className="'border-0'" />
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+                    </table>
+                </BuilderButtonGroup>
+            </BuilderRow>
+        </div>
+        <BuilderRow label.translate="Re-order" t-if="this.displayReOrder">
+            <BuilderButtonGroup action="'changeSequence'">
+                <BuilderButton actionValue="'top'" title.translate="Push to top" className="'fa fa-fw fa-angle-double-left'" />
+                <BuilderButton actionValue="'up'" title.translate="Push up" className="'fa fa-fw fa-angle-left ms-1'" />
+                <BuilderButton actionValue="'down'" title.translate="Push down" className="'fa fa-fw fa-angle-right mx-1'" />
+                <BuilderButton actionValue="'bottom'" title.translate="Push to bottom" className="'fa fa-fw fa-angle-double-right'" />
+            </BuilderButtonGroup>
+        </BuilderRow>
+    </t>
+</templates>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="view_memory">
+        &lt;!DOCTYPE html&gt;
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <title>Memory Usage Visualization</title>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <style>
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f9f9f9;
+                    height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                }
+                .chart-row {
+                    height: 30vh;
+                    min-height: 200px;
+                    padding: 10px;
+                    flex-shrink: 0;
+                }
+                .chart-container {
+                    position: relative;
+                    background: #fff;
+                    border: 1px solid #ddd;
+                    border-radius: 5px;
+                    padding: 10px;
+                    height: 100%;
+                    width: 100%;
+                }
+                .speedscope-row {
+                    flex: 1;
+                    min-height: 0;
+                    padding: 0 10px 10px;
+                }
+                .speedscope-row iframe {
+                    width: 100%;
+                    height: 100%;
+                    border: 1px solid #ddd;
+                    border-radius: 5px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="chart-row">
+                <div class="chart-container">
+                    <canvas id="memoryChart"></canvas>
+                </div>
+            </div>
+            <div class="speedscope-row">
+                <iframe id="speedscopeFrame" sandbox="allow-scripts allow-same-origin"></iframe>
+            </div>
+
+            <script>
+                // --- DATA FROM SERVER ---
+                const memoryData = JSON.parse(atob('<t t-esc="memory_data"/>'));
+                const fullSpeedscopeBase64 = '<t t-esc="speedscope_base64"/>';
+                const cdn = '<t t-esc="cdn"/>';
+                const points = memoryData.points;
+
+                // --- UTILITY ---
+                function formatBytes(bytes) {
+                    if (bytes === 0) return '0 B';
+                    const k = 1024;
+                    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+                    const i = Math.floor(Math.log(Math.abs(bytes)) / Math.log(k));
+                    const sign = bytes &lt; 0 ? '-' : '';
+                    return sign + (Math.abs(bytes) / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i];
+                }
+
+                function formatTimestamp(ts) {
+                    return new Date(ts * 1000).toLocaleTimeString();
+                }
+
+                // --- SPEEDSCOPE IFRAME ---
+                let currentBlobUrl = null;
+
+                function loadSpeedscopeInIframe(base64Data) {
+                    if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+
+                    const html = '\x3c!DOCTYPE html\x3e' +
+                        '\x3chtml\x3e\x3chead\x3e' +
+                        '\x3cscript\x3ewindow.location.hash="#localProfilePath=1";\x3c/script\x3e' +
+                        '\x3clink href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet"/\x3e' +
+                        '\x3clink rel="stylesheet" href="' + cdn + 'reset.8c46b7a1.css"/\x3e' +
+                        '\x3c/head\x3e\x3cbody\x3e' +
+                        '\x3cscript src="' + cdn + 'speedscope.026f36b0.js"\x3e\x3c/script\x3e' +
+                        '\x3cscript\x3e' +
+                        'document.addEventListener("DOMContentLoaded", function() {' +
+                        '  speedscope.loadFileFromBase64("Profile", "' + base64Data + '");' +
+                        '});' +
+                        '\x3c/script\x3e' +
+                        '\x3c/body\x3e\x3c/html\x3e';
+
+                    const blob = new Blob([html], {type: 'text/html'});
+                    currentBlobUrl = URL.createObjectURL(blob);
+                    document.getElementById('speedscopeFrame').src = currentBlobUrl;
+                }
+
+                // --- CHART (hover-only, no click interaction) ---
+                const labels = points.map(p => formatTimestamp(p.timestamp));
+                const memValues = points.map(p => p.memory);
+
+                new Chart(document.getElementById('memoryChart'), {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'RSS Memory (baselined)',
+                            data: memValues,
+                            fill: true,
+                            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            tension: 0.1,
+                            pointRadius: 2,
+                            pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'RSS Memory Over Time' },
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx => 'Δ ' + formatBytes(ctx.raw),
+                                    afterLabel: ctx => 'Absolute: ' + formatBytes(points[ctx.dataIndex].abs_memory),
+                                }
+                            },
+                            legend: { display: false },
+                        },
+                        scales: {
+                            y: {
+                                title: { display: true, text: 'Memory (Δ from baseline)' },
+                                ticks: { callback: v => formatBytes(v) },
+                            },
+                            x: {
+                                title: { display: true, text: 'Time' },
+                                ticks: { maxTicksLimit: 20 },
+                            }
+                        }
+                    }
+                });
+
+                // Load full memory speedscope
+                loadSpeedscopeInIframe(fullSpeedscopeBase64);
+            </script>
+        </body>
+        </html>
+    </template>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_template_test_attachment" model="ir.attachment">
+        <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
+        <field name="name">YourCompany2022.doc</field>
+    </record>
+
+    <record id="mail_template_test" model="mail.template">
+        <field name="name">Mail: Test Mail Template</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="email_from">"{{ object.company_id.name }}" &lt;{{ (object.company_id.email or user.email) }}&gt;</field>
+        <field name="email_to">{{ object.email_formatted }}</field>
+        <field name="use_default_to" eval="False"/>
+        <field name="body_html" type="html">
+            <div>Hello Odoo</div>
+        </field>
+        <field name="lang">{{ object.lang }}</field>
+        <field name="attachment_ids" eval="[(6, 0, [ref('mail_template_test_attachment')])]"/>
+    </record>
+</odoo>

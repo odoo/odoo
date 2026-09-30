@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    <!-- Let's connect! -->
+    <record model="survey.survey" id="lead_qualification_survey">
+        <field name="survey_type">survey</field>
+        <field name="title">Let's connect!</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="access_mode">public</field>
+        <field name="is_attempts_limited" eval="True"/>
+        <field name="users_can_go_back" eval="False" />
+        <field name="description" type="html">
+            <p>Welcome, <br/><br/>
+                You're receiving this survey because you're likely to become one of our partners.<br/>
+                Once submitted, one of our managers will follow up on the integration process based on your answers.</p>
+        </field>
+        <field name="description_done" type="html">
+            <p>Thanks a lot for your participation!</p>
+        </field>
+        <field name="lang_ids" eval="False"/>
+    </record>
+    <record model="survey.question" id="lead_qualification_question_0">
+        <field name="title">About you</field>
+        <field name="survey_id" ref="lead_qualification_survey"/>
+        <field name="is_page" eval="True"/>
+        <field name="question_type" eval="False"/>
+        <field name="sequence">0</field>
+        <field name="description" type="html"><p> </p></field>
+    </record>
+
+    <record model="survey.question" id="lead_qualification_question_1">
+        <field name="title">Before this survey, were you aware of our company?</field>
+        <field name="survey_id" ref="lead_qualification_survey"/>
+        <field name="question_type" eval="False"/>
+        <field name="sequence">1</field>
+        <field name="question_type">simple_choice</field>
+        <field name="constr_mandatory" eval="True"/>
+    </record>
+        <record id="lead_qualification_question_1_question_answer_1" model="survey.question.answer">
+            <field name="question_id" ref="lead_qualification_question_1"/>
+            <field name="sequence">1</field>
+            <field name="value">Yes</field>
+        </record>
+        <record id="lead_qualification_question_1_question_answer_2" model="survey.question.answer">
+            <field name="question_id" ref="lead_qualification_question_1"/>
+            <field name="sequence">2</field>
+            <field name="value">No</field>
+        </record>
+
+    <record model="survey.question" id="lead_qualification_question_2">
+        <field name="survey_id" ref="lead_qualification_survey"/>
+        <field name="sequence">2</field>
+        <field name="title">What's your name?</field>
+        <field name="question_type">char_box</field>
+        <field name="constr_mandatory" eval="True"/>
+        <field name="save_as_nickname" eval="True"/>
+    </record>
+
+    <record model="survey.question" id="lead_qualification_question_3">
+        <field name="survey_id" ref="lead_qualification_survey"/>
+        <field name="sequence">3</field>
+        <field name="title">Your email:</field>
+        <field name="question_type">char_box</field>
+        <field name="constr_mandatory" eval="True"/>
+        <field name="validation_email">True</field>
+        <field name="save_as_email">True</field>
+    </record>
+
+    <record model="survey.question" id="lead_qualification_question_4">
+        <field name="survey_id" ref="lead_qualification_survey"/>
+        <field name="sequence">4</field>
+        <field name="title">What's your job position?</field>
+        <field name="question_type">char_box</field>
+        <field name="constr_mandatory" eval="True"/>
+    </record>
+
+    <record model="survey.question" id="lead_qualification_question_5">
+        <field name="title">About your company</field>
+        <field name="survey_id" ref="lead_qualification_survey"/>
+        <field name="is_page" eval="True"/>
+        <field name="question_type" eval="False"/>
+        <field name="sequence">5</field>
+        <field name="description" type="html"><p> </p></field>
+    </record>
+
+    <record model="survey.question" id="lead_qualification_question_6">
+        <field name="survey_id" ref="lead_qualification_survey"/>
+        <field name="sequence">6</field>
+        <field name="title">How is your company named?</field>
+        <field name="question_type">char_box</field>
+        <field name="constr_mandatory" eval="True"/>
+    </record>
+
+    <record model="survey.question" id="lead_qualification_question_7">
+        <field name="survey_id" ref="lead_qualification_survey"/>
+        <field name="sequence">7</field>
+        <field name="title">What sector do you primarily operate within?</field>
+        <field name="question_type">multiple_choice</field>
+        <field name="constr_mandatory" eval="True"/>
+        <field name="comments_allowed" eval="True"/>
+        <field name="comments_message">Other</field>
+        <field name="comment_count_as_answer" eval="True"/>
+    </record>
+        <record id="lead_qualification_question_7_question_answer_1" model="survey.question.answer">
+            <field name="question_id" ref="lead_qualification_question_7"/>
+            <field name="sequence">1</field>
+            <field name="value">Agriculture</field>
+        </record>
+        <record id="lead_qualification_question_7_question_answer_2" model="survey.question.answer">
+            <field name="question_id" ref="lead_qualification_question_7"/>
+            <field name="sequence">2</field>
+            <field name="value">Manufacturing/Industry</field>
+            <field name="generate_lead">True</field>
+        </record>
+        <record id="lead_qualification_question_7_question_answer_3" model="survey.question.answer">
+            <field name="question_id" ref="lead_qualification_question_7"/>
+            <field name="sequence">3</field>
+            <field name="value">Services</field>
+        </record>
+
+    <record model="survey.question" id="lead_qualification_question_8">
+        <field name="survey_id" ref="lead_qualification_survey"/>
+        <field name="sequence">8</field>
+        <field name="title">What's your total headcount?</field>
+        <field name="question_type">simple_choice</field>
+        <field name="constr_mandatory" eval="True"/>
+    </record>
+        <record id="lead_qualification_question_8_question_answer_1" model="survey.question.answer">
+            <field name="question_id" ref="lead_qualification_question_8"/>
+            <field name="sequence">1</field>
+            <field name="value">1 - 9</field>
+        </record>
+        <record id="lead_qualification_question_8_question_answer_2" model="survey.question.answer">
+            <field name="question_id" ref="lead_qualification_question_8"/>
+            <field name="sequence">2</field>
+            <field name="value">10 - 99</field>
+        </record>
+        <record id="lead_qualification_question_8_question_answer_3" model="survey.question.answer">
+            <field name="question_id" ref="lead_qualification_question_8"/>
+            <field name="sequence">3</field>
+            <field name="value">100 - 499</field>
+            <field name="generate_lead">True</field>
+        </record>
+        <record id="lead_qualification_question_8_question_answer_4" model="survey.question.answer">
+            <field name="question_id" ref="lead_qualification_question_8"/>
+            <field name="sequence">4</field>
+            <field name="value">500+</field>
+        </record>
+
+    <record model="survey.question" id="lead_qualification_question_9">
+        <field name="title">Working together</field>
+        <field name="survey_id" ref="lead_qualification_survey"/>
+        <field name="is_page" eval="True"/>
+        <field name="question_type" eval="False"/>
+        <field name="sequence">9</field>
+        <field name="description" type="html"><p> </p></field>
+    </record>
+
+    <record model="survey.question" id="lead_qualification_question_10">
+        <field name="survey_id" ref="lead_qualification_survey"/>
+        <field name="sequence">10</field>
+        <field name="title">Have you ever worked with any of the following?</field>
+        <field name="question_type">matrix</field>
+        <field name="matrix_subtype">simple</field>
+    </record>
+        <record model="survey.question.answer" id="lead_qualification_question_answer_col_1">
+            <field name="question_id" ref="lead_qualification_question_10"/>
+            <field name="sequence">1</field>
+            <field name="value">Yes</field>
+            <field name="generate_lead">True</field>
+        </record>
+        <record model="survey.question.answer" id="lead_qualification_question_answer_row_1">
+            <field name="matrix_question_id" ref="lead_qualification_question_10"/>
+            <field name="sequence">1</field>
+            <field name="value">Our company in the past?</field>
+        </record>
+        <record model="survey.question.answer" id="lead_qualification_question_answer_row_2">
+            <field name="matrix_question_id" ref="lead_qualification_question_10"/>
+            <field name="sequence">2</field>
+            <field name="value">An IT-oriented company?</field>
+        </record>
+        <record model="survey.question.answer" id="lead_qualification_question_answer_row_3">
+            <field name="matrix_question_id" ref="lead_qualification_question_10"/>
+            <field name="sequence">3</field>
+            <field name="value">A client-relationship company?</field>
+        </record>
+
+    <record model="survey.question" id="lead_qualification_question_11">
+        <field name="survey_id" ref="lead_qualification_survey"/>
+        <field name="sequence">11</field>
+        <field name="title">Anything to add?</field>
+        <field name="question_type">text_box</field>
+    </record>
+    </data>
+</odoo>

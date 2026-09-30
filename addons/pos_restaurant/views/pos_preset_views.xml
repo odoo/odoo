@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_pos_preset_form_inherit_pos_restaurant" model="ir.ui.view">
+        <field name="name">pos.preset.form</field>
+        <field name="model">pos.preset</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_preset_form"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='resource']" position="after">
+                <page string="Options" name="options">
+                    <group>
+                        <group name="restaurant" string="Restaurant">
+                            <field name="use_guest" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

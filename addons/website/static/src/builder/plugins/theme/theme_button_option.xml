@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ThemeButtonOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Primary Style">
+            <BuilderSelect action="'customizeButtonStyle'" actionParam="'primary'">
+                <BuilderSelectItem actionValue="'fill'">Fill</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'outline'" id="'btn_primary_outline_opt'">Outline</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'flat'">Flat</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow t-if="isActiveItem('btn_primary_outline_opt')"
+            level="1" label.translate="Border Width"
+            action="'customizeWebsiteVariable'"
+        >
+            <BuilderNumberInput actionParam="'btn-primary-outline-border-width'" unit="'px'" saveUnit="'rem'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Secondary Style">
+            <BuilderSelect action="'customizeButtonStyle'" actionParam="'secondary'">
+                <BuilderSelectItem actionValue="'fill'">Fill</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'outline'" id="'btn_secondary_outline_opt'">Outline</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'flat'">Flat</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow t-if="isActiveItem('btn_secondary_outline_opt')"
+            level="1" label.translate="Border Width"
+            action="'customizeWebsiteVariable'"
+        >
+            <BuilderNumberInput actionParam="'btn-secondary-outline-border-width'" unit="'px'" saveUnit="'rem'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Font Family">
+            <ThemeFontFamilyOption
+                cssVariable="'buttons-font'"
+                buttonIcon="'fa-trash'"
+                buttonTitle.translate="Reset to Default Font Family"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Padding" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput title.translate="Y" actionParam="'btn-padding-y'" unit="'px'" saveUnit="'rem'"/>
+            <BuilderNumberInput title.translate="X" actionParam="'btn-padding-x'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput title.translate="Y" actionParam="'btn-padding-y-sm'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderNumberInput title.translate="X" actionParam="'btn-padding-x-sm'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderNumberInput title.translate="Y" actionParam="'btn-padding-y-lg'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderNumberInput title.translate="X" actionParam="'btn-padding-x-lg'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput actionParam="'btn-font-size'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput actionParam="'btn-font-size-sm'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderNumberInput actionParam="'btn-font-size-lg'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Round Corners" action="'customizeWebsiteVariable'">
+            <BuilderNumberInput actionParam="'btn-border-radius'" unit="'px'" saveUnit="'rem'"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderNumberInput actionParam="'btn-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderNumberInput actionParam="'btn-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="On Click Effect">
+            <BuilderSelect action="'websiteConfig'">
+                <!-- TODO implicit removal of assets -->
+                <BuilderSelectItem actionParam="{vars: {'btn-ripple': 'false'}, assets: []}">None</BuilderSelectItem>
+                <BuilderSelectItem
+                    actionParam="{vars: {'btn-ripple': 'true'}, assets: ['website.ripple_effect_scss', 'website.ripple_effect_js']}"
+                >Ripple</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>

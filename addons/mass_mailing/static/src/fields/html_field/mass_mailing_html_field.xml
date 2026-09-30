@@ -1,0 +1,20 @@
+<templates>
+    <t t-name="mass_mailing.HtmlField">
+        <t t-if="state.showThemeSelector">
+            <ThemeSelector config="this.getThemeSelectorConfig()"/>
+        </t>
+        <t t-if="state.showCodeView">
+            <div class="d-flex">
+                <textarea name="codeView" t-ref="codeView" class="o_codeview" t-att-value="this.value"
+                    t-on-input="onTextareaInput"/>
+                <div t-if="state.showCodeView" t-ref="codeViewButtonRef"
+                    class="btn-group o_mass_mailing_code_view">
+                    <button class="o_codeview_btn btn btn-primary" t-on-click="toggleCodeView" accesskey="d">
+                        <i class="fa fa-code" />
+                    </button>
+                </div>
+            </div>
+        </t>
+        <MassMailingIframe t-key="state.key" t-props="this.getMassMailingIframeProps()"/>
+    </t>
+</templates>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- /shop/l10n_tw_invoicing_info route -->
+    <template id="l10n_tw_edi_invoicing_info">
+        <t t-call="website_sale.checkout_layout">
+            <t t-set="additional_title">ECpay information</t>
+            <t t-set="oe_structure">
+                <!-- This is the drag-and-drop area for website building blocs at the end of each
+                     checkout page. This is append at the of the page in `checkout_layout`. The
+                     templates created in the database to store blocs are hooked using XPath on the
+                     `oe_struture` element ID. Therefore, we can't use dynamic IDs (like with
+                     t-att-id) and each template needs to define a div element. -->
+                <div class="oe_structure" id="oe_structure_l10n_tw_edi_website_sale_extra_info_1"/>
+            </t>
+            <section>
+                <div t-attf-class="container o_l10n_tw_edi_invoicing_info">
+                    <h3>Invoicing Info</h3>
+                    <form
+                        t-attf-action="{{post_url}}"
+                        method="post"
+                        id="form_l10n_tw_invoicing_info"
+                        t-att-date-order-id="website_sale_order.id"
+                        t-att-data-access-token="website_sale_order.access_token"
+                    >
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <t t-if="errors" t-foreach="errors.values()" t-as="err">
+                            <h5 class="text-danger" t-esc="err" />
+                        </t>
+                        <div id="ecpay_invoice_method" class="mt-3">
+                            <div class="row">
+                                <div id="ecpay_invoice_donate" class="mt-3 col-md-7">
+                                    <label for="l10n_tw_edi_is_donate" class="form-check-label me-2">Donate</label>
+                                    <input type="checkbox" id="l10n_tw_edi_is_donate" name="l10n_tw_edi_is_donate" class="form-check-input" t-att-checked="default_vals['is_donate'] =='on'"/>
+                                </div>
+                            </div>
+                            <div id="ecpay_carrier_type_group" t-att-class="'d-none' if default_vals['is_donate'] == 'on' else ''">
+                                <div class="row">
+                                    <div id="carrier_type_selection" class="mt-3 col-md-7">
+                                        <label for="l10n_tw_edi_carrier_type" class="form-label">Storage Type</label>
+                                        <select class="form-select" id="l10n_tw_edi_carrier_type" name="l10n_tw_edi_carrier_type">
+                                            <t t-foreach="carrier_choices" t-as="choice">
+                                                <option t-attf-value="{{choice[0]}}"
+                                                        t-att-selected="choice[0] == default_vals.get('carrier_type')">
+                                                    <t t-esc="choice[1]"/>
+                                                </option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="ecpay_invoice_carrier_number" t-att-class="'d-none' if default_vals['carrier_type'] in ['0', '1'] else ''" class="row">
+                                    <div class="mt-3 col-md-7">
+                                        <label for="l10n_tw_edi_carrier_number" class="form-label">Storage Code</label>
+                                        <div class="d-flex">
+                                            <input
+                                                class="form-control"
+                                                id="l10n_tw_edi_carrier_number"
+                                                maxlength="20"
+                                                name="l10n_tw_edi_carrier_number"
+                                                type="text"
+                                                t-att-value="default_vals['carrier_number']"
+                                            />
+                                            <button type="button" id="validate_carrier_number" class="btn btn-primary ms-1 d-none">
+                                                Validate
+                                            </button>
+                                            <button type="button" id="reenter_carrier_number" class="btn btn-primary ms-1 d-none">
+                                                ReEnter
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="ecpay_invoice_carrier_number_2" t-att-class="'d-none' if default_vals['carrier_type'] in ['0', '1', '2', '3'] else ''" class="row">
+                                    <div class="mt-3 col-md-7">
+                                        <label for="l10n_tw_edi_carrier_number_2" class="form-label">Storage Code 2</label>
+                                        <div class="d-flex">
+                                            <input
+                                                class="form-control"
+                                                id="l10n_tw_edi_carrier_number_2"
+                                                maxlength="20"
+                                                name="l10n_tw_edi_carrier_number_2"
+                                                type="text"
+                                                t-att-value="default_vals['carrier_number_2']"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="ecpay_invoice_love_code" t-att-class="'d-none' if default_vals['is_donate'] != 'on' else ''" class="row">
+                                <div class="mt-3 col-md-7">
+                                    <label for="l10n_tw_edi_love_code" class="form-label">Donation Code</label>
+                                    <div class="d-flex">
+                                        <input
+                                            class="form-control"
+                                            id="l10n_tw_edi_love_code"
+                                            maxlength="7"
+                                            name="l10n_tw_edi_love_code"
+                                            type="text"
+                                            placeholder="Love code format is 3-7 digits"
+                                            t-att-value="default_vals.get('love_code')"
+                                        />
+                                        <button type="button" id="validate_love_code" class="btn btn-primary ms-1 d-none">
+                                            Validate
+                                        </button>
+                                        <button type="button" id="reenter_love_code" class="btn btn-primary ms-1 d-none">
+                                            ReEnter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </t>
+    </template>
+
+    <template id="address" inherit_id="website_sale.address_form_fields">
+        <div id="div_state" position="after">
+            <div class="row m-0 mb-3 p-0" id="l10n_tw_edi_require_paper_format"
+                t-if="(address_type == 'billing' or use_delivery_as_billing)
+                    and res_company.account_fiscal_country_id.code == 'TW'
+                    and not partner_sudo.commercial_partner_id.is_company
+                    and not partner_sudo.commercial_company_name">
+                <div class="col-xl-6">
+                    <label class="col-form-label" for="l10n_tw_edi_require_paper_format">Request a paper copy</label>
+                    <select name="l10n_tw_edi_require_paper_format" class="form-select">
+                        <option value="1" t-att-selected="l10n_tw_edi_require_paper_format">Yes</option>
+                        <option value="0" t-att-selected="not l10n_tw_edi_require_paper_format">No</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

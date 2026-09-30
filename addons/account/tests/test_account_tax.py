@@ -1,0 +1,471 @@
+# -*- coding: utf-8 -*-
+
+from odoo import Command
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests import tagged
+from odoo.exceptions import UserError, ValidationError
+
+
+@tagged('post_install', '-at_install')
+class TestAccountTax(AccountTestInvoicingCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company_data_2 = cls.setup_other_company()
+
+    @classmethod
+    def default_env_context(cls):
+        # OVERRIDE
+        return {}
+
+    def set_up_and_use_tax(self):
+
+        self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2023-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'invoice_line',
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
+                }),
+            ],
+        })
+
+        # Create two lines after creating the move so that those lines are not used in the move
+        self.company_data['default_tax_sale'].write({
+            'invoice_repartition_line_ids': [
+                Command.create({'repartition_type': 'tax', 'factor_percent': 0.0}),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({'repartition_type': 'tax', 'factor_percent': 0.0}),
+            ],
+        })
+
+        self.flush_tracking()
+        self.assertTrue(self.company_data['default_tax_sale'].is_used)
+
+    def flush_tracking(self):
+        """ Force the creation of tracking values. """
+        self.env.flush_all()
+        self.cr.flush()
+
+    def test_changing_tax_company(self):
+        ''' Ensure you can't change the company of an account.tax if there are some journal entries '''
+
+        # Avoid duplicate key value violates unique constraint "account_tax_name_company_uniq".
+        self.company_data['default_tax_sale'].name = 'test_changing_account_company'
+
+        self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2019-01-01',
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': 'invoice_line',
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                    'tax_ids': [(6, 0, self.company_data['default_tax_sale'].ids)],
+                }),
+            ],
+        })
+
+        with self.assertRaises(UserError):
+            self.company_data['default_tax_sale'].company_id = self.company_data_2['company']
+
+    def test_logging_of_tax_update_when_tax_is_used(self):
+        """ Modifications of a used tax should be logged. """
+
+        self.set_up_and_use_tax()
+
+        self.company_data['default_tax_sale'].write({
+            'name': self.company_data['default_tax_sale'].name + ' MODIFIED',
+            'amount': 21,
+            'amount_type': 'fixed',
+            'type_tax_use': 'purchase',
+            'price_include_override': 'tax_included',
+            'include_base_amount': True,
+            'is_base_affected': False,
+        })
+        self.flush_tracking()
+        self.assertEqual(len(self.company_data['default_tax_sale'].message_ids), 1,
+                         "Only 1 message should have been created when updating all the values.")
+        # There are 7 tracked values in account.tax and we update each of them, each on should be included in the message
+        self.assertEqual(len(self.company_data['default_tax_sale'].message_ids.tracking_value_ids), 7,
+                         "The number of updated value should be 7.")
+
+    def test_logging_of_repartition_lines_addition_when_tax_is_used(self):
+        """ Adding repartition lines in a used tax should be logged. """
+
+        self.set_up_and_use_tax()
+
+        self.company_data['default_tax_sale'].write({
+            'invoice_repartition_line_ids': [
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+        })
+        self.flush_tracking()
+
+        previews = self.company_data['default_tax_sale'].message_ids.mapped('preview')
+        self.assertIn(
+            "New Invoice repartition line 4: -100.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
+            previews
+        )
+        self.assertIn(
+            "New Refund repartition line 4: -100.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
+            previews
+        )
+
+    def test_logging_of_repartition_lines_update_when_tax_is_used(self):
+        """ Updating repartition lines in a used tax should be logged. """
+
+        self.set_up_and_use_tax()
+
+        last_invoice_rep_line = self.company_data['default_tax_sale'].invoice_repartition_line_ids\
+            .filtered(lambda tax_rep: not tax_rep.factor_percent)
+        last_refund_rep_line = self.company_data['default_tax_sale'].refund_repartition_line_ids\
+            .filtered(lambda tax_rep: not tax_rep.factor_percent)
+
+        self.company_data['default_tax_sale'].write({
+            "invoice_repartition_line_ids": [
+                Command.update(last_invoice_rep_line.id, {
+                    'factor_percent': -100,
+                    'tag_ids': [Command.create({'name': 'TaxTag12345'})]
+                }),
+            ],
+            "refund_repartition_line_ids": [
+                Command.update(last_refund_rep_line.id, {
+                    'factor_percent': -100,
+                    'account_id': self.company_data['default_account_tax_purchase'].id,
+                }),
+            ],
+        })
+        self.flush_tracking()
+
+        previews = self.company_data['default_tax_sale'].message_ids.mapped('preview')
+        self.assertIn("Invoice repartition line 3: 0.0 -100.0 (Factor Percent) None ['TaxTag12345'] (Tax Grids)", previews)
+        self.assertIn("Refund repartition line 3: 0.0 -100.0 (Factor Percent) None 131000 Tax Paid (Account) False True (Use in tax closing)", previews)
+
+    def test_logging_of_repartition_lines_reordering_when_tax_is_used(self):
+        """ Reordering repartition lines in a used tax should be logged. """
+
+        self.set_up_and_use_tax()
+
+        last_invoice_rep_line = self.company_data['default_tax_sale'].invoice_repartition_line_ids\
+            .filtered(lambda tax_rep: not tax_rep.factor_percent)
+        last_refund_rep_line = self.company_data['default_tax_sale'].refund_repartition_line_ids\
+            .filtered(lambda tax_rep: not tax_rep.factor_percent)
+
+        self.company_data['default_tax_sale'].write({
+            "invoice_repartition_line_ids": [
+                Command.update(last_invoice_rep_line.id, {'sequence': 0}),
+            ],
+            "refund_repartition_line_ids": [
+                Command.update(last_refund_rep_line.id, {'sequence': 0}),
+            ],
+        })
+        self.flush_tracking()
+
+        previews = self.company_data['default_tax_sale'].message_ids.mapped('preview')
+        self.assertIn("Invoice repartition line 1: 100.0 0.0 (Factor Percent)", previews)
+        self.assertIn("Invoice repartition line 3: 0.0 100.0 (Factor Percent) None 251000 Tax Received (Account) False True (Use in tax closing)", previews)
+
+    def test_logging_of_repartition_lines_removal_when_tax_is_used(self):
+        """ Deleting repartition lines in a used tax should be logged. """
+
+        self.set_up_and_use_tax()
+
+        last_invoice_rep_line = self.company_data['default_tax_sale'].invoice_repartition_line_ids.sorted(key=lambda r: r.sequence)[-1]
+        last_refund_rep_line = self.company_data['default_tax_sale'].refund_repartition_line_ids.sorted(key=lambda r: r.sequence)[-1]
+
+        self.company_data['default_tax_sale'].write({
+            "invoice_repartition_line_ids": [
+                Command.delete(last_invoice_rep_line.id),
+            ],
+            "refund_repartition_line_ids": [
+                Command.delete(last_refund_rep_line.id),
+            ],
+        })
+        self.flush_tracking()
+
+        previews = self.company_data['default_tax_sale'].message_ids.mapped('preview')
+        self.assertIn(
+            "Removed Invoice repartition line 3: 0.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
+            previews
+        )
+        self.assertIn(
+            "Removed Refund repartition line 3: 0.0 (Factor Percent) None (Account) None (Tax Grids) False (Use in tax closing)",
+            previews
+        )
+
+    def test_tax_is_used_when_in_transactions(self):
+        ''' Ensures that a tax is set to used when it is part of some transactions '''
+
+        # Account.move is one type of transaction
+        tax_invoice = self.env['account.tax'].create({
+            'name': 'test_is_used_invoice',
+            'amount': '100',
+        })
+
+        self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2023-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'invoice_line',
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax_invoice.ids)],
+                }),
+            ],
+        })
+        self.assertTrue(tax_invoice.is_used)
+
+        # Account.reconcile is another of transaction
+        tax_reconciliation = self.env['account.tax'].create({
+            'name': 'test_is_used_reconcilition',
+            'amount': '100',
+        })
+        self.env['account.reconcile.model'].create({
+            'name': "test_tax_is_used",
+            'line_ids': [Command.create({
+                'account_id': self.company_data['default_account_revenue'].id,
+                'tax_ids': [Command.set(tax_reconciliation.ids)],
+            })],
+        })
+        self.assertTrue(tax_reconciliation.is_used)
+
+    def test_tax_no_duplicate_in_repartition_line(self):
+        """ Test that whenever a tax generate a second tax line
+            the same tax is not applied to the tax line.
+        """
+
+        account_1 = self.company_data['default_account_tax_sale'].copy()
+        account_2 = self.company_data['default_account_tax_sale'].copy()
+        tax = self.env['account.tax'].create({
+            'name': "tax",
+            'amount': 15.0,
+            'include_base_amount': True,
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': account_1.id,
+                }),
+                Command.create({
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': account_2.id,
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': account_1.id,
+                }),
+                Command.create({
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                    'account_id': account_2.id,
+                }),
+            ],
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'invoice_line',
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax.ids)],
+                }),
+            ],
+        })
+
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 100.0,
+            'amount_tax': 0.0,
+            'amount_total': 100.0,
+        }])
+        self.assertRecordValues(invoice.line_ids, [
+            {'display_type': 'product',         'tax_ids': tax.ids,     'balance': -100.0,  'account_id': self.company_data['default_account_revenue'].id},
+            {'display_type': 'tax',             'tax_ids': [],          'balance': -15.0,   'account_id': account_1.id},
+            {'display_type': 'tax',             'tax_ids': [],          'balance': 15.0,    'account_id': account_2.id},
+            {'display_type': 'payment_term',    'tax_ids': [],          'balance': 100.0,   'account_id': self.company_data['default_account_receivable'].id},
+        ])
+
+    def test_cannot_delete_group_tax_in_use(self):
+        """ Test that a group of taxes (parent tax) cannot be deleted when it's used. """
+
+        sales_10_perc = self.env['account.tax'].create({
+            'name': '10% Sales tax',
+            'amount': 10.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        sales_5_perc = self.env['account.tax'].create({
+            'name': '5% Sales tax',
+            'amount': 5.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        # Group of taxes
+        sales_15_perc = self.env['account.tax'].create({
+            'name': '15% Sales tax',
+            'amount': 15.0,
+            'amount_type': 'group',
+            'type_tax_use': 'sale',
+            'children_tax_ids': [Command.set([sales_10_perc.id, sales_5_perc.id])],
+        })
+        self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2025-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'invoice_line',
+                    'quantity': 1.0,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(sales_15_perc.ids)],
+                }),
+            ],
+        })
+        self.assertTrue(sales_15_perc.is_used)
+        with self.assertRaisesRegex(ValidationError, "delete taxes that are currently in use"):
+            sales_15_perc.unlink()
+
+    def test_negative_factor_percent(self):
+        account_1 = self.company_data['default_account_tax_sale'].copy()
+        with self.assertRaisesRegex(ValidationError, r"Invoice and credit note distribution should have a total factor \(\+\) equals to 100\."):
+            self.env['account.tax'].create({
+                'name': "tax",
+                'amount': 15.0,
+                'include_base_amount': True,
+                'invoice_repartition_line_ids': [
+                    Command.create({
+                        'repartition_type': 'base',
+                    }),
+                    Command.create({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': account_1.id,
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    Command.create({
+                        'repartition_type': 'base',
+                    }),
+                    Command.create({
+                        'factor_percent': -100,
+                        'repartition_type': 'tax',
+                        'account_id': account_1.id,
+                    }),
+                ],
+            })
+
+    def test_name_search_self_replacing_taxes(self):
+        tax_1 = self.percent_tax(15.0, name='Name search tax 1')
+        tax_2 = self.percent_tax(15.0, name='Name search tax 2', original_tax_ids=tax_1)
+        result = self.env['account.tax'].with_context(
+            dynamic_fiscal_position_id=self.fiscal_pos_a.id,
+            hide_original_tax_ids=True,
+        ).name_search(name='Name search tax')
+        self.assertEqual(result, [(tax_2.id, tax_2.display_name)])
+
+        tax_1.original_tax_ids = [Command.set((tax_1 | tax_2).ids)]
+        result = self.env['account.tax'].with_context(
+            dynamic_fiscal_position_id=self.fiscal_pos_a.id,
+            hide_original_tax_ids=True,
+        ).name_search(name='Name search tax')
+        self.assertEqual(result, [(tax_1.id, tax_1.display_name)])
+
+    def test_distribute_delta_amount_smoothly_empty_target_factors(self):
+        """ Empty 'target_factors' must not crash, e.g. a reverse-charge tax
+        with no positive-factor repartition line. """
+        result = self.env['account.tax']._distribute_delta_amount_smoothly(
+            precision_digits=2,
+            delta_amount=0.03,
+            target_factors=[],
+        )
+        self.assertEqual(result, [])
+
+    def test_import_retrieve_tax_from_fixed_allowance_charge(self):
+        """ Test fuzzy matching of fixed taxes like Recupel and Bebat """
+        company = self.company_data['company']
+
+        tax_recupel = self.env['account.tax'].create({
+            'name': 'REC 0.12',
+            'amount_type': 'fixed',
+            'amount': 0.12,
+            'type_tax_use': 'purchase',
+            'company_id': company.id,
+        })
+        tax_bebat = self.env['account.tax'].create({
+            'name': 'Bebat 0.13',
+            'amount_type': 'fixed',
+            'amount': 0.13,
+            'type_tax_use': 'purchase',
+            'company_id': company.id,
+        })
+        random = self.env['account.tax'].create({
+            'name': 'random 0.50',
+            'amount_type': 'fixed',
+            'amount': 0.50,
+            'type_tax_use': 'purchase',
+            'company_id': company.id,
+        })
+
+        dummy_invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'company_id': company.id,
+        })
+
+        def get_search_method(amount, name, amount_type='fixed'):
+            tax_values = {
+                'amount_type': amount_type,
+                'type_tax_use': 'purchase',
+                'amount': amount,
+                'name': name,
+                'invoice_predictive': {'invoice': dummy_invoice},
+            }
+            plan = self.env['account.tax']._import_retrieve_tax_from_fixed_allowance_charge(tax_values)
+            return plan['criteria'][0]['search_method'] if plan else None
+
+        # multiple candidate taxes matching
+        search_method_recupel = get_search_method(0.125, 'REC 0.12 (Kopie)')
+        search_method_bebat = get_search_method(0.125, 'BEBAT')
+
+        self.assertEqual(search_method_recupel({}), tax_recupel)
+        self.assertEqual(search_method_bebat({}), tax_bebat)
+
+        # single candidate tax match, even if the name doesnt match
+        search_method_fallback = get_search_method(0.505, 'Unknown Eco Tax')
+        self.assertEqual(search_method_fallback({}), random)
+
+        # multiple candidate taxes matching, but name doesnt match
+        search_method_not_found = get_search_method(0.125, 'Unknown Eco Tax')
+        self.assertFalse(search_method_not_found({}))
+
+        # percentage tax, early exit
+        search_method_ignored = get_search_method(0.125, 'REC 0.12 (Kopie)', amount_type='percent')
+        self.assertIsNone(search_method_ignored)
+
+    def test_is_domestic_with_duplicate_tax(self):
+        """ Test that the is_domestic field is well computed when duplicating a tax """
+        tax = self.tax_sale_a
+        self.assertTrue(tax.company_id.domestic_fiscal_position_id in tax.fiscal_position_ids)
+        self.assertEqual(tax.is_domestic, True)
+        tax_copy = tax.copy({'name': 'new tax'})
+        self.assertEqual(tax_copy.is_domestic, True)

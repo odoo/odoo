@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ResourceEditorWarningOverlay">
+    <div t-if="state.visible" class="position-absolute top-0 start-0 bottom-0 end-0 d-flex align-items-center justify-content-center z-3 p-4 bg-light bg-opacity-75" role="alert">
+        <div class="border shadow-sm p-4 bg-light text-dark rounded-2 bg-opacity-100">
+            <div class="d-flex flex-row gap-4">
+                <i class="fa fa-warning mb-4 fs-1 text-danger"/>
+                <div>
+                    <h1 class="fs-2 text-dark mb-4">Your changes might be lost during future Odoo upgrade.</h1>
+                    <p>If you need to add analytics or marketing tags, inject code in your &lt;head&gt; or &lt;body&gt; instead.</p>
+                    <em>Note: To embed code in this specific page, use the "Embed Code" building block</em>
+                    <div class="d-flex justify-content-between mt-5">
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-primary" t-on-click="onInjectCode">Inject code in &lt;head&gt; or &lt;body&gt;</button>
+                            <button type="button" class="btn btn-secondary" t-on-click="onCloseEditor">Close editor</button>
+                        </div>
+                        <button type="button" class="btn btn-link" t-on-click="onHideWarning">Edit HTML anyway</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="button"
+            class="btn btn-link position-absolute bottom-0 end-0 m-4"
+            t-on-click="onStopAsking">
+            Don't show again
+        </button>
+    </div>
+</t>
+
+</templates>

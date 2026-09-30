@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="asset_view_form_inherit_website" model="ir.ui.view">
+        <field name="name">ir.asset.form.inherit.website</field>
+        <field name="model">ir.asset</field>
+        <field name="inherit_id" ref="base.asset_view_form"/>
+        <field name="arch" type="xml">
+            <field name="directive" position="after">
+                <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
+    <record id="asset_view_tree_inherit_website" model="ir.ui.view">
+        <field name="name">ir.asset.list.inherit.website</field>
+        <field name="model">ir.asset</field>
+        <field name="inherit_id" ref="base.asset_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="bundle" position="after">
+                <field name="website_id" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
+</odoo>

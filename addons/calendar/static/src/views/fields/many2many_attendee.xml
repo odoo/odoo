@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="calendar.Many2ManyAttendee" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_field_many2many_selection')]" position="attributes">
+            <attribute name="style" add="flex-basis: 100%;" separator=" "/>
+        </xpath>
+        <xpath expr="//Many2XAutocomplete" position="attributes">
+            <attribute name="placeholder">props.placeholder</attribute>
+        </xpath>
+    </t>
+</templates>

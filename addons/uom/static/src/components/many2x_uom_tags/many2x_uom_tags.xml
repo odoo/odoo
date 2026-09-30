@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="uom.Many2ManyUomTagsField" t-inherit="web.Many2ManyTagsField">
+        <xpath expr="//Many2XAutocomplete" position="attributes">
+            <attribute name="productModel">this.productModel</attribute>
+            <attribute name="productId">["product.template", "product.product"].includes(this.props.record.resModel) ? (this.props.record.resId || 0) : this.props.record.data[this.props.productField][0] || 0</attribute>
+            <attribute name="productQuantity">this.props.record.data[this.props.quantityField]</attribute>
+        </xpath>
+        <xpath expr="//Many2XAutocomplete//span[@t-out]" position="replace">
+            <t t-if="autoCompleteItemScope.record?.relative_info">
+                <div class="uom_autocomplete_grid">
+                    <span t-out="autoCompleteItemScope.label"/>
+                    <div t-esc="autoCompleteItemScope.record.relative_info" class="text-muted"/>
+                </div>
+            </t>
+            <t t-else="">
+                <span t-out="autoCompleteItemScope.label"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

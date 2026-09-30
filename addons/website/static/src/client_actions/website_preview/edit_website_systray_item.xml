@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.EditWebsiteSystrayItem">
+    <div class="o_menu_systray_item o_edit_website_container d-none d-md-flex">
+        <button t-if="!translatable and !this.websiteService.is404"
+                class="o-website-btn-custo-primary btn d-flex align-items-center rounded-0 border-0 px-3"
+                t-on-click="this.onClickEditPage"
+                accesskey="a">
+            <span t-if="websiteContext.edition" role="img" aria-label="Loading" class="fa fa-circle-o-notch fa-spin"/>
+            <t t-else="">Edit</t>
+        </button>
+        <Dropdown t-else="">
+            <button class="o-website-btn-custo-primary o-dropdown-toggle-custo btn rounded-0 border-0 px-3" accesskey="a" t-on-click="this.onEditDropdownClick">
+                <span t-if="websiteContext.edition" role="img" aria-label="Loading" class="fa fa-circle-o-notch fa-spin"/>
+                <t t-else="">Edit</t>
+            </button>
+            <t t-set-slot="content">
+                <t t-if="this.websiteService.is404">
+                    <t t-if="translatable">
+                        <DropdownItem onSelected.bind="() => this.attemptStartTranslate()" class="'o_translate_website_dropdown_item'">
+                            Translate 404 page<t t-translation="off"> - <span class="text-muted" t-out="this.currentWebsiteInfo.langName"/></t>
+                        </DropdownItem>
+                    </t>
+                    <DropdownItem onSelected.bind="() => this.translatable ? this.editFromTranslate() : this.onClickEditPage()" class="'o_edit_website_dropdown_item'">
+                        Edit 404 page<t t-if="translatable" t-translation="off"> - <span class="text-muted" t-out="this.currentWebsiteInfo.defaultLangName"/></t>
+                    </DropdownItem>
+                    <DropdownItem onSelected.bind="() => this.props.onNewPage(true)" class="'o_edit_website_dropdown_item'">
+                        <t t-set="url" t-value="this.websiteService.currentLocation"/>
+                        Create <span class="text-muted" t-out="url"/> page
+                    </DropdownItem>
+                </t>
+                <t t-else=""><!-- In this case, this is translatable -->
+                    <DropdownItem onSelected.bind="() => this.attemptStartTranslate()" class="'o_translate_website_dropdown_item'">
+                        Translate<t t-translation="off"> - <span class="text-muted" t-out="this.currentWebsiteInfo.langName"/></t>
+                    </DropdownItem>
+                    <DropdownItem onSelected.bind="() => this.editFromTranslate()" class="'o_edit_website_dropdown_item'">
+                        Edit<t t-translation="off"> - <span class="text-muted" t-out="this.currentWebsiteInfo.defaultLangName"/></t>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </div>
+</t>
+
+</templates>

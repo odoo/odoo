@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="view_event_registration_ticket_tree" model="ir.ui.view">
+        <field name="name">event.registration.list.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_tree" />
+        <field name="arch" type="xml">
+            <field name="event_id" position="after">
+                <field name="sale_order_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_registration_ticket_view_form" model="ir.ui.view">
+        <field name="name">event.registration.form.inherit</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event_product.event_registration_ticket_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_sale_order" type="object"
+                        class="oe_stat_button" icon="fa-usd"
+                        groups="sales_team.group_sale_salesman"
+                        invisible="not sale_order_id">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Sale Order</span>
+                        </div>
+                </button>
+            </xpath>
+            <group name="transaction" position="inside">
+                <field name="sale_order_id"/>
+                <field name="sale_order_line_id" readonly="1" invisible="not sale_order_id"/>
+            </group>
+        </field>
+    </record>
+
+</data></odoo>

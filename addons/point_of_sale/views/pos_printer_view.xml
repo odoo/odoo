@@ -1,0 +1,65 @@
+<odoo>
+    <record id="view_pos_printer_form" model="ir.ui.view">
+        <field name="name">Preparation Printer</field>
+        <field name="model">pos.printer</field>
+        <field name="arch" type="xml">
+            <form string="POS Printer">
+                <sheet>
+                <group>
+                    <group>
+                        <field name="company_id" invisible="1" />
+                        <field name="name" />
+                        <field name="printer_type" widget="radio"/>
+                        <field name="epson_printer_ip" invisible="printer_type != 'epson_epos'"/>
+                        <field name="proxy_ip" invisible="printer_type != 'iot'"/>
+                        <field name="product_categories_ids" />
+                    </group>
+                    <group>
+                        <div style="display:flex; justify-content:flex-end; align-items:flex-start; height:100%;">
+                            <widget name="point_of_sale_test_epos" invisible="printer_type != 'epson_epos'"/>
+                        </div>
+                    </group>
+                </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pos_printer_form" model="ir.actions.act_window">
+        <field name="name">Preparation Printers</field>
+        <field name="res_model">pos.printer</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Add a new preparation printer
+            </p><p>
+            Preparation printers are typically used by restaurants and bars to print the
+            orders at the kitchen/bar when the waiter updates an order.
+            </p><p>
+            Each printer can be configured to print products from a specific category.
+            The printer will then only print updates for products belonging to one of
+            its linked categories.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_pos_printer" model="ir.ui.view">
+        <field name="name">Preparation Printers</field>
+        <field name="model">pos.printer</field>
+        <field name="arch" type="xml">
+            <list string="Preparation Printers">
+                <field name="name" />
+                <field name="product_categories_ids" widget="many2many_tags"/>
+                <field name="proxy_ip" optional="hide"/>
+                <field name="company_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <menuitem
+        name="Preparation Printers"
+        id="point_of_sale.menu_pos_preparation_printer"
+        parent="point_of_sale.menu_point_of_sale"
+        action="action_pos_printer_form"
+        sequence="99" />
+</odoo>

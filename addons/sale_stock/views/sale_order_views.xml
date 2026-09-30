@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_order_form_inherit_sale_stock" model="ir.ui.view">
+        <field name="name">sale.order.form.sale.stock</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <button name="action_view_invoice" position="before">
+                <button
+                    name="action_view_delivery"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-truck"
+                    invisible="delivery_count == 0"
+                    groups="stock.group_stock_user"
+                >
+                    <field name="delivery_count" widget="statinfo" string="Delivery"/>
+                </button>
+            </button>
+            <group name="sale_shipping" position="attributes">
+                <attribute name="groups"></attribute><!-- Remove the res.group on the group and set it on the field directly-->
+                <attribute name="string">Delivery</attribute>
+            </group>
+            <label for="commitment_date" position="before">
+                <field name="warehouse_id" options="{'no_create': True}" force_save="1" readonly="state == 'sale'"/>
+                <field name="incoterm" options="{'no_open': True, 'no_create': True}"/>
+                <field name="incoterm_location"/>
+                <field name="picking_policy" required="True" readonly="state not in ['draft', 'sent']"/>
+            </label>
+            <span name="expected_date_span" position="attributes">
+                <attribute name="invisible">effective_date and commitment_date</attribute>
+            </span>
+            <div name="commitment_date_div" position="replace">
+                <div class="o_row">
+                    <field name="commitment_date"/>
+                    <span class="text-muted" invisible="not expected_date or (effective_date and commitment_date)">Expected: <field name="expected_date" class="oe_inline"/></span>
+                </div>
+                <field name="effective_date" invisible="not effective_date"/>
+                <field name="delivery_status" invisible="state != 'sale'"/>
+            </div>
+            <xpath expr="//page[@name='other_information']//field[@name='expected_date']" position="after">
+                <field string=" " name="json_popover" widget="stock_rescheduling_popover" invisible="not show_json_popover"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//form//field[@name='analytic_distribution']" position="before">
+                <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location" options="{'no_create': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//form//field[@name='product_uom_id']" position="after">
+                <widget name="qty_at_date_widget"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//list//field[@name='analytic_distribution']" position="after">
+                <field
+                    name="route_ids"
+                    widget="many2many_tags"
+                    groups="stock.group_adv_location"
+                    options="{'no_create': True}"
+                    optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']//list//field[@name='qty_delivered']" position="after">
+                <widget name="qty_at_date_widget" width="20px"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_tree" model="ir.ui.view">
+        <field name="name">sale.order.list.inherit.sale.stock</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="tag_ids" position="after">
+                <field
+                    name="warehouse_id"
+                    options="{'no_create': True}"
+                    readonly="state == 'sale'"
+                    groups="stock.group_stock_multi_warehouses"
+                    optional="hide"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_order_tree" model="ir.ui.view">
+        <field name="name">sale.order.list.inherit.sale.stock</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="commitment_date" position="attributes">
+                <attribute name="decoration-danger">
+                    (
+                        (
+                            commitment_date &lt; effective_date
+                            or commitment_date &lt; datetime.datetime.combine(
+                                datetime.date.today(),
+                                datetime.time(0,0,0)
+                            ).to_utc().strftime('%Y-%m-%d %H:%M:%S')
+                        )
+                        and delivery_status in ['pending', 'started']
+                        and effective_date &lt;= commitment_date
+                        or delivery_status == 'partial'
+                    )
+                </attribute>
+            </field>
+            <field name="invoice_status" position="before">
+                <field
+                    name="delivery_status"
+                    decoration-success="delivery_status == 'full'"
+                    decoration-warning="delivery_status == 'partial'"
+                    decoration-info="delivery_status in ['pending', 'started']"
+                    widget="badge"
+                    optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="sale_stock_sale_order_view_search_inherit" model="ir.ui.view">
+        <field name="name">sale_stock.sale.order.search.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="arch" type="xml">
+            <filter name="order_date" position="after">
+                <filter string="Late Availability" name="late_availability" domain="[('late_availability', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

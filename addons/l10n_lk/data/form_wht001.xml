@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_lk_wht001" model="account.report">
+        <field name="name">WHT/AIT Return Form WHT-001</field>
+        <field name="root_report_id" ref="account.generic_tax_report" />
+        <field name="sequence">20</field>
+        <field name="country_id" ref="base.lk" />
+        <field name="column_ids">
+            <record id="l10n_lk_wht001_balance_a" model="account.report.column">
+                <field name="name">Total Payment Value</field>
+                <field name="expression_label">balance_a</field>
+            </record>
+            <record id="l10n_lk_wht001_balance_b" model="account.report.column">
+                <field name="name">Amount Not Liable</field>
+                <field name="expression_label">balance_b</field>
+            </record>
+            <record id="l10n_lk_wht001_balance_c" model="account.report.column">
+                <field name="name">Amount Liable</field>
+                <field name="expression_label">balance_c</field>
+            </record>
+            <record id="l10n_lk_wht001_balance_d" model="account.report.column">
+                <field name="name">Amount Deducted</field>
+                <field name="expression_label">balance_d</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_lk_wht001_lk_wht_001e_whtd" model="account.report.line">
+                <field name="name">PART I – Summery of Withholding Tax (WHT) Deductions </field>
+                <field name="code">LK_WHT_001E_WHTD</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_lk_wht001_lk_wht_001e_whtd_1" model="account.report.line">
+                        <field name="name">1. Interest or Discount</field>
+                        <field name="code">LK_WHT_001E_WHTD_1</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_1_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_WHTD_1.balance_b + LK_WHT_001E_WHTD_1.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_1_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_1B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_1_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_1C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_1_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-WHTD_1D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_whtd_2" model="account.report.line">
+                        <field name="name">2. Charges</field>
+                        <field name="code">LK_WHT_001E_WHTD_2</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_2_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_WHTD_2.balance_b + LK_WHT_001E_WHTD_2.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_2_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_2B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_2_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_2C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_2_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-WHTD_2D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_whtd_3" model="account.report.line">
+                        <field name="name">3. Natural resource payment</field>
+                        <field name="code">LK_WHT_001E_WHTD_3</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_3_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_WHTD_3.balance_b + LK_WHT_001E_WHTD_3.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_3_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_3B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_3_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_3C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_3_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-WHTD_3D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_whtd_4" model="account.report.line">
+                        <field name="name">4. Rent</field>
+                        <field name="code">LK_WHT_001E_WHTD_4</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_4_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_WHTD_4.balance_b + LK_WHT_001E_WHTD_4.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_4_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_4B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_4_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_4C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_4_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-WHTD_4D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_whtd_5" model="account.report.line">
+                        <field name="name">5. Royalty</field>
+                        <field name="code">LK_WHT_001E_WHTD_5</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_5_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_WHTD_5.balance_b + LK_WHT_001E_WHTD_5.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_5_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_5B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_5_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_5C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_5_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-WHTD_5D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_whtd_6" model="account.report.line">
+                        <field name="name">6. Service fee or insurance premium</field>
+                        <field name="code">LK_WHT_001E_WHTD_6</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_6_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_WHTD_6.balance_b + LK_WHT_001E_WHTD_6.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_6_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_6B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_6_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_6C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_6_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-WHTD_6D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_whtd_7" model="account.report.line">
+                        <field name="name">7. Fee on Transport or Telecommunications Service</field>
+                        <field name="code">LK_WHT_001E_WHTD_7</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_7_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_WHTD_7.balance_b + LK_WHT_001E_WHTD_7.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_7_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_7B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_7_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_7C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_7_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-WHTD_7D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_whtd_8" model="account.report.line">
+                        <field name="name">8. Any other payments (Dividend, ect)</field>
+                        <field name="code">LK_WHT_001E_WHTD_8</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_8_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_WHTD_8.balance_b + LK_WHT_001E_WHTD_8.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_8_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_8B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_8_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_8C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_8_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-WHTD_8D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_whtd_9" model="account.report.line">
+                        <field name="name">9. Rewards, ro winnings from lottery / betting / gambling</field>
+                        <field name="code">LK_WHT_001E_WHTD_9</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_9_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_WHTD_9.balance_b + LK_WHT_001E_WHTD_9.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_9_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_9B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_9_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_9C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_9_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-WHTD_9D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_whtd_10" model="account.report.line">
+                        <field name="name">10. Sale of gem at an auction</field>
+                        <field name="code">LK_WHT_001E_WHTD_10</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_10_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_WHTD_10.balance_b + LK_WHT_001E_WHTD_10.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_10_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_10B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_10_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">WHTD_10C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_10_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-WHTD_10D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_whtd_11" model="account.report.line">
+                        <field name="name">IA Total (1-10)</field>
+                        <field name="code">LK_WHT_001E_WHTD_11</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_11_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_WHTD_1.balance_a + LK_WHT_001E_WHTD_2.balance_a + LK_WHT_001E_WHTD_3.balance_a + LK_WHT_001E_WHTD_4.balance_a + LK_WHT_001E_WHTD_5.balance_a + LK_WHT_001E_WHTD_6.balance_a + LK_WHT_001E_WHTD_7.balance_a + LK_WHT_001E_WHTD_8.balance_a + LK_WHT_001E_WHTD_9.balance_a + LK_WHT_001E_WHTD_10.balance_a</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_11_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_WHTD_1.balance_b + LK_WHT_001E_WHTD_2.balance_b + LK_WHT_001E_WHTD_3.balance_b + LK_WHT_001E_WHTD_4.balance_b + LK_WHT_001E_WHTD_5.balance_b + LK_WHT_001E_WHTD_6.balance_b + LK_WHT_001E_WHTD_7.balance_b + LK_WHT_001E_WHTD_8.balance_b + LK_WHT_001E_WHTD_9.balance_b + LK_WHT_001E_WHTD_10.balance_b</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_11_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_WHTD_1.balance_c + LK_WHT_001E_WHTD_2.balance_c + LK_WHT_001E_WHTD_3.balance_c + LK_WHT_001E_WHTD_4.balance_c + LK_WHT_001E_WHTD_5.balance_c + LK_WHT_001E_WHTD_6.balance_c + LK_WHT_001E_WHTD_7.balance_c + LK_WHT_001E_WHTD_8.balance_c + LK_WHT_001E_WHTD_9.balance_c + LK_WHT_001E_WHTD_10.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_whtd_11_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_WHTD_1.balance_d + LK_WHT_001E_WHTD_2.balance_d + LK_WHT_001E_WHTD_3.balance_d + LK_WHT_001E_WHTD_4.balance_d + LK_WHT_001E_WHTD_5.balance_d + LK_WHT_001E_WHTD_6.balance_d + LK_WHT_001E_WHTD_7.balance_d + LK_WHT_001E_WHTD_8.balance_d + LK_WHT_001E_WHTD_9.balance_d + LK_WHT_001E_WHTD_10.balance_d</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_lk_wht001_lk_wht_001e_aitd" model="account.report.line">
+                <field name="name">PART II – Summery of Advance Income Tax (AIT) Deductions </field>
+                <field name="code">LK_WHT_001E_AITD</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_lk_wht001_lk_wht_001e_aitd_1" model="account.report.line">
+                        <field name="name">1. Interest or Discount</field>
+                        <field name="code">LK_WHT_001E_AITD_1</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_1_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_AITD_1.balance_b + LK_WHT_001E_AITD_1.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_1_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AITD_1B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_1_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AITD_1C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_1_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-AITD_1D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_aitd_2" model="account.report.line">
+                        <field name="name">2. Charges</field>
+                        <field name="code">LK_WHT_001E_AITD_2</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_2_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_AITD_2.balance_b + LK_WHT_001E_AITD_2.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_2_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AITD_2B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_2_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AITD_2C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_2_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-AITD_2D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_aitd_3" model="account.report.line">
+                        <field name="name">3. Natural resource Payments</field>
+                        <field name="code">LK_WHT_001E_AITD_3</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_3_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_AITD_3.balance_b + LK_WHT_001E_AITD_3.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_3_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AITD_3B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_3_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AITD_3C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_3_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-AITD_3D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_aitd_4" model="account.report.line">
+                        <field name="name">4. Rent</field>
+                        <field name="code">LK_WHT_001E_AITD_4</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_4_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_AITD_4.balance_b + LK_WHT_001E_AITD_4.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_4_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AITD_4B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_4_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AITD_4C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_4_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-AITD_4D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_aitd_5" model="account.report.line">
+                        <field name="name">5. Royalty</field>
+                        <field name="code">LK_WHT_001E_AITD_5</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_5_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_AITD_5.balance_b + LK_WHT_001E_AITD_5.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_5_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AITD_5B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_5_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AITD_5C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_5_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-AITD_5D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_aitd_6" model="account.report.line">
+                        <field name="name">6. Dividend</field>
+                        <field name="code">LK_WHT_001E_AITD_6</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_6_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_AITD_6.balance_b + LK_WHT_001E_AITD_6.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_6_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AITD_6B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_6_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AITD_6C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_6_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-AITD_6D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_aitd_7" model="account.report.line">
+                        <field name="name">7. Premium or Similar Periodic Payment or payment on services</field>
+                        <field name="code">LK_WHT_001E_AITD_7</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_7_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_AITD_7.balance_b + LK_WHT_001E_AITD_7.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_7_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AITD_7B</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_7_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">AITD_7C</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_7_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-AITD_7D</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_lk_wht001_lk_wht_001e_aitd_8" model="account.report.line">
+                        <field name="name">IIA Total (1-7)</field>
+                        <field name="code">LK_WHT_001E_AITD_8</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_8_balance_a" model="account.report.expression">
+                                <field name="label">balance_a</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_AITD_1.balance_a + LK_WHT_001E_AITD_2.balance_a + LK_WHT_001E_AITD_3.balance_a + LK_WHT_001E_AITD_4.balance_a + LK_WHT_001E_AITD_5.balance_a + LK_WHT_001E_AITD_6.balance_a + LK_WHT_001E_AITD_7.balance_a</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_8_balance_b" model="account.report.expression">
+                                <field name="label">balance_b</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_AITD_1.balance_b + LK_WHT_001E_AITD_2.balance_b + LK_WHT_001E_AITD_3.balance_b + LK_WHT_001E_AITD_4.balance_b + LK_WHT_001E_AITD_5.balance_b + LK_WHT_001E_AITD_6.balance_b + LK_WHT_001E_AITD_7.balance_b</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_8_balance_c" model="account.report.expression">
+                                <field name="label">balance_c</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_AITD_1.balance_c + LK_WHT_001E_AITD_2.balance_c + LK_WHT_001E_AITD_3.balance_c + LK_WHT_001E_AITD_4.balance_c + LK_WHT_001E_AITD_5.balance_c + LK_WHT_001E_AITD_6.balance_c + LK_WHT_001E_AITD_7.balance_c</field>
+                            </record>
+                            <record id="l10n_lk_wht001_lk_wht_001e_aitd_8_balance_d" model="account.report.expression">
+                                <field name="label">balance_d</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LK_WHT_001E_AITD_1.balance_d + LK_WHT_001E_AITD_2.balance_d + LK_WHT_001E_AITD_3.balance_d + LK_WHT_001E_AITD_4.balance_d + LK_WHT_001E_AITD_5.balance_d + LK_WHT_001E_AITD_6.balance_d + LK_WHT_001E_AITD_7.balance_d</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.SelectionPopup">
+        <Dialog title="props.title" footer="false" size="props.size" contentClass="'pb-5'" bodyClass="'d-flex flex-column gap-2 border-bottom'">
+            <button t-foreach="props.list" t-as="item" t-key="item.id"
+                    class="selection-item d-flex align-items-center justify-content-between btn btn-lg btn-outline-secondary w-100 p-3 text-start"
+                    t-att-class="{ 'selected active': item.isSelected }"
+                    t-on-click="() => this.selectItem(item.id)">
+
+               <div class="d-flex align-items-center">
+                    <div class="ratio ratio-1x1 me-3" style="width: 40px" t-if="item.image">
+                         <img class="rounded-3" t-att-src="item.image"/>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <span t-esc="item.label" />
+                        <span t-esc="item.description" t-if="item.description" />
+                    </div>
+               </div>
+                <i t-attf-class="{{ item.isSelected ? 'fa fa-check text-action' : 'oi oi-chevron-right' }}"/>
+            </button>
+        </Dialog>
+    </t>
+
+</templates>

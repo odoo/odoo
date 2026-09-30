@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="stock.StockOrderpoint.listView" t-inherit="web.ListView">
+        <xpath expr="//SelectionBox" position="after">
+            <Dropdown>
+                <button class="btn btn-secondary">
+                    <span class="o_dropdown_title">Order</span>
+                    <i class="fa fa-caret-down ms-1"/>
+                </button>
+                <t t-set-slot="content">
+                    <DropdownItem t-if="hasSelectedRecords" onSelected="() => this.onClickOrder(false)">
+                        Order
+                    </DropdownItem>
+                    <DropdownItem t-if="hasSelectedRecords" onSelected="() => this.onClickOrder(true)">
+                        Order To Max
+                    </DropdownItem>
+                </t>
+            </Dropdown>
+            <button t-if="hasSelectedRecords" type="button" t-on-click="onClickSnooze"
+                    class="o_button_snooze btn btn-secondary me-1">
+                Snooze
+            </button>
+        </xpath>
+    </t>
+
+</templates>

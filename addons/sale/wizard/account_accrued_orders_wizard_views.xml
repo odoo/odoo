@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="action_accrued_revenue_entry" model="ir.actions.act_window">
+        <field name="name">Accrued Revenue Entry</field>
+        <field name="res_model">account.accrued.orders.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="group_ids" eval="[(4, ref('account.group_account_user'))]"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_accrued_revenue_entry_sale_order_line" model="ir.actions.act_window">
+        <field name="name">Accrued Revenue Entry</field>
+        <field name="res_model">account.accrued.orders.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="binding_model_id" ref="sale.model_sale_order_line"/>
+        <field name="group_ids" eval="[(4, ref('account.group_account_user'))]"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-inherit="event.EventRegistrationSummaryDialog" t-inherit-mode="extension">
+        <xpath expr="//div[@id='registration_header']" position="inside">
+            <t t-if="registration.sale_status_value">
+                <span class="badge rounded-pill" t-out="registration.sale_status_value" t-att-class="registration.has_to_pay ? 'text-bg-danger' : 'text-bg-success'"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

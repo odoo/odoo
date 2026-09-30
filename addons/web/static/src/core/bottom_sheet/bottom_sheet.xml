@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.BottomSheet">
+        <div
+            class="o_bottom_sheet"
+            t-att-class="{
+                'o_bottom_sheet_ready': state.isPositionedReady,
+                'o_bottom_sheet_dismissing': state.isDismissing,
+                'o_bottom_sheet_snapping': state.isSnappingEnabled,
+            }"
+            t-attf-style="--BottomSheet-progress: {{state.progress}}"
+            t-ref="container"
+            >
+            <!-- Scroll container that handles drag gestures -->
+            <div
+                class="o_bottom_sheet_rail"
+                t-att-class="{
+                        o_bottom_sheet_rail_prevent_overscroll : props.preventDismissOnContentScroll
+                    }"
+                t-ref="scrollRail"
+                >
+                <!-- Backdrop overlay -->
+                <div class="o_bottom_sheet_backdrop" t-on-click="slideOut"/>
+
+                <!-- Dismiss area - used for scroll snap -->
+                <div class="o_bottom_sheet_dismiss"/>
+
+                <!-- Spacer area - used for scroll snap -->
+                <div class="o_bottom_sheet_spacer"/>
+
+                <!-- Sheet container -->
+                <div
+                    class="o_bottom_sheet_sheet offcanvas position-relative overflow-hidden"
+                    role="dialog"
+                    t-ref="sheet"
+                    >
+
+                    <!-- Handle bar -->
+                    <div
+                        tabindex="-1"
+                        role="button"
+                        class="o_bottom_sheet_handle text-center d-flex align-items-center justify-content-center opacity-50 py-2"
+                        t-on-click.stop="slideOut"
+                        >
+                        <div class="o_bottom_sheet_handle_bar pt-1 mx-auto rounded-pill d-inline-block px-5 bg-dark"/>
+                    </div>
+
+                    <!-- Body content -->
+                    <div
+                        class="o_bottom_sheet_body offcanvas-body"
+                        role="menu"
+                        t-att-class="props.class"
+                        t-ref="ref"
+                        >
+
+                        <!-- Render dynamic component if provided -->
+                        <t t-if="props.component">
+                            <t t-component="props.component" t-props="props.componentProps || {}"/>
+                        </t>
+
+                        <!-- Render slot content if provided -->
+                        <t t-else="">
+                            <t t-slot="default" close="close" back="back"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

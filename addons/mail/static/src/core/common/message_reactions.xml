@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+<t t-name="mail.MessageReactions">
+    <div class="o-mail-MessageReactions position-relative d-flex flex-wrap"
+        t-att-class="{
+            'flex-row-reverse me-3': env.inChatWindow and env.alignedRight,
+            'ms-3': !(env.inChatWindow and env.alignedRight) and (props.message.isDiscussion),
+            'o-emojiPickerOpen': emojiPicker.isOpen,
+            'mt-n1': props.message.message_type === 'comment' and !props.message.attachment_ids.length,
+            'o-mt-0_5': props.message.attachment_ids.length,
+        }">
+        <t t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content">
+            <MessageReactionList message="this.props.message" openReactionMenu="this.props.openReactionMenu" reaction="reaction"/>
+        </t>
+        <QuickReactionMenu t-if="props.message.canAddReaction()" action="messageActions.actions.find(action => action.id === 'reaction')" classNames="{ 'p-1 mb-1 opacity-25 opacity-100-hover': true }" message="props.message"/>
+    </div>
+</t>
+</templates>

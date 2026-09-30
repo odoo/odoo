@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_es_edi_tbai_pos.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('before-footer')]" position="after">
+            <t t-if="order.l10n_es_pos_tbai_qrsrc">
+                <br/><br/>
+                <div class="pos-receipt-order-data mb-2">TicketBai QR Code</div>
+                <img t-att-src="order.l10n_es_pos_tbai_qrsrc" class="pos-receipt-qrcode"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

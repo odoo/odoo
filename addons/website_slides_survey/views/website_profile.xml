@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <template id="user_profile_content" inherit_id="website_profile.user_profile_content">
+        <xpath expr="//div[@id='profile_about_badge']" position="before">
+            <t t-if="channel">
+                <div class="mb32">
+                    <h5 class="border-bottom pb-1">Certifications</h5>
+                    <t t-call="website_slides_survey.display_certificate"/>
+                </div>
+            </t>
+        </xpath>
+        <!-- Certification Attempts -->
+        <xpath expr="//ul[hasclass('o_wprofile_nav_tabs')]" position="inside">
+            <li t-if="show_certification_tab" class="nav-item">
+                <a role="tab" aria-controls="certification" href="#profile_tab_content_certification" t-attf-class="nav-link #{ 'active' if active_tab == 'certification' else '' }" data-bs-toggle="tab">
+                    <t t-if="user_inputs" t-out="len(user_inputs)" /> Certification Attempts
+                </a>
+            </li>
+        </xpath>
+        <xpath expr="//div[hasclass('o_wprofile_tabs_content')]" position="inside">
+            <div t-if="show_certification_tab" role="tabpanel" t-attf-class="tab-pane #{ 'show active' if active_tab == 'certification' else '' }" id="profile_tab_content_certification">
+                <h5 class="d-flex justify-content-between align-items-end border-bottom pb-1">
+                    Certification Attempts
+                    <form method="post">
+                        <div class="input-group" role="search">
+                            <input type="text" class="form-control oe_search_box border-0 bg-light" name="certification_search" t-att-value="certification_search_terms or ''" placeholder="Search Attempts..."/>
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-light" aria-label="Search" title="Search">
+                                    <i class="oi oi-search"/>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </h5>
+                <t t-if="not user_inputs">
+                    <p t-if="certification_search_terms">No certification found for the given search term.</p>
+                    <p t-else="">You have not taken any certification yet.</p>
+                    <a href="/slides?slide_category=certification">
+                        <i class="oi oi-arrow-right"/> See Certifications
+                    </a>
+                </t>
+                <div t-else="" class="card p-3 mb-3" t-foreach="user_inputs" t-as="user_input">
+                    <div class="row">
+                        <div class="col-sm-3" t-out="user_input.create_date" t-options="{'widget': 'datetime'}"/>
+                        <div class="col-sm-4">
+                            <a t-if="user_input.slide_id"
+                                t-attf-href="/slides_survey/slide/get_certification_url?slide_id=#{user_input.slide_id.id}"
+                                t-out="user_input.survey_id.title"/>
+                            <t t-else="" t-out="user_input.survey_id.title"/>
+                        </div>
+                        <div class="col-sm-3">
+                            Attempt n°<t t-out="user_input.attempts_number"/>
+                        </div>
+                        <div class="col-sm-2">
+                            <span t-attf-class="badge #{ 'text-bg-primary' if user_input.scoring_success else 'text-bg-danger'}">
+                                <t t-out="user_input.scoring_percentage"/>%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+     <template id="display_certificate">
+        <t t-if="certificates">
+            <div class="row">
+               <div class="col-12 col-lg-6" t-foreach="certificates" t-as="certificate">
+                    <div class="card mb-2">
+                        <div class="card-body o_wprofile_slides_course_card_body p-0 d-flex" t-attf-onclick="location.href='/slides/#{slug(certificate.slide_id.channel_id)}';">
+                            <div class="ps-5 pe-4 rounded-start" t-attf-style="background-image: url(#{website.image_url(certificate.slide_id, 'image_128')}); background-position: center"/>
+                            <div class="p-2 w-100">
+                                <h5 class="mt-0 mb-1" t-out="certificate.survey_id.title"/>
+                                <div t-if="user.id == uid">
+                                    <small class="fw-bold">Score: <span t-out="certificate.scoring_percentage"/> %</small>
+                                    <div class="float-end">
+                                        <a role="button" class="float-end" t-att-href="'/survey/%s/get_certification' % certificate.survey_id.id">
+                                            <i class="fa fa-download" aria-label="Download certification" title="Download Certification"/>
+                                        </a>
+                                        <a role="button" class="o_wslides_share me-2"
+                                           t-att-data-id="certificate.slide_id.channel_id.id"
+                                           t-att-data-name="certificate.slide_id.channel_id.name"
+                                           t-att-data-url="certificate.slide_id.channel_id.website_absolute_url"
+                                           t-att-data-email-sharing="bool(certificate.slide_id.channel_id.share_channel_template_id)"
+                                           data-is-channel="True">
+                                            <i class="fa fa-share-alt" aria-label="Share" title="Share"/>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+         <t t-elif="my_profile">
+            <div class="text-muted d-inline-block">
+                Certifications are exams that you successfully passed. <br />
+                <a href="/slides?slide_type=certification" class="btn-link">
+                    <i class="fa fa-arrow-right"></i> Get Certified
+                </a>
+            </div>
+        </t>
+        <t t-else="">
+            <div class="text-muted d-inline-block">No certifications yet!</div>
+            <div class="text-end d-inline-block pull-right">
+                <a href="/slides?slide_category=certification" class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Certifications</a>
+            </div>
+        </t>
+    </template>
+
+    <template id="top3_user_card" inherit_id="website_profile.top3_user_card">
+        <xpath expr="//div[hasclass('o_wprofile_top3_card_footer')]//div[last()]" position="after">
+            <div class="col py-3"><b t-out="user['certification_count']"/> <span class="text-muted">Certifications</span></div>
+        </xpath>
+    </template>
+
+    <template id="all_user_card" inherit_id="website_profile.all_user_card">
+        <xpath expr="//td[hasclass('all_user_badge_count')]" position="after">
+            <td class="align-middle text-end pe-3 text-nowrap all_user_certification_count">
+                <b t-out="user['certification_count']"/> <span class="text-muted small fw-bold">Certifications</span>
+            </td>
+        </xpath>
+    </template>
+
+    <template id="badge_content" inherit_id="website_profile.badge_content">
+        <xpath expr="//div[@id='website_profile_badges']" position="after">
+            <t t-if="certification_badges">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="mt-4 mt-lg-2">Certification Badges</h1>
+                        <p class="lead">
+                            You can gain badges by passing certifications. Here is a list of all available certification badges.
+                            <br />Follow the links to reach new heights and skill up!
+                        </p>
+                        <div class="row col-12 align-items-center p-0" t-foreach="certification_badges" t-as="badge">
+                            <div class="col-3">
+                                <t t-call="website_profile.badge_header">
+                                    <t t-if="badge.id in certification_badge_urls" t-set="badge_url" t-value="certification_badge_urls[badge.id]"/>
+                                </t>
+                            </div>
+                            <div class="col-6">
+                                <span t-field="badge.description"/>
+                            </div>
+                            <div class="col-3 text-end">
+                                <b t-out="badge.granted_users_count"/>
+                                <i class="text-muted"> awarded users</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</data></odoo>

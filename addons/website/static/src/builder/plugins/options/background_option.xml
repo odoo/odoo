@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.WebsiteBackgroundOption" t-inherit="html_builder.BackgroundOption">
+    <xpath expr="//BuilderButton[@action=&quot;'toggleBgImage'&quot;]" position="after">
+        <t t-if="props.withVideos">
+            <BuilderButton title.translate="Video"
+                className="'fa fa-fw fa-film px-2'"
+                preview="false"
+                action="'toggleBgVideo'"
+                id="'toggle_bg_video_id'"
+            />
+        </t>
+    </xpath>
+    <!-- TODO: change position of the xpath when snippet_options_image_optimization_widgets is converted -->
+    <xpath expr="//ImageFormatOption" position="after">
+        <ParallaxOption/>
+        <t t-call="website.BackgroundVideoOption"/>
+    </xpath>
+    <xpath expr="//BackgroundImageOption" position="replace">
+        <BuilderContext applyTo="this.websiteBgOptionDomState.applyTo">
+            <BackgroundImageOption/>
+        </BuilderContext>
+    </xpath>
+    <xpath expr="//ImageFilterOption" position="replace">
+        <BuilderContext applyTo="this.websiteBgOptionDomState.applyTo">
+            <ImageFilterOption level="2"/>
+        </BuilderContext>
+    </xpath>
+    <xpath expr="//ImageFormatOption" position="replace">
+        <BuilderContext applyTo="this.websiteBgOptionDomState.applyTo">
+            <ImageFormatOption level="2" computeMaxDisplayWidth="this.computeMaxDisplayWidth"/>
+        </BuilderContext>
+    </xpath>
+    <xpath expr="//BuilderButton[@action=&quot;'toggleBgImage'&quot;]" position="attributes">
+        <attribute name="applyTo">this.websiteBgOptionDomState.applyTo</attribute>
+    </xpath>
+    <xpath expr="//BackgroundPositionOption" position="replace">
+        <BuilderContext applyTo="this.websiteBgOptionDomState.applyTo">
+            <BackgroundPositionOption/>
+        </BuilderContext>
+    </xpath>
+    <!-- TODO: the same for BackgroundOptimize-->
+</t>
+
+</templates>

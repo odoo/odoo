@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_holidays.CalendarController" t-inherit="web.CalendarController" t-inherit-mode="primary">
+        <xpath expr="//Layout" position="inside">
+            <t t-if="props.archInfo.canCreate" t-set-slot="control-panel-create-button">
+                <span class="o_timeoff_buttons btn-group">
+                    <div class="btn-group">
+                        <button class="btn btn-primary btn-time-off " t-on-click="newTimeOffRequest" type="button">
+                            New
+                        </button>
+                    </div>
+                </span>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="hr_holidays.CalendarView.Buttons">
+        <button t-if="canCreateGroupTimeOff" class="btn btn-secondary" t-on-click="onNewGroupTimeOff">
+            New Group Time Off
+        </button>
+    </t>
+
+</templates>

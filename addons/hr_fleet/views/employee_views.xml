@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Employee -->
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.hr.fleet</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="priority" eval="60" />
+        <field name="arch" type="xml">
+            <button name="action_open_versions" position="before">
+                <button name="action_open_employee_cars" type="object"
+                        class="oe_stat_button" icon="fa-car" groups="fleet.fleet_group_manager"
+                        invisible="employee_cars_count == 0">
+                    <field name="employee_cars_count" widget="statinfo" string="Cars History" />
+                </button>
+            </button>
+            <group name="application_group" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </group>
+            <group name="application_group" position="inside">
+                <field name="mobility_card" string="Fleet Mobility Card"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_employee_filter" model="ir.ui.view">
+        <field name="name">hr.employee.filter.inherit.hr.fleet</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='private_car_plate']" position="replace">
+                <field name="license_plate"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-inherit="website.FooterTemplateOption" t-inherit-mode="extension">
+    <BuilderSelect position="inside">
+        <BuilderSelectItem
+            title.translate="eCommerce"
+            actionParam="{
+                view: 'website_sale.template_footer_website_sale',
+                vars: { 'footer-template': 'website_sale' }
+            }"
+        >
+            <Img
+                attrs="{ style: 'width: 100%;' }"
+                src="'/website_sale/static/src/img/snippets_options/footer_template_website_sale.svg'"
+            />
+        </BuilderSelectItem>
+    </BuilderSelect>
+</t>
+
+</templates>

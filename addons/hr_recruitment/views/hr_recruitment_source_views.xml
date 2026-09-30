@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="hr_recruitment_source_tree">
+            <field name="name">hr.recruitment.source.list</field>
+            <field name="model">hr.recruitment.source</field>
+            <field name="arch" type="xml">
+                <list string="Sources of Applicants" editable="top" sample="1">
+                    <field name="has_domain" column_invisible="True"/>
+                    <field name="campaign_id" optional="show"/>
+                    <field name="source_id" placeholder="e.g. LinkedIn" decoration-bf="1" readonly="id" optional="show"/>
+                    <field name="medium_id" optional="show"/>
+                    <field name="email" widget="RecruitmentCopyClipboardChar" invisible="not has_domain" options="{'content_generation_function_name': 'create_and_get_alias', 'displayed_value': 'Email'}"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="hr_recruitment_source_view_search" model="ir.ui.view">
+            <field name="name">hr.recruitment.source.view.search</field>
+            <field name="model">hr.recruitment.source</field>
+            <field name="arch" type="xml">
+                <search string="Search Source">
+                    <field name="source_id"/>
+                    <field name="job_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_hr_job_sources">
+            <field name="name">Trackers</field>
+            <field name="res_model">hr.recruitment.source</field>
+            <field name="view_mode">list</field>
+            <field name="search_view_id" ref="hr_recruitment_source_view_search"/>
+            <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Want to analyse where applications come from ?
+                </p><p>
+                    Use emails and links trackers
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays_attendance.AccrualLevels" t-inherit="hr_holidays.AccrualLevels" t-inherit-mode="extension">
+        <xpath expr="//h4[@name='header']" position="inside">
+            <t t-if="level.data.frequency == 'worked_hours'">
+                every worked hour.
+                <br/>
+            </t>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ListView.ConfirmationModal">
+        <Dialog size="'md'" title="props.title">
+            <main role="alert">
+                <p>
+                    <t t-if="props.isDomainSelected">This update will only consider the records of the current page.<br/><br/></t>
+                    <t t-if="props.nbRecords != props.nbValidRecords">
+                        <t t-esc="validRecordsText"/>
+                        <br/>
+                    </t>
+                    <t t-esc="updateConfirmationText"/>
+                </p>
+                <div class="table-responsive">
+                    <table class="o_modal_changes">
+                        <tbody>
+                            <t t-foreach="props.fields" t-as="field" t-key="field_index">
+                                <tr>
+                                    <td>Field:</td>
+                                    <td><t t-esc="field.label"/></td>
+                                </tr>
+                                <t t-if="field.fieldNode?.type === 'many2many'">
+                                    <tr t-if="props.changes[field.name].add.length">
+                                        <td><span>Add</span>: </td>
+                                        <td>
+                                            <div class="o_field_many2many_tags">
+                                            <TagsList tags="getTagProps(props.changes[field.name].add, field)"/>                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="props.changes[field.name].remove.length">
+                                        <td><span>Remove</span>: </td>
+                                        <td>
+                                            <div class="o_field_many2many_tags">
+                                                <TagsList tags="getTagProps(props.changes[field.name].remove, field)"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr t-else="">
+                                    <td>Update to:</td>
+                                    <td style="pointer-events: none;">
+                                        <span t-if="isValueEmpty(field)">None</span>
+                                        <span t-elif="isValueOperation(field)" t-att-name="field.name">
+                                            <t t-out="field.label + ' ' + props.changes[field.name].operator + ' ' + props.changes[field.name].operand"></t>
+                                        </span>
+                                        <Field t-else="" name="field.name" record="props.record" type="field.widget" readonly="true" fieldInfo="field.fieldNode"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div t-if="showTip" class="alert alert-info d-flex align-items-center mt-3">
+                        <i class="fa fa-lightbulb-o fa-lg me-4"></i>
+                        <div class="text-muted">
+                            <div>Use the operators "+=", "-=", "*=" and "/=" to update the current value.</div>
+                            <div>For example, if the value is "1" and you enter "+=2", it will be updated to "3".</div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="_confirm" t-ref="autofocus">
+                Update
+                </button>
+                <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel">
+                Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
