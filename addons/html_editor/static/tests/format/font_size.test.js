@@ -213,3 +213,19 @@ test("should add style to br except line-break br (2)", async () => {
         `<p><span style="font-size: 36px;">[abc</span><br><span style="font-size: 36px;"><br>]</span><br></p>`
     );
 });
+
+test("should wrap `t` in `span`", async () => {
+    await testEditor({
+        contentBefore: `<p>x[<t t-out="hello" contenteditable="false">abc</t>]x</p>`,
+        stepFunction: setFontSize("10px"),
+        contentAfter: `<p>x<span style="font-size: 10px;">[<t t-out="hello" contenteditable="false">abc</t>]</span>x</p>`,
+    });
+});
+
+test("should apply font size to the span parent when `t` tag is the sole child of a span", async () => {
+    await testEditor({
+        contentBefore: `<p><span>[<t t-out="'Test'" contenteditable="false">Test</t>]</span></p>`,
+        stepFunction: setFontSize("36px"),
+        contentAfter: `<p><span style="font-size: 36px;">[<t t-out="'Test'" contenteditable="false">Test</t>]</span></p>`,
+    });
+});
