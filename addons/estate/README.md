@@ -72,3 +72,15 @@ The new type and tag models have configuration menus and access rights. Offers h
 
 **Try it:** Create a type and a tag, assign them to a property, and add an offer from its Offers tab. Inspect the offer's `property_id` to see how Odoo connected the records.
 
+## Chapter 8 - Computed fields and onchanges
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/08_compute_onchange.html)
+
+A property's total area and best offer can be calculated from information already stored in Odoo. In this chapter, `total_area` adds the living and garden areas, while `best_price` selects the highest offer. `@api.depends` tells Odoo which changes require those values to be recalculated.
+
+Offers also gain a validity period and a deadline. The deadline is calculated from the creation date and validity; an inverse method lets you edit the deadline and have Odoo update the validity instead. For a new offer without a creation date yet, the calculation starts from today.
+
+The garden onchange fills in an area of 10 and a North orientation when Garden is selected, then clears them when it is deselected. This helper runs in the form. The computed fields also work when records are changed through code.
+
+**Try it:** Change a property's living area, add two offers, and edit an offer's deadline. Observe which other values change.
+

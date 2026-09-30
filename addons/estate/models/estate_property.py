@@ -2,7 +2,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class EstateProperty(models.Model):
@@ -33,6 +33,8 @@ class EstateProperty(models.Model):
     user_id = fields.Many2one('res.users', string='Salesperson', default=lambda self: self.env.user)
     tag_ids = fields.Many2many('estate.property.tag')
     offer_ids = fields.One2many('estate.property.offer', 'property_id')
+    total_area = fields.Integer(compute='_compute_total_area')
+    best_price = fields.Float(compute='_compute_best_price')
     state = fields.Selection([
         ('new', 'New'),
         ('offer_received', 'Offer Received'),
@@ -40,3 +42,19 @@ class EstateProperty(models.Model):
         ('sold', 'Sold'),
         ('cancelled', 'Cancelled'),
     ], required=True, default='new', copy=False)
+
+    @api.depends('living_area', 'garden_area')
+    def _compute_total_area(self):
+        for property_record in self:
+            property_record.total_area = property_record.living_area + property_record.garden_area
+
+    @api.depends('offer_ids.price')
+    def _compute_best_price(self):
+        for property_record in self:
+            property_record.best_price = max(property_record.offer_ids.mapped('price'), default=0.0)
+
+    @api.onchange('garden')
+    def _onchange_garden(self):
+        for property_record in self:
+            property_record.garden_area = 10 if property_record.garden else 0
+            property_record.garden_orientation = 'north' if property_record.garden else False
