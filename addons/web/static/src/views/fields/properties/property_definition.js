@@ -78,7 +78,9 @@ export const PROPERTIES_INFO = {
     },
 };
 export const PROPERTY_TYPES = Object.keys(PROPERTIES_INFO);
-const PROPERTY_PARAMETERS = new Set(Object.values(PROPERTIES_INFO).flatMap((info) => info.parameters));
+const PROPERTY_PARAMETERS = new Set(
+    Object.values(PROPERTIES_INFO).flatMap((info) => info.parameters)
+);
 
 export class PropertyDefinition extends Component {
     static template = "web.PropertyDefinition";
@@ -177,16 +179,20 @@ export class PropertyDefinition extends Component {
             return {
                 enabled: isEnabled,
                 label,
-                tooltip: isEnabled ? "" : _t("Not possible to create monetary field because there is no currency on current model."),
+                tooltip: isEnabled
+                    ? ""
+                    : _t(
+                          "Not possible to create monetary field because there is no currency on current model."
+                      ),
                 value,
             };
         });
     }
 
     get currencyFields() {
-        return Object
-            .values(this.props.record.fields)
-            .filter((fieldDef) => fieldDef.type === "many2one" && fieldDef.relation === "res.currency");
+        return Object.values(this.props.record.fields).filter(
+            (fieldDef) => fieldDef.type === "many2one" && fieldDef.relation === "res.currency"
+        );
     }
 
     get defaultCurrencyField() {
@@ -252,7 +258,8 @@ export class PropertyDefinition extends Component {
     onDefaultChange(newDefault) {
         const propertyDefinition = {
             ...this.state.propertyDefinition,
-            default: newDefault,
+            default: this.state.propertyDefinition.type == "many2one" ? newDefault.id : newDefault,
+            default_display: newDefault,
         };
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;
