@@ -3,11 +3,15 @@
     <t t-name="web.DocumentationLink">
         <a t-att-href="this.url" title="Documentation" t-att-class="this.classes" target="_blank">
             <t t-if="!this.props.icon and !this.props.label">
-                <i class="oi" data-icon="open_in_new" aria-hidden="true"></i>
+                <span>
+                    <i class="oi" data-icon="open_in_new" aria-hidden="true"></i>
+                </span>
                 <span>View Documentation</span>
             </t>
             <t t-else="">
-                <i t-if="this.props.icon" class="oi pe-1" t-att-data-icon="this.props.icon"></i>
+                <span t-if="this.props.icon">
+                    <i t-att-class="this.iconClasses" t-att-data-icon="this.props.icon" aria-hidden="true"></i>
+                </span>
                 <span t-out="this.props.label"/>
             </t>
         </a>
