@@ -29,6 +29,9 @@ class ResUsers(models.Model):
         return res
 
     @api.ondelete(at_uninstall=False)
+    def _unlink_unsubscribe_from_non_public_channels(self):
+        self._unsubscribe_from_non_public_channels(reset_role=True)
+
     def _unsubscribe_from_non_public_channels(self, reset_role=False):
         """This method un-subscribes users from group restricted channels. Main purpose
         of this method is to prevent sending internal communication to archived / deleted users.
@@ -37,7 +40,16 @@ class ResUsers(models.Model):
         # sudo: discuss.channel.member - removing member of other users based on channel restrictions
         current_cm = self.env["discuss.channel.member"].sudo().search(domain)
         if reset_role:
-            current_cm.filtered("channel_role").write({"channel_role": False})
+            # other channel types compute their roles, e.g. from the live chat member type
+            members_with_role = current_cm.filtered(
+                lambda cm: cm.channel_role and cm.channel_id.channel_type in ("channel", "group")
+            )
+            channels_losing_owner = members_with_role.filtered(
+                lambda cm: cm.channel_role == "owner"
+            ).channel_id
+            members_with_role.write({"channel_role": False})
+            # deleted users are still active at this point
+            channels_losing_owner._ensure_owner(excluded_users=self)
         current_cm.filtered(
             lambda cm: (
                 cm.channel_id.channel_type == "channel"
