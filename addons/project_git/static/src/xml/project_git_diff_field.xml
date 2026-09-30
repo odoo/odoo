@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="project_git.ProjectGitDiffField" owl="1">
+        <div class="o_project_git_diff_widget">
+            <t t-set="payloadData" t-value="payload"/>
+
+            <t t-if="payloadData.status === 'error'">
+                <div class="alert alert-danger mb-0">
+                    <t t-esc="payloadData.error"/>
+                </div>
+            </t>
+            <t t-elif="!payloadData.files || !payloadData.files.length">
+                <div class="o_pg_empty_state card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="o_pg_empty_title">No diff loaded yet</div>
+                        <div class="text-muted">
+                            <t t-esc="payloadData.empty_message || 'Click Refresh Diff to load the comparison.'"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="o_pg_toolbar card border-0 shadow-sm mb-3">
+                    <div class="card-body d-flex flex-wrap align-items-center gap-3">
+                        <div class="o_pg_toolbar_stat">
+                            <span class="o_pg_toolbar_value"><t t-esc="payloadData.file_count || 0"/></span>
+                            <span class="o_pg_toolbar_label">files</span>
+                        </div>
+                        <div class="o_pg_toolbar_stat">
+                            <span class="o_pg_toolbar_value"><t t-esc="payloadData.comment_count || 0"/></span>
+                            <span class="o_pg_toolbar_label">inline comments</span>
+                        </div>
+                        <div class="o_pg_filter ms-auto">
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Filter files..."
+                                t-att-value="state.fileFilter"
+                                t-on-input="onFilterInput"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="o_pg_file_jump mb-3" t-if="visibleFiles.length &gt; 1">
+                    <t t-foreach="visibleFiles" t-as="file" t-key="fileKey(file, file_index)">
+                        <a class="o_pg_chip" t-att-href="'#' + fileKey(file, file_index)">
+                            <t t-esc="file.display_path || file.file_path || '(unknown file)'"/>
+                            <span class="o_pg_chip_count" t-if="file.comment_count">
+                                <t t-esc="file.comment_count"/>
+                            </span>
+                        </a>
+                    </t>
+                </div>
+
+                <t t-foreach="visibleFiles" t-as="file" t-key="fileKey(file, file_index)">
+                    <section class="o_pg_file card border-0 shadow-sm mb-4" t-att-id="fileKey(file, file_index)">
+                        <button type="button" class="o_pg_file_header btn btn-link text-start w-100" t-on-click="onToggleFile" t-att-data-file-key="fileKey(file, file_index)">
+                            <div class="o_pg_file_header_main">
+                                <div class="o_pg_file_path">
+                                    <t t-esc="file.display_path || file.file_path || '(unknown file)'"/>
+                                </div>
+                                <div class="o_pg_file_meta">
+                                    <span class="o_pg_badge o_pg_badge_add" t-if="file.additions">+<t t-esc="file.additions"/></span>
+                                    <span class="o_pg_badge o_pg_badge_del" t-if="file.deletions">-<t t-esc="file.deletions"/></span>
+                                    <span class="o_pg_badge o_pg_badge_comment" t-if="file.comment_count">
+                                        <t t-esc="countLabel(file.comment_count, 'comment', 'comments')"/>
+                                    </span>
+                                    <span class="o_pg_chevron"><t t-esc="isExpanded(file, file_index) ? '▾' : '▸'"/></span>
+                                </div>
+                            </div>
+                        </button>
+
+                        <div class="o_pg_file_details" t-if="isExpanded(file, file_index)">
+                            <t t-if="file.headers &amp;&amp; file.headers.length">
+                                <div class="o_pg_file_meta_lines">
+                                    <t t-foreach="file.headers" t-as="header" t-key="header_index">
+                                        <div class="o_pg_meta_line"><t t-esc="header"/></div>
+                                    </t>
+                                </div>
+                            </t>
+
+                            <t t-foreach="file.hunks" t-as="hunk" t-key="hunkKey(file, hunk, hunk_index)">
+                                <div class="o_pg_hunk">
+                                    <div class="o_pg_hunk_header"><t t-esc="hunk.header"/></div>
+                                    <table class="o_pg_table">
+                                        <tbody>
+                                            <t t-foreach="hunk.lines" t-as="line" t-key="lineKey(file, hunk, line, line_index)">
+                                                <tr t-att-class="lineClass(file, line)">
+                                                    <td class="o_pg_action_cell">
+                                                        <button
+                                                            type="button"
+                                                            class="o_pg_add_comment"
+                                                            title="Add inline comment"
+                                                            t-on-click.stop="onOpenComposer"
+                                                            t-att-data-file-path="file.file_path || file.display_path || ''"
+                                                            t-att-data-hunk-header="hunk.header || ''"
+                                                            t-att-data-old-line="line.old_line || 0"
+                                                            t-att-data-new-line="line.new_line || 0"
+                                                            t-att-data-side="line.side || 'new'"
+                                                        >+</button>
+                                                    </td>
+                                                    <td class="o_pg_ln"><t t-esc="displayLineNo(line.old_line)"/></td>
+                                                    <td class="o_pg_ln"><t t-esc="displayLineNo(line.new_line)"/></td>
+                                                    <td class="o_pg_code_cell">
+                                                        <div class="o_pg_code"><t t-esc="codeText(line)"/></div>
+                                                    </td>
+                                                </tr>
+
+                                                <tr class="o_pg_comments_row" t-if="line.comments &amp;&amp; line.comments.length">
+                                                    <td></td>
+                                                    <td colspan="3">
+                                                        <div class="o_pg_thread">
+                                                            <t t-foreach="line.comments" t-as="comment" t-key="commentKey(comment, comment_index)">
+                                                                <div class="o_pg_comment_card card border-0 shadow-sm mb-2">
+                                                                    <div class="card-body">
+                                                                        <div class="o_pg_comment_meta">
+                                                                            <strong><t t-esc="comment.author"/></strong>
+                                                                            <span class="text-muted ms-2"><t t-esc="comment.date"/></span>
+                                                                            <span class="o_pg_anchor ms-2"><t t-esc="anchorLabel(line)"/></span>
+                                                                        </div>
+                                                                        <div class="o_pg_comment_body"><t t-esc="comment.body"/></div>
+                                                                    </div>
+                                                                </div>
+                                                            </t>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                <tr class="o_pg_composer_row" t-if="isComposerOpen(file, line)">
+                                                    <td></td>
+                                                    <td colspan="3">
+                                                        <div class="o_pg_composer card border-0 shadow-sm">
+                                                            <div class="card-body">
+                                                                <div class="o_pg_composer_meta mb-2">
+                                                                    Commenting on <strong><t t-esc="file.display_path || file.file_path"/></strong>
+                                                                    <span class="ms-2"><t t-esc="anchorLabel(line)"/></span>
+                                                                </div>
+                                                                <textarea
+                                                                    class="form-control o_pg_textarea"
+                                                                    rows="4"
+                                                                    placeholder="Leave an inline comment..."
+                                                                    t-att-value="state.draft"
+                                                                    t-on-input="onComposerInput"
+                                                                ></textarea>
+                                                                <div class="o_pg_composer_actions mt-2 d-flex gap-2">
+                                                                    <button
+                                                                        type="button"
+                                                                        class="btn btn-primary"
+                                                                        t-att-disabled="state.submitting ? true : undefined"
+                                                                        t-on-click="submitComposer"
+                                                                    >
+                                                                        <t t-esc="state.submitting ? 'Posting…' : 'Add comment'"/>
+                                                                    </button>
+                                                                    <button type="button" class="btn btn-secondary" t-on-click="closeComposer">Cancel</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </t>
+                        </div>
+                    </section>
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

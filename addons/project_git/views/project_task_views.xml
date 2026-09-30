@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_task_form_inherit_project_git" model="ir.ui.view">
+        <field name="name">project.task.form.project.git</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Git Review">
+                    <group>
+                        <group>
+                            <field name="git_source_remote" placeholder="origin"/>
+                            <field name="git_source_branch" placeholder="feature/my-branch"/>
+                        </group>
+                        <group>
+                            <field name="git_target_remote" placeholder="Leave empty to reuse source remote"/>
+                            <field name="git_target_branch" placeholder="19.0"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="git_repo_root" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="git_available_remotes" readonly="1" widget="text"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="git_last_refresh" readonly="1"/>
+                    </group>
+                    <group>
+                        <button name="action_git_refresh_diff" string="Refresh Diff" type="object" class="btn-primary"/>
+                        Hover a diff line and click + to add an inline comment. Inline comments appear both here and in the chatter.
+                    </group>
+                    <group>
+                        <field name="git_refresh_error" readonly="1" nolabel="1"/>
+                    </group>
+
+                    <field name="git_diff_payload" widget="project_git_diff" nolabel="1"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
