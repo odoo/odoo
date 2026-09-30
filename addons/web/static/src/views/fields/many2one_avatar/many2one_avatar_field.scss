@@ -1,7 +1,7 @@
 .o_field_many2one_avatar {
     img:hover {
         cursor: context-menu;
-        outline: var(--border-width) solid $o-action;
+        outline: var(--border-width) solid var(--o-action);
     }
     &.text-muted {
         img {
@@ -25,7 +25,7 @@
 }
 
 .o_m2o_tags_avatar_field_popover {
-    z-index: $zindex-modal - 1;
+    z-index: calc(var(--o-bs-zindex-modal) - 1);
     font-size: $dropdown-font-size;
     .o_field_many2one_selection {
         padding: 0.25rem;
@@ -33,7 +33,7 @@
             min-width: 178px;
             font-size: $dropdown-font-size;
             .dropdown-item {
-                padding: $o-dropdown-vpadding $o-dropdown-hpadding/2;
+                padding: $o-dropdown-vpadding calc(var(--o-dropdown-hpadding) / 2);
             }
         }
         .o-autocomplete--input {

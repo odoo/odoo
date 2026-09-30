@@ -1,6 +1,6 @@
 .o_field_widget.o_field_many2many_tags_avatar {
     $-text-spacing-v: $o-line-height-base * 1em;
-    --img-text-gap-v: calc(var(--Avatar-size, #{$o-avatar-size}) - #{$-text-spacing-v});
+    --img-text-gap-v: calc(var(--Avatar-size, var(--o-avatar-size)) - #{$-text-spacing-v});
 
     flex-flow: row wrap;
     margin-top: calc(var(--img-text-gap-v) * -0.5); /* using transform conflicts with dropdown position */
@@ -49,7 +49,7 @@
     }
 }
 .o_m2m_tags_avatar_field_popover {
-    z-index: $zindex-modal - 1;
+    z-index: calc(var(--o-bs-zindex-modal) - 1);
     width: 280px;
     font-size: $dropdown-font-size;
     .o_input.o_tags_input {
@@ -61,7 +61,7 @@
     .o-autocomplete--dropdown-menu {
         font-size: $dropdown-font-size;
         .dropdown-item {
-            padding: $o-dropdown-vpadding $o-dropdown-hpadding/2;
+            padding: $o-dropdown-vpadding calc(var(--o-dropdown-hpadding) / 2);
         }
     }
     .o-autocomplete .o-autocomplete--input.o_input {

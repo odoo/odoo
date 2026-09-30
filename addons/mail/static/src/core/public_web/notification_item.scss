@@ -62,7 +62,7 @@
     color: var(--success) !important;
     outline: 1px solid rgba($success, .75);
     outline-offset: -1px;
-    padding: map-get($spacers, 1) / 2;
+    padding: calc(var(--o-bs-spacer-1) / 2);
 
     &:hover {
         outline-color: rgba(darken($success, 10%), 1);

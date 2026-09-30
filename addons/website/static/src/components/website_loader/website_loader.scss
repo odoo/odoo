@@ -2,7 +2,7 @@
     $-accent-color: #BB86FC; /* dark mode primary color */
     background-color: var(--o-view-background-color);
     pointer-events: all;
-    z-index: $zindex-modal - 1;
+    z-index: calc(var(--o-bs-zindex-modal) - 1);
 
     .o_website_loader_odoo_logo {
         background-image: url('/web/static/img/odoo_logo.svg');

@@ -29,7 +29,7 @@
         height: var(--CallDebriefTimeline__track-height, var(--o-bs-spacer-2));
 
         &.o-CallDebriefTimeline-silence-segment {
-            --CallDebriefTimeline__track-height: #{map-get($spacers, 1) / 2};
+            --CallDebriefTimeline__track-height: calc(var(--o-bs-spacer-1) / 2);
         }
 
         .o-CallDebriefTimeline-media-progress {

@@ -35,14 +35,14 @@
         top: 50%;
         left: auto;
         bottom: auto;
-        right: $grid-gutter-width*0.5;
+        right: calc(var(--o-bs-grid-gutter-width) * 0.5);
         border-radius: 100%;
         padding: 12px 16px 11px 18px;
         @include o-FileViewer-arrow;
     }
 
     .arrow-left {
-        left: $grid-gutter-width*0.5;
+        left: calc(var(--o-bs-grid-gutter-width) * 0.5);
         right: auto;
         padding: 12px 18px 11px 16px;
     }

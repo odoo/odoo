@@ -172,12 +172,12 @@
             .o_configurator_industry_wrapper {
                 position: relative;
                 display: inline-block;
-                height: $line-height-base * 1em;
+                height: calc(var(--body-line-height) * 1em);
                 min-width: 17ch;
                 cursor: pointer;
 
                 input, &::after {
-                    height: $line-height-base * 1em;
+                    height: calc(var(--body-line-height) * 1em);
                     font-style: italic;
                     text-indent: 5px;
                     padding: 0;
