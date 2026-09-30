@@ -5,6 +5,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
     click,
+    edit,
     manuallyDispatchProgrammaticEvent,
     press,
     queryAll,
@@ -13,7 +14,7 @@ import {
 } from "@odoo/hoot-dom";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "./_helpers/editor";
-import { deleteBackward, insertText } from "./_helpers/user_actions";
+import { deleteBackward, insertText, undo } from "./_helpers/user_actions";
 import { getContent, setSelection } from "./_helpers/selection";
 import { execCommand } from "./_helpers/userCommands";
 import { expectElementCount } from "./_helpers/ui_expectations";
@@ -538,4 +539,67 @@ test("should show the updated file name in the link preview", async () => {
     await waitFor(".o_we_url_link:not(:empty)");
     const fileNameInPreview = queryOne(".o_we_url_link");
     expect(fileNameInPreview.textContent).toBe("Hello");
+});
+
+describe("embedded file settings", () => {
+    const setupEditorWithFile = async () => {
+        const { editor, el } = await setupEditor("<p>[]<br></p>", {
+            config: configWithEmbeddedFile,
+        });
+        const mockedUpload = patchUpload(editor);
+        execCommand(editor, "uploadFile");
+        await mockedUpload;
+        await waitFor('[data-embedded="file"] .o_file_name:contains("file.txt")');
+        return { editor, el };
+    };
+
+    const openFileSettings = async () => {
+        await click('[data-embedded="file"] .file-options-button');
+        await animationFrame();
+    };
+
+    test("should toggle the inline preview", async () => {
+        const { editor } = await setupEditorWithFile();
+        await openFileSettings();
+        await click(".file-inline-preview-button");
+        await animationFrame();
+        expect('[data-embedded="file"] iframe.o_file_preview_iframe').toHaveCount(1);
+        expect('[data-embedded="file"] .alert-info').toHaveCount(0);
+        const host = queryOne('[data-embedded="file"]');
+        expect(JSON.parse(host.dataset.embeddedProps).isPreviewInline).toBe(true);
+
+        undo(editor);
+        await animationFrame();
+        expect('[data-embedded="file"] iframe.o_file_preview_iframe').toHaveCount(0);
+        expect('[data-embedded="file"] .alert-info').toHaveCount(1);
+    });
+
+    test("should remove the file in its own undo step", async () => {
+        const { editor, el } = await setupEditorWithFile();
+        await insertText(editor, "z");
+        await openFileSettings();
+        await click(".file-delete-button");
+        await animationFrame();
+        expect('[data-embedded="file"]').toHaveCount(0);
+        expect(el.textContent).toInclude("z");
+
+        // Undoing the removal must not undo the typing done just before.
+        undo(editor);
+        await animationFrame();
+        expect('[data-embedded="file"]').toHaveCount(1);
+        expect(el.textContent).toInclude("z");
+    });
+
+    test("should rename the file from the rename dialog", async () => {
+        await setupEditorWithFile();
+        await openFileSettings();
+        await click(".file-rename-button");
+        await waitFor(".modal #o_file_rename_input");
+        expect("#o_file_rename_input").toBeFocused();
+        await edit("renamed");
+        await press("Enter");
+        await animationFrame();
+        expect(".modal").toHaveCount(0);
+        expect('[data-embedded="file"] .o_file_name').toHaveText("renamed");
+    });
 });

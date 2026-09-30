@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="html_editor.RenameDialog">
+    <Dialog
+        size="'sm'"
+        title.translate="Rename file"
+    >
+        <label for="o_file_rename_input">Name</label>
+        <input id="o_file_rename_input" name="filename" type="text" maxLength="100"
+            class="form-control"
+            t-att-value="this.props.filename" t-ref="this.nameInputRef"
+            t-on-keydown="this.onKeydown"/>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="() => this.rename()" data-hotkey="r">Rename</button>
+            <button class="btn btn-secondary" t-on-click="() => this.props.close()" data-hotkey="x">Discard</button>
+        </t>
+    </Dialog>
+</t>
+</templates>

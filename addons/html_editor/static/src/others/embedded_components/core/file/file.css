@@ -12,4 +12,16 @@
     input[type="text"] {
         width: 190px;
     }
+
+    &:has(iframe) {
+        display: block;
+        width: 100%;
+    }
+    iframe.o_file_preview_iframe {
+        display: block;
+        width: 100%;
+        margin: 6px 0;
+        padding: 0;
+        min-height: calc(100vh - 170px);
+    }
 }
