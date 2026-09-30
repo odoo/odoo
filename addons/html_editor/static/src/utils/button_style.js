@@ -42,6 +42,8 @@ export const BUTTON_SHAPES = [
     { shape: "outline rounded-circle", label: "Outline + Rounded" },
     { shape: "fill", label: "Fill" },
     { shape: "fill rounded-circle", label: "Fill + Rounded" },
+    { shape: "gradient", label: "Gradient" },
+    { shape: "gradient rounded-circle", label: "Gradient + Rounded" },
     { shape: "flat", label: "Flat" },
 ];
 
@@ -53,7 +55,7 @@ export const BUTTON_SIZES = [
 
 export function computeButtonClasses(el, { type, size, shape }) {
     const classes = [...el.classList].filter(
-        (value) => !value.match(/^(btn.*|rounded-circle|flat|(text|bg)-(o-color-\d$|\d{3}$))$/)
+        (value) => !value.match(/^(btn.*|rounded-circle|flat|bg-gradient|(text|bg)-(o-color-\d$|\d{3}$))$/)
     );
 
     if (!type || type === "link") {
@@ -70,6 +72,9 @@ export function computeButtonClasses(el, { type, size, shape }) {
         const shapeValues = shape.split(" ");
         if (["outline", "fill"].includes(shapeValues[0])) {
             shapePrefix = `${shapeValues[0]}-`;
+            classes.push(...shapeValues.slice(1));
+        } else if (shapeValues[0] === "gradient") {
+            classes.push("bg-gradient");
             classes.push(...shapeValues.slice(1));
         } else {
             classes.push(...shapeValues);
@@ -99,6 +104,8 @@ export function getButtonShape(el) {
         const regexParts = parts.map((cls) => {
             if (["outline", "fill"].includes(cls)) {
                 cls = `btn-${cls}`;
+            } else if (cls === "gradient") {
+                cls = "bg-gradient";
             }
             return `(?=.*\\b${cls}\\b)`;
         });

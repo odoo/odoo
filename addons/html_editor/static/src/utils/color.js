@@ -48,8 +48,10 @@ for (let i = 1; i <= 5; i++) {
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-headings`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-text`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-primary`);
+    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-primary-gradient`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-primary-text`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-secondary`);
+    EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-secondary-gradient`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-secondary-text`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-primary-border`);
     EDITOR_COLOR_CSS_VARIABLES.push(`o-cc${i}-btn-secondary-border`);
