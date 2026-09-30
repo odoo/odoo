@@ -116,7 +116,7 @@
             .o_hr_holidays_kanban .o_hr_holidays_button {
                 flex-direction: column;
                 align-items: start;
-                gap: map-get($spacers, 1) !important;
+                gap: var(--o-bs-spacer-1) !important;
             }
         }
 
@@ -150,7 +150,7 @@
         .o_hr_holidays_button {
             grid-template-columns: 1fr;
             grid-template-rows: 1fr 1fr;
-            gap: map-get($spacers, 1);
+            gap: var(--o-bs-spacer-1);
 
             .btn-primary.oe_kanban_action:where(:last-child), .btn-secondary.oe_kanban_action {
                 grid-area: 2 / 2;
@@ -165,7 +165,7 @@
             @container (min-width: 500px) {
                 grid-template-columns: 1fr 1fr 5.5rem;
                 grid-template-rows: 1fr;
-                gap: map-get($spacers, 2);
+                gap: var(--o-bs-spacer-2);
                 align-items: center;
 
                 .btn-primary.oe_kanban_action:where(:last-child), .btn-secondary.oe_kanban_action {

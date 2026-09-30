@@ -5,24 +5,24 @@
     th:nth-child(2),
     td:nth-child(2) {
         text-align: right;
-        padding-right: map-get($spacers, 3);
+        padding-right: var(--o-bs-spacer-3);
         white-space: nowrap;
     }
 
     th:nth-child(3),
     td:nth-child(3) {
-        padding-left: map-get($spacers, 1);
+        padding-left: var(--o-bs-spacer-1);
     }
 
     th:nth-child(4),
     td:nth-child(4) {
         text-align: right;
-        padding-left: map-get($spacers, 2);
+        padding-left: var(--o-bs-spacer-2);
     }
 }
 
 .cash-overview tr td:first-child {
-    padding-left: map-get($spacers, 2);
+    padding-left: var(--o-bs-spacer-2);
 }
 
 @media screen and (max-width: 768px) {

@@ -16,7 +16,7 @@
         .o_popover:has(&) {
             $-margin-top: #{map-get($spacers, 5) * 3};
 
-            --#{$prefix}popover-border-radius: #{map-get($spacers, 2)} #{map-get($spacers, 2)} 0 0;
+            --#{$prefix}popover-border-radius: var(--o-bs-spacer-2) var(--o-bs-spacer-2) 0 0;
             --CwPopover-max-height: calc(100dvh - #{$-margin-top});
             --CwPopover-max-width: auto;
             --CwPopover-width: 100%;
@@ -49,7 +49,7 @@
     }
 
     .o_card_popover_close {
-        margin: map-get($spacers, 3) map-get($spacers, 2);
+        margin: var(--o-bs-spacer-3) var(--o-bs-spacer-2);
     }
 
     .o_popover_header {
