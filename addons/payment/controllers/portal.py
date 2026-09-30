@@ -325,6 +325,11 @@ class PaymentPortal(portal.CustomerPortal):
                 _("The payment should either be direct, with redirection, or made by a token.")
             )
 
+        if provider_sudo.state == 'disabled' or (
+            not provider_sudo.is_published and not request.env.user._is_internal()
+        ):
+            raise ValidationError(_("This payment provider is not available."))
+
         reference = request.env['payment.transaction']._compute_reference(
             provider_sudo.code,
             prefix=reference_prefix,
