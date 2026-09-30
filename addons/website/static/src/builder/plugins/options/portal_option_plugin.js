@@ -11,7 +11,6 @@ export class PortalOptionPlugin extends Plugin {
     resources = {
         builder_actions: {
             SetStylePortalCardAction,
-            SetPortalCardGapAction,
             UpdatePortalCardListAction,
         },
         anchor_excluded_selectors: ".o_portal_index_card",
@@ -100,43 +99,6 @@ export class PortalOptionPlugin extends Plugin {
                 { specification: {} }
             );
         }
-        const portalCardGap =
-            this.document.documentElement.style.getPropertyValue("--portal-card-gap");
-        if (portalCardGap) {
-            await this.dependencies.customizeWebsite.customizeWebsiteVariables(
-                { "portal-card-gap": portalCardGap },
-                "null",
-                false,
-                false
-            );
-        }
-    }
-}
-
-export class SetPortalCardGapAction extends BuilderAction {
-    static id = "setPortalCardGap";
-    static dependencies = ["customizeWebsite", "domObserver"];
-
-    getValue() {
-        return (
-            this.document.documentElement.style.getPropertyValue("--portal-card-gap") ||
-            this.dependencies.customizeWebsite.getWebsiteVariableValue("portal-card-gap")
-        );
-    }
-
-    apply({ isPreviewing, value }) {
-        const previousValue = this.getValue();
-        this.setGap(value);
-        if (!isPreviewing) {
-            this.dependencies.domObserver.stageCustomMutation({
-                apply: () => this.setGap(value),
-                revert: () => this.setGap(previousValue),
-            });
-        }
-    }
-
-    setGap(value) {
-        this.document.documentElement.style.setProperty("--portal-card-gap", value);
     }
 }
 
