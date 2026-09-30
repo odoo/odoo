@@ -15,7 +15,7 @@ const notificationPatch = {
         if (this.notification_type === "snail") {
             switch (this.notification_status) {
                 case "process":
-                    return "fa fa-truck";
+                    return "local_shipping";
                 case "sent":
                     return "check";
                 case "ready":
