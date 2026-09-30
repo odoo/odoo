@@ -22,3 +22,13 @@ The addon is an empty shell at this point. It can be installed, but it has no mo
 
 **Try it:** Enable developer mode, update the Apps list, and install Real Estate. Notice that the app appears in the list even though it has no main menu yet.
 
+## Chapter 3 - Models and basic fields
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/03_basicmodel.html)
+
+The new `estate.property` model gives the application somewhere to store property records. Its Python class defines fields for the name, description, postcode, availability, prices, rooms, area, and garden details. The ORM maps the model to a PostgreSQL table named `estate_property`.
+
+`name` and `expected_price` are required because a useful property record needs both. `garden_orientation` stores one of four keys while showing readable labels in the interface. Odoo also adds fields such as `id` and `create_date` automatically; they do not need declarations in our class.
+
+**Try it:** Upgrade `estate` and inspect the `estate_property` table. Compare its columns with the Python fields, then find an automatic field that was not declared in `estate_property.py`.
+
