@@ -1,4 +1,5 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, hover, leave, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
 import { defineModels, mountView } from "@web/../tests/web_test_helpers";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { HrLeaveAccrualPlan } from "@hr_holidays/../tests/mock_server/mock_models/hr_leave_accrual_plan";
@@ -66,4 +67,26 @@ test("accrual levels widget rendering with diverse level configurations", async 
     expect(`${level7} .content`).toHaveText(
         "Accrual frequency : 20 day\(s\) every year on the Allocation date's anniversary\.\n\nUnused days will be transferred totally on each start of the year\."
     );
+});
+
+test.tags("desktop");
+test("hovering a milestone toggles o_accrual_level_hovered", async () => {
+    await mountView({
+        type: "form",
+        resModel: "hr.leave.accrual.plan",
+        arch: `<form><field name="level_ids" widget="accrual_levels"/></form>`,
+        resId: 1,
+    });
+    const level = ".o_accrual_level:nth-child(2)";
+    expect(`${level}.o_accrual_level_hovered`).toHaveCount(0);
+    await hover(`${level} .content`);
+    await animationFrame();
+    expect(`${level}.o_accrual_level_hovered`).toHaveCount(1);
+    expect(".o_accrual_level_hovered").toHaveCount(1);
+    await leave();
+    await animationFrame();
+    expect(".o_accrual_level_hovered").toHaveCount(0);
+    await hover(`${level} .time > span`);
+    await animationFrame();
+    expect(`${level}.o_accrual_level_hovered`).toHaveCount(1);
 });
