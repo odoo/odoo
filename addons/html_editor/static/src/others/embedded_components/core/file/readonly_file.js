@@ -18,6 +18,7 @@ export class ReadonlyEmbeddedFileComponent extends Component {
     };
     props = useProps({
         fileData: t.object(),
+        isPreviewInline: t.boolean().optional(false),
         host: t.object(),
     });
     static template = "html_editor.ReadonlyEmbeddedFile";
@@ -26,6 +27,7 @@ export class ReadonlyEmbeddedFileComponent extends Component {
         this.dialogService = useService("dialog");
         this.state = proxy({
             fileData: { ...this.props.fileData },
+            isPreviewInline: this.props.isPreviewInline,
         });
         this.fileModel = new StateFileModel(this.state);
         this.attachmentViewer = useFileViewer();

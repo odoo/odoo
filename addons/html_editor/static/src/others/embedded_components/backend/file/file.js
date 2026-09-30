@@ -53,6 +53,9 @@ export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
             this.env.editorShared?.setSelectionAfter(this.props.host);
         }
     }
+    toggleInlinePreview() {
+        this.state.isPreviewInline = !this.state.isPreviewInline;
+    }
 
     renameFile() {
         let newName = this.nameInput()?.value || "";

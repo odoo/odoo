@@ -12,4 +12,12 @@
     input[type="text"] {
         width: 190px;
     }
+
+    &:has(iframe) {
+        display: block;
+    }
+    iframe.o_file_preview_iframe {
+        width: 200%;
+        filter: drop-shadow(2px 4px 6px black);
+    }
 }
