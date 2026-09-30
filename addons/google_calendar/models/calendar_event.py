@@ -171,6 +171,12 @@ class CalendarEvent(models.Model):
 
     @api.model
     def _odoo_values(self, google_event, calendar, default_reminders=()):
+        """ Convert the google event record to a set of values that can be used to create or update an Odoo event.
+
+        Side effect note: To prevent alarm duplication when importing multiple events in a single transaction, we create
+        the alarm record directly within this call so that other events can be linked to it. If the sync process fails,
+        the transaction will be rolled back and the alarm record will not be committed (see _odoo_reminders_commands)
+        """
         if google_event.is_cancelled():
             return {'active': False}
 
@@ -287,6 +293,11 @@ class CalendarEvent(models.Model):
 
     @api.model
     def _odoo_reminders_commands(self, reminders=()):
+        """ Returns commands to link alarms to the event based on the reminders provided by google.
+
+        Side effect note: To avoid having to extract and deduplicate alarm commands later on, we simply create
+        missing alarms directly within this call. If the sync process fails, the transaction will be rolled back
+        and the alarm record will not be committed."""
         commands = []
         for reminder in reminders:
             alarm_type = 'email' if reminder.get('method') == 'email' else 'notification'
@@ -324,7 +335,13 @@ class CalendarEvent(models.Model):
                         reminder_type=alarm_type_label,
                         duration=duration,
                     )
-                commands += [(0, 0, {'duration': duration, 'interval': interval, 'name': name, 'alarm_type': alarm_type})]
+                alarm = self.env['calendar.alarm'].create({
+                    'duration': duration,
+                    'interval': interval,
+                    'name': name,
+                    'alarm_type': alarm_type,
+                })
+                commands += [(4, alarm.id)]
         return commands
 
     def action_mass_archive(self, recurrence_update_setting):
