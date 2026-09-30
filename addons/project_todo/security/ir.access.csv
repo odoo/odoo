@@ -10,7 +10,7 @@ task_visibility_rule,Project/Task: employees: follow required for follower-only 
                     # to subscribe check access to the record, follower is not enough at creation
                     ('user_ids', 'in', user.id)
         ]"
-project_manager_all_project_tasks_rule,Project/Task: project manager: see all tasks linked to a project or its own tasks and all tasks templates,project.task,project.group_project_manager,crud,"[
+project_manager_all_project_tasks_rule,Project/Task: administrator: see all tasks linked to a project or its own tasks and all tasks templates,project.task,base.group_system,crud,"[
             '|',
                 '|',
                     ('project_id', '!=', False),

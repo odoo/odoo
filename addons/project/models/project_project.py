@@ -153,7 +153,7 @@ class ProjectProject(models.Model):
              "• Advanced Edit: create and update tasks, change their priority, and move them between stages.\n\n"
              "Other rules\n\n"
              "• Internal users can open a task from a direct link, even if they don't have access to the project application.\n"
-             "• Project admins have access to private projects, even if they are not team members.")
+             "• System admins have access to private projects, even if they are not team members.")
     allowed_internal_user_ids = fields.Many2many(
         comodel_name='res.users',
         relation='project_allowed_internal_users_rel',
@@ -161,7 +161,7 @@ class ProjectProject(models.Model):
         compute='_compute_allowed_internal_user_ids',
         store=True,
         readonly=False,
-        domain=lambda self: f"[('share', '=', False), ('group_ids', 'in', {self.env.ref('project.group_project_user').id}), ('company_ids', '=?', company_id)]"
+        domain=lambda self: f"[('share', '=', False), ('all_group_ids', 'in', {self.env.ref('project.group_project_user').id}), ('company_ids', '=?', company_id)]"
     )
     access_instruction_message = fields.Char('Access Instruction Message', compute='_compute_access_instruction_message', export_string_translation=False)
     date_start = fields.Date(string='Start Date', copy=False)
@@ -687,6 +687,9 @@ class ProjectProject(models.Model):
                     'partner_id': project.partner_id.id,
                     'access_mode': 'view',
                 })
+            if project.privacy_visibility in ['followers', 'invited_users']:
+                # Add the current user as a team member so that creating a private project does not lock them out.
+                project.sudo().allowed_internal_user_ids |= self.env.user
         if collaborators_to_create:
             self.env['project.collaborator'].create(collaborators_to_create)
         return projects
@@ -1168,6 +1171,9 @@ class ProjectProject(models.Model):
         for project in self:
             if project.privacy_visibility == new_visibility:
                 continue
+            if new_visibility in ['followers', 'invited_users']:
+                # Keep the current user as a team member so that restricting the visibility does not lock them out.
+                project.allowed_internal_user_ids |= self.env.user
             if new_visibility in ['invited_users', 'portal']:
                 if project.partner_id and project.partner_id not in project.collaborator_ids.partner_id:
                     self.env['project.collaborator'].create({
@@ -1365,6 +1371,9 @@ class ProjectProject(models.Model):
 
     def _toggle_template_mode(self, is_template):
         self.ensure_one()
+        if not is_template and self.privacy_visibility in ['followers', 'invited_users']:
+            # Keep the current user as a team member so that converting the template back to a regular project does not lock them out.
+            self.allowed_internal_user_ids |= self.env.user
         self.is_template = is_template
         if not is_template:
             self.task_ids.role_ids = False
