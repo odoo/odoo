@@ -18,7 +18,8 @@
     <t t-call="web.external_layout"
         address="address"
         layout_document_title="layout_document_title"
-        information_block="information_block">
+        information_block="information_block"
+        forced_vat="o.fiscal_position_id.foreign_vat"> <!-- So that it appears in the report instead of the company VAT if it's set -->
         <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
         <div class="page">
             <div class="oe_structure"/>
