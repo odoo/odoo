@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+import logging
 import werkzeug
 
 from odoo import http
 from odoo.http import request
+
+_logger = logging.getLogger(__name__)
 
 
 class PosSelfKiosk(http.Controller):
@@ -10,6 +13,17 @@ class PosSelfKiosk(http.Controller):
     def start_self_ordering(self, config_id=None, access_token=None, table_identifier=None, subpath=None):
         pos_config, _, config_access_token = self._verify_entry_access(config_id, access_token, table_identifier)
         use_lna = bool(pos_config.sudo().env["ir.config_parameter"].get_param("point_of_sale.use_lna"))
+
+        _logger.warning(
+            "SELF ORDER LANG: cookie=%s, request.lang=%s, context.lang=%s, default=%s",
+            request.cookies.get("frontend_lang"),
+            request.lang,
+            request.env.context.get("lang"),
+            pos_config.self_ordering_default_language_id.code,
+        )
+        if (default_lang := pos_config.self_ordering_default_language_id) and not request.cookies.get('frontend_lang'):
+            request.future_response.set_cookie('frontend_lang', default_lang.code)
+
         return request.render(
                 'pos_self_order.index',
                 {

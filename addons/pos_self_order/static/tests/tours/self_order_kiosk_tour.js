@@ -140,7 +140,8 @@ registry.category("web_tour.tours").add("self_order_price_null", {
 
 registry.category("web_tour.tours").add("self_order_language_changes", {
     steps: () => [
-        LandingPage.checkLanguageSelected("English"),
+        LandingPage.checkLanguageSelected("French"),
+        ...Utils.changeLanguage("English"),
         LandingPage.checkCountryFlagShown("us"),
 
         Utils.clickBtn("Order Now"),

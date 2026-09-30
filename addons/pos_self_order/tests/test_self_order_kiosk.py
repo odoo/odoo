@@ -77,6 +77,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
 
         self.pos_config.write({
             'self_ordering_available_language_ids': [Command.link(lang.id) for lang in self.env['res.lang'].search([])],
+            'self_ordering_default_language_id': self.env['res.lang'].search([('code', '=', 'fr_FR')], limit=1),
             'self_ordering_takeaway': False,
             'self_ordering_mode': 'kiosk',
             'self_ordering_pay_after': 'each'
