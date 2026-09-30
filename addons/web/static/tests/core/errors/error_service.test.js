@@ -250,7 +250,7 @@ test("handle uncaught client errors", async () => {
         add(dialogClass, props) {
             expect(dialogClass).toBe(ClientErrorDialog);
             expect(props.name).toBe("UncaughtClientError > TestError");
-            expect(props.message).toBe("Uncaught Javascript Error > This is an error test");
+            expect(props.message).toBe("Uncaught JavaScript Error > This is an error test");
             expect.step("dialog.add");
         },
     });

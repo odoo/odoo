@@ -5,7 +5,7 @@
     'name': 'Live Event Tracks',
     'category': 'Marketing/Events',
     'sequence': 1006,
-    'summary': 'Support live tracks: streaming, participation, youtube',
+    'summary': 'Support live tracks: streaming, participation, YouTube',
     'website': 'https://www.odoo.com/app/events',
     'depends': [
         'website_event_track',

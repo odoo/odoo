@@ -40,7 +40,7 @@ class PaymentProvider(models.Model):
 
     paypal_access_token = fields.Char(
         string="PayPal Access Token",
-        help="The short-lived token used to access Paypal APIs",
+        help="The short-lived token used to access PayPal APIs",
         copy=False,
         groups="base.group_system",
     )

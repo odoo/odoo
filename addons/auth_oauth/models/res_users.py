@@ -20,7 +20,7 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     oauth_provider_id = fields.Many2one('auth.oauth.provider', string='OAuth Provider')
-    oauth_uid = fields.Char(string='OAuth User ID', help="Oauth Provider user_id", copy=False)
+    oauth_uid = fields.Char(string='OAuth User ID', help="OAuth Provider user_id", copy=False)
     oauth_access_token = fields.Char(string='OAuth Access Token Store', readonly=True, copy=False, prefetch=False, groups=fields.NO_ACCESS)
     has_oauth_access_token = fields.Boolean(string='Has OAuth Access Token', compute='_compute_has_oauth_access_token')
 

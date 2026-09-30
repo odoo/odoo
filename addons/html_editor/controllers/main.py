@@ -715,7 +715,7 @@ class HTML_Editor(Controller):
                 raise UserError(_("The text you are trying to translate is too long. Please select less text and try it again."))
             raise UserError(_("Sorry, we could not translate the text. Please try again later."))
         except requests.RequestException:
-            raise UserError(_("Oops, it looks like google translation service is unreachable!"))
+            raise UserError(_("Oops, it looks like the Google translation service is unreachable!"))
 
     @route(["/web_editor/get_ice_servers", "/html_editor/get_ice_servers"], type='jsonrpc', auth="user")
     def get_ice_servers(self):

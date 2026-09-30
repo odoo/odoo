@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    "name": "Payment Provider: Paypal",
+    "name": "Payment Provider: PayPal",
     "version": "2.0",
     "category": "Accounting/Payment Providers",
     "sequence": 350,

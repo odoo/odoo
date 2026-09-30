@@ -39,7 +39,7 @@ class IrHttp(models.AbstractModel):
         if turnstile_result == 'wrong_secret':
             raise ValidationError(_("The Cloudflare turnstile private key is invalid."))
         elif turnstile_result == 'wrong_token':
-            raise ValidationError(_("The CloudFlare human validation failed."))
+            raise ValidationError(self.env._("The Cloudflare human validation failed."))
         elif turnstile_result == 'timeout':
             raise UserError(_("Your request has timed out, please retry."))
         elif turnstile_result == 'bad_request':

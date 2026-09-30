@@ -13,7 +13,7 @@ Featuring
 
  * Integrated course and lesson management
  * Fullscreen navigation
- * Support Youtube videos, Google documents, PDF, images, articles
+ * Support YouTube videos, Google documents, PDF, images, articles
  * Test knowledge with quizzes
  * Filter and Tag
  * Statistics
