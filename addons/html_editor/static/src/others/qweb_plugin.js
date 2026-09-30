@@ -92,7 +92,9 @@ export class QWebPlugin extends Plugin {
             this.dependencies.selection
                 .getTargetedNodes()
                 .map((n) => closestElement(n, PROTECTED_QWEB_SELECTOR))
-                .filter(Boolean)
+                // `t` elements are replaced by their content at QWeb
+                // compilation: style them through a wrapper instead.
+                .filter((n) => n && n.nodeName !== "T")
         );
         for (const fieldNode of fieldNodes) {
             this.dependencies.color.colorElement(fieldNode, color, mode);
@@ -105,7 +107,9 @@ export class QWebPlugin extends Plugin {
             this.dependencies.selection
                 .getTargetedNodes()
                 .map((n) => closestElement(n, PROTECTED_QWEB_SELECTOR))
-                .filter(Boolean)
+                // `t` elements are replaced by their content at QWeb
+                // compilation: style them through a wrapper instead.
+                .filter((n) => n && n.nodeName !== "T")
         );
         const formatSpec = formatsSpecs[formatName];
         for (const fieldNode of fieldNodes) {
