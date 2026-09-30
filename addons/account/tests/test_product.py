@@ -85,6 +85,20 @@ class TestProduct(AccountTestInvoicingCommon):
 
         self.assertEqual(product.taxes_id, tax_new, "The branch company default tax shouldn't be set if we set a different tax on the product from the parent company.")
 
+    def test_multi_company_combo_product_tax(self):
+        """Ensure a combo product doesn't get the default taxes of the other companies """
+        company_2 = self.setup_other_company()['company']
+        combo_product = self.env['product.template'].with_context(allowed_company_ids=self.env.company.ids).create({
+            'name': 'Combo Product',
+            'type': 'combo',
+            'combo_ids': [Command.create({
+                'name': 'Combo',
+                'combo_item_ids': [Command.create({'product_id': self.product_a.id})],
+            })],
+            'taxes_id': False,
+        })
+        self.assertFalse(combo_product.with_company(company_2).taxes_id)
+
     def test_product_category_parent_account_fallback(self):
         """When no account is set on a product category, accounts should be inherited from parent categories.
         Also covers the case where income and expense are defined at different hierarchy levels.
