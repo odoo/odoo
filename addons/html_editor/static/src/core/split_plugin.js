@@ -207,8 +207,18 @@ export class SplitPlugin extends Plugin {
      * @returns {[HTMLElement, HTMLElement]}
      */
     splitElement(element, offset) {
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
         const cursor = this.dependencies.selection.preserveSelection();
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+        this.dispatchTo("clean_handlers", element);
+        // const before = /** @type {HTMLElement} **/ (element.cloneNode());
+=======
+        const cursor = this.dependencies.selection.preserveSelection();
+        this.dispatchTo("clean_handlers", element);
+        // const before = /** @type {HTMLElement} **/ (element.cloneNode());
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
         /** @type {HTMLElement} **/
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
         const firstPart = element.cloneNode();
         /** @type {HTMLElement} **/
         const secondPart = element.cloneNode();
@@ -220,16 +230,55 @@ export class SplitPlugin extends Plugin {
         for (const node of children.slice(0, offset)) {
             cursor.update(callbacksForCursorUpdate.append(firstPart, node));
             firstPart.appendChild(node);
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+        const before = element.cloneNode();
+        const after = /** @type {HTMLElement} **/ (element.cloneNode());
+        element.before(before);
+        element.after(after);
+        let index = 0;
+        for (const child of childNodes(element)) {
+            index < offset ? before.appendChild(child) : after.appendChild(child);
+            index++;
+=======
+        const before = element.cloneNode();
+        const after = /** @type {HTMLElement} **/ (element.cloneNode());
+        cursor.update(callbacksForCursorUpdate.before(element, before));
+        element.before(before);
+        cursor.update(callbacksForCursorUpdate.after(element, after));
+        element.after(after);
+        let index = 0;
+        for (const child of childNodes(element)) {
+            if (index < offset) {
+                cursor.update(callbacksForCursorUpdate.append(before, child));
+                before.appendChild(child);
+            } else {
+                cursor.update(callbacksForCursorUpdate.append(after, child));
+                after.appendChild(child);
+            }
+            index++;
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
         }
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
         for (const node of children.slice(offset)) {
             cursor.update(callbacksForCursorUpdate.append(secondPart, node));
             secondPart.appendChild(node);
         }
         cursor.update(callbacksForCursorUpdate.remove(element));
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+=======
+        cursor.update(callbacksForCursorUpdate.remove(element));
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
         element.remove();
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
         this.dispatchTo("after_split_element_handlers", { firstPart, secondPart });
         cursor.restore();
         return [firstPart, secondPart];
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+        return [before, after];
+=======
+        cursor.restore();
+        return [before, after];
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
     }
 
     /**

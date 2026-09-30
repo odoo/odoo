@@ -1009,7 +1009,13 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
             `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p><br></p></td></tr></tbody></table><p>]<br></p>`
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p>\u200b</p></td></tr></tbody></table><p>]\u200b</p>`
+=======
+            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p><br></p></td></tr></tbody></table><p>]<br></p>`
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
         );
     });
 
@@ -1019,7 +1025,13 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
             `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p>]<br></p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[\u200b</p></td><td class="o_selected_td"><p>]\u200b</p></td></tr></tbody></table>`
+=======
+            `<table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p>]<br></p></td></tr></tbody></table>`
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
         );
     });
 

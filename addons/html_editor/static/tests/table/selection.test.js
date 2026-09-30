@@ -767,9 +767,17 @@ describe("select columns on cross over", () => {
                     '<table class="o_selected_table"><tbody><tr>' +
                     '<td class="o_selected_td"><strong>a[b</strong></td>' +
                     '<td class="o_selected_td"><strong>cd</strong></td>' +
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
                     '<td class="o_selected_td"><strong>e]f</strong></td>' +
                     "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>" +
                     '<p data-selection-placeholder=""><br></p>',
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+                    '<td class="o_selected_td"><strong>ef]</strong></td>' +
+                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
+=======
+                    '<td class="o_selected_td"><strong>e]f</strong></td>' +
+                    "</tr><tr><td>ab</td><td>cd</td><td>ef</td></tr></tbody></table>",
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
             });
         });
 
