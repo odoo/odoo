@@ -22,6 +22,8 @@ _logger = logging.getLogger(__name__)
 
 EU_EXTRA_VAT_CODES_INV = {v: k for k, v in EU_EXTRA_VAT_CODES.items()}
 
+EU_VAT_UNPREFIXED = ['RO', 'HU', 'DE']
+
 _ref_vat = {
     'al': 'ALJ91402501L',
     'ar': '20055361682',
@@ -170,6 +172,10 @@ class ResPartner(models.Model):
                 raise ValidationError(msg)
             else:
                 return '', code_to_check
+
+        if not prefixed_country and 'EU_PREFIX' in country.country_group_codes and country.code not in EU_VAT_UNPREFIXED:
+            vat_to_return = EU_EXTRA_VAT_CODES.get(country.code, country.code) + vat
+
         return vat_to_return, code_to_check
 
     def _inverse_vat(self):
