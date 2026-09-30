@@ -14,10 +14,6 @@ class ResCompany(models.Model):
         string='Kunci Pembelian / Pengadaan',
         help='Mencegah penambahan, perubahan, atau pembatalan transaksi pembelian dan pengadaan PPL pada atau sebelum tanggal ini (inklusif).'
     )
-    tax_lock_date = fields.Date(
-        string='Kunci Pajak (Tax Return)',
-        help='Mencegah penambahan, perubahan, atau pembatalan transaksi perpajakan pada atau sebelum tanggal ini (setelah penutupan pajak).'
-    )
     user_lock_date = fields.Date(
         string='Kunci Semua Pengguna Biasa',
         help='Mencegah seluruh transaksi jurnal pada atau sebelum tanggal ini untuk staf umum. Manajer Keuangan masih diizinkan membuat penyesuaian.'
@@ -27,12 +23,11 @@ class ResCompany(models.Model):
         help='Kunci mutlak dan permanen. Seluruh pengguna termasuk Administrator dan Manajer Keuangan tidak dapat mengubah atau memposting transaksi pada atau sebelum tanggal ini.'
     )
 
-    def check_lock_date(self, target_date, lock_type='general', is_tax=False):
+    def check_lock_date(self, target_date, lock_type='general'):
         """
         Memeriksa apakah target_date berada dalam batas tanggal kunci aktif.
         - target_date: date object / str
-        - lock_type: 'sales', 'purchase', 'general', 'tax', or 'all'
-        - is_tax: boolean jika ada akun perpajakan
+        - lock_type: 'sales', 'purchase', 'general', or 'all'
         """
         if not target_date or not self:
             return
@@ -57,13 +52,7 @@ class ResCompany(models.Model):
                 'Transaksi Pembelian / Pengadaan / Bank terkunci hingga tanggal %s (inklusif).'
             ) % self.purchase_lock_date.strftime('%d/%m/%Y'))
 
-        # 4. Lock Tax Return
-        if (lock_type in ('tax', 'all') or is_tax) and self.tax_lock_date and target_date <= self.tax_lock_date:
-            raise UserError(_(
-                'Transaksi Perpajakan terkunci hingga tanggal %s setelah penutupan pajak (tax closing).'
-            ) % self.tax_lock_date.strftime('%d/%m/%Y'))
-
-        # 5. Lock Everything (General Lock)
+        # 4. Lock Everything (General Lock)
         if self.user_lock_date and target_date <= self.user_lock_date:
             raise UserError(_(
                 'Seluruh transaksi terkunci oleh Tanggal Kunci (Lock Everything) hingga tanggal %s (inklusif).'
