@@ -325,7 +325,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
 
         self.assertRecordValues(partner, [{
             'peppol_eas': '9957',
-            'peppol_endpoint': '23334175221',
+            'peppol_endpoint': 'FR23334175221',
         }])
 
         partner.write({
