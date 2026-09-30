@@ -92,6 +92,7 @@ export class EmojiPicker extends Component {
     categoryId = signal(null, { type: t.or([t.number(), t.literal(null)]) });
     hoveredEmoji = signal(null, { type: t.or([t.object(), t.literal(null)]) }); // Emoji | null
     activeEmojiIndex = signal(0, { type: t.number() });
+    isSearchFocused = signal(false, { type: t.boolean() });
 
     gridRef = signal(null, { type: t.ref() });
     navbarRef = signal(null, { type: t.ref() });
