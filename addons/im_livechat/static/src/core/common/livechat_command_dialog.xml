@@ -2,11 +2,12 @@
 <templates xml:space="preserve">
     <t t-name="im_livechat.LivechatCommandDialog">
         <ActionPanel close="this.props.close" title="this.props.title" icon="this.props.icon" resizable="false">
-            <div class="input-group my-2 shadow-sm">
-                <div class="o-livechat-LivechatCommandDialog-form form-control bg-view p-0" aria-autocomplete="list">
-                    <input type="text" class="border-0 h-100 rounded px-2 form-control" accesskey="Q" t-att-placeholder="this.props.placeholderText" t-on-keydown="this.onKeydown" t-ref="this.autofocusRef" t-model.proxy="this.state.inputText"/>
+            <div class="o-livechat-LivechatCommandDialog-form o_field_highlight d-flex flex-column gap-2 my-2 p-3 border rounded-3 bg-view shadow">
+                <input type="text" class="o_input form-control" t-att-placeholder="this.props.placeholderText" t-on-keydown="this.onKeydown" t-ref="this.autofocusRef" t-model.proxy="this.state.inputText" accesskey="Q" aria-autocomplete="list"/>
+                <div class="d-flex justify-content-end gap-1">
+                    <button class="btn btn-secondary" t-on-click="this.props.close">Cancel</button>
+                    <button class="btn btn-primary" t-on-click="this.executeCommand" t-att-disabled="!this.state.inputText.trim()" t-out="this.props.title"/>
                 </div>
-                <button class="btn btn-primary" t-on-click="this.executeCommand" t-att-disabled="!this.state.inputText" t-out="this.props.title"/>
             </div>
         </ActionPanel>
     </t>
