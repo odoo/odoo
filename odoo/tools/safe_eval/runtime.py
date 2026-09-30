@@ -152,6 +152,41 @@ class _SafeTransformer(ast.NodeTransformer):
     GEN_FUNC_ID = '_safe_eval_gen_func'
     GEN_ITER_ID = '_safe_eval_gen_iter'
 
+    # Only include builtins that fully consume their iterable argument.
+    # Never add `any`, `all`, `next`, `map`, `filter`, `zip`.
+    _BUILTIN_EAGER_CONSUMER_FUNCS = frozenset({
+        'sum', 'sorted', 'min', 'max', 'list', 'tuple', 'set', 'dict',
+    })
+
+    def _materialize_genexp_arg(self, node):
+        """
+        This function is provided solely to improve performance.
+
+        The ``assert_safe_context`` function runs before and after every
+        resumption of the generator. Re-validating the whole reachable context
+        on each step costs O(context) per step, i.e. O(n^2) for a generator
+        producing values out of an n-sized context. To stay linear in common
+        situations, When the generator's consumer is a builtin function defined
+        in ``_BUILTIN_EAGER_CONSUMER_FUNCS``, we convert it to a list
+        comprehension to avoid context checks. This is the compromise to ensure
+        that the relative safety of the generators is not compromised.
+
+        Transforms:
+            builtin_eager_consumer_func((x for x in ...), *args)
+
+        Into:
+            builtin_eager_consumer_func([x for x in ...], *args)
+        """
+        if (
+            isinstance(node.func, ast.Name)
+            and node.func.id in self._BUILTIN_EAGER_CONSUMER_FUNCS
+            and node.args and isinstance(genexp := node.args[0], ast.GeneratorExp)
+            and not any(comp.is_async for comp in genexp.generators)
+        ):
+            listcomp = ast.ListComp(elt=genexp.elt, generators=genexp.generators)
+            ast.copy_location(listcomp, genexp)
+            node.args[0] = listcomp
+
     def visit_Call(self, node):
         """
         Transforms:
@@ -160,6 +195,7 @@ class _SafeTransformer(ast.NodeTransformer):
         Into:
             _safe_eval_call(func, *args, **kwargs)
         """
+        self._materialize_genexp_arg(node)
         self.generic_visit(node)
         call = ast.Call(
             func=ast.Name(id=self.CALL_ID, ctx=ast.Load()),
