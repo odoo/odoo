@@ -35,7 +35,7 @@
     /* Ungrouped display: whole length (kanban-list) */
     &.o_kanban_ungrouped {
         .o_survey_kanban_card {
-            --#{$prefix}gap: #{map-get($spacers, 3)} #{map-get($spacers, 2)};
+            --#{$prefix}gap: var(--o-bs-spacer-3) var(--o-bs-spacer-2);
 
             .btn-link-inline {
                 --#{$prefix}btn-padding-x: var(--o-bs-btn-padding-x);

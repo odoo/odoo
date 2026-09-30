@@ -13,8 +13,8 @@ $o-kanban-attachement-image-size: 80px;
 
 .o_kanban_renderer {
     .o_kanban_record.o_kanban_attachment {
-        --Card-padding-h: #{map-get($spacers, 0)};
-        --Card-padding-v: #{map-get($spacers, 0)};
+        --Card-padding-h: var(--o-bs-spacer-0);
+        --Card-padding-v: var(--o-bs-spacer-0);
 
         .o_kanban_image {
             width: $o-kanban-attachement-image-size;

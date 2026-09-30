@@ -6,10 +6,10 @@
     &.o_kanban_ungrouped {
         display: grid !important;
         grid-template-columns: 1fr;
-        grid-row-gap: map-get($spacers, 3);
-        grid-column-gap: map-get($spacers, 3);
+        grid-row-gap: var(--o-bs-spacer-3);
+        grid-column-gap: var(--o-bs-spacer-3);
         justify-items: center;
-        padding: map-get($spacers, 3);
+        padding: var(--o-bs-spacer-3);
 
         @include media-breakpoint-up(sm) {
             grid-template-columns: repeat(2, 1fr);
