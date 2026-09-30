@@ -241,6 +241,9 @@ class CalendarEvent(models.Model):
         partners_by_email = {(p.email_normalized or p.email): p for p in partners}
         for google_attendee in google_attendees:
             attendee_email = google_attendee.get('email')
+            if google_attendee.get('resource'):
+                # do not include rooms in the attendee list
+                continue
             attendee_email_normalized = tools.email_normalize(attendee_email)
             if attendee_email in attendees_by_emails:
                 # Update existing attendees
