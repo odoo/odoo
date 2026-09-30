@@ -1,5 +1,6 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { Component, onMounted, proxy, useProps, signal, t } from "@odoo/owl";
+import { deserializeDateTime, formatDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
@@ -32,6 +33,7 @@ export class SelectLotPopup extends Component {
                 .map((item) => ({
                     text: item.text.trim(),
                     id: item.id,
+                    expiration_date: item.expiration_date,
                 })),
         });
         useAutoFocusToLast(this.rootRef);
@@ -55,7 +57,11 @@ export class SelectLotPopup extends Component {
                     );
                     if (filteredOptions.length) {
                         return filteredOptions.map((option) => ({
-                            label: option.name,
+                            label: `${option.name}${
+                                option.expiration_date
+                                    ? " - " + this.getFormattedDate(option.expiration_date)
+                                    : ""
+                            }`,
                             onSelect: () =>
                                 this.onSelect({
                                     create: true,
@@ -92,6 +98,9 @@ export class SelectLotPopup extends Component {
     }
     onInput({ inputValue }) {
         this.state.value = inputValue;
+        if (this.props.isSingleItem && !inputValue.trim()) {
+            this.state.values = [];
+        }
     }
     onSelect(lot) {
         if (this.state.values.some((item) => item.text == lot.currentInput)) {
@@ -116,12 +125,16 @@ export class SelectLotPopup extends Component {
         this.state.values = this.state.values.filter((item) => item.id !== id);
     }
     confirm() {
-        const currentInput = this.state.value;
-        this.onSelect({
-            currentInput,
-            id: currentInput,
-            create: true,
-        });
+        const currentInput = this.state.value?.trim();
+        if (this.props.isSingleItem && !currentInput) {
+            this.state.values = [];
+        } else if (currentInput && !this.state.values.some((item) => item.text === currentInput)) {
+            this.onSelect({
+                currentInput,
+                id: currentInput,
+                create: true,
+            });
+        }
         const validItems = this.state.values.filter((item) => {
             const itemValue = item.text.trim();
             return (
@@ -155,5 +168,18 @@ export class SelectLotPopup extends Component {
             event.stopPropagation();
             this.confirm();
         }
+    }
+
+    getFormattedDate(value) {
+        if (!value) {
+            return "";
+        }
+
+        if (typeof value === "string") {
+            // Raw UTC datetime string from the server (get_existing_lots)
+            value = deserializeDateTime(value);
+        }
+
+        return formatDate(value);
     }
 }
