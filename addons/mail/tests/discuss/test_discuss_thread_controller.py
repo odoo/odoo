@@ -71,7 +71,7 @@ class TestDiscussThreadController(TestThreadControllerCommon):
             (
                 test_partners(self.user_public, True, members),
                 test_partners(self.guest, True, members),
-                test_partners(self.user_portal, True, members),
+                test_partners(self.user_portal, True, members | self.user_portal.partner_id),
                 test_partners(self.user_employee, True, partners),
                 test_partners(self.user_demo, True, partners),
                 test_partners(self.user_admin, True, partners),
