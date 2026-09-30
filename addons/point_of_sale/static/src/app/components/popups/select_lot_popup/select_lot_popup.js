@@ -2,7 +2,6 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { Component, onMounted, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef, useService } from "@web/core/utils/hooks";
-import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 
 export class SelectLotPopup extends Component {
@@ -32,11 +31,16 @@ export class SelectLotPopup extends Component {
                     id: item.id,
                 })),
         });
-        useAutoFocusToLast();
         this.notification = useService("notification");
         this.inputRef = useChildRef();
-        onMounted(() => {
-            this.inputRef.el.click();
+        onMounted(async () => {
+            const input = this.inputRef.el;
+            const dialogContent = input.closest(".modal-content");
+            const animation = dialogContent.getAnimations()[0];
+            if (animation) {
+                await animation.finished;
+            }
+            input.click();
         });
     }
     _nextId() {
