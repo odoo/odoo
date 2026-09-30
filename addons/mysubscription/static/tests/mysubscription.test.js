@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, queryAllTexts, test } from "@odoo/hoot";
 import {
     contains,
     defineMenus,
@@ -16,8 +16,13 @@ import { MySubscriptionNavBar } from "@mysubscription/components/navbar";
  * @param {Object} [options]
  * @param {string} [options.enterpriseCode]
  * @param {boolean} [options.hasSubscription]
+ * @param {boolean} [options.showDatabaseAction]
  */
-function mockDashboardData({ enterpriseCode = "123-456-789", hasSubscription = false } = {}) {
+function mockDashboardData({
+    enterpriseCode = "123-456-789",
+    hasSubscription = false,
+    showDatabaseAction = true
+} = {}) {
     // Required by DatabaseSection's onWillStart.
     patchWithCleanup(user, { hasGroup: () => Promise.resolve(false) });
     onRpc("/web/database/list", () => ["test_db"]);
@@ -26,6 +31,7 @@ function mockDashboardData({ enterpriseCode = "123-456-789", hasSubscription = f
         enterprise_code: enterpriseCode,
         base_url: "http://localhost:8069",
         has_subscription: hasSubscription,
+        show_database_action: showDatabaseAction,
     }));
 }
 
@@ -59,6 +65,22 @@ test("no subscription: Community plan is current and the upgrade link targets th
     expect(".card:eq(1)").not.toHaveClass("border-primary", { message: "Enterprise plan is not current" });
     expect(".card:eq(1) a:contains('Switch')").toHaveCount(1);
     expect("a:contains('Upgrade')").toHaveAttribute("href", "https://www.odoo.com/pricing");
+});
+
+test("show the database section when show_database_action is true", async () => {
+    mockDashboardData({ enterpriseCode: "123-456-789", hasSubscription: true, showDatabaseAction: true });
+    await mountWithCleanup(MySubscriptionDashboard);
+
+    expect(".o_mysub_title").toHaveCount(2);
+    expect(queryAllTexts(".o_mysub_title")).toEqual(["Current Plan", "Database"]);
+});
+
+test("hide the database section when show_database_action is false", async () => {
+    mockDashboardData({ enterpriseCode: "123-456-789", hasSubscription: true, showDatabaseAction: false });
+    await mountWithCleanup(MySubscriptionDashboard);
+
+    expect(".o_mysub_title").toHaveCount(1);
+    expect(queryAllTexts(".o_mysub_title")).toEqual(["Current Plan"]);
 });
 
 function mountNavBar(props = {}) {
