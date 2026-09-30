@@ -13941,16 +13941,26 @@ test("duplicate records of a one2many (serializes date and datetime values)", as
     Partner._records[0].turtles = [1, 2];
 
     onRpc("onchange_batch", ({ args }) => {
-        const [valuesList] = args;
+        const [recordsList] = args;
         // date and datetime values must have been serialized by copyRecordData, otherwise the
         // server can't read them (they are Luxon objects client side)
-        expect(valuesList.map((values) => values.turtle_date)).toEqual([false, "2017-01-25"]);
-        expect(valuesList.map((values) => values.turtle_datetime)).toEqual([
+        expect(recordsList.map((record) => record.values.turtle_date)).toEqual([
+            false,
+            "2017-01-25",
+        ]);
+        expect(recordsList.map((record) => record.values.turtle_datetime)).toEqual([
             false,
             "2016-12-12 10:55:05",
         ]);
         expect.step("onchange_batch");
+
+        return recordsList.map((record) => ({
+            id: false,
+            virtual_id: false,
+            result: { value: record.values },
+        }));
     });
+
     onRpc("web_save", ({ args }) => {
         const createCommands = args[1].turtles.filter((c) => c[0] === x2ManyCommands.CREATE);
         expect(createCommands.map((c) => c[2].name)).toEqual(["leonardo", "donatello"]);
