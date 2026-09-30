@@ -14,8 +14,8 @@
         <xpath expr="//Layout//div[hasclass('o_calendar_container')]//h5[hasclass('d-inline-flex')]" position="after">
             <div id="header_synchronization_settings" class="me-auto me-sm-2 ms-sm-auto d-flex flex-wrap align-items-end">
                 <div t-if="
-                    (this.model.syncStatus.google_calendar === 'sync_active' and this.model.state?.googlePendingSync and this.model.googleSyncTimedOut)
-                    or (this.model.syncStatus.microsoft_calendar === 'sync_active' and this.model.state?.microsoftPendingSync and this.model.microsoftSyncTimedOut)"
+                    (this.model.syncStatus.google_calendar === 'sync_active' and this.model.state?.googlePendingSync)
+                    or (this.model.syncStatus.microsoft_calendar === 'sync_active' and this.model.state?.microsoftPendingSync)"
                     class="text-center me-2">
                     <i class="oi oi-spin" data-icon="progress_activity"/>
                     <span class="ms-1">Syncing</span>
