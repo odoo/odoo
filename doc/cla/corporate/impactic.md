@@ -17,4 +17,5 @@ Tõnu Kaare tonu.kaare@outlook.com https://github.com/tonu-kaare
 Madis Harjo madis.harjo@impactic.ee https://github.com/Tagzor
 Andri Poolakese andri.poola@gmail.com https://github.com/AndriPoolakese
 Kristjan Tehu kristjan.tehu@estpos.ee https://github.com/KristjanTehu
+Inno Komp kompinno@gmail.com https://github.com/InnoKomp
 
