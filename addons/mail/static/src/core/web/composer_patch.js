@@ -1,3 +1,4 @@
+import { ChatGPTTranslatePlugin } from "@html_editor/main/chatgpt/chatgpt_translate_plugin";
 import { wrapInlinesInBlocks } from "@html_editor/utils/dom";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 
@@ -34,5 +35,9 @@ patch(Composer.prototype, {
         container.append(...childNodes(fragment));
         wrapInlinesInBlocks(container, { baseContainerNodeName: "DIV" });
         return markup(container.innerHTML);
+    },
+    get wysiwygConfig() {
+        const config = super.wysiwygConfig;
+        return { ...config, Plugins: [...config.Plugins, ChatGPTTranslatePlugin] };
     },
 });
