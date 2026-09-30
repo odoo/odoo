@@ -292,8 +292,9 @@ class Message(models.Model):
         if not self.env.user._is_internal():
             domain = self._get_search_domain_share() + domain
 
-        # make the search query with the default rules
-        query = super()._search(domain, offset, limit, order)
+        # Fetch without limit/offset so access filtering is applied to the full
+        # result set; limit/offset are re-applied on the filtered result below.
+        query = super()._search(domain, offset=0, limit=None, order=order)
 
         # retrieve matching records and determine which ones are truly accessible
         self.flush_model(['model', 'res_id', 'author_id', 'message_type', 'partner_ids'])
@@ -342,7 +343,11 @@ class Message(models.Model):
                 model_ids[model][res_id].add(id_)
 
         allowed_ids.update(self._find_allowed_doc_ids(model_ids))
-        allowed = self.browse(id_ for id_ in ids if id_ in allowed_ids)
+        # ids preserves the SQL ORDER BY; slice in Python after filtering
+        # so limit/offset are applied to the access-filtered result.
+        ordered_allowed = [id_ for id_ in ids if id_ in allowed_ids]
+        end = (offset + limit) if limit else None
+        allowed = self.browse(ordered_allowed[offset:end])
         return allowed._as_query(order)
 
     def _filter_records_for_message_operation(self, doc_model, doc_res_ids, operation):
