@@ -869,3 +869,41 @@ class TestAllocations(TestHrHolidaysCommon):
         self.employee.invalidate_recordset(['allocations_count', 'allocation_display'])
         self.assertEqual(self.employee.allocation_display, '0', "nothing accrued yet")
         self.assertEqual(self.employee.allocations_count, 1, "but the employee has an allocation")
+
+    @freeze_time('2026-03-02')
+    def test_leave_form_keeps_time_type_on_employee_change(self):
+        """ Changing the employee of a request keeps its time type, even without allocation:
+            the warning shows the balance and the save check refuses the request. """
+        self._create_validated_allocation(self.work_entry_type, self.employee, date(2026, 1, 1), days=5)
+        other_employee = self.env['hr.employee'].create({
+            'name': 'Employee Without Allocation',
+            'company_id': self.company.id,
+        })
+        leave_form = Form(self.env['hr.leave'])
+        leave_form.employee_id = self.employee
+        leave_form.work_entry_type_id = self.work_entry_type
+        leave_form.request_date_from = date(2026, 3, 2)
+        leave_form.request_date_to = date(2026, 3, 3)
+        self.assertFalse(leave_form.allocation_display_warning)
+        leave_form.employee_id = other_employee
+        self.assertEqual(leave_form.work_entry_type_id, self.work_entry_type)
+        self.assertEqual(leave_form.allocation_display_warning, "Only 0.0 day(s) available")
+        with self.assertRaises(ValidationError):
+            leave_form.save()
+
+    @freeze_time('2026-03-02')
+    def test_time_type_balance_ignores_edited_leave(self):
+        """ The balance shown in the time type dropdown of a saved request does not count the
+            request itself (``ignored_leave_ids`` in the field context). """
+        self._create_validated_allocation(self.work_entry_type, self.employee, date(2026, 1, 1), days=2)
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': date(2026, 3, 2),
+            'request_date_to': date(2026, 3, 3),
+        })
+        context = {'employee_id': self.employee.id, 'leave_date_from': '2026-03-02'}
+        self.assertEqual(self.work_entry_type.with_context(context).virtual_remaining_leaves, 0)
+        self.assertEqual(
+            self.work_entry_type.with_context(context, ignored_leave_ids=leave.ids).virtual_remaining_leaves, 2)
+        self.assertFalse(leave.allocation_display_warning)
