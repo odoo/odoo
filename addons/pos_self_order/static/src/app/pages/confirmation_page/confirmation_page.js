@@ -19,6 +19,7 @@ export class ConfirmationPage extends Component {
             continueDisabled: true,
             onReload: true,
             payment: this.props.screenMode === "pay",
+            receiptPrinted: false,
         });
 
         onMounted(() => {
@@ -28,7 +29,56 @@ export class ConfirmationPage extends Component {
                 }, 30000);
             }
         });
+<<<<<<< d42074b2041b9b63aa1964513b4b8572dff7fe64
+||||||| 8a041cc4ee3c2ee057921f06df30a99f59830a02
+        useLayoutEffect(
+            () => {
+                if (
+                    !this.confirmedOrder ||
+                    !this.confirmedOrder.uiState?.receiptReady ||
+                    typeof this.confirmedOrder.id !== "number"
+                ) {
+                    return;
+                }
+=======
 
+        useLayoutEffect(
+            () => {
+                if (
+                    !this.confirmedOrder ||
+                    !this.confirmedOrder.uiState?.receiptReady ||
+                    typeof this.confirmedOrder.id !== "number"
+                ) {
+                    return;
+                }
+>>>>>>> 391a478a076220be8a670894b80021d4fbae9db1
+
+<<<<<<< d42074b2041b9b63aa1964513b4b8572dff7fe64
+||||||| 8a041cc4ee3c2ee057921f06df30a99f59830a02
+                const printReceipts = async () => {
+                    await this.printOrder();
+                    await this.printOrderChanges();
+                };
+
+                printReceipts();
+            },
+            () => [this.confirmedOrder?.uiState?.receiptReady]
+        );
+=======
+                const printReceipts = async () => {
+                    try {
+                        await this.printOrder();
+                        await this.printOrderChanges();
+                    } finally {
+                        this.state.receiptPrinted = true;
+                    }
+                };
+
+                printReceipts();
+            },
+            () => [this.confirmedOrder?.uiState?.receiptReady]
+        );
+>>>>>>> 391a478a076220be8a670894b80021d4fbae9db1
         onWillUnmount(() => {
             clearTimeout(this.defaultTimeout);
         });
