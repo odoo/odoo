@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr.CompanyTransferMany2OneField">
+        <Many2One t-props="this.m2oProps" cssClass="'w-100'"/>
+    </t>
+
+    <t t-name="hr.CompanyModificationDialog">
+        <Dialog size="'md'" title.translate="Company Modification">
+            <div class="p-3">
+                <p class="fs-6 mb-0">
+                    To avoid multi-company issues (losing access to your previous contracts, leaves, etc...),
+                    you should duplicate this employee in the new company instead.
+                </p>
+            </div>
+
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="this.onDuplicateClick">
+                    Duplicate
+                </button>
+                <button class="btn btn-primary" t-on-click="this.onDuplicateArchiveClick">
+                    Duplicate &amp; Archive
+                </button>
+                <button class="btn btn-secondary" t-on-click="this.onDiscard">
+                    Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
