@@ -126,3 +126,13 @@ The addon extends `res.users` with a relation to properties assigned to that sal
 
 **Try it:** Create an offer, try a lower one, and try deleting the property. Then open the salesperson's user form and compare its Properties tab with the property's `user_id`.
 
+## Chapter 13 - Interact with other modules
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/13_other_module.html)
+
+Real estate management can be useful without Invoicing. The separate `estate_account` addon depends on both `estate` and `account`, so invoice creation is available only when the integration addon is installed. This keeps the base estate addon independent of accounting.
+
+`estate_account` extends the property's Sold action through `super()`. After an accepted buyer is available, it creates a draft customer invoice with two lines: 6% of the selling price for commission and 100 for administrative fees. `Command.create` adds both lines as part of the invoice creation.
+
+**Try it:** Install `estate_account`, accept an offer, mark the property Sold, and find the draft invoice. Check both line amounts and compare the installed dependencies of `estate` and `estate_account`.
+
