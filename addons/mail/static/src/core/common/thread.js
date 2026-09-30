@@ -49,6 +49,9 @@ export class Thread extends Component {
     static template = "mail.Thread";
 
     isFocused = signal(false);
+    hasHighlightedMessage = computed(() =>
+        this.orderedMessages.some((message) => this.isMessageHighlighted(message))
+    );
     scope = useScope();
     /** @type {Promise|undefined} */
     smoothScrollingPromise;
@@ -605,11 +608,16 @@ export class Thread extends Component {
         }
     }
 
+    /** @param {import("models").Message} message */
+    isMessageHighlighted(message) {
+        return (
+            !message.isNotification && this.messageHighlight?.highlightedMessageId() === message.id
+        );
+    }
+
+    /** @param {import("models").Message} message */
     getMessageClassName(message) {
-        return !message.isNotification &&
-            this.messageHighlight?.highlightedMessageId() === message.id
-            ? "o-highlighted"
-            : "";
+        return this.isMessageHighlighted(message) ? "o-highlighted" : "";
     }
 
     async jumpToPresent({ immediate = false } = {}) {
