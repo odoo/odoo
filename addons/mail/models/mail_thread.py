@@ -3690,7 +3690,7 @@ class MailThread(models.AbstractModel):
             # If a chunk only contains canceled notifications, no MailMail is created
             # to avoid pointless work.
             email_to_deduplicated_recipient_id = {
-                email_address: recipient_id for recipient_id, email_address in reversed(recipients_to_emails.items())
+                email_address: recipient_id for recipient_id, email_address in sorted(recipients_to_emails.items(), reverse=True)
                 if recipient_id
             }
             deduplicated_recipient_ids = set(email_to_deduplicated_recipient_id.values())
