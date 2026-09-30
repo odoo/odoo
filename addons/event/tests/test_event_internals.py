@@ -928,22 +928,22 @@ class TestEventRegistrationData(TestEventInternalsCommon):
         self.assertEqual(multi_entry_registration.remaining_entries, 3,
             "Assigning a ticket to a registration should set this registration remaining entries to the same amount as the ticket entry limit")
         multi_entry_registration.action_attend_event()
-        multi_entry_registration._invalidate_cache(['remaining_entries'])
+        multi_entry_registration.invalidate_model(['remaining_entries'])
         self.assertEqual(multi_entry_registration.remaining_entries, 2,
             "Validating once the registration should lower the remaining entries by 1")
         self.assertEqual(multi_entry_registration.state, 'open',
             "Validating once the registration should not change its state")
         multi_entry_registration.action_attend_event()
         multi_entry_registration.action_cancel_last_sub_registration()
-        multi_entry_registration._invalidate_cache(['remaining_entries'])
+        multi_entry_registration.invalidate_model(['remaining_entries'])
         self.assertEqual(multi_entry_registration.remaining_entries, 2,
             "Validating once the registration then canceling the last sub_registration should not change the remaining entries")
         self.assertEqual(multi_entry_registration.state, 'open',
             "Validating then canceling last sub registration should not change the registration's state")
         multi_entry_registration.action_attend_event()
-        multi_entry_registration._invalidate_cache(['remaining_entries'])
+        multi_entry_registration.invalidate_model(['remaining_entries'])
         multi_entry_registration.action_attend_event()
-        multi_entry_registration._invalidate_cache(['remaining_entries'])
+        multi_entry_registration.invalidate_model(['remaining_entries'])
         self.assertEqual(multi_entry_registration.remaining_entries, 0,
             "Validating enough times should set the registration remaining entries to 0")
         self.assertEqual(multi_entry_registration.state, 'done',

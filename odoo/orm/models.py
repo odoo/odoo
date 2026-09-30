@@ -6223,7 +6223,24 @@ class BaseModel(metaclass=MetaModel):
         """
         if flush:
             self.flush_model(fnames)
-        self._invalidate_cache(fnames)
+
+        if fnames is None:
+            fields = self._fields.values()
+        else:
+            fields = [self._fields[fname] for fname in fnames]
+
+        env = self.env
+        for field in fields:
+            field._invalidate_cache(env)
+            if field.type == 'one2many':
+                # skip invalidation of inverse for o2m fields
+                # (o2m is "computed" from m2o)
+                continue
+            for invf in self.pool.field_inverses[field]:
+                if flush:
+                    self.env[invf.model_name].flush_model([invf.name])
+                invf._invalidate_cache(env)
+        self.env.transaction.invalidate_access_cache(self._name)
 
     @api.private
     def invalidate_recordset(self, fnames: Collection[str] | None = None, flush: bool = True) -> None:
@@ -6236,13 +6253,11 @@ class BaseModel(metaclass=MetaModel):
             It is ``True`` by default, which ensures cache consistency.
             Do not use this parameter unless you know what you are doing.
         """
+        if not self._ids:  # Avoid invalidating field_inverses for no reason
+            return
+
         if flush:
             self.flush_recordset(fnames)
-        self._invalidate_cache(fnames, self._ids)
-
-    def _invalidate_cache(self, fnames: Collection[str] | None = None, ids: Sequence[IdType] | None = None) -> None:
-        if ids is not None and not ids:  # Avoid invalidating field_inverses for no reason
-            return
 
         if fnames is None:
             fields = self._fields.values()
@@ -6251,13 +6266,14 @@ class BaseModel(metaclass=MetaModel):
 
         env = self.env
         for field in fields:
-            field._invalidate_cache(env, ids)
+            field._invalidate_cache(env, self._ids)
             if field.type == 'one2many':
                 # skip invalidation of inverse for o2m fields
                 # (o2m is "computed" from m2o)
                 continue
             for invf in self.pool.field_inverses[field]:
-                self.env[invf.model_name].flush_model([invf.name])
+                if flush:
+                    self.env[invf.model_name].flush_model([invf.name])
                 invf._invalidate_cache(env)
         self.env.transaction.invalidate_access_cache(self._name)
 

@@ -212,7 +212,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         ])
         self.assertFalse(set(attachments.ids) & set(attachments_linked_to_sale_order.ids))
         # No more attachments to import (need to invalidate cache to make sure the field is computed again)
-        self.env['sale.order']._invalidate_cache(fnames=['is_linked_to_expense_with_attachment'])
+        self.env['sale.order'].invalidate_model(['is_linked_to_expense_with_attachment'])
         self.assertFalse(sale_order.is_linked_to_expense_with_attachment)
 
         new_attachments = create_attachments([
