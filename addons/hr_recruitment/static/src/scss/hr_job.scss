@@ -68,7 +68,7 @@
 
         @include media-breakpoint-down(xxl) {
             .o_hr_recruitment_activity-col {
-                width: map-get($spacers, 3) * 3.5;
+                width: calc(var(--o-bs-spacer-3) * 3.5);
             }
         }
 
@@ -137,7 +137,7 @@
 
     .number {
         font-size: 1.75rem !important;
-        margin: 0 map-get($spacers, 2) * .75 0 0;
+        margin: 0 calc(var(--o-bs-spacer-2) * .75) 0 0;
         align-content: center;
         font-variant-numeric: tabular-nums;
     }

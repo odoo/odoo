@@ -4,7 +4,7 @@
     max-height: var(--CwPopover-max-height, 80vh);
     max-width: var(--CwPopover-max-width, 95vw);
     width: var(--CwPopover-width, 448px);
-    z-index: $zindex-modal - 1;
+    z-index: calc(var(--o-bs-zindex-modal) - 1);
     font-size: var(--o-bs-font-size-base);
 
     @include media-breakpoint-down(md) {

@@ -43,8 +43,8 @@
 
         .o_empty_custom_dashboard {
             min-height: 327px;
-            margin-left: -$grid-gutter-width/2;
-            margin-top: -$grid-gutter-width/2;
+            margin-left: calc(var(--o-bs-grid-gutter-width) * -1 / 2);
+            margin-top: calc(var(--o-bs-grid-gutter-width) * -1 / 2);
             padding: 100px 0 0 137px;
             background: transparent url(/web/static/img/graph_background.png) no-repeat 0 0;
         }
@@ -89,9 +89,9 @@
 
 .state_selection_field_menu .dropdown-item {
     > .o_status, > .oi {
-        width: $o-bubble-color-size;
-        height: $o-bubble-color-size;
-        font-size: $o-bubble-color-size;
+        width: var(--o-bubble-color-size);
+        height: var(--o-bubble-color-size);
+        font-size: var(--o-bubble-color-size);
         transform: translateX(-50%);
         text-align: center;
     }

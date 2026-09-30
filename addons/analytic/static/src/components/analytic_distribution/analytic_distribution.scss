@@ -47,7 +47,7 @@
         max-width: var(--o-form-sheet-min-width);
         max-height: 50vh;
         /* this ensures that analytic distribution widget does not cover "new model" or "search more" modals */
-        z-index: $zindex-modal - 1;
+        z-index: calc(var(--o-bs-zindex-modal) - 1);
         white-space: nowrap;
         cursor: default;
 

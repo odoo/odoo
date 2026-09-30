@@ -96,7 +96,7 @@
 /* Style for the widget "dashboard_graph" */
 .o_dashboard_graph {
     position: relative;
-    margin: $spacer (-$spacer);
+    margin: var(--o-bs-spacer) calc(var(--o-bs-spacer) * -1);
 
     canvas {
         height: 150px;

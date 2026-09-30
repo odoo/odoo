@@ -35,7 +35,7 @@
             max-width: none;
 
             > .o_kanban_card_manage_title {
-                margin: (($font-size-base * $line-height-base) / 2) 0;
+                margin: calc((var(--o-bs-font-size-base) * var(--body-line-height)) / 2) 0;
             }
             > div:not(.o_kanban_card_manage_title) {
                 @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);
@@ -60,7 +60,7 @@
             }
             > div:last-child {
                 @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);
-                padding-left: $dropdown-item-padding-x;
+                padding-left: var(--o-bs-dropdown-item-padding-x);
             }
         }
     }
@@ -105,7 +105,7 @@
     /* ---------------------------------------------------------------------------- */
     /* Default KanbanView values */
 
-    --Kanban-background: #{$o-kanban-background};
+    --Kanban-background: var(--o-kanban-background);
     --Kanban-gap: unset;
     --Kanban-padding: 0;
 
@@ -120,15 +120,15 @@
     --KanbanRecord--small-width: #{$o-kanban-small-record-width};
 
     --KanbanColumn__highlight-background: #{tint-color($o-action, 90%)};
-    --KanbanColumn__highlight-border: #{$o-action};
+    --KanbanColumn__highlight-border: var(--o-action);
     --KanbanColumn__highlight-selected: #d1ecf1;
     --KanbanColumn__highlight-selected-border: #{tint-color($o-action, 60%)};
 
     --o-view-nocontent-zindex: 1;
 
     --Card-border-width: 1px;
-    --Card-padding-v: #{$o-kanban-inside-vgutter};
-    --Card-padding-h: #{$o-kanban-inside-hgutter};
+    --Card-padding-v: var(--o-kanban-inside-vgutter);
+    --Card-padding-h: var(--o-kanban-inside-hgutter);
     --Card__image-width: #{$o-kanban-image-width};
     --Card__image--fill-width: #{$o-kanban-image-fill-width};
     --Card-Footer-gap: 4px;
@@ -136,7 +136,7 @@
     /* ---------------------------------------------------------------------------- */
     /* Inner components contextual adaptations */
     .o_kanban_record {
-        --Ribbon-font-size: #{$font-size-sm};
+        --Ribbon-font-size: var(--o-bs-font-size-sm);
         --Ribbon-wrapper-width: 6.5rem;
         --Ribbon-height:  calc(var(--Ribbon-font-size) * 2);
     }
@@ -156,7 +156,7 @@
 
     @include media-only(print) {
         @include media-breakpoint-down(md) {
-            --Card-padding-h: #{$o-kanban-inside-hgutter * 2};
+            --Card-padding-h: calc(var(--o-kanban-inside-hgutter) * 2);
         }
     }
 
@@ -170,7 +170,7 @@
     .o_kanban_quick_create {
         border: var(--border-width) solid var(--border-color);
         border-radius: var(--border-radius-lg);
-        background-color: $o-view-background-color;
+        background-color: var(--o-view-background-color);
         margin-bottom: map-get($spacers, 3);
         /* TODO: Use variables from card.scss. */
         /* We may need to define the card variables on o_kanban_renderer parent so it's accessible from this element. */
