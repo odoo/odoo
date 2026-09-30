@@ -325,6 +325,22 @@ export function cloneContentEls(content, keepScripts = false) {
 }
 
 /**
+ * Reads the code saved in an Embed Code snippet's `<template>`.
+ *
+ * The code is stored as escaped text and not as markup, because the view arch
+ * goes through QWeb on every render, which drops comment nodes.
+ *
+ * @param {HTMLTemplateElement} templateEl
+ * @returns {String}
+ */
+export function getEmbedCode(templateEl) {
+    // Legacy snippets stored the code as markup instead of escaped text.
+    return templateEl.content.firstElementChild
+        ? templateEl.innerHTML
+        : templateEl.content.textContent;
+}
+
+/**
  * Converts a string into a URL-friendly slug.
  *
  * @param {string} value - The string to slugify.
