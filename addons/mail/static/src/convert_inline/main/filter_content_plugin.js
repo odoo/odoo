@@ -180,6 +180,8 @@ export class FilterContentPlugin extends Plugin {
     }
 
     genericLayoutStyleRules(rules) {
+        // TODO EGGMAIL: fix display: inline-flex as inline-block? investigate
+        // https://github.com/odoo/odoo/pull/270586
         rules.allow("display", {
             when: ({ propertyValue }) => ALLOWED_CSS_DISPLAY_VALUES.has(propertyValue),
         });
@@ -236,6 +238,8 @@ export class FilterContentPlugin extends Plugin {
     }
 
     isInvisible(referenceNode) {
+        // TODO EGGMAIL: allow invisible elements with QWEB attributes?
+        // allow "invisible" img with QWEB src attribute
         if (!referenceNode) {
             return true;
         }
