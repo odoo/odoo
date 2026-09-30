@@ -217,9 +217,7 @@ defineModels([Foo, Bar, Currency, ResCompany, ResPartner, ResUsers]);
 
 async function clickControlPanelAction(buttonName) {
     if (isSmall()) {
-        await contains(
-            ".o_cp_action_menus [data-icon='more_vert']"
-        ).click();
+        await contains(".o_cp_action_menus [data-icon='more_vert']").click();
         await contains(`.o-dropdown-item button[name="${buttonName}"]`).click();
     } else {
         await contains(`.o_control_panel_actions button[name="${buttonName}"]`).click();
@@ -1448,14 +1446,10 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
         `,
     });
     expect(`.o_control_panel_actions > *`).toHaveCount(0);
-    await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
-    ).click();
+    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
     await clickRecordSelector();
-    await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
-    ).click();
+    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "plaf",
         "Export",
@@ -1463,9 +1457,7 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
         "Delete",
     ]);
     await clickRecordSelector();
-    await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
-    ).click();
+    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
 });
 
@@ -1545,9 +1537,7 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
     ]);
 
     await clickRecordSelector();
-    await contains(
-        ".o_cp_action_menus [data-icon='more_vert']"
-    ).click();
+    await contains(".o_cp_action_menus [data-icon='more_vert']").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "",
         "default-selection",
@@ -2265,7 +2255,9 @@ test(`discard a new record in editable="top" list with less than 4 records`, asy
     expect(`tbody tr:eq(0)`).toHaveClass("o_selected_row");
 
     if (isSmall()) {
-        await contains(".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown").click();
+        await contains(
+            ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
+        ).click();
         expect(`.o_list_button_discard`).toHaveCount(0);
         expect(`.o_control_panel .o_list_button_add`).toHaveCount(1);
     } else {
@@ -3556,6 +3548,173 @@ test(`Loading a filter with a sort attribute`, async () => {
     await toggleSearchBarMenu();
     await toggleMenuItem("My second favorite");
     expect.verifySteps(["date ASC, foo DESC", "date DESC, foo ASC"]);
+});
+
+test(`restore local sort after returning from a form with a filter`, async () => {
+    Foo._filters = [
+        {
+            context: "{}",
+            domain: "[]",
+            id: 7,
+            is_default: false,
+            name: "My favorite",
+            sort: '["foo asc"]',
+            user_ids: [2],
+        },
+    ];
+    Foo._views = {
+        list: `
+            <list>
+                <field name="foo"/>
+                <field name="amount"/>
+            </list>
+        `,
+        form: `<form><field name="foo"/></form>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Foo",
+            res_model: "foo",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        },
+    ]);
+
+    onRpc("web_search_read", ({ kwargs }) => expect.step(kwargs.order));
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My favorite");
+    await contains(`th.o_column_sortable[data-name=amount]`).click();
+    await contains(`.o_data_row .o_data_cell`).click();
+    await contains(`.breadcrumb-item, .o_back_button`).click();
+
+    expect(`th.o_column_sortable.table-active[data-name=amount]`).toHaveCount(1);
+    expect.verifySteps(["", "foo ASC", "amount ASC, foo ASC", "amount ASC, foo ASC"]);
+});
+
+test(`removing a favorite clears its sort`, async () => {
+    Foo._filters = [
+        {
+            context: "{}",
+            domain: "[]",
+            id: 7,
+            is_default: false,
+            name: "My favorite",
+            sort: '["date asc", "foo desc"]',
+            user_ids: [2],
+        },
+    ];
+
+    onRpc("web_search_read", ({ kwargs }) => expect.step(kwargs.order));
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="date"/>
+            </list>
+        `,
+        loadIrFilters: true,
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My favorite");
+    await removeFacet("My favorite");
+
+    expect(`th.o_column_sortable.table-active`).toHaveCount(0);
+    expect.verifySteps(["", "date ASC, foo DESC", ""]);
+});
+
+test(`removing a favorite keeps a local sort override`, async () => {
+    Foo._filters = [
+        {
+            context: "{}",
+            domain: "[]",
+            id: 7,
+            is_default: false,
+            name: "My favorite",
+            sort: '["date asc", "foo desc"]',
+            user_ids: [2],
+        },
+    ];
+
+    onRpc("web_search_read", ({ kwargs }) => expect.step(kwargs.order));
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list default_order="foo">
+                <field name="foo"/>
+                <field name="date"/>
+                <field name="amount"/>
+            </list>
+        `,
+        loadIrFilters: true,
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My favorite");
+    await contains(`th.o_column_sortable[data-name=amount]`).click();
+    await removeFacet("My favorite");
+
+    expect(`th.o_column_sortable.table-active[data-name=amount]`).toHaveCount(1);
+    expect.verifySteps([
+        "foo ASC",
+        "date ASC, foo DESC",
+        "amount ASC, date ASC, foo DESC",
+        "amount ASC, date ASC, foo DESC",
+    ]);
+});
+
+test(`applying search preserves a local sort after a favorite sort`, async () => {
+    Foo._filters = [
+        {
+            context: "{}",
+            domain: "[]",
+            id: 7,
+            is_default: false,
+            name: "My favorite",
+            sort: '["date asc", "foo desc"]',
+            user_ids: [2],
+        },
+    ];
+
+    onRpc("web_search_read", ({ kwargs }) => expect.step(kwargs.order));
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list default_order="foo">
+                <field name="foo"/>
+                <field name="date"/>
+                <field name="amount"/>
+            </list>
+        `,
+        searchViewArch: `
+            <search>
+                <filter name="extra_filter" string="Extra filter" domain="[('bar', '=', True)]"/>
+            </search>
+        `,
+        loadIrFilters: true,
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My favorite");
+    await contains(`th.o_column_sortable[data-name=amount]`).click();
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Extra filter");
+
+    expect(`th.o_column_sortable.table-active[data-name=amount]`).toHaveCount(1);
+    expect(queryAllTexts(`.o_data_row td[name='foo']`)).toEqual(["gnap", "blip", "yop"]);
+    expect.verifySteps([
+        "foo ASC",
+        "date ASC, foo DESC",
+        "amount ASC, date ASC, foo DESC",
+        "amount ASC, date ASC, foo DESC",
+    ]);
 });
 
 test(`many2one field rendering`, async () => {

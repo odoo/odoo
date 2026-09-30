@@ -62,6 +62,7 @@ import { OfflinePlugin } from "@web/core/offline/offline_plugin";
  *  openGroupsByDefault?: boolean;
  *  sendOpeningInfo?: boolean;
  *  noCache?: boolean;
+ *  searchOrderBy?: Object[];
  * }} RelationalModelConfig
  *
  * @typedef {{
@@ -468,10 +469,27 @@ export class RelationalModel extends Model {
             });
 
             // orderBy
-            config.orderBy = "orderBy" in params ? params.orderBy : config.orderBy;
-            // re-apply previous orderBy if not given (or no order)
-            if (!config.orderBy.length) {
-                config.orderBy = currentConfig.orderBy || [];
+            if ("orderBy" in params) {
+                // Sort coming from the search side (favorite).
+                const searchOrderBy = params.orderBy || [];
+                const previousSearchOrderBy = orderByToString(currentConfig.searchOrderBy || []);
+                // Replace config orderBy with the search sort only when:
+                // 1 there is no sort yet, or
+                // 2 the favorite changed AND either:
+                //    - the new favorite has a sort (added or switched: the latest action wins), or
+                //    - the favorite was removed and the current sort is still the old favorite's sort
+                //       (so it is not a column click made after the favorite).
+                // If the favorite was removed but the user clicked a column after it, the click is kept.
+                if (
+                    !config.orderBy?.length ||
+                    (orderByToString(searchOrderBy) !== previousSearchOrderBy &&
+                        (searchOrderBy.length ||
+                            orderByToString(config.orderBy) === previousSearchOrderBy))
+                ) {
+                    config.orderBy = searchOrderBy;
+                }
+                // Remember the favorite's sort for the next load's comparison.
+                config.searchOrderBy = searchOrderBy;
             }
             // apply default order if no order
             if (this.defaultOrderBy && !config.orderBy.length) {
