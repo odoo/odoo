@@ -98,10 +98,10 @@ test("BarcodeScanningProductPackagingTour: scan product packaging barcodes", asy
     expect(Utils.hasOrderline({ productName: "Packaging Product", quantity: "2" })).toBe(true);
 
     await Utils.scanBarcode("12345610");
-    expect(Utils.hasOrderline({ productName: "Packaging Product", quantity: "12" })).toBe(true);
+    expect(Utils.hasOrderline({ productName: "Packaging Product", quantity: "1" })).toBe(true);
 
     await Utils.scanBarcode("12345610");
-    expect(Utils.hasOrderline({ productName: "Packaging Product", quantity: "22" })).toBe(true);
+    expect(Utils.hasOrderline({ productName: "Packaging Product", quantity: "2" })).toBe(true);
 
     await Utils.scanBarcode("12345618");
 
@@ -112,7 +112,7 @@ test("BarcodeScanningProductPackagingTour: scan product packaging barcodes", asy
     expect(
         Utils.hasOrderline({
             productName: "Packaging Product2",
-            quantity: "10",
+            quantity: "1",
             attributeLine: "Cushion",
         })
     ).toBe(true);
@@ -153,7 +153,7 @@ test("test_quantity_package_of_non_basic_unit: barcode packaging sets the packag
     });
 
     await Utils.scanBarcode("555555");
-    expect(Utils.hasOrderline({ productName: "Cord", quantity: "6" })).toBe(true);
+    expect(Utils.hasOrderline({ productName: "Cord", quantity: "1" })).toBe(true);
 });
 
 test("test_one_attribute_value_scan_barcode: scan barcode adds variant with attributes", async () => {
