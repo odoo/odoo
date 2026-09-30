@@ -1,9 +1,10 @@
 import { markup } from "@odoo/owl";
 import { tourState } from "@web_tour/tour_state";
 import * as hoot from "@odoo/hoot-dom";
+import { Macro } from "@web/core/macro";
 import { utils } from "@web/core/ui/ui_utils";
-import { TourStepInteractive } from "@web_tour/tour_interactive/tour_step_interactive";
 import { TourInteractiveObserver } from "@web_tour/tour_interactive/tour_interactive_observer";
+import { TourStepInteractive } from "@web_tour/tour_interactive/tour_step_interactive";
 import { TourPointer, pointerState } from "@web_tour/tour_pointer/tour_pointer";
 
 /**
@@ -14,13 +15,17 @@ import { TourPointer, pointerState } from "@web_tour/tour_pointer/tour_pointer";
  */
 
 export class TourInteractive {
-    static observer = null;
+    static current = null;
     static removePointer = () => {};
+    static MAX_BACKWARD_ACTIONS = 10;
     mode = "manual";
     currentAction;
     currentActionIndex;
     anchorEl;
+    consumeEvents = [];
     removeListeners = () => {};
+    canSearch = true;
+    searchedActionIndex = null;
 
     /**
      * @param {Tour} data
@@ -48,11 +53,19 @@ export class TourInteractive {
      */
     start(env) {
         TourInteractive.removePointer();
-        if (TourInteractive.observer) {
-            TourInteractive.observer.disconnect();
-        }
-        TourInteractive.observer = new TourInteractiveObserver(() => this._onMutation());
-        TourInteractive.observer.observe(document.body);
+        TourInteractive.current?.stop();
+        TourInteractive.current = this;
+        this.macro = new Macro({
+            name: this.name,
+            timeout: this.config.robot ? 10000 : Infinity,
+            steps: this.actions.map((action, index) => ({
+                trigger: () => this.shouldSearch(index) && this.track(action, index),
+            })),
+            onComplete: () => this.finish(),
+            onError: ({ error, index }) => this.fail(error, this.actions[index]),
+        });
+        this.observer = new TourInteractiveObserver(() => (this.canSearch = true));
+        this.observer.start(document);
         TourInteractive.removePointer = this.overlay.add(
             TourPointer,
             { pointerState },
@@ -64,81 +77,130 @@ export class TourInteractive {
             debugger;
         }
         this.play();
-        env.bus.addEventListener("ACTION_MANAGER:UPDATE", () => (this.isBusy = true));
-        env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", () => (this.isBusy = false));
+        this.busController = new AbortController();
+        const { signal } = this.busController;
+        env.bus.addEventListener("ACTION_MANAGER:UPDATE", () => (this.isBusy = true), { signal });
+        env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", () => (this.isBusy = false), {
+            signal,
+        });
     }
 
+    /**
+     * Moves the tour back to the closest previous action whose trigger is in the
+     * DOM, looking at most {@link TourInteractive.MAX_BACKWARD_ACTIONS} actions
+     * back.
+     */
     backward() {
-        let tempIndex = this.currentActionIndex;
-        let tempAction, tempAnchor;
-        while (!tempAnchor && tempIndex >= 0) {
-            tempIndex--;
-            tempAction = this.actions.at(tempIndex);
-            if (!tempAction.step.active || tempAction.event === "warn") {
-                continue;
+        const fromIndex = Math.max(
+            this.currentActionIndex - TourInteractive.MAX_BACKWARD_ACTIONS,
+            0
+        );
+        for (let index = this.currentActionIndex - 1; index >= fromIndex; index--) {
+            const action = this.actions[index];
+            if (action.step.active && action.event !== "warn" && action.findTrigger()) {
+                this.currentActionIndex = index;
+                this.play();
+                return;
             }
-            tempAnchor = tempAction.findTrigger();
-        }
-
-        if (tempIndex >= 0) {
-            this.currentActionIndex = tempIndex;
-            this.play();
         }
     }
 
     play() {
         this.removeListeners();
-        if (this.currentActionIndex === this.actions.length) {
-            TourInteractive.observer.disconnect();
-            this.finish();
-            return;
+        pointerState.trigger = undefined;
+        this.canSearch = true;
+        this.macro.play(this.currentActionIndex);
+    }
+
+    stop() {
+        this.macro.stop();
+        this.removeListeners();
+        this.detach();
+    }
+
+    detach() {
+        this.busController?.abort();
+        this.observer?.disconnect();
+        if (TourInteractive.current === this) {
+            TourInteractive.current = null;
         }
+    }
 
-        this.currentAction = this.actions.at(this.currentActionIndex);
-
-        if (this.config.robot) {
-            clearTimeout(this.robotWatchdog);
-            const actionAtCall = this.currentAction;
-            this.robotWatchdog = setTimeout(() => {
-                if (this.currentAction === actionAtCall) {
-                    throw new Error(
-                        `Robot: no progress for 10s on step '${actionAtCall.anchor}'.\n` +
-                            actionAtCall.step.error.join("\n")
-                    );
-                }
-            }, 10000);
+    /**
+     * Called on every animation frame by the macro: the trigger of a newly
+     * played action is looked for right away, then only once
+     * {@link TourInteractiveObserver} flagged that the DOM may have changed.
+     * @param {number} index
+     * @returns {boolean}
+     */
+    shouldSearch(index) {
+        if (!this.canSearch && index === this.searchedActionIndex) {
+            return false;
         }
+        this.canSearch = false;
+        this.searchedActionIndex = index;
+        return true;
+    }
 
-        if (!this.currentAction.step.active) {
-            this.currentActionIndex++;
-            this.play();
-            return;
+    track(action, index) {
+        if (!action.step.active) {
+            return true;
         }
-
-        if (this.currentAction.event === "warn") {
-            if (!this.currentAction.findTrigger()) {
-                return;
+        const anchor = action.findTrigger();
+        if (action.event === "warn") {
+            if (anchor) {
+                console.log(`Step '${action.anchor}' ignored.`);
             }
-            console.log(`Step '${this.currentAction.anchor}' ignored.`);
-            this.currentActionIndex++;
-            this.play();
-            return;
+            return anchor;
         }
-
-        console.log(this.currentAction.event, this.currentAction.anchor);
-
-        tourState.setCurrentIndex(this.currentActionIndex);
-        this.anchorEl = this.currentAction.findTrigger();
-        this.setActionListeners();
-        if (!this.config.robot && this.anchorEl && !this.hasConsumeEvent) {
-            this.currentActionIndex++;
-            this.play();
-            return;
+        if (this.currentAction !== action) {
+            this.removeListeners();
+            this.currentAction = action;
+            this.currentActionIndex = index;
+            console.log(action.event, action.anchor);
+            tourState.setCurrentIndex(index);
         }
-        this.updatePointer();
+        if (anchor) {
+            if (anchor !== this.anchorEl) {
+                this.removeListeners();
+                this.anchorEl = anchor;
+                this.setActionListeners();
+                if (!this.config.robot && !this.consumeEvents.length) {
+                    return true;
+                }
+            }
+            this.updatePointer();
+        } else if (this.anchorEl && !this.config.robot) {
+            if (
+                this.isBusy ||
+                hoot.queryFirst(".o_home_menu", { visible: true }) ||
+                hoot.queryFirst(".dropdown-item.o_loading", { visible: true })
+            ) {
+                pointerState.trigger = undefined;
+            } else {
+                this.backward();
+            }
+        }
+        return false;
+    }
+
+    fail(error, action) {
+        this.removeListeners();
+        this.detach();
+        TourInteractive.removePointer();
+        pointerState.trigger = undefined;
+        if (error.type === "Timeout") {
+            console.error(
+                `Robot: no progress for ${this.macro.timeout}ms on step '${action.anchor}'.\n` +
+                    action.step.error.join("\n")
+            );
+        } else {
+            console.error(error.message);
+        }
     }
 
     async finish() {
+        this.detach();
         TourInteractive.removePointer();
         tourState.clear();
         let message = this.config.rainbowManMessage || this.rainbowManMessage;
@@ -158,10 +220,6 @@ export class TourInteractive {
         if (nextTour) {
             this.onChainNextTour(nextTour);
         }
-    }
-
-    get hasConsumeEvent() {
-        return this.getConsumeEventType(this.anchorEl, this.currentAction.event).length > 0;
     }
 
     updatePointer() {
@@ -195,7 +253,7 @@ export class TourInteractive {
             return;
         }
         this.robotStep = step;
-        const selfAdvance = !this.hasConsumeEvent;
+        const selfAdvance = !this.consumeEvents.length;
         this.robotQueue = (this.robotQueue || Promise.resolve()).then(async () => {
             await step.doAction();
             if (selfAdvance && this.currentAction === action) {
@@ -207,11 +265,13 @@ export class TourInteractive {
 
     setActionListeners() {
         if (!this.anchorEl) {
+            this.consumeEvents = [];
             this.removeListeners = () => {};
             return;
         }
+        this.consumeEvents = this.getConsumeEventType(this.anchorEl, this.currentAction.event);
         const cleanups = this.setupListeners({
-            consumeEvents: this.getConsumeEventType(this.anchorEl, this.currentAction.event),
+            consumeEvents: this.consumeEvents,
             onConsume: () => {
                 this.currentActionIndex++;
                 tourState.setCurrentIndex(this.currentActionIndex);
@@ -271,7 +331,7 @@ export class TourInteractive {
      */
     skipNextActionIfDropdownItem() {
         const nextAction = this.actions.at(this.currentActionIndex + 1);
-        if (nextAction.findTrigger()?.closest(".o-autocomplete--dropdown-item")) {
+        if (nextAction?.findTrigger()?.closest(".o-autocomplete--dropdown-item")) {
             this.currentActionIndex++;
         }
     }
@@ -421,32 +481,5 @@ export class TourInteractive {
         }
 
         return consumeEvents;
-    }
-
-    _onMutation() {
-        if (this.currentAction?.event === "warn") {
-            this.play();
-            return;
-        }
-        if (this.currentAction) {
-            const tempAnchor = this.currentAction.findTrigger();
-            if (tempAnchor && tempAnchor !== this.anchorEl) {
-                this.removeListeners();
-                this.anchorEl = tempAnchor;
-                this.setActionListeners();
-            } else if (!tempAnchor && this.anchorEl) {
-                if (
-                    !hoot.queryFirst(".o_home_menu", { visible: true }) &&
-                    !hoot.queryFirst(".dropdown-item.o_loading", { visible: true }) &&
-                    !this.isBusy
-                ) {
-                    this.backward();
-                } else {
-                    pointerState.trigger = undefined;
-                }
-                return;
-            }
-            this.updatePointer();
-        }
     }
 }
