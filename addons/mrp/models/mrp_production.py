@@ -2377,7 +2377,10 @@ class MrpProduction(models.Model):
         self.workorder_ids._action_confirm()
 
     def button_mark_done(self):
+        productions_to_update_date_start = self.env['mrp.production']
         for production in self:
+            if production.state == 'confirmed' and not production.workorder_ids:
+                productions_to_update_date_start |= production
             if production.bom_id.continuous and self.env.context.get('last_qty_produced'):
                 production.qty_producing = self.env.context.get('last_qty_produced')
                 production.set_qty_producing()
@@ -2433,12 +2436,15 @@ class MrpProduction(models.Model):
         })
         finished_moves.filtered(lambda x: x.state == 'done').date = now
         for production in self:
-            production.write({
+            vals = {
                 'date_finished': now,
                 'priority': '0',
                 'is_locked': True,
                 'state': 'done',
-            })
+            }
+            if production in productions_to_update_date_start:
+                vals['date_start'] = now
+            production.with_context(force_date=True).write(vals)
 
         # It is prudent to reserve any quantity that has become available to the backorder
         # production's move_raw_ids after the production which spawned them has been marked done.

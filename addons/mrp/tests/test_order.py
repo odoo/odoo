@@ -220,6 +220,18 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.action_confirm()
         self.assertEqual(mo.workorder_ids.mapped('sequence'), [0, 1, 2, 100])
 
+    def test_direct_produce_without_workorders_updates_start_date(self):
+        """ Test that the start date of a MO is updated when it is produced directly without workorders.
+        """
+        now = fields.Datetime.now()
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_1.id,
+            'date_start': now + timedelta(days=15),
+        })
+        mo.action_confirm()
+        mo.button_mark_done()
+        self.assertEqual(mo.date_start, now)
+
     @freeze_time('2022-06-28 08:00')
     def test_end_date(self):
         """ End date must be the day the MO is done (regardless of lead times)"""
