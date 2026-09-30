@@ -55,7 +55,11 @@
               action="action_sif_aging_report_wizard" 
               sequence="50"/>
 
-
+    <menuitem id="menu_sif_aging_piutang_sub" 
+              name="Aging Piutang (Umur Piutang)" 
+              parent="menu_sif_laporan" 
+              action="action_sif_aging_piutang_client" 
+              sequence="55"/>
 
     <!-- Kategori 3: Master Data -->
     <menuitem id="menu_sif_master" 
@@ -67,6 +71,19 @@
               name="Chart of Accounts (COA)" 
               parent="menu_sif_master" 
               action="action_sif_coa" 
+              sequence="10"/>
+
+    <!-- Kategori 4: Konfigurasi -->
+    <menuitem id="menu_sif_konfigurasi" 
+              name="Konfigurasi" 
+              parent="menu_sif_keuangan_root" 
+              sequence="40"/>
+
+    <menuitem id="menu_sif_lock_date_sub" 
+              name="Tanggal Kunci (Lock Dates)" 
+              parent="menu_sif_konfigurasi" 
+              action="action_sif_change_lock_date" 
+              groups="sif_keuangan.group_sif_keuangan_manager"
               sequence="10"/>
 
 </odoo>

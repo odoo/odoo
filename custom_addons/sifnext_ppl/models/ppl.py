@@ -176,6 +176,13 @@ class SifnextPPL(models.Model):
             if any(line.subtotal <= 0 for line in record.line_ids):
                 raise ValidationError(_("Nilai setiap detail PPL harus lebih dari nol."))
 
+    def _check_lock_dates(self, custom_date=None):
+        for rec in self:
+            comp = rec.company_id or self.env.company
+            target_date = custom_date or rec.payment_date or rec.request_date or fields.Date.context_today(rec)
+            if comp and target_date and hasattr(comp, 'check_lock_date'):
+                comp.check_lock_date(target_date, lock_type='purchase')
+
     @api.model_create_multi
     def create(self, vals_list):
         self._check_finance_central_readonly()
@@ -193,6 +200,9 @@ class SifnextPPL(models.Model):
                 vals["applicant_id"] = applicant.id
                 vals["source_type"] = "manual"
             company = self.env["res.company"].browse(vals.get("company_id", self.env.company.id))
+            request_date = fields.Date.to_date(vals.get("request_date")) or fields.Date.context_today(self)
+            if company and hasattr(company, 'check_lock_date'):
+                company.check_lock_date(request_date, lock_type='purchase')
             department = self.env["hr.department"].browse(
                 vals.get("department_id") or applicant.department_id.id
             ).exists()
@@ -230,6 +240,14 @@ class SifnextPPL(models.Model):
 
     def write(self, vals):
         self._check_finance_central_readonly()
+        if any(k in vals for k in ['payment_date', 'request_date', 'total_amount', 'line_ids', 'state', 'company_id']):
+            self._check_lock_dates()
+            if 'payment_date' in vals:
+                new_date = fields.Date.to_date(vals['payment_date'])
+                self._check_lock_dates(custom_date=new_date)
+            elif 'request_date' in vals:
+                new_date = fields.Date.to_date(vals['request_date'])
+                self._check_lock_dates(custom_date=new_date)
         if "name" in vals and any(record.name != vals["name"] for record in self):
             raise UserError(_("Nomor PPL tidak dapat diubah."))
         workflow_fields = {
@@ -495,6 +513,7 @@ class SifnextPPL(models.Model):
         return True
 
     def action_submit(self):
+        self._check_lock_dates()
         is_finance = self.env.user.has_group("sifnext_ppl.group_ppl_finance")
         for record in self:
             if record.state != "draft":
@@ -520,6 +539,7 @@ class SifnextPPL(models.Model):
         self._workflow_write(values)
 
     def action_verify(self):
+        self._check_lock_dates()
         self._check_finance_group()
         for record in self:
             if record.state != "submitted":
@@ -534,6 +554,7 @@ class SifnextPPL(models.Model):
         })
 
     def action_approve(self):
+        self._check_lock_dates()
         self._check_group("sifnext_ppl.group_ppl_approver", "Hanya Direktur yang dapat menyetujui PPL.")
         for record in self:
             if record.state != "verified":
@@ -559,6 +580,7 @@ class SifnextPPL(models.Model):
         }
 
     def action_pay(self):
+        self._check_lock_dates()
         self._check_group("sifnext_ppl.group_ppl_finance", "Hanya Keuangan yang dapat mencatat pembayaran.")
         for record in self:
             if record.state != "approved":
