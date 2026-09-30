@@ -588,10 +588,20 @@ export class Thread extends Component {
         }
     }
 
+    get hasHighlightedMessage() {
+        return this.orderedMessages.some((message) => this.isMessageHighlighted(message));
+    }
+
+    /** @param {import("models").Message} message */
+    isMessageHighlighted(message) {
+        return (
+            !message.isNotification && this.messageHighlight?.highlightedMessageId === message.id
+        );
+    }
+
+    /** @param {import("models").Message} message */
     getMessageClassName(message) {
-        return !message.isNotification && this.messageHighlight?.highlightedMessageId === message.id
-            ? "o-highlighted"
-            : "";
+        return this.isMessageHighlighted(message) ? "o-highlighted" : "";
     }
 
     async jumpToPresent({ immediate = false } = {}) {
