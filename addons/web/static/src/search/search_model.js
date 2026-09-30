@@ -1530,6 +1530,14 @@ export class SearchModel extends EventBus {
                         this.toggleSearchItem(f.id);
                     }
                 });
+            const defaultSearchGroupBy = this._getGroupBy({ fallbackOnDefault: false });
+            if (
+                this.env.config.viewType !== "kanban" &&
+                !this.globalGroupBy.length &&
+                JSON.stringify(defaultSearchGroupBy) === JSON.stringify(this.defaultGroupBy)
+            ) {
+                this.defaultGroupBy = undefined;
+            }
         }
     }
 
