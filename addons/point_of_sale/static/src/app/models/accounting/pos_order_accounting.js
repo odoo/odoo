@@ -51,6 +51,10 @@ export class PosOrderAccounting extends Base {
         return formatCurrency(totalOtherCurrencyAmount, currency.id);
     }
 
+    getAmountInCurrency(amount, currency = this.currency) {
+        return currency.convert(amount, this.currency);
+    }
+
     /**
      * Currency formatted prices, these getters already handle included/excluded tax configuration.
      * They must be used each time a price is displayed to the user.
@@ -96,8 +100,14 @@ export class PosOrderAccounting extends Base {
      * !!! Keep in mind that from 19.0 only one cash payment line can be used in an order !!!
      */
     get remainingDue() {
-        const isNegative = this.totalDue < 0;
-        const remaining = this.currency.round(this.totalDue - this.amountPaid);
+        return this.getRemainingDueCurrency();
+    }
+
+    getRemainingDueCurrency(currency = this.currency) {
+        const totalDue = this.getTotalDueCurrency(currency);
+        const amountPaid = this.getAmountPaidCurrency(currency);
+        const isNegative = totalDue < 0;
+        const remaining = currency.round(totalDue - amountPaid);
 
         // Amount paid covers the total due
         if ((isNegative && remaining >= 0) || (!isNegative && remaining <= 0)) {
@@ -109,27 +119,36 @@ export class PosOrderAccounting extends Base {
             this.config.rounding_method.asymmetricRound(isNegative ? -remaining : remaining) == 0
                 ? 0
                 : Math.abs(remaining);
-        return isNegative ? this.currency.round(-amount) : this.currency.round(amount);
+        return currency.round(isNegative ? -amount : amount);
     }
     get change() {
-        const isNegative = this.totalDue < 0;
-        const roundingSanatizer = this.orderIsRounded ? this.appliedRounding : 0;
-        const remaining = this.totalDue - this.amountPaid;
+        return this.getChangeCurrency();
+    }
+    getChangeCurrency(currency = this.currency) {
+        const totalDue = this.getTotalDueCurrency(currency);
+        const amountPaid = this.getAmountPaidCurrency(currency);
+        const isNegative = totalDue < 0;
+        const roundingSanatizer = this.orderIsRounded
+            ? this.getAppliedRoundingCurrency(currency)
+            : 0;
+        const remaining = totalDue - amountPaid;
 
         // Amount paid does not exceed total due
         if ((isNegative && remaining <= 0) || (!isNegative && remaining >= 0)) {
             return 0;
         }
 
+        const priceInclCurrency = this.getAmountInCurrency(this.priceIncl, currency);
         const total =
-            Math.abs(this.priceIncl) -
-            Math.abs(this.amountPaid) +
+            Math.abs(priceInclCurrency) -
+            Math.abs(amountPaid) +
             (isNegative ? -roundingSanatizer : roundingSanatizer);
 
-        const amount = isNegative ? -this.currency.round(total) : this.currency.round(total);
+        const amount = currency.round(total);
+        const signedAmount = isNegative ? -amount : amount;
         return this.shouldRoundChange
-            ? this.config.rounding_method.asymmetricRound(amount)
-            : amount;
+            ? this.config.rounding_method.asymmetricRound(signedAmount)
+            : signedAmount;
     }
     get shouldRoundChange() {
         return this.config.cash_rounding;
@@ -139,8 +158,12 @@ export class PosOrderAccounting extends Base {
         return this.config.hasGlobalRounding || (cashPm && this.config.hasCashRounding);
     }
     get appliedRounding() {
-        const total = this.prices.taxDetails.total_amount_no_rounding;
-        const remaining = this.currency.round(total - this.amountPaid);
+        return this.getAppliedRoundingCurrency();
+    }
+    getAppliedRoundingCurrency(currency = this.currency) {
+        const total = this.getAmountInCurrency(this.priceIncl, currency);
+        const amountPaid = this.getAmountPaidCurrency(currency);
+        const remaining = currency.round(total - amountPaid);
         const signedRemaining = total < 0 ? -remaining : remaining;
         const isDone =
             this.orderIsRounded &&
@@ -153,7 +176,7 @@ export class PosOrderAccounting extends Base {
         const roundedRemaining = this.config.rounding_method.asymmetricRound(signedRemaining);
         const diff =
             total < 0 ? signedRemaining - roundedRemaining : roundedRemaining - signedRemaining;
-        return this.currency.round(diff);
+        return currency.round(diff);
     }
 
     /**
@@ -185,9 +208,13 @@ export class PosOrderAccounting extends Base {
         return this.prices.taxDetails.base_amount;
     }
     get totalDue() {
-        return this.config.hasCashRounding
-            ? this.currency.round(this.prices.taxDetails.total_amount_no_rounding)
-            : this.currency.round(this.prices.taxDetails.total_amount);
+        return this.getTotalDueCurrency();
+    }
+    getTotalDueCurrency(currency = this.currency) {
+        const total = this.config.hasCashRounding
+            ? this.prices.taxDetails.total_amount_no_rounding
+            : this.prices.taxDetails.total_amount;
+        return this.getAmountInCurrency(total, currency);
     }
     get amountTaxes() {
         return this.prices.taxDetails.tax_amount_currency;
@@ -196,12 +223,19 @@ export class PosOrderAccounting extends Base {
         return this.currency.isZero(this.remainingDue);
     }
     get amountPaid() {
-        return this.currency.round(
-            this.payment_ids.reduce(function (sum, paymentLine) {
+        return this.getAmountPaidCurrency();
+    }
+    getAmountPaidCurrency(currency = this.currency) {
+        return currency.round(
+            this.payment_ids.reduce((sum, paymentLine) => {
                 // Return lines are created after the sync, should not be taken into account in
                 // the paid amount otherwise, the change would be wrong.
                 if (paymentLine.isDone() && !paymentLine.is_change) {
-                    sum += paymentLine.getAmount();
+                    if (currency.id === paymentLine.currency.id) {
+                        sum += paymentLine.amount_currency;
+                    } else {
+                        sum += this.getAmountInCurrency(paymentLine.amount, currency);
+                    }
                 }
                 return sum;
             }, 0)
@@ -231,11 +265,12 @@ export class PosOrderAccounting extends Base {
      * @param paymentMethod: The payment method of the payment to be created.
      * @returns A monetary value.
      */
-    getDefaultAmountDueToPayIn(paymentMethod) {
+    getDefaultAmountDueToPayIn(paymentMethod, currency = this.currency) {
+        const remainingDue = this.getRemainingDueCurrency(currency);
         const amount = this.shouldRound(paymentMethod)
-            ? this.config_id.rounding_method.round(this.remainingDue)
-            : this.remainingDue;
-        return amount || this.change;
+            ? this.config_id.rounding_method.round(remainingDue)
+            : remainingDue;
+        return amount || this.getChangeCurrency(currency);
     }
 
     /**
