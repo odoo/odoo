@@ -351,7 +351,13 @@ class IrActionsReport(models.Model):
             # for `QR` type, `quiet` is not supported. And is simply ignored.
             # But we can use `barBorder` to get a similar behaviour.
             # quiet=True & barBorder=4 by default cf above, remove border only if quiet=False
-            if not kwargs['quiet']:
+            if kwargs['quiet']:
+                # The QR code standard ISO 18004 requires a width of 4 module units surrounding the encoding region.
+                # The requirement is lowered to 'at least' to remain somewhat compatible with the API contract.
+                kwargs['barBorder'] = max(4, kwargs['barBorder'])
+            else:
+                # NOT RECOMMENDED!
+                # Not following that standard could lead to unreadable symbols.
                 kwargs['barBorder'] = 0
 
         if barcode_type in ('EAN8', 'EAN13') and not check_barcode_encoding(value, barcode_type):
