@@ -130,12 +130,11 @@ class SifJurnalEntry(models.Model):
         """
         Validasi batas tanggal kunci pembukuan (Lock Dates):
         1. Hard Lock (fiscalyear_lock_date): Berlaku mutlak untuk semua pengguna termasuk Admin/Manager.
-        2. Lock Sales (sale_lock_date): Mengunci transaksi penjualan/pendapatan (source_type == 'pendapatan').
-        3. Lock Purchases (purchase_lock_date): Mengunci transaksi pembelian/PPL (source_type == 'ppl').
+        2. Lock Sales (sale_lock_date): Mengunci transaksi penjualan/pendapatan.
+        3. Lock Purchases (purchase_lock_date): Mengunci transaksi pembelian/PPL/pengeluaran.
         4. Lock Tax Return (tax_lock_date): Mengunci transaksi perpajakan.
-        5. Lock Everything (user_lock_date): Mengunci seluruh transaksi untuk staf operasional, mengizinkan pengecualian untuk Manager Keuangan.
+        5. Lock Everything (user_lock_date): Mengunci seluruh transaksi jurnal umum.
         """
-        is_manager = self.env.user.has_group('sif_keuangan.group_sif_keuangan_manager') or self.env.is_superuser()
         for entry in self:
             company = entry.company_id or self.env.company
             target_date = custom_date or entry.date
@@ -144,6 +143,7 @@ class SifJurnalEntry(models.Model):
 
             if not target_date or not company:
                 continue
+            target_date = fields.Date.to_date(target_date)
 
             # 1. Hard Lock Check (Semua Pengguna)
             if company.fiscalyear_lock_date and target_date <= company.fiscalyear_lock_date:
@@ -153,15 +153,31 @@ class SifJurnalEntry(models.Model):
                 ) % company.fiscalyear_lock_date.strftime('%d/%m/%Y'))
 
             # 2. Sales / Pendapatan Lock Check
-            if source_type == 'pendapatan' and company.sale_lock_date and target_date <= company.sale_lock_date:
+            is_sales = source_type == 'pendapatan'
+            if not is_sales and lines:
+                for l in lines:
+                    acc_code = getattr(l, 'account_id', False) and (l.account_id.code or '') or ''
+                    acc_type = getattr(l, 'account_id', False) and (l.account_id.account_type or '') or ''
+                    if acc_code.startswith(('4', '113')) or acc_type in ('income', 'revenue'):
+                        is_sales = True
+                        break
+            if is_sales and company.sale_lock_date and target_date <= company.sale_lock_date:
                 raise UserError(_(
-                    'Transaksi Penjualan / Pendapatan terkunci hingga tanggal %s.'
+                    'Transaksi Penjualan / Pendapatan terkunci hingga tanggal %s (inklusif).'
                 ) % company.sale_lock_date.strftime('%d/%m/%Y'))
 
             # 3. Purchases / PPL Lock Check
-            if source_type == 'ppl' and company.purchase_lock_date and target_date <= company.purchase_lock_date:
+            is_purchase = source_type == 'ppl'
+            if not is_purchase and lines:
+                for l in lines:
+                    acc_code = getattr(l, 'account_id', False) and (l.account_id.code or '') or ''
+                    acc_type = getattr(l, 'account_id', False) and (l.account_id.account_type or '') or ''
+                    if acc_code.startswith(('5', '6', '211')) or acc_type in ('expense', 'expense_direct', 'expense_indirect'):
+                        is_purchase = True
+                        break
+            if is_purchase and company.purchase_lock_date and target_date <= company.purchase_lock_date:
                 raise UserError(_(
-                    'Transaksi Pembelian / Pengadaan (PPL) terkunci hingga tanggal %s.'
+                    'Transaksi Pembelian / Pengadaan (PPL) terkunci hingga tanggal %s (inklusif).'
                 ) % company.purchase_lock_date.strftime('%d/%m/%Y'))
 
             # 4. Tax Return Lock Check
@@ -169,8 +185,9 @@ class SifJurnalEntry(models.Model):
                 has_tax = False
                 if lines:
                     for l in lines:
-                        acc_name = getattr(l, 'account_id', False) and l.account_id.name or ''
-                        if any(kw in acc_name.lower() for kw in ['pajak', 'ppn', 'pph']):
+                        acc_code = getattr(l, 'account_id', False) and (l.account_id.code or '') or ''
+                        acc_name = getattr(l, 'account_id', False) and (l.account_id.name or '') or ''
+                        if acc_code.startswith(('115', '213')) or any(kw in acc_name.lower() for kw in ['pajak', 'ppn', 'pph']):
                             has_tax = True
                             break
                 if has_tax:
@@ -178,18 +195,15 @@ class SifJurnalEntry(models.Model):
                         'Transaksi Perpajakan terkunci hingga tanggal %s setelah penutupan pajak (tax closing).'
                     ) % company.tax_lock_date.strftime('%d/%m/%Y'))
 
-            # 5. Lock Everything (Soft Lock / Non-Manager Lock)
+            # 5. Lock Everything (General Lock)
             if company.user_lock_date and target_date <= company.user_lock_date:
-                if not is_manager:
-                    raise UserError(_(
-                        'Seluruh transaksi jurnal terkunci hingga tanggal %s untuk staf operasional.\n'
-                        'Hubungi Manajer Keuangan / Super User jika memerlukan jurnal penyesuaian.'
-                    ) % company.user_lock_date.strftime('%d/%m/%Y'))
+                raise UserError(_(
+                    'Seluruh transaksi jurnal terkunci oleh Tanggal Kunci (Lock Everything) hingga tanggal %s (inklusif).'
+                ) % company.user_lock_date.strftime('%d/%m/%Y'))
 
     @api.model_create_multi
     def create(self, vals_list):
         self._check_finance_central_readonly()
-        is_manager = self.env.user.has_group('sif_keuangan.group_sif_keuangan_manager') or self.env.is_superuser()
         for vals in vals_list:
             date_val = fields.Date.to_date(vals.get('date')) or fields.Date.today()
             comp_id = vals.get('company_id') or self.env.company.id
@@ -214,12 +228,11 @@ class SifJurnalEntry(models.Model):
                     'Transaksi Pembelian / Pengadaan (PPL) terkunci hingga tanggal %s.'
                 ) % company.purchase_lock_date.strftime('%d/%m/%Y'))
 
-            # 4. Soft Lock (Lock Everything)
+            # 4. Lock Everything
             if company.user_lock_date and date_val <= company.user_lock_date:
-                if not is_manager:
-                    raise UserError(_(
-                        'Seluruh transaksi jurnal terkunci hingga tanggal %s untuk staf operasional.'
-                    ) % company.user_lock_date.strftime('%d/%m/%Y'))
+                raise UserError(_(
+                    'Seluruh transaksi jurnal terkunci oleh Tanggal Kunci (Lock Everything) hingga tanggal %s.'
+                ) % company.user_lock_date.strftime('%d/%m/%Y'))
 
             if vals.get('name', _('New')) == _('New'):
                 seq = self.env['ir.sequence'].next_by_code('sif.jurnal.number')
