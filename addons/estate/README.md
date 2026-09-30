@@ -42,3 +42,13 @@ The tutorial text shows the older `ir.model.access.csv` layout. This Odoo 20 che
 
 **Try it:** Upgrade `estate` and check that its missing-access warning is gone. Compare property access for an internal user with access for a user outside that group.
 
+## Chapter 5 - Finally, some UI to play with
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/05_firstui.html)
+
+A window action connects a menu to `estate.property`. The new menu path is Real Estate > Advertisements > Properties. Odoo can now open its generated list and form views, so you can create a property before any custom views exist.
+
+The model also gains useful defaults and lifecycle fields. New properties start with two bedrooms, an availability date three months ahead, `active=True`, and state New. Availability and selling price are not copied when a property is duplicated. Selling price is read-only in the form because accepting an offer will set it later.
+
+**Try it:** Create and duplicate a property. Compare their availability dates and selling prices, then archive one property and look for it in the normal list.
+
