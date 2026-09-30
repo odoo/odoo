@@ -81,14 +81,14 @@
                         <t t-name="card">
                             <div class="d-flex">
                                 <div class="d-flex flex-column">
-                                    <field class="fw-bolder" name="livechat_customer_history_ids" widget="im_livechat.one2many_names"/>
-                                    <span class="fw-bold">Date: <field name="create_date" class="fw-normal"/></span>
-                                    <span class="fw-bold">Duration: <field class="d-inline fw-normal" name="duration" widget="float_time" options="{'show_seconds': true}"/></span>
-                                    <span class="fw-bold">Messages: <field name="message_count" class="fw-normal"/></span>
+                                    <field class="mb-1 fs-4 fw-bold" name="livechat_customer_history_ids" widget="im_livechat.one2many_names"/>
+                                    <span class="fw-bold"><i class="oi oi-fw me-2 text-muted" data-icon="calendar_today" role="img" aria-label="Date" />Date: <field name="create_date" class="fw-normal"/></span>
+                                    <span class="fw-bold"><i class="oi oi-fw me-2 text-muted" data-icon="hourglass_bottom" role="img" aria-label="Duration" />Duration: <field class="d-inline fw-normal" name="duration" widget="float_time" options="{'show_seconds': true}"/></span>
+                                    <span class="fw-bold"><i class="oi oi-fw me-2 text-muted" data-icon="chat_bubble" role="img" aria-label="Messages" />Messages: <field name="message_count" class="fw-normal"/></span>
                                     <field name="livechat_failure" invisible="1"/>
                                     <field name="livechat_is_escalated" invisible="1"/>
                                     <span t-if="record.livechat_is_escalated.raw_value or record.livechat_failure.raw_value" class="fw-bold">
-                                        Status:
+                                        <i class="oi oi-fw me-2 text-muted" data-icon="info" role="img" aria-label="Status" />Status:
                                         <span class="fw-normal">
                                             <t t-if="record.livechat_is_escalated.raw_value">Escalated</t>
                                             <t t-elif="record.livechat_failure.raw_value === 'no_failure'">Success</t>
@@ -110,7 +110,7 @@
                             </div>
                             <footer class="pt-0">
                                 <t t-if="record.country_id.raw_value">
-                                    <span class="fw-bold">Country: </span><field string="Country" name="country_id"/>
+                                    <span class="small fw-bold"><i class="oi oi-fw me-2 text-muted" data-icon="map" role="img" aria-label="Country" />Country: </span><field string="Country" name="country_id" class="small"/>
                                 </t>
                                 <field name="livechat_agent_partner_ids" widget="many2many_avatar_user" class="ms-auto me-1"/>
                             </footer>
