@@ -12,7 +12,7 @@
                     <separator/>
                     <filter string="My Roles" name="my_role_ids" domain="[('user_ids', '=', uid)]"/>
                     <group>
-                        <filter string="Users" name="filter_user_ids" domain="[]" context="{'group_by': 'user_ids'}"/>
+                        <filter name="filter_user_ids" domain="[]" context="{'group_by': 'user_ids'}"/>
                     </group>
                 </search>
             </field>
