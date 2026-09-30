@@ -287,7 +287,7 @@ class ChannelController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])
         if not channel:
             raise NotFound()
-        if channel.is_readonly and not channel.can_self_edit_readonly_channel:
+        if channel.is_readonly and not channel.self_has_admin_rights:
             raise AccessError(
                 self.env._(
                     "Only channel owners and admins can create threads in a read-only channel.",
@@ -368,13 +368,13 @@ class ChannelController(http.Controller):
         self_channel_role = channel.self_member_id.sudo().channel_role
         if not self_channel_role == "owner" and not request.env.user.has_group("base.group_system"):
             raise AccessError(self.env._("Only the channel owner or DB admins can modify member roles."))
-        if (
-            channel_member.sudo().channel_role == "owner"
-            and channel_member != channel.self_member_id
-            and not request.env.user.has_group("base.group_system")
-        ):
+        # Owners cannot remove ownership, theirs included. Only DB admins can.
+        removes_ownership = channel_member.sudo().channel_role == "owner" and channel_role != "owner"
+        if removes_ownership and not request.env.user.has_group("base.group_system"):
             raise AccessError(
                 self.env._("Removing ownership from an owner is not allowed. Please contact your DB administrator.")
             )
         # sudo: discuss.channel.member - writing channel role of a member is considered allowed
         channel_member.sudo().channel_role = channel_role
+        if removes_ownership:
+            channel._ensure_owner(excluded_users=channel_member.partner_id.user_ids)
