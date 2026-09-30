@@ -1,12 +1,11 @@
-$o-fe-handles-accent-color: #01bad2 !default;
-$o-fe-handles-bg-color: #FFFFFF !default;
 $o-fe-handle-edge-size: 16px !default;
 $o-fe-handle-border-width: 2px !default;
-$o-fe-handle-inside-line-width: 3px !default;
-$o-fe-snap-guide-color: #1da0fb!default;
-$o-fe-rotation-handle-distance: 22px !default;
-$o-fe-color-active-border-color: $o-main-link-color !default;
 $o-fe-color-active-background-color: var(--background-color) !default;
+
+.o_fp_color_item.selected,
+.o_fp_handles {
+    --o-fe-handles-bg-color: #FFFFFF;
+}
 
 .o_fp_canvas {
     transition: transform 0.2s ease-out;
@@ -47,7 +46,8 @@ $o-fe-color-active-background-color: var(--background-color) !default;
 }
 
 .o_fp_color_item.selected {
-  box-shadow: 0 0 0 1px $o-fe-color-active-border-color, inset 0 0 0 2px $o-fe-color-active-border-color, inset 0 0 0 4px $o-fe-handles-bg-color;
+  --o-fe-color-active-border-color: var(--o-main-link-color);
+  box-shadow: 0 0 0 1px var(--o-fe-color-active-border-color), inset 0 0 0 2px var(--o-fe-color-active-border-color), inset 0 0 0 4px var(--o-fe-handles-bg-color);
 }
 
 .o_fp_edit_menu{
@@ -69,17 +69,21 @@ $o-fe-color-active-background-color: var(--background-color) !default;
 }
 
 .o_fp_snap_guides {
+  --o-fe-snap-guide-color: #1da0fb;
   pointer-events: none;
   z-index: 999;
 
   .snap-guide {
-    stroke: $o-fe-snap-guide-color;
+    stroke: var(--o-fe-snap-guide-color);
     stroke-width: 1;
     stroke-dasharray: 5, 5;
   }
 }
 
 .o_fp_handles {
+  --o-fe-handles-accent-color: #01bad2;
+  --o-fe-handle-inside-line-width: 3px;
+  --o-fe-rotation-handle-distance: 22px;
   border-color: inherit;
   z-index: 1000;
   pointer-events: none;
@@ -91,7 +95,7 @@ $o-fe-color-active-background-color: var(--background-color) !default;
 
     &:hover, &:active {
       .o_fp_handle_indicator {
-        outline-color: $o-fe-handles-accent-color;
+        outline-color: var(--o-fe-handles-accent-color);
       }
     }
 
@@ -107,7 +111,7 @@ $o-fe-color-active-background-color: var(--background-color) !default;
         content: '';
         position: absolute;
         inset: 0;
-        background: $o-fe-handles-accent-color;
+        background: var(--o-fe-handles-accent-color);
       }
 
       &.o_fp_side_x {
@@ -270,10 +274,10 @@ $o-fe-color-active-background-color: var(--background-color) !default;
       width: $o-fe-handle-edge-size;
       height: $o-fe-handle-edge-size;
       margin: auto;
-      border: solid $o-fe-handle-border-width $o-fe-handles-accent-color;
+      border: solid $o-fe-handle-border-width var(--o-fe-handles-accent-color);
       border-radius: $o-fe-handle-edge-size;
-      background: $o-fe-handles-bg-color;
-      outline: $o-fe-handle-inside-line-width solid $o-fe-handles-bg-color;
+      background: var(--o-fe-handles-bg-color);
+      outline: var(--o-fe-handle-inside-line-width) solid var(--o-fe-handles-bg-color);
       outline-offset: -($o-fe-handle-edge-size * 0.5);
       transition: all .2s ease-in-out;
 
@@ -352,15 +356,15 @@ $o-fe-color-active-background-color: var(--background-color) !default;
      transform: translateX(-50%);
 
     .o_fp_rotation_handle_inner{
-      margin-top: $o-fe-rotation-handle-distance;
+      margin-top: var(--o-fe-rotation-handle-distance);
       padding: 6px;
       pointer-events: auto;
       color: #444;
 
          &:hover, &:active {
           .o_fp_handle_indicator {
-            background: $o-fe-handles-accent-color;
-            color: $o-fe-handles-bg-color;
+            background: var(--o-fe-handles-accent-color);
+            color: var(--o-fe-handles-bg-color);
             transform: scale(1.4);
           }
       }
@@ -375,7 +379,7 @@ $o-fe-color-active-background-color: var(--background-color) !default;
 
       .o_fp_rotation_handle_inner {
         margin: 0;
-        padding-bottom: $o-fe-rotation-handle-distance;
+        padding-bottom: var(--o-fe-rotation-handle-distance);
       }
     }
 
@@ -388,7 +392,7 @@ $o-fe-color-active-background-color: var(--background-color) !default;
 
       .o_fp_rotation_handle_inner {
         margin: 0;
-        padding-right: $o-fe-rotation-handle-distance;
+        padding-right: var(--o-fe-rotation-handle-distance);
       }
     }
 
@@ -401,7 +405,7 @@ $o-fe-color-active-background-color: var(--background-color) !default;
 
       .o_fp_rotation_handle_inner {
         margin: 0;
-        padding-left: $o-fe-rotation-handle-distance;
+        padding-left: var(--o-fe-rotation-handle-distance);
       }
     }
 
@@ -409,8 +413,8 @@ $o-fe-color-active-background-color: var(--background-color) !default;
       transition: all .2s ease-in-out;
        width: 24px;
        border-radius: 999rem;
-       border: $o-fe-handle-border-width solid $o-fe-handles-accent-color;
-       background: $o-fe-handles-bg-color;
+       border: $o-fe-handle-border-width solid var(--o-fe-handles-accent-color);
+       background: var(--o-fe-handles-bg-color);
        height: 24px;
        font-size: 12px;
        display: flex;
