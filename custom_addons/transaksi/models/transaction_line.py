@@ -35,7 +35,7 @@ class TransaksiTransactionLine(models.Model):
         string="Bank Penerima",
     )
     bank_name = fields.Char(
-        string="Bank Penerima",
+        string="Nama Bank Penerima",
         compute="_compute_bank_name",
         store=True,
         readonly=False,

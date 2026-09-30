@@ -293,7 +293,7 @@ class TransaksiTransaction(models.Model):
         tracking=True,
     )
     single_bank_name = fields.Char(
-        string="Bank Penerima",
+        string="Nama Bank Penerima",
         compute="_compute_single_bank_name",
         store=True,
         readonly=False,
@@ -368,17 +368,17 @@ class TransaksiTransaction(models.Model):
 
     # --- Ringkasan Rekening Penerima untuk List View ---
     recipient_bank = fields.Char(
-        string="Bank Penerima",
+        string="Ringkasan Bank Penerima",
         compute="_compute_recipient_info",
         store=True,
     )
     recipient_account = fields.Char(
-        string="Nomor Rekening",
+        string="Ringkasan Nomor Rekening",
         compute="_compute_recipient_info",
         store=True,
     )
     recipient_name = fields.Char(
-        string="Nama Pemilik Rekening",
+        string="Ringkasan Pemilik Rekening",
         compute="_compute_recipient_info",
         store=True,
     )
