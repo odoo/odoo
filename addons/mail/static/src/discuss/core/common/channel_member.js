@@ -48,6 +48,14 @@ export class ChannelMember extends Component {
         };
     }
 
+    get showAdminIcon() {
+        return this.member().channel_role === "admin";
+    }
+
+    get showOwnerIcon() {
+        return this.member().channel_role === "owner";
+    }
+
     /** @param {import("models").ChannelMember} member */
     canOpenChat(member) {
         if (this.store.inPublicPage) {

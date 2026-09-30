@@ -141,17 +141,26 @@ class ResUsers(models.Model):
             user.has_access_livechat = user.has_group('im_livechat.im_livechat_group_user')
 
     def write(self, vals):
-        if vals.get("group_ids"):
-            operator_group = self.env.ref("im_livechat.im_livechat_group_user")
-            if operator_group in self.all_group_ids:
-                result = super().write(vals)
-                lost_operators = self.filtered_domain([("all_group_ids", "not in", operator_group.id)])
-                # sudo - im_livechat.channel: user manager can remove user from livechat channels
-                self.env["im_livechat.channel"].sudo() \
-                    .search([("user_ids", "in", lost_operators.ids)]) \
-                    .write({"user_ids": [Command.unlink(operator.id) for operator in lost_operators]})
-                return result
-        return super().write(vals)
+        operator_group = vals.get("group_ids") and self.env.ref("im_livechat.im_livechat_group_user")
+        had_operators = operator_group and operator_group in self.all_group_ids
+        reactivated_users = self.filtered(lambda user: not user.active) if vals.get("active") else self.browse()
+        result = super().write(vals)
+        if had_operators:
+            lost_operators = self.filtered_domain([("all_group_ids", "not in", operator_group.id)])
+            # sudo - im_livechat.channel: user manager can remove user from livechat channels
+            self.env["im_livechat.channel"].sudo() \
+                .search([("user_ids", "in", lost_operators.ids)]) \
+                .write({"user_ids": [Command.unlink(operator.id) for operator in lost_operators]})
+        if reactivated_users:
+            # Archiving resets channel roles, restore the ones of live chat members as
+            # they are deduced from the member type.
+            # sudo: discuss.channel.member - restoring roles deduced from the member type
+            livechat_members = self.env["discuss.channel.member"].sudo().search([
+                ("partner_id", "in", reactivated_users.partner_id.ids),
+                ("channel_id.channel_type", "=", "livechat"),
+            ])
+            self.env.add_to_compute(livechat_members._fields["channel_role"], livechat_members)
+        return result
 
     def _after_session_login(self):
         super()._after_session_login()
