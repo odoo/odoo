@@ -31,3 +31,25 @@ class TestGccInvoice(AccountTestInvoicingCommon):
         ar_partner = self.env['res.partner'].create({'name': 'Arabic Partner', 'lang': 'ar_001'})
         invoice_ar = self.init_invoice('out_invoice', products=self.product_a, partner=ar_partner)
         self.assertEqual(invoice_ar.narration, Markup('<p>Arabic Terms</p>'), 'Invoice narration should show Arabic terms for Arabic partner')
+
+    def test_gcc_invoice_without_description(self):
+        ''' Test that the GCC invoice report renders correctly when the product description is empty. '''
+        self.env['res.lang']._activate_lang('ar_001')
+
+        gcc_countries = self.env.ref('base.gulf_cooperation_council').country_ids
+        self.company.write({
+            'country_id': gcc_countries[0].id,
+            'l10n_gcc_dual_language_invoice': True,
+        })
+
+        ar_partner = self.env['res.partner'].create({'name': 'Arabic Partner', 'lang': 'ar_001'})
+        invoice = self.init_invoice('out_invoice', partner=ar_partner, products=self.product_a)
+        invoice.invoice_line_ids.write({'name': False})
+
+        report, _ = self.env['ir.actions.report']._render_qweb_html('account.account_invoices', invoice.ids)
+        report = report.decode()
+
+        self.assertIn(ar_partner.name, report)
+        self.assertIn(self.product_a.name, report)
+        self.assertIn(invoice.invoice_line_ids.tax_ids[0].name, report)
+        self.assertIn(invoice.currency_id.symbol, report)
