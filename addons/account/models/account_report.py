@@ -284,6 +284,12 @@ class AccountReport(models.Model):
     def _unlink_if_no_variant(self):
         if self.variant_report_ids:
             raise UserError(_("You can't delete a report that has variants."))
+        model_data = self.env['ir.model.data'].sudo().search([('model', '=', self._name), ('res_id', 'in', self.ids)], limit=1)
+        if model_data:
+            raise UserError(_(
+                "You cannot delete this report(s) because it is part of the default system data. "
+                "If needed, consider archiving it instead."
+            ))
 
     def _get_copied_name(self):
         '''Return a copied name of the account.report record by adding the suffix (copy) at the end

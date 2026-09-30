@@ -2,6 +2,7 @@
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.exceptions import UserError
 
 
 @tagged('post_install', '-at_install')
@@ -50,3 +51,8 @@ class TestAccountReport(AccountTestInvoicingCommon):
         expression = copy.line_ids[1].expression_ids
         self.assertEqual(expression.formula, 'test_line_1_COPY')
         self.assertEqual(expression.subformula, 'if_other_expr_above(test_line_1_COPY.balance, USD(0))')
+
+    def test_cannot_delete_default_account_report(self):
+        report = self.env.ref("account_reports.balance_sheet")
+        with self.assertRaises(UserError):
+            report.unlink()
