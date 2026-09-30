@@ -125,6 +125,7 @@ class TestOrmMessage(models.Model):
     name = fields.Char(string='Title', compute='_compute_name', store=True)
     display_name = fields.Char(string='Abstract')
     size = fields.Integer(compute='_compute_size', search='_search_size')
+    author_message_count = fields.Integer(compute='_compute_author_message_count')
     double_size = fields.Integer(compute='_compute_double_size')
     discussion_name = fields.Char(related='discussion.name', string="Discussion Name", readonly=False)
     author_partner = fields.Many2one(
@@ -192,6 +193,12 @@ class TestOrmMessage(models.Model):
     def _compute_size(self):
         for message in self:
             message.size = len(message.body or '')
+
+    @api.depends('author')
+    def _compute_author_message_count(self):
+        counts = dict(self._read_group([], ['author'], ['__count']))
+        for message in self:
+            message.author_message_count = counts.get(message.author, 0)
 
     def _search_size(self, operator, value):
         if operator not in ('=', '!=', '<', '<=', '>', '>=', 'in', 'not in'):
