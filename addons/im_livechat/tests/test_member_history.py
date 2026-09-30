@@ -204,3 +204,5 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
         self.assertFalse(john_member.channel_role)
         john.action_unarchive()
         self.assertEqual(john_member.channel_role, "owner")
+        john.unlink()
+        self.assertFalse(john_member.channel_role)
