@@ -132,8 +132,7 @@ class SifJurnalEntry(models.Model):
         1. Hard Lock (fiscalyear_lock_date): Berlaku mutlak untuk semua pengguna termasuk Admin/Manager.
         2. Lock Sales (sale_lock_date): Mengunci transaksi penjualan/pendapatan.
         3. Lock Purchases (purchase_lock_date): Mengunci transaksi pembelian/PPL/pengeluaran.
-        4. Lock Tax Return (tax_lock_date): Mengunci transaksi perpajakan.
-        5. Lock Everything (user_lock_date): Mengunci seluruh transaksi jurnal umum.
+        4. Lock Everything (user_lock_date): Mengunci seluruh transaksi jurnal umum.
         """
         for entry in self:
             company = entry.company_id or self.env.company
@@ -180,22 +179,7 @@ class SifJurnalEntry(models.Model):
                     'Transaksi Pembelian / Pengadaan (PPL) terkunci hingga tanggal %s (inklusif).'
                 ) % company.purchase_lock_date.strftime('%d/%m/%Y'))
 
-            # 4. Tax Return Lock Check
-            if company.tax_lock_date and target_date <= company.tax_lock_date:
-                has_tax = False
-                if lines:
-                    for l in lines:
-                        acc_code = getattr(l, 'account_id', False) and (l.account_id.code or '') or ''
-                        acc_name = getattr(l, 'account_id', False) and (l.account_id.name or '') or ''
-                        if acc_code.startswith(('115', '213')) or any(kw in acc_name.lower() for kw in ['pajak', 'ppn', 'pph']):
-                            has_tax = True
-                            break
-                if has_tax:
-                    raise UserError(_(
-                        'Transaksi Perpajakan terkunci hingga tanggal %s setelah penutupan pajak (tax closing).'
-                    ) % company.tax_lock_date.strftime('%d/%m/%Y'))
-
-            # 5. Lock Everything (General Lock)
+            # 4. Lock Everything (General Lock)
             if company.user_lock_date and target_date <= company.user_lock_date:
                 raise UserError(_(
                     'Seluruh transaksi jurnal terkunci oleh Tanggal Kunci (Lock Everything) hingga tanggal %s (inklusif).'
