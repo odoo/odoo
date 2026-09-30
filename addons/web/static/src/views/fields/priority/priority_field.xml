@@ -2,15 +2,15 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PriorityField">
-        <div class="o_priority opacity-trigger-hover d-flex" role="radiogroup" name="priority" aria-label="Priority">
+        <div class="o_priority opacity-trigger-hover d-flex" t-att-class="this.colorClass" role="radiogroup" name="priority" aria-label="Priority">
             <t t-foreach="this.options" t-as="value" t-key="value">
                 <t t-if="!value_first">
                     <t t-if="this.props.readonly">
                         <span
-                            class="o_priority_star oi"
+                            class="o_priority_star oi p-1"
                             role="radio"
-                            data-icon="star"
-                            t-att-class="{'oi-filled': value_index lte this.index}"
+                            data-icon="flag"
+                            t-att-class="{'o_star_active oi-filled': value_index lte this.index}"
                             tabindex="0"
                             t-att-data-tooltip="this.getTooltip(value[0],value[1])"
                             t-att-aria-checked="value_index === this.index ? 'true' : 'false'"
@@ -19,10 +19,10 @@
                     </t>
                     <t t-else="">
                         <button
-                            class="o_priority_star btn btn-link btn-link-inline oi p-0"
+                            class="o_priority_star btn btn-link btn-link-inline oi p-1 p-0"
                             role="radio"
-                            data-icon="star"
-                            t-att-class="value_index lte this.index ? 'oi-filled' : 'opacity-25 opacity-100-hover'"
+                            data-icon="flag"
+                            t-att-class="value_index lte this.index ? 'o_star_active oi-filled' : 'opacity-25 opacity-50-hover'"
                             tabindex="0"
                             t-att-data-tooltip="this.getTooltip(value[0], value[1])"
                             t-att-aria-checked="value_index === this.index ? 'true' : 'false'"

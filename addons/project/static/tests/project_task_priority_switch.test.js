@@ -20,12 +20,12 @@ test("project.task (form): check ProjectTaskPrioritySwitch", async () => {
         `,
     });
 
-    expect("div[name='priority'] [data-icon='star']:not(.oi-filled)").toHaveCount(1, {
+    expect("div[name='priority'] button:not(.o_star_active)").toHaveCount(1, {
         message: "The low priority should display the star (empty) icon",
     });
     await press("alt+r");
     await animationFrame();
-    expect("div[name='priority'] [data-icon='star'].oi-filled").toHaveCount(1, {
+    expect("div[name='priority'] button.o_star_active").toHaveCount(1, {
         message:
             "After using the alt+r hotkey the priority should be set to high and the widget should display the star (filled) icon",
     });

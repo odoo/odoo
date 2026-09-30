@@ -58,6 +58,9 @@ export class PriorityField extends Component {
             ? this.state.index
             : this.options.findIndex((o) => o[0] === this.props.record.data[this.props.name]);
     }
+    get colorClass() {
+        return this.index > 0 ? `o_priority_lvl_${this.index}` : "";
+    }
 
     getTooltip(value, label) {
         if (!this.tooltipLabel || this.tooltipLabel === label) {

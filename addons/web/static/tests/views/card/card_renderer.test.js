@@ -739,9 +739,9 @@ test("priority field should not be editable when missing access rights", async (
             </card>`,
         readonly: true,
     });
-    expect(".o_card_record .o_priority [data-icon='star']:not(.oi-filled)").toHaveCount(2);
+    expect(".o_card_record .o_priority .o_priority_star:not(.o_star_active)").toHaveCount(2);
     await contains(".o_card_record .o_priority_star:first-child").click();
-    expect(".o_card_record .o_priority [data-icon='star']:not(.oi-filled)").toHaveCount(2);
+    expect(".o_card_record .o_priority .o_priority_star:not(.o_star_active)").toHaveCount(2);
 });
 
 test("can use JSON in card template", async () => {
