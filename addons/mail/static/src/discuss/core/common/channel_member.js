@@ -45,6 +45,8 @@ export class ChannelMember extends Component {
         return {
             "cursor-pointer": this.isClickable(this.member()),
             "o-offline": this.member().imStatusUI === "offline",
+            "o-actions-open": this.showingActions.isOpen,
+            "o-mobile": this.store.useMobileView,
         };
     }
 
