@@ -1031,6 +1031,34 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.mobile, self.test_phone_data[2])
         self.assertFalse(lead.phone_sanitized)
 
+    def test_lead_probability_with_all_team_stages(self):
+        self.env['crm.lead'].with_context(active_test=False).search([]).unlink()
+        self.env['crm.lead.scoring.frequency'].search([]).unlink()
+
+        team = self.env['crm.team'].create({
+            'name': 'Test CRM Team'
+        })
+        no_team_stages = self.env['crm.stage'].with_context(active_test=False).search([('team_id', '=', False)])
+        no_team_stages.write({
+            'team_id': team.id
+        })
+
+        lead_1, lead_2, lead_3, lead_4 = self.env['crm.lead'].create([
+            {'name': 'Lead 1'},
+            {'name': 'Lead 2'},
+            {'name': 'Lead 3'},
+            {'name': 'Lead 4'},
+        ])
+        (lead_1 + lead_2 + lead_3).action_set_won()
+        lead_4.action_set_lost()
+
+        lead_5 = self.env['crm.lead'].create({
+            'name': 'Lead 5'
+        })
+
+        # expected probability: (3.1 / 4.2) * 100 ~= 73.81
+        self.assertEqual(lead_5.probability, 73.81)
+
 
 @tagged('lead_internals')
 class TestLeadFormTools(FormatAddressCase):
