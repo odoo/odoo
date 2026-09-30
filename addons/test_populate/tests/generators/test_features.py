@@ -1,3 +1,4 @@
+from random import Random
 from unittest.mock import MagicMock
 
 from odoo.tests import TransactionCase
@@ -52,7 +53,11 @@ class TestGeneratorUnique(TransactionCase):
         self.assertEqual(len(values), len(set(values)))
 
     def test_unique_generator_exhaustion(self):
-        generator = Integer(target=self.stock_field, env=self.env, start=1, end=3, unique=True)
+        generator = Integer(
+            target=self.stock_field, env=self.env,
+            start=1, end=3, unique=True,
+            random=Random(42),  # Fix seed to avoid undeterministic failure.
+        )
 
         values = []
         for _ in range(3):
