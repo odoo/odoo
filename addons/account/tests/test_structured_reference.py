@@ -11,6 +11,7 @@ from odoo.addons.account.tools import (
     is_valid_structured_reference_iso,
     is_valid_structured_reference,
     is_valid_structured_reference_for_country,
+    format_structured_reference,
 )
 
 
@@ -215,3 +216,53 @@ class StructuredReferenceTest(TransactionCase):
 
         # Returns False for invalid references
         self.assertFalse(is_valid_structured_reference_for_country(''))
+
+    def test_format_structured_reference(self):
+        """Test format_structured_reference without country_code (guessing)."""
+        # Belgian ref: valid mod97 checksum (1234567890 % 97 == 2)
+        self.assertEqual(
+            format_structured_reference('123456789002'),
+            '+++123/4567/89002+++',
+        )
+        # Belgian ref already formatted
+        self.assertEqual(
+            format_structured_reference('+++020/3430/57642+++'),
+            '+++020/3430/57642+++',
+        )
+        # Non-structured ref: returned unchanged
+        self.assertEqual(
+            format_structured_reference('ABCDEF123456'),
+            'ABCDEF123456',
+        )
+        # Plain text: returned unchanged
+        self.assertEqual(
+            format_structured_reference('Invoice payment 123'),
+            'Invoice payment 123',
+        )
+
+    def test_format_structured_reference_with_country(self):
+        """Test format_structured_reference with explicit country_code."""
+        # Known country BE with valid ref (1234567890 % 97 == 2)
+        self.assertEqual(
+            format_structured_reference('123456789002', country_code='BE'),
+            '+++123/4567/89002+++',
+        )
+        # Known country BE with invalid ref for that country
+        self.assertEqual(
+            format_structured_reference('ABCDEF123456', country_code='BE'),
+            'ABCDEF123456',
+        )
+        # Unsupported country: always return as-is
+        self.assertEqual(
+            format_structured_reference('123456789002', country_code='US'),
+            '123456789002',
+        )
+        self.assertEqual(
+            format_structured_reference('ABCDEF123456', country_code='US'),
+            'ABCDEF123456',
+        )
+        # Empty country_code: falls back to guessing
+        self.assertEqual(
+            format_structured_reference('123456789002', country_code=''),
+            '+++123/4567/89002+++',
+        )
