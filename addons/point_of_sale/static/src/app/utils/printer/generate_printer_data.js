@@ -361,23 +361,9 @@ export class GeneratePrinterData {
         const order = this.order;
         const override = opts.orderChange;
         let orderChange = override || order.getChanges({ cancelled: opts.cancelled });
-        let reprint = false;
-
+        const reprint = opts.explicitReprint;
         if (!opts.prepOrderLines) {
-            if (
-                !orderChange.addedQuantity.length &&
-                !orderChange.removedQuantity.length &&
-                !orderChange.noteUpdate.length &&
-                !orderChange.internal_note &&
-                !orderChange.general_customer_note &&
-                order.lastPrints.length
-            ) {
-                orderChange = [order.lastPrints.at(-1)];
-                reprint = true;
-            } else {
-                order.pushLastPrints(orderChange);
-                orderChange = [orderChange];
-            }
+            orderChange = [orderChange];
         }
 
         if (reprint && opts.orderDone) {

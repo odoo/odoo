@@ -715,23 +715,6 @@ export class PosOrder extends PosOrderAccounting {
         this.internal_note = note || "";
     }
 
-    get lastPrints() {
-        return this.print_history || [];
-    }
-    pushLastPrints(data) {
-        if (!this.print_history) {
-            this.print_history = [];
-        }
-        this.print_history.push({
-            addedQuantity: data.addedQuantity,
-            noteChange: data.noteChange,
-            noteUpdate: data.noteUpdate,
-            removedQuantity: data.removedQuantity,
-            internal_note: data.internal_note,
-            general_customer_note: data.general_customer_note,
-        });
-    }
-
     get showChange() {
         return !this.currency.isZero(this.change) && this.finalized;
     }

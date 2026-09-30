@@ -1,6 +1,16 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, test, waitUntil } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
+import { advanceTime } from "@odoo/hoot-mock";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
-import { getFilledOrder, setupPosEnv } from "@point_of_sale/../tests/unit/utils";
+import {
+    getFilledOrder,
+    setupPosEnv,
+    setupAndMountPosApp,
+} from "@point_of_sale/../tests/unit/utils";
+import { patch } from "@web/core/utils/patch";
+import * as PosUiUtils from "@point_of_sale/../tests/unit/ui_utils";
+import * as ResUiUtils from "@pos_restaurant/../tests/unit/ui_utils";
+const Utils = { ...PosUiUtils, ...ResUiUtils };
 
 definePosModels();
 
@@ -134,4 +144,86 @@ test("only printers with matching categories are used", async () => {
     });
     expect(result).toBe(true);
     expect(printedBy).toEqual(["Printer 1"]);
+});
+
+test("check only matching categories product data printed and reprinted", async () => {
+    // The preparation printers are configured to accept products with different categories.
+    // This test ensures that the printer selection and reprint flow respect category filtering.
+    const store = await setupAndMountPosApp();
+    const printer = store.models["pos.printer"].create({
+        name: "Preparation Printer",
+        product_categories_ids: [4],
+        printer_type: "epson_epos",
+        use_type: "preparation",
+    });
+    Object.assign(store.config, {
+        preparation_printer_ids: [1, printer.id],
+    });
+    await store.ticketPrinter.initPrinters();
+    let printedData = [];
+    const generateIframeFun = store.ticketPrinter.generateIframe;
+    patch(store.ticketPrinter, {
+        async generateIframe(...args) {
+            const data = args[1];
+            // Capture the generated preparation payload so the assertions validate the filtered
+            // products independently from the printer UI rendering itself.
+            printedData.push(
+                data.changes.data.map((line) => ({
+                    basic_name: line.basic_name,
+                    quantity: line.quantity,
+                }))
+            );
+            return await generateIframeFun(...args);
+        },
+        print() {
+            return { successful: true };
+        },
+    });
+    await Utils.clickTable("1");
+    await Utils.clickDisplayedProduct("Steel desk");
+    await Utils.clickOrderButton();
+    await animationFrame();
+    await Utils.clickPlanButton();
+    // Printed for preparation printer with id 1 which contains same category as Steel desk
+    expect(printedData).toHaveLength(1);
+    expect(printedData[0]).toHaveLength(1);
+    expect(printedData[0][0]).toMatchObject({
+        basic_name: "Steel desk",
+        quantity: 1,
+    });
+    printedData = [];
+    await advanceTime(300);
+    await Utils.clickTable("1");
+    await Utils.clickDisplayedProduct("Bacon burger");
+    await Utils.clickOrderButton();
+    await animationFrame();
+    await Utils.clickPlanButton();
+    // Printed for preparation printer with id 5 which contains same category as bacon burger
+    expect(printedData).toHaveLength(1);
+    expect(printedData[0]).toHaveLength(1);
+    expect(printedData[0][0]).toMatchObject({
+        basic_name: "Bacon burger",
+        quantity: 1,
+    });
+    printedData = [];
+    await advanceTime(300);
+    await Utils.clickTable("1");
+    await Utils.checkNoOrderButton();
+    if (store.ui.isSmall) {
+        await Utils.clickBackButton();
+    }
+    await Utils.clickReprintButton();
+    await waitUntil(() => printedData.length === 2);
+    // Reprint both the order lines separately because of different categories
+    expect(printedData).toHaveLength(2);
+    expect(printedData[0]).toHaveLength(1);
+    expect(printedData[0][0]).toMatchObject({
+        basic_name: "Steel desk",
+        quantity: 1,
+    });
+    expect(printedData[1]).toHaveLength(1);
+    expect(printedData[1][0]).toMatchObject({
+        basic_name: "Bacon burger",
+        quantity: 1,
+    });
 });
