@@ -11,7 +11,6 @@ patch(AttendeeCalendarModel.prototype, {
     setup(params) {
         super.setup(...arguments);
         this.isAlive = params.isAlive;
-        this.microsoftSyncTimedOut = false;
         this.state = proxy({
             microsoftSyncError: false,
             microsoftPendingSync: false,
@@ -20,26 +19,57 @@ patch(AttendeeCalendarModel.prototype, {
         })
     },
 
+    /** Override
+     * This override handles the situation where the sync finishes during the initial view load.
+     * The sync process can sometimes take a while, so we launch it in the background without awaiting
+     * the result so that we don't block the UI.
+     *
+     * We cannot call 'super.updateData(data)' directly within `syncMicrosoftCalendar` because it
+     * could conflict with the update called from the load, leading to inconsistent data.
+     * We also cannot call `this.keepLast.add(super.updateData(data));` which would solve that issue
+     * by ensuring that only the last update call is kept. If we did so, the original promise would
+     * be discarded, and the await in model.js `_load` would never resolve - the view would not load.
+     *
+     * Instead, we postpone the second update call to the end of the load
+     */
+    async load() {
+
+        this.isLoading = true;
+        try {
+            await super.load(...arguments);
+        } finally {
+            this.isLoading = false;
+        }
+        if (this.updateAfterLoad) {
+            this.updateAfterLoad = false;
+            await this.postSyncUpdate();
+        }
+    },
+
+    async postSyncUpdate() {
+        if (!this.isAlive()) {
+            return;
+        }
+        const data = { ...this.data };
+        await this.keepLast.add(super.updateData(data));
+        this.data = data;
+        this.notify();
+    },
+
     /**
      * @override
      */
     async updateData() {
-        this.microsoftSyncTimedOut = false;
         if (this.state.microsoftPendingSync) {
             return super.updateData(...arguments);
         }
-        try {
-            this.microsoftSyncTimedOut = await Promise.race([
-                new Promise(resolve => setTimeout(resolve, 1000)).then(() => true),
-                this.syncMicrosoftCalendar(true).then(() => false),
-            ]);
-        } catch (error) {
+        this.syncMicrosoftCalendar(true).catch((error) => {
             if (error.event) {
                 error.event.preventDefault();
             }
             console.error("Could not synchronize microsoft events now.", error);
             this.state.microsoftPendingSync = false;
-        }
+        })
         if (this.isAlive()) {
             return super.updateData(...arguments);
         }
@@ -71,11 +101,12 @@ patch(AttendeeCalendarModel.prototype, {
         this.state.microsoftSyncError = result.status === "sync_failed";
         this.state.microsoftIsPaused = result.status === "sync_paused";
         this.state.microsoftPendingSync = false;
-        if (this.microsoftSyncTimedOut && result.status === "need_refresh") {
-            const data = { ...this.data };
-            await this.keepLast.add(super.updateData(data));
-            this.data = data;
-            this.notify();
+        if (result.status === "need_refresh") {
+            if (this.isLoading) {
+                this.updateAfterLoad = true;
+            } else {
+                await this.postSyncUpdate();
+            }
         }
         return result;
     },
