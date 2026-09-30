@@ -2105,6 +2105,43 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         with self.assertRaises(MissingError):
             deleted.categories
 
+    @mute_logger('odoo.addons.base.models.ir_rule')
+    def test_33_prefetch_access_error_compute(self):
+        """ Test that a non-stored computed field is computed in batch on the
+        records of a one2many, even if the prefetch set of the one2many also
+        contains records that the user cannot read.
+        """
+        discussion = self.env['test_orm.discussion'].create({
+            'name': 'Discussion',
+            'participants': [Command.link(self.env.user.id)],
+        })
+        self.env['test_orm.message'].create([
+            {'discussion': discussion.id, 'body': f"Message {i}", 'important': i % 3 == 0}
+            for i in range(100)
+        ])
+        self.env['ir.rule'].create({
+            'model_id': self.env['ir.model']._get('test_orm.message').id,
+            'domain_force': "[('important', '=', False)]",
+        })
+        self.env.invalidate_all()
+
+        messages = discussion.with_user(self.user_demo).messages
+        self.assertEqual(len(messages), 66)
+
+        # the computation of author_message_count below doesn't raise
+        # AccessError if message.author isn't already in cache
+        # (Explanation: The prefetching of all messages fails because some of
+        # them are not accessible. The prefetching is then retried on the first
+        # message, and as this one is already in cache, the ORM only checks
+        # access rights. The latter fills the access rights cache for all
+        # messages, which prefetches fields in sudo() to evaluate the domain.
+        # Once done, the cache of inaccessible records is polluted with the
+        # prefetched fields.)
+        messages.fetch()
+
+        with self.assertQueryCount(18):
+            messages.mapped('author_message_count')
+
     def test_40_real_vs_new(self):
         """ test field access on new records vs real records. """
         Model = self.env['test_orm.category']
