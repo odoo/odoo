@@ -2,7 +2,6 @@
 import io
 import zipfile
 from odoo import _, http
-from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.http.stream import content_disposition
 from odoo.tools import OrderedSet
@@ -56,8 +55,8 @@ class AccountDocumentDownloadController(http.Controller):
             if filetype == 'all' and (doc_data := invoice._get_invoice_legal_documents_all(allow_fallback=allow_fallback)):
                 docs_data += doc_data
             elif doc_data := invoice._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback):
-                if len(invoices) == 1 and (errors := [error for data in docs_data for error in data.get('errors', [])]):
-                    raise UserError(_("Error while creating XML:\n- %s", '\n- '.join(errors)))
+                # The potential export errors are not raised: like the Print, the documents generated
+                # here are not meant to be legally valid and are never stored on the invoice.
                 docs_data.extend(doc_data)
         if len(docs_data) == 1:
             doc_data = docs_data[0]
