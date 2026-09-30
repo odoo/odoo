@@ -199,7 +199,6 @@ export class SelectionPlugin extends Plugin {
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
         shortcuts: [{ hotkey: "control+a", commandId: "selectAll" }],
-        is_node_editable_predicates: (node) => node.parentElement?.isContentEditable,
     };
 
     setup() {
@@ -1129,7 +1128,10 @@ export class SelectionPlugin extends Plugin {
     }
 
     isNodeEditable(node) {
-        return this.getResource("is_node_editable_predicates").some((p) => p(node));
+        return (
+            this.checkPredicates("is_node_editable_predicates", node) ??
+            !!node.parentElement?.isContentEditable
+        );
     }
 
     focusEditable() {

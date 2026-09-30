@@ -40,6 +40,11 @@ export class QWebPlugin extends Plugin {
         unremovable_node_predicates: (node) =>
             node.getAttribute?.("t-set") || node.getAttribute?.("t-call"),
         unsplittable_node_predicates: isUnsplittableQWebElement,
+        is_node_editable_predicates: (node) => {
+            if (node.nodeName === "T") {
+                return false;
+            }
+        },
     };
 
     setup() {
@@ -208,6 +213,8 @@ export class QWebPlugin extends Plugin {
                 prevNode.setAttribute("data-oe-t-selectable", "true");
                 groupId = parseInt(prevNode.getAttribute("data-oe-t-group"));
                 node.setAttribute("data-oe-t-selectable", "true");
+            } else if (node.hasAttribute("t-if") && node.hasAttribute("data-oe-t-group")) {
+                groupId = parseInt(node.getAttribute("data-oe-t-group"));
             } else {
                 groupId = this.groupIndex++;
             }

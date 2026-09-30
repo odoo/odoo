@@ -68,7 +68,11 @@ export class MediaPlugin extends Plugin {
 
         unsplittable_node_predicates: isIconElement, // avoid merge
         functional_empty_node_predicates: isMediaElement,
-        is_node_editable_predicates: this.isEditableMediaElement.bind(this),
+        is_node_editable_predicates: (node) => {
+            if (this.isEditableMediaElement(node)) {
+                return true;
+            }
+        },
 
         selectors_for_feff_providers: () => ICON_SELECTOR,
     };
