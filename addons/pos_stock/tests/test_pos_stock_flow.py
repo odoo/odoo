@@ -1720,3 +1720,44 @@ class TestPosStockFlow(CommonPosStockTest):
         order = self.env['pos.order'].search([('session_id', '=', current_session_b.id)])
         self.assertEqual(len(order), 1)
         self.assertTrue(order.account_move)
+
+    def _create_invoiced_line_with_lots(self, lots_vals):
+        product = self.ten_dollars_with_10_incl.product_variant_id
+        product.write({'tracking': 'lot', 'is_storable': True})
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
+        lots = self.env['stock.lot'].create([{**vals, 'product_id': product.id} for vals in lots_vals])
+        for lot in lots:
+            self.env['stock.quant']._update_available_quantity(product, stock_location, 1, lot_id=lot)
+
+        order, _ = self.create_backend_pos_order({
+            'order_data': {'partner_id': self.partner_manv.id},
+            'line_data': [{
+                'product_id': product.id,
+                'qty': len(lots),
+                'pack_lot_ids': [Command.create({'lot_name': lot.name}) for lot in lots],
+            }],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 10 * len(lots)},
+            ],
+        })
+        res = order.action_pos_order_invoice()
+        invoice = self.env['account.move'].browse(res['res_id'])
+        return invoice.invoice_line_ids.filtered(lambda l: l.product_id == product)
+
+    def test_invoice_label_with_lots(self):
+        invoice_line = self._create_invoiced_line_with_lots([{'name': 'A10'}, {'name': 'A1'}])
+        self.assertEqual(invoice_line.label.splitlines()[-2:], ['A10', 'A1'])
+
+    def test_invoice_label_with_lot_expiration_date(self):
+        if 'expiration_date' not in self.env['stock.lot']._fields:
+            self.skipTest("product_expiry is not installed")
+        self.env.user.tz = 'America/New_York'
+        # 02:00 UTC on Jan 1st is still Dec 31st in New York
+        invoice_line = self._create_invoiced_line_with_lots([
+            {'name': 'A1', 'expiration_date': '2027-01-01 02:00:00'},
+        ])
+        self.assertEqual(
+            invoice_line.pos_order_line_id.pack_lot_ids.expiration_date,
+            fields.Datetime.to_datetime('2027-01-01 02:00:00'),
+        )
+        self.assertEqual(invoice_line.label.splitlines()[-1], 'A1 - 12/31/2026')

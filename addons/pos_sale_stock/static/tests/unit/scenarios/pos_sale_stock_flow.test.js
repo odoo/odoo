@@ -27,6 +27,22 @@ test("test_settle_order_with_lot: the SN/Lots of the sale order are loaded on th
     expect(lotNamesOf(order)).toEqual(["1001", "1002"]);
 });
 
+test("settling a sale order keeps the expiration date of the loaded SN/Lots", async () => {
+    const store = await setupAndMountPosApp();
+
+    await Utils.settleSaleOrder("S00031", { loadSN: true });
+
+    const [line] = store.getOrder().lines;
+    const expirationByLot = Object.fromEntries(
+        line.pack_lot_ids.map((packLot) => [
+            packLot.lot_name,
+            packLot.expiration_date ? packLot.expiration_date.toISODate() : false,
+        ])
+    );
+    expect(expirationByLot).toEqual({ 1001: "2027-01-01", 1002: false });
+    expect(line.packLotLines).toEqual(["SN 1001 - 01/01/2027", "SN 1002"]);
+});
+
 test("test_multiple_lots_sale_order_2: discarding the SN/Lots leaves the line without lot", async () => {
     const store = await setupAndMountPosApp();
 
