@@ -66,7 +66,6 @@
                                         <field name="account_stock_expense_id" invisible="account_type != 'asset_current'" placeholder="For Perpetual Continental Only" groups="base.group_no_one" decoration-muted="not account_stock_expense_active"/>
                                     </group>
                                     <group name="technical_settings">
-                                        <field name="internal_group" invisible="1" readonly="1"/> <!-- computed group kept loaded for inherited views/exports; not user-editable -->
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" string="Currency" placeholder="Any currency"/>
                                         <field name="active" widget="boolean_toggle"/>
                                         <field name="parent_id" placeholder="Root account"/>
