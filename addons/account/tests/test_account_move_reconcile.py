@@ -5715,6 +5715,30 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         payment.action_post()
         self.assertEqual(payment.reconciled_invoice_ids, invoice_outstanding)
 
+    def test_search_reconciled_invoice_ids(self):
+        free_payment = self.env['account.payment'].create({
+            'amount': 100,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+        })
+        invoice_outstanding = self.init_invoice(move_type='out_invoice', amounts=[300], post=True)
+        self.assertIn(invoice_outstanding, self.env['account.move'].search([('reconciled_payment_ids', '=', False)]))
+        self.assertNotIn(invoice_outstanding, self.env['account.move'].search([('reconciled_payment_ids', '!=', False)]))
+        self.assertIn(free_payment, self.env['account.payment'].search([('reconciled_invoice_ids', '=', False)]))
+        self.assertNotIn(free_payment, self.env['account.payment'].search([('reconciled_invoice_ids', '!=', False)]))
+
+        payment = self.create_move_payment(invoice_outstanding, 300, True)
+        self.assertEqual(self.env['account.move'].search([('reconciled_payment_ids', '=', payment.id)]), invoice_outstanding)
+        self.assertEqual(self.env['account.move'].search([('reconciled_payment_ids', 'in', payment.ids)]), invoice_outstanding)
+        self.assertNotIn(invoice_outstanding, self.env['account.move'].search([('reconciled_payment_ids', '=', False)]))
+        self.assertIn(invoice_outstanding, self.env['account.move'].search([('reconciled_payment_ids', '!=', False)]))
+
+        self.assertEqual(self.env['account.payment'].search([('reconciled_invoice_ids', '=', invoice_outstanding.id)]), payment)
+        self.assertEqual(self.env['account.payment'].search([('reconciled_invoice_ids', 'in', invoice_outstanding.ids)]), payment)
+        self.assertNotIn(payment, self.env['account.payment'].search([('reconciled_invoice_ids', '=', False)]))
+        self.assertIn(payment, self.env['account.payment'].search([('reconciled_invoice_ids', '!=', False)]))
+
     def test_reconciliation_currency_exchange_matching_number(self):
         """
         Test that reconciliation assigns the same matching number to
