@@ -13,6 +13,9 @@ from odoo.tools.translate import code_translations, LazyTranslate
 _lt = LazyTranslate(__name__)
 
 REFERENCING_FIELDS = {None, 'id', '.id'}
+MATCHES_REPORTING_LIMIT = 10
+# stands for an empty cell a record was picked for, as empty values never reach the converters
+EMPTY_REFERENCE = '\x00empty'
 def only_ref_fields(record):
     return {k: v for k, v in record.items() if k in REFERENCING_FIELDS}
 def exclude_ref_fields(record):
@@ -38,6 +41,14 @@ class ImportWarning(Warning):
 
 class ConversionNotFound(ValueError):
     pass
+
+
+class ImportErrors(ValueError):
+    """ Several errors raised while converting a single value, e.g. each failing
+    reference of an x2many column. """
+    def __init__(self, errors):
+        super().__init__(*errors[0].args)
+        self.errors = errors
 
 
 class IrFieldsConverter(models.AbstractModel):
@@ -137,22 +148,23 @@ class IrFieldsConverter(models.AbstractModel):
                 except (UnicodeEncodeError, UnicodeDecodeError) as e:
                     log(field, ValueError(str(e)))
                 except ValueError as e:
-                    if import_file_context:
-                        # if the error is linked to a matching error, the error is a tuple
-                        # E.g.:("Value X cannot be found for field Y at row 1", {
-                        #   'more_info': {},
-                        #   'value': 'X',
-                        #   'field': 'Y',
-                        #   'field_path': child_id/Y,
-                        # })
-                        # In order to link the error to the correct header-field couple in the import UI, we need to add
-                        # the field path to the additional error info.
-                        # As we raise the deepest child in error, we need to add the field path only for the deepest
-                        # error in the import recursion. (if field_path is given, don't overwrite it)
-                        error_info = len(e.args) > 1 and e.args[1]
-                        if error_info and not error_info.get('field_path'):  # only raise the deepest child in error
-                            error_info['field_path'] = self._get_import_field_path(field, value)
-                    log(field, e)
+                    for error in (e.errors if isinstance(e, ImportErrors) else [e]):
+                        if import_file_context:
+                            # if the error is linked to a matching error, the error is a tuple
+                            # E.g.:("Value X cannot be found for field Y at row 1", {
+                            #   'more_info': {},
+                            #   'value': 'X',
+                            #   'field': 'Y',
+                            #   'field_path': child_id/Y,
+                            # })
+                            # In order to link the error to the correct header-field couple in the import UI, we need to add
+                            # the field path to the additional error info.
+                            # As we raise the deepest child in error, we need to add the field path only for the deepest
+                            # error in the import recursion. (if field_path is given, don't overwrite it)
+                            error_info = len(error.args) > 1 and error.args[1]
+                            if error_info and not error_info.get('field_path'):  # only raise the deepest child in error
+                                error_info['field_path'] = self._get_import_field_path(field, value)
+                        log(field, error)
             return converted
 
         return fn
@@ -328,14 +340,18 @@ class IrFieldsConverter(models.AbstractModel):
         if value.lower() in falses:
             return False, []
 
-        if field.name in self.env.context.get('import_skip_records', []):
-            return None, []
-
         return True, [self._format_import_error(
             ValueError,
             self.env._("Unknown value '%s' for boolean field '%%(field)s'"),
             value,
-            {'moreinfo': self.env._("Use '1' for yes and '0' for no")}
+            {
+                'value': value,
+                'selection': [
+                    {'value': '1', 'display_name': self.env._("Yes")},
+                    {'value': '0', 'display_name': self.env._("No")},
+                ],
+                'moreinfo': self.env._("Use '1' for yes and '0' for no"),
+            }
         )]
 
     @api.model
@@ -465,15 +481,18 @@ class IrFieldsConverter(models.AbstractModel):
             if value.lower() == str(item).lower() or any(value.lower() == label.lower() for label in labels):
                 return item, []
 
-        if field.name in self.env.context.get('import_skip_records', []):
-            return None, []
-        elif field.name in self.env.context.get('import_set_empty_fields', []):
-            return False, []
         raise self._format_import_error(
             ValueError,
             self.env._("Value '%s' not found in selection field '%%(field)s'"),
             value,
-            {'moreinfo': [_label or str(item) for item, _label in selection if _label or item]}
+            {
+                'value': value,
+                'selection': [
+                    {'value': item, 'display_name': label or str(item)}
+                    for item, label in selection
+                ],
+                'moreinfo': [label or str(item) for item, label in selection if label or item],
+            }
         )
 
     @api.model
@@ -501,6 +520,20 @@ class IrFieldsConverter(models.AbstractModel):
         id = None
         warnings = []
         error_msg = ''
+        field_path = "/".join(self.env.context.get('parent_fields_hierarchy', []) + [field.name])
+        RelatedModel = self.env[field.comodel_name]
+        record_overrides = (self.env.context.get('import_record_overrides') or {}).get(field_path) or {}
+        override_id = record_overrides.get(value)
+        # the record picked by the user may have been deleted since
+        if isinstance(override_id, int) and RelatedModel.browse(override_id).exists():
+            return override_id, warnings
+        if value == EMPTY_REFERENCE:
+            raise self._format_import_error(
+                ValueError,
+                self.env._("The record picked for field '%%(field)s' no longer exists"),
+                (),
+                {'value': ''},
+            )
         action = {
             'name': 'Possible Values',
             'type': 'ir.actions.act_window', 'target': 'new',
@@ -514,7 +547,6 @@ class IrFieldsConverter(models.AbstractModel):
             action['res_model'] = 'ir.model.data'
             action['domain'] = [('model', '=', field.comodel_name)]
 
-        RelatedModel = self.env[field.comodel_name]
         if subfield == '.id':
             field_type = self.env._("database id")
             if isinstance(value, str) and not self._str_to_boolean(model, field, value, savepoint=savepoint)[0]:
@@ -549,8 +581,15 @@ class IrFieldsConverter(models.AbstractModel):
                 if len(ids) > 1:
                     raise self._format_import_error(
                         ValueError,
-                        self.env._('Found multiple matches for value "%(value)s" in field "%%(field)s" (%(match_count)s matches)'),
+                        self.env._('"%(value)s" matches %(match_count)s different records in field "%%(field)s"'),
                         {'value': value, 'match_count': len(ids)},
+                        {
+                            'value': value,
+                            'matches': [
+                                {'id': match_id, 'display_name': match_name}
+                                for match_id, match_name in ids[:MATCHES_REPORTING_LIMIT]
+                            ],
+                        },
                     )
                 id, _name = ids[0]
             else:
@@ -568,14 +607,7 @@ class IrFieldsConverter(models.AbstractModel):
                 self.env._("Unknown sub-field “%s”", subfield),
             )
 
-        set_empty = False
-        skip_record = False
-        if self.env.context.get('import_file'):
-            import_set_empty_fields = self.env.context.get('import_set_empty_fields') or []
-            field_path = "/".join(self.env.context.get('parent_fields_hierarchy', []) + [field.name])
-            set_empty = field_path in import_set_empty_fields
-            skip_record = field_path in self.env.context.get('import_skip_records', [])
-        if id is None and not set_empty and not skip_record:
+        if id is None:
             if error_msg:
                 message = self.env._("No matching record found for %(field_type)s '%(value)s' in field '%%(field)s' and the following error was encountered when we attempted to create one: %(error_message)s")
             else:
@@ -583,15 +615,15 @@ class IrFieldsConverter(models.AbstractModel):
 
             error_info_dict = {'moreinfo': action}
             if self.env.context.get('import_file'):
-                # limit to 50 char to avoid too long error messages.
-                value = value[:50] if isinstance(value, str) else value
+                # not truncated, as the corrections are keyed on it
                 error_info_dict.update({'value': value, 'field_type': field_type})
                 if error_msg:
                     error_info_dict['error_message'] = error_msg
             raise self._format_import_error(
                 ValueError,
                 message,
-                {'field_type': field_type, 'value': value, 'error_message': error_msg},
+                # limit to 50 char to avoid too long error messages.
+                {'field_type': field_type, 'value': value[:50] if isinstance(value, str) else value, 'error_message': error_msg},
                 error_info_dict)
         return id, warnings
 
@@ -664,15 +696,17 @@ class IrFieldsConverter(models.AbstractModel):
         subfield, warnings = self._referencing_subfield(record)
 
         ids = []
+        errors = []
         for reference in record[subfield].split(','):
-            id, ws = self.db_id_for(model, field, subfield, reference, savepoint)
+            try:
+                id, ws = self.db_id_for(model, field, subfield, reference, savepoint)
+            except ValueError as e:
+                errors.append(e)
+                continue
             ids.append(id)
             warnings.extend(ws)
-
-        if field.name in self.env.context.get('import_set_empty_fields', []) and any(id is None for id in ids):
-            ids = [id for id in ids if id]
-        elif field.name in self.env.context.get('import_skip_records', []) and any(id is None for id in ids):
-            return None, warnings
+        if errors:
+            raise ImportErrors(errors)
 
         if self.env.context.get('update_many2many'):
             return [Command.link(id) for id in ids], warnings
@@ -701,12 +735,16 @@ class IrFieldsConverter(models.AbstractModel):
             # [{subfield:ref1},{subfield:ref2},{subfield:ref3}]
             records = ({subfield:item} for item in record[subfield].split(','))
 
+        errors = []
+        line_errors = []
+
         def log(f, exception):
             if not isinstance(exception, Warning):
                 current_field_name = self.env[field.comodel_name]._fields[f].string
                 arg0 = exception.args[0].replace('%(field)s', '%(field)s/' + current_field_name)
                 exception.args = (arg0, *exception.args[1:])
-                raise exception
+                line_errors.append(exception)
+                return
             warnings.append(exception)
 
         # Complete the field hierarchy path
@@ -719,24 +757,34 @@ class IrFieldsConverter(models.AbstractModel):
         ).for_model(self.env[field.comodel_name], savepoint=savepoint)
 
         for record in records:
+            line_errors.clear()
             id = None
             refs = only_ref_fields(record)
             writable = convert(exclude_ref_fields(record), log)
             if refs:
-                subfield, w1 = self._referencing_subfield(refs)
-                warnings.extend(w1)
                 try:
-                    id, w2 = self.db_id_for(model, field, subfield, record[subfield], savepoint)
-                    warnings.extend(w2)
-                except ValueError:
-                    if subfield != 'id':
-                        raise
-                    writable['id'] = record['id']
+                    subfield, w1 = self._referencing_subfield(refs)
+                    warnings.extend(w1)
+                    try:
+                        id, w2 = self.db_id_for(model, field, subfield, record[subfield], savepoint)
+                        warnings.extend(w2)
+                    except ValueError:
+                        if subfield != 'id':
+                            raise
+                        writable['id'] = record['id']
+                except ValueError as e:
+                    line_errors.append(e)
+            if line_errors:
+                errors.extend(line_errors)
+                continue
 
             if id:
                 commands.append(Command.link(id))
                 commands.append(Command.update(id, writable))
             else:
                 commands.append(Command.create(writable))
+
+        if errors:
+            raise ImportErrors(errors)
 
         return commands, warnings
