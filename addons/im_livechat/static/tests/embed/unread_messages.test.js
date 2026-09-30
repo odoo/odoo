@@ -32,7 +32,7 @@ test("new message from operator displays unread counter", async () => {
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
         livechat_channel_id: livechatChannelId,
