@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail_inbox.InboxList">
+        <div class="o-mail-InboxList d-flex flex-column h-100">
+            <div class="o-mail-InboxList-header d-flex align-items-center px-4 py-2 border-bottom">
+                <h5 class="mb-0 fw-semibold" t-out="this.folderLabel"/>
+            </div>
+
+            <t t-if="props.loading">
+                <div class="d-flex align-items-center justify-content-center flex-grow-1 text-muted">
+                    <i class="fa fa-spinner fa-spin me-2"/>Loading…
+                </div>
+            </t>
+            <t t-elif="!props.mails.length">
+                <div class="d-flex flex-column align-items-center justify-content-center flex-grow-1 text-muted gap-2">
+                    <i class="fa fa-inbox fa-3x opacity-25"/>
+                    <span>No messages</span>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="o-mail-InboxList-rows flex-grow-1 overflow-auto">
+                    <InboxMailItem
+                        t-foreach="props.mails"
+                        t-as="mail"
+                        t-key="mail.id"
+                        mail="mail"
+                        onMailUpdated="props.onMailUpdated"
+                    />
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

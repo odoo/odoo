@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_mail_inbox" model="ir.actions.client">
+        <field name="name">Inbox</field>
+        <field name="tag">mail_inbox.InboxApp</field>
+    </record>
+
+    <record id="view_fetchmail_mail_list" model="ir.ui.view">
+        <field name="name">fetchmail.mail.list</field>
+        <field name="model">fetchmail.mail</field>
+        <field name="arch" type="xml">
+            <list string="Mails" decoration-muted="mail_status == 'read'" default_order="date desc">
+                <field name="date" widget="datetime" optional="show"/>
+                <field name="email_from" string="From"/>
+                <field name="subject"/>
+                <field name="preview" optional="show"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="mail_status" widget="badge"
+                    decoration-success="mail_status == 'sent'"
+                    decoration-info="mail_status == 'new'"
+                    decoration-warning="mail_status == 'draft'"
+                    decoration-danger="mail_status == 'error'"/>
+                <field name="is_starred" widget="boolean_favorite"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_fetchmail_mail_form" model="ir.ui.view">
+        <field name="name">fetchmail.mail.form</field>
+        <field name="model">fetchmail.mail</field>
+        <field name="arch" type="xml">
+            <form string="Mail">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="email_from" string="From"/>
+                            <field name="email_to" string="To"/>
+                            <field name="email_cc" string="CC"/>
+                            <field name="subject"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="mail_type"/>
+                            <field name="mail_status"/>
+                            <field name="is_starred"/>
+                            <field name="fetchmail_server_id"/>
+                        </group>
+                    </group>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="body" widget="html"/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_fetchmail_mail_list" model="ir.actions.act_window">
+        <field name="name">Inbox Mails</field>
+        <field name="res_model">fetchmail.mail</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- fetchmail.tag views -->
+    <record id="view_fetchmail_tag_list" model="ir.ui.view">
+        <field name="name">fetchmail.tag.list</field>
+        <field name="model">fetchmail.tag</field>
+        <field name="arch" type="xml">
+            <list string="Inbox Tags" editable="top">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_fetchmail_tag_form" model="ir.ui.view">
+        <field name="name">fetchmail.tag.form</field>
+        <field name="model">fetchmail.tag</field>
+        <field name="arch" type="xml">
+            <form string="Inbox Tag">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="color" widget="color_picker"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_fetchmail_tag_list" model="ir.actions.act_window">
+        <field name="name">Inbox Tags</field>
+        <field name="res_model">fetchmail.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

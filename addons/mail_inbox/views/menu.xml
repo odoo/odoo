@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_mail_inbox_root"
+        name="Inbox"
+        web_icon="mail_inbox,static/description/icon.svg"
+        action="action_mail_inbox"
+        sequence="5"/>
+
+    <!-- Technical > Email > Incoming Mail Servers sub-entries -->
+    <!-- Re-expose the original servers list as first child so the parent becomes a folder -->
+    <menuitem
+        id="menu_incoming_mail_servers_sub"
+        name="Servers"
+        parent="mail.menu_action_fetchmail_server_tree"
+        action="mail.action_email_server_tree"
+        sequence="1"
+        groups="base.group_no_one"/>
+    <menuitem
+        id="menu_fetchmail_mail"
+        name="Inbox Mails"
+        parent="mail.menu_action_fetchmail_server_tree"
+        action="action_fetchmail_mail_list"
+        sequence="10"
+        groups="base.group_no_one"/>
+    <menuitem
+        id="menu_fetchmail_tag"
+        name="Inbox Tags"
+        parent="mail.menu_action_fetchmail_server_tree"
+        action="action_fetchmail_tag_list"
+        sequence="20"
+        groups="base.group_no_one"/>
+</odoo>
