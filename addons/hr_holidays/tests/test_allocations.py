@@ -512,12 +512,12 @@ class TestAllocations(TestHrHolidaysCommon):
         leave = self.env['hr.leave'].with_context(skip_allocation_check=True).create({
             'employee_id': self.employee.id,
             'work_entry_type_id': self.work_entry_type_diff_gran.id,
-            'request_date_from': date(2026, 10, 31),
-            'request_date_to': date(2026, 10, 31),
+            'request_date_from': date(2026, 10, 29),
+            'request_date_to': date(2026, 10, 30),
         })
-        self.assertEqual(leave.work_entry_type_request_unit, 'day')  # leave request is for 1 day -> 8 hours -> remining 0.5
-        self.assertEqual(leave.number_of_hours, 8)
-        self.assertEqual(leave.allocation_display_warning, "Only 0.5 hour(s) available")
+        self.assertEqual(leave.work_entry_type_request_unit, 'day')  # leave request is for 2 days -> 16 hours > 8.5 hours
+        self.assertEqual(leave.number_of_hours, 16)
+        self.assertEqual(leave.allocation_display_warning, "Only 8.5 hour(s) available")
 
     def test_leave_allocation_by_removing_employee(self):
         """
