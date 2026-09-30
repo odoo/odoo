@@ -15,7 +15,7 @@ class PosOrder(models.Model):
             raise ValueError("This order has already been printed automatically.")
 
         self.nb_print += 1
-        return self.read_pos_data([], self.config_id.id)
+        return self.read_pos_data([], self.config_id)
 
     @api.depends('config_id.self_order_online_payment_method_id')
     def _compute_use_self_order_online_payment(self):

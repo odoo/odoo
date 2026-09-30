@@ -420,6 +420,10 @@ registry.category("web_tour.tours").add("test_paid_order_with_archived_product_l
             inLeftSide([
                 ...Order.hasLine({ productName: "Archived Product", withClass: ".selected" }),
             ]),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.toRefundTextContains("1"),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
         ].flat(),
 });
 

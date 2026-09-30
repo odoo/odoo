@@ -173,11 +173,29 @@ export class PosOrder extends models.ServerModel {
             posCustomAttributeValue.push(...customAttributeValues);
         }
 
+        const productIds = [...new Set(posOrderLine.map((line) => line.product_id))].filter(
+            Boolean
+        );
+        const products = this.env["product.product"]._load_pos_data_read(
+            this.env["product.product"].read(
+                productIds,
+                this.env["product.product"]._load_pos_data_fields(config_id),
+                false
+            )
+        );
+        const productTemplates = this.env["product.template"].read(
+            [...new Set(products.map((product) => product.product_tmpl_id))],
+            this.env["product.template"]._load_pos_data_fields(config_id),
+            false
+        );
+
         return {
             "pos.order": posOrder,
             "pos.session": posSession,
             "pos.payment": posPayment,
             "pos.order.line": posOrderLine,
+            "product.product": products,
+            "product.template": productTemplates,
             "product.attribute.custom.value": posCustomAttributeValue,
             "pos.prep.order": posPrepOrder,
             "pos.prep.line": posPrepLine,
