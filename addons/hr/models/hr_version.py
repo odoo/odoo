@@ -194,6 +194,11 @@ class HrVersion(models.Model):
     employee_type_id = fields.Many2one('hr.employee.type', "Employee Type", tracking=1, index=True,
                                        groups="hr.group_hr_manager")
 
+    hourly_cost = fields.Monetary(
+        string='Hourly Cost',
+        tracking=True,
+        help="Employee's hourly cost for this specific version."
+    )
     hr_responsible_id = fields.Many2one(
         'res.users', 'HR Responsible', tracking=1,
         help='Person responsible for validating the employee\'s contracts.', domain=_get_hr_responsible_domain,
