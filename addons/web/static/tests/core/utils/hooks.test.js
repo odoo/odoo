@@ -855,6 +855,64 @@ describe("useBackButton", () => {
         expect.verifySteps(["dummy3 callback", "dummy2 callback", "dummy1 callback"]);
         expect(history.state.sentinel).toBe(2);
     });
+
+    test.tags("mobile");
+    test("closing the last component while the page navigates away keeps the history", async () => {
+        mockUserAgent("android");
+        class DummyComponent extends Component {
+            static template = xml`<div/>`;
+            setup() {
+                useBackButton(() => expect.step("callback"));
+            }
+        }
+
+        history.pushState({ sentinel: 1 }, "", "/");
+        history.pushState({ sentinel: 2 }, "", "/other");
+        await mountWithCleanup(DummyComponent);
+        expect(history.state.trapState).toBe(true);
+
+        const navigateEvent = Object.assign(new Event("navigate"), {
+            destination: { sameDocument: false },
+            downloadRequest: null,
+        });
+        window.navigation.dispatchEvent(navigateEvent);
+        destroyApp();
+        await animationFrame();
+
+        expect(history.state.trapState).toBe(true);
+        expect.verifySteps([]);
+    });
+
+    test.tags("mobile");
+    test("closing the last component after a download or a same-document navigation restores the history", async () => {
+        mockUserAgent("android");
+        class DummyComponent extends Component {
+            static template = xml`<div/>`;
+            setup() {
+                useBackButton(() => expect.step("callback"));
+            }
+        }
+
+        history.pushState({ sentinel: 1 }, "", "/");
+        history.pushState({ sentinel: 2 }, "", "/other");
+        await mountWithCleanup(DummyComponent);
+        expect(history.state.trapState).toBe(true);
+
+        const sameDocumentEvent = Object.assign(new Event("navigate"), {
+            destination: { sameDocument: true },
+            downloadRequest: null,
+        });
+        const downloadEvent = Object.assign(new Event("navigate"), {
+            destination: { sameDocument: false },
+            downloadRequest: "file.txt",
+        });
+        window.navigation.dispatchEvent(sameDocumentEvent);
+        window.navigation.dispatchEvent(downloadEvent);
+        destroyApp();
+        await animationFrame();
+
+        expect(history.state.sentinel).toBe(2);
+    });
 });
 
 describe("useOwnedDialogs", () => {
