@@ -7,7 +7,7 @@
         <div t-if="this.thread" class="o-mail-DiscussContent-header d-flex flex-shrink-0 align-items-center gap-1 z-1 flex-grow-0">
             <div class="o-mail-DiscussContent-headerInfo flex-grow-1 min-w-0 d-flex">
                 <div class="o-mail-DiscussContent-headerBox rounded-4 border d-flex min-w-0 ps-3 pe-2 align-items-center" t-att-class="{ 'py-1': !this.correspondentLocalDateTimeFormatted() }">
-                    <div t-if="this.thread.channel" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit" t-att-class="this.threadAvatarAttClass" t-ref="this.threadAvatarRef">
+                    <div class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit" t-att-class="this.threadAvatarAttClass" t-ref="this.threadAvatarRef">
                         <DiscussAvatar record="this.thread" size="26"/>
                         <FileUploader t-if="this.isThreadAvatarEditable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
                             <t t-set-slot="toggler">
@@ -17,9 +17,6 @@
                             </t>
                         </FileUploader>
                     </div>
-                    <t t-else="">
-                        <ThreadIcon className="'align-self-center fs-3 my-2 opacity-75'" size="'large'" thread="this.thread"/>
-                    </t>
                     <div class="flex-grow-1 min-w-0 align-self-center align-items-center h-100 py-1" t-att-class="{ 'lh-sm': this.showsChatLocalDateTime }">
                         <div class="d-flex">
                             <div t-if="this.thread.channel?.parent_channel_id" class="d-flex align-items-center gap-1 o-ms-1_5">

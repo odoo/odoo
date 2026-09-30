@@ -1,6 +1,6 @@
 import { Discuss } from "@mail/core/public_web/discuss_app/discuss_app";
 
-import { asyncComputed, proxy, useOnChange } from "@odoo/owl";
+import { asyncComputed, computed, proxy, useOnChange } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { FormRenderer } from "@web/views/form/form_renderer";
@@ -15,9 +15,11 @@ export class LivechatSessionFormRenderer extends FormRenderer {
     setup() {
         super.setup();
         this.store = proxy(useService("mail.store"));
-        this.channel = asyncComputed(() =>
+        this.channelAsync = asyncComputed(() =>
             this.store["discuss.channel"].getOrFetch(this.props.record.resId)
         );
+        // `asyncComputed` is not a reactive value accepted by `t.signal`.
+        this.channel = computed(() => this.channelAsync());
         useOnChange(
             () => [this.channel()],
             (channel) => {

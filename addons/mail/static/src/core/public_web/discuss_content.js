@@ -14,12 +14,12 @@ import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { ActionList } from "@mail/core/common/action_list";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { Thread } from "@mail/core/common/thread";
-import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { Composer } from "@mail/core/common/composer";
 import { attClassObjectToString } from "@mail/utils/common/format";
 
 import { FileUploader } from "@web/views/fields/file_handler";
 import { useService } from "@web/core/utils/hooks";
+import { propSignal } from "@mail/utils/common/hooks";
 
 export class DiscussContent extends Component {
     static components = {
@@ -27,7 +27,6 @@ export class DiscussContent extends Component {
         AutoresizeInput,
         DiscussAvatar,
         Thread,
-        ThreadIcon,
         Composer,
         FileUploader,
     };
@@ -36,8 +35,10 @@ export class DiscussContent extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = useProps({
-            thread: types.instanceOf(this.store["mail.thread"]).optional(),
+        // `this.props` is read by thread actions (e.g. `owner.props.chatWindow`).
+        this.props = useProps({});
+        this.channel = propSignal("channel", types.instanceOf(this.store["discuss.channel"]), {
+            optional: true,
         });
         this.ui = useService("ui");
         this.notification = useService("notification");
@@ -74,7 +75,7 @@ export class DiscussContent extends Component {
     }
 
     get thread() {
-        return this.props.thread || this.store.discuss.thread;
+        return this.channel?.()?.thread || this.store.discuss.thread;
     }
 
     get isNotificationTabActive() {
