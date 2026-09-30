@@ -1,0 +1,1 @@
+from . import test_purchase_stock_fiscal_position
