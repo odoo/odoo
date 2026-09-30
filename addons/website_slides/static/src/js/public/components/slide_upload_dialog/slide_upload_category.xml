@@ -92,7 +92,7 @@
                 autocomplete="off"
             />
         </div>
-        <div t-if="!this.state.defaultCategoryID" class="mb-3">
+        <div t-if="!this.state.defaultCategoryID" class="mb-3" data-label="Section">
             <label for="category_id" class="col-form-label">Section</label>
             <SelectMenu
                 togglerClass="'form-control form-select'"
@@ -112,7 +112,7 @@
                 </t>
             </SelectMenu>
         </div>
-        <div class="mb-3">
+        <div class="mb-3" data-label="Tags">
             <label for="tag_ids" class="col-form-label">Tags</label>
             <SelectMenu
                 togglerClass="'form-control form-select'"

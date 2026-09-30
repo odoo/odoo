@@ -140,11 +140,10 @@ export class SelectMenu extends Component {
         this.menuRef = useChildRef();
         this.choicesRef = useRef("choicesRef");
         this.props.menuRef?.(this.menuRef);
-        this.debouncedOnInput = useDebounced((ev) => {
+        this.debouncedOnInput = useDebounced((searchString) => {
             if (!this.dropdownState.isOpen) {
                 this.dropdownState.open();
             }
-            const searchString = ev.target.value;
             this.state.searchValue = searchString;
             delete this.pendingValue;
             this.onInput(searchString);
@@ -200,7 +199,7 @@ export class SelectMenu extends Component {
 
     handleInputDebounced(ev) {
         this.pendingValue = ev.target.value;
-        this.debouncedOnInput(ev);
+        this.debouncedOnInput(this.pendingValue);
     }
 
     get displayValue() {
