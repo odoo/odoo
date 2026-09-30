@@ -52,3 +52,13 @@ The model also gains useful defaults and lifecycle fields. New properties start 
 
 **Try it:** Create and duplicate a property. Compare their availability dates and selling prices, then archive one property and look for it in the normal list.
 
+## Chapter 6 - Basic views
+
+[Official chapter](https://www.odoo.com/documentation/20.0/developer/tutorials/server_framework_101/06_basicviews.html)
+
+Generated views expose fields, but they do not organize the application around a user's task. This chapter adds a property list with the most useful columns, a form grouped by purpose, and a search view for finding records. These XML views change how records appear without changing their database fields.
+
+The Available filter selects properties in New or Offer Received state. Group By Postcode rearranges the results without modifying any record. Search domains choose records; grouping context changes their presentation.
+
+**Try it:** Create properties in two postcodes. Search by name, apply Available, and group by postcode. Remove a field from a view in your local experiment and check whether its database column still exists.
+
