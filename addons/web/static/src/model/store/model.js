@@ -1,13 +1,14 @@
 import { FIELD } from "./fields";
 
 // Record slots. Symbols keep them out of the way of field names, which live on
-// the prototype as accessors.
+// the prototype as getters returning field signals.
 export const MODEL = Symbol("model"); // on the per-store prototype: the model meta
 export const ID = Symbol("id");
 export const OWNER = Symbol("owner"); // the store or draft the record belongs to
 export const VALUES = Symbol("values"); // last server values, by field index; undefined = not loaded
 export const CHANGES = Symbol("changes"); // null | Map<fieldIndex, { value, version }>
-export const ATOMS = Symbol("atoms"); // signals, created on first read
+export const ATOMS = Symbol("atoms"); // subscription ticks, created on first read
+export const HANDLES = Symbol("handles"); // field signals, created on first access
 export const FLAGS = Symbol("flags");
 export const PARENT = Symbol("parent"); // forks only: the record this one overlays
 
@@ -17,6 +18,10 @@ export const STUB = 4; // referenced by id, nothing loaded yet
 
 /**
  * Base class of all store records.
+ *
+ * Fields are read by calling them and written with `set`: `partner.name()`,
+ * `partner.name.set("Bob")`. `partner.name` is a stable per-record function,
+ * so it can be passed around like a signal (e.g. to `t-model`).
  *
  * Records are built with `Object.create`, so constructors and class field
  * initializers never run for them: class fields are only read once, as field
@@ -33,7 +38,12 @@ export class Model {
     static _inherit = "";
     /** local writes are tracked as changes (baseline + changes + versions) */
     static _tracked = false;
-    /** @type {"field" | "record" | "model" | "none"} */
+    /**
+     * How reads subscribe: to each field of each record, or to the whole model
+     * (one subscription for all records, for large read-mostly data).
+     *
+     * @type {"field" | "model"}
+     */
     static _reactivity = "field";
     /** @type {string[]} fields with a unique index, see `store.getBy` */
     static _indexes = [];
