@@ -1818,12 +1818,28 @@ class Field[T]:
                 recs = record if self.recursive else self._to_prefetch(record)
                 try:
                     self.compute_value(recs)
-                    fallback_single = False
+                    fallback = False
                 except (AccessError, MissingError):
-                    fallback_single = True
-                if fallback_single:
-                    self.compute_value(record)
-                    recs = record
+                    if len(recs) == 1:
+                        raise
+                    # fallback: restrict recs to accessible records
+                    recs1 = recs.exists()._filtered_access('read')
+                    if record not in recs1 or len(recs1) == len(recs):
+                        raise
+                    recs = recs1
+                    fallback = True
+                if fallback:
+                    try:
+                        self.compute_value(recs)
+                        fallback = False
+                    except (AccessError, MissingError):
+                        if len(recs) == 1:
+                            raise
+                        # fallback: restrict recs to record
+                        recs = record
+                        fallback = True
+                    if fallback:
+                        self.compute_value(recs)
 
                 missing_recs_ids = tuple(self._cache_missing_ids(recs))
                 if missing_recs_ids:
