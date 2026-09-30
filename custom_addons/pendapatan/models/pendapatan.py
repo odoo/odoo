@@ -203,6 +203,15 @@ class Pendapatan(models.Model):
     # ------------------------------------------------------------------
     # CREATE - SEQUENCE
     # ------------------------------------------------------------------
+    # CRUD & LOCK DATES HOOKS
+    # ------------------------------------------------------------------
+    def _check_lock_dates(self, custom_date=None):
+        for rec in self:
+            comp = rec.company_id or self.env.company
+            target_date = custom_date or rec.tanggal
+            if comp and target_date and hasattr(comp, 'check_lock_date'):
+                comp.check_lock_date(target_date, lock_type='sales')
+
     @api.model_create_multi
     def create(self, vals_list):
         self._check_finance_central_readonly()
@@ -212,6 +221,10 @@ class Pendapatan(models.Model):
                 raise ValidationError(_('Perusahaan/cabang pendapatan tidak ditemukan.'))
             if company not in self.env.companies:
                 raise AccessError(_('Anda tidak memiliki akses ke perusahaan/cabang ini.'))
+
+            date_val = fields.Date.to_date(vals.get('tanggal')) or fields.Date.today()
+            if company and hasattr(company, 'check_lock_date'):
+                company.check_lock_date(date_val, lock_type='sales')
 
             department_id = vals.get('department_id') or self.env.user.department_id.id
             department = self.env['hr.department'].browse(department_id).exists()
@@ -235,6 +248,11 @@ class Pendapatan(models.Model):
 
     def write(self, vals):
         self._check_finance_central_readonly()
+        if any(k in vals for k in ['tanggal', 'amount', 'category_id', 'state', 'company_id']):
+            self._check_lock_dates()
+            if 'tanggal' in vals:
+                new_date = fields.Date.to_date(vals['tanggal'])
+                self._check_lock_dates(custom_date=new_date)
         for record in self:
             company = self.env['res.company'].browse(vals.get('company_id') or record.company_id.id).exists()
             if not company or company not in self.env.companies:
@@ -253,6 +271,7 @@ class Pendapatan(models.Model):
 
     def unlink(self):
         self._check_finance_central_readonly()
+        self._check_lock_dates()
         return super().unlink()
 
     # ------------------------------------------------------------------
@@ -261,6 +280,7 @@ class Pendapatan(models.Model):
     def action_submit(self):
         """Draft → Submitted (oleh user biasa)"""
         self._check_finance_central_readonly()
+        self._check_lock_dates()
         if not self.env.user.has_group('pendapatan.group_pendapatan_user'):
             raise AccessError(_('Anda tidak memiliki akses untuk mengajukan pendapatan.'))
         for rec in self:
@@ -283,6 +303,7 @@ class Pendapatan(models.Model):
     def action_approve(self):
         """Submitted → Approved (oleh manager)"""
         self._check_pendapatan_manager()
+        self._check_lock_dates()
         for rec in self:
             if rec.state != 'submitted':
                 raise UserError(_('Hanya pendapatan berstatus Diajukan yang dapat disetujui.'))
@@ -310,6 +331,7 @@ class Pendapatan(models.Model):
     def action_post(self):
         """Approved → Posted + auto-create Jurnal di sif.jurnal.entry"""
         self._check_pendapatan_manager()
+        self._check_lock_dates()
         JurnalEntry = self.env['sif.jurnal.entry']
         JurnalLine = self.env['sif.jurnal.line']
 

@@ -596,6 +596,13 @@ class TransaksiTransaction(models.Model):
                         "sequence": 1,
                     })
 
+    def _check_lock_dates(self, custom_date=None):
+        for rec in self:
+            comp = rec.company_id or self.env.company
+            target_date = custom_date or rec.date
+            if comp and target_date and hasattr(comp, 'check_lock_date'):
+                comp.check_lock_date(target_date, lock_type='purchase')
+
     @api.model_create_multi
     def create(self, vals_list):
         self._check_finance_central_readonly()
@@ -603,6 +610,9 @@ class TransaksiTransaction(models.Model):
             company = self.env["res.company"].browse(vals.get("company_id") or self.env.company.id).exists()
             if not company or company not in self.env.companies:
                 raise AccessError(_("Anda tidak memiliki akses ke perusahaan/cabang transaksi ini."))
+            date_val = fields.Date.to_date(vals.get("date")) or fields.Date.today()
+            if company and hasattr(company, 'check_lock_date'):
+                company.check_lock_date(date_val, lock_type='purchase')
             vals["company_id"] = company.id
             if "department_id" not in vals:
                 if vals.get("ppl_ids"):
@@ -622,6 +632,11 @@ class TransaksiTransaction(models.Model):
 
     def write(self, vals):
         self._check_finance_central_readonly()
+        if any(k in vals for k in ['date', 'line_ids', 'single_rupiah', 'single_destination_account', 'source_account_id', 'state', 'company_id']):
+            self._check_lock_dates()
+            if 'date' in vals:
+                new_date = fields.Date.to_date(vals['date'])
+                self._check_lock_dates(custom_date=new_date)
         organization_fields = {"company_id", "department_id"}
         if organization_fields.intersection(vals) and any(record.state != "draft" for record in self):
             raise UserError(_("Perusahaan dan departemen transaksi hanya dapat diubah pada status Draf."))
@@ -633,6 +648,7 @@ class TransaksiTransaction(models.Model):
 
     def unlink(self):
         self._check_finance_central_readonly()
+        self._check_lock_dates()
         for rec in self:
             if rec.state not in ("draft", "rejected"):
                 raise UserError(_("Hanya transaksi berstatus Draf atau Ditolak yang dapat dihapus."))
@@ -643,6 +659,7 @@ class TransaksiTransaction(models.Model):
 
     # --- Aksi Alur Status (State Machine) ---
     def action_submit(self):
+        self._check_lock_dates()
         for rec in self:
             if rec.state != "draft":
                 raise UserError(_("Hanya transaksi berstatus Draf yang dapat diajukan."))
@@ -679,6 +696,7 @@ class TransaksiTransaction(models.Model):
         return True
 
     def action_verify(self):
+        self._check_lock_dates()
         for rec in self:
             if rec.state != "submitted":
                 raise UserError(_("Hanya transaksi berstatus Diajukan yang dapat diverifikasi."))
@@ -691,6 +709,7 @@ class TransaksiTransaction(models.Model):
         return True
 
     def action_approve(self):
+        self._check_lock_dates()
         for rec in self:
             if rec.state not in ("submitted", "verified"):
                 raise UserError(_("Hanya transaksi berstatus Diajukan atau Diverifikasi Keuangan yang dapat disetujui."))
@@ -711,6 +730,7 @@ class TransaksiTransaction(models.Model):
 
     def action_approve_direct(self):
         """Aksi khusus Super User untuk menyetujui langsung tanpa melalui verifikasi keuangan."""
+        self._check_lock_dates()
         for rec in self:
             if rec.state != "submitted":
                 raise UserError(_("Persetujuan langsung hanya dapat dilakukan pada transaksi berstatus Diajukan."))
