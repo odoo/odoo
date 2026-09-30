@@ -7,21 +7,18 @@
         border: 0;
         padding: 0;
     }
-    .tab-pane.active:has(> div[name="google_map_iframe"]) {
-        padding: 0;
-        div[name="google_map_iframe"] {
-            margin: 0 var(--Notebook-margin-x, -16px) calc(var(--formView-sheet-padding-y, 16px) * -1);
-            border-radius: 0 0 var(--formView-sheet-border-radius, 0) var(--formView-sheet-border-radius, 0);
-            overflow: hidden;
+    .tab-pane.active > div.o_field_widget[name="google_map_iframe"] {
+        margin: calc(var(--o-horizontal-padding) * -1) var(--Notebook-margin-x, -16px) calc((var(--o-horizontal-padding) + var(--formView-sheet-padding-y, 16px)) * -1);
+        border-radius: 0 0 var(--formView-sheet-border-radius, 0) var(--formView-sheet-border-radius, 0);
+        overflow: hidden;
 
-            div.o_readonly {
-                padding: 0 !important;
-                margin: 0 !important;
-            }
+        div.o_readonly {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
 
-            @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
-                margin: 0 0 calc(var(--formView-sheet-padding-y, 16px) * -1);
-            }
+        @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
+            margin: calc(var(--o-horizontal-padding) * -1) 0 calc((var(--o-horizontal-padding) + var(--formView-sheet-padding-y, 16px)) * -1);
         }
     }
 }
