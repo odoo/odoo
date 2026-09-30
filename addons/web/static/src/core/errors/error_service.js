@@ -5,6 +5,8 @@ import { isBrowserFirefox, isBrowserChrome } from "@web/core/browser/feature_det
 import { usePlugin, useScope } from "@odoo/owl";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
+const errorHandlerRegistry = registry.category("error_handlers");
+
 export class HTMLElementLoadingError extends Error {
     static message = "Error loading an HTML Element";
     constructor(message = HTMLElementLoadingError.message, event) {
@@ -49,10 +51,10 @@ export class ThirdPartyScriptError extends UncaughtError {
 }
 
 export const errorService = {
-    start(env) {
+    start() {
         const debugMode = usePlugin(DebugModePlugin);
         const scope = useScope();
-        function handleError(uncaughtError, retry = true) {
+        function handleError(uncaughtError) {
             function shouldLogError() {
                 // Only log errors that are relevant business-wise, following the heuristics:
                 // Error.event and Error.traceback have been assigned
@@ -69,9 +71,9 @@ export const errorService = {
                 originalError = originalError.cause;
             }
             const runHandlers = () => {
-                for (const [name, handler] of registry.category("error_handlers").getEntries()) {
+                for (const [name, handler] of errorHandlerRegistry.getEntries()) {
                     try {
-                        if (handler(env, uncaughtError, originalError)) {
+                        if (handler({ error: uncaughtError, originalError })) {
                             break;
                         }
                     } catch (e) {

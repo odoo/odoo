@@ -24,7 +24,8 @@ export function handleRPCError(error, dialog) {
     }
 }
 
-function rpcErrorHandler(env, error, originalError) {
+/** @type {import("registries").ErrorHandler} */
+function rpcErrorHandler({ originalError }) {
     const dialog = useService("dialog");
     if (originalError instanceof RPCError) {
         handleRPCError(originalError, dialog);
@@ -33,7 +34,8 @@ function rpcErrorHandler(env, error, originalError) {
 }
 registry.category("error_handlers").add("pos-rpcErrorHandler", rpcErrorHandler);
 
-export function offlineErrorHandler(env, error, originalError) {
+/** @type {import("registries").ErrorHandler} */
+export function offlineErrorHandler({ originalError }) {
     const pos = useService("pos");
     const dialog = useService("dialog");
     if (originalError instanceof ConnectionLostError) {
@@ -53,7 +55,8 @@ export function offlineErrorHandler(env, error, originalError) {
 }
 registry.category("error_handlers").add("pos-offlineErrorHandler", offlineErrorHandler);
 
-function defaultErrorHandler(env, error, originalError) {
+/** @type {import("registries").ErrorHandler} */
+function defaultErrorHandler({ error }) {
     const dialog = useService("dialog");
     if (error instanceof Error) {
         dialog.add(ErrorDialog, {

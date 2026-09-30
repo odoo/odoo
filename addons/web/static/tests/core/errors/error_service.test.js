@@ -31,7 +31,7 @@ test("can handle rejected promise errors with a string as reason", async () => {
     await makeTestApp();
     errorHandlerRegistry.add(
         "__test_handler__",
-        (env, err, originalError) => {
+        ({ originalError }) => {
             expect.step(originalError);
         },
         { sequence: 0 }
@@ -174,9 +174,8 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
 test("will let handlers from the registry handle errors first", async () => {
     assignTestEnv({ someValue: 14 });
     await makeTestApp();
-    errorHandlerRegistry.add("__test_handler__", (env, err, originalError) => {
+    errorHandlerRegistry.add("__test_handler__", ({ originalError }) => {
         expect(originalError).toBe(error);
-        expect(env.someValue).toBe(14);
         expect.step("in handler");
         return true;
     });
@@ -197,7 +196,7 @@ test("originalError is the root cause of the error chain", async () => {
     error.name = "boom";
     error.cause = rootError;
 
-    errorHandlerRegistry.add("__test_handler__", (env, err, originalError) => {
+    errorHandlerRegistry.add("__test_handler__", ({ error: err, originalError }) => {
         expect(err).toBeInstanceOf(UncaughtPromiseError); // Wrapped by error service
         expect(err.cause).toBe(error);
         expect(originalError).toBe(rootError);
@@ -410,7 +409,7 @@ describe("Error Service Logs", () => {
         // The crash of the error handler should merely be seen as a consequence of the early stage at which the error occurs.
         errorHandlerRegistry.add(
             "__test_handler__",
-            (env, err, originalError) => {
+            () => {
                 throw new Error("Boom in handler");
             },
             { sequence: 0 }

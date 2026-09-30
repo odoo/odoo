@@ -303,7 +303,8 @@ export class CheckIdentity {
         }
     }
 
-    verifyUserErrorHandler(env, error, originalError) {
+    /** @type {import("registries").ErrorHandler} */
+    verifyUserErrorHandler({ originalError }) {
         if (originalError instanceof RPCError) {
             if (originalError.data.name === "odoo.http.session.CheckIdentityException") {
                 this.run();

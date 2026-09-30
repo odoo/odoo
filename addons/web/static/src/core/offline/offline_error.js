@@ -16,13 +16,8 @@ const fetchErrorMessages = [
     "NetworkError when attempting to fetch resource.", // Firefox
 ];
 
-/**
- * @param {OdooEnv} env
- * @param {UncaughError} error
- * @param {Error} originalError
- * @returns {boolean}
- */
-export function offlineFailToFetchErrorHandler(env, error, originalError) {
+/** @type {import("registries").ErrorHandler} */
+export function offlineFailToFetchErrorHandler({ originalError }) {
     if (originalError instanceof TypeError && fetchErrorMessages.includes(originalError.message)) {
         const offlinePlugin = usePlugin(OfflinePlugin);
         offlinePlugin.setOffline(true);
@@ -37,13 +32,8 @@ errorHandlerRegistry.add("offlineFailToFetchErrorHandler", offlineFailToFetchErr
 // Lost connection errors
 // -----------------------------------------------------------------------------
 
-/**
- * @param {OdooEnv} env
- * @param {UncaughError} error
- * @param {Error} originalError
- * @returns {boolean}
- */
-export function lostConnectionHandler(env, error, originalError) {
+/** @type {import("registries").ErrorHandler} */
+export function lostConnectionHandler({ error, originalError }) {
     if (!(error instanceof UncaughtPromiseError)) {
         return false;
     }

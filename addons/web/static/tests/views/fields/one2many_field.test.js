@@ -8223,7 +8223,8 @@ test("default value for nested one2manys (coming from onchange)", async () => {
 test("display correct value after validation error", async () => {
     expect.assertions(5);
 
-    function validationHandler(env, error, originalError) {
+    /** @type {import("registries").ErrorHandler} */
+    function validationHandler({ error, originalError }) {
         if (originalError.data.name === "odoo.exceptions.ValidationError") {
             return true;
         }
