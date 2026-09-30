@@ -1,0 +1,88 @@
+<odoo>
+    <!-- =========================
+        FEATURE / PERMISSION GROUP
+    ========================= -->
+    <record id="group_view_only" model="res.groups">
+        <field name="name">Chỉ xem</field>
+    </record>
+
+    <record id="group_manage_phone_data" model="res.groups">
+        <field name="name">Quản lý Data</field>
+    </record>
+
+    <record id="group_view_report" model="res.groups">
+        <field name="name">Xem thống kê</field>
+    </record>
+
+    <record id="group_manage_project" model="res.groups">
+        <field name="name">Quản lý dự án</field>
+    </record>
+
+    <record id="group_manage_customer" model="res.groups">
+        <field name="name">Quản lý khách hàng</field>
+        <field name="implied_ids" eval="[(6, 0, [])]"/>
+    </record>
+
+    <record id="group_manage_employee" model="res.groups">
+        <field name="name">Quản lý nhân viên</field>
+    </record>
+
+    <record id="group_manage_transaction" model="res.groups">
+        <field name="name">Quản lý giao dịch</field>
+    </record>
+
+    <record id="group_full_access" model="res.groups">
+        <field name="name">Toàn quyền</field>
+        <field name="implied_ids" eval="[
+            (4, ref('ht_crm.group_manage_phone_data')),
+            (4, ref('ht_crm.group_view_report')),
+            (4, ref('ht_crm.group_manage_project')),
+            (4, ref('ht_crm.group_manage_customer')),
+            (4, ref('ht_crm.group_manage_employee')),
+            (4, ref('ht_crm.group_manage_transaction'))
+        ]"/>
+    </record>
+
+
+    <!-- =========================
+        ROLE GROUP
+    ========================= -->
+
+    <!-- User cơ bản -->
+    <record id="group_ht_sales_user" model="res.groups">
+        <field name="name">Sales</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Trưởng phòng (kế thừa User) -->
+    <record id="group_ht_sales_leader" model="res.groups">
+        <field name="name">Trưởng Phòng</field>
+        <field name="implied_ids" eval="[(4, ref('ht_crm.group_ht_sales_user'))]"/>
+    </record>
+
+    <record id="group_ht_general_admin" model="res.groups">
+        <field name="name">General Administrator</field>
+        <field name="implied_ids" eval="[
+            (4, ref('ht_crm.group_view_report')),
+            (4, ref('ht_crm.group_manage_customer')),
+            (4, ref('ht_crm.group_manage_transaction')),
+            (4, ref('ht_crm.group_manage_project'))
+        ]"/>
+    </record>
+
+    <!-- Ban điều hành-->
+    <record id="group_ht_executive" model="res.groups">
+        <field name="name">Ban Điều Hành</field>
+        <field name="implied_ids" eval="[
+            (4, ref('ht_crm.group_manage_customer')),
+            (4, ref('ht_crm.group_manage_phone_data')),
+            (4, ref('ht_crm.group_manage_project'))
+        ]"/>
+    </record>
+
+    <record id="group_ht_board_of_directors" model="res.groups">
+        <field name="name">Ban Lãnh Đạo</field>
+        <field name="implied_ids" eval="[(4, ref('ht_crm.group_view_only'))]"/>
+    </record>
+
+</odoo>

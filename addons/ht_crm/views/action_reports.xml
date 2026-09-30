@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="action_report_transaction" model="ir.actions.report">
+        <field name="name">Báo cáo giao dịch</field>
+        <field name="model">sale.transaction</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ht_crm.report_sale_transaction</field>
+        <field name="report_file">ht_crm.report_sale_transaction</field>
+        <field name="binding_model_id" ref="model_sale_transaction"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

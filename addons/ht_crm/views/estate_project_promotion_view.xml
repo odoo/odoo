@@ -1,0 +1,104 @@
+<odoo>
+
+    <record id="view_estate_project_promotion_list" model="ir.ui.view">
+        <field name="name">estate.project.promotion.list</field>
+        <field name="model">estate.project.promotion</field>
+        <field name="arch" type="xml">
+            <list default_order="sequence asc">
+                <field name="sequence" widget="handle"/>
+
+                <field name="active" widget="boolean_toggle"/>
+
+                <field name="name"/>
+
+                <field name="promotion_type"/>
+
+                <field name="cash_amount"
+                    invisible="promotion_type != 'cash'"/>
+
+                <field name="percent_amount"
+                    invisible="promotion_type != 'percent'"/>
+
+                <field name="start_date"/>
+
+                <field name="end_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_estate_project_promotion_form" model="ir.ui.view">
+        <field name="name">estate.project.promotion.form</field>
+        <field name="model">estate.project.promotion</field>
+        <field name="arch" type="xml">
+            <form string="Ưu đãi dự án">
+
+                <sheet>
+
+                    <!-- Ribbon -->
+                    <widget name="web_ribbon"
+                            title="Ngưng áp dụng"
+                            bg_color="text-bg-danger"
+                            invisible="active"/>
+
+                    <!-- Header -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"
+                                placeholder="Ví dụ: Chiết khấu tháng 5"/>
+                        </h1>
+                    </div>
+
+                    <!-- Main -->
+                    <group>
+
+                        <group>
+
+                            <field name="project_id"/>
+
+                            <field name="promotion_type"/>
+
+                            <field name="active"/>
+
+                        </group>
+
+                        <group>
+
+                            <field name="start_date"/>
+
+                            <field name="end_date"/>
+
+                        </group>
+
+                    </group>
+
+                    <!-- Amount -->
+                    <group string="Giá trị ưu đãi">
+
+                        <field name="cash_amount"
+                            invisible="promotion_type != 'cash'"/>
+
+                        <field name="percent_amount"
+                            invisible="promotion_type != 'percent'"/>
+
+                    </group>
+
+                    <!-- Note -->
+                    <notebook>
+
+                        <page string="Ghi chú">
+
+                            <field name="note"
+                                placeholder="Nhập mô tả ưu đãi..."
+                                nolabel="1"/>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+</odoo>

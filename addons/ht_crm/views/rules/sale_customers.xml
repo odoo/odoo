@@ -1,0 +1,48 @@
+<odoo>  
+    <record id="rule_customer_ga" model="ir.rule">
+        <field name="name">GA (Customer)</field>
+        <field name="model_id" ref="model_sale_customer"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_general_admin'))]"/>
+    </record>
+
+    <!-- Hệ Thống -->
+    <record id="rule_customer_admin" model="ir.rule">
+        <field name="name">Hệ Thống (Customer)</field>
+        <field name="model_id" ref="model_sale_customer"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
+    </record>
+
+    <!-- Ban Điều Hành -->
+    <record id="rule_customer_exec" model="ir.rule">
+        <field name="name">Ban Điều Hành (Customer)</field>
+        <field name="model_id" ref="model_sale_customer"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
+    </record>
+
+    <record id="rule_customer_leader" model="ir.rule">
+        <field name="name">Trưởng Phòng (Customer)</field>
+        <field name="model_id" ref="model_sale_customer"/>
+        <field name="domain_force">
+            [
+                '|',
+                ('salesperson_id.user_id', '=', user.id),
+                ('salesperson_id.manager_id.user_id', '=', user.id)
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_ht_sales_leader'))]"/>
+    </record>
+
+    <record id="rule_customer_user" model="ir.rule">
+        <field name="name">Sales (Customer)</field>
+        <field name="model_id" ref="model_sale_customer"/>
+        <field name="domain_force">
+            [
+                ('salesperson_id.user_id', '=', user.id)
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_ht_sales_user'))]"/>
+    </record>
+</odoo>

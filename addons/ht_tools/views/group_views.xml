@@ -1,0 +1,71 @@
+<odoo>
+    <record id="tool_group_owner_rule" model="ir.rule">
+        <field name="name">Group Owner Rule</field>
+        <field name="model_id" ref="model_tool_group"/>
+        <field name="domain_force">
+            [('user_id', '=', user.id)]
+        </field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    
+    <record id="view_tool_group_list" model="ir.ui.view">
+        <field name="name">tool.group.list</field>
+        <field name="model">tool.group</field>
+        <field name="arch" type="xml">
+            <list string="Danh sách Nhóm">
+                <field name="name"/>
+                <field name="group_id"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="view_tool_sync_group_wizard_form" model="ir.ui.view">
+        <field name="name">tool.sync.group.wizard.form</field>
+        <field name="model">tool.sync.group.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Đồng bộ Nhóm">
+                <group>
+                    <field name="uid" placeholder="Ví dụ: 1000123456789"/>
+                    <field name="username" placeholder="Ví dụ: nguyenvanua"/>
+                </group>
+                <footer>
+                    <button string="Xác nhận Đồng bộ" 
+                        name="action_execute" 
+                        type="object" 
+                        class="btn-primary"
+                        invisible="context.get('action_mode') == 'post'"/> 
+
+                    <button string="Tiến hành Đăng Bài" 
+                            name="action_execute" 
+                            type="object" 
+                            class="btn-success"
+                            invisible="context.get('action_mode') != 'post'"/> 
+
+                    <button string="Hủy" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tool_group_form" model="ir.ui.view">
+        <field name="name">tool.group.form</field>
+        <field name="model">tool.group</field>
+        <field name="arch" type="xml">
+            <form string="Nhóm">
+                <header>
+                    <button name="action_sync_groups_from_fastapi" 
+                            string="Đồng bộ từ FastAPI" 
+                            type="object" 
+                            class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="group_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

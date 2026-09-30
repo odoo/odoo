@@ -1,0 +1,312 @@
+<odoo>
+    <record id="seq_sale_transaction" model="ir.sequence">
+        <field name="name">Sale Transaction</field>
+        <field name="code">sale.transaction</field>
+        <field name="prefix">GD/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+    </record>
+
+    <record id="view_sale_transaction_list" model="ir.ui.view">
+        <field name="name">sale.transaction.list</field>
+        <field name="model">sale.transaction</field>
+        <field name="arch" type="xml">
+            <list string="Giao Dịch">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="customer_id"/>
+                <field name="product_id"/>
+                <field name="price_total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sale_transaction_form" model="ir.ui.view">
+        <field name="name">sale.transaction.form</field>
+        <field name="model">sale.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Giao dịch">
+                
+                <!-- Header -->
+                <header>
+                    <button name="action_print_transaction"
+                        type="object"
+                        string="In phiếu"
+                        class="btn-primary"
+                        icon="fa-print"/>
+
+                    <field name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,booking,deposit,cancel"/>
+                </header>
+
+                <sheet>
+
+                    <!-- Ribbon -->
+                    <widget name="web_ribbon"
+                            title="Đặt cọc"
+                            bg_color="bg-success"
+                            invisible="state != 'deposit'"/>
+
+                    <widget name="web_ribbon"
+                            title="Booking"
+                            bg_color="bg-warning"
+                            invisible="state != 'booking'"/>
+
+                    <widget name="web_ribbon"
+                            title="Hủy"
+                            bg_color="bg-danger"
+                            invisible="state != 'cancel'"/>
+
+                    <widget name="web_ribbon"
+                        title="Nháp"
+                        bg_color="bg-info"
+                        invisible="state != 'draft'"/>
+
+                    <!-- Title -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <!-- Main Info -->
+                    <group>
+                        <group string="Thông tin giao dịch">
+
+                            <field name="date"/>
+
+                            <field name="employee_id"
+                                options="{'no_create': False}"/>
+
+                            <field name="customer_id" options="{'no_create': False}"/>
+
+                            <field name="hot_money"/>
+
+                            <field name="plan_id"/>
+
+                        </group>
+
+                        <group string="Thông tin sản phẩm">
+
+                            <field name="product_id"
+                                options="{'no_create': True}"/>
+
+                            <field name="net_area" readonly="1"/>
+
+                            <field name="gross_area" readonly="1"/>
+
+                        </group>
+                    </group>
+
+                    <!-- Price Section -->
+                    <group string="Thông tin tài chính" col="4">
+                        <field name="currency_id" invisible="1"/>
+
+                        <!-- Giá niêm yết -->
+                        <field name="listed_price" readonly="1" class="oe_inline" widget="monetary"/>
+
+                        <!-- Tiền CK -->
+                        <field name="discount_amount" widget="monetary"/>
+
+                        <!-- Giá sau CK -->
+                        <field name="price_subtotal" readonly="1" widget="monetary"/>
+
+                        <!-- VAT % -->
+                        <field name="vat_percent"/>
+
+                        <!-- Tiền VAT -->
+                        <field name="vat_amount" readonly="1" widget="monetary"/>
+
+                        <!-- Tổng cuối -->
+                        <field name="price_total" readonly="1" class="oe_inline" widget="monetary"/>
+
+                        <!-- Ghi chú -->
+                        <label for="price_total" widget="monetary"/>
+                        <div class="text-muted">
+                            Tổng thanh toán cuối cùng sau chiết khấu và VAT
+                        </div>
+
+                    </group>
+
+                    <!-- Notebook -->
+                    <notebook>
+                        <page string="Tài liệu">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                        
+                        <page string="Lịch sử">
+                            <group>
+                                <field name="create_uid" readonly="1"/>
+                                <field name="create_date" readonly="1"/>
+                                <field name="write_uid" readonly="1"/>
+                                <field name="write_date" readonly="1"/>
+                            </group>
+                        </page>
+
+                        <page string="Thanh toán">
+                            <group>
+                                <field name="payment_ids">
+                                    <list>
+                                        <field name="name"/>
+                                        <field name="due_date"/>
+                                        <field name="amount" widget="monetary"/>
+                                        <field name="paid_amount" widget="monetary"/>
+                                        <field name="status"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sale_transaction_kanban" model="ir.ui.view">
+        <field name="name">sale.transaction.kanban</field>
+        <field name="model">sale.transaction</field>
+        <field name="arch" type="xml">
+
+            <kanban default_group_by="project_id">
+                <progressbar field="state"
+                        colors='{
+                        "draft": "info",
+                        "booking": "warning",
+                        "deposit": "success",
+                        "cancel": "danger"
+                }'/>
+
+                <templates>
+
+                    <t t-name="card">
+
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="mb-2">
+                                <widget name="web_ribbon"
+                                        title="Đặt cọc"
+                                        bg_color="bg-success"
+                                        invisible="state != 'deposit'"/>
+
+                                <widget name="web_ribbon"
+                                        title="Booking"
+                                        bg_color="bg-warning"
+                                        invisible="state != 'booking'"/>
+
+                                <widget name="web_ribbon"
+                                        title="Hủy"
+                                        bg_color="bg-danger"
+                                        invisible="state != 'cancel'"/>
+
+                                <widget name="web_ribbon"
+                                    title="Nháp"
+                                    bg_color="bg-info"
+                                    invisible="state != 'draft'"/>
+                            </div>
+
+                            <!-- Header -->
+                            <div class="o_kanban_record_top">
+                                <strong>
+                                    <field name="name"/>
+                                </strong>
+                            </div>
+
+                            <!-- Body -->
+                            <div class="mt-2">
+
+                                <div>
+                                    👤 <field name="customer_id"/>
+                                </div>
+
+                                <div>
+                                    🏢 <field name="product_id"/>
+                                </div>
+
+                                <div>
+                                    💰 <field name="price_total"/>
+                                </div>
+
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="mt-3 text-muted">
+
+                                <field name="employee_id"/>
+
+                            </div>
+
+                        </div>
+
+                    </t>
+
+                </templates>
+
+            </kanban>
+
+        </field>
+    </record>
+
+
+    <record id="view_sale_transaction_payment_form" model="ir.ui.view">
+        <field name="name">sale.transaction.payment.form</field>
+        <field name="model">sale.transaction.payment</field>
+        <field name="arch" type="xml">
+            <form string="Chi Tiết Thanh Toán">
+                <sheet>
+
+                    <!-- Header -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <h2>
+                            <field name="transaction_id"/>
+                        </h2>
+                    </div>
+
+                    <!-- Status -->
+                    <group>
+                        <field name="status" widget="statusbar"
+                            statusbar_visible="pending,paid,overdue"/>
+                    </group>
+
+                    <!-- Main Info -->
+                    <group col="2">
+                        <group string="Thông tin đợt thanh toán">
+
+                            <field name="plan_line_id"/>
+
+                            <field name="sequence" readonly="1"/>
+
+                            <field name="amount"
+                                widget="monetary"
+                                options="{'currency_field': 'currency_id'}"/>
+
+                            <field name="paid_amount"
+                                widget="monetary"
+                                options="{'currency_field': 'currency_id'}"/>
+
+                        </group>
+
+                        <group string="Thông tin thời gian">
+
+                            <field name="due_type" readonly="1"/>
+
+                            <field name="due_value" readonly="1"/>
+
+                            <field name="base_date"/>
+
+                            <field name="due_date" readonly="1"/>
+
+                        </group>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,101 @@
+<odoo>
+    <record id="ir_cron_distribute_hot" model="ir.cron">
+        <field name="name">Distribute Batch</field>
+        <field name="model_id" ref="model_sale_phonebook_batch"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_distribute()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="view_phonebook_batch_list" model="ir.ui.view">
+        <field name="name">sale.phonebook.batch.list</field>
+        <field name="model">sale.phonebook.batch</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="project_id" string="Dự án"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_phonebook_batch_form" model="ir.ui.view">
+        <field name="name">sale.phonebook.batch.form</field>
+        <field name="model">sale.phonebook.batch</field>
+        <field name="arch" type="xml">
+
+            <form string="Phonebook Batch">
+                <header>
+
+                    <button name="action_redistribute"
+                            string="Phân lại"
+                            type="object"
+                            class="oe_highlight"
+                            icon="fa-undo"
+                            groups="ht_crm.group_ht_executive,base.group_system"/>
+
+                    <button name="action_clean_invalid"
+                            string="Xóa số không hợp lệ"
+                            type="object"
+                            class="oe_highlight"
+                            icon="fa-trash"
+                            groups="ht_crm.group_ht_executive,base.group_system"/>
+
+                    <button name="action_test_cron"
+                            string="Chạy Cron"
+                            type="object"
+                            class="oe_highlight"
+                            groups="ht_crm.group_ht_executive,base.group_system"/>
+                </header>
+                    
+                <sheet>
+
+                    <group>
+                        <field name="name"/>
+                        <field name="date"/>
+                        <field name="project_id"/>
+                        <field name="state"/>
+                        <field name="chunk_size"/>
+                        <field name="distribute_at"/>
+                        <field name="rest_time" string="Thời gian nghỉ (phút)"/>
+                        <field name="hot_live_time"/>
+                        <field name="cold_live_time"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Danh sách số điện thoại">
+
+                            <field name="phone_ids" options="{'no_create': True}">
+
+                                <list editable="bottom" limit="20">
+                                    <field name="name"/>
+                                    <field name="phone"/>
+                                    <field name="salesperson_id"/>
+                                    <field name="is_hot"/>
+                                    <field name="given_at"/>
+                                </list>
+
+                            </field>
+
+                        </page>
+
+                        <page string="Sales phụ trách">
+
+                            <field name="e_p_rel_ids">
+                                <list limit="5">
+                                    <field name="sales_id"/>
+                                </list>
+                            </field>
+
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+
+        </field>
+    </record>
+</odoo>

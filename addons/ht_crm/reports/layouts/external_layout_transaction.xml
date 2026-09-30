@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <!-- ===================================================== -->
+    <!-- EXTERNAL LAYOUT -->
+    <!-- ===================================================== -->
+
+    <template id="external_layout_transaction">
+        <div t-attf-class="header o_company_#{o.env.company.id}_layout {{report_type == 'pdf' and 'pt-5'}}">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="o_shape_bubble_1 z-n1 {{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}}" width="1100" height="1100">
+                <circle cx="550" cy="550" r="550" t-att-fill="o.env.company.primary_color" fill-opacity=".1"/>
+            </svg>
+            <table class="o_ignore_layout_styling table table-borderless mb-0">
+                <tbody>
+                    <tr>
+                        <td t-if="o.env.company.report_header" class="o_company_tagline fw-bold p-0 pe-2">
+                            <span t-field="o.env.company.report_header">
+                                Company tagline
+                            </span>
+                        </td>
+                        <td class="p-0 text-end">
+                            <img t-if="o.env.company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(o.env.company.logo)" alt="Logo"/>
+                            <t t-set="company" t-value="o.env.company"/>
+
+                            <div name="company_address">
+                                <ul class="list-unstyled" name="company_address_list">
+
+                                    <!-- CASE 1: company details empty -->
+                                    <li t-if="not company.company_details">
+
+                                        <span t-field="company.partner_id"
+                                            t-options="{
+                                                'widget': 'contact',
+                                                'fields': ['name', 'address'],
+                                                'no_marker': True
+                                            }"/>
+
+                                    </li>
+
+                                    <!-- CASE 2: company details exists -->
+                                    <li t-else="">
+
+                                        <span t-field="company.company_details"/>
+
+                                    </li>
+
+                                    <!-- VAT (optional safe block) -->
+                                    <li t-if="company.vat">
+
+                                        <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                                        <span t-esc="company.vat"/>
+
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- BODY -->
+        <t t-set="layout_background_url" t-value="'data:image/png;base64,%s' % o.env.company.layout_background_image.decode('utf-8') if o.env.company.layout_background_image and o.env.company.layout_background == 'Custom' else                 '/base/static/img/demo_logo_report.png' if o.env.company.layout_background == 'Demo logo' else ''"/>
+        <div t-attf-class="article o_report_layout_bubble o_table_boxed-rounded o_company_#{o.env.company.id}_layout {{'o_report_layout_background' if o.env.company.layout_background != 'Blank' else ''}}" t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <table class="o_ignore_layout_styling table table-borderless mb-0">
+                <tbody>
+                    <tr>
+                        <td t-attf-class="p-0 {{'pt-3' if information_block else ''}}">
+                            <t t-call="web.address_layout" custom_layout_address="true"/>
+                        </td>
+                        <td t-if="not information_block" class="align-bottom p-0 ps-2">
+                            <h2 class="mb-4 text-nowrap text-end" t-out="layout_document_title"/>
+                        </td>
+                    </tr>
+                    <tr t-if="information_block">
+                        <td colspan="2" class="align-bottom p-0">
+                            <h2 class="text-nowrap text-end" t-out="layout_document_title"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <t t-out="0"/>
+
+            <div class="mt-5 pt-4" style="page-break-inside: avoid;">
+
+                <table class="table table-borderless w-100 text-center">
+
+                    <tr>
+                        <!-- Khách hàng -->
+                        <td style="width:25%; vertical-align:top;">
+
+                            <div>
+                                <strong>KHÁCH HÀNG</strong>
+                            </div>
+
+                            <div class="small text-muted mt-1">
+                                (Ký và ghi rõ họ tên)
+                            </div>
+
+                            <div style="height:80px;"></div>
+
+                        </td>
+
+                        <!-- Sales -->
+                        <td style="width:25%; vertical-align:top;">
+
+                            <div>
+                                <strong>SALES</strong>
+                            </div>
+
+                            <div class="small text-muted mt-1">
+                                (Ký và ghi rõ họ tên)
+                            </div>
+
+                            <div style="height:80px;"></div>
+
+                        </td>
+
+                        <!-- Sales Admin -->
+                        <td style="width:25%; vertical-align:top;">
+
+                            <div>
+                                <strong>SALES ADMIN</strong>
+                            </div>
+
+                            <div class="small text-muted mt-1">
+                                (Ký và ghi rõ họ tên)
+                            </div>
+
+                            <div style="height:20px;"></div>
+
+                        </td>
+
+                        <!-- Quản lý -->
+                        <td style="width:25%; vertical-align:top;">
+
+                            <div>
+                                <strong>QUẢN LÝ KINH DOANH</strong>
+                            </div>
+
+                            <div class="small text-muted mt-1">
+                                (Ký và đóng dấu)
+                            </div>
+
+                            <div style="height:20px;"></div>
+
+                        </td>
+
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed start-0'}}" width="500" height="228" viewBox="0 0 500 228" fill="none">
+                <path d="M500 228H0V6.52743C26.3323 2.23278 53.3561 0 80.9008 0C256.522 0 410.969 90.7656 500 228Z" t-att-fill="company.secondary_color" fill-opacity=".1"/>
+            </svg>
+            <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-4 text-center">
+                <div class="border-top pt-2" t-field="company.report_footer"/>
+                <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
+                <!-- <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></span> -->
+            </div>
+        </div>
+    </template>
+
+    <!-- Report -->
+    <template id="report_sale_transaction">
+        <t t-call="web.html_container">
+
+            <t t-foreach="docs" t-as="o">
+
+                <t t-call="ht_crm.external_layout_transaction">
+
+                    <div class="page">
+
+                        <h2 class="text-center mb-4">
+                            PHIẾU GIAO DỊCH
+                        </h2>
+
+                        <!-- ========================= -->
+                        <!-- THÔNG TIN GIAO DỊCH -->
+                        <!-- ========================= -->
+                        <h4 class="mt-4 mb-2">
+                            I. THÔNG TIN GIAO DỊCH
+                        </h4>
+
+                        <table class="table table-borderless table-sm">
+
+                            <tbody>
+
+                                <tr>
+                                    <td><strong>Mã</strong></td>
+                                    <td><span t-field="o.name"/></td>
+
+                                    <td><strong>Ngày</strong></td>
+                                    <td><span t-field="o.date"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td><strong>Trạng thái</strong></td>
+                                    <td><span t-field="o.state"/></td>
+
+                                    <td><strong>Nhân sự phụ trách</strong></td>
+                                    <td><span t-field="o.employee_id"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td><strong>Dự án</strong></td>
+                                    <td><span t-field="o.product_id.project_id"/></td>
+
+                                    <td><strong>Chủ đầu tư</strong></td>
+                                    <td><span t-field="o.product_id.project_id.investor"/></td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                        <!-- ========================= -->
+                        <!-- THÔNG TIN KHÁCH HÀNG -->
+                        <!-- ========================= -->
+                        <h4 class="mt-4 mb-2">
+                            II. THÔNG TIN KHÁCH HÀNG
+                        </h4>
+
+                        <table class="table table-borderless table-sm">
+
+                            <tbody>
+
+                                <tr>
+                                    <td><strong>Khách hàng</strong></td>
+                                    <td colspan="2"><span t-field="o.customer_id"/></td>
+
+                                    <td><strong>Ngày sinh</strong></td>
+                                    <td colspan="4"><span t-field="o.customer_id.date_of_birth"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td><strong>CCCD / Passport</strong></td>
+                                    <td><span t-field="o.customer_id.id_number"/></td>
+
+                                    <td><strong>Điện thoại</strong></td>
+                                    <td><span t-field="o.customer_id.phone"/></td>
+
+                                    <td><strong>Email</strong></td>
+                                    <td><span t-field="o.customer_id.email"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td><strong>Địa chỉ</strong></td>
+                                    <td colspan="5"><span t-field="o.customer_id.contact_address"/></td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                        <!-- ========================= -->
+                        <!-- THÔNG TIN SẢN PHẨM / TÀI CHÍNH -->
+                        <!-- ========================= -->
+                        <h4 class="mt-4 mb-2">
+                            III. THÔNG TIN SẢN PHẨM
+                        </h4>
+
+                        <table class="table table-borderless table-sm">
+
+                            <tbody>
+
+                                <tr>
+                                    <td><strong>Mã sản phẩm</strong></td>
+                                    <td><span t-field="o.product_id.product_code"/></td>
+
+                                    <td><strong>Loại sản phẩm</strong></td>
+                                    <td><span t-field="o.product_id.unit_type_id"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td><strong>Block / Tháp</strong></td>
+                                    <td><span t-field="o.product_id.block"/></td>
+
+                                    <td><strong>Tầng</strong></td>
+                                    <td><span t-field="o.product_id.floor"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td><strong>Diện tích thông thủy</strong></td>
+                                    <td>
+                                        <span t-field="o.net_area"/> m²
+                                    </td>
+
+                                    <td><strong>Diện tích tim tường</strong></td>
+                                    <td>
+                                        <span t-field="o.gross_area"/> m²
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                        <!-- ========================= -->
+                        <!-- GIÁ BÁN & THANH TOÁN -->
+                        <!-- ========================= -->
+                        <!-- <div style="page-break-before: always;"></div> -->
+
+                        <h4 class="mt-4 mb-2">
+                            IV. GIÁ BÁN &amp; THANH TOÁN
+                        </h4>
+
+                        <table class="table table-borderless table-sm">
+
+                            <tbody>
+
+                                <tr>
+                                    <td><strong>Giá niêm yết</strong></td>
+                                    <td><span t-field="o.listed_price"/></td>
+
+                                    <!-- <td><strong>Chiết khấu (%)</strong></td>
+                                    <td><span t-field="o.discount_percent"/></td> -->
+                                </tr>
+
+                                <tr>
+                                    <td><strong>Tiền chiết khấu</strong></td>
+                                    <td><span t-field="o.discount_amount"/></td>
+
+                                    <td><strong>Giá sau chiết khấu</strong></td>
+                                    <td><span t-field="o.price_subtotal"/></td>
+                                </tr>
+
+                                <tr>
+                                    <td><strong>VAT (%)</strong></td>
+                                    <td><span t-field="o.vat_percent"/></td>
+
+                                    <td><strong>Tiền VAT</strong></td>
+                                    <td><span t-field="o.vat_amount"/></td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <!-- ========================= -->
+                    <!-- GHI CHÚ-->
+                    <!-- ========================= -->
+                    <h4 class="mt-4 mb-2">V. GHI CHÚ</h4>
+
+                    <div style="
+                        border: 1px dashed #999;
+                        min-height: 50px;
+                        padding: 10px;
+                    ">
+                    </div>
+
+                </t>
+
+            </t>
+
+        </t>
+
+    </template>
+</odoo>
