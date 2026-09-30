@@ -60,6 +60,50 @@ class SifChangeLockDateWizard(models.TransientModel):
             rec.draft_entry_count = count
             rec.has_draft_entries = count > 0
 
+    def action_clear_sale_lock_date(self):
+        self.ensure_one()
+        self.write({'sale_lock_date': False})
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+        }
+
+    def action_clear_purchase_lock_date(self):
+        self.ensure_one()
+        self.write({'purchase_lock_date': False})
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+        }
+
+    def action_clear_user_lock_date(self):
+        self.ensure_one()
+        self.write({'user_lock_date': False})
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+        }
+
+    def action_clear_fiscalyear_lock_date(self):
+        self.ensure_one()
+        self.write({'fiscalyear_lock_date': False})
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+        }
+
     def action_review_draft_entries(self):
         self.ensure_one()
         dates = [d for d in [self.sale_lock_date, self.purchase_lock_date, self.user_lock_date, self.fiscalyear_lock_date] if d]
@@ -79,15 +123,6 @@ class SifChangeLockDateWizard(models.TransientModel):
 
     def action_save_lock_dates(self):
         self.ensure_one()
-        # Validasi Hard Lock: tidak boleh dimundurkan jika sudah ada hard lock sebelumnya
-        old_hard_lock = self.company_id.fiscalyear_lock_date
-        if old_hard_lock and self.fiscalyear_lock_date and self.fiscalyear_lock_date < old_hard_lock:
-            raise UserError(_(
-                'Tanggal Hard Lock (%s) tidak boleh dimundurkan dari tanggal yang sudah terkunci sebelumnya (%s).'
-            ) % (self.fiscalyear_lock_date.strftime('%d/%m/%Y'), old_hard_lock.strftime('%d/%m/%Y')))
-        if old_hard_lock and not self.fiscalyear_lock_date:
-            raise UserError(_('Tanggal Hard Lock tidak dapat dihapus setelah ditetapkan.'))
-
         self.company_id.write({
             'sale_lock_date': self.sale_lock_date,
             'purchase_lock_date': self.purchase_lock_date,
