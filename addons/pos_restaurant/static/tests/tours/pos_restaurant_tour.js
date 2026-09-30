@@ -1440,6 +1440,19 @@ registry.category("web_tour.tours").add("test_floating_order_name_change_partner
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_reprint_button_visibility_on_md_size", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickOrderButton(true),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickReprintButton(true),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_guest_count_defaults_to_table_seats", {
     steps: () =>
         [

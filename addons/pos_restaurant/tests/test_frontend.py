@@ -1077,6 +1077,11 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_add_new_table_number_with_multi_floor', login="pos_admin")
 
+    def test_reprint_button_visibility_on_md_size(self):
+        self.browser_size = '820x1180'  # browser size for iPad air
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_reprint_button_visibility_on_md_size', login="pos_user")
+
     def test_floating_order_name_change_partner(self):
         # Create partners
         self.env['res.partner'].create([
