@@ -25,13 +25,41 @@
                     <field name="company_id" invisible="1" />
                     <field name="has_draft_entries" invisible="1" />
                     
-                    <field name="sale_lock_date" string="Lock Sales" />
-                    <field name="purchase_lock_date" string="Lock Purchases" />
+                    <label for="sale_lock_date" string="Lock Sales" />
+                    <div class="d-flex align-items-center gap-2">
+                        <field name="sale_lock_date" class="oe_inline" />
+                        <button name="action_clear_sale_lock_date" type="object" 
+                                class="btn btn-sm btn-outline-danger py-0 px-2 d-flex align-items-center gap-1" 
+                                invisible="not sale_lock_date" 
+                                title="Batal pilih / kosongkan kunci penjualan">
+                            <i class="fa fa-times" />
+                            <span>Batal Kunci</span>
+                        </button>
+                    </div>
+
+                    <label for="purchase_lock_date" string="Lock Purchases" />
+                    <div class="d-flex align-items-center gap-2">
+                        <field name="purchase_lock_date" class="oe_inline" />
+                        <button name="action_clear_purchase_lock_date" type="object" 
+                                class="btn btn-sm btn-outline-danger py-0 px-2 d-flex align-items-center gap-1" 
+                                invisible="not purchase_lock_date" 
+                                title="Batal pilih / kosongkan kunci pembelian">
+                            <i class="fa fa-times" />
+                            <span>Batal Kunci</span>
+                        </button>
+                    </div>
                     
                     <label for="user_lock_date" string="Lock Everything" />
                     <div class="d-flex align-items-center gap-2">
                         <field name="user_lock_date" class="oe_inline" />
-                        <span class="text-muted fst-italic small">but allow exceptions</span>
+                        <span class="text-muted fst-italic small me-1">but allow exceptions</span>
+                        <button name="action_clear_user_lock_date" type="object" 
+                                class="btn btn-sm btn-outline-danger py-0 px-2 d-flex align-items-center gap-1" 
+                                invisible="not user_lock_date" 
+                                title="Batal pilih / kosongkan kunci semua transaksi">
+                            <i class="fa fa-times" />
+                            <span>Batal Kunci</span>
+                        </button>
                     </div>
                 </group>
 
@@ -41,7 +69,17 @@
                         Need an irreversible lock to ensure inalterability, for all users?
                     </div>
                     <group class="mb-0">
-                        <field name="fiscalyear_lock_date" string="Hard Lock" placeholder="Not locked" />
+                        <label for="fiscalyear_lock_date" string="Hard Lock" />
+                        <div class="d-flex align-items-center gap-2">
+                            <field name="fiscalyear_lock_date" class="oe_inline" placeholder="Not locked" />
+                            <button name="action_clear_fiscalyear_lock_date" type="object" 
+                                    class="btn btn-sm btn-outline-danger py-0 px-2 d-flex align-items-center gap-1" 
+                                    invisible="not fiscalyear_lock_date" 
+                                    title="Batal pilih tanggal Hard Lock">
+                                <i class="fa fa-times" />
+                                <span>Batal Pilih</span>
+                            </button>
+                        </div>
                     </group>
                 </div>
 
