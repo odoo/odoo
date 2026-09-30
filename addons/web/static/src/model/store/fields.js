@@ -2,13 +2,21 @@
  * Field declarations for store models.
  *
  * A field factory returns a plain descriptor tagged with {@link FIELD}. It is
- * typed as returning the field's *value* type, so that a class field such as
- * `name = fields.Char()` is typed as a string on records, while the store reads
- * the descriptor once at setup time (records never run class field
+ * typed as the field signal records expose, so that a class field such as
+ * `name = fields.Char()` is typed as `FieldSignal<string | false>`, while the
+ * store reads the descriptor once at setup time (records never run class field
  * initializers).
  */
 
 export const FIELD = Symbol("field");
+
+/**
+ * What a record exposes for each field: call it to read (tracked), `set` to
+ * write (a local write).
+ *
+ * @template T
+ * @typedef {{ (): T; set(value: any): void }} FieldSignal
+ */
 
 /**
  * @typedef {"char" | "text" | "html" | "integer" | "float" | "monetary" | "boolean"
@@ -99,75 +107,75 @@ export function normalizeField(name, def, index) {
 export const fields = {
     /**
      * @param {FieldOptions} [options]
-     * @returns {string | false}
+     * @returns {FieldSignal<string | false>}
      */
     Char: (options) => declare("char", options),
     /**
      * @param {FieldOptions} [options]
-     * @returns {string | false}
+     * @returns {FieldSignal<string | false>}
      */
     Text: (options) => declare("text", options),
     /**
      * @param {FieldOptions} [options]
-     * @returns {string | false}
+     * @returns {FieldSignal<string | false>}
      */
     Html: (options) => declare("html", options),
     /**
      * @param {FieldOptions} [options]
-     * @returns {number}
+     * @returns {FieldSignal<number>}
      */
     Integer: (options) => declare("integer", options),
     /**
      * @param {FieldOptions} [options]
-     * @returns {number}
+     * @returns {FieldSignal<number>}
      */
     Float: (options) => declare("float", options),
     /**
      * @param {FieldOptions} [options]
-     * @returns {number}
+     * @returns {FieldSignal<number>}
      */
     Monetary: (options) => declare("monetary", options),
     /**
      * @param {FieldOptions} [options]
-     * @returns {boolean}
+     * @returns {FieldSignal<boolean>}
      */
     Boolean: (options) => declare("boolean", options),
     /**
      * @param {FieldOptions} [options]
-     * @returns {string | false}
+     * @returns {FieldSignal<string | false>}
      */
     Date: (options) => declare("date", options),
     /**
      * @param {FieldOptions} [options]
-     * @returns {string | false}
+     * @returns {FieldSignal<string | false>}
      */
     Datetime: (options) => declare("datetime", options),
     /**
      * @param {FieldOptions & { selection?: [string, string][] }} [options]
-     * @returns {string | false}
+     * @returns {FieldSignal<string | false>}
      */
     Selection: (options) => declare("selection", options),
     /**
      * @param {FieldOptions} [options]
-     * @returns {any}
+     * @returns {FieldSignal<any>}
      */
     Json: (options) => declare("json", options),
     /**
      * @param {string} relation
      * @param {RelationalFieldOptions} [options]
-     * @returns {import("./model").Model | null}
+     * @returns {FieldSignal<import("./model").Model | null>}
      */
     Many2one: (relation, options) => declare("many2one", { relation, ...options }),
     /**
      * @param {string} relation
      * @param {RelationalFieldOptions} [options]
-     * @returns {import("./model").Model[]}
+     * @returns {FieldSignal<import("./model").Model[]>}
      */
     One2many: (relation, options) => declare("one2many", { relation, ...options }),
     /**
      * @param {string} relation
      * @param {RelationalFieldOptions} [options]
-     * @returns {import("./model").Model[]}
+     * @returns {FieldSignal<import("./model").Model[]>}
      */
     Many2many: (relation, options) => declare("many2many", { relation, ...options }),
 };

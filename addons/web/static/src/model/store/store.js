@@ -5,6 +5,7 @@ import {
     CHANGES,
     DELETED,
     FLAGS,
+    HANDLES,
     ID,
     MODEL,
     Model,
@@ -27,7 +28,7 @@ import {
  *  fields: StoreField[];
  *  fieldsByName: Record<string, StoreField>;
  *  tracked: boolean;
- *  reactivity: "field" | "record" | "model" | "none";
+ *  reactivity: "field" | "model";
  *  records: Map<number | string, Model>;
  *  indexes: Map<string, Map<any, Model>>;
  *  atom: ReturnType<typeof signal>;
@@ -42,24 +43,21 @@ import {
 // Reactivity
 //-----------------------------------------------------------------------------
 
+// Values are not stored in signals: signals are empty "ticks" used to
+// subscribe (read) and to wake subscribers (trigger). Values are computed on
+// read from plain storage (see `read`).
+
 /**
  * @param {Model} rec
  * @param {StoreField} field
  */
 function track(rec, field) {
     const model = rec[MODEL];
-    switch (model.reactivity) {
-        case "field": {
-            const atoms = (rec[ATOMS] ||= []);
-            (atoms[field.index] ||= signal(0))();
-            break;
-        }
-        case "record":
-            (rec[ATOMS] ||= signal(0))();
-            break;
-        case "model":
-            model.atom();
-            break;
+    if (model.reactivity === "model") {
+        model.atom();
+    } else {
+        const atoms = (rec[ATOMS] ||= []);
+        (atoms[field.index] ||= signal(0))();
     }
 }
 
@@ -69,23 +67,33 @@ function track(rec, field) {
  */
 function notify(rec, field) {
     const model = rec[MODEL];
-    switch (model.reactivity) {
-        case "field": {
-            const atom = rec[ATOMS]?.[field.index];
-            if (atom) {
-                signal.trigger(atom);
-            }
-            break;
+    if (model.reactivity === "model") {
+        signal.trigger(model.atom);
+    } else {
+        const atom = rec[ATOMS]?.[field.index];
+        if (atom) {
+            signal.trigger(atom);
         }
-        case "record":
-            if (rec[ATOMS]) {
-                signal.trigger(rec[ATOMS]);
-            }
-            break;
-        case "model":
-            signal.trigger(model.atom);
-            break;
     }
+}
+
+/**
+ * The function a record exposes for a field: call it to read, `set` to write.
+ * Created on first access and cached on the record, so that it is stable.
+ *
+ * @param {Model} rec
+ * @param {StoreField} field
+ * @returns {import("./fields").FieldSignal<any>}
+ */
+function getFieldSignal(rec, field) {
+    const handles = (rec[HANDLES] ||= []);
+    let fieldSignal = handles[field.index];
+    if (!fieldSignal) {
+        fieldSignal = () => read(rec, field);
+        fieldSignal.set = (value) => writeField(rec, field, value);
+        handles[field.index] = fieldSignal;
+    }
+    return fieldSignal;
 }
 
 //-----------------------------------------------------------------------------
@@ -828,6 +836,7 @@ export class RecordStore {
         rec[VALUES] = new Array(model.fields.length);
         rec[CHANGES] = null;
         rec[ATOMS] = null;
+        rec[HANDLES] = null;
         rec[FLAGS] = flags;
         rec[PARENT] = null;
         model.records.set(id, rec);
@@ -901,7 +910,10 @@ export class RecordStore {
             normalizeField(fieldName, def, index)
         );
 
-        // per-store subclass: holds the accessors, so that stores don't share state
+        if (!["field", "model"].includes(ModelClass._reactivity)) {
+            throw new Error(`Invalid _reactivity "${ModelClass._reactivity}" on model "${name}"`);
+        }
+        // per-store subclass: holds the field getters, so that stores don't share state
         const Record = class extends ModelClass {};
         /** @type {ModelMeta} */
         const model = {
@@ -925,10 +937,7 @@ export class RecordStore {
             }
             Object.defineProperty(Record.prototype, field.name, {
                 get() {
-                    return read(this, field);
-                },
-                set(value) {
-                    writeField(this, field, value);
+                    return getFieldSignal(this, field);
                 },
             });
         }
@@ -1057,6 +1066,7 @@ export class Draft {
         rec[VALUES] = new Array(model.fields.length);
         rec[CHANGES] = null;
         rec[ATOMS] = null;
+        rec[HANDLES] = null;
         rec[FLAGS] = NEW;
         rec[PARENT] = null;
         this.created.set(id, rec);
@@ -1145,6 +1155,7 @@ export class Draft {
             fork[VALUES] = null;
             fork[CHANGES] = null;
             fork[ATOMS] = null;
+            fork[HANDLES] = null;
             fork[FLAGS] = 0;
             fork[PARENT] = rec;
             this.forks.set(rec, fork);
