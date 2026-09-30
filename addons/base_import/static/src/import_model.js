@@ -92,7 +92,6 @@ export class BaseImportModel {
         this.fields = [];
         this.columns = [];
         this.importMessages = [];
-        this._importOptions = {};
 
         this.importTemplates = [];
 
@@ -147,7 +146,12 @@ export class BaseImportModel {
             },
         };
 
-        this.fieldsToHandle = {};
+        // Errors reported by the import, by identity. They outlive the run that
+        // reported them: an error the user chose a way out of stays in sight,
+        // as the record of what was decided and the way back to change it.
+        this.errors = {};
+        // name of the record each row was about, to help locating the errors
+        this.resultNames = [];
 
         this.languagesInstalled = [];
 
@@ -175,31 +179,11 @@ export class BaseImportModel {
 
     get importOptions() {
         const tempImportOptions = {
-            import_skip_records: [],
-            import_set_empty_fields: [],
-            fallback_values: {},
             name_create_enabled_fields: {},
         };
         for (const [name, option] of Object.entries(this.importOptionsValues)) {
             tempImportOptions[name] = option.value;
         }
-
-        for (const key in this.fieldsToHandle) {
-            const value = this.fieldsToHandle[key];
-            if (value) {
-                if (value.optionName === "import_skip_records") {
-                    tempImportOptions.import_skip_records.push(key);
-                } else if (value.optionName === "import_set_empty_fields") {
-                    tempImportOptions.import_set_empty_fields.push(key);
-                } else if (value.optionName === "name_create_enabled_fields") {
-                    tempImportOptions.name_create_enabled_fields[key] = true;
-                } else if (value.optionName === "fallback_values") {
-                    tempImportOptions.fallback_values[key] = value.value;
-                }
-            }
-        }
-
-        this._importOptions = tempImportOptions;
         return tempImportOptions;
     }
 
@@ -257,6 +241,10 @@ export class BaseImportModel {
         this.handleInterruption = false;
         this._updateComments();
         this.importMessages = [];
+        // this run reports anew every error that is still there
+        for (const error of Object.values(this.errors)) {
+            error.outdated = true;
+        }
 
         const startRow = this.importOptions.skip;
         const importRes = {
@@ -300,6 +288,16 @@ export class BaseImportModel {
             }
         }
 
+        // an error the user did not choose a way out of is gone for good once
+        // the server stops reporting it; the others stay in sight, along with
+        // the correction that made them go away
+        for (const [key, error] of Object.entries(this.errors)) {
+            if (error.outdated && !error.resolution) {
+                delete this.errors[key];
+            }
+        }
+        this._dispatchErrors();
+
         if (!importRes.hasError) {
             if (!isTest && importRes.nextrow) {
                 this._addMessage("warning", [
@@ -327,6 +325,9 @@ export class BaseImportModel {
     async updateData(fileChanged = false) {
         if (fileChanged) {
             this.importOptionsValues.sheet.value = "";
+            // the corrections were chosen for the previous file's errors
+            this.errors = {};
+            this.resultNames = [];
         }
         this.importMessages = [];
 
@@ -345,14 +346,7 @@ export class BaseImportModel {
         return { res, error: res.error };
     }
 
-    async setOption(optionName, value, fieldName) {
-        if (fieldName) {
-            this.fieldsToHandle[fieldName] = {
-                optionName,
-                value,
-            };
-            return;
-        }
+    async setOption(optionName, value) {
         this.importOptionsValues[optionName].value = value;
         if (this.importOptionsValues[optionName].reloadParse) {
             return this.updateData();
@@ -373,8 +367,25 @@ export class BaseImportModel {
     }
 
     setColumnField(column, fieldInfo) {
+        if (column.fieldInfo) {
+            // the errors of the field being replaced, and whatever was chosen
+            // to recover from them, are moot
+            this._forgetErrors(column.fieldInfo.fieldPath);
+        }
         column.fieldInfo = fieldInfo;
         this._updateComments(column);
+    }
+
+    /**
+     * Record how the user wants to recover from an error, to be applied by the
+     * next run of the import.
+     *
+     * @param {Object} error as reported by the server
+     * @param {Object|false} resolution `{ action: "empty"|"set", value }`,
+     *  or false to revert to reporting the error
+     */
+    setErrorResolution(error, resolution) {
+        error.resolution = resolution;
     }
 
     setColumnLanguage(column, language) {
@@ -412,7 +423,11 @@ export class BaseImportModel {
             this.id,
             importRes.fields,
             importRes.columns,
-            this.formattedImportOptions,
+            // the corrections belong to the import request, not to the options
+            // the panel displays: keeping them apart means choosing a way out
+            // of an error does not invalidate every component that watches the
+            // options
+            { ...this.formattedImportOptions, ...this._getErrorResolutions() },
         ];
         const { ids, messages, nextrow, name, error, binary_filenames } = await this._callImport(
             isTest,
@@ -515,77 +530,157 @@ export class BaseImportModel {
     }
 
     _handleImportErrors(messages, name) {
+        this.resultNames = name || [];
         if (messages[0].not_matching_error) {
-            this._addMessage(messages[0].type, [messages[0].message]);
+            // a validation error is raised before any record was built: there
+            // is no line to point at, but the offending value, if any, can
+            // still be corrected on its own column
+            const [error] = this._registerErrors(messages);
+            if (error.value !== undefined && this._findErrorColumn(error)) {
+                this.notificationService.add(_t("Import failed: see errors below"), {
+                    type: "danger",
+                    autocloseDelay: 4000,
+                });
+            } else {
+                this._addMessage(error.type, [error.message]);
+            }
             return true;
         }
 
-        const sortedMessages = this._groupErrorsByField(messages);
-        if (sortedMessages[0]) {
-            this._addMessage(sortedMessages[0].type, [sortedMessages[0].message]);
-            delete sortedMessages[0];
-        } else {
+        const errors = this._registerErrors(this._mergeErrors(messages));
+        // a global error is about the import as a whole: there is neither a
+        // line to leave out nor a value to correct
+        const globalErrors = errors.filter((error) => error.record === undefined);
+        for (const error of globalErrors) {
+            this._addMessage(error.type, [error.message]);
+        }
+        if (!globalErrors.length) {
             this.notificationService.add(_t("Import failed: see errors below"), {
                 type: "danger",
                 autocloseDelay: 4000,
             });
         }
-
-        for (const [columnFieldId, errors] of Object.entries(sortedMessages)) {
-            // Handle errors regarding specific colums.
-            const column = this.columns.find(
-                (e) => e.fieldInfo && e.fieldInfo.fieldPath === columnFieldId
-            );
-            if (column) {
-                column.resultNames = name;
-                column.errors = errors;
-            } else {
-                for (const error of errors) {
-                    // Handle errors regarding specific records.
-                    if (error.record !== undefined) {
-                        this._addMessage("danger", [
-                            error.rows.from === error.rows.to
-                                ? _t('Error at row %(row)s: "%(error)s"', {
-                                      row: error.record,
-                                      error: error.message,
-                                  })
-                                : _t("%s at multiple rows", error.message),
-                        ]);
-                    }
-                    // Handle global errors.
-                    else {
-                        this._addMessage("danger", [error.message]);
-                    }
-                }
+        // errors that could not be traced back to a mapped column are reported
+        // on their own, as there is no value of the file to correct
+        for (const error of errors) {
+            if (error.record !== undefined && !this._findErrorColumn(error)) {
+                this._addMessage("danger", [this._getErrorText(error)]);
             }
         }
     }
 
-    _groupErrorsByField(messages) {
-        const groupedErrors = {};
-        const errorsByMessage = Object.groupBy(this._sortErrors(messages), (f) => f.message || "0");
-        for (const [message, errors] of Object.entries(errorsByMessage)) {
-            if (!message.record) {
-                const foundError = errors.find((e) => e.record === undefined);
-                if (foundError) {
-                    groupedErrors[0] = foundError;
-                    continue;
-                }
+    /**
+     * The server reports an error per faulty row, whereas the same message on
+     * several rows is a single error to the user, spanning them all. Unless the
+     * offending values differ: each of them is recovered from on its own.
+     */
+    _mergeErrors(messages) {
+        const sorted = sortBy(messages, (e) => ["error", "warning", "info"].indexOf(e.type));
+        const byMessage = Object.groupBy(sorted, (e) =>
+            JSON.stringify([e.message || "", e.value ?? null])
+        );
+        return Object.values(byMessage).map((errors) => {
+            const global = errors.find((e) => e.record === undefined);
+            if (global || !errors[0].rows) {
+                return global || errors[0];
             }
-
-            errors[0].rows.to = errors[errors.length - 1].rows.to;
-            const fieldId = errors[0].field_path ? errors[0].field_path.join("/") : errors[0].field;
-            if (groupedErrors[fieldId]) {
-                groupedErrors[fieldId].push(errors[0]);
-            } else {
-                groupedErrors[fieldId] = [errors[0]];
-            }
-        }
-        return groupedErrors;
+            return { ...errors[0], rows: { ...errors[0].rows, to: errors.at(-1).rows.to } };
+        });
     }
 
-    _sortErrors(messages) {
-        return sortBy(messages, (e) => ["error", "warning", "info"].indexOf(e.priority));
+    /**
+     * Take in the errors of a run: an error that was already reported keeps
+     * whatever the user chose to recover from it, and is flagged so that being
+     * left untouched through another run can be made to stand out.
+     */
+    _registerErrors(errors) {
+        for (const error of errors) {
+            const key = this._getErrorKey(error);
+            const previous = this.errors[key];
+            error.resolution = previous?.resolution || false;
+            error.reportedBefore = Boolean(previous);
+            this.errors[key] = error;
+        }
+        return errors;
+    }
+
+    /**
+     * Identity of an error across runs: the offending value of a field, or the
+     * lines it is on when it could not be traced back to a single cell.
+     */
+    _getErrorKey(error) {
+        return error.value === undefined
+            ? `${error.message}@${error.rows?.from}`
+            : `${this._getErrorFieldPath(error)}:${error.value}`;
+    }
+
+    _getErrorFieldPath(error) {
+        return error.field_path ? error.field_path.join("/") : error.field;
+    }
+
+    _findErrorColumn(error) {
+        const fieldPath = this._getErrorFieldPath(error);
+        if (!fieldPath) {
+            // an error on no field in particular is not on a column either,
+            // and certainly not on any of the ones left unmapped
+            return undefined;
+        }
+        return this.columns.find((column) => column.fieldInfo?.fieldPath === fieldPath);
+    }
+
+    _getErrorText(error) {
+        return error.rows.from === error.rows.to
+            ? _t('Error at row %(row)s: "%(error)s"', {
+                  row: error.rows.from + 1,
+                  error: error.message,
+              })
+            : _t('Error at rows %(from)s to %(to)s: "%(error)s"', {
+                  from: error.rows.from + 1,
+                  to: error.rows.to + 1,
+                  error: error.message,
+              });
+    }
+
+    _forgetErrors(fieldPath) {
+        for (const [key, error] of Object.entries(this.errors)) {
+            if (this._getErrorFieldPath(error) === fieldPath) {
+                delete this.errors[key];
+            }
+        }
+    }
+
+    /**
+     * Lay the errors out on the columns they were reported on.
+     */
+    _dispatchErrors() {
+        const errors = Object.values(this.errors);
+        for (const column of this.columns) {
+            column.errors = column.fieldInfo
+                ? errors.filter(
+                      (error) => this._getErrorFieldPath(error) === column.fieldInfo.fieldPath
+                  )
+                : [];
+        }
+    }
+
+    /**
+     * The corrections to send along with the next run, applied on the offending
+     * value only. An error that could not be traced back to one can only be
+     * reported, and has to be sorted out in the file itself.
+     */
+    _getErrorResolutions() {
+        const resolutions = {};
+        for (const error of Object.values(this.errors)) {
+            const fieldPath = this._getErrorFieldPath(error);
+            if (!error.resolution || !fieldPath || error.value === undefined) {
+                continue;
+            }
+            resolutions[fieldPath] = {
+                ...resolutions[fieldPath],
+                [error.value]: error.resolution,
+            };
+        }
+        return { resolutions };
     }
 
     /**
@@ -767,10 +862,6 @@ export class BaseImportModel {
         }
         for (const column of this.columns) {
             column.comments = [];
-            column.errors = [];
-            column.resultNames = [];
-            column.importOptions =
-                column.fieldInfo && this.fieldsToHandle[column.fieldInfo.fieldPath];
 
             if (!column.fieldInfo) {
                 continue;
@@ -824,6 +915,7 @@ export class BaseImportModel {
                 }
             }
         }
+        this._dispatchErrors();
     }
 
     _getCSVFormattingOptions() {
