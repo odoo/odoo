@@ -270,5 +270,18 @@
                 </xpath>
             </field>
         </record>
+        <record id="task_templates_view_list_inherited" model="ir.ui.view">
+            <field name="name">project.task.template.list.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.task_templates_view_list" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='effective_hours' and @widget='timesheet_uom']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='progress' and @widget='project_task_progressbar']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>
