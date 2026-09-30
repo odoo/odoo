@@ -191,7 +191,7 @@ class EventEventTicket(models.Model):
         """ Compute a multiline description of this ticket. It is used when ticket
         description are necessary without having to encode it manually, like sales
         information. """
-        return '%s\n%s' % (self.display_name, self.event_id.display_name)
+        return self.event_id.display_name
 
     def _set_tz_context(self):
         self.ensure_one()
