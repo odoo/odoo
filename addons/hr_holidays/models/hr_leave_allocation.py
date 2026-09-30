@@ -43,7 +43,7 @@ class HrLeaveAllocation(models.Model):
     @api.model
     def default_get(self, fields):
         defaults = super().default_get(fields)
-        if self.env.context.get('default_work_entry_type_id'):
+        if self.env.context.get('default_work_entry_type_id') or 'work_entry_type_id' not in fields:
             return defaults
         employee = defaults.get('employee_id')
         country = self.env['hr.employee'].browse(employee).company_id.country_id or self.env.company.country_id
