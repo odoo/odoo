@@ -3063,7 +3063,13 @@ class AccountMove(models.Model):
                 round_from_tax_lines = False
             elif any(line not in base_lines for line, values in move_base_lines_values_before.items() if values['tax_ids']):
                 # Removed a base line affecting the taxes.
-                round_from_tax_lines = any_field_has_changed(move_tax_lines_values_before, tax_lines)
+                # A new currency rate changes the balance of the tax lines: this is not a manual edit of the taxes.
+                rate_changed = field_has_changed(moves_values_before, move, 'invoice_currency_rate')
+                round_from_tax_lines = any_field_has_changed(
+                    move_tax_lines_values_before,
+                    tax_lines,
+                    fields=('amount_currency', 'analytic_distribution') if rate_changed else None,
+                )
             elif changed_lines := list(get_changed_lines(move_base_lines_values_before, base_lines)):
                 # A base line has been modified.
                 round_from_tax_lines = (
