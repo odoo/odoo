@@ -112,6 +112,10 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
         return this.isEventViewable || super.hasFooter;
     }
 
+    isHtmlDescriptionWithIcon(fieldInfo, fieldType) {
+        return fieldInfo.name === "description" && fieldInfo.options.icon && fieldType === "html";
+    }
+
     async changeAttendeeStatus(selectedStatus) {
         const record = this.props.record;
         if (record.attendeeStatus === selectedStatus) {
