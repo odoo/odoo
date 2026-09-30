@@ -89,7 +89,7 @@ class ResCompany(models.Model):
     def stock_value(self, accounts_by_product=None, at_date=None):
         self.ensure_one()
         value_by_account: dict = defaultdict(float)
-        if not accounts_by_product:
+        if accounts_by_product is None:
             accounts_by_product = self.with_context(prefetch_fields=False)._get_accounts_by_product()
         for product, accounts in accounts_by_product.items():
             account = accounts['valuation']
@@ -99,7 +99,7 @@ class ResCompany(models.Model):
 
     def stock_accounting_value(self, accounts_by_product=None, at_date=None):
         self.ensure_one()
-        if not accounts_by_product:
+        if accounts_by_product is None:
             accounts_by_product = self._get_accounts_by_product()
         account_data = defaultdict(float)
         stock_valuation_accounts_ids = {accounts['valuation'].id for accounts in accounts_by_product.values()}
@@ -157,6 +157,17 @@ class ResCompany(models.Model):
             products = self.env['product.product'].with_company(self).search_fetch(
                 self._get_valuation_product_domain(), ['categ_id'],
             )
+
+        templates = products.product_tmpl_id
+        templates.fetch([
+            'categ_id', 'company_id',
+            'property_account_income_id', 'property_account_expense_id',
+        ])
+        templates.categ_id.fetch([
+            'parent_id',
+            'property_account_income_categ_id', 'property_account_expense_categ_id',
+            'property_stock_valuation_account_id',
+        ])
 
         accounts_by_product = {}
         for product in products:
