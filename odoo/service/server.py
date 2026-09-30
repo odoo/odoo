@@ -895,6 +895,8 @@ class PreforkServer(CommonServer):
                     (now - worker.watchdog_time) >= worker.watchdog_timeout:
                 self.logger.error("%s (%s) timeout after %ss",
                     worker.__class__.__name__, pid, worker.watchdog_timeout)
+                self.worker_kill(pid, signal.SIGQUIT)  # dump stack
+                time.sleep(0.1)
                 self.worker_kill(pid, signal.SIGKILL)
 
     def process_spawn(self):
