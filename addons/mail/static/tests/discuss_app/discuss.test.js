@@ -2684,6 +2684,41 @@ test("Read-only channel member has bottom banner instead of composer", async () 
     await contains(".o-mail-Composer", { count: 0 });
 });
 
+test("Read-only channel info is only editable by channel admins", async () => {
+    const pyEnv = await startServer();
+    const memberPartnerId = pyEnv["res.partner"].create({ name: "Member User" });
+    pyEnv["res.users"].create({
+        partner_id: memberPartnerId,
+        login: "test_member",
+        password: "test_member",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        description: "Read-only channel description",
+        group_public_id: false,
+        is_readonly: true,
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+            Command.create({ partner_id: memberPartnerId, channel_role: "admin" }),
+        ],
+    });
+    await start({
+        authenticateAs: { login: "test_member", password: "test_member" },
+    });
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussContent-threadName:enabled");
+    await contains(".o-mail-DiscussContent-threadDescription:enabled");
+    await contains(".o-mail-DiscussContent-header a[title='Change Picture']");
+    const memberId = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", memberPartnerId],
+    ])[0];
+    pyEnv["discuss.channel.member"].write([memberId], { channel_role: false });
+    await contains(".o-mail-DiscussContent-threadName:disabled");
+    await contains(".o-mail-DiscussContent-threadDescription:disabled");
+    await contains(".o-mail-DiscussContent-header a[title='Change Picture']", { count: 0 });
+});
+
 test("Read-only channel admin has composer", async () => {
     const pyEnv = await startServer();
     const adminPartnerId = pyEnv["res.partner"].create({ name: "Admin User" });
