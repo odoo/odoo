@@ -98,7 +98,7 @@ async function fetchInternalMetaData(url) {
     }
 
     const result = await keepLastPromise
-        .add(fetch(urlParsed))
+        .add(fetch(urlParsed, { headers: { "Odoo-Link-Preview": "True" } }))
         .then((response) => ({
             contentPromise: response.text(),
             type: response.headers.get("content-type"),
