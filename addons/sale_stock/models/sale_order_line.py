@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, time, timedelta
 from collections import defaultdict
+from datetime import datetime, time, timedelta
 
-from odoo import api, fields, models, _
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import float_compare, float_is_zero
-from odoo.exceptions import UserError
 
 
 class SaleOrderLine(models.Model):
@@ -426,16 +426,22 @@ class SaleOrderLine(models.Model):
 
     def _get_product_catalog_lines_data(self, *args, **kwargs) -> dict:
         """Override of `sale` to add the delivered quantity."""
-        return {
-            **super()._get_product_catalog_lines_data(*args, **kwargs),
-            "deliveredQty": sum(
-                self.mapped(
-                    lambda line: line.product_uom_id._compute_quantity(
-                        qty=line.qty_delivered, to_unit=self._get_product_uom()
-                    )
+        res = super()._get_product_catalog_lines_data(*args, **kwargs)
+        if self.product_id.type == "service":
+            # Delivered qty only has to be sent to restrict quantity update of delivered goods
+            return res
+
+        delivered_qty = sum(
+            self.mapped(
+                lambda line: line.product_uom_id._compute_quantity(
+                    qty=line.qty_delivered, to_unit=self._get_product_uom()
                 )
-            ),
-        }
+            )
+        )
+        if delivered_qty > 0:
+            res["deliveredQty"] = delivered_qty
+
+        return res
 
     def _is_returnable(self):
         """Return whether this line contains a product eligible for return."""

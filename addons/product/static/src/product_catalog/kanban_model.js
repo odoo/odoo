@@ -77,7 +77,6 @@ export class ProductCatalogKanbanModel extends RelationalModel {
                 quantity: Math.floor(Math.random() * 10),
                 min_qty: 0,
                 price: Math.floor(Math.random() * 500) + 100,
-                productType: "consu",
                 readOnly: false,
                 uomDisplayName: _t("Units"),
                 uomId: 1,

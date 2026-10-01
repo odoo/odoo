@@ -20,7 +20,7 @@ class ProductCatalogLineMixin(models.AbstractModel):
 
         lines_data = {
             **parent_record._get_product_catalog_uom_data(self.product_id, uom=catalog_uom),
-            "readOnly": parent_record._is_readonly() or len(self) > 1,
+            **({"readOnly": True} if len(self) > 1 else {}),
             "quantity": sum(
                 self.mapped(
                     lambda line: line._get_product_uom()._compute_quantity(
