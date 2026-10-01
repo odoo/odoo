@@ -1,4 +1,5 @@
-import { useForwardRefsToParent } from "@mail/utils/common/hooks";
+import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
+import { useForwardRefsToParent, useMaybePlugin } from "@mail/utils/common/hooks";
 import { Component, htmlEscape, markup, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -12,6 +13,7 @@ export class NotificationMessage extends Component {
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
         this.htmlEscape = htmlEscape;
         this.store = useService("mail.store");
+        this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
         this.props = useProps({
             message: t.instanceOf(this.store["mail.message"]),
             messageRefs: t.instanceOf(Map).optional(),
@@ -26,7 +28,7 @@ export class NotificationMessage extends Component {
         this.store.handleClickOnLink(ev, this.props.thread);
         const { oeType, oeId } = ev.target.dataset;
         if (oeType === "highlight") {
-            await this.env.messageHighlight?.highlightMessage(
+            await this.messageHighlight?.highlightMessage(
                 this.store["mail.message"].insert({
                     id: Number(oeId),
                     res_id: this.props.thread.id,

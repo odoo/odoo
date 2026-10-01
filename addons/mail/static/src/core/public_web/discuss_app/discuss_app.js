@@ -1,5 +1,6 @@
 import { EffectPlugin } from "@web/core/effects/effect_plugin";
-import { propSignal, useMessageScrolling } from "@mail/utils/common/hooks";
+import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
+import { propSignal } from "@mail/utils/common/hooks";
 import { useSubEnv } from "@web/owl2/utils";
 
 import {
@@ -7,6 +8,7 @@ import {
     computed,
     onMounted,
     onWillUnmount,
+    providePlugins,
     signal,
     t,
     useListener,
@@ -41,14 +43,11 @@ export class Discuss extends Component {
             optional: true,
         });
         this.menuState = computed(() => this.store.discuss.sidebarState);
-        this.messageHighlight = useMessageScrolling({ thread: () => this.thread });
+        providePlugins([MessageHighlightPlugin], { thread: () => this.thread });
         this.orm = useService("orm");
         this.effect = usePlugin(EffectPlugin);
         this.ui = useService("ui");
-        useSubEnv({
-            inDiscussApp: true,
-            messageHighlight: this.messageHighlight,
-        });
+        useSubEnv({ inDiscussApp: true });
         useListener(
             window,
             "keydown",

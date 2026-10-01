@@ -3,9 +3,9 @@ import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { Call } from "@mail/discuss/call/common/call";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
-import { useMessageScrolling } from "@mail/utils/common/hooks";
+import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 
-import { Component, onMounted, onWillUnmount, types, useProps } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, providePlugins, types, useProps } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { user } from "@web/core/user";
@@ -52,11 +52,10 @@ export class Meeting extends Component {
             },
         });
         this.threadActions = useThreadActions({ thread: () => this.channel.thread });
-        this.messageHighlight = useMessageScrolling({ thread: () => this.channel.thread });
+        providePlugins([MessageHighlightPlugin], { thread: () => this.channel.thread });
         this.messageSearch = useMessageSearch(this.channel.thread);
         useSubEnv({
             hasPreviousActionPanel: () => this.threadActions.actionStack.length > 0,
-            messageHighlight: this.messageHighlight,
             messageSearch: this.messageSearch,
         });
         onMounted(() => (this.store.meetingViewOpened = true));

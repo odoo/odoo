@@ -1,9 +1,10 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
-import { propComputed, useMessageScrolling } from "@mail/utils/common/hooks";
+import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
+import { propComputed } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, proxy, signal, t, useOnChange } from "@odoo/owl";
+import { Component, onMounted, providePlugins, proxy, signal, t, useOnChange } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { router } from "@web/core/browser/router";
@@ -34,7 +35,7 @@ export class Chatter extends Component {
              */
             thread: undefined,
         });
-        this.messageHighlight = useMessageScrolling({
+        providePlugins([MessageHighlightPlugin], {
             thread: () => this.state.thread,
             messageFetchRouteParams: () => this.messageFetchRouteParams,
         });
@@ -104,7 +105,6 @@ export class Chatter extends Component {
         return {
             inChatter: this.state,
             messageFetchRouteParams: this.extraMessageFetchRouteParams,
-            messageHighlight: this.messageHighlight,
         };
     }
 
