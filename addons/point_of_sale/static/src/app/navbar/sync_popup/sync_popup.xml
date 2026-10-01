@@ -2,38 +2,48 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.SyncPopup">
-        <Dialog class="'p-0'">
+        <Dialog contentClass="'p-0'">
             <t t-set-slot="header">
-                <h4 class="modal-title">Records to synchronize</h4>
-                <div class="total-orders fw-bolder">
-                    Total <t t-esc="pos.data.network.unsyncData.length"/>
+                <div>
+                    <h3 class="modal-title">Records to synchronize</h3>
+                    <div class="total-orders">
+                        <div class="total-orders fw-bolder">
+                            Total <t t-esc="this.pos.unsyncedOrderCount"/>
+                        </div>
+                    </div>
                 </div>
             </t>
             <div class="payment-methods-overview overflow-auto">
                 <div class="w-100">
-                    <t t-foreach="this.pos.data.network.unsyncData" t-as="data" t-key="data_index">
-                        <div class="d-flex align-item-center border rounded mb-1">
-                            <div class="col wide p-2 d-flex flex-column">
-                                <span class="fw-bolder">Model</span>
-                                <span t-esc="data.args[0].model"/>
+                    <t t-set="pendingOrderLists" t-value="this.pos.getPendingOrder()"/>
+
+                    <t t-foreach="pendingOrderLists" t-as="category" t-key="category_index">
+                        <t t-foreach="pendingOrderLists[category]" t-as="order" t-key="order_index">
+                            <div t-if="order.state == 'paid' or order.state == 'done' or order.finalized" class="d-flex align-item-center border rounded mb-1">
+                                <div class="col wide p-2 d-flex flex-column">
+                                    <span class="fw-bolder">Status</span>
+                                    <span t-if="category_index == 0">Deleted</span>
+                                    <span t-elif="category_index == 1">Created</span>
+                                    <span t-else="">Updated</span>
+                                </div>
+                                <div class="col wide p-2 d-flex flex-column">
+                                    <span class="fw-bolder">Name</span>
+                                    <span t-esc="order.name"/>
+                                </div>
+                                <div class="col wide p-2 d-flex flex-column">
+                                    <span class="fw-bolder">Date</span>
+                                    <span t-esc="order.date_order"/>
+                                </div>
+                                <div class="col wide p-2 d-flex flex-column">
+                                    <span class="fw-bolder">Retry</span>
+                                    <i class="fa fa-refresh cursor-pointer" aria-hidden="true" t-on-click="() => this.trySync(order.id)"></i>
+                                </div>
+                                <div class="col p-2 d-flex flex-column">
+                                    <span class="fw-bolder">Delete</span>
+                                    <i class="fa fa-trash cursor-pointer" aria-hidden="true" t-on-click="() => this.delete(order.id)"></i>
+                                </div>
                             </div>
-                            <div class="col wide p-2 d-flex flex-column">
-                                <span class="fw-bolder">Date</span>
-                                <span t-esc="data.date.toFormat('dd/MM/yyyy HH:mm:ss')"/>
-                            </div>
-                            <div class="col wide p-2 d-flex flex-column">
-                                <span class="fw-bolder">Count</span>
-                                <span t-esc="this.getCount(data.args[0])"/>
-                            </div>
-                            <div class="col wide p-2 d-flex flex-column">
-                                <span class="fw-bolder">Retry</span>
-                                <span t-esc="data.try"/>
-                            </div>
-                            <div class="col p-2 d-flex flex-column">
-                                <span class="fw-bolder">Delete</span>
-                                <i class="fa fa-trash cursor-pointer" aria-hidden="true" t-on-click="() => this.delete(data.uuid)"></i>
-                            </div>
-                        </div>
+                        </t>
                     </t>
                 </div>
             </div>
