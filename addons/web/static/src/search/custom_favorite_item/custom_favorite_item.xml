@@ -2,7 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CustomFavoriteItem">
-        <AccordionItem class="'o_add_favorite text-truncate'" description.translate="Save search">
+        <div t-if="this.showSaveFavorite">
+            <div class="mb-2 fs-5">
+                <i class="oi oi-filled me-2 text-info" data-icon="bookmark"></i>
+                <h5 class="o_dropdown_title d-inline">Save current search</h5>
+            </div>
             <div class="d-flex flex-column gap-2">
                 <input type="text"
                     class="o_input my-1"
@@ -23,7 +27,7 @@
                     </button>
                 </div>
             </div>
-        </AccordionItem>
+        </div>
     </t>
 
 </templates>
