@@ -16,7 +16,7 @@ class MailPoll(models.Model):
     start_message_id = fields.Many2one(
         "mail.message", ondelete="cascade", required=True, index=True
     )
-    winning_option_id = fields.Many2one("mail.poll.option", compute="_compute_winning_option_ids")
+    winning_option_id = fields.Many2one("mail.poll.option", compute="_compute_winning_option_ids", store=True)
 
     _unique_start_message_id = models.Constraint(
         "UNIQUE(start_message_id)", "A start message can only be linked to one poll."

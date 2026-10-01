@@ -1,3 +1,5 @@
+import { MessageSearchState } from "@mail/core/common/message_search_hook";
+
 import { Component, types, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
@@ -9,6 +11,7 @@ export class PollResult extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = useProps({
+            messageSearch: types.instanceOf(MessageSearchState).optional(),
             poll: types.instanceOf(this.store["mail.poll"]),
         });
     }
