@@ -10,6 +10,6 @@ patch(Message.prototype, {
      * @type {ReturnType<typeof import("@mail/discuss/core/public_web/sub_channel_preview").subChannelPreviewOnClickType>["type"]}
      */
     openLinkedSubChannel(ev, { channelAtRender }) {
-        channelAtRender.open();
+        channelAtRender.openSubChannel();
     },
 });

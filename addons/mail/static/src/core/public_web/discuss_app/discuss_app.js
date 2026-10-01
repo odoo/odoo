@@ -1,5 +1,5 @@
 import { EffectPlugin } from "@web/core/effects/effect_plugin";
-import { propSignal, useMessageScrolling } from "@mail/utils/common/hooks";
+import { propSignal } from "@mail/utils/common/hooks";
 import { useSubEnv } from "@web/owl2/utils";
 
 import {
@@ -40,15 +40,12 @@ export class Discuss extends Component {
         this.channel = propSignal("channel", t.instanceOf(this.store["discuss.channel"]), {
             optional: true,
         });
+        this.sideChannel = computed(() => this.store.discuss.sideChannel);
         this.menuState = computed(() => this.store.discuss.sidebarState);
-        this.messageHighlight = useMessageScrolling({ thread: () => this.thread });
         this.orm = useService("orm");
         this.effect = usePlugin(EffectPlugin);
         this.ui = useService("ui");
-        useSubEnv({
-            inDiscussApp: true,
-            messageHighlight: this.messageHighlight,
-        });
+        useSubEnv({ inDiscussApp: true });
         useListener(
             window,
             "keydown",

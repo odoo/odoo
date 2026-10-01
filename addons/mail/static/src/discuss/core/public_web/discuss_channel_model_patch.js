@@ -16,6 +16,7 @@ const discussChannelPatch = {
             },
             { immediate: true }
         );
+        this.discussAppAsSideChannel = fields.One("DiscussApp", { inverse: "sideChannel" });
         this.lastSubChannelLoaded = fields.One("discuss.channel");
         this.loadSubChannelsDone = false;
         this.messagingMenuTabs = fields.Many("MessagingMenuTab", {
@@ -92,7 +93,22 @@ const discussChannelPatch = {
             name,
         });
         this.store.insert(store_data);
-        this.store["discuss.channel"].get(sub_channel).open({ focus: true });
+        this.store["discuss.channel"].get(sub_channel).openSubChannel();
+    },
+    /**
+     * Open this sub-channel as side channel when its parent is displayed in the
+     * discuss app, otherwise open it normally.
+     */
+    openSubChannel() {
+        if (
+            this.store.discuss.isActive &&
+            !this.store.env.services.ui.isSmall &&
+            this.parent_channel_id?.thread?.eq(this.store.discuss.thread)
+        ) {
+            this.store.discuss.sideChannel = this;
+        } else {
+            this.open({ focus: true });
+        }
     },
     get hasSubChannelFeature() {
         return ["channel", "group"].includes(this.channel_type);
