@@ -43,10 +43,10 @@ import { CTYPES } from "../utils/content_types";
 import { withSequence } from "@html_editor/utils/resource";
 import { compareListTypes } from "@html_editor/main/list/utils";
 import {
-    hasTouch,
     isBrowserChrome,
     isBrowserSafari,
     isMacOS,
+    isMobileOS,
 } from "@web/core/browser/feature_detection";
 import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils/selection";
 
@@ -1335,7 +1335,7 @@ export class DeletePlugin extends Plugin {
         if (argsForDelete) {
             this.delete(...argsForDelete);
             ev.preventDefault();
-            if (isBrowserChrome() && hasTouch()) {
+            if (isBrowserChrome() && isMobileOS()) {
                 this.preventDefaultDeleteAndroidChrome(ev);
             }
         }
