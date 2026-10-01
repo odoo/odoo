@@ -29,7 +29,7 @@ export class DebugMenuBasic extends Component {
     }
 
     async loadGroupedItems() {
-        const items = await this.debugContext.getItems(this.env);
+        const items = await this.debugContext.getItems();
         const sections = Object.groupBy(items, (item) => item.section || "");
         this.sectionEntries = sortBy(
             Object.entries(sections),

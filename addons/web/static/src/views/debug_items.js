@@ -1,17 +1,16 @@
-import { _t } from "@web/core/l10n/translation";
+import { Component, onWillStart, proxy, t, usePlugin, useProps, xml } from "@odoo/owl";
 import { CopyButton } from "@web/core/copy_button/copy_button";
-import { Dialog } from "@web/core/dialog/dialog";
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { editModelDebug } from "@web/core/debug/debug_utils";
-import { formatDate, formatDateTime, deserializeDateTime } from "@web/core/l10n/dates";
+import { Dialog } from "@web/core/dialog/dialog";
+import { deserializeDateTime, formatDate, formatDateTime } from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
+import { ORM } from "@web/core/orm_plugin";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { formatMany2one } from "@web/views/fields/formatters";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
-
-import { Component, onWillStart, usePlugin, proxy, t, useProps, xml } from "@odoo/owl";
 import { serializeDate, serializeDateTime } from "../core/l10n/dates";
-import { ORM } from "@web/core/orm_plugin";
 
 const debugRegistry = registry.category("debug");
 

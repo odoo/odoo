@@ -15,7 +15,7 @@ export class DebugMenu extends DebugMenuBasic {
         useCommand(
             _t("Debug tools..."),
             async () => {
-                const items = await debugContext.getItems(this.env);
+                const items = await debugContext.getItems();
                 let index = 0;
                 const defaultCategories = items
                     .filter((item) => item.type === "separator")

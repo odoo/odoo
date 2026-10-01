@@ -44,7 +44,7 @@ class DebugContextPlugin extends Plugin {
         };
     }
 
-    async getItems(env) {
+    async getItems() {
         const accessRights = await getAccessRights();
         return [...this.categories.entries()]
             .flatMap(([category, contexts]) =>
@@ -53,7 +53,7 @@ class DebugContextPlugin extends Plugin {
                     .getAll()
                     .map((factory) =>
                         this.scope.run(() =>
-                            factory(Object.assign({ env, accessRights }, ...contexts))
+                            factory(Object.assign({ accessRights }, ...contexts))
                         )
                     )
             )
