@@ -23,7 +23,7 @@ from werkzeug import urls
 
 from odoo import _, api, models, fields
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import posix_to_ldml
+from odoo.tools import BinaryBytes, posix_to_ldml
 from odoo.tools.json import scriptsafe as json_safe
 from odoo.tools.misc import file_open, get_lang, babel_locale_parse
 
@@ -407,7 +407,7 @@ class IrQwebFieldImage(models.AbstractModel):
                 image = I.open(f)
                 image.load()
                 f.seek(0)
-                return f.read()
+                return BinaryBytes(f.read())
         except Exception:  # noqa: BLE001
             logger.exception("Failed to load local image %r", url)
             return None
@@ -439,7 +439,7 @@ class IrQwebFieldImage(models.AbstractModel):
         # luck PIL will remove some of it?
         out = io.BytesIO()
         image.save(out, image.format)
-        return out.getvalue()
+        return BinaryBytes(out.getvalue())
 
 
 class IrQwebFieldMonetary(models.AbstractModel):
