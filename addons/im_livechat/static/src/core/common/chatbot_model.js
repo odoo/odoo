@@ -182,6 +182,8 @@ export class Chatbot extends Record {
             // The latch below only guards against stale server writes: replaying a
             // step is a client-side decision, no write can bring the answer back.
             this.currentStep.selectedAnswerEver = null;
+            // Welcome steps are reused across sessions, reset their completion state.
+            this.currentStep.completed = false;
         }
     }
 

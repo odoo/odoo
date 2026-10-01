@@ -400,7 +400,8 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
         self.livechat_channel.rule_ids = self.env["im_livechat.channel.rule"].create(
             {"chatbot_script_id": chatbot_script.id},
         )
-        self.start_tour("/", "website_livechat.chatbot_restart_on_feedback_tour")
+        tests.new_test_user(self.env, login="portal_user", groups="base.group_portal")
+        self.start_tour("/", "website_livechat.chatbot_restart_on_feedback_tour", login="portal_user")
 
     @mute_logger("odoo.http")
     def test_chatbot_stop_when_agent_joins(self):
