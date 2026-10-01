@@ -1592,7 +1592,7 @@ class HrLeave(models.Model):
         holiday_sudo.add_follower(self.employee_id.id)
         if self.validation_type == 'manager':
             holiday_sudo.message_subscribe(partner_ids=self.employee_id.leave_manager_id.partner_id.ids)
-        if self.validation_type == 'no_validation' or self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+        if self.validation_type == 'no_validation' or (self.env.user.has_group('hr_holidays.group_hr_holidays_user') and self.employee_id != self.env.user.employee_id):
             # Automatic validation should be done in sudo, because user might not have the rights to do it by himself
             # skip_time_rules: bulk trigger below, once resource.calendar.leaves exist for all auto-approved leaves
             holiday_sudo.with_context(skip_time_rules=True).action_approve()
