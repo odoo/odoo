@@ -154,4 +154,13 @@
     --o-bs-zindex-offcanvas: #{$zindex-offcanvas};
     --o-bs-zindex-popover: #{$zindex-popover};
     --o-bs-zindex-tooltip: #{$zindex-tooltip};
+
+    /* Contrast colors that Bootstrap computes with color-contrast() */
+    --o-bs-gray-100-contrast: #{color-contrast($gray-100)};
+    --o-bs-gray-200-contrast: #{color-contrast($gray-200)};
+    --o-bs-success-contrast: #{color-contrast($success)};
+    --o-bs-warning-contrast: #{color-contrast($warning)};
+    --o-component-active-border-contrast: #{color-contrast($o-component-active-border)};
+    --o-gray-400-contrast: #{color-contrast($o-gray-400)};
+    --o-view-background-color-contrast: #{color-contrast($o-view-background-color)};
 }
