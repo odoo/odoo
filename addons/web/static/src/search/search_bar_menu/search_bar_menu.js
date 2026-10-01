@@ -226,7 +226,7 @@ export class SearchBarMenu extends Component {
     get otherItems() {
         const registryMenus = [];
         for (const item of favoriteMenuRegistry.getAll()) {
-            if ("isDisplayed" in item ? this.scope.run(() => item.isDisplayed(this.env)) : true) {
+            if ("isDisplayed" in item ? this.scope.run(() => item.isDisplayed()) : true) {
                 registryMenus.push({
                     Component: item.Component,
                     groupNumber: item.groupNumber,
