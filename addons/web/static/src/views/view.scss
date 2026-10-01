@@ -72,7 +72,7 @@
     background-color: map-get($grays, '200');
     height: var(--Status-size, 12px);
     width: var(--Status-size, 12px);
-    box-shadow: inset 0 0 0 1px rgba($black, .2);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--o-bs-black) 20%, transparent);
 
     &.o_status_green {
         background-color: map-get($theme-colors, "success");

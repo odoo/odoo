@@ -66,7 +66,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            box-shadow: 0 0 200px rgba(#111827, .9) inset;
+            box-shadow: 0 0 200px rgba(17, 24, 39, .9) inset;
             z-index: 1;
         }
     }
@@ -247,7 +247,7 @@
             opacity: 0;
             animation: loaderTextFading 6s infinite;
             mix-blend-mode: plus-lighter;
-            color: rgba(white, .5);
+            color: rgba(255, 255, 255, .5);
 
             @keyframes loaderTextFading {
                 0%, 100% {
@@ -259,11 +259,11 @@
             }
             &:nth-child(2) {
                 animation-delay: 2s;
-                color: rgba(mix(cyan, white), .5);
+                color: color-mix(in srgb, color-mix(in srgb, cyan, white) 50%, transparent);
             }
             &:nth-child(3) {
                 animation-delay: 4s;
-                color: rgba(mix(magenta, white), .5);;
+                color: color-mix(in srgb, color-mix(in srgb, magenta, white) 50%, transparent);;
                 transform: translate(-10%, -25%) scale(.9);
             }
         }

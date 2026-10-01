@@ -120,7 +120,7 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
 
     &:not(:disabled):hover {
         border-color: var(--o-brand-primary);
-        background-color: mix($o-brand-primary, $o-view-background-color, 5%);
+        background-color: color-mix(in srgb, var(--o-brand-primary) 5%, var(--o-view-background-color));
     }
 
     &:disabled {

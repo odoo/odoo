@@ -19,10 +19,10 @@
 
     & button.o-discussCallTheme.o-hasBtnBg:not(.o-tag-DANGER):not(.o-tag-SUCCESS):not(.o-tag-PRIMARY) {
         background-color: var(--gray-200);
-        border: 1px solid rgba(white, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
 
         &:hover {
-            background-color: mix($gray-200, white, 90%);
+            background-color: color-mix(in srgb, var(--gray-200) 90%, white);
         }
     }
 }

@@ -44,15 +44,15 @@
 
         &.fc-event-mirror, &.fc-dragging {
             --o-bg-opacity: .25;
-            border-color: rgba($o-action, .5);
+            border-color: color-mix(in srgb, var(--o-action) 50%, transparent);
 
             .fc-bg {
-                background-color: rgba($o-action, var(--o-bg-opacity));
+                background-color: color-mix(in srgb, var(--o-action) calc(var(--o-bg-opacity) * 100%), transparent);
             }
         }
 
         &.fc-event-mirror {
-            background-color: rgba($o-action, var(--o-bg-opacity));
+            background-color: color-mix(in srgb, var(--o-action) calc(var(--o-bg-opacity) * 100%), transparent);
         }
 
         &.o_past_event::after {
@@ -61,7 +61,7 @@
             inset: 0;
             display: block;
             z-index: 3;
-            background-color: rgba($o-view-background-color, var(--o-overlay-opacity));
+            background-color: color-mix(in srgb, var(--o-view-background-color) calc(var(--o-overlay-opacity) * 100%), transparent);
         }
 
         &:not(.o_event_dot):not(.fc-dragging).o_cw_custom_highlight {
@@ -147,7 +147,7 @@
         /* ======================================================== */
         --fc-page-bg-color: var(--o-view-background-color);
         --fc-border-color: var(--o-cw-border-color);
-        --fc-non-business-color: #{rgba($o-gray-300, .5)};
+        --fc-non-business-color: color-mix(in srgb, var(--o-gray-300) 50%, transparent);
 
         .fc-body > tr > .fc-widget-content {
             border-top: 0;
@@ -191,7 +191,7 @@
         }
 
         .o_calendar_disabled:not(.fc-more-popover) {
-            background-color: var(--o-calendar-disabled-bg, rgba($gray-200, .5));
+            background-color: var(--o-calendar-disabled-bg, color-mix(in srgb, var(--gray-200) 50%, transparent));
         }
 
         .fc-daygrid-day-bottom {

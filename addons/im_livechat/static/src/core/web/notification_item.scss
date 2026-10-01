@@ -3,11 +3,11 @@
         --background-color: RGBA(#{to-rgb($purple)}, .1);
 
         &:hover {
-            --background-color: #{mix($o-webclient-background-color, $purple, 80%)};
+            --background-color: color-mix(in srgb, var(--o-webclient-background-color) 80%, var(--purple));
         }
 
         &.o-active {
-            --background-color: #{mix($o-webclient-background-color, $purple, 90%)};
+            --background-color: color-mix(in srgb, var(--o-webclient-background-color) 90%, var(--purple));
         }
     }
 
