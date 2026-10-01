@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import time
+
 from odoo.tests import TransactionCase
 from odoo.exceptions import UserError
+from odoo.tools import mute_logger
 from unittest.mock import patch
 
 import odoo.tests
@@ -62,3 +65,37 @@ class TestPartnerGeoLocalization(TransactionCase):
                 'message': "No match found for Test A, Other Address address(es).",
             })
             mock_send.reset_mock()
+
+    def _clear_osm_rate_limiter(self):
+        if hasattr(self.env.registry, '_geocoding_last_calls'):
+            self.env.registry._geocoding_last_calls.pop('osm', None)
+
+    @mute_logger('odoo.addons.base_geolocalize.models.base_geocoder')
+    def test_01_rate_limit_trigger(self):
+        """ Test that calling the service twice immediately raises UserError """
+        self._clear_osm_rate_limiter()
+        self.env["base.geocoder"]._check_geocoding_rate_limit('osm')
+
+        with self.assertRaises(UserError):
+            self.env["base.geocoder"]._check_geocoding_rate_limit('osm')
+
+    def test_02_system_parameter_respect(self):
+        """ Test that the limiter respects the 'geocoder.osm.minimum_delta' parameter """
+        self._clear_osm_rate_limiter()
+        self.env['ir.config_parameter'].sudo().set_param('geocoder.osm.minimum_delta', 0.0)
+
+        # This should not raise an error because delta is 0
+        self.env["base.geocoder"]._check_geocoding_rate_limit('osm')
+        self.env["base.geocoder"]._check_geocoding_rate_limit('osm')
+
+    def test_03_cooldown_passing(self):
+        """ Test that after waiting the delta, the request is allowed again """
+        self._clear_osm_rate_limiter()
+        self.env['ir.config_parameter'].sudo().set_param('geocoder.osm.minimum_delta', 0.1)
+        self.env["base.geocoder"]._check_geocoding_rate_limit('osm')
+        time.sleep(0.15)
+
+        try:
+            self.env["base.geocoder"]._check_geocoding_rate_limit('osm')
+        except UserError:
+            self.fail("_check_geocoding_rate_limit raised UserError even after waiting!")
