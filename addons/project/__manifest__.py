@@ -196,7 +196,7 @@
 
             'web/static/src/env.js',
 
-            'base/static/src/scss/res_partner.scss',
+            'base/static/src/scss/res_partner.css',
 
             # Form style should be computed before
             'web/static/src/views/form/button_box/*.scss',

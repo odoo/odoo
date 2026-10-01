@@ -22,7 +22,7 @@
     'assets': {
         'web.assets_backend': [
             'project_todo/static/src/components/**/*',
-            'project_todo/static/src/scss/todo.scss',
+            'project_todo/static/src/scss/todo.css',
             'project_todo/static/src/views/**/*',
             'project_todo/static/src/core/web/**/*',
             'project_todo/static/src/webclient/**/*',
