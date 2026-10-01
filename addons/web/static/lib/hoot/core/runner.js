@@ -1777,15 +1777,14 @@ export class Runner {
             return;
         }
         const error = ensureError(ev);
+        if (!isInstanceOf(ev, Event)) {
+            ev = new ErrorEvent("error", { error });
+        }
         if (handledErrors.has(error)) {
             // Already handled
             return ev.preventDefault();
         }
         handledErrors.add(error);
-
-        if (!isInstanceOf(ev, Event)) {
-            ev = new ErrorEvent("error", { error });
-        }
 
         mockPreventDefault(ev);
 
