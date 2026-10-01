@@ -233,12 +233,13 @@ patch(AttendeeCalendarModel.prototype, {
     },
 
     mapPartnersToColor(data) {
-        return (data.filterSections.partner_ids?.filters || [])
-            .filter((filter) => filter.type !== "all" && filter.value)
-            .reduce(
-                (map, partner) => ({ ...map, [partner.value]: getColor(partner.colorIndex) }),
-                {}
-            );
+        const map = {};
+        for (const filter of data.filterSections.partner_ids?.filters || []) {
+            if (filter.type !== "all" && filter.value) {
+                map[filter.value] = getColor(filter.colorIndex);
+            }
+        }
+        return map;
     },
 
     /**
