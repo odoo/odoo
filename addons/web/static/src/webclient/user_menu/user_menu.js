@@ -31,7 +31,7 @@ export class UserMenu extends Component {
     getElements() {
         const sortedItems = userMenuRegistry
             .getAll()
-            .map((element) => this.scope.run(() => element(this.env)))
+            .map((element) => this.scope.run(element))
             .sort((x, y) => {
                 const xSeq = x.sequence ? x.sequence : 100;
                 const ySeq = y.sequence ? y.sequence : 100;

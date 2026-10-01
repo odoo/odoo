@@ -1,14 +1,16 @@
-import { registry } from "@web/core/registry";
+import { usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 
-function mySubscriptionItem(env) {
+function mySubscriptionItem() {
+    const action = usePlugin(ActionPlugin);
     return {
         type: "item",
         id: "mysubscription_user_menu",
         description: _t("My Subscription"),
         callback: () => {
-            const actionService = env.services.action;
-            actionService.doAction("mysubscription.dashboard", {
+            action.doAction("mysubscription.dashboard", {
                 clearBreadcrumbs: true,
             });
         },
