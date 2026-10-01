@@ -83,7 +83,7 @@ export class SettingsFormController extends formView.Controller {
         onPatched(removeLocalStateGetter);
 
         this.searchBarToggler = useSearchBarToggler();
-        if (this.searchState.value) {
+        if (this.searchState.value && !this.searchBarToggler.state.showSearchBar) {
             this.searchBarToggler.props.toggleSearchBar();
         }
         this.initialApp = "module" in this.props.context ? this.props.context.module : "";

@@ -1,6 +1,6 @@
 import { onWillRender } from "@web/owl2/utils";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { Component, onWillStart, usePlugin, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, computed, onWillStart, usePlugin, proxy, signal, t, useProps } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -27,12 +27,22 @@ export class OfflineSearchBar extends Component {
     setup() {
         this.ui = useService("ui");
         this.inputRef = this.autofocusRef;
+        this.visibilityState = proxy(this.props.toggler?.state || { showSearchBar: true });
         if (!(this.env.config.disableSearchBarAutofocus || !this.props.autofocus)) {
-            // only force the focus on touch devices on small screens
-            useAutofocus({ ref: this.autofocusRef, mobile: this.ui.isSmall });
+            // only force the focus on touch devices on small screens, and there only
+            // once the user opened the search bar with the toggler: focusing it when
+            // it is displayed by default would open the virtual keyboard
+            const waitForToggle = this.props.toggler && this.ui.isSmall;
+            useAutofocus({
+                ref: waitForToggle
+                    ? computed(() =>
+                          this.visibilityState.manuallyToggled ? this.autofocusRef() : null
+                      )
+                    : this.autofocusRef,
+                mobile: this.ui.isSmall,
+            });
         }
         this.searchBarDropdownState = useDropdownState();
-        this.visibilityState = proxy(this.props.toggler?.state || { showSearchBar: true });
 
         useHotkey("backspace", () => this.onBackspace(), {
             area: () => this.inputRef(),
