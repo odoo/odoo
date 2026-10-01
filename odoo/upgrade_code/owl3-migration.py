@@ -1136,6 +1136,7 @@ SERVICES_MAPPING = {
     "overlay": ['OverlayPlugin', '@web/core/overlay/overlay_plugin'],
     "popover": ['PopoverPlugin', '@web/core/popover/popover_plugin'],
     "presence": ['PresencePlugin', '@bus/services/presence_plugin'],
+    "scss_error_display": ['ScssErrorDisplayPlugin', '@web/core/errors/scss_error_plugin'],
     "signInfo": ['SignInfoPlugin', '@sign/services/sign_info_plugin'],
     "sortable": ['SortablePlugin', '@web/core/utils/sortable_plugin'],
     "simple_notification": ['SimpleNotificationPlugin', '@bus/simple_notification_plugin'],
