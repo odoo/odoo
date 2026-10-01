@@ -48,3 +48,37 @@ test("validateOrder", async () => {
     expect(order.new_coupon_info[0].code).toMatch(/^[A-Za-z0-9]+$/);
     expect(order.new_coupon_info[0].program_name).toBe(loyaltyProgram.name);
 });
+
+test("validateOrder with a reward line without coupon", async () => {
+    const store = await setupPosEnv();
+    const models = store.models;
+    const order = store.addNewOrder();
+    const fastPaymentMethod = order.config.fast_payment_method_ids[0];
+    const loyaltyProgram = models["loyalty.program"].get(1);
+    const card = models["loyalty.card"].get(1);
+
+    order.uiState.couponPointChanges = {
+        [card.id]: { coupon_id: card.id, program_id: loyaltyProgram.id, points: 100 },
+    };
+
+    // A promotion reward line of a draft loaded from the server: its
+    // temporary negative coupon id is not serialized.
+    await addProductLineToOrder(store, order, {
+        is_reward_line: true,
+        reward_id: models["loyalty.reward"].get(4),
+        points_cost: 0,
+    });
+
+    const validation = new OrderPaymentValidation({
+        pos: store,
+        orderUuid: store.getOrder().uuid,
+        fastPaymentMethod: fastPaymentMethod,
+    });
+
+    validation.isOrderValid = async () => true;
+
+    await validation.validateOrder();
+    await tick();
+
+    expect(card.points).toBe(110);
+});
