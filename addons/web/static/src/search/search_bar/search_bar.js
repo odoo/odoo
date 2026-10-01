@@ -1,4 +1,10 @@
+<<<<<<< 8f43be9fd8c66dd62f21e7c14c481ce6fa6db2ef
 import { Component, computed, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
+||||||| 53882d6696307bd63504f79ae8aa421b7468a333
+import { Component, proxy, signal, status, t, usePlugin, useProps } from "@odoo/owl";
+=======
+import { Component, computed, proxy, signal, status, t, usePlugin, useProps } from "@odoo/owl";
+>>>>>>> dcca15a8a9df12147fafae6a1bdde4084cf4396b
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Domain } from "@web/core/domain";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
