@@ -392,6 +392,15 @@ export class PaymentScreen extends Component {
     get orderTotalDue() {
         return this.currentOrder.orderCurrency.convertFormatted(this.currentOrder.totalDue);
     }
+
+    hasPaymentForCurrency(paymentMethod, currency) {
+        return (
+            this.currentOrder.orderCurrency === currency &&
+            this.currentOrder.payment_ids.some(
+                (payment) => payment.payment_method_id === paymentMethod
+            )
+        );
+    }
 }
 
 registry.category("pos_pages").add("PaymentScreen", {
