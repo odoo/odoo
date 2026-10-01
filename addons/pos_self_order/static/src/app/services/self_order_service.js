@@ -359,7 +359,6 @@ export class SelfOrder extends Reactive {
 
         let order = this.currentOrder;
         const orderHasChanges = Object.keys(order.changes).length > 0;
-
         // Stand number page will recall this function after the stand number is set
         if (
             service === "table" &&
@@ -749,6 +748,7 @@ export class SelfOrder extends Reactive {
                     order: this.currentOrder.serializeForORM(),
                     access_token: this.access_token,
                     table_identifier: tableIdentifier, // Always trust URL one, is the one user scanned
+                    partner_data: this.currentOrder.uiState.partnerData,
                 }
             );
             const result = this.models.connectNewData(data);

@@ -11,6 +11,7 @@ patch(PosOrder.prototype, {
             ...this.uiState,
             lineChanges: this.uiState.lineChanges || {},
             receiptReady: false,
+            partnerData: this.uiState.partnerData || null,
         };
     },
     get unsentLines() {
