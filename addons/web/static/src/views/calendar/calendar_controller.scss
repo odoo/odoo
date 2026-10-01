@@ -2,10 +2,10 @@
 /* Animations */
 @keyframes backgroundfade {
     from {
-        background-color: rgba($info, 0.5);
+        background-color: color-mix(in srgb, var(--info) 50%, transparent);
     }
     to {
-        background-color: rgba($info, 0.1);
+        background-color: color-mix(in srgb, var(--info) 10%, transparent);
     }
 }
 
@@ -53,8 +53,8 @@
         width: var(--o-datetime-picker-reduced-width);
         height: stretch;
         min-height: 200px; /* Fallback for firefox < 146 */
-        border: 1px solid rgba($o-enterprise-action-color, 0.4);
-        background-color: mix($o-enterprise-action-color, $o-view-background-color, 10%);
+        border: 1px solid color-mix(in srgb, var(--o-enterprise-action-color) 40%, transparent);
+        background-color: color-mix(in srgb, var(--o-enterprise-action-color) 10%, var(--o-view-background-color));
     }
 
     .o_calendar_sidepanel {

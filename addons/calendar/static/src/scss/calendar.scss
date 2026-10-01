@@ -107,7 +107,7 @@
         inset: 0;
         display: block;
         z-index: 3;
-        background-color: rgba($o-view-background-color, var(--o-overlay-opacity));
+        background-color: color-mix(in srgb, var(--o-view-background-color) calc(var(--o-overlay-opacity) * 100%), transparent);
     }
 }
 

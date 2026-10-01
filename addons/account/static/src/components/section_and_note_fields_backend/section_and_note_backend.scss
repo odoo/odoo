@@ -20,8 +20,8 @@ table.o_section_and_note_list_view {
         }
 
         &.o_is_line_section {
-            --table-hover-bg: #{rgba($body-emphasis-color, .1)};
-            --table-bg-type: #{rgba($body-emphasis-color, .08)};
+            --table-hover-bg: color-mix(in srgb, var(--emphasis-color) 10%, transparent);
+            --table-bg-type: color-mix(in srgb, var(--emphasis-color) 8%, transparent);
             --ListRenderer-data-row-focused-striped-bg: var(--table-bg-type);
 
             font-weight: var(--o-bs-font-weight-bolder);
@@ -38,8 +38,8 @@ table.o_section_and_note_list_view {
         }
 
         &.o_is_line_subsection {
-            --table-hover-bg: #{rgba($body-emphasis-color, .05)};
-            --table-bg-type: #{rgba($body-emphasis-color, .03)};
+            --table-hover-bg: color-mix(in srgb, var(--emphasis-color) 5%, transparent);
+            --table-bg-type: color-mix(in srgb, var(--emphasis-color) 3%, transparent);
 
             font-weight: var(--o-bs-font-weight-bold);
         }

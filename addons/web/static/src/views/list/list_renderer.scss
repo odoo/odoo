@@ -1,9 +1,9 @@
 /* ------- List renderer ------- */
 .o_list_renderer {
-    --ListRenderer-table-padding-x: #{$table-cell-padding-x-sm};
+    --ListRenderer-table-padding-x: var(--o-bs-table-cell-padding-x-sm);
     --ListRenderer-thead-padding-y: #{map-get($spacers, 4)};
-    --ListRenderer-thead-bg-color: linear-gradient(to bottom, #{$o-webclient-background-color}, #{rgba($o-webclient-background-color, .75)} );
-    --ListRendererGrouped__th-bg-color: #{rgba($o-view-background-color, .5)};
+    --ListRenderer-thead-bg-color: linear-gradient(to bottom, #{$o-webclient-background-color}, color-mix(in srgb, var(--o-webclient-background-color) 75%, transparent) );
+    --ListRendererGrouped__th-bg-color: color-mix(in srgb, var(--o-view-background-color) 50%, transparent);
     --ListRenderer-thead-border-end-color: var(--border-color);
     --ListRenderer-tfoot-bg-color: #{$o-list-footer-bg-color};
     --sticky-header-zindex: 1;
@@ -40,18 +40,18 @@
     }
 
     .o_list_view & {
-        --ListRenderer-thead-padding-y: #{$table-cell-padding-y-sm};
-        --ListRenderer-table-padding-x: #{$o-horizontal-padding};
+        --ListRenderer-thead-padding-y: var(--o-bs-table-cell-padding-y-sm);
+        --ListRenderer-table-padding-x: var(--o-horizontal-padding);
 
         @include media-only(print) {
             --ListRenderer-table-padding-x: 0;
 
-            --Tag-font-size: #{$font-size-sm};
+            --Tag-font-size: var(--o-bs-font-size-sm);
         }
     }
 
     .o_list_table {
-        --table-bg: #{$o-view-background-color};
+        --table-bg: var(--o-view-background-color);
 
         /* We need this to be collapse because we want to add a border on the rows */
         /* for sale order/invoice lines of type section. */
@@ -101,7 +101,7 @@
                 backdrop-filter: var(--o-backdrop-blur-sm);
 
                 @include media-only(print) {
-                    font-weight: $font-weight-bold;
+                    font-weight: var(--o-bs-font-weight-bold);
                 }
             }
 
@@ -177,7 +177,7 @@
 
             /* ------- Decrease table's inner content "visual depth" ------- */
             &:first-of-type > tr:first-child:not(.o_group_header) {
-                box-shadow: inset 0px 5px 10px -4px rgba(black, 0.15);
+                box-shadow: inset 0px 5px 10px -4px rgba(0, 0, 0, 0.15);
             }
         }
         &.o_list_computing_widths {
@@ -265,7 +265,7 @@
         .o_keyboard_navigation {
             th:focus-within, td:focus-within {
                 --table-accent-bg: none;
-                background-color: $o-form-lightsecondary;
+                background-color: var(--o-form-lightsecondary);
                 outline: none;
             }
         }
@@ -276,7 +276,7 @@
         .o_selected_row {
             th:focus-within, td:focus-within {
                 --table-accent-bg: none;
-                background-color: $o-view-background-color;
+                background-color: var(--o-view-background-color);
             }
         }
 
@@ -542,7 +542,7 @@
     .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
         &.o_required_modifier,
         > .o_column_group_field.o_required_modifier:not(.o_readonly_modifier) {
-            border-bottom: 1px solid $o-input-border-required;
+            border-bottom: 1px solid var(--o-input-border-required);
         }
 
         &.o_invalid_cell:not(:focus-within),
