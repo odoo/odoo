@@ -1,5 +1,4 @@
-import { onWillRender, render } from "@web/owl2/utils";
-import { Component, signal, t, onMounted, onPatched, useListener, useProps } from "@odoo/owl";
+import { Component, signal, t, onMounted, onPatched, useListener, useProps, proxy, useEffect } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -67,7 +66,12 @@ export class StatusBarField extends Component {
 
     setup() {
         // Properties
-        this.items = {};
+        this.items = proxy({
+            inline: [],
+            before: [],
+            after: [],
+            folded: [],
+        });
         this.uiService = useService("ui");
 
         // Resize listeners
@@ -75,26 +79,20 @@ export class StatusBarField extends Component {
         const adjust = () => {
             status = "adjusting";
             this.adjustVisibleItems();
-            render(this);
         };
 
-        const adjustIfNeeded = () => {
+        onMounted(() => {
             if (status === "shouldAdjust") {
                 adjust();
             }
-        };
-        onMounted(adjustIfNeeded);
-        onPatched(adjustIfNeeded);
+        });
 
-        let forceRecomputeItems = false;
-        onWillRender(() => {
-            if (status !== "adjusting" || forceRecomputeItems) {
-                Object.assign(this.items, this.getSortedItems());
-                status = "shouldAdjust";
-            } else {
+        onPatched(() => {
+            if (status === "shouldAdjust") {
+                adjust();
+            } else if (status === "adjusting") {
                 status = "idle";
             }
-            forceRecomputeItems = false;
         });
 
         const throttledRenderAndAdapt = useThrottleForAnimation(() => {
@@ -126,10 +124,17 @@ export class StatusBarField extends Component {
                         }
                         throw error;
                     });
-                forceRecomputeItems = true;
                 return res;
             });
         }
+
+        useEffect(() => {
+            if (this.field.type === "many2one" && !Array.isArray(this.specialData?.data)) {
+                return;
+            }
+            Object.assign(this.items, this.getSortedItems());
+            status = "shouldAdjust";
+        });
 
         // Command palette
         if (this.props.withCommand) {
@@ -236,14 +241,16 @@ export class StatusBarField extends Component {
         }
 
         // Reset items variables
-        this.items.before = [];
-        this.items.after = [...this.items.folded];
+        const before = [];
+        const after = [...this.items.folded];
         const itemsToAssign = this.getAllItems().filter((item) => !item.isFolded);
 
         if (this.uiService.isSmall && this.items.inline.length) {
             // Small screen case: only a single dropdown
             show(this.dropdownRef());
             hide(this.beforeRef(), this.afterRef(), ...itemEls);
+            this.items.before = before;
+            this.items.after = after;
             return;
         }
 
@@ -252,12 +259,12 @@ export class StatusBarField extends Component {
                 // Case 1: elements before can be hidden
                 show(this.beforeRef());
                 hide(itemsBefore.shift());
-                this.items.before.push(itemsToAssign.shift());
+                before.push(itemsToAssign.shift());
             } else if (itemsAfter.length) {
                 // Case 2: elements before are hidden, elements after can be hidden
                 show(this.afterRef());
                 hide(itemsAfter.pop());
-                this.items.after.unshift(itemsToAssign.pop());
+                after.unshift(itemsToAssign.pop());
             } else {
                 // Last resort: no elements can be hidden => fallback to single dropdown
                 show(this.dropdownRef());
@@ -265,6 +272,8 @@ export class StatusBarField extends Component {
                 break;
             }
         }
+        this.items.before = before;
+        this.items.after = after;
     }
 
     areItemsWrapping() {
