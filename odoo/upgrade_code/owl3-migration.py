@@ -1128,6 +1128,7 @@ SERVICES_MAPPING = {
     "lazy_session": ['LazySessionPlugin', '@web/webclient/lazy_session_plugin'],
     "mail.sound_effects": ['SoundEffectsPlugin', '@mail/core/common/sound_effects_plugin'],
     "mail.store": ['StorePlugin', '@mail/core/common/store_plugin'],
+    "menu": ['MenuPlugin', '@web/webclient/menus/menu_plugin'],
     "name": ['NamePlugin', '@web/core/name_plugin'],
     "notification": ['NotificationPlugin', '@web/core/notifications/notification_plugin'],
     "mobile": ['MobilePlugin', '@web_mobile/js/mobile_plugin'],
