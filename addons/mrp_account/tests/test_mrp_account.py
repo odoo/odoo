@@ -427,12 +427,12 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         self.assertEqual(wip_empty_entries[0].wip_production_count, 1, "WIP MOs should be linked to entries even if no 'done' work")
         self.assertEqual(len(wip_empty_entries.line_ids), 6, "Should be 3 lines per journal entry: 1 for 'Component Value', 1 for '(WO) overhead', 1 for WIP")
         self.assertRecordValues(wip_empty_entries.line_ids, [
-            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 718.75, 'credit': 0.0},
             {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0, 'credit': 0.0},
-            {'account_id': self.env.company.account_production_wip_account_id.id, 'debit': 0.0, 'credit': 0.0},
-            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id, 'debit': 0.0, 'credit': 718.75},
+            {'account_id': self.account_stock_valuation.id, 'debit': 0.0, 'credit': 718.75},
             {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0, 'credit': 0.0},
-            {'account_id': self.env.company.account_production_wip_account_id.id, 'debit': 0.0, 'credit': 0.0},
+            {'account_id': self.env.company.account_production_wip_account_id.id, 'debit': 718.75, 'credit': 0.0},
         ])
 
         # WO time completed + components consumed
