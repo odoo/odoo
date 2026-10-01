@@ -349,12 +349,12 @@ export function getFieldDomain(record, fieldName, domain) {
 }
 
 export function getBasicEvalContext(config) {
-    const { uid, allowed_company_ids } = config.context;
+    const { allowed_company_ids } = config.context;
     return {
         context: config.context,
-        uid,
         allowed_company_ids,
         current_company_id: user.activeCompany?.id,
+        ...user.evalContext,
     };
 }
 

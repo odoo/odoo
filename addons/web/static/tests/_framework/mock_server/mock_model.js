@@ -483,17 +483,17 @@ function getViewKey(viewType, viewId) {
 }
 
 /**
- * @param {string} data 
+ * @param {string} data
  * @returns {string}
  */
 function simpleHash(data) {
     let hash = 0;
     for (let i = 0; i < data.length; i++) {
-        hash = ((hash << 5) - hash) + data.charCodeAt(i);
+        hash = (hash << 5) - hash + data.charCodeAt(i);
         hash |= 0; // Convert to 32-bit integer
     }
     // unsigned hex
-    return (hash >>> 0).toString(16).padStart(8, '0');
+    return (hash >>> 0).toString(16).padStart(8, "0");
 }
 
 /**
@@ -590,8 +590,9 @@ function isValidFieldValue(record, fieldDef) {
             return isValidId(value, fieldDef, record);
         }
         case "binary":
-            return typeof value === "string" || (
-                typeof value === "object" && value.content !== undefined
+            return (
+                typeof value === "string" ||
+                (typeof value === "object" && value.content !== undefined)
             );
         case "properties": {
             return isObject(value);
@@ -2103,11 +2104,30 @@ export class Model extends Array {
         /** @type {typeof this.views} */
         const result = {};
 
+        const binding_actions = MockServer.current.actions.filter(
+            // In hoot, the actions are a list of objects, not real models.
+            // We can't use a "normal" reference. So in this case we do the reference by the name of the model.
+            (action) => action.binding_model_id === this._name
+        );
+
         // Determine all the models/fields used in the views
         // modelFields = {modelName: {fields: Set([...fieldNames])}}
         const modelFields = {};
         for (const [viewId, viewType] of views) {
             result[viewType] = getView(this, [viewId, viewType], kwargs);
+            if (options.toolbar) {
+                const toolbarAction = binding_actions.filter((action) =>
+                    action.binding_view_types.split(",").includes(viewType)
+                );
+                if (toolbarAction.length) {
+                    result[viewType].toolbar.action = toolbarAction.map((action) => ({
+                        id: action.id,
+                        name: action.name,
+                        binding_view_types: action.binding_view_types,
+                        binding_invisible: action.binding_invisible,
+                    }));
+                }
+            }
             for (const [modelName, fields] of Object.entries(result[viewType].models)) {
                 modelFields[modelName] ||= { fields: new Set() };
                 for (const field of fields) {
@@ -3054,7 +3074,7 @@ export class Model extends Array {
             records: this.read(
                 records.map((r) => r.id),
                 unique(["id", ...fieldNames]),
-                "web",
+                "web"
             ),
         };
         if (countLimit) {
@@ -3469,7 +3489,7 @@ export class Model extends Array {
                             result[field.name].filename = filename;
                         }
                     }
-                    if (load != 'web') {
+                    if (load != "web") {
                         result[field.name].content = content;
                     }
                     if (content) {
@@ -3537,7 +3557,7 @@ export class Model extends Array {
                             const result = this.env[modelName].web_read(
                                 id,
                                 relatedFields,
-                                makeKwArgs({ context: {...context, ...spec[fieldName].context} })
+                                makeKwArgs({ context: { ...context, ...spec[fieldName].context } })
                             );
                             record[fieldName] = result[0];
                         }
@@ -3564,7 +3584,7 @@ export class Model extends Array {
                             const [result] = this.env[model].web_read(
                                 id,
                                 relatedFields,
-                                makeKwArgs({ context: {...context, ...spec[fieldName].context} })
+                                makeKwArgs({ context: { ...context, ...spec[fieldName].context } })
                             );
                             record[fieldName] = result;
                         }
@@ -3587,7 +3607,7 @@ export class Model extends Array {
                             let result = relModel.web_read(
                                 relResIds,
                                 relatedFields,
-                                makeKwArgs({ context: {...context, ...spec[fieldName].context} })
+                                makeKwArgs({ context: { ...context, ...spec[fieldName].context } })
                             );
                             if (limit) {
                                 result = result.map((r, i) => (i < limit ? r : { id: r.id }));
@@ -3604,7 +3624,9 @@ export class Model extends Array {
                                 record[fieldName] = getRelation(field).web_read(
                                     [record[fieldName]],
                                     relatedFields,
-                                    makeKwArgs({ context: {...context, ...spec[fieldName].context} })
+                                    makeKwArgs({
+                                        context: { ...context, ...spec[fieldName].context },
+                                    })
                                 )[0];
                             }
                         }
