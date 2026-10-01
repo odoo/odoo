@@ -5199,3 +5199,14 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             1000.00,
             msg="Price should be tax included"
         )
+
+    def test_invoice_partner_display_name_ignores_partner_form_context(self):
+        """ Test that granting portal access to a contact does not add context
+            info to the invoice partner display name."""
+        self.partner_a.write({'email': 'partner_a@example.com', 'street': 'Rue du Test 1', 'vat': 'BE0477472701'})
+        invoice = self.init_invoice('out_invoice', partner=self.partner_a, amounts=[100])
+        action = self.partner_a.with_context(show_address=1, show_vat=True).get_formview_action()
+        wizard = self.env['portal.wizard'].with_context(action['context'], active_ids=self.partner_a.ids).create({})
+        wizard.user_ids.action_grant_access()
+        self.env.flush_all()
+        self.assertEqual(invoice.invoice_partner_display_name, 'partner_a')
