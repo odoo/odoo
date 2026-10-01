@@ -5,6 +5,7 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.tools import SQL
 
 
 class ProductProduct(models.Model):
@@ -52,6 +53,7 @@ class ProductProduct(models.Model):
             Domain("order_id.state", "=", "sale"),
             Domain("product_id", "in", self.ids),
             Domain("company_id", "in", self.env.companies.ids),
+            Domain.custom(to_sql=lambda table: SQL("%s > %s", table.product_uom_qty, table.qty_delivered)),
         ])
         if self.env.context.get("to_date"):
             domain = Domain.AND([
