@@ -46,3 +46,12 @@ class ResCompany(models.Model):
             if not company.resource_calendar_id.company_id:
                 company.resource_calendar_id.company_id = company.id
         return companies
+
+    def _get_company_tz(self):
+        """ Timezone of the company, else of the user, else UTC. """
+        self.ensure_one()
+        return self.tz or self.env.user.tz or 'UTC'
+
+    def _get_company_today(self):
+        """ Today's date in the timezone of the company. """
+        return fields.Date.context_today(self.with_context(tz=self._get_company_tz()))
