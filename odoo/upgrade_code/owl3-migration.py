@@ -1124,6 +1124,7 @@ SERVICES_MAPPING = {
     "discuss.upgrade": ['DiscussUpgradePlugin', '@mail/core/common/upgrade/upgrade_plugin'],
     "effect": ['EffectPlugin', '@web/core/effects/effect_plugin'],
     "frequent_emoji": ['FrequentEmojiPlugin', '@web/core/emoji_picker/frequent_emoji_plugin'],
+    "home_menu": ['HomeMenuPlugin', '@web_enterprise/webclient/home_menu/home_menu_plugin'],
     "hotkey": ['HotkeyPlugin', '@web/core/hotkeys/hotkey_plugin'],
     "lazy_session": ['LazySessionPlugin', '@web/webclient/lazy_session_plugin'],
     "mail.sound_effects": ['SoundEffectsPlugin', '@mail/core/common/sound_effects_plugin'],
