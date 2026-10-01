@@ -1,5 +1,14 @@
-import { onWillRender, render } from "@web/owl2/utils";
-import { Component, signal, t, onMounted, onPatched, useListener, useProps } from "@odoo/owl";
+import {
+    Component,
+    signal,
+    t,
+    useListener,
+    useProps,
+    computed,
+    untrack,
+    onPatched,
+    useEffect,
+} from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -64,45 +73,36 @@ export class StatusBarField extends Component {
     rootRef = signal.ref();
     afterRef = signal.ref();
     dropdownRef = signal.ref();
-    forceRecomputeItemsKey = signal(0);
+
+    allItems = computed(() => this.getAllItems());
+    adjustedItems = signal(null);
+    sortedItems = computed(() => {
+        // Dependency allItems changed, reset outdated adjustedItems
+        this.adjustedItems.set(null);
+        return this.getSortedItems();
+    });
+
+    currentLabel = computed(
+        () => this.allItems().find((item) => item.isSelected)?.label || _t("More")
+    );
+
+    itemsKey = computed(() =>
+        this.allItems()
+            .map((i) => (i.isSelected ? `__selected__${i.value}` : i.value))
+            .join(",")
+    );
+    adjustKey = signal(0);
+
+    get items() {
+        const sortedItems = this.sortedItems();
+        return this.adjustedItems() ?? sortedItems;
+    }
 
     setup() {
         // Properties
-        this.items = {};
         this.uiService = useService("ui");
-
-        // Resize listeners
-        let status = "idle";
-        const adjust = () => {
-            status = "adjusting";
-            this.adjustVisibleItems();
-            render(this);
-        };
-
-        const adjustIfNeeded = () => {
-            if (status === "shouldAdjust") {
-                adjust();
-            }
-        };
-        onMounted(adjustIfNeeded);
-        onPatched(adjustIfNeeded);
-
-        let currentItemsKey = this.forceRecomputeItemsKey();
-        onWillRender(() => {
-            const nextKey = this.forceRecomputeItemsKey();
-            if (status !== "adjusting" || nextKey !== currentItemsKey) {
-                Object.assign(this.items, this.getSortedItems());
-                status = "shouldAdjust";
-            } else {
-                status = "idle";
-            }
-            currentItemsKey = nextKey;
-        });
-
         const throttledRenderAndAdapt = useThrottleForAnimation(() => {
-            if (this.rootRef()) {
-                adjust();
-            }
+            this.adjustKey.set(this.adjustKey() + 1);
         });
         useListener(window, "resize", throttledRenderAndAdapt);
 
@@ -128,10 +128,30 @@ export class StatusBarField extends Component {
                         }
                         throw error;
                     });
-                this.forceRecomputeItemsKey.set(this.forceRecomputeItemsKey() + 1);
                 return res;
             });
+            this.specialData.data = [];
         }
+
+        let itemsKey = this.itemsKey();
+        onPatched(() => {
+            const nextItemsKey = this.itemsKey();
+            if (nextItemsKey !== itemsKey) {
+                this.adjustKey.set(this.adjustKey() + 1);
+            }
+            itemsKey = nextItemsKey;
+        });
+
+        useEffect(() => {
+            void this.adjustKey();
+            const root = this.rootRef();
+            const dropdown = this.dropdownRef();
+            const before = this.beforeRef();
+            const after = this.afterRef();
+            if (root && dropdown && before && after) {
+                this.adjustedItems.set(untrack(() => this.adjustVisibleItems(this.sortedItems())));
+            }
+        });
 
         // Command palette
         if (this.props.withCommand) {
@@ -143,7 +163,7 @@ export class StatusBarField extends Component {
                     providers: [
                         {
                             provide: () =>
-                                this.getAllItems().map((item) => ({
+                                this.allItems().map((item) => ({
                                     name: item.label,
                                     action: () => this.selectItem(item),
                                 })),
@@ -159,7 +179,7 @@ export class StatusBarField extends Component {
             useCommand(
                 _t("Move to next %s", this.field.string),
                 () => {
-                    const items = this.getAllItems();
+                    const items = this.allItems();
                     const nextIndex = items.findIndex((item) => item.isSelected) + 1;
                     this.selectItem(items[nextIndex]);
                 },
@@ -170,7 +190,7 @@ export class StatusBarField extends Component {
                         if (this.props.isDisabled) {
                             return false;
                         }
-                        const items = this.getAllItems();
+                        const items = this.allItems();
                         return items.length && !items.at(-1).isSelected;
                     },
                 }
@@ -215,7 +235,9 @@ export class StatusBarField extends Component {
      *
      * 4. If that still doesn't suffice: all items are combined in a single dropdown.
      */
-    adjustVisibleItems() {
+    adjustVisibleItems(sortedItems) {
+        // Object copy to avoid polluting a computed's output
+        sortedItems = { ...sortedItems };
         // Get all visible buttons
         const itemEls = [...this.rootRef().querySelectorAll(".o_arrow_button_wrap")];
         const selectedIndex = itemEls.findIndex((el) =>
@@ -227,7 +249,7 @@ export class StatusBarField extends Component {
         // Reset hidden elements
         show(...itemEls);
         hide(this.dropdownRef(), this.beforeRef());
-        if (this.items.folded.length) {
+        if (sortedItems.folded.length) {
             show(this.afterRef());
             itemEls.forEach((el) =>
                 el.querySelector(".o_arrow_button").classList.remove("o_first")
@@ -238,15 +260,15 @@ export class StatusBarField extends Component {
         }
 
         // Reset items variables
-        this.items.before = [];
-        this.items.after = [...this.items.folded];
-        const itemsToAssign = this.getAllItems().filter((item) => !item.isFolded);
+        sortedItems.before = [];
+        sortedItems.after = [...sortedItems.folded];
+        const itemsToAssign = this.allItems().filter((item) => !item.isFolded);
 
-        if (this.uiService.isSmall && this.items.inline.length) {
+        if (this.uiService.isSmall && sortedItems.inline.length) {
             // Small screen case: only a single dropdown
             show(this.dropdownRef());
             hide(this.beforeRef(), this.afterRef(), ...itemEls);
-            return;
+            return sortedItems;
         }
 
         while (this.areItemsWrapping()) {
@@ -254,12 +276,12 @@ export class StatusBarField extends Component {
                 // Case 1: elements before can be hidden
                 show(this.beforeRef());
                 hide(itemsBefore.shift());
-                this.items.before.push(itemsToAssign.shift());
+                sortedItems.before.push(itemsToAssign.shift());
             } else if (itemsAfter.length) {
                 // Case 2: elements before are hidden, elements after can be hidden
                 show(this.afterRef());
                 hide(itemsAfter.pop());
-                this.items.after.unshift(itemsToAssign.pop());
+                sortedItems.after.unshift(itemsToAssign.pop());
             } else {
                 // Last resort: no elements can be hidden => fallback to single dropdown
                 show(this.dropdownRef());
@@ -267,6 +289,7 @@ export class StatusBarField extends Component {
                 break;
             }
         }
+        return sortedItems;
     }
 
     areItemsWrapping() {
@@ -330,7 +353,7 @@ export class StatusBarField extends Component {
     }
 
     getCurrentLabel() {
-        return this.getAllItems().find((item) => item.isSelected)?.label || _t("More");
+        return this.currentLabel();
     }
 
     /**
@@ -351,7 +374,7 @@ export class StatusBarField extends Component {
         const before = [];
         const after = [];
         const { true: inline = [], false: folded = [] } = Object.groupBy(
-            this.getAllItems(),
+            this.allItems(),
             (item) => item.isSelected || !item.isFolded
         );
         inline.reverse(); // CSS rules account for this list to be reversed
