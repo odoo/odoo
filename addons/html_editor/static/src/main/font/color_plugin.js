@@ -83,7 +83,7 @@ export class ColorPlugin extends Plugin {
         on_collapsed_formats_removed_handlers: this.removeAllColor.bind(this),
         color_combination_providers: getColorCombinationFromClass,
         on_beforeinput_handlers: this.onBeforeInput.bind(this),
-        before_insert_handlers: this.beforeInsert.bind(this),
+        on_will_insert_handlers: this.onWillInsert.bind(this),
         on_selectionchange_handlers: this.clearPendingColors.bind(this),
         on_deleted_handlers: this.convertEmptyColorToPendingIntent.bind(this),
 
@@ -135,7 +135,7 @@ export class ColorPlugin extends Plugin {
         }
     }
 
-    beforeInsert() {
+    onWillInsert() {
         const selection = this.dependencies.selection.getEditableSelection();
         if (selection.isCollapsed) {
             this.applyPendingColors();
