@@ -113,6 +113,12 @@ class AccountMove(models.Model):
             if move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state == 'sent' and move.state != 'draft':
                 move.show_reset_to_draft_button = True
 
+    def _is_draft_disabled(self):
+        self.ensure_one()
+        if self.l10n_es_edi_is_required and self.l10n_es_edi_sii_state == 'sent':
+            return False
+        return super()._is_draft_disabled()
+
     def button_request_cancel(self):
         res = super().button_request_cancel()
         for move in self:
