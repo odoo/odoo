@@ -131,3 +131,44 @@ class TestWorkorder(TestMrpCommon):
             ],
             field_names=['operation_id'],
         )
+
+    def test_sequence_after_replanning(self):
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'uom_id': self.product_6.uom_id.id,
+            'product_qty': 1.0,
+            'allow_operation_dependencies': True,
+            'operation_ids': [
+                Command.create({'name': 'WO1', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 60, 'sequence': 1}),
+                Command.create({'name': 'WO2', 'workcenter_id': self.workcenter_2.id, 'time_cycle': 60, 'sequence': 2}),
+                Command.create({'name': 'WO3', 'workcenter_id': self.workcenter_2.id, 'time_cycle': 60, 'sequence': 3}),
+            ],
+            'bom_line_ids': [Command.create({'product_id': self.product_1.id, 'product_qty': 1})],
+        })
+
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+        })
+        mo.action_confirm()
+
+        wo1, wo2, wo3 = mo.workorder_ids.sorted('sequence')
+        wo2.blocked_by_workorder_ids = [Command.link(wo1.id)]
+        wo3.blocked_by_workorder_ids = [Command.link(wo2.id)]
+
+        mo.button_plan()
+        self.assertTrue(wo1.date_start < wo2.date_start < wo3.date_start)
+
+        # resequence work orders (imitate kanban reordering)
+        swapped_wos = wo3 + wo2
+        swapped_wos.web_resequence({'sequence': {}})
+        self.assertTrue(wo3.sequence < wo2.sequence)
+        self.assertTrue(wo3.date_start == wo2.date_start, "WO3 should have the same start date as WO2")
+
+        # update planning
+        # the sequence should change correctly again
+        mo.workorder_ids.action_replan()
+
+        # verify sequence and try to plan and unplan again
+        self.assertTrue(wo1.sequence < wo2.sequence < wo3.sequence)
+        mo.button_unplan()
+        mo.button_plan()
