@@ -76,7 +76,7 @@ class IrHttp(models.AbstractModel):
                         f"Logged out after {timeout} seconds of inactivity."
                         if reauth_type == 'logout' else
                         f"Locked after {timeout} seconds of inactivity "
-                        f"({"2FA" if mfa and session.get("identity-check-1fa") else "1FA"})."
+                        f"({'2FA' if mfa and session.get('identity-check-1fa') else '1FA'})."
                     )
                     return res
 
