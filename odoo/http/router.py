@@ -383,7 +383,7 @@ def serve_db(request: Request) -> Response:
         # get the registry and cursor (RO)
         try:
             registry = Registry(request.db)
-            cr = registry.cursor(readonly=True)
+            cr = registry.cursor(readonly=config.has_db_replica)
             # check signaling
             request.env = Environment(cr, request.session.uid, request.session.context)
             request.update_context(host_id=request.env['ir.http']._get_host_id_from_domain(request.httprequest.host))
@@ -419,9 +419,8 @@ def serve_db(request: Request) -> Response:
             try:
                 return retrying(serve_func, env=request.env)
             except ReadOnlySqlTransaction as exc:
-                # although the controller is marked read-only, it
-                # attempted a write operation, try again using a
-                # read/write cursor
+                # although the controller is marked replica, it
+                # attempted a write operation, try again on the primary
                 _logger.warning("%s, retrying with a read/write cursor", exc.args[0].rstrip(), exc_info=True)
                 threading.current_thread().cursor_mode = 'ro->rw'
             except Exception as exc:  # noqa: BLE001

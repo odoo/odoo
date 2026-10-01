@@ -300,7 +300,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         self._db: Connection = sql_db.db_connect(db_name, readonly=False)
         self._db_readonly: Connection | None = None
         self._db_readonly_failed_time: float | None = None
-        if config['db_replica_host'] or config['test_enable'] or 'replica' in config['dev_mode']:  # by default, only use readonly pool if we have a db_replica_host defined.
+        if config.has_db_replica:
             self._db_readonly = sql_db.db_connect(db_name, readonly=True)
 
         # field dependencies
@@ -1145,9 +1145,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """ Return a new cursor for the database. The cursor itself may be used
             as a context manager to commit/rollback and close automatically.
 
-            :param readonly: Attempt to acquire a cursor on a replica database.
-                Acquire a read/write cursor on the primary database in case no
-                replica exists or that no readonly cursor could be acquired.
+            :param readonly: Attempt to acquire a read-only cursor on a
+                replica database. Acquire a read-only cursor on the
+                primary database in case no replica exists or the
+                connection failed.
         """
         if readonly and self._db_readonly is not None:
             if (
@@ -1160,9 +1161,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     return cr
                 except psycopg2.OperationalError:
                     self._db_readonly_failed_time = time.monotonic()
-                    _logger.warning("Failed to open a readonly cursor, falling back to read-write cursor for %dmin %dsec", *divmod(_REPLICA_RETRY_TIME, 60))
-            threading.current_thread().cursor_mode = 'ro->rw'
-        return self._db.cursor()
+                    _logger.warning("Failed to connect on the replica database, falling back on the primary database for %dmin %dsec", *divmod(_REPLICA_RETRY_TIME, 60))
+        return self._db.cursor(readonly=readonly)
 
 
 class TriggerTree(dict['Field', 'TriggerTree']):
