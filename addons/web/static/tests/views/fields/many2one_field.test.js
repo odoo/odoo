@@ -3727,6 +3727,29 @@ test("focus when closing many2one modal in many2one modal", async () => {
     expect(".o_dialog").toHaveCount(1);
 });
 
+test("closing the many2one modal does not focus the field if it becomes readonly", async () => {
+    onRpc("get_formview_id", () => false);
+
+    await mountViewInDialog({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="trululu" readonly="id"/></form>`,
+    });
+    expect(".modal").toHaveCount(1);
+
+    // Select many2one record
+    await selectFieldDropdownItem("trululu", "first record");
+    expect(".o_field_widget[name=trululu] input").toHaveCount(1);
+
+    // Open many2one modal
+    await contains(".o_field_widget[name=trululu] .o_external_button", { visible: false }).click();
+    expect(".modal").toHaveCount(2);
+
+    // Close modal without focusing readonly field
+    await contains(".o_dialog:not(.o_inactive_modal) .btn-close").click();
+    expect(".o_field_widget[name=trululu]").toHaveClass("o_readonly_modifier");
+});
+
 test("search more pager is reset when doing a new search", async () => {
     Partner._fields.datetime = fields.Datetime({ string: "Datetime Field", searchable: true });
     Partner._records.push(...range(170).map((i) => ({ id: i + 10, name: `Partner ${i}` })));
