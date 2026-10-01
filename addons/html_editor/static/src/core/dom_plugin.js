@@ -66,7 +66,7 @@ import { withSequence } from "@html_editor/utils/resource";
  * @typedef {((root: HTMLElement) => void)[]} on_normalized_handlers
  *
  * @typedef {((root: EditorContext["editable"] | HTMLElement) => EditorContext["editable"] | HTMLElement)[]} normalize_processors
- * @typedef {((container: Element, block: Element) => container)[]} before_insert_processors
+ * @typedef {((fragment: DocumentFragment) => DocumentFragment)[]} fragment_to_insert_processors
  * @typedef {((nodeToInsert: Node, container: HTMLElement) => nodeToInsert)[]} node_to_insert_processors
  *
  * @typedef {((block: HTMLElement) => boolean)[]} is_retagging_safe_predicates
@@ -235,11 +235,11 @@ export class DomPlugin extends Plugin {
             selection = this.dependencies.selection.getEditableSelection();
         }
 
-        let container = this.document.createElement("fake-element");
+        let fragment = this.document.createDocumentFragment();
         const containerFirstChild = this.document.createElement("fake-element-fc");
         const containerLastChild = this.document.createElement("fake-element-lc");
         if (typeof content === "string") {
-            container.textContent = content;
+            fragment.textContent = content;
         } else {
             if (content.nodeType === Node.ELEMENT_NODE) {
                 this.normalize(content);
@@ -248,13 +248,13 @@ export class DomPlugin extends Plugin {
                     this.normalize(child);
                 }
             }
-            container.replaceChildren(content);
+            fragment.replaceChildren(content);
         }
 
         const block = closestBlock(selection.anchorNode);
-        container = this.processThrough("before_insert_processors", container, block);
+        fragment = this.processThrough("fragment_to_insert_processors", fragment);
         this.trigger("before_insert_handlers");
-        if (!container.hasChildNodes()) {
+        if (!fragment.hasChildNodes()) {
             return [];
         }
         selection = this.dependencies.selection.getEditableSelection();
@@ -275,7 +275,7 @@ export class DomPlugin extends Plugin {
         const allInsertedNodes = [];
         // In case the html inserted starts with a list and will be inserted within
         // a list, unwrap the list elements from the list.
-        const hasSingleChild = nodeSize(container) === 1;
+        const hasSingleChild = nodeSize(fragment) === 1;
         const closestList = (node) => {
             if (isBlock(node)) {
                 return node && isListItemElement(node);
@@ -283,16 +283,16 @@ export class DomPlugin extends Plugin {
             return closestList(node.parentElement);
         };
 
-        if (closestList(selection.anchorNode) && isListElement(container.firstChild)) {
-            unwrapContents(container.firstChild);
+        if (closestList(selection.anchorNode) && isListElement(fragment.firstChild)) {
+            unwrapContents(fragment.firstChild);
         }
         // Similarly if the html inserted ends with a list.
         if (
             closestList(selection.focusNode) &&
-            isListElement(container.lastChild) &&
+            isListElement(fragment.lastChild) &&
             !hasSingleChild
         ) {
-            unwrapContents(container.lastChild);
+            unwrapContents(fragment.lastChild);
         }
 
         startNode = startNode || this.dependencies.selection.getEditableSelection().anchorNode;
@@ -315,14 +315,14 @@ export class DomPlugin extends Plugin {
             !isEditionBoundary(selection.anchorNode, this.editable);
 
         // Empty block must contain a br element to allow cursor placement.
-        const firstLeafNode = firstLeaf(container);
+        const firstLeafNode = firstLeaf(fragment);
         if (
             isBlock(firstLeafNode) &&
             !(closestElement(firstLeafNode, "[contenteditable]")?.contentEditable === "false")
         ) {
             fillEmpty(firstLeafNode);
         }
-        const lastLeafNode = lastLeaf(container);
+        const lastLeafNode = lastLeaf(fragment);
         if (
             isBlock(lastLeafNode) &&
             !(closestElement(lastLeafNode, "[contenteditable]")?.contentEditable === "false")
@@ -334,41 +334,41 @@ export class DomPlugin extends Plugin {
         // tag, we take the all content of the <p> or <li> and avoid inserting the
         // <p> or <li>.
         if (
-            container.childElementCount === 1 &&
-            (this.dependencies.baseContainer.isCandidateForBaseContainer(container.firstChild) ||
-                shouldUnwrap(container.firstChild))
+            fragment.childElementCount === 1 &&
+            (this.dependencies.baseContainer.isCandidateForBaseContainer(fragment.firstChild) ||
+                shouldUnwrap(fragment.firstChild))
         ) {
-            const nodeToUnwrap = container.firstElementChild;
-            container.replaceChildren(...childNodes(nodeToUnwrap));
-        } else if (container.childElementCount > 1) {
+            const nodeToUnwrap = fragment.firstElementChild;
+            fragment.replaceChildren(...childNodes(nodeToUnwrap));
+        } else if (fragment.childElementCount > 1) {
             const isSelectionAtStart =
                 firstLeaf(block) === selection.anchorNode && selection.anchorOffset === 0;
             const isSelectionAtEnd =
                 lastLeaf(block) === selection.focusNode &&
                 selection.focusOffset === nodeSize(selection.focusNode);
             // Grab the content of the first child block and isolate it.
-            if (shouldUnwrap(container.firstChild) && !isSelectionAtStart) {
+            if (shouldUnwrap(fragment.firstChild) && !isSelectionAtStart) {
                 // Unwrap the deepest nested first <li> element in the
                 // container to extract and paste the text content of the list.
-                if (isListItemElement(container.firstChild)) {
-                    const deepestBlock = closestBlock(firstLeaf(container.firstChild));
-                    this.split.splitAroundUntil(deepestBlock, container.firstChild);
-                    container.firstElementChild.replaceChildren(...childNodes(deepestBlock));
+                if (isListItemElement(fragment.firstChild)) {
+                    const deepestBlock = closestBlock(firstLeaf(fragment.firstChild));
+                    this.split.splitAroundUntil(deepestBlock, fragment.firstChild);
+                    fragment.firstElementChild.replaceChildren(...childNodes(deepestBlock));
                 }
-                containerFirstChild.replaceChildren(...childNodes(container.firstElementChild));
-                container.firstElementChild.remove();
+                containerFirstChild.replaceChildren(...childNodes(fragment.firstElementChild));
+                fragment.firstElementChild.remove();
             }
             // Grab the content of the last child block and isolate it.
-            if (shouldUnwrap(container.lastChild) && !isSelectionAtEnd) {
+            if (shouldUnwrap(fragment.lastChild) && !isSelectionAtEnd) {
                 // Unwrap the deepest nested last <li> element in the container
                 // to extract and paste the text content of the list.
-                if (isListItemElement(container.lastChild)) {
-                    const deepestBlock = closestBlock(lastLeaf(container.lastChild));
-                    this.split.splitAroundUntil(deepestBlock, container.lastChild);
-                    container.lastElementChild.replaceChildren(...childNodes(deepestBlock));
+                if (isListItemElement(fragment.lastChild)) {
+                    const deepestBlock = closestBlock(lastLeaf(fragment.lastChild));
+                    this.split.splitAroundUntil(deepestBlock, fragment.lastChild);
+                    fragment.lastElementChild.replaceChildren(...childNodes(deepestBlock));
                 }
-                containerLastChild.replaceChildren(...childNodes(container.lastElementChild));
-                container.lastElementChild.remove();
+                containerLastChild.replaceChildren(...childNodes(fragment.lastElementChild));
+                fragment.lastElementChild.remove();
             }
         }
 
@@ -414,7 +414,7 @@ export class DomPlugin extends Plugin {
 
         // If all the Html have been isolated, We force a split of the parent element
         // to have the need new line in the final result
-        if (!container.hasChildNodes()) {
+        if (!fragment.hasChildNodes()) {
             if (this.split.isUnsplittable(closestBlock(currentNode.nextSibling))) {
                 this.dependencies.lineBreak.insertLineBreakNode({
                     targetNode: currentNode.nextSibling,
@@ -432,7 +432,7 @@ export class DomPlugin extends Plugin {
         let doesCurrentNodeAllowsP = allowsParagraphRelatedElements(currentNode);
         const candidatesForRemoval = [];
         const insertedNodes = [];
-        while ((nodeToInsert = container.firstChild)) {
+        while ((nodeToInsert = fragment.firstChild)) {
             if (isBlock(nodeToInsert) && !doesCurrentNodeAllowsP) {
                 // Split blocks at the edges if inserting new blocks (preventing
                 // <p><p>text</p></p> or <li><li>text</li></li> scenarios).
@@ -453,8 +453,8 @@ export class DomPlugin extends Plugin {
                             doesCurrentNodeAllowsP = allowsParagraphRelatedElements(currentNode);
                             continue;
                         } else {
-                            makeContentsInline(container);
-                            nodeToInsert = container.firstChild;
+                            makeContentsInline(fragment);
+                            nodeToInsert = fragment.firstChild;
                             break;
                         }
                     }
