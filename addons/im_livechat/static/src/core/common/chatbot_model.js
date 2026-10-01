@@ -165,6 +165,7 @@ export class Chatbot extends Record {
             const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
             this.currentStep = this.steps[nextStepIndex];
             this.currentStep.selectedAnswer = null;
+            this.currentStep.completed = false;
         }
     }
 

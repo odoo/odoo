@@ -395,6 +395,34 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
         )
         self.start_tour("/", "website_livechat.chatbot_restart_on_feedback_tour")
 
+    def test_chatbot_new_session(self):
+        chatbot_script = self.env["chatbot.script"].create({"title": "New session Bot"})
+        greeting_step, welcome_question_step, joke_step = self.env["chatbot.script.step"].create([
+            {
+                "step_type": "text",
+                "chatbot_script_id": chatbot_script.id,
+                "message": "Hello, I am a bot!",
+            },
+            {
+                "step_type": "question_selection",
+                "chatbot_script_id": chatbot_script.id,
+                "message": "What do you want to do?",
+            },
+            {
+                "step_type": "text",
+                "chatbot_script_id": chatbot_script.id,
+                "message": "Knock knock",
+            },
+        ])
+        self.env["chatbot.script.answer"].create({
+            "name": "Tell me a joke",
+            "script_step_id": welcome_question_step.id,
+        })
+        self.livechat_channel.rule_ids = self.env["im_livechat.channel.rule"].create(
+            {"chatbot_script_id": chatbot_script.id}
+        )
+        self.start_tour("/", "website_livechat.chatbot_new_session_tour")
+
 
 @tests.tagged("post_install", "-at_install")
 class TestLivechatChatbotUIMoblie(TestLivechatChatbotUICommon):
