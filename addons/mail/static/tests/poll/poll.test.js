@@ -48,3 +48,17 @@ test("poll creation should be disabled during message editing", async () => {
     await contains(".o-dropdown-item:text('Attach Files')");
     await contains(".o-dropdown-item:text('Create Poll')", { count: 0 });
 });
+
+test.tags("focus required");
+test("autofocus question on poll opening and user-added options", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Composer button[title='More Actions']");
+    await click(".o-dropdown-item:text('Create Poll')");
+    await contains(".modal-header:text('Create Poll')");
+    await contains("input[name='poll_question']:focus");
+    await click("button:text('Add another option')");
+    await contains(".o-mail-CreatePollOptionDialog:eq(2) input:focus");
+});

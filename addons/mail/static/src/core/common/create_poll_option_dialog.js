@@ -17,6 +17,7 @@ export class CreatePollOptionDialog extends Component {
 
     setup() {
         this.props = useProps({
+            autofocus: t.boolean().optional(false),
             deletable: t.boolean(),
             model: t.object({
                 direction: t.selection(["forward", "backward", "none"]).optional(),
@@ -26,7 +27,9 @@ export class CreatePollOptionDialog extends Component {
             }),
             onClickRemove: t.function([t.instanceOf(MouseEvent)]),
         });
-        useAutofocus({ ref: this.rootRef });
+        if (this.props.autofocus) {
+            useAutofocus({ ref: this.rootRef, mobile: true });
+        }
         this.ui = useService("ui");
         useSelection({
             ref: this.rootRef,
