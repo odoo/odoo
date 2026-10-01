@@ -1,8 +1,11 @@
 import { startWebClient } from "@web/start";
 import { SubcontractingPortalWebClient } from "./subcontracting_portal";
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
+import { MenuPlugin } from "@web/webclient/menus/menu_plugin";
 
 const servicesToRemove = ["menu"];
+const pluginsToRemove = [MenuPlugin];
 
 const servicesRegistry = registry.category("services");
 
@@ -21,6 +24,9 @@ export function removeServices() {
         if (servicesRegistry.contains(service)) {
             servicesRegistry.remove(service);
         }
+    }
+    for (const plugin of pluginsToRemove) {
+        services.delete(plugin);
     }
 }
 
