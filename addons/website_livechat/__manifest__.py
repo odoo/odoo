@@ -53,6 +53,10 @@
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',
         ],
+        'mail.assets_discuss_public_test_tours': [
+            'im_livechat/static/tests/tours/livechat_tour_utils.js',
+            'website_livechat/static/tests/tours/website_livechat_as_portal.js',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
