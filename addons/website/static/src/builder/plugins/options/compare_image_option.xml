@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CompareImage">
+    <BuilderRow label.translate="Orientation">
+        <BuilderButtonGroup>
+            <BuilderButton classAction="''" title.translate="Vertical divider, images side by side">Vertical</BuilderButton>
+            <BuilderButton id="'compare_image_horizontal_opt'" classAction="'s_compare_image_horizontal'" title.translate="Horizontal divider, images stacked">Horizontal</BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Labels">
+        <!-- Both orientations drive the same "align-items" classes; only the
+             wording differs, since the cross axis is vertical in the vertical
+             variant and horizontal in the horizontal one. -->
+        <BuilderButtonGroup applyTo="'.s_compare_image_labels'">
+            <t t-if="this.isActiveItem('compare_image_horizontal_opt')">
+                <BuilderButton classAction="''" title.translate="Left">Left</BuilderButton>
+                <BuilderButton classAction="'s_compare_image_labels_center'" title.translate="Center">Center</BuilderButton>
+                <BuilderButton classAction="'s_compare_image_labels_end'" title.translate="Right">Right</BuilderButton>
+            </t>
+            <t t-else="">
+                <BuilderButton classAction="''" title.translate="Top">Top</BuilderButton>
+                <BuilderButton classAction="'s_compare_image_labels_center'" title.translate="Center">Center</BuilderButton>
+                <BuilderButton classAction="'s_compare_image_labels_end'" title.translate="Bottom">Bottom</BuilderButton>
+            </t>
+        </BuilderButtonGroup>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Initial position"
+        tooltip.translate="Where the divider sits when the page loads.">
+        <BuilderRange styleAction="'--compare-pos'" min="0" max="100" step="1"
+            default="50" unit="'%'" withNumberInput="true"/>
+    </BuilderRow>
+
+    <BuilderOptionsSection title.translate="Before">
+        <BuilderContext applyTo="'.s_compare_image_before'">
+            <ReplaceMediaOption/>
+            <CompareImageToolOption/>
+        </BuilderContext>
+    </BuilderOptionsSection>
+
+    <BuilderOptionsSection title.translate="After">
+        <BuilderContext applyTo="'.s_compare_image_after'">
+            <ReplaceMediaOption/>
+            <CompareImageToolOption/>
+        </BuilderContext>
+    </BuilderOptionsSection>
+</t>
+
+<t t-name="website.CompareImageToolOption" t-inherit="html_builder.ImageToolOption" t-inherit-mode="primary">
+    <xpath expr="//ImageShapeOption" position="replace"/>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <compare_image_option template="website.CompareImage" selector=".s_compare_image"/>
+    </xpath>
+</t>
+</templates>

@@ -1,0 +1,122 @@
+.s_compare_image {
+    // Fallback: the JS and the builder option both write this inline on the
+    // root, but the snippet must still render before either of them runs.
+    --compare-pos: 50%;
+
+    .s_compare_image_before {
+        // Sets the height of the whole snippet, so it has to span the root:
+        // "img-fluid" alone would cap it at the image's natural width while the
+        // absolutely positioned "after" layer still fills the root. "block"
+        // drops the inline descender gap underneath it.
+        display: block;
+        width: 100%;
+    }
+
+    .s_compare_image_after {
+        position: absolute;
+        inset: 0;
+        clip-path: inset(0 0 0 var(--compare-pos));
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .s_compare_image_divider {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        bottom: 0;
+        left: var(--compare-pos);
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        transform: translateX(-50%);
+        width: 4px;
+        background: rgba($white, .9);
+        cursor: ew-resize;
+        touch-action: none; // the pointer gesture is ours, not the page's
+        user-select: none;
+    }
+
+    .s_compare_image_handle {
+        // The divider is a 4px flex container: without this the handle would be
+        // shrunk down to the width of the line and the two arrows would end up
+        // on top of each other. It also keeps the handle grabbable where it
+        // overflows the line.
+        flex: 0 0 auto;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        // Keeps the arrows readable over a light image, since they sit on the
+        // picture rather than on a solid handle.
+        filter: drop-shadow(0 1px 2px rgba($black, .5));
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.25rem;
+        color: $white;
+
+        .oi {
+            flex: 0 0 auto;
+        }
+    }
+
+    .s_compare_image_labels {
+        // Spans the whole box so the labels can be placed anywhere along the
+        // cross axis. "align-items" is the single lever the position option
+        // drives: it moves them up/down in the vertical variant (row) and
+        // left/right in the horizontal one (column).
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        justify-content: space-between;
+        align-items: flex-start;
+        display: flex;
+        padding: .75rem;
+        pointer-events: none; // the container is only a positioning frame
+    }
+
+    .s_compare_image_label {
+        pointer-events: auto; // but the labels stay editable
+    }
+
+    // Label placement along the cross axis. Shown as top/center/bottom in the
+    // vertical variant and left/center/right in the horizontal one.
+    .s_compare_image_labels_center {
+        align-items: center;
+    }
+
+    .s_compare_image_labels_end {
+        align-items: flex-end;
+    }
+
+    // Horizontal divider: the images are stacked and the wipe runs top to
+    // bottom. Everything is the default variant with the two axes swapped.
+    &.s_compare_image_horizontal {
+        .s_compare_image_after {
+            clip-path: inset(var(--compare-pos) 0 0 0);
+        }
+
+        .s_compare_image_divider {
+            top: var(--compare-pos);
+            right: 0;
+            bottom: auto;
+            left: 0;
+            transform: translateY(-50%);
+            width: auto;
+            height: 4px;
+            cursor: ns-resize;
+        }
+
+        .s_compare_image_handle {
+            // Turns the two chevrons into up/down arrows.
+            transform: rotate(90deg);
+        }
+
+        .s_compare_image_labels {
+            // The two labels now belong above and below the divider rather than
+            // left and right of it. The cross axis becomes horizontal, so the
+            // placement classes keep working untouched.
+            flex-direction: column;
+        }
+    }
+}
