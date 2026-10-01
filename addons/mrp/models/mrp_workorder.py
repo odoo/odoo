@@ -778,7 +778,22 @@ class MrpWorkorder(models.Model):
                 ('date_finished', '!=', False),
             ])
         date = max(min([wo.date_start for wo in workorders if wo.date_start], default=datetime.min), datetime.now())
+<<<<<<< 2c740152f4afd0fa16f769aa6cfdb4f92adfb1c7
         workorders._action_plan(from_date=date, alternative=False)
+||||||| d9d0a81413b1ce42a3b4a9d922081eb8200b7a75
+        workorders._plan_workorders(from_date=date, alternative=False)
+=======
+        workorders._plan_workorders(from_date=date, alternative=False)
+
+        # since date_start changes, we need to resequence
+        for mo in workorders.production_id:
+            sorted_wos = mo.workorder_ids.sorted(
+                key=lambda w: (w.date_start or datetime.max, w.sequence, w.id)
+            )
+            for ind, wo in enumerate(sorted_wos):
+                wo.sequence = ind + 1
+
+>>>>>>> 81fb0fc1cd92f65d4d7fa74d6e3ae2ff18558f99
         return True
 
     def action_select_mo_to_plan(self):
