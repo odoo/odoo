@@ -960,6 +960,16 @@
         <field name="amount_rate">0.0</field>
     </record>
 
+    <record id="l10n_be_work_entry_type_work_accident_after_one_year" model="hr.work.entry.type">
+        <field name="name">Work accident after 1 year</field>
+        <field name="code">112.00</field>
+        <field name="color">5</field>
+        <field name="display_code">WAY</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+        <field name="amount_rate">0.0</field>
+    </record>
+
     <record id="l10n_be_work_entry_type_work_accident_unassimilated" model="hr.work.entry.type">
         <field name="name">Industrial accident 31st day - 6 month</field>
         <field name="code">113.00</field>
@@ -1067,6 +1077,8 @@
         <field name="display_code">SDY</field>
         <field name="country_id" ref="base.be"/>
         <field name="count_as">absence</field>
+        <field name="amount_rate">1.0</field>
+        <field name="resource_calendar_selectable" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_paid_absence" model="hr.work.entry.type">
@@ -1211,6 +1223,17 @@
         <field name="display_code">CL1</field>
         <field name="country_id" ref="base.be"/>
         <field name="count_as">absence</field>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_be_work_entry_type_illness_insufficient_seniority" model="hr.work.entry.type">
+        <field name="name">Days of illness with less than 1 month of seniority</field>
+        <field name="code">121.00</field>
+        <field name="color">5</field>
+        <field name="display_code">CLS</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+        <field name="amount_rate">0.0</field>
     </record>
 
     <record id="l10n_be_work_entry_type_common_law_illness_attributable_to_worker" model="hr.work.entry.type">
