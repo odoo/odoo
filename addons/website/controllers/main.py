@@ -5,7 +5,9 @@ import datetime
 import logging
 import math
 import os
+import random
 import re
+import time
 import urllib.parse
 import zipfile
 from hashlib import md5, sha256
@@ -1113,6 +1115,14 @@ class Website(Home):
             ["is_new_page_template"]
         )
         return page_records
+
+    @http.route('/website/contact', type='jsonrpc', auth='public', website=True, methods=['POST'])
+    def contact(self, member_name=None):
+        time.sleep(3)
+        logger.info("Request received, sent to: %r", member_name)
+        if not member_name or random.random() < 0.5:
+            return {'success': False, 'error': 'The message could not be sent.'}
+        return {'success': True}
 
     # --------------------------------------------------------------------------
     # Search Bar
