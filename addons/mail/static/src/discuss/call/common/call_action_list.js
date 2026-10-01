@@ -5,7 +5,12 @@ import { useService } from "@web/core/utils/hooks";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "@web/core/tooltip/tooltip";
-import { ActionList, CircleInlineAction, InlineAction } from "@mail/core/common/action_list";
+import {
+    ActionList,
+    CircleInlineAction,
+    DropdownAction,
+    InlineAction,
+} from "@mail/core/common/action_list";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { nestedShallowEqual } from "@mail/utils/common/signal";
@@ -45,6 +50,151 @@ export class JoinBackInlineAction extends PillCallInlineAction {
 }
 
 /**
+ * Round button of the call controls. Its size and its neutral grays come from the call bar
+ * (call_action_list.scss) rather than a button variant or the call theme.
+ */
+export class CallControlInlineAction extends InlineAction {
+    get classObj() {
+        return {
+            ...super.classObj,
+            "o-discuss-CallControl d-inline-flex align-items-center justify-content-center": true,
+        };
+    }
+
+    /** None of the looks of the action list's inline buttons, with or without a background. */
+    get coreClass() {
+        return {
+            ...super.coreClass,
+            "btn-group-item o-inline": false,
+            "btn-group-item": true,
+            "o-hasBtnBg": false,
+        };
+    }
+
+    get colorClass() {
+        return {
+            "o-discuss-CallControl-neutral": true,
+            // Raising a hand and sharing the screen stand out, unlike an open menu or panel.
+            "o-discuss-CallControl-selected": this.action.tags.includes(ACTION_TAGS.SUCCESS),
+        };
+    }
+
+    get iconClass() {
+        return { ...super.iconClass, "o-discuss-CallControl-icon": true };
+    }
+
+    get borderClass() {
+        return { "border-0": true };
+    }
+
+    get marginClass() {
+        return { "m-0": true };
+    }
+
+    get paddingClass() {
+        return { "p-0": true };
+    }
+
+    get roundnessClass() {
+        return { "rounded-pill": true };
+    }
+
+    get themeClass() {
+        return {};
+    }
+}
+
+/** Button opening a "More" menu, narrower than the other call controls. */
+export class CallMoreInlineAction extends CallControlInlineAction {
+    get classObj() {
+        return { ...super.classObj, "o-discuss-CallControl-more": true };
+    }
+}
+
+/** Microphone or camera toggle, sharing a pill with its settings: neutral if on, red if off. */
+export class CallToggleInlineAction extends CallControlInlineAction {
+    get colorClass() {
+        const isOff =
+            this.action.tags.includes(ACTION_TAGS.DANGER) ||
+            (this.action.id === "camera-on" && !this.action.isActive);
+        return { "o-discuss-CallControl-toggle": !isOff, "o-discuss-CallControl-off": isOff };
+    }
+}
+
+/** Settings chevron of the microphone or the camera, which shares the pill of its toggle. */
+export class CallSettingsInlineAction extends CallControlInlineAction {
+    get classObj() {
+        return { ...super.classObj, "o-discuss-CallControl-settings": true };
+    }
+
+    get colorClass() {
+        return {};
+    }
+
+    get iconClass() {
+        return {
+            ...super.iconClass,
+            "o-discuss-CallControl-icon": false,
+            "o-discuss-CallControl-chevron transition-base": true,
+        };
+    }
+
+    get paddingClass() {
+        return { "ps-0 pe-1 py-0": true };
+    }
+}
+
+/** Button to leave the call, a wider red pill. */
+export class LeaveCallInlineAction extends CallControlInlineAction {
+    get classObj() {
+        return { ...super.classObj, "o-discuss-CallControl-leave": true };
+    }
+
+    get colorClass() {
+        return { "btn-danger": true };
+    }
+}
+
+/**
+ * Item of the menus of the call controls, without the call theme's look: the menu gives the
+ * colors. In a meeting, it matches the meeting's larger bar.
+ */
+export class CallMenuDropdownAction extends DropdownAction {
+    get alignmentClass() {
+        if (!this.env.inMeetingView) {
+            return super.alignmentClass;
+        }
+        return { "d-flex align-items-center dropdown-item_active_noarrow text-start gap-3": true };
+    }
+
+    get colorClass() {
+        return { ...super.colorClass, "btn-secondary": false };
+    }
+
+    get iconClass() {
+        if (!this.env.inMeetingView) {
+            return super.iconClass;
+        }
+        return { "oi-fw": this.props.fw, "fs-3": true };
+    }
+
+    get labelClass() {
+        return { ...super.labelClass, "fs-6": Boolean(this.env.inMeetingView) };
+    }
+
+    get paddingClass() {
+        if (!this.env.inMeetingView) {
+            return super.paddingClass;
+        }
+        return { "o-px-3_5 o-py-2_5": true };
+    }
+
+    get themeClass() {
+        return {};
+    }
+}
+
+/**
  * Picks the component of the inline buttons to join or leave a call: circles, except the button
  * to join the call again, and the button to reject next to it, which are pills.
  *
@@ -63,41 +213,37 @@ export function getCallActionComponent({ action, actions, inline }) {
     return CircleInlineAction;
 }
 
-/** Buttons of the bar of a meeting, which get bigger while it is fullscreen. */
-const meetingAction = (Base) =>
-    class extends Base {
-        get isFullscreen() {
-            return this.store.rtc.isFullscreen;
-        }
-
-        get paddingClass() {
-            return { ...super.paddingClass, "px-1 py-2": this.isFullscreen };
-        }
-
-        get iconClass() {
-            return {
-                ...super.iconClass,
-                "oi-lg": this.isFullscreen,
-                "py-1": this.isFullscreen && !this.isCircle,
-            };
-        }
-    };
-
-/** Meeting variant of each component, made once so that its buttons are not remounted. */
-const meetingActions = new WeakMap();
-
 /**
- * @param {typeof InlineAction} Base
- * @returns {typeof InlineAction}
+ * Picks the component of the call controls. Join and reject keep the look of the buttons to join
+ * or leave a call, @see getCallActionComponent, as they may carry a label.
+ *
+ * @type {import("@mail/core/common/action_list").GetActionComponent}
  */
-function getMeetingAction(Base) {
-    if (!meetingActions.has(Base)) {
-        meetingActions.set(Base, meetingAction(Base));
+export function getCallControlComponent(params) {
+    const { action, dropdown, inline } = params;
+    if (dropdown) {
+        return CallMenuDropdownAction;
     }
-    return meetingActions.get(Base);
+    if (!inline) {
+        return undefined;
+    }
+    if (action.id === "disconnect") {
+        return LeaveCallInlineAction;
+    }
+    if (action.tags.includes(ACTION_TAGS.JOIN_LEAVE_CALL)) {
+        return getCallActionComponent(params);
+    }
+    if (action.definition?.isMoreAction) {
+        return CallMoreInlineAction;
+    }
+    if (["quick-video-settings", "quick-voice-settings"].includes(action.id)) {
+        return CallSettingsInlineAction;
+    }
+    if (["camera-on", "deafen", "mute"].includes(action.id)) {
+        return CallToggleInlineAction;
+    }
+    return CallControlInlineAction;
 }
-
-export const MeetingInlineAction = getMeetingAction(InlineAction);
 
 export class CallActionList extends Component {
     static components = { ActionList };
@@ -153,10 +299,8 @@ export class CallActionList extends Component {
                                   {
                                       actions: moreActions,
                                       dropdownMenuClass: attClassObjectToString({
-                                          "m-0 mb-1 overflow-x-hidden": true,
-                                          "o-discuss-CallActionList-menu": Boolean(
-                                              this.env.inMeetingView
-                                          ),
+                                          "o-discuss-CallActionList-menu m-0 mb-1 border-0 shadow overflow-x-hidden": true,
+                                          "o-inMeetingView": Boolean(this.env.inMeetingView),
                                       }),
                                       dropdownPosition: "top-end",
                                       name: this.MORE,
@@ -182,10 +326,8 @@ export class CallActionList extends Component {
                             {
                                 actions: [layoutActions],
                                 dropdownMenuClass: attClassObjectToString({
-                                    "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden": true,
-                                    "o-discuss-CallActionList-menu o-inMeetingView": Boolean(
-                                        this.env.inMeetingView
-                                    ),
+                                    "o-discuss-CallActionList-callLayout o-discuss-CallActionList-menu m-0 mb-1 border-0 shadow overflow-x-hidden": true,
+                                    "o-inMeetingView": Boolean(this.env.inMeetingView),
                                 }),
                                 dropdownPosition: "top-end",
                                 id: "call-layout",
@@ -251,8 +393,8 @@ export class CallActionList extends Component {
                       {
                           actions: moreGroups,
                           dropdownMenuClass: attClassObjectToString({
-                              "m-0 mb-1 overflow-x-hidden": true,
-                              "o-discuss-CallActionList-menu": Boolean(this.env.inMeetingView),
+                              "o-discuss-CallActionList-menu m-0 mb-1 border-0 shadow overflow-x-hidden": true,
+                              "o-inMeetingView": Boolean(this.env.inMeetingView),
                           }),
                           dropdownPosition: "top-end",
                           id: "small-screen-more",
@@ -267,14 +409,7 @@ export class CallActionList extends Component {
 
     /** @type {import("@mail/core/common/action_list").GetActionComponent} */
     getActionComponent(params) {
-        if (!params.inline) {
-            return undefined;
-        }
-        const callActionComponent = getCallActionComponent(params);
-        if (this.env.inMeetingView) {
-            return getMeetingAction(callActionComponent ?? InlineAction);
-        }
-        return callActionComponent;
+        return getCallControlComponent(params);
     }
 
     get callActionsParams() {

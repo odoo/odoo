@@ -1,13 +1,14 @@
+// The same neutral grays as the call bar it holds (call_action_list.scss).
 .o-discuss-PipBanner {
-    background-color: $o-mail-CallMenu-bgColor-darker;
+    background-color: mix(white, $o-mail-Meeting-bgColor, 5%);
     color: rgba(white, 0.8) !important;
 
     .o-discuss-PipBannerButton {
       border: 1px solid black;
-      background-color: $o-mail-CallMenu-bgColor;
+      background-color: mix(white, $o-mail-Meeting-bgColor, 10%);
       color: rgba(white, 0.8) !important;
         &:hover {
-            background-color: $o-mail-CallMenu-bgColor-lighter;
+            background-color: mix(white, $o-mail-Meeting-bgColor, 20%);
         }
     }
 }

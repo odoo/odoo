@@ -96,8 +96,8 @@ export const quickActionSettings = {
     dropdownComponent: QuickVoiceSettings,
     dropdownMenuClass: ({ owner }) =>
         owner.env.inMeetingView
-            ? "o-discuss-CallActionList-menu overflow-x-hidden"
-            : "p-1 overflow-x-hidden",
+            ? "o-discuss-CallActionList-menu o-inMeetingView p-2 border-0 shadow overflow-x-hidden"
+            : "o-discuss-CallActionList-menu p-1 border-0 shadow overflow-x-hidden",
     dropdownPosition: "top-end",
     dropdownTrigger: true,
     extraContentComponent: TalkingAudioBars,
@@ -169,8 +169,8 @@ export const quickVideoSettings = {
     dropdownComponent: QuickVideoSettings,
     dropdownMenuClass: ({ owner }) =>
         owner.env.inMeetingView
-            ? "o-discuss-CallActionList-menu overflow-x-hidden"
-            : "p-1 overflow-x-hidden",
+            ? "o-discuss-CallActionList-menu o-inMeetingView p-2 border-0 shadow overflow-x-hidden"
+            : "o-discuss-CallActionList-menu p-1 border-0 shadow overflow-x-hidden",
     dropdownPosition: "top-end",
     dropdownTrigger: true,
     icon: "keyboard_arrow_up",
