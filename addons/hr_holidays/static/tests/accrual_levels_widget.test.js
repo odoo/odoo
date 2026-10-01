@@ -22,8 +22,8 @@ test("accrual levels widget rendering with diverse level configurations", async 
         resId: 1,
     });
 
-    // 1 Header + 4 Levels + 1 Add button = 6 total timeline rows
-    expect(".o_accrual_level").toHaveCount(6);
+    // 1 Header + 7 Levels + 1 Add button = 8 total timeline rows
+    expect(".o_accrual_level").toHaveCount(9);
 
     // Verify Level 1 (Immediately)
     const level1 = ".o_accrual_level:nth-child(2)";
@@ -51,4 +51,19 @@ test("accrual levels widget rendering with diverse level configurations", async 
     expect(`${level4} .time`).toHaveText("After 5 year(s)");
     expect(`${level4} .content`).toHaveText(
         "Accrual frequency : 25 day(s) every year on the 1 of January.\n\nUnused days will be transferred with a max of 0 day\(s\) on each start of the year.\nA yearly cap is set to 25 day(s) and a balance cap is set to 50 day(s).");
+
+    const level5 = ".o_accrual_level:nth-child(6)";
+    expect(`${level5} .content`).toHaveText(
+        "Accrual frequency : 4 hour\(s\) every week on the Allocation date's day of the week\.\n\nUnused days will be transferred totally on each start of the year\."
+    );
+
+    const level6 = ".o_accrual_level:nth-child(7)";
+    expect(`${level6} .content`).toHaveText(
+        "Accrual frequency : 2 day\(s\) every month on the Allocation date's day of the month\.\n\nUnused days will be transferred totally on each start of the year\."
+    );
+
+    const level7 = ".o_accrual_level:nth-child(8)";
+    expect(`${level7} .content`).toHaveText(
+        "Accrual frequency : 20 day\(s\) every year on the Allocation date's anniversary\.\n\nUnused days will be transferred totally on each start of the year\."
+    );
 });

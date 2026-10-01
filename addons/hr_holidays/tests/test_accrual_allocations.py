@@ -4247,3 +4247,97 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             ('employee_id', '=', test_employee.id),
         ])
         self.assertEqual(len(created_allocation), 2, "Another accrual allocation should be created for the employee based on their working schedule.")
+
+    def test_accrual_allocation_on_yearly_anniversary_date(self):
+        accrual_plan = self.dummy_accrual_plan
+        accrual_plan.update({'level_ids': [(0, 0, {
+            'added_value': 20,
+            'added_value_type': 'day',
+            'frequency': 'yearly',
+            'yearly_option': 'anniversary',
+            'milestone_date': 'creation',
+            'action_with_unused_accruals': 'all',
+            'carryover_options': 'unlimited',
+            'accrual_validity': False,
+        })]})
+
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager).create({
+            'name': 'Yearly Accrual',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'date_from': date(2026, 9, 21),
+            'number_of_days': 0,
+        })
+
+        allocation.action_approve()
+
+        self._assert_get_allocation_data(allocation, (
+            ('2026-09-21', 0),
+            ('2027-09-20', 0),
+            ('2027-09-21', 20),
+            ('2028-09-20', 20),
+            ('2028-09-21', 40),
+        ), ('allocated_duration',))
+
+    def test_accrual_allocation_on_monthly_anniversary_date(self):
+        accrual_plan = self.dummy_accrual_plan
+        accrual_plan.update({'level_ids': [(0, 0, {
+            'added_value': 2,
+            'added_value_type': 'day',
+            'frequency': 'monthly',
+            'monthly_option': 'anniversary',
+            'milestone_date': 'creation',
+            'action_with_unused_accruals': 'all',
+            'carryover_options': 'unlimited',
+            'accrual_validity': False,
+        })]})
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager).create({
+            'name': 'Monthly Accrual',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'date_from': date(2026, 9, 21),
+            'number_of_days': 0,
+        })
+
+        allocation.action_approve()
+
+        self._assert_get_allocation_data(allocation, (
+            ('2026-09-21', 0),
+            ('2026-10-20', 0),
+            ('2026-10-21', 2),
+            ('2027-09-21', 24),
+        ), ('allocated_duration',))
+
+    def test_accrual_allocation_on_weekly_anniversary_date(self):
+        accrual_plan = self.dummy_accrual_plan
+        accrual_plan.update({'level_ids': [(0, 0, {
+            'added_value': 1,
+            'added_value_type': 'day',
+            'frequency': 'weekly',
+            'weekly_option': 'anniversary',
+            'milestone_date': 'creation',
+            'action_with_unused_accruals': 'all',
+            'carryover_options': 'unlimited',
+            'accrual_validity': False,
+        })]})
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager).create({
+            'name': 'Weekly Accrual',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'date_from': date(2026, 9, 21),
+            'number_of_days': 0,
+        })
+
+        allocation.action_approve()
+
+        self._assert_get_allocation_data(allocation, (
+            ('2026-09-21', 0),
+            ('2026-09-27', 0),
+            ('2026-09-28', 1),
+            ('2026-10-04', 1),
+            ('2026-10-05', 2),
+            ('2027-01-01', 14),
+        ), ('allocated_duration',))
