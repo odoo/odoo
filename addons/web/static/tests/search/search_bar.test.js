@@ -305,6 +305,32 @@ test("search input is focused when being toggled", async () => {
     expect(queryFirst`.o_searchview input`).toBeFocused();
 });
 
+test.tags("mobile");
+test("search bar is displayed by default when there are default facets", async () => {
+    class Parent extends Component {
+        static template = xml`
+            <div>
+                <t t-component="this.searchBarToggler.component" t-props="this.searchBarToggler.props"/>
+                <SearchBar toggler="this.searchBarToggler"/>
+            </div>
+        `;
+        static components = { SearchBar };
+        setup() {
+            this.searchBarToggler = useSearchBarToggler();
+        }
+    }
+    await mountWithSearch(Parent, {
+        resModel: "partner",
+        searchMenuTypes: ["groupBy"],
+        searchViewId: false,
+        context: { search_default_date_group_by: 1 },
+    });
+    expect(".o_searchview .o_searchview_facet").toHaveCount(1);
+    expect(".o_searchview input").toHaveCount(1);
+    await contains(`button [data-icon="search"]`).click();
+    expect(".o_searchview input").toHaveCount(0);
+});
+
 test.tags("desktop");
 test("search input is not focused on larger touch devices", async () => {
     mockTouch(true);
