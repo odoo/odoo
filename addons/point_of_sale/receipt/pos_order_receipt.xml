@@ -131,8 +131,8 @@
                             <tbody>
                                 <tr>
                                     <td colspan="2">
-                                        <span t-out="partner.get('name')"/>,
-                                        <span t-if="partner['street']" t-out="partner['street']"/>
+                                        <span t-out="partner.get('name')"/>
+                                        <span t-if="partner['street']" t-out="', ' + partner['street']"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -184,20 +184,27 @@
                                 <strong t-out="extra_data['preset_datetime']" style="font-size: 1.2em;"/>
                             </td>
                         </tr>
-                        <tr name="partner_details" style="text-align: start; top">
+                        <t t-if="partner">
+                            <tr style="text-align: start; top">
                             <td colspan="2">
-                                <t t-if="partner">
-                                    <span t-out="partner.get('name')"/>
-                                    <div t-if="partner['vat']">
-                                        <t t-out="extra_data['partner_vat_label']"/> <t t-out="partner['vat']" />
-                                    </div>
-                                    <div t-if="partner.get('street')"><span t-out="partner['street']"/></div>
-                                    <div t-if="partner.get('city') or partner.get('zip')">
-                                        <span t-out="partner.get('zip', '')"/>&#160;<span t-out="partner.get('city', '')"/>
-                                    </div>
-                                </t>
-                                <div t-if="order['mobile']"><span t-out="order['mobile']"/></div>
-                                <div t-elif="(partner and partner.get('phone'))"><span t-out="(partner and partner.get('phone'))"/></div>
+                                <span t-out="partner.get('name')"/>
+                                <span t-if="partner['street']" t-out="', ' + partner['street']"/>
+                                <span t-if="partner['city']" t-out="', ' + partner['city']"/>&#160;<span t-if="partner['zip']" t-out="', ' + partner['zip']"/>
+                            </td>
+                            </tr>
+                            <tr name="partner_details" style="text-align: start; top">
+                                <td t-if="partner['phone']" class="text-start w-60">
+                                    Tel <span t-out="partner['phone']"/>
+                                </td>
+                                <td class="text-end w-40" t-if="partner['vat']">
+                                    <t t-out="extra_data['partner_vat_label'] + ' '"/>
+                                    <t t-out="partner['vat']"/>
+                                </td>
+                            </tr>
+                        </t>
+                        <tr t-if="order['mobile']">
+                            <td colspan="2">
+                                <span t-out="order['mobile']"/>
                             </td>
                         </tr>
                     </table>

@@ -563,14 +563,14 @@ for (const tipCase of tipAfterPaymentCases) {
             payment_lines: [
                 { name: tipCase.paymentName, amount: tipCase.paymentAmount.toFixed(2) },
             ],
-            // orderlines: tipCase.lines,
+            orderlines: tipCase.lines,
         });
         expectTicketData(ticket, {
             total_amount: tipCase.totalAmount,
             payment_lines: [
                 { name: tipCase.paymentName, amount: tipCase.paymentAmount.toFixed(2) },
             ],
-            // orderlines: tipCase.lines,
+            orderlines: tipCase.lines,
         });
     });
 }
