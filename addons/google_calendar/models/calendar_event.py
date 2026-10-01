@@ -163,6 +163,7 @@ class CalendarEvent(models.Model):
             '|',
                 ('partner_ids.user_ids', 'in', self.env.user.id),
                 ('calendar_id', 'in', self.env.user.writable_calendar_ids.ids),
+            ('user_id', '!=', False),
             ('stop', '>', lower_bound),
             ('start', '<', upper_bound),
             # Do not sync events that follow the recurrence, they are already synced at recurrence creation
