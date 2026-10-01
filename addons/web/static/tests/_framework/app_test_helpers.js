@@ -287,13 +287,15 @@ export function restoreRegistry(registry) {
 }
 
 /**
+ * @template {any[]} [P=any[]]
  * @template [T=void]
- * @param {() => T} fn
+ * @param {(...args: P) => T} fn
+ * @param {P} args
  * @returns {Promise<T>}
  */
-export async function runTestScope(fn) {
+export async function runTestScope(fn, ...args) {
     const app = getTestApp() || (await makeTestApp());
-    return app.scope.run(fn);
+    return app.scope.run(fn, ...args);
 }
 
 /**
