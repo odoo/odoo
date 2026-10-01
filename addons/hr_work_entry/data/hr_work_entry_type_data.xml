@@ -1067,6 +1067,8 @@
         <field name="display_code">SDY</field>
         <field name="country_id" ref="base.be"/>
         <field name="count_as">absence</field>
+        <field name="amount_rate">1.0</field>
+        <field name="resource_calendar_selectable" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_paid_absence" model="hr.work.entry.type">
@@ -1211,6 +1213,7 @@
         <field name="display_code">CL1</field>
         <field name="country_id" ref="base.be"/>
         <field name="count_as">absence</field>
+        <field name="amount_rate">0.0</field>
     </record>
 
     <record id="l10n_be_work_entry_type_common_law_illness_attributable_to_worker" model="hr.work.entry.type">
