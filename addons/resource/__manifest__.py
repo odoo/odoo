@@ -17,6 +17,7 @@ associated to every resource. It also manages the leaves of every resource.
         'data/resource_data.xml',
         'data/ir_cron.xml',
         'views/resource_resource_views.xml',
+        'views/res_company_views.xml',
         'views/resource_calendar_leaves_views.xml',
         'views/resource_calendar_attendance_views.xml',
         'views/resource_calendar_views.xml',
