@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.FieldSelectorField">
-        <t t-if="this.props.readonly">
+        <t t-if="this.props.readonly or !this.resModel">
             <span t-out="this.formattedValue" />
         </t>
         <t t-else="">
