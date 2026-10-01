@@ -4,18 +4,17 @@ import { stepUtils } from "@web_tour/tour_utils";
 registry.category("web_tour.tours").add('custom_content_kanban_like_tour', {
     steps: () => [
         {
-            trigger: "ul.nav a:contains(Quote Builder)",
+            trigger: ".o_notebook_headers button[name='pdf_quote_builder']",
             run: "click",
         },
         {
-            trigger: "label:contains(Header)",
+            trigger: "label:contains(Product Document)",
             run: "click",
         },
         {
             trigger: "h5:contains(custom_1) ~ div textarea",
-            run: "edit Test",
+            run: "edit Test && click body",
         },
         ...stepUtils.saveForm(),
-        // TODO VCR: Finish this
     ]
 });
