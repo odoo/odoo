@@ -15,10 +15,10 @@ class TestL10nPkIdentifiers(TransactionCase):
     def test_business_identification(self):
         """Business Identification: relabeled Tax ID validating the NTN/CNIC formats."""
         self.assertEqual(self.env.ref('base.pk').vat_label, 'Business Identification')
-        for value in ('4174942', '1234567-8', '12345-1234567-8'):
+        for value in ('4174942', '1234567-8', '12345-1234567-8', 'B594380', 'b594380', 'B594380-1', 'AB12C34-D'):
             self.partner.vat = value
             self.assertEqual(self.partner.vat, value)
-        for value in ('12345', '1234abc'):
+        for value in ('12345', 'B3953', 'B594380AB', '12345-123456A-8', 'B59438@'):
             with self.assertRaises(ValidationError):
                 self.partner.vat = value
         # A rejection reports the accepted formats back to the user.
