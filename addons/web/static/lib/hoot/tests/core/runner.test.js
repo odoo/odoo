@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { defineTags, describe, expect, test } from "@odoo/hoot";
-import { makeTestRunner, parseUrl } from "../local_helpers";
-
+import { after, defineTags, describe, expect, test } from "@odoo/hoot";
+import { Component, onMounted, xml } from "@odoo/owl";
 import { Suite } from "../../core/suite";
+import { makeTestRunner, mountForTest, parseUrl } from "../local_helpers";
 
 describe(parseUrl(import.meta.url), () => {
     test("can register suites", () => {
@@ -106,5 +106,33 @@ describe(parseUrl(import.meta.url), () => {
 
         expect(runner.tests).toHaveLength(3);
         expect(runner.tags).toHaveLength(3);
+    });
+
+    test("same error reported twice is only handled once", async () => {
+        const { warn } = console;
+        console.warn = (...msg) => expect.step(msg.join(" "));
+        after(() => {
+            console.warn = warn;
+        });
+
+        class Boom extends Component {
+            static props = {};
+            static template = xml`<div />`;
+
+            setup() {
+                onMounted(() => {
+                    throw new Error("boom");
+                });
+            }
+        }
+
+        expect.errors(1);
+        expect.verifyErrors([]);
+        expect.verifySteps([]);
+
+        const prom = mountForTest(Boom);
+
+        await expect.waitForErrors(["boom"]);
+        await prom; // crash and end the test
     });
 });

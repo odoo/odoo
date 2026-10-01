@@ -905,9 +905,6 @@ test("create a new <p> with press 'Enter' then apply a powerbox command", async 
 // @todo @phoenix Need a fix in hoot duplicate error are throw
 test.todo("add plugins with the same powerboxCategory should crash", async () => {
     expect.errors(1);
-    patchWithCleanup(console, {
-        warn: (msg) => expect.step(msg),
-    });
     class Plugin1 extends Plugin {
         resources = {
             powerbox_categories: withSequence(10, { id: "test", name: "Test" }),
@@ -924,9 +921,4 @@ test.todo("add plugins with the same powerboxCategory should crash", async () =>
         })
     ).rejects.toThrow();
     expect.verifyErrors(["Duplicate category id: test"]);
-    expect.verifySteps([
-        "[Owl] Unhandled error. Destroying the root component",
-        "[Owl] Unhandled error. Destroying the root component",
-        "[Owl] Unhandled error. Destroying the root component",
-    ]);
 });
