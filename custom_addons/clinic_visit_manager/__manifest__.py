@@ -1,0 +1,37 @@
+# pyright: reportUnusedExpression=false
+{
+    "name": "Clinic Visit Manager",
+    "version": "1.0",
+    "summary": "Manage clinic visits, queues, and patient information",
+    "description": "A module to manage clinic visits, queue workflow, patient cards, and visit reports.",
+    "author": "Soul Software Solutions",
+    "website": "https://abis-portfolio.vercel.app/",
+    "category": "Healthcare",
+    "depends": ["base", "bus", "web", "account"],
+    "data": [
+        "security/clinic_security.xml",
+        "security/ir.model.access.csv",
+        "data/clinic_config_parameters.xml",
+        "data/clinic_visit_sequence.xml",
+        "report/clinic_visit_report.xml",
+        "views/clinic_visit_views.xml",
+        "views/hospital_queue_views.xml",
+        "views/clinic_patient_views.xml",
+        "views/clinic_dashboard_views.xml",
+        "views/res_config_settings_views.xml",
+    ],
+    "assets": {
+        "web.assets_backend": [
+            "clinic_visit_manager/static/src/owl/clinic_dashboard_components.js",
+            "clinic_visit_manager/static/src/owl/clinic_dashboard.js",
+            "clinic_visit_manager/static/src/owl/hospital_queue.js",
+            "clinic_visit_manager/static/src/owl/clinic_dashboard_components.xml",
+            "clinic_visit_manager/static/src/owl/clinic_dashboard.xml",
+            "clinic_visit_manager/static/src/owl/hospital_queue.xml",
+            "clinic_visit_manager/static/src/scss/clinic_dashboard.scss",
+        ],
+    },
+    "installable": True,
+    "application": True,
+    "license": "LGPL-3",
+}

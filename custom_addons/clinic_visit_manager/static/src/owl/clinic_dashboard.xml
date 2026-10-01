@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="clinic_visit_manager.ClinicDashboard">
+        <div class="o_action o_clinic_owl_dashboard">
+            <ControlPanel>
+                <t t-set-slot="layout-buttons">
+                    <button t-if="canCreateVisit" class="btn btn-primary" t-on-click="() => this.toggleForm('visit')">New Visit</button>
+                    <button t-if="canCreatePatient" class="btn btn-secondary" t-on-click="() => this.toggleForm('patient')">New Patient</button>
+                </t>
+            </ControlPanel>
+
+            <div class="o-content o_clinic_workspace overflow-auto">
+                <nav class="o_clinic_app_tabs" aria-label="Clinic workspace">
+                    <button t-att-class="tabClass('dashboard')" t-on-click="() => this.setTab('dashboard')">Dashboard</button>
+                    <button t-att-class="tabClass('visits')" t-on-click="() => this.setTab('visits')">Visits</button>
+                    <button t-att-class="tabClass('patients')" t-on-click="() => this.setTab('patients')">Patients</button>
+                </nav>
+
+                <t t-if="state.loading and !state.dashboard">
+                    <div class="o_clinic_loading">Loading clinic...</div>
+                </t>
+                <t t-elif="state.error">
+                    <div class="alert alert-danger m-4" role="alert" t-out="state.error"/>
+                </t>
+                <t t-else="">
+                    <QuickVisitForm t-if="state.showVisitForm and canCreateVisit"
+                                    visit="state.newVisit"
+                                    doctors="doctors"
+                                    update.bind="updateNewVisit"
+                                    create.bind="createVisit"
+                                    close.bind="closeVisitForm"/>
+
+                    <QuickPatientForm t-if="state.showPatientForm and canCreatePatient"
+                                      patient="state.newPatient"
+                                      doctors="doctors"
+                                      update.bind="updateNewPatient"
+                                      create.bind="createPatient"
+                                      close.bind="closePatientForm"/>
+
+                    <t t-if="state.activeTab === 'dashboard'">
+                        <DashboardSummary data="data"
+                                          metricCards="metricCards"
+                                          updatedAt="updatedAt"
+                                          canCompleteVisits="canCompleteVisits"
+                                          canStartVisits="canStartVisits"
+                                          openDashboardAction.bind="openDashboardAction"
+                                          openVisit.bind="openVisit"
+                                          completeVisit.bind="completeVisit"
+                                          startVisit.bind="startVisit"
+                                          statusClass.bind="statusClass"/>
+                    </t>
+
+                    <t t-if="state.activeTab === 'visits'">
+                        <section class="o_clinic_list_header">
+                            <div><h1>Clinic Visits</h1></div>
+                            <input class="form-control" placeholder="Search patient, token, doctor" t-att-value="state.visitSearch" t-on-input="ev => this.onVisitSearch(ev)"/>
+                        </section>
+                        <div class="o_clinic_filter_bar">
+                            <button t-foreach="visitFilters" t-as="filter" t-key="filter.key"
+                                    t-att-class="filterClass(filter.key)"
+                                    t-on-click="() => this.setVisitFilter(filter.key)">
+                                <t t-out="filter.label"/>
+                            </button>
+                        </div>
+                        <VisitTable visits="state.visits"
+                                    visitCount="state.visitCount"
+                                    pageNumbers="visitPageNumbers"
+                                    currentPage="state.visitPage"
+                                    canQueueVisits="canQueueVisits"
+                                    canStartVisits="canStartVisits"
+                                    canCompleteVisits="canCompleteVisits"
+                                    canCancelVisits="canCancelVisits"
+                                    formatDate.bind="formatDate"
+                                    formatNumber.bind="formatNumber"
+                                    statusClass.bind="statusClass"
+                                    statusLabel.bind="statusLabel"
+                                    openVisit.bind="openVisit"
+                                    sendToQueue.bind="sendToQueue"
+                                    startVisit.bind="startVisit"
+                                    completeVisit.bind="completeVisit"
+                                    cancelVisit.bind="cancelVisit"
+                                    setPage.bind="setVisitPage"
+                                    previousPage.bind="previousVisitPage"
+                                    nextPage.bind="nextVisitPage"/>
+                    </t>
+
+                    <t t-if="state.activeTab === 'patients'">
+                        <section class="o_clinic_list_header">
+                            <div><h1>Patients</h1></div>
+                            <input class="form-control" placeholder="Search name, phone, email" t-att-value="state.patientSearch" t-on-input="ev => this.onPatientSearch(ev)"/>
+                        </section>
+                        <PatientTable patients="paginatedPatients"
+                                      patientCount="state.patients.length"
+                                      pageNumbers="patientPageNumbers"
+                                      currentPage="state.patientPage"
+                                      genderLabel.bind="genderLabel"
+                                      bloodGroupLabel.bind="bloodGroupLabel"
+                                      openPatient.bind="openPatient"
+                                      setPage.bind="setPatientPage"
+                                      previousPage.bind="previousPatientPage"
+                                      nextPage.bind="nextPatientPage"/>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

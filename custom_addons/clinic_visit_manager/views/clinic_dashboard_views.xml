@@ -1,0 +1,35 @@
+<odoo>
+    <record id="view_clinic_visit_dashboard_form" model="ir.ui.view">
+        <field name="name">clinic.visit.dashboard.form</field>
+        <field name="model">clinic.visit.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Clinic Dashboard" create="0" edit="0">
+                <sheet>
+                    <field name="name" readonly="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_clinic_visit_dashboard_owl" model="ir.actions.client">
+        <field name="name">Clinic Dashboard</field>
+        <field name="tag">clinic_visit_manager.dashboard</field>
+        <field name="context">{'clinic_tab': 'dashboard'}</field>
+    </record>
+
+    <menuitem id="menu_clinic_dashboard"
+              name="Dashboard"
+              parent="menu_clinic_root"
+              action="action_clinic_visit_dashboard_owl"
+              sequence="1"
+              groups="base.group_no_one"/>
+
+    <record id="menu_clinic_root" model="ir.ui.menu">
+        <field name="name">Clinic</field>
+        <field name="action" ref="action_clinic_visit_dashboard_owl"/>
+    </record>
+
+    <record id="menu_clinic_dashboard" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+</odoo>
