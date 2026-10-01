@@ -211,6 +211,23 @@ class TestWorkEntry(TestWorkEntryBase):
         work_entry = self.env['hr.work.entry'].create(vals_list)
         self.assertEqual(work_entry.duration, 1, "The duration should be 1 hour")
 
+    def test_working_schedule_leave_is_not_counted_as_work(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Calendar',
+            'attendance_ids': [(0, 0, {
+                'dayofweek': '0',
+                'hour_from': 8,
+                'hour_to': 16,
+                'day_period': 'morning',
+                'work_entry_type_id': self.work_entry_type_leave.id,
+            })],
+        })
+
+        self.assertEqual(
+            calendar.get_work_hours_count(datetime(2024, 9, 2), datetime(2024, 9, 2, 23, 59, 59)),
+            0.0,
+        )
+
     def test_work_entry_different_calendars(self):
         """ Test work entries are correctly created for employees with versions that have different calendar types. """
         flexible_calendar = self.env['resource.calendar'].create({
