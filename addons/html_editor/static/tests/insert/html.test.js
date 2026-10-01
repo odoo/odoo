@@ -381,11 +381,11 @@ describe("collapsed selection", () => {
             static id = "customPlugin";
             static dependencies = ["dom", "selection"];
             resources = {
-                before_insert_processors: (container) => {
+                fragment_to_insert_processors: (fragment) => {
                     const second = this.editable.querySelector(".second");
                     this.dependencies.selection.setCursorStart(second);
-                    container.replaceChildren(parseHTML(this.document, `<p>surprise</p>`));
-                    return container;
+                    fragment.replaceChildren(parseHTML(this.document, `<p>surprise</p>`));
+                    return fragment;
                 },
             };
         }
