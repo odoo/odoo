@@ -186,8 +186,8 @@ export class ListPlugin extends Plugin {
         normalize_processors: this.normalize.bind(this),
         node_to_insert_processors: this.processNodeToInsert.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
-        before_insert_within_pre_processors: this.insertListWithinPre.bind(this),
-        before_insert_processors: this.handleInsert.bind(this),
+        fragment_to_insert_within_pre_processors: this.processFragmentToInsertWithinPre.bind(this),
+        fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
 
         /** Overrides */
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
@@ -1120,8 +1120,8 @@ export class ListPlugin extends Plugin {
         return clonedContents;
     }
 
-    insertListWithinPre(node) {
-        const listItems = node.querySelectorAll("li:not(.oe-nested)");
+    processFragmentToInsertWithinPre(fragment) {
+        const listItems = fragment.querySelectorAll("li:not(.oe-nested)");
         for (const li of listItems) {
             const nestingLvl = ancestors(li).filter(isListElement).length - 1;
             const list = closestElement(li, "ul, ol");
@@ -1140,7 +1140,7 @@ export class ListPlugin extends Plugin {
             const prefix = " ".repeat(nestingLvl * 4) + char;
             li.prepend(this.document.createTextNode(prefix));
         }
-        return node;
+        return fragment;
     }
 
     // --------------------------------------------------------------------------
@@ -1398,12 +1398,12 @@ export class ListPlugin extends Plugin {
             });
     }
 
-    handleInsert(container, block) {
+    processFragmentToInsert(fragment) {
         if (!this.config.allowChecklist) {
-            for (const list of container.querySelectorAll(".o_checklist > li")) {
+            for (const list of fragment.querySelectorAll(".o_checklist > li")) {
                 this.liToBlocks(list);
             }
         }
-        return container;
+        return fragment;
     }
 }
