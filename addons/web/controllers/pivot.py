@@ -14,7 +14,7 @@ from odoo.tools import osutil
 
 class TableExporter(http.Controller):
 
-    @http.route('/web/pivot/export_xlsx', type='http', auth="user", readonly=True)
+    @http.route('/web/pivot/export_xlsx', type='http', auth="user", replica=True)
     def export_xlsx(self, data, **kw):
         import xlsxwriter  # noqa: PLC0415
         jdata = json.load(data) if isinstance(data, FileStorage) else json.loads(data)

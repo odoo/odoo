@@ -252,7 +252,7 @@ class ChannelController(http.Controller):
             channel._find_or_create_member_for_self()
         channel.self_member_id._notify_typing(is_typing)
 
-    @mail_route("/discuss/channel/attachments", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
+    @mail_route("/discuss/channel/attachments", methods=["POST"], type="jsonrpc", auth="public", replica=True)
     def load_attachments(self, channel_id, limit=30, before=None):
         """Load attachments of a channel. If before is set, load attachments
         older than the given id.

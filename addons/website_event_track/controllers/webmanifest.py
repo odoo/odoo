@@ -11,7 +11,7 @@ from odoo.tools.translate import _
 
 class TrackManifest(http.Controller):
 
-    @http.route('/event/manifest.webmanifest', type='http', auth='public', methods=['GET'], website=True, sitemap=False, readonly=True)
+    @http.route('/event/manifest.webmanifest', type='http', auth='public', methods=['GET'], website=True, sitemap=False, replica=True)
     def webmanifest(self):
         """ Returns a WebManifest describing the metadata associated with a web application.
         Using this metadata, user agents can provide developers with means to create user 
@@ -39,7 +39,7 @@ class TrackManifest(http.Controller):
         ])
         return response
 
-    @http.route('/event/service-worker.js', type='http', auth='public', methods=['GET'], website=True, sitemap=False, readonly=True)
+    @http.route('/event/service-worker.js', type='http', auth='public', methods=['GET'], website=True, sitemap=False, replica=True)
     def service_worker(self):
         """ Returns a ServiceWorker javascript file scoped for website_event
         """
@@ -56,7 +56,7 @@ class TrackManifest(http.Controller):
         ])
         return response
 
-    @http.route('/event/offline', type='http', auth='public', methods=['GET'], website=True, sitemap=False, readonly=True)
+    @http.route('/event/offline', type='http', auth='public', methods=['GET'], website=True, sitemap=False, replica=True)
     def offline(self):
         """ Returns the offline page used by the 'website_event' PWA
         """

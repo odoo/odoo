@@ -812,7 +812,7 @@ class HTML_Editor(Controller):
         else:
             return {'error': response.status_code}
 
-    @route('/html_editor/icons_search', type='jsonrpc', auth='user', readonly=True)
+    @route('/html_editor/icons_search', type='jsonrpc', auth='user', replica=True)
     def icons_search(self, needle=''):
         """Search icons by name and tags.
 

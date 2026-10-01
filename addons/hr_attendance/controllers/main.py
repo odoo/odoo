@@ -401,7 +401,7 @@ class HrAttendance(http.Controller):
         response.update(self._get_user_attendance_data(employee, include_attendance_details=True))
         return response
 
-    @http.route('/hr_attendance/attendance_user_data', type="jsonrpc", auth="user", readonly=True)
+    @http.route('/hr_attendance/attendance_user_data', type="jsonrpc", auth="user", replica=True)
     def user_attendance_data(self):
         employee = request.env.user.with_company(self._get_active_company(request)).employee_id
         return self._get_user_attendance_data(

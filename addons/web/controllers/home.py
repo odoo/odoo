@@ -46,7 +46,7 @@ class Home(Controller):
         return False
 
     # ideally, this route should be `auth="user"` but that don't work in non-monodb mode.
-    @route(['/web', '/odoo', '/odoo/<path:subpath>', '/scoped_app/<path:subpath>'], type='http', auth="none", readonly=_web_client_readonly)
+    @route(['/web', '/odoo', '/odoo/<path:subpath>', '/scoped_app/<path:subpath>'], type='http', auth="none", replica=_web_client_readonly)
     def web_client(self, s_action=None, **kw):
 
         # Ensure we have both a database and a user
@@ -89,7 +89,7 @@ class Home(Controller):
     # within a QWeb template (see `web.webclient_bootstrap` in `webclient_templates.xml`).
     # Only `rpc` is overriden to catch `CheckIdentityException` to display the screen lock dialog.
     # `fetch` isn't and therefore raises an error upon receiving a `CheckIdentityException`.
-    @route('/web/webclient/load_menus', type='http', auth='user', methods=['GET'], readonly=True, check_identity=False)
+    @route('/web/webclient/load_menus', type='http', auth='user', methods=['GET'], replica=True, check_identity=False)
     def web_load_menus(self, lang=None):
         """
         Loads the menus for the webclient
@@ -107,7 +107,7 @@ class Home(Controller):
     def _login_redirect(self, uid, redirect=None):
         return _get_login_redirect_url(uid, redirect)
 
-    @route('/web/login', type='http', auth='none', readonly=False, list_as_website_content=_lt("Login"))
+    @route('/web/login', type='http', auth='none', replica=False, list_as_website_content=_lt("Login"))
     def web_login(self, redirect=None, **kw):
         ensure_db()
         request.params['login_success'] = False
@@ -178,7 +178,7 @@ class Home(Controller):
         valid_values = {k: v for k, v in kwargs.items() if k in LOGIN_SUCCESSFUL_PARAMS}
         return request.render('web.login_successful', valid_values)
 
-    @route('/web/become', type='http', auth='user', sitemap=False, readonly=True)
+    @route('/web/become', type='http', auth='user', sitemap=False, replica=True)
     def switch_to_admin(self):
         uid = request.env.user.id
         if request.env.user._is_system():
