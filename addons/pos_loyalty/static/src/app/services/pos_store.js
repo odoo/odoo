@@ -242,6 +242,20 @@ patch(PosStore.prototype, {
             })
         );
         order._code_activated_coupon_ids = [["unlink", ...toUnlink]];
+
+        // A temporary (negative id) coupon is not saved on the server, so a reward line
+        // of an order loaded from it has no coupon: give it back the card of its program.
+        for (const line of order._get_reward_lines()) {
+            if (line.coupon_id) {
+                continue;
+            }
+            const pointChange = Object.values(order.uiState.couponPointChanges).find(
+                (pe) => pe.program_id === line.reward_id?.program_id?.id
+            );
+            if (pointChange) {
+                line.coupon_id = this.models["loyalty.card"].get(pointChange.coupon_id);
+            }
+        }
     },
     async activateCode(code) {
         const order = this.getOrder();
@@ -779,6 +793,9 @@ patch(PosStore.prototype, {
             return agg;
         }, {});
         for (const line of rewardLines) {
+            if (!line.coupon_id) {
+                continue;
+            }
             const reward = line.reward_id;
             const couponId = line.coupon_id.id;
             if (!couponData[couponId]) {
