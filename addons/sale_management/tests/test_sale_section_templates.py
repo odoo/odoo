@@ -136,3 +136,81 @@ class TestSaleSectionTemplates(SaleCommon):
         self.assertEqual(
             template.currency_id, order.currency_id, "Currency should be taken from SO"
         )
+
+    def test_section_template_keeps_section_qty_uom(self):
+        """Section quantity and UoM should survive saving a section as template and reapplying it."""
+        order = self.sections_sale_order
+        section_line = order.order_line[1]  # Sec1
+        subsection_line = order.order_line[3]  # Sec1-Sub1
+        section_line.write({"section_qty": 3.0, "section_uom_id": self.uom_dozen.id})
+        subsection_line.section_qty = 2.0
+
+        section_line.save_section_template()
+        template = self._get_section_templates(order.company_id)
+        template_lines = template.sale_order_template_line_ids
+        self.assertRecordValues(
+            template_lines,
+            [
+                {"name": "Sec1", "section_qty": 3.0, "section_uom_id": self.uom_dozen.id},
+                {"name": "Sec1-r1", "section_qty": 0.0, "section_uom_id": False},
+                {"name": "Sec1-Sub1", "section_qty": 2.0, "section_uom_id": self.uom_unit.id},
+                {"name": "Sec1-Sub1-r1", "section_qty": 0.0, "section_uom_id": False},
+                {"name": "Sec1-Sub1-r2", "section_qty": 0.0, "section_uom_id": False},
+                {"name": "Sec1-Sub1-r3", "section_qty": 0.0, "section_uom_id": False},
+            ],
+        )
+
+        # Saving again should update the existing template
+        section_line.section_qty = 4.0
+        subsection_line.section_uom_id = self.uom_dozen
+        section_line.save_section_template()
+        template = self._get_section_templates(order.company_id)
+        self.assertEqual(len(template), 1)
+        self.assertRecordValues(
+            template.sale_order_template_line_ids.filtered("display_type"),
+            [
+                {"name": "Sec1", "section_qty": 4.0, "section_uom_id": self.uom_dozen.id},
+                {"name": "Sec1-Sub1", "section_qty": 2.0, "section_uom_id": self.uom_dozen.id},
+            ],
+        )
+
+        # Applying the section template should give back the section quantities and UoMs
+        lines_values = template.prepare_section_template_order_lines(
+            {"order_id": {"id": order.id}},
+            order.fiscal_position_id.id,
+            order.company_id.id,
+            order.currency_id.id,
+            {
+                field_name: {}
+                for field_name in (
+                    "name",
+                    "display_type",
+                    "sequence",
+                    "is_optional",
+                    "collapse_composition",
+                    "collapse_prices",
+                    "product_id",
+                    "product_uom_qty",
+                    "product_uom_id",
+                    "product_no_variant_attribute_value_ids",
+                    "product_custom_attribute_value_ids",
+                    "price_unit",
+                    "discount",
+                    "tax_ids",
+                    "section_qty",
+                    "section_uom_id",
+                )
+            },
+        )
+        self.assertEqual(
+            [
+                (values["name"], values["section_qty"], values["section_uom_id"])
+                for values in lines_values
+                if values["name"] in ("Sec1", "Sec1-Sub1", "Sec1-r1")
+            ],
+            [
+                ("Sec1", 4.0, self.uom_dozen.id),
+                ("Sec1-r1", 0.0, False),
+                ("Sec1-Sub1", 2.0, self.uom_dozen.id),
+            ],
+        )

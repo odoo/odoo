@@ -7,6 +7,7 @@ import {
     defineModels,
     fields,
     mountView,
+    onRpc,
 } from '@web/../tests/web_test_helpers';
 import { defineComboModels } from '@product/../tests/product_combo_test_helpers';
 import { saleModels } from './sale_test_helpers';
@@ -255,3 +256,58 @@ test("Test combo columns", async () => {
         message: 'Non-combo line should have all columns'
     });
 })
+
+test("Editing a section's quantity doesn't apply the ratio to combo items", async () => {
+    SaleOrderLine._records.unshift({
+        id: 10,
+        name: "Section",
+        sequence: 0,
+        display_type: "line_section",
+        section_qty: 1,
+    });
+
+    onRpc("batch_onchange_sol", ({ args }) => {
+        expect.step("batch_onchange_sol");
+        expect(Object.keys(args[0])).toEqual(["1", "2", "3", "6", "9"], {
+            message: "Combo items should follow their combo line, not the section's quantity",
+        });
+        return {};
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: 1,
+        arch: `
+            <form js_class="sale_order_form">
+                <field name="order_line" widget="sol_o2m" options="{'subsections': True}">
+                    <list editable="bottom">
+                        <field name="sequence" widget="handle" invisible="combo_item_id"/>
+                        <column name="product_and_description">
+                            <field name="name" invisible="not display_type"/>
+                            <field name="label" invisible="display_type"/>
+                        </column>
+                        <column name="sol_qty">
+                            <field name="product_uom_qty" invisible="display_type"/>
+                            <field
+                                name="section_qty"
+                                invisible="display_type not in ('line_section', 'line_subsection')"
+                            />
+                        </column>
+                        <field name="display_type" column_invisible="1"/>
+                        <field name="linked_line_id" column_invisible="1"/>
+                        <field name="product_type" column_invisible="1"/>
+                        <field name="combo_item_id" column_invisible="1"/>
+                    </list>
+                </field>
+            </form>
+        `,
+    });
+
+    await contains(".o_data_row:contains(Section):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("2", {
+        confirm: "blur",
+    });
+
+    expect.verifySteps(["batch_onchange_sol"]);
+});

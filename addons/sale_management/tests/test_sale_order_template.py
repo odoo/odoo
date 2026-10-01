@@ -2,7 +2,7 @@
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 from odoo.addons.sale_management.tests.common import SaleManagementCommon
 
@@ -137,3 +137,43 @@ class TestSaleOrderTemplate(SaleManagementCommon):
             UserError, msg="Only the creator of a shared template can delete it."
         ):
             self.empty_order_template.with_user(self.sale_user).unlink()
+
+    def test_quotation_template_keeps_section_qty_uom(self):
+        """Section quantity and UoM should survive creating a quotation template from an order and
+        applying it on a new order."""
+        self._enable_uom()
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({
+                    "name": "Section",
+                    "display_type": "line_section",
+                    "section_qty": 3.0,
+                    "section_uom_id": self.uom_dozen.id,
+                }),
+                Command.create({"product_id": self.product.id, "product_uom_qty": 36.0}),
+                Command.create({
+                    "name": "Subsection",
+                    "display_type": "line_subsection",
+                    "section_qty": 2.0,
+                }),
+                Command.create({"product_id": self.product.id, "product_uom_qty": 4.0}),
+                Command.create({"name": "Default section", "display_type": "line_section"}),
+            ],
+        })
+        expected_values = [
+            {"section_qty": 3.0, "section_uom_id": self.uom_dozen.id, "product_uom_qty": 0.0},
+            {"section_qty": 0.0, "section_uom_id": False, "product_uom_qty": 36.0},
+            {"section_qty": 2.0, "section_uom_id": self.uom_unit.id, "product_uom_qty": 0.0},
+            {"section_qty": 0.0, "section_uom_id": False, "product_uom_qty": 4.0},
+            {"section_qty": 1.0, "section_uom_id": self.uom_unit.id, "product_uom_qty": 0.0},
+        ]
+
+        order.action_create_quotation_template()
+        template = order.sale_order_template_id
+        self.assertRecordValues(template.sale_order_template_line_ids, expected_values)
+
+        with Form(self.env["sale.order"]) as order_form:
+            order_form.partner_id = self.partner
+            order_form.sale_order_template_id = template
+        self.assertRecordValues(order_form.record.order_line, expected_values)
