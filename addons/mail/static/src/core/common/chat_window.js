@@ -1,4 +1,3 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { ActionList } from "@mail/core/common/action_list";
 import { Composer } from "@mail/core/common/composer";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
@@ -27,6 +26,7 @@ import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { useBackButton, useService } from "@web/core/utils/hooks";
 import { Typing } from "@mail/discuss/typing/common/typing";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
@@ -50,12 +50,12 @@ export class ChatWindow extends Component {
 
     setup() {
         super.setup(...arguments);
+        this.ancestors = useAncestors({ inChatWindow: true });
         this.store = useService("mail.store");
         this.props = useProps({
             chatWindow: t.instanceOf(this.store.ChatWindow),
             right: t.number().optional(),
         });
-        useSubEnv({ inChatWindow: true });
         providePlugins([RenameThreadPlugin]);
         providePlugins([MessageHighlightPlugin], { thread: () => this.channel?.thread });
         this.editingName = usePlugin(RenameThreadPlugin).editingName;

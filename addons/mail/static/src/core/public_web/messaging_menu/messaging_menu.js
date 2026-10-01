@@ -5,6 +5,7 @@ import { MessagingMenuItem } from "@mail/core/public_web/messaging_menu/messagin
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { useOnBottomScrolled, useSearch } from "@mail/utils/common/hooks";
 import { incrementFn } from "@mail/utils/common/signal";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { Component, computed, shallowEqual, signal, types, useEffect, useProps } from "@odoo/owl";
 
@@ -55,6 +56,7 @@ export class MessagingMenu extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.dialog = useService("dialog");
         this.notification = useService("mail.notification.permission");
         this.messageSearch = useSearch({

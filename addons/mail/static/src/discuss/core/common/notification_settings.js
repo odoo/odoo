@@ -8,6 +8,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nesting";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useHover } from "@mail/utils/common/hooks";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 class NotificationDialog extends Component {
     static components = { Dialog, DiscussNotificationSettingsClientAction };
@@ -26,6 +27,7 @@ export class NotificationSettings extends Component {
     muteMenuRef = signal.ref();
 
     setup() {
+        this.ancestors = useAncestors();
         this.store = useService("mail.store");
         this.props = useProps({
             channel: t.instanceOf(this.store["discuss.channel"]),

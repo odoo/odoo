@@ -3,10 +3,10 @@ import { SuggestionService } from "@mail/core/common/suggestion_service";
 import { patch } from "@web/core/utils/patch";
 
 patch(SuggestionService.prototype, {
-    getSupportedDelimiters(thread, env) {
+    getSupportedDelimiters(thread, ancestors) {
         if (thread?.reviewChatter) {
             return [];
         }
-        return super.getSupportedDelimiters(thread, env);
+        return super.getSupportedDelimiters(thread, ancestors);
     },
 });

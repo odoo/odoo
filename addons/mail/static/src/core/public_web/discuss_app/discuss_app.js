@@ -1,7 +1,6 @@
 import { EffectPlugin } from "@web/core/effects/effect_plugin";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 import { propSignal } from "@mail/utils/common/hooks";
-import { useSubEnv } from "@web/owl2/utils";
 
 import {
     Component,
@@ -20,6 +19,7 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 
 import { DiscussContent } from "@mail/core/public_web/discuss_content";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useService } from "@web/core/utils/hooks";
 
@@ -47,7 +47,7 @@ export class Discuss extends Component {
         this.orm = useService("orm");
         this.effect = usePlugin(EffectPlugin);
         this.ui = useService("ui");
-        useSubEnv({ inDiscussApp: true });
+        useAncestors({ inDiscussApp: true });
         useListener(
             window,
             "keydown",

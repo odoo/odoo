@@ -17,6 +17,7 @@ import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 
 import { attClassObjectToString } from "@mail/utils/common/format";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 class Actions extends Component {
     static components = { Dropdown, DropdownItem };
@@ -45,6 +46,7 @@ export class AttachmentList extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         Object.assign(this, { attClassObjectToString, formatDate, formatDateTime });
         this.store = useService("mail.store");
         this.props = useProps({
@@ -93,7 +95,7 @@ export class AttachmentList extends Component {
      * @param {import("models").Attachment} attachment
      */
     canDownload(attachment) {
-        return !attachment.uploading && !this.env.inComposer;
+        return !attachment.uploading && !this.ancestors.inComposer;
     }
 
     /**
@@ -113,7 +115,7 @@ export class AttachmentList extends Component {
      *  clicked one stands for, itself alone most of the time
      */
     onClickUnlink(attachment, duplicates = [attachment]) {
-        if (this.env.inComposer) {
+        if (this.ancestors.inComposer) {
             this.props.unlinkAttachments(duplicates);
             return true;
         }
@@ -178,15 +180,15 @@ export class AttachmentList extends Component {
     }
 
     onImageLoaded() {
-        this.env.onImageLoaded?.();
+        this.ancestors.inThread?.onImageLoaded();
     }
 
     get isInChatWindowAndIsAlignedRight() {
-        return this.env.inChatWindow && this.env.alignedRight;
+        return this.ancestors.inChatWindow && this.ancestors.inMessage?.isAlignedRight;
     }
 
     get isInChatWindowAndIsAlignedLeft() {
-        return this.env.inChatWindow && !this.env.alignedRight;
+        return this.ancestors.inChatWindow && !this.ancestors.inMessage?.isAlignedRight;
     }
 
     /**
@@ -218,24 +220,21 @@ export class AttachmentList extends Component {
 
     showDelete(attachment) {
         // in the composer they should all be implicitly deletable
-        if (this.env.inComposer) {
+        if (this.ancestors.inComposer) {
             return true;
         }
         if (!attachment.isDeletable) {
             return false;
         }
         // in messages users are expected to delete the message instead of just the attachment
-        return (
-            !this.env.message ||
-            this.env.message.hasTextContent ||
-            (this.env.message && this.props.attachmentGroups.length > 1)
-        );
+        const message = this.ancestors.inMessage?.message;
+        return !message || message.hasTextContent || this.props.attachmentGroups.length > 1;
     }
 
     /**
      * @param {import("models").Attachment} attachment
      */
     showUploaded(attachment) {
-        return !attachment.isImage && !attachment.uploading && this.env.inComposer;
+        return !attachment.isImage && !attachment.uploading && this.ancestors.inComposer;
     }
 }

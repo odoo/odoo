@@ -1,4 +1,5 @@
 import { LinkPreview } from "@mail/core/common/link_preview";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { Component, types, useProps } from "@odoo/owl";
 
@@ -10,6 +11,7 @@ export class MessageLinkPreviewList extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.store = useService("mail.store");
         this.props = useProps({
             messageLinkPreviews: types.array(

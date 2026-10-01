@@ -6,6 +6,7 @@ import {
     generateSpecialMentionElement,
 } from "@mail/utils/common/format";
 import { useSearch } from "@mail/utils/common/hooks";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { proxy, t, useProps, useScope } from "@odoo/owl";
 import { emojiType } from "@web/core/emoji_picker/emoji_loader";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
@@ -55,17 +56,16 @@ export const optionType = (store) =>
  */
 
 export class UseSuggestion {
+    ancestors = useAncestors();
     props = useProps();
     scope = useScope();
     composerService = useService("mail.composer");
     suggestionService = useService("mail.suggestion");
 
     /**
-     * @param {import("@web/env").OdooEnv} env
      * @param {import("@odoo/owl").ReactiveValue<import("@html_editor/editor").Editor>} editor
      */
-    constructor(env, editor) {
-        this.env = env;
+    constructor(editor) {
         this.editor = editor;
         this.detection = proxy({
             /** @type {SuggestionDelimiter|undefined} */
@@ -159,7 +159,7 @@ export class UseSuggestion {
         }
         const supportedDelimiters = this.suggestionService.getSupportedDelimiters(
             this.thread,
-            this.env
+            this.ancestors
         );
         for (const candidatePosition of candidatePositions) {
             if (candidatePosition < 0 || candidatePosition >= text.length) {

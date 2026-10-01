@@ -1,4 +1,5 @@
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { useChildRefs, useScrollState } from "@mail/utils/common/hooks";
 import { Component, Portal, signal, t, useEffect, useProps } from "@odoo/owl";
 
@@ -19,8 +20,8 @@ export class Tabs extends Component {
         this.headerRefs = useChildRefs();
         this.navRef = signal();
         this.scrollState = useScrollState(this.navRef);
-        useSubEnv({
-            tabsContext: {
+        useAncestors({
+            inTabs: {
                 navRef: this.navRef,
                 headerRefs: this.headerRefs,
                 isActive: (id) => this.activeHeaderId() === id,
@@ -59,6 +60,7 @@ export class Tab extends Component {
 
     setup() {
         super.setup(...arguments);
+        this.ancestors = useAncestors();
         this.props = useProps({
             id: t.or([t.string(), t.number()]),
             title: t.string().optional(),
@@ -70,7 +72,7 @@ export class Tab extends Component {
                 headerRefs.set(id, this.rootRef);
                 return () => headerRefs.delete(id);
             },
-            () => [this.env.tabsContext.headerRefs, this.props.id]
+            () => [this.ancestors.inTabs.headerRefs, this.props.id]
         );
         useLayoutEffect(
             (active) => {
@@ -83,10 +85,10 @@ export class Tab extends Component {
     }
 
     onClick() {
-        this.env.tabsContext.setActiveTab(this.props.id);
+        this.ancestors.inTabs.setActiveTab(this.props.id);
     }
 
     get isActive() {
-        return this.env.tabsContext.isActive(this.props.id);
+        return this.ancestors.inTabs.isActive(this.props.id);
     }
 }

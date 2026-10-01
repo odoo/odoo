@@ -22,6 +22,7 @@ import { patch } from "@web/core/utils/patch";
 import { Composer, MENTION_AMOUNT_WARNING } from "@mail/core/common/composer";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { NavigableList } from "@mail/core/common/navigable_list";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { press } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
 import { range } from "@web/core/utils/numbers";
@@ -480,7 +481,7 @@ test("select @ mention from the suggestion list being filtered", async () => {
     patch(DiscussAvatar.prototype, {
         setup() {
             super.setup();
-            if (!this.env.inNavigableList) {
+            if (!useAncestors().inNavigableList) {
                 return;
             }
             // Simulate a slow render of the filtered list, keeping the previous search on screen.

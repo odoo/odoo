@@ -10,6 +10,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 import { useService } from "@web/core/utils/hooks";
 import { ActionList } from "@mail/core/common/action_list";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 export class ChannelMember extends Component {
     static components = {
@@ -25,6 +26,7 @@ export class ChannelMember extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.store = useService("mail.store");
         this.member = propComputed("member", t.instanceOf(this.store["discuss.channel.member"]));
         this.actions = useChannelMemberActions({ member: this.member });

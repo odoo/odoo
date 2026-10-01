@@ -42,14 +42,14 @@ export const muteAction = {
     badge: ({ store }) =>
         store.rtc.microphonePermission !== "granted" || store.rtc.showMicrophoneSilentWarning,
     badgeIcon: "priority_high",
-    condition: ({ owner, store, channel }) =>
-        channel?.isSelfInCall && (owner.env.inCallMenu || !store.rtc.selfSession?.is_deaf),
+    condition: ({ ancestors, channel, store }) =>
+        channel?.isSelfInCall && (ancestors.inCallMenu || !store.rtc.selfSession?.is_deaf),
     disabledCondition: ({ store }) => store.rtc.showMicrophoneSilentWarning,
     name: ({ store }) => (store.rtc.selfSession?.isMute ? _t("Unmute") : _t("Mute")),
     isActive: ({ store }) => store.rtc.selfSession?.isMute,
-    icon: ({ action, owner, store }) =>
+    icon: ({ action, ancestors, store }) =>
         action.isActive
-            ? store.rtc.selfSession?.is_deaf && !owner.env.inCallMenu
+            ? store.rtc.selfSession?.is_deaf && !ancestors.inCallMenu
                 ? CALL_ICON_DEAFEN
                 : CALL_ICON_MUTED
             : "mic",
@@ -90,10 +90,10 @@ export const muteAction = {
 registerCallAction("mute", muteAction);
 /** @type {CallActionDefinition} */
 export const quickActionSettings = {
-    condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
+    condition: ({ ancestors, channel }) => !ancestors.inCallMenu && channel?.isSelfInCall,
     dropdownComponent: QuickVoiceSettings,
-    dropdownMenuClass: ({ owner }) =>
-        owner.env.inMeetingView
+    dropdownMenuClass: ({ ancestors }) =>
+        ancestors.inMeetingView
             ? "o-discuss-CallActionList-menu overflow-x-hidden"
             : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
@@ -111,8 +111,8 @@ export const quickActionSettings = {
 };
 registerCallAction("quick-voice-settings", quickActionSettings);
 registerCallAction("deafen", {
-    condition: ({ owner, store, channel }) =>
-        channel?.isSelfInCall && (owner.env.inCallMenu || store.rtc.selfSession?.is_deaf),
+    condition: ({ ancestors, channel, store }) =>
+        channel?.isSelfInCall && (ancestors.inCallMenu || store.rtc.selfSession?.is_deaf),
     name: ({ store }) => (store.rtc.selfSession?.is_deaf ? _t("Undeafen") : _t("Deafen")),
     isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
     icon: ({ action }) => (action.isActive ? CALL_ICON_DEAFEN : "headphones"),
@@ -127,8 +127,8 @@ registerCallAction("deafen", {
 });
 /** @type {CallActionDefinition} */
 export const cameraOnAction = {
-    badge: ({ owner, store, channel }) =>
-        !owner.env.inCallMenu &&
+    badge: ({ ancestors, channel, store }) =>
+        !ancestors.inCallMenu &&
         channel?.default_display_mode === "video_full_screen" &&
         store.rtc.cameraPermission !== "granted",
     badgeIcon: "priority_high",
@@ -163,10 +163,10 @@ export const cameraOnAction = {
 registerCallAction("camera-on", cameraOnAction);
 /** @type {CallActionDefinition} */
 export const quickVideoSettings = {
-    condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
+    condition: ({ ancestors, channel }) => !ancestors.inCallMenu && channel?.isSelfInCall,
     dropdownComponent: QuickVideoSettings,
-    dropdownMenuClass: ({ owner }) =>
-        owner.env.inMeetingView
+    dropdownMenuClass: ({ ancestors }) =>
+        ancestors.inMeetingView
             ? "o-discuss-CallActionList-menu overflow-x-hidden"
             : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
@@ -184,11 +184,11 @@ registerCallAction("quick-video-settings", quickVideoSettings);
  * @type {CallActionDefinition}
  */
 export const switchCameraAction = {
-    condition: ({ owner, channel, store }) =>
+    condition: ({ ancestors, channel, store }) =>
         channel?.isSelfInCall &&
         isMobileOS() &&
         store.rtc.selfSession?.is_camera_on &&
-        owner.env.inCallMenu,
+        ancestors.inCallMenu,
     name: _t("Switch Camera"),
     isActive: false,
     icon: "refresh",
@@ -301,8 +301,8 @@ registerCallAction("picture-in-picture", {
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("change-layout", {
-    condition: ({ channel, owner }) =>
-        channel?.isSelfInCall && !owner.env.inCallMenu && !owner.env.pipWindow,
+    condition: ({ ancestors, channel, owner }) =>
+        channel?.isSelfInCall && !ancestors.inCallMenu && !owner.env.pipWindow,
     name: _t("Change Layout"),
     icon: "view_module",
     onSelected: ({ channel, store }) =>

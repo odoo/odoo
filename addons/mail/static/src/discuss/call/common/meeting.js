@@ -15,6 +15,8 @@ import { MeetingReadyBanner } from "./meeting_ready_banner";
 import { meetingMoreActionGroups, MeetingSideActions } from "./meeting_side_actions";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
+import { assignGetter } from "@mail/utils/common/misc";
 
 const { DateTime } = luxon;
 const PIP_EXTRA_ACTION_IDS = ["copy-invite-link", "meeting-chat"];
@@ -41,21 +43,23 @@ export class Meeting extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
-        useSubEnv({
+        useAncestors({
             inDiscussCallTheme: true,
             inDiscussCallView: true,
-            inMeetingView: {
-                openChat: () =>
-                    this.threadActions.actions
-                        .find((action) => action.id === "meeting-chat")
-                        ?.actionPanelOpen(),
-            },
+            inMeetingView: assignGetter(
+                {
+                    openChat: () =>
+                        this.threadActions.actions
+                            .find((action) => action.id === "meeting-chat")
+                            ?.actionPanelOpen(),
+                },
+                { hasPreviousActionPanel: () => this.threadActions.actionStack.length > 0 }
+            ),
         });
         this.threadActions = useThreadActions({ thread: () => this.channel.thread });
         providePlugins([MessageHighlightPlugin], { thread: () => this.channel.thread });
         this.messageSearch = useMessageSearch(this.channel.thread);
         useSubEnv({
-            hasPreviousActionPanel: () => this.threadActions.actionStack.length > 0,
             messageSearch: this.messageSearch,
         });
         onMounted(() => (this.store.meetingViewOpened = true));

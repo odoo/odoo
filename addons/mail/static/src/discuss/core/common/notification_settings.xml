@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.NotificationSettings">
-        <ActionPanel t-if="!this.env[this.DROPDOWN_NESTING] and this.env.inChatWindow" close="this.props.close" title.translate="Notification Settings" resizable="!!this.env.inMeetingView" initialWidth="400" icon="'notifications'" iconClass="'oi-filled'">
+        <ActionPanel t-if="!this.env[this.DROPDOWN_NESTING] and this.ancestors.inChatWindow" close="this.props.close" title.translate="Notification Settings" resizable="!!this.ancestors.inMeetingView" initialWidth="400" icon="'notifications'" iconClass="'oi-filled'">
             <t t-call="discuss.NotificationSettings.content"/>
         </ActionPanel>
         <t t-else="" t-call="discuss.NotificationSettings.content"/>
@@ -12,7 +12,7 @@
         <div class="o-discuss-NotificationSettings">
             <t t-if="this.props.channel.channel_type === 'channel'">
                 <t t-call="discuss.NotificationSettings.unMuteSttings" />
-                <Dropdown position="this.ui.isSmall ? 'bottom-end' : 'right-start'" state="this.muteConversationDropdownState" menuClass="'o-mail-NotificationSettings-submenu my-0 p-0 ' + this.store.discussDropdownMenuClass(this)" menuRef="this.muteMenuRef" manual="true">
+                <Dropdown position="this.ui.isSmall ? 'bottom-end' : 'right-start'" state="this.muteConversationDropdownState" menuClass="'o-mail-NotificationSettings-submenu my-0 p-0 ' + this.store.discussDropdownMenuClass(this.ancestors)" menuRef="this.muteMenuRef" manual="true">
                     <button class="btn rounded-3 w-100 d-flex border-0" t-att-class="{
                         'o-px-2_5': this.env[this.DROPDOWN_NESTING],
                         'o-ps-2_5 o-pe-1_5': !this.env[this.DROPDOWN_NESTING],
@@ -50,7 +50,7 @@
     </t>
 
     <t t-name="discuss.NotificationSettings.muteSttings">
-        <div class="d-flex flex-column" t-attf-class="{{ this.store.discussDropdownMenuClass(this) }}">
+        <div class="d-flex flex-column" t-attf-class="{{ this.store.discussDropdownMenuClass(this.ancestors) }}">
             <t t-if="this.props.channel.channel_type !== 'channel'" t-call="discuss.NotificationSettings.unMuteSttings" />
             <t t-foreach="this.store.settings.MUTES" t-as="mute" t-key="mute.label">
                 <DropdownItem class="'o-mail-NotificationSettings-muteDuration d-flex align-items-center cursor-pointer'" onSelected="()=>this.setMute(mute.value)"><t t-out="mute.name"/></DropdownItem>

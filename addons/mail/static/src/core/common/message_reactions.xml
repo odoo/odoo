@@ -3,8 +3,8 @@
 <t t-name="mail.MessageReactions">
     <div class="o-mail-MessageReactions position-relative d-flex flex-wrap"
         t-att-class="{
-            'flex-row-reverse me-3': this.env.inChatWindow and this.env.alignedRight,
-            'ms-3': !(this.env.inChatWindow and this.env.alignedRight) and (this.message().isDiscussion),
+            'flex-row-reverse me-3': this.ancestors.inChatWindow and this.ancestors.inMessage?.isAlignedRight,
+            'ms-3': !(this.ancestors.inChatWindow and this.ancestors.inMessage?.isAlignedRight) and (this.message().isDiscussion),
             'mt-n1': this.message().message_type === 'comment' and !this.message().attachment_ids.length,
             'o-mt-0_5': this.message().attachment_ids.length,
         }">

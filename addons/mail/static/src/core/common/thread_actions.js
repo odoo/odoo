@@ -109,7 +109,7 @@ registerThreadAction("meeting-chat", {
     badgeIconClass: ({ channel }) =>
         !channel.importantCounter && "oi-filled o-text-white opacity-75",
     badgeText: ({ channel }) => channel.importantCounter || undefined,
-    condition: ({ owner }) => owner.env.inMeetingView,
+    condition: ({ ancestors }) => ancestors.inMeetingView,
     icon: "forum",
     name: _t("Chat"),
     sequence: 30,
