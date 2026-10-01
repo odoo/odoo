@@ -3381,3 +3381,124 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             self.pos_config.notify_synchronisation(session.id, 1, {'product.product': [product.id]})
         static_products = mock_send.call_args[0][2]['static_records']['product.product']
         self.assertEqual(static_products[0]['display_name'], 'Synced Tube')
+
+    def _shared_order_payload(self, session, product, uuid, **overrides):
+        """Build a `sync_from_ui` payload for an order of `product` at quantity 2.
+
+        Args:
+            session: the open `pos.session` the order belongs to.
+            product: the `product.product` sold, priced 100.0 and tax free.
+            uuid: the order uuid, which is what `_get_open_order` matches on.
+            **overrides: keys replacing the defaults, e.g. ``state`` or ``amount_total``.
+
+        Returns:
+            dict: a fresh payload, safe to pass to `sync_from_ui` (which mutates it).
+        """
+        payload = {
+            'access_token': '0123456789',
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+            'amount_tax': 0.0,
+            'amount_total': 200.0,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'last_order_preparation_change': '{}',
+            'lines': [Command.create({
+                'discount': 0.0,
+                'pack_lot_ids': [],
+                'price_subtotal': 200.0,
+                'price_subtotal_incl': 200.0,
+                'price_unit': 100.0,
+                'product_id': product.id,
+                'qty': 2.0,
+                'tax_ids': [Command.set([])],
+                'uuid': f'{uuid}-line',
+            })],
+            'name': 'Order 00001-001-0001',
+            'partner_id': False,
+            'payment_ids': [],
+            'sequence_number': 1,
+            'session_id': session.id,
+            'state': 'draft',
+            'user_id': self.env.uid,
+            'uuid': uuid,
+        }
+        payload.update(overrides)
+        return payload
+
+    def test_shared_order_total_is_recomputed_from_the_stored_lines(self):
+        """A draft save must store the total of the lines, not the number the client sent."""
+        product = self.env['product.product'].create({
+            'name': 'Shared Order Product',
+            'available_in_pos': True,
+            'list_price': 100.0,
+            'taxes_id': [Command.clear()],
+        })
+        self.pos_config.open_ui()
+        session = self.pos_config.current_session_id
+        uuid = '11111111-1111-1111-1111-111111111111'
+
+        # The order is first saved with a total matching its single line.
+        order_id = self.PosOrder.sync_from_ui(
+            [self._shared_order_payload(session, product, uuid)])['pos.order'][0]['id']
+        order = self.PosOrder.browse(order_id)
+
+        # A later draft save claims 111.0 while the line is still worth 200.0.
+        self.PosOrder.sync_from_ui([self._shared_order_payload(
+            session, product, uuid, amount_total=111.0, lines=[])])
+
+        self.assertEqual(order.state, 'draft')
+        self.assertEqual(order.amount_total, 200.0)
+
+    def test_paid_order_refuses_a_stale_client_total(self):
+        """Paying from a device that did not see another device's change must be refused."""
+        product = self.env['product.product'].create({
+            'name': 'Shared Order Product',
+            'available_in_pos': True,
+            'list_price': 100.0,
+            'taxes_id': [Command.clear()],
+        })
+        self.pos_config.open_ui()
+        session = self.pos_config.current_session_id
+        uuid = '22222222-2222-2222-2222-222222222222'
+
+        # Device A saves the order with quantity 2.
+        order_id = self.PosOrder.sync_from_ui(
+            [self._shared_order_payload(session, product, uuid)])['pos.order'][0]['id']
+        order = self.PosOrder.browse(order_id)
+        line = order.lines
+
+        # Device B raises the quantity to 5 and saves.
+        self.PosOrder.sync_from_ui([self._shared_order_payload(
+            session, product, uuid,
+            amount_total=500.0,
+            lines=[Command.update(line.id, {
+                'qty': 5.0,
+                'price_subtotal': 500.0,
+                'price_subtotal_incl': 500.0,
+            })],
+        )])
+        self.assertEqual(line.qty, 5.0)
+        self.assertEqual(order.amount_total, 500.0)
+
+        # Device A pays without refreshing: it sends no line command, because its own
+        # copy of the line was never edited, but it does send its stale total.
+        stale_payment = self._shared_order_payload(
+            session, product, uuid,
+            amount_paid=200.0,
+            amount_total=200.0,
+            lines=[],
+            payment_ids=[Command.create({
+                'amount': 200.0,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.cash_payment_method.id,
+            })],
+            state='paid',
+        )
+
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.PosOrder.sync_from_ui([stale_payment])
+
+        self.assertEqual(order.state, 'draft')
+        self.assertEqual(order.amount_total, 500.0)
+        self.assertFalse(order.payment_ids)
