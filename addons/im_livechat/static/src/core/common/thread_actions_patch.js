@@ -1,23 +1,30 @@
-import { ThreadAction, threadActionsRegistry } from "@mail/core/common/thread_actions";
+import {
+    externalThreadActions,
+    ThreadAction,
+    threadActionsRegistry,
+} from "@mail/core/common/thread_actions";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
+for (const actionId of [
+    "fold-chat-window",
+    "close",
+    "restart",
+    "call-settings",
+    "meeting-chat",
+    "leave",
+    "notification-settings",
+]) {
+    externalThreadActions.add(actionId);
+}
+
 patch(ThreadAction.prototype, {
     _condition({ action, channel, store }) {
-        const visitorActions = [
-            "fold-chat-window",
-            "close",
-            "restart",
-            "call-settings",
-            "meeting-chat",
-            "leave",
-            "notification-settings",
-        ];
         if (
             channel?.channel_type === "livechat" &&
             store.self_user?.share !== false &&
-            !visitorActions.includes(action.id)
+            !externalThreadActions.has(action.id)
         ) {
             return false;
         }

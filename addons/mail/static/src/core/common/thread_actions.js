@@ -16,6 +16,7 @@ import { MeetingChat } from "@mail/discuss/call/common/meeting_chat";
 import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
+export const externalThreadActions = new Set();
 
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("models").Thread} Thread */
