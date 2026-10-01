@@ -1427,7 +1427,7 @@ export function useActionManager(router = _router) {
     async function _executeReportAction(action, options) {
         const handlers = registry.category("ir.actions.report handlers").getAll();
         for (const handler of handlers) {
-            const result = await scope.run(() => handler(action, options, env));
+            const result = await scope.run(handler, action, options);
             if (result) {
                 const { onClose } = options;
                 if (action.close_on_report_download) {
