@@ -9,7 +9,7 @@ declare module "plugins" {
     import { on_will_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, on_deleted_handlers, delete_range_overrides, DeleteShared, is_functional_empty_node_predicates, removable_descendants_providers, system_node_selectors, is_node_removable_predicates } from "@html_editor/core/delete_plugin";
     import { DialogShared } from "@html_editor/core/dialog_plugin";
     import { DomObserverShared, attributes_mutation_value_processors, on_will_filter_mutations_handlers, set_attribute_overrides, on_content_updated_handlers, on_pending_mutations_staged_handlers, on_pending_mutations_normalized_handlers, is_mutation_savable_predicates, is_classlist_mutation_savable_predicates } from "@html_editor/core/dom_observer_plugin";
-    import { on_inserted_handlers, normalize_processors, before_insert_processors, on_will_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties, is_retagging_safe_predicates } from "@html_editor/core/dom_plugin";
+    import { on_inserted_handlers, normalize_processors, fragment_to_insert_processors, on_will_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties, is_retagging_safe_predicates } from "@html_editor/core/dom_plugin";
     import { are_inlines_allowed_at_root_predicates } from "@html_editor/core/no_inline_root_plugin";
     import { DomReferenceMapShared, serializable_descendants_processors } from "@html_editor/core/dom_reference_map_plugin";
     import { can_format_content_predicates, format_specs, is_format_class_predicates, is_formattable_node_predicates, before_format_handlers, formattable_node_providers, FormatShared, can_remove_format_predicates, is_node_in_same_block_segment_predicates, on_all_formats_removed_handlers, on_format_applied_handlers, on_format_requested_handlers, on_collapsed_formats_removed_handlers } from "@html_editor/core/format_plugin";
@@ -26,7 +26,7 @@ declare module "plugins" {
     import { user_commands, UserCommandShared } from "@html_editor/core/user_command_plugin";
 
     import { BannerShared } from "@html_editor/main/banner_plugin";
-    import { before_insert_within_pre_processors } from "@html_editor/main/code_block_plugin";
+    import { fragment_to_insert_within_pre_processors } from "@html_editor/main/code_block_plugin";
     import { EmojiShared } from "@html_editor/main/emoji_plugin";
     import { feff_providers, FeffShared, would_feff_be_legit_predicates, selectors_for_feff_providers } from "@html_editor/main/feff_plugin";
     import { apply_background_color_processors, apply_color_style_overrides, apply_color_overrides, color_combination_providers, ColorShared, background_color_processors, on_color_requested_handlers, before_color_element_processors } from "@html_editor/main/font/color_plugin";
@@ -240,12 +240,12 @@ declare module "plugins" {
         attributes_mutation_value_processors: attributes_mutation_value_processors;
         background_color_processors: background_color_processors;
         before_color_element_processors: before_color_element_processors;
-        before_insert_processors: before_insert_processors;
-        before_insert_within_pre_processors: before_insert_within_pre_processors;
         clean_for_save_processors: clean_for_save_processors;
         clipboard_content_processors: clipboard_content_processors;
         clipboard_text_processors: clipboard_text_processors;
         deselect_custom_selected_nodes_processors: deselect_custom_selected_nodes_processors;
+        fragment_to_insert_processors: fragment_to_insert_processors;
+        fragment_to_insert_within_pre_processors: fragment_to_insert_within_pre_processors;
         move_widget_position_processors: move_widget_position_processors;
         node_to_insert_processors: node_to_insert_processors;
         normalize_processors: normalize_processors;
