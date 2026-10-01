@@ -33,7 +33,7 @@ export class ImStatusDropdown extends Component {
     }
 }
 
-export function imStatusItem(env) {
+export function imStatusItem() {
     return {
         type: "component",
         contentComponent: ImStatusDropdown,
