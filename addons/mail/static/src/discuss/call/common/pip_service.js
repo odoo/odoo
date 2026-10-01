@@ -24,6 +24,7 @@ export const callPipService = {
             }
         );
         function closePip() {
+            popout.reset();
             state.active = false;
             pipWindow?.close();
         }

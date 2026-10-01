@@ -10,6 +10,7 @@ import {
     makeMockRtcNetwork,
     mockBrowserFullscreen,
     mockGetMedia,
+    mockPermissionsPrompt,
     mockPipWindow,
     onRpcAfter,
     openDiscuss,
@@ -33,6 +34,7 @@ import {
 } from "@mail/discuss/call/common/rtc_service";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 import { Meeting } from "@mail/discuss/call/common/meeting";
+import { POLL_CLOSE_WINDOW_TIMEOUT } from "@mail/core/common/mail_popout_service";
 
 import {
     advanceTime,
@@ -1215,6 +1217,47 @@ test("Leaving the meeting view auto-focuses the participant video in a chat wind
     await contains(".o-mail-Meeting", { count: 0 });
     await contains(".o-mail-ChatWindow .o-discuss-CallParticipantCard[aria-label='Batman'] video");
     await contains(".o-mail-ChatWindow .o-discuss-CallParticipantCard", { count: 1 });
+});
+
+async function startCallWithMicWarningInPip() {
+    mockPermissionsPrompt(); // overrides the "granted" mock from beforeEach
+    const mocks = mockPipWindow();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Start Call')");
+    await contains(".o-discuss-Call");
+    await click(".o-mail-ActionList-button[name='more-action:call-layout']");
+    await click(".o-dropdown-item[name='picture-in-picture']");
+    await contains(".o-mail-Meeting", { target: mocks.popoutIframe.contentDocument });
+    await contains(".o_popover:contains('No microphone permissions')", {
+        target: mocks.popoutIframe.contentDocument,
+    });
+    return mocks;
+}
+
+test("Leaving the call with mic warning in PiP, then rejoining, generates no error", async () => {
+    await startCallWithMicWarningInPip();
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Disconnect')");
+    await contains(".o-discuss-Call", { count: 0 });
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Start Call')");
+    await contains(".o-discuss-Call");
+});
+
+test("Closing PiP natively with mic warning, leaving, then rejoining, generates no error", async () => {
+    const { popoutWindow } = await startCallWithMicWarningInPip();
+    popoutWindow.close(); // the browser's close button: skips closePip()
+    await advanceTime(POLL_CLOSE_WINDOW_TIMEOUT);
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Disconnect')");
+    await contains(".o-discuss-Call", { count: 0 });
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Start Call')");
+    await contains(".o-discuss-Call");
 });
 
 test("Systray icon shows latest action", async () => {
