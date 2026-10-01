@@ -1,8 +1,8 @@
-import { defineMailModels } from '@mail/../tests/mail_test_helpers';
 import { expect, test } from '@odoo/hoot';
 import { queryAllTexts } from '@odoo/hoot-dom';
 import { saleManagementModels } from '@sale_management/../tests/sale_management_test_helpers';
 import {
+    clickCancel,
     clickSave,
     contains,
     defineModels,
@@ -116,6 +116,13 @@ class SaleOrderTemplate extends saleManagementModels.SaleOrderTemplate {
                                 class="fw-normal text-muted"
                             />
                         </column>
+                        <column name="sotl_uom">
+                            <field name="product_uom_id" invisible="display_type"/>
+                            <field
+                                name="section_uom_id"
+                                invisible="display_type not in ('line_section', 'line_subsection')"
+                            />
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                         <field name="is_optional" column_invisible="1"/>
                         <field name="collapse_prices" column_invisible="1"/>
@@ -127,8 +134,7 @@ class SaleOrderTemplate extends saleManagementModels.SaleOrderTemplate {
     };
 }
 
-defineModels({ SaleOrderTemplateLine, SaleOrderTemplate });
-defineMailModels();
+defineModels({ ...saleManagementModels, SaleOrderTemplateLine, SaleOrderTemplate });
 
 const EXPECTED_LINE_RECORDS = [
     "r1",
@@ -450,6 +456,7 @@ test("Drag and drop optional subsection under hidden section resets its optional
     expect.verifySteps(["web_save"]);
 });
 
+test.tags("desktop");
 test("Editing a subsection's quantity applies the ratio to its line and recomputes its price", async () => {
     SaleOrderTemplateLine._records.find((record) => record.name === "Sec3-sub2").section_qty = 2;
     SaleOrderTemplateLine._records.find(
@@ -489,4 +496,147 @@ test("Editing a subsection's quantity applies the ratio to its line and recomput
     await clickSave();
 
     expect.verifySteps(["web_save"]);
+});
+
+test.tags("desktop");
+test("Editing a section's quantity applies the ratio to its template lines", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].sale_order_template_line_ids.sort((c1, c2) => c1[1] - c2[1])).toEqual([
+            [1, 12, { section_qty: 2 }],
+            [1, 13, { product_uom_qty: 2 }],
+            [1, 14, { section_qty: 2 }],
+            [1, 15, { product_uom_qty: 2 }],
+        ]);
+    });
+
+    await mountView({ type: "form", resModel: "sale.order.template", resId: 1 });
+
+    await contains(".o_data_row:contains(Sec4):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("2", {
+        confirm: "blur",
+    });
+    await clickSave();
+
+    expect.verifySteps(["web_save"]);
+});
+
+test.tags("desktop");
+test("Changing a section's UoM applies the factor to its template lines", async () => {
+    await mountView({ type: "form", resModel: "sale.order.template", resId: 1 });
+
+    await contains(".o_data_row:contains(Sec4):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_uom_id] input", { visible: false }).click();
+    await contains(".o-autocomplete--dropdown-item:contains(Dozens)").click();
+
+    expect(".o_data_row:contains(Sec4-r1) td[name=sotl_qty]").toHaveText("12.00");
+    expect(".o_data_row:contains(Sec4-sub1):first td[name=sotl_qty]").toHaveText("12.00");
+    expect(".o_data_row:contains(Sec4-sub1-r1) td[name=sotl_qty]").toHaveText("12.00");
+});
+
+test.tags("desktop");
+test("Notes inside a section keep their values when the section's quantity changes", async () => {
+    SaleOrderTemplateLine._records.push({
+        id: 16,
+        name: "Sec3-note",
+        sequence: 7,
+        display_type: "line_note",
+        product_uom_qty: 0,
+    });
+
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].sale_order_template_line_ids.map((c) => c[1])).not.toInclude(16, {
+            message: "Sec3-note shouldn't be impacted",
+        });
+    });
+
+    await mountView({ type: "form", resModel: "sale.order.template", resId: 1 });
+
+    await contains(".o_data_row:contains(Sec3):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("2", {
+        confirm: "blur",
+    });
+    await clickSave();
+
+    expect.verifySteps(["web_save"]);
+});
+
+test.tags("desktop");
+test("Editing the quantity of a section without template lines only updates the section", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].sale_order_template_line_ids).toEqual([[1, 3, { section_qty: 2 }]]);
+    });
+
+    await mountView({ type: "form", resModel: "sale.order.template", resId: 1 });
+
+    await contains(".o_data_row:contains(Sec1):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("2", {
+        confirm: "blur",
+    });
+    await clickSave();
+
+    expect.verifySteps(["web_save"]);
+});
+
+test.tags("desktop");
+test("Editing a section's quantity also applies the ratio to unsaved template lines", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        const commands = args[1].sale_order_template_line_ids;
+
+        expect(commands.find((c) => c[1] === 15)[2]).toEqual({ product_uom_qty: 3 });
+        const newLine = commands.find((c) => c[0] === 0)[2];
+        expect(newLine.product_uom_qty).toBe(3);
+    });
+
+    await mountView({ type: "form", resModel: "sale.order.template", resId: 1 });
+
+    // New lines are appended to the last subsection (Sec4-sub1)
+    await contains("button:contains(Add a line)").click();
+    await contains(".o_selected_row [name=label] textarea").edit("New line", { confirm: false });
+    await contains(".o_data_row:contains(Sec4-sub1):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("3", {
+        confirm: "blur",
+    });
+    await clickSave();
+
+    expect.verifySteps(["web_save"]);
+});
+
+test.tags("desktop");
+test("Changing a section's UoM to an incompatible one doesn't change its template lines", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].sale_order_template_line_ids).toEqual([[1, 10, { section_uom_id: 3 }]]);
+    });
+
+    await mountView({ type: "form", resModel: "sale.order.template", resId: 1 });
+
+    await contains(".o_data_row:contains(Sec3-sub2):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_uom_id] input", { visible: false }).click();
+    await contains(".o-autocomplete--dropdown-item:contains(kg)").click();
+    await clickSave();
+
+    expect.verifySteps(["web_save"]);
+});
+
+test.tags("desktop");
+test("Discarding a section's quantity change restores its template lines", async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+
+    await mountView({ type: "form", resModel: "sale.order.template", resId: 1 });
+
+    await contains(".o_data_row:contains(Sec3-sub2):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("4", {
+        confirm: "blur",
+    });
+    expect(".o_data_row:contains(Sec3-sub2-r1) td[name=sotl_qty]").toHaveText("4.00");
+
+    await clickCancel();
+
+    expect(".o_data_row:contains(Sec3-sub2-r1) td[name=sotl_qty]").toHaveText("1.00");
+    expect(".o_data_row:contains(Sec3-sub2):first td[name=sotl_qty]").toHaveText("1.00");
+    expect.verifySteps([]);
 });
