@@ -12,6 +12,47 @@ from .common import TestL10nFrPdpCommon, mock_pdp_annuaire_lookup, mock_pdp_pepp
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
 
+    def test_compact_identifiers_in_test_mode(self):
+        partner = self.env['res.partner'].create({
+            'name': 'French partner',
+            'country_id': self.env.ref('base.fr').id,
+            'l10n_fr_siret': '397 471 822 00114',
+        })
+        self.assertEqual(partner.additional_identifiers['FR_SIRET'], '39747182200114')
+
+        partner.write({
+            'l10n_fr_siret': '397 471 822 00110',
+            'l10n_fr_siren': '397 471 822',
+        })
+        self.assertEqual(partner.additional_identifiers['FR_SIRET'], '39747182200110')
+        self.assertEqual(partner.additional_identifiers['FR_SIREN'], '397471822')
+
+    def test_preserve_test_demo_identifiers(self):
+        cases = (
+            ('FR_SIREN', '397.471.822', '397471822'),
+            ('FR_SIRET', '397.471.822.00110', '39747182200110'),
+            ('FR_SIREN', '397 47A 822', '397 47A 822'),
+            ('FR_SIREN', '397 471 82', '397 471 82'),
+            ('FR_SIRET', '397 471 822 0011A', '397 471 822 0011A'),
+            ('FR_SIRET', '397 471 822 0011', '397 471 822 0011'),
+            ('FR_CTC', '397 471 822_00110', '397 471 822_00110'),
+        )
+        partner_model = self.env['res.partner']
+
+        for edi_mode in ('test', 'demo'):
+            with mock.patch.object(
+                self.env.registry['res.company'],
+                '_get_peppol_edi_mode',
+                return_value=edi_mode,
+            ):
+                for key, value, expected in cases:
+                    with self.subTest(edi_mode=edi_mode, key=key, value=value):
+                        result = partner_model._validate_identifier(
+                            key, value, validation='error',
+                        )
+                        self.assertTrue(result['valid'])
+                        self.assertEqual(result['value'], expected)
+
     def test_pdp_identifier_derivation(self):
         # SIREN is derived from the FR SIRET/SIREN identifier and `routing_identifier` computed from SIREN
         partner = self.env["res.partner"].create({
