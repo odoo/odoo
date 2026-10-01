@@ -104,7 +104,7 @@ export async function getCustomPtavs(orm, saleOrderLine) {
     return customPtavs.map(customPtav => ({
         id: customPtav.custom_product_template_attribute_value_id &&
             customPtav.custom_product_template_attribute_value_id.id,
-        value: customPtav.custom_value,
+        value: customPtav.custom_value || "",
     }));
 }
 
