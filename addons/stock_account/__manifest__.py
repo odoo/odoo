@@ -49,6 +49,9 @@ Dashboard / Reports for Warehouse Management includes:
         'web.assets_backend': [
             'stock_account/static/src/**/*',
         ],
+        'web.assets_unit_tests': [
+            'stock_account/static/tests/*.test.js',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

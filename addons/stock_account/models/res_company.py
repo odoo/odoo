@@ -193,7 +193,7 @@ class ResCompany(models.Model):
         if last_closing_date:
             moves_base_domain &= Domain([('date', '>', last_closing_date)])
         if at_date:
-            moves_base_domain &= Domain([('date', '<=', at_date)])
+            moves_base_domain &= Domain([('date', '<=', self._to_date_upper_bound(at_date))])
         moves_in_domain = Domain([
             ('is_out', '=', True),
             ('company_id', '=', self.id),

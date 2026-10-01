@@ -2334,6 +2334,8 @@ class TestStockValuation(TestStockValuationCommon):
         """
         Ensure that qty_available, free_qty, avg_cost, and total_value are computed
         correctly for products at a historical to_date, taking the user's timezone into account.
+        A receipt in the evening of the company timezone, already the next day in UTC,
+        counts on that day.
         """
         self.env.user.tz = 'Europe/Paris'
         to_date = date(2024, 1, 10)
@@ -2380,6 +2382,48 @@ class TestStockValuation(TestStockValuationCommon):
             products.with_context(to_date="2024-01-10"),
             expected_values,
         )
+
+        self.env.company.tz = 'America/Bogota'  # UTC-5
+        with freeze_time('2024-01-11 01:00:00'):  # 2024-01-10 20:00 in Bogota
+            self._make_in_move(self.product_standard, 1)
+        with freeze_time('2024-01-12 10:00:00'):
+            self.assertRecordValues(
+                self.product_standard.with_context(to_date=to_date),
+                [{'qty_available': 11.0, 'total_value': 110.0}],
+            )
+
+    def test_valuation_report_and_closing_use_company_timezone(self):
+        """ With the company in UTC+9 and the user in Brussels, 2026-07-01 20:00 UTC
+        is July 1 for the user and July 2 for the company. The valuation report and
+        a closing at July 1 count what happened until the end of the company's
+        July 1. """
+        self.env.company.tz = 'Asia/Tokyo'  # UTC+9
+        self.env.user.tz = 'Europe/Brussels'
+        self._use_inventory_location_accounting()
+        product = self.product_standard_auto
+        with freeze_time('2026-07-01 01:00:00'):  # 2026-07-01 10:00 for the company
+            self._make_in_move(product, 1)
+        with freeze_time('2026-07-01 20:00:00'):  # 2026-07-01 22:00 for the user, 2026-07-02 05:00 for the company
+            self._make_in_move(product, 1)
+            self.env['stock.quant'].create({
+                'product_id': self.product_standard.id,
+                'location_id': self.stock_location.id,
+                'inventory_quantity': 1,
+            }).action_apply_inventory()
+            report = self.env['stock_account.stock.valuation.report'].get_report_values(date='2026-07-01')['data']
+            self.assertEqual(report['ending_stock']['value'], 10.0)
+            self.assertEqual(report['today'], '2026-07-02')
+            self.assertEqual(report['date_upper_bound'], '2026-07-01 14:59:59')
+            closing_move = self._close(at_date=date(2026, 7, 1))
+            valuation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_valuation)
+            variation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_variation)
+            self.assertRecordValues(
+                valuation_aml + variation_aml,
+                [
+                    {'account_id': self.account_stock_valuation.id, 'debit': 10, 'credit': 0},
+                    {'account_id': self.account_stock_variation.id, 'debit': 0, 'credit': 10},
+                ]
+            )
 
     def test_stock_report_avco_warehouse_dependency(self):
         """ Create two warehouses and check that the total value and the on hand quantity
