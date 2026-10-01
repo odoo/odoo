@@ -1,6 +1,5 @@
 declare module "registries" {
     import { Component } from "@odoo/owl";
-    import { OdooEnv } from "@web/env";
 
     interface AccessRights {
         canEditView: boolean;
@@ -10,7 +9,6 @@ declare module "registries" {
 
     interface DebugRegistryItemShapeParams {
         accessRights: AccessRights;
-        env: OdooEnv;
         [k: string]: any;
     }
 
