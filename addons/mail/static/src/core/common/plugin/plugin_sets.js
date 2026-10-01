@@ -15,7 +15,6 @@ import { ShortCutPlugin } from "@html_editor/core/shortcut_plugin";
 import { SyntaxHighlightingPlugin } from "@html_editor/others/embedded_components/plugins/syntax_highlighting_plugin/syntax_highlighting_plugin";
 import { TabulationPlugin } from "@html_editor/main/tabulation_plugin";
 import { ToolbarPlugin } from "@html_editor/main/toolbar/toolbar_plugin";
-import { TranslatePlugin } from "@html_editor/main/translate/translate_plugin";
 
 import { MailCodeBlockPlugin } from "@mail/core/common/plugin/mail_code_block_plugin";
 import { MailComposerPlugin } from "@mail/core/common/plugin/mail_composer_plugin";
@@ -38,7 +37,6 @@ export const MAIL_CORE_PLUGINS = [
     SelectionPlaceholderPlugin,
     ShortCutPlugin,
     TabulationPlugin,
-    TranslatePlugin,
 ];
 
 export const MAIL_PLUGINS = [
