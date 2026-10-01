@@ -16,7 +16,7 @@ declare module "registries" {
     export interface CogMenuRegistryItemShape {
         Component: typeof Component;
         groupNumber: number;
-        isDisplayed?: (env: OdooEnv) => boolean;
+        isDisplayed?: () => boolean;
     }
 
     export type DialogsRegistryItemShape = typeof Component;

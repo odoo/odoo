@@ -1,7 +1,8 @@
+import { Component } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
-import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { useEnv } from "@web/owl2/utils";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
@@ -37,8 +38,9 @@ export class DataRefreshCogMenu extends Component {
 
 export const DataRefreshCogMenuItem = {
     Component: DataRefreshCogMenu,
-    isDisplayed: ({ searchModel }) => {
-        return searchModel.resModel === "data_recycle.record";
+    isDisplayed() {
+        const env = useEnv();
+        return env.searchModel.resModel === "data_recycle.record";
     },
     groupNumber: 50,
 };

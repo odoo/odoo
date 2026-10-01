@@ -57,7 +57,7 @@ export class CogMenu extends ActionMenus {
         const registryItems = cogMenuRegistry.getAll();
         const areDisplayed = await Promise.all(
             registryItems.map((item) =>
-                "isDisplayed" in item ? this.scope.run(() => item.isDisplayed(this.env)) : true
+                "isDisplayed" in item ? this.scope.run(() => item.isDisplayed()) : true
             )
         );
         const items = [];

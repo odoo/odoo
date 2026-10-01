@@ -1,7 +1,8 @@
-import { registry } from '@web/core/registry';
-import { exprToBoolean } from "@web/core/utils/strings";
 import { DocumentFileUploader } from '@account/components/document_file_uploader/document_file_uploader';
 import { DropdownItem } from '@web/core/dropdown/dropdown_item';
+import { registry } from '@web/core/registry';
+import { exprToBoolean } from "@web/core/utils/strings";
+import { useEnv } from '@web/owl2/utils';
 
 const cogMenuRegistry = registry.category('cogMenu');
 
@@ -16,7 +17,7 @@ export class QuotationRequestUploader extends DocumentFileUploader {
         ...DocumentFileUploader.components,
         DropdownItem,
     }
-    
+
     getResModel() {
         return 'sale.order';
     }
@@ -25,10 +26,14 @@ export class QuotationRequestUploader extends DocumentFileUploader {
 export const quotationUploaderMenuItem = {
     Component: QuotationRequestUploader,
     groupNumber: 0,
-    isDisplayed: ({ config, searchModel }) =>
-        searchModel.resModel === 'sale.order'
-        && ['list', 'kanban'].includes(config.viewType)
-        && exprToBoolean(config.viewArch.getAttribute('create'), true),
+    isDisplayed() {
+        const env = useEnv();
+        return (
+            env.searchModel.resModel === 'sale.order'
+            && ['list', 'kanban'].includes(env.config.viewType)
+            && exprToBoolean(env.config.viewArch.getAttribute('create'), true)
+        );
+    },
 };
 
 cogMenuRegistry.add('quotation-upload-menu', quotationUploaderMenuItem);

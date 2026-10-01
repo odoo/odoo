@@ -1,9 +1,10 @@
-import { _t } from "@web/core/l10n/translation";
+import { Component, proxy, signal } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { Component, proxy, signal } from "@odoo/owl";
+import { useEnv } from "@web/owl2/utils";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
@@ -94,8 +95,9 @@ export class AddToBoard extends Component {
 export const addToBoardItem = {
     Component: AddToBoard,
     groupNumber: 10,
-    isDisplayed: ({ config }) => {
-        const { actionType, actionId, viewType } = config;
+    isDisplayed() {
+        const env = useEnv();
+        const { actionType, actionId, viewType } = env.config;
         return actionType === "ir.actions.act_window" && actionId && viewType !== "form";
     },
 };
