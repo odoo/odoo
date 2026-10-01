@@ -174,5 +174,78 @@ class TestWorkorder(TestMrpCommon):
         original_names = mo.workorder_ids.mapped('name')
         self.assertEqual(original_names, ['Cutting Machine', 'Weld Machine'])
 
+<<<<<<< 9a8b4869478d387ceb65c42517b35edc8906a4b9
         mo_copy = mo.copy()
         self.assertEqual(mo_copy.workorder_ids.mapped('name'), original_names)
+||||||| daa38df439bf5073976eefd381b84dd6cc4991b2
+        # Reschedule both operations to two days from now
+        in_two_days = datetime(2024, 9, 5, 15, 0, 0)
+        workorders.with_context(bypass_duration_calculation=True).write({
+            'date_start': in_two_days,
+            'date_finished': in_two_days + timedelta(hours=1),
+        })
+        self.assertEqual(mo.date_start, datetime(2024, 9, 5, 15, 0, 0))
+        self.assertEqual(mo.date_finished, datetime(2024, 9, 5, 16, 0, 0))
+
+        # Reschedule them forward to tomorrow
+        tomorrow = datetime(2024, 9, 4, 15, 0, 0)
+        workorders.with_context(bypass_duration_calculation=True).write({
+            'date_start': tomorrow,
+            'date_finished': tomorrow + timedelta(hours=1),
+        })
+        self.assertEqual(mo.date_start, datetime(2024, 9, 4, 15, 0, 0))
+        self.assertEqual(mo.date_finished, datetime(2024, 9, 4, 16, 0, 0))
+=======
+        # Reschedule both operations to two days from now
+        in_two_days = datetime(2024, 9, 5, 15, 0, 0)
+        workorders.with_context(bypass_duration_calculation=True).write({
+            'date_start': in_two_days,
+            'date_finished': in_two_days + timedelta(hours=1),
+        })
+        self.assertEqual(mo.date_start, datetime(2024, 9, 5, 15, 0, 0))
+        self.assertEqual(mo.date_finished, datetime(2024, 9, 5, 16, 0, 0))
+
+        # Reschedule them forward to tomorrow
+        tomorrow = datetime(2024, 9, 4, 15, 0, 0)
+        workorders.with_context(bypass_duration_calculation=True).write({
+            'date_start': tomorrow,
+            'date_finished': tomorrow + timedelta(hours=1),
+        })
+        self.assertEqual(mo.date_start, datetime(2024, 9, 4, 15, 0, 0))
+        self.assertEqual(mo.date_finished, datetime(2024, 9, 4, 16, 0, 0))
+
+    def test_sequence_after_replanning(self):
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'uom_id': self.product_6.uom_id.id,
+            'product_qty': 1.0,
+            'allow_operation_dependencies': True,
+            'operation_ids': [
+                Command.create({'name': 'WO1', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 60, 'sequence': 1}),
+                Command.create({'name': 'WO2', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 60, 'sequence': 2}),
+                Command.create({'name': 'WO3', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 60, 'sequence': 3}),
+            ],
+            'bom_line_ids': [Command.create({'product_id': self.product_1.id, 'product_qty': 1})],
+        })
+
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+        })
+        mo.action_confirm()
+
+        wo1, wo2, wo3 = mo.workorder_ids.sorted('sequence')
+        wo2.blocked_by_workorder_ids = [Command.link(wo1.id)]
+        wo3.blocked_by_workorder_ids = [Command.link(wo2.id)]
+
+        mo.button_plan()
+        self.assertTrue(wo1.date_start < wo2.date_start < wo3.date_start)
+
+        # resequence work orders (imitate kanban reordering)
+        swapped_wos = wo3 + wo2
+        swapped_wos.web_resequence({'sequence': {}})
+
+        # verify sequence and try to plan and unplan again
+        self.assertTrue(wo1.sequence < wo2.sequence < wo3.sequence)
+        mo.button_unplan()
+        mo.button_plan()
+>>>>>>> 4791176686a725b0c7014516b357ab8fa555b5f5
