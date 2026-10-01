@@ -556,6 +556,10 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         }
 
     @api.model
+    def _is_document_line_refund(self, vals):
+        return vals['is_refund']
+
+    @api.model
     def _get_importe_desglose_es_partner(self, base_lines, is_refund):
         AccountTax = self.env['account.tax']
 
@@ -571,7 +575,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 'l10n_es_bien_inversion': tax.l10n_es_bien_inversion,
                 'is_reverse_charge': tax_data['is_reverse_charge'],
                 'tax_scope': tax.tax_scope,
-                'is_refund': base_line['is_refund'],
+                'is_refund': self._is_document_line_refund(base_line),
             }
 
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, tax_details_info_grouping_function)
@@ -630,7 +634,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 'l10n_es_bien_inversion': tax.l10n_es_bien_inversion,
                 'is_reverse_charge': tax_data['is_reverse_charge'],
                 'tax_scope': tax.tax_scope,
-                'is_refund': base_line['is_refund'],
+                'is_refund': self._is_document_line_refund(base_line),
             }
 
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, tax_details_info_grouping_function)
