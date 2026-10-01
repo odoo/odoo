@@ -996,6 +996,13 @@ def get_deduced_identifiers(key, value):
         deduced['SG_UEN'] = value
     if key == 'RO_VAT':
         deduced['RO_EN'] = get_non_prefixed_identifier('RO', value)
+    if key == 'FI_VAT':
+        deduced['FI_EN'] = get_non_prefixed_identifier('FI', value)  # FI + Y-tunnus (8 digits)
+    if key == 'NO_VAT':
+        deduced['NO_EN'] = get_non_prefixed_identifier('NO', value)[:9]  # NO + organisation number (9 digits) + optional 'MVA'
+    if key == 'SE_VAT':
+        deduced['SE_EN'] = get_non_prefixed_identifier('SE', value)[:10]  # SE + organisation number (10 digits) + '01'
+
     return deduced
 
 
