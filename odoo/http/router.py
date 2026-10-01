@@ -398,23 +398,23 @@ def serve_db(request: Request) -> Response:
         except NotFound as not_found_exc:
             # no controller endpoint matched -> fallback or 404
             serve_func = functools.partial(_serve_ir_http_fallback, request, not_found_exc)
-            readonly = True
+            replica = True
         else:
             # a controller endpoint matched -> dispatch it the request
             _set_request_dispatcher(request, rule)
             serve_func = functools.partial(serve_ir_http, request, rule, args)
             endpoint: Endpoint = rule.endpoint  # type: ignore
-            readonly = endpoint.routing['readonly']
-            if callable(readonly):
-                readonly = readonly(endpoint.func.__self__, rule, args)
+            replica = endpoint.routing['replica']
+            if callable(replica):
+                replica = replica(endpoint.func.__self__, rule, args)
         # update the parent cache for the route mapping to make it available as
         # soon as possible and don't lose it if there are invalidations
         for layer in request.env.transaction.ormcaches__.values():
             layer.update_parent()
 
-        # keep on using the RO cursor when a readonly route matched,
+        # keep on using the RO cursor when a replica route matched,
         # and for serve fallback
-        if readonly and cr.readonly:
+        if replica and cr.readonly:
             threading.current_thread().cursor_mode = 'ro'
             try:
                 return retrying(serve_func, env=request.env)
@@ -429,7 +429,7 @@ def serve_db(request: Request) -> Response:
         else:
             threading.current_thread().cursor_mode = 'rw'
 
-        # we must use a RW cursor when a read/write route matched, or
+        # we must use a RW cursor when a non replica route matched, or
         # there was a ReadOnlySqlTransaction error
         if cr.readonly:
             cr.close()
