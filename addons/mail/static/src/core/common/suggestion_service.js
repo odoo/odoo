@@ -30,9 +30,10 @@ export class SuggestionService {
      * - c: (optional) if set, this is the minimum amount of extra char after delimiter to allow using this delimiter
      *
      * @param {import('models').Thread} thread
+     * @param {Readonly<Record<string, any>>} [ancestors] named ancestors of the composer, @see useAncestors
      * @returns {Array<[SuggestionDelimiter, number, number]>}
      */
-    getSupportedDelimiters(thread, env) {
+    getSupportedDelimiters(thread, ancestors) {
         const delimiters = [
             [SUGGESTION_DELIMITERS.PARTNER],
             [SUGGESTION_DELIMITERS.CANNED_RESPONSE],

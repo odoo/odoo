@@ -4,6 +4,7 @@ import { Component, computed, onWillUnmount, shallowEqual, t, useProps, xml } fr
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Action as ActionModel, ACTION_TAGS } from "@mail/core/common/action";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -68,6 +69,7 @@ export class BaseAction extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.props = useProps({
             action: t.instanceOf(ActionModel),
             isFirstInGroup: t.boolean().optional(),
@@ -143,7 +145,7 @@ export class BaseAction extends Component {
     }
 
     get themeClass() {
-        return { "o-discussCallTheme": this.env.inDiscussCallTheme };
+        return { "o-discussCallTheme": this.ancestors.inDiscussCallTheme };
     }
 
     get dynamicClass() {

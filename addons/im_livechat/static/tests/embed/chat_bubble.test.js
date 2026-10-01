@@ -4,7 +4,7 @@ import {
 } from "@im_livechat/../tests/livechat_test_helpers";
 import { contains, setupChatHub, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { assignTestEnv, Command } from "@web/../tests/web_test_helpers";
+import { Command } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -12,7 +12,6 @@ defineLivechatModels();
 test("Do not show bot IM status", async () => {
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
-    assignTestEnv({ embedLivechat: true });
     const partnerId1 = pyEnv["res.partner"].create({ name: "Mitchell" });
     pyEnv["res.users"].create({ partner_id: partnerId1, im_status: "online" });
     const paulPid = pyEnv["res.partner"].create({ email: "paul@example.com", name: "Paul" });

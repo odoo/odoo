@@ -1,4 +1,3 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
@@ -8,6 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useHover } from "@mail/utils/common/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { CountryFlag } from "@mail/core/common/country_flag";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 
@@ -48,6 +48,7 @@ export class ChatBubble extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors({ inChatBubble: true });
         this.store = useService("mail.store");
         this.props = useProps({
             chatWindow: types.instanceOf(this.store.ChatWindow),
@@ -91,7 +92,6 @@ export class ChatBubble extends Component {
             }
             previousCounter = counter;
         });
-        useSubEnv({ inChatBubble: true });
     }
 
     /** @returns {import("models").Channel} */

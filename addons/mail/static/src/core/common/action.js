@@ -1,3 +1,4 @@
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { isRecord, STORE_SYM } from "@mail/model/misc";
 import { nestedShallowEqual } from "@mail/utils/common/signal";
 import { Component, computed, proxy, shallowEqual, signal, useScope } from "@odoo/owl";
@@ -56,7 +57,7 @@ function toArray(val) {
 /**
  * @template Action_T
  * @template UseActions_T
- * @typedef {ActionRootRefParam & {actions: UseActions_T, action: Action_T, store: import("models").Store, owner: ActionOwner}} ActionParams
+ * @typedef {ActionRootRefParam & {actions: UseActions_T, action: Action_T, ancestors: Readonly<Record<string, any>>, store: import("models").Store, owner: ActionOwner}} ActionParams
  */
 
 /** @typedef {number} ActionGroupId id of group is a number that also represents its sequence between groups! */
@@ -119,6 +120,8 @@ export class Action {
     definition;
     /** @type {ActionOwner} Entity that is using this action */
     owner;
+    /** @type {Readonly<Record<string, any>>} Named ancestors of the owner, @see useAncestors */
+    ancestors;
     /**
      * When this action opens a popover, must save usePopover() in this attribute, i.e. action.popover = usePopover().
      * Useful for action that open an action panel in some contexts and popovers in others. See @actionPanel
@@ -139,14 +142,18 @@ export class Action {
      *
      * @param {Object} params0
      * @param {UseActionClass_T} [params0.actions]
+     * @param {Readonly<Record<string, any>>} [params0.ancestors] Named ancestors of the owner,
+     *   defaults to the ones of `actions`. Required for actions made with new Action() by hand
+     *   in components that depend on the ancestors.
      * @param {ActionOwner} params0.owner
      * @param {string} params0.id
      * @param {ActionDefinition<ActionParams, Action>} params0.definition
      * @param {import("models").Store} [params0.store]
      * @param {import("@odoo/owl").Signal<HTMLElement>} [params0.rootRef] @see ActionRootRefParam
      */
-    constructor({ actions, owner, id, definition, store, rootRef }) {
+    constructor({ actions, ancestors, owner, id, definition, store, rootRef }) {
         this.actions = actions;
+        this.ancestors = ancestors ?? actions?.ancestors ?? {};
         this.definition = definition;
         this.id = id;
         this.owner = owner;
@@ -167,6 +174,7 @@ export class Action {
         return {
             actions: this.actions,
             action: this,
+            ancestors: this.ancestors,
             store: this.store,
             owner: this.owner,
             rootRef: this.rootRef,
@@ -686,6 +694,8 @@ export class UseActions {
     ActionClass = Action;
     /** @type {Component} */
     component;
+    /** @type {Readonly<Record<string, any>>} Named ancestors of the component, @see useAncestors */
+    ancestors = {};
     /** @type {Map<string, Action_T>} */
     moreActions = new Map();
     /** @type {Map<ActionGroupId, ActionGroupDescription>} */
@@ -737,6 +747,7 @@ export class UseActions {
         } else {
             moreAction = new this.ActionClass({
                 ...actionsParams,
+                ancestors: this.ancestors,
                 owner: this.component,
                 id: `more-action:${id}`,
                 definition: {
@@ -836,6 +847,7 @@ function useActionState({ UseActionClass, component }) {
 export function useAction(actionRegistry, UseActionClass, ActionClass, actionClassParams) {
     const component = useScope().component;
     const actions = useActionState({ UseActionClass, component });
+    actions.ancestors = useAncestors();
     actions.actionGroupDescriptions = new Map(
         actionRegistry
             .getEntries()

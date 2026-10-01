@@ -9,6 +9,7 @@ import { _t } from "@web/core/l10n/translation";
 
 import { useService } from "@web/core/utils/hooks";
 import { useSearch } from "@mail/utils/common/hooks";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 const SEARCH_RESULT_LIMIT = 100;
 
@@ -50,6 +51,7 @@ export class ChannelMemberList extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.store = useService("mail.store");
         this.props = useProps({
             channel: t.instanceOf(this.store["discuss.channel"]),

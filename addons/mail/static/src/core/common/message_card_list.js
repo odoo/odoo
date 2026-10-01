@@ -1,8 +1,8 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { Message } from "@mail/core/common/message";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 import { useMaybePlugin, useVisible } from "@mail/utils/common/hooks";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
@@ -17,6 +17,7 @@ export class MessageCardList extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors({ inMessageCardList: true });
         this.store = useService("mail.store");
         this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
         this.props = useProps({
@@ -31,7 +32,6 @@ export class MessageCardList extends Component {
             thread: t.instanceOf(this.store["mail.thread"]),
         });
         this.ui = useService("ui");
-        useSubEnv({ messageCard: true });
         useVisible(this.loadMoreRef, (isVisible) => {
             if (isVisible) {
                 this.props.onLoadMoreVisible?.();
@@ -47,10 +47,10 @@ export class MessageCardList extends Component {
      */
     async onClickJump(message) {
         this.props.onClickJump?.();
-        if (this.ui.isSmall || this.env.inChatWindow || this.env.inMeetingView) {
+        if (this.ui.isSmall || this.ancestors.inChatWindow || this.ancestors.inMeetingView) {
             this.env.pinMenu?.close();
             this.env.searchMenu?.close();
-            this.env.inMeetingView?.openChat();
+            this.ancestors.inMeetingView?.openChat();
         }
         // Give the time for menus to close before scrolling to the message.
         await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));

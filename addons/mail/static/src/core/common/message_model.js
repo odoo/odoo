@@ -760,11 +760,12 @@ export class Message extends Record {
     /**
      * @param {Object} owner
      * @param {import("@odoo/owl").Signal<HTMLElement>} [rootRef]
+     * @param {Readonly<Record<string, any>>} [ancestors] named ancestors of the owner, @see useAncestors
      */
-    showDeleteConfirm(owner, rootRef) {
+    showDeleteConfirm(owner, rootRef, ancestors) {
         this.store.env.services.dialog.add(
             discussComponentRegistry.get("MessageDeleteDialog"),
-            { message: this, onConfirm: () => this.onShowDeleteConfirm(owner) },
+            { message: this, onConfirm: () => this.onShowDeleteConfirm(owner, ancestors) },
             { rootRef }
         );
     }
@@ -772,9 +773,12 @@ export class Message extends Record {
     /**
      * @param {Object} owner
      * @param {import("@web/env").OdooEnv} owner.env
+     * @param {Readonly<Record<string, any>>} [ancestors={}] named ancestors of the owner, @see useAncestors
      */
-    onShowDeleteConfirm(owner) {
-        this.remove({ removeFromThread: this.shouldHideFromMessageListOnDelete(owner.env) });
+    onShowDeleteConfirm(owner, ancestors = {}) {
+        this.remove({
+            removeFromThread: this.shouldHideFromMessageListOnDelete(owner.env, ancestors),
+        });
     }
 
     /**
@@ -885,7 +889,11 @@ export class Message extends Record {
         ]);
     }
 
-    shouldHideFromMessageListOnDelete(env) {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {Readonly<Record<string, any>>} ancestors @see useAncestors
+     */
+    shouldHideFromMessageListOnDelete(env, ancestors) {
         return false;
     }
 
@@ -893,10 +901,10 @@ export class Message extends Record {
         await this.store.fetchStoreData("add_bookmark", { message_id: this.id });
     }
 
-    /** @param {import("@web/env").OdooEnv} env */
-    async removeBookmark(env) {
+    /** @param {Readonly<Record<string, any>>} [ancestors={}] @see useAncestors */
+    async removeBookmark(ancestors = {}) {
         await this.store.fetchStoreData("remove_bookmark", { message_id: this.id });
-        if (!env.inMessagingMenu) {
+        if (!ancestors.inMessagingMenu) {
             return;
         }
         this.closeNotificationFn?.();

@@ -48,7 +48,7 @@
                     <span class="o-discuss-Call-notification text-bg-light shadow-lg rounded-1 m-1" t-att-class="{ 'p-3 fs-4': this.rtc.isFullscreen, 'p-2': !this.rtc.isFullscreen }" t-foreach="this.bottomNotifications" t-as="notification" t-key="notification.id" t-out="notification.text"/>
                 </div>
                 <CallRecordingIndicator t-if="this.rtc.isRecording()" className="'position-absolute z-3 bottom-0 start-0 m-2'"/>
-                <div t-if="!this.isActiveCall" class="w-100"><hr class="border-top border-dark" t-att-class="{ 'ms-2 me-3': this.env.inDiscussApp, 'mx-1': this.env.inChatWindow }" style="--border-opacity: .75;"/></div>
+                <div t-if="!this.isActiveCall" class="w-100"><hr class="border-top border-dark" t-att-class="{ 'ms-2 me-3': this.ancestors.inDiscussApp, 'mx-1': this.ancestors.inChatWindow }" style="--border-opacity: .75;"/></div>
             </div>
         </div>
     </t>

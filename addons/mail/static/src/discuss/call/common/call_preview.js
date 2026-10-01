@@ -11,6 +11,7 @@ import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_
 import { CallSettingsDialog } from "@mail/discuss/call/common/call_settings";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 import { closeStream } from "@mail/utils/common/misc";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import {
     Component,
@@ -35,6 +36,7 @@ export class CallPreview extends Component {
     videoRef = signal.ref();
 
     setup() {
+        this.ancestors = useAncestors();
         this.props = useProps({
             activateCamera: types.number().optional(),
             activateMicrophone: types.number().optional(),
@@ -173,7 +175,7 @@ export class CallPreview extends Component {
     }
 
     get inWelcomePageMobile() {
-        return this.env.inWelcomePage && this.ui.isSmall;
+        return this.ancestors.inWelcomePage && this.ui.isSmall;
     }
 
     actions = computed(() => {
@@ -211,6 +213,7 @@ export class CallPreview extends Component {
         const callAudioActions = [
             new Action({
                 id: "toggle-microphone",
+                ancestors: this.ancestors,
                 owner: this,
                 definition: muteActionUpdated,
                 store: this.store,
@@ -219,6 +222,7 @@ export class CallPreview extends Component {
         const callVideoActions = [
             new Action({
                 id: "toggle-camera",
+                ancestors: this.ancestors,
                 owner: this,
                 definition: cameraOnActionUpdated,
                 store: this.store,
@@ -228,6 +232,7 @@ export class CallPreview extends Component {
             callVideoActions.push(
                 new Action({
                     id: "video-blur",
+                    ancestors: this.ancestors,
                     owner: this,
                     definition: videoBlurAction,
                     store: this.store,
@@ -237,6 +242,7 @@ export class CallPreview extends Component {
             callAudioActions.push(
                 new Action({
                     id: "audio-settings",
+                    ancestors: this.ancestors,
                     owner: this,
                     definition: quickActionSettings,
                     store: this.store,
@@ -245,6 +251,7 @@ export class CallPreview extends Component {
             callVideoActions.push(
                 new Action({
                     id: "video-settings",
+                    ancestors: this.ancestors,
                     owner: this,
                     definition: quickVideoSettings,
                     store: this.store,

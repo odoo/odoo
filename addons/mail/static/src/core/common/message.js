@@ -49,10 +49,11 @@ import {
     useRightClickMenu,
 } from "@mail/utils/common/hooks";
 import { ActionList, CircleInlineAction } from "@mail/core/common/action_list";
-import { loadCssFromBundle } from "@mail/utils/common/misc";
+import { assignGetter, loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
 import { Priority } from "@mail/core/common/priority";
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 
@@ -91,6 +92,15 @@ export class Message extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors({
+            inMessage: assignGetter(
+                {},
+                {
+                    isAlignedRight: () => this.isAlignedRight,
+                    message: () => this.props.message,
+                }
+            ),
+        });
         this.nbsp = nbsp;
         this.store = useService("mail.store");
         this.props = useProps({
@@ -141,11 +151,6 @@ export class Message extends Component {
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
         this.isActive = computed(() => Boolean(this._isActive));
-        useSubEnv({
-            inMessage: true,
-            message: this.props.message,
-            alignedRight: this.isAlignedRight,
-        });
         useLayoutEffect(
             () => {
                 if (this.shadowBody()) {
@@ -338,13 +343,13 @@ export class Message extends Component {
         return {
             "user-select-none o-disable-safari-native-long-press o-isMobileOS": isMobileOS(),
             [this.props.className]: true,
-            "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
+            "o-selfAuthored": this.message.isSelfAuthored && !this.ancestors.inMessageCardList,
             "o-selected":
                 this.props.message.composerAsReplyToMessage?.thread.eq(this.props.thread) ||
                 this.props.messageSelection?.isSelected(this.props.message),
             "o-squashed": this.props.squashed,
-            "mt-2": !this.props.squashed && this.props.thread && !this.env.messageCard,
-            "px-1": this.env.inChatWindow,
+            "mt-2": !this.props.squashed && this.props.thread && !this.ancestors.inMessageCardList,
+            "px-1": this.ancestors.inChatWindow,
             "o-actionMenuMobileOpen": this.ui.isSmall && this.optionsDropdown.isOpen,
             "o-editing": this.isEditing,
         };
@@ -388,7 +393,7 @@ export class Message extends Component {
         const isNoteVisual = this.message.isNote || this.message.message_type === "notification";
         return {
             "p-1": isNoteVisual,
-            "fs-1": !this.isEditing && !this.env.inChatter && this.message.onlyEmojis,
+            "fs-1": !this.isEditing && !this.ancestors.inChatter && this.message.onlyEmojis,
             "mb-0": !isNoteVisual,
             "py-2": !isNoteVisual && !this.isEditing && this.showTextVisually,
             "pt-2 pb-1": !isNoteVisual && this.isEditing,
@@ -448,7 +453,9 @@ export class Message extends Component {
 
     get isAlignedRight() {
         return Boolean(
-            this.env.inChatWindow && this.props.message.isSelfAuthored && !this.env.messageCard
+            this.ancestors.inChatWindow &&
+                this.props.message.isSelfAuthored &&
+                !this.ancestors.inMessageCardList
         );
     }
 
@@ -477,7 +484,7 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get shouldDisplayAuthorName() {
-        if (!this.env.inChatWindow || this.env.messageCard) {
+        if (!this.ancestors.inChatWindow || this.ancestors.inMessageCardList) {
             return true;
         }
         if (this.message.isSelfAuthored) {
@@ -615,7 +622,7 @@ export class Message extends Component {
     getAvatarContainerAttClass() {
         return {
             "opacity-50": this.message.isPending,
-            "o-inChatWindow": this.env.inChatWindow,
+            "o-inChatWindow": this.ancestors.inChatWindow,
         };
     }
 
@@ -626,7 +633,7 @@ export class Message extends Component {
     getSidebarAttClass() {
         return {
             "align-items-start": !this.isAlignedRight,
-            "o-inChatWindow": this.env.inChatWindow,
+            "o-inChatWindow": this.ancestors.inChatWindow,
         };
     }
 

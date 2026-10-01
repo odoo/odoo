@@ -1,4 +1,5 @@
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { Component, types, useProps } from "@odoo/owl";
 
@@ -12,6 +13,7 @@ export class DeleteThreadDialog extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.store = useService("mail.store");
         this.props = useProps({
             channel: types.instanceOf(this.store["discuss.channel"]),
@@ -22,7 +24,10 @@ export class DeleteThreadDialog extends Component {
     async onConfirmation() {
         let toOpenThread;
         const threadName = this.props.channel.name;
-        if (this.store.discuss?.thread?.eq(this.props.channel.thread) || this.env.inChatWindow) {
+        if (
+            this.store.discuss?.thread?.eq(this.props.channel.thread) ||
+            this.ancestors.inChatWindow
+        ) {
             toOpenThread = this.props.channel.parent_channel_id;
         }
         await rpc("/discuss/channel/sub_channel/delete", {

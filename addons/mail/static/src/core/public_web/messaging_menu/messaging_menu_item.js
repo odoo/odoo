@@ -5,6 +5,7 @@ import { MessagingMenuItemContextMenu } from "@mail/core/public_web/messaging_me
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { propSignal, useLongPress, useRightClickMenu } from "@mail/utils/common/hooks";
 import { nestedShallowEqual } from "@mail/utils/common/signal";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { Component, computed, shallowEqual, signal, types, useProps } from "@odoo/owl";
 
@@ -37,6 +38,7 @@ export class MessagingMenuItem extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors({ inMessagingMenu: true });
         // Sub-dropdowns (action menu, notification settings mute) closing should not
         // close the outer messaging menu dropdown via `closeAllParents()`. Must be here
         // rather than MessagingMenuInDropdown: the outer Dropdown overwrites
@@ -62,7 +64,6 @@ export class MessagingMenuItem extends Component {
         });
         this.messageDropdownState = useDropdownState();
         this.ui = useService("ui");
-        useSubEnv({ inMessagingMenu: true });
         if (isMobileOS()) {
             useLongPress(this.root, {
                 action: () => {

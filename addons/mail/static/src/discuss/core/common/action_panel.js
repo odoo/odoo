@@ -1,5 +1,5 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { attClassObjectToString } from "@mail/utils/common/format";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { Component, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
@@ -10,6 +10,7 @@ export class ActionPanel extends Component {
     static components = { ResizablePanel };
     setup() {
         super.setup();
+        this.ancestors = useAncestors({ inDiscussCallTheme: false });
         this.props = useProps({
             close: t.function([]).optional(),
             contentPadding: t.boolean().optional(true),
@@ -27,7 +28,6 @@ export class ActionPanel extends Component {
         );
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        useSubEnv({ inDiscussActionPanel: true, inDiscussCallTheme: false });
         useBackButton(
             () => this.props.close(),
             () => this.props.close
@@ -35,7 +35,7 @@ export class ActionPanel extends Component {
     }
 
     get backButtonTitle() {
-        return this.env.hasPreviousActionPanel?.()
+        return this.ancestors.inMeetingView?.hasPreviousActionPanel
             ? _t("Back to previous panel")
             : _t("Close panel");
     }
@@ -43,9 +43,9 @@ export class ActionPanel extends Component {
     get classNames() {
         return attClassObjectToString({
             "o-mail-ActionPanel rounded-4 overflow-auto o-scrollbar-thin d-flex flex-column flex-shrink-0 position-relative py-2 pt-0 h-100 bg-inherit": true,
-            "o-mail-ActionPanel-chatter": this.env.inChatter,
-            "o-chatWindow": this.env.inChatWindow,
-            "px-2": this.env.inDiscussApp || this.env.inChatWindow,
+            "o-mail-ActionPanel-chatter": this.ancestors.inChatter,
+            "o-chatWindow": this.ancestors.inChatWindow,
+            "px-2": this.ancestors.inDiscussApp || this.ancestors.inChatWindow,
             rounded: !this.props.resizable,
         });
     }

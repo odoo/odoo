@@ -32,7 +32,7 @@
 <!-- Shared by the templates of InlineAction and DropdownAction, which give their button as body. -->
 <t t-name="mail.Action">
     <t t-if="this.action.dropdownTrigger">
-        <t t-component="this.Dropdown" menuClass="(this.action.dropdownMenuClass ?? '') + ' ' + this.store.discussDropdownMenuClass(this)" position="this.action.dropdownPosition" state="this.action.dropdownState">
+        <t t-component="this.Dropdown" menuClass="(this.action.dropdownMenuClass ?? '') + ' ' + this.store.discussDropdownMenuClass(this.ancestors)" position="this.action.dropdownPosition" state="this.action.dropdownState">
             <t t-out="0"/>
             <t t-set-slot="content">
                 <t t-if="this.action.dropdownComponent" t-component="this.action.dropdownComponent" t-props="this.action.dropdownComponentProps"/>

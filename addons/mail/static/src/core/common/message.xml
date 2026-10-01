@@ -43,7 +43,7 @@
                             <t t-if="this.message.isPending" t-call="mail.Message.pendingStatus"/>
                             <t t-else="" t-out="this.message.dateSimpleWithDay"/>
                         </small>
-                        <div t-if="this.props.message.scheduledDatetime" t-att-class="{ 'ms-2': this.env.inChatWindow and this.isAlignedRight }" t-att-title="this.props.message.scheduledDateSimple">
+                        <div t-if="this.props.message.scheduledDatetime" t-att-class="{ 'ms-2': this.ancestors.inChatWindow and this.isAlignedRight }" t-att-title="this.props.message.scheduledDateSimple">
                             <span class="text-600 cursor-pointer">
                                 <i class="oi" data-icon="calendar_today"/>
                             </span>
@@ -106,7 +106,7 @@
                                         </div>
                                     </t>
                                 </t>
-                                <t t-if="this.message.bubbleColor and this.message.hasTextContent and !this.env.inChatWindow" t-call="mail.Message.actions"/>
+                                <t t-if="this.message.bubbleColor and this.message.hasTextContent and !this.ancestors.inChatWindow" t-call="mail.Message.actions"/>
                                 <PollResult t-if="this.message.ended_poll_ids.length" poll="this.message.poll"/>
                                 <Poll t-elif="this.message.poll" poll="this.message.poll"/>
                             </div>
@@ -119,7 +119,7 @@
                             </div>
                             <MessageLinkPreviewList t-if="(this.message.message_link_preview_ids.length > 0 and this.store.hasLinkPreviewFeature and !this.message.linkPreviewSquash) or (!this.isEditing and this.message.linkPreviewSquash and this.message.parent_id)" messageLinkPreviews="this.message.message_link_preview_ids"/>
                         </div>
-                        <t t-if="this.message.bubbleColor and (!this.message.hasTextContent or this.env.inChatWindow)" t-call="mail.Message.actions"/>
+                        <t t-if="this.message.bubbleColor and (!this.message.hasTextContent or this.ancestors.inChatWindow)" t-call="mail.Message.actions"/>
                     </div>
                     <MessageReactions t-if="this.message.reactions.length" hasActions="this.props.hasActions" isReadOnly="this.isReadOnly" message="this.message" openReactionMenu="this.openReactionMenu"/>
                     <t name="after-reactions"/>
@@ -145,14 +145,14 @@
         }"
     >
         <t t-if="this.isMobileOS">
-            <Dropdown state="this.optionsDropdown" menuClass="this.store.discussDropdownMenuClass(this)">
+            <Dropdown state="this.optionsDropdown" menuClass="this.store.discussDropdownMenuClass(this.ancestors)">
                 <button class="d-none"/>
                 <t t-set-slot="content">
                     <ActionList actions="this.messageActions.actionsComputed" dropdown="true"/>
                 </t>
             </Dropdown>
         </t>
-        <t t-set="isReverse" t-value="this.env.inChatWindow and this.isAlignedRight"/>
+        <t t-set="isReverse" t-value="this.ancestors.inChatWindow and this.isAlignedRight"/>
         <t t-if="this.isMobileOS and isReverse" t-call="mail.Message.emptyQuickAction"/>
         <div class="d-flex rounded-1 overflow-hidden gap-1" t-att-class="{ 'flex-row-reverse': isReverse }">
             <ActionList actions="this.actions" inline="true" fw="false" actionComponent.bind="this.getActionComponent"/>
