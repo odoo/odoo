@@ -47,7 +47,7 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
-    @http.route('/web/webclient/translations', type='http', auth='public', cors='*', readonly=True)
+    @http.route('/web/webclient/translations', type='http', auth='public', cors='*', replica=True)
     def translations(self, hash=None, mods=None, lang=None):
         """
         Load the translations for the specified language and modules
@@ -97,7 +97,7 @@ class WebClient(http.Controller):
             'server_serie': release.serie,
         }
 
-    @http.route('/web/tests', type='http', auth='user', readonly=True)
+    @http.route('/web/tests', type='http', auth='user', replica=True)
     def unit_tests_suite(self, mod=None, **kwargs):
         return request.render('web.unit_tests_suite', {
             'session_info': {
@@ -107,7 +107,7 @@ class WebClient(http.Controller):
             },
         })
 
-    @http.route('/web/bundle/<string:bundle_name>', auth='public', methods=['GET'], readonly=True)
+    @http.route('/web/bundle/<string:bundle_name>', auth='public', methods=['GET'], replica=True)
     def bundle(self, bundle_name, **bundle_params):
         """
         Request the definition of a bundle, including its javascript and css bundled assets
@@ -144,7 +144,7 @@ class ModelTranslations(http.Controller):
             case _:
                 return "text"
 
-    @http.route("/web/translations/get_translation_for_field", type="jsonrpc", methods=["POST"], auth="user", readonly=True)
+    @http.route("/web/translations/get_translation_for_field", type="jsonrpc", methods=["POST"], auth="user", replica=True)
     def get_translation_for_field(self, res_model: str, field_name: str, res_id: int, target_lang: str | None = None, context: dict | None = None) -> dict:
         """
         For a record (res_model, res_id), retrieves the translation terms for the field "field_name",

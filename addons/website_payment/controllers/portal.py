@@ -10,7 +10,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
     @route(
         '/website_payment/snippet/supported_payment_methods',
-        type='http', methods=['GET'], auth='public', website=True, sitemap=False, readonly=True,
+        type='http', methods=['GET'], auth='public', website=True, sitemap=False, replica=True,
     )
     def get_supported_payment_methods(self, limit=None):
         """Retrieve the payment methods linked to payment providers published on the current

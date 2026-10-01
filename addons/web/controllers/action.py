@@ -19,7 +19,7 @@ class MissingActionError(UserError):
 
 class Action(Controller):
 
-    @route('/web/action/load', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/action/load', type='jsonrpc', auth='user', replica=True)
     def load(self, action_id, context=None):
         if context:
             request.update_context(**context)
@@ -56,7 +56,7 @@ class Action(Controller):
         result = action.run()
         return clean_action(result, env=action.env) if result else False
 
-    @route('/web/action/load_breadcrumbs', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/action/load_breadcrumbs', type='jsonrpc', auth='user', replica=True)
     def load_breadcrumbs(self, actions):
         results = []
         for idx, action in enumerate(actions):

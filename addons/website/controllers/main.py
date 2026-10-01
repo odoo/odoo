@@ -251,7 +251,7 @@ class Website(Home):
             template = "http_routing.404"
         return request.render(template)
 
-    @http.route('/website/force/<int:website_id>', type='http', auth="user", website=True, sitemap=False, multilang=False, readonly=True)
+    @http.route('/website/force/<int:website_id>', type='http', auth="user", website=True, sitemap=False, multilang=False, replica=True)
     def website_force(self, website_id, path='/', isredir=False, **kw):
         """ To switch from a website to another, we need to force the website in
         session, AFTER landing on that website domain (if set) as this will be a
@@ -284,11 +284,11 @@ class Website(Home):
         website._force()
         return request.redirect(path)
 
-    @http.route('/website/get_current_website_id', type='jsonrpc', auth="user", readonly=True)
+    @http.route('/website/get_current_website_id', type='jsonrpc', auth="user", replica=True)
     def get_current_website(self):
         return self.env.context.get('host_id')
 
-    @http.route(['/@/', '/@/<path:path>'], type='http', auth='public', website=True, sitemap=False, multilang=False, readonly=True)
+    @http.route(['/@/', '/@/<path:path>'], type='http', auth='public', website=True, sitemap=False, multilang=False, replica=True)
     def client_action_redirect(self, path='', **kw):
         """ Redirect internal users to the backend preview of the requested path
         URL (client action iframe).
@@ -358,11 +358,11 @@ class Website(Home):
     # Business
     # ------------------------------------------------------
 
-    @http.route('/website/get_languages', type='jsonrpc', auth="user", website=True, readonly=True)
+    @http.route('/website/get_languages', type='jsonrpc', auth="user", website=True, replica=True)
     def website_languages(self, **kwargs):
         return [(py_to_js_locale(lg.code), lg.url_code, lg.name) for lg in self.env.website.language_ids]
 
-    @http.route('/website/get_translated_elements', type='jsonrpc', auth="user", readonly=True)
+    @http.route('/website/get_translated_elements', type='jsonrpc', auth="user", replica=True)
     def translated_elements(self, **kwargs):
         return list(TRANSLATED_ELEMENTS)
 
@@ -380,7 +380,7 @@ class Website(Home):
         redirect.set_cookie('frontend_lang', lang_code)
         return redirect
 
-    @http.route(['/website/country_infos/<model("res.country"):country>'], type='jsonrpc', auth="public", methods=['POST'], website=True, readonly=True)
+    @http.route(['/website/country_infos/<model("res.country"):country>'], type='jsonrpc', auth="public", methods=['POST'], website=True, replica=True)
     def country_infos(self, country, **kw):
         fields = country.get_address_fields()
         return dict(fields=fields, states=[(st.id, st.name, st.code) for st in country.state_ids], phone_code=country.phone_code)
@@ -479,13 +479,13 @@ class Website(Home):
 
     # if not icon provided in DOM, browser tries to access /favicon.ico, eg when
     # opening an order pdf
-    @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False, readonly=True)
+    @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False, replica=True)
     def favicon(self, **kw):
         response = request.redirect(self.env.website.image_url(self.env.website, 'favicon'), code=301)
         response.headers['Cache-Control'] = f'public, max-age={STATIC_CACHE_LONG}'
         return response
 
-    @http.route('/website/info', type='http', auth="public", website=True, sitemap=False, readonly=True, list_as_website_content=_lt("Website Information"))
+    @http.route('/website/info', type='http', auth="public", website=True, sitemap=False, replica=True, list_as_website_content=_lt("Website Information"))
     def website_info(self, **kwargs):
         Module = request.env['ir.module.module'].sudo()
         apps = Module.search([('state', '=', 'installed'), ('application', '=', True)])
@@ -514,7 +514,7 @@ class Website(Home):
             action_url += '&step=' + str(step)
         return request.redirect(action_url)
 
-    @http.route('/website/cookie-policy', type='http', auth="public", website=True, sitemap=False, readonly=True)
+    @http.route('/website/cookie-policy', type='http', auth="public", website=True, sitemap=False, replica=True)
     def cookie_policy_redirect(self, **kwargs):
         url = self.env.website.cookie_policy_id.sudo().url or '/cookie-policy'
         return request.redirect(url)
@@ -971,7 +971,7 @@ class Website(Home):
             ('Content-Security-Policy', CONFIGURATOR_PREVIEW_CSP),
         ])
 
-    @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True, readonly=True)
+    @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True, replica=True)
     def get_suggested_link(self, needle, limit=10):
         matching_pages = []
         limit = None if limit == "no_limit" else int(limit)
@@ -1010,16 +1010,16 @@ class Website(Home):
             ]
         }
 
-    @http.route('/website/check_existing_link', type='jsonrpc', auth="user", website=True, readonly=True)
+    @http.route('/website/check_existing_link', type='jsonrpc', auth="user", website=True, replica=True)
     def check_existing_link(self, link):
         return self.env.website.check_existing_page(link)
 
-    @http.route('/website/save_session_layout_mode', type='jsonrpc', auth='public', website=True, readonly=True)
+    @http.route('/website/save_session_layout_mode', type='jsonrpc', auth='public', website=True, replica=True)
     def save_session_layout_mode(self, layout_mode, view_id):
         assert layout_mode in ('grid', 'list'), "Invalid layout mode"
         request.session[f'website_{view_id}_layout_mode'] = layout_mode
 
-    @http.route('/website/snippet/filters', type='jsonrpc', auth='public', website=True, readonly=True)
+    @http.route('/website/snippet/filters', type='jsonrpc', auth='public', website=True, replica=True)
     def get_dynamic_filter(self, filter_id, **kwargs):
         """Render records from an existing website.snippet.filter as HTML cards.
 
@@ -1041,7 +1041,7 @@ class Website(Home):
         dynamic_filter_found = single_record_filter or dynamic_filter_sudo
         return dynamic_filter_sudo._render(**kwargs) if dynamic_filter_found else []
 
-    @http.route('/website/snippet/options_filters', type='jsonrpc', auth='user', website=True, readonly=True)
+    @http.route('/website/snippet/options_filters', type='jsonrpc', auth='user', website=True, replica=True)
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.NotFound()
@@ -1060,7 +1060,7 @@ class Website(Home):
         )
         return dynamic_filter
 
-    @http.route('/website/snippet/filter_templates', type='jsonrpc', auth='public', website=True, readonly=True)
+    @http.route('/website/snippet/filter_templates', type='jsonrpc', auth='public', website=True, replica=True)
     def get_dynamic_snippet_templates(self, filter_name=False):
         """List the QWeb card templates usable with /website/snippet/filters' template_key.
 
@@ -1089,7 +1089,7 @@ class Website(Home):
             t['thumb'] = attribs.get('data-thumb')
         return templates
 
-    @http.route('/website/get_current_currency', type='jsonrpc', auth="public", website=True, readonly=True)
+    @http.route('/website/get_current_currency', type='jsonrpc', auth="public", website=True, replica=True)
     def get_current_currency(self, **kwargs):
         """Return the currency the prices of the current website are expressed in.
 
@@ -1201,7 +1201,7 @@ class Website(Home):
         order = order or 'name ASC'
         return 'is_published desc, %s, id desc' % order
 
-    @http.route('/website/snippet/autocomplete', type='jsonrpc', auth='public', website=True, readonly=True)
+    @http.route('/website/snippet/autocomplete', type='jsonrpc', auth='public', website=True, replica=True)
     def autocomplete(self, search_type=None, term=None, order=None, offset=0, limit=6, max_nb_chars=999, options=None):
         """
         Returns list of results according to the term and options
@@ -1362,7 +1362,7 @@ class Website(Home):
             'allowFuzzy': not post.get('noFuzzy'),
         }
 
-    @http.route(['/pages', '/pages/page/<int:page>'], type='http', auth="public", website=True, sitemap=False, readonly=True)
+    @http.route(['/pages', '/pages/page/<int:page>'], type='http', auth="public", website=True, sitemap=False, replica=True)
     def pages_list(self, page=1, search='', **kw):
         options = self._get_page_search_options(**kw)
         step = 50
@@ -1398,7 +1398,7 @@ class Website(Home):
     @http.route([
         '/website/search',
         '/website/search/<string:search_type>',
-    ], type='http', auth="public", website=True, sitemap=False, readonly=True)
+    ], type='http', auth="public", website=True, sitemap=False, replica=True)
     def hybrid_list(self, search='', limit=24, search_type='all', **kw):
         if not search:
             return request.render('website.list_hybrid')
@@ -1472,7 +1472,7 @@ class Website(Home):
             return json.dumps({'view_id': page.get('view_id')})
         return json.dumps({'url': url})
 
-    @http.route('/website/get_new_page_templates', type='jsonrpc', auth='user', website=True, readonly=True)
+    @http.route('/website/get_new_page_templates', type='jsonrpc', auth='user', website=True, replica=True)
     def get_new_page_templates(self, **kw):
         View = request.env['ir.ui.view']
         result = []
@@ -1549,7 +1549,7 @@ class Website(Home):
         )
         return not disable_delay_translations
 
-    @http.route("/website/get_switchable_related_views", type="jsonrpc", auth="user", website=True, readonly=True)
+    @http.route("/website/get_switchable_related_views", type="jsonrpc", auth="user", website=True, replica=True)
     def get_switchable_related_views(self, key):
         views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
         views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
@@ -1568,7 +1568,7 @@ class Website(Home):
         view.with_context(website_id=None).reset_arch(mode)
         return True
 
-    @http.route(['/website/seo_suggest'], type='jsonrpc', auth="user", website=True, readonly=True)
+    @http.route(['/website/seo_suggest'], type='jsonrpc', auth="user", website=True, replica=True)
     def seo_suggest(self, keywords=None, lang=None):
         """
         Suggests search keywords based on a given input using Google's
@@ -1713,7 +1713,7 @@ class Website(Home):
                 new_html_content = html.tostring(tree, encoding='unicode', method='html')
                 record.with_context(delay_translations=self._get_delay_translations()).write({link['field']: new_html_content})
 
-    @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True, readonly=True)
+    @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True, replica=True)
     def get_seo_data(self, res_id, res_model):
         """
         Fetch SEO metadata for a given record.
@@ -1813,7 +1813,7 @@ class Website(Home):
 
         return res
 
-    @http.route(['/website/check_can_modify_any'], type='jsonrpc', auth="user", website=True, readonly=True)
+    @http.route(['/website/check_can_modify_any'], type='jsonrpc', auth="user", website=True, replica=True)
     def check_can_modify_any(self, records):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
@@ -1829,7 +1829,7 @@ class Website(Home):
                 continue
         raise first_error
 
-    @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False, readonly=True)
+    @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False, replica=True)
     def google_console_search(self, key, **kwargs):
         if not self.env.website.google_search_console:
             logger.warning('Google Search Console not enable')
@@ -1846,7 +1846,7 @@ class Website(Home):
 
         return request.make_response("google-site-verification: %s" % self.env.website.google_search_console)
 
-    @http.route('/website/google_maps_api_key', type='jsonrpc', auth='public', website=True, readonly=True)
+    @http.route('/website/google_maps_api_key', type='jsonrpc', auth='public', website=True, replica=True)
     def google_maps_api_key(self):
         return json.dumps({
             'google_maps_api_key': self.env.website.google_maps_api_key or ''
@@ -1891,7 +1891,7 @@ class Website(Home):
         domain = Domain("key", "in", keys) & self.env.website.website_domain()
         return Model.search(domain).filter_duplicate()
 
-    @http.route(['/website/theme_customize_data_get'], type='jsonrpc', auth='user', website=True, readonly=True)
+    @http.route(['/website/theme_customize_data_get'], type='jsonrpc', auth='user', website=True, replica=True)
     def theme_customize_data_get(self, keys, is_view_data):
         records = self._get_customize_data(keys, is_view_data)
         return records.filtered('active').mapped('key')
@@ -1916,7 +1916,7 @@ class Website(Home):
             records = self._get_customize_data(enable, is_view_data)
             records.filtered(lambda x: not x.active).write({'active': True})
 
-    @http.route(['/website/theme_customize_bundle_reload'], type='jsonrpc', auth='user', website=True, readonly=True)
+    @http.route(['/website/theme_customize_bundle_reload'], type='jsonrpc', auth='user', website=True, replica=True)
     def theme_customize_bundle_reload(self):
         """
         Reloads asset bundles and returns their unique URLs.
@@ -2270,7 +2270,7 @@ class WebsiteBinary(Binary):
         '/website/image/<xmlid>/<field>/<int:width>x<int:height>',
         '/website/image/<model>/<id>/<field>',
         '/website/image/<model>/<id>/<field>/<int:width>x<int:height>'
-    ], type='http', auth="public", website=False, multilang=False, readonly=True)
+    ], type='http', auth="public", website=False, multilang=False, replica=True)
     def website_content_image(self, id=None, max_width=0, max_height=0, **kw):  # noqa: A002
         if max_width:
             kw['width'] = max_width

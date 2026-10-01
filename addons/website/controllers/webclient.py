@@ -6,7 +6,7 @@ from odoo.addons.web.controllers.webclient import WebClient
 
 
 class WebsiteWebClient(http.Controller):
-    @http.route('/web/bundle/website.<string:bundle_name>', auth='public', methods=['GET'], readonly=True)
+    @http.route('/web/bundle/website.<string:bundle_name>', auth='public', methods=['GET'], replica=True)
     def bundle(self, bundle_name, **bundle_params):
         website_id = self.env.context.get('host_id')
         if website_id:

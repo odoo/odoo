@@ -794,7 +794,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         auth="public",
         website=True,
         sitemap=False,
-        readonly=True,
+        replica=True,
     )
     def product_document(self, product_template, document_id):
         product_template.check_access("read")
@@ -962,7 +962,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         type="jsonrpc",
         auth="public",
         website=True,
-        readonly=True,
+        replica=True,
     )
     def is_add_to_cart_allowed(self, product_id, **_kwargs):
         product = self.env["product.product"].browse(product_id)

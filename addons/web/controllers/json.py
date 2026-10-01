@@ -28,7 +28,7 @@ _logger = logging.getLogger(__name__)
 class WebJsonController(http.Controller):
 
     # for /json, the route should work in a browser, therefore type=http
-    @http.route('/json/<path:subpath>', auth='user', type='http', readonly=True)
+    @http.route('/json/<path:subpath>', auth='user', type='http', replica=True)
     def web_json(self, subpath, **kwargs):
         self._check_json_route_active()
         return request.redirect(
@@ -36,7 +36,7 @@ class WebJsonController(http.Controller):
             HTTPStatus.TEMPORARY_REDIRECT
         )
 
-    @http.route('/json/1/<path:subpath>', auth='bearer', bearer_scope='rpc', type='http', readonly=True)
+    @http.route('/json/1/<path:subpath>', auth='bearer', bearer_scope='rpc', type='http', replica=True)
     def web_json_1(self, subpath, **kwargs):
         """Simple JSON representation of the views.
 
