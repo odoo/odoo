@@ -10,11 +10,15 @@
     --o-badge-min-width: #{$o-badge-min-width};
     --o-black: #{$o-black};
     --o-border-radius-lg: #{$o-border-radius-lg};
+    --o-brand-lightsecondary: #{$o-brand-lightsecondary};
     --o-brand-odoo: #{$o-brand-odoo};
     --o-brand-primary: #{$o-brand-primary};
     --o-brand-secondary: #{$o-brand-secondary};
     --o-bubble-color-size: #{$o-bubble-color-size};
     --o-bubble-color-size-xl: #{$o-bubble-color-size-xl};
+    --o-burger-base-bg: #{$o-burger-base-bg};
+    --o-burger-topbar-bg: #{$o-burger-topbar-bg};
+    --o-burger-topbar-color: #{$o-burger-topbar-color};
     --o-calendar-today-background-color: #{$o-calendar-today-background-color};
     --o-calendar-today-color: #{$o-calendar-today-color};
     --o-caret-down: #{$o-caret-down};
@@ -25,14 +29,22 @@
     --o-datetime-picker-reduced-width: #{$o-datetime-picker-reduced-width};
     --o-dropdown-hpadding: #{$o-dropdown-hpadding};
     --o-dropdown-max-height: #{$o-dropdown-max-height};
+    --o-dropdown-vpadding: #{$o-dropdown-vpadding};
     --o-enterprise-action-color: #{$o-enterprise-action-color};
     --o-enterprise-color: #{$o-enterprise-color};
+    --o-field-translate-padding: #{$o-field-translate-padding};
     --o-font-size-base: #{$o-font-size-base};
     --o-font-size-base-smaller: #{$o-font-size-base-smaller};
     --o-font-weight-bold: #{$o-font-weight-bold};
+    --o-font-weight-medium: #{$o-font-weight-medium};
     --o-font-weight-normal: #{$o-font-weight-normal};
     --o-form-lightsecondary: #{$o-form-lightsecondary};
+    --o-form-picture-size: #{$o-form-picture-size};
+    --o-form-renderer-max-width: #{$o-form-renderer-max-width};
+    --o-form-separator-color: #{$o-form-separator-color};
     --o-form-sheet-min-width: #{$o-form-sheet-min-width};
+    --o-form-spacing-unit: #{$o-form-spacing-unit};
+    --o-form-view-sheet-max-width: #{$o-form-view-sheet-max-width};
     --o-gray-100: #{$o-gray-100};
     --o-gray-200: #{$o-gray-200};
     --o-gray-300: #{$o-gray-300};
@@ -45,12 +57,27 @@
     --o-horizontal-padding: #{$o-horizontal-padding};
     --o-info: #{$o-info};
     --o-input-border-required: #{$o-input-border-required};
+    --o-input-invalid-bg: #{$o-input-invalid-bg};
+    --o-input-padding-y: #{$o-input-padding-y};
     --o-kanban-background: #{$o-kanban-background};
+    --o-kanban-dashboard-dropdown-complex-gap: #{$o-kanban-dashboard-dropdown-complex-gap};
     --o-kanban-dashboard-hpadding: #{$o-kanban-dashboard-hpadding};
     --o-kanban-dashboard-vpadding: #{$o-kanban-dashboard-vpadding};
+    --o-kanban-default-record-width: #{$o-kanban-default-record-width};
+    --o-kanban-group-padding: #{$o-kanban-group-padding};
+    --o-kanban-image-fill-width: #{$o-kanban-image-fill-width};
+    --o-kanban-image-width: #{$o-kanban-image-width};
+    --o-kanban-inner-hmargin: #{$o-kanban-inner-hmargin};
     --o-kanban-inside-hgutter: #{$o-kanban-inside-hgutter};
     --o-kanban-inside-vgutter: #{$o-kanban-inside-vgutter};
+    --o-kanban-record-margin: #{$o-kanban-record-margin};
+    --o-kanban-small-record-width: #{$o-kanban-small-record-width};
+    --o-label-font-size-factor: #{$o-label-font-size-factor};
+    --o-line-height-base: #{$o-line-height-base};
     --o-line-size: #{$o-line-size};
+    --o-list-footer-bg-color: #{$o-list-footer-bg-color};
+    --o-list-footer-color: #{$o-list-footer-color};
+    --o-list-footer-font-weight: #{$o-list-footer-font-weight};
     --o-main-color-muted: #{$o-main-color-muted};
     --o-main-favorite-color: #{$o-main-favorite-color};
     --o-main-link-color: #{$o-main-link-color};
@@ -60,17 +87,20 @@
     --o-navbar-badge-padding: #{$o-navbar-badge-padding};
     --o-navbar-badge-size: #{$o-navbar-badge-size};
     --o-sheet-vpadding: #{$o-sheet-vpadding};
+    --o-statusbar-arrow-width: #{$o-statusbar-arrow-width};
     --o-view-background-color: #{$o-view-background-color};
     --o-warning: #{$o-warning};
     --o-webclient-background-color: #{$o-webclient-background-color};
     --o-white: #{$o-white};
 
     /* Bootstrap variables that Bootstrap does not expose itself */
+    --o-bs-badge-font-weight: #{$badge-font-weight};
     --o-bs-black: #{$black};
     --o-bs-blue-400: #{$blue-400};
     --o-bs-blue-500: #{$blue-500};
     --o-bs-btn-border-radius: #{$btn-border-radius};
     --o-bs-btn-border-radius-lg: #{$btn-border-radius-lg};
+    --o-bs-btn-close-white-filter: #{$btn-close-white-filter};
     --o-bs-btn-disabled-opacity: #{$btn-disabled-opacity};
     --o-bs-btn-focus-width: #{$btn-focus-width};
     --o-bs-btn-font-size-lg: #{$btn-font-size-lg};
@@ -82,15 +112,20 @@
     --o-bs-btn-padding-y-lg: #{$btn-padding-y-lg};
     --o-bs-btn-padding-y-sm: #{$btn-padding-y-sm};
     --o-bs-card-bg: #{$card-bg};
+    --o-bs-card-spacer-x: #{$card-spacer-x};
+    --o-bs-card-spacer-y: #{$card-spacer-y};
     --o-bs-component-active-bg: #{$component-active-bg};
     --o-bs-component-active-color: #{$component-active-color};
     --o-bs-cyan-200: #{$cyan-200};
     --o-bs-cyan-300: #{$cyan-300};
     --o-bs-danger-bg-subtle: #{$danger-bg-subtle};
+    --o-bs-dropdown-font-size: #{$dropdown-font-size};
     --o-bs-dropdown-item-padding-x: #{$dropdown-item-padding-x};
     --o-bs-dropdown-link-color: #{$dropdown-link-color};
     --o-bs-dropdown-link-hover-bg: #{$dropdown-link-hover-bg};
     --o-bs-dropdown-link-hover-color: #{$dropdown-link-hover-color};
+    --o-bs-focus-ring-blur: #{$focus-ring-blur};
+    --o-bs-focus-ring-box-shadow: #{$focus-ring-box-shadow};
     --o-bs-font-size-base: #{$font-size-base};
     --o-bs-font-size-lg: #{$font-size-lg};
     --o-bs-font-size-sm: #{$font-size-sm};
@@ -99,10 +134,12 @@
     --o-bs-font-weight-medium: #{$font-weight-medium};
     --o-bs-font-weight-normal: #{$font-weight-normal};
     --o-bs-font-weight-semibold: #{$font-weight-semibold};
+    --o-bs-form-switch-width: #{$form-switch-width};
     --o-bs-grid-gutter-width: #{$grid-gutter-width};
     --o-bs-h3-font-size: #{$h3-font-size};
     --o-bs-h4-font-size: #{$h4-font-size};
     --o-bs-h5-font-size: #{$h5-font-size};
+    --o-bs-headings-line-height: #{$headings-line-height};
     --o-bs-headings-margin-bottom: #{$headings-margin-bottom};
     --o-bs-input-bg: #{$input-bg};
     --o-bs-input-btn-padding-x: #{$input-btn-padding-x};
@@ -115,6 +152,7 @@
     --o-bs-input-line-height: #{$input-line-height};
     --o-bs-input-padding-x: #{$input-padding-x};
     --o-bs-input-padding-y: #{$input-padding-y};
+    --o-bs-input-placeholder-color: #{$input-placeholder-color};
     --o-bs-line-height-sm: #{$line-height-sm};
     --o-bs-list-group-active-bg: #{$list-group-active-bg};
     --o-bs-list-group-active-border-color: #{$list-group-active-border-color};
@@ -145,6 +183,9 @@
     --o-bs-table-cell-padding-y-sm: #{$table-cell-padding-y-sm};
     --o-bs-table-hover-bg: #{$table-hover-bg};
     --o-bs-text-muted: #{$text-muted};
+    --o-bs-transition-base: #{$transition-base};
+    --o-bs-transition-collapse: #{$transition-collapse};
+    --o-bs-transition-fade: #{$transition-fade};
     --o-bs-warning-bg-subtle: #{$warning-bg-subtle};
     --o-bs-warning-text-emphasis: #{$warning-text-emphasis};
     --o-bs-yellow-200: #{$yellow-200};
@@ -153,7 +194,15 @@
     --o-bs-zindex-modal: #{$zindex-modal};
     --o-bs-zindex-offcanvas: #{$zindex-offcanvas};
     --o-bs-zindex-popover: #{$zindex-popover};
+    --o-bs-zindex-sticky: #{$zindex-sticky};
     --o-bs-zindex-tooltip: #{$zindex-tooltip};
+
+    /* Bootstrap variables whose own custom property some components redefine */
+    --o-bs-body-color: #{$body-color};
+    --o-bs-border-radius-lg: #{$border-radius-lg};
+    --o-bs-border-style: #{$border-style};
+    --o-bs-border-width: #{$border-width};
+    --o-bs-headings-color: #{$headings-color};
 
     /* Contrast colors that Bootstrap computes with color-contrast() */
     --o-bs-gray-100-contrast: #{color-contrast($gray-100)};

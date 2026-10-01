@@ -1,7 +1,7 @@
 .o_kanban_record {
     /* Scoped here rather than on the root so nested rules keep their specificity. */
     &:not(.o_kanban_ghost) {
-        background-color: $o-view-background-color;
+        background-color: var(--o-view-background-color);
     }
 
     &:first-of-type {
@@ -27,7 +27,7 @@
     }
 
     .o_dropdown_kanban .btn {
-        border-radius: calc(#{$border-radius-lg} - #{map-get($spacers, 1)});
+        border-radius: calc(var(--o-bs-border-radius-lg) - #{map-get($spacers, 1)});
     }
 
     @media (pointer: fine) {

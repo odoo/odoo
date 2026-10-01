@@ -15,7 +15,7 @@
 
     &:not(.o_readonly_modifier) > *:first-child {
       min-width: 50px;
-      border-bottom: solid $border-width $border-color;
+      border-bottom: solid var(--o-bs-border-width) $border-color;
       max-width: fit-content;
       field-sizing: content;
     }
@@ -44,7 +44,7 @@
     width: 70%;
     padding: 8px;
     font-weight: var(--o-font-weight-normal);
-    border: solid $border-width $border-color;
+    border: solid var(--o-bs-border-width) $border-color;
     border-radius: var(--border-radius);
     background-color: var(--o-webclient-background-color);
   }

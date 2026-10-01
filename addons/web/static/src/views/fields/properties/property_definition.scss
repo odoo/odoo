@@ -4,9 +4,9 @@
 
     .o_modal_container {
         @media screen and (min-width: 576px), print and (min-width: 100mm) {
-            min-width: calc(#{$o-form-view-sheet-max-width} / 2.5);
+            min-width: calc(var(--o-form-view-sheet-max-width) / 2.5);
         }
-        max-width: calc(#{$o-form-view-sheet-max-width} / 2);
+        max-width: calc(var(--o-form-view-sheet-max-width) / 2);
     }
 
     .o_field_property_definition_kanban,

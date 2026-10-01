@@ -4,7 +4,7 @@
             border-radius: calc(var(--o-statusbar-radius) + var(--o-statusbar-padding));
             border: var(--border-width) solid $border-color;
             padding: var(--o-statusbar-padding);
-            background: $o-view-background-color;
+            background: var(--o-view-background-color);
         }
 
         /* TODO: replace the following properties with utility classes ? */
@@ -15,13 +15,13 @@
         align-self: stretch;
         align-items: stretch;
 
-        --o-statusbar-radius: #{$btn-border-radius};
-        --o-statusbar-caret-width: #{$o-statusbar-arrow-width};
+        --o-statusbar-radius: var(--o-bs-btn-border-radius);
+        --o-statusbar-caret-width: var(--o-statusbar-arrow-width);
         --o-statusbar-caret-gap: 2px;
         --o-statusbar-border-width: #{$btn-border-width};
         --o-statusbar-padding: #{$border-width * 2};
         --o-statusbar-button-padding-x: calc(var(--o-statusbar-caret-width) * 1.25);
-        --o-statusbar-button-padding-y: calc(#{$btn-padding-y} - #{$border-width * 2});
+        --o-statusbar-button-padding-y: calc(var(--o-bs-btn-padding-y) - #{$border-width * 2});
         --o-statusbar-point-top-left: var(--o-statusbar-caret-gap) 0;
         --o-statusbar-point-top-right: calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-caret-gap)) 0;
         --o-statusbar-point-middle-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-caret-gap)) 50%;
@@ -32,7 +32,7 @@
         .o_arrow_button:not(.d-none) {
             --#{$prefix}btn-hover-bg: var(--gray-200);
             --#{$prefix}btn-active-bg: var(--gray-300);
-            --#{$prefix}btn-disabled-bg: #{$o-component-active-bg};
+            --#{$prefix}btn-disabled-bg: var(--o-component-active-bg);
             --#{$prefix}btn-disabled-color: var(--#{$prefix}btn-active-color);
             --#{$prefix}btn-focus-box-shadow: 0;
             --gradient: none;
@@ -127,7 +127,7 @@
                 cursor: default;
 
                 &:not(.o_arrow_button_current) {
-                    color: $text-muted;
+                    color: var(--o-bs-text-muted);
                 }
             }
         }

@@ -50,8 +50,8 @@
 .o_input {
     border: $input-border-width solid var(--o-input-border-color);
     border-width: 0 0 $input-border-width 0;
-    padding: $o-input-padding-y $o-input-padding-x;
-    background-color: var(--o-input-background-color, #{$input-bg});
+    padding: var(--o-input-padding-y) $o-input-padding-x;
+    background-color: var(--o-input-background-color, var(--o-bs-input-bg));
 
     &:placeholder-shown {
         text-overflow: ellipsis;
@@ -71,7 +71,7 @@
     }
 
     &:not(.o_form_label) {
-        --o-input-background-color: #{$o-input-invalid-bg};
+        --o-input-background-color: var(--o-input-invalid-bg);
     }
 }
 
@@ -119,7 +119,7 @@
 
         .o_dropdown_button, .o_datepicker_button {
             position: absolute;
-            top: $o-input-padding-y;
+            top: var(--o-input-padding-y);
             left: auto;
             bottom: var($input-border-width);
             right: $o-input-padding-x;
@@ -213,7 +213,7 @@
         &.o_vertical {
             flex-flow: column nowrap;
             .o_radio_item {
-                margin-bottom: $o-form-spacing-unit;
+                margin-bottom: var(--o-form-spacing-unit);
             }
         }
     }
@@ -245,7 +245,7 @@
             width: 100%;
 
             color: white;
-            background-color: $o-brand-primary;
+            background-color: var(--o-brand-primary);
             opacity: 0;
             transition: opacity ease 400ms;
             min-width: 35px;
@@ -271,7 +271,7 @@
                     margin: 0px;
                     text-align: center;
                     &.o_select_file_button{
-                        background: $o-brand-primary;
+                        background: var(--o-brand-primary);
                     }
                     &.o_clear_file_button{
                         background: map-get($theme-colors, 'danger');
@@ -327,9 +327,9 @@
         width: 100% !important;
         border-radius: 5px;
         border: 1px solid var(--primary);
-        font-size: $font-size-sm;
-        color: $o-brand-primary;
-        font-weight: $badge-font-weight;
+        font-size: var(--o-bs-font-size-sm);
+        color: var(--o-brand-primary);
+        font-weight: var(--o-bs-badge-font-weight);
         text-align: center;
         padding-right: 6rem;
         word-break: break-word;

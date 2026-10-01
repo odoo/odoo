@@ -16,14 +16,14 @@
     .o_dropdown_button,
     .o_datepicker_button {
         @include print-variable(o-input-border-color, $o-form-lightsecondary);
-        color: $o-main-text-color !important;
+        color: var(--o-main-text-color) !important;
     }
     .o_dropdown_button,
     .o_datepicker_button {
         color: initial !important;
     }
     .o_input_dropdown {
-        color: $o-main-text-color !important;
+        color: var(--o-main-text-color) !important;
     }
 
     & {
@@ -99,7 +99,7 @@
     user-select: none;
     height: 20px;
     &:not(.folded) {
-        box-shadow: 0 var(--border-width) 0 $o-form-separator-color;
+        box-shadow: 0 var(--border-width) 0 var(--o-form-separator-color);
     }
 }
 
@@ -144,5 +144,5 @@
     /* highlight effect on the group is activated only in multi-columns */
     box-sizing: border-box;
     background-color: #{tint-color($o-action, 90%)};
-    border: 1px solid #{$o-action};
+    border: 1px solid var(--o-action);
 }
