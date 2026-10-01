@@ -1124,6 +1124,7 @@ SERVICES_MAPPING = {
     "effect": ['EffectPlugin', '@web/core/effects/effect_plugin'],
     "frequent_emoji": ['FrequentEmojiPlugin', '@web/core/emoji_picker/frequent_emoji_plugin'],
     "hotkey": ['HotkeyPlugin', '@web/core/hotkeys/hotkey_plugin'],
+    "mail.fullscreen": ['MailFullscreenPlugin', '@mail/core/common/mail_fullscreen'],
     "mail.sound_effects": ['SoundEffectsPlugin', '@mail/core/common/sound_effects_plugin'],
     "notification": ['NotificationPlugin', '@web/core/notifications/notification_plugin'],
     "mobile": ['MobilePlugin', '@web_mobile/js/mobile_plugin'],

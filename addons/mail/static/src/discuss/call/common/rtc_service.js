@@ -6,8 +6,9 @@ import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream } from "@mail/utils/common/misc";
+import { MailFullscreenPlugin } from "@mail/core/common/mail_fullscreen";
 
-import { markup, proxy, toRaw } from "@odoo/owl";
+import { markup, proxy, toRaw, usePlugin } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -487,7 +488,7 @@ export class Rtc extends Record {
      * @returns {boolean}
      */
     get isBrowserFullscreen() {
-        return this.isFullscreen && this.fullscreen.isBrowserFullscreen;
+        return this.isFullscreen && this.fullscreen.isBrowserFullscreen();
     }
 
     /**
@@ -539,7 +540,7 @@ export class Rtc extends Record {
         this.closeCallPermissionDialog = undefined;
         /** @type {Services["dialog"]} */
         this.dialog = undefined;
-        /** @type {Services["mail.fullscreen"]} */
+        /** @type {MailFullscreenPlugin} */
         this.fullscreen = undefined;
         /** @type {Services["notification"]} */
         this.notification = undefined;
@@ -2967,7 +2968,6 @@ export const rtcService = {
         "discuss.p2p",
         "discuss.pip_service",
         "discuss.ptt_extension",
-        "mail.fullscreen",
         "mail.sound_effects",
         "mail.store",
         "notification",
@@ -3008,9 +3008,9 @@ export const rtcService = {
             },
             { immediate: true, initialRun: false }
         );
-        rtc.fullscreen = services["mail.fullscreen"];
+        rtc.fullscreen = usePlugin(MailFullscreenPlugin);
         rtc.onChange(
-            () => [rtc.fullscreen.id],
+            () => [rtc.fullscreen.id()],
             function onChangeFullscreen(fullscreenId) {
                 const wasFullscreen = rtc.isFullscreen;
                 rtc.isFullscreen = fullscreenId === CALL_FULLSCREEN_ID;
