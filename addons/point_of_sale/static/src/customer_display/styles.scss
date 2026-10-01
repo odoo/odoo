@@ -19,7 +19,7 @@ li {
 .o_customer_display {
     flex-direction: column;
 
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) {
         flex-direction: row;
     }
 
@@ -35,7 +35,7 @@ li {
 .o_customer_display_sidebar .o_customer_display_footer {
     display: none !important;
 
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) {
         display: flex !important;
     }
     @media (orientation: portrait) {
@@ -46,7 +46,7 @@ li {
 .o_customer_display_main .o_customer_display_footer {
     display: flex !important;
 
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) {
         display: none !important;
     }
     @media (orientation: portrait) {
@@ -55,7 +55,7 @@ li {
 }
 
 .order-container {
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) {
         padding-top: 16px !important;
     }
     @media (orientation: portrait) {
@@ -66,7 +66,7 @@ li {
 .o_customer_display_logo img {
     max-height: 10rem;
 
-    @include media-breakpoint-down(md) {
+    @media (max-width: 767.98px) {
         max-height: 5rem;
     }
 }
@@ -76,7 +76,7 @@ li {
     border-right: var(--border-width) solid var(--border-color);
     flex-basis: 50%;
 
-    @include media-breakpoint-down(md) {
+    @media (max-width: 767.98px) {
         border-right: 0;
         border-bottom: var(--border-width) solid $border-color;
     }

@@ -3,7 +3,7 @@
     overflow-y: auto;
 
     .o_modal_container {
-        @include media-breakpoint-up(sm) {
+        @media screen and (min-width: 576px), print and (min-width: 100mm) {
             min-width: calc(#{$o-form-view-sheet-max-width} / 2.5);
         }
         max-width: calc(#{$o-form-view-sheet-max-width} / 2);
@@ -28,7 +28,7 @@
             margin-left: 0 !important;
         }
     }
-    @include media-breakpoint-up(sm) {
+    @media screen and (min-width: 576px), print and (min-width: 100mm) {
         max-height: 70vh !important;
     }
 }

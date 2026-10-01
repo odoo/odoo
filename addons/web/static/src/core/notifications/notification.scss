@@ -7,13 +7,13 @@
     inset: auto $o-notification-margin ($o-navbar-height * 0.25) $o-notification-margin;
     z-index: $o-notification-zindex;
 
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         inset: ($o-navbar-height * 1.15) $o-notification-margin auto auto;
         min-width: $o-notification-min-width-md;
         max-width: $o-notification-max-width-md;
     }
 
-    @include media-breakpoint-down(md) {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
         .o_notification_content {
             flex: 0 1 auto;
         }

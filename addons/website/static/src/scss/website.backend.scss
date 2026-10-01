@@ -20,16 +20,16 @@
                 height: 2950px; /* Copied from iframe. */
                 top: 2px; /* Do not cover eCommerce dashboard border. */
 
-                @include media-breakpoint-only(md) {
+                @media screen and (min-width: 768px) and (max-width: 991.98px), print and (min-width: 188mm) and (max-width: 189.98mm) {
                     height: 2855px; /* Copied from iframe. */
                 }
-                @include media-breakpoint-only(lg) {
+                @media screen and (min-width: 992px) and (max-width: 1199.98px), print and (min-width: 190mm) and (max-width: 219.98mm) {
                     height: 2040px; /* Copied from iframe. */
                 }
-                @include media-breakpoint-only(xl) {
+                @media screen and (min-width: 1200px) and (max-width: 1399.98px), print and (min-width: 220mm) and (max-width: 249.98mm) {
                     height: 1875px; /* Copied from iframe. */
                 }
-                @include media-breakpoint-only(xxl) {
+                @media screen and (min-width: 1400px), print and (min-width: 250mm) {
                     height: 1875px; /* Copied from iframe. */
                 }
             }
@@ -42,11 +42,11 @@
             justify-content: flex-start;
 
             > .o_inner_box {
-                @include media-breakpoint-down(md) {
+                @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
                     flex: 1 1 200px;
                     display: block !important;
                 }
-                @include media-breakpoint-up(md) {
+                @media screen and (min-width: 768px), print and (min-width: 188mm) {
                     flex: 0 0 16.6%;
                 }
             }
@@ -138,7 +138,7 @@
         height: 100%;
 
         div.is_mobile {
-            @include media-breakpoint-up(md) {
+            @media screen and (min-width: 768px), print and (min-width: 188mm) {
                 @include o-mobile-phone;
 
                 iframe {

@@ -52,21 +52,21 @@
 .pos .o_pos_burger_menu_buttons {
     grid-template-columns: repeat(var(--grid-columns, 1), 1fr);
 
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) {
         --grid-columns: 3;
         --oi-font-size: 1.5rem;
 
         .btn {
             aspect-ratio: 1.3;
         }
-        @include media-breakpoint-down(lg) {
+        @media (max-width: 991.98px) {
             &:has(.btn:nth-child(3n + 1):last-child) {
                 @include burger-menu-orphan-child;
             }
         }
     }
 
-    @include media-breakpoint-up(lg) {
+    @media (min-width: 992px) {
         --grid-columns: 4;
 
         &:has(.btn:nth-child(4n + 1):last-child) {

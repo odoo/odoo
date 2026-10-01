@@ -1,11 +1,11 @@
 input[name="sale_quantity"] {
     padding: 0;
 
-    @include media-breakpoint-down(md) {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
         max-width: 3rem;
     }
 
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         max-width: 4rem;
     }
 

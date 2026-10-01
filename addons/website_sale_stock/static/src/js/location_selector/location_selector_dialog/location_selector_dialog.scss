@@ -1,12 +1,12 @@
 .o_location_selector {
     .o_location_selector_view {
         /* Force tab-pane to be displayed on desktop. */
-        @include media-breakpoint-up(md) {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
             opacity: 1;
         }
 
         /* Remove border-start class for mobile */
-        @include media-breakpoint-down(md) {
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             border-left: 0 !important;
         }
     }

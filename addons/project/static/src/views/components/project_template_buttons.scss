@@ -3,7 +3,7 @@
 }
 
 .o-project-template, .o-task-template {
-    @include media-breakpoint-up(sm) {
+    @media screen and (min-width: 576px), print and (min-width: 100mm) {
         .o_template_icon_group {
             visibility: hidden;
         }

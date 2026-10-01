@@ -27,7 +27,7 @@
             display: none;
         }
 
-        @include media-breakpoint-down(md) {
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             .btn, .o_file_input {
                 width: 100%;
             }
@@ -38,7 +38,7 @@
             }
         }
 
-        @include media-breakpoint-down(sm) {
+        @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
             --btn-padding-y: #{map-get($spacers, 2)};
         }
     }
@@ -67,12 +67,12 @@
                 padding: #{$_halfPadding} var(--modal-padding);
             }
 
-            @include media-breakpoint-up(sm) {
+            @media screen and (min-width: 576px), print and (min-width: 100mm) {
                 --Dialog-padding: #{map-get($spacers, 4)};
             }
         }
 
-        @include media-breakpoint-down(sm) {
+        @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
             .modal-dialog {
                 --modal-margin: #{$modal-dialog-margin * 4 $modal-dialog-margin * 2};
 
@@ -87,14 +87,14 @@
             }
         }
 
-        @include media-breakpoint-up(sm) {
+        @media screen and (min-width: 576px), print and (min-width: 100mm) {
             .btn-close.position-sm-absolute {
                 margin: map-get($spacers, 2);
             }
         }
     }
 
-    @include media-breakpoint-down(sm) {
+    @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
         &.o_modal_full {
             --modal-margin: 0;
             --modal-border-width: 0;
@@ -150,7 +150,7 @@
     outline: none;
 }
 
-@include media-breakpoint-up(sm) {
+@media screen and (min-width: 576px), print and (min-width: 100mm) {
     .modal-content {
         .modal-header {
             cursor: grab;

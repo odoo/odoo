@@ -11,7 +11,7 @@
     background: $o-navbar-background;
     font-size: $o-navbar-font-size;
 
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         min-width: min-content;
     }
 
@@ -72,7 +72,7 @@
 
         /* Animate on large screen without 'reduced-motion' only. */
         /* -------------------------------------------------------------------- */
-        @include media-breakpoint-up(md) {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
             &.hasImage:not(.o_menu_toggle_back),
             &.hasFaIcon:not(.o_menu_toggle_back) {
                 .o_menu_toggle_icon {

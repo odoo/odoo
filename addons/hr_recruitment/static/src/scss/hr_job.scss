@@ -8,7 +8,7 @@
                 --Ribbon-wrapper-width: 5rem;
                 --Ribbon-height: 1.9;
 
-                @include media-breakpoint-between(md, xxl) {
+                @media screen and (min-width: 768px) and (max-width: 1399.98px), print and (min-width: 188mm) and (max-width: 249.98mm) {
                     min-width: calc(100vw - (#{$btn-font-size-sm} + #{$btn-padding-x-sm * 2} + #{map-get($spacers, 1) * 4})); /* cscreen size reduced by the size of the closed search panel */
                 }
 
@@ -25,7 +25,7 @@
                 }
             }
 
-            @include media-breakpoint-down(md) {
+            @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
                 .o_hr_recruitment_kanban_card_large_screen {
                     display: none;
                 }
@@ -66,7 +66,7 @@
             }
         }
 
-        @include media-breakpoint-down(xxl) {
+        @media screen and (max-width: 1399.98px), print and (max-width: 249.98mm) {
             .o_hr_recruitment_activity-col {
                 width: calc(var(--o-bs-spacer-3) * 3.5);
             }

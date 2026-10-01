@@ -1,6 +1,6 @@
 .o_export_data_dialog .modal-body {
     display: flex;
-    @include media-breakpoint-down(md) {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
         display: block;
     }
 
@@ -14,7 +14,7 @@
         column-gap: 1.5rem;
         row-gap: 0.5rem;
 
-        @include media-breakpoint-down(md) {
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             grid-auto-flow: row;
             grid-template-columns: minmax(0, 1fr);
             grid-template-rows: none;

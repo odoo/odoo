@@ -13,12 +13,12 @@
     .o_task_state_widget {
         font-size: large;
     }
-    @include media-breakpoint-up(xxl) {
+    @media screen and (min-width: 1400px), print and (min-width: 250mm) {
         .o_widget_todo_chatter_panel {
             width: 35%;
         }
     }
-    @include media-breakpoint-down(xxl) {
+    @media screen and (max-width: 1399.98px), print and (max-width: 249.98mm) {
         .o_widget_todo_chatter_panel {
             min-width: 100%;
         }

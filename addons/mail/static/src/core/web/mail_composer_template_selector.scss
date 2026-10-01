@@ -1,4 +1,4 @@
-@include media-breakpoint-up(xl) {
+@media screen and (min-width: 1200px), print and (min-width: 220mm) {
     .mail-composer-template-dropdown {
         max-height: 50vh;
     }
@@ -7,11 +7,11 @@
 .mail-composer-template-dropdown {
     max-width: 250px !important;
 
-    @include media-breakpoint-up(sm) {
+    @media screen and (min-width: 576px), print and (min-width: 100mm) {
         max-width: 400px !important;
     }
 
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         max-width: 500px !important;
     }
 }

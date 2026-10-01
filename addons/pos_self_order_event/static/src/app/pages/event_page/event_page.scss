@@ -22,7 +22,7 @@
     }
   }
 
-  @include media-breakpoint-down(sm) {
+  @media (max-width: 575.98px) {
     .o_self_event_image {
       max-width: 200px;
     }
@@ -35,7 +35,7 @@
 
   }
 
-  @include media-breakpoint-only(sm) {
+  @media (min-width: 576px) and (max-width: 767.98px) {
 
     .o_self_event_image {
       max-width: 200px;
@@ -49,7 +49,7 @@
 
   }
 
-  @include media-breakpoint-down(md) {
+  @media (max-width: 767.98px) {
 
        .event_product_box {
         .btn-lg {
@@ -60,7 +60,7 @@
 
    }
 
-  @include media-breakpoint-up(md) {
+  @media (min-width: 768px) {
     .o_self_event_products.small-item-nb {
       --gutter-y: 1rem;
       --gutter-x: 1rem;
@@ -71,7 +71,7 @@
 }
 
 @mixin o-kiosk() {
-    @include media-breakpoint-up(lg) {
+    @media (min-width: 992px) {
          .kiosk {
              @content;
          }

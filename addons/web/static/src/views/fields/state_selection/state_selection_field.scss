@@ -1,10 +1,10 @@
 .o_form_sheet > .o_field_state_selection {
-    @include media-breakpoint-down(sm) {
+    @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
         margin-left: 100%;
         transform: translateX(-100%);
     }
 
-    @include media-breakpoint-up(sm) {
+    @media screen and (min-width: 576px), print and (min-width: 100mm) {
         float: inline-end;
     }
 

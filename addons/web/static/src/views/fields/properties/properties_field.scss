@@ -85,7 +85,7 @@
     box-sizing: border-box;
 
     /* fullscreen on small screen sizes */
-    @include media-breakpoint-down(md) {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
         top: 0px !important;
         left: 0px !important;
         right: 0px;
@@ -107,7 +107,7 @@
     [data-icon='drag_indicator'] {
         cursor: grab;
     }
-    @include media-breakpoint-down(sm) {
+    @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
         .o_field_property_open_popover {
             opacity: 1;
             &.disabled {

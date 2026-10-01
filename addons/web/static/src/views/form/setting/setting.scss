@@ -25,7 +25,7 @@
       &:not(.o_field_boolean) {
          flex: 0 0 auto;
 
-         @include media-breakpoint-up(md) {
+         @media screen and (min-width: 768px), print and (min-width: 188mm) {
             width: 50%;
          }
       }
@@ -43,7 +43,7 @@
 .o_setting_box .o_field_boolean {
     background-color: $o-view-background-color;
 
-    @include media-breakpoint-down(md) {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
         &:not(.o_setting_container &) {
             background-color: var(--body-bg);
         }

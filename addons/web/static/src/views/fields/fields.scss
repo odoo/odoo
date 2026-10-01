@@ -193,7 +193,7 @@
 
     /* Radio buttons */
     &.o_field_radio {
-        @include media-breakpoint-down(md) {
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             display: inline-block;
         }
         .o_radio_input {
@@ -261,7 +261,7 @@
                 cursor: pointer;
             }
         }
-        @include media-breakpoint-down(sm) {
+        @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
             .o_form_image_controls{
                 position: initial;
                 opacity: 1;

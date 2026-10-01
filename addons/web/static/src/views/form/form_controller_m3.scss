@@ -1,7 +1,7 @@
 /* Specific CSS rules for M3 style */
 
 .o_form_view {
-    @include media-breakpoint-down(md) {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
         --field-spacing-unit: 8px;
         --o-field-box-spacing: #{map-get($spacers, 3)};
         --o-field-box-border-color: var(--gray-300);

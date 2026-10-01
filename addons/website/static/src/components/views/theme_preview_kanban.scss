@@ -11,15 +11,15 @@
         justify-items: center;
         padding: var(--o-bs-spacer-3);
 
-        @include media-breakpoint-up(sm) {
+        @media screen and (min-width: 576px), print and (min-width: 100mm) {
             grid-template-columns: repeat(2, 1fr);
         }
 
-        @include media-breakpoint-up(md) {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
             grid-template-columns: repeat(3, 1fr);
         }
 
-        @include media-breakpoint-up(xxl) {
+        @media screen and (min-width: 1400px), print and (min-width: 250mm) {
             grid-template-columns: repeat(4, 1fr);
         }
     }

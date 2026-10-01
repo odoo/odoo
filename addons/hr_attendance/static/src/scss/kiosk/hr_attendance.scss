@@ -1,11 +1,11 @@
 :root {
-    @include media-breakpoint-up(lg) {
+    @media (min-width: 992px) {
         /* Allow to handle root font size whether or not the website is installed */
         --bs-root-font-size: var(--o-attendance-font-size-root-lg);
         --root-font-size: var(--o-attendance-font-size-root-lg);
     }
 
-    @include media-breakpoint-up(xxl) {
+    @media (min-width: 1400px) {
         --bs-root-font-size: var(--o-attendance-font-size-root-xxl);
         --root-font-size: var(--o-attendance-font-size-root-xxl);
     }
@@ -31,7 +31,7 @@
 
 .o_hr_attendance_kiosk_company_image {
     max-height: 10vh;
-    @include media-breakpoint-up(sm) {
+    @media (min-width: 576px) {
         max-height: 7 vh;
     }
 }
@@ -61,7 +61,7 @@
         width:4rem;
     }
 
-    @include media-breakpoint-down(md) {
+    @media (max-width: 767.98px) {
         height: calc(100dvh - var(--kiosk-searchBar-height--mobile));
     }
 }
@@ -69,10 +69,10 @@
 
 .o_hr_attendance_kiosk_card {
     min-width: 75%;
-    @include media-breakpoint-up(md) {
+    @media (min-width: 768px) {
         min-width: 50%;
     }
-    @include media-breakpoint-up(xl) {
+    @media (min-width: 1200px) {
         min-width: 35%;
     }
 }
@@ -114,7 +114,7 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    @include media-breakpoint-down(sm){
+    @media (max-width: 575.98px) {
         flex-direction: column;
         align-items: stretch;
     }

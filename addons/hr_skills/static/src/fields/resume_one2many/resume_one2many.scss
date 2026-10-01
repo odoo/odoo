@@ -27,11 +27,11 @@
                 background-color: var(--border-color);
                 content: "";
 
-                @include media-breakpoint-up(lg) {
+                @media screen and (min-width: 992px), print and (min-width: 190mm) {
                     left: ($o-hrs-timeline-dot-size * .5 + o-to-rem(map-get($spacers, 4))  - o-to-rem($border-width))
                 }
 
-                @include media-breakpoint-up(xxl) {
+                @media screen and (min-width: 1400px), print and (min-width: 250mm) {
                     left: ($o-hrs-timeline-dot-size * .5 + o-to-rem($o-horizontal-padding)  - o-to-rem($border-width))
                 }
             }

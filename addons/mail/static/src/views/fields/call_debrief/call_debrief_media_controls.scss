@@ -21,7 +21,7 @@
     }
 
     .o-CallDebrief-control {
-        @include media-breakpoint-up(md) {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
             --#{$prefix}btn-bg: transparent;
             --#{$prefix}btn-border-color: transparent;
             --#{$prefix}btn-disabled-bg: transparent;
@@ -54,7 +54,7 @@
     .o-CallDebriefMediaControls-playbackRate {
         --#{$prefix}box-shadow-inset: none;
 
-        @include media-breakpoint-up(md) {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
             --#{$prefix}bg-opacity: 0;
         }
 

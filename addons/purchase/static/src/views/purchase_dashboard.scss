@@ -1,6 +1,6 @@
 .o_purchase_dashboard {
     .purchase-dashboard-card {
-        @include media-breakpoint-up(lg) {
+        @media screen and (min-width: 992px), print and (min-width: 190mm) {
             border-radius: var(--btn-border-radius);
 
             &.o_purchase_dashboard_card_top {
@@ -38,7 +38,7 @@
 }
 
 .o_purchase_dashboard_list_view .o_list_renderer {
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         height: auto;
     }
 }
