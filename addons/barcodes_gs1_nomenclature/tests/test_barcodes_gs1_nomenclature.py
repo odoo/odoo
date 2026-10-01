@@ -134,3 +134,11 @@ class TestBarcodeGS1Nomenclature(TransactionCase):
         barcode_rule.pattern = r'(300)(.*)'
         with self.assertRaises(ValidationError):
             res = barcode_nomenclature.gs1_decompose_extanded('300bilou4000')
+
+    def test_invaild_gs1_separator_fnc1_raises_validation(self):
+        barcode_nomenclature = self.env['barcode.nomenclature'].create({
+            'name': "GS1 Nomenclature - Test",
+            'is_gs1_nomenclature': True,
+        })
+        with self.assertRaises(ValidationError):
+            barcode_nomenclature.gs1_separator_fnc1 = "*"  # invalid regex
