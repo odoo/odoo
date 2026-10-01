@@ -5283,7 +5283,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             ],
         })
         data = move.invoice_line_ids._get_product_catalog_lines_data(parent_record=move)
-        self.assertEqual(data['uomDisplayName'], "Units")
+        self.assertEqual(data['uomId'], self.uom_unit.id)
         self.assertEqual(data['quantity'], 12)
 
     @freeze_time('2026-04-01')

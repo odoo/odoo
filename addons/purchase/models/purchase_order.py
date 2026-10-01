@@ -1244,11 +1244,11 @@ class PurchaseOrder(models.Model):
 
     def _get_product_catalog_uom_data(self, product, uom, **kwargs) -> dict:
         res = super()._get_product_catalog_uom_data(product, uom, **kwargs)
-        if 'availableUoms' not in res:  # UoM not enabled
+        if not res:  # UoM not enabled
             return res
 
         available_uoms = product._get_available_uoms() | product.seller_ids.uom_id | uom
-        res['availableUoms'] = available_uoms.read(["name", "factor"])
+        res['availableUoms'] = available_uoms.read(["display_name", "factor"])
         return res
 
     def _get_product_catalog_seller_data(self, product, *, uom=None, **kwargs):
@@ -1260,10 +1260,9 @@ class PurchaseOrder(models.Model):
         :return: A dict with the following structure:
             {
                 'price': float,
-                'uomDisplayName': string,
                 'uomId' : int,
-                'sellerUomFactor': float (optional),
-                'productUomDisplayName': string (optional),
+                'productUomId': string (optional),
+                'availableUoms': list (optional),
                 'min_qty': float (optional)
             }
         """
@@ -1291,7 +1290,6 @@ class PurchaseOrder(models.Model):
                     self._get_product_catalog_uom_data(product, target_uom, **kwargs),
                     price=product.uom_id._compute_price(seller_price, target_uom),
                     min_qty=seller_info['min_qty'],
-                    sellerUomFactor=seller_info['uom_id'].factor / product.uom_id.factor,
                 )
         return product_infos
 

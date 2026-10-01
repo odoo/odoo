@@ -1996,7 +1996,8 @@ class SaleOrderLine(models.Model):
 
     def _get_product_catalog_lines_data(self, parent_record, **kwargs):
         lines_data = super()._get_product_catalog_lines_data(parent_record, **kwargs)
-        lines_data["readOnly"] |= bool(self.combo_item_id)
+        if self.combo_item_id:
+            lines_data["readOnly"] = True
         return lines_data
 
     def _can_be_unlinked_from_catalog(self):
