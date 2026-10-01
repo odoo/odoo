@@ -10,7 +10,7 @@ class WebsiteSaleVariantController(Controller):
         auth="public",
         methods=["POST"],
         website=True,
-        readonly=True,
+        replica=True,
     )
     def get_combination_info_website(
         self, product_template_id, product_id, combination, add_qty, uom_id=None, **_kwargs
@@ -104,7 +104,7 @@ class WebsiteSaleVariantController(Controller):
         auth="public",
         methods=["POST"],
         website=True,
-        readonly=True,
+        replica=True,
     )
     def get_dynamic_attribute_images(self, product_template_id, combination, **_kwargs):
         """Return the 'closest variant' image for every value based on the current selection.

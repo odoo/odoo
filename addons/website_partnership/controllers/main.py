@@ -109,7 +109,7 @@ class WebsitePartnership(WebsitePartnerPage):
 
         '/partners/grade/<model("res.partner.grade"):grade>',
         '/partners/grade/<model("res.partner.grade"):grade>/page/<int:page>',
-    ], type='http', auth="public", website=True, readonly=True, list_as_website_content=_lt("Partners"))
+    ], type='http', auth="public", website=True, replica=True, list_as_website_content=_lt("Partners"))
     def partners(self, grade=None, page=0, **post):
         values = self._get_partners_values(
             grade=grade,
