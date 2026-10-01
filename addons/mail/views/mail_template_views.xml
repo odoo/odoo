@@ -7,9 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Templates" class="o_mail_template_form_view">
                     <header>
-                        <field name="ref_ir_act_window" invisible="1"/>
-                        <field name="template_fs" invisible="1"/>
-                        <field name="is_template_editor" invisible="1"/>
+                        <field name="template_fs" invisible="1"/> <!-- drives invisible on Reset Template button -->
                         <button string="Preview"
                                 name="action_open_mail_preview" type="object"
                                 class="btn-primary" target="new"/>
@@ -41,12 +39,10 @@
                                 <field name="model_id" groups="base.group_no_one" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
                                 <field name="subject" options="{'dynamic_placeholder': true}"
                                        placeholder='e.g. "Welcome to MyCompany" or "Nice to meet you, {{ object.name }}"'/>
-                                <field name="model" invisible="1"/>
                             </group>
                         </div>
                         <notebook>
                             <page string="Body" name="content">
-                                <field name="can_write" invisible="1"/>
                                 <field name="body_html" widget="html_mail" class="oe-bordered-editor"
                                     placeholder="Write your message here..."
                                     options="{'codeview': true, 'dynamic_placeholder': true, 'allowVideo': false}"
@@ -72,7 +68,6 @@
                                     <group>
                                         <separator string="Technical"/>
                                         <field name="lang" placeholder="Main partner's language" options="{'dynamic_placeholder': true}"/>
-                                        <field name="has_mail_server" invisible="1"/>
                                         <field name="mail_server_id" invisible="not has_mail_server" placeholder="By order of server priority"/>
                                         <field name="auto_delete"/>
                                         <field name="scheduled_date" string="Send Date" placeholder="Send Instantly" options="{'dynamic_placeholder': true}"/>
@@ -82,7 +77,6 @@
                             <page string="Options" name="email_settings">
                                 <group col="2">
                                     <group>
-                                        <field name="has_dynamic_reports" invisible="1"/>
                                         <field name="attachment_ids" widget="many2many_binary"/>
                                         <field name="report_template_ids" widget="many2many_tags"
                                             domain="[('model','=',model)]"
@@ -110,7 +104,7 @@
             <field name="model">mail.template</field>
             <field name="arch" type="xml">
                 <list string="Templates">
-                    <field name="mail_server_id" column_invisible="True"/>
+                    <field name="mail_server_id" column_invisible="True"/> <!-- kept for search view group_by mail_server_id -->
                     <field name="name"/>
                     <field name="model_id" groups="base.group_no_one"/>
                     <field name="user_id" optional="show" widget="many2one_avatar_user"/>

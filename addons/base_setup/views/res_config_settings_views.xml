@@ -7,7 +7,6 @@
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="inside">
-                    <field name="is_root_company" invisible="1"/>
                     <app data-string="General Settings" string="General Settings" name="general_settings" logo="/base/static/description/settings.png">
 
                         <div id="invite_users">
@@ -55,7 +54,7 @@
 
                         <div id="companies">
                             <block title="Companies" name="companies_setting_container">
-                                <field name="company_id" invisible="1"/>
+                                <field name="company_id" invisible="1"/> <!-- kept for onchange/compute of company_name, company_informations shown below -->
                                 <setting id="company_details_settings">
                                     <field name="company_name" nolabel="1" class="fw-bold"/>
                                     <br/>
@@ -89,7 +88,7 @@
                                             <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one" icon="east"/>
                                     </div>
                                 </setting>
-                                <field name="company_id" invisible="1"/>
+                                <field name="company_id" invisible="1"/> <!-- kept for onchange/compute of external_report_layout_id and other company-related fields on this page -->
                                 <setting id="inter_company" string="Inter-Company Transactions" company_dependent="1" help="Create corresponding in/out orders and bills when you sell/buy between your companies" groups="base.group_multi_company">
                                     <field name="module_account_inter_company_rules" widget="upgrade_boolean"/>
                                     <div class="content-group" invisible="not module_account_inter_company_rules" id="inter_companies_rules">
@@ -104,7 +103,7 @@
                             <block title="Contacts" name="contacts_setting_container">
                                 <setting id="sms" string="Send SMS" documentation="/applications/marketing/sms_marketing/pricing/pricing_and_faq.html" help="Send texts to your contacts">
                                     <!-- Invisible to avoid breaking any custom inheriting templates -->
-                                    <field name="module_sms" invisible="1"/>
+                                    <field name="module_sms" invisible="1"/> <!-- kept present but hidden so inheriting templates can still reference/override it -->
                                 </setting>
                                 <setting help="Automatically enrich your contact base with company data" title="When populating your address book, Odoo provides a list of matching companies. When selecting one item, the company data and logo are auto-filled." id="partner_autocomplete">
                                     <field name="module_partner_autocomplete"/>

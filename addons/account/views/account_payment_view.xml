@@ -12,9 +12,8 @@
                     <header>
                         <button name="action_post" type="object" string="Confirm"/>
                     </header>
-                    <field name="company_currency_id" column_invisible="True"/>
-                    <!-- <field name="suitable_journal_ids" column_invisible="True"/> -->
-                    <field name="available_payment_method_line_ids" column_invisible="True"/>
+                    <field name="company_currency_id" column_invisible="True"/> <!-- currency for the amount_company_currency_signed monetary column -->
+                    <field name="available_payment_method_line_ids" column_invisible="True"/> <!-- provides the domain values for the payment_method_line_id column -->
                     <field name="date" readonly="state in ['cancel', 'paid']"/>
                     <field name="name"/>
                     <field name="journal_id"/>
@@ -169,24 +168,14 @@
                     </div>
                     <sheet>
                         <!-- Invisible fields -->
-                        <field name="id" invisible="1"/>
-                        <field name="is_sent" invisible="1"/>
-                        <field name="need_cancel_request" invisible="1"/>
-                        <field name="is_reconciled" invisible="1"/>
-                        <field name="is_matched" invisible="1"/>
-                        <field name="payment_method_code" invisible="1"/>
-                        <field name="show_partner_bank_account" invisible="1"/>
-                        <field name="require_partner_bank_account" invisible="1"/>
-                        <field name="available_payment_method_line_ids" invisible="1"/>
-                        <field name="available_partner_bank_ids" invisible="1"/>
-                        <!-- <field name="suitable_journal_ids" invisible="1"/> -->
-                        <field name="country_code" invisible="1"/>
-                        <field name="partner_type" invisible="1"/>
-                        <field name="reconciled_invoices_type" invisible="1"/>
-                        <field name="company_id" invisible="1"/>
-                        <field name="paired_internal_transfer_payment_id" invisible="1"/>
-                        <field name="available_journal_ids" invisible="1"/>
-                        <field name="currency_id" invisible="1"/>
+                        <field name="id" invisible="1"/> <!-- drives the 'not id' guard on the Cancel button visibility -->
+                        <field name="is_reconciled" invisible="1"/> <!-- drives the state badge decoration in the header -->
+                        <field name="is_matched" invisible="1"/> <!-- technical reconciliation flag kept for header/state logic -->
+                        <field name="country_code" invisible="1"/> <!-- related company fiscal country code, used by localization overrides of this view -->
+                        <field name="partner_type" invisible="1"/> <!-- drives invisible on the Customer/Vendor partner_id and partner_bank_id fields -->
+                        <field name="company_id" invisible="1"/> <!-- company context feeding related fields (company_currency_id) and journal domain -->
+                        <field name="paired_internal_transfer_payment_id" invisible="1"/> <!-- technical pointer to the paired transfer payment, kept for localization/onchange -->
+                        <field name="currency_id" invisible="1"/> <!-- currency for the amount monetary field; also shown under group_multi_currency -->
 
                         <div class="oe_button_box" name="button_box">
                             <!-- Invoice stat button -->
@@ -305,7 +294,6 @@
                                         required="require_partner_bank_account"/>
                             </group>
                             <group class="d-none d-md-block">
-                                <field name="qr_code" invisible="1"/>
                                 <div invisible="not qr_code" colspan="2" class="text-center">
                                     <field name="qr_code" widget="html"/>
                                 </div>

@@ -37,9 +37,7 @@
                     <field name="date" string="Date" optional="show" readonly="1"
                         decoration-danger="(state not in ('cancel','done')) and date > current_date"/>
                     <field name="reference" readonly="1"/>
-                    <field name="picking_type_id" column_invisible="True" readonly="1"/>
-                    <field name="location_usage" column_invisible="True" readonly="1"/>
-                    <field name="location_dest_usage" column_invisible="True" readonly="1"/>
+                    <field name="picking_type_id" column_invisible="True" readonly="1"/> <!-- used to group_by picking_type_id via search view groupby -->
                     <field name="product_id" readonly="1"/>
                     <field name="location_id" options="{'no_create': True}" string="From"
                         decoration-muted="location_usage not in ('internal','transit')" readonly="1"/>
@@ -69,22 +67,18 @@
             <field eval="50" name="priority"/>
             <field name="arch" type="xml">
                 <list decoration-muted="is_scrap or state == 'cancel' or (state == 'done' and is_locked == True)" string="Stock Moves" editable="bottom">
-                    <field name="company_id" column_invisible="True"/>
-                    <field name="date" column_invisible="True"/>
-                    <field name="state" readonly="0" column_invisible="True"/>
-                    <field name="picking_type_id" column_invisible="True"/>
-                    <field name="location_id" column_invisible="True"/>
-                    <field name="location_dest_id" column_invisible="True"/>
-                    <field name="picking_code" column_invisible="True"/>
-                    <field name="show_details_visible" column_invisible="True"/>
-                    <field name="additional" column_invisible="True"/>
-                    <field name="move_lines_count" column_invisible="True"/>
-                    <field name="is_locked" column_invisible="True"/>
+                    <field name="company_id" column_invisible="True"/> <!-- kept loaded for multi-company record data though not shown in this list -->
+                    <field name="date" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                    <field name="state" readonly="0" column_invisible="True"/> <!-- drives decoration-muted on the list and readonly of product_uom_qty/quantity via is_initial_demand_editable/is_quantity_done_editable -->
+                    <field name="picking_type_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                    <field name="location_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                    <field name="location_dest_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                    <field name="picking_code" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                    <field name="show_details_visible" column_invisible="True"/> <!-- drives invisible of the action_show_details button added by stock_move_view_list_from_batch -->
+                    <field name="additional" column_invisible="True"/> <!-- drives readonly of product_id -->
                     <field name="product_id" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0"/>
                     <field name="packaging_uom_qty" optional="hide" groups="uom.group_uom"/>
                     <field name="packaging_uom_id" optional="hide" groups="uom.group_uom"/>
-                    <field name="is_initial_demand_editable" column_invisible="True"/>
-                    <field name="is_quantity_done_editable" column_invisible="True"/>
                     <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>
                     <field name="quantity" string="Quantity" readonly="not is_quantity_done_editable"/>
                     <field name="picked"/>
@@ -158,23 +152,19 @@
             <field name="priority">1000</field>
             <field name="arch" type="xml">
                 <form string="Move Detail">
-                    <field name="sequence" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
-                    <field name="state" invisible="1"/>
-                    <field name="location_id" invisible="1"/>
-                    <field name="location_dest_id" invisible="1"/>
-                    <field name="picking_id" invisible="1" readonly="state == 'done'"/>
-                    <field name="picking_type_id" invisible="1"/>
-                    <field name="is_locked" invisible="1"/>
-                    <field name="display_assign_serial" invisible="1"/>
-                    <field name="display_import_lot" invisible="1"/>
-                    <field name="picking_code" invisible="1"/>
-                    <field name="has_tracking" invisible="1"/>
-                    <field name="show_quant" invisible="1"/>
-                    <field name="show_lots_text" invisible="1"/>
-                    <field name="show_lots_m2o" invisible="1"/>
-                    <field name="product_qty" invisible="1"/>
-                    <field name="quantity" invisible="1"/>
+                    <field name="sequence" invisible="1"/> <!-- kept for record data, no display needed on this operations detail form -->
+                    <field name="company_id" invisible="1"/> <!-- used as default_company_id in context of move_line_ids -->
+                    <field name="location_id" invisible="1"/> <!-- used as default_location_id in context of move_line_ids -->
+                    <field name="location_dest_id" invisible="1"/> <!-- used as default_location_dest_id in context of move_line_ids -->
+                    <field name="picking_id" invisible="1" readonly="state == 'done'"/> <!-- used as default_picking_id/active_picking_id in context of move_line_ids and shown conditionally via the visible picking_id field below -->
+                    <field name="picking_type_id" invisible="1"/> <!-- kept for record data, no display needed on this operations detail form -->
+                    <field name="picking_code" invisible="1"/> <!-- used via parent.picking_code in column_invisible conditions of child view_stock_move_line_operation_tree -->
+                    <field name="has_tracking" invisible="1"/> <!-- used via parent.has_tracking in column_invisible condition of lot_id in child view_stock_move_line_operation_tree -->
+                    <field name="show_quant" invisible="1"/> <!-- used via parent.show_quant in column_invisible conditions of quant_id/lot_id/owner_id in child view_stock_move_line_operation_tree -->
+                    <field name="show_lots_text" invisible="1"/> <!-- used via parent.show_lots_text in column_invisible condition of lot_name in child view_stock_move_line_operation_tree -->
+                    <field name="show_lots_m2o" invisible="1"/> <!-- used via parent.show_lots_m2o in column_invisible condition of lot_id in child view_stock_move_line_operation_tree -->
+                    <field name="product_qty" invisible="1"/> <!-- kept for record data, no display needed on this operations detail form -->
+                    <field name="quantity" invisible="1"/> <!-- kept for record data, no display needed on this operations detail form -->
                     <group name="product_qty">
                         <group>
                             <field name="product_id" readonly="id or move_line_ids"/>
@@ -209,16 +199,16 @@
             <field name="priority">1000</field>
             <field name="arch" type="xml">
                 <list editable="bottom" decoration-muted="state == 'done' and is_locked == True" default_order="result_package_id desc, location_id asc, location_dest_id asc, picking_id asc, id">
-                    <field name="company_id" column_invisible="True" force_save="1"/>
-                    <field name="picking_id" column_invisible="True" force_save="1"/>
-                    <field name="move_id" column_invisible="True" force_save="1" />
-                    <field name="product_id" column_invisible="True"/>
-                    <field name="location_id" column_invisible="True"/>
-                    <field name="location_dest_id" column_invisible="True"/>
-                    <field name="package_id" column_invisible="True" context="{'show_src_package': 1}"/>
-                    <field name="result_package_id" column_invisible="True" context="{'show_dest_package': 1}"/>
-                    <field name="tracking" column_invisible="True"/>
-                    <field name="picking_type_id" column_invisible="True"/>
+                    <field name="company_id" column_invisible="True" force_save="1"/> <!-- persisted via force_save for domain of lot_id -->
+                    <field name="picking_id" column_invisible="True" force_save="1"/> <!-- persisted via force_save for context of lot_id/result_package_id -->
+                    <field name="move_id" column_invisible="True" force_save="1" /> <!-- persisted via force_save; kept for record data though not shown in this list -->
+                    <field name="product_id" column_invisible="True"/> <!-- used in domain of quant_id and context of lot_id -->
+                    <field name="location_id" column_invisible="True"/> <!-- used in default_order, context of quant_id, and domain of quant_id child_of -->
+                    <field name="location_dest_id" column_invisible="True"/> <!-- used in default_order and domain of location_dest_id child_of -->
+                    <field name="package_id" column_invisible="True" context="{'show_src_package': 1}"/> <!-- kept loaded for record data though not shown in this list -->
+                    <field name="result_package_id" column_invisible="True" context="{'show_dest_package': 1}"/> <!-- kept loaded for record data though not shown in this list -->
+                    <field name="tracking" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                    <field name="picking_type_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="quant_id"
                         domain="[('product_id', '=', product_id), ('location_id', 'child_of', parent.location_id)]"
                         context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'list_view_ref': 'stock.view_stock_quant_tree', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': True, 'show_src_package': 1}"
@@ -239,13 +229,11 @@
                         column_invisible="parent.show_quant and parent.picking_code != 'internal'"
                         domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"
                         groups="stock.group_stock_multi_locations"/>
-                    <field name="package_id" column_invisible="1" readonly="state == 'done' and is_locked" groups="stock.group_tracking_lot"/>
+                    <field name="package_id" column_invisible="1" readonly="state == 'done' and is_locked" groups="stock.group_tracking_lot"/> <!-- duplicate hidden column kept to persist package_id value for group_tracking_lot users where the visible src package widget is not shown -->
                     <field name="result_package_id" readonly="state == 'done' and is_locked" widget="package_m2o" groups="stock.group_tracking_lot" context="{'picking_id': picking_id, 'show_dest_package': 1}"/>
                     <field name="owner_id" column_invisible="parent.show_quant" groups="stock.group_tracking_owner"/>
-                    <field name="state" column_invisible="True"/>
-                    <field name="is_locked" column_invisible="True"/>
-                    <field name="picking_code" column_invisible="True"/>
-                    <field name="picked" column_invisible="True"/>
+                    <field name="picking_code" column_invisible="True"/> <!-- drives column_invisible of location_dest_id -->
+                    <field name="picked" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="quantity" string="Quantity" readonly="state == 'done' and is_locked" sum="Quantity"/>
                     <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"
                         readonly="state == 'done' and id"/>
@@ -269,15 +257,13 @@
                             groups="stock.group_tracking_lot"/>
                     </header>
                     <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="state == 'done' or move_id"/>
-                    <field name="company_id" column_invisible="True"/>
-                    <field name="move_id" column_invisible="True"/>
-                    <field name="picking_id" column_invisible="True"/>
-                    <field name="picking_code" column_invisible="True"/>
-                    <field name="picking_location_id" column_invisible="True"/>
-                    <field name="picking_location_dest_id" column_invisible="True"/>
-                    <field name="location_id" column_invisible="True"/>
-                    <field name="location_dest_id" column_invisible="True"/>
-                    <field name="package_id" column_invisible="True" context="{'show_src_package': 1}"/>
+                    <field name="move_id" column_invisible="True"/> <!-- drives readonly of product_id -->
+                    <field name="picking_id" column_invisible="True"/> <!-- used in default_order 'result_package_id desc, location_id asc, ..., picking_id asc, id' -->
+                    <field name="picking_code" column_invisible="True"/> <!-- drives column_invisible of quant_id/lot_id/lot_name/location_dest_id/owner_id -->
+                    <field name="picking_location_dest_id" column_invisible="True"/> <!-- used in domain of location_dest_id child_of -->
+                    <field name="location_id" column_invisible="True"/> <!-- used in default_order and domain of quant_id -->
+                    <field name="location_dest_id" column_invisible="True"/> <!-- used in default_order -->
+                    <field name="package_id" column_invisible="True" context="{'show_src_package': 1}"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="quant_id" column_invisible="context.get('picking_code') == 'incoming'"
                         domain="[('product_id', '=', product_id), ('location_id', 'child_of', picking_location_id)]"
                         context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'list_view_ref': 'stock.view_stock_quant_tree_simple', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': False, 'show_src_package': 1}"
@@ -288,10 +274,7 @@
                     <field name="lot_name" column_invisible="context.get('picking_code') != 'incoming' or not context.get('show_lots_text')"  groups="stock.group_production_lot" invisible="not lots_visible" readonly="state in ('done', 'cancel') and is_locked" context="{'default_product_id': product_id}"/>
                     <field name="location_dest_id" options="{'no_create': True}" column_invisible="context.get('picking_code') == 'outgoing'" readonly="state in ('done', 'cancel') and is_locked" groups="stock.group_stock_multi_locations" domain="[('id', 'child_of', picking_location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id), ('usage', '!=', 'view')]"/>
                     <field name="result_package_id" readonly="state in ('done', 'cancel') and is_locked" widget="package_m2o" context="{'show_dest_package': 1}" groups="stock.group_tracking_lot"/>
-                    <field name="lots_visible" column_invisible="True"/>
                     <field name="owner_id" groups="stock.group_tracking_owner" column_invisible="context.get('picking_code') == 'incoming'" readonly="state in ('done', 'cancel') and is_locked" />
-                    <field name="state" column_invisible="True"/>
-                    <field name="is_locked" column_invisible="True"/>
                     <field name="quantity" readonly="state in ('done', 'cancel') and is_locked" force_save="1"/>
                     <field name="uom_id" force_save="1" readonly="state != 'draft' and id" groups="uom.group_uom" widget="many2one_uom"/>
                 </list>
@@ -304,7 +287,7 @@
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Stock Moves" create="0" edit="0">
-                <field name="company_id" invisible="1"/>
+                <field name="company_id" invisible="1"/> <!-- ensures value is loaded even without base.group_multi_company, since the visible company_id field below is restricted to that group -->
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" />
                 </header>
@@ -376,7 +359,7 @@
                         <button name="action_scrap" type="object" string="Confirm" class="btn-primary" invisible="state in ('done', 'cancel')" context="{'not_unlink_on_discard': True}"/>
                     </header>
                     <sheet>
-                        <field name="is_scrap" invisible="1"/>
+                        <field name="is_scrap" invisible="1"/> <!-- kept for default_is_scrap create context/domain filtering, not displayed since this form is scrap-specific -->
                         <group>
                             <group>
                                 <field name="product_id" readonly="state in ('done', 'cancel')" domain="[('id', 'in', context.get('product_ids')), ('type', '=', 'consu')] if 'product_ids' in context else [('type', '=', 'consu')]" options="{'no_create': 'product_ids' in context}"/>
@@ -390,7 +373,7 @@
                             </group>
                             <group>
                                 <field name="location_id" options="{'no_create': True}" readonly="state in ('done', 'cancel')" groups="stock.group_stock_multi_locations"/>
-                                <field name="location_id" invisible="1" groups="!stock.group_stock_multi_locations"/>
+                                <field name="location_id" invisible="1" groups="!stock.group_stock_multi_locations"/> <!-- ensures location_id value is loaded when multi-location group is disabled, since the visible field above is restricted to that group -->
                                 <field name="location_dest_id" string="Scrap Location" domain="[('usage', '=', 'inventory')]" options="{'no_create': True}" readonly="state in ('done', 'cancel')" groups="stock.group_stock_multi_locations"/>
                                 <field name="picking_id" invisible="not picking_id" readonly="1"/>
                                 <field name="company_id" groups="base.group_multi_company" readonly="state in ('done', 'cancel')"/>
@@ -580,18 +563,18 @@
             <field name="priority" eval="6"/>
             <field name="arch" type="xml">
                 <list decoration-muted="state == 'cancel'" default_order='date, picking_id, sequence' string="Moves" create="0">
-                    <field name="date" column_invisible="True"/>
+                    <field name="date" column_invisible="True"/> <!-- used in default_order 'date, picking_id, sequence' -->
                     <field name="date_deadline" optional="hide"/>
-                    <field name="picking_id" string="Reference" column_invisible="True" readonly="state == 'done'"/>
-                    <field name="sequence" column_invisible="True"/>
+                    <field name="picking_id" string="Reference" column_invisible="True" readonly="state == 'done'"/> <!-- used in default_order 'date, picking_id, sequence' -->
+                    <field name="sequence" column_invisible="True"/> <!-- used in default_order 'date, picking_id, sequence' -->
                     <field name="origin" optional="show"/>
                     <field name="product_id" readonly="state == 'done'"/>
                     <field name="product_uom_qty" readonly="state == 'done'"/>
                     <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
-                    <field name="location_id" options="{'no_create': True}" column_invisible="True"/>
-                    <field name="location_dest_id" column_invisible="True"/>
+                    <field name="location_id" options="{'no_create': True}" column_invisible="True"/> <!-- kept loaded for record data though not shown in this receipt-focused list -->
+                    <field name="location_dest_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this receipt-focused list -->
                     <field name="state" optional="show"/>
-                    <field name="company_id" column_invisible="True"/>
+                    <field name="company_id" column_invisible="True"/> <!-- kept loaded for multi-company record data though not shown in this list -->
                 </list>
             </field>
         </record>

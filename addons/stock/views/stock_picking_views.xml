@@ -71,7 +71,7 @@
                     <header>
                         <button name="action_assign" type="object" string="Reserve"/>
                     </header>
-                    <field name="company_id" column_invisible="True"/>
+                    <field name="company_id" column_invisible="True"/> <!-- loaded for multi-company logic; the visible company_id column below is a separate field instance -->
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                     <field name="name" width="110px" decoration-bf="1"/>
                     <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show" readonly="state == 'done'"/>
@@ -80,8 +80,6 @@
                     <field name="is_signed" string="Signed" optional="hide" groups="stock.group_stock_sign_delivery"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user" readonly="state in ['cancel', 'done']"/>
                     <field name="scheduled_date" optional="show" widget="relative_date" invisible="state in ('done', 'cancel')" readonly="1"/>
-                    <field name="picking_type_code" column_invisible="True"/>
-                    <field name="products_availability_state" column_invisible="True" options='{"lazy": true}'/>
                     <field name="products_availability" options='{"lazy": true}'
                         optional="hide"
                         invisible="picking_type_code not in ('outgoing', 'internal') or state not in ['confirmed', 'waiting', 'assigned']"
@@ -295,8 +293,8 @@
                             <field name="picking_type_id" options="{'no_open': True, 'no_quick_create': True}"
                                    readonly="state in ('done', 'cancel')"
                                    domain="[('code', 'in', ('incoming', 'outgoing', 'internal'))]" />
-                            <field name="location_id" groups="!stock.group_stock_multi_locations" invisible="1" readonly="state == 'done'"/>
-                            <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1" readonly="state == 'done'"/>
+                            <field name="location_id" groups="!stock.group_stock_multi_locations" invisible="1" readonly="state == 'done'"/> <!-- kept to provide default source location value when multi-locations group is disabled -->
+                            <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1" readonly="state == 'done'"/> <!-- kept to provide default destination location value when multi-locations group is disabled -->
                             <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" invisible="picking_type_code == 'incoming'" readonly="state == 'done'"/>
                             <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" invisible="picking_type_code == 'outgoing'" readonly="state == 'done'"/>
                             <field name="backorder_id" invisible="not backorder_id"/>
@@ -315,7 +313,6 @@
                                 invisible="state in ('done', 'cancel') or not date_deadline"
                                 decoration-danger="date_deadline and date_deadline &lt; current_date"
                                 decoration-bf="date_deadline and date_deadline &lt; current_date"/>
-                            <field name="products_availability_state" invisible="1"/>
                             <field name="products_availability"
                                 invisible="picking_type_code not in ('outgoing', 'internal') or state not in ['confirmed', 'waiting', 'assigned']"
                                 decoration-success="state == 'assigned' or products_availability_state == 'available'"
@@ -341,19 +338,15 @@
                                         <create string="Add a Product" hotkey="shift+p"/>
                                     </control>
                                     <field name="sequence" widget="handle"/>
-                                    <field name="company_id" column_invisible="True"/>
-                                    <field name="state" readonly="0" column_invisible="True"/>
-                                    <field name="picking_type_id" column_invisible="True"/>
-                                    <field name="location_id" column_invisible="True"/>
-                                    <field name="location_dest_id" column_invisible="True"/>
-                                    <field name="partner_id" column_invisible="True" readonly="state == 'done'"/>
-                                    <field name="picking_code" column_invisible="True"/>
-                                    <field name="show_details_visible" column_invisible="True"/>
-                                    <field name="additional" column_invisible="True"/>
-                                    <field name="move_lines_count" column_invisible="True"/>
-                                    <field name="is_locked" column_invisible="True"/>
-                                    <field name="is_storable" column_invisible="True"/>
-                                    <field name="has_tracking" column_invisible="True"/>
+                                    <field name="company_id" column_invisible="True"/> <!-- provides default_company_id used elsewhere; not meant to be shown as a column -->
+                                    <field name="state" readonly="0" column_invisible="True"/> <!-- used by decoration-muted and readonly conditions on this list's fields -->
+                                    <field name="picking_type_id" column_invisible="True"/> <!-- kept for domain/context of fields like batch_id on other views; not shown as a column -->
+                                    <field name="location_id" column_invisible="True"/> <!-- used in default_location_id context for embedded operations -->
+                                    <field name="location_dest_id" column_invisible="True"/> <!-- used in default_location_dest_id context for embedded operations -->
+                                    <field name="partner_id" column_invisible="True" readonly="state == 'done'"/> <!-- used as default_partner_id/address_in_id context, not shown as a column -->
+                                    <field name="picking_code" column_invisible="True"/> <!-- drives has_tracking-based invisible on lot_ids below -->
+                                    <field name="additional" column_invisible="True"/> <!-- drives readonly on product_id and uom_id -->
+                                    <field name="is_storable" column_invisible="True"/> <!-- provides default_is_storable context for product_id -->
                                     <column>
                                         <field
                                             name="product_id"
@@ -379,17 +372,15 @@
                                     <field name="forecasted_location_id" optional="hide" groups="stock.group_stock_multi_locations"/>
                                     <field name="date" optional="hide"/>
                                     <field name="date_deadline" optional="hide"/>
-                                    <field name="is_quantity_done_editable" column_invisible="True"/>
-                                    <field name="show_quant" column_invisible="True"/>
-                                    <field name="show_lots_text" column_invisible="True"/>
-                                    <field name="show_lots_m2o" column_invisible="True"/>
-                                    <field name="is_initial_demand_editable" column_invisible="True"/>
-                                    <field name="display_import_lot" column_invisible="True"/>
-                                    <field name="has_lines_without_result_package" column_invisible="True"/>
+                                    <field name="show_quant" column_invisible="True"/> <!-- read by stock_move_line_x2_many_field.js to decide quant display -->
+                                    <field name="show_lots_text" column_invisible="True"/> <!-- kept for stock.move.line list rendering of lot info -->
+                                    <field name="show_lots_m2o" column_invisible="True"/> <!-- kept for stock.move.line list rendering of lot info -->
+                                    <field name="display_import_lot" column_invisible="True"/> <!-- kept for lot import/assign serial UI logic -->
+                                    <field name="has_lines_without_result_package" column_invisible="True"/> <!-- read by stock_package_m2m.js to show the "None" tag -->
                                     <field name="package_ids" optional="show" widget="package_m2m" groups="stock.group_tracking_lot" width="200px" readonly="1"/>
                                     <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>
-                                    <field name="forecast_expected_date" column_invisible="True"/>
-                                    <field name="product_qty" readonly="1" column_invisible="True"/>
+                                    <field name="forecast_expected_date" column_invisible="True"/> <!-- read by forecast_widget.js to flag late forecasts -->
+                                    <field name="product_qty" readonly="1" column_invisible="True"/> <!-- kept for onchange/compute comparisons against quantity -->
                                     <field name="quantity" string="Quantity" readonly="not is_quantity_done_editable" column_invisible="parent.state=='draft'" decoration-danger="product_uom_qty and quantity > product_uom_qty and parent.state not in ['done', 'cancel']"/>
                                     <field name="uom_id" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
                                     <field name="picked" optional="hide" column_invisible="parent.state=='draft'"/>
@@ -406,7 +397,7 @@
                                             invisible="not show_details_visible"/>
                                 </list>
                             </field>
-                            <field name="id" invisible="1"/>
+                            <field name="id" invisible="1"/> <!-- used in invisible conditions on the title header (new record vs saved) -->
                             <button class="btn-secondary float-end" name="action_put_in_pack" type="object" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel')" groups="stock.group_tracking_lot" data-hotkey="shift+g"/>
                             <button class="btn-secondary float-end me-2" name="action_return_all" type="object" string="Return All" invisible="state != 'draft' or not return_id" groups="base.group_user"/>
                             <button class="btn-secondary float-end me-2" name="action_clear_return" type="object" string="Clear" invisible="state != 'draft' or not return_id" groups="base.group_user"/>

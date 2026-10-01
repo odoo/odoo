@@ -100,7 +100,7 @@
                         <h1><field name="reference" class="text-break"/></h1>
                     </div>
                     <group name="transaction_details">
-                        <field name="currency_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/> <!-- currency_field for the amount Monetary widget -->
                         <field name="amount"/>
                         <field name="partner_id" widget="res_partner_many2one"/>
                         <field name="company_id" groups="base.group_multi_company"/>
@@ -142,7 +142,7 @@
                 <field name="provider_id"/>
                 <field name="partner_id"/>
                 <!-- Needed to display the currency of the amounts -->
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- currency_field for the amount Monetary widget in this list -->
                 <field name="amount"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 <field name="is_live" optional="hide"/>

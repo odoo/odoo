@@ -33,7 +33,6 @@
                     <strong>Where do you want to send the products?</strong>
                 </div>
                 <div>
-                    <field name="filtered_location" invisible="1"/>
                     <field name="location_dest_id" domain="[('id', 'in', filtered_location)]" options="{'no_create': True, 'no_open': True}"/>
                 </div>
                 <footer>

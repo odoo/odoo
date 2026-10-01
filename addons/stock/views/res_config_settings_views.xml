@@ -96,7 +96,7 @@
                             </setting>
                             <setting id="stock_text_confirmation" company_dependent="1" help="Send an automatic confirmation Text Message when Delivery Orders are done" string="Text Confirmation">
                                 <field name="stock_text_confirmation"/>
-                                <field name="module_stock_sms" invisible="1"/>
+                                <field name="module_stock_sms" invisible="1"/> <!-- Set by onchange on stock_confirmation_type/stock_text_confirmation; drives module install -->
                                 <div class="content-group" id="module_install_warning" invisible="not stock_text_confirmation">
                                     <field name="stock_confirmation_type" required="stock_text_confirmation"/>
                                     <div class="mt16 text-warning" id="module_install_warning_sms" invisible="stock_confirmation_type != 'sms'">

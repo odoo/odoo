@@ -39,10 +39,9 @@
         <field name="arch" type="xml">
             <form string="Product">
                 <sheet name="product_form">
-                    <field name='product_variant_count' invisible='1'/>
-                    <field name='is_product_variant' invisible='1'/>
-                    <field name='attribute_line_ids' invisible='1'/>
-                    <field name="company_id" invisible="1"/>
+                    <field name='product_variant_count' invisible='1'/> <!-- drives many invisible/readonly conditions throughout this form -->
+                    <field name='attribute_line_ids' invisible='1'/> <!-- kept for has_configurable_attributes/valid_product_template_attribute_line_ids computes -->
+                    <field name="company_id" invisible="1"/> <!-- technical company field driving cost_currency_id compute and multi-company logic -->
                     <div class="oe_button_box" name="button_box">
                         <!-- Dummy tag for organizing buttons, using position='replace' when inheriting -->
                         <span id="button_website" invisible="1"/>
@@ -54,7 +53,7 @@
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <field name="id" invisible="True"/>
+                    <field name="id" invisible="True"/> <!-- record id read by context (product_template_id) and required="id" modifiers in this form -->
                     <div class="d-flex flex-column-reverse flex-md-row align-items-center gap-3">
                         <div class="w-100">
                             <div class="oe_title">
@@ -85,7 +84,7 @@
                         <page string="General Information" name="general_information">
                             <group>
                                 <group name="group_general">
-                                    <field name="active" invisible="1"/>
+                                    <field name="active" invisible="1"/> <!-- drives the web_ribbon "Archived" invisible="active" modifier above -->
                                     <field name="type" widget="radio" options="{'horizontal': True}"/>
                                     <field
                                         name="combo_ids"
@@ -103,7 +102,6 @@
                                         string=""
                                         invisible="not product_tooltip"
                                     />
-                                    <field name="show_qty_update_button" invisible="1"/>
                                     <field name="is_storable" invisible="type != 'consu' or is_storable"/>
                                     <label for="is_storable" invisible="type != 'consu'  or not is_storable"/>
                                     <div name="tracking_and_qty_no_stock" class="o_row w-100" invisible="type != 'consu' or not is_storable">
@@ -171,9 +169,8 @@
                                         groups="base.group_multi_company"
                                         options="{'no_create': True}"
                                         placeholder="Visible to all"/>
-                                    <field name="currency_id" invisible="1"/>
-                                    <field name="cost_currency_id" invisible="1"/>
-                                    <field name="product_variant_id" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/> <!-- currency for the list_price monetary widget in this group -->
+                                    <field name="cost_currency_id" invisible="1"/> <!-- currency for the standard_price monetary widget in this group -->
                                 </group>
                             </group>
                             <group name="internal_notes" string="Internal Notes">
@@ -270,8 +267,8 @@
                                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
 
                                     <!-- Needed for rule edition & creation on product.product form -->
-                                    <field name="product_tmpl_id" column_invisible="True"/>
-                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="product_tmpl_id" column_invisible="True"/> <!-- needed for pricelist rule edition and creation on the product form -->
+                                    <field name="currency_id" column_invisible="True"/> <!-- currency for the fixed_price monetary column in this list -->
                                 </list>
                             </field>
                         </page>
@@ -456,8 +453,8 @@
                         readonly="1"
                     />
                     <!-- Currency, needed for monetary widgets to display the currency symbol -->
-                    <field name="currency_id" column_invisible="True"/>
-                    <field name="cost_currency_id" column_invisible="True"/>
+                    <field name="currency_id" column_invisible="True"/> <!-- currency for the lst_price monetary column in this list -->
+                    <field name="cost_currency_id" column_invisible="True"/> <!-- currency for the standard_price monetary column in this list -->
                     <field
                         name="lst_price"
                         optional="show"
@@ -567,7 +564,7 @@
                     </div>
                 </div>
                 <field name="name" position="after">
-                    <field name="product_tmpl_id" readonly="1" invisible="1" required="id"/>
+                    <field name="product_tmpl_id" readonly="1" invisible="1" required="id"/> <!-- persisted template link required on the product variant form; hidden but validated via required -->
                 </field>
                 <field name="product_tag_ids" position="attributes">
                     <attribute name="string">Product Tags</attribute>
@@ -607,9 +604,9 @@
                         <div class="d-flex flex-column flex-md-row align-items-center gap-3">
                             <field name="image_1920" widget="image" options="{'convert_to_webp': True,'preview_image': 'image_128', 'zoom': True}"/>
                             <group name="name" class="d-flex flex-column gap-md-0 w-100">
-                                <field name="company_id" invisible="1"/>
-                                <field name="currency_id" invisible="1"/>
-                                <field name="cost_currency_id" invisible="1"/>
+                                <field name="company_id" invisible="1"/> <!-- technical field kept for multi-company logic -->
+                                <field name="currency_id" invisible="1"/> <!-- drives currency_field on list_price monetary widget below -->
+                                <field name="cost_currency_id" invisible="1"/> <!-- kept for cost_currency_id-based monetary widgets in inheriting views -->
                                 <label for="name" class="d-md-none"/>
                                 <h1>
                                     <field name="name" placeholder="e.g. Cheese Burger"/>

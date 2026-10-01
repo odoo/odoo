@@ -101,7 +101,7 @@
                                 required="state == 'mail_post'"
                                 context="{'default_model': model_name,
                                             'default_use_default_to': True}"/>
-                            <field name="mail_post_autofollow" invisible="1"/>
+                            <field name="mail_post_autofollow" invisible="1"/> <!-- read by _run_action_mail_post_multi to set the auto-subscribe context flag -->
                         </group>
                     </group>
                     <!-- Log Note -->

@@ -8,15 +8,15 @@
             <form>
                 <group>
                     <group>
-                        <field name="product_ids" invisible="1"/>
-                        <field name="product_tmpl_ids" invisible="1"/>
-                        <field name="product_uom_ids" invisible="1"/>
+                        <field name="product_ids" invisible="1"/> <!-- persisted so process() can print labels for the selected products -->
+                        <field name="product_tmpl_ids" invisible="1"/> <!-- persisted so process() can print labels for the selected templates -->
+                        <field name="product_uom_ids" invisible="1"/> <!-- persisted so process() can print labels for the selected product UoMs -->
                         <field name="barcode_format" widget="radio"/>
                         <field name="custom_quantity"/>
                         <field name="print_format" widget="radio"/>
                     </group>
                     <group>
-                        <field name="available_packaging_ids" invisible="1"/>
+                        <field name="available_packaging_ids" invisible="1"/> <!-- drives the invisible on packaging_id below -->
                         <field
                             name="packaging_id"
                             groups="uom.group_uom"

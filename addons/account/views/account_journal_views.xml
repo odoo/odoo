@@ -17,7 +17,6 @@
                     <field name="default_account_id" optional="show"/>
                     <field name="active" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                    <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>
                 </list>
             </field>
         </record>
@@ -28,8 +27,8 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Account Journal">
-                    <field name="company_id" invisible="1"/>
-                    <field name="bank_statements_source" invisible="1"/>
+                    <field name="company_id" invisible="1"/> <!-- exposed for check_company on default_account_id/suspense_account_id and company_partner_id domains -->
+                    <field name="bank_statements_source" invisible="1"/> <!-- loads the value so the visible radios (bank/credit) and the dashboard's bank_statements_source logic have it -->
                     <sheet>
                         <div name="button_box" class="oe_button_box">
                             <button class="oe_stat_button" type="action"
@@ -43,26 +42,26 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <div class="oe_title">
                             <label for="name"/>
-                            <field name="name_placeholder" invisible="1" force_save="1"/>
+                            <field name="name_placeholder" invisible="1" force_save="1"/> <!-- feeds the name field's placeholder_field option; force_save persists it for the create() name fallback -->
                             <h1><field name="name" options="{'placeholder_field': 'name_placeholder'}" required="not type"/></h1>
                         </div>
                         <group>
                             <group>
-                                <field name="active" invisible="1"/>
+                                <field name="active" invisible="1"/> <!-- drives the web_ribbon "Archived" invisible="active" modifier above -->
                                 <field name="type"/>
                                 <field name="code" placeholder="e.g. INV"/>
                             </group>
                             <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="journal_group_id" placeholder="Local Gaap" invisible="not has_ledger"/>
-                                <field name="country_code" invisible="1"/>
+                                <field name="country_code" invisible="1"/> <!-- drives country_code-based invisible modifiers added by l10n journal-form inherits (l10n_in, l10n_br, l10n_ar, ...) -->
                             </group>
                         </group>
                         <notebook>
                             <page name="bank_account" string="Journal Entries">
                                 <group>
                                     <group>
-                                        <field name="default_account_type" invisible="1"/>
+                                        <field name="default_account_type" invisible="1"/> <!-- compute exposing the expected account_type for this journal's default account section -->
                                         <label for="default_account_id" string="Bank Account"
                                                invisible="type != 'bank'" groups="account.group_account_readonly"/>
                                         <label for="default_account_id" string="Journal Account"
@@ -110,7 +109,6 @@
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>
                                     <group name="bank_account_number" invisible="type != 'bank'">
-                                        <field name="company_partner_id" invisible="1"/>
                                         <field name="bank_account_id" string="Bank Account Number" context="{'default_partner_id': company_partner_id}"/>
                                         <field name="bank_bic" invisible="not bank_account_id"/>
                                         <field name="bank_statements_source" widget="radio" required="type == 'bank'"  groups="account.group_account_basic"/>
@@ -122,12 +120,10 @@
                                 </group>
                             </page>
                             <page id="inbound_payment_settings" string="Incoming Payments" name="page_incoming_payments" invisible="type not in ['cash', 'bank', 'credit']">
-                                <field name="available_payment_method_ids" invisible="1"/>
+                                <field name="available_payment_method_ids" invisible="1"/> <!-- loads the journal-level set that the payment-method lines relate to and filter payment_method_id against -->
                                 <field name="inbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'inbound'}">
                                     <list string="Payment Methods" editable="bottom">
-                                        <field name="available_payment_method_ids" column_invisible="True"/>
-                                        <field name="payment_type" column_invisible="True"/>
-                                        <field name="company_id" column_invisible="True"/>
+                                        <field name="company_id" column_invisible="True"/> <!-- provides check_company for payment_account_id in this list -->
                                         <field name="sequence" widget="handle"/>
                                         <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
                                         <field name="name"/>
@@ -142,9 +138,7 @@
                             <page id="outbound_payment_settings" string="Outgoing Payments" name="page_outgoing_payments" invisible="type not in ['cash', 'bank', 'credit']">
                                     <field name="outbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'outbound'}">
                                         <list string="Payment Methods" editable="bottom">
-                                            <field name="available_payment_method_ids" column_invisible="True"/>
-                                            <field name="payment_type" column_invisible="True"/>
-                                            <field name="company_id" column_invisible="True"/>
+                                            <field name="company_id" column_invisible="True"/> <!-- provides check_company for payment_account_id in this list -->
                                             <field name="sequence" widget="handle"/>
                                             <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
                                             <field name="name"/>
@@ -155,7 +149,6 @@
                                                    groups="account.group_account_readonly"/>
                                         </list>
                                     </field>
-                                    <field name="selected_payment_method_codes" invisible="1"/>
                                     <group name="outgoing_payment" />
                             </page>
                             <page name="advanced_settings" string="Advanced Settings">
@@ -166,7 +159,6 @@
                                     </group>
                                     <group string="Emails" name="group_email_alias"
                                            invisible="type not in ('general', 'sale', 'purchase', 'cash', 'credit', 'bank')">
-                                        <field name="display_alias_fields" invisible="1"/>
                                         <div class="o_row" colspan="2" invisible="display_alias_fields">
                                             <a type='action' name='%(action_open_settings)d' class="btn btn-link" role="button">
                                                 <i class="o_button_icon oi me-2" data-icon="east"/> Configure Alias Domain
@@ -191,7 +183,7 @@
                                                class="w-100"/>
                                     </group>
                                     <!-- edi -->
-                                    <group name="group_edi_config" string="Electronic Data Interchange" invisible="1"/>
+                                    <group name="group_edi_config" string="Electronic Data Interchange" invisible="1"/> <!-- placeholder anchor: account_edi's inherit xpaths flip invisible and inject EDI fields here -->
                                     <group string="Payment Communications" invisible="type != 'sale'">
                                         <field name="invoice_reference_type"/>
                                         <field name="invoice_reference_model" invisible="invoice_reference_type == 'none'"/>

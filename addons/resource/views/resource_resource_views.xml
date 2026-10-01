@@ -32,8 +32,8 @@
         <field name="arch" type="xml">
             <form string="Resource">
             <sheet>
-                <field name="active" invisible="1" />
-                <field name="company_id" invisible="1"/>
+                <field name="active" invisible="1" /> <!-- drives invisible on the Archived web_ribbon -->
+                <field name="company_id" invisible="1"/> <!-- ensures value is loaded for calendar_id's company_id domain even without multi-company group -->
                 <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                 <group>
                     <group name="user_details">
@@ -58,7 +58,7 @@
         <field name="model">resource.resource</field>
         <field name="arch" type="xml">
             <list string="Resources" multi_edit="1" default_order="name">
-                <field name="company_id" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/> <!-- ensures value is loaded for calendar_id's company_id domain even without multi-company group -->
                 <field name="avatar_128" widget="resource_avatar"
                     options="{'size': [24, 24], 'img_class': 'rounded-3'}"
                     nolabel="1" width="30"/>

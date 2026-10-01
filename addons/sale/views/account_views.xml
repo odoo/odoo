@@ -66,7 +66,7 @@
                 </button>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']/list" position="inside">
-                <field name="is_downpayment" column_invisible="1"/>
+                <field name="is_downpayment" column_invisible="1"/> <!-- Needed by sibling product_id readonly attribute and JS isDownpayment getter -->
             </xpath>
             <xpath
                 expr="//field[@name='invoice_line_ids']/list/column[@name='product_and_description']"

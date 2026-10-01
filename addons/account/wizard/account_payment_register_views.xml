@@ -8,35 +8,27 @@
             <field name="arch" type="xml">
                 <form string="Pay">
                     <!-- Invisible fields -->
-                    <field name="line_ids" invisible="1"/>
-                    <field name="can_edit_wizard" invisible="1" force_save="1"/>
-                    <field name="can_group_payments" invisible="1" force_save="1"/>
-                    <field name="early_payment_discount_mode" invisible="1" force_save="1"/>
-                    <field name="installments_mode" invisible="1"/>
-                    <field name="installments_switch_amount" invisible="1"/>
-                    <field name="installments_switch_html" invisible="1"/>
-                    <field name="payment_type" invisible="1" force_save="1"/>
-                    <field name="partner_type" invisible="1" force_save="1"/>
-                    <field name="source_amount" invisible="1" force_save="1"/>
-                    <field name="source_amount_currency" invisible="1" force_save="1"/>
-                    <field name="source_currency_id" invisible="1" force_save="1"/>
-                    <field name="company_id" invisible="1" force_save="1"/>
-                    <field name="partner_id" invisible="1" force_save="1"/>
-                    <field name="country_code" invisible="1" force_save="1"/>
-                    <field name="currency_id" invisible="1" />
-                    <field name="custom_user_amount" invisible="1" />
-                    <field name="custom_user_currency_id" invisible="1" />
+                    <field name="line_ids" invisible="1"/> <!-- source move lines the wizard pays; feeds computes of amount/installments/available_* and referenced in onchange handlers -->
+                    <field name="can_edit_wizard" invisible="1" force_save="1"/> <!-- drives readonly on amount and invisible on currency_id/communication/partner_bank_id -->
+                    <field name="can_group_payments" invisible="1" force_save="1"/> <!-- drives invisible on group_payment and readonly/invisible on amount, currency_id, communication -->
+                    <field name="early_payment_discount_mode" invisible="1" force_save="1"/> <!-- drives required on writeoff_account_id -->
+                    <field name="installments_mode" invisible="1"/> <!-- feeds _compute_amount/_compute_installments_switch_* logic exposed to the view -->
+                    <field name="installments_switch_amount" invisible="1"/> <!-- used by the account_payment_register_html widget/compute for the installments switch -->
+                    <field name="installments_switch_html" invisible="1"/> <!-- hidden mirror; the visible copy below renders via account_payment_register_html widget -->
+                    <field name="payment_type" invisible="1" force_save="1"/> <!-- drives readonly on partner_bank_id -->
+                    <field name="partner_type" invisible="1" force_save="1"/> <!-- feeds partner/bank computes; persisted for created payments -->
+                    <field name="source_amount" invisible="1" force_save="1"/> <!-- source residual persisted for _compute_amount and currency conversion display -->
+                    <field name="source_amount_currency" invisible="1" force_save="1"/> <!-- source residual in currency, persisted for amount/currency computes -->
+                    <field name="source_currency_id" invisible="1" force_save="1"/> <!-- drives the currency_conversion_div visibility and currency_id compute -->
+                    <field name="company_id" invisible="1" force_save="1"/> <!-- company context persisted for created payments and related company_currency_id -->
+                    <field name="partner_id" invisible="1" force_save="1"/> <!-- persisted for created payments; used by partner_bank_id context default_partner_id -->
+                    <field name="country_code" invisible="1" force_save="1"/> <!-- related company fiscal country code, used by localization overrides of this view -->
+                    <field name="currency_id" invisible="1" /> <!-- also shown in amount block under group_multi_currency; drives currency_conversion_div and monetary widgets -->
+                    <field name="custom_user_amount" invisible="1" /> <!-- captures manual amount edits, read by _compute_amount to detect custom user input -->
+                    <field name="custom_user_currency_id" invisible="1" /> <!-- currency paired with custom_user_amount for manual amount edits -->
 
-                    <field name="show_partner_bank_account" invisible="1"/>
-                    <field name="require_partner_bank_account" invisible="1"/>
-                    <field name="available_journal_ids" invisible="1"/>
-                    <field name="available_payment_method_line_ids" invisible="1"/>
-                    <field name="available_partner_bank_ids" invisible="1"/>
-                    <field name="company_currency_id" invisible="1"/>
-                    <field name="hide_writeoff_section" invisible="1"/>
-                    <field name="writeoff_is_exchange_account" invisible="1"/>
-                    <field name="untrusted_bank_ids" invisible="1"/>
-                    <field name="missing_account_partners" invisible="1"/>
+                    <field name="untrusted_bank_ids" invisible="1"/> <!-- feeds untrusted_payments_count alert; opened via action_open_untrusted_bank_accounts -->
+                    <field name="missing_account_partners" invisible="1"/> <!-- drives the missing-account warning alert; opened via action_open_missing_account_partners -->
 
                     <div role="alert" class="alert alert-info" invisible="not hide_writeoff_section">
                         <p class="m-0"><b>Early Payment Discount of <field name="payment_difference"/> has been applied.</b></p>
@@ -61,7 +53,7 @@
                                    context="{'hide_payment_journal_id': 1}"
                                    invisible="hide_payment_method"
                                    required="1"  options="{'no_create': True, 'no_open': True}"/>
-                            <field name="allow_out_payment" invisible="1"/>
+                            <field name="allow_out_payment" invisible="1"/> <!-- related partner_bank_id.allow_out_payment, kept for localization/warning logic -->
                             <field name="partner_bank_id"
                                    invisible="not show_partner_bank_account or not can_edit_wizard or (can_group_payments and not group_payment)"
                                    readonly="payment_type == 'inbound'"
@@ -120,8 +112,7 @@
                                            groups="base.group_multi_currency"/>
                                 </div>
                                 <div name="currency_conversion_div" class="d-flex gap-1 text-muted" invisible="company_currency_id == (currency_id if currency_id != company_currency_id else (source_currency_id or company_currency_id))">
-                                    <field name="company_currency_id" invisible="1"/>
-                                    <field name="exchange_rate" invisible="1"/>
+                                    <field name="exchange_rate" invisible="1"/> <!-- rate_field feeding the account_currency_exchange_rate widget below -->
                                     <widget name="account_currency_exchange_rate" readonly="1" options="{'rate_field': 'exchange_rate'}"/>
                                 </div>
                             </div>
@@ -135,7 +126,6 @@
                             <field name="communication"
                                    invisible="not can_edit_wizard or (can_group_payments and not group_payment)"/>
                         </group>
-                        <field name="qr_code" invisible="1"/>
                         <div invisible="not qr_code" colspan="2" class="text-center d-none d-md-block">
                             <field name="qr_code"/>
                         </div>

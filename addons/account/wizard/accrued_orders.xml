@@ -5,15 +5,15 @@
         <field name="model">account.accrued.orders.wizard</field>
         <field name="arch" type="xml">
             <form string="Make Accrual Entries">
-                <field name="company_id" invisible="1"/>
-                <field name="accrual_type" invisible="1"/>
+                <field name="company_id" invisible="1"/> <!-- scopes the check_company=True domains of journal_id/account_id below -->
+                <field name="accrual_type" invisible="1"/> <!-- dependency of the preview_data compute, set from the action context -->
                 <group>
                     <div class="alert alert-warning" colspan="4" role="alert" invisible="not duplicate_entry_id">
                       <span>An accrual entry of </span>
                       <button name="open_duplicate"
                               type="object"
                               class="btn btn-link p-0 align-baseline">
-                        <field name="currency_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/> <!-- currency of the duplicate_price_total monetary widget next to it -->
                         <field name="duplicate_price_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                       </button>
                       <span> already exists for this period. Posting this entry will replace it.</span>
@@ -25,7 +25,6 @@
                     <field name="journal_id"/>
                     <field name="account_id"/>
                     <field name="amount" invisible="not display_amount"/>
-                    <field name="display_amount" invisible="1"/>
                   </group>
                   <group>
                     <field name="date"/>

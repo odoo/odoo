@@ -8,7 +8,6 @@
             <field name="model">mail.alias</field>
             <field name="arch" type="xml">
                 <form string="Alias">
-                    <field name="alias_status" invisible="1"/>
                     <div invisible="alias_status != 'invalid'"
                          class="alert alert-danger text-center" role="alert">
                         The last message received on this alias has caused an error.
