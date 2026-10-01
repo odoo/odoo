@@ -12,7 +12,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         type="jsonrpc",
         auth="public",
         website=True,
-        readonly=True,
+        replica=True,
     )
     def website_sale_product_configurator_get_values(self, *args, **kwargs):
         product_template_id = kwargs.get("product_template_id")
@@ -80,7 +80,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         auth="public",
         methods=["POST"],
         website=True,
-        readonly=True,
+        replica=True,
     )
     def website_sale_product_configurator_update_combination(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
@@ -91,7 +91,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         type="jsonrpc",
         auth="public",
         website=True,
-        readonly=True,
+        replica=True,
     )
     def website_sale_product_configurator_get_optional_products(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
