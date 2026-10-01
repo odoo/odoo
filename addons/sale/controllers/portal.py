@@ -436,7 +436,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         "/my/orders/<int:order_id>/document/<int:document_id>",
         type="http",
         auth="public",
-        readonly=True,
+        replica=True,
     )
     def portal_quote_document(self, order_id, document_id, access_token):
         try:

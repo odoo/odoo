@@ -7,7 +7,7 @@ from odoo.addons.web.controllers.home import Home
 
 class WebsiteBackend(http.Controller):
 
-    @http.route('/website/fetch_dashboard_data', type="jsonrpc", auth='user', readonly=True)
+    @http.route('/website/fetch_dashboard_data', type="jsonrpc", auth='user', replica=True)
     def fetch_dashboard_data(self, website_id=None):
         Website = request.env['website']
         has_group_system = request.env.user.has_group('base.group_system')
@@ -32,11 +32,11 @@ class WebsiteBackend(http.Controller):
             dashboard_data['dashboards']['plausible_share_url'] = current_website._get_plausible_share_url()
         return dashboard_data
 
-    @http.route('/website/iframefallback', type="http", auth='user', website=True, readonly=True)
+    @http.route('/website/iframefallback', type="http", auth='user', website=True, replica=True)
     def get_iframe_fallback(self):
         return request.render('website.iframefallback')
 
-    @http.route('/website/theme_colors_preview', type="http", auth='user', website=True, readonly=True)
+    @http.route('/website/theme_colors_preview', type="http", auth='user', website=True, replica=True)
     def get_theme_colors_preview(self):
         return request.render('website.theme_colors_preview')
 
