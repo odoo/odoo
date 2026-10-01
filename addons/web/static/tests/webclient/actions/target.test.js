@@ -52,6 +52,12 @@ class Partner extends models.Model {
             </kanban>`,
         list: `<list><field name="display_name"/></list>`,
         "list,2": `<list limit="3"><field name="display_name"/></list>`,
+        "form,3": `
+            <form>
+                <group>
+                    <field name="display_name" readonly="0"/>
+                </group>
+            </form>`,
     };
 }
 
@@ -583,6 +589,103 @@ describe("new", () => {
         await contains(".modal .o_data_row .o_data_cell").click();
         expect(".o_dialog .modal-dialog .o_list_view").toHaveCount(1);
         expect(".o_form_view").toHaveCount(0);
+    });
+
+    describe("expand", () => {
+        /**
+         * Lets target="new" actions through, and captures any other action
+         * (i.e. the one dispatched by the expand button) in `.action`.
+         */
+        function captureExpandedAction() {
+            const captured = { action: null };
+            mockService("action", {
+                doAction(action, options) {
+                    if (action.target === "new") {
+                        return super.doAction(action, options);
+                    }
+                    captured.action = action;
+                },
+            });
+            return captured;
+        }
+
+        const newFormAction = {
+            name: "My form",
+            type: "ir.actions.act_window",
+            res_model: "partner",
+            views: [[false, "form"]],
+            target: "new",
+            context: {
+                form_view_ref: "my.form",
+                anything_else: true,
+            },
+        };
+
+        test("form action with target=new shows an expand button", async () => {
+            await mountWithCleanup(WebClient);
+
+            await getService("action").doAction(newFormAction);
+
+            expect(".o_dialog .o_expand_button").toHaveCount(1);
+        });
+
+        test("form action with target=new for a transient model does not show an expand button", async () => {
+            await mountWithCleanup(WebClient);
+
+            await getService("action").doAction({
+                ...newFormAction,
+                res_model_transient: true,
+            });
+
+            expect(".o_dialog").toHaveCount(1);
+            expect(".o_dialog .o_expand_button").toHaveCount(0);
+        });
+
+        test("clicking expand creates a new action with target=current", async () => {
+            await mountWithCleanup(WebClient);
+
+            const expanded = captureExpandedAction();
+
+            await getService("action").doAction(newFormAction);
+
+            await contains(".o_dialog .o_expand_button").click();
+
+            expect(expanded.action).toEqual({
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                res_id: false,
+                views: [[false, "form"]],
+                target: "current",
+                context: {
+                    form_view_ref: undefined,
+                    anything_else: true,
+                },
+            });
+        });
+
+        test("clicking expand on a dirty form captures the res_id", async () => {
+            await mountWithCleanup(WebClient);
+
+            const expanded = captureExpandedAction();
+
+            await getService("action").doAction(newFormAction);
+
+            await contains(".o_dialog .o_field_widget[name=display_name] input").edit("John");
+
+            await contains(".o_dialog .o_expand_button").click();
+
+            expect(expanded.action).toEqual({
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                res_id: 3, // res_id was captured
+                views: [[false, "form"]],
+                target: "current",
+                context: {
+                    form_view_ref: undefined,
+                    anything_else: true,
+                },
+            });
+        });
     });
 });
 

@@ -3,6 +3,8 @@ import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { DebugMenu } from "@web/core/debug/debug_menu";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Dialog, dialogProps } from "@web/core/dialog/dialog";
+import { useService } from "@web/core/utils/hooks";
+import { CallbackRecorder } from "@web/search/action_hook";
 
 export class ActionDialog extends Dialog {
     static components = { ...Dialog.components, DebugMenu };
@@ -18,13 +20,55 @@ export class ActionDialog extends Dialog {
     actionProps = useProps({
         ActionComponent: t.any().optional(),
         actionProps: t.any().optional(),
-        actionType: t.any().optional(),
+        action: t.any().optional(),
     });
 
     debugMode = usePlugin(DebugModePlugin);
+    actionService = useService("action");
 
     setup() {
         super.setup();
         useOwnDebugContext();
+
+        const { actionProps, action } = this.actionProps;
+        this.currentResId = actionProps?.resId || false;
+
+        const shouldExpand = actionProps?.type === "form" && action && !action.res_model_transient;
+        if (shouldExpand) {
+            this.onExpandCallback = this.onExpand.bind(this);
+            actionProps.__beforeLeave__ = new CallbackRecorder();
+            const originalOnSave = actionProps.onSave;
+            actionProps.onSave = (record, params) => {
+                this.currentResId = record.resId;
+                originalOnSave?.(record, params);
+            };
+        }
+    }
+
+    async onExpand(_ev, newWindow) {
+        const { actionProps } = this.actionProps;
+        const beforeLeaveCallbacks = actionProps.__beforeLeave__.callbacks;
+        const res = await Promise.all(beforeLeaveCallbacks.map((callback) => callback()));
+        if (!res.includes(false)) {
+            this.actionService.doAction(
+                {
+                    type: "ir.actions.act_window",
+                    res_model: actionProps.resModel,
+                    res_id: this.currentResId,
+                    views: [[false, "form"]],
+                    target: "current",
+                    context: {
+                        ...actionProps.context,
+                        // unset form_view_ref. We want to default form
+                        // to show, we explicitely prevent form_view_ref
+                        // to be used. Should we want a way to specify
+                        // the "expand form" later, a better option should
+                        // be implemented.
+                        form_view_ref: undefined,
+                    },
+                },
+                { newWindow }
+            );
+        }
     }
 }

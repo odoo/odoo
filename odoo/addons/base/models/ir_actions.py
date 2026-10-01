@@ -297,6 +297,7 @@ class IrActionsAct_Window(models.Model):
     res_id = fields.Integer(string='Record ID', help="Database ID of record to open in form view, when ``view_mode`` is set to 'form' only")
     res_model = fields.Char(string='Destination Model', required=True,
                             help="Model name of the object to open in the view window")
+    res_model_transient = fields.Boolean(compute="_compute_res_model_transient", help="Whether or not the destination model is transient")
     target = fields.Selection([('current', 'Current Window'), ('new', 'New Window'), ('fullscreen', 'Full Screen'), ('main', 'Main action of Current Window')], default="current", string='Target Window')
     view_mode = fields.Char(required=True, default='list,form',
                             help="Comma-separated list of allowed view modes, such as 'form', 'list', 'calendar', etc. (Default: list,form)")
@@ -321,6 +322,12 @@ class IrActionsAct_Window(models.Model):
         embedded_actions = self.env["ir.embedded.actions"].search([('parent_action_id', 'in', self.ids)]).filtered(lambda x: x.is_visible)
         for action in self:
             action.embedded_action_ids = embedded_actions.filtered(lambda rec: rec.parent_action_id == action)
+
+    @api.depends("res_model")
+    def _compute_res_model_transient(self):
+        for action in self:
+            model = self.env.get(action.res_model)
+            action.res_model_transient = model is not None and model._transient
 
     def read(self, fields=None, load='_classic_read'):
         """ call the method get_empty_list_help of the model and set the window action help message
@@ -361,6 +368,8 @@ class IrActionsAct_Window(models.Model):
             "res_id", "res_model", "search_view_id", "target", "view_id", "view_mode", "views", "embedded_action_ids",
             # this is used by frontend, with the document layout wizard before send and print
             "close_on_report_download",
+            # this is used by the frontend to identify wizards
+            "res_model_transient",
         }
 
     def _get_action_dict(self):
