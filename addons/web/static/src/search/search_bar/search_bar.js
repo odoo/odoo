@@ -102,7 +102,10 @@ export class SearchBar extends Component {
 
         if (!(this.env.config.disableSearchBarAutofocus || !this.props.autofocus)) {
             // only force the focus on touch devices on small screens
-            useAutofocus({ ref: this.inputRef, mobile: this.ui.isSmall });
+            useAutofocus({
+                ref: this.inputRef,
+                mobile: this.ui.isSmall,
+            });
         }
 
         this.popoverWillCloseOnClickAway = (target) => {
