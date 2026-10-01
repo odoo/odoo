@@ -7,6 +7,7 @@ import json
 import logging
 import os
 import re
+import threading
 import time
 import typing
 import unicodedata
@@ -346,6 +347,7 @@ class IrHttp(models.AbstractModel):
                 raise AccessDenied(e)
             request.update_env(user=uid)
             request.session.can_save = False  # stateless
+            threading.current_thread().req_ident = ('bearer', token[:8])
         elif not request.env.uid:
             e = "User not authenticated, use an API Key with a Bearer Authorization header."
             raise Unauthorized(e, www_authenticate=WWWAuthenticate('bearer'))
