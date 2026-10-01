@@ -1945,7 +1945,7 @@ describe("Complex html 3 p", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c1<i>X</i>2</span><p>3<i>X</i>4</p><span class="a">5<i>X</i>6[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c1<i>X</i>2</span><p>3<i>X</i>4</p>5<i>X</i>6[]f</div>',
             });
         });
 
@@ -2000,7 +2000,7 @@ describe("Complex html 3 p", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div>2a<span class="a">b1<i>X</i>2</span><p>3<i>X</i>4</p><span class="a">5<i>X</i>6[]</span>e<br>f</div>',
+                    '<div>2a<span class="a">b1<i>X</i>2</span><p>3<i>X</i>4</p>5<i>X</i>6[]e<br>f</div>',
             });
         });
     });
@@ -2134,18 +2134,18 @@ describe("Complex html p+i", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c12<i><br>ii</i>[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c12<br><i>ii</i>[]</span>f</div>',
             });
         });
 
-        test("should paste a text when selection leave a spanunsplittable (2)", async () => {
+        test("should paste a text when selection leave a span unsplittable (2)", async () => {
             await testEditor({
                 contentBefore: '<div class="oe_unbreakable">2a[b<span class="a">c]d</span>ef</div>',
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">2a12<i><br>ii</i>[]<span class="a">d</span>ef</div>',
+                    '<div class="oe_unbreakable">2a12<br><i>ii</i>[]<span class="a">d</span>ef</div>',
             });
         });
 
@@ -2196,7 +2196,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: `<div class="oe_unbreakable">2a<span class="a">b12<i><br>ii</i>[]</span>e<br>f</div>`,
+                contentAfter: `<div class="oe_unbreakable">2a<span class="a">b12<br><i>ii</i>[]</span>e<br>f</div>`,
             });
         });
     });
@@ -2329,7 +2329,7 @@ describe("Complex html 3p+b", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c1<b>23</b></span><p>zzz</p><span class="a">45<b>6</b>7[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c1<b>23</b></span><p>zzz</p>45<b>6</b>7[]f</div>',
             });
         });
 
@@ -2362,7 +2362,7 @@ describe("Complex html 3p+b", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div>2a<span class="a">b1<b>23</b></span><p>zzz</p><span class="a">45<b>6</b>7[]</span>e<br>f</div>',
+                    '<div>2a<span class="a">b1<b>23</b></span><p>zzz</p>45<b>6</b>7[]e<br>f</div>',
             });
         });
     });
@@ -2615,6 +2615,53 @@ describe("Special cases", () => {
                                                 <li>abc</li>
                                             </ul>
                                         </li>
+                                        <li>def</li>
+                                    </ul>
+                                </li>
+                                <li>ghi</li>
+                            </ul>
+                        </li>
+                        <li>jkl[]</li>
+                    </ul>
+                `),
+            });
+        });
+
+        test("should paste a nested list into another list (3)", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>Alpha</li><li>Beta[]</li></ul>",
+                stepFunction: async (editor) => {
+                    pasteHtml(
+                        editor,
+                        unformat(`
+                            <ol>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li class="oe-nested">
+                                            <ol>
+                                                <li class="oe-nested">
+                                                    <ul class="o_checklist">
+                                                        <li>abc</li>
+                                                    </ul>
+                                                </li>
+                                                <li>def</li>
+                                            </ol>
+                                        </li>
+                                        <li>ghi</li>
+                                    </ul>
+                                </li>
+                                <li>jkl</li>
+                            </ol>
+                        `)
+                    );
+                },
+                contentAfter: unformat(`
+                    <ul>
+                        <li>Alpha</li>
+                        <li><p>Betaabc</p>
+                            <ul>
+                                <li class="oe-nested">
+                                    <ul>
                                         <li>def</li>
                                     </ul>
                                 </li>
@@ -4969,9 +5016,9 @@ describe("paste table cells into an existing table", () => {
                                 <p>before</p>
                                 <table class="table table-bordered o_table">
                                     <tbody>
-                                        <tr><td><p>x</p></td></tr>
+                                        <tr><td><p>x[]</p></td></tr>
                                     </tbody>
-                                </table>[]
+                                </table>
                                 <p>a</p>
                             </td>
                             <td><p>b</p></td>

@@ -251,6 +251,18 @@ export class TablePlugin extends Plugin {
                 return true;
             }
         },
+        can_hold_selection_after_insertion_predicates: (container) => {
+            if (container.nodeName === "TD" || container.nodeName === "TH") {
+                let afterTable = closestElement(container, "table").nextElementSibling;
+                const systemNode = this.getResource("system_node_selectors").join(",");
+                while (afterTable?.matches(systemNode)) {
+                    afterTable = afterTable.nextElementSibling;
+                }
+                if (!afterTable) {
+                    return true;
+                }
+            }
+        },
 
         /** Selectors */
         move_node_whitelist_selectors: "table",

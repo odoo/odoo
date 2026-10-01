@@ -54,6 +54,7 @@ const [getPreviousLeavesInBlock, getNextLeavesInBlock] = [DIRECTIONS.LEFT, DIREC
  * @typedef { Object } SplitShared
  * @property { SplitPlugin['isUnsplittable'] } isUnsplittable
  * @property { SplitPlugin['splitAroundUntil'] } splitAroundUntil
+ * @property { SplitPlugin['splitElementUntil'] } splitElementUntil
  * @property { SplitPlugin['splitBlock'] } splitBlock
  * @property { SplitPlugin['splitBlockNode'] } splitBlockNode
  * @property { SplitPlugin['splitElement'] } splitElement
@@ -80,6 +81,7 @@ export class SplitPlugin extends Plugin {
         "splitElementBlock",
         "splitElement",
         "splitAroundUntil",
+        "splitElementUntil",
         "splitSelection",
         "isUnsplittable",
         "splitBlockSegments",
