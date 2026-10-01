@@ -180,6 +180,14 @@
                         </tbody>
                     </table>
                     <div class="oe_structure"></div>
+                    <table t-if="not is_html_empty(o.delivery_slip_note)" class="table table-sm table-borderless mt-4" name="delivery_slip_note">
+                        <thead>
+                            <tr><th>Note</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><div t-field="o.delivery_slip_note"/></td></tr>
+                        </tbody>
+                    </table>
                     <t t-set="backorders" t-value="o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))"/>
                     <div t-if="not (o.backorder_ids and backorders)" class="oe_structure"></div>
                     <div t-else="">

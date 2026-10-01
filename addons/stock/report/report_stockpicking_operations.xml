@@ -269,13 +269,20 @@
                                 </tbody>
                             </table>
 
+                            <table t-if="not is_html_empty(o.note)" class="table table-sm table-borderless mt-4" name="note">
+                                <thead>
+                                    <tr><th class="border-bottom">Note</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><div t-field="o.note"/></td></tr>
+                                </tbody>
+                            </table>
                             <t t-set="no_reserved_product" t-value="o.move_ids.filtered(lambda x: x.product_uom_qty &gt; x.quantity and x.move_line_ids and x.state!='done')"/>
                             <p t-if="o.state in ['draft', 'waiting', 'confirmed'] or no_reserved_product"><i class="oi" data-icon="warning" />
                                 All products could not be reserved. Click on the "Reserve" button to try to reserve products.
                             </p>
                             <p t-else=""/>
                             <div class="oe_structure"></div>
-                            <p t-field="o.note"/>
                             <div class="oe_structure"></div>
                         </div>
                         <t t-if="not o_last">

@@ -37,6 +37,7 @@ class StockPicking(models.Model):
         copy=False, index='trigram', readonly=True)
     origin = fields.Char('Source Document', index='trigram')
     note = fields.Html('Notes')
+    delivery_slip_note = fields.Html('Delivery Slip Notes')
     backorder_id = fields.Many2one(
         'stock.picking', 'Back Order of',
         copy=False, index='btree_not_null', readonly=True,
