@@ -61,3 +61,22 @@ export const formSelectXml = `
         </div>
     </form>
 `;
+
+/**
+ * The frontend stylesheet is not loaded in tests, so the frame is given its size
+ * inline: it is the only box the interaction measures, and 400x200 makes every
+ * expected position a round number.
+ *
+ * @param {string} [classes] added to the snippet root, e.g. the orientation
+ */
+export const compareImageXml = (classes = "") => `
+    <figure class="s_compare_image ${classes}" style="--compare-pos: 50%;">
+        <div class="s_compare_image_frame" style="width: 400px; height: 200px;">
+            <img class="s_compare_image_before" alt=""/>
+            <img class="s_compare_image_after" alt=""/>
+            <div class="s_compare_image_divider">
+                <span class="s_compare_image_handle"/>
+            </div>
+        </div>
+    </figure>
+`;
