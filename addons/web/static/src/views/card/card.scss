@@ -3,8 +3,8 @@
     --Card-min-width: 240px;
     --Card-padding-v: 0;
     --Card-padding-h: 0;
-    --Card__image-width: #{$o-kanban-image-width};
-    --Card__image--fill-width: #{$o-kanban-image-fill-width};
+    --Card__image-width: var(--o-kanban-image-width);
+    --Card__image--fill-width: var(--o-kanban-image-fill-width);
 
 }
 
@@ -12,7 +12,7 @@
 .o_card_record {
     --fieldWidget-display: block;
     --Tag-max-width: 100%;
-    --Tag-font-size: #{$o-font-size-base-smaller};
+    --Tag-font-size: var(--o-font-size-base-smaller);
     --Tags-margin: calc(1em - var(--Tag-font-size, .75rem)) 0;
 
     position: relative;

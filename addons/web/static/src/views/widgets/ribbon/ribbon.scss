@@ -8,7 +8,7 @@
     position: absolute;
 
     & span {
-        --Ribbon-font-size-default: #{$font-size-lg};
+        --Ribbon-font-size-default: var(--o-bs-font-size-lg);
         --Ribbon-height-default: calc(var(--Ribbon-font-size, var(--Ribbon-font-size-default)) * 2.5);
         --Ribbon-shadow-distance: .25rem;
         --Ribbon-shadow-blur: .5rem;
@@ -21,7 +21,7 @@
         color: var(--white);
         font-size: var(--Ribbon-font-size, var(--Ribbon-font-size-default));
         line-height: var(--Ribbon-height, var(--Ribbon-height-default));
-        font-weight: $o-font-weight-bold;
+        font-weight: var(--o-font-weight-bold);
         font-family: 'Lato', sans-serif;
         text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
         text-transform: uppercase;
@@ -31,10 +31,10 @@
         transform-origin: left bottom;
         pointer-events: none;
         &.o_small {
-            font-size: $font-size-sm
+            font-size: var(--o-bs-font-size-sm)
         }
         &.o_medium {
-            font-size: $font-size-base;
+            font-size: var(--o-bs-font-size-base);
         }
     }
 

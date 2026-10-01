@@ -51,7 +51,7 @@
 .o_m2m_tags_avatar_field_popover {
     z-index: calc(var(--o-bs-zindex-modal) - 1);
     width: 280px;
-    font-size: $dropdown-font-size;
+    font-size: var(--o-bs-dropdown-font-size);
     .o_input.o_tags_input {
         border: none;
     }
@@ -59,9 +59,9 @@
         width: 275px;
     }
     .o-autocomplete--dropdown-menu {
-        font-size: $dropdown-font-size;
+        font-size: var(--o-bs-dropdown-font-size);
         .dropdown-item {
-            padding: $o-dropdown-vpadding calc(var(--o-dropdown-hpadding) / 2);
+            padding: var(--o-dropdown-vpadding) calc(var(--o-dropdown-hpadding) / 2);
         }
     }
     .o-autocomplete .o-autocomplete--input.o_input {

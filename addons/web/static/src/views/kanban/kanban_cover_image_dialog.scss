@@ -5,7 +5,7 @@
     }
 
     &:hover, &.o_selected {
-        --border-color: #{$o-action};
+        --border-color: var(--o-action);
     }
 
     &.o_selected {
@@ -18,7 +18,7 @@
             overflow: hidden;
             border-radius: 100%;
             font: normal normal normal 1rem/1 "Material Symbols Outlined";
-            color: $o-action;
+            color: var(--o-action);
             backdrop-filter: brightness(100);
             content: "check";
             aspect-ratio: 1;

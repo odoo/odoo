@@ -122,7 +122,7 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
            }
             .o_page_invalid {
                 color: o-text-color('danger') !important;
-                background-color: #{$o-input-invalid-bg} !important;
+                background-color: var(--o-input-invalid-bg) !important;
             }
        }
 
@@ -201,6 +201,6 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
 
 @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
     .o_form_renderer .o_setting_left_pane .o_boolean_toggle.form-switch {
-        padding-left: $form-switch-width;
+        padding-left: var(--o-bs-form-switch-width);
     }
 }

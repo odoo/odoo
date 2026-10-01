@@ -26,14 +26,14 @@
 
 .o_m2o_tags_avatar_field_popover {
     z-index: calc(var(--o-bs-zindex-modal) - 1);
-    font-size: $dropdown-font-size;
+    font-size: var(--o-bs-dropdown-font-size);
     .o_field_many2one_selection {
         padding: 0.25rem;
         .o-autocomplete--dropdown-menu {
             min-width: 178px;
-            font-size: $dropdown-font-size;
+            font-size: var(--o-bs-dropdown-font-size);
             .dropdown-item {
-                padding: $o-dropdown-vpadding calc(var(--o-dropdown-hpadding) / 2);
+                padding: var(--o-dropdown-vpadding) calc(var(--o-dropdown-hpadding) / 2);
             }
         }
         .o-autocomplete--input {

@@ -5,7 +5,7 @@
     --ListRenderer-thead-bg-color: linear-gradient(to bottom, #{$o-webclient-background-color}, color-mix(in srgb, var(--o-webclient-background-color) 75%, transparent) );
     --ListRendererGrouped__th-bg-color: color-mix(in srgb, var(--o-view-background-color) 50%, transparent);
     --ListRenderer-thead-border-end-color: var(--border-color);
-    --ListRenderer-tfoot-bg-color: #{$o-list-footer-bg-color};
+    --ListRenderer-tfoot-bg-color: var(--o-list-footer-bg-color);
     --sticky-header-zindex: 1;
     --o-view-nocontent-zindex: calc(var(--sticky-header-zindex) + 1);
 
@@ -90,7 +90,7 @@
             th {
                 padding-top: var(--ListRenderer-thead-padding-y);
                 background: var(--ListRenderer-thead-bg-color);
-                color: $headings-color;
+                color: var(--o-bs-headings-color);
 
                 /* Currently sticky thead > th elements have a border bottom that doens't follow when scrolling. */
                 /* Temporary workaround: We replace the border with a box-shadow to simulate the border bottom so it keeps visible when scrolling. */
@@ -204,9 +204,9 @@
                 max-width: 300px;
             }
             > tr > td {
-                color: $o-list-footer-color;
-                background-color: $o-list-footer-bg-color;
-                font-weight: $o-list-footer-font-weight;
+                color: var(--o-list-footer-color);
+                background-color: var(--o-list-footer-bg-color);
+                font-weight: var(--o-list-footer-font-weight);
                 display: table-cell;
                 max-width: 100%;
                 white-space: nowrap;
@@ -330,7 +330,7 @@
                     display: flex;
                     align-items: center;
                     &:hover {
-                        background-color: $o-brand-lightsecondary;
+                        background-color: var(--o-brand-lightsecondary);
                     }
                     i {
                         font-size: 10px;
@@ -548,7 +548,7 @@
         &.o_invalid_cell:not(:focus-within),
         > .o_column_group_field.o_invalid_cell:not(.o_readonly_modifier):not(:focus-within) {
             border-bottom: 1px solid var(--danger);
-            background-color: $o-input-invalid-bg;
+            background-color: var(--o-input-invalid-bg);
         }
     }
 
@@ -618,7 +618,7 @@
 
         .o_invalid_optional_columns_button {
             color: o-text-color('danger');
-            background-color: #{$o-input-invalid-bg};
+            background-color: var(--o-input-invalid-bg);
         }
     }
 }

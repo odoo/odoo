@@ -100,7 +100,7 @@ $o-web-calendar-colors: o-build-web-calendar-colors();
             background-color: map-get(nth($o-web-calendar-colors, $i), "color-subtle");
 
             .btn {
-                color: $body-color;
+                color: var(--o-bs-body-color);
             }
         }
     }

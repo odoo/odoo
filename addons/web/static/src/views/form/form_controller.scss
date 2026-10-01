@@ -22,7 +22,7 @@
         max-width: 100%;
 
         &.o_wrap_label {
-            line-height: $o-label-font-size-factor;
+            line-height: var(--o-label-font-size-factor);
         }
 
         .o_field_widget {
@@ -51,7 +51,7 @@
 }
 
 .o_form_view {
-    --fieldWidget-margin-bottom: #{$o-form-spacing-unit};
+    --fieldWidget-margin-bottom: var(--o-form-spacing-unit);
     --Ribbon-z-index: 1;
 
     @media screen and (min-width: 768px), print and (min-width: 188mm) {
@@ -189,7 +189,7 @@
     }
 
     .o_form_renderer {
-        max-width: $o-form-renderer-max-width;
+        max-width: var(--o-form-renderer-max-width);
     }
 
     /* No sheet */
@@ -221,7 +221,7 @@
         padding-left: var(--formView-sheetBg-padding-x);
         padding-right: var(--formView-sheetBg-padding-right, var(--formView-sheetBg-padding-x));
         width: 100%;
-        max-width: $o-form-view-sheet-max-width;
+        max-width: var(--o-form-view-sheet-max-width);
         margin-right: auto; /* Always align to the left */
 
         &:not(:has(.o_form_statusbar)) {
@@ -287,7 +287,7 @@
         @media screen and (min-width: 768px), print and (min-width: 188mm) {
             position: sticky;
             top: 0;
-            z-index: $zindex-sticky;
+            z-index: var(--o-bs-zindex-sticky);
             background-color: var(--body-bg);
 
             .modal & {
@@ -318,7 +318,7 @@
 
     /* Title */
     .oe_title {
-        color: $headings-color;
+        color: var(--o-bs-headings-color);
 
         @media screen and (min-width: 768px), print and (min-width: 188mm) {
             max-width: 75%;
@@ -327,7 +327,7 @@
                 width: 100%; /* Needed because inline-block when is a hx.o_row */
                 margin-top: 0;
                 margin-bottom: map-get($spacers, 3);
-                line-height: $headings-line-height;
+                line-height: var(--o-bs-headings-line-height);
 
                 &.d-flex > .o_input {
                     height: max-content;
@@ -346,8 +346,8 @@
         margin-bottom: 10px;
 
         .img {
-            width: $o-form-picture-size;
-            height: $o-form-picture-size;
+            width: var(--o-form-picture-size);
+            height: var(--o-form-picture-size);
             object-fit: contain;
             vertical-align: top;
             border: 1px solid var(--o-gray-300);
@@ -385,7 +385,7 @@
             }
 
             .o_form_label {
-                margin-bottom: $o-form-spacing-unit;
+                margin-bottom: var(--o-form-spacing-unit);
             }
         }
 
@@ -471,7 +471,7 @@
         }
 
         > .o_form_label {
-            color: $headings-color;
+            color: var(--o-bs-headings-color);
             font-weight: var(--o-bs-font-weight-bold);
         }
     }
@@ -481,7 +481,7 @@
         color: var(--gray-700);
 
         &:not(:empty) {
-            box-shadow: 0 var(--border-width) 0 $o-form-separator-color;
+            box-shadow: 0 var(--border-width) 0 var(--o-form-separator-color);
         }
 
         &:empty {
@@ -534,7 +534,7 @@
                         }
 
                         .note-editing-area, .o_readonly {
-                            padding: $card-spacer-y $card-spacer-x;
+                            padding: var(--o-bs-card-spacer-y) var(--o-bs-card-spacer-x);
                             @include o-form-sheet-inner-left-padding;
                             @include o-form-sheet-inner-right-padding;
                         }
@@ -628,7 +628,7 @@
 
         &.o_field_many2many_tags_avatar {
             --fieldWidget-display: inline-flex;
-            min-height: calc(var(--Avatar-size, var(--o-avatar-size)) + #{$o-input-padding-y} * 2 + #{$input-border-width});
+            min-height: calc(var(--Avatar-size, var(--o-avatar-size)) + var(--o-input-padding-y) * 2 + #{$input-border-width});
         }
     }
     .o_field_widget, .btn {
