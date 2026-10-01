@@ -190,7 +190,7 @@ export async function clickPaymentMethod(name) {
 
 export async function clickCurrencyWisePaymentMethod(name, currencyCode, amount) {
     await contains(
-        `.paymentmethod:contains("${name}") + div .currency-wise-method:contains("${currencyCode}"):contains("${amount}")`
+        `.paymentmethod:contains("${name}") button.currency-wise-method:contains("${currencyCode}"):contains("${amount}")`
     ).click();
     await animationFrame();
 }
