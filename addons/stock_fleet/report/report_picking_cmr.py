@@ -169,5 +169,5 @@ class ReportCmr(models.AbstractModel):
             'delivery_address': pickings[0].partner_id,
             'warehouse_id': pickings[0].picking_type_id.warehouse_id,
             'reference': ', '.join(pickings.mapped('name')),
-            'notes': Markup('<div/>').join(note for note in pickings.mapped('note') if note)
+            'notes': Markup('<div/>').join(note for note in pickings.mapped('picking_operation_note') if note)
         }
