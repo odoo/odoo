@@ -101,7 +101,7 @@ export class DiscussChannel extends Record {
         return this.allowDescriptionTypes.includes(this.channel_type);
     }
     get allowEditDescription() {
-        return this.thread.is_editable;
+        return this.thread.is_editable && this.canSelfInteractWithChannel;
     }
     get allowedToLeaveChannelTypes() {
         return ["channel", "group"];
@@ -111,7 +111,9 @@ export class DiscussChannel extends Record {
     }
     get isAllowedToRename() {
         return (
-            this.allowedToRenameChannelTypes.includes(this.channel_type) && this.thread.is_editable
+            this.allowedToRenameChannelTypes.includes(this.channel_type) &&
+            this.thread.is_editable &&
+            this.canSelfInteractWithChannel
         );
     }
     get areAllMembersLoaded() {
