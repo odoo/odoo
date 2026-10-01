@@ -3,21 +3,22 @@ import { ThreadAction, threadActionsRegistry } from "@mail/core/common/thread_ac
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
+export const visitorActions = new Set([
+    "fold-chat-window",
+    "close",
+    "restart",
+    "call-settings",
+    "meeting-chat",
+    "leave",
+    "notification-settings",
+]);
+
 patch(ThreadAction.prototype, {
     _condition({ action, channel, store }) {
-        const visitorActions = [
-            "fold-chat-window",
-            "close",
-            "restart",
-            "call-settings",
-            "meeting-chat",
-            "leave",
-            "notification-settings",
-        ];
         if (
             channel?.channel_type === "livechat" &&
             store.self_user?.share !== false &&
-            !visitorActions.includes(action.id)
+            !visitorActions.has(action.id)
         ) {
             return false;
         }
