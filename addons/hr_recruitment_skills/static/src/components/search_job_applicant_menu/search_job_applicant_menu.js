@@ -1,7 +1,8 @@
 import { Component, markup } from "@odoo/owl";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useEnv } from "@web/owl2/utils";
 import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 
 const cogMenuRegistry = registry.category("cogMenu");
@@ -40,11 +41,12 @@ export class SearchJobApplicant extends Component {
 export const searchJobApplicant = {
     Component: SearchJobApplicant,
     groupNumber: STATIC_ACTIONS_GROUP_NUMBER,
-    isDisplayed: ({ config, searchModel }) => {
+    isDisplayed() {
+        const env = useEnv();
         return (
-            searchModel.resModel === "hr.applicant" &&
-            searchModel.globalContext.allow_search_matching_applicants &&
-            config.viewArch.classList.contains('o_search_matching_applicant')
+            env.searchModel.resModel === "hr.applicant" &&
+            env.searchModel.globalContext.allow_search_matching_applicants &&
+            env.config.viewArch.classList.contains('o_search_matching_applicant')
         );
     },
 };

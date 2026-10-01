@@ -20,7 +20,6 @@ import {
     tick,
     waitFor,
 } from "@odoo/hoot";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import {
     Component,
     EventBus,
@@ -62,15 +61,15 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
-import { render } from "@web/owl2/utils";
-
 import { browser } from "@web/core/browser/browser";
 import { makeErrorFromResponse } from "@web/core/network/rpc";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
 import { registry } from "@web/core/registry";
 import { config as transitionConfig } from "@web/core/transition";
 import { SIZES } from "@web/core/ui/ui_utils";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { redirect } from "@web/core/utils/urls";
+import { render, useEnv } from "@web/owl2/utils";
 import { CharField } from "@web/views/fields/char/char_field";
 import { DateTimeField } from "@web/views/fields/datetime/datetime_field";
 import { Field } from "@web/views/fields/field";
@@ -13200,7 +13199,8 @@ test("CogMenu receives the model in env", async () => {
     }
     registry.category("cogMenu").add("test-cog", {
         Component: CogItem,
-        isDisplayed: (env) => {
+        isDisplayed() {
+            const env = useEnv();
             expect.step([`cog displayed`, env.model.root.resModel, env.model.root.resId]);
             return true;
         },

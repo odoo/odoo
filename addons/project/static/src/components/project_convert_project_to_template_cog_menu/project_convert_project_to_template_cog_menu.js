@@ -3,6 +3,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
+import { useEnv } from "@web/owl2/utils";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
@@ -27,12 +28,13 @@ class ConvertProjectToTemplateCogMenu extends Component {
 export const ConvertProjectToTemplateMenuItem = {
     Component: ConvertProjectToTemplateCogMenu,
     groupNumber: 0,
-    isDisplayed: async ({ config, searchModel }) => {
+    async isDisplayed() {
+        const env = useEnv();
         return (
-            searchModel.resModel === "project.task" &&
-            ["kanban", "list"].includes(config.viewType) &&
-            config.actionType === "ir.actions.act_window" &&
-            searchModel.context.active_id &&
+            env.searchModel.resModel === "project.task" &&
+            ["kanban", "list"].includes(env.config.viewType) &&
+            env.config.actionType === "ir.actions.act_window" &&
+            env.searchModel.context.active_id &&
             await user.hasGroup("project.group_project_manager")
         );
     },

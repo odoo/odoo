@@ -1,8 +1,9 @@
 import { Component } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
+import { useEnv } from "@web/owl2/utils";
 import { ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 
 const cogMenuRegistry = registry.category("cogMenu");
@@ -116,12 +117,13 @@ export class FetchEInvoices extends Component {
 export const fetchEInvoicesActionMenu = {
     Component: FetchEInvoices,
     groupNumber: ACTIONS_GROUP_NUMBER,
-    isDisplayed: async ({ searchModel }) => {
-        if (searchModel.resModel !== "account.move") {
+    async isDisplayed() {
+        const env = useEnv();
+        if (env.searchModel.resModel !== "account.move") {
             return false;
         }
 
-        return Boolean(await getActionData(searchModel));
+        return Boolean(await getActionData(env.searchModel));
     },
 };
 

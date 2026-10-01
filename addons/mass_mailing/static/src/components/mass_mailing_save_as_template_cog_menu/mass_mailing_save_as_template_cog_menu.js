@@ -1,12 +1,13 @@
 import { Component, usePlugin } from "@odoo/owl";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
-import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
-import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { ORM } from "@web/core/orm_plugin";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { useEnv } from "@web/owl2/utils";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
@@ -85,12 +86,16 @@ export class MassMailingSaveAsTemplateCogMenu extends Component {
 export const MassMailingSaveAsTemplateCogMenuItem = {
     Component: MassMailingSaveAsTemplateCogMenu,
     groupNumber: 4,
-    isDisplayed: async (env) =>
-        env.searchModel.resModel === "mailing.mailing" &&
-        env.model.root.data?.mailing_type === "mail" &&
-        !env.model.root.data?.is_template &&
-        env.config.viewType == "form" &&
-        env.config.actionType === "ir.actions.act_window",
+    isDisplayed() {
+        const env = useEnv();
+        return (
+            env.searchModel.resModel === "mailing.mailing" &&
+            env.model.root.data?.mailing_type === "mail" &&
+            !env.model.root.data?.is_template &&
+            env.config.viewType == "form" &&
+            env.config.actionType === "ir.actions.act_window"
+        );
+    },
 };
 
 cogMenuRegistry.add("save-as-template-menu", MassMailingSaveAsTemplateCogMenuItem, {
