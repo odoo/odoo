@@ -653,43 +653,6 @@ export class MailMessage extends models.ServerModel {
         return res;
     }
 
-    _get_tracking_values_domain(search_term) {
-        let numeric_term = false;
-        const epsilon = 1e-9;
-        numeric_term = parseFloat(search_term);
-        const field_names = [
-            "old_value_char",
-            "new_value_char",
-            "old_value_text",
-            "new_value_text",
-            "old_value_datetime",
-            "new_value_datetime",
-        ];
-        let domain = Domain.or(
-            field_names.map((field_name) => new Domain([[field_name, "ilike", search_term]]))
-        );
-        if (numeric_term) {
-            const float_domain = Domain.or(
-                ["old_value_float", "new_value_float"].map(
-                    (fieldName) =>
-                        new Domain([
-                            [fieldName, ">=", numeric_term - epsilon],
-                            [fieldName, "<=", numeric_term + epsilon],
-                        ])
-                )
-            );
-            domain = Domain.or([domain, float_domain]);
-        }
-        if (Number.isInteger(numeric_term)) {
-            domain = Domain.or([
-                domain,
-                new Domain([["old_value_integer", "=", numeric_term]]),
-                new Domain([["new_value_integer", "=", numeric_term]]),
-            ]);
-        }
-        return domain;
-    }
-
     _linked_message_ids(message) {
         const body = message?.body || "";
         const doc = new DOMParser().parseFromString(body, "text/html");
