@@ -1,0 +1,87 @@
+.s_compare_image {
+    --s_compare_image-position: 50%;
+
+    .s_compare_image_after {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .s_compare_image_divider {
+        position: absolute;
+        z-index: 2;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        background: rgba(var(--white-rgb), .9);
+        touch-action: none;
+    }
+
+    .s_compare_image_handle {
+        flex: 0 0 auto;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        filter: drop-shadow(0 1px 2px rgba(var(--black-rgb), .5));
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.25rem;
+        color: var(--white);
+    }
+
+    .s_compare_image_labels {
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        justify-content: space-between;
+        align-items: flex-start;
+        display: flex;
+        padding: .75rem;
+        pointer-events: none;
+    }
+
+    .s_compare_image_label {
+        pointer-events: auto;
+    }
+
+    &:not(.s_compare_image_horizontal) {
+        .s_compare_image_after {
+            clip-path: inset(0 0 0 var(--s_compare_image-position))
+                /*rtl:inset(0 var(--s_compare_image-position) 0 0)*/;
+        }
+
+        .s_compare_image_divider {
+            top: 0;
+            bottom: 0;
+            left: var(--s_compare_image-position);
+            transform: translateX(-50%);
+            width: 4px;
+            cursor: ew-resize;
+        }
+    }
+
+    &.s_compare_image_horizontal {
+        .s_compare_image_after {
+            clip-path: inset(var(--s_compare_image-position) 0 0 0);
+        }
+
+        .s_compare_image_divider {
+            top: var(--s_compare_image-position);
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            height: 4px;
+            cursor: ns-resize;
+        }
+
+        .s_compare_image_handle {
+            transform: rotate(90deg);
+        }
+
+        .s_compare_image_labels {
+            flex-direction: column;
+        }
+    }
+}
