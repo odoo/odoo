@@ -4,7 +4,7 @@ export class ResourceCalendarAttendance extends models.ServerModel {
     _name = "resource.calendar.attendance";
 
     _load_pos_data_fields() {
-        return ["id", "hour_from", "hour_to", "dayofweek"];
+        return ["id", "hour_from", "hour_to", "dayofweek", "week_type"];
     }
 
     _records = [
