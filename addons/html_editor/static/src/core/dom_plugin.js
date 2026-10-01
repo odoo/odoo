@@ -424,7 +424,7 @@ export class DomPlugin extends Plugin {
                 // If we arrive here, the o_enter index should always be 0.
                 const parent = currentNode.nextSibling.parentElement;
                 const index = childNodes(parent).indexOf(currentNode.nextSibling);
-                this.split.splitBlockNode({ targetNode: parent, targetOffset: index });
+                this.split.splitBlockNode(parent, index);
             }
         }
 
