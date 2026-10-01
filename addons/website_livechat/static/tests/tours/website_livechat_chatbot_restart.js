@@ -60,5 +60,31 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_restart_on_fee
             trigger:
                 '.o-livechat-root:shadow .o-mail-ChatWindow-header:not(:has(button[title="Restart Conversation"]))',
         },
+        // new session from feedback
+        {
+            trigger: ".o-livechat-root:shadow button:contains(New Session)",
+            run: "click",
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Thread[data-transient]",
+        },
+        ...stepsUntilLastMessage(0),
+        // new session again, welcome steps were completed in previous sessions
+        {
+            trigger: ".o-livechat-root:shadow button[title='Close Chat Window (ESC)']",
+            run: "click",
+        },
+        {
+            trigger: ".o-livechat-root:shadow button:contains(Yes, leave conversation)",
+            run: "click",
+        },
+        {
+            trigger: ".o-livechat-root:shadow button:contains(New Session)",
+            run: "click",
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Thread[data-transient]",
+        },
+        ...stepsUntilLastMessage(0),
     ],
 });
