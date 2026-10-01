@@ -15,7 +15,7 @@ const actionRegistry = registry.category("actions");
  * @param {string} [displayName]
  */
 export function addSpreadsheetActionLazyLoader(actionName, path, displayName) {
-    const actionLazyLoader = async (env, action) => {
+    const actionLazyLoader = async (action) => {
         // load the bundle which should redefine the action in the registry
         await loadBundle("spreadsheet.o_spreadsheet");
 

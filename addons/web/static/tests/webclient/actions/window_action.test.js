@@ -1928,7 +1928,7 @@ test("current_action doesn't contains _originalAction", async () => {
         static template = xml`<div>This is a Client Action</div>`;
     }
 
-    const myAction = (env, action) => {
+    const myAction = (action) => {
         registry.category("actions").add("myAction", myActionComponent, { force: true });
         return action;
     };

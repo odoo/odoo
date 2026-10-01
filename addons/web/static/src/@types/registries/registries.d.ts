@@ -3,16 +3,11 @@ declare module "registries" {
     import { OdooEnv } from "@web/env";
     import { Interaction } from "@web/public/interaction";
     import { Compiler } from "@web/views/view_compiler";
-    import { ActionDescription } from "@web/webclient/actions/action_plugin";
+    import { ActionDescription, ActionOptions } from "@web/webclient/actions/action_plugin";
 
-    interface ActionHandlerParams {
-        action: object;
-        env: OdooEnv;
-        options: ActionOptions;
-    }
-    export type ActionHandlersRegistryItemShape = (params: ActionHandlerParams) => (void | Promise<void>);
+    export type ActionHandlersRegistryItemShape = (action: ActionDescription, options: ActionOptions) => (void | Promise<void>);
 
-    export type ActionsRegistryItemShape = (((env: OdooEnv, action: ActionDescription) => void) | typeof Component) & {
+    export type ActionsRegistryItemShape = (((action: ActionDescription) => void) | typeof Component) & {
         displayName?: string;
         path?: string;
         target?: ActionMode;

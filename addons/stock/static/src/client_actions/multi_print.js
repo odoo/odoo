@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-async function doMultiPrint(env, actionDescr) {
+async function doMultiPrint(actionDescr) {
     const action = useService("action");
     const notification = useService("notification");
     for (const report of actionDescr.params.reports) {

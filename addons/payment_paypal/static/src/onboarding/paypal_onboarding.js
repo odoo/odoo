@@ -2,6 +2,9 @@ import { registry } from "@web/core/registry";
 import { RPCErrorDialog } from "@web/core/errors/error_dialogs";
 import { loadJS } from "@web/core/assets";
 import { rpc } from "@web/core/network/rpc";
+import { usePlugin } from "@odoo/owl";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 
 /**
  * Run the PayPal seller onboarding in a PayPal-hosted mini browser.
@@ -9,11 +12,13 @@ import { rpc } from "@web/core/network/rpc";
  * The onboarding is driven by PayPal's partner SDK: it opens the mini browser on the onboarding
  * URL, then calls back into Odoo with the OAuth values once the seller has linked their account.
  *
- * @param {Object} env - The environment of the client action
  * @param {Object} action - The client action
  * @return {void}
  */
-async function paypalOnboardingAction(env, action) {
+async function paypalOnboardingAction(action) {
+    const dialogPlugin = usePlugin(DialogPlugin);
+    const actionPlugin = usePlugin(ActionPlugin);
+
     // Fetch the URLs of the merchant-specific onboarding page and of the partner SDK
     const providerId = action.params.provider_id;
     const response = await rpc("/payment/paypal/oauth/init", { provider_id: providerId });
@@ -32,10 +37,10 @@ async function paypalOnboardingAction(env, action) {
         } catch (error) {
             // Manually catch RPC errors to prevent the SDK handler from consuming them, then
             // display them in the dialog the error service would have used.
-            env.services.dialog.add(RPCErrorDialog, { ...error, traceback: error.stack});
+            dialogPlugin.add(RPCErrorDialog, { ...error, traceback: error.stack});
             return;  // Don't reload, as `doAction` closes all the open dialogs
         }
-        env.services.action.doAction("soft_reload");  // Show the account linked status
+        actionPlugin.doAction("soft_reload");  // Show the account linked status
     };
 
     // Wait for `window.PAYPAL` to exist before clicking the anchor, since `loadJS` resolves before

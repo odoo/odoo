@@ -1,31 +1,3 @@
-import { useSubEnv, useEnv } from "@web/owl2/utils";
-import { _t } from "@web/core/l10n/translation";
-import { location, browser } from "@web/core/browser/browser";
-import { makeContext } from "@web/core/context";
-import { useDebugCategory } from "@web/core/debug/debug_context";
-import { evaluateExpr } from "@web/core/py_js/py";
-import { rpc, rpcBus } from "@web/core/network/rpc";
-import { registry } from "@web/core/registry";
-import { services } from "@web/core/services";
-import { user } from "@web/core/user";
-import { KeepLast } from "@web/core/utils/concurrency";
-import { useBus, useService } from "@web/core/utils/hooks";
-import { View, ViewNotFoundError } from "@web/views/view";
-import { ActionDialog } from "./action_dialog";
-import { ReportAction } from "./reports/report_action";
-import { UPDATE_METHODS } from "@web/core/orm_plugin";
-import { CallbackRecorder } from "@web/search/action_hook";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { PATH_KEYS, router as _router } from "@web/core/browser/router";
-import { OfflinePlugin } from "@web/core/offline/offline_plugin";
-import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
-import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
-import { EffectPlugin } from "@web/core/effects/effect_plugin";
-import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
-import { TitlePlugin } from "@web/core/browser/title_plugin";
-import { UIPlugin } from "@web/core/ui/ui_plugin";
-
 import {
     Component,
     markup,
@@ -33,21 +5,48 @@ import {
     onMounted,
     onWillUnmount,
     Plugin,
-    usePlugin,
-    useListener,
     proxy,
     status,
     t,
+    useListener,
+    usePlugin,
     useProps,
-    xml,
     useScope,
+    xml,
 } from "@odoo/owl";
-import { downloadReport, getReportUrl } from "./reports/utils";
+import { browser, location } from "@web/core/browser/browser";
+import { router as _router, PATH_KEYS } from "@web/core/browser/router";
+import { TitlePlugin } from "@web/core/browser/title_plugin";
+import { makeContext } from "@web/core/context";
+import { useDebugCategory } from "@web/core/debug/debug_context";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { EffectPlugin } from "@web/core/effects/effect_plugin";
+import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
+import { _t } from "@web/core/l10n/translation";
+import { rpc, rpcBus } from "@web/core/network/rpc";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { UPDATE_METHODS } from "@web/core/orm_plugin";
+import { evaluateExpr } from "@web/core/py_js/py";
+import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
+import { user } from "@web/core/user";
 import { zip } from "@web/core/utils/arrays";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { isHtmlEmpty } from "@web/core/utils/html";
 import { omit, pick, shallowEqual } from "@web/core/utils/objects";
-import { session } from "@web/session";
 import { exprToBoolean } from "@web/core/utils/strings";
+import { useSubEnv } from "@web/owl2/utils";
+import { CallbackRecorder } from "@web/search/action_hook";
+import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { session } from "@web/session";
+import { View, ViewNotFoundError } from "@web/views/view";
+import { ActionDialog } from "./action_dialog";
+import { ReportAction } from "./reports/report_action";
+import { downloadReport, getReportUrl } from "./reports/utils";
 
 class BlankComponent extends Component {
     props = useProps({
@@ -161,7 +160,6 @@ export function useActionManager(router = _router) {
     const notification = usePlugin(NotificationPlugin);
     const title = usePlugin(TitlePlugin);
     const ui = usePlugin(UIPlugin);
-    const env = useEnv();
 
     const breadcrumbCache = {};
     const keepLast = new KeepLast();
@@ -1389,7 +1387,7 @@ export function useActionManager(router = _router) {
             controller.displayName ||= clientAction.displayName?.toString() || "";
             return _updateUI(controller, options);
         } else {
-            const next = await scope.run(() => clientAction(env, action, options));
+            const next = await scope.run(clientAction, action, options);
             if (next) {
                 return doAction(next, options);
             }
@@ -1568,7 +1566,7 @@ export function useActionManager(router = _router) {
             default: {
                 const handler = actionHandlersRegistry.get(action.type, null);
                 if (handler !== null) {
-                    return scope.run(() => handler({ env, action, options }));
+                    return scope.run(handler, action, options);
                 }
                 throw new Error(
                     `The ActionManager service can't handle actions of type ${action.type}`

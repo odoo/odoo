@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { htmlSprintf } from "@web/core/utils/html";
 
-export function displayNotificationAction(env, action) {
+export function displayNotificationAction(action) {
     const notification = useService("notification");
     const params = action.params || {};
     const options = {
@@ -28,7 +28,7 @@ registry.category("actions").add("display_notification", displayNotificationActi
 /**
  * Client action to trigger an Exception on the interface.
  */
-function displayException(env, action) {
+function displayException(action) {
     throw makeErrorFromResponse(action.params);
 }
 
@@ -39,7 +39,7 @@ registry.category("actions").add("display_exception", displayException);
  * If action.params.menu_id, it opens the given menu entry.
  * If action.params.action_id, it opens the given action.
  */
-function reload(env, action) {
+function reload(action) {
     const { menu_id, action_id } = action.params || {};
     let route = { ...router.current };
 
@@ -57,6 +57,7 @@ function reload(env, action) {
 }
 
 registry.category("actions").add("reload", reload);
+registry.category("actions").add("reload_context", reload);
 
 /**
  * Client action to go back home.
@@ -77,16 +78,6 @@ async function home() {
 }
 
 registry.category("actions").add("home", home);
-
-/**
- * Client action to refresh the session context (making sure HTTP requests will
- * have the right one). It simply reloads the page.
- */
-async function reloadContext(env, action) {
-    reload(env, action);
-}
-
-registry.category("actions").add("reload_context", reloadContext);
 
 /**
  * Client action to restore the current controller

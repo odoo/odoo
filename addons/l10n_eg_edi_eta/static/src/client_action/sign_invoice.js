@@ -36,7 +36,7 @@ async function initLNA(notification) {
     }
 }
 
-async function actionGetDrive(env, actionDescr, type) {
+async function actionGetDrive(actionDescr, type) {
     const { drive_id, sign_host: host } = actionDescr.params;
     const orm = usePlugin(ORM);
     const notification = useService("notification");
@@ -123,9 +123,9 @@ async function sendLogOnSignFailure(orm, params) {
 
 registry
     .category("actions")
-    .add("action_get_drive_certificate", (env, action) =>
-        actionGetDrive(env, action, "certificate")
+    .add("action_get_drive_certificate", (action) =>
+        actionGetDrive(action, "certificate")
     );
 registry
     .category("actions")
-    .add("action_post_sign_invoice", (env, action) => actionGetDrive(env, action, "sign"));
+    .add("action_post_sign_invoice", (action) => actionGetDrive(action, "sign"));
