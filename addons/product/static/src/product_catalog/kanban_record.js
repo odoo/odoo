@@ -103,10 +103,6 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
         const oldUom = data.availableUoms.find(u => u.id === data.uomId);
         if (newUom && oldUom) {
             data.uomId = newUom.id;
-            data.uomDisplayName = newUom.name;
-            if (data.productUomFactor !== undefined) {
-                data.productUomFactor = data.productUomFactor * oldUom.factor / newUom.factor;
-            }
             await this._onQuantityChange();
         }
     }
