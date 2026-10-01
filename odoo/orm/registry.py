@@ -155,6 +155,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         from odoo.modules import db  # noqa: PLC0415
         from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
+        from odoo.modules.module import Manifest  # noqa: PLC0415
 
         t0 = time.time()
         registry: Registry = object.__new__(cls)
@@ -192,11 +193,17 @@ class Registry(Mapping[str, type["BaseModel"]]):
                         # lock and try to acquire the exclusive lock
                         cr.commit()  # commit after acquiring the lock to re-start the transaction
                         cr.execute("""
-                            SELECT FROM ir_module_module
+                            SELECT name, state
+                            FROM ir_module_module
                             WHERE state IN ('to upgrade', 'to install', 'to remove')
-                            LIMIT 1
                         """)
-                        if cr.rowcount:
+                        # modules that cannot be loaded (missing or not installable) stay
+                        # in their transient state, an update would not change anything
+                        if any(
+                            state == 'to remove'
+                            or (Manifest.for_addon(name, display_warning=False) or {}).get('installable')
+                            for name, state in cr.fetchall()
+                        ):
                             _logger.info("Force module updates, some modules must be installed/uninstalled/upgraded")
                             update_module = True
                 if update_module:
