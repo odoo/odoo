@@ -1,4 +1,4 @@
-import { Component, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
+import { Component, computed, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Domain } from "@web/core/domain";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -101,8 +101,18 @@ export class SearchBar extends Component {
         this.keepLast = new KeepLast();
 
         if (!(this.env.config.disableSearchBarAutofocus || !this.props.autofocus)) {
-            // only force the focus on touch devices on small screens
-            useAutofocus({ ref: this.inputRef, mobile: this.ui.isSmall });
+            // only force the focus on touch devices on small screens, and there only
+            // once the user opened the search bar with the toggler: focusing it when
+            // it is displayed by default would open the virtual keyboard
+            const waitForToggle = this.props.toggler && this.ui.isSmall;
+            useAutofocus({
+                ref: waitForToggle
+                    ? computed(() =>
+                          this.visibilityState.manuallyToggled ? this.inputRef() : null
+                      )
+                    : this.inputRef,
+                mobile: this.ui.isSmall,
+            });
         }
 
         this.popoverWillCloseOnClickAway = (target) => {
