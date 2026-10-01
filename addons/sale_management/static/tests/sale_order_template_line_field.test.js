@@ -1,28 +1,43 @@
 import { defineMailModels } from '@mail/../tests/mail_test_helpers';
 import { expect, test } from '@odoo/hoot';
 import { queryAllTexts } from '@odoo/hoot-dom';
+import { productModels } from '@product/../tests/product_test_helpers';
 import { saleManagementModels } from '@sale_management/../tests/sale_management_test_helpers';
 import {
+    clickCancel,
     clickSave,
     contains,
     defineModels,
     fields,
+    models,
     mountView,
     onRpc,
 } from '@web/../tests/web_test_helpers';
+
+class UomUom extends models.ServerModel {
+    _name = "uom.uom";
+
+    _records = [
+        { id: 1, name: "Units", factor: 1, parent_path: "1/" },
+        { id: 2, name: "Dozens", factor: 12, parent_path: "1/2/" },
+        { id: 3, name: "kg", factor: 1, parent_path: "3/" },
+    ];
+}
 
 class SaleOrderTemplateLine extends saleManagementModels.SaleOrderTemplateLine {
     _name = 'sale.order.template.line';
 
     product_uom_qty = fields.Float({ default: 1.00 });
     _records = [
-        { id: 1, name: "r1", sequence: 1 },
-        { id: 2, name: "r2", sequence: 2 },
+        { id: 1, name: "r1", sequence: 1, product_id: 1 },
+        { id: 2, name: "r2", sequence: 2, product_id: 1 },
         {
             id: 3,
             name: "Sec1",
             sequence: 3,
             display_type: 'line_section',
+            section_qty: 1,
+            section_uom_id: 1,
             product_uom_qty: 0,
             collapse_prices: true,
         },
@@ -31,6 +46,8 @@ class SaleOrderTemplateLine extends saleManagementModels.SaleOrderTemplateLine {
             name: "Sec2",
             sequence: 4,
             display_type: 'line_section',
+            section_qty: 1,
+            section_uom_id: 1,
             product_uom_qty: 0,
             collapse_composition: true,
         },
@@ -39,44 +56,54 @@ class SaleOrderTemplateLine extends saleManagementModels.SaleOrderTemplateLine {
             name: "Sec3",
             sequence: 5,
             display_type: 'line_section',
+            section_qty: 1,
+            section_uom_id: 1,
             product_uom_qty: 0,
         },
-        { id: 6, name: "Sec3-r1", sequence: 6 },
-        { id: 7, name: "Sec3-r2", sequence: 7 },
+        { id: 6, name: "Sec3-r1", sequence: 6, product_id: 1 },
+        { id: 7, name: "Sec3-r2", sequence: 7, product_id: 1 },
         {
             id: 8,
             name: "Sec3-sub1",
             sequence: 8,
             display_type: 'line_subsection',
+            section_qty: 1,
+            section_uom_id: 1,
             product_uom_qty: 0,
         },
-        { id: 9, name: "Sec3-sub1-r1", sequence: 9 },
+        { id: 9, name: "Sec3-sub1-r1", sequence: 9, product_id: 1 },
         {
             id: 10,
             name: "Sec3-sub2",
             sequence: 10,
             display_type: 'line_subsection',
+            section_qty: 1,
+            section_uom_id: 1,
             product_uom_qty: 0,
         },
-        { id: 11, name: "Sec3-sub2-r1", sequence: 11 },
+        { id: 11, name: "Sec3-sub2-r1", sequence: 11, product_id: 1 },
         {
             id: 12,
             name: "Sec4",
             sequence: 12,
             display_type: 'line_section',
+            section_qty: 1,
+            section_uom_id: 1,
             product_uom_qty: 0,
         },
-        { id: 13, name: "Sec4-r1", sequence: 13 },
+        { id: 13, name: "Sec4-r1", sequence: 13, product_id: 1 },
         {
             id: 14,
             name: "Sec4-sub1",
             sequence: 14,
             display_type: 'line_subsection',
+            section_qty: 1,
+            section_uom_id: 1,
             product_uom_qty: 0,
             collapse_composition: true,
             collapse_prices: true,
         },
-        { id: 15, name: "Sec4-sub1-r1", sequence: 15 },
+        { id: 15, name: "Sec4-sub1-r1", sequence: 15, product_id: 2 },
     ];
 }
 
@@ -108,12 +135,20 @@ class SaleOrderTemplate extends saleManagementModels.SaleOrderTemplate {
                             <field name="name" invisible="not display_type"/>
                             <field name="label" invisible="display_type"/>
                         </column>
+                        <field name="product_id" invisible="display_type"/>
                         <column name="sotl_qty">
                             <field name="product_uom_qty" invisible="display_type"/>
                             <field
                                 name="section_qty"
                                 invisible="display_type not in ('line_section', 'line_subsection')"
                                 class="fw-normal text-muted"
+                            />
+                        </column>
+                        <column name="sotl_uom">
+                            <field name="product_uom_id" invisible="display_type"/>
+                            <field
+                                name="section_uom_id"
+                                invisible="display_type not in ('line_section', 'line_subsection')"
                             />
                         </column>
                         <field name="display_type" column_invisible="1"/>
@@ -127,7 +162,7 @@ class SaleOrderTemplate extends saleManagementModels.SaleOrderTemplate {
     };
 }
 
-defineModels({ SaleOrderTemplateLine, SaleOrderTemplate });
+defineModels({ ...productModels, SaleOrderTemplateLine, SaleOrderTemplate, UomUom });
 defineMailModels();
 
 const EXPECTED_LINE_RECORDS = [
@@ -485,8 +520,149 @@ test("Editing a subsection's quantity applies the ratio to its line and recomput
     );
 
     await contains(".o_data_row:contains(Sec3-sub2):first [name=product_and_description]").click();
-    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("4");
+    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("4", { confirm: "blur" });
     await clickSave();
 
     expect.verifySteps(["web_save"]);
+});
+
+test("Editing a section's quantity applies the ratio to its template lines", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].sale_order_template_line_ids.sort((c1, c2) => c1[1] - c2[1])).toEqual([
+            [1, 12, { section_qty: 2 }],
+            [1, 13, { product_uom_qty: 2 }],
+            [1, 14, { section_qty: 2 }],
+            [1, 15, { product_uom_qty: 2 }],
+        ]);
+    });
+
+    await mountView({ type: "form", resModel: "sale.order.template", resId: 1 });
+
+    await contains(".o_data_row:contains(Sec4):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("2", {
+        confirm: "blur",
+    });
+    await clickSave();
+
+    expect.verifySteps(["web_save"]);
+});
+
+test.tags("desktop");
+test("Changing a section's UoM applies the factor to its template lines", async () => {
+    await mountView({ type: "form", resModel: "sale.order.template", resId: 1 });
+
+    await contains(".o_data_row:contains(Sec4):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_uom_id] input", { visible: false }).click();
+    await contains(".o-autocomplete--dropdown-item:contains(Dozens)").click();
+
+    expect(".o_data_row:contains(Sec4-r1) td[name=sotl_qty]").toHaveText("12.00");
+    expect(".o_data_row:contains(Sec4-sub1):first td[name=sotl_qty]").toHaveText("12.00");
+    expect(".o_data_row:contains(Sec4-sub1-r1) td[name=sotl_qty]").toHaveText("12.00");
+});
+
+test("Notes inside a section keep their values when the section's quantity changes", async () => {
+    SaleOrderTemplateLine._records.push({
+        id: 16,
+        name: "Sec3-note",
+        sequence: 7,
+        display_type: "line_note",
+        product_uom_qty: 0,
+    });
+
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].sale_order_template_line_ids.map((c) => c[1])).not.toInclude(16, {
+            message: "Sec3-note shouldn't be impacted",
+        });
+    });
+
+    await mountView({ type: "form", resModel: "sale.order.template", resId: 1 });
+
+    await contains(".o_data_row:contains(Sec3):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("2", {
+        confirm: "blur",
+    });
+    await clickSave();
+
+    expect.verifySteps(["web_save"]);
+});
+
+test("Editing the quantity of a section without template lines only updates the section", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].sale_order_template_line_ids).toEqual([[1, 3, { section_qty: 2 }]]);
+    });
+
+    await mountView({ type: "form", resModel: "sale.order.template", resId: 1 });
+
+    await contains(".o_data_row:contains(Sec1):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("2", {
+        confirm: "blur",
+    });
+    await clickSave();
+
+    expect.verifySteps(["web_save"]);
+});
+
+test.tags("desktop");
+test("Editing a section's quantity also applies the ratio to unsaved template lines", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        const commands = args[1].sale_order_template_line_ids;
+
+        expect(commands.find((c) => c[1] === 15)[2]).toEqual({ product_uom_qty: 3 });
+        const newLine = commands.find((c) => c[0] === 0)[2];
+        expect(newLine.product_id).toBe(1);
+        expect(newLine.product_uom_qty).toBe(3);
+    });
+
+    await mountView({ type: "form", resModel: "sale.order.template", resId: 1 });
+
+    // New lines are appended to the last subsection (Sec4-sub1)
+    await contains("button:contains(Add a line)").click();
+    await contains(".o_selected_row [name=product_id] input").click();
+    await contains(".o-autocomplete--dropdown-item:contains(Test Product)").click();
+    await contains(".o_data_row:contains(Sec4-sub1):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("3", {
+        confirm: "blur",
+    });
+    await clickSave();
+
+    expect.verifySteps(["web_save"]);
+});
+
+test.tags("desktop");
+test("Changing a section's UoM to an incompatible one doesn't change its template lines", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].sale_order_template_line_ids).toEqual([[1, 10, { section_uom_id: 3 }]]);
+    });
+
+    await mountView({ type: "form", resModel: "sale.order.template", resId: 1 });
+
+    await contains(".o_data_row:contains(Sec3-sub2):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_uom_id] input", { visible: false }).click();
+    await contains(".o-autocomplete--dropdown-item:contains(kg)").click();
+    await clickSave();
+
+    expect.verifySteps(["web_save"]);
+});
+
+test("Discarding a section's quantity change restores its template lines", async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+
+    await mountView({ type: "form", resModel: "sale.order.template", resId: 1 });
+
+    await contains(".o_data_row:contains(Sec3-sub2):first [name=product_and_description]").click();
+    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("4", {
+        confirm: "blur",
+    });
+    expect(".o_data_row:contains(Sec3-sub2-r1) td[name=sotl_qty]").toHaveText("4.00");
+
+    await clickCancel();
+
+    expect(".o_data_row:contains(Sec3-sub2-r1) td[name=sotl_qty]").toHaveText("1.00");
+    expect(".o_data_row:contains(Sec3-sub2):first td[name=sotl_qty]").toHaveText("1.00");
+    expect.verifySteps([]);
 });

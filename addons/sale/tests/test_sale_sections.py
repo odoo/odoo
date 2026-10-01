@@ -173,3 +173,46 @@ class TestSaleSections(SaleCommon):
             self.sections_sale_order.order_line[7]._get_section_totals("price_subtotal"),
             sum(self.sections_sale_order.order_line[8:].mapped("price_subtotal")),
         )
+
+    def test_section_qty_uom_defaults(self):
+        """Sections and subsections default to a quantity of 1 Unit, other lines have none."""
+        order = self.sections_sale_order
+        order.order_line = [Command.create({"name": "Note", "display_type": "line_note"})]
+        sections = order.order_line.filtered(
+            lambda line: line.display_type in ("line_section", "line_subsection")
+        )
+        self.assertRecordValues(
+            sections, [{"section_qty": 1.0, "section_uom_id": self.uom_unit.id}] * len(sections)
+        )
+        other_lines = order.order_line - sections
+        self.assertRecordValues(
+            other_lines, [{"section_qty": 0.0, "section_uom_id": False}] * len(other_lines)
+        )
+
+    def test_batch_onchange_sol(self):
+        """`batch_onchange_sol` recomputes each line from its own changes, keyed by line id."""
+        order = self.sections_sale_order
+        saved_line = order.order_line[2]  # Sec1-r1
+        fields_spec = {"product_uom_qty": {}, "price_subtotal": {}}
+
+        result = self.env["sale.order"].batch_onchange_sol(
+            {
+                str(saved_line.id): {
+                    "ids": saved_line.ids,
+                    "changes": {"product_uom_qty": 3.0},
+                    "changed_fields": ["product_uom_qty"],
+                },
+                "virtual_1": {
+                    "ids": [],
+                    "changes": {"product_id": self.product.id, "product_uom_qty": 4.0},
+                    "changed_fields": ["product_uom_qty"],
+                },
+            },
+            {"order_id": {"id": order.id}},
+            fields_spec,
+        )
+
+        self.assertEqual(set(result), {str(saved_line.id), "virtual_1"})
+        self.assertEqual(result[str(saved_line.id)]["price_subtotal"], 60.0)
+        self.assertEqual(result["virtual_1"]["price_subtotal"], 80.0)
+        self.assertEqual(saved_line.product_uom_qty, 1.0, "Onchange shouldn't write on the line")
