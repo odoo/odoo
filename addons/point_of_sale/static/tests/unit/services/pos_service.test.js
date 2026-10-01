@@ -25,6 +25,36 @@ describe("pos_store.js", () => {
         expect(order.lines.length).toBe(3); // 2 original lines + 1 tip line
     });
 
+    test("clickSaveOrder keeps the router state in sync with the order it switches to", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        store.navigate("ProductScreen", { orderUuid: order.uuid });
+
+        store.clickSaveOrder();
+
+        const newOrder = store.getOrder();
+        expect(newOrder.uuid).not.toBe(order.uuid);
+        expect(store.router.state.params.orderUuid).toBe(newOrder.uuid);
+    });
+
+    test("a popstate after clickSaveOrder does not reopen the saved order", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        store.navigate("ProductScreen", { orderUuid: order.uuid });
+
+        store.clickSaveOrder();
+        const newOrder = store.getOrder();
+
+        // A stale router param made any later popstate (e.g. a mobile back-gesture
+        // or a dialog's keyboard dismissal) force-reselect the previously saved
+        // order. `popStateCallback` is exactly what the browser's popstate
+        // listener invokes, so calling it here reproduces that without depending
+        // on a real browser history/URL.
+        await store.router.popStateCallback();
+
+        expect(store.getOrder().uuid).toBe(newOrder.uuid);
+    });
+
     test("orderNoteFormat", async () => {
         const str = getStrNotes("string");
         expect(str).toBeOfType("string");
@@ -569,6 +599,18 @@ describe("pos_store.js", () => {
         const deletedOrder = await store.onDeleteOrder(order);
         expect(order.uiState.displayed).toBe(false);
         expect(deletedOrder).toBe(true);
+    });
+
+    test("onDeleteOrder keeps the router state in sync with the order it switches to", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        store.navigate("ProductScreen", { orderUuid: order.uuid });
+
+        await store.onDeleteOrder(order);
+
+        const newOrder = store.getOrder();
+        expect(newOrder.uuid).not.toBe(order.uuid);
+        expect(store.router.state.params.orderUuid).toBe(newOrder.uuid);
     });
 
     test("setNextOrderRefs", async () => {
