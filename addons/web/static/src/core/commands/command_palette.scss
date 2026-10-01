@@ -1,6 +1,6 @@
 .o_command_palette {
     $-app-icon-size: 1.8rem;
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         top: 120px;
         position: absolute;
     }
@@ -9,7 +9,7 @@
     }
 
     &_listbox {
-        @include media-breakpoint-up(md) {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
             max-height: 50vh;
         }
 

@@ -5,7 +5,7 @@
     justify-content: center;
     align-items: center;
 
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         position: absolute;
         inset: 0;
     }
@@ -46,10 +46,10 @@
             left: -12.5%;
         }
     }
-    @include media-breakpoint-down(md) {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
         padding: 0 1em 1em .75em;
     }
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         flex: 0 0 auto;
         width: 550px;
         border-radius: 10px;

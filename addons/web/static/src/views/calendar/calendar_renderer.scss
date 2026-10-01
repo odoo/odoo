@@ -4,7 +4,7 @@
 
     background-color: var(--o-view-background-color);
 
-    @include media-breakpoint-down(lg) {
+    @media screen and (max-width: 991.98px), print and (max-width: 189.98mm) {
         border-top: 1px solid var(--o-cw-border-color);
     }
 
@@ -30,7 +30,7 @@
         --fc-event-bg-color: var(--o-view-background-color);
         overflow: hidden;
 
-        @include media-breakpoint-down(md) {
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             line-height: 1.2;
         }
 
@@ -80,7 +80,7 @@
 
         .fc-event-main {
             > .o_event_title {
-                @include media-breakpoint-down(lg) {
+                @media screen and (max-width: 991.98px), print and (max-width: 189.98mm) {
                     text-overflow: unset;
                     white-space: break-spaces;
 
@@ -242,7 +242,7 @@
                 .o_cw_day_number {
                     padding: var(--o-bs-spacer-1);
 
-                    @include media-breakpoint-up(lg) {
+                    @media screen and (min-width: 992px), print and (min-width: 190mm) {
                         font-size: 1.25rem;
                     }
                 }
@@ -294,7 +294,7 @@
                 font-size: .6rem;
                 height: 2em;
 
-                @include media-breakpoint-up(md) {
+                @media screen and (min-width: 768px), print and (min-width: 188mm) {
                     font-size: .75rem;
                 }
 
@@ -334,7 +334,7 @@
                 }
             }
 
-            @include media-breakpoint-down(md) {
+            @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
                 .fc-daygrid-day .fc-daygrid-event {
                     margin: 1px;
 
@@ -364,7 +364,7 @@
                 .fc-event-main {
                     margin: var(--o-bs-spacer-1);
 
-                    @include media-breakpoint-up(md) {
+                    @media screen and (min-width: 768px), print and (min-width: 188mm) {
                         margin-top: 0;
                         margin-bottom: 0;
                     }
@@ -433,7 +433,7 @@
                 line-height: var(--o-bs-line-height-sm);
                 font-size: var(--o-font-size-base-smaller);
                 opacity: .5;
-                @include media-breakpoint-down(md) {
+                @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
                     width: 3ch;
                 }
             }
@@ -448,13 +448,13 @@
                     font-size: var(--o-font-size-base-smaller);
                     opacity: .8;
 
-                    @include media-breakpoint-down(lg) {
+                    @media screen and (max-width: 991.98px), print and (max-width: 189.98mm) {
                         > a {
                             font-size: .5rem;
                         }
                     }
 
-                    @include media-breakpoint-up(lg) {
+                    @media screen and (min-width: 992px), print and (min-width: 190mm) {
                         padding: var(--o-bs-spacer-1);
                     }
                 }
@@ -470,7 +470,7 @@
                     }
                     .fc-daygrid-week-number {
                         /* only in Month view */
-                        @include media-breakpoint-down(lg) {
+                        @media screen and (max-width: 991.98px), print and (max-width: 189.98mm) {
                             background-color: var(--gray-100);
                         }
                     }
@@ -565,7 +565,7 @@
             }
 
             > .fc-month-container {
-                @include media-breakpoint-down(md) {
+                @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
                     width: 100%;
                 }
 
@@ -575,7 +575,7 @@
 
                     /* On mobile year view, make months take the full screen width. */
                     /* Using "vw" instead of "%" to keep each month weekday columns aligned. */
-                    @include media-breakpoint-down(md) {
+                    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
                         width: calc(100vw - var(--o-bs-spacer-5));
                     }
 

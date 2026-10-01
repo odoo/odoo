@@ -29,7 +29,7 @@
         padding-right: 16px;
         padding-bottom: 0;
     }
-    @include media-breakpoint-down(md) {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
         .col-6 {
             flex-direction: column;
         }
@@ -46,7 +46,7 @@
                 margin-bottom: 0;
             }
         }
-        @include media-breakpoint-up(sm) {
+        @media screen and (min-width: 576px), print and (min-width: 100mm) {
             .o_hr_leave_title {
                 font-size: 1.8rem;
             }
@@ -72,10 +72,10 @@
         .o_hr_leave_date {
             display: flex;
             flex-direction: row;
-            @include media-breakpoint-down(lg) {
+            @media screen and (max-width: 991.98px), print and (max-width: 189.98mm) {
                 flex-direction: column;
             }
-            @include media-breakpoint-down(md) {
+            @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
                 flex-direction: row;
             }
         }

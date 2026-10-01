@@ -1,13 +1,13 @@
 /* Define left and right padding according to screen resolution */
 @mixin o-form-sheet-inner-left-padding {
     padding-left: var(--o-horizontal-padding);
-    @include media-breakpoint-up(lg) {
+    @media screen and (min-width: 992px), print and (min-width: 190mm) {
         padding-left: calc(var(--o-horizontal-padding) * 2);
     }
 }
 @mixin o-form-sheet-inner-right-padding {
     padding-right: var(--o-horizontal-padding);
-    @include media-breakpoint-up(lg) {
+    @media screen and (min-width: 992px), print and (min-width: 190mm) {
         padding-right: calc(var(--o-horizontal-padding) * 2);
     }
 }
@@ -54,7 +54,7 @@
     --fieldWidget-margin-bottom: #{$o-form-spacing-unit};
     --Ribbon-z-index: 1;
 
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         display: flex;
         flex-flow: column nowrap;
         min-height: 100%;
@@ -234,7 +234,7 @@
         margin: 0 var(--formView-sheet-margin-x, calc(var(--formView-sheetBg-padding-x) * -1));
         padding: var(--formView-sheet-padding-y, #{map-get($spacers, 3)}) var(--formView-sheet-padding-x, #{map-get($spacers, 3)});
 
-        @include media-breakpoint-up(md) {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
             border-style: solid;
             border-color: $border-color;
             border-width: var(--formView-sheet-border-width, 1px 0 1px 0);
@@ -247,12 +247,12 @@
             --formView-sheet-border-radius: var(--formView-sheet-border-radius-md, var(--border-radius-lg));
         }
 
-        @include media-breakpoint-up(lg) {
+        @media screen and (min-width: 992px), print and (min-width: 190mm) {
             --formView-sheet-padding-y: var(--formView-sheet-padding-y-lg, #{map-get($spacers, 4)});
             --formView-sheet-padding-x: var(--formView-sheet-padding-x-lg, #{map-get($spacers, 4)});
         }
 
-        @include media-breakpoint-up(xxl) {
+        @media screen and (min-width: 1400px), print and (min-width: 250mm) {
             --formView-sheet-padding-y: var(--formView-sheet-padding-y-xxl, #{map-get($spacers, 4)});
             --formView-sheet-padding-x: var(--formView-sheet-padding-x-xxl, #{map-get($spacers, 4)});
         }
@@ -284,7 +284,7 @@
         padding-inline: var(--formView-sheetBg-padding-x) var(--formView-sheetBg-padding-right, --formView-sheetBg-padding-x);
         padding-top: var(--formView-statusbar-padding-top, #{map-get($spacers, 2)});
 
-        @include media-breakpoint-up(md) {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
             position: sticky;
             top: 0;
             z-index: $zindex-sticky;
@@ -303,14 +303,14 @@
             align-self: flex-start;
 
             &:first-child:last-child {
-                @include media-breakpoint-down(md) {
+                @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
                     width: 100%;
                 }
             }
         }
     }
 
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         .o_list_renderer .o_list_table thead {
             z-index: 0;
         }
@@ -320,7 +320,7 @@
     .oe_title {
         color: $headings-color;
 
-        @include media-breakpoint-up(md) {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
             max-width: 75%;
 
             > h1, > h2, > h3 {
@@ -376,7 +376,7 @@
             }
         }
 
-        @include media-breakpoint-up(sm) {
+        @media screen and (min-width: 576px), print and (min-width: 100mm) {
             .o_field_widget {
                 &.o_text_overflow {
                     width: 1px!important; /* hack to make the table layout believe it is a small element (so that the table does not grow too much) ... */
@@ -393,7 +393,7 @@
             white-space: nowrap;
         }
 
-        @include media-breakpoint-down(lg) {
+        @media screen and (max-width: 991.98px), print and (max-width: 189.98mm) {
             &.o_label_nowrap .o_form_label {
                 white-space: normal;
             }
@@ -405,7 +405,7 @@
 
     .o_inner_group {
         --columns: 1;
-        @include media-breakpoint-down(md) {
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             --inner-group-row-gap: 0;
         }
         gap: var(--inner-group-row-gap, map-get($spacers, 2)) var(--o-horizontal-padding);
@@ -419,7 +419,7 @@
     }
 
     & .o_form_renderer:not(.o_kanban_quick_create_form) .o_inner_group {
-        @include media-breakpoint-up(sm) {
+        @media screen and (min-width: 576px), print and (min-width: 100mm) {
             .o_cell:first-child:last-child,
             .o_cell:not(.o_wrap_label):not(.o_wrap_input):not(.o_cell_custom) {
                 grid-column: span 2;
@@ -427,7 +427,7 @@
         }
     }
 
-    @include media-breakpoint-up(sm) {
+    @media screen and (min-width: 576px), print and (min-width: 100mm) {
         .o_inner_group {
             grid-template-columns: fit-content(150px) minmax(0, 1fr);
             &.o_form_fw_labels {
@@ -461,7 +461,7 @@
     .o_checkbox_optional_field {
         display: flex;
 
-        @include media-breakpoint-down(sm) {
+        @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
             .o_field_boolean {
                 order: -1;
             }
@@ -589,7 +589,7 @@
         line-height: var(--body-line-height);
         font-weight: var(--o-bs-font-weight-bold);
 
-        @include media-breakpoint-down(md) {
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             font-size: $o-font-size-base-touch;
         }
 
@@ -666,7 +666,7 @@
     /* Text field with oe_inline class */
     .o_field_text.oe_inline {
         width: 100%!important;
-        @include media-breakpoint-up(sm) {
+        @media screen and (min-width: 576px), print and (min-width: 100mm) {
             width: 45%!important;
         }
     }
@@ -719,7 +719,7 @@
 
     /* Specific style classes */
     --o-subtotal-footer-label-padding: 20px;
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         .o_inner_group.oe_subtotal_footer {
             grid-template-columns: 1fr auto;
             width: auto;
@@ -897,7 +897,7 @@
             margin-top: 32px !important;
         }
     }
-    @include media-breakpoint-down(md) {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
         .o_form_label:not(.o_invisible_modifier) {
             padding-bottom: 4px;
         }
@@ -972,7 +972,7 @@
         --Notebook-padding-x: var(--formView-sheetBg-padding-x);
     }
 
-    @include media-breakpoint-down(lg) {
+    @media screen and (max-width: 991.98px), print and (max-width: 189.98mm) {
         .o_group.o_inner_group .o_wrap_label {
             min-width: 100px;
         }
@@ -996,7 +996,7 @@
     }
 }
 
-@include media-breakpoint-down(md) {
+@media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
     .modal {
         &.o_modal_full .modal-content {
             .modal-body .o_form_view .o_form_sheet_bg {
@@ -1043,7 +1043,7 @@
     }
 }
 
-@include media-breakpoint-down(md) {
+@media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
     .o_form_view {
         .o_inner_group {
             @include form-break-table;

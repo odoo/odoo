@@ -53,7 +53,7 @@
                 padding: 0;
             }
 
-            @include media-breakpoint-up(sm) {
+            @media screen and (min-width: 576px), print and (min-width: 100mm) {
                 > div + div {
                     border-left: 1px solid $dropdown-divider-bg;
                 }
@@ -69,7 +69,7 @@
 
 /* ------- Kanban View ------- */
 .o_kanban_view {
-    @include media-breakpoint-down(md) {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
         &.o_field_x2many_kanban .o_kanban_ghost {
             display: none;
         }
@@ -155,14 +155,14 @@
     }
 
     @include media-only(print) {
-        @include media-breakpoint-down(md) {
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             --Card-padding-h: calc(var(--o-kanban-inside-hgutter) * 2);
         }
     }
 
     &.o_kanban_ungrouped .o_kanban_record {
         flex-grow: 1;
-        @include media-breakpoint-down(md) {
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             flex-shrink: 0;
         }
     }
@@ -200,7 +200,7 @@
 
         min-height: 100%;
 
-        @include media-breakpoint-down(md) {
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             --KanbanGroup-width: 90%; /* don't take full width to give a hint of next/previous column on smaller screens */
 
             min-height: initial;
@@ -209,7 +209,7 @@
             scroll-snap-type: x mandatory;
         }
 
-        @include media-breakpoint-up(lg) {
+        @media screen and (min-width: 992px), print and (min-width: 190mm) {
             --KanbanGroup-width: calc(var(--KanbanRecord-width) + (2 * var(--KanbanGroup-padding-h)));
         }
 
@@ -275,7 +275,7 @@
     }
 
     .o_quick_create_folded {
-        @include media-breakpoint-up(md) {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
             --KanbanGroup-padding-h: 0;
         }
         &:hover .o_quick_create_title {
@@ -310,7 +310,7 @@
             display: none !important;
         }
         /* don't visually fold on smaller screens (aka. mobile) */
-        @include media-breakpoint-up(md) {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
             --KanbanGroup-padding-h: 0;
 
             &, .o_column_unfold {
@@ -350,7 +350,7 @@
         }
     }
 
-    @include media-breakpoint-down(md) {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
         .o_kanban_group,
         .o_column_quick_create {
             scroll-snap-align: center;
@@ -362,7 +362,7 @@
     &.o_kanban_ungrouped {
         min-height: 100%;
 
-        @include media-breakpoint-up(md) {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
             --Kanban-padding: var(--KanbanRecord-margin-v) var(--KanbanRecord-margin-h);
         }
 
@@ -370,7 +370,7 @@
             width: var(--KanbanRecord-width);
             margin: var(--KanbanRecord-margin-v) var(--KanbanRecord-margin-h);
 
-            @include media-breakpoint-down(md) {
+            @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
                 margin: 0 0 #{-$border-width};
                 flex-basis: 100%;
             }
@@ -403,7 +403,7 @@
 }
 
 .o_kanban_small_column .o_kanban_renderer.o_kanban_grouped {
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         --KanbanGroup-width: calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
     }
 }

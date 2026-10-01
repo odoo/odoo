@@ -46,7 +46,7 @@
 }
 
 .o_loyalty_program_list_view_view .o_list_renderer .o_view_nocontent{
-    @include media-breakpoint-down(lg){
+    @media screen and (max-width: 991.98px), print and (max-width: 189.98mm) {
         height: fit-content;
     }
 }
@@ -54,11 +54,11 @@
 .o_nocontent_help:has(.loyalty-template) {
     max-width: unset;
 
-    @include media-breakpoint-up(sm) {
+    @media screen and (min-width: 576px), print and (min-width: 100mm) {
         max-width: 90%;
     }
 
-    @include media-breakpoint-up(lg) {
+    @media screen and (min-width: 992px), print and (min-width: 190mm) {
         max-width: 80%;
     }
 }

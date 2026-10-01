@@ -14,7 +14,7 @@
 
     /* sticky header on desktop */
     @include media-only(screen) {
-        @include media-breakpoint-up(md) {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
             height: 100%;
 
             .o_list_table thead {
@@ -633,7 +633,7 @@
     }
 }
 
-@include media-breakpoint-down(md) {
+@media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
     .o_data_row_selected {
         user-select: none; /* Prevent text selection when editing */
     }

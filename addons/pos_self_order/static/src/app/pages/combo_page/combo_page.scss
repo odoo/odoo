@@ -24,7 +24,7 @@
   }
 
 
-  @include media-breakpoint-down(sm) {
+  @media (max-width: 575.98px) {
     .o_self_combo_confirmation, .o_self_combo_page_body {
       .o_self_product_image {
         max-width: 90px  !important;
@@ -34,7 +34,7 @@
   }
 
 
-  @include media-breakpoint-only(sm) {
+  @media (min-width: 576px) and (max-width: 767.98px) {
 
     .o_self_product_image {
       max-width: 200px;
@@ -48,7 +48,7 @@
 
   }
 
-  @include media-breakpoint-down(md) {
+  @media (max-width: 767.98px) {
 
        .combo_product_box {
         .btn-lg {
@@ -59,7 +59,7 @@
 
    }
 
-  @include media-breakpoint-up(md) {
+  @media (min-width: 768px) {
     .o_self_combo_products.small-item-nb {
       --gutter-y: 1rem;
       --gutter-x: 1rem;

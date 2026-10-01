@@ -10,7 +10,7 @@
 .o_res_partner_kanban_card {
     --Card__image-width: 36px;
 
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         &:not(:hover) .o_has_no_activity {
             opacity: 0;
         }

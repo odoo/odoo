@@ -681,7 +681,7 @@ $o-fe-color-active-background-color: var(--background-color) !default;
 .floor-kanban {
     grid-template-columns: repeat(3, 1fr);
 
-    @include media-breakpoint-up(sm) {
+    @media (min-width: 576px) {
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     }
 }

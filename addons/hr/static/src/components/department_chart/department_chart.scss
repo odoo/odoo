@@ -6,10 +6,10 @@
             }
         }
 
-        @include media-breakpoint-up(sm) {
+        @media screen and (min-width: 576px), print and (min-width: 100mm) {
             width: 50%;
         }
-        @include media-breakpoint-down(md) {
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             flex-grow: 1;
         }
     }

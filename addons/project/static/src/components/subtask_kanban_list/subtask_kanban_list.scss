@@ -6,7 +6,7 @@
     }
 
     .subtask_list_row {
-        @include media-breakpoint-up(sm) {
+        @media screen and (min-width: 576px), print and (min-width: 100mm) {
             .o_field_widget.o_field_many2many_tags_avatar .o_quick_assign {
                 visibility: hidden !important;
             }
@@ -14,7 +14,7 @@
     }
 
     .subtask_list_row:hover {
-        @include media-breakpoint-up(sm) {
+        @media screen and (min-width: 576px), print and (min-width: 100mm) {
             .o_field_widget.o_field_many2many_tags_avatar .o_quick_assign {
                 visibility: visible !important;
             }

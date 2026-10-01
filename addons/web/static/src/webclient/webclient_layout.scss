@@ -22,7 +22,7 @@
         flex-flow: column nowrap;
         overflow: hidden;
 
-        @include media-breakpoint-up(lg) {
+        @media screen and (min-width: 992px), print and (min-width: 190mm) {
           -ms-overflow-style: none; /* IE and Edge */
           scrollbar-width: none;    /* Firefox */
 
@@ -39,7 +39,7 @@
           height: 100%;
         }
 
-        @include media-breakpoint-down(md) {
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
           /* Made the o_action scroll instead of its o_content. */
           /* Except when the view wants to handle the scroll itself. */
           &:not(.o_action_delegate_scroll), .o_form_view_container {

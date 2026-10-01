@@ -29,7 +29,7 @@
     }
 }
 
-@include media-breakpoint-up(lg) {
+@media screen and (min-width: 992px), print and (min-width: 190mm) {
     .o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
         /* cancel the padding of the form_sheet when breakpoints are reached */
         margin-left: calc(var(--formView-sheet-padding-x) * -1);
@@ -55,7 +55,7 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
 .o_form_view.o_mass_mailing_mailing_form .o_form_renderer {
     /* Align the model / domain container with subject field in large devices */
     /* and provide better tap area to the filter */
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         .o_readonly_modifier.o_mailing_filter_readonly_width ,
         &.o_form_readonly .o_mailing_filter_readonly_width {
             max-width: 100%;
@@ -130,7 +130,7 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
                 &:hover {
                     color: rgb(1, 126, 132) !important;
                 }
-                @include media-breakpoint-down(sm) {
+                @media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
                     @include kanban-stats-button-style;
                 }
             }
@@ -143,7 +143,7 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
                 &.o_mailing_list_kanban_big_nb {
                     text-align: left;
                     font-size: 300%;
-                    @include media-breakpoint-up(sm) {
+                    @media screen and (min-width: 576px), print and (min-width: 100mm) {
                         text-align: right;
                     }
                     &:hover {
@@ -153,7 +153,7 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
             }
         }
         .o_dropdown_kanban {
-            @include media-breakpoint-up(lg) {
+            @media screen and (min-width: 992px), print and (min-width: 190mm) {
                 top: 50% !important;
                 transform: translateY(-50%) !important;
             }

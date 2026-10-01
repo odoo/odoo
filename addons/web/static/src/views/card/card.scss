@@ -114,7 +114,7 @@
             }
 
             > * {
-                @include media-breakpoint-up(md) {
+                @media screen and (min-width: 768px), print and (min-width: 188mm) {
                     height: calc(100% + var(--Card-padding-v)* 2);
                     margin-top: calc(var(--Card-padding-v)* -1);
                     margin-bottom: calc(var(--Card-padding-v)* -1);

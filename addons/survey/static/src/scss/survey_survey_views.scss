@@ -48,7 +48,7 @@
 
                 flex-direction: row-reverse;
 
-                @include media-breakpoint-down(lg) {
+                @media screen and (max-width: 991.98px), print and (max-width: 189.98mm) {
                     .progress {
                         display: none;
                     }
@@ -90,7 +90,7 @@
         .ribbon {
             --Ribbon-wrapper-width: 6rem;
 
-            @include media-breakpoint-down(md) {
+            @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
                 --Ribbon-wrapper-width: 6.5rem;
             }
         }
@@ -151,11 +151,11 @@
 .o_nocontent_help:has(.o_survey_load_sample) {
     max-width: unset;
 
-    @include media-breakpoint-up(sm) {
+    @media screen and (min-width: 576px), print and (min-width: 100mm) {
         max-width: 90%;
     }
 
-    @include media-breakpoint-up(lg) {
+    @media screen and (min-width: 992px), print and (min-width: 190mm) {
         max-width: 80%;
     }
 }

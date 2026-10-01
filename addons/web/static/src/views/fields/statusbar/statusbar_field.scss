@@ -1,6 +1,6 @@
 .o_field_statusbar {
     > .o_statusbar_status {
-        @include media-breakpoint-up(md) {
+        @media screen and (min-width: 768px), print and (min-width: 188mm) {
             border-radius: calc(var(--o-statusbar-radius) + var(--o-statusbar-padding));
             border: var(--border-width) solid $border-color;
             padding: var(--o-statusbar-padding);
@@ -37,7 +37,7 @@
             --#{$prefix}btn-focus-box-shadow: 0;
             --gradient: none;
 
-            @include media-breakpoint-up(md) {
+            @media screen and (min-width: 768px), print and (min-width: 188mm) {
                 --#{$prefix}btn-bg: transparent;
 
                 margin-left: calc(-1 * var(--o-statusbar-caret-width) - var(--o-statusbar-border-width) * sqrt(3));

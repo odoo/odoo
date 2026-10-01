@@ -2,7 +2,7 @@
   width: $pos-left-pane-width;
   min-width: $pos-left-pane-width;
 
-  @include media-breakpoint-down(xl) {
+  @media (max-width: 1199.98px) {
       width: $pos-left-pane-width-tablet;
       min-width: $pos-left-pane-width-tablet;
   }
@@ -25,7 +25,7 @@
     max-height: 50px;
     vertical-align: middle;
 
-    @include media-breakpoint-down(sm) {
+    @media (max-width: 575.98px) {
       max-width: 32px;
       max-height: 32px;
     }
@@ -35,7 +35,7 @@
   font-size: clamp(24px, 3vw, 64px);
 }
 
-@include media-breakpoint-down(md) {
+@media (max-width: 767.98px) {
     .paymentlines-empty .message {
         padding-bottom: var(--o-bs-spacer-3);
     }

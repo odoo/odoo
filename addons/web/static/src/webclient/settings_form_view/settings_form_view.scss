@@ -42,7 +42,7 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
 @mixin o-base-settings-horizontal-padding($padding-base: $input-btn-padding-y-sm) {
    padding: $padding-base var(--o-horizontal-padding);
 
-   @include media-breakpoint-up(xl) {
+   @media screen and (min-width: 1200px), print and (min-width: 220mm) {
        padding-left: calc(var(--o-horizontal-padding) * 2);;
    }
 }
@@ -153,7 +153,7 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
 
                .o_settings_container {
                    max-width: map-get($grid-breakpoints, lg); /* Provide a maximum container size to ensure readability */
-                   @include media-breakpoint-up(md) {
+                   @media screen and (min-width: 768px), print and (min-width: 188mm) {
                         @include o-base-settings-horizontal-padding(0);
                    }
                    margin-bottom: 24px;
@@ -199,7 +199,7 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
    }
 }
 
-@include media-breakpoint-down(md) {
+@media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
     .o_form_renderer .o_setting_left_pane .o_boolean_toggle.form-switch {
         padding-left: $form-switch-width;
     }
