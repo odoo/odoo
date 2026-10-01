@@ -225,31 +225,21 @@ export class TourPlugin extends Plugin {
 
         tour.steps.forEach((step) => this.validateStep(step));
 
-        if (tourConfig.mode === "auto") {
-            if (!odoo.loader.modules.get("@web_tour/tour_automatic/tour_automatic")) {
-                await loadBundle("web_tour.automatic", { css: false });
-            }
-            const { TourAutomatic } = odoo.loader.modules.get(
-                "@web_tour/tour_automatic/tour_automatic"
-            );
-            new TourAutomatic(tour).start();
-        } else {
-            await loadBundle("web_tour.interactive");
-            const { TourInteractive } = odoo.loader.modules.get(
-                "@web_tour/tour_interactive/tour_interactive"
-            );
-            new TourInteractive(tour, {
-                orm: this.orm,
-                effect: this.effect,
-                overlay: this.overlay,
-                onChainNextTour: (nextTour) =>
-                    this.startTour(nextTour.name, {
-                        mode: "manual",
-                        redirect: false,
-                        rainbowManMessage: nextTour.rainbowManMessage,
-                    }),
-            }).start(this.env);
+        if (!odoo.loader.modules.get("@web_tour/tour_engine/tour_engine")) {
+            await loadBundle("web_tour.engine", { css: false });
         }
+        const { TourEngine } = odoo.loader.modules.get("@web_tour/tour_engine/tour_engine");
+        new TourEngine(tour, {
+            orm: this.orm,
+            effect: this.effect,
+            overlay: this.overlay,
+            onChainNextTour: (nextTour) =>
+                this.startTour(nextTour.name, {
+                    mode: "manual",
+                    redirect: false,
+                    rainbowManMessage: nextTour.rainbowManMessage,
+                }),
+        }).start(this.env);
     }
 
     /**
@@ -266,6 +256,8 @@ export class TourPlugin extends Plugin {
      * automatically (using the same helpers as automatic tours) instead of waiting for a real
      * user interaction, while still resolving and displaying the tour pointer as it would for a
      * human. Useful to test that onboarding tours' pointer resolves correctly.
+     * @param {boolean} [options.pointer] - Whether to display the tour pointer. Defaults to
+     * true in "manual" mode and false in "auto" mode.
      */
     async startTour(name, options = {}) {
         this.recorder.removeTourRecorder();

@@ -26,7 +26,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
-import { TourInteractive } from "@web_tour/tour_interactive/tour_interactive";
+import { TourEngine } from "@web_tour/tour_engine/tour_engine";
 import { Tour, TourStep } from "./tour_models";
 
 describe.current.tags("desktop");
@@ -73,7 +73,7 @@ beforeEach(() => {
 });
 
 after(() => {
-    TourInteractive.observer.disconnect();
+    TourEngine.current?.stop();
 });
 
 defineModels([Tour, TourStep]);
@@ -275,8 +275,7 @@ test("pointer is added on top of overlay's stack", async () => {
     expect(`.o-overlay-item`).toHaveCount(2);
     // the pointer should be after the dialog
     expect(".o-overlay-item:eq(0) .modal").toHaveCount(1);
-    await animationFrame();
-    expect(".o-overlay-item:eq(1) .o_tour_pointer").toHaveCount(1);
+    await waitFor(".o-overlay-item:eq(1) .o_tour_pointer");
 
     await contains(".modal .a").click();
     await animationFrame();
