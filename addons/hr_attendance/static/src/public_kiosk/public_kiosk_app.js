@@ -150,27 +150,18 @@ class kioskAttendanceApp extends Component{
             return rpc(route, {...params})
         }
         this.ui.block();
-        return new Promise((resolve) => {
-            navigator.geolocation.getCurrentPosition(
-                async ({ coords: { latitude, longitude } }) => {
-                    const result = await rpc(route, {
-                        ...params,
-                        latitude,
-                        longitude,
-                    });
-                    resolve(result);
-                    this.ui.unblock();
-                },
-                async (err) => {
-                    const result = await rpc(route, {
-                        ...params
-                    });
-                    resolve(result);
-                    this.ui.unblock();
-                },
-                { enableHighAccuracy: true }
-            );
-        });
+        try {
+            const coords = await new Promise((resolve) => {
+                navigator.geolocation.getCurrentPosition(
+                    ({ coords: { latitude, longitude } }) => resolve({ latitude, longitude }),
+                    () => resolve({}),
+                    { enableHighAccuracy: true }
+                );
+            });
+            return await rpc(route, { ...params, ...coords });
+        } finally {
+            this.ui.unblock();
+        }
     }
 
     async onManualSelection(employeeId, enteredPin) {
