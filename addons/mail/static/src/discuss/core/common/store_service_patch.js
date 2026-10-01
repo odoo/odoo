@@ -1,4 +1,4 @@
-import { Store } from "@mail/core/common/store_service";
+import { Store } from "@mail/core/common/store_plugin";
 import { fields } from "@mail/model/misc";
 import { compareDatetime } from "@mail/utils/common/misc";
 

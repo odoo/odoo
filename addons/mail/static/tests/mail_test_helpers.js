@@ -50,7 +50,7 @@ import { WebClient } from "@web/webclient/webclient";
 export { SIZES } from "@web/core/ui/ui_utils";
 
 import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
-import { Store as StoreService } from "@mail/core/common/store_service";
+import { Store as StoreService } from "@mail/core/common/store_plugin";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
 import { authenticateGuest, DISCUSS_ACTION_ID } from "./mock_server/mail_mock_server";

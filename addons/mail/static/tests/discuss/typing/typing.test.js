@@ -15,7 +15,7 @@ import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
-import { Store } from "@mail/core/common/store_service";
+import { Store } from "@mail/core/common/store_plugin";
 import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
 import { rpc } from "@web/core/network/rpc";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";

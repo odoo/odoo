@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Store } from "@mail/core/common/store_service";
+import { Store } from "@mail/core/common/store_plugin";
 import { patch } from "@web/core/utils/patch";
 import { user } from "@web/core/user";
 

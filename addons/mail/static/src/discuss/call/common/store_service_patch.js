@@ -1,5 +1,5 @@
 import { fields } from "@mail/model/export";
-import { Store } from "@mail/core/common/store_service";
+import { Store } from "@mail/core/common/store_plugin";
 import { router } from "@web/core/browser/router";
 
 import { patch } from "@web/core/utils/patch";

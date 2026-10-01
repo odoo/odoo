@@ -10,7 +10,7 @@ export class AttachmentUploadService {
     setup(env, services) {
         this.env = env;
         this.fileUploadService = services["file_upload"];
-        /** @type {import("@mail/core/common/store_service").Store} */
+        /** @type {import("@mail/core/common/store_plugin").Store} */
         this.store = services["mail.store"];
         this.notificationService = services["notification"];
 

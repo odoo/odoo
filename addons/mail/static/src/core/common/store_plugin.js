@@ -3,7 +3,7 @@ import { formatLocalDateTime, resolveTimeZoneName } from "@mail/utils/common/dat
 import { attClassObjectToString, generateEmojisOnHtml } from "@mail/utils/common/format";
 import { nestedShallowEqual } from "@mail/utils/common/signal";
 
-import { proxy, shallowEqual, usePlugin } from "@odoo/owl";
+import { Plugin, proxy, shallowEqual, usePlugin } from "@odoo/owl";
 
 import { location } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
@@ -12,6 +12,7 @@ import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { user } from "@web/core/user";
 import { Mutex } from "@web/core/utils/concurrency";
 import { renderToElement } from "@web/core/utils/render";
@@ -19,6 +20,7 @@ import { debounce } from "@web/core/utils/timing";
 import { getOrigin } from "@web/core/utils/urls";
 import { session } from "@web/session";
 import { isMarkup, createDocumentFragmentFromContent } from "@web/core/utils/html";
+import { useEnv } from "@web/owl2/utils";
 
 const { DateTime } = luxon;
 
@@ -839,27 +841,59 @@ export class Store extends BaseStore {
 }
 Store.register();
 
-export const storeService = {
-    dependencies: ["bus_service", "im_status", "ui", "popover", "discuss.upgrade"],
+export class StorePlugin extends Plugin {
     /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {import("services").ServiceFactories} services
+     * The store still reads legacy services from `env.services` while it starts: start it after
+     * the legacy services (see `LegacyServiceStarterPlugin`).
+     */
+    static sequence = 110;
+
+    /**
+     * Consumers get the store itself, so that `usePlugin(StorePlugin)` can replace
+     * `useService("mail.store")` as is.
+     *
+     * @param {StorePlugin} self
      * @returns {import("models").Store}
      */
-    start(env, services) {
-        const store = makeStore(env);
-        store.insert(session.storeData);
+    static scoped(self) {
+        return self.store;
+    }
+
+    /** @private */
+    env = useEnv();
+    debugMode = usePlugin(DebugModePlugin);
+
+    setup() {
+        /** @type {import("models").Store} */
+        this.store = makeStore(this.env);
+        this.store.insert(session.storeData);
         /**
          * Add a default for `self` because in livechat there could be no user and no guest yet
          * (both undefined at init), but some parts of the code that loosely depend on this value
          * will still be executed immediately. Providing a dummy default is enough to avoid
          * crashes, the actual value being filled at livechat init when it is necessary.
          */
-        store.self_guest ??= { id: -1 };
-        const debugMode = usePlugin(DebugModePlugin);
-        store.debugMode = debugMode;
-        store.onStarted();
-        return store;
+        this.store.self_guest ??= { id: -1 };
+        this.store.debugMode = this.debugMode;
+        this.store.onStarted();
+    }
+}
+
+services.add(StorePlugin);
+
+/**
+ * -----------------------------------------------------------------------------
+ * @todo owl3 migration
+ * temporary - to remove when all use of the mail.store service are removed
+ * -----------------------------------------------------------------------------
+ */
+export const storeService = {
+    dependencies: ["bus_service", "im_status", "ui", "popover", "discuss.upgrade"],
+    /**
+     * @returns {import("models").Store}
+     */
+    start() {
+        return usePlugin(StorePlugin);
     },
 };
 

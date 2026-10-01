@@ -9,7 +9,7 @@ export class AutopopupService {
      * @param {import("@web/env").OdooEnv} env
      * @param {{
      * "im_livechat.livechat": import("@im_livechat/embed/common/livechat_service").LivechatService,
-     * "mail.store": import("@mail/core/common/store_service").Store,
+     * "mail.store": import("@mail/core/common/store_plugin").Store,
      * ui: import("@web/core/ui/ui_plugin").UIPlugin,
      * }} services
      */
