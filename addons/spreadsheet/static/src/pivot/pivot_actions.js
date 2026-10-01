@@ -11,13 +11,13 @@ const { getNumberOfPivotFunctions } = helpers;
  * @returns {Promise<void>}
  */
 export const SEE_RECORDS_PIVOT = async (position, env, newWindow) => {
-    position = env.model.getters.getEvaluatedCell(position).origin ?? position;
-    const pivotId = env.model.getters.getPivotIdFromPosition(position);
-    const pivot = env.model.getters.getPivot(pivotId);
+    position = env.model().getters.getEvaluatedCell(position).origin ?? position;
+    const pivotId = env.model().getters.getPivotIdFromPosition(position);
+    const pivot = env.model().getters.getPivot(pivotId);
     await pivot.load();
     const { model } = pivot.definition;
-    const { actionXmlId, context } = env.model.getters.getPivotCoreDefinition(pivotId);
-    const pivotCell = env.model.getters.getPivotCellFromPosition(position);
+    const { actionXmlId, context } = env.model().getters.getPivotCoreDefinition(pivotId);
+    const pivotCell = env.model().getters.getPivotCellFromPosition(position);
     const domain = pivot.getPivotCellDomain(pivotCell.domain);
     const name = await pivot.getModelLabel();
     await navigateTo(
@@ -88,8 +88,8 @@ export function SET_FILTER_MATCHING_CONDITION(position, getters) {
 }
 
 export function SET_FILTER_MATCHING(position, env) {
-    const pivotId = env.model.getters.getPivotIdFromPosition(position);
-    const domain = env.model.getters.getPivotCellFromPosition(position).domain;
-    const filters = env.model.getters.getFiltersMatchingPivotArgs(pivotId, domain);
-    env.model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters });
+    const pivotId = env.model().getters.getPivotIdFromPosition(position);
+    const domain = env.model().getters.getPivotCellFromPosition(position).domain;
+    const filters = env.model().getters.getFiltersMatchingPivotArgs(pivotId, domain);
+    env.model().dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters });
 }

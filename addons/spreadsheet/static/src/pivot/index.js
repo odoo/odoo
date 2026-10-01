@@ -31,12 +31,12 @@ cellMenuRegistry.add("pivot_see_records", {
     name: _t("See records"),
     sequence: 175,
     execute: async (env, isMiddleClick) => {
-        const position = env.model.getters.getActivePosition();
+        const position = env.model().getters.getActivePosition();
         await SEE_RECORDS_PIVOT(position, env, isMiddleClick);
     },
     isVisible: (env) => {
-        const position = env.model.getters.getActivePosition();
-        return SEE_RECORDS_PIVOT_VISIBLE(position, env.model.getters);
+        const position = env.model().getters.getActivePosition();
+        return SEE_RECORDS_PIVOT_VISIBLE(position, env.model().getters);
     },
     icon: "o-spreadsheet-Icon.SEE_RECORDS",
     isEnabledOnLockedSheet: true,
