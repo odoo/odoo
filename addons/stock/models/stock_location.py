@@ -338,7 +338,7 @@ class StockLocation(models.Model):
                         ('state', 'not in', ['draft', 'cancel', 'done']),
                     ], ['location_dest_id'], ['result_package_id:count_distinct'])
                     quant_data = self.env['stock.quant']._read_group([
-                        ('package_id.package_type_id', '=', package_type.id),
+                        ('package_type_id', '=', package_type.id),
                         ('location_id', 'in', locations.ids),
                     ], ['location_id'], ['package_id:count_distinct'])
                     qty_by_location.update({location_dest.id: count for location_dest, count in move_line_data})

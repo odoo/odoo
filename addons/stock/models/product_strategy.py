@@ -161,7 +161,7 @@ class StockPutawayRule(models.Model):
                 if location in checked_locations:
                     continue
                 if package_type:
-                    if location.quant_ids.filtered(lambda q: q.package_id and q.package_id.package_type_id == package_type):
+                    if location.quant_ids.filtered(lambda q: q.package_type_id == package_type):
                         if location._check_can_be_used(product, quantity, package=package, location_qty=qty_by_location[location.id]):
                             return location
                         else:

@@ -73,6 +73,7 @@ class StockQuant(models.Model):
         'stock.package', 'Package',
         domain="['|', ('location_id', '=', location_id), '&', ('location_id', '=', False), ('quant_ids', '=', False)]",
         help='The package containing this quant', ondelete='restrict', check_company=True, index=True)
+    package_type_id = fields.Many2one('stock.package.type', related='package_id.package_type_id')
     owner_id = fields.Many2one(
         'res.partner', 'Owner',
         help='This is the owner of the quant', check_company=True,
