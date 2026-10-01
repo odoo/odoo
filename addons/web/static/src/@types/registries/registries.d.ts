@@ -1,6 +1,5 @@
 declare module "registries" {
     import { Component } from "@odoo/owl";
-    import { OdooEnv } from "@web/env";
     import { Interaction } from "@web/public/interaction";
     import { Compiler } from "@web/views/view_compiler";
     import { ActionDescription, ActionOptions } from "@web/webclient/actions/action_plugin";
@@ -70,7 +69,7 @@ declare module "registries" {
         isDisplayed?(): boolean;
     }
 
-    export type IrActionsReportHandlers = (action: ActionRequest, options: ActionOptions, env: OdooEnv) => (void | boolean | Promise<void | boolean>);
+    export type IrActionsReportHandlers = (action: ActionRequest, options: ActionOptions) => (void | boolean | Promise<void | boolean>);
 
     export type InteractionRegistryItemShape = typeof Interaction;
 

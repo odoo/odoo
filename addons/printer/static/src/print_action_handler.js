@@ -1,5 +1,8 @@
-import { registry } from "@web/core/registry";
+import { usePlugin, useScope } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
 const base64Decode = (base64) => {
   const binary = atob(base64);
@@ -65,7 +68,9 @@ async function ePosPrint(ip, report) {
     }
 }
 
-export async function printJobs(printer, jobs, { notification }) {
+export async function printJobs(printer, jobs) {
+    const notification = usePlugin(NotificationPlugin);
+
     jobs = [...jobs]; // copy to allow using the same array for multiple printers
     // print jobs one by one and retry if the printers is waiting for the user to eject the paper
     while (jobs.length > 0) {
@@ -99,11 +104,13 @@ export async function printJobs(printer, jobs, { notification }) {
 }
 
 const printerTypeRegistry = registry.category("printer.type.handlers");
-printerTypeRegistry.add("epos", (printer, _duplex, jobs, services) => printJobs(printer, jobs, services));
-printerTypeRegistry.add("zpl", (printer, _duplex, jobs, services) => printJobs(printer, jobs, services));
+printerTypeRegistry.add("epos", (printer, _duplex, jobs) => printJobs(printer, jobs));
+printerTypeRegistry.add("zpl", (printer, _duplex, jobs) => printJobs(printer, jobs));
 
-async function printActionHandler(action, options, { services }) {
-    const printersCache = services.report_printers_cache;
+async function printActionHandler(action, options) {
+    const scope = useScope();
+
+    const printersCache = useService("report_printers_cache");
     const { report_id, jobs } = action.context;
     if (!jobs?.length) {
         return false;
@@ -117,7 +124,9 @@ async function printActionHandler(action, options, { services }) {
 
     for (const printer of printerSettings.selectedPrinters) {
         const handler = printerTypeRegistry.get(printer.type);
-        await handler?.(printer, printerSettings.duplex, jobs, services);
+        if (handler) {
+            await scope.run(handler, printer, printerSettings.duplex, jobs);
+        }
     }
     options.onClose?.();
     return true;
