@@ -17,7 +17,7 @@
                 </t>
             </div>
         </td>
-        <td class="text-end" name="quantity">
+        <td class="text-end" name="quantity"  t-attf-class="{{ this.data.route_alert ? 'text-danger' : '' }}">
             <t t-if="this.data.type == 'operation'" t-out="this.formatFloatTime(this.data.quantity, {'unit': 'minutes', 'showSeconds': true})"/>
             <t t-else="" t-out="this.formatFloat(this.data.quantity, {'digits': [false, this.precision]})"/>
         </td>
@@ -44,11 +44,13 @@
         </td>
         <td t-if="this.forecastMode">
             <div t-if="this.data.route_name &amp;&amp; this.data.route_detail">
-                <span t-attf-class="{{ this.data.route_alert ? 'text-danger' : '' }}"><t t-out="this.data.route_name"/>: </span>
+                <span><t t-out="this.data.route_name"/>: </span>
                 <a href="#" t-on-click.prevent="() => this.goToRoute(this.data.route_type)" t-out="this.data.route_detail"/>
             </div>
         </td>
-        <td t-attf-class="text-end {{ this.data.type == 'component' ? 'opacity-50' : '' }}" t-attf-colspan="{{ this.forecastMode ? 1 : 2 }}" t-out="this.formatMonetary(this.data.bom_cost)"/>
+        <td t-attf-class="text-end {{ this.data.type == 'component' ? 'opacity-50' : '' }} {{ this.data.route_alert ? 'text-danger' : '' }}"
+            t-attf-colspan="{{ this.forecastMode ? 1 : 2 }}"
+            t-out="this.formatMonetary(this.data.bom_cost)"/>
         <td t-if="this.showAttachments" class="text-center">
             <span t-if="this.data.has_attachments">
                 <a href="#" role="button" t-on-click.prevent="this.goToAttachment" class="o_button_icon oi oi-fw" data-icon="content_copy"/>

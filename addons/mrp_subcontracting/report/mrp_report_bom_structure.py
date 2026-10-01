@@ -46,6 +46,10 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 seller_info = bom.product_tmpl_id.seller_ids.filtered(lambda s: s.partner_id in bom.subcontractor_ids)[:1]._get_seller_info()
             elif bom.type == 'subcontract':
                 seller_info = res['product']._select_seller(quantity=res['quantity'], uom_id=bom.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
+                if not seller_info:
+                    # If no vendor found for the right quantity, we still want to display the vendor in red
+                    seller_info = res['product']._select_seller(quantity=None, uom_id=bom.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
+                    res['not_enough_qty'] = True
             if seller_info:
                 res['subcontracting'] = self._get_subcontracting_line(bom, seller_info, level + 1, res['quantity'])
                 if not self.env.context.get('minimized', False):

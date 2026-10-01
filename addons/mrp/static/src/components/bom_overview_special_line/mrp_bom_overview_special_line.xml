@@ -12,7 +12,7 @@
                 <t t-elif="this.props.type == 'byproducts'">By-Products</t>
             </span>
         </td>
-        <td name="quantity" class="text-end">
+        <td name="quantity" class="text-end" t-att-class="this.data.not_enough_qty ? 'text-danger' : ''">
             <span t-if="this.props.type == 'operations'" t-out="this.formatFloatTime(this.data.operations_time, {'unit': 'minutes', 'showSeconds': true})"/>
             <span t-elif="this.props.type == 'byproducts'" t-out="this.formatFloat(this.data.byproducts_total, {'digits': [false, this.precision]})"/>
         </td>
@@ -21,7 +21,7 @@
         <td name="status" t-if="this.forecastMode"/>
         <td name="lead_time" t-if="this.forecastMode"/>
         <td name="route" t-if="this.forecastMode"/>
-        <td name="bom_cost" class="text-end" t-attf-colspan="{{ this.forecastMode ? 1 : 2 }}">
+        <td name="bom_cost" class="text-end" t-attf-colspan="{{ this.forecastMode ? 1 : 2 }}" t-att-class="this.data.not_enough_qty ? 'text-danger' : ''">
             <span t-if="this.props.type == 'operations'" t-out="this.formatMonetary(this.data.operations_cost)"/>
             <span t-elif="this.props.type == 'byproducts'" t-out="this.formatMonetary(this.data.byproducts_cost)"/>
         </td>
