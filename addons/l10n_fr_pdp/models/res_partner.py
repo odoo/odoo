@@ -1,8 +1,9 @@
 import logging
 import re
-import requests
-
 from urllib import parse
+
+import requests
+from stdnum.fr import siren, siret
 
 from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -87,6 +88,10 @@ class ResPartner(models.Model):
         edi_mode = self.env.company._get_peppol_edi_mode()
         if edi_mode in ('test', 'demo') and key in ('FR_SIRET', 'FR_SIREN', 'FR_CTC'):
             value = normalize_identifier(value)
+            if value and key in ('FR_SIRET', 'FR_SIREN'):
+                compacted = (siret if key == 'FR_SIRET' else siren).compact(value)
+                if compacted.isascii() and compacted.isdigit():
+                    value = compacted
             return {'valid': True, 'value': value, 'key': key}
         return super()._validate_identifier(key, value, validation)
 
