@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_account_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='tag_ids']" position="after">
-                <field name="is_vehicle_account" invisible="account_type not in ['asset_fixed', 'expense', 'expense_depreciation']"/>
+                <field name="is_vehicle_account" invisible="account_type not in ['asset_fixed', 'expense', 'expense_depreciation', 'expense_other', 'income_other']"/>
             </xpath>
         </field>
     </record>
