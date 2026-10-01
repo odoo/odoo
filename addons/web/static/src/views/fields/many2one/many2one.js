@@ -125,7 +125,7 @@ export class Many2One extends Component {
                 fieldString: this.props.string,
                 isToMany: false,
                 onClose: () => {
-                    this.input.focus();
+                    this.input?.focus();
                 },
                 onRecordSaved: this.props.onRecordSaved,
                 onRecordDiscarded: () => {},
