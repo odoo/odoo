@@ -109,10 +109,17 @@ class CalendarEvent(models.Model):
         # for a recurrent event, we do not create events separately but we directly
         # create the recurrency from the corresponding calendar.recurrence.
         # That's why, events from a recurrency have their `need_sync_m` attribute set to False.
-        return super(CalendarEvent, self.with_context(dont_notify=notify_context)).create([
+        events = super(CalendarEvent, self.with_context(dont_notify=notify_context)).create([
             dict(vals, need_sync_m=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
+
+        if any(not event.recurrency for event in events):
+            cron = self.env.ref('microsoft_calendar.ir_cron_sync_light_cals', raise_if_not_found=False)
+            if cron:
+                cron._trigger()
+
+        return events
 
     def _check_organizer_validation(self, sender_user, partner_included):
         """ Check if the proposed event organizer can be set accordingly. """

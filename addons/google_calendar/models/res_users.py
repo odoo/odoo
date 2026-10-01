@@ -92,6 +92,13 @@ class ResUsers(models.Model):
         calendars_to_sync._sync_calendars_odoo2google(calendar_service)
         return new_calendars
 
+    @api.model
+    def _sync_light_google_calendar(self):
+        users_to_sync = self.sudo().search([('google_calendar_rtoken', '!=', False)])
+        for user in users_to_sync:
+            if user._get_google_sync_status() == "sync_active":
+                user.with_user(user)._sync_light_google_events()
+
     def _sync_google_events(self, calendar_service: GoogleCalendarService):
         self.ensure_one()
         need_refresh = False
@@ -179,6 +186,20 @@ class ResUsers(models.Model):
                 need_refresh = True
 
         return need_refresh
+
+    def _sync_light_google_events(self):
+        self.ensure_one()
+        domain = [
+            ('recurrency', '=', False),
+            ('need_sync', '=', True),
+            '|',
+            ('user_id', '=', self.id),
+            ('partner_ids', 'in', self.partner_id.id),
+        ]
+        events_to_sync = self.env['calendar.event'].search(domain)
+        if events_to_sync:
+            google_service = GoogleCalendarService(self.env['google.service'])
+            events_to_sync.with_context(google_sync_light=True)._sync_odoo2google(google_service)
 
     def _sync_google_calendar_filter_remote_events(self, google_events):
         """Filter out events coming from google which should not be synced into odoo."""
