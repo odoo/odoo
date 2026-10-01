@@ -410,6 +410,32 @@ class TestPermissions(TransactionCaseWithUserDemo):
         self.assertNotEqual(SUPERUSER_ID, admin_user.id)
         attachment_admin.with_user(admin_user).raw
 
+    def test_search_without_res_model(self):
+        """A search without res_model returns the attachments the user may read,
+        including the ones granted by an extra access rule."""
+        Admin = self.Attachments.with_user(SUPERUSER_ID)
+        own = self.Attachments.create({'name': 'search_own'})
+        public = Admin.create({'name': 'search_public', 'public': True})
+        Admin.create({'name': 'search_foreign'})
+        token = Admin.create({'name': 'search_token', 'access_token': 'search-token'})
+        linked = Admin.create({'name': 'search_linked', 'res_model': self.attachment._name, 'res_id': self.attachment.id})
+        domain = [('name', '=like', 'search_%')]
+        readable = (own + public + linked).sorted('id')
+
+        self.assertEqual(self.Attachments.search(domain, order='id'), readable)
+        self.assertEqual(self.Attachments.search_count(domain), 3)
+        self.assertEqual(self.Attachments.search(domain, order='id', offset=1), readable[1:])
+        self.assertEqual(self.Attachments.search(domain, order='id', limit=2), readable[:2])
+
+        self.env['ir.access'].sudo().create({
+            'name': 'read attachments with a token',
+            'model_id': self.env['ir.model']._get_id('ir.attachment'),
+            'group_id': self.env.ref('base.group_user').id,
+            'operation': 'r',
+            'domain': "[('access_token', '!=', False)]",
+        })
+        self.assertEqual(self.Attachments.search(domain, order='id'), (readable + token).sorted('id'))
+
     @mute_logger("odoo.addons.base.models.ir_access", "odoo.models")
     def test_field_read_permission(self):
         """If the record field can't be read,

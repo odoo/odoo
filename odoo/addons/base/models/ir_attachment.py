@@ -678,10 +678,11 @@ class IrAttachment(models.Model):
         self.fetch(SECURITY_FIELDS)  # fetch only these fields
         user_model = self.sudo(False)
         forbidden_ids = set()
+        is_system = user_model.env.is_system()
         for attachment in self:
             att_id = attachment.id
             res_model, res_id = attachment.res_model, attachment.res_id
-            if not user_model.env.is_system():
+            if not is_system:
                 if not res_id and attachment.create_uid.id != self.env.uid:
                     forbidden_ids.add(att_id)
                     continue
@@ -819,6 +820,21 @@ class IrAttachment(models.Model):
             raise ValueError("Cannot generate SQL for whole ir.attachment")
         if 0 < len(condition_values(self, 'res_model', domain) or ()) <= MAX_COMODELS_FOR_DOMAIN:
             return super()._search(domain, offset, limit, order, active_test=active_test, bypass_access=bypass_access)
+
+        # Filter in SQL with the read access domain, where res_access_* keep
+        # the attachments they may accept and conditions SQL cannot express
+        # keep every attachment. The check in Python drops the rest.
+        def to_sql(cond):
+            if cond.field_expr in ('res_access_read', 'res_access_write'):
+                if cond.operator == 'in' and set(cond.value) == {True} and not self.env.is_system():
+                    # a linked record, or no record and created by the user
+                    return Domain('res_id', '!=', False) | Domain('create_uid', '=', self.env.uid)
+                return Domain.TRUE
+            if not cond._field(self)._description_searchable:
+                return Domain.TRUE
+            return cond
+
+        domain &= self._access_domain('read').optimize(self).map_conditions(to_sql)
 
         self_sudo = self.sudo().with_context(active_test=False)
         ordered = bool(order)
