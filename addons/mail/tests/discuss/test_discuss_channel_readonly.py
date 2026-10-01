@@ -195,3 +195,18 @@ class TestDiscussChannelReadonly(MailCommon, HttpCase):
             )
         )
         self.assertEqual(message.body, Markup("<p>Message created by admin</p>"))
+
+    def test_readonly_channel_only_admin_can_edit_info(self):
+        channel_as_user = self.test_channel.with_user(self.test_user)
+        for vals in ({"name": "New Name"}, {"description": "New Description"}, {"image_128": False}):
+            with self.subTest(vals=vals), self.assertRaises(UserError):
+                channel_as_user.write(vals)
+        with self.assertRaises(UserError):
+            channel_as_user.channel_rename("New Name")
+        with self.assertRaises(UserError):
+            channel_as_user.channel_change_description("New Description")
+        self.test_channel.with_user(self.user_employee).write(
+            {"name": "Admin Name", "description": "Admin Description"},
+        )
+        self.assertEqual(self.test_channel.name, "Admin Name")
+        self.assertEqual(self.test_channel.description, "Admin Description")
