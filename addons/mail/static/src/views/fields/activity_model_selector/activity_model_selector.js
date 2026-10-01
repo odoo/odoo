@@ -18,8 +18,12 @@ const getAvailableResModels = memoize((_null, orm) =>
     orm.call("mail.activity.schedule", "get_model_options")
 );
 
+class AlwaysEditableModelSelector extends ModelSelector {
+    static template = "mail.ActivityModelSelector.ModelSelector";
+}
+
 class ActivityModelSelector extends Component {
-    static components = { ModelSelector };
+    static components = { ModelSelector: AlwaysEditableModelSelector };
     static template = "mail.ActivityModelSelector";
     static props = standardFieldProps;
 
