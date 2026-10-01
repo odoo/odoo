@@ -529,7 +529,7 @@ def _set_session_and_dbname(request: Request) -> None:
     session.is_dirty = False
     request.session = session
     request.db = dbname
-    threading.current_thread().sess_id = request.session.sid[:8]
+    threading.current_thread().req_ident = ('session', request.session.sid[:8])
 
 
 def _set_request_dispatcher(request: Request, rule: werkzeug.routing.Rule):
