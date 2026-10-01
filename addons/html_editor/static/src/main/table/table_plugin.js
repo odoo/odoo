@@ -20,6 +20,7 @@ import {
     descendants,
     firstLeaf,
     lastLeaf,
+    selectElements,
 } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, leftPos, rightPos, nodeSize } from "@html_editor/utils/position";
@@ -348,7 +349,7 @@ export class TablePlugin extends Plugin {
      * @returns {HTMLElement | DocumentFragment}
      */
     normalizeTable(root) {
-        for (const table of root.querySelectorAll("table")) {
+        for (const table of selectElements(root, "table")) {
             this.wrapTable(table);
         }
         return root;
@@ -602,7 +603,7 @@ export class TablePlugin extends Plugin {
      * @returns {HTMLElement | DocumentFragment}
      */
     adaptTables(root) {
-        for (const table of root.querySelectorAll("table")) {
+        for (const table of selectElements(root, "table")) {
             this.fillMissingCells(table);
             let tbody = table.tBodies[0];
             const thead = table.tHead;

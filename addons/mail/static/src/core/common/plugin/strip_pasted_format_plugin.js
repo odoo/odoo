@@ -28,17 +28,17 @@ export class StripPastedFormatPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         // Paste and drop both end up inserting through the dom plugin.
-        before_insert_processors: (container) => {
-            for (const el of container.querySelectorAll(`${FORMAT_SELECTOR}, ${LINK_SELECTOR}`)) {
+        fragment_to_insert_processors: (fragment) => {
+            for (const el of fragment.querySelectorAll(`${FORMAT_SELECTOR}, ${LINK_SELECTOR}`)) {
                 unwrapContents(el);
             }
-            for (const list of container.querySelectorAll(LIST_SELECTOR)) {
+            for (const list of fragment.querySelectorAll(LIST_SELECTOR)) {
                 // Nested lists are flattened along with their outermost list.
-                if (container.contains(list)) {
+                if (fragment.contains(list)) {
                     this.replaceListByLines(list);
                 }
             }
-            return container;
+            return fragment;
         },
     };
 
