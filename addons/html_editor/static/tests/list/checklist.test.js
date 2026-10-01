@@ -414,7 +414,7 @@ test("should uncheck all nested checklist items and update wrapper title", async
 
 test("should preserve list type on paste", async () => {
     await testEditor({
-        contentBefore: unformat(`<div></div>`),
+        contentBefore: unformat(`<div>[]</div>`),
         stepFunction: async (editor) => {
             pasteHtml(
                 editor,
@@ -422,7 +422,7 @@ test("should preserve list type on paste", async () => {
             );
         },
         contentAfter: unformat(
-            `<ul><li>a</li></ul><ul class="o_checklist"><li>b</li><li>c</li><li>d[]</li></ul><div><br></div>`
+            `<ul><li>a</li></ul><ul class="o_checklist"><li>b</li><li>c</li><li>d[]</li></ul>`
         ),
     });
 });

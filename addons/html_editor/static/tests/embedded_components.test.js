@@ -391,7 +391,6 @@ describe("Mount and Destroy embedded components", () => {
         for (const index of indexOrder) {
             embeddedComponentPlugin.mountComponent(...orderedMountInfos[index]);
         }
-        await animationFrame();
         // Validate the commit, but the mounting process already started.
         editor.shared.history.commit();
         await animationFrame();
@@ -427,7 +426,7 @@ describe("Mount and Destroy embedded components", () => {
                                         </div>
                                     </div>
                                 </div>
-                                <p data-selection-placeholder="" class="o-horizontal-caret"><br></p>
+                                <p data-selection-placeholder=""><br></p>
                             </div>
                         </div>
                     </div>
@@ -1156,7 +1155,7 @@ describe("editable descendants", () => {
                             <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                                 <div class="deep">
                                     <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
-                                        <p>deep</p>
+                                        <p>deep[]</p>
                                     </div>
                                 </div>
                             </div>
@@ -1164,7 +1163,7 @@ describe("editable descendants", () => {
                         </div>
                     </div>
                 </div>
-                <p>[]after</p>
+                <p>after</p>
             `)
         );
         undo(editor);
