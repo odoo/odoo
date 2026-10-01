@@ -343,6 +343,6 @@ function _convertImageColumn(columnEl) {
     const textNodeEls = [...columnEl.childNodes].filter(el => el.nodeType === Node.TEXT_NODE);
     textNodeEls.forEach(el => el.remove());
     const imageEl = columnEl.querySelector('img');
-    columnEl.classList.add('o_grid_item_image');
+    columnEl.classList.add('o_grid_item_image', 'o_grid_item_image_contain');
     imageEl.style.removeProperty('width');
 }
