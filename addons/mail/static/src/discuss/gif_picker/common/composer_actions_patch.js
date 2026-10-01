@@ -23,9 +23,9 @@ registerComposerAction("add-gif", {
         const anchorEl = pickerGetAnchor(...args);
         this.popover?.open(anchorEl, this.actionPanelComponentProps);
     },
-    condition: ({ composer, owner, store }) =>
+    condition: ({ ancestors, composer, store }) =>
         (store.hasGifPickerFeature || store.self_user?.is_admin) &&
-        !owner.env.inChatter &&
+        !ancestors.inChatter &&
         !composer.message,
     icon: "gif_box",
     name: _t("Send GIF"),
@@ -41,6 +41,6 @@ registerComposerAction("add-gif", {
             onClose: () => this.actionPanelClose(),
         });
     },
-    sequence: ({ owner }) => (!owner.env.inDiscussApp ? 40 : undefined),
-    sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 15 : undefined),
+    sequence: ({ ancestors }) => (!ancestors.inDiscussApp ? 40 : undefined),
+    sequenceQuick: ({ ancestors }) => (ancestors.inDiscussApp ? 15 : undefined),
 });

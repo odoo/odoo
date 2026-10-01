@@ -1,6 +1,7 @@
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { propComputed } from "@mail/utils/common/hooks";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { Component, t, useProps } from "@odoo/owl";
 
@@ -20,6 +21,7 @@ export class SubChannelPreview extends Component {
 
     setup() {
         super.setup(...arguments);
+        this.ancestors = useAncestors();
         this.store = useService("mail.store");
         this.channel = propComputed("channel", t.instanceOf(this.store["discuss.channel"]));
         this.class = propComputed("class", t.string().optional());

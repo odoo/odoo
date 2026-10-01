@@ -1,4 +1,3 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { Action, ACTION_TAGS } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import {
@@ -9,6 +8,7 @@ import {
 } from "@mail/discuss/call/common/call_actions";
 import { getCallActionComponent } from "@mail/discuss/call/common/call_action_list";
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { Component, computed, proxy, signal, types, useProps } from "@odoo/owl";
 
@@ -36,7 +36,7 @@ export class CallInvitation extends Component {
             hasCamera: false,
             hasMicrophone: this.rtc.microphonePermission === "granted",
         });
-        useSubEnv({ inDiscussCallTheme: true });
+        useAncestors({ inDiscussCallTheme: true });
     }
 
     /** @type {import("@mail/core/common/action_list").GetActionComponent} */

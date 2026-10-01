@@ -30,7 +30,7 @@ registerThreadAction("camera-call", {
             fullscreen: !store.inPublicPage,
         }),
     sequence: 5,
-    sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 25 : 35),
+    sequenceQuick: ({ ancestors }) => (ancestors.inDiscussApp ? 25 : 35),
     tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
 });
 registerThreadAction("call-settings", {

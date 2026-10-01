@@ -1,9 +1,11 @@
-import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
 import { useChildRefs, useMessageSelection, useVisible } from "@mail/utils/common/hooks";
 import { incrementFn } from "@mail/utils/common/signal";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
+import { assignGetter } from "@mail/utils/common/misc";
 
 import {
     Component,
@@ -48,6 +50,12 @@ export class Thread extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors({
+            inThread: assignGetter(
+                { onImageLoaded: () => this.applyScroll() },
+                { thread: () => this.props.thread }
+            ),
+        });
         this.escape = escape;
         this.applyScroll = this.applyScroll.bind(this);
         this.saveScroll = this.saveScroll.bind(this);
@@ -194,7 +202,7 @@ export class Thread extends Component {
             () => [this.state.mountedAndLoaded]
         );
         onMounted(() => {
-            if (!this.env.inChatter) {
+            if (!this.ancestors.inChatter) {
                 this.fetchInitialMessages();
             }
         });
@@ -250,7 +258,7 @@ export class Thread extends Component {
             () => [this.props.thread],
             (thread) => {
                 this.lastJumpPresent = this.props.jumpPresent;
-                if (!this.env.inChatter) {
+                if (!this.ancestors.inChatter) {
                     thread.fetchNewMessages();
                 }
             },
@@ -264,8 +272,8 @@ export class Thread extends Component {
 
     get startMessageAvatarAttClass() {
         return {
-            "o-mail-Thread-avatarChatWindow mt-1": this.env.inChatWindow,
-            "mt-2": !this.env.inChatWindow,
+            "o-mail-Thread-avatarChatWindow mt-1": this.ancestors.inChatWindow,
+            "mt-2": !this.ancestors.inChatWindow,
         };
     }
 
@@ -281,11 +289,11 @@ export class Thread extends Component {
         const pt = parseInt(computedStyle.getPropertyValue("padding-top"));
         const pb = parseInt(computedStyle.getPropertyValue("padding-bottom"));
         this.jumpPresentRef().style.transform = `translate(${
-            this.env.inChatter ? 22 : width - ps - pe - 22
+            this.ancestors.inChatter ? 22 : width - ps - pe - 22
         }px, ${
-            this.env.inChatter && !this.env.inChatter.aside
+            this.ancestors.inChatter && !this.ancestors.inChatter.aside
                 ? -22
-                : height - pt - pb - (this.env.inChatter?.aside ? 75 : 0)
+                : height - pt - pb - (this.ancestors.inChatter?.aside ? 75 : 0)
         }px)`;
     }
 
@@ -376,10 +384,6 @@ export class Thread extends Component {
         });
         onMounted(this.applyScroll);
         onPatched(this.applyScroll);
-        useSubEnv({
-            getCurrentThread: () => this.props.thread,
-            onImageLoaded: this.applyScroll,
-        });
         const observer = new ResizeObserver(() => {
             this.computeJumpPresentPosition();
             this.applyScroll();
@@ -628,7 +632,7 @@ export class Thread extends Component {
     }
 
     isSquashed(msg, prevMsg) {
-        if (!prevMsg || prevMsg.message_type === "notification" || this.env.inChatter) {
+        if (!prevMsg || prevMsg.message_type === "notification" || this.ancestors.inChatter) {
             return false;
         }
 

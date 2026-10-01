@@ -2,6 +2,7 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
 import { useDiscussSystray } from "@mail/utils/common/hooks";
 import { incrementFn } from "@mail/utils/common/signal";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { Component, computed, signal, useEffect } from "@odoo/owl";
 
@@ -17,6 +18,7 @@ export class MessagingMenuInDropdown extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.dropdown = useDropdownState();
         this.discussSystray = useDiscussSystray(this.dropdown);
         this.store = useService("mail.store");

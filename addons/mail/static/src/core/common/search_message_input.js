@@ -1,6 +1,7 @@
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 import { Component, t, useListener, useProps } from "@odoo/owl";
 import { SearchInput } from "@mail/core/common/search_input";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
@@ -32,6 +33,7 @@ export class SearchMessageInput extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.store = useService("mail.store");
         this.MESSAGE_SEARCH_FILTERS = MESSAGE_SEARCH_FILTERS;
         this.props = useProps({

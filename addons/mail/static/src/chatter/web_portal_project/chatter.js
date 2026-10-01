@@ -2,6 +2,7 @@ import { useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { propComputed, useMessageScrolling } from "@mail/utils/common/hooks";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { Component, onMounted, proxy, signal, t, useOnChange } from "@odoo/owl";
 
@@ -34,6 +35,7 @@ export class Chatter extends Component {
              */
             thread: undefined,
         });
+        this.ancestors = useAncestors({ inChatter: this.chatterAncestor });
         this.messageHighlight = useMessageScrolling({
             thread: () => this.state.thread,
             messageFetchRouteParams: () => this.messageFetchRouteParams,
@@ -42,7 +44,10 @@ export class Chatter extends Component {
         this.rootRef = signal.ref(HTMLDivElement);
         this.topRef = signal.ref(HTMLDivElement);
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll.bind(this));
-        useSubEnv(this.subEnv);
+        useSubEnv({
+            messageFetchRouteParams: this.extraMessageFetchRouteParams,
+            messageHighlight: this.messageHighlight,
+        });
 
         onMounted(this._onMounted);
 
@@ -54,9 +59,10 @@ export class Chatter extends Component {
         useOnChange(
             () => [this.state.thread],
             (thread) => {
-                if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
-                    if (this.env.chatter) {
-                        this.env.chatter.fetchThreadData = false;
+                const formController = this.ancestors.inFormController;
+                if (!formController || formController.fetchThreadData) {
+                    if (formController) {
+                        formController.fetchThreadData = false;
                     }
                     this.load(thread, this.initialRequestList);
                 }
@@ -100,12 +106,9 @@ export class Chatter extends Component {
         return [];
     }
 
-    get subEnv() {
-        return {
-            inChatter: this.state,
-            messageFetchRouteParams: this.extraMessageFetchRouteParams,
-            messageHighlight: this.messageHighlight,
-        };
+    /** Exposed to the descendants as `ancestors.inChatter`, @see useAncestors */
+    get chatterAncestor() {
+        return this.state;
     }
 
     changeThread(threadModel, threadId) {
@@ -159,9 +162,10 @@ export class Chatter extends Component {
 
     _onMounted() {
         this.changeThread(this.threadModel(), this.threadId());
-        if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
-            if (this.env.chatter) {
-                this.env.chatter.fetchThreadData = false;
+        const formController = this.ancestors.inFormController;
+        if (!formController || formController.fetchThreadData) {
+            if (formController) {
+                formController.fetchThreadData = false;
             }
             this.load(this.state.thread, this.initialRequestList);
         }

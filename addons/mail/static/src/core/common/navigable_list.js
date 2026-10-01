@@ -1,7 +1,7 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { optionType } from "@mail/core/common/suggestion_hook";
 import { onExternalClick } from "@mail/utils/common/hooks";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
 import { Component, proxy, signal, t, useListener, useOnChange, useProps } from "@odoo/owl";
@@ -50,7 +50,7 @@ export class NavigableList extends Component {
             position: t.string().optional("bottom"),
             rememberPosition: t.boolean().optional(),
         });
-        useSubEnv({ inNavigableList: true });
+        useAncestors({ inNavigableList: true });
         this.state = proxy({
             activeIndex: null,
             open: false,

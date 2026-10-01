@@ -1,7 +1,7 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 import { useHover } from "@mail/utils/common/hooks";
-import { useSubEnv } from "@web/owl2/utils";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
 
@@ -22,6 +22,7 @@ export class NotificationItem extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors({ inNotificationItem: true });
         this.DateTime = DateTime;
         this.ui = useService("ui");
         this.store = useService("mail.store");
@@ -48,7 +49,6 @@ export class NotificationItem extends Component {
             thread: t.instanceOf(this.store["mail.thread"]).optional(),
         });
         this.rootHover = useHover(this.rootRef);
-        useSubEnv({ inNotificationItem: true });
     }
 
     get dateText() {
