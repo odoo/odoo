@@ -173,3 +173,52 @@ class TestSaleSections(SaleCommon):
             self.sections_sale_order.order_line[7]._get_section_totals("price_subtotal"),
             sum(self.sections_sale_order.order_line[8:].mapped("price_subtotal")),
         )
+
+    def test_section_qty_uom_defaults(self):
+        """Sections and subsections default to a quantity of 1 Unit, other lines have none."""
+        order = self.sections_sale_order
+        order.order_line = [Command.create({"name": "Note", "display_type": "line_note"})]
+        sections = order.order_line.filtered(
+            lambda line: line.display_type in ("line_section", "line_subsection")
+        )
+        self.assertRecordValues(
+            sections, [{"section_qty": 1.0, "section_uom_id": self.uom_unit.id}] * len(sections)
+        )
+        other_lines = order.order_line - sections
+        self.assertRecordValues(
+            other_lines, [{"section_qty": 0.0, "section_uom_id": False}] * len(other_lines)
+        )
+
+    def test_onchange_batch_order_lines(self):
+        """`onchange_batch` recomputes saved and unsaved order lines from their own changes."""
+        order = self.sections_sale_order
+        saved_line = order.order_line[2]  # Sec1-r1
+        fields_spec = {"product_uom_qty": {}, "price_subtotal": {}}
+
+        saved_result, new_result = self.env["sale.order.line"].onchange_batch(
+            [
+                {
+                    "id": saved_line.id,
+                    "virtual_id": False,
+                    "values": {"order_id": {"id": order.id}, "product_uom_qty": 3.0},
+                    "field_names": ["product_uom_qty"],
+                },
+                {
+                    "id": False,
+                    "virtual_id": "virtual_1",
+                    "values": {
+                        "order_id": {"id": order.id},
+                        "product_id": self.product.id,
+                        "product_uom_qty": 4.0,
+                    },
+                    "field_names": ["product_uom_qty"],
+                },
+            ],
+            fields_spec,
+        )
+
+        self.assertEqual((saved_result["id"], saved_result["virtual_id"]), (saved_line.id, False))
+        self.assertEqual(saved_result["result"]["value"]["price_subtotal"], 60.0)
+        self.assertEqual((new_result["id"], new_result["virtual_id"]), (False, "virtual_1"))
+        self.assertEqual(new_result["result"]["value"]["price_subtotal"], 80.0)
+        self.assertEqual(saved_line.product_uom_qty, 1.0, "Onchange shouldn't write on the line")
