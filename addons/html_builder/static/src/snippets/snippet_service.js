@@ -1,7 +1,6 @@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { memoize, uniqueId } from "@web/core/utils/functions";
-import { Reactive } from "@web/core/utils/reactive";
 import { AddSnippetDialog } from "./add_snippet_dialog";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
@@ -9,9 +8,8 @@ import { markup, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
-export class SnippetModel extends Reactive {
+export class SnippetModel {
     constructor(services, { snippetsName, context }) {
-        super();
         this.orm = services.orm;
         this.dialog = services.dialog;
         this.snippetsName = snippetsName;
@@ -26,6 +24,7 @@ export class SnippetModel extends Reactive {
             snippet_custom_content: [],
         };
         this.originalSnippets = {};
+        return proxy(this);
     }
 
     get hasCustomGroup() {

@@ -4,7 +4,6 @@ import { Component, computed, proxy, shallowEqual, signal, useScope } from "@odo
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
-import { Reactive } from "@web/core/utils/reactive";
 
 export const ACTION_TAGS = Object.freeze({
     DANGER: "DANGER",
@@ -689,7 +688,7 @@ export class Action {
  * @template ActionParams_T
  * @template Action_T
  */
-export class UseActions extends Reactive {
+export class UseActions {
     /** @type {Action_T} */
     ActionClass = Action;
     /** @type {Component} */
@@ -713,7 +712,7 @@ export class UseActions extends Reactive {
      * @param {Action_T[]} transformedActions
      */
     constructor(component, store, transformedActions) {
-        super();
+        const self = proxy(this);
         this.component = component;
         this.store = store;
         this.transformedActions = transformedActions;
@@ -721,10 +720,11 @@ export class UseActions extends Reactive {
         // only re-run when the visible set or order actually changes, and
         // otherwise keep a stable array identity so consumers do not
         // re-render for unrelated changes.
-        this.actionsComputed = computed(() => this._computeActions(), { equals: shallowEqual });
-        this.partitionComputed = computed(() => this._computePartition(), {
+        this.actionsComputed = computed(() => self._computeActions(), { equals: shallowEqual });
+        this.partitionComputed = computed(() => self._computePartition(), {
             equals: nestedShallowEqual,
         });
+        return self;
     }
 
     /**

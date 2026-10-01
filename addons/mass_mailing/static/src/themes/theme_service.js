@@ -1,9 +1,9 @@
+import { proxy } from "@odoo/owl";
 import { children } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { getInnerHtml } from "@mail/utils/common/html";
 import { registry } from "@web/core/registry";
 import { htmlTrim } from "@web/core/utils/html";
-import { Reactive } from "@web/core/utils/reactive";
 import { renderToMarkup } from "@web/core/utils/render";
 
 function hasDataOption(element, attribute) {
@@ -20,9 +20,8 @@ function getNameFromClass(className) {
     return match ? match[1] : undefined;
 }
 
-export class ThemeModel extends Reactive {
+export class ThemeModel {
     constructor(services) {
-        super();
         this.orm = services.orm;
         this.loadedAssets = new Set();
         // Shared themes written by Odoo
@@ -30,6 +29,7 @@ export class ThemeModel extends Reactive {
         // Blank slate themes (text-only or empty)
         this.simpleThemes = new Map();
         this.loadingPromise = Promise.withResolvers();
+        return proxy(this);
     }
 
     computeThemesTemplates(themesEl) {

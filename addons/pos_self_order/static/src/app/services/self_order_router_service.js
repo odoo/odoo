@@ -1,13 +1,13 @@
 import { registry } from "@web/core/registry";
-import { Reactive } from "@web/core/utils/reactive";
 import { location } from "@web/core/browser/browser";
+import { proxy } from "@odoo/owl";
 
-export class SelfOrderRouter extends Reactive {
+export class SelfOrderRouter {
     static serviceDependencies = [];
 
     constructor(...args) {
-        super(...args);
-        this.setup(...args);
+        proxy(this).setup(...args);
+        return proxy(this);
     }
 
     setup(env) {
