@@ -459,6 +459,11 @@
                                                invisible="work_entry_type_request_unit == 'hour'"
                                                class="text-muted w-auto"/>
                                         <span class="text-muted text-nowrap" invisible="work_entry_type_request_unit == 'hour'">day(s)</span>
+                                        <div class="text-muted d-flex gap-1 me-1" invisible="not max_leaves">
+                                            (<field name="virtual_remaining_leaves" widget="float" digits="[3,2]"/>
+                                            <span class="text-nowrap">remaining out of</span>
+                                            <field name="max_leaves" widget="float" digits="[3,2]"/>)
+                                        </div>
                                     </div>
                                     <div invisible="work_entry_type_request_unit != 'half_day' or last_several_days">
                                         <field name="work_entry_type_request_unit" invisible="1"/> <!-- Needed -->
