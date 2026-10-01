@@ -1,7 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { useEnv } from "@web/owl2/utils";
 import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nesting";
-import { Reactive } from "@web/core/utils/reactive";
 
 /**
  * Represents the state of a dropdown.
@@ -11,12 +10,12 @@ import { Reactive } from "@web/core/utils/reactive";
  * @param {Function} callbacks.onOpen
  * @param {Function} callbacks.onClose
  */
-export class DropdownState extends Reactive {
+export class DropdownState {
     isOpen = false;
     constructor({ onOpen, onClose } = {}) {
-        super();
         this._onOpen = onOpen;
         this._onClose = onClose;
+        return proxy(this);
     }
     open() {
         this.isOpen = true;

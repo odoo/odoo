@@ -1,6 +1,5 @@
-import { markRaw, markup } from "@odoo/owl";
+import { markRaw, markup, proxy } from "@odoo/owl";
 import { localeCompare } from "@web/core/l10n/utils";
-import { Reactive } from "@web/core/utils/reactive";
 
 function tryParseJSON(jsonString) {
     try {
@@ -53,10 +52,8 @@ class DocAPIError extends Error {
     }
 }
 
-export class ModelStore extends Reactive {
+export class ModelStore {
     constructor() {
-        super();
-
         this.models = [];
         this._addons = {};
 
@@ -67,6 +64,7 @@ export class ModelStore extends Reactive {
         this.activeField = null;
         this.activeMethod = null;
         this.error = null;
+        return proxy(this);
     }
 
     get addons() {

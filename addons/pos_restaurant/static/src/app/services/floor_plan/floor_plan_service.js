@@ -1,4 +1,4 @@
-import { Reactive } from "@web/core/utils/reactive";
+import { proxy } from "@odoo/owl";
 import { uuid } from "@web/core/utils/strings";
 import { History } from "./utils/history";
 import { registry } from "@web/core/registry";
@@ -22,12 +22,12 @@ import { applyDefaults, convertObjectUrlToDataUrl } from "./utils/utils";
 
 const DEFAULT_TABLE_COLOR_KEY = "green";
 const DEFAULT_SEATS_NUMBER = 2;
-export class FloorPlanStore extends Reactive {
+export class FloorPlanStore {
     constructor() {
-        super();
         this.selectedFloor = null;
         this.editMode = false;
         this.storedFloorPlanStyle = localStorage.getItem("floorPlanStyle");
+        return proxy(this);
     }
 
     init(pos) {

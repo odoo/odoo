@@ -1,9 +1,8 @@
-import { Reactive } from "@web/core/utils/reactive";
 import { Mutex } from "@web/core/utils/concurrency";
 import { ConnectionLostError, RPCError, rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { formatCurrency as webFormatCurrency } from "@web/core/currency";
-import { markup, usePlugin } from "@odoo/owl";
+import { markup, proxy, usePlugin } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
@@ -29,12 +28,13 @@ import { PosTicketPrinterPlugin } from "@point_of_sale/app/plugins/pos_ticket_pr
 
 const { DateTime } = luxon;
 
-export class SelfOrder extends Reactive {
+export class SelfOrder {
     static serviceDependencies = ["notification", "router", "barcode", "bus_service", "dialog"];
 
     constructor(...args) {
-        super();
-        this.ready = this.setup(...args).then(() => this);
+        const self = proxy(this);
+        self.ready = self.setup(...args).then(() => self);
+        return self;
     }
 
     async setup(env, { notification, router, barcode, bus_service, dialog }) {

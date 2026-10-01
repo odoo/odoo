@@ -12,15 +12,18 @@ import {
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { isMarkup } from "@web/core/utils/html";
-import { Reactive } from "../utils/reactive";
 
-class CodeEditorState extends Reactive {
+class CodeEditorState {
     /**@protected*/
     _session = null;
     /**@protected*/
     _canUndo = false;
     /**@protected*/
     _canRedo = false;
+
+    constructor() {
+        return proxy(this);
+    }
 
     get canUndo() {
         return this._session && this._canUndo;

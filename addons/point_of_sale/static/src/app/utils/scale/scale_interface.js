@@ -1,12 +1,10 @@
+import { proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { formatFloat, roundDecimals } from "@web/core/utils/numbers";
-import { Reactive } from "@web/core/utils/reactive";
 
-export class ScaleInterface extends Reactive {
+export class ScaleInterface {
     /** @param {import("@point_of_sale/app/services/pos_store").PosStore} pos */
     constructor(pos) {
-        super(...arguments);
-
         this.pos = pos;
         this.env = pos.env;
         this.lastWeight = null;
@@ -15,6 +13,7 @@ export class ScaleInterface extends Reactive {
         this.tare = 0;
         this.tareRequested = false;
         this.errorCallback = null;
+        return proxy(this);
     }
 
     /**
