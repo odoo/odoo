@@ -5335,3 +5335,95 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         wizard.user_ids.action_grant_access()
         self.env.flush_all()
         self.assertEqual(invoice.invoice_partner_display_name, 'partner_a')
+
+    def test_out_invoice_multi_currency_exchange_diff(self):
+        """
+        Test that through the 'Reverse and Create Invoice' on a cash basis and multi-currency invoice,
+        the exchange difference and cash basis transition moves are correctly generated and posted.
+        """
+        self.env['res.currency.rate'].create([
+            {'name': '2026-07-01', 'rate': 20.0, 'currency_id': self.other_currency.id, 'company_id': self.env.company.id},
+            {'name': '2026-07-15', 'rate': 15.0, 'currency_id': self.other_currency.id, 'company_id': self.env.company.id},
+        ])
+
+        self.env.company.tax_exigibility = True
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        })
+
+        caba_tax = self.env['account.tax'].create({
+            'name': 'Cash Basis 15%',
+            'type_tax_use': 'sale',
+            'amount': 15,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+        })
+
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            partner=self.partner_a,
+            invoice_date='2026-07-01',
+            currency=self.other_currency,
+            amounts=[100.0],
+            taxes=caba_tax,
+            post=True
+        )
+
+        move_reversal = self.env['account.move.reversal'].with_context(
+            active_model="account.move",
+            active_ids=invoice.ids,
+        ).create({
+            'date': '2026-07-15',
+            'reason': 'test reversal exchange',
+            'journal_id': invoice.journal_id.id,
+        })
+
+        move_reversal.modify_moves()
+        credit_note = self.env['account.move'].search([('reversed_entry_id', '=', invoice.id)])
+        self.assertTrue(credit_note)
+
+        partials = invoice.line_ids.matched_credit_ids | invoice.line_ids.matched_debit_ids
+        exchange_moves = partials.exchange_move_id
+
+        self.assertTrue(exchange_moves)
+
+    def test_read_group_multi_currency_sort(self):
+        """Test that grouping invoices by partner and sorting by the 'Total' ascending is correctly displayed"""
+        eur = self.env.ref('base.EUR')
+        eur.active = True
+        self.env['res.currency.rate'].create({
+            'name': '2026-08-01',
+            'rate': 0.5,
+            'currency_id': eur.id,
+            'company_id': self.env.company.id,
+        })
+        partner_1 = self.env['res.partner'].create({'name': 'Customer 1'})
+        partner_2 = self.env['res.partner'].create({'name': 'Customer 2'})
+        inv_1_usd = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner_1.id,
+            'invoice_line_ids': [(0, 0, {'name': 'product', 'price_unit': 57.50})],
+        })
+        inv_1_eur = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner_1.id,
+            'currency_id': eur.id,
+            'invoice_line_ids': [(0, 0, {'name': 'product', 'price_unit': 115.00})],
+        })
+        inv_2_usd = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner_2.id,
+            'invoice_line_ids': [(0, 0, {'name': 'product', 'price_unit': 200.00})],
+        })
+        (inv_1_usd + inv_1_eur + inv_2_usd).action_post()
+        groups = self.env['account.move']._read_group(
+            domain=[('id', 'in', (inv_1_usd + inv_1_eur + inv_2_usd).ids)],
+            groupby=['partner_id'],
+            order='amount_total_in_currency_signed:sum_currency ASC'
+        )
+        self.assertEqual(len(groups), 2)
+        self.assertEqual(groups[0][0], partner_2)
+        self.assertEqual(groups[1][0], partner_1)
