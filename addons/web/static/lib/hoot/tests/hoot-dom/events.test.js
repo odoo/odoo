@@ -1595,6 +1595,20 @@ describe(parseUrl(import.meta.url), () => {
         ]);
     });
 
+    test("hover and leave: shadow root", async () => {
+        await mountForTest(/* xml */ `<div class="container" />`);
+        const shadow = queryOne(".container").attachShadow({ mode: "open" });
+        const button = document.createElement("button");
+        shadow.appendChild(button);
+        for (const type of ["mouseenter", "mouseleave"]) {
+            button.addEventListener(type, () => expect.step(type));
+        }
+        await hover(".container:shadow button");
+        expect.verifySteps(["mouseenter"]);
+        await leave();
+        expect.verifySteps(["mouseleave"]);
+    });
+
     test("keyDown", async () => {
         await mountForTest(/* xml */ `<input type="text" />`);
 
