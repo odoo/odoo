@@ -171,7 +171,7 @@
             'mass_mailing/static/src/themes/theme_selector/**/*',
             'mass_mailing/static/src/iframe/**/*',
             'mass_mailing/static/src/scss/mass_mailing.scss',
-            'mass_mailing/static/src/scss/mass_mailing_mobile.scss',
+            'mass_mailing/static/src/scss/mass_mailing_mobile.css',
             'mass_mailing/static/src/scss/mass_mailing_mobile_preview.scss',
             'mass_mailing/static/src/js/tours/**/*',
             # Don't include dark mode files in light mode
