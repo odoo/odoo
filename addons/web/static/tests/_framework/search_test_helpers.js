@@ -1,4 +1,4 @@
-import { queryAll, queryAllTexts, queryOne, queryText } from "@odoo/hoot";
+import { queryAll, queryAllTexts, queryOne, queryText, waitFor } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { getDefaultConfig } from "@web/views/view";
@@ -187,7 +187,7 @@ export async function editFavorite(text) {
 
 export async function toggleSaveFavorite() {
     await ensureSearchBarMenu();
-    await contains(`.o_favorite_menu .o_add_favorite`).click();
+    await waitFor(`.o_favorite_menu .o_custom_favorite_item`);
 }
 
 /**
@@ -196,7 +196,7 @@ export async function toggleSaveFavorite() {
 export async function editFavoriteName(name) {
     await ensureSearchBarMenu();
     await contains(
-        `.o_favorite_menu .o_add_favorite + .o_accordion_values input[type="text"]`
+        `.o_favorite_menu .o_custom_favorite_input`
     ).edit(name, { confirm: false });
 }
 

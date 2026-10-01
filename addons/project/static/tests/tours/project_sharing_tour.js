@@ -96,11 +96,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'click on the first item in the group by menu',
     run: "click",
 }, {
-    trigger: '.o_favorite_menu .o_add_favorite',
-    content: 'open accordion "save current search" in favorite menu',
-    run: "click",
-}, {
-    trigger: '.o_favorite_menu .o_accordion_values .o_save_favorite',
+    trigger: '.o_favorite_menu .o_custom_favorite_item .o_save_favorite',
     content: 'click to "save" button in favorite menu',
     run: "click",
 }, {
@@ -112,7 +108,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'click on the first item in the group by menu',
     run: "click",
 }, {
-    trigger: '.o_favorite_menu .o_accordion_values .o_save_favorite',
+    trigger: '.o_favorite_menu .o_custom_favorite_item .o_save_favorite',
     content: 'click to "save" button in favorite menu',
     run: "click",
 }, {

@@ -1058,11 +1058,11 @@ describe("Favorite filters in search bar", () => {
     test("simple favorite menu rendering", async function () {
         await toggleSearchBarMenu();
         await toggleSaveFavorite();
-        expect(`.o_add_favorite + .o_accordion_values input[type="text"]`).toHaveValue(
+        expect(`.o_custom_favorite_item input[type="text"]`).toHaveValue(
             "Spreadsheet with Pivot"
         );
-        expect(`.o_add_favorite + .o_accordion_values input[type="checkbox"]`).toHaveCount(1);
-        expect(`.o_add_favorite + .o_accordion_values .form-check label`).toHaveText(
+        expect(`.o_custom_favorite_item input[type="checkbox"]`).toHaveCount(1);
+        expect(`.o_custom_favorite_item .form-check label`).toHaveText(
             "Default filter"
         );
     });
