@@ -48,7 +48,7 @@ patch(NavBar.prototype, {
                 .getEntries()
                 .map(([key, value], index) => ({ key, ...value, index }))
                 .filter((item) =>
-                    "isDisplayed" in item ? this.scope.run(() => item.isDisplayed(this.env)) : true
+                    "isDisplayed" in item ? this.scope.run(() => item.isDisplayed()) : true
                 )
                 .reverse();
             // Do not override the regular Odoo navbar if the only visible

@@ -67,7 +67,7 @@ declare module "registries" {
 
     export interface SystrayRegistryItemShape {
         Component: typeof Component;
-        isDisplayed?: (env: OdooEnv) => boolean;
+        isDisplayed?(): boolean;
     }
 
     export type IrActionsReportHandlers = (action: ActionRequest, options: ActionOptions, env: OdooEnv) => (void | boolean | Promise<void | boolean>);

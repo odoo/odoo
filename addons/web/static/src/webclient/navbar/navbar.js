@@ -148,7 +148,7 @@ export class NavBar extends Component {
             .getEntries()
             .map(([key, value]) => ({ key, ...value }))
             .filter((item) =>
-                "isDisplayed" in item ? this.scope.run(() => item.isDisplayed(this.env)) : true
+                "isDisplayed" in item ? this.scope.run(() => item.isDisplayed()) : true
             )
             .reverse();
     }
