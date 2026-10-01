@@ -9,7 +9,7 @@ from werkzeug.datastructures import FileStorage
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.http import Response
-from odoo.tests import Form, tagged
+from odoo.tests import Form, HttpCase, tagged
 from odoo.tools.misc import file_open
 
 from .files import forms_pdf, plain_pdf
@@ -20,7 +20,7 @@ from odoo.addons.sale_pdf_quote_builder.controllers.quotation_document import (
 
 
 @tagged("-at_install", "post_install")
-class TestPDFQuoteBuilder(SaleManagementCommon):
+class TestPDFQuoteBuilder(SaleManagementCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -348,12 +348,15 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             quotation_document.company_id, "Quotation document shouldn't have a company id"
         )
 
-    def _test_custom_content_kanban_like(self):
-        # TODO VCR finish tour and uncomment
+    def test_custom_content_kanban_like(self):
         self.start_tour(
             f"/odoo/sales/{self.sale_order.id}", "custom_content_kanban_like_tour", login="admin"
         )
-        # Assert documents are selected
+        sol = self.sale_order.order_line.filtered(lambda sol: sol.product_id == self.product)
+        self.assertEqual(sol.product_document_ids, self.product_document)
+        form_fields = json.loads(self.sale_order.customizable_pdf_form_fields)
+        doc_fields = form_fields["line"][str(sol.id)][str(self.product_document.id)]
+        self.assertEqual(doc_fields["custom_form_fields"]["custom_1"], "Test")
 
     def test_quotation_document_is_added_iff_default(self):
         self.assertFalse(self._create_so().quotation_document_ids)
