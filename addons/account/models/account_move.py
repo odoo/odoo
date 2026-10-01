@@ -5680,6 +5680,14 @@ class AccountMove(models.Model):
                     accounts_codes_names=format_list(self.env, mismatched_accounts.mapped('display_name'))
                 ))
 
+            move_taxes = move.line_ids.tax_ids | move.line_ids.tax_line_id
+            mismatched_taxes = move_taxes.filtered(lambda tax: tax.sudo().company_id not in move_company_and_parents)
+            if mismatched_taxes:
+                validation_msgs.add(self.env._(
+                    "The entry is using taxes (%(tax_names)s) from a different company.",
+                    tax_names=format_list(self.env, mismatched_taxes.mapped('display_name'))
+                ))
+
         if validation_msgs:
             msg = "\n".join([line for line in validation_msgs])
             raise UserError(msg)
