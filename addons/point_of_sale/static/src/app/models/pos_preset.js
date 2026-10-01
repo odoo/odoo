@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { range } from "@web/core/utils/numbers";
 import { Base } from "./related_models";
+import { PyDate } from "@web/core/py_js/py_date";
 
 const { DateTime } = luxon;
 
@@ -109,7 +110,12 @@ export class PosPreset extends Base {
                 });
             const dayOfWeek = (dateNow.weekday - 1).toString();
             const date = dateNow.toFormat("yyyy-MM-dd");
-            const attToday = this.attendance_ids.filter((a) => a.dayofweek === dayOfWeek);
+            // Same computation as resource.calendar.attendance.get_week_type
+            const ordinal = PyDate.create(dateNow.year, dateNow.month, dateNow.day).toordinal();
+            const weekType = (Math.floor((ordinal - 1) / 7) % 2).toString();
+            const attToday = this.attendance_ids.filter(
+                (a) => a.dayofweek === dayOfWeek && (!a.week_type || a.week_type === weekType)
+            );
             slots[date] = [];
 
             for (const attendance of attToday) {
