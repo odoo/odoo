@@ -64,6 +64,7 @@ export class StatusBarField extends Component {
     rootRef = signal.ref();
     afterRef = signal.ref();
     dropdownRef = signal.ref();
+    forceRecomputeItemsKey = signal(0);
 
     setup() {
         // Properties
@@ -86,15 +87,16 @@ export class StatusBarField extends Component {
         onMounted(adjustIfNeeded);
         onPatched(adjustIfNeeded);
 
-        let forceRecomputeItems = false;
+        let currentItemsKey = this.forceRecomputeItemsKey();
         onWillRender(() => {
-            if (status !== "adjusting" || forceRecomputeItems) {
+            const nextKey = this.forceRecomputeItemsKey();
+            if (status !== "adjusting" || nextKey !== currentItemsKey) {
                 Object.assign(this.items, this.getSortedItems());
                 status = "shouldAdjust";
             } else {
                 status = "idle";
             }
-            forceRecomputeItems = false;
+            currentItemsKey = nextKey;
         });
 
         const throttledRenderAndAdapt = useThrottleForAnimation(() => {
@@ -126,7 +128,7 @@ export class StatusBarField extends Component {
                         }
                         throw error;
                     });
-                forceRecomputeItems = true;
+                this.forceRecomputeItemsKey.set(this.forceRecomputeItemsKey() + 1);
                 return res;
             });
         }

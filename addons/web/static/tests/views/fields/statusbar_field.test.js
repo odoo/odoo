@@ -1,4 +1,4 @@
-import { expect, resize, test } from "@odoo/hoot";
+import { expect, resize, test, waitFor } from "@odoo/hoot";
 import {
     click,
     edit,
@@ -1307,4 +1307,71 @@ test("statusbar ignores sub-pixel measurement noise", async () => {
 
     expect(".o_statusbar_status button:visible:not(.dropdown-toggle)").toHaveCount(3);
     expect(".o_statusbar_status button.dropdown-toggle:visible").toHaveCount(0);
+});
+
+test("correctly rerenders when rpc comes back after a while", async () => {
+    Partner._fields.parent_id = fields.Many2one({ relation: "partner" });
+
+    Partner._records = [
+        {
+            name: "1",
+            id: 1,
+            trululu: 11,
+        },
+        {
+            name: "2",
+            id: 2,
+            trululu: 21,
+        },
+        {
+            name: "11",
+            id: 11,
+            parent_id: 1,
+        },
+        {
+            name: "12",
+            id: 12,
+            parent_id: 1,
+        },
+        {
+            name: "21",
+            id: 21,
+            parent_id: 2,
+        },
+        {
+            name: "22",
+            id: 22,
+            parent_id: 2,
+        },
+    ];
+
+    let def;
+    onRpc("search_read", async ({ kwargs }) => {
+        await def?.promise;
+        expect.step(`search_read: ${kwargs.domain}`);
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        resIds: [1, 2],
+        arch: /* xml */ `
+            <form>
+                <header>
+                    <field name="trululu" widget="statusbar" domain="[['parent_id', '=', id]]" options="{'clickable': true}" />
+                </header>
+            </form>
+        `,
+    });
+    expect.verifySteps(["search_read: parent_id,=,1"]);
+    def = Promise.withResolvers();
+    await contains(".o_pager_next").click();
+    await waitFor(".o_last_breadcrumb_item:contains(2)");
+    def.resolve();
+    await def.promise;
+    expect.verifySteps(["search_read: parent_id,=,2"]);
+
+    await animationFrame();
+    const statuses = queryAll(".o_field_statusbar[name='trululu'] .o_arrow_button_wrap");
+    expect([...statuses].map((el) => el.textContent)).toEqual(["22", "21"]);
 });
