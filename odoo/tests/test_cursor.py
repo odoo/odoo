@@ -41,7 +41,7 @@ class TestCursor(Cursor):
 
     def __init__(self, cursor: Cursor, lock: threading.RLock, readonly: bool):
         assert isinstance(cursor, Cursor) and not isinstance(cursor, TestCursor)
-        super().__init__(MockedPsycoConnection(cursor, readonly), cursor.dbname)
+        super().__init__(MockedPsycoConnection(cursor, readonly), cursor.dbname, readonly=readonly)
         self._closed = True  # consider closed until acquired
         self._cnx._obj = self._obj
         # we use a lock to serialize concurrent requests
