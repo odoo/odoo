@@ -60,6 +60,7 @@ import { withSequence } from "@html_editor/utils/resource";
  */
 
 /**
+ * @typedef {(() => void)[]} on_will_insert_handlers
  * @typedef {((insertedNodes: Node[]) => void)[]} on_inserted_handlers
  * @typedef {((el: HTMLElement) => void)[]} on_will_set_tag_handlers
  * @typedef {((root: HTMLElement) => void)[]} on_will_normalize_handlers
@@ -253,7 +254,7 @@ export class DomPlugin extends Plugin {
 
         const block = closestBlock(selection.anchorNode);
         fragment = this.processThrough("fragment_to_insert_processors", fragment);
-        this.trigger("before_insert_handlers");
+        this.trigger("on_will_insert_handlers");
         if (!fragment.hasChildNodes()) {
             return [];
         }
