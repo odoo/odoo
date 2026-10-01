@@ -72,7 +72,7 @@ def reset_thread_info():
     current_thread.perf_t0 = t0
     current_thread.cursor_mode = None
     current_thread.rpc_model_method = None
-    current_thread.sess_id = None
+    current_thread.req_ident = None
 
 
 def run_in_isolated_context(callback, /, *a, **kw):
@@ -82,7 +82,7 @@ def run_in_isolated_context(callback, /, *a, **kw):
     perf_t0 = current_thread.perf_t0
     cursor_mode = current_thread.cursor_mode
     rpc_model_method = current_thread.rpc_model_method
-    sess_id = current_thread.sess_id
+    req_ident = current_thread.req_ident
 
     reset_thread_info()
 
@@ -94,7 +94,7 @@ def run_in_isolated_context(callback, /, *a, **kw):
         current_thread.perf_t0 = perf_t0
         current_thread.cursor_mode = cursor_mode
         current_thread.rpc_model_method = rpc_model_method
-        current_thread.sess_id = sess_id
+        current_thread.req_ident = req_ident
 
 
 def http_log(
@@ -120,8 +120,15 @@ def http_log(
     )
     if th_cursor_mode := current_thread.cursor_mode:
         extra['cursor_mode'] = th_cursor_mode
-    if th_sess_id := current_thread.sess_id:
-        extra['ident'] = th_sess_id
+    if th_req_ident := current_thread.req_ident:
+        ident_type, ident = th_req_ident
+        if ident_type == 'session':
+            ident_type = 'S'
+        elif ident_type == 'bearer':
+            ident_type = 'B'
+        else:
+            ident_type = '?'
+        extra['ident'] = f'{ident_type}/{ident}'
 
     if req:
         extra['http_headers'] = req.headers
