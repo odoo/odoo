@@ -1168,6 +1168,10 @@ class configmanager:
             raise ValueError(e)
         return int(mht)
 
+    @property
+    def has_db_replica(self):
+        return config['db_replica_host'] or 'replica' in config['dev_mode'] or config['test_enable']
+
     @classmethod
     def _normalize(cls, path):
         if not path:

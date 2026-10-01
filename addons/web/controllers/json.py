@@ -218,9 +218,6 @@ class WebJsonController(http.Controller):
             # force read-only evaluation of action_data
             try:
                 with action.pool.cursor(readonly=True) as ro_cr:
-                    if not ro_cr.readonly:
-                        ro_cr.connection.set_session(readonly=True)
-                    assert ro_cr.readonly
                     action_data = action.with_env(action.env(cr=ro_cr, su=False)).run()
             except psycopg2.errors.ReadOnlySqlTransaction as e:
                 # never retry on RO connection, just leave
