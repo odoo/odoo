@@ -74,6 +74,7 @@
                 <t t-if="section.hasAvatar and filter.hasAvatar">
                     <img
                         class="o_cw_filter_avatar o_avatar rounded"
+                        loading="lazy"
                         t-attf-src="/web/image/{{ section.avatar.model }}/{{ filter.value }}/{{ section.avatar.field }}"
                         alt="Avatar"
                     />
