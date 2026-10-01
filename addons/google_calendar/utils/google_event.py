@@ -68,7 +68,12 @@ class GoogleEvent(abc.Set):
 
     @property
     def rrule(self):
-        if self.recurrence and any('RRULE' in item for item in self.recurrence):
+        if not isinstance(self.recurrence, list):
+            # Cancelled/ambiguous events have no actual 'recurrence' list: clear_type_ambiguity()
+            # resolves them beforehand by storing a plain True/False here instead. There is no rrule
+            # to extract in that case, same as if 'RRULE' were simply absent from the list below.
+            return None
+        if any('RRULE' in item for item in self.recurrence):
             return next(item for item in self.recurrence if 'RRULE' in item)
 
     def odoo_id(self, env):
@@ -163,7 +168,13 @@ class GoogleEvent(abc.Set):
     def is_recurrence(self):
         if self._is_type_ambiguous():
             _logger.warning("Ambiguous event type: cannot accurately tell whether a cancelled event is a recurrence or not")
-        return bool(self.recurrence)
+        # A 'recurrence' list without any RRULE (e.g. a stale EXDATE left over from a since-removed
+        # rule) does not define an actual series: per RFC5545, EXDATE/RDATE only have meaning together
+        # with a RRULE. Google sometimes sends such leftovers, so treat the event as a single one.
+        # self.recurrence can be True without a rrule if ambiguous (clear_type_ambiguity() resolved
+        # a cancelled event to a known recurrence, but cancelled events carry no payload to extract
+        # an actual rrule from).
+        return self.recurrence is True or bool(self.rrule)
 
     def is_recurrent(self):
         return bool(self.recurringEventId or self.is_recurrence())

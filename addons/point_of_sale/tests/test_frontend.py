@@ -2472,6 +2472,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(order.amount_total, 2.80, "The total amount should be rounded to 2 decimals")
         self.assertEqual(order.amount_return, 0, "The return amount should be rounded to 2 decimals")
 
+    def test_stale_draft_read_keeps_order_paid(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_stale_draft_read_keeps_order_paid', login="pos_user")
+
     def test_offline_barcode_not_in_pos(self):
         """
         Tests that an unwanted error is not thrown when trying to scan a barcode while offline
@@ -2689,10 +2693,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_price_extra_pricelist_based_pricelist', login="pos_user")
 
-    def test_ticket_screen_keeps_variants_collapsed(self):
-        """ Fetching paid orders in the ticket screen must not undo the
-            client-side grouping of a template's variants into one card.
-        """
+    def _check_ticket_screen_keeps_variants_collapsed(self, sold_variant_index, tour='test_ticket_screen_keeps_variants_collapsed'):
         attribute = self.env['product.attribute'].create({
             'name': 'Side',
             'create_variant': 'always',
@@ -2717,7 +2718,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'config_id': self.main_pos_config.id,
             'lines': [Command.create({
                 'name': 'OL/0001',
-                'product_id': template.product_variant_ids[0].id,
+                'product_id': template.product_variant_ids[sold_variant_index].id,
                 'price_unit': 10.00,
                 'discount': 0,
                 'qty': 1,
@@ -2734,7 +2735,23 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         order.action_pos_order_paid()
 
-        self.start_pos_tour('test_ticket_screen_keeps_variants_collapsed')
+        self.start_pos_tour(tour)
+
+    def test_ticket_screen_keeps_variants_collapsed(self):
+        """ Fetching paid orders in the ticket screen must not undo the
+            client-side grouping of a template's variants into one card.
+        """
+        self._check_ticket_screen_keeps_variants_collapsed(0)
+
+    def test_ticket_screen_keeps_displayed_variant(self):
+        """ Same, when the paid order holds the variant displayed on the card. """
+        self._check_ticket_screen_keeps_variants_collapsed(-1)
+
+    def test_synced_products_keep_variants_collapsed(self):
+        """ Products synced from another device must not undo the client-side
+            grouping of a template's variants into one card.
+        """
+        self._check_ticket_screen_keeps_variants_collapsed(0, 'test_synced_products_keep_variants_collapsed')
 
 
 # This class just runs the same tests as above but with mobile emulation

@@ -152,3 +152,6 @@ class AccountMoveSend(models.AbstractModel):
                     invoice._l10n_tr_nilvera_submit_einvoice(xml_file, customer_alias)
                 else:   # E-Archive
                     invoice._l10n_tr_nilvera_submit_earchive(xml_file)
+
+                if self._can_commit():
+                    self._cr.commit()

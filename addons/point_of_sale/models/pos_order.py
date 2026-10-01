@@ -120,7 +120,9 @@ class PosOrder(models.Model):
                     order[field] = []
 
             del order['uuid']
-            del order['access_token']
+            if 'access_token' in order:
+                del order['access_token']
+
             pos_order.write(order)
 
         pos_order._link_combo_items(combo_child_uuids_by_parent_uuid)
