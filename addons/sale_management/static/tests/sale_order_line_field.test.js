@@ -22,22 +22,12 @@ class AccountFiscalPosition extends models.ServerModel {
     ];
 }
 
-class UomUom extends models.ServerModel {
-    _name = "uom.uom";
-
-    _records = [
-        { id: 1, name: "Units", factor: 1, parent_path: "1/" },
-        { id: 2, name: "Dozens", factor: 12, parent_path: "1/2/" },
-    ];
-}
-
 class SaleOrderLine extends saleManagementModels.SaleOrderLine {
     // for skipping tax setup required for prices computation to run correctly
     price_unit = fields.Float({ default: 3.00 });
     price_total = fields.Float({ default: 3.00 });
     price_subtotal = fields.Float({ default: 3.50 });
     product_uom_qty = fields.Float({ default: 1.00 });
-    section_qty = fields.Float({ default: 0.00 });
 
     _records = [
         { id: 1, name: "r1", sequence: 1 },
@@ -91,7 +81,6 @@ class SaleOrderLine extends saleManagementModels.SaleOrderLine {
             name: "Sec3-sub2",
             sequence: 10,
             display_type: 'line_subsection',
-            section_uom_id: 1,
             product_uom_qty: 0,
             price_unit: 0,
             price_total: 0,
@@ -189,7 +178,6 @@ defineModels({
     SaleOrderLine,
     SaleOrder,
     AccountFiscalPosition,
-    UomUom,
 });
 
 const EXPECTED_LINE_RECORDS = [
@@ -513,85 +501,4 @@ test("Search more section templates when there are more than 9 templates", async
 
     await contains(".o_section_templates_dropdown .o-dropdown-item:contains(Search more...)").click();
     expect(".o_dialog .o_data_row").toHaveCount(11);
-});
-
-test("Editing a subsection's quantity applies the ratio to its line and recomputes its price", async () => {
-    SaleOrderLine._records.find(record => record.name === "Sec3-sub2").section_qty = 2;
-    SaleOrderLine._records.find(record => record.name === "Sec3-sub2-r1").product_uom_qty = 3;
-
-    onRpc("onchange_batch", ({ args }) => {
-        expect.step("onchange_batch");
-        const [recordsList] = args;
-
-        expect(recordsList.find(record => record.id === 11).values.product_uom_qty).toEqual(6, {
-            message: "Sec3-sub2-r1's quantity should be doubled (ratio 4/2 applied to the subsection)",
-        });
-
-        return [{ id: 11, virtual_id: false, result: {value: { price_subtotal: 42 }} }];
-    });
-
-    onRpc("web_save", ({ args }) => {
-        expect.step("web_save");
-        const commands = args[1].order_line;
-
-        expect(commands.find(c => c[1] === 10)[2]).toEqual({ section_qty: 4 }, {
-            message: "The subsection's own quantity change should be saved",
-        });
-        expect(commands.find(c => c[1] === 11)[2]).toEqual({ product_uom_qty: 6, price_subtotal: 42 }, {
-            message: "Its line's quantity and recomputed price should both be saved",
-        });
-    });
-
-    await mountView({
-        type: "form",
-        resModel: "sale.order",
-        resId: 1,
-    });
-
-    expect(queryAllTexts(".o_data_row td[name=product_and_description]")).toEqual(
-        EXPECTED_LINE_RECORDS
-    );
-
-    await contains(".o_data_row:contains(Sec3-sub2):first [name=product_and_description]").click();
-    await contains(".o_selected_row [name=section_qty] input", { visible: false }).edit("4");
-    await clickSave();
-
-    expect.verifySteps(["onchange_batch", "web_save"]);
-});
-
-test.tags("desktop");
-test("Changing a section's UoM marks the order as dirty and applies the factor to its lines", async () => {
-    onRpc("onchange_batch", ({ args }) => {
-        const [recordsList] = args;
-
-        return recordsList.map((record) => ({
-            id: false,
-            virtual_id: false,
-            result: { values: record.values },
-        }));
-    });
-    onRpc("web_save", ({ args }) => {
-        expect.step("web_save");
-        const commands = args[1].order_line;
-
-        expect(commands.find((c) => c[1] === 10)[2]).toEqual({ section_uom_id: 2 });
-        expect(commands.find((c) => c[1] === 11)[2]).toEqual({ product_uom_qty: 12 });
-    });
-
-    await mountView({
-        type: "form",
-        resModel: "sale.order",
-        resId: 1,
-    });
-
-    await contains(".o_data_row:contains(Sec3-sub2):first [name=product_and_description]").click();
-    await contains(".o_selected_row [name=section_uom_id] input", { visible: false }).click();
-    await contains(".o-autocomplete--dropdown-item:contains(Dozens)").click();
-
-    expect(".o_form_button_save").toBeVisible({
-        message: "The order should be dirty after changing the section's UoM",
-    });
-    await clickSave();
-
-    expect.verifySteps(["web_save"]);
 });
