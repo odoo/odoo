@@ -110,6 +110,7 @@
         'views/snippets/s_tabs.xml',
         'views/snippets/s_tabs_images.xml',
         'views/snippets/s_table_of_content.xml',
+        'views/snippets/s_team_board.xml',
         'views/snippets/s_images_constellation.xml',
         'views/snippets/s_chart.xml',
         'views/snippets/s_parallax.xml',
