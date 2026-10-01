@@ -289,7 +289,7 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
 
 class Export(Controller):
 
-    @route('/web/export/formats', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/export/formats', type='jsonrpc', auth='user', replica=True)
     def formats(self):
         """ Returns all valid export formats
 
@@ -306,7 +306,7 @@ class Export(Controller):
             {'tag': 'csv', 'label': self.env._("Plain Text (.csv)")},
         ]
 
-    @route('/web/export/get_fields', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/export/get_fields', type='jsonrpc', auth='user', replica=True)
     def get_fields(self, model, domain, prefix='', parent_name='',
                    import_compat=True, parent_field_type=None,
                    parent_field=None, exclude=None):
@@ -384,7 +384,7 @@ class Export(Controller):
 
         return result
 
-    @route('/web/export/namelist', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/export/namelist', type='jsonrpc', auth='user', replica=True)
     def namelist(self, model, export_id):
         export = self.env['ir.exports'].browse([export_id])
         return {

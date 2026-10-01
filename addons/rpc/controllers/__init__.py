@@ -21,7 +21,7 @@ from .xmlrpc import XMLRPC  # noqa: E402
 
 
 class RPC(XMLRPC, JSONRPC):
-    @route(['/web/version', '/json/version'], type='http', auth='none', readonly=True)
+    @route(['/web/version', '/json/version'], type='http', auth='none', replica=True)
     def version(self):
         return request.make_json_response({
             'version_info': odoo.release.version_info,

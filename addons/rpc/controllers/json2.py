@@ -38,7 +38,7 @@ class WebJson2Controller(http.Controller):
         ['/json/2', '/json/2/<path:subpath>'],
         auth='public',
         type='json2',
-        readonly=True,
+        replica=True,
         methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     )
     def web_json_2_404(self, subpath=None):
@@ -51,7 +51,7 @@ class WebJson2Controller(http.Controller):
         auth='bearer',
         bearer_scope='rpc',
         type='json2',
-        readonly=_web_json_2_rpc_readonly,
+        replica=_web_json_2_rpc_readonly,
         save_session=False,
     )
     def web_json_2_rpc(

@@ -27,13 +27,13 @@ _logger = logging.getLogger(__name__)
 
 class Session(Controller):
 
-    @route('/web/session/get_session_info', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/session/get_session_info', type='jsonrpc', auth='user', replica=True)
     def get_session_info(self):
         # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@)
         touch(request.session)
         return request.env['ir.http'].session_info()
 
-    @route('/web/session/authenticate', type='jsonrpc', auth="none", readonly=False)
+    @route('/web/session/authenticate', type='jsonrpc', auth="none", replica=False)
     def authenticate(self, db, login, password, base_location=None):
         if not db_filter([db]):
             e = "Database not found."
@@ -60,16 +60,16 @@ class Session(Controller):
 
             return env['ir.http'].with_user(request.session.uid).session_info()
 
-    @route('/web/session/modules', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/session/modules', type='jsonrpc', auth='user', replica=True)
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
         return list(request.env.registry._init_modules)
 
-    @route('/web/session/check', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/session/check', type='jsonrpc', auth='user', replica=True)
     def check(self):
         return  # ir.http@_authenticate does the job
 
-    @route('/web/session/account', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/session/account', type='jsonrpc', auth='user', replica=True)
     def account(self):
         ICP = request.env['ir.config_parameter'].sudo()
         params = {
@@ -80,11 +80,11 @@ class Session(Controller):
         }
         return 'https://accounts.odoo.com/oauth2/auth?' + url_encode(params)
 
-    @route('/web/session/destroy', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/session/destroy', type='jsonrpc', auth='user', replica=True)
     def destroy(self):
         logout(request.session)
 
-    @route('/web/session/logout', type='http', auth='none', methods=['POST'], readonly=True)
+    @route('/web/session/logout', type='http', auth='none', methods=['POST'], replica=True)
     def logout(self, redirect='/odoo'):
         logout(request.session, keep_db=True)
         return request.redirect(redirect, 303)

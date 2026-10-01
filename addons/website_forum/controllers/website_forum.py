@@ -73,7 +73,7 @@ class WebsiteForum(WebsiteProfile):
             if not qs or qs.lower() in '/forum':
                 yield {'loc': '/forum'}
 
-    @http.route(['/forum'], type='http', auth="public", website=True, sitemap=sitemap_forum, readonly=True, list_as_website_content=_lt("Forum"))
+    @http.route(['/forum'], type='http', auth="public", website=True, sitemap=sitemap_forum, replica=True, list_as_website_content=_lt("Forum"))
     def forum(self, **kwargs):
         domain = self.env.website.website_domain()
         forums = request.env['forum.forum'].search(domain)
@@ -116,7 +116,7 @@ class WebsiteForum(WebsiteProfile):
                  '/forum/<model("forum.forum"):forum>/page/<int:page>',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions''',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
-                 ], type='http', auth="public", website=True, sitemap=sitemap_forum_all, readonly=True)
+                 ], type='http', auth="public", website=True, sitemap=sitemap_forum_all, replica=True)
     def questions(
         self, forum=None, tag=None, page=1, filters='all', my=None, sorting=None, search='',
         create_uid=False, include_answers=False, **post,
@@ -197,13 +197,13 @@ class WebsiteForum(WebsiteProfile):
         return request.render("website_forum.forum_index", values)
 
     @http.route(['''/forum/<model("forum.forum"):forum>/faq'''], type='http', auth="public",
-        website=True, sitemap=True, readonly=True)
+        website=True, sitemap=True, replica=True)
     def forum_faq(self, forum, **post):
         values = self._prepare_user_values(forum=forum, searches={}, header={'is_guidelines': True}, **post)
         return request.render("website_forum.faq", values)
 
     @http.route(['/forum/<model("forum.forum"):forum>/faq/karma'], type='http', auth="public",
-        website=True, sitemap=False, readonly=True)
+        website=True, sitemap=False, replica=True)
     def forum_faq_karma(self, forum, **post):
         values = self._prepare_user_values(forum=forum, header={'is_guidelines': True, 'is_karma': True}, **post)
         return request.render("website_forum.faq_karma", values)
@@ -212,7 +212,7 @@ class WebsiteForum(WebsiteProfile):
     # --------------------------------------------------
 
     @http.route('/forum/get_tags', type='http', auth="public", methods=['GET'],
-                website=True, sitemap=False, readonly=True)
+                website=True, sitemap=False, replica=True)
     def tag_read(self, forum_id, query='', limit=25, **post):
         data = request.env['forum.tag'].search_read(
             domain=[('forum_id', '=', int(forum_id)), ('name', '=ilike', (query or '') + "%")],
@@ -226,7 +226,7 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route(['/forum/<model("forum.forum"):forum>/tag',
                  '/forum/<model("forum.forum"):forum>/tag/<string:tag_char>'],
-                 type='http', auth="public", website=True, sitemap=False, readonly=True)
+                 type='http', auth="public", website=True, sitemap=False, replica=True)
     def tags(self, forum, tag_char='', filters='all', search='', **post):
         """Render a list of tags matching filters and search parameters.
 

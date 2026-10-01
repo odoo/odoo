@@ -200,7 +200,7 @@ class CustomerPortal(Controller):
         """
         return False, False, False
 
-    @route(['/my/counters'], type='jsonrpc', auth="user", website=True, readonly=True)
+    @route(['/my/counters'], type='jsonrpc', auth="user", website=True, replica=True)
     def counters(self, counters, **kw):
         """Compute each badges record count for /my & /my/home routes template rendering.
 
@@ -261,7 +261,7 @@ class CustomerPortal(Controller):
             'page_name': 'my_details',
         }
 
-    @route('/my/addresses', type='http', auth='user', readonly=True, website=True)
+    @route('/my/addresses', type='http', auth='user', replica=True, website=True)
     def my_addresses(self, **query_params):
         """Display the user's addresses."""
         partner_sudo = request.env.user.partner_id  # env.user is always sudoed
@@ -330,7 +330,7 @@ class CustomerPortal(Controller):
         auth='user',
         website=True,
         sitemap=False,
-        readonly=True,
+        replica=True,
     )
     def portal_address(
         self, partner_id=None, address_type='billing', use_delivery_as_billing=False, **query_params
@@ -932,7 +932,7 @@ class CustomerPortal(Controller):
         auth='public',
         methods=['POST'],
         website=True,
-        readonly=True,
+        replica=True,
     )
     def portal_address_country_info(self, country, address_type, **kwargs):
         address_fields = country._get_address_fields()
@@ -967,7 +967,7 @@ class CustomerPortal(Controller):
         auth='public',
         methods=['POST'],
         website=True,
-        readonly=True,
+        replica=True,
     )
     def portal_address_state_info(self, country_id, state_id=False, **kw):
         """Return the cities of the selected state, or all cities of the country when no state is

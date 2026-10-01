@@ -13,7 +13,7 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
         type="jsonrpc",
         auth="public",
         website=True,
-        readonly=True,
+        replica=True,
     )
     def website_sale_combo_configurator_get_data(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
@@ -25,7 +25,7 @@ class WebsiteSaleComboConfiguratorController(SaleComboConfiguratorController, We
         type="jsonrpc",
         auth="public",
         website=True,
-        readonly=True,
+        replica=True,
     )
     def website_sale_combo_configurator_get_price(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)

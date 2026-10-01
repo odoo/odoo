@@ -74,7 +74,7 @@ class WebManifest(http.Controller):
             }
         return manifest
 
-    @http.route('/web/manifest.webmanifest', type='http', auth='public', methods=['GET'], readonly=True)
+    @http.route('/web/manifest.webmanifest', type='http', auth='public', methods=['GET'], replica=True)
     def webmanifest(self):
         """ Returns a WebManifest describing the metadata associated with a web application.
         Using this metadata, user agents can provide developers with means to create user
@@ -84,7 +84,7 @@ class WebManifest(http.Controller):
             'Content-Type': 'application/manifest+json'
         })
 
-    @http.route('/web/service-worker.js', type='http', auth='public', methods=['GET'], readonly=True)
+    @http.route('/web/service-worker.js', type='http', auth='public', methods=['GET'], replica=True)
     def service_worker(self):
         response = request.make_response(
             self._get_service_worker_content(),
@@ -105,7 +105,7 @@ class WebManifest(http.Controller):
     def _icon_path(self):
         return 'web/static/img/odoo-icon-192x192.png'
 
-    @http.route('/odoo/offline', type='http', auth='public', methods=['GET'], readonly=True)
+    @http.route('/odoo/offline', type='http', auth='public', methods=['GET'], replica=True)
     def offline(self):
         """ Returns the offline page delivered by the service worker """
         with file_open(self._icon_path(), 'rb') as f:
