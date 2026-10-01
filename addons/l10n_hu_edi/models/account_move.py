@@ -273,19 +273,10 @@ class AccountMove(models.Model):
         return chain_invoices
 
     def _l10n_hu_get_currency_rate(self):
-        """ Get the invoice currency / HUF rate.
-
-            We don't use `invoice_currency_rate` to avoid rounding error as 1/0.002470 ≃ 404.87,
-            and we want exactly 404.87, i.e. the rate given by the MNB of Hungary, to avoid NAV error
-            upon XML submission.
-        """
+        """ Get the invoice currency / HUF rate. """
         self.ensure_one()
-        return self.env['res.currency']._get_conversion_rate(
-            from_currency=self.currency_id,
-            to_currency=self.env.ref('base.HUF'),
-            company=self.company_id,
-            date=self._get_invoice_currency_rate_date(),
-        )
+
+        return 1 / self.invoice_currency_rate
 
     def _l10n_hu_edi_set_chain_index(self):
         """ Set the l10n_hu_invoice_chain_index field. """
@@ -905,10 +896,11 @@ class AccountMove(models.Model):
                     last_reconciled_payment = reconciled_moves.filtered(lambda m: m.origin_payment_id or m.statement_line_id).sorted('date', reverse=True)[:1]
 
                     if last_reconciled_payment:
+                        paid_advance_invoice = advance_invoices.filtered(lambda m: last_reconciled_payment in m._get_reconciled_amls().move_id)[0]
                         line_values.update({
-                            'advanceOriginalInvoice': advance_invoices.filtered(lambda m: last_reconciled_payment in m._get_reconciled_amls().move_id)[0].name,
+                            'advanceOriginalInvoice': paid_advance_invoice.name,
                             'advancePaymentDate': last_reconciled_payment.date,
-                            'advanceExchangeRate': last_reconciled_payment._l10n_hu_get_currency_rate(),
+                            'advanceExchangeRate': paid_advance_invoice._l10n_hu_get_currency_rate(),
                         })
 
             if line.display_type == 'product':
