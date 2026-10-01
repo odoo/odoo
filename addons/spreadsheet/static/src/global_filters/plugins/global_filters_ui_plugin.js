@@ -14,10 +14,7 @@ const { UuidGenerator, createEmptyExcelSheet, createEmptySheet, toXC } = helpers
  */
 
 import { OdooUIPlugin } from "@spreadsheet/plugins";
-import {
-    globalFieldMatchingRegistry,
-    checkFilterAndValue,
-} from "@spreadsheet/global_filters/helpers";
+import { checkFilterAndValue } from "@spreadsheet/global_filters/helpers";
 
 export class GlobalFiltersUIPlugin extends OdooUIPlugin {
     static getters = /** @type {const} */ (["exportSheetWithActiveFilters"]);
@@ -52,19 +49,20 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                 }
                 break;
             case "SET_DATASOURCE_FIELD_MATCHING": {
-                const matcher = globalFieldMatchingRegistry.get(cmd.dataSourceType);
+                const matcher = this.getters
+                    .getGlobalFieldMatchingRegistry()
+                    .get(cmd.dataSourceType);
                 /**
                  * cmd.fieldMatchings looks like { [filterId]: { chain, type } }
                  */
                 for (const filterId in cmd.fieldMatchings) {
                     const filterFieldMatching = {};
-                    for (const dataSourceId of matcher.getIds(this.getters)) {
+                    for (const dataSourceId of matcher.getIds()) {
                         if (dataSourceId === cmd.dataSourceId) {
                             filterFieldMatching[dataSourceId] = cmd.fieldMatchings[filterId];
                         } else {
                             filterFieldMatching[dataSourceId] =
-                                matcher.getFieldMatching(this.getters, dataSourceId, filterId) ||
-                                {};
+                                matcher.getFieldMatching(dataSourceId, filterId) || {};
                         }
                     }
                     this.dispatch("EDIT_GLOBAL_FILTER", {
