@@ -100,10 +100,12 @@ const LINE_COLLAPSE_ARCH = `
 onRpc("has_group", () => true);
 
 onRpc("onchange_batch", ({ args }) => {
-    const [changesList] = args;
+    const [recordsList] = args;
 
-    return changesList.map((changes) => ({
-        value: changes,
+    return recordsList.map((record) => ({
+        id: false,
+        virtual_id: false,
+        result: { value: record.changes },
     }));
 });
 

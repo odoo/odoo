@@ -1008,7 +1008,7 @@ export class StaticList extends DataPoint {
             }
         }
 
-        const changesList = records.map((record) => {
+        const recordsList = records.map((record) => {
             const changes = {
                 ...copyRecordData(record, copyFields),
                 [this.handleField]: sequence++,
@@ -1018,30 +1018,33 @@ export class StaticList extends DataPoint {
                 changes[this.config.relationField] = { ...parentChanges };
             }
 
-            return changes;
+            // keep ids false since we're creating new records
+            return {
+                id: false,
+                virtual_id: false,
+                changes,
+                field_names: [],
+            };
         });
 
-        const fieldsSpec = getFieldsSpec(
-            this.activeFields,
-            this.fields,
-            this.evalContext,
-            { withInvisible: true }
-        );
+        const fieldsSpec = getFieldsSpec(this.activeFields, this.fields, this.evalContext, {
+            withInvisible: true,
+        });
 
         const responses = await this.model.orm.call(
             this.resModel,
             "onchange_batch",
-            [changesList, [], fieldsSpec],
+            [recordsList, fieldsSpec],
             {
                 context: this.context,
             }
         );
 
-        const valuesList = responses.map(({ value, warning }) => {
-            if (warning) {
-                this.model._displayOnchangeWarning(warning);
+        const valuesList = responses.map(({ result }) => {
+            if (result.warning) {
+                this.model._displayOnchangeWarning(result.warning);
             }
-            return value;
+            return result.value;
         });
 
         const newRecords = valuesList.map((values) =>
