@@ -30,7 +30,7 @@ declare module "registries" {
     export interface FavoriteMenuRegistryItemShape {
         Component: typeof Component;
         groupNumber: number;
-        isDisplayed?: (env: OdooEnv) => boolean;
+        isDisplayed?(): boolean;
     }
 
     export type FormattersRegistryItemShape = (value: any) => any;
