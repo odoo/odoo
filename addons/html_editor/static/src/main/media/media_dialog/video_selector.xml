@@ -41,7 +41,7 @@
                     <b>Video code </b>(URL or Embed)
                 </label>
                 <div class="text-start">
-                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b>, <b><i>Facebook</i></b>, <b><i>Instagram</i></b>, <b><i>Google Drive</i></b>, <b><i>Twitch</i></b> and <b><i>Loom</i></b> videos<t t-if="this.props.allowVideoFile">, as well as a direct link to an <b><i>MP4</i></b>, <b><i>WebM</i></b> or <b><i>Ogg</i></b> file</t></small>
+                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b>, <b><i>Facebook</i></b>, <b><i>Instagram</i></b>, <b><i>Google Drive</i></b>, <b><i>Twitch</i></b> and <b><i>Loom</i></b> videos and playlists<t t-if="this.props.allowVideoFile">, as well as a direct link to an <b><i>MP4</i></b>, <b><i>WebM</i></b> or <b><i>Ogg</i></b> file</t></small>
                 </div>
                 <textarea t-ref="this.urlInputRef" t-model.proxy="this.state.urlInput" class="form-control" id="o_video_text" placeholder="Copy-paste your URL or embed code here" t-on-input="this.onChangeUrl" t-att-class="{ 'is-valid': this.state.urlInput and !this.state.errorMessage and !this.state.isValidatingUrl, 'is-invalid': this.state.urlInput and this.state.errorMessage }"/>
             </div>
