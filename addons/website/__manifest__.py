@@ -307,7 +307,6 @@
             'website/static/src/js/utils.js',
             'web/static/src/core/autocomplete/*',
             'website/static/src/components/autocomplete_with_pages/*',
-            'website/static/src/js/tours/tour_utils.js',
             'website/static/src/js/content/compatibility.js',
             'website/static/src/js/user_custom_javascript.js',
             'website/static/src/js/http_cookie.js',
@@ -380,6 +379,7 @@
         ],
         'web.assets_tests': [
             'website/static/tests/tours/**/*',
+            'website/static/src/js/tours/tour_utils.js',
             'website/static/src/client_actions/website_preview/website_builder_action_test_mode.js',
             'html_builder/static/src/utils/utils_css.js',
         ],
