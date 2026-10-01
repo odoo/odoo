@@ -19,12 +19,20 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'web/static/src/views/fields/file_handler.*',
             'website_profile/static/src/scss/website_profile.scss',
-            'website_profile/static/src/components/**/*',
             'website_profile/static/src/interactions/**/*',
             ('remove', 'website_profile/static/src/interactions/**/*.edit.js'),
+        ],
+        'website_profile.assets_html_editor': [
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_frontend_helpers'),
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
             ('include', 'html_editor.assets_editor'),
+            'web/static/src/views/fields/file_handler.*',
+            'website_profile/static/src/components/**/*',
         ],
         'website.assets_inside_builder_iframe': [
             'website_profile/static/src/**/*.edit.js',

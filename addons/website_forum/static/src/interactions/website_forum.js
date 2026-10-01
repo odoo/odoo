@@ -1,5 +1,6 @@
 import { closestScrollable, scrollTo } from "@html_builder/utils/scrolling";
 import { markup, usePlugin } from "@odoo/owl";
+import { loadBundle } from "@web/core/assets";
 import { location } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -11,7 +12,6 @@ import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 import { htmlJoin } from "@web/core/utils/html";
 import { Interaction } from "@web/public/interaction";
 import { session } from "@web/session";
-import { WebsiteForumWysiwyg } from "@website_forum/components/website_forum_wysiwyg/website_forum_wysiwyg";
 import { FlagMarkAsOffensiveDialog } from "../components/flag_mark_as_offensive/flag_mark_as_offensive";
 import { WebsiteForumTagsWrapper } from "../components/website_forum_tags_wrapper";
 
@@ -98,7 +98,38 @@ export class WebsiteForum extends Interaction {
             });
         }
 
-        this.el.querySelectorAll("textarea.o_wysiwyg_loader").forEach((textareaEl) => {
+        const textareaEls = this.el.querySelectorAll("textarea.o_wysiwyg_loader");
+        if (textareaEls.length) {
+            this.waitFor(loadBundle("website_profile.assets_html_editor")).then(() =>
+                this.mountWysiwygs(textareaEls)
+            );
+        }
+
+        this.el.querySelectorAll(".o_wforum_bio_popover").forEach((authorBox) => {
+            this.bootstrap.getOrCreateInstance(window.Popover, authorBox, {
+                trigger: "hover",
+                offset: "10",
+                animation: false,
+                html: true,
+                customClass: "o_wforum_bio_popover_container shadow-sm",
+            });
+        });
+
+        this.el
+            .querySelectorAll(
+                ".o_wforum_question, .o_wforum_answer, .o_wforum_post_comment, .o_wforum_last_activity"
+            )
+            .forEach((post) => {
+                post.querySelector(".o_wforum_relative_datetime").textContent =
+                    luxon.DateTime.fromSQL(post.dataset.lastActivity, { zone: "utc" }).toRelative();
+            });
+    }
+
+    mountWysiwygs(textareaEls) {
+        const { WebsiteForumWysiwyg } = odoo.loader.modules.get(
+            "@website_forum/components/website_forum_wysiwyg/website_forum_wysiwyg"
+        );
+        textareaEls.forEach((textareaEl) => {
             const editorKarma = parseInt(textareaEl.dataset.karma || 0); // default value for backward compatibility
             const hasFullEdit = parseInt(this.el.querySelector("#karma").value) >= editorKarma;
             const isReply = !!textareaEl.closest("#post_reply");
@@ -126,25 +157,6 @@ export class WebsiteForum extends Interaction {
 
             this.mountComponent(wysiwygWrapper, WebsiteForumWysiwyg, props);
         });
-
-        this.el.querySelectorAll(".o_wforum_bio_popover").forEach((authorBox) => {
-            this.bootstrap.getOrCreateInstance(window.Popover, authorBox, {
-                trigger: "hover",
-                offset: "10",
-                animation: false,
-                html: true,
-                customClass: "o_wforum_bio_popover_container shadow-sm",
-            });
-        });
-
-        this.el
-            .querySelectorAll(
-                ".o_wforum_question, .o_wforum_answer, .o_wforum_post_comment, .o_wforum_last_activity"
-            )
-            .forEach((post) => {
-                post.querySelector(".o_wforum_relative_datetime").textContent =
-                    luxon.DateTime.fromSQL(post.dataset.lastActivity, { zone: "utc" }).toRelative();
-            });
     }
 
     /**
