@@ -3540,3 +3540,26 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             employee_allowed,
             "A regular user must not be able to select an unselectable time off type",
         )
+
+    def test_leave_autovalidation_for_manager(self):
+        """ A time off officer creating a time off for someone else gets it automatically approved,
+            but not when creating it for themselves.
+        """
+        HrLeave = self.env['hr.leave'].with_user(self.user_hrmanager)
+        own_leave = HrLeave.create({
+            'name': 'Own Leave',
+            'employee_id': self.employee_hrmanager_id,
+            'work_entry_type_id': self.holidays_type_1.id,
+            'request_date_from': '2025-09-02',
+            'request_date_to': '2025-09-02',
+        })
+        self.assertEqual(own_leave.state, 'confirm')
+
+        other_leave = HrLeave.create({
+            'name': 'Employee Leave',
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': self.holidays_type_1.id,
+            'request_date_from': '2025-09-02',
+            'request_date_to': '2025-09-02',
+        })
+        self.assertEqual(other_leave.state, 'validate')
