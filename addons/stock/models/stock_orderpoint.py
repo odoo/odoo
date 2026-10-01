@@ -745,6 +745,10 @@ class StockWarehouseOrderpoint(models.Model):
             values['reference_ids'] = self.env['stock.reference'].browse(reference.get(self.id))
         return values
 
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = f"{record.product_min_qty:g} - {record.product_max_qty:g} for {record.product_id.display_name} in {record.location_id.display_name}"
+
     def _procure_orderpoint_confirm(self, use_new_cursor=False, company_id=None, raise_user_error=True):
         """ Create procurements based on orderpoints.
         :param bool use_new_cursor: if set, use a dedicated cursor and auto-commit after processing
@@ -764,12 +768,18 @@ class StockWarehouseOrderpoint(models.Model):
                 while orderpoints_batch:
                     procurements = []
                     for orderpoint in orderpoints_batch:
+                        orderpoint_display = "%g - %g for %s in %s" % (
+                            orderpoint.product_min_qty,
+                            orderpoint.product_max_qty,
+                            orderpoint.product_id.display_name,
+                            orderpoint.location_id.display_name,
+                        )
                         origins = orderpoint.env.context.get('origins', {}).get(orderpoint.id, False)
                         if origins:
                             origins = self.env['stock.reference'].browse(origins)
-                            origin = '%s - %s' % (orderpoint.display_name, ','.join(origins.mapped('name')))
+                            origin = '%s - %s' % (orderpoint_display, ','.join(origins.mapped('name')))
                         else:
-                            origin = orderpoint.name
+                            origin = orderpoint_display
                         if orderpoint.uom_id.compare(orderpoint.qty_to_order, 0.0) == 1:
                             date = orderpoint._get_orderpoint_procurement_date()
                             global_horizon_days = orderpoint.get_horizon_days()
@@ -778,7 +788,7 @@ class StockWarehouseOrderpoint(models.Model):
                             values = orderpoint._prepare_procurement_values(date=date)
                             procurements.append(self.env['stock.rule'].Procurement(
                                 orderpoint.product_id, orderpoint.qty_to_order, orderpoint.uom_id,
-                                orderpoint.location_id, orderpoint.name, origin,
+                                orderpoint.location_id, orderpoint.display_name, origin,
                                 orderpoint.company_id, values))
 
                     try:
