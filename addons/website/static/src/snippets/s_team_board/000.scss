@@ -23,7 +23,7 @@
         }
     }
 
-     &.o_team_board_compact {
+    &.o_team_board_compact {
         .s_team_board_card {
             .card-body {
                 padding-top: 0.5rem;
@@ -33,3 +33,23 @@
         }
     }
 }
+
+.o_team_board_modal .o_team_board_modal_card {
+    .o_card_img_wrapper {
+        flex: 0 0 33.3333%;
+        margin: 0;
+
+        .o_card_img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--bs-border-radius);
+        }
+    }
+
+    .card-body {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+}
+

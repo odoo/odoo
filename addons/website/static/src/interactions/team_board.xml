@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website.SendMessageModal">
+        <Dialog size="'lg'" modalRef="this.modalRef" contentClass="'o_team_board_modal'">
+            <div class="o_team_board_modal_card d-flex align-items-start" t-out="this.cardContent">
+
+            </div>
+            <t t-set-slot="footer">
+                <button type="button" class="btn btn-primary"
+                        t-on-click="this.sendMessage"
+                        t-att-disabled="this.state.sending">
+                    <t t-if="this.state.sending"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> Sending...</t>
+                    <t t-else="">Send a Message</t>
+                </button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
