@@ -175,7 +175,7 @@ class ResUsers(models.Model):
             synced_events |= synced_recurrences.calendar_event_ids - synced_recurrences._get_outliers()
             events = self.env['calendar.event']._get_records_to_sync(calendar, full_sync=full_sync)
             (events - synced_events).with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
-            if bool(events | synced_events) or bool(recurrences | synced_recurrences):
+            if bool(synced_events) or bool(synced_recurrences):
                 need_refresh = True
 
         return need_refresh
