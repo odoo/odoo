@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.event_sale.tests.common import TestEventSaleCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
@@ -613,3 +614,42 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(registration.sale_status, 'to_pay', "Price of $0.01 should be paid")
         registration.sale_order_id.action_confirm()
         self.assertEqual(registration.sale_status, 'sold')
+
+    def test_write_signature_seat_availability(self):
+        """ Test that writing a signature on a quotation for a sold-out event ticket
+        raises a ValidationError on Accept & Sign step before payment processing. """
+
+        self.event_0.write({
+            'seats_max': 1,
+            'seats_limited': True,
+        })
+        self.ticket.write({'seats_max': 1, 'price': 100.0})
+        # Already fill the single available seat
+        self.env['event.registration'].create({
+            'event_id': self.event_0.id,
+            'event_ticket_id': self.ticket.id,
+            'name': 'Existing Attendee',
+            'email': 'attendee@example.com',
+            'state': 'open',
+        })
+        # Create a new draft quotation for the paid ticket
+        quote = self.env['sale.order'].create({
+            'partner_id': self.sale_order.partner_id.id,
+            'require_signature': True,
+            'require_payment': True,
+            'order_line': [
+                Command.create({
+                    'product_id': self.event_product.id,
+                    'price_unit': 100.0,
+                    'event_id': self.event_0.id,
+                    'event_ticket_id': self.ticket.id,
+                    'product_uom_qty': 1,
+                }),
+            ],
+        })
+        # Attempting to sign the quotation should raise ValidationError on Accept & Sign
+        with self.assertRaises(ValidationError):
+            quote.write({
+                'signed_by': 'John Doe',
+                'signature': b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+            })
