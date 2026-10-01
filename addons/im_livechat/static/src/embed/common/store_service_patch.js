@@ -1,5 +1,5 @@
 import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
-import { Store } from "@mail/core/common/store_service";
+import { Store } from "@mail/core/common/store_plugin";
 import { fields } from "@mail/model/export";
 
 import { patch } from "@web/core/utils/patch";

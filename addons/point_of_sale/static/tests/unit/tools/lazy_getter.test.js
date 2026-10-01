@@ -1,4 +1,4 @@
-import { afterEach, expect, test } from "@odoo/hoot";
+import { after, afterEach, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { Component, onMounted, onPatched, proxy, t, useProps, xml } from "@odoo/owl";
 import {
@@ -13,9 +13,11 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { zip } from "@web/core/utils/arrays";
 import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
 import { PosTicketPrinterPlugin } from "@point_of_sale/app/plugins/pos_ticket_printer_plugin";
+import { StorePlugin } from "@mail/core/common/store_plugin";
 
 /**
  * @param {string} value
@@ -144,6 +146,9 @@ class Root extends Component {
 
 test("each getter should only be called once and only when needed", async () => {
     clearRegistry(registry.category("services"));
+    // the store needs the legacy services that were just cleared
+    services.delete(StorePlugin);
+    after(() => services.add(StorePlugin));
 
     patchWithCleanup(PosDataPlugin.prototype, {
         _onWillStart() {
@@ -215,6 +220,9 @@ test("each getter should only be called once and only when needed", async () => 
 
 test("only dependent components rerender", async () => {
     clearRegistry(registry.category("services"));
+    // the store needs the legacy services that were just cleared
+    services.delete(StorePlugin);
+    after(() => services.add(StorePlugin));
 
     patchWithCleanup(PosDataPlugin.prototype, {
         _onWillStart() {

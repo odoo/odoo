@@ -1,4 +1,4 @@
-import { Store } from "@mail/core/common/store_service";
+import { Store } from "@mail/core/common/store_plugin";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { compareDatetime } from "@mail/utils/common/misc";
 

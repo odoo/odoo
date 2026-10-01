@@ -1,4 +1,4 @@
-import { Store } from "@mail/core/common/store_service";
+import { Store } from "@mail/core/common/store_plugin";
 import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";

@@ -31,7 +31,7 @@ export class LivechatService {
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {{
-     * "mail.store": import("@mail/core/common/store_service").Store
+     * "mail.store": import("@mail/core/common/store_plugin").Store
      * }} services
      */
     setup(env, services) {

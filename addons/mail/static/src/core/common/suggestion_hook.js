@@ -51,7 +51,7 @@ export const optionType = (store) =>
  *   | import("models").ResRole
  *   | import("models").CannedResponse
  *   | import("@web/core/emoji_picker/emoji_picker").Emoji
- *   | import("@mail/core/common/store_service").SpecialMention} Suggestion
+ *   | import("@mail/core/common/store_plugin").SpecialMention} Suggestion
  */
 
 export class UseSuggestion {

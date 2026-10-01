@@ -298,7 +298,7 @@ export class SuggestionService {
     }
 
     /**
-     * @param {[import("models").Persona | import("@mail/core/common/store_service").SpecialMention]} [partners]
+     * @param {[import("models").Persona | import("@mail/core/common/store_plugin").SpecialMention]} [partners]
      * @param {String} [searchTerm]
      * @param {import("models").Thread} thread
      * @returns {[import("models").Persona]}

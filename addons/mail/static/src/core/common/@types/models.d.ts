@@ -32,7 +32,7 @@ declare module "models" {
     import { ResUsers as ResUsersClass } from "@mail/core/common/res_users_model";
     import { ResUsersSettings as ResUsersSettingsClass } from "@mail/core/common/res_users_settings_model";
     import { Settings as SettingsClass } from "@mail/core/common/settings_model";
-    import { Store as StoreClass } from "@mail/core/common/store_service";
+    import { Store as StoreClass } from "@mail/core/common/store_plugin";
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
     import { Volume as VolumeClass } from "@mail/core/common/volume_model";
 

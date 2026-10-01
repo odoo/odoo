@@ -1,4 +1,4 @@
-import { Store } from "@mail/core/common/store_service";
+import { Store } from "@mail/core/common/store_plugin";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { formatDateTime } from "@web/views/fields/formatters";
