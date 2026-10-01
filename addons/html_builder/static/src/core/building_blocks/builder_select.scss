@@ -111,14 +111,6 @@
             color: var(--o-hb-select-color-hover);
         }
 
-        &:first-child {
-            @include border-top-radius(var(--#{$prefix}popover-inner-border-radius));
-        }
-
-        &:last-child {
-            @include border-bottom-radius(var(--#{$prefix}popover-inner-border-radius));
-        }
-
         &::before {
             color: $active-color !important;
         }
@@ -133,6 +125,18 @@
                 border: 2px solid color-mix(in srgb, $active-color 50%, transparent);
                 border-radius: inherit;
             }
+        }
+    }
+
+    // SelectMenu items never touch the menu's edges (searchbox on top) and
+    // the menu clips its own content.
+    &:not(.o_select_menu_menu) .dropdown-item {
+        &:first-child {
+            @include border-top-radius(var(--#{$prefix}popover-inner-border-radius));
+        }
+
+        &:last-child {
+            @include border-bottom-radius(var(--#{$prefix}popover-inner-border-radius));
         }
     }
 
