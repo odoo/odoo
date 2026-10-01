@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { KEProxyDialog } from "./ke_proxy_dialog";
 import { useService } from "@web/core/utils/hooks";
 
-export function KESendInvoiceClientAction(env, action) {
+export function KESendInvoiceClientAction(action) {
     const dialog = useService("dialog");
     return new Promise((resolve) => {
         dialog.add(

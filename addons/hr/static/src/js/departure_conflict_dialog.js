@@ -7,7 +7,7 @@ import { ORM } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-registry.category("actions").add("departure_conflict_dialog", async (env, actionDescr) => {
+registry.category("actions").add("departure_conflict_dialog", async (actionDescr) => {
     const { title, message, employee_id } = actionDescr.params || {};
     const orm = usePlugin(ORM);
     const dialog = useService("dialog");

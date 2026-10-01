@@ -224,7 +224,7 @@ const StorePatch = {
 };
 patch(Store.prototype, StorePatch);
 
-registry.category("actions").add("mail.store_insert", function storeInsertAction(env, action) {
+registry.category("actions").add("mail.store_insert", function storeInsertAction(action) {
     const store = useService("mail.store");
     store.insert(action.params.store_values);
     return action.params.next_action;

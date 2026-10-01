@@ -276,7 +276,7 @@ test("getCurrentAction (virtual controller)", async () => {
 
 test("action in handler registry", async () => {
     await makeTestApp();
-    actionHandlersRegistry.add("ir.action_in_handler_registry", ({ action }) =>
+    actionHandlersRegistry.add("ir.action_in_handler_registry", (action) =>
         expect.step(action.type)
     );
     await getService("action").doAction({

@@ -1,9 +1,13 @@
+import { usePlugin } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { registry } from "@web/core/registry";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 import { _t } from "@web/core/l10n/translation";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { ORM } from "@web/core/orm_plugin";
+import { registry } from "@web/core/registry";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 
 export function showTemplateUndoNotification(
-    env,
     {
         model,
         recordId,
@@ -13,27 +17,31 @@ export function showTemplateUndoNotification(
         undoCallback,
     }
 ) {
-    const undoNotification = env.services.notification.add(_t(message), {
+    const action = usePlugin(ActionPlugin);
+    const notification = usePlugin(NotificationPlugin);
+    const orm = usePlugin(ORM);
+
+    const undoNotification = notification.add(_t(message), {
         type: actionType,
         buttons: [
             {
                 name: _t("Undo"),
                 icon: "undo",
                 onClick: async () => {
-                    const res = await env.services.orm.call(model, undoMethod, [recordId]);
+                    const res = await orm.call(model, undoMethod, [recordId]);
                     if (undoCallback) {
-                        await env.services.orm.call(model, undoCallback.method, undoCallback.args);
+                        await orm.call(model, undoCallback.method, undoCallback.args);
                     }
                     if (res && undoMethod !== "unlink") {
-                        env.services.action.doAction(res);
+                        action.doAction(res);
                     } else if (undoMethod === "unlink") {
                         // Taking out the controller to be restored after unlinking the record
                         const restoreController =
-                            env.services.action.currentController.config.breadcrumbs?.at(-2);
+                            action.currentController.config.breadcrumbs?.at(-2);
                         await restoreController?.onSelected();
                         const postAction = undoCallback?.post_action;
                         if (postAction) {
-                            env.services.action.doAction(postAction);
+                            action.doAction(postAction);
                         }
                     }
                     undoNotification();
@@ -44,7 +52,6 @@ export function showTemplateUndoNotification(
 }
 
 export function showTemplateUndoConfirmationDialog(
-    env,
     {
         model,
         recordId,
@@ -54,14 +61,18 @@ export function showTemplateUndoConfirmationDialog(
         confirmationCallback,
     }
 ) {
-    env.services.dialog.add(ConfirmationDialog, {
+    const action = usePlugin(ActionPlugin);
+    const dialog = usePlugin(DialogPlugin);
+    const orm = usePlugin(ORM);
+
+    dialog.add(ConfirmationDialog, {
         body: bodyMessage,
         confirmLabel: confirmLabel,
         confirm: async () => {
-            const action = await env.services.orm.call(model, undoMethod, [recordId]);
-            await env.services.action.doAction(action);
+            const actionDescr = await orm.call(model, undoMethod, [recordId]);
+            await action.doAction(actionDescr);
             if (confirmationCallback) {
-                await env.services.orm.call(
+                await orm.call(
                     model,
                     confirmationCallback.method,
                     confirmationCallback.args
@@ -72,32 +83,36 @@ export function showTemplateUndoConfirmationDialog(
     });
 }
 
-export async function showTemplateView(env, { recordId }) {
-    const action = await env.services.orm.call(
+export async function showTemplateView({ recordId }) {
+    const action = usePlugin(ActionPlugin);
+    const orm = usePlugin(ORM);
+
+    const actionDescr = await orm.call(
         "project.project",
         "action_create_template_from_project",
         [recordId]
     );
-    const templateId = action.params.project_id;
-    const currentView = env.services.action.currentController.view.type;
+    const templateId = actionDescr.params.project_id;
+    const currentView = action.currentController.view.type;
     if (currentView === "form") {
-        await env.services.action.doAction({
+        await action.doAction({
             type: "ir.actions.act_window",
             res_model: "project.project",
             views: [[false, "form"]],
             res_id: templateId,
         });
     } else {
-        await env.services.action.doAction("project.act_project_project_2_project_task_all", {
+        await action.doAction("project.act_project_project_2_project_task_all", {
             viewType: currentView,
             stackPosition: "replaceCurrentAction",
             additionalContext: { active_id: templateId },
         });
     }
-    await env.services.action.doAction(action);
+    await action.doAction(actionDescr);
 }
-export async function showProjectForm(env, { model, recordId }) {
-    await env.services.action.doAction({
+export async function showProjectForm({ model, recordId }) {
+    const action = usePlugin(ActionPlugin);
+    await action.doAction({
         type: "ir.actions.act_window",
         res_model: model,
         views: [[false, "form"]],
@@ -106,9 +121,9 @@ export async function showProjectForm(env, { model, recordId }) {
 }
 
 // Task → Template Notification
-registry.category("actions").add("project_show_template_notification", (env, action) => {
+registry.category("actions").add("project_show_template_notification", (action) => {
     const params = action.params || {};
-    showTemplateUndoNotification(env, {
+    showTemplateUndoNotification({
         model: "project.task",
         recordId: params.task_id,
         message: _t("Task converted to template"),
@@ -119,9 +134,9 @@ registry.category("actions").add("project_show_template_notification", (env, act
 // Task → Template Undo Confirmation Dialog
 registry
     .category("actions")
-    .add("project_show_template_undo_confirmation_dialog", (env, action) => {
+    .add("project_show_template_undo_confirmation_dialog", (action) => {
         const params = action.params || {};
-        showTemplateUndoConfirmationDialog(env, {
+        showTemplateUndoConfirmationDialog({
             model: "project.task",
             recordId: params.task_id,
             bodyMessage: _t(
@@ -133,15 +148,15 @@ registry
     });
 
 // Project → Template Create Redirection
-registry.category("actions").add("project_to_template_redirection_action", (env, action) => {
+registry.category("actions").add("project_to_template_redirection_action", (action) => {
     const params = action.params || {};
-    return showTemplateView(env, { recordId: params.project_id });
+    return showTemplateView({ recordId: params.project_id });
 });
 
 // Project → Template Notification
-registry.category("actions").add("project_template_show_notification", (env, action) => {
+registry.category("actions").add("project_template_show_notification", (action) => {
     const params = action.params || {};
-    showTemplateUndoNotification(env, {
+    showTemplateUndoNotification({
         model: "project.project",
         recordId: params.project_id,
         message: params.message || _t("Project converted to template."),
@@ -154,9 +169,9 @@ registry.category("actions").add("project_template_show_notification", (env, act
 // Project → Template Undo Confirmation Dialog
 registry
     .category("actions")
-    .add("project_template_show_undo_confirmation_dialog", (env, action) => {
+    .add("project_template_show_undo_confirmation_dialog", (action) => {
         const params = action.params || {};
-        showTemplateUndoConfirmationDialog(env, {
+        showTemplateUndoConfirmationDialog({
             model: "project.project",
             recordId: params.project_id,
             bodyMessage: params.message,
@@ -167,10 +182,10 @@ registry
     });
 
 // Top Menu → Project Form  Make Breadcrumbs
-registry.category("actions").add("project_top_menu_overview", (env, action) => {
+registry.category("actions").add("project_top_menu_overview", (action) => {
     const params = action || {};
     console.log(params);
-    showProjectForm(env, {
+    showProjectForm({
         model: "project.project",
         recordId: action.res_id,
     });
