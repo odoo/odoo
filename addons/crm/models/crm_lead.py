@@ -1979,13 +1979,22 @@ class Lead(models.Model):
         return res
 
     def _message_get_default_recipients(self):
-        return {
-            r.id: {
-                'partner_ids': [],
-                'email_to': ','.join(tools.email_normalize_all(r.email_from)) or r.email_from,
-                'email_cc': False,
-            } for r in self
-        }
+        res = {}
+        for lead in self:
+            partner = lead.partner_id
+            if partner and partner.email_normalized and partner.email_normalized == lead.email_normalized:
+                res[lead.id] = {
+                    'partner_ids': partner.ids,
+                    'email_to': False,
+                    'email_cc': False,
+                }
+            else:
+                res[lead.id] = {
+                    'partner_ids': [],
+                    'email_to': ','.join(tools.email_normalize_all(lead.email_from)) or lead.email_from,
+                    'email_cc': False,
+                }
+        return res
 
     def _message_get_suggested_recipients(self):
         recipients = super()._message_get_suggested_recipients()
