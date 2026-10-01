@@ -162,6 +162,20 @@ function createRawInstance(ModelClass) {
 }
 
 /**
+ * @param {Model} model
+ * @param {string[]} errorMessages
+ */
+function ensureNoErrors(model, errorMessages) {
+    if (errorMessages.length) {
+        throw new MockServerError(
+            `Errors in model "${model._name}":\n${errorMessages
+                .map((msg) => `- ${msg}`)
+                .join("\n")}`
+        );
+    }
+}
+
+/**
  * @param {string} modelName
  * @param {string} fieldName
  */
@@ -301,12 +315,18 @@ function getModelDefinition(previous, constructor) {
     }
 
     // Fields declared on '_fields' object
+    /** @type {string[]} */
+    const errorMessages = [];
     for (const [fieldName, fieldDef] of Object.entries(model._fields)) {
         if (!fieldDef) {
             delete model._fields[fieldName];
             continue;
         }
-        validateFieldDefinition(fieldName, fieldDef);
+        if (S_FIELD_REQUIRED_KEYS in fieldDef && fieldDef.name) {
+            errorMessages.push(
+                `Cannot set the name of field "${fieldName}" from its definition: got "${fieldDef.name}"`
+            );
+        }
     }
 
     // Fields declared as JS class fields (do not override explicit fields)
@@ -314,9 +334,11 @@ function getModelDefinition(previous, constructor) {
         if (!fieldDef?.[S_FIELD]) {
             continue;
         }
-        model._fields[fieldName] ||= validateFieldDefinition(fieldName, fieldDef);
+        model._fields[fieldName] ||= fieldDef;
         delete model[fieldName];
     }
+
+    ensureNoErrors(model, errorMessages);
 
     return model;
 }
@@ -540,6 +562,7 @@ function isValidCommand(command) {
 }
 
 /**
+<<<<<<< bbc83e38fcb268cd99e9762ce55a7486357c6c4a
  * @param {ModelRecord} record
  * @param {FieldDefinition} fieldDef
  * @param {unknown} value
@@ -618,6 +641,115 @@ function isValidFieldValue(record, fieldDef) {
 }
 
 /**
+||||||| 9df43e71a362ba0cee662079dd08a1bc2959b190
+ * @param {ModelRecord} record
+ * @param {FieldDefinition} fieldDef
+ * @param {unknown} value
+ * @returns {null | string} null = valid - string = description of expected value
+ */
+function isValidFieldValue(record, fieldDef) {
+    const value = record[fieldDef.name];
+    if (value === false) {
+        // False is the accepted default for all field types
+        return null;
+    }
+    let isValid = true;
+    switch (fieldDef.type) {
+        case "char":
+        case "html":
+        case "text": {
+            isValid = typeof value === "string";
+            break;
+        }
+        case "boolean": {
+            isValid = typeof value === "boolean";
+            break;
+        }
+        case "date": {
+            isValid = R_DATE.test(String(value));
+            break;
+        }
+        case "datetime": {
+            isValid = R_DATE_TIME.test(String(value));
+            break;
+        }
+        case "float":
+        case "monetary": {
+            isValid = typeof value === "number";
+            break;
+        }
+        case "integer": {
+            isValid = Number.isInteger(value);
+            break;
+        }
+        case "many2many":
+        case "one2many": {
+            if (!Array.isArray(value)) {
+                isValid = false;
+            } else if (
+                !value.every((id) => {
+                    if (Array.isArray(id)) {
+                        return isValidCommand(id);
+                    } else {
+                        return isValidId(id, fieldDef, record);
+                    }
+                })
+            ) {
+                return `an id referencing a "${fieldDef.relation}" record`;
+            }
+            break;
+        }
+        case "many2one":
+        case "many2one_reference": {
+            if (!isValidId(value, fieldDef, record)) {
+                return `an id referencing a "${fieldDef.relation}" record`;
+            }
+            break;
+        }
+        case "binary":
+            isValid =
+                typeof value === "string" ||
+                (typeof value === "object" && value.content !== undefined);
+            break;
+        case "properties": {
+            isValid = isObject(value);
+            break;
+        }
+        case "properties_definition": {
+            isValid = value.every(
+                (def) => typeof def.name === "string" && typeof def.type === "string"
+            );
+            break;
+        }
+        case "reference": {
+            const [modelName, id] = getReferenceValue(value);
+            if (!fieldDef.selection.some(([selValue]) => selValue === modelName)) {
+                return formatList(
+                    "or",
+                    fieldDef.selection.map(([selValue]) => safeStringify(selValue))
+                );
+            }
+            if (!isValidId(id, { ...fieldDef, relation: modelName }, record)) {
+                return `an id referencing a "${modelName}" record`;
+            }
+            break;
+        }
+        case "selection": {
+            if (!fieldDef.selection.some(([selValue]) => selValue === value)) {
+                return formatList(
+                    "or",
+                    fieldDef.selection.map(([selValue]) => safeStringify(selValue))
+                );
+            }
+            break;
+        }
+    }
+    return isValid ? null : `"${fieldDef.type}" value`;
+}
+
+/**
+=======
+>>>>>>> e713afdd7fbf9aaf05087bfa04bf88292246df2e
  * @param {number | false} id
  * @param {FieldDefinition} field
  * @param {ModelRecord} [record]
@@ -1259,17 +1391,130 @@ function updateComodelRelationalFields(model, record, originalRecord) {
 }
 
 /**
- * @param {string} fieldName
+ * @param {ModelRecord} record
  * @param {FieldDefinition} fieldDef
+ * @param {unknown} value
+ * @returns {null | string} null = valid - string = description of expected value
  */
+<<<<<<< bbc83e38fcb268cd99e9762ce55a7486357c6c4a
 function validateFieldDefinition(fieldName, fieldDef) {
     if (fieldDef[S_FIELD] && fieldDef.name) {
         throw new MockServerError(
             `Cannot set the name of field "${fieldName}" from its definition: got "${fieldDef.name}"`
         );
+||||||| 9df43e71a362ba0cee662079dd08a1bc2959b190
+function validateFieldDefinition(fieldName, fieldDef) {
+    if (S_FIELD_REQUIRED_KEYS in fieldDef && fieldDef.name) {
+        throw new MockServerError(
+            `Cannot set the name of field "${fieldName}" from its definition: got "${fieldDef.name}"`
+        );
+=======
+function validateFieldValue(record, fieldDef) {
+    const value = record[fieldDef.name];
+    if (value === false) {
+        // False is the accepted default for all field types
+        return null;
+>>>>>>> e713afdd7fbf9aaf05087bfa04bf88292246df2e
     }
+<<<<<<< bbc83e38fcb268cd99e9762ce55a7486357c6c4a
     delete fieldDef[S_FIELD];
     return fieldDef;
+||||||| 9df43e71a362ba0cee662079dd08a1bc2959b190
+    return fieldDef;
+=======
+    let isValid = true;
+    switch (fieldDef.type) {
+        case "char":
+        case "html":
+        case "text": {
+            isValid = typeof value === "string";
+            break;
+        }
+        case "boolean": {
+            isValid = typeof value === "boolean";
+            break;
+        }
+        case "date": {
+            isValid = R_DATE.test(String(value));
+            break;
+        }
+        case "datetime": {
+            isValid = R_DATE_TIME.test(String(value));
+            break;
+        }
+        case "float":
+        case "monetary": {
+            isValid = typeof value === "number";
+            break;
+        }
+        case "integer": {
+            isValid = Number.isInteger(value);
+            break;
+        }
+        case "many2many":
+        case "one2many": {
+            if (!Array.isArray(value)) {
+                isValid = false;
+            } else if (
+                !value.every((id) => {
+                    if (Array.isArray(id)) {
+                        return isValidCommand(id);
+                    } else {
+                        return isValidId(id, fieldDef, record);
+                    }
+                })
+            ) {
+                return `an id referencing a "${fieldDef.relation}" record`;
+            }
+            break;
+        }
+        case "many2one":
+        case "many2one_reference": {
+            if (!isValidId(value, fieldDef, record)) {
+                return `an id referencing a "${fieldDef.relation}" record`;
+            }
+            break;
+        }
+        case "binary":
+            isValid =
+                typeof value === "string" ||
+                (typeof value === "object" && value.content !== undefined);
+            break;
+        case "properties": {
+            isValid = isObject(value);
+            break;
+        }
+        case "properties_definition": {
+            isValid = value.every(
+                (def) => typeof def.name === "string" && typeof def.type === "string"
+            );
+            break;
+        }
+        case "reference": {
+            const [modelName, id] = getReferenceValue(value);
+            if (!fieldDef.selection.some(([selValue]) => selValue === modelName)) {
+                return formatList(
+                    "or",
+                    fieldDef.selection.map(([selValue]) => safeStringify(selValue))
+                );
+            }
+            if (!isValidId(id, { ...fieldDef, relation: modelName }, record)) {
+                return `an id referencing a "${modelName}" record`;
+            }
+            break;
+        }
+        case "selection": {
+            if (!fieldDef.selection.some(([selValue]) => selValue === value)) {
+                return formatList(
+                    "or",
+                    fieldDef.selection.map(([selValue]) => safeStringify(selValue))
+                );
+            }
+            break;
+        }
+    }
+    return isValid ? null : `"${fieldDef.type}" value`;
+>>>>>>> e713afdd7fbf9aaf05087bfa04bf88292246df2e
 }
 
 /**
@@ -3109,12 +3354,32 @@ export class Model extends Array {
         }
 
         // Validate record values
+<<<<<<< bbc83e38fcb268cd99e9762ce55a7486357c6c4a
+||||||| 9df43e71a362ba0cee662079dd08a1bc2959b190
+        const errors = [];
+=======
+        /** @type {string[]} */
+        const errorMessages = [];
+>>>>>>> e713afdd7fbf9aaf05087bfa04bf88292246df2e
         for (const record of this) {
             for (const fieldName of Object.keys(record)) {
+<<<<<<< bbc83e38fcb268cd99e9762ce55a7486357c6c4a
                 const fieldDef = this._fields[fieldName];
                 if (!isValidFieldValue(record, fieldDef)) {
                     throw new MockServerError(
                         `Invalid value for field "${fieldName}" on ${getRecordQualifier(
+||||||| 9df43e71a362ba0cee662079dd08a1bc2959b190
+                const fieldDef = this._fields[fieldName];
+                const expected = isValidFieldValue(record, fieldDef);
+                if (expected) {
+                    errors.push(
+                        `- invalid value for field "${fieldName}" on ${getRecordQualifier(
+=======
+                const expected = validateFieldValue(record, this._fields[fieldName]);
+                if (expected) {
+                    errorMessages.push(
+                        `Invalid value for field "${fieldName}" on ${getRecordQualifier(
+>>>>>>> e713afdd7fbf9aaf05087bfa04bf88292246df2e
                             record
                         )} in model "${this._name}": expected "${fieldDef.type}" and got: ${
                             record[fieldName]
@@ -3122,9 +3387,26 @@ export class Model extends Array {
                     );
                 }
             }
+<<<<<<< bbc83e38fcb268cd99e9762ce55a7486357c6c4a
 
             updateComodelRelationalFields(this, record, originalRecords[record.id]);
         }
+||||||| 9df43e71a362ba0cee662079dd08a1bc2959b190
+            if (!errors.length) {
+                updateComodelRelationalFields(this, record, originalRecords[record.id]);
+            }
+        }
+        if (errors.length) {
+            throw new MockServerError(`Errors in model ${this._name}:\n${errors.join("\n")}`);
+        }
+=======
+            if (!errorMessages.length) {
+                updateComodelRelationalFields(this, record, originalRecords[record.id]);
+            }
+        }
+
+        ensureNoErrors(this, errorMessages);
+>>>>>>> e713afdd7fbf9aaf05087bfa04bf88292246df2e
     }
 
     /**
