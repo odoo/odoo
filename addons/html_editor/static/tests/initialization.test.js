@@ -167,33 +167,6 @@ describe("list normalization", () => {
     });
 });
 
-describe("link normalization", () => {
-    test("should move inline color from anchor to span", async () => {
-        await testEditor({
-            contentBefore: '<p><a href="#" style="color: #008f8c">test</a></p>',
-            contentAfter:
-                '<p><a href="#"><span style="color: rgb(0, 143, 140);">test</span></a></p>',
-        });
-    });
-
-    test("should remove anchor color and retain text color", async () => {
-        await testEditor({
-            contentBefore:
-                '<p><a href="#" style="color: #008f8c"><span style="color: rgb(255, 0, 0);">test</span></a></p>',
-            contentAfter: '<p><a href="#"><span style="color: rgb(255, 0, 0);">test</span></a></p>',
-        });
-    });
-
-    test("should handle inline color styles in multiple anchor elements", async () => {
-        await testEditor({
-            contentBefore:
-                '<p><a href="#" style="color: #008f8c"><span style="color: rgb(255, 0, 0);">test</span></a></p><p><a href="#" style="color: #008f8c">test</a></p>',
-            contentAfter:
-                '<p><a href="#"><span style="color: rgb(255, 0, 0);">test</span></a></p><p><a href="#"><span style="color: rgb(0, 143, 140);">test</span></a></p>',
-        });
-    });
-});
-
 describe("color normalization", () => {
     test("should unwrap nested identical <font> tags with gradient (class and style same)", async () => {
         await testEditor({

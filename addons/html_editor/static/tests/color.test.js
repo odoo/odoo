@@ -430,7 +430,7 @@ test("should distribute color to texts and to button separately", async () => {
         contentBefore: '<p>a[b<a href="#" class="btn">c</a>d]e</p>',
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter:
-            '<p>a<span style="color: rgb(255, 0, 0);">[b<a href="#" class="btn">c</a>d]</span>e</p>',
+            '<p>a<span style="color: rgb(255, 0, 0);">[b</span><a href="#" class="btn" style="color: rgb(255, 0, 0);">c</a><span style="color: rgb(255, 0, 0);">d]</span>e</p>',
     });
 });
 
@@ -1106,14 +1106,10 @@ test("Should properly apply color when selection on feff", async () => {
         unformat(`
             <div class="o-paragraph">
                 <span style="color: #6e4a8b;">
-                    ]<span style="color: rgb(255, 0, 0);">
-                        \ufeff
-                        <a href="#">\ufeffa\ufeff</a>
-                        \ufeff
-                    </span>[
-                    <span style="color: #008f8c;">
-                        b
-                    </span>
+                    ]\ufeff
+                    <a href="#" style="color: rgb(255, 0, 0);">\ufeffa\ufeff</a>
+                    \ufeff[
+                    <span style="color: #008f8c;">b</span>
                 </span>
             </div>
         `)
