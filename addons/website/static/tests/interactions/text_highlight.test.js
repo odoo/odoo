@@ -86,26 +86,11 @@ test("[rtl] SVG positionned inside highlighted text", async () => {
     expect(relativePosition(items[3], items[2])).toBe("beforeLeft,afterBottom");
 });
 
-test("highlight applied on an animated text is drawn", async () => {
+test("highlight of an animated text is drawn as displayed once animated", async () => {
+    const highlightMarkup = `<span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 2px;">personality</span>`;
     await startInteractions(`
-        <p>
-            Great stories have a
-            <span class="o_animated_text o_animate o_anim_fade_in" style="display: inline-block;">personality</span>.
-        </p>
-    `);
-    const animatedEl = queryFirst(".o_animated_text");
-    animatedEl.classList.add("o_text_highlight", "o_text_highlight_underline");
-    animatedEl.style.setProperty("--text-highlight-width", "2px");
-    animatedEl.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
-    await animationFrame();
-    expect(".o_text_highlight path").toHaveCount(1);
-});
-
-test("highlight of a text animated on appearance is not drawn mid-animation", async () => {
-    const style = `style="display: inline-block; --text-highlight-width: 2px;"`;
-    await startInteractions(`
-        <p><span class="o_text_highlight o_text_highlight_underline" ${style}>personality</span></p>
-        <p><span class="o_text_highlight o_text_highlight_underline o_animated_text" ${style}>personality</span></p>
+        <p>${highlightMarkup}</p>
+        <p><span class="o_animated_text" style="display: inline-block;">${highlightMarkup}</span></p>
     `);
     // Zoom in the animated text, and keep it on the first frame of the
     // animation, as when it starts on page load.
@@ -116,9 +101,10 @@ test("highlight of a text animated on appearance is not drawn mid-animation", as
             fill: "both",
         })
         .pause();
-    animatedEl.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
+    animatedEl
+        .querySelector(".o_text_highlight")
+        .dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
     await animationFrame();
-    // The highlight is drawn on the text as displayed once animated.
     const [pathEl, animatedPathEl] = queryAll(".o_text_highlight path");
     expect(animatedPathEl.getAttribute("d")).toBe(pathEl.getAttribute("d"));
 });
