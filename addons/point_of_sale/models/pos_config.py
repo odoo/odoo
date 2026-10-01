@@ -514,7 +514,13 @@ class PosConfig(models.Model):
             statistics['orders']['paid'] = {
                 'amount': total_paid,
                 'count': paid_order_count,
+<<<<<<< 0d3d14467ed0e75586e8a86f574d9acd4baa213f
                 'display': f"{currency.format(total_paid)} ({paid_order_count} {'order' if paid_order_count == 1 else 'orders'})",
+||||||| c3d0086109371bfe9506dca83b869e3c5f0c14f8
+                'display': f"{currency.format(total_paid)} ({paid_order_count} {'order' if paid_order_count == 1 else 'orders'})"
+=======
+                'display': f"{currency.format(total_paid)} ({paid_order_count} {self.env._('order') if paid_order_count == 1 else self.env._('orders')})"
+>>>>>>> 213edf6737e245387750bfd70ca7574e3e70a8f6
             }
 
         if draft_orders:
@@ -523,7 +529,13 @@ class PosConfig(models.Model):
             statistics['orders']['draft'] = {
                 'amount': total_draft,
                 'count': count_draft,
+<<<<<<< 0d3d14467ed0e75586e8a86f574d9acd4baa213f
                 'display': f"{currency.format(total_draft)} ({count_draft} {'order' if count_draft == 1 else 'orders'})",
+||||||| c3d0086109371bfe9506dca83b869e3c5f0c14f8
+                'display': f"{currency.format(total_draft)} ({count_draft} {'order' if count_draft == 1 else 'orders'})"
+=======
+                'display': f"{currency.format(total_draft)} ({count_draft} {self.env._('order') if count_draft == 1 else self.env._('orders')})"
+>>>>>>> 213edf6737e245387750bfd70ca7574e3e70a8f6
             }
 
         return statistics
