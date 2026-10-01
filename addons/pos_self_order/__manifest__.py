@@ -120,6 +120,7 @@
             "web/static/src/core/utils/render.js",
             "account/static/src/helpers/*.js",
             "web/static/src/model/**/*",
+            "web/static/src/scss/animation.scss",
             "web/static/src/search/**/*",
             "web/static/src/views/fields/parsers.js",
 
