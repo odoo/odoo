@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
-import { hasColor } from "@html_editor/utils/color";
-import { mergeAdjacentTextNodes, removeStyle, unwrapContents } from "@html_editor/utils/dom";
+import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
@@ -10,7 +9,6 @@ import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils
 import {
     isElement,
     isStylable,
-    isPhrasingContent,
     isProtected,
     isProtecting,
     isVisible,
@@ -893,30 +891,6 @@ export class LinkPlugin extends Plugin {
                 // if the link is a customized button, we don't want to change the color
                 continue;
             }
-            const { color } = anchorEl.style;
-            const childNodes = [...anchorEl.childNodes];
-            // For each anchor element, if it has an inline color style,
-            // (converted from an external style), remove it from the anchor,
-            // create a span inside it, and move the color to that span.
-            // This ensures the color is applied to the span element instead of
-            // the anchor element itself.
-            // TODO DESO: should be a html_compatibility_processor.
-            if (color && childNodes.every(isPhrasingContent)) {
-                removeStyle(anchorEl, "color");
-                const wrapper = anchorEl.firstElementChild;
-                if (
-                    wrapper &&
-                    hasColor(wrapper, "color") &&
-                    cleanZWChars(anchorEl.textContent) === wrapper.textContent
-                ) {
-                    continue;
-                }
-                const newSpan = this.document.createElement("span");
-                newSpan.append(...childNodes);
-                anchorEl.appendChild(newSpan);
-                this.dependencies.color.colorElement(newSpan, color, "color");
-            }
-
             // When a link contains unsupported element (like an iframe or a link),
             // we remove the link. Cases can happen when a image link is replaced
             // by a document or a video
