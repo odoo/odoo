@@ -1,7 +1,6 @@
 import { _t } from '@web/core/l10n/translation';
 import { patch } from '@web/core/utils/patch';
 import { patchDynamicContent } from '@web/public/utils';
-import { rpc } from '@web/core/network/rpc';
 import { Checkout } from '@website_sale/interactions/checkout';
 
 patch(Checkout.prototype, {
@@ -34,12 +33,11 @@ patch(Checkout.prototype, {
      * @param {Event} ev
      */
     async onClickUpdateProductQty(ev) {
-        await this.waitFor(rpc('/shop/cart/update', {
-            line_id: parseInt(ev.currentTarget.dataset.lineId, 10),
-            product_id: parseInt(ev.currentTarget.dataset.productId, 10),
-            quantity: parseInt(ev.currentTarget.dataset.availableQty || 0, 10),
-        }));
-        window.location.reload(); // Reload all cart values.
+        await this.services.cart.update(
+            parseInt(ev.currentTarget.dataset.lineId, 10),
+            parseInt(ev.currentTarget.dataset.productId, 10),
+            parseInt(ev.currentTarget.dataset.availableQty || 0, 10),
+        );
     },
 
     // #=== DOM MANIPULATION ===#

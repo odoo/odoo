@@ -10,14 +10,16 @@ from odoo.addons.website_sale.controllers import main
 
 class WebsiteSale(main.WebsiteSale):
     @route()
-    def pricelist(self, promo, reward_id=None, **post):
+    def pricelist_apply(self, promo, reward_id=None, **post):
+        result = {}
+
         if not (order_sudo := request.cart):
-            return request.redirect("/shop")
+            return {"success": False}
         coupon_status = order_sudo._try_apply_code(promo)
         if coupon_status.get("not_found"):
-            return super().pricelist(promo, **post)
+            return super().pricelist_apply(promo, **post)
         if coupon_status.get("error"):
-            request.session["error_promo_code"] = coupon_status["error"]
+            result.update({"success": False, "message": coupon_status["error"]})
         elif "error" not in coupon_status:
             reward_successfully_applied = True
             if len(coupon_status) == 1:
@@ -30,8 +32,16 @@ class WebsiteSale(main.WebsiteSale):
                     reward_successfully_applied = self._apply_reward(order_sudo, reward, coupon)
 
             if reward_successfully_applied:
-                request.session["successful_code"] = promo
-        return request.redirect(post.get("r", "/shop/cart"))
+                result.update({
+                    "success": True,
+                    "message": self.env._(
+                        "You have successfully applied the following code: %(code)s.", code=promo
+                    ),
+                })
+        return result
+
+    def _promo_code_unavailable_warning(self):
+        return self.env._("Invalid or expired promo code.")
 
     @route(["/coupon/<string:code>"], type="http", auth="public", website=True, sitemap=False)
     def activate_coupon(self, code, r="/shop", **_kwargs):
@@ -58,9 +68,8 @@ class WebsiteSale(main.WebsiteSale):
 
     @route("/shop/claimreward", type="http", auth="public", website=True, sitemap=False)
     def claim_reward(self, reward_id, code=None, **post):
-        redirect = post.get("r", "/shop/cart")
         if not (order_sudo := request.cart):
-            return request.redirect(redirect)
+            return {"success": False}
 
         try:
             reward_id = int(reward_id)
@@ -69,12 +78,12 @@ class WebsiteSale(main.WebsiteSale):
 
         reward_sudo = self.env["loyalty.reward"].sudo().browse(reward_id).exists()
         if not reward_sudo:
-            return request.redirect(redirect)
+            return {"success": False}
 
         if reward_sudo.multi_product and "product_id" in post:
             request.update_context(product_id=int(post["product_id"]))
         else:
-            request.redirect(redirect)
+            return {"success": False}
 
         program_sudo = reward_sudo.program_id
         claimable_rewards = order_sudo._get_claimable_and_showable_rewards()
@@ -93,10 +102,10 @@ class WebsiteSale(main.WebsiteSale):
                         and program_sudo.program_type not in ("ewallet", "loyalty")
                     )
                 ):
-                    return self.pricelist(code, reward_id=reward_id)
+                    return self.pricelist_apply(code, reward_id=reward_id)
         if coupon:
             self._apply_reward(order_sudo, reward_sudo, coupon)
-        return request.redirect(redirect)
+        return {"success": True}
 
     def _apply_reward(self, order, reward, coupon):
         """Try to apply the given program reward.
@@ -109,6 +118,7 @@ class WebsiteSale(main.WebsiteSale):
         try:
             reward_status = order._apply_program_reward(reward, coupon, product=product)
         except UserError as e:
+            # todo NIPL: Hanlde this in JSON RPC
             request.session["error_promo_code"] = str(e)
             return False
         if "error" in reward_status:

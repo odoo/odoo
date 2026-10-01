@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-inherit="website_sale.CartTotal" t-inherit-mode="extension">
+        <t name="tax_included_lines" position="after">
+            <tbody t-if="this.state.totals.promotion_progress_bars?.length">
+                <tr>
+                    <td colspan="3" class="border-0 p-0">
+                        <t
+                            t-foreach="this.state.totals.promotion_progress_bars"
+                            t-as="bar"
+                            t-key="bar.program_id"
+                        >
+                            <PromotionProgressBar
+                                reward_name="bar.reward_name"
+                                minimum_amount="bar.minimum_amount"
+                                progress="bar.progress"
+                                currency_id="this.state.totals.currency_id"
+                            />
+                        </t>
+                    </td>
+                </tr>
+            </tbody>
+        </t>
+    </t>
+
+</templates>

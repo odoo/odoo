@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="website_sale.CartAccessories">
+        <h5 t-attf-class="mt-3 mb-0" t-out="this.props.templateData.accessoriesTitle"/>
+        <div id="suggested_products" class="d-flex flex-column align-items-stretch">
+            <div
+                t-foreach="this.props.accessories.lines"
+                t-as="accessoryProduct"
+                t-key="accessoryProduct.id"
+                class="d-flex gap-3 py-4"
+            >
+                <div class="o_cart_product_image">
+                    <a class="text-reset" t-att-href="accessoryProduct.website_url">
+                        <img
+                            t-att-src="(
+                                accessoryProduct.image_uri
+                                || `/web/image/product.product/${accessoryProduct.id}/image_128`
+                            )"
+                            class="img border rounded"
+                        />
+                    </a>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <a class="text-reset" t-att-href="accessoryProduct.website_url">
+                                <h6
+                                    class="align-top text-wrap"
+                                    t-out="accessoryProduct.display_name"
+                                />
+                            </a>
+                            <div
+                                class="mb-2 small text-muted"
+                                t-out="accessoryProduct.description_sale"
+                            />
+                        </div>
+                        <div class="d-flex flex-column gap-2 align-items-end">
+                            <h6
+                                class="d-flex mb-0 text-end"
+                                name="suggested_product_price_container"
+                            >
+                                <del
+                                    name="suggested_product_list_price"
+                                    t-attf-class="me-2 text-nowrap text-muted {{accessoryProduct.combination_info.has_discounted_price ? '' : 'd-none'}}"
+                                    t-out="this.env.formatPrice(accessoryProduct.combination_info.list_price)"
+                                />
+                                <span
+                                    name="suggested_product_price"
+                                    class="text-nowrap"
+                                    t-out="this.env.formatPrice(accessoryProduct.combination_info.price)"
+                                />
+                            </h6>
+                            <small
+                                t-if="accessoryProduct.combination_info.base_unit_price"
+                                class="o_product_price_unit text-muted d-block"
+                            >
+                                (<span t-out="this.env.formatPrice(accessoryProduct.combination_info.base_unit_price)"/>
+                                / <span class="oe_custom_base_unit" t-out="accessoryProduct.combination_info.base_unit_name"/>)
+                            </small>
+                            <button
+                                name="add_to_cart"
+                                class="btn btn-primary text-nowrap"
+                                t-on-click="() => this.addToCart(accessoryProduct)"
+                            >
+                                <i class="d-md-none fa fa-shopping-cart" role="presentation"/>
+                                <span class="d-none d-md-inline" t-out="this.props.templateData.addToCartButtonText"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
