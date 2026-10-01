@@ -62,6 +62,11 @@ export class CaptionPlugin extends Plugin {
                 return false;
             }
         },
+        can_hold_selection_after_insertion_predicates: (node) => {
+            if (closestElement(node, CAPTION_SPAN_SELECTOR)) {
+                return true;
+            }
+        },
         is_node_splittable_predicates: [
             (node) => {
                 // avoid merge

@@ -374,7 +374,6 @@ export class LinkPlugin extends Plugin {
         on_will_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
         on_pasted_handlers: this.onPasteNormalizeLink.bind(this),
         on_selectionchange_handlers: this.handleSelectionChange.bind(this),
-        on_inserted_handlers: this.handleAfterInsert.bind(this),
         on_will_remove_handlers: () => this.closeLinkTools(),
 
         /** Overrides */
@@ -387,6 +386,7 @@ export class LinkPlugin extends Plugin {
 
         /** Processors */
         clean_for_save_processors: (root) => this.removeEmptyLinks(root),
+        inserted_content_processors: this.processInsertedContent.bind(this),
         normalize_processors: this.normalizeLink.bind(this),
         to_inline_code_processors: (node) => {
             this.removeEmptyLinks(node);
@@ -1455,7 +1455,7 @@ export class LinkPlugin extends Plugin {
         return true;
     }
 
-    handleAfterInsert(insertedNodes) {
+    processInsertedContent(insertedNodes) {
         for (const node of insertedNodes) {
             if (node.nodeType === Node.ELEMENT_NODE) {
                 for (const link of selectElements(node, "A")) {
@@ -1465,6 +1465,7 @@ export class LinkPlugin extends Plugin {
                 }
             }
         }
+        return insertedNodes;
     }
 
     initializePopovers() {
