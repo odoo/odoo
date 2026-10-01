@@ -35,23 +35,34 @@
     }
 
     &.s_team_board_list {
-    .row > div {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-        width: 100%;
-        flex: 0 0 100%;
-        max-width: 100%;
-        text-align: start !important;
+        .row > div {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            width: 100%;
+            flex: 0 0 100%;
+            max-width: 100%;
+            text-align: start !important;
 
-        img {
-            width: 120px;
-            flex-shrink: 0;
-        }
+            img {
+                width: 120px;
+                flex-shrink: 0;
+            }
 
-        > div {
-            flex: 1;
+            > div {
+                flex: 1;
+            }
         }
     }
 }
+
+.o_team_board_modal {
+    .o_team_board_modal_img {
+        display: block;
+        width: 100%;
+        max-width: 200px;
+        aspect-ratio: 1;
+        object-fit: cover;
+        margin-inline: auto;
+    }
 }
