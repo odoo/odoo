@@ -31,7 +31,7 @@
             </div>
             <div class="o-mail-Composer-coreHeader min-w-0">
                 <div t-if="this.props.composer.replyToMessage" class="text-truncate small p-2 align-items-center d-flex">
-                    <span class="o-mail-Composer-replyingToJumpClickable cursor-pointer px-2 rounded-pill" t-on-click="() => this.env.messageHighlight?.highlightMessage(this.props.composer.replyToMessage)">
+                    <span class="o-mail-Composer-replyingToJumpClickable cursor-pointer px-2 rounded-pill" t-on-click="() => this.messageHighlight?.highlightMessage(this.props.composer.replyToMessage)">
                         Replying to <b t-out="this.props.composer.replyToMessage.authorName"/>
                     </span>
                     <span t-if="this.props.composer.replyToMessage.thread?.notEq(this.props.composer.thread)">
