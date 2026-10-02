@@ -2107,18 +2107,12 @@ class IrQweb(models.AbstractModel):
         # Generates the part of the code that prost process and output the
         # attributes from ``attrs`` dictionary. Consumes `attrs` dictionary
         # and reset it.
-        #
-        # Use str(value) to change Markup into str and escape it, then use str
-        # to avoid the escaping of the other html content.
 
         if compile_context.get('qweb_attrs_created'):
             code = self._flush_text(compile_context, level)
             code.append(indent_code(f"""
                 if attrs:
-                    tagName = {el.tag!r}
-                    for name, value in self._post_processing_att(tagName, attrs).items():
-                        if value or isinstance(value, str):
-                            yield f' {{escape(str(name))}}="{{escape(str(value))}}"'
+                    yield from self._render_attributes({el.tag!r}, attrs)
                     attrs = None
             """, level))
         else:
@@ -2783,9 +2777,7 @@ class IrQweb(models.AbstractModel):
                 yield '<'
                 yield tagName
 
-                for name, value in self._post_processing_att(tagName, asset_attrs).items():
-                    if value or isinstance(value, str):
-                        yield f' {escape(str(name))}="{escape(str(value))}"'
+                yield from self._render_attributes(tagName, asset_attrs)
 
                 if tagName in VOID_ELEMENTS:
                     yield '/>'
@@ -2841,6 +2833,20 @@ class IrQweb(models.AbstractModel):
             __import__(debugger).set_trace()
         else:
             raise ValueError(f"unsupported t-debug value: {debugger}")
+
+    def _render_attributes(self, tagName, atts):
+        """ Post-processes the ``attrs`` dictionary of an element into strings of
+            HTML attributes to output.
+
+            Called at rendering time by the compiled templates.
+
+            :returns: generator of strings representing HTML attributes
+        """
+        # Use str(value) to change Markup into str and escape it, then use str
+        # to avoid the escaping of the other html content.
+        for name, value in self._post_processing_att(tagName, atts).items():
+            if value or isinstance(value, str):
+                yield f' {escape(str(name))}="{escape(str(value))}"'
 
     def _post_processing_att(self, tagName, atts):
         """ Method called at compile time for the static node and called at
