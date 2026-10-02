@@ -10,7 +10,7 @@
                 <attribute name="disable_autofocus">true</attribute>
             </form>
             <group name="down_payment_specification" position="after">
-                <field name="invoicing_timesheet_enabled" invisible="1"/>
+                <field name="invoicing_timesheet_enabled" invisible="1"/> <!-- drives invisible of the timesheet_invoice_date_range group -->
                 <group
                     name="timesheet_invoice_date_range"
                     invisible="not invoicing_timesheet_enabled or advance_payment_method != 'delivered'">
@@ -23,7 +23,7 @@
                         options="{'end_date_field': 'date_end_invoice_timesheet', 'always_range': True}"
                         title="Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction."
                     />
-                    <field name="date_end_invoice_timesheet" required="date_start_invoice_timesheet or date_end_invoice_timesheet" invisible="1" />
+                    <field name="date_end_invoice_timesheet" required="date_start_invoice_timesheet or date_end_invoice_timesheet" invisible="1" /> <!-- end of the date_start_invoice_timesheet daterange widget (end_date_field option) -->
                 </group>
             </group>
         </field>

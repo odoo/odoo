@@ -5,8 +5,8 @@
         <field name="model">project.task.type.delete.wizard</field>
         <field name="arch" type="xml">
             <form string="Delete Stage">
-                <field name="tasks_count" invisible="1" />
-                <field name="stages_active" invisible="1" />
+                <field name="tasks_count" invisible="1" /> <!-- drives invisible of the block, the action_archive button and 1 more -->
+                <field name="stages_active" invisible="1" /> <!-- drives invisible of the block, the action_archive button -->
                 <div invisible="tasks_count &gt; 0">
                     <p>Are you sure you want to delete these stages?</p>
                 </div>
