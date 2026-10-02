@@ -5,7 +5,7 @@
     <Dropdown state="this.props.dropdownState" manual="true" menuClass="this.store.discussDropdownMenuClass(this.ancestors)" noClasses="true" position="'right-start'">
         <span class="o-mail-MessagingMenuItem-contextMenuAnchor d-flex position-fixed z-1" t-ref="this.anchorRef"/>
         <t t-set-slot="content">
-            <ActionList actions="this.actionsList" dropdown="true"/>
+            <ActionList actions="this.actionsList" dropdown="true" panelContainer="this.props.panelContainer"/>
         </t>
     </Dropdown>
 </t>

@@ -20,7 +20,7 @@ export class SearchMessagesPanel extends Component {
         this.messageSearch = useMessageSearch(this.props.thread);
         useOnChange(
             () => [this.props.thread],
-            () => this.env.searchMenu?.close(),
+            () => this.props.close?.(),
             { initialRun: false }
         );
     }

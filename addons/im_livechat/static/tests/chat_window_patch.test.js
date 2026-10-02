@@ -10,9 +10,10 @@ import {
     start,
     startServer,
     MENU_ACTIVE_IDS,
+    actionPanel,
 } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
-import { test } from "@odoo/hoot";
+import { test, waitFor, waitForNone } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
@@ -287,4 +288,42 @@ test("Opening ended livechat and seeing last messages automatically marks it as 
     await contains(".o-mail-Thread-banner:has(:text('2 new messages'))");
     resolve();
     await contains(".o-mail-Thread-banner", { count: 0 });
+});
+
+test.tags("desktop");
+test("Change livechat status from the actions menu of the chat window", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({
+                guest_id: pyEnv["mail.guest"].create({ name: "Visitor 11" }),
+                livechat_member_type: "visitor",
+            }),
+        ],
+        channel_type: "livechat",
+        livechat_status: "need_help",
+    });
+    setupChatHub({ opened: [channelId] });
+    await start();
+    const needHelpLabel = ".o-mail-ChatWindow .o-livechat-LivechatStatusLabel.o-help";
+    await waitFor(`${needHelpLabel}:count(1)`);
+    await click("[title='Open Actions Menu']");
+    await click(".o-dropdown--menu button[name='livechat-status']");
+    await waitFor(
+        ".o-dropdown--menu .o-livechat-LivechatStatusSelection .active:text('Looking for help'):count(1)"
+    );
+    await click(".o-livechat-LivechatStatusSelection button:text('In progress')");
+    await waitForNone(needHelpLabel);
+    await waitForNone(".o-dropdown--menu");
+    await click("[title='Open Actions Menu']");
+    await waitFor(
+        ".o-dropdown--menu button[name='livechat-status'] .o-mail-ActionList-actionLabel:text('In progress'):count(1)"
+    );
+    await waitForNone(actionPanel("Information"));
 });

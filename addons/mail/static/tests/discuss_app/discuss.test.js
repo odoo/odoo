@@ -3,6 +3,7 @@ import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import {
+    actionPanel,
     click,
     contains as mailContains,
     defineMailModels,
@@ -813,8 +814,8 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     await contains(".o-mail-NotificationItem:has(:text('General')):count(1)").click();
     await waitFor(".o-mail-DiscussContent-threadName:value('General'):count(1)");
     await contains("button[title='Pinned Messages']:count(1)").click();
-    await waitFor(".o-discuss-PinnedMessagesPanel .o-mail-Message:count(1)");
-    await rightClick(".o-discuss-PinnedMessagesPanel .o-mail-Message");
+    await waitFor(`${actionPanel("Pinned Messages")} .o-mail-Message:count(1)`);
+    await rightClick(`${actionPanel("Pinned Messages")} .o-mail-Message`);
     await expect.waitForSteps(["Message.onContextMenu"]);
     await animationFrame();
     expect.verifySteps([]);
@@ -2493,7 +2494,7 @@ test("Notification settings: basic rendering", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
     await contains("[title='Notification Settings']:count(1)").click();
     await waitFor("button:text('All Messages'):count(1)");
     await waitFor("button:text('Mentions Only'):count(1)");
@@ -2564,7 +2565,7 @@ test("Notification settings: mute/unmute conversation works correctly", async ()
     });
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
     await click("[title='Notification Settings']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await waitFor("button:text('Mute Conversation'):count(1)");

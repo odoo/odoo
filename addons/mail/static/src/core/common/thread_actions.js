@@ -1,5 +1,3 @@
-import { useSubEnv } from "@web/owl2/utils";
-
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
@@ -11,6 +9,7 @@ import {
     useAction,
     UseActions,
 } from "@mail/core/common/action";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { RenameThreadPlugin } from "@mail/core/common/rename_thread_plugin";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 import { MeetingChat } from "@mail/discuss/call/common/meeting_chat";
@@ -77,30 +76,18 @@ registerThreadAction("close", {
     sequenceQuick: 10,
 });
 registerThreadAction("search-messages", {
-    actionPanelComponent: SearchMessagesPanel,
-    actionPanelComponentProps: ({ thread }) => ({ thread }),
-    actionPanelOuterClass: "o-mail-SearchMessagesPanel bg-inherit",
     condition: ({ owner, channel }) => channel && !owner.isDiscussSidebarChannelActions,
     hotkey: "f",
     icon: "search",
     name: ({ action }) => (action.isActive ? _t("Close Search") : _t("Search Messages")),
+    panel: {
+        component: SearchMessagesPanel,
+        props: ({ thread }) => ({ thread }),
+    },
     sequence: 20,
     sequenceGroup: 20,
-    setup: ({ action }) =>
-        useSubEnv({
-            searchMenu: {
-                open: () => action.actionPanelOpen(),
-                close: () => {
-                    if (action.isActive) {
-                        action.actionPanelClose();
-                    }
-                },
-            },
-        }),
 });
 registerThreadAction("meeting-chat", {
-    actionPanelComponent: MeetingChat,
-    actionPanelOuterClass: "bg-100 border",
     availableOffline: true,
     badge: ({ thread }) => thread.isUnread,
     badgeIcon: ({ channel }) => !channel.importantCounter && "circle",
@@ -110,6 +97,7 @@ registerThreadAction("meeting-chat", {
     condition: ({ ancestors }) => ancestors.inMeetingView,
     icon: "forum",
     name: _t("Chat"),
+    panel: { component: MeetingChat },
     sequence: 30,
     tags: ({ channel }) => {
         const tags = [];
@@ -149,5 +137,10 @@ export class UseThreadActions extends UseActions {
  * @returns {UseThreadActions_Def}
  */
 export function useThreadActions({ thread, rootRef } = {}) {
-    return useAction(threadActionsRegistry, UseThreadActions, ThreadAction, { rootRef, thread });
+    const actions = useAction(threadActionsRegistry, UseThreadActions, ThreadAction, {
+        rootRef,
+        thread,
+    });
+    useAncestors({ threadActions: actions });
+    return actions;
 }

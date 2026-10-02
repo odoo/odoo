@@ -2,6 +2,11 @@
     color: var(--livechat-LivechatStatusLabel-helpColor, var(--purple));
 }
 
+// The status selection is a list that fills a dropdown on its own, e.g. as the panel of its action.
+.o-dropdown--menu:has(.o-livechat-LivechatStatusSelection) {
+    padding: 0;
+}
+
 .o-livechat-LivechatStatusSelection {
     --list-group-border-radius: var(--border-radius);
 

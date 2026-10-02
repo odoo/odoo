@@ -1,5 +1,6 @@
 import { HIGHLIGHT_CLASS, searchHighlight } from "@mail/core/common/message_search_hook";
 import {
+    actionPanel,
     SIZES,
     defineMailModels,
     insertText,
@@ -174,7 +175,9 @@ test("Display highlighted search in Discuss", async () => {
     await contains("button[title='Search Messages']:count(1)").click();
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "empty");
-    await waitFor(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}:count(1)`);
+    await waitFor(
+        `${actionPanel("Search Messages")} .o-mail-Message span.${HIGHLIGHT_CLASS}:count(1)`
+    );
 });
 
 test("Display multiple highlighted search in Discuss", async () => {
@@ -194,7 +197,9 @@ test("Display multiple highlighted search in Discuss", async () => {
     await contains("button[title='Search Messages']:count(1)").click();
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "not empty");
-    await waitFor(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}:count(2)`);
+    await waitFor(
+        `${actionPanel("Search Messages")} .o-mail-Message span.${HIGHLIGHT_CLASS}:count(2)`
+    );
 });
 
 test("Search update keeps embedded code block rendering in Discuss", async () => {
@@ -215,17 +220,21 @@ test("Search update keeps embedded code block rendering in Discuss", async () =>
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "prefix");
     await waitFor(
-        `.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}:text('prefix'):count(1)`
+        `${actionPanel(
+            "Search Messages"
+        )} .o-mail-Message span.${HIGHLIGHT_CLASS}:text('prefix'):count(1)`
     );
     await waitFor(
-        ".o-mail-SearchMessagesPanel pre[data-embedded='readonlySyntaxHighlighting']:count(1)"
+        `${actionPanel("Search Messages")} pre[data-embedded='readonlySyntaxHighlighting']:count(1)`
     );
     await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", " suffix");
     await waitFor(
-        `.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}:text('suffix'):count(1)`
+        `${actionPanel(
+            "Search Messages"
+        )} .o-mail-Message span.${HIGHLIGHT_CLASS}:text('suffix'):count(1)`
     );
     await waitFor(
-        ".o-mail-SearchMessagesPanel pre[data-embedded='readonlySyntaxHighlighting']:count(1)"
+        `${actionPanel("Search Messages")} pre[data-embedded='readonlySyntaxHighlighting']:count(1)`
     );
 });
 

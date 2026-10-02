@@ -11,7 +11,7 @@ import {
     DropdownAction,
     InlineAction,
 } from "@mail/core/common/action_list";
-import { ACTION_TAGS } from "@mail/core/common/action";
+import { ACTION_TAGS, PANEL_CONTAINER_TYPE } from "@mail/core/common/action";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { computedShallowEqual } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
@@ -324,13 +324,6 @@ export class CallActionList extends Component {
                                   this.callActionsParams,
                                   {
                                       actions: moreActions,
-                                      dropdownMenuClass: attClassObjectToString({
-                                          "o-discuss-CallActionList-menu m-0 mb-1 border-0 shadow overflow-x-hidden": true,
-                                          "o-inMeetingView o-p-1_5": Boolean(
-                                              this.ancestors.inMeetingView
-                                          ),
-                                      }),
-                                      dropdownPosition: "top-end",
                                       name: this.MORE,
                                   },
                                   sequenceGroup
@@ -353,13 +346,6 @@ export class CallActionList extends Component {
                             this.callActionsParams,
                             {
                                 actions: [layoutActions],
-                                dropdownMenuClass: attClassObjectToString({
-                                    "o-discuss-CallActionList-callLayout o-discuss-CallActionList-menu m-0 mb-1 border-0 shadow overflow-x-hidden": true,
-                                    "o-inMeetingView o-p-1_5": Boolean(
-                                        this.ancestors.inMeetingView
-                                    ),
-                                }),
-                                dropdownPosition: "top-end",
                                 id: "call-layout",
                                 name: this.MORE,
                             },
@@ -422,11 +408,6 @@ export class CallActionList extends Component {
                       this.callActionsParams,
                       {
                           actions: moreGroups,
-                          dropdownMenuClass: attClassObjectToString({
-                              "o-discuss-CallActionList-menu m-0 mb-1 border-0 shadow overflow-x-hidden": true,
-                              "o-inMeetingView o-p-1_5": Boolean(this.ancestors.inMeetingView),
-                          }),
-                          dropdownPosition: "top-end",
                           id: "small-screen-more",
                           name: this.MORE,
                       },
@@ -440,6 +421,45 @@ export class CallActionList extends Component {
     /** @type {import("@mail/core/common/action_list").GetActionComponent} */
     getActionComponent(params) {
         return getCallControlComponent(params);
+    }
+
+    /**
+     * The call actions open their panel in a dropdown above the bar; the actions of the meeting
+     * that its "More" lists still open theirs in the meeting.
+     *
+     * @type {import("@mail/core/common/action_list").GetPanelContainer}
+     */
+    getPanelContainer({ action }) {
+        const inMeetingView = Boolean(this.ancestors.inMeetingView);
+        if (action.id === "more-action:call-layout") {
+            return {
+                type: PANEL_CONTAINER_TYPE.DROPDOWN,
+                position: "top-end",
+                menuClass: attClassObjectToString({
+                    "o-discuss-CallActionList-callLayout o-discuss-CallActionList-menu m-0 mb-1 border-0 shadow overflow-x-hidden": true,
+                    "o-inMeetingView o-p-1_5": inMeetingView,
+                }),
+            };
+        }
+        if (action.definition.isMoreAction) {
+            return {
+                type: PANEL_CONTAINER_TYPE.DROPDOWN,
+                position: "top-end",
+                menuClass: attClassObjectToString({
+                    "o-discuss-CallActionList-menu m-0 mb-1 border-0 shadow overflow-x-hidden": true,
+                    "o-inMeetingView o-p-1_5": inMeetingView,
+                }),
+            };
+        }
+        if (["quick-video-settings", "quick-voice-settings"].includes(action.id)) {
+            return {
+                type: PANEL_CONTAINER_TYPE.DROPDOWN,
+                position: "top-end",
+                menuClass: inMeetingView
+                    ? "o-discuss-CallActionList-menu o-inMeetingView o-p-1_5 border-0 shadow overflow-x-hidden"
+                    : "o-discuss-CallActionList-menu p-1 border-0 shadow overflow-x-hidden",
+            };
+        }
     }
 
     get callActionsParams() {

@@ -17,7 +17,11 @@ export class MessagingMenuItemContextMenu extends Component {
         super.setup();
         this.ancestors = useAncestors();
         this.store = useService("mail.store");
-        this.props = useProps({ dropdownState: t.instanceOf(DropdownState) });
+        this.props = useProps({
+            dropdownState: t.instanceOf(DropdownState),
+            /** @see import("@mail/core/common/action_list").ActionPanelContainer */
+            panelContainer: t.function().optional(),
+        });
         this.actionsList = propSignal(
             "actionsList",
             t.array(t.or([t.instanceOf(Action), t.array(t.instanceOf(Action))]))

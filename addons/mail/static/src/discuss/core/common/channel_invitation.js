@@ -31,6 +31,8 @@ export function openChannelInvitationDialog(env, channel) {
 }
 
 export class ChannelInvitation extends Component {
+    /** @see PanelDefinition: small content, shown in a popover by a place with a large panel */
+    static compact = true;
     static components = { ActionPanel, DiscussAvatar };
     static template = "discuss.ChannelInvitation";
 

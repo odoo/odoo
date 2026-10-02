@@ -3,7 +3,12 @@ import { propSignal } from "@mail/utils/common/hooks";
 import { Component, onWillUnmount, t, useProps, xml } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Action as ActionModel, ACTION_TAGS } from "@mail/core/common/action";
+import {
+    Action as ActionModel,
+    ACTION_TAGS,
+    PANEL,
+    PANEL_CONTAINER_TYPE,
+} from "@mail/core/common/action";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { computedShallowEqual } from "@mail/utils/common/signal";
@@ -29,6 +34,18 @@ import { computedShallowEqual } from "@mail/utils/common/signal";
  * @typedef {typeof BaseAction | GetActionComponent} ActionComponent
  */
 
+/**
+ * Where the panels of the actions of an ActionList are shown: either one container for all the
+ * actions of the list, or a function picking it per action. Returning nothing falls back to the
+ * default: a dropdown for a more-action or a menu (@see PanelDefinition), otherwise the panel of
+ * the owner. Only the function is passed on to the dropdown of a more-action, like for @see
+ * ActionComponent.
+ *
+ * @typedef {import("@mail/core/common/action").PanelContainer} PanelContainer
+ * @typedef {(params: ActionComponentParams) => PanelContainer | undefined} GetPanelContainer
+ * @typedef {PanelContainer | GetPanelContainer} ActionPanelContainer
+ */
+
 /** @param {ActionComponent} [actionComponent] */
 function isComponent(actionComponent) {
     return actionComponent?.prototype instanceof Component;
@@ -45,6 +62,13 @@ const actionListPropsSchema = {
     fw: t.boolean().optional(true),
     hasBtnBg: t.boolean().optional(),
 };
+
+/** @see PanelContainer */
+const panelContainerSchema = t.object({ type: t.selection(Object.values(PANEL_CONTAINER_TYPE)) });
+/** @see ActionPanelContainer */
+const actionPanelContainerSchema = t
+    .or([panelContainerSchema, t.function([t.object()], panelContainerSchema.optional())])
+    .optional();
 
 /**
  * Renders one action of an ActionList; extend it to change how actions look in a given place.
@@ -75,16 +99,22 @@ export class BaseAction extends Component {
             action: t.instanceOf(ActionModel),
             isFirstInGroup: t.boolean().optional(),
             isLastInGroup: t.boolean().optional(),
+            /** @see ActionPanelContainer of the list, to pass on to the dropdown of a more-action */
+            listPanelContainer: actionPanelContainerSchema,
+            /** @see PanelContainer, picked by the list for this action */
+            panelContainer: panelContainerSchema.optional(),
             style: t.string().optional(),
             ...actionListPropsSchema,
         });
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        if (this.props.action.definition?.isMoreAction) {
-            onWillUnmount(() => {
-                this.props.action.dropdownState.close();
-            });
-        }
+        // A dropdown goes with its button; a popover or a dialog outlives it, e.g. when the button
+        // is in a menu that closes as the panel opens.
+        onWillUnmount(() => {
+            if (this.action.overlayState.isOpen && this.hasPanelDropdown) {
+                this.action.closePanel();
+            }
+        });
     }
 
     get action() {
@@ -94,6 +124,37 @@ export class BaseAction extends Component {
     /** @see ActionComponent, a component of this list's own actions is not passed on. */
     get dropdownActionComponent() {
         return isComponent(this.props.actionComponent) ? undefined : this.props.actionComponent;
+    }
+
+    /** @see ActionPanelContainer, a container of this list's own actions is not passed on. */
+    get dropdownPanelContainer() {
+        const container = this.props.listPanelContainer;
+        return typeof container === "function" ? container : undefined;
+    }
+
+    /** @returns {PanelContainer} */
+    get panelContainer() {
+        return this.props.panelContainer ?? PANEL;
+    }
+
+    /** @see Action.getPanel */
+    get panel() {
+        return this.action.getPanel();
+    }
+
+    /** Whether the button opens the panel, or the list of a more-action, in a dropdown. */
+    get hasPanelDropdown() {
+        return (
+            this.panelContainer.type === PANEL_CONTAINER_TYPE.DROPDOWN &&
+            (this.action.hasPanel || Boolean(this.action.definition?.isMoreAction))
+        );
+    }
+
+    get panelMenuClass() {
+        return attClassObjectToString({
+            [this.panelContainer.menuClass ?? ""]: true,
+            [this.store.discussDropdownMenuClass(this.ancestors)]: true,
+        });
     }
 
     get attrs() {
@@ -174,7 +235,10 @@ export class BaseAction extends Component {
     }
 
     onSelected(action, ev) {
-        action.onSelected?.(ev);
+        if (this.hasPanelDropdown) {
+            return; // the dropdown opens and closes the panel
+        }
+        action.onSelected?.(ev, { container: this.panelContainer });
     }
 }
 
@@ -293,17 +357,40 @@ export class ActionList extends Component {
         if (isComponent(this.props.actionComponent)) {
             return this.props.actionComponent;
         }
-        /** @type {ActionComponentParams} */
-        const params = {
+        return (
+            this.props.actionComponent?.(this.getActionParams(action)) ??
+            (this.props.dropdown ? DropdownAction : InlineAction)
+        );
+    }
+
+    /**
+     * @param {ActionModel} action
+     * @returns {ActionComponentParams}
+     */
+    getActionParams(action) {
+        return {
             ...action.params,
             dropdown: Boolean(this.props.dropdown),
             inline: Boolean(this.props.inline),
             parentAction: this.props.parentAction,
         };
-        return (
-            this.props.actionComponent?.(params) ??
-            (this.props.dropdown ? DropdownAction : InlineAction)
-        );
+    }
+
+    /**
+     * @param {ActionModel} action
+     * @returns {PanelContainer}
+     */
+    getPanelContainer(action) {
+        const container =
+            typeof this.props.panelContainer === "function"
+                ? this.props.panelContainer(this.getActionParams(action))
+                : this.props.panelContainer;
+        if (container) {
+            return container;
+        }
+        return action.definition?.isMoreAction || action.definition?.panel?.component.menu
+            ? { type: PANEL_CONTAINER_TYPE.DROPDOWN }
+            : PANEL;
     }
 
     getActionProps(action, group, { index, isFirstInGroup, isLastInGroup } = {}) {
@@ -312,6 +399,8 @@ export class ActionList extends Component {
             group,
             isFirstInGroup,
             isLastInGroup,
+            listPanelContainer: this.props.panelContainer,
+            panelContainer: this.getPanelContainer(action),
             ...Object.fromEntries(
                 actionListProps.map((propName) => {
                     const actualPropName = propName.endsWith("?")
@@ -334,6 +423,8 @@ export class ActionList extends Component {
             dropdown: t.boolean().optional(),
             groupClass: t.string().optional(),
             inline: t.boolean().optional(),
+            /** @see ActionPanelContainer */
+            panelContainer: actionPanelContainerSchema,
             /** More-action whose dropdown shows this list. */
             parentAction: t.instanceOf(ActionModel).optional(),
             ...actionListPropsSchema,

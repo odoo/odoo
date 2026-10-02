@@ -1,4 +1,5 @@
 import {
+    actionPanel,
     click,
     contains,
     hover,
@@ -72,7 +73,7 @@ test("invite button should be present on livechat", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
+    await contains(actionPanel("Information")); // wait for auto-open of this panel
     await click("button[title='Members']");
     await contains("button[title='Add People']");
 });

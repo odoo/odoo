@@ -8,6 +8,8 @@ import { registry } from "@web/core/registry";
 const commandRegistry = registry.category("discuss.channel_commands");
 
 export class LivechatCommandDialog extends Component {
+    /** @see PanelDefinition: small content, shown in a popover by a place with a large panel */
+    static compact = true;
     static template = "im_livechat.LivechatCommandDialog";
     static components = { ActionPanel };
     props = useProps({
