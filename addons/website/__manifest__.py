@@ -298,6 +298,7 @@
             ('remove', 'website/static/src/core/website_edit_service.js'),
             ('replace', 'web/static/src/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
             'website/static/src/snippets/**/*.js',
+            'website/static/src/snippets/s_team_board/send_message_modal.xml',
             ('remove', 'website/static/src/snippets/**/*.edit.js'),
             'website/static/src/scss/website.scss',
             'website/static/src/scss/portal.scss',

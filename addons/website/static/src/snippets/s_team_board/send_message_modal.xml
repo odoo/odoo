@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+        <t t-name="website.s_team_board.send_message_modal">
+            <Dialog>
+                <div class="row align-items-start">
+                    <div class="col-3">
+                        <img t-att-src="this.props.photo" alt="Avatar" class="img-fluid shadow-sm"/>
+                    </div>
+                    <div class="col-9">
+                        <div>
+                            <h3 class="h5-fs"> <t t-out="this.props.name"/> </h3>
+                            <h6 class="text-secondary mb-2"><t t-out="this.props.role"/></h6>
+                            <p><t t-out="this.props.description"/></p>
+                        </div>
+                    </div>
+                </div>
+
+                <t t-set-slot="footer">
+                    <button class="btn btn-primary" t-on-click="this.onSendMessage" t-att-disabled="this.isLoading()">
+                        <t t-if="this.isLoading()">
+                            Sending...
+                        </t>
+                        <t t-else="">
+                            Send Message
+                        </t>
+                    </button>
+                </t>
+            </Dialog> 
+        </t>
+</templates>
