@@ -1,5 +1,7 @@
 from odoo import _, api, models
 
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
+
 PDP_CUSTOMIZATION_ID = 'urn:cen.eu:en16931:2017'  # Not accepted by SuperPDP due to missing validator
 
 CPRO_CUSTOMIZATION_ID = 'urn:cen.eu:en16931:2017#conformant#urn.cpro.gouv.fr:1p0:extended-ctc-fr'
@@ -172,6 +174,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
 
     def _get_invoice_line_price_vals(self, line):
         price_vals = super()._get_invoice_line_price_vals(line)
+        price_vals['price_amount'] = FloatFmt(price_vals['price_amount'], 1, 6)
         currency = price_vals['currency']
         price_vals['allowance_charge_vals_list'] = [{
             'charge_indicator': 'false',

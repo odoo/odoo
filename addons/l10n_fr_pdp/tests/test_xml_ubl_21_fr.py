@@ -1,3 +1,5 @@
+from lxml import etree
+
 from odoo import Command
 from odoo.tests import tagged
 
@@ -38,6 +40,23 @@ class TestL10nFrPdpXml(TestPdpMessagesCommon):
         wizard = self.create_send_and_print(invoice, checkbox_ubl_cii_xml=True)
         wizard.action_send_and_print()
         self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice")
+
+    def test_export_price_amount_max_6_decimals(self):
+        """
+        Test that the line net price (BT-146), reverse-computed from the discounted subtotal,
+        is exported with at most 6 decimals [BR-FR-DEC-03].
+        """
+        invoice = self._create_french_invoice(invoice_line_ids=[Command.create({
+            'product_id': self.product_a.id,
+            'quantity': 7.0,
+            'price_unit': 1.23,
+            'discount': 13.0,
+            'tax_ids': [Command.set(self.env['account.chart.template'].ref('tva_acq_normale').ids)],
+        })])
+        invoice.action_post()
+        xml_content = self.env['account.edi.xml.ubl_21_fr']._export_invoice(invoice)[0]
+        price_amount = etree.fromstring(xml_content).findtext('.//{*}InvoiceLine/{*}Price/{*}PriceAmount')
+        self.assertEqual(price_amount, '1.229885')
 
     def test_export_credit_note_partner_fr(self):
         invoice = self._create_french_invoice()
