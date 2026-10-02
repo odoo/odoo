@@ -36,7 +36,6 @@ export class TeamBoard extends Interaction {
             picture: card.querySelector('img.o_card_img')?.getAttribute('src'),
         };
         this.closeModal = this.dialog.add(SendMessageModal, {
-        this.closeModal = this.dialog.add(SendMessageModal, {
             name : data.name,
             role: data.function,
             description: data.description,
