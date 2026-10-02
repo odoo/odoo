@@ -69,6 +69,10 @@ export class MassMailingIframe extends Component {
         this.iframeLoaded = new Deferred();
         onMounted(() => {
             this.setupIframe();
+            const iframe = this.iframeRef.el;
+            iframe.contentDocument.addEventListener("pointerdown", () => {
+                iframe.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }, true));
+            });
         });
         if (!this.props.readonly && !this.props.withBuilder) {
             this.editor = new Editor(this.props.config, this.env.services);
