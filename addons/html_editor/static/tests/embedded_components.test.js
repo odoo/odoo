@@ -27,6 +27,7 @@ import {
     queryFirst,
     test,
     tick,
+    waitFor,
 } from "@odoo/hoot";
 import {
     App,
@@ -594,7 +595,11 @@ describe("Selection after embedded component insertion", () => {
         });
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.commit();
-        await animationFrame();
+        // Insertion triggers `selectionchange` and `commit` creates a selection
+        // placeholder. `fixSelectionInsideEditableRoot` moves the selection
+        // into it and triggers another `selectionchange` that removes the
+        // selection placeholder. So we must wait for the `.o-we-hint`.
+        await waitFor(".o-we-hint");
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -609,7 +614,11 @@ describe("Selection after embedded component insertion", () => {
         });
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.commit();
-        await animationFrame();
+        // Insertion triggers `selectionchange` and `commit` creates a selection
+        // placeholder. `fixSelectionInsideEditableRoot` moves the selection
+        // into it and triggers another `selectionchange` that removes the
+        // selection placeholder. So we must wait for the `.o-we-hint`.
+        await waitFor(".o-we-hint");
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
