@@ -757,9 +757,7 @@
                 <field name="duration_display" string="Duration"/>
                 <field name="name" optional="hidden"/>
                 <field name="state" widget="badge" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'" decoration-danger="state == 'refuse'"/>
-                <field name="active_employee" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="user_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
-                <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="time_rule_id" column_invisible="1"/> <!-- drives decoration-it of the list -->
                 <button string="Approve" name="action_approve" type="object"
                     icon="thumb_up" icon_class="oi-filled"

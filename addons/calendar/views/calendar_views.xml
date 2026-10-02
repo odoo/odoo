@@ -116,7 +116,6 @@
                 <field name="description" optional="hide" readonly="recurrency"/>
                 <field name="allday" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="is_draft" column_invisible="1"/> <!--Required to check if cancellation emails must be sent.-->
-                <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
             </list>
         </field>
     </record>
@@ -270,7 +269,6 @@
                                     </div>
                                     <span class="fw-bold text-nowrap" invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')">Repeat on</span>
                                     <div invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')" ><widget name="calendar_week_days" readonly="not user_can_edit"/></div>
-                                    <field name="recurrence_id" invisible="1" /> <!-- duplicate of the recurrence_id field already declared above in this group -->
 
                                     <label string="Day of Month" for="month_by" class="fw-bold text-900" style="width: fit-content;" invisible="rrule_type_ui not in ['monthly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'monthly')"/>
                                     <div class="d-flex gap-2" invisible="rrule_type_ui not in ['monthly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'monthly')">

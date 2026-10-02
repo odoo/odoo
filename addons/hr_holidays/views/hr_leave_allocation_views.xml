@@ -323,7 +323,6 @@
                 <field name="date_to" string="Validity Stop" optional="hide" readonly="state in ['refuse', 'validate', 'validate1']"/>
                 <field name="accrual_plan_id"/>
                 <field name="notes" string="Reason" optional="hide"/>
-                <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="active_employee" column_invisible="True"/> <!-- drives decoration-muted of the employee_id column -->
                 <field name="state" widget="badge" decoration-warning="state in ['confirm', 'validate1']" decoration-success="state == 'validate'" decoration-danger="state == 'refuse'"/>
                 <button string="Approve" name="action_approve" type="object" class="text-success"

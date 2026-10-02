@@ -63,7 +63,6 @@
         <field name="arch" type="xml">
             <list multi_edit="1">
                 <field name="company_id" column_invisible="True"/> <!-- passed as default_company_id in the context of operation_id and needed by the company-dependent domain of the check_company fields -->
-                <field name="is_produced" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="is_user_working" column_invisible="True"/> <!-- read by the mrp_timer widget of duration and drives invisible of the Start/Pause/Done buttons -->
                 <field name="uom_id" readonly="0" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="production_state" column_invisible="True"/> <!-- drives invisible of duration, of state and of the Start/Pause/Done buttons -->
@@ -345,15 +344,12 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <form string="Production Workcenter" delete="0" create="0">
-            <field name="is_user_working" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
-            <field name="working_state" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
             <field name="production_state" invisible="1"/> <!-- drives invisible of the state badge and readonly of qty_produced -->
             <field name="operation_id" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
             <field name="sequence" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
             <sheet>
                 <field name="company_id" invisible="1"/> <!-- needed by the company-dependent domain of the check_company fields of this form -->
                 <field name="product_tracking" invisible="1"/> <!-- drives invisible of production_lot_producing_id -->
-                <field name="product_id" invisible="1"/> <!-- duplicate of the product_id displayed in the first group below -->
                 <div invisible="not has_conflicts" class="h5 alert alert-warning text-center" role="alert">
                     This work order is planned at the same time as other work orders in this work center
                     <button name="%(action_mrp_workorder_workcenter)d" icon="east" type="action" string="View Planning" class="btn-link"
@@ -434,7 +430,6 @@
                                     <group>
                                         <field name="user_id"/>
                                         <field name="workcenter_id"/>
-                                        <field name="company_id" invisible="1"/> <!-- duplicate of the company_id declared in the first group of this time tracking form -->
                                         <field name="loss_id"/>
                                     </group>
                                 </group>
@@ -462,7 +457,6 @@
                         </list>
                     </field>
                 </page>
-                <field name="allow_workorder_dependencies" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                 <page string="Blocked By" name="dependencies" invisible="not blocked_by_workorder_ids">
                     <field name="blocked_by_workorder_ids" nolabel="1" readonly="1">
                         <list>

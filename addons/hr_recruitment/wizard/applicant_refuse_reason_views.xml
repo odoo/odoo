@@ -86,7 +86,6 @@
                         <group col="1" invisible="not send_mail">
                             <group col="2">
                                 <field name="lang" invisible="1"/> <!-- mail.render.mixin lang, editable compute persisted when the mail is sent; never shown -->
-                                <field name="render_model" invisible="1"/> <!-- kept loaded for record data though not shown in this wizard -->
                                 <field name="subject" required="send_mail" placeholder="Subject..."/>
                             </group>
                             <field name="body" nolabel="1" class="oe-bordered-editor" widget="html_mail" placeholder="Email Body..." force_save="1"/>
