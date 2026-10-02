@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="stock.view_stock_move_operations"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_id']" position="after" >
-                <field name="picking_code" invisible="1"/>
-                <field name="use_expiration_date" invisible="1"/>
+                <field name="picking_code" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+                <field name="use_expiration_date" invisible="1"/> <!-- read by the forecasted report components of this module -->
             </xpath>
         </field>
     </record>
@@ -18,10 +18,10 @@
         <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_id']" position="after">
-                <field name="is_expired" column_invisible="True"/>
+                <field name="is_expired" column_invisible="True"/> <!-- drives decoration-bf/danger of expiration_date -->
             </xpath>
             <xpath expr="//field[@name='lot_name']" position="after" >
-                <field name="picking_type_use_existing_lots" column_invisible="True"/>
+                <field name="picking_type_use_existing_lots" column_invisible="True"/> <!-- drives readonly of expiration_date, removal_date -->
                 <field name="expiration_date" force_save="1" column_invisible="not parent.use_expiration_date" readonly="picking_type_use_existing_lots"
                  decoration-danger="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
                  decoration-bf="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"/>
@@ -38,8 +38,8 @@
         <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_name']" position="after">
-                <field name="picking_type_use_existing_lots" column_invisible="True"/>
-                <field name="tracking" column_invisible="True"/>
+                <field name="picking_type_use_existing_lots" column_invisible="True"/> <!-- drives readonly of expiration_date -->
+                <field name="tracking" column_invisible="True"/> <!-- drives invisible of expiration_date, removal_date -->
                 <field name="expiration_date" decoration-danger="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
                  decoration-bf="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
                  force_save="1" readonly="picking_type_use_existing_lots" invisible="tracking not in ['lot', 'serial']"/>
@@ -47,7 +47,7 @@
                  decoration-danger="removal_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')" decoration-bf="removal_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"/>
             </xpath>
             <xpath expr="//field[@name='lot_id']" position="after">
-                <field name="is_expired" column_invisible="True"/>
+                <field name="is_expired" column_invisible="True"/> <!-- drives decoration-bf/danger of expiration_date -->
             </xpath>
         </field>
     </record>

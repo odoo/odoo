@@ -17,8 +17,8 @@
                                 icon="format_list_bulleted"
                             />
                         </div>
-                        <field name="active" invisible="1" />
-                        <field name="model_name" invisible="1" force_save="True" />
+                        <field name="active" invisible="1" /> <!-- drives invisible of the web_ribbon widget -->
+                        <field name="model_name" invisible="1" force_save="True" /> <!-- technical model name, force_save so the value computed from model_id is saved -->
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
                         <div class="oe_title">
                             <h1><field name="name" placeholder="Set an explicit name"/></h1>
@@ -54,7 +54,7 @@
                                             invisible="trigger not in ['on_stage_set', 'on_tag_set']"
                                             required="trigger in ['on_stage_set', 'on_tag_set']"
                                         />
-                                        <field name="trg_field_ref_model_name" invisible="1" />
+                                        <field name="trg_field_ref_model_name" invisible="1" /> <!-- kept loaded for record data though not shown in this form -->
                                     </div>
                                     <div class="text-muted" invisible="trigger != 'on_change'"><i class="oi" data-icon="warning"/> Automation rules triggered by UI changes will be executed <em>every time</em> the watched fields change, <em>whether you save or not</em>.</div>
                                 </div>
@@ -100,7 +100,7 @@
                                             'on_time_updated'
                                         ]"
                                 />
-                                <field name="previous_domain" invisible="1"/>
+                                <field name="previous_domain" invisible="1"/> <!-- previous domain kept so the automation can compare it on save -->
                                 <field name="filter_domain" widget="domain" groups="base.group_no_one"
                                     options="{'model': 'model_name', 'in_dialog': True, 'allow_expressions':True}"
                                     invisible="trigger in ['on_webhook']"

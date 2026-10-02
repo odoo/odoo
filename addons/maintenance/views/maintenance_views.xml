@@ -76,8 +76,8 @@
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
             <form string="Maintenance Request">
-                <field name="company_id" invisible="1"/>
-                <field name="category_id" invisible="1"/>
+                <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of equipment_id, maintenance_team_id, production_id -->
+                <field name="category_id" invisible="1"/> <!-- passed as default_category_id in the context of equipment_id -->
                 <header>
                     <button string="Cancel" name="cancel_equipment_request" type="object" invisible="state == 'cancelled' or not id"/>
                     <button string="Reopen Request" name="reset_equipment_request" type="object" invisible="state != 'cancelled'"/>
@@ -97,7 +97,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="owner_user_id" string="Requested By" invisible="1"/>
+                            <field name="owner_user_id" string="Requested By" invisible="1"/> <!-- used by hr_maintenance.maintenance_request_view_form_inherit_hr -->
                             <field name="equipment_id" context="{'default_company_id':company_id, 'default_category_id':category_id}" required="1"/>
                             <field name="category_id" groups="maintenance.group_equipment_manager" context="{'default_company_id':company_id}" invisible="not equipment_id"/>
                             <field name="close_date" readonly="True" invisible="state != 'done'"/>
@@ -185,7 +185,7 @@
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
             <list string="Maintenance Request" multi_edit="1" sample="1">
-                <field name="message_needaction" column_invisible="True"/>
+                <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="name"/>
                 <field name="owner_user_id"/>
                 <field name="user_ids" widget="many2many_avatar_user"/>
@@ -355,7 +355,7 @@
         <field name="arch" type="xml">
             <form string="Equipment">
                 <sheet>
-                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of maintenance_team_id, partner_id, workcenter_id -->
                     <div class="oe_button_box" name="button_box">
                         <button name="%(hr_equipment_request_action_from_equipment)d"
                             type="action"
@@ -372,11 +372,11 @@
                     </div>
                     <group name="service_info_group">
                         <group>
-                            <field name="active" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
                             <field name="category_id" options="{&quot;no_open&quot;: True}" context="{'default_company_id':company_id}"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
                             <!-- below field is used in hr_maintenance and fleet_maintenance -->
-                            <field name="equipment_assign_to" invisible="1" widget="ordered_radio"/>
+                            <field name="equipment_assign_to" invisible="1" widget="ordered_radio"/> <!-- used by fleet_maintenance.maintenance_equipment_view_form_inherit_fleet and 1 other inheriting view(s) -->
                             <field name="owner_user_id" string="Owner"/>
                         </group>
                         <group>
@@ -478,7 +478,7 @@
         <field name="model">maintenance.equipment</field>
         <field name="arch" type="xml">
             <list string="Assign To User" sample="1">
-                <field name="message_needaction" column_invisible="True"/>
+                <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="name"/>
                 <!-- <field name="active" invisible="1"/> -->
                 <field name="owner_user_id" string="Owner"/>
@@ -486,7 +486,7 @@
                 <field name="serial_no"/>
                 <field name="technician_user_id"/>
                 <field name="category_id"/>
-                <field name="partner_id" column_invisible="True"/>
+                <field name="partner_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </list>
@@ -757,7 +757,7 @@
                 </div>
                 <group>
                     <group>
-                        <field name="active" invisible="1"/>
+                        <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
                         <field name="member_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create': True}" domain="[('share', '=', False)]"/>
                     </group>
                     <group name="group_alias">
