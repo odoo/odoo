@@ -460,11 +460,3 @@ export const router = {
 };
 
 startRouter();
-
-export function objectToQuery(obj) {
-    const query = {};
-    Object.entries(obj).forEach(([k, v]) => {
-        query[k] = v ? String(v) : v;
-    });
-    return query;
-}

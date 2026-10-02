@@ -11,7 +11,3 @@ var isFlexSupported =
 if (!isFlexSupported) {
     document.documentElement.setAttribute("data-no-flex", "");
 }
-
-export default {
-    isFlexSupported: isFlexSupported,
-};

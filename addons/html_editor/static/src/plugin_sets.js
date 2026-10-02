@@ -70,8 +70,6 @@ import { ToggleBlockPlugin } from "@html_editor/others/embedded_components/plugi
 import { EmbeddedVideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/embedded_video_plugin";
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
 import { SyntaxHighlightingPlugin } from "@html_editor/others/embedded_components/plugins/syntax_highlighting_plugin/syntax_highlighting_plugin";
-import { QWebPlugin } from "./others/qweb_plugin";
-import { EditorVersionPlugin } from "./core/editor_version_plugin";
 import { ImagePostProcessPlugin } from "./main/media/image_post_process_plugin";
 import { DoubleClickImagePreviewPlugin } from "./main/media/dblclick_image_preview_plugin";
 import { StylePlugin } from "./core/style_plugin";
@@ -185,13 +183,5 @@ export const EMBEDDED_COMPONENT_PLUGINS = [
 ];
 
 export const NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS = [VideoPlugin];
-
-export const EXTRA_PLUGINS = [
-    ...COLLABORATION_PLUGINS,
-    ...MAIN_PLUGINS,
-    ...EMBEDDED_COMPONENT_PLUGINS,
-    EditorVersionPlugin,
-    QWebPlugin,
-];
 
 export const TOUCH_EXCLUDED_PLUGINS = [MoveNodePlugin, ResizePlugin];

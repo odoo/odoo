@@ -16,7 +16,6 @@ export const ONE_SYM = Symbol("one");
 export const OR_SYM = Symbol("or");
 const AND_SYM = Symbol("and");
 export const IS_RECORD_SYM = Symbol("isRecord");
-export const IS_FIELD_SYM = Symbol("isField");
 export const STORE_SYM = Symbol("store");
 
 export function AND(...args) {

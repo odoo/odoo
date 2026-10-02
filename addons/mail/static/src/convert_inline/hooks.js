@@ -9,10 +9,6 @@ export const EMAIL_DESKTOP_DIMENSIONS = {
     width: 1320,
     height: 1000,
 };
-export const EMAIL_MOBILE_DIMENSIONS = {
-    width: 360,
-    height: 1000,
-};
 
 /**
  * Hook to handle email HTML conversion in a mail HtmlField.

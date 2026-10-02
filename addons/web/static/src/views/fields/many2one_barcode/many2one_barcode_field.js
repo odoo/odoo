@@ -18,8 +18,6 @@ export class Many2OneBarcodeField extends Component {
     }
 }
 
-export const many2OneBarcodeField = {};
-
 registry.category("fields").add("many2one_barcode", {
     ...buildM2OFieldDescription(Many2OneBarcodeField),
     displayName: _t("Many2OneBarcode"),

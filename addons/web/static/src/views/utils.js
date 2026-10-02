@@ -8,7 +8,6 @@ import { combineModifiers } from "@web/model/relational_model/utils";
 export const TOUCH_SELECTION_THRESHOLD = 400;
 
 export const X2M_TYPES = ["one2many", "many2many"];
-const NUMERIC_TYPES = ["integer", "float", "monetary"];
 
 /**
  * @typedef ViewActiveActions {
@@ -197,14 +196,6 @@ export function getDecoration(rootNode) {
  */
 export function isX2Many(field) {
     return field && X2M_TYPES.includes(field.type);
-}
-
-/**
- * @param {Object} field
- * @returns {boolean} true iff the given field is a numeric field
- */
-export function isNumeric(field) {
-    return NUMERIC_TYPES.includes(field.type);
 }
 
 /**
