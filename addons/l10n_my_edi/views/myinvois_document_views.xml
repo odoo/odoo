@@ -22,7 +22,6 @@
                                 string="Cancel Submission"
                                 invisible="myinvois_state not in ['valid', 'rejected']"/>
                         <field name="myinvois_state" widget="statusbar" statusbar_visible="in_progress,valid" invisible="is_received_document"/>
-                        <!-- Received documents never go through our submission steps. -->
                         <field name="myinvois_state" widget="statusbar" statusbar_visible="received" invisible="not is_received_document"/>
                     </header>
                     <sheet>
@@ -43,7 +42,7 @@
                             <group>
                                 <field name="myinvois_document_type" invisible="not is_received_document"/>
                                 <field name="myinvois_amount_total" invisible="not is_received_document"/>
-                                <field name="currency_id" invisible="1"/>  <!-- For the monetary widget. -->
+                                <field name="currency_id" invisible="1"/>
                                 <field name="myinvois_issuance_date"/>
                                 <field name="myinvois_submission_uid"/>
                                 <field name="myinvois_external_uuid"/>
