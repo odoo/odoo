@@ -18,11 +18,7 @@ export class MediaVideo extends Interaction {
                 if (!iframeEl) {
                     return;
                 }
-                // TODO still oeExpression to remove someday
-                this.services.website_cookies.manageIframeSrc(
-                    iframeEl,
-                    this.el.dataset.embedUrl || this.el.dataset.src || this.el.dataset.oeExpression
-                );
+                this.services.website_cookies.manageIframeSrc(iframeEl, this.iframeSrc);
             },
             "t-on-hide.bs.modal": () => {
                 const iframeEl = this.el.querySelector("iframe");
@@ -55,6 +51,8 @@ export class MediaVideo extends Interaction {
         if (!playerEl) {
             playerEl = generateVideoPlayer(this.el, this.services.website_cookies.manageIframeSrc);
         }
+
+        this.iframeSrc = playerEl?.dataset.nocookieSrc || playerEl?.getAttribute("src") || "";
 
         if (playerEl && !playerEl.getAttribute("aria-label")) {
             playerEl.setAttribute("aria-label", _t("Media video"));
