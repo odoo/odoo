@@ -7,7 +7,6 @@ import { useService } from "@web/core/utils/hooks";
 export class SaverScreen extends Component {
     static template = "point_of_sale.SaverScreen";
     static storeOnOrder = false;
-    static updatePreviousScreen = false;
 
     setup() {
         this.time = useTime();

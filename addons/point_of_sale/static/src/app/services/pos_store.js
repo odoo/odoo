@@ -66,8 +66,6 @@ const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
 
 export class PosStore extends WithLazyGetterTrap {
-    loadingSkipButtonIsShown = false;
-    mainScreen = { name: null, component: null };
     feedbackScreenAutoSkipDelay = 1500;
     _customerDisplayQrData = null;
     router = usePlugin(PosRouterPlugin);
@@ -1577,14 +1575,6 @@ export class PosStore extends WithLazyGetterTrap {
         order.tracking_number = deviceIdentifier + `${parseInt(number) % 1000}`.padStart(3, "0");
     }
 
-    selectNextOrder() {
-        const orders = this.models["pos.order"].filter((order) => !order.finalized);
-        if (orders.length > 0) {
-            this.selectedOrderUuid = orders[0].uuid;
-        } else {
-            return this.addNewOrder();
-        }
-    }
     get openOrder() {
         return this.models["pos.order"].find((o) => o.state === "draft") || this.addNewOrder();
     }

@@ -48,10 +48,6 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
         };
     }
 
-    get hasCancelButton() {
-        return false;
-    }
-
     get hasMailButton() {
         return false;
     }

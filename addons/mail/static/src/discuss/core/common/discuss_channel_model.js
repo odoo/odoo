@@ -321,12 +321,6 @@ export class DiscussChannel extends Record {
     /** @type {"not_fetched"|"fetching"|"fetched"} */
     fetchChannelInfoState = "not_fetched";
     from_message_id = fields.One("mail.message", { inverse: "linkedSubChannel" });
-    get fullNameWithParent() {
-        const text = this.parent_channel_id
-            ? `${this.parent_channel_id.displayName} > ${this.displayName}`
-            : this.displayName;
-        return text;
-    }
     group_ids = fields.Many("res.groups");
     has_meeting_today = false;
     get memberListTypes() {

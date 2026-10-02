@@ -30,9 +30,6 @@ export class StockValuationReport extends Component {
 
     setup() {
         this.controller = proxy(new StockValuationReportController(this.props.action));
-        this.state = proxy({
-            displayInventoryValuationLine: false,
-        })
         this.orm = useService("orm");
         this.actionService = useService("action");
 
@@ -55,24 +52,6 @@ export class StockValuationReport extends Component {
     // Getters -----------------------------------------------------------------
     get data() {
         return this.controller.data || {};
-    }
-
-    get accountingStockValuation() {
-        return this.formatMonetary(this.data.accounting_stock_valuation);
-    }
-
-    get inventoryValuation() {
-        return formatMonetary(this.data.inventory_valuation.value, {
-            currencyId: this.data.currency_id,
-        });
-    }
-
-    get stockInitial() {
-        return this.formatMonetary(this.data.stock_initial);
-    }
-
-    get stockVariation() {
-        return this.formatMonetary(this.data.stock_variation);
     }
 
     get stockVariationLabel() {
@@ -107,10 +86,6 @@ export class StockValuationReport extends Component {
             views: [[false, 'list'], [false, 'form']],
             target: 'current',
         });
-    }
-
-    toggleInventoryValuationFold() {
-        this.state.displayInventoryValuationLine = !this.state.displayInventoryValuationLine;
     }
 }
 

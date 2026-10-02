@@ -187,10 +187,6 @@ export class AttachmentList extends Component {
         return this.ancestors.inChatWindow && this.ancestors.inMessage?.isAlignedRight;
     }
 
-    get isInChatWindowAndIsAlignedLeft() {
-        return this.ancestors.inChatWindow && !this.ancestors.inMessage?.isAlignedRight;
-    }
-
     /**
      * Compute the action items for the given attachment.
      *
@@ -229,12 +225,5 @@ export class AttachmentList extends Component {
         // in messages users are expected to delete the message instead of just the attachment
         const message = this.ancestors.inMessage?.message;
         return !message || message.hasTextContent || this.props.attachmentGroups.length > 1;
-    }
-
-    /**
-     * @param {import("models").Attachment} attachment
-     */
-    showUploaded(attachment) {
-        return !attachment.isImage && !attachment.uploading && this.ancestors.inComposer;
     }
 }

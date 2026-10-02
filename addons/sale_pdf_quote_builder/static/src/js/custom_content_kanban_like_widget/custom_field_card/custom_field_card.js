@@ -19,9 +19,4 @@ export class CustomFieldCard extends Component {
         this.placeholder = _t("Click to write content for the PDF quote...");
         useAutoresize(this.customFormFieldTextAreaRef);
     }
-
-    expandTextArea(ev) {
-        const textarea = ev.target;
-        textarea.style.height = textarea.scrollHeight + "px";
-    }
 }

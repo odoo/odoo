@@ -560,12 +560,6 @@ export class Thread extends Component {
         this.onClickLoadOlder();
     }
 
-    async onClickPreferences() {
-        const actionDescription = await this.orm.call("res.users", "action_get");
-        actionDescription.res_id = this.store.self_user?.id;
-        this.env.services.action.doAction(actionDescription);
-    }
-
     onFocusin() {
         this.isFocused.set(true);
         if (this.props.thread.shouldMarkAsReadOnFocus) {

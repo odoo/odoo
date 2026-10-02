@@ -190,18 +190,6 @@ export class PeerToPeer {
         this._stopped = true;
     }
 
-    getConnectedPeerIds() {
-        return Object.entries(this.peersInfos)
-            .filter(
-                ([id, infos]) =>
-                    infos.peerConnection &&
-                    infos.peerConnection.iceConnectionState === "connected" &&
-                    infos.dataChannel &&
-                    infos.dataChannel.readyState === "open"
-            )
-            .map(([id]) => id);
-    }
-
     removePeer(peerId) {
         if (debugShowLog) {
             console.log(`%c REMOVE PEER ${peerId}`, "background: chocolate;");

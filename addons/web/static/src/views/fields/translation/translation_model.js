@@ -263,14 +263,6 @@ export class TranslateModel extends Plugin {
         }
     }
 
-    langStatus(lang) {
-        const changes = this.changesSet();
-        if (!(lang in changes)) {
-            return "no_change";
-        }
-        return changes[lang]?.description ? "reset" : "changed";
-    }
-
     async changeLang(lang) {
         const values = this.valuesSet();
         if (values[lang] === undefined) {

@@ -166,22 +166,6 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         await record.update(changes);
     }
 
-    async addRowAfterSection(record, addSubSection) {
-        const canProceed = await this.props.list.leaveEditMode({ canAbandon: false });
-        if (!canProceed) {
-            return;
-        }
-
-        const index =
-            this.props.list.records.indexOf(record) +
-            getSectionRecords(this.props.list, record).length -
-            1;
-        const context = {
-            default_display_type: addSubSection ? DISPLAY_TYPES.SUBSECTION : DISPLAY_TYPES.SECTION,
-        };
-        await this.props.list.addNewRecordAtIndex(index, { context });
-    }
-
     async addNoteInSection(record) {
         const canProceed = await this.props.list.leaveEditMode({ canAbandon: false });
         if (!canProceed) {

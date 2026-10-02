@@ -330,13 +330,6 @@ export class TicketScreen extends Component {
             this.numberBuffer.reset();
         }
     }
-    onClickRefundOrderUid(orderUuid) {
-        // Open the refund order.
-        const refundOrder = this.pos.models["pos.order"].find((order) => order.uuid == orderUuid);
-        if (refundOrder) {
-            this.setOrder(refundOrder);
-        }
-    }
     _setToRefundDetail(toRefundDetail, buffer) {
         // When already linked to an order, do not modify the to refund quantity.
         if (toRefundDetail.destionation_order_id) {

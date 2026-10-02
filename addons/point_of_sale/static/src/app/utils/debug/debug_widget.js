@@ -172,9 +172,6 @@ export class DebugWidget extends Component {
     _onBufferUpdate({ detail: value }) {
         this.state.buffer = value;
     }
-    get bufferRepr() {
-        return `"${this.state.buffer}"`;
-    }
 
     get randomOrder() {
         const orderLength = this.pos.models["pos.order"].length;

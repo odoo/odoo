@@ -32,19 +32,6 @@ export class BomOverviewTable extends Component {
 
     //---- Handlers ----
 
-    async goToProduct() {
-        return this.actionService.doAction({
-            type: "ir.actions.act_window",
-            res_model: this.data.link_model,
-            res_id: this.data.link_id,
-            views: [[false, "form"]],
-            target: "current",
-            context: {
-                active_id: this.data.link_id,
-            },
-        });
-    }
-
     //---- Getters ----
 
     get data() {

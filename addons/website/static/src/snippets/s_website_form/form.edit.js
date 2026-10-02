@@ -21,19 +21,6 @@ export class FormEdit extends Interaction {
             }
         }
     }
-
-    // Todo: remove in master
-    _getDataForFields() {
-        if (!this.dataForValues) {
-            return [];
-        }
-        return Object.keys(this.dataForValues)
-            .map((name) => this.el.querySelector(`[name="${CSS.escape(name)}"]`))
-            .filter(
-                (dataForValuesFieldEl) =>
-                    dataForValuesFieldEl && dataForValuesFieldEl.name !== "email_to"
-            );
-    }
 }
 
 registry.category("public.interactions.edit").add("website.form", {

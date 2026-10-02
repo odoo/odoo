@@ -1221,10 +1221,6 @@ export class PosDataPlugin extends Plugin {
 
         return Array.from(visited);
     }
-
-    isDataLoadedFromCache() {
-        return this.dataLoadedFromCache();
-    }
 }
 
 services.add(PosDataPlugin);

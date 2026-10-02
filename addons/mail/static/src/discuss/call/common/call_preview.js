@@ -380,14 +380,6 @@ export class CallPreview extends Component {
         this.state.blurManager = undefined;
     }
 
-    toggleBlur() {
-        if (this.state.blurManager) {
-            this.disableBlur();
-            return;
-        }
-        this.enableBlur();
-    }
-
     onClickSettings() {
         this.dialog.add(CallSettingsDialog, {});
     }
