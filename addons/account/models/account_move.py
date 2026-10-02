@@ -5304,6 +5304,8 @@ class AccountMove(models.Model):
         else:
             cash_discount_account = company.account_journal_early_pay_discount_gain_account_id
 
+        cash_discount_account = self.fiscal_position_id.map_account(cash_discount_account)
+
         epd_analytic_distribution = self.env['account.analytic.distribution.model']._get_distribution({
             'account_prefix': cash_discount_account.code,
             'company_id': self.company_id.id,
@@ -5807,6 +5809,8 @@ class AccountMove(models.Model):
             cash_discount_account = self.company_id.account_journal_early_pay_discount_loss_account_id
         else:
             cash_discount_account = self.company_id.account_journal_early_pay_discount_gain_account_id
+
+        cash_discount_account = self.fiscal_position_id.map_account(cash_discount_account)
         return payment_term_line, cash_discount_account
 
     def _is_early_payment_discount_applied(self, payment_move, amount, payment_term_line, cash_discount_account):
@@ -7760,11 +7764,15 @@ class AccountMove(models.Model):
         return res
 
     def _get_discount_allocation_account(self):
+        account = None
         if self.is_sale_document(include_receipts=True) and self.company_id.account_discount_expense_allocation_id:
-            return self.company_id.account_discount_expense_allocation_id
+            account = self.company_id.account_discount_expense_allocation_id
         if self.is_purchase_document(include_receipts=True) and self.company_id.account_discount_income_allocation_id:
-            return self.company_id.account_discount_income_allocation_id
-        return None
+            account = self.company_id.account_discount_income_allocation_id
+
+        if account and self.fiscal_position_id:
+            account = self.fiscal_position_id.map_account(account)
+        return account
 
     def _get_available_invoice_template_pdf_report_ids(self):
         """
