@@ -11,6 +11,7 @@ class TestCalendarController(HttpCase):
         super().setUp()
         self.user = new_test_user(self.env, "test_user_1", email="test_user_1@nowhere.com", tz="UTC")
         self.other_user = new_test_user(self.env, "test_user_2", email="test_user_2@nowhere.com", password="P@ssw0rd!", tz="UTC")
+        self.portal_user = new_test_user(self.env, "portal_user", email="portal_user@nowhere.com", password="Tigrou007$", tz="UTC", groups="base.group_portal")
         self.partner = self.user.partner_id
         self.event = (
             self.env["calendar.event"]
@@ -47,3 +48,12 @@ class TestCalendarController(HttpCase):
         self.assertEqual(res.status_code, 200, "Response should = OK")
         self.env.invalidate_all()
         self.assertEqual(attendee.state, "accepted", "Attendee should have accepted")
+
+    def test_portal_video_call(self):
+        self.event.partner_ids = [(4, self.portal_user.partner_id.id)]
+        self.event._set_discuss_videocall_location()
+
+        self.authenticate("portal_user", "Tigrou007$")
+        res = self.url_open(self.event.videocall_location)
+        self.assertEqual(res.status_code, 200, "Response should = OK")
+        self.env.invalidate_all()
