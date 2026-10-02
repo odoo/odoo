@@ -196,7 +196,6 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         approved_capture = {
             "status": "COMPLETED",
             "id": self.order_id,
-            "txn_type": "CAPTURE",
             "reference_id": self.reference,
             "amount": {"currency_code": self.currency.name, "value": str(self.amount)},
             "payment_source": {"paypal": {"attributes": {"vault": {"status": "APPROVED"}}}},
