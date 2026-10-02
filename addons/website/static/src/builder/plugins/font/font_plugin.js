@@ -52,13 +52,15 @@ export class WebsiteFontPlugin extends Plugin {
         } else {
             values["uploaded-local-fonts"] = "null";
         }
+        // TODO reloadEditor: true
+        // Saved first: the save writes the previewed theme values, which must
+        // not overwrite the font settings written here.
+        await this.dependencies.savePlugin.save(/* not in translation */);
         await this.dependencies.customizeWebsite.makeSCSSCusto(
             "/website/static/src/scss/options/user_values.scss",
             values
         );
         this.dependencies.builderFont.getFontsCache().invalidate();
-        // TODO reloadEditor: true
-        await this.dependencies.savePlugin.save(/* not in translation */);
     }
     async deleteFont(font) {
         const { googleFonts, googleLocalFonts, uploadedLocalFonts } =

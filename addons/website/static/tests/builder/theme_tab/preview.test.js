@@ -79,9 +79,15 @@ test("theme tab: an emptied value removes the preview and is reset on save", asy
 });
 
 // Each value changes the page at once: the compiled CSS reads it from its
-// variable. `expand` is the option of the row that holds `option` in its
-// collapse. Font sizes stay at most 20px, where Bootstrap's rfs doesn't make
-// them fluid; the line height probes have a fixed font size.
+// variable. `expand` is the row that holds `option` in its collapse (its
+// option, or a selector). `select` is the row of a select, where `value` is
+// picked. Font sizes stay at most 20px, where Bootstrap's rfs doesn't make
+// them fluid; the line height probes have a fixed font size. The fonts are the
+// system ones, which load nothing.
+const PARAGRAPH = "[data-container-title='Paragraph']";
+const HEADINGS = "[data-container-title='Headings']";
+const SYSTEM_FONTS =
+    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Noto Sans", Arial, "Odoo Unicode Support Noto", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
 // prettier-ignore
 const PREVIEWED_VALUES = [
     { option: "box-shadow-offset-x", value: "20", element: ".shadow", property: "box-shadow", expected: "rgba(0, 0, 0, 0.12) 20px 4px 16px 0px" },
@@ -100,24 +106,38 @@ const PREVIEWED_VALUES = [
     { option: "headings-margin-top", value: "10", element: "h2", property: "margin-top", expected: "10px" },
     { option: "headings-margin-bottom", value: "6", element: "h2", property: "margin-bottom", expected: "6px" },
     { option: "h5-margin-bottom", value: "12", expand: "headings-margin-top", element: "h5", property: "margin-bottom", expected: "12px" },
+    { option: "font", value: "'SYSTEM_FONTS'", select: `${PARAGRAPH} [data-label='Font Family']`, element: "p", property: "font-family", expected: SYSTEM_FONTS },
+    { option: "headings-font", value: "'SYSTEM_FONTS'", select: `${HEADINGS} [data-label='Font Family']`, element: "h3", property: "font-family", expected: SYSTEM_FONTS },
+    { option: "h3-font", value: "'SYSTEM_FONTS'", expand: "headings-font", select: `${HEADINGS} [data-label='Heading 3']`, element: "h3", property: "font-family", expected: SYSTEM_FONTS },
+    { option: "font-weight-normal", value: "300", select: `${PARAGRAPH} [data-label='Font Weight']`, element: "p", property: "font-weight", expected: "300" },
+    { option: "font-weight-bolder", value: "900", expand: `${PARAGRAPH} [data-label='Font Weight']`, select: `${PARAGRAPH} [data-label='Bold']`, element: "p b", property: "font-weight", expected: "900" },
+    { option: "headings-font-weight", value: "700", select: `${HEADINGS} [data-label='Font Weight']`, element: "h2", property: "font-weight", expected: "700" },
 ];
 
-for (const { option, value, expand, element, property, expected } of PREVIEWED_VALUES) {
+for (const { option, value, expand, select, element, property, expected } of PREVIEWED_VALUES) {
     test(`theme tab: ${option} is previewed on the page`, async () => {
         mockThemeRpcs();
         await setupWebsiteBuilder(
-            `<p>Text <small>small</small></p>
+            `<p>Text <small>small</small> <b>bold</b></p>
             <h1>H1</h1><h2>H2</h2><h3>H3</h3>
             <h4 style="font-size: 20px">H4</h4><h5>H5</h5>
             <div class="display-1">Display 1</div>
             <div class="display-2" style="font-size: 20px">Display 2</div>
             <div class="shadow">Shadow</div>`,
-            { loadIframeBundles: true }
+            {
+                loadIframeBundles: true,
+                // The page's fonts, with their weights (the page loads none).
+                styleContent: `
+                    @font-face { font-family: "Inter"; font-weight: 100 900; src: local("Arial"); }
+                    @font-face { font-family: "Inter Tight"; font-weight: 100 900; src: local("Arial"); }`,
+            }
         );
         await contains("#theme-tab").click();
         if (expand) {
-            const inputEl = await waitFor(`[data-action-param='${expand}']`);
-            const rowEl = inputEl.closest("[data-label]");
+            const optionEl = await waitFor(
+                expand.startsWith("[") ? expand : `[data-action-param='${expand}']`
+            );
+            const rowEl = optionEl.closest("[data-label]");
             await contains(rowEl.querySelector(".o_hb_collapse_toggler")).click();
         }
         expect(`:iframe ${element}`).not.toHaveStyle({ [property]: expected });
@@ -125,6 +145,9 @@ for (const { option, value, expand, element, property, expected } of PREVIEWED_V
         if (value.startsWith("#")) {
             await contains("div[data-label='Color'] button.o_we_color_preview").click();
             await contains(`.o_popover button.o_color_button[data-color='${value}']`).click();
+        } else if (select) {
+            await contains(`${select} .o-hb-select-toggle`).click();
+            await contains(`.o-dropdown--menu [data-action-value="${value}"]`).click();
         } else {
             await contains(`[data-action-param='${option}'] input`).edit(value);
         }
