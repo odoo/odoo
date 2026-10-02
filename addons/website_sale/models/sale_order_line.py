@@ -150,7 +150,8 @@ class SaleOrderLine(models.Model):
         :rtype: bool
         """
         return (
-            self.product_id._is_published()
+            bool(self.product_id)
+            and self.product_id._is_published()
             and not self._is_custom_cart_line()
             and not self.is_delivery
         )
