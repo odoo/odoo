@@ -335,8 +335,11 @@ class Website(models.Model):
 
         # Ignore the current order if a payment has been initiated. We don't want to retrieve the
         # cart and allow the user to update it when the payment is about to confirm it.
-        if sale_order_sudo and sale_order_sudo.get_portal_last_transaction().state in (
-            'pending', 'authorized', 'done'
+        if sale_order_sudo and (
+            sale_order_sudo.state != 'draft'
+            or sale_order_sudo.get_portal_last_transaction().state in (
+                'pending', 'authorized', 'done'
+            )
         ):
             sale_order_sudo = None
 
