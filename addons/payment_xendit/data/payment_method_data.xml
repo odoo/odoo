@@ -15,16 +15,6 @@
         <field name="supported_currency_ids" eval="[Command.set([ref('base.PHP')])]"/>
     </record>
 
-    <record id="payment_method_akulaku" model="payment.method">
-        <field name="name">Akulaku PayLater</field>
-        <field name="code">akulaku</field>
-        <field name="provider_id" ref="payment.payment_provider_xendit"/>
-        <field name="image" type="bytes" file="payment/static/img/akulaku.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="supported_country_ids" eval="[Command.set([ref('base.id')])]"/>
-        <field name="supported_currency_ids" eval="[Command.set([ref('base.IDR')])]"/>
-    </record>
-
     <record id="payment_method_appota" model="payment.method">
         <field name="name">Appota</field>
         <field name="code">appota</field>
@@ -65,16 +55,6 @@
         <field name="supported_currency_ids" eval="[Command.set([ref('base.IDR')])]"/>
     </record>
 
-    <record id="payment_method_billease" model="payment.method">
-        <field name="name">BillEase</field>
-        <field name="code">billease</field>
-        <field name="provider_id" ref="payment.payment_provider_xendit"/>
-        <field name="image" type="bytes" file="payment/static/img/billease.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="supported_country_ids" eval="[Command.set([ref('base.ph')])]"/>
-        <field name="supported_currency_ids" eval="[Command.set([ref('base.PHP')])]"/>
-    </record>
-
     <record id="payment_method_bni" model="payment.method">
         <field name="name">Bank Negara Indonesia</field>
         <field name="code">bni</field>
@@ -112,16 +92,6 @@
         <field name="provider_id" ref="payment.payment_provider_xendit"/>
         <field name="image" type="bytes" file="payment/static/img/card.png"/>
         <field name="support_tokenization">True</field>
-    </record>
-
-    <record id="payment_method_cashalo" model="payment.method">
-        <field name="name">Cashalo</field>
-        <field name="code">cashalo</field>
-        <field name="provider_id" ref="payment.payment_provider_xendit"/>
-        <field name="image" type="bytes" file="payment/static/img/cashalo.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="supported_country_ids" eval="[Command.set([ref('base.ph')])]"/>
-        <field name="supported_currency_ids" eval="[Command.set([ref('base.PHP')])]"/>
     </record>
 
     <record id="payment_method_cebuana" model="payment.method">
@@ -208,16 +178,6 @@
         <field name="support_tokenization">False</field>
         <field name="supported_country_ids" eval="[Command.set([ref('base.my')])]"/>
         <field name="supported_currency_ids" eval="[Command.set([ref('base.MYR')])]"/>
-    </record>
-
-    <record id="payment_method_kredivo" model="payment.method">
-        <field name="name">Kredivo</field>
-        <field name="code">kredivo</field>
-        <field name="provider_id" ref="payment.payment_provider_xendit"/>
-        <field name="image" type="bytes" file="payment/static/img/kredivo.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="supported_country_ids" eval="[Command.set([ref('base.id')])]"/>
-        <field name="supported_currency_ids" eval="[Command.set([ref('base.IDR')])]"/>
     </record>
 
     <record id="payment_method_krungthai_bank" model="payment.method">
@@ -366,16 +326,6 @@
         <field name="support_tokenization">False</field>
         <field name="supported_country_ids" eval="[Command.set([ref('base.th')])]"/>
         <field name="supported_currency_ids" eval="[Command.set([ref('base.THB')])]"/>
-    </record>
-
-    <record id="payment_method_uob" model="payment.method">
-        <field name="name">United Overseas Bank</field>
-        <field name="code">uob</field>
-        <field name="provider_id" ref="payment.payment_provider_xendit"/>
-        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
-        <field name="support_tokenization">False</field>
-        <field name="supported_country_ids" eval="[Command.set([ref('base.my')])]"/>
-        <field name="supported_currency_ids" eval="[Command.set([ref('base.MYR')])]"/>
     </record>
 
     <record id="payment_method_vietcapital" model="payment.method">
