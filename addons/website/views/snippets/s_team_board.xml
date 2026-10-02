@@ -1,52 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<!-- Reusable Sub-Template -->
+<template id="s_team_board_card" name="Team Member Card">
+    <div class="o_team_board_card col-6 col-lg-3" data-name="Team Member">
+        <div class="card border-0 o_cc o_cc1" data-snippet="s_card">
+            <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
+                <img class="card-img-top o_card_img" 
+                     t-att-src="img_src or '/web/image/website.set_avatars_square_md_1'" 
+                     t-att-alt="name or 'Team Member'"/>
+            </figure>
+            <div class="card-body">
+                <h3 class="card-title h5-fs" t-out="name or 'Team Member Name'"/>
+                <h6 class="card-subtitle text-secondary mb-2" t-out="role or 'Job Title'"/>
+                <p class="card-text" t-out="description or 'Description text...'"/>
+
+                <a href="#" 
+                   class="stretched-link" 
+                   data-bs-toggle="modal" 
+                   data-bs-target=".o_team_board_modal" 
+                   t-att-aria-label="'Voir le profil de ' + (name or 'ce membre')">
+                </a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- Main Snippet -->
 <template id="s_team_board" name="Card Team">
-    <section class="s_team_board o_colored_level o_cc o_cc2 pt48 pb48">
+    <section class="s_team_board o_colored_level o_cc o_cc2 pt48 pb48" data-snippet="s_team_board" data-name="Card Team">
         <div class="container">
 
             <h2>Meet Our Team</h2>
-            <p style="text-align: left;">The people building the experience you rely on every day.</p>
-
+            <p>The people building the experience you rely on every day.</p>
             <div class="row">
-                <div data-name="Team Member" class="o_team_board_card col-6 col-lg-3">
-                    <div class="s_card o_card_img_top card o_cc o_cc1" data-name="Card" data-snippet="s_card" data-vxml="001" style="border-width: 0px !important;">
-                        <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
-                            <img class="o_card_img card-img-top " src="/web/image/website.set_avatars_square_md_1"/>
-                        </figure>
-                        <div class="card-body">
-                            <h3 class="card-title h5-fs">James Mitchell</h3>
-                            <p class="card-text text-secondary">Chief Technical Officer</p>
-                            <p class="card-text">James leads the tech strategy and innovation efforts at the company.</p>
+
+                <!-- Card 1 -->
+                <t>
+                    <t t-set="name" t-value="'James Mitchell'"/>
+                    <t t-set="role" t-value="'Chief Technical Officer'"/>
+                    <t t-set="description" t-value="'James leads the tech strategy and innovation efforts at the company.'"/>
+                    <t t-set="img_src" t-value="'/web/image/website.set_avatars_square_md_1'"/>
+                    <t t-call="website.s_team_board_card"/>
+                </t>
+
+                <!-- Card 2 -->
+                <t>
+                    <t t-set="name" t-value="'Sophia Benett'"/>
+                    <t t-set="role" t-value="'Financial Analyst'"/>
+                    <t t-set="description" t-value="'Sophia evaluates financial data and provides strategic insights.'"/>
+                    <t t-set="img_src" t-value="'/web/image/website.set_avatars_square_md_4'"/>
+                    <t t-call="website.s_team_board_card"/>
+                </t>
+
+                <!-- Card 3 -->
+                <t>
+                    <t t-set="name" t-value="'Olivia Reed'"/>
+                    <t t-set="role" t-value="'Product Manager'"/>
+                    <t t-set="description" t-value="'Olivia oversees product development from concept to launch.'"/>
+                    <t t-set="img_src" t-value="'/web/image/website.set_avatars_square_md_3'"/>
+                    <t t-call="website.s_team_board_card"/>
+                </t>
+
+            </div>
+        </div>
+
+        <div class="modal o_team_board_modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-0 pb-0">
+                        <h3 class="h5-fs">Name</h3>
+                        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row align-items-start">
+                            <div class="col-3">
+                                <img src="" alt="Avatar" class="img-fluid shadow-sm"/>
+                            </div>
+                            <div class="col-9">
+                                <div>
+                                    <h6 class="text-secondary mb-2">Role</h6>
+                                    <p>Description</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div data-name="Team Member" class="o_team_board_card col-6 col-lg-3">
-                    <div class="s_card o_card_img_top card o_cc o_cc1" data-name="Card" data-snippet="s_card" data-vxml="001" style="border-width: 0px !important;">
-                        <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
-                            <img class="o_card_img card-img-top " src="/web/image/website.set_avatars_square_md_4"/>
-                        </figure>
-                        <div class="card-body">
-                            <h3 class="card-title h5-fs">Sophia Benett</h3>
-                            <p class="card-text text-secondary">Financial Analyst</p>
-                            <p class="card-text">Sophia evaluates financial data and provides strategic insights.</p>
-                        </div>
-                    </div>
-                </div>
-                <div data-name="Team Member" class="o_team_board_card col-6 col-lg-3">
-                    <div class="s_card o_card_img_top card o_cc o_cc1" data-name="Card" data-snippet="s_card" data-vxml="001" style="border-width: 0px !important;">
-                        <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
-                            <img class="o_card_img card-img-top " src="/web/image/website.set_avatars_square_md_3"/>
-                        </figure>
-                        <div class="card-body">
-                            <h3 class="card-title h5-fs ">Olivia Reed</h3>
-                            <p class="card-text text-secondary">Product Manager</p>
-                            <p class="card-text">Olivia oversees product development from concept to launch.</p>
-                        </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button class="s_team_board_send_btn btn btn-primary">
+                            Send Message
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
+
     </section>
 </template>
 
@@ -54,4 +101,5 @@
     <bundle>web.assets_frontend</bundle>
     <path>website/static/src/snippets/s_team_board/000.scss</path>
 </asset>
+
 </odoo>
