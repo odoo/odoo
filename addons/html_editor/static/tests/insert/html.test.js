@@ -419,8 +419,8 @@ describe("collapsed selection", () => {
         cleanHints(editor);
         expect(getContent(el)).toBe(
             '<p data-selection-placeholder=""><br></p>' +
-                '<div class="oe_unbreakable">a[]</div>' +
-                '<p data-selection-placeholder=""><br></p>'
+                '<div class="oe_unbreakable">a</div>' +
+                '<p data-selection-placeholder="" class="o-horizontal-caret">[]<br></p>'
         );
     });
 
@@ -429,7 +429,7 @@ describe("collapsed selection", () => {
         insertHTML(`<div class="oe_unbreakable">a</div>`)(editor);
         cleanHints(editor);
         expect(getContent(el)).toBe(
-            `<p>b</p><div class="oe_unbreakable">a[]</div><p data-selection-placeholder=""><br></p>`
+            `<p>b</p><div class="oe_unbreakable">a</div><p data-selection-placeholder="" class="o-horizontal-caret">[]<br></p>`
         );
     });
 
