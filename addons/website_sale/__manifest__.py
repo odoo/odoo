@@ -171,7 +171,6 @@
         "website.website_builder_assets": [
             "website_sale/static/src/website_builder/**/*",
             "website_sale/static/src/js/website_sale_utils.js",
-            "website_sale/static/src/snippets/s_product_search/000.xml",
             "website_sale/static/src/snippets/s_product_search/product_search_utils.js",
             ("remove", "website_sale/static/src/**/*.edit.*"),
         ],

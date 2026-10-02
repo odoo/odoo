@@ -8,9 +8,7 @@ class ProductSearch(Controller):
     @route(
         "/shop/product_search/filters", type="jsonrpc", auth="public", website=True, readonly=True
     )
-    def product_search_filters(
-        self, tags=False, categories=False, ribbons=False, attributes=False, attribute_ids=None
-    ):
+    def product_search_filters(self, tags=False, categories=False, ribbons=False, attributes=False):
         website_domain = self.env.website.website_domain()
         filter_data = {}
 
@@ -31,16 +29,17 @@ class ProductSearch(Controller):
                 [("assign", "=", "manual")], ["name"]
             )
 
-        if attributes or attribute_ids:
+        if attributes:
             attributes_domain = Domain([("visibility", "=", "visible"), ("value_ids", "!=", False)])
-            if attributes:
-                # The editor only needs the names
+            # `attributes` is either True to get all the attributes (the editor),
+            # or a list of ids to get these attributes with their values
+            if attributes is True:
                 filter_data["attributes"] = self.env["product.attribute"].search_read(
                     attributes_domain, ["name"]
                 )
             else:
                 filter_data["attributes"] = self.env["product.attribute"].web_search_read(
-                    attributes_domain & Domain("id", "in", attribute_ids),
+                    attributes_domain & Domain("id", "in", attributes),
                     {
                         "name": {},
                         "display_type": {},

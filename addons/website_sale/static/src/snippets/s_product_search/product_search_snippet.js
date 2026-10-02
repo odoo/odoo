@@ -12,25 +12,19 @@ export class ProductSearchSnippet extends Interaction {
             't-on-keydown': this.onKeydown,
         },
         '.s_product_search_filters': { 't-on-change': this.onChangeFilter },
-        '.s_product_search_attribute_filter': {
-            't-att-class': (filterEl) => ({
-                'd-none': !this.attributes.some((attr) => attr.id === parseInt(filterEl.dataset.attributeId)),
-            }),
-        },
     };
 
     async willStart() {
         const needTags = !this.el.querySelector('.s_product_search_tags_wrap').classList.contains('d-none')
             && !document.body.classList.contains('o_wsale_product_search_no_tags');
-        const attributeIds = [...this.el.querySelectorAll('.s_product_search_attribute_filter[data-attribute-id]')]
-            .map((filterEl) => parseInt(filterEl.dataset.attributeId));
+        const attributeIds = this.getAttributeIds();
         this.tags = [];
         this.attributes = [];
         if (!needTags && !attributeIds.length) {
             return;
         }
         const { tags = [], attributes = [] } = await this.waitFor(
-            fetchProductSearchData({ tags: needTags, attribute_ids: attributeIds })
+            fetchProductSearchData({ tags: needTags, attributes: attributeIds })
         );
         this.tags = tags;
         this.attributes = attributes;
@@ -41,25 +35,33 @@ export class ProductSearchSnippet extends Interaction {
         if (this.tags.length && tagsMenuEl) {
             this.renderAt('website_sale.s_product_search.filter_items', { key: 'tags', items: this.tags }, tagsMenuEl);
         }
+        // Only the attribute ids are saved in the page, the dropdowns are rendered here so that
+        // the unavailable attributes are not displayed, and the names are up to date.
         for (const filterEl of this.el.querySelectorAll('.s_product_search_attribute_filter')) {
             const attribute = this.attributes.find((attr) => attr.id === parseInt(filterEl.dataset.attributeId));
-            const menuEl = filterEl.querySelector('.s_product_search_filter_menu');
-            if (attribute && menuEl) {
-                this.renderAt('website_sale.s_product_search.filter_items', {
+            if (attribute) {
+                this.renderAt('website_sale.s_product_search.filter_dropdown', {
                     key: `attribute_${attribute.id}`,
+                    label: attribute.name,
                     items: attribute.value_ids,
                     displayType: attribute.display_type,
-                }, menuEl);
+                }, filterEl);
             }
         }
 
         this.registerCleanup(() => {
-            for (const groupEl of this.el.querySelectorAll('.s_product_search_filter_group')) {
-                groupEl.querySelector('.s_product_search_filter_selected').textContent = '';
-                groupEl.querySelector('.s_product_search_filter_btn').setAttribute('aria-expanded', 'false');
-                groupEl.querySelector('.s_product_search_filter_menu').classList.remove('show');
+            for (const selectedEl of this.el.querySelectorAll('.s_product_search_filter_selected')) {
+                selectedEl.textContent = '';
             }
         });
+    }
+
+    /**
+     * @returns {number[]} the ids of the attributes of the attribute filters.
+     */
+    getAttributeIds() {
+        return [...this.el.querySelectorAll('.s_product_search_attribute_filter[data-attribute-id]')]
+            .map((filterEl) => parseInt(filterEl.dataset.attributeId));
     }
 
     onKeydown(ev) {

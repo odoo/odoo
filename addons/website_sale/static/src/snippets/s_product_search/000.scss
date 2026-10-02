@@ -2,10 +2,6 @@
     container: s_product_search / inline-size;
 }
 
-.s_product_search_field_label:empty {
-    display: none;
-}
-
 .o_wsale_product_search_no_tags .s_product_search_tags_wrap {
     display: none !important;
 }
@@ -62,7 +58,8 @@
 }
 
 // If an odd number of attributes, the last one takes the full width
-.s_product_search_attributes > *:last-child:nth-child(odd) {
+// We ignore the empty filters of the unavailable attributes
+.s_product_search_attributes > :nth-last-child(1 of :not(:empty)):nth-child(odd of :not(:empty)) {
     @container s_product_search (min-width: 700px) {
         grid-column: 1 / -1;
     }

@@ -13,8 +13,13 @@
         data-bs-display="static"
         data-bs-auto-close="outside"
         aria-expanded="false"
-    ><span class="flex-shrink-0" t-out="label"/><span class="s_product_search_filter_selected text-muted text-truncate"/></button>
-    <div class="dropdown-menu s_product_search_filter_menu overflow-y-auto p-2 w-100"/>
+    >
+        <span class="flex-shrink-0" t-out="label"/>
+        <span class="s_product_search_filter_selected text-muted text-truncate"/>
+    </button>
+    <div class="dropdown-menu s_product_search_filter_menu overflow-y-auto p-2 w-100">
+        <t t-call="website_sale.s_product_search.filter_items"/>
+    </div>
 </div>
 
 <t t-name="website_sale.s_product_search.filter_items">
@@ -36,7 +41,7 @@
             t-attf-style="background: #{item.image ? ('url(/web/image/product.attribute.value/' + item.id + '/image); background-size: cover') : (item.html_color || item.name)}"
         />
         <div
-            t-if="displayType === 'image'"
+            t-elif="displayType === 'image'"
             t-attf-class="css_attribute_image size_small flex-shrink-0 rounded #{item.image ? '' : 'transparent'}"
         >
             <div

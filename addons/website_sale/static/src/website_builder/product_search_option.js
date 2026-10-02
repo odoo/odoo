@@ -1,7 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { registry } from "@web/core/registry";
-import { ALL_FILTERS, fetchProductSearchData } from "../snippets/s_product_search/product_search_utils";
+import { fetchProductSearchData } from "../snippets/s_product_search/product_search_utils";
 
 export class ProductSearchOption extends BaseOptionComponent {
     static id = "product_search_option";
@@ -10,7 +10,7 @@ export class ProductSearchOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.state = useDomState(async () => {
-            const { attributes, categories, tags, ribbons } = await fetchProductSearchData(ALL_FILTERS);
+            const { attributes, categories, tags, ribbons } = await fetchProductSearchData();
             return { attributes, categories, tags, ribbons };
         });
     }
@@ -25,7 +25,7 @@ export class ProductSearchAttributeFilterOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.state = useDomState(async () => {
-            const { attributes } = await fetchProductSearchData(ALL_FILTERS);
+            const { attributes } = await fetchProductSearchData();
             return { attributes };
         });
     }

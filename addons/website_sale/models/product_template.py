@@ -1413,26 +1413,24 @@ class ProductTemplate(models.Model):
         return docs.filtered(lambda d: d.attached_on_sale == "shown_on_product_page")
 
     def _get_variant_filters_domain(self, tags=None, ribbon=None):  # noqa: PLR6301
-        """Return the domain matching the templates having a variant with all the given filters."""
-        variant_domains = []
+        """Return the domain matching the templates having the given tags and ribbon, either on the
+        template or on one of its variants."""
+        domains = []
         if tags:
-            variant_domains.append(
+            domains.append(
                 Domain.OR([
-                    Domain("product_tmpl_id", "any!", Domain("product_tag_ids", "in", tags)),
-                    Domain("additional_product_tag_ids", "in", tags),
+                    Domain("product_tag_ids", "in", tags),
+                    Domain("product_variant_ids.additional_product_tag_ids", "in", tags),
                 ])
             )
         if ribbon:
-            variant_domains.append(
+            domains.append(
                 Domain.OR([
-                    Domain("variant_ribbon_id", "=", ribbon),
-                    Domain("variant_ribbon_id", "=", False)
-                    & Domain("product_tmpl_id", "any!", Domain("website_ribbon_id", "=", ribbon)),
+                    Domain("website_ribbon_id", "=", ribbon),
+                    Domain("product_variant_ids.variant_ribbon_id", "=", ribbon),
                 ])
             )
-        if not variant_domains:
-            return Domain.TRUE
-        return Domain("product_variant_ids", "any!", Domain.AND(variant_domains))
+        return Domain.AND(domains)
 
     def _get_attribute_value_domain(self, attribute_value_dict):  # noqa: PLR6301
         return [

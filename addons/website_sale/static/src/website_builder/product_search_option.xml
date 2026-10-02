@@ -42,9 +42,9 @@
 
 <t t-name="website_sale.ProductSearchAttributeFilterOption">
     <BuilderRow t-if="this.state.attributes" label.translate="Attribute">
-        <BuilderSelect action="'setProductSearchAttribute'" actionParam="'attributeId'">
+        <BuilderSelect dataAttributeAction="'attributeId'">
             <t t-foreach="this.state.attributes" t-as="attribute" t-key="attribute.id">
-                <BuilderSelectItem actionValue="attribute.id.toString()" t-out="attribute.name"/>
+                <BuilderSelectItem dataAttributeActionValue="attribute.id.toString()" t-out="attribute.name"/>
             </t>
         </BuilderSelect>
     </BuilderRow>

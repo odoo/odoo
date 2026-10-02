@@ -470,7 +470,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         filters_domain = self._get_shop_domain(search_term, category, attribute_value_dict={})
         filters_query = request.env["product.template"]._search(filters_domain)
 
-        filter_by_price_enabled = website.is_view_active("website_sale.filter_products_price")
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
             # This is ~4 times more efficient than a search for the cheapest and most expensive
