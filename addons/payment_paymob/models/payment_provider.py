@@ -118,7 +118,7 @@ class PaymentProvider(models.Model):
             "tag": "display_notification",
             "params": {},
         }
-        if len(matched_gateways_data) < len(self.payment_method_ids):
+        if len(matched_gateways_data) < len(self.primary_payment_method_ids.filtered("active")):
             displayed_notification["params"].update({
                 "type": "warning",
                 "title": self.env._("Payment methods not found"),
@@ -155,7 +155,9 @@ class PaymentProvider(models.Model):
         :return: All the matched Paymob gateways' data.
         :rtype: list
         """
-        available_payment_method_codes = self.payment_method_ids.mapped("code")
+        available_payment_method_codes = self.primary_payment_method_ids.filtered("active").mapped(
+            "code"
+        )
         sorted_gateways_data = sorted(
             paymob_gateways_data,
             key=lambda pm: datetime.fromisoformat(pm["created_at"]),
@@ -226,9 +228,7 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
         if not self.paymob_account_country_id:
-            raise ValidationError(
-                self.env._("The account country is not set.")
-            )
+            raise ValidationError(self.env._("The account country is not set."))
 
         api_prefix = const.API_MAPPING[self.paymob_account_country_id.code]
         return f"https://{api_prefix}.paymob.com"
