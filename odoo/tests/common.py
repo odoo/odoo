@@ -159,7 +159,10 @@ def release_test_lock():
     finally:
         if not _registry_test_lock.acquire(timeout=60):
             tag = odoo.modules.module.current_test.canonical_tag
-            exit(f'Could not re-acquire the registry lock during {tag}, exiting...')
+            _logger.error("Could not re-acquire the registry lock during %s, waiting for it", tag)
+            odoo.tools.misc.dumpstacks(log_level=logging.ERROR)
+            _registry_test_lock.acquire()
+            raise RuntimeError(f'Could not re-acquire the registry lock in time during {tag}')
 
 
 def standalone(*tags):
