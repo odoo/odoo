@@ -212,6 +212,50 @@
     @include print-variable('input-border-radius-sm', $input-border-radius-sm);
     @include print-variable('input-border-radius-lg', $input-border-radius-lg);
 
+    // What a Theme tab value resets to, and what its slider marks: the value
+    // without the user's own. That's the theme's, else what the compile falls
+    // back to, which can be another value (a heading level follows the
+    // headings one).
+    $-fallbacks: (
+        'input-border-width': $input-btn-border-width,
+        'display-1-font-size': 5rem,
+        'display-2-font-size': 4.5rem,
+        'display-3-font-size': 4rem,
+        'display-4-font-size': 3.5rem,
+    );
+    @each $level, $multiplier in (1: $o-theme-h1-font-size-multiplier, 2: $o-theme-h2-font-size-multiplier, 3: $o-theme-h3-font-size-multiplier, 4: $o-theme-h4-font-size-multiplier, 5: $o-theme-h5-font-size-multiplier, 6: $o-theme-h6-font-size-multiplier) {
+        $-fallbacks: map-merge($-fallbacks, ('h#{$level}-font-size': $font-size-base * $multiplier));
+    }
+    @each $level in ('h2', 'h3', 'h4', 'h5', 'h6', 'display-1', 'display-2', 'display-3', 'display-4') {
+        @each $property in ('line-height', 'margin-top', 'margin-bottom') {
+            $-fallbacks: map-merge($-fallbacks, ('#{$level}-#{$property}': var(--headings-#{$property})));
+        }
+    }
+    @each $side in ('top', 'right', 'bottom', 'left') {
+        $-fallbacks: map-merge($-fallbacks, ('input-border-#{$side}-width': var(--input-border-width)));
+    }
+    // Bootstrap's own (or another module's) values: only known while the
+    // user's value doesn't replace them.
+    @each $key, $value in (
+        'btn-padding-y': $btn-padding-y, 'btn-padding-x': $btn-padding-x, 'btn-font-size': $btn-font-size, 'btn-border-radius': $btn-border-radius,
+        'btn-padding-y-sm': $btn-padding-y-sm, 'btn-padding-x-sm': $btn-padding-x-sm, 'btn-font-size-sm': $btn-font-size-sm, 'btn-border-radius-sm': $btn-border-radius-sm,
+        'btn-padding-y-lg': $btn-padding-y-lg, 'btn-padding-x-lg': $btn-padding-x-lg, 'btn-font-size-lg': $btn-font-size-lg, 'btn-border-radius-lg': $btn-border-radius-lg,
+        'input-padding-y': $input-padding-y, 'input-padding-x': $input-padding-x, 'input-font-size': $input-font-size, 'input-border-radius': $input-border-radius,
+        'input-padding-y-sm': $input-padding-y-sm, 'input-padding-x-sm': $input-padding-x-sm, 'input-font-size-sm': $input-font-size-sm, 'input-border-radius-sm': $input-border-radius-sm,
+        'input-padding-y-lg': $input-padding-y-lg, 'input-padding-x-lg': $input-padding-x-lg, 'input-font-size-lg': $input-font-size-lg, 'input-border-radius-lg': $input-border-radius-lg,
+    ) {
+        $-fallbacks: map-merge($-fallbacks, ($key: if(map-get($o-user-website-values, $key), null, $value)));
+    }
+    $-keys: ('font-size-base', 'small-font-size', 'body-line-height', 'paragraph-margin-top', 'paragraph-margin-bottom', 'headings-line-height', 'headings-margin-top', 'headings-margin-bottom', 'btn-primary-outline-border-width', 'btn-secondary-outline-border-width');
+    @each $size in ('', '-sm', '-lg') {
+        @each $property in ('offset-x', 'offset-y', 'blur-radius', 'spread-radius') {
+            $-keys: append($-keys, 'box-shadow#{$size}-#{$property}');
+        }
+    }
+    @each $key in join($-keys, map-keys($-fallbacks)) {
+        @include print-variable('o-default-#{$key}', map-get($o-default-website-values, $key) or map-get($-fallbacks, $key));
+    }
+
     @include print-variable('color-palettes-name', $o-original-color-palette-name);
 
     @include print-variable('has-customized-colors', $o-has-customized-colors);
