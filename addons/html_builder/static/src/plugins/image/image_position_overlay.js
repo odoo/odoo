@@ -227,20 +227,11 @@ export class ImagePositionOverlay extends Component {
     }
 
     /**
-     * Gets the scale factor of the iframe's parent container.
-     * Useful when the user zooms in/out in the browser, as it affects the
-     * dimensions of the iframe.
+     * Gets the visual scale factor of the iframe (e.g. transformed iframe or
+     * iframe container, browser zoom).
      * @returns {number} The scale factor (1 if no transform is applied)
      */
     getIframeContainerScale() {
-        const matrix = getComputedStyle(this.iframeEl.parentElement).transform;
-        if (matrix === "none") {
-            return 1;
-        }
-        const values = matrix
-            .match(/matrix\(([^)]+)\)/)[1]
-            .split(",")
-            .map(parseFloat);
-        return values[0];
+        return this.iframeEl.getBoundingClientRect().width / this.iframeEl.offsetWidth || 1;
     }
 }
