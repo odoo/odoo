@@ -84,6 +84,53 @@ class TestAccountMove(TestStockValuationCommon):
         self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.display_type == 'cogs')), 2)
         self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
 
+    def test_cogs_not_converted_when_invoice_rate_changes_at_post(self):
+        """COGS stays in company currency when the invoice rate changes at posting."""
+        product = self.product_standard_auto
+        self._use_multi_currencies([
+            ('2026-01-01', 0.5),
+            ('2026-01-02', 0.1),
+        ])
+        with freeze_time('2026-01-01'):
+            invoice = self.env['account.move'].create({
+                'move_type': 'out_invoice',
+                'partner_id': self.partner.id,
+                'currency_id': self.other_currency.id,
+                'invoice_line_ids': [Command.create({
+                    'product_id': product.id,
+                    'quantity': 1,
+                    'price_unit': 100,
+                    'tax_ids': False,
+                })],
+            })
+            self.assertEqual(invoice.invoice_currency_rate, 0.5)
+        # create_date is the database clock, so freezegun does not move it.
+        self.env.cr.execute(
+            "UPDATE account_move SET create_date = %s WHERE id = %s",
+            [fields.Datetime.to_datetime('2026-01-01'), invoice.id],
+        )
+        invoice.invalidate_recordset(['create_date'])
+
+        with freeze_time('2026-01-02'):
+            invoice.action_post()
+
+        cogs_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'cogs')
+        self.assertEqual(invoice.invoice_currency_rate, 0.1)
+        self.assertRecordValues(cogs_lines.sorted('balance'), [
+            {
+                'currency_id': self.company.currency_id.id,
+                'currency_rate': 1.0,
+                'amount_currency': -product.standard_price,
+                'balance': -product.standard_price,
+            },
+            {
+                'currency_id': self.company.currency_id.id,
+                'currency_rate': 1.0,
+                'amount_currency': product.standard_price,
+                'balance': product.standard_price,
+            },
+        ])
+
     def test_storno_accounting(self):
         """Storno accounting uses negative numbers on debit/credit to cancel other moves.
         This test checks that we do the same for the anglosaxon lines when storno is enabled.
