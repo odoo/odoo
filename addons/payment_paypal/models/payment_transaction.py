@@ -370,9 +370,7 @@ class PaymentTransaction(models.Model):
             return  # Vault notifications carry no payment state; only the token is created
 
         # Update the provider reference.
-        txn_id = payment_data.get("id")
-
-        self.provider_reference = txn_id
+        self.provider_reference = payment_data.get("id")
 
         # Update the payment method
         # TODO
