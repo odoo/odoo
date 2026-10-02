@@ -1802,9 +1802,11 @@ class AccountMove(models.Model):
         ''' Create the xml file content.
             :return:    The XML content as bytestring.
         '''
-        qweb_template_name = (
-            'l10n_it_edi.account_invoice_it_FatturaPA_export' if not self._l10n_it_edi_is_simplified()
-            else 'l10n_it_edi.account_invoice_it_simplified_FatturaPA_export')
+        document_type = self._l10n_it_edi_get_document_type()
+        if self._l10n_it_edi_is_simplified_document_type(document_type):
+            qweb_template_name = 'l10n_it_edi.account_invoice_it_simplified_FatturaPA_export'
+        else:
+            qweb_template_name = 'l10n_it_edi.account_invoice_it_FatturaPA_export'
         xml_content = self.env['ir.qweb']._render(qweb_template_name, {
             **self._l10n_it_edi_get_values(pdf_values),
             **self._l10n_it_edi_get_formatters()})
