@@ -862,7 +862,11 @@ class Base(models.AbstractModel):
             )
         if last_field.type == 'monetary':
             return ' '.join(
-                float_repr(float(value), precision_digits=record[last_field.currency_field].decimal_places)
+                float_repr(float(value), precision_digits=(
+                    record[last_field.currency_field].decimal_places)
+                    if record[last_field.currency_field]
+                    else record.env.company.currency_id.decimal_places # Fallback to 2 if the currency_field is not define
+                    )
                 for record, value in zip(last_model, field_value)
             )
         return ' '.join(str(value if value is not False and value is not None else '') for value in field_value)
