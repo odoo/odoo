@@ -47,6 +47,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { pick } from "@web/core/utils/objects";
 import { weakMemoize } from "@html_editor/utils/functions";
 import { isColorGradient } from "@web/core/utils/colors";
+import { PLAIN_TEXT_MODES } from "@html_editor/core/dom_plugin";
 
 const listSelectorItems = [
     {
@@ -193,7 +194,7 @@ export class ListPlugin extends Plugin {
         /** Processors */
         normalize_processors: this.normalize.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
-        fragment_to_insert_within_pre_processors: this.processFragmentToInsertWithinPre.bind(this),
+        fragment_to_insert_as_text_processors: this.processFragmentToInsertAsText.bind(this),
         fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
 
         /** Overrides */
@@ -1111,7 +1112,10 @@ export class ListPlugin extends Plugin {
         return clonedContents;
     }
 
-    processFragmentToInsertWithinPre(fragment) {
+    processFragmentToInsertAsText(fragment, plainTextMode) {
+        if (plainTextMode !== PLAIN_TEXT_MODES.MULTI_LINE) {
+            return fragment;
+        }
         const listItems = fragment.querySelectorAll("li:not(.oe-nested)");
         for (const li of listItems) {
             const nestingLvl = ancestors(li).filter(isListElement).length - 1;

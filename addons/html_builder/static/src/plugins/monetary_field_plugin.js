@@ -16,7 +16,7 @@ export class MonetaryFieldPlugin extends Plugin {
         on_beforeinput_handlers: this.onBeforeInput.bind(this),
 
         /** Processors */
-        clipboard_paste_text_processors: this.processUnsupportedHtmlForPaste.bind(this),
+        unsupported_paste_text_processors: this.processUnsupportedHtmlForPaste.bind(this),
     };
 
     setup() {
