@@ -24,7 +24,7 @@
         <div class="o_calendar_renderer o_radio_item position-relative cursor-pointer d-flex gap-1 align-items-center"
              t-att-class="className"
              style="background-color: inherit;">
-            <span class="small rounded-3 d-flex justify-content-center text-truncate align-self-start" t-out="data?.display_code || ' '"
+            <span class="small rounded-3 d-flex flex-shrink-0 justify-content-center text-truncate align-self-start" t-out="data?.display_code || ' '"
                   t-attf-class="o_calendar_color_#{data?.color || 0}"
                   style="background-color: rgb(var(--o-event-bg--subtle-rgb)); min-width: 5ch; max-width: 10ch; height:23px; padding: 2px;"/>
             <t t-if="label">
