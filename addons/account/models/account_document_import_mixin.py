@@ -459,14 +459,13 @@ class AccountDocumentImportMixin(models.AbstractModel):
             if 'decoder_info' not in file_data:
                 file_data['decoder_info'] = self._get_edi_decoder(file_data, new=new)
 
-        return sorted(
+        return max(
             files_data,
             key=lambda file_data: (
                 file_data['decoder_info'] is not None,
                 (file_data['decoder_info'] or {}).get('priority', 0),
             ),
-            reverse=True,
-        )[0]
+        )
 
     @api.model
     def _get_xml_tree(self, file_data):
