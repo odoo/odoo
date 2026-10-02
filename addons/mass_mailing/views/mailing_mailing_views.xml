@@ -149,7 +149,6 @@
                                 type="object"
                                 invisible="state in ('draft', 'test')"
                                 class="oe_stat_button">
-                                <field name="delivered" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                                 <field name="received_ratio" widget="deliverance_percentpie"
                                     top_field="delivered" bottom_field="failed"/>
                             </button>

@@ -283,9 +283,7 @@
             <field name="arch" type="xml">
                 <list decoration-muted="active == False" string="Projects" multi_edit="1" sample="1" default_order="is_favorite desc, sequence, name, id" js_class="project_project_list">
                     <field name="sequence" column_invisible="True"/> <!-- used by project.project_templates_view_list and 1 other inheriting view(s) -->
-                    <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="active" column_invisible="True"/> <!-- drives decoration-muted of the Projects list -->
-                    <field name="is_milestone_exceeded" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="can_mark_milestone_as_done" column_invisible="True"/> <!-- drives decoration-success of next_milestone_id -->
                     <field name="is_milestone_deadline_exceeded" column_invisible="1"/> <!-- drives decoration-danger of next_milestone_id -->
                     <field name="allow_milestones" column_invisible="True"/> <!-- drives invisible of milestone_progress, next_milestone_id -->
@@ -306,7 +304,6 @@
                         invisible="not allow_milestones or is_template"
                     />
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True}"/>
-                    <field name="last_update_color" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
                     <field name="last_update_status" string="Status" nolabel="1" width="20px" optional="show" widget="project_state_selection" invisible="is_template"/>
                     <field name="color" column_invisible="1"/> <!-- color_field option of stage_id, tag_ids -->
