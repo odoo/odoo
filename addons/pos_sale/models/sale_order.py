@@ -190,6 +190,13 @@ class SaleOrderLine(models.Model):
             ), 0)
         return invoiced_qties
 
+    def _get_qty_procurement(self, previous_product_uom_qty=False):
+        # The quantities settled in PoS are delivered by the PoS pickings: they must not be procured again by the SO.
+        qty = super()._get_qty_procurement(previous_product_uom_qty)
+        pos_lines = self.sudo().pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+        refund_lines = pos_lines.refund_orderline_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+        return qty + sum(self._convert_qty(self, pos_line.qty, 'p2s') for pos_line in pos_lines | refund_lines)
+
     def _get_sale_order_fields(self):
         return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_ids", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total", "is_downpayment"]
 
