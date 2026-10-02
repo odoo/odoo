@@ -18,7 +18,6 @@ import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { renderToString } from "@web/core/utils/render";
 import { uuid } from "@web/core/utils/strings";
-import { SPLIT_OPERATION_TYPES } from "@html_editor/core/split_plugin";
 
 const toggleSelector = "[data-embedded='toggleBlock']";
 const titleSelector = "[data-embedded-editable='title']";
@@ -479,9 +478,6 @@ export class ToggleBlockPlugin extends Plugin {
                 targetOffset,
                 blockToSplit,
             });
-            if (splitResult.type !== SPLIT_OPERATION_TYPES.BLOCK) {
-                return splitResult;
-            }
             const { before: beforeSplit, after: afterSplit } = splitResult;
             if (beforeSplit && afterSplit) {
                 if (content.parentElement.matches(".d-none") || insertBefore) {
@@ -509,7 +505,7 @@ export class ToggleBlockPlugin extends Plugin {
                 }
                 this.dependencies.selection.setCursorStart(afterSplit);
             }
-            return true;
+            return splitResult;
         }
     }
 

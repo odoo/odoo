@@ -40,16 +40,6 @@ const [getPreviousLeavesInBlock, getNextLeavesInBlock] = [DIRECTIONS.LEFT, DIREC
     )
     .map((path) => (node, offset) => [...path(node, offset)]);
 
-export const SPLIT_OPERATION_TYPES = /** @type {const} */ ({
-    BLOCK: "block",
-    LINE: "line",
-    HANDLED: "handled",
-});
-
-/**
- * @typedef { typeof SPLIT_OPERATION_TYPES[keyof typeof SPLIT_OPERATION_TYPES] } SplitOperationType
- */
-
 /**
  * @template { SplitOperationType } T
  * @typedef { T extends "block"
@@ -193,7 +183,7 @@ export class SplitPlugin extends Plugin {
         for (const override of this.getResource("split_element_block_overrides")) {
             const result = override(params);
             if (result) {
-                return result.type ? result : { type: SPLIT_OPERATION_TYPES.HANDLED };
+                return result === true ? {} : result;
             }
         }
 
@@ -221,7 +211,7 @@ export class SplitPlugin extends Plugin {
                 targetNode,
                 targetOffset,
             });
-            return { type: SPLIT_OPERATION_TYPES.LINE, lineBreaks };
+            return { lineBreaks };
         }
         const restore = prepareUpdate(targetNode, targetOffset);
 
@@ -251,7 +241,7 @@ export class SplitPlugin extends Plugin {
 
         this.dependencies.selection.setCursorStart(afterElement);
 
-        return { type: SPLIT_OPERATION_TYPES.BLOCK, before: beforeElement, after: afterElement };
+        return { before: beforeElement, after: afterElement };
     }
 
     /**

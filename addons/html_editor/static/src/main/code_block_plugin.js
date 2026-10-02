@@ -11,7 +11,6 @@ import { DIRECTIONS } from "@html_editor/utils/position";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
-import { SPLIT_OPERATION_TYPES } from "@html_editor/core/split_plugin";
 
 /** @typedef {((insertedNode: Node) => insertedNode)[]} before_insert_within_pre_processors */
 
@@ -89,7 +88,7 @@ export class CodeBlockPlugin extends Plugin {
                 targetOffset,
                 blockToSplit: closestBlockNode,
             });
-            if (splitResult.type !== SPLIT_OPERATION_TYPES.BLOCK) {
+            if (!splitResult.before || !splitResult.after) {
                 return splitResult;
             }
             const isPreBlock = splitResult.before.nodeName === "PRE";
@@ -114,7 +113,7 @@ export class CodeBlockPlugin extends Plugin {
             const lineBreak = this.document.createElement("br");
             targetNode.insertBefore(lineBreak, targetNode.childNodes[targetOffset]);
             this.dependencies.selection.setCursorEnd(lineBreak);
-            return { type: SPLIT_OPERATION_TYPES.LINE, lineBreaks: [lineBreak] };
+            return { lineBreaks: [lineBreak] };
         }
     }
 

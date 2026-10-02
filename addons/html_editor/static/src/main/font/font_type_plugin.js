@@ -26,7 +26,6 @@ import {
 import { READ, withSequence } from "@html_editor/utils/resource";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
-import { SPLIT_OPERATION_TYPES } from "@html_editor/core/split_plugin";
 
 /** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
 
@@ -357,7 +356,7 @@ export class FontTypePlugin extends Plugin {
             targetNode,
             targetOffset,
         });
-        return { type: SPLIT_OPERATION_TYPES.LINE, lineBreaks };
+        return { lineBreaks };
     }
 
     // @todo @phoenix: Move this to a specific Heading plugin?
@@ -376,7 +375,7 @@ export class FontTypePlugin extends Plugin {
             // @todo @phoenix: if this condition can be anticipated before the split,
             // handle the splitBlock only in such case.
             if (
-                splitResult.type === SPLIT_OPERATION_TYPES.BLOCK &&
+                splitResult.after &&
                 headingTags.includes(splitResult.after.tagName) &&
                 !descendants(splitResult.after).some(isVisibleTextNode)
             ) {
