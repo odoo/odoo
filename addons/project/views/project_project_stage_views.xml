@@ -34,7 +34,7 @@
         <field name="model">project.project.stage</field>
         <field name="arch" type="xml">
             <form delete="0">
-                <field name="active" invisible="1"/>
+                <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">

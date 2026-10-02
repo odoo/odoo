@@ -22,8 +22,8 @@
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
                 <form string="Task Stage" delete="0">
-                    <field name="active" invisible="1"/>
-                    <field name="user_id" invisible="1"/>
+                    <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
+                    <field name="user_id" invisible="1"/> <!-- drives invisible of mail_template_id, project_ids and required of project_ids -->
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <div class="oe_title">

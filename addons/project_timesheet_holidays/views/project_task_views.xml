@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
         <field name="arch" type="xml">
             <xpath expr="/form" position="inside">
-                <field name="is_timeoff_task" invisible="1"/>
+                <field name="is_timeoff_task" invisible="1"/> <!-- used in the readonly attribute(s) this view sets on other fields -->
             </xpath>
             <xpath expr="//field[@name='timesheet_ids']" position="attributes">
                 <attribute name="readonly">not analytic_account_active or is_timeoff_task</attribute>

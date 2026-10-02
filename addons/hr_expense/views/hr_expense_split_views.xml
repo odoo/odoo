@@ -7,10 +7,10 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <field name="currency_id" invisible="1"/>
-                        <field name="expense_id" invisible="1"/>
-                        <field name="company_id" invisible="1"/>
-                        <field name="product_has_cost" invisible="1"/>
+                        <field name="currency_id" invisible="1"/> <!-- currency of the monetary fields of this form -->
+                        <field name="expense_id" invisible="1"/> <!-- expense being split, filled from the context -->
+                        <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of product_id, sale_order_id, tax_ids -->
+                        <field name="product_has_cost" invisible="1"/> <!-- drives readonly of total_amount_currency -->
                         <group>
                             <field name="name"/>
                             <field name="product_id"
