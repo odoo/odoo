@@ -73,7 +73,7 @@ class AccountMove(models.Model):
             # EDI matching as its own way of adjusting the bill lines after matching, no need to interfere here.
             self._add_purchase_order_lines(po_lines)
         else:
-            should_create_new_lines = all(line.purchase_line_id for line in self.invoice_line_ids if line.display_type == 'product')
+            should_create_new_lines = all(line.purchase_line_id for line in self.invoice_line_ids if line.display_type in ('product', 'downpayment'))
             po_lines = self._update_purchase_order_lines(po_lines)
 
             if should_create_new_lines:
@@ -164,7 +164,7 @@ class AccountMove(models.Model):
     @api.depends('line_ids.purchase_line_id')
     def _compute_is_purchase_matched(self):
         for move in self:
-            product_lines = move.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+            product_lines = move.invoice_line_ids.filtered(lambda l: l.display_type in ('product', 'downpayment'))
             total = len(product_lines)
             matched = len(product_lines.filtered('purchase_line_id'))
             move.purchase_matched_ratio = 100.0 * matched / total if total else 0.0
@@ -658,7 +658,6 @@ class AccountMoveLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
     _inherit = 'account.move.line'
 
-    is_downpayment = fields.Boolean()
     purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index='btree_not_null', copy=False)
     purchase_order_id = fields.Many2one('purchase.order', 'Purchase Order', related='purchase_line_id.order_id', readonly=True)
     purchase_matching_issue_msg = fields.Char(compute='_compute_purchase_matching_issue_msg')

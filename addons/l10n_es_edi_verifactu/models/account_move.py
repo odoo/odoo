@@ -229,7 +229,7 @@ class AccountMove(models.Model):
             'l10n_es_applicability': tax_applicability,
         })
 
-        base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product')
+        base_amls = self.line_ids.filtered(lambda x: x.display_type in ('product', 'downpayment'))
         base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
         epd_amls = self.line_ids.filtered(lambda line: line.display_type == 'epd')
         base_lines += [self._prepare_epd_base_line_for_taxes_computation(line) for line in epd_amls]

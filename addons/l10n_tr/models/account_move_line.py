@@ -10,7 +10,7 @@ class AccountMoveLine(models.Model):
 
         for line in self.filtered(lambda l: l.company_id.country_code == 'TR'
                                   and l.move_id.move_type == 'out_refund'
-                                  and l.display_type == 'product'
+                                  and l.display_type in ('product', 'downpayment')
                                   ):
             if (product := line.product_id) and product.with_company(line.company_id).l10n_tr_default_sales_return_account_id:
                 line.account_id = product.with_company(line.company_id).l10n_tr_default_sales_return_account_id
@@ -28,7 +28,7 @@ class AccountMoveLine(models.Model):
                 if (
                     line.company_id.country_code == 'TR'
                     and line.move_id.move_type == 'out_invoice'
-                    and line.display_type == 'product'
+                    and line.display_type in ('product', 'downpayment')
                     and (account := line.move_id.journal_id.l10n_tr_default_sales_return_account_id)
                 ):
                     values['account_id'] = account.id

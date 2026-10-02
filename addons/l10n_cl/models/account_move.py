@@ -231,7 +231,7 @@ class AccountMove(models.Model):
                 if other_currency:
                     values['second_currency']['vat_amount'] += line[key_other_currency] * sign_main_currency
                 vat_percent = max(vat_percent, line.tax_line_id.amount)
-            if line.display_type == 'product':
+            if line.display_type in ('product', 'downpayment'):
                 if line.tax_ids.filtered(lambda x: x.l10n_cl_sii_code == 14):
                     values['subtotal_amount_taxable'] += line[key_main_currency] * sign_main_currency
                     if other_currency:

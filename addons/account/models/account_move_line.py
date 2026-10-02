@@ -386,6 +386,7 @@ class AccountMoveLine(models.Model):
     display_type = fields.Selection(
         selection=[
             ('product', 'Product'),
+            ('downpayment', 'Downpayment'),
             ('cogs', 'Cost of Goods Sold'),
             ('tax', 'Tax'),
             ('discount', "Discount"),
@@ -777,7 +778,7 @@ class AccountMoveLine(models.Model):
                     account_id = line.move_id.fiscal_position_id.map_account(self.env['account.account'].browse(account_id))
                 line.account_id = account_id
 
-        product_lines = self.filtered(lambda line: line.display_type == 'product' and line.move_id.is_invoice(True))
+        product_lines = self.filtered(lambda line: line.display_type in ('product', 'downpayment') and line.move_id.is_invoice(True))
         for line in product_lines:
             if line.product_id:
                 fiscal_position = line.move_id.fiscal_position_id
@@ -1234,7 +1235,7 @@ class AccountMoveLine(models.Model):
     @api.depends('display_type')
     def _compute_quantity(self):
         for line in self:
-            if line.display_type == 'product':
+            if line.display_type in ('product', 'downpayment'):
                 line.quantity = line.quantity if line.quantity else 1
             else:
                 line.quantity = False
@@ -1257,7 +1258,7 @@ class AccountMoveLine(models.Model):
         AccountTax = self.env['account.tax']
         for line in self:
             # TODO remove the need of cogs lines to have a price_subtotal/price_total
-            if line.display_type not in ('product', 'cogs', 'non_deductible_product', 'non_deductible_product_total') or not line.move_id:
+            if line.display_type not in ('product', 'downpayment', 'cogs', 'non_deductible_product', 'non_deductible_product_total') or not line.move_id:
                 line.price_total = line.price_subtotal = False
                 continue
 
@@ -1365,7 +1366,7 @@ class AccountMoveLine(models.Model):
                 (discount_allocation_account, -amount_currency, -line.company_currency_id.round(amount_currency / line.currency_rate)),
             ]
             for line in self.move_id.line_ids
-            if line.display_type == 'product'
+            if line.display_type in ('product', 'downpayment')
             and (discount_allocation_account := line.move_id._get_discount_allocation_account())
             and line.account_id != discount_allocation_account
             and (amount_currency := line.currency_id.round(
@@ -1439,7 +1440,7 @@ class AccountMoveLine(models.Model):
 
         candidate_invoice_lines = self.filtered(lambda l: (
             l.move_id.invoice_payment_term_id.early_discount
-            and l.display_type == 'product'
+            and l.display_type in ('product', 'downpayment')
             and l.tax_ids
             and l.move_id.invoice_payment_term_id.early_pay_discount_computation == 'mixed'
         ))
@@ -1464,7 +1465,7 @@ class AccountMoveLine(models.Model):
             sign = move.direction_sign
 
             # Get the amounts for each invoice line.
-            invoice_lines = move.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+            invoice_lines = move.invoice_line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment'))
             base_lines = [
                 {
                     **move._prepare_product_base_line_for_taxes_computation(line),
@@ -1598,7 +1599,7 @@ class AccountMoveLine(models.Model):
     def _compute_analytic_distribution(self):
         cache = {}
         for line in self:
-            if line.display_type == 'product' or not line.move_id.is_invoice(include_receipts=True):
+            if line.display_type in ('product', 'downpayment') or not line.move_id.is_invoice(include_receipts=True):
                 related_distribution = line._related_analytic_distribution()
                 root_plans = self.env['account.analytic.account'].browse(
                     list({int(account_id) for ids in related_distribution for account_id in ids.split(',') if account_id.strip()})
@@ -1680,7 +1681,7 @@ class AccountMoveLine(models.Model):
                 elif line.display_type == 'line_subsection':
                     value = last_section
                     last_sub = line
-                elif line.display_type in {'line_note', 'product'}:
+                elif line.display_type in {'line_note', 'product', 'downpayment'}:
                     value = last_sub or last_section
                 else:
                     value = False
@@ -1758,7 +1759,7 @@ class AccountMoveLine(models.Model):
     def _inverse_product_id(self):
         if self.product_id or not self.account_id:
             self._conditional_add_to_compute('account_id', lambda line: (
-                line.display_type == 'product' and line.move_id.is_invoice(True)
+                line.display_type in ('product', 'downpayment') and line.move_id.is_invoice(True)
             ))
 
     # TODO: delete in master
@@ -2396,7 +2397,7 @@ class AccountMoveLine(models.Model):
     def _compute_has_invalid_analytics(self):
         SKIPPED_ACCOUNT_TYPES = {'asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'}
         lines_to_validate = self.filtered(lambda line: (
-            line.display_type == 'product' and
+            line.display_type in ('product', 'downpayment') and
             line.account_id.account_type not in SKIPPED_ACCOUNT_TYPES
         ))
         (self - lines_to_validate).has_invalid_analytics = False
@@ -2429,7 +2430,7 @@ class AccountMoveLine(models.Model):
                 del vals['balance']
                 del vals['account_id']
             # Will be recomputed from the price_unit
-            if line.display_type == 'product' and line.move_id.is_invoice(True):
+            if line.display_type in ('product', 'downpayment') and line.move_id.is_invoice(True):
                 del vals['balance']
             if self.env.context.get('include_business_fields'):
                 line._copy_data_extend_business_fields(vals)
@@ -3512,7 +3513,7 @@ class AccountMoveLine(models.Model):
 
     def _validate_analytic_distribution(self):
         lines_with_missing_analytic_distribution = self.env['account.move.line']
-        for line in self.filtered(lambda line: line.display_type == 'product'):
+        for line in self.filtered(lambda line: line.display_type in ('product', 'downpayment')):
             try:
                 line._validate_distribution(
                     company_id=line.company_id.id,
@@ -4069,9 +4070,28 @@ class AccountMoveLine(models.Model):
 
     def _get_downpayment_lines(self):
         ''' Return the downpayment move lines associated with the move line.
-        This method is overridden in the sale order module.
         '''
-        return self.env['account.move.line']
+        downpayment_lines = self.env['account.move.line']
+        if 'sale_line_ids' in self._fields:
+            downpayment_lines |= self.sale_line_ids.filtered("is_downpayment").invoice_lines.filtered(
+                lambda line: line.move_id._is_downpayment()
+            )
+
+        self_computation_keys = {
+            aml.extra_tax_data.get('computation_key')
+            for aml in self
+            if aml.extra_tax_data and aml.extra_tax_data.get('computation_key')
+        }
+        if not self_computation_keys:
+            return downpayment_lines
+
+        downpayment_moves = self.move_id.filtered(lambda move: move._is_downpayment())
+        downpayment_lines |= downpayment_moves.invoice_line_ids.filtered(lambda line:
+            line.display_type == 'downpayment'
+            and line.extra_tax_data
+            and line.extra_tax_data.get('computation_key') in self_computation_keys
+        )
+        return downpayment_lines.sorted('sequence')
 
     def _get_discount_lines(self):
         ''' Return the discount move lines associated with the move line.'''

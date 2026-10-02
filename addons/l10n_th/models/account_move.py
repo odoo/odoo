@@ -77,7 +77,7 @@ class AccountMove(models.Model):
 
         return self.invoice_line_ids.filtered(
             lambda line: (
-                line.display_type == "product"
+                line.display_type in ('product', 'downpayment')
                 and any(
                     not tax.is_withholding_tax and tax.tax_exigibility == tax_exigibility
                     for tax in line.tax_ids.flatten_taxes_hierarchy()

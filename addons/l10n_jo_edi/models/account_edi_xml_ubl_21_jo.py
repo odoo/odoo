@@ -79,7 +79,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
         # Compute values for invoice lines. In Jordan, because the web-service has absolutely no tolerance,
         # what we do is: use round per line with 9 decimals (yes!)
-        base_amls = invoice.line_ids.filtered(lambda line: line.display_type == 'product')
+        base_amls = invoice.line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment'))
         base_lines = [invoice._prepare_product_base_line_for_taxes_computation(line) for line in base_amls]
         epd_amls = invoice.line_ids.filtered(lambda line: line.display_type == 'epd')
         base_lines += [invoice._prepare_epd_base_line_for_taxes_computation(line) for line in epd_amls]

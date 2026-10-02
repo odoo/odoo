@@ -270,7 +270,7 @@ class AccountMove(models.Model):
         Check the tax type and special tax type on the invoice lines
         """
         self.ensure_one()
-        product_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == "product")
+        product_lines = self.invoice_line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment'))
         errors = []
         # Invoice lines without tax or having multiple taxes are not allowed
         if product_lines.filtered(lambda line: not line.tax_ids or len(line.tax_ids) > 1):
@@ -342,7 +342,7 @@ class AccountMove(models.Model):
             - is_zero_tax_rate (bool): True if it is zero tax rate.
         """
         self.ensure_one()
-        product_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == "product")
+        product_lines = self.invoice_line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment'))
         # Create a set of tax types on invoice lines to check if there are multiple tax types or specific tax type on the invoice lines
         invoice_lines_tax_types = set(product_lines.tax_ids.mapped('l10n_tw_edi_tax_type'))
 
@@ -466,7 +466,7 @@ class AccountMove(models.Model):
         has_negative_lines = False
         AccountTax = self.env['account.tax']
         tax_type, _, _ = self._l10n_tw_edi_determine_tax_types()
-        for index, line in enumerate(self.invoice_line_ids.filtered(lambda line: line.display_type == "product"), start=1):
+        for index, line in enumerate(self.invoice_line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment')), start=1):
             base_line = self._prepare_product_base_line_for_taxes_computation(line)
             if is_allowance and self.reversed_entry_id.currency_id == self.currency_id:
                 base_line['rate'] = self.reversed_entry_id.invoice_currency_rate  # replace the rate by the original invoice's rate
@@ -584,7 +584,7 @@ class AccountMove(models.Model):
         tax_type, special_tax_type, is_zero_tax_rate = self._l10n_tw_edi_determine_tax_types()
         self.l10n_tw_edi_related_number = base64.urlsafe_b64encode(uuid.uuid4().bytes)[:20]
         formatted_phone = self._reformat_phone_number(self.partner_id.phone) if self.partner_id.phone else ""
-        product_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == "product")
+        product_lines = self.invoice_line_ids.filtered(lambda line: line.display_type in ('product', 'downpayment'))
         vat = "1" if product_lines[0].tax_ids and product_lines[0].tax_ids[0].price_include else "0"
 
         json_data = {

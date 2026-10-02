@@ -177,7 +177,7 @@ class AccountMove(models.Model):
             self.company_id.l10n_in_edi_feature
             and self.journal_id.type == 'sale'
             and any(
-                line.display_type == 'product'
+                line.display_type in ('product', 'downpayment')
                 and line.l10n_in_gstr_section in [
                     'sale_b2b_rcm', 'sale_b2b_regular', 'sale_exp_wp', 'sale_exp_wop',
                     'sale_sez_wp', 'sale_sez_wop', 'sale_deemed_export', 'sale_cdnr_rcm',
@@ -637,7 +637,7 @@ class AccountMove(models.Model):
         line_ids = []
         global_discount_line_ids = []
         grouping_lines = self.invoice_line_ids.grouped(
-            lambda l: l.display_type == 'product' and (l._l10n_in_is_global_discount() and 'global_discount' or 'lines')
+            lambda l: l.display_type in ('product', 'downpayment') and (l._l10n_in_is_global_discount() and 'global_discount' or 'lines')
         )
         default_line = self.env['account.move.line'].browse()
         lines = grouping_lines.get('lines', default_line)
