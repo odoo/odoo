@@ -8,7 +8,9 @@ from odoo.tests.common import freeze_time
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import mute_logger
 
+from odoo.addons.hr.models.hr_version import format_date_abbr
 from odoo.addons.hr.tests.common import TestHrCommon
+from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 
 
@@ -1061,3 +1063,54 @@ class TestHrVersion(TestHrCommon):
         self.assertEqual(version_1.date_end, date(2023, 12, 31))
         self.assertEqual(version_2.date_start, date(2024, 1, 1))
         self.assertFalse(version_2.date_end)
+
+
+@tagged('post_install', '-at_install')
+class TestHrVersionTracking(MailCase, TestHrCommon):
+
+    def _last_employee_message(self, employee):
+        self.flush_tracking()
+        return employee.message_ids.sorted('id')[-1]
+
+    @freeze_time('2026-10-01')
+    def test_version_changes_tracked_on_employee(self):
+        """ The changes of the versions are logged on the employee, whether they are written through the
+        employee or on the versions directly (automations, AI), and the creation of a version is logged with
+        its differences with the previous version. """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
+        employee = self.env['hr.employee'].create({
+            'name': 'Tracked Employee',
+            'date_version': date(2026, 1, 1),
+            'contract_date_start': date(2026, 1, 1),
+            'contract_date_end': date(2026, 12, 31),
+            'wage': 2000,
+        })
+        first_version = employee.version_id
+        self.flush_tracking()
+
+        # A version written directly logs the same grouped message as through the employee
+        first_version.write({'wage': 2500})
+        message = self._last_employee_message(employee)
+        self.assertIn(f"As of {format_date_abbr(self.env, date(2026, 1, 1))} to {format_date_abbr(self.env, date(2026, 12, 31))}", message.body)
+        self.assertIn('Wage', message.body)
+
+        # A new version logs its creation and its differences with the previous version
+        second_version = self.env['hr.version'].create({
+            'employee_id': employee.id,
+            'date_version': date(2026, 11, 1),
+            'contract_date_start': date(2026, 1, 1),
+            'contract_date_end': date(2026, 12, 31),
+            'wage': 3000,
+        })
+        message = self._last_employee_message(employee)
+        self.assertIn(f"New employee record created at {format_date_abbr(self.env, date(2026, 11, 1))}", message.body)
+        self.assertIn('Wage', message.body)
+
+        # The employee form applies a change to the next versions too: it writes them first, then the current
+        # version with all of them in the context, and the header covers them all
+        self.assertEqual(employee.version_id, first_version)
+        second_version.write({'wage': 3500})
+        self.flush_tracking()
+        employee.with_context(multi_update_version_ids=(first_version | second_version).ids).write({'wage': 3500})
+        message = self._last_employee_message(employee)
+        self.assertIn(f"As of {format_date_abbr(self.env, date(2026, 1, 1))} to {format_date_abbr(self.env, date(2026, 12, 31))}", message.body)
