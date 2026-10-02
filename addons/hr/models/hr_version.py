@@ -4,6 +4,7 @@ from collections import defaultdict
 from datetime import date, datetime, time
 from dateutil.relativedelta import relativedelta
 from babel.dates import format_date, get_date_format
+from markupsafe import Markup
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models
@@ -292,7 +293,57 @@ class HrVersion(models.Model):
                 contract_vals = Version.get_values_from_contract_template(Version.browse(vals['contract_template_id']))
                 # take vals from template, but priority given to the original vals
                 vals.update({**contract_vals, **vals})
-        return super().create(vals_list)
+        versions = super().create(vals_list)
+        versions._track_log_version_creation()
+        return versions
+
+    @api.model
+    def _get_version_creation_diff_excluded_fnames(self):
+        """ Tracked fields to leave out of the "closest previous version" diff
+        logged on creation: purely computed/structural state whose change is
+        implied by "a new version was created" and already conveyed by the
+        "New employee record created at <date>" header, not meaningful HR
+        content worth calling out on its own. """
+        return {
+            'date_version', 'date_start', 'date_end',
+            'is_current', 'is_past', 'is_future', 'is_in_contract',
+            'last_modified_uid', 'last_modified_date',
+        }
+
+    def _track_log_version_creation(self):
+        """ Log the creation of a new employee record (version) on the employee's
+        chatter, highlighting the differences with the closest previous version
+        (if any). This lives on `hr.version` (rather than `hr.employee`) so it
+        fires no matter how the version was created: from the Employee form, an
+        automation, or the AI (which creates `hr.version` records directly). """
+        excluded_fnames = self._get_version_creation_diff_excluded_fnames()
+        for version in self:
+            employee = version.employee_id
+            # a version created together with its employee (delegation create)
+            # or without an employee (e.g. a contract template) isn't logged
+            if not employee or version._track_log_context_disabled() or len(employee.version_ids) <= 1:
+                continue
+            version_su = version.sudo()
+            header = Markup("<b>%s</b>") % self.env._(
+                "New employee record created at %(date)s",
+                date=format_date_abbr(self.env, version_su.date_version),
+            )
+            previous_version = (employee.version_ids - version).filtered(
+                lambda v: v.date_version < version_su.date_version
+            ).sorted('date_version', reverse=True)[:1].sudo()
+            tracked_fnames = version._track_get_fields() - excluded_fnames
+            diff_fnames = {
+                fname for fname in tracked_fnames
+                if previous_version and previous_version[fname] != version_su[fname]
+            }
+            if diff_fnames:
+                employee._track_record(
+                    version, diff_fnames,
+                    initial_values={version.id: {fname: previous_version[fname] for fname in diff_fnames}},
+                    body=header,
+                )
+            else:
+                employee._message_log(body=header)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_last_version(self):
@@ -304,6 +355,64 @@ class HrVersion(models.Model):
                 raise ValidationError(
                     self.env._('Employee %s must always have at least one active version.') % employee_id.name
                 )
+
+    def _track_log_context_disabled(self):
+        """ Whether the employee-chatter tracking added on top of the regular
+        field tracking should be skipped: on top of the usual tracking-disable
+        context keys, also skip it for versions that only exist for a "what if"
+        computation (salary configurator simulations, offer previews, ...) and
+        are never meant to represent a real employee record change. """
+        return self._track_disabled() or self.env.context.get('salary_simulation') or self.env.context.get('is_simulation_offer')
+
+    def _track_prepare_employee_changes(self, vals):
+        """ Snapshot the tracked fields of the impacted employees before this
+        write happens, so a version write triggers the same tracking on the
+        employee's chatter regardless of whether it goes through
+        `hr.employee.write()` or writes `hr.version` directly (automations,
+        the AI, ...). """
+        tracked_employees = self.env['hr.employee']
+        if self._track_log_context_disabled():
+            return tracked_employees
+        tracked_fnames = self._track_get_fields() & set(vals)
+        if not tracked_fnames:
+            return tracked_employees
+        for employee, versions in self.filtered('employee_id').grouped('employee_id').items():
+            employee_tracked_fnames = employee._track_get_fields() & tracked_fnames
+            if employee_tracked_fnames:
+                employee._track_prepare(employee_tracked_fnames)
+                tracked_employees |= employee
+        return tracked_employees
+
+    def _track_log_employee_changes(self, employees):
+        """ Set the grouped "As of <date>" header used to bundle the tracking
+        values prepared in `_track_prepare_employee_changes` into a single,
+        readable chatter message on the employee. """
+        # The employee form applies a change to the next versions too: they are written first, then the current
+        # version with the ids of all of them in the context, the header covers them all
+        multi_update_version_ids = self.env.context.get('multi_update_version_ids')
+        # Don't replace the title of a message already prepared for the employee (e.g. "End of Collaboration
+        # planned"): the changes of the versions are logged under it
+        logged_messages = self.env.cr.precommit.data.get(f'mail.tracking.message.{employees._name}', {})
+        version_headers = self.env.cr.precommit.data.setdefault('hr.version.tracking.header', set())
+        for employee in employees:
+            if employee.id in logged_messages and employee.id not in version_headers:
+                continue
+            version_headers.add(employee.id)
+            versions = self.filtered(lambda v: v.employee_id == employee)
+            if multi_update_version_ids:
+                versions |= employee.version_ids.filtered(lambda v: v.id in multi_update_version_ids)
+            versions = versions.sudo().sorted('date_version')
+            if not versions:
+                continue
+            start = format_date_abbr(self.env, versions[0].date_start) if versions[0].date_start else False
+            end = format_date_abbr(self.env, versions[-1].date_end) if versions[-1].date_end else False
+            if start and end:
+                msg = self.env._("As of %(start)s to %(end)s", start=start, end=end)
+            elif start:
+                msg = self.env._("As of %s", start)
+            else:
+                msg = self.env._("As of")
+            employee._track_set_log_message(Markup("<b>%s</b>") % msg)
 
     def write(self, vals):
         """Write on versions, keeping the contract dates consistent across the versions of a contract.
@@ -323,6 +432,8 @@ class HrVersion(models.Model):
             of an employee, or writing contract dates on versions of different
             contracts at once
         """
+        tracked_employees = self._track_prepare_employee_changes(vals)
+
         if 'hr_responsible_id' in vals:
             new_responsible = self.env['res.users'].browse(vals['hr_responsible_id'])
             for version in self:
@@ -344,7 +455,9 @@ class HrVersion(models.Model):
                 raise ValidationError(self.env._("Cannot archive all the active versions of an employee."))
 
         if self.env.context.get('sync_contract_dates') or ("contract_date_start" not in vals and "contract_date_end" not in vals):
-            return super().write(vals)
+            res = super().write(vals)
+            self._track_log_employee_changes(tracked_employees)
+            return res
 
         for versions_by_employee in self.grouped('employee_id').values():
             if len(versions_by_employee.grouped('contract_date_start').keys()) > 1:
@@ -361,7 +474,9 @@ class HrVersion(models.Model):
                 })
 
         if not any(multiple_versions.mapped('contract_date_start')):
-            return super(HrVersion, multiple_versions).write(vals)
+            res = super(HrVersion, multiple_versions).write(vals)
+            self._track_log_employee_changes(tracked_employees)
+            return res
 
         new_vals = {
             f_name: f_value
@@ -397,7 +512,9 @@ class HrVersion(models.Model):
             else:
                 versions.with_context(sync_contract_dates=True).write(dates_vals)
 
-        return super(HrVersion, multiple_versions).write(new_vals)
+        res = super(HrVersion, multiple_versions).write(new_vals)
+        self._track_log_employee_changes(tracked_employees)
+        return res
 
     def get_record_default_action(self, access_uid=None):
         """Return the action opening the version: the employee form for employee versions.
