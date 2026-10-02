@@ -804,6 +804,7 @@ registry.category("web_tour.tours").add("test_combo_synchronisation", {
                 content: "Check if there still has combo lines",
                 trigger: ".orderline-combo",
             },
+            ProductScreen.clickDisplayedProduct("Coca-Cola"), // fake product to prevent course from being cleaned up
             ProductScreen.addCourse(),
             ProductScreen.clickOrderline("Combo Product 2"),
             ProductScreen.transferCourseTo("Course 2"),
@@ -811,11 +812,11 @@ registry.category("web_tour.tours").add("test_combo_synchronisation", {
                 content: "Check if entire combo is transfered to course 2",
                 trigger: ".pos", // dummy trigger
                 run: function () {
-                    const onlyCourse2 = window.posmodel
+                    const comboLines = window.posmodel
                         .getOrder()
-                        .lines.every((x) => x.course_id.name === "Course 2");
+                        .lines.filter((x) => x.combo_parent_id || x.combo_line_ids?.length);
 
-                    if (!onlyCourse2) {
+                    if (!comboLines.every((x) => x.course_id.name === "Course 2")) {
                         throw new Error("The entire combo must be transferred to Course 2.");
                     }
                 },
