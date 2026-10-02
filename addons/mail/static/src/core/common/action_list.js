@@ -98,10 +98,10 @@ export class BaseAction extends Component {
             "aria-label": this.action.name,
             disabled: this.action.disabledCondition,
             name: this.action.id,
+            "data-available-offline": this.action.availableOffline,
             "data-sequence": this.action.sequence,
             "data-sequence-group": this.action.sequenceGroup,
             "data-sequence-quick": this.action.sequenceQuick,
-            ...this.action.btnAttrs,
         };
     }
 
