@@ -10,13 +10,14 @@ from odoo.tests.common import tagged, new_test_user, users
 from odoo.exceptions import ValidationError
 from odoo.addons.google_calendar.models.res_users import ResUsers
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
+from odoo.addons.mail.tests.common import MockEmail
 from odoo.addons.google_calendar.utils.google_calendar_service import GoogleEvent, GoogleCalendarService
 from odoo import Command, tools
 
 
 @patch.object(ResUsers, '_get_google_calendar_token', lambda user: 'dummy-token')
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestSyncGoogle2Odoo(TestSyncGoogle):
+class TestSyncGoogle2Odoo(TestSyncGoogle, MockEmail):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -2714,3 +2715,37 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             any(e.date() == date(2023, 10, 26) for e in event_starts),
             "No event should be created on Oct 26 (the UTC boundary date)",
         )
+
+    @patch_api
+    def test_no_mail_to_attendees_on_google_sync(self):
+        """
+        Creating an event from Google must not send invitation emails from Odoo,
+        Google already notifies the attendees. This must hold even when the organizer
+        is an Odoo user whose Google access token is expired, since the organizer's
+        token validity is what usually prevents those emails from being sent.
+        """
+        now = datetime(2021, 2, 10, 12, 0)
+        self.organizer_user.sudo().res_users_settings_id.write({
+            'google_calendar_rtoken': 'organizer-rtoken',
+            'google_calendar_token': 'organizer-token',
+            'google_calendar_token_validity': now - timedelta(hours=2),
+        })
+        values = {
+            'id': 'no_mail_event',
+            'summary': 'Meeting',
+            'start': {'dateTime': '2021-02-15T08:00:00+00:00'},
+            'end': {'dateTime': '2021-02-15T10:00:00+00:00'},
+            'reminders': {'useDefault': True},
+            'creator': {'email': self.organizer_user.email},
+            'attendees': [
+                {'email': email, 'responseStatus': 'needsAction'}
+                for email in [self.organizer_user.email, self.attendee_user.email, 'external@example.com']
+            ],
+            'updated': '2021-02-10T12:00:00Z',
+        }
+        with self.mock_datetime_and_now(now), self.mock_mail_gateway():
+            self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]), self.env.user.primary_calendar_id)
+        event = self.env['calendar.event'].search([('google_id', '=', 'no_mail_event')])
+        self.assertEqual(event.user_id, self.organizer_user)
+        self.assertEqual(len(event.attendee_ids), 3)
+        self.assertNotSentEmail()
