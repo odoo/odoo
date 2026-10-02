@@ -616,7 +616,7 @@ export class Message extends Component {
 
     /** @param {HTMLElement} bodyEl */
     renderEmbeddedCodeBlocks(bodyEl) {
-        if (this.message.message_type && this.message.message_type.includes("email")) {
+        if (this.message.hasEmailLikeBody) {
             return [];
         }
         const { name, Component, getProps } = readonlySyntaxHighlightingEmbedding;

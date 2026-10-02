@@ -418,7 +418,7 @@ export class Store extends BaseStore {
     }
 
     handleClickOnLink(ev, thread) {
-        const link = ev.target.closest("a");
+        const link = ev.composedPath()[0].closest("a");
         if (!link) {
             return;
         }
