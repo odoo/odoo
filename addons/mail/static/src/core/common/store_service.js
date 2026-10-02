@@ -372,9 +372,13 @@ export class Store extends BaseStore {
     }
 
     _fetchStoreDataRpc(fetchParams) {
+        const context = {
+            ...user.context,
+            hide_quote_attachments: true,
+        };
         return rpc(
             "/mail/store",
-            { fetch_params: fetchParams, context: user.context },
+            { fetch_params: fetchParams, context: context },
             { silent: this.fetchSilent }
         );
     }
