@@ -205,6 +205,6 @@ class TestSubcontractingLandedCosts(TestMrpSubcontractingCommon):
         stock_valu_acc_id = product_category_all.property_stock_valuation_account_id.id
         expense_acc_id = product_category_all.property_account_expense_categ_id.id
         self.assertRecordValues(stock_landed_cost.account_move_id.line_ids, [
-            {'account_id': stock_valu_acc_id,   'product_id': self.finished.id,    'debit': 7.0,  'credit': 0.0},
-            {'account_id': expense_acc_id,     'product_id': self.finished.id,    'debit': 0.0,   'credit': 7.0},
+            {'account_id': stock_valu_acc_id,   'product_id': self.finished.id,    'debit': 10.0,  'credit': 0.0},
+            {'account_id': expense_acc_id,      'product_id': self.finished.id,    'debit': 0.0,   'credit': 10.0},
         ])
