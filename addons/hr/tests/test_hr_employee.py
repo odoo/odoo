@@ -704,6 +704,26 @@ class TestHrEmployee(TestHrCommon):
         with self.assertRaises(ValidationError):
             no_email_emp.user_id = no_email_emp._get_or_create_light_user()
 
+    def test_employee_form_links_user_of_work_email(self):
+        user = self.env['res.users'].create({'name': 'Free', 'login': 'free_login', 'email': 'free@example.com'})
+        portal_user = self.env['res.users'].create({
+            'name': 'Portal', 'login': 'portal@example.com', 'group_ids': [Command.set(self.env.ref('base.group_portal').ids)]})
+
+        employee_form = Form(self.env['hr.employee'])
+        employee_form.name = 'Portal'
+        employee_form.work_email = portal_user.login
+        self.assertFalse(employee_form.user_id)
+        employee_form.work_email = 'Free <free@example.com>'
+        self.assertEqual(employee_form.user_id, user)
+        employee = employee_form.save()
+
+        # the user already is an employee of the company
+        employee_form = Form(self.env['hr.employee'])
+        employee_form.name = 'Other'
+        employee_form.work_email = 'free@example.com'
+        self.assertFalse(employee_form.user_id)
+        self.assertEqual(employee.user_id, user)
+
     def test_user_contact_phone_sync(self):
         partner = self.env['res.partner'].create({'name': 'Partner Test'})
         first_company = self.env['res.company'].create({'name': 'First Company'})
