@@ -15,4 +15,35 @@
             </group>
         </field>
     </record>
+
+    <record id="view_invoice_tree_l10n_kr" model="ir.ui.view">
+        <field name="name">account.invoice.list.l10n_kr</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="journal_id" position="after">
+                <field name="l10n_kr_issuance_type" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter_l10n_kr" model="ir.ui.view">
+        <field name="name">account.invoice.select.l10n_kr</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <field name="journal_id" position="after">
+                <field name="l10n_kr_issuance_type"/>
+            </field>
+            <filter name="out_refund" position="after">
+                <separator/>
+                <filter string="Proof of Issuance" name="l10n_kr_issuance_type">
+                    <field name="l10n_kr_issuance_type"/>
+                </filter>
+            </filter>
+            <filter name="group_by_company" position="after">
+                <filter string="Proof of Issuance" name="group_by_l10n_kr_issuance_type" context="{'group_by': 'l10n_kr_issuance_type'}"/>
+            </filter>
+        </field>
+    </record>
 </odoo>
