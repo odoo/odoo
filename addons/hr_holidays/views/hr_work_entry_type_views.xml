@@ -44,7 +44,7 @@
                     <span class="text-muted fst-italic">Configure how time off requests are approved, allocated and managed for this time type.</span>
                     <group>
                         <group name="leave_validation" id="time_off_requests" string="Time Off Requests">
-                            <field name="active" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- duplicate of the active field already in the inherited hr_work_entry form -->
                             <field name="leave_validation_type" string="Approval" widget="radio"/>
                         </group>
                         <group name="allocation_validation" id="allocation_requests" string="Allocation">

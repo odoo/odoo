@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
             <field name="company_id" position="after">
-                <field name="employee_salary_amount_is_percentage" groups="hr.group_hr_user" invisible="1"/>
-                <field name="employee_has_multiple_bank_accounts" groups="hr.group_hr_user" invisible="1"/>
+                <field name="employee_salary_amount_is_percentage" groups="hr.group_hr_user" invisible="1"/> <!-- drives invisible of the percentage suffix of the salary allocation -->
+                <field name="employee_has_multiple_bank_accounts" groups="hr.group_hr_user" invisible="1"/> <!-- drives invisible of the Salary Allocation label and block -->
                 <label string="Salary Allocation" for="employee_salary_amount" 
                     invisible="not employee_has_multiple_bank_accounts" groups="hr.group_hr_user"/>
                 <div class="d-flex" invisible="not employee_has_multiple_bank_accounts" groups="hr.group_hr_user">
