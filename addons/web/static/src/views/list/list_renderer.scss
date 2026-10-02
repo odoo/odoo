@@ -571,10 +571,10 @@
             border-bottom-width: var(--ListRenderer-data-row-border-bottom-width, 1px);
 
             &:not(.o_selected_row):not(.o_data_row_selected):focus-within > * {
-                $-focus-bg: rgba(var(--#{$variable-prefix}emphasis-color-rgb), #{$table-hover-bg-factor * 2});
+                $-focus-bg: rgba(var(--emphasis-color-rgb), #{$table-hover-bg-factor * 2});
 
-                --#{$variable-prefix}table-accent-bg: #{$-focus-bg};
-                --#{$variable-prefix}table-striped-bg: var(--ListRenderer-data-row-focused-striped-bg, #{$-focus-bg});
+                --table-accent-bg: #{$-focus-bg};
+                --table-striped-bg: var(--ListRenderer-data-row-focused-striped-bg, #{$-focus-bg});
             }
         }
 

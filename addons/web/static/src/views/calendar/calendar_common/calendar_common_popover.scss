@@ -16,7 +16,7 @@
         .o_popover:has(&) {
             $-margin-top: #{map-get($spacers, 5) * 3};
 
-            --#{$prefix}popover-border-radius: var(--o-bs-spacer-2) var(--o-bs-spacer-2) 0 0;
+            --popover-border-radius: var(--o-bs-spacer-2) var(--o-bs-spacer-2) 0 0;
             --CwPopover-max-height: calc(100dvh - #{$-margin-top});
             --CwPopover-max-width: auto;
             --CwPopover-width: 100%;
@@ -108,7 +108,7 @@ $o-web-calendar-colors: o-build-web-calendar-colors();
     .o_cw_popover.o_calendar_color_#{$i - 1} {
         $-calendar-colors-map: nth($o-web-calendar-colors, $i);
         .o_popover_header {
-            --#{$variable-prefix}card-border-color: #{map-get($-calendar-colors-map, "color-subtle")};
+            --card-border-color: #{map-get($-calendar-colors-map, "color-subtle")};
             background-color: map-get($-calendar-colors-map, "popover-background-color");
             color: map-get($-calendar-colors-map, "popover-color");
         }

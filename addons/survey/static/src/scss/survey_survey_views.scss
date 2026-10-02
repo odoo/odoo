@@ -35,11 +35,11 @@
     /* Ungrouped display: whole length (kanban-list) */
     &.o_kanban_ungrouped {
         .o_survey_kanban_card {
-            --#{$prefix}gap: var(--o-bs-spacer-3) var(--o-bs-spacer-2);
+            --gap: var(--o-bs-spacer-3) var(--o-bs-spacer-2);
 
             .btn-link-inline {
-                --#{$prefix}btn-padding-x: var(--o-bs-btn-padding-x);
-                --#{$prefix}btn-padding-y: var(--o-bs-btn-padding-y);
+                --btn-padding-x: var(--o-bs-btn-padding-x);
+                --btn-padding-y: var(--o-bs-btn-padding-y);
             }
 
             .o_progressbar {
@@ -66,7 +66,7 @@
     /* Grouped specific */
     &.o_kanban_grouped {
         .o_survey_kanban_card {
-            --#{$prefix}columns: 2;
+            --columns: 2;
         }
     }
 
