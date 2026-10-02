@@ -5,11 +5,11 @@
         <field name="model">hr.employee.cv.wizard</field>
         <field name="arch" type="xml">
             <form string="Print Resume">
-                <field name="can_show_others" invisible="1"/>
-                <field name="can_show_skills" invisible="1"/>
+                <field name="can_show_others" invisible="1"/> <!-- drives invisible of show_others -->
+                <field name="can_show_skills" invisible="1"/> <!-- drives invisible of show_skills -->
                 <group>
                     <group>
-                        <field name="employee_ids" widget="many2many_tags" invisible="1"/>
+                        <field name="employee_ids" widget="many2many_tags" invisible="1"/> <!-- employees to print, filled from active_ids by the action context and posted when the resume is generated -->
                         <label for="color_primary" string="Colors"/>
                         <div class="d-flex flex-row">
                             <field name="color_primary" widget="color" nolabel="1" style="width: 35px;"/>

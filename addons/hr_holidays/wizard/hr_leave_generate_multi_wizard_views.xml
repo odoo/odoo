@@ -6,14 +6,14 @@
             <form string="Generate time off for multiple employees">
                 <group>
                     <field name="employee_ids" widget="many2many_avatar_employee" placeholder="All Employees"/>
-                    <field name="valid_work_entry_type_ids" invisible="1"/>
+                    <field name="valid_work_entry_type_ids" invisible="1"/> <!-- used in the python-declared domain of work_entry_type_id -->
                     <label for="date_from" string="Dates"/>
                     <field
                         name="date_from"
                         widget="daterange"
                         options="{'end_date_field': 'date_to'}"
                         class="w-50" nolabel="1"/>
-                    <field name="date_to" invisible="1" />
+                    <field name="date_to" invisible="1" /> <!-- end date of the date_from daterange widget (end_date_field option) -->
                     <!-- half day or custom hours-->
                     <label for="date_from_period" invisible="work_entry_type_request_unit != 'half_day'" string="Day Period"/>
                     <div class="o_row" invisible="work_entry_type_request_unit != 'half_day'">

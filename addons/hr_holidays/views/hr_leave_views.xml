@@ -427,7 +427,7 @@
                                                required="not date_from or not date_to"
                                                options="{'end_date_field': 'request_date_to', 'always_range': True}"
                                         />
-                                        <field name="request_date_to" invisible="1"/>
+                                        <field name="request_date_to" invisible="1"/> <!-- end date of the request_date_from daterange widget (end_date_field option) -->
                                     </div>
                                     <div invisible="work_entry_type_request_unit != 'hour'">
                                         <field name="request_date_hour_from"
@@ -436,17 +436,17 @@
                                                required="1"
                                                options="{'end_date_field': 'request_date_hour_to', 'always_range': True}"
                                         />
-                                        <field name="request_date_hour_to" invisible="1"/>
+                                        <field name="request_date_hour_to" invisible="1"/> <!-- end datetime of the request_date_hour_from daterange widget (end_date_field option) -->
                                         <!-- Needed for the onchange -->
-                                        <field name="request_hour_from" invisible="1"/>
-                                        <field name="request_hour_to" invisible="1"/>
+                                        <field name="request_hour_from" invisible="1"/> <!-- needed for the onchange recomputing the duration -->
+                                        <field name="request_hour_to" invisible="1"/> <!-- needed for the onchange recomputing the duration -->
                                     </div>
                                     <div class="d-flex gap-2" invisible="work_entry_type_request_unit != 'half_day' or not last_several_days">
                                         <field name="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
                                         <i class="oi" data-icon="east" aria-label="to" title="To"/>
                                         <field name="request_date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
                                     </div>
-                                    <field name="is_time_rule_trimmed" invisible="1"/>
+                                    <field name="is_time_rule_trimmed" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                                     <!-- trimmed source / output: show exact time range set by the rule engine -->
                                     <field name="time_rule_time_range" nolabel="1" readonly="1" class="text-muted"
                                            invisible="not time_rule_time_range"/>
@@ -757,10 +757,10 @@
                 <field name="duration_display" string="Duration"/>
                 <field name="name" optional="hidden"/>
                 <field name="state" widget="badge" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'" decoration-danger="state == 'refuse'"/>
-                <field name="active_employee" column_invisible="True"/>
-                <field name="user_id" column_invisible="True"/>
-                <field name="message_needaction" column_invisible="True"/>
-                <field name="time_rule_id" column_invisible="1"/>
+                <field name="active_employee" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                <field name="user_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                <field name="time_rule_id" column_invisible="1"/> <!-- drives decoration-it of the list -->
                 <button string="Approve" name="action_approve" type="object"
                     icon="thumb_up" icon_class="oi-filled"
                     invisible="not can_approve"/>

@@ -15,7 +15,7 @@
                         invisible="not employees_count"
                         class="btn-link"/>
                     <field name="company_id" groups="hr.group_hr_user" optional="hide"/>
-                    <field name="code" column_invisible="1"/>
+                    <field name="code" column_invisible="1"/> <!-- xpath anchor of the payroll localisations which make this column visible -->
                 </list>
             </field>
         </record>
@@ -28,7 +28,7 @@
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="code" invisible="1"/>
+                                <field name="code" invisible="1"/> <!-- xpath anchor of the payroll localisations which make this field visible -->
                                 <field name="country_id"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>

@@ -7,7 +7,7 @@
             <form string="Accrual Level">
                 <sheet>
                     <div colspan="2">
-                        <field name="can_modify_value_type" invisible="1"/>
+                        <field name="can_modify_value_type" invisible="1"/> <!-- drives readonly of added_value_type -->
                     </div>
                     <div class="o_accrual_level_form">
                         <group class="o_accrual" string="Accrual Level Options">
@@ -154,8 +154,8 @@
         <field name="model">hr.leave.accrual.plan</field>
         <field name="arch" type="xml">
             <form string="Accrual Plan" class="o_accrual_plan_form">
-                <field name="active" invisible="1"/>
-                <field name="show_transition_mode" invisible="1"/>
+                <field name="active" invisible="1"/> <!-- drives invisible of the Archived web_ribbon widget -->
+                <field name="show_transition_mode" invisible="1"/> <!-- drives invisible of the transition mode label and block -->
                 <sheet>
                     <div class="oe_button_box" name="button_box" invisible="not id">
                         <button name="action_open_accrual_plan_employees" type="object" class="oe_stat_button"

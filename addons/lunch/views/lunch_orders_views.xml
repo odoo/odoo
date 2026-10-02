@@ -41,20 +41,20 @@
                 <field name='note' class="o_text_overflow"/>
                 <field name='user_id' widget='many2one_avatar_user' readonly="state != 'new'"/>
                 <field name="lunch_location_id"/>
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- currency of the price monetary widget -->
                 <field name='price' sum="Total" string="Price" widget="monetary"/>
                 <field name='state' widget="badge" decoration-warning="state == 'new'" decoration-success="state == 'confirmed'" decoration-info="state == 'sent'" decoration-danger="state == 'ordered'"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="display_reorder_button" column_invisible="True"/>
-                <field name="notified" column_invisible="True"/>
+                <field name="display_reorder_button" column_invisible="True"/> <!-- drives invisible of the Re-order button -->
+                <field name="notified" column_invisible="True"/> <!-- drives invisible of the Send Notification button -->
                 <button name="action_reorder" string="Re-order" type="object" icon="history" invisible="not display_reorder_button or not display_add_button" groups="lunch.group_lunch_user"/>
                 <button name="action_confirm" string="Confirm" type="object" icon="check" invisible="state != 'sent'" groups="lunch.group_lunch_manager"/>
                 <button name="action_cancel" string="Cancel" type="object" icon="close" invisible="state in ['cancelled', 'confirmed']" groups="lunch.group_lunch_manager"/>
                 <button name="action_reset" string="Reset" type="object" icon="undo" invisible="state != 'cancelled'" groups="lunch.group_lunch_manager"/>
                 <button name="action_notify" string="Send Notification" type="object" icon="mail" icon_class="oi-filled" invisible="state != 'confirmed' or notified" groups="lunch.group_lunch_manager"/>
                 <groupby name="supplier_id">
-                    <field name="show_order_button" invisible="1" />
-                    <field name="show_confirm_button" invisible="1" />
+                    <field name="show_order_button" invisible="1" /> <!-- drives invisible of the Send Orders button of this groupby header -->
+                    <field name="show_confirm_button" invisible="1" /> <!-- drives invisible of the Confirm Orders button of this groupby header -->
                     <button string="Send Orders" type="object" name="action_send_orders" invisible="not show_order_button"/>
                     <button string="Confirm Orders" type="object" name="action_confirm_orders" invisible="not show_confirm_button"/>
                 </groupby>
@@ -187,19 +187,19 @@
         <field name="model">lunch.order</field>
         <field name="arch" type="xml">
             <form class="flex-column">
-                <field name="company_id" invisible="1"/>
-                <field name="date" invisible="1" readonly="state != 'new'"/>
-                <field name="currency_id" invisible="1"/>
-                <field name="quantity" invisible="1"/>
-                <field name="product_id" invisible="1"/>
-                <field name="state" invisible="1"/>
-                <field name="category_id" invisible="1"/>
-                <field name="available_toppings_1" invisible="1"/>
-                <field name="available_toppings_2" invisible="1"/>
-                <field name="available_toppings_3" invisible="1"/>
-                <field name="supplier_id" invisible="1"/>
-                <field name="order_deadline_passed" invisible="1"/>
-                <field name="available_today" invisible="1"/>
+                <field name="company_id" invisible="1"/> <!-- company the related currency_id is read from -->
+                <field name="date" invisible="1" readonly="state != 'new'"/> <!-- required order date, defaulted to today and locked once the order left the new state -->
+                <field name="currency_id" invisible="1"/> <!-- currency of the price monetary field displayed above -->
+                <field name="quantity" invisible="1"/> <!-- required quantity kept writable so its default is posted when the line is added to the cart -->
+                <field name="product_id" invisible="1"/> <!-- required product set from the context, source of the name/price/image and toppings computes -->
+                <field name="state" invisible="1"/> <!-- drives readonly of date -->
+                <field name="category_id" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+                <field name="available_toppings_1" invisible="1"/> <!-- drives invisible of topping_label_1 and topping_ids_1 -->
+                <field name="available_toppings_2" invisible="1"/> <!-- drives invisible of topping_label_2 and topping_ids_2 -->
+                <field name="available_toppings_3" invisible="1"/> <!-- drives invisible of topping_label_3 and topping_ids_3 -->
+                <field name="supplier_id" invisible="1"/> <!-- used in the domain of the three topping_ids fields -->
+                <field name="order_deadline_passed" invisible="1"/> <!-- drives invisible of the deadline warning and of the Add To Cart button -->
+                <field name="available_today" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                 <div class="d-flex">
                     <div class="flex-grow-0 pe-5">
                         <field name="image_1920" widget="image" class="o_lunch_image" options="{'image_preview': 'image_128'}"/>

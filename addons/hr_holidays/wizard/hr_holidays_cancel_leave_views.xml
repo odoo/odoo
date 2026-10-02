@@ -5,7 +5,7 @@
         <field name="arch" type="xml">
             <form string="Cancel Time Off">
                 <group>
-                    <field name="leave_id" invisible="1" />
+                    <field name="leave_id" invisible="1" /> <!-- required time off to cancel, filled by the default_leave_id of the context -->
                     <field name="reason" placeholder="Why do you want to cancel this approved time off ?" />
                 </group>
                 <footer>
