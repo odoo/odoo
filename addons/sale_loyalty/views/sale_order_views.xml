@@ -56,7 +56,7 @@
                 <attribute name="groups" remove="sale.group_discount_per_so_line"/>
             </xpath>
             <xpath expr="//list//column[@name='sol_qty']" position="before">
-                <field name="is_reward_line" column_invisible="True"/>
+                <field name="is_reward_line" column_invisible="True"/> <!-- used in the readonly attribute(s) this view sets on other fields -->
             </xpath>
             <xpath expr="//list//field[@name='product_uom_qty']" position="attributes">
                 <attribute name="readonly" add="is_reward_line" separator=" or "/>

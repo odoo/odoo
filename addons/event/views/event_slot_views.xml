@@ -6,7 +6,7 @@
         <field name="model">event.slot</field>
         <field name="arch" type="xml">
             <form>
-                <field name="event_id" invisible="1"/>
+                <field name="event_id" invisible="1"/> <!-- read by the event slot calendar model and the barcode client action -->
                 <group>
                     <group>
                         <label for="start_hour" string="Hour range"/>
@@ -32,7 +32,7 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <form>
-                <field name="event_id" invisible="1"/>
+                <field name="event_id" invisible="1"/> <!-- read by the event slot calendar model, filled from the context of the multi create -->
                 <group>
                     <field name="date_tz" string="Timezone"/>
                     <field name="color" widget="color_picker"/>

@@ -7,10 +7,10 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="order_id" invisible="1"/>
-                        <field name="reward_ids" invisible="1"/>
-                        <field name="multi_product_reward" invisible="1"/>
-                        <field name="reward_product_ids" invisible="1"/>
+                        <field name="order_id" invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
+                        <field name="reward_ids" invisible="1"/> <!-- drives invisible of the link, the Choose your reward: label and 5 more -->
+                        <field name="multi_product_reward" invisible="1"/> <!-- drives invisible of the Choose a product: label, selected_product_id -->
+                        <field name="reward_product_ids" invisible="1"/> <!-- used in the python-declared domain of selected_product_id -->
                         <a invisible="reward_ids">
                             No rewards available for this customer!
                         </a>

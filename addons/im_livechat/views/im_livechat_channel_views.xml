@@ -77,10 +77,10 @@
                     <header>
                         <button type="object" name="action_join" class="oe_highlight" string="Join Channel" invisible="are_you_inside"/>
                         <button type="object" name="action_quit" class="btn btn-primary" string="Leave Channel" invisible="not are_you_inside"/>
-                        <field name="are_you_inside" invisible="1"/>
+                        <field name="are_you_inside" invisible="1"/> <!-- drives invisible of the action_join button, the action_quit button -->
                     </header>
                     <sheet>
-                        <field name="rating_count" invisible="1"/>
+                        <field name="rating_count" invisible="1"/> <!-- drives invisible of the o_stat_info block -->
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="object" name="action_view_chatbot_scripts" icon="oi_android"
                                 invisible="chatbot_script_count == 0" groups="im_livechat.im_livechat_group_manager">
@@ -155,7 +155,7 @@
                                         </group>
                                         <group class="oe_subtotal_footer">
                                             <div class="container p-0 mw-100">
-                                                <field name="available_operator_ids" invisible="1"/>
+                                                <field name="available_operator_ids" invisible="1"/> <!-- read by the livechat channel kanban menu -->
                                                 <div class="row mb-2">
                                                     <div class="col"><label class="fw-bold" for="available_operator_ids_count"/></div>
                                                     <div class="col me-1 text-end"><field name="available_operator_ids_count" nolabel="1"/></div>

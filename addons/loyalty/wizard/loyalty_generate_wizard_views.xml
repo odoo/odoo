@@ -8,9 +8,9 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="program_id" invisible="1"/>
-                            <field name="will_send_mail" invisible="1"/>
-                            <field name="program_type" invisible="1"/>
+                            <field name="program_id" invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
+                            <field name="will_send_mail" invisible="1"/> <!-- drives invisible of the text -->
+                            <field name="program_type" invisible="1"/> <!-- drives invisible of mode, the Coupon value label and 3 more -->
                             <field name="mode" widget="radio" invisible="program_type == 'ewallet'"/>
                             <field name="customer_ids" widget="many2many_tags" placeholder="For all customers" invisible="mode == 'anonymous'"/>
                             <field name="customer_tag_ids" widget="many2many_tags" invisible="mode == 'anonymous'" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>

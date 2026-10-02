@@ -111,7 +111,7 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <form string="Mailing Contacts">
-                <field name="id" invisible="1"/>
+                <field name="id" invisible="1"/> <!-- drives invisible of create_date -->
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_mailings"
@@ -157,7 +157,7 @@
                                     type="object" context="{'default_email': email}" groups="base.group_user"
                                     invisible="not is_blacklisted"/>
                                 <field name="email" widget="email"/>
-                                <field name="is_blacklisted" invisible="1"/>
+                                <field name="is_blacklisted" invisible="1"/> <!-- drives invisible of the mail_action_blacklist_remove button -->
                             </div>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
                                    placeholder="e.g. Roadshow"/>

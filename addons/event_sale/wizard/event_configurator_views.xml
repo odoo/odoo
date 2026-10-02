@@ -5,8 +5,8 @@
         <field name="model">event.event.configurator</field>
         <field name="arch" type="xml">
             <form js_class="event_configurator_form">
-                <field name="has_available_tickets" invisible="1"/>
-                <field name="additional_product_ids" invisible="1"/>
+                <field name="has_available_tickets" invisible="1"/> <!-- drives invisible of the block, the group and 3 more -->
+                <field name="additional_product_ids" invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
                 <div invisible="has_available_tickets">
                     We could not find a matching event ticket for this product. <br/>
                     <a role="button" class="btn btn-link" target="_blank"
@@ -39,7 +39,7 @@
                         required="event_id"
                         context="{'name_with_seats_availability': True}"
                         options="{'no_open': True, 'no_create': True}"/>
-                    <field name="product_id" invisible="1"/>
+                    <field name="product_id" invisible="1"/> <!-- used in the domain of event_id, event_ticket_id -->
                 </group>
                 <footer>
                     <button string="Add" invisible="not has_available_tickets"
