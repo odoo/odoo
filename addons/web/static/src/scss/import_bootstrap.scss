@@ -20,6 +20,12 @@
 @import "root";
 @import "reboot";
 @import "type";
+// Rules that read Bootstrap's typography values at runtime (e.g. from CSS
+// variables) belong here: further down, they would also win over the later
+// components on elements that combine both (`.btn.h4`, `.navbar-brand.h1`).
+@if mixin-exists(o-after-bootstrap-type) {
+    @include o-after-bootstrap-type;
+}
 @import "images";
 @import "containers";
 @import "grid";
