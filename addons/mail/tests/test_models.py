@@ -1,13 +1,13 @@
 
 from odoo.tests.common import TransactionCase, tagged
 
+
 @tagged('post_install', '-at_install')
 class TestModel(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
         # We use an existing model and add monetary information
         partner_model = cls.env['ir.model']._get('res.partner')
         cls.env['ir.model.fields'].create({
@@ -26,10 +26,8 @@ class TestModel(TransactionCase):
         cls.env.company.currency_id = cls.env.ref('base.EUR').id
 
 
-
     def test_find_value_from_field_path_monetary(self):
         """ Check the format of the return in case of monetary value (Digits after comma """
-
         self.partner_eur = self.env['res.partner'].create({
             'name': 'EUR Partner',
             'x_currency_id': self.env.ref('base.EUR').id,
@@ -65,7 +63,7 @@ class TestModel(TransactionCase):
         """ Check an amount of 0 is correcly formated"""
         partner = self.env['res.partner'].create({
             'name': 'Partner Zero',
-            'x_currency_id': self.env.ref('base.LYD').id,  # 3 décimales
+            'x_currency_id': self.env.ref('base.LYD').id,  # 3 décimals
             'x_test_amount': 0.0,
         })
         res = partner._find_value_from_field_path('x_test_amount')

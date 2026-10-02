@@ -865,7 +865,7 @@ class Base(models.AbstractModel):
                 float_repr(float(value), precision_digits=(
                     record[last_field.currency_field].decimal_places)
                     if record[last_field.currency_field]
-                    else record.env.company.currency_id.decimal_places # Fallback to 2 if the currency_field is not define
+                    else record.env.company.currency_id.decimal_places  # Fallback to 2 if the currency_field is not define
                     )
                 for record, value in zip(last_model, field_value)
             )
