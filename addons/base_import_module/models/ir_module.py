@@ -419,6 +419,9 @@ class IrModuleModule(models.Model):
                 'records': modules_list[:(limit or 80)],
             }
         else:
+            domain = Domain(domain).map_conditions(
+                lambda c: Domain.OR([c, [('module_type', '=', False)]]) if c.field_expr == 'module_type' else c
+            ).optimize(self)
             return super().web_search_read(domain, specification, offset=offset, limit=limit, order=order, count_limit=count_limit)
 
     def more_info(self):
