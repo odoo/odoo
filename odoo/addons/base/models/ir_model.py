@@ -2669,11 +2669,21 @@ class IrModelData(models.Model):
         self = self.with_context({MODULE_UNINSTALL_FLAG: True})
         loaded_xmlids = self.pool.loaded_xmlids
 
-        query = """ SELECT id, module || '.' || name, model, res_id FROM ir_model_data
-                    WHERE module IN %s AND res_id IS NOT NULL AND COALESCE(noupdate, false) != %s ORDER BY id DESC
+        # imd_count counts every xid of the record, including those of modules not being updated
+        query = """ SELECT id, xmlid, model, res_id, imd_count FROM (
+                        SELECT id, module, module || '.' || name AS xmlid, model, res_id, noupdate,
+                               COUNT(*) OVER (PARTITION BY model, res_id) AS imd_count
+                        FROM ir_model_data
+                        WHERE (model, res_id) IN (
+                            SELECT model, res_id FROM ir_model_data WHERE module IN %(modules)s AND res_id IS NOT NULL
+                        )
+                    ) AS record_imd
+                    WHERE module IN %(modules)s AND noupdate IS NOT TRUE
+                    ORDER BY id DESC
                 """
-        self.env.cr.execute(query, (tuple(modules), True))
-        for (id, xmlid, model, res_id) in self.env.cr.fetchall():
+        self.env.cr.execute(query, {'modules': tuple(modules)})
+        record_imd_count = {}
+        for (id, xmlid, model, res_id, imd_count) in self.env.cr.fetchall():
             if xmlid in loaded_xmlids:
                 continue
 
@@ -2708,12 +2718,8 @@ class IrModelData(models.Model):
                 continue
 
             # if the record has other associated xids, only remove the xid
-            if self.search_count([
-                ("model", "=", model),
-                ("res_id", "=", res_id),
-                ("id", "!=", id),
-                ("id", "not in", bad_imd_ids),
-            ]):
+            if record_imd_count.setdefault((model, res_id), imd_count) > 1:
+                record_imd_count[model, res_id] -= 1
                 bad_imd_ids.append(id)
                 continue
 
