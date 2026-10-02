@@ -160,9 +160,7 @@
                                 <field name="partner_email_update" invisible="1"/> <!-- drives invisible of the oi text -->
                                 <field name="partner_phone_update" invisible="1"/> <!-- drives invisible of the oi text -->
                                 <!-- opportunity -->
-                                <field name="partner_is_blacklisted" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                                 <field name="date_conversion" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
-                                <field name="user_company_ids" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
 
                                 <field name="partner_id" widget="res_partner_many2one"
                                     invisible="type == 'opportunity'"
@@ -324,7 +322,6 @@
                         <button name="%(crm.crm_lead_lost_action)d" type="action" string="Mark Lost"/>
                     </header>
                     <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of partner_id, team_id, user_id -->
-                    <field name="user_company_ids" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="date_deadline" column_invisible="True"/> <!-- read by the forecast kanban renderer and the fill temporal service -->
                     <field name="phone_sanitized" column_invisible="1"/> <!-- read by the phone widget of phone for the tel: link -->
                     <field name="phone_formatted" column_invisible="1"/> <!-- read by the phone widget of phone for the displayed format -->
@@ -349,7 +346,6 @@
                     <field name="medium_id" optional="hide"/>
                     <field name="source_id" optional="show"/>
                     <field name="probability" string="Probability (%)" optional="hide"/>
-                    <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                     <field name="priority" optional="hide"/>
                 </list>
@@ -447,7 +443,6 @@
                         <field name="company_currency" invisible="1"/> <!-- currency_field option of the expected_revenue monetary widget -->
                         <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of partner_id, team_id, user_id -->
                         <field name="user_id" invisible="1"/> <!-- used in the context of partner_id -->
-                        <field name="user_company_ids" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                         <field name="team_id" invisible="1"/> <!-- used in the python-declared domain of stage_id -->
                         <field name="type" invisible="1"/> <!-- passed as res_partner_search_mode in the context of partner_id -->
                         <field name="partner_name" invisible="1"/> <!-- used in the context of partner_id -->
@@ -711,9 +706,7 @@
                         <button name="%(crm.action_lead_mass_mail)d" type="action" string="Email" />
                     </header>
                     <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of partner_id, team_id, user_id -->
-                    <field name="user_company_ids" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="date_deadline" column_invisible="True"/> <!-- read by the forecast kanban renderer and the fill temporal service -->
-                    <field name="activity_calendar_event_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="won_status" column_invisible="True"/> <!-- drives invisible of the Email button -->
                     <field name="phone_sanitized" column_invisible="1"/> <!-- read by the phone widget of phone for the tel: link -->
                     <field name="phone_formatted" column_invisible="1"/> <!-- read by the phone widget of phone for the displayed format -->
@@ -752,7 +745,6 @@
                     <field name="lost_reason_id" optional="hide"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                     <field name="referred" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
-                    <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="lead_properties"/>
                     <field name="is_rotting" column_invisible="True"/> <!-- read by the rotting widget of stage_id -->
                     <field name="rotting_days" column_invisible="True"/> <!-- read by the rotting widget of stage_id -->

@@ -49,7 +49,6 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="background_image" widget="image" class="oe_avatar" filename="background_image_filename"/>
-                    <field name="allowed_survey_types" invisible="True"/> <!-- kept loaded for record data though not shown in this form -->
                     <field name="survey_type" widget="badges_selection" nolabel="1" class="w-auto mb-3"
                         options="{
                             'allowed_selection_field': 'allowed_survey_types',
@@ -74,7 +73,6 @@
                                 string="Background" options="{'use_replace_button': True}"/>
                             <field name="background_image_filename" invisible="1"/> <!-- filename of the background_image binary widget -->
                             <field name="active" invisible="1"/> <!-- drives invisible of the action_send_survey button, the action_start_session button and 4 more -->
-                            <field name="has_conditional_questions" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                         </group>
                         <group>
                             <field name="restrict_user_ids" widget="many2many_tags_avatar" string="Shared with"/>

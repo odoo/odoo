@@ -25,7 +25,6 @@
                        decoration-success="state == 'done'"
                        decoration-muted="state == 'cancel'" widget="badge"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide" readonly="state != 'draft'"/>
-                <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <button name="action_confirm" string="Registered" type="object" icon="check"
                         invisible="not active or state != 'draft'"/>
                 <button name="action_attend_event" string="Mark as Attending" type="object" icon="subdirectory_arrow_right"
