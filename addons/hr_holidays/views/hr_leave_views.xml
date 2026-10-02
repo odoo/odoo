@@ -390,11 +390,11 @@
                     <div class="o_hr_leave_column col_left col-md-6 col-12">
                         <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
                             <group name="col_left" class="m-0" col="1">
-                                <div class="d-flex gap-2">
-                                    <i class="oi oi-lg align-self-center" data-icon="label" title="Time Off Type" name="work_entry_type_id"/>
-                                    <label for="work_entry_type_id" string="Time Type"/>
-                                </div>
-                                <div>
+                                <div class="o_hr_leave_row d-flex d-sm-contents gap-2">
+                                    <div class="d-flex gap-2">
+                                        <i class="oi oi-lg" data-icon="label" title="Time Off Type" name="work_entry_type_id"/>
+                                        <label for="work_entry_type_id" string="Time Type"/>
+                                    </div>
                                     <field name="work_entry_type_id" force_save="1" default_focus="1"
                                         widget="many2one_work_entry_type"
                                         domain="[
@@ -416,71 +416,73 @@
                                         placeholder="eg. Sickness, Paid time off, Unpaid, ..."
                                     />
                                 </div>
-                                <div class="d-flex gap-2">
-                                    <i class="oi oi-lg align-self-center" data-icon="schedule" title="Dates" name="date"/>
-                                    <label for="request_date_from" string="Dates"/>
+                                <div class="o_hr_leave_row d-flex d-sm-contents align-items-baseline gap-2">
+                                    <div class="d-flex gap-2">
+                                        <i class="oi oi-lg" data-icon="schedule" title="Dates" name="date"/>
+                                        <label for="request_date_from" string="Dates"/>
+                                    </div>
+                                    <div>
+                                        <div id="full_date" invisible="work_entry_type_request_unit == 'hour'" class="mb-2">
+                                            <field name="request_date_from"
+                                                   widget="daterange"
+                                                   readonly="state != 'confirm'"
+                                                   required="not date_from or not date_to"
+                                                   options="{'end_date_field': 'request_date_to', 'always_range': True}"
+                                            />
+                                            <field name="request_date_to" invisible="1"/>
+                                        </div>
+                                        <div invisible="work_entry_type_request_unit != 'hour'">
+                                            <field name="request_date_hour_from"
+                                                   widget="daterange"
+                                                   readonly="state != 'confirm'"
+                                                   required="1"
+                                                   options="{'end_date_field': 'request_date_hour_to', 'always_range': True}"
+                                            />
+                                            <field name="request_date_hour_to" invisible="1"/>
+                                            <!-- Needed for the onchange -->
+                                            <field name="request_hour_from" invisible="1"/>
+                                            <field name="request_hour_to" invisible="1"/>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2" invisible="work_entry_type_request_unit != 'half_day' or not last_several_days">
+                                            <field name="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
+                                            <i class="oi" data-icon="east" aria-label="to" title="To"/>
+                                            <field name="request_date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
+                                        </div>
+                                        <field name="is_time_rule_trimmed" invisible="1"/>
+                                        <!-- trimmed source / output: show exact time range set by the rule engine -->
+                                        <field name="time_rule_time_range" nolabel="1" readonly="1" class="text-muted"
+                                               invisible="not time_rule_time_range"/>
+                                        <div class="d-flex gap-2" invisible="work_entry_type_request_unit == 'half_day' and not last_several_days">
+                                            <field name="number_of_hours" widget="float_time" nolabel="1"
+                                                   readonly="state != 'confirm' or work_entry_type_request_unit != 'hour'"
+                                                   invisible="work_entry_type_request_unit != 'hour'"/>
+                                            <field name="number_of_days" readonly="1" nolabel="1"
+                                                   invisible="work_entry_type_request_unit == 'hour'"
+                                                   class="text-muted w-auto"/>
+                                            <span class="text-muted text-nowrap" invisible="work_entry_type_request_unit == 'hour'">day(s)</span>
+                                        </div>
+                                        <div invisible="work_entry_type_request_unit != 'half_day' or last_several_days">
+                                            <field name="work_entry_type_request_unit" invisible="1"/> <!-- Needed -->
+                                            <field name="last_several_days" invisible="1"/> <!-- Needed -->
+                                            <field name="allowed_request_durations" invisible="1"/> <!-- Needed -->
+                                            <field name="request_duration"
+                                                   readonly="state != 'confirm'"
+                                                   widget="selection_badge_with_filter"
+                                                   options="{'allowed_selection_field': 'allowed_request_durations'}"
+                                                   nolabel="1"
+                                                   required="1"
+                                            />
+                                        </div>
+                                        <div invisible="not allocation_display_warning">
+                                              <field class="text-danger fw-bold" name="allocation_display_warning" nolabel="1"/>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div id="full_date" invisible="work_entry_type_request_unit == 'hour'">
-                                        <field name="request_date_from"
-                                               widget="daterange"
-                                               readonly="state != 'confirm'"
-                                               required="not date_from or not date_to"
-                                               options="{'end_date_field': 'request_date_to', 'always_range': True}"
-                                        />
-                                        <field name="request_date_to" invisible="1"/>
+                                <div class="o_hr_leave_row d-flex d-sm-contents gap-2">
+                                    <div class="d-flex align-self-start gap-2">
+                                        <i class="oi oi-lg oi-filled align-self-start" data-icon="edit" title="Description" name="name"/>
+                                        <label for="name" string="Description"/>
                                     </div>
-                                    <div invisible="work_entry_type_request_unit != 'hour'">
-                                        <field name="request_date_hour_from"
-                                               widget="daterange"
-                                               readonly="state != 'confirm'"
-                                               required="1"
-                                               options="{'end_date_field': 'request_date_hour_to', 'always_range': True}"
-                                        />
-                                        <field name="request_date_hour_to" invisible="1"/>
-                                        <!-- Needed for the onchange -->
-                                        <field name="request_hour_from" invisible="1"/>
-                                        <field name="request_hour_to" invisible="1"/>
-                                    </div>
-                                    <div class="d-flex gap-2" invisible="work_entry_type_request_unit != 'half_day' or not last_several_days">
-                                        <field name="request_date_from_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
-                                        <i class="oi" data-icon="east" aria-label="to" title="To"/>
-                                        <field name="request_date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
-                                    </div>
-                                    <field name="is_time_rule_trimmed" invisible="1"/>
-                                    <!-- trimmed source / output: show exact time range set by the rule engine -->
-                                    <field name="time_rule_time_range" nolabel="1" readonly="1" class="text-muted"
-                                           invisible="not time_rule_time_range"/>
-                                    <div class="d-flex gap-2" invisible="work_entry_type_request_unit == 'half_day' and not last_several_days">
-                                        <field name="number_of_hours" widget="float_time" nolabel="1"
-                                               readonly="state != 'confirm' or work_entry_type_request_unit != 'hour'"
-                                               invisible="work_entry_type_request_unit != 'hour'"/>
-                                        <field name="number_of_days" readonly="1" nolabel="1"
-                                               invisible="work_entry_type_request_unit == 'hour'"
-                                               class="text-muted w-auto"/>
-                                        <span class="text-muted text-nowrap" invisible="work_entry_type_request_unit == 'hour'">day(s)</span>
-                                    </div>
-                                    <div invisible="work_entry_type_request_unit != 'half_day' or last_several_days">
-                                        <field name="work_entry_type_request_unit" invisible="1"/> <!-- Needed -->
-                                        <field name="last_several_days" invisible="1"/> <!-- Needed -->
-                                        <field name="allowed_request_durations" invisible="1"/> <!-- Needed -->
-                                        <field name="request_duration"
-                                               readonly="state != 'confirm'"
-                                               widget="selection_badge_with_filter"
-                                               options="{'allowed_selection_field': 'allowed_request_durations'}"
-                                               nolabel="1"
-                                               required="1"
-                                        />
-                                    </div>
-                                    <div invisible="not allocation_display_warning">
-                                          <field class="text-danger fw-bold" name="allocation_display_warning" nolabel="1"/>
-                                    </div>
-                                </div>
-                                <div class="d-flex gap-2">
-                                    <i class="oi oi-lg oi-filled align-self-center" data-icon="edit" title="Description" name="name"/>
-                                    <label for="name" string="Description"/>
-                                </div>
-                                <div>
                                     <field name="name"
                                            readonly="state != 'confirm'"
                                            widget="text"
@@ -582,10 +584,8 @@
         <field name="priority">17</field>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='col_left']/*[1]" position="before">
-                <div class="d-flex gap-2">
-                    <i class="oi oi-lg oi-filled align-self-center" data-icon="person" title="Employee" name="employee_id"/>
-                </div>
-                <div>
+                <div class="o_hr_leave_row d-flex d-sm-contents gap-2">
+                    <i class="oi oi-lg oi-filled" data-icon="person" title="Employee" name="employee_id"/>
                     <field name="employee_id" groups="hr_holidays.group_hr_holidays_responsible"
                         readonly="state != 'confirm'" widget="many2one_avatar_employee"/>
                 </div>
@@ -710,11 +710,11 @@
         <field name="arch" type="xml">
             <xpath expr="//form/field[@name='employee_id']" position="replace"/> <!--to focus on selected employee-->
             <xpath expr="//group[@name='col_left']/*[1]" position="before">
-                <div class="d-flex gap-2">
-                    <i class="oi oi-lg oi-filled align-self-center" data-icon="person" title="Employee" name="employee_id"/>
-                    <label for="employee_id" string="Employee"/>
-                </div>
-                <div>
+                <div class="o_hr_leave_row d-flex d-sm-contents gap-2">
+                    <div class="d-flex gap-2">
+                        <i class="oi oi-lg oi-filled" data-icon="person" title="Employee" name="employee_id"/>
+                        <label for="employee_id" string="Employee"/>
+                    </div>
                     <field name="employee_id" groups="hr_holidays.group_hr_holidays_responsible" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_employee" nolabel="1"/>
                 </div>
             </xpath>
