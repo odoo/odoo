@@ -19,7 +19,7 @@ const CAPTION_SPAN_SELECTOR = "span.o_caption_editable";
 
 export class CaptionPlugin extends Plugin {
     static id = "caption";
-    static dependencies = ["image", "split", "history", "selection", "baseContainer", "clipboard"];
+    static dependencies = ["image", "split", "history", "selection", "baseContainer", "dom"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -88,10 +88,7 @@ export class CaptionPlugin extends Plugin {
                 return DISABLED_NAMESPACE;
             }
         }),
-        html_drop_overrides: this.onDrop.bind(this),
-        paste_text_overrides: this.onPaste.bind(this),
-        paste_html_overrides: this.onPaste.bind(this),
-        paste_odoo_editor_html_overrides: this.onPaste.bind(this),
+        plain_text_container_selectors: CAPTION_SPAN_SELECTOR,
         normalize_processors: (root) => {
             let figures = [];
             if (root.matches(CAPTION_SPAN_SELECTOR)) {
@@ -150,21 +147,6 @@ export class CaptionPlugin extends Plugin {
             figure.remove();
             this.addImageCaption(image, caption, false);
             this.dependencies.history.commit();
-        }
-    }
-
-    onDrop(selection, text) {
-        if (closestElement(selection.anchorNode, CAPTION_SPAN_SELECTOR)) {
-            this.dependencies.clipboard.pasteText(text.replace(/\r?\n|\r/g, ""));
-            return true;
-        }
-    }
-
-    onPaste(selection, clipboardRoot) {
-        if (closestElement(selection.anchorNode, CAPTION_SPAN_SELECTOR)) {
-            const pastedTextContent = clipboardRoot.textContent;
-            this.dependencies.clipboard.pasteText(pastedTextContent.replace(/\r?\n|\r/g, ""));
-            return true;
         }
     }
 
