@@ -1083,17 +1083,16 @@ class IrQweb(models.AbstractModel):
             return {'not_found_template': not_found_template}, 'not_found_template', frozendict(options), ''
 
         wrap_code = '\n'.join([
-            "def generate_functions():",
+            "def generate_functions(code):",
             indent_code(code, 1),
-            f"    code = {code!r}",
-            "    return template_functions, code",
+            "    return template_functions",
         ])
         compiled = compile(wrap_code, f"<{ref}>", 'exec')
         globals_dict = self.__prepare_globals()
         globals_dict['__builtins__'] = globals_dict  # So that unknown/unsafe builtins are never added.
         unsafe_eval(compiled, globals_dict)
 
-        template_functions, code = globals_dict['generate_functions']()
+        template_functions = globals_dict['generate_functions'](code)
         return template_functions, def_name, frozendict(options), code
 
     def _generate_code(self, template: int | str | etree._Element):
@@ -1202,7 +1201,6 @@ class IrQweb(models.AbstractModel):
         code_lines = []
         json_options = json.scriptsafe.loads(json.scriptsafe.dumps(options, default=str))
         code_lines.append(f'template_options = {pprint.pformat(json_options, indent=4)}')
-        code_lines.append('code = None')
         code_lines.append('template_functions = {}')
 
         for lines in compile_context['template_functions'].values():
