@@ -797,7 +797,8 @@ class AccountMoveLine(models.Model):
                 if len(previous_two_accounts) == 1 and len(line.move_id.line_ids) > 2:
                     line.account_id = previous_two_accounts
                 else:
-                    line.account_id = line.move_id.journal_id.default_account_id
+                    base_account = line.move_id.journal_id.default_account_id
+                    line.account_id = line.move_id.fiscal_position_id.map_account(base_account)
 
     @api.model
     def _search_account_id(self, operator, value):
@@ -2076,8 +2077,11 @@ class AccountMoveLine(models.Model):
             defaults['account_id'] = quick_encode_suggestion['account_id']
             defaults['price_unit'] = quick_encode_suggestion['price_unit']
             defaults['tax_ids'] = [Command.set(quick_encode_suggestion['tax_ids'])]
-        elif (journal := self.env['account.journal'].browse(self.env.context.get('journal_id'))) and journal.default_account_id:
-            defaults['account_id'] = journal.default_account_id
+        elif (
+            (journal := self.env['account.journal'].browse(self.env.context.get('journal_id')))
+            and journal.type not in ('sale', 'purchase')
+            and journal.default_account_id):
+            defaults['account_id'] = journal.default_account_id.id
         return defaults
 
     def _sanitize_vals(self, vals):
@@ -3397,6 +3401,13 @@ class AccountMoveLine(models.Model):
                 exchange_account_per_move.get(line.move_id)
                 or self._get_exchange_account(company, amount_residual_to_fix).id
             )
+
+            fiscal_position = line.move_id.fiscal_position_id
+            if fiscal_position:
+                original_account = self.env['account.account'].browse(exchange_line_account_id)
+                mapped_account = fiscal_position.map_account(original_account)
+                if mapped_account:
+                    exchange_line_account_id = mapped_account.id
 
             sequence = len(move_vals['line_ids'])
             line_vals = [
