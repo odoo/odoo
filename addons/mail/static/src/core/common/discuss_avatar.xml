@@ -2,6 +2,9 @@
 <templates xml:space="preserve">
     <t t-name="mail.DiscussAvatar">
         <svg t-att-width="this.props.size" t-att-height="this.props.size" viewBox="0 0 32 32" class="o-mail-DiscussAvatar overflow-visible" t-attf-class="{{ this.props.className }}" t-att-class="{ 'o-isBrowserSafari': this.isBrowserSafari() }">
+            <t t-set="cutoutX" t-value="this.isTyping ? 14 : 19"/>
+            <t t-set="cutoutWidth" t-value="this.isTyping ? 24 : 16"/>
+            <t t-set="rtlShiftX" t-value="this.isRtl ? 32 - 2 * cutoutX - cutoutWidth : 0"/> <!-- mirror the cutout to the bottom-left corner -->
             <mask t-att-id="this.uniqueId" width="1000" height="1000">
                 <rect x="0" y="0" height="100%" width="100%" fill="white"/>
                 <t t-if="this.showIconMask">
@@ -16,15 +19,15 @@
                                 </defs>
                             </svg>
                         </Portal>
-                        <use t-att-href="'#' + this.uniqueId + '.imStatus'" t-att-transform="'translate(21, 20) ' + (this.props.iconExtraTransform ?? '')"/>
+                        <use t-att-href="'#' + this.uniqueId + '.imStatus'" t-attf-transform="translate({{21 + rtlShiftX}}, 20) {{this.props.iconExtraTransform ?? ''}}"/>
                     </t>
-                    <rect t-else="" fill="black" x="0" y="0" t-att-width="this.isTyping ? 24 : 16" t-att-height="this.isTyping ? 15 : 16" rx="8" ry="8" t-att-transform="'translate(' + (this.isTyping ? 14 : 19) + ', 19) ' + (this.props.iconExtraTransform ?? '')"/>
+                    <rect t-else="" fill="black" x="0" y="0" t-att-width="cutoutWidth" t-att-height="this.isTyping ? 15 : 16" rx="8" ry="8" t-attf-transform="translate({{cutoutX + rtlShiftX}}, 19) {{this.props.iconExtraTransform ?? ''}}"/>
                 </t>
             </mask>
             <foreignObject x="0" y="0" width="32" height="32" t-att-mask="'url(#' + this.uniqueId + ')'">
                 <t t-call="mail.DiscussAvatar.avatarImg"/> <!-- FIXME: owl doesn't like and load immediate <img> below <foreignObject>, hence t-call shenanigans -->
             </foreignObject>
-            <g t-if="this.showIcon" t-att-transform="'translate(' + (this.isTyping ? 16 : 21) + ', 20) ' + (this.props.iconExtraTransform ?? '')">
+            <g t-if="this.showIcon" t-attf-transform="translate({{(this.isTyping ? 16 : 21) + rtlShiftX}}, 20) {{this.props.iconExtraTransform ?? ''}}">
                 <svg width="25" height="15" viewBox="0 0 25 15">
                     <foreignObject x="0" y="0" width="25" height="15">
                         <ThreadIcon t-if="this.thread" thread="this.thread" typing="this.props.typing"/>
