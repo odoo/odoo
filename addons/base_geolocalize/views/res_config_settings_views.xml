@@ -10,7 +10,7 @@
                     class="content-group"
                     invisible="not module_base_geolocalize">
                     Provider <field name="geoloc_provider_id" class="ms-2" options="{'no_open': True}"/>
-                    <field name="geoloc_provider_techname" invisible="1"/>
+                    <field name="geoloc_provider_techname" invisible="1"/> <!-- drives invisible of the Google Maps API key block -->
                     <div invisible="geoloc_provider_techname != 'googlemap'">
                         Key <field name='geoloc_provider_googlemap_key'/>
                     </div>
