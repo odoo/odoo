@@ -59,7 +59,7 @@
                             <div class="o_employee_avatar ms-2 p-0 h-100">
                                 <field name="hr_icon_display" invisible="not show_hr_icon_display or not id or not active" widget="hr_presence_status"/>
                                 <field name="image_1920" widget="image" class="m-0" options="{'size': [140,140], 'zoom': true, 'preview_image':'avatar_128', 'img_class': 'border rounded h-100 object-fit-contain'}"/>
-                                <field name="show_hr_icon_display" invisible="1" />
+                                <field name="show_hr_icon_display" invisible="1" /> <!-- drives invisible of hr_icon_display -->
                             </div>
                             <group class="d-flex flex-column gap-md-0 w-100">
                                 <label for="name" class="d-md-none"/>
@@ -75,15 +75,15 @@
                                 <label for="work_phone" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
                                     <i class="oi oi-filled d-none d-md-block" data-icon="phone" title="Work Phone" invisible="not work_phone"/>
-                                    <field name="work_phone_sanitized" invisible="1"/>
-                                    <field name="work_phone_formatted" invisible="1"/>
+                                    <field name="work_phone_sanitized" invisible="1"/> <!-- read by the phone widget of work_phone for the tel: link -->
+                                    <field name="work_phone_formatted" invisible="1"/> <!-- read by the phone widget of work_phone for the displayed format -->
                                     <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
                                 </div>
                                 <label for="mobile_phone" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
                                     <i class="oi d-none d-md-block" data-icon="smartphone" title="Work Mobile" invisible="not mobile_phone"/>
-                                    <field name="mobile_phone_sanitized" invisible="1"/>
-                                    <field name="mobile_phone_formatted" invisible="1"/>
+                                    <field name="mobile_phone_sanitized" invisible="1"/> <!-- read by the phone widget of mobile_phone for the tel: link -->
+                                    <field name="mobile_phone_formatted" invisible="1"/> <!-- read by the phone widget of mobile_phone for the displayed format -->
                                     <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
                                 </div>
                             </group>
@@ -97,7 +97,7 @@
                                             <field name="company_id" groups="base.group_multi_company"/>
                                             <field name="department_id"/>
                                             <field name="job_title" string="Job Title"/>
-                                            <field name="job_id" string="Job Position" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager" invisible="1"/>
+                                            <field name="job_id" string="Job Position" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                                             <field name="parent_id" widget="many2one_avatar_employee"/>
                                         </group>
                                         <group string="Location" name="location">
@@ -150,8 +150,8 @@
             <field name="arch" type="xml">
                 <list string="Employees" sample="1" expand="context.get('expand', False)">
                     <field name="name"/>
-                    <field name="work_phone_sanitized" column_invisible="1"/>
-                    <field name="work_phone_formatted" column_invisible="1"/>
+                    <field name="work_phone_sanitized" column_invisible="1"/> <!-- read by the phone widget of work_phone for the tel: link -->
+                    <field name="work_phone_formatted" column_invisible="1"/> <!-- read by the phone widget of work_phone for the displayed format -->
                     <field name="work_phone" widget="phone" class="o_force_ltr"/>
                     <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
