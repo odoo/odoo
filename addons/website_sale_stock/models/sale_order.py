@@ -64,6 +64,13 @@ class SaleOrder(models.Model):
             if address:
                 self.partner_shipping_id = address
 
+    def _get_checkout_delivery_address(self):
+        """Override of `website_sale` to select the customer address instead of the pickup
+        location, which is not listed among the delivery addresses."""
+        if self.partner_shipping_id.pickup_delivery_method_id:
+            return self.partner_shipping_id.parent_id
+        return super()._get_checkout_delivery_address()
+
     def _get_shop_warehouse_id(self):
         """Return the warehouse to use for shop availability checks.
 
