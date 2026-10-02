@@ -37,7 +37,6 @@ export function useBuilderSelect(props) {
     let currentLabel = _t("None");
 
     const dropdown = useDropdownState();
-    useVisibilityObserver(contentRef, useApplyVisibility(rootRef), { isBuilderSelect: true });
 
     const updateCurrentLabel = () => {
         if (!props.slots.fixedButton) {
@@ -84,17 +83,23 @@ export class WithIgnoreItem extends Component {
     }
 }
 
+export const builderSelectComponents = {
+    Dropdown,
+    BuilderComponent,
+    WithIgnoreItem,
+};
+
 export class BuilderSelect extends Component {
-    static components = {
-        Dropdown,
-        BuilderComponent,
-        WithIgnoreItem,
-    };
+    static components = builderSelectComponents;
     static template = "html_builder.BuilderSelect";
 
     props = useProps(builderSelectProps);
 
     setup() {
-        Object.assign(this, useBuilderSelect(this.props));
+        const { builderSelectLabel, buttonRef, contentRef, dropdown, rootRef } = useBuilderSelect(
+            this.props
+        );
+        Object.assign(this, { builderSelectLabel, buttonRef, contentRef, dropdown, rootRef });
+        useVisibilityObserver(this.contentRef, useApplyVisibility(this.rootRef));
     }
 }

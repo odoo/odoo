@@ -1020,37 +1020,6 @@ function handleBuilderActionError(error, env, editingElement) {
 }
 
 /**
- * Handles inputs that set custom values when selectable items are used.
- *
- * @param {[Object]} [actions] The input actions to clean.
- */
-export function useSelectionCustomInputContext(actions) {
-    const env = useEnv();
-    const getAction = env.editor.shared.builderActions.getAction;
-
-    function customInputClean(isPreviewing) {
-        const proms = [];
-        for (const action of actions) {
-            for (const editingElement of env.getEditingElements()) {
-                proms.push(
-                    getAction(action.actionId).clean?.({
-                        isPreviewing,
-                        editingElement,
-                        params: convertParamToObject(action.actionParam),
-                        dependencyManager: env.dependencyManager,
-                    })
-                );
-            }
-        }
-        return Promise.all(proms);
-    }
-
-    useSubEnv({
-        selectionCustomInputContext: { customInputClean },
-    });
-}
-
-/**
  * @param {DefaultBuilderProps} props
  * @param {{
  *  defaultValue?: any;

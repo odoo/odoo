@@ -1,16 +1,13 @@
-import { WithIgnoreItem, builderSelectProps, useBuilderSelect } from "./builder_select";
+import { builderSelectProps, useBuilderSelect, builderSelectComponents } from "./builder_select";
 import { BuilderNumberInput, builderNumberInputProps } from "./builder_number_input";
-import { Component, useProps, t, onMounted, proxy } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { BuilderComponent } from "./builder_component";
+import { Component, useProps, t, onMounted, signal } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
-import { useSelectionCustomInputContext } from "../utils";
+import { convertParamToObject } from "../utils";
+import { useEnv, useSubEnv } from "@web/owl2/utils";
 
 export class BuilderNumberSelect extends Component {
     static components = {
-        Dropdown,
-        BuilderComponent,
-        WithIgnoreItem,
+        ...builderSelectComponents,
         BuilderNumberInput,
     };
     static template = "html_builder.BuilderNumberSelect";
@@ -26,70 +23,92 @@ export class BuilderNumberSelect extends Component {
     });
 
     setup() {
-        this.state = proxy({
-            disableOptions: true,
-            customMode: false,
-        });
+        this.customMode = signal(false);
         this.autofocusInput = false;
         const { builderSelectLabel, buttonRef, contentRef, dropdown, rootRef } = useBuilderSelect(
             this.props
         );
         Object.assign(this, { builderSelectLabel, buttonRef, contentRef, dropdown, rootRef });
-        this.getSelectableState = this.env.selectableContext?.getSelectableState;
+        this.getSelectableState = this.env.selectableContext.getSelectableState;
 
-        useSelectionCustomInputContext([
-            {
-                actionId: this.numberInputProps.inputAction,
-                actionParam: this.numberInputProps.inputActionParam,
-            },
-        ]);
+        const env = useEnv();
+        const getAction = env.editor.shared.builderActions.getAction;
+
+        const numberInputProps = this.numberInputProps;
+        function customInputClean(isPreviewing) {
+            const { inputAction, inputActionParam } = numberInputProps;
+            if (!inputAction) {
+                return;
+            }
+            const action = getAction(inputAction);
+            const proms = [];
+            for (const editingElement of env.getEditingElements()) {
+                proms.push(
+                    action.clean?.({
+                        isPreviewing,
+                        editingElement,
+                        params: convertParamToObject(inputActionParam),
+                        dependencyManager: env.dependencyManager,
+                    })
+                );
+            }
+            return Promise.all(proms);
+        }
+
+        useSubEnv({
+            selectionCustomInputContext: { customInputClean },
+        });
+
+        // Avoid opening an empty menu.
+        const defaultOpen = this.dropdown.open.bind(this.dropdown);
+        this.dropdown.open = () => {
+            if (this.contentRef()?.querySelector(".o-hb-select-dropdown-item")) {
+                defaultOpen();
+            }
+        };
+
         // To prevent the dropdown from closing in certain situations (e.g.
-        // clicking on the "custom value" input should keep the selection
-        // items available), we need to patch the default close behavior.
+        // clicking on the "custom value" input should keep the selection items
+        // available), we need to patch the default close behavior.
         const defaultClose = this.dropdown.close.bind(this.dropdown);
         this.dropdown.close = () => {
-            if (!this.inputIsClosingDropdown) {
+            if (!this.preventCloseOnInputClick) {
                 // Clicking away with a selected option in "custom mode" should
                 // show the selection label again instead of the custom input.
-                if (this.state.customMode && this.isSelectableItemEnabled()) {
-                    this.setCustomMode(false);
+                if (this.customMode() && this.isSelectableItemEnabled()) {
+                    this.customMode.set(false);
                 }
                 defaultClose();
             }
-            this.inputIsClosingDropdown = false;
+            this.preventCloseOnInputClick = false;
         };
 
         onMounted(() => {
-            this.state.disableOptions = !this.env.selectableContext.items.length;
-            this.setCustomMode(!this.isSelectableItemEnabled());
+            // Wait for child select items to register so the applied preset is
+            // known.
+            this.customMode.set(!this.isSelectableItemEnabled());
         });
 
         useBus(this.env.editorBus, "DOM_UPDATED", () => {
-            this.setCustomMode(!this.isSelectableItemEnabled());
+            this.customMode.set(!this.isSelectableItemEnabled());
         });
     }
 
     onInputClick() {
-        if (!this.state.disableOptions) {
-            this.inputIsClosingDropdown = this.dropdown.isOpen;
+        if (this.dropdown.isOpen) {
+            this.preventCloseOnInputClick = true;
         }
     }
 
-    onSelectClick() {
+    onLabelClick() {
         if (!this.autofocusInput) {
             this.autofocusInput = true;
         }
-        this.setCustomMode(true);
+        this.customMode.set(true);
     }
 
     isSelectableItemEnabled() {
-        // The correct `currentSelectedItem` value is available during the
-        // onMounted call (see `useSelectableComponent` > `refreshCurrentItem`).
         return this.getSelectableState().currentSelectedItem?.isApplied();
-    }
-
-    setCustomMode(active) {
-        this.state.customMode = active;
     }
 
     get currentLabel() {
