@@ -9,6 +9,16 @@
 // content of the "bootstrap.scss" files but do not import functions, variables
 // and mixins which will be handled "by hand" in _assets_helpers.
 
+// Rules that read the values of a part of Bootstrap at runtime (e.g. from CSS
+// variables) belong right after it: further down, they would also win over
+// the later components on elements that combine both (`.btn.h4`,
+// `.navbar-brand.h1`). A module defines `o-after-bootstrap($part)` for that.
+@mixin o-bootstrap-hook($part) {
+    @if mixin-exists(o-after-bootstrap) {
+        @include o-after-bootstrap($part);
+    }
+}
+
 // scss-docs-start import-stack
 // Configuration
 // @import "functions";
@@ -20,17 +30,13 @@
 @import "root";
 @import "reboot";
 @import "type";
-// Rules that read Bootstrap's typography values at runtime (e.g. from CSS
-// variables) belong here: further down, they would also win over the later
-// components on elements that combine both (`.btn.h4`, `.navbar-brand.h1`).
-@if mixin-exists(o-after-bootstrap-type) {
-    @include o-after-bootstrap-type;
-}
+@include o-bootstrap-hook(type);
 @import "images";
 @import "containers";
 @import "grid";
 @import "tables";
 @import "forms";
+@include o-bootstrap-hook(forms);
 
 // Small hack in bootstrap (see bootstrap_review.scss): prevent it to generate
 // primary, secondary, and other color/outline classes by itself to be able to

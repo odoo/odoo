@@ -83,6 +83,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             CustomizeWebsiteVariableAction,
             PreviewWebsiteVariableAction,
             CustomizeWebsiteSubVariablesAction,
+            PreviewWebsiteSubVariablesAction,
             CustomizeWebsiteColorAction,
             SwitchThemeAction,
             AddLanguageAction,
@@ -260,8 +261,8 @@ export class CustomizeWebsitePlugin extends Plugin {
      * CSS read it. Only works for the variables the compiled CSS reads through
      * `var()`. The SCSS customization is only written on save.
      *
-     * A reset (empty value) removes the override: the last saved value shows
-     * until save.
+     * A reset (empty value, or `nullValue`) removes the override: the last
+     * saved value shows until save.
      *
      * @param {Object<string, string>} variables
      * @param {string} [nullValue="null"]
@@ -277,7 +278,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 pending: this.pendingVariables[name],
                 inline: style.getPropertyValue(`--${PRINTED_NAMES[name] || name}`),
             };
-            const value = variables[name];
+            const value = variables[name] === nullValue ? "" : variables[name];
             step.next[name] = {
                 pending: name in variables ? value || nullValue : this.pendingVariables[name],
                 inline: previewValues[name] ?? (value || ""),
@@ -1125,10 +1126,13 @@ export class CustomizeWebsiteSubVariablesAction extends CustomizeWebsiteVariable
         const currentValue = this._subVariablesValue([variable, ...subVariables]);
         return currentValue;
     }
-    async apply({
-        params: { mainParam: variable, nullValue = "null", subVariablesConfig = {} },
-        value,
-    }) {
+    async apply({ params, value }) {
+        await this.dependencies.customizeWebsite.customizeWebsiteVariables(
+            this.getVariablesToUpdate(params, value),
+            params.nullValue
+        );
+    }
+    getVariablesToUpdate({ mainParam: variable, nullValue = "null", subVariablesConfig = {} }, value) {
         // 1. A single variable with potential sub-variables: update all.
         const variablesToUpdate = [variable, ...(subVariablesConfig[variable] || [])].map(
             (name) => [name, value]
@@ -1144,10 +1148,7 @@ export class CustomizeWebsiteSubVariablesAction extends CustomizeWebsiteVariable
                 this._subVariablesValue(otherSubVariables) === value ? value : nullValue,
             ]);
         }
-        await this.dependencies.customizeWebsite.customizeWebsiteVariables(
-            Object.fromEntries(variablesToUpdate),
-            nullValue
-        );
+        return Object.fromEntries(variablesToUpdate);
     }
     /**
      * Returns the shared value of a list of CSS variables, or `null`
@@ -1163,6 +1164,29 @@ export class CustomizeWebsiteSubVariablesAction extends CustomizeWebsiteVariable
             return values[0];
         }
         return null;
+    }
+}
+
+export class PreviewWebsiteSubVariablesAction extends CustomizeWebsiteSubVariablesAction {
+    static id = "previewWebsiteSubVariables";
+    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
+    setup() {}
+    apply({ params, value }) {
+        const { nullValue = "null", subVariablesConfig = {} } = params;
+        const variables = this.getVariablesToUpdate(params, value);
+        const previewValues = {};
+        // A sub-variable set apart only applies on save (the compiled CSS has
+        // no rule for it before): meanwhile, the global value stays as shown.
+        const globalVariable = Object.keys(subVariablesConfig)[0];
+        if (variables[globalVariable] === nullValue) {
+            previewValues[globalVariable] =
+                this.dependencies.customizeWebsite.getWebsiteVariableValue(globalVariable);
+        }
+        this.dependencies.customizeWebsite.previewWebsiteVariables(
+            variables,
+            nullValue,
+            previewValues
+        );
     }
 }
 

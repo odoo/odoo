@@ -81,12 +81,14 @@ test("theme tab: an emptied value removes the preview and is reset on save", asy
 // Each value changes the page at once: the compiled CSS reads it from its
 // variable. `expand` is the row that holds `option` in its collapse (its
 // option, or a selector). `select` is the row of a select, where `value` is
-// picked. Font sizes stay at most 20px, where Bootstrap's rfs doesn't make
+// picked; `input`, the input to edit when it isn't found by its option. Font sizes stay at most 20px, where Bootstrap's rfs doesn't make
 // them fluid; the line height probes have a fixed font size. The fonts are the
 // system ones, which load nothing.
 const PARAGRAPH = "[data-container-title='Paragraph']";
 const HEADINGS = "[data-container-title='Headings']";
 const BUTTONS = "[data-container-title='Button']";
+const INPUTS = "[data-container-title='Input Fields']";
+const INPUT = ".form-control:not(.form-control-sm, .form-control-lg)";
 const SYSTEM_FONTS =
     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Noto Sans", Arial, "Odoo Unicode Support Noto", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
 // prettier-ignore
@@ -122,9 +124,18 @@ const PREVIEWED_VALUES = [
     { option: "btn-border-radius-lg", value: "20", expand: "btn-border-radius", element: ".btn-lg", property: "border-top-left-radius", expected: "20px" },
     { option: "buttons-font", value: "'SYSTEM_FONTS'", select: `${BUTTONS} [data-label='Font Family']`, element: ".btn:not(.btn-lg, .btn-sm)", property: "font-family", expected: SYSTEM_FONTS },
     { option: "btn-font-weight", value: "300", select: `${BUTTONS} [data-label='Font Weight']`, element: ".btn:not(.btn-lg, .btn-sm)", property: "font-weight", expected: "300" },
+    { option: "input-padding-y", value: "10", element: INPUT, property: "padding-top", expected: "10px" },
+    { option: "input-padding-x", value: "20", element: INPUT, property: "padding-left", expected: "20px" },
+    { option: "input-padding-y-lg", value: "14", expand: "input-padding-y", element: ".form-control-lg", property: "padding-top", expected: "14px" },
+    { option: "input-font-size", value: "18", element: INPUT, property: "font-size", expected: "18px" },
+    { option: "input-font-size-sm", value: "12", expand: "input-font-size", element: ".form-control-sm", property: "font-size", expected: "12px" },
+    { option: "input-border-width", value: "3", input: `${INPUTS} [data-label='Border Width'] input`, element: INPUT, property: "border-top-width", expected: "3px" },
+    { option: "input-border-radius", value: "12", element: INPUT, property: "border-top-left-radius", expected: "12px" },
+    { option: "input-border-radius-lg", value: "20", expand: "input-border-radius", element: ".form-control-lg", property: "border-top-left-radius", expected: "20px" },
 ];
 
-for (const { option, value, expand, select, element, property, expected } of PREVIEWED_VALUES) {
+// prettier-ignore
+for (const { option, value, expand, select, input, element, property, expected } of PREVIEWED_VALUES) {
     test(`theme tab: ${option} is previewed on the page`, async () => {
         mockThemeRpcs();
         await setupWebsiteBuilder(
@@ -136,7 +147,10 @@ for (const { option, value, expand, select, element, property, expected } of PRE
             <div class="shadow">Shadow</div>
             <a class="btn btn-primary">Button</a>
             <a class="btn btn-primary btn-lg">Large</a>
-            <a class="btn btn-primary btn-sm">Small</a>`,
+            <a class="btn btn-primary btn-sm">Small</a>
+            <input class="form-control"/>
+            <input class="form-control form-control-sm"/>
+            <input class="form-control form-control-lg"/>`,
             {
                 loadIframeBundles: true,
                 // The page's fonts, with their weights (the page loads none).
@@ -162,12 +176,29 @@ for (const { option, value, expand, select, element, property, expected } of PRE
             await contains(`${select} .o-hb-select-toggle`).click();
             await contains(`.o-dropdown--menu [data-action-value="${value}"]`).click();
         } else {
-            await contains(`[data-action-param='${option}'] input`).edit(value);
+            await contains(input || `[data-action-param='${option}'] input`).edit(value);
         }
         expect(`:iframe ${element}`).toHaveStyle({ [property]: expected });
         expect.verifySteps([]);
     });
 }
+
+test("theme tab: a border side set apart keeps the widths shown until save", async () => {
+    mockThemeRpcs();
+    await setupWebsiteBuilder(`<input class="form-control"/>`, { loadIframeBundles: true });
+    await contains("#theme-tab").click();
+    await contains(`${INPUTS} [data-label='Border Width'] input`).edit("2");
+    await contains(`${INPUTS} [data-label='Border Width'] .o_hb_collapse_toggler`).click();
+    await contains(`${INPUTS} [data-label='Bottom'] input`).edit("5");
+    // The side applies on save: the compiled CSS has no rule for it before.
+    expect(":iframe .form-control").toHaveStyle({ "border-top-width": "2px" });
+    expect(":iframe .form-control").toHaveStyle({ "border-bottom-width": "2px" });
+
+    await save();
+    expect.verifySteps([
+        `${USER_VALUES} {"input-border-width":"null","input-border-top-width":"0.125rem","input-border-right-width":"0.125rem","input-border-bottom-width":"0.3125rem","input-border-left-width":"0.125rem"}`,
+    ]);
+});
 
 test("theme tab: hovering a color previews it, leaving the picker reverts it", async () => {
     mockThemeRpcs();
