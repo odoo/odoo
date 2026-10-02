@@ -55,17 +55,19 @@ class TestWorkEntryTypeData(TransactionCase):
         This is to test the implemention of automatically populating newly created
         work calendar with the default work calendar.
         """
-        work_entries = self.env['hr.work.entry.type'].search([], order='id')
+        # the types are created on the country of the company, as the attendances of a
+        # calendar can only use the types of the country of their company
+        work_entries = self.env['hr.work.entry.type'].create([{
+            'name': 'Test Work Entry Type %s' % day,
+            'code': 'Test Work Entry Type %s' % day,
+        } for day in range(5)])
         default_calendar = self.env['resource.calendar'].create({
             'name': '40 hours/week',
             'hours_per_day': 8,
             'full_time_required_hours': 40,
             'attendance_ids': [
-                (0, 0, {'dayofweek': '0', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0, 'work_entry_type_id': work_entries[8].id}),
-                (0, 0, {'dayofweek': '1', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0, 'work_entry_type_id': work_entries[1].id}),
-                (0, 0, {'dayofweek': '2', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0, 'work_entry_type_id': work_entries[2].id}),
-                (0, 0, {'dayofweek': '3', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0, 'work_entry_type_id': work_entries[0].id}),
-                (0, 0, {'dayofweek': '4', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0, 'work_entry_type_id': work_entries[4].id}),
+                (0, 0, {'dayofweek': str(day), 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0, 'work_entry_type_id': work_entries[day].id})
+                for day in range(5)
             ],
         })
         # Assigning the created calendar to the company resource calendar

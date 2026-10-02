@@ -12,10 +12,16 @@ class TestHrLeaveUninstall(TransactionCase):
         employee = self.env['hr.employee'].create({
             'name': 'Test Employee'
         })
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Sick Time Off',
+            'code': 'Sick Time Off',
+            'count_as': 'absence',
+            'requires_allocation': False,
+        })
         holiday = self.env['hr.leave'].create({
             'name': 'Time Off',
             'employee_id': employee.id,
-            'work_entry_type_id': self.env.ref('hr_work_entry.generic_work_entry_type_sick_leave').id,
+            'work_entry_type_id': work_entry_type.id,
             'request_date_from': date(2020, 1, 7),
             'date_from': date(2020, 1, 7),
             'request_date_to': date(2020, 1, 9),
