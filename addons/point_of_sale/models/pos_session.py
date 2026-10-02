@@ -1076,16 +1076,9 @@ class PosSession(models.Model):
                 check_move_validity=False,
             ).write({'line_ids': extra_commands})
 
-        # Ensure account_id is always the good one, sometime due to the
-        # compute method on account_id in the account.move.line model,
-        # the account_id on payment_commands is not the one expected,
-        # so we set it again here to be sure.
         payment_term_lines = move.line_ids.filtered(
             lambda line: line.display_type == 'payment_term',
         )
-        zipped = zip(payment_commands, payment_term_lines)
-        for payment_command, term_line in zipped:
-            term_line.account_id = payment_command[2]['account_id']
 
         with move_ctx._check_balanced({'records': move}):
             if rounding_method.exists():
@@ -1105,36 +1098,33 @@ class PosSession(models.Model):
                         payment_term_lines[0].balance -= balance_diff
 
         move_ctx.with_company(self.company_id)._post()
-        partner = self.config_id.default_partner_id
-        payment_lines = self.env['account.move.line']
-        for payment in payments:
+        default_partner = self.config_id.default_partner_id
+        receivable_account = self._get_receivable_account()
+
+        # The payment_term lines are created in the same order as the
+        # payments, pair them so each payment is reconciled with its own
+        # term line. We cannot reconcile automatically all lines together
+        # because sometime it create weird reconciliation with multiple payments
+        for payment, term in zip(payments, payment_term_lines.sorted('id')):
             metadata = payment['metadata']
             pm = metadata['payment_method_id']
-            payment_lines |= pm._create_payment_line(
+            payment_line = pm._create_payment_line(
                 self,
                 metadata['amount'],
-                partner.property_account_receivable_id,
+                receivable_account,
                 False,
-                partner,
+                metadata['partner'] or default_partner,
                 metadata['foreign_currency_id'].id,
                 metadata['amount_currency'],
             )
-
-        payment_lines = payment_lines.filtered(
-            lambda line: not line.reconciled,
-        )
-        payment_term_lines = payment_term_lines.filtered(
-            lambda line: not line.reconciled,
-        )
-
-        # We cannot reconcile automatically all lines together because
-        # sometime it create weird reconciliation with multiple payments
-        for idx, term in enumerate(payment_term_lines):
-            payment_line = payment_lines[idx]
-            (payment_line + term).with_context(
-                skip_invoice_sync=True,
-                no_cash_basis=True,
-            ).sudo().reconcile()
+            to_reconcile = (payment_line + term).filtered(
+                lambda line: not line.reconciled,
+            )
+            if len(to_reconcile) > 1:
+                to_reconcile.with_context(
+                    skip_invoice_sync=True,
+                    no_cash_basis=True,
+                ).sudo().reconcile()
 
         return move
 
@@ -1156,27 +1146,97 @@ class PosSession(models.Model):
                 invoices=invoices,
             ))
 
-    def _prepare_account_move_line_commands_for_reversal(self, order, invoice_to_reverse):
-        product_lines = invoice_to_reverse.line_ids.filtered(
-            lambda line: line.display_type == 'product',
-        )
+    def _prepare_account_move_line_commands_for_reversal(self, order, original_move):
+        """
+        Reverse the product lines of this order only. The closing entry lines
+        aggregate every order of the session, so they are rebuilt from the
+        order with the same grouping as the closing entry.
+        """
+        company = order.company_id
+        # Product lines balance is direction_sign * total excluded, reverse it
+        sign = -original_move.direction_sign
         reverse_move_lines = []
-        for line in product_lines:
+        line_data = order.with_context(hide_combo_title=True)._prepare_account_move_line_data()
+        for data in line_data:
+            vals = data['account.move.line']
+            if vals.get('display_type') != 'product':
+                continue
+
+            base_line = data['metadata'].get('base_line')
+            balance = sign * base_line['tax_details']['total_excluded'] if base_line else 0.0
             reverse_move_lines.append(Command.create({
-                'name': _("Reversal of %s", line.name),
-                'product_id': line.product_id.id,
-                'account_id': line.account_id.id,
-                'partner_id': line.partner_id.id,
-                'currency_id': order.company_id.currency_id.id,
-                'amount_currency': -line.amount_currency,
-                'balance': -line.amount_currency,
-                'display_type': line.display_type,
-                'tax_ids': [(6, 0, line.tax_ids.ids)],
-                'quantity': -line.quantity,
+                'name': _("Reversal of %s", vals['name']),
+                'product_id': vals.get('product_id'),
+                'account_id': vals['account_id'],
+                'partner_id': original_move.commercial_partner_id.id,
+                'currency_id': company.currency_id.id,
+                'amount_currency': balance,
+                'balance': balance,
+                'display_type': 'product',
+                'tax_ids': vals['tax_ids'],
+                'quantity': -vals['quantity'],
             }))
         return reverse_move_lines
 
-    def _create_partial_reversal_move_from_session_closing(self, order):
+    def _reconcile_partial_reversal_move(self, order, invoice, reversal_move):
+        """
+        Reconcile the reversal entry receivable lines:
+
+        - Customer account payments: the customer debt was moved to the
+          customer receivable by a transfer entry at the session closing.
+          The reversal line settles that transfer line, so the debt now
+          only lives on the new invoice, which stays open for that amount.
+        - Other payments: the money was already received, the reversal
+          line pays the new invoice.
+        """
+        self.ensure_one()
+        receivable = invoice.partner_id.property_account_receivable_id
+        commercial_partner = order.partner_id.commercial_partner_id
+        original_term_lines = reversal_move.reversed_entry_id.line_ids.filtered(
+            lambda line: line.display_type == 'payment_term',
+        )
+        counterparts = (
+            original_term_lines.matched_debit_ids.debit_move_id
+            | original_term_lines.matched_credit_ids.credit_move_id
+        )
+        transfer_lines = counterparts.move_id.line_ids.filtered(
+            lambda line: line.account_id == receivable
+            and line.partner_id.commercial_partner_id == commercial_partner
+            and not line.reconciled,
+        )
+
+        reversal_lines = reversal_move.line_ids.filtered(
+            lambda line: line.display_type == 'payment_term'
+            and line.account_id == receivable,
+        ).sorted('id')
+        # Reversal lines are created in the same order as the payments
+        payments = order._prepare_account_move_line_data_for_payments(order.partner_id)
+        for line, payment_data in zip(reversal_lines, payments):
+            pm = payment_data['metadata']['payment_method_id']
+            if pm.type != 'pay_later':
+                continue
+
+            # The transfer line can hold the customer account amount of
+            # several orders, the partial reconciliation only settles the
+            # share of this order and leaves the rest open for the others.
+            # Opposite sign only: a sale reverses a debit, a refund a credit
+            open_transfer = transfer_lines.filtered(
+                lambda t, line=line: not t.reconciled and t.balance * line.balance < 0,
+            )
+            if open_transfer:
+                (line | open_transfer).with_context(
+                    skip_invoice_sync=True,
+                ).reconcile()
+
+        # Whatever is left (other payments, or a customer account already
+        # paid by the customer) pays the new invoice.
+        to_reconcile = (reversal_lines | invoice.line_ids).filtered(
+            lambda line: line.account_id == receivable and not line.reconciled,
+        )
+        if len(to_reconcile) > 1:
+            to_reconcile.with_context(skip_invoice_sync=True).reconcile()
+
+    def _create_partial_reversal_move_from_session_closing(self, orders):
         """
         Create a misc move to reverse POS orders and "remove" it from the
         POS closing entry. This is done by taking data from the orders
@@ -1184,66 +1244,71 @@ class PosSession(models.Model):
         to reverse partially the movements done in the POS closing entry.
         """
         self.ensure_one()
-        order.ensure_one()
-        order.account_move.ensure_one()
+        orders.account_move.ensure_one()
+        orders.partner_id.ensure_one()
 
-        reverse_move_lines = []
-        invoice_to_reverse = order.account_move
-        is_refund = order.is_refund_or_negative()
-        original_move = order.account_move if order.is_globally_invoiced else self.refund_move_ids[-1] if is_refund else self.sale_move_ids[-1]
-        reverse_move_lines += self._prepare_account_move_line_commands_for_reversal(
-            order,
-            invoice_to_reverse,
+        if any(not order.is_globally_invoiced for order in orders):
+            raise UserError(_("Some orders are not globally invoiced."))
+
+        original_move = orders.account_move
+        reverse_move_lines = self._prepare_account_move_line_commands_for_reversal(
+            orders,
+            original_move,
         )
 
-        rounding_line = invoice_to_reverse.line_ids.filtered(
-            lambda line: line.display_type == 'rounding',
-        )
-        if rounding_line:
-            matching_line = original_move.line_ids.filtered(
-                lambda line: line.display_type == 'rounding',
+        company = orders.company_id
+        for payment_data in orders._prepare_account_move_line_data_for_payments(orders.partner_id):
+            # Converted at the closing entry date, like the line it reverses
+            balance = orders.currency_id._convert(
+                payment_data['metadata']['amount'],
+                company.currency_id,
+                company,
+                original_move.date,
             )
-            reverse_move_lines.append(Command.create({
-                'name': _("Rounding reversal: %s", matching_line.name),
-                'account_id': matching_line.account_id.id,
-                'partner_id': matching_line.partner_id.id,
-                'currency_id': order.company_id.currency_id.id,
-                'amount_currency': -rounding_line.amount_currency,
-                'balance': -rounding_line.balance,
-                'display_type': matching_line.display_type,
-            }))
-
-        payment_lines = invoice_to_reverse.line_ids.filtered(
-            lambda line: line.display_type == 'payment_term',
-        )
-        for idx, payment in enumerate(payment_lines):
-            matching_line = original_move.line_ids.filtered(
-                lambda line: line.display_type == 'payment_term',
-            )[idx]
             receivable_line = Command.create({
-                'name': _("Payment reversal %s", matching_line.name),
-                'account_id': order.partner_id.property_account_receivable_id.id,
-                'partner_id': order.partner_id.id,
-                'currency_id': order.company_id.currency_id.id,
-                'amount_currency': -payment.amount_currency,
-                'balance': -payment.balance,
+                'name': _("Payment reversal %s", payment_data['account.move.line']['name']),
+                'account_id': orders.partner_id.property_account_receivable_id.id,
+                'partner_id': orders.partner_id.id,
+                'currency_id': company.currency_id.id,
+                'amount_currency': -balance,
+                'balance': -balance,
                 'display_type': 'payment_term',
             })
             reverse_move_lines.append(receivable_line)
 
-        Move = self.env['account.move'].sudo().with_company(order.company_id)
+        Move = self.env['account.move'].sudo().with_company(orders.company_id)
         move_ctx = Move.with_context(
             linked_to_pos=True,
         )
 
-        return move_ctx.create({
-            'invoice_cash_rounding_id': invoice_to_reverse.invoice_cash_rounding_id.id,
+        reference = _("Partial reversal of %s for PoS Order invoicing", original_move.name)
+        move = move_ctx.with_context(check_move_validity=False).create({
+            'invoice_cash_rounding_id': original_move.invoice_cash_rounding_id.id,
             'date': fields.Date.today(),
-            'reversed_pos_order_id': order.id,
-            'ref': self.env._("Convert POS Order to Invoice"),
+            'ref': reference,
+            'reversed_pos_order_id': orders.id if len(orders) == 1 else None,  # In case of invoice consolidation, order reversal isn't linked to a single order
             'line_ids': reverse_move_lines,
             'journal_id': original_move.journal_id.id,
             'reversed_entry_id': original_move.id,
             'pos_session_ids': [(4, self.id)],
             'always_tax_exigible': True,
         })
+
+        # The cash rounding of the orders is what is left once their
+        # products, taxes and payments are reversed.
+        with move_ctx._check_balanced({'records': move}):
+            rounding_line = original_move.line_ids.filtered(
+                lambda line: line.display_type == 'rounding',
+            )[:1]
+            difference = sum(move.line_ids.mapped('balance'))
+            if rounding_line and not company.currency_id.is_zero(difference):
+                move.with_context(check_move_validity=False).line_ids = [Command.create({
+                    'name': _("Rounding reversal: %s", rounding_line.name),
+                    'account_id': rounding_line.account_id.id,
+                    'partner_id': rounding_line.partner_id.id,
+                    'currency_id': company.currency_id.id,
+                    'amount_currency': -difference,
+                    'balance': -difference,
+                    'display_type': 'rounding',
+                })]
+        return move
