@@ -209,6 +209,22 @@ export class BuilderRange extends Component {
         }
     }
 
+    /**
+     * The position of the actions' default value on the range, from 0 to 1,
+     * if in the range.
+     */
+    getDefaultValuePosition() {
+        const { actionDefaultValue } = this.state;
+        if (!actionDefaultValue || this.convertorObject) {
+            return;
+        }
+        const value = parseFloat(this.formatRawValue(actionDefaultValue));
+        const { min, max } = this.props;
+        if (value >= min && value <= max) {
+            return (value - min) / (max - min);
+        }
+    }
+
     get inputValueRange() {
         return this.formatRawValue(this.state.value || this.props.min);
     }
