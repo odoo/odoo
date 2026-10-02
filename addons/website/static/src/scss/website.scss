@@ -124,6 +124,24 @@
     @include print-variable('headings-margin-bottom', $headings-margin-bottom);
 
     @include print-variable('set-buttons-font', o-get-font-info('buttons'));
+    @include print-variable('navbar-font-family', $o-theme-navbar-font);
+    // Keywords the CSS reads (`print-variable` quotes strings).
+    @each $key in ('menu-border-style', 'portal-card-border-style') {
+        @if o-website-value($key) {
+            --#{$key}: #{o-website-value($key)};
+        }
+    }
+    // The header's bottom (or right) border uses the first width only.
+    $-menu-border-width: o-website-value('menu-border-width');
+    @if $-menu-border-width {
+        @include print-variable('o-menu-border-bottom-width', nth($-menu-border-width, 1));
+    }
+    @include print-variable('o-menu-box-shadow', map-get((
+        'shadow': var(--box-shadow),
+        'shadow-sm': var(--box-shadow-sm),
+        'shadow-lg': var(--box-shadow-lg),
+        'o-shadow-custom': var(--menu-box-shadow-style),
+    ), o-website-value('menu-shadow-class')));
 
     @include print-variable('font-weight-normal', o-website-value('font-weight-normal'));
     @include print-variable('lead-font-weight', o-website-value('lead-font-weight'));
@@ -268,33 +286,31 @@ body {
     }
 }
 
-// A bold weight left to "Auto" compiles to no rule at all, which a CSS variable
-// can't express: the builder previews a change of weight, not a change from
-// "Auto" (applied on save). Back to "Auto", it previews the other bold texts'.
-@function o-bold-font-weight-var($key) {
-    @if not o-website-value($key) {
-        @return null;
-    }
-    @return var(--#{$key}, #{o-font-weight-var('font-weight-bolder', $font-weight-bolder)});
-}
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
-    b, strong {
-        font-weight: o-bold-font-weight-var('headings-font-weight-bold') !important;
+// The bold weights, when set ("Auto" has no rule).
+@include o-theme-gate('headings-font-weight-bold') {
+    h1, h2, h3, h4, h5, h6,
+    .h1, .h2, .h3, .h4, .h5, .h6 {
+        b, strong {
+            font-weight: var(--headings-font-weight-bold) !important;
+        }
     }
 }
 
 // Keep display-5/6 covered for Bootstrap/custom markup, even though the editor
 // only exposes display-1 through display-4.
-.display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
-    b, strong {
-        font-weight: o-bold-font-weight-var('display-font-weight-bold') !important;
+@include o-theme-gate('display-font-weight-bold') {
+    .display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+        b, strong {
+            font-weight: var(--display-font-weight-bold) !important;
+        }
     }
 }
 
-.btn {
-    b, strong {
-        font-weight: o-bold-font-weight-var('btn-font-weight-bold') !important;
+@include o-theme-gate('btn-font-weight-bold') {
+    .btn {
+        b, strong {
+            font-weight: var(--btn-font-weight-bold) !important;
+        }
     }
 }
 
@@ -492,10 +508,10 @@ h1, h2, h3, h4, h5, h6,
         }
     }
 }
-.navbar-brand, .navbar-text, .navbar .nav-link, .navbar a.js_change_lang span,
-.navbar a.o_add_language {
-    @if $o-theme-navbar-font != $o-theme-font {
-        font-family: $o-theme-navbar-font;
+@include o-theme-gate('navbar-font') {
+    .navbar-brand, .navbar-text, .navbar .nav-link, .navbar a.js_change_lang span,
+    .navbar a.o_add_language {
+        font-family: var(--navbar-font-family);
     }
 }
 
@@ -649,11 +665,9 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
     }
 }
 
-$-header-nav-link-height: $nav-link-height;
-@if o-website-value('header-font-size') {
-    $-header-nav-link-height: o-website-value('header-font-size') * $line-height-base + $nav-link-padding-y * 2;
+@include o-theme-gate('header-font-size') {
     header {
-        font-size: o-website-value('header-font-size');
+        font-size: var(--header-font-size);
 
         .dropdown-menu, .btn {
             font-size: inherit !important;
@@ -664,12 +678,31 @@ $-header-nav-link-height: $nav-link-height;
     // With default values, this makes it slightly bigger than standard
     // navbar-brand, which is what we want
     header .navbar-brand {
-        font-size: $o-theme-navbar-logo-height / $line-height-base;
-
-        $-logo-padding-y: max(0, $-header-nav-link-height - $o-theme-navbar-logo-height) / 2;
-        &, &.logo {
-            padding-top: $-logo-padding-y;
-            padding-bottom: $-logo-padding-y;
+        font-size: calc(var(--logo-height) / #{$line-height-base});
+    }
+    // The logo's padding centers it in a nav link's height, which depends on
+    // the header font size when set.
+    @each $gate, $nav-link-height in (
+        '': $nav-link-height,
+        'header-font-size': calc(var(--header-font-size) * #{$line-height-base} + #{$nav-link-padding-y * 2}),
+    ) {
+        $-logo-padding-y: #{"max(0px, calc((#{$nav-link-height} - var(--logo-height)) / 2))"};
+        @if $gate == '' {
+            header .navbar-brand {
+                &, &.logo {
+                    padding-top: $-logo-padding-y;
+                    padding-bottom: $-logo-padding-y;
+                }
+            }
+        } @else {
+            @include o-theme-gate($gate) {
+                header .navbar-brand {
+                    &, &.logo {
+                        padding-top: $-logo-padding-y;
+                        padding-bottom: $-logo-padding-y;
+                    }
+                }
+            }
         }
     }
 }
@@ -703,55 +736,6 @@ h6 {
     color: map-get($colors, 'o-cc1-h6');
 }
 
-$heading-font-families: () !default;
-$heading-font-families: map-merge((
-    "h2": $h2-font-family,
-    "h3": $h3-font-family,
-    "h4": $h4-font-family,
-    "h5": $h5-font-family,
-    "h6": $h6-font-family,
-    "display-1": $display-1-font-family,
-    "display-2": $display-2-font-family,
-    "display-3": $display-3-font-family,
-    "display-4": $display-4-font-family,
-), $heading-font-families);
-$heading-line-heights: () !default;
-$heading-line-heights: map-merge((
-    "h2": $h2-line-height,
-    "h3": $h3-line-height,
-    "h4": $h4-line-height,
-    "h5": $h5-line-height,
-    "h6": $h6-line-height,
-    "display-1": $display-1-line-height,
-    "display-2": $display-2-line-height,
-    "display-3": $display-3-line-height,
-    "display-4": $display-4-line-height,
-), $heading-line-heights);
-$heading-margin-tops: () !default;
-$heading-margin-tops: map-merge((
-    "h2": $h2-margin-top,
-    "h3": $h3-margin-top,
-    "h4": $h4-margin-top,
-    "h5": $h5-margin-top,
-    "h6": $h6-margin-top,
-    "display-1": $display-1-margin-top,
-    "display-2": $display-2-margin-top,
-    "display-3": $display-3-margin-top,
-    "display-4": $display-4-margin-top,
-), $heading-margin-tops);
-$heading-margin-bottoms: () !default;
-$heading-margin-bottoms: map-merge((
-    "h2": $h2-margin-bottom,
-    "h3": $h3-margin-bottom,
-    "h4": $h4-margin-bottom,
-    "h5": $h5-margin-bottom,
-    "h6": $h6-margin-bottom,
-    "display-1": $display-1-margin-bottom,
-    "display-2": $display-2-margin-bottom,
-    "display-3": $display-3-margin-bottom,
-    "display-4": $display-4-margin-bottom,
-), $heading-margin-bottoms);
-
 // The typography values are read from the CSS variables printed on `:root`
 // above, which the builder overrides to preview them (the values Bootstrap
 // compiles: see `o-after-bootstrap-type`).
@@ -760,26 +744,30 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: var(--headings-margin-top);
     margin-bottom: var(--headings-margin-bottom);
 }
-@each $selector, $map-key in
-("h2" "h2", "h3" "h3", "h4" "h4", "h5" "h5", "h6" "h6", ".display-1" "display-1",
-".display-2" "display-2", ".display-3" "display-3", ".display-4" "display-4") {
-    // Always set on h2-h6, which get the headings value from the rule above
-    // otherwise. On the display classes (which also go on paragraphs) only
-    // when they differ, as before. The fonts, and the display line heights,
-    // are set where Bootstrap sets them, and here too when they differ.
-    $is-heading-tag: str-index($selector, '.') != 1;
-    #{$selector} {
-        @if $headings-font-family != map-get($heading-font-families, $map-key) {
-            font-family: var(--#{$map-key}-font-family);
+// h2-h6 get the headings line height and margins from the rule above: they're
+// always set, to preview each level's own. A level's font, and a display
+// level's values (the classes also go on paragraphs, which keep their own),
+// only when they differ from the headings' (see `o-theme-gate`). The fonts are
+// also set where Bootstrap sets them (`o-after-bootstrap-type`).
+@each $level in ('h2', 'h3', 'h4', 'h5', 'h6', 'display-1', 'display-2', 'display-3', 'display-4') {
+    $is-display: str-index($level, 'display') == 1;
+    $selector: if($is-display, '.#{$level}', $level);
+    @include o-theme-gate('#{$level}-font') {
+        #{$selector} {
+            font-family: var(--#{$level}-font-family);
         }
-        @if $is-heading-tag or $headings-line-height != map-get($heading-line-heights, $map-key) {
-            line-height: var(--#{$map-key}-line-height);
-        }
-        @if $is-heading-tag or $headings-margin-top != map-get($heading-margin-tops, $map-key) {
-            margin-top: var(--#{$map-key}-margin-top);
-        }
-        @if $is-heading-tag or $headings-margin-bottom != map-get($heading-margin-bottoms, $map-key) {
-            margin-bottom: var(--#{$map-key}-margin-bottom);
+    }
+    @each $property in ('line-height', 'margin-top', 'margin-bottom') {
+        @if $is-display {
+            @include o-theme-gate('#{$level}-#{$property}') {
+                #{$selector} {
+                    #{$property}: var(--#{$level}-#{$property});
+                }
+            }
+        } @else {
+            #{$selector} {
+                #{$property}: var(--#{$level}-#{$property});
+            }
         }
     }
 }
@@ -1059,7 +1047,7 @@ font[class*='bg-'] {
     --o-bg-blur-enhance: 1;
 }
 
-@if o-website-value('header-bg-blur') != 0 {
+@include o-theme-gate('header-bg-blur') {
     header {
         $-header-blur-navbar-selector: "nav.navbar";
         @if o-website-value('header-template') == 'sidebar' {
@@ -1068,7 +1056,7 @@ font[class*='bg-'] {
 
         // Apply the configured header blur to the nav blur layer and mobile navbar.
         #{$-header-blur-navbar-selector}::before, .o_navbar_mobile {
-            --o-bg-blur: #{o-website-value('header-bg-blur')};
+            --o-bg-blur: var(--header-bg-blur);
         }
 
         #{$-header-blur-navbar-selector} {
@@ -1093,7 +1081,7 @@ font[class*='bg-'] {
 
         &.o_header_sidebar > nav.navbar:not(.o_header_mobile) {
             @include media-breakpoint-up(lg) {
-                --o-bg-blur: #{o-website-value('header-bg-blur')};
+                --o-bg-blur: var(--header-bg-blur);
                 @include o-bg-blur-option;
             }
         }
@@ -1933,10 +1921,10 @@ $-transition-duration: 200ms;
 
     &.o_header_is_scrolled {
         .navbar-brand {
-            @include font-size($o-theme-navbar-fixed-logo-height / $line-height-base);
+            @include o-font-size-var(calc(var(--fixed-logo-height) / #{$line-height-base}));
 
             img {
-                height: $o-theme-navbar-fixed-logo-height;
+                height: var(--fixed-logo-height);
             }
         }
     }
@@ -2057,37 +2045,30 @@ header {
     }
 
     nav.navbar {
-        $-menu-border-width: o-website-value('menu-border-width');
-        @if $-menu-border-width {
+        @include o-theme-gate('menu-border-width') {
             // When the header should only have a bottom border, only take the
             // first value of the variable 'menu-border-width' to behave as if
-            // the input only accepted one number.
-            $-menu-border-bottom-width: nth($-menu-border-width, 1);
+            // the input only accepted one number (`--o-menu-border-bottom-width`).
             // When no 'menu-border-color' is set, `o-color` returns null and the
             // border color falls back to a full-opacity `currentColor`. Default
             // it instead to a faded `currentColor` (like the generic
             // `--o-border-color`), so the border stays subtle out of the box.
-            $-menu-border-color: o-color('menu-border-color') or $border-color;
-            border: o-website-value('menu-border-style') $-menu-border-color !important;
-            border-width: 0 0 $-menu-border-bottom-width 0 !important;
+            border-style: var(--menu-border-style) !important;
+            border-color: o-color('menu-border-color') or $border-color !important;
+            border-width: 0 0 var(--o-menu-border-bottom-width) 0 !important;
 
             &.o_border_right_only {
-                border-width: 0 $-menu-border-bottom-width 0 0 !important;
+                border-width: 0 var(--o-menu-border-bottom-width) 0 0 !important;
             }
             &.o_full_border {
-                border-width: $-menu-border-width !important;
+                border-width: var(--menu-border-width) !important;
             }
         }
-        border-radius: o-website-value('menu-border-radius') !important;
-
-        @if o-website-value('menu-shadow-class') == 'shadow' {
-            box-shadow: var(--box-shadow) !important;
-        } @else if o-website-value('menu-shadow-class') == 'shadow-sm' {
-            box-shadow: var(--box-shadow-sm) !important;
-        } @else if o-website-value('menu-shadow-class') == 'shadow-lg' {
-            box-shadow: var(--box-shadow-lg) !important;
-        } @else if o-website-value('menu-shadow-class') == 'o-shadow-custom' {
-            box-shadow: o-website-value('menu-box-shadow-style') !important;
+        @include o-theme-gate('menu-border-radius') {
+            border-radius: var(--menu-border-radius) !important;
+        }
+        @include o-theme-gate('menu-shadow-class') {
+            box-shadow: var(--o-menu-box-shadow) !important;
         }
 
 
@@ -2127,7 +2108,7 @@ header {
             // - The website layout template when different than 'full'
             // We need to combine both using `calc`. The `border` solution does
             // not work on Safari.
-            $padding-size: o-website-value('sidebar-width');
+            $padding-size: var(--sidebar-width);
             $-hamburger-right: o-website-value("hamburger-position") == "right";
             @if o-website-value('layout') != 'full' {
                 $padding-size: calc(#{$grid-gutter-width} * 2 + #{$padding-size});
@@ -2139,7 +2120,7 @@ header {
             }
 
             > header {
-                --Offcanvas-horizontal-width: #{o-website-value('sidebar-width')};
+                --Offcanvas-horizontal-width: var(--sidebar-width);
 
                 @if $-hamburger-right {
                     inset: 0 0 0 auto;
@@ -2149,7 +2130,7 @@ header {
                 position: fixed;
                 z-index: $zindex-fixed;
                 display: flex;
-                width: o-website-value('sidebar-width');
+                width: var(--sidebar-width);
                 transform: none !important;
 
                 .navbar {

@@ -10,7 +10,7 @@
             <BuilderSelectItem title.translate="Dotted" actionValue="'dotted'"><div class="o-hb-border-preview" style="border-style: dotted;"/></BuilderSelectItem>
             <BuilderSelectItem title.translate="Double" actionValue="'double'"><div class="o-hb-border-preview" style="border-style: double; border-left: none; border-right: none;"/></BuilderSelectItem>
         </BuilderSelect>
-        <BuilderColorPicker action="this.props.action" actionParam="this.getStyleActionParam('color')"
+        <BuilderColorPicker action="this.props.colorAction or this.props.action" actionParam="this.getStyleActionParam('color')"
             t-if="this.state.hasBorder"
             enabledTabs="['solid', 'custom']"
         />
