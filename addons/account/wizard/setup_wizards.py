@@ -51,7 +51,11 @@ class AccountFinancialYearOp(models.TransientModel):
         # one value at a time... so it is likely to fail.
         company_fields_to_update = {k: k for k in self._company_fields_to_update()}
         company_fields_to_update['opening_date'] = 'account_opening_date'
-        company_id.write({
+        # Accounting managers are allowed to use this wizard but have no write access on res.company
+        company_to_update = company_id
+        if company_id in self.env.companies and self.env.user.has_group('account.group_account_manager'):
+            company_to_update = company_id.sudo()
+        company_to_update.write({
             company_field: vals[wizard_field] for wizard_field, company_field in company_fields_to_update.items() if wizard_field in vals
         })
         opening_date = vals.get('opening_date', company_id.account_opening_date)
@@ -84,10 +88,11 @@ class AccountFinancialYearOp(models.TransientModel):
         return super().write(vals)
 
     def action_save_onboarding_fiscal_year(self):
-        step_state = self.env['onboarding.onboarding.step'].with_company(self.company_id).action_validate_step('account.onboarding_onboarding_step_fiscal_year')
+        self.ensure_one()
+        step_state = self.env['onboarding.onboarding.step'].sudo().with_company(self.company_id).action_validate_step('account.onboarding_onboarding_step_fiscal_year')
         # move the state to DONE to avoid an update in the web_read
         if step_state == 'JUST_DONE':
-            self.env.ref('account.onboarding_onboarding_account_dashboard')._prepare_rendering_values()
+            self.env.ref('account.onboarding_onboarding_account_dashboard').sudo()._prepare_rendering_values()
         return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
 
