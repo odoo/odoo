@@ -64,21 +64,6 @@
         </xpath>
     </t>
 
-    <t t-name="partner_autocomplete.PartnerAutoCompleteMany2XField" t-inherit="web.Many2XAutocomplete" t-inherit-mode="primary">
-        <xpath expr="//AutoComplete" position="replace">
-            <PartnerAutoComplete t-else=""
-                value="this.props.value || ''"
-                autoSelect="true"
-                sources="this.sources"
-                onChange.bind="this.onChange"
-                input="this.inputRef"
-                placeholder="this.placeholder || ''"
-                slots="this.props.slots"
-                id="this.props.id"
-            />
-        </xpath>
-    </t>
-
     <t t-name="partner_autocomplete.DropdownOption">
         <div style="display: flex; justify-content: space-between; align-items: center; height: 24px;">
             <div>
