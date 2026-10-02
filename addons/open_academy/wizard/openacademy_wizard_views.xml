@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--    wizard form view-->
+    <record id="openacademy_wizard_view_form" model="ir.ui.view">
+        <field name="name">openacademy.wizard.view.form</field>
+        <field name="model">openacademy.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Add Attendees">
+                <group>
+                    <field name="session_ids"/>
+                    <field name="attendee_ids"/>
+                </group>
+                <footer>
+                    <button name="subscribe" type="object"
+                            string="Subscribe" class="oe_highlight"/>
+                    or
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!--    Create a window action to launch the "Add Attendees" wizard for OpenAcademy sessions.-->
+    <record id="action_openacademy_launch_session_wizard"
+            model="ir.actions.act_window">
+        <field name="name">Add Attendees</field>
+        <field name="res_model">openacademy.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_openacademy_session"/>
+    </record>
+</odoo>

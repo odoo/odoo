@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--Inherit sale order from view to add split sale order related buttons-->
+    <record id="view_sale_order_split_button_form" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//div[hasclass('oe_button_box')]/button[@name='action_preview_sale_order']"
+                position="before"
+            >
+                <button
+                    class="oe_stat_button"
+                    type="object"
+                    name="action_split_orders"
+                    groups="sales_team.group_sale_manager"
+                    icon="fa-dollar"
+                    attrs="{'invisible': [('split_order_count', '=', 0)]}"
+                >
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Split</span>
+                        <span class="o_stat_text">Orders</span>
+                    </div>
+                    <field name="split_order_count" invisible="1" />
+                </button>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_split_sale_order_quotation"
+                    string="Split Sales Order"
+                    type="object"
+                    attrs="{'invisible': [('state', '!=', 'draft')]}"
+                    groups="sales_team.group_sale_manager"
+                    class="btn-primary"
+                />
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field
+                    name="split_sale_order_id"
+                    attrs="{'invisible': [('split_sale_order_id', '=', False)]}"
+                    readonly="1"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

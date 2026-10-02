@@ -1,0 +1,57 @@
+<odoo>
+    <record id="res_config_settings_for_woocommerce_integration" model="ir.ui.view">
+        <field name="name">res.config.settings.for.woocommerce.integration</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Woocommerce Integration" string="Woocommerce"
+                     data-key="eg_new_woocommerce_integration">
+                    <h2>Tax Rate</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Tax Rate</span>
+                                <div class="text-muted">
+                                    Apply Tax rate for Woocommerce or Odoo
+                                </div>
+                                <div class="text-muted">
+                                    <field name="tax_rate"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-lg-6 o_setting_box"
+                             attrs="{'invisible': [('tax_rate', '=', 'odoo_tax')]}">
+                            <div class="o_setting_left_pane">
+                                <field name="create_tax_rate"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="create_tax_rate"/>
+                                <div class="text-muted">
+                                    Create Tax rate if not get a in Odoo
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_woocommerce_integration_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="res_config_settings_for_woocommerce_integration"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'eg_new_woocommerce_integration'}</field>
+    </record>
+
+    <menuitem id="menu_woocommerce_integration_general_settings"
+              name="Settings"
+              parent="eg_ecommerce_base.eg_base_configuration"
+              sequence="2"
+              action="action_woocommerce_integration_config_settings"/>
+</odoo>

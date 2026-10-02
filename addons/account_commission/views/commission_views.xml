@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="commission_form" model="ir.ui.view">
+        <field name="name">commissions form</field>
+        <field name="model">commission</field>
+        <field name="inherit_id" ref="commission.commission_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='commision_params']" position="inside">
+                <field
+                    name="invoice_state"
+                    attrs="{'required': [('settlement_type', '=', 'sale_invoice')]}"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

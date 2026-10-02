@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--    Form view of authentication.wizard-->
+    <record id="dropbox_auth_code_view_form" model="ir.ui.view">
+        <field name="name">dropbox.auth.code.view.form</field>
+        <field name="model">dropbox.auth.code</field>
+        <field name="arch" type="xml">
+            <form>
+                <group invisible="not context.get('dropbox_auth')">
+                    <span>Get an authorization code and set it in the field below.</span>
+                    <field name="dropbox_auth_url"
+                           class="fa fa-arrow-right"
+                           widget="url"
+                           text="Get Authorization Code"
+                           nolabel="1"/>
+                </group>
+                <group>
+                    <field name="dropbox_authorization_code" required="context.get('dropbox_auth')" invisible="not context.get('dropbox_auth')"/>
+                </group>
+                <footer>
+                    <button string="Confirm" type="object" name="action_setup_dropbox_token" class="btn-primary" invisible="not context.get('dropbox_auth')"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

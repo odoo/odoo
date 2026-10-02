@@ -1,0 +1,46 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_attribute_value_tree_view">
+        <field name="name">eg.attribute.value.tree.view</field>
+        <field name="model">eg.attribute.value</field>
+        <field name="arch" type="xml">
+            <tree create="0" decoration-danger="update_required==True">
+                <field name="odoo_attribute_value_id"/>
+                <field name="instance_id"/>
+                <field name="inst_attribute_id"/>
+                <field name="update_required"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="eg_attribute_value_form_view">
+        <field name="name">eg.attribute.value.form.view</field>
+        <field name="model">eg.attribute.value</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="odoo_attribute_value_id"/>
+                            <field name="odoo_attribute_id"/>
+                            <field name="instance_value_id"/>
+                        </group>
+                        <group>
+                            <field name="inst_attribute_id"/>
+                            <!--                            <field name="inst_attribute_value_id"/>-->
+                            <field name="instance_id"/>
+                            <field name="provider" invisible="1"/>
+                            <field name="update_required"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="eg_attribute_value_action">
+        <field name="name">Attribute Values</field>
+        <field name="res_model">eg.attribute.value</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Attribute Values" id="eg_attribute_value_menu" action="eg_attribute_value_action"
+              parent="product_mapping_id" sequence="4"/>
+</odoo>

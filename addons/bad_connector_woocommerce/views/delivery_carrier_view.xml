@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!-- Inherited delivery.carrier form view to add backend -->
+        <record id="delivery_carier_form_view_inherit_woocommerce" model="ir.ui.view">
+            <field name="name">deliery.carrier.form.view.inherit.woocommerce</field>
+            <field name="model">delivery.carrier</field>
+            <field name="inherit_id" ref="delivery.view_delivery_carrier_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//notebook//page[@name='description']" position="after">
+                    <page
+                        string="WooCommerce Connector"
+                        name="woo_connector"
+                        attrs="{'invisible': [('woo_bind_ids', '=', [])]}"
+                        groups="connector.group_connector_manager"
+                    >
+                        <field name="woo_bind_ids" nolabel="1" readonly="1">
+                            <tree
+                                string="WooCommerce Delivery Carrier"
+                                delete="false"
+                                edit="false"
+                                create="false"
+                            >
+                                <field name="backend_id" widget="selection" />
+                                <field name="external_id" />
+                            </tree>
+                            <form
+                                string="WooCommerce Delivery Carrier"
+                                delete="false"
+                                edit="false"
+                                create="false"
+                            >
+                                <group>
+                                    <group>
+                                        <field name="backend_id" widget="selection" />
+                                        <field name="external_id" />
+                                        <field name="title" />
+                                        <field name="description" />
+                                    </group>
+                                    <group>
+                                        <field name="woo_data" />
+                                    </group>
+                                </group>
+                            </form>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

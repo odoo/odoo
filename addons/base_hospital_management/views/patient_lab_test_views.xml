@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Patient Lab Test form view-->
+    <record id="patient_lab_test_view_form" model="ir.ui.view">
+        <field name="name">patient.lab.test.view.form</field>
+        <field name="model">patient.lab.test</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"/>
+                    <button name="action_start_test"
+                            string="Start Test"
+                            class="oe_highlight"
+                            states="draft"
+                            groups="base_hospital_management.base_hospital_management_group_lab_assistant"
+                            type="object"/>
+                    <button name="action_test_end"
+                            string="End Test"
+                            class="oe_highlight"
+                            states="test"
+                            groups="base_hospital_management.base_hospital_management_group_lab_assistant"
+                            type="object"/>
+                    <button name="action_create_invoice"
+                            string="Create Invoice"
+                            class="oe_highlight"
+                            groups="base_hospital_management.base_hospital_management_group_lab_assistant"
+                            attrs="{'invisible': ['|',('state', '!=','completed'),('invoiced', '=', True)]}"
+                            type="object"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice" type="object"
+                                class="oe_stat_button" icon="fa-edit"
+                                attrs="{'invisible':[('invoice_count','=',0)]}">
+                            <field string="Invoice" name="invoice_count"
+                                   widget="statinfo"/>
+                        </button>
+                        <button name="action_view_sale_order" type="object"
+                                class="oe_stat_button" icon="fa-usd"
+                                attrs="{'invisible':[('sale_count','=',0)]}">
+                            <field string="Sale Order" name="sale_count"
+                                   widget="statinfo"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="test_id"/>
+                            <field name="patient_id" widget="selection"/>
+                            <field name="patient_type"/>
+                            <field name="invoiced" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="lab_id"
+                                   options="{'no_create': True, 'no_edit': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Test Details">
+                            <field name="test_ids"/>
+                        </page>
+                        <page string="Medicines">
+                            <field name="medicine_ids">
+                                <tree editable="bottom">
+                                    <field name="medicine_id"/>
+                                    <field name="qty_available"/>
+                                    <field name="quantity"/>
+                                    <field name="sub_total"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="Result"
+                              attrs="{'invisible': [('state', '=','draft')]}">
+                            <field name="result_ids">
+                                <tree editable="bottom">
+                                    <field name="test_id"/>
+                                    <field name="normal"/>
+                                    <field name="result"/>
+                                    <field name="uom_id"/>
+                                    <field name="attachment"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Patient Lab Test tree view-->
+    <record id="patient_lab_test_view_tree" model="ir.ui.view">
+        <field name="name">patient.lab.test.view.tree</field>
+        <field name="model">patient.lab.test</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="test_id"/>
+                <field name="patient_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Patient Lab Test action-->
+    <record id="patient_lab_test_action" model="ir.actions.act_window">
+        <field name="name">Patient Lab Test</field>
+        <field name="res_model">patient.lab.test</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create Laboratory Tests
+            </p>
+        </field>
+    </record>
+    <!--    Patient Lab Test menu-->
+    <menuitem id="patient_lab_test_menu" name="All Tests"
+              parent="hospital_menu_laboratory" sequence="1"
+              action="patient_lab_test_action"/>
+</odoo>

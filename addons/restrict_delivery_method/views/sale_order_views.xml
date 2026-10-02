@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Inherited form view of sale order to add delivery method field-->
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">
+            sale.order.view.form.inherit.restrict.delivery.method
+        </field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale_shipping']" position="inside">
+                <field name="delivery_method_ids" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

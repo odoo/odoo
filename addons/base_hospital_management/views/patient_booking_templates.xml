@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--        Patient booking template-->
+    <template id="patient_booking_form">
+        <t t-call="website.layout">
+            <div id="booking_form">
+                <section
+                        class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24"
+                        data-vcss="001" data-snippet="s_title"
+                        data-scroll-background-ratio="1">
+                    <span class="s_parallax_bg oe_img_bg"
+                          style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+                    <div class="o_we_bg_filter bg-black-50"/>
+                    <div class="container-fluid">
+                        <h1 class="container">Patient Booking</h1>
+                    </div>
+                </section>
+                <section class="p-3">
+                    <div class="container">
+                        <form action="/patient_booking/success"
+                              method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="mb-3 col-8">
+                                    <label for="name"
+                                           class="form-label">Patient Name
+                                    </label>
+                                    <input type="text"
+                                           t-attf-value="{{user}}"
+                                           class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-2">
+                                    <label for="qty"
+                                           class="form-label">Booking Date
+                                    </label>
+                                    <input class="form-control" type="date"
+                                           id="booking_date" name="date" t-attf-value="{{date}}"
+                                           required="True"/>
+                                </div>
+                                <div class="mb-3 col-3">
+                                    <label for="qty"
+                                           class="form-label">Department
+                                    </label>
+                                    <select name="doctor-department"
+                                            id="doctor-department"
+                                            class="form-control link-style">
+                                        <option/>
+                                        <t t-foreach="departments" t-as="dep">
+                                            <option t-att-value="dep[0]">
+                                                <t t-esc="dep[1]"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-3">
+                                    <label for="qty"
+                                           class="form-label">Doctor
+                                    </label>
+                                    <select name="doctor-name"
+                                            id="doctor-name"
+                                            required="True"
+                                            class="form-control link-style">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-8">
+                                    <label for="description"
+                                           class="form-label">Reason For
+                                        Visit
+                                    </label>
+                                    <textarea
+                                            class="form-control s_website_form_input"
+                                            name="reason" id="reason"
+                                            rows="4"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-8">
+                                    <button type="submit"
+                                            class="btn btn-primary">
+                                        Submit
+                                    </button>
+                                    <t t-if="card">
+                                        <a t-attf-href="/web/content/{{attachment_id}}?download=true&amp;access_token="
+                                           style="text-decoration:underline; margin-left:10px;">
+                                            Download Patient Card
+                                        </a>
+                                    </t>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

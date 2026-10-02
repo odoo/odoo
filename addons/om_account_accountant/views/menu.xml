@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="account.menu_finance" name="Accounting"/>
+
+    <menuitem id="menu_account_templates"
+              sequence="100"
+              name="Templates"
+              parent="account.menu_finance_configuration"
+              groups="base.group_no_one"/>
+
+    <record id="account.menu_action_account_moves_all" model="ir.ui.menu">
+        <field name="groups_id" eval="[(5,0,0)]" />
+    </record>
+
+    <menuitem id="menu_finance_entries_accounting_journals" name="Journals" parent="account.menu_finance_entries" sequence="2">
+        <menuitem id="menu_action_account_moves_journal_sales" action="account.action_account_moves_journal_sales" groups="account.group_account_readonly" sequence="1"/>
+        <menuitem id="menu_action_account_moves_journal_purchase" action="account.action_account_moves_journal_purchase" groups="account.group_account_readonly" sequence="2"/>
+        <menuitem id="menu_action_account_moves_journal_bank_cash" action="account.action_account_moves_journal_bank_cash" groups="account.group_account_readonly" sequence="3"/>
+        <menuitem id="menu_action_account_moves_journal_misc" action="account.action_account_moves_journal_misc" groups="account.group_account_readonly" sequence="4"/>
+    </menuitem>
+
+</odoo>

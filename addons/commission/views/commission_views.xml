@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="commission_tree">
+        <field name="name">commissions tree</field>
+        <field name="model">commission</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="commission_type" />
+                <field name="settlement_type" />
+                <field name="amount_base_type" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="commission_form">
+        <field name="name">commissions form</field>
+        <field name="model">commission</field>
+        <field name="arch" type="xml">
+            <form string="Commission">
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <group string="General information">
+                        <group>
+                            <field name="name" />
+                            <field name="active" invisible="1" />
+                        </group>
+                        <group name="commision_params">
+                            <field name="commission_type" />
+                            <field name="settlement_type" />
+                            <field name="amount_base_type" />
+                        </group>
+                    </group>
+                    <group string="Rates definition" colspan="4">
+                        <group colspan="2">
+                            <field
+                                name="fix_qty"
+                                attrs="{'invisible': [('commission_type', '!=', 'fixed')], 'required': [('commission_type', '=', 'fixed')]}"
+                            />
+                        </group>
+                        <field
+                            name="section_ids"
+                            colspan="4"
+                            nolabel="1"
+                            attrs="{'invisible': [('commission_type', '!=', 'section')]}"
+                        >
+                            <tree editable="bottom">
+                                <field name="amount_from" />
+                                <field name="amount_to" />
+                                <field name="percent" />
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_commission">
+        <field name="name">Commission types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">commission</field>
+        <field name="binding_view_types">form,tree</field>
+    </record>
+    <menuitem
+        name="Commission types"
+        id="menu_commission_type"
+        parent="commission.menu_commission_management"
+        action="action_commission"
+    />
+</odoo>

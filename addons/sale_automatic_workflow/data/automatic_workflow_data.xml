@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright (C) 2011 Akretion Sébastien BEAU <sebastien.beau@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<odoo noupdate="1">
+    <record id="automatic_workflow_order_filter" model="ir.filters">
+        <field name="name">Automatic Workflow Order Filter</field>
+        <field name="model_id">sale.order</field>
+        <field name="domain">[('state', '=', 'draft')]</field>
+        <field name="user_id" ref="base.user_root" />
+    </record>
+    <record id="automatic_workflow_picking_filter" model="ir.filters">
+        <field name="name">Automatic Workflow Picking Filter</field>
+        <field name="model_id">stock.picking</field>
+        <field
+            name="domain"
+        >[('state', 'in', ['draft', 'confirmed', 'assigned'])]</field>
+        <field name="user_id" ref="base.user_root" />
+    </record>
+    <record id="automatic_workflow_create_invoice_filter" model="ir.filters">
+        <field name="name">Automatic Workflow Create Invoice Filter</field>
+        <field name="model_id">sale.order</field>
+        <field
+            name="domain"
+        >[('state','in',['sale','done']),('invoice_status','=','to invoice')]</field>
+        <field name="user_id" ref="base.user_root" />
+    </record>
+    <record id="automatic_workflow_validate_invoice_filter" model="ir.filters">
+        <field name="name">Automatic Workflow Validate Invoice Filter</field>
+        <field name="model_id">account.move</field>
+        <field
+            name="domain"
+        >[('state', '=', 'draft'), ('posted_before', '=', False)]</field>
+        <field name="user_id" ref="base.user_root" />
+    </record>
+    <record id="automatic_workflow_send_invoice_filter" model="ir.filters">
+        <field name="name">Automatic Workflow Send Invoice Filter</field>
+        <field name="model_id">account.move</field>
+        <field
+            name="domain"
+        >[('state', '=', 'posted'), ('is_move_sent', '=', False), ('move_type', '=', 'out_invoice')]</field>
+        <field name="user_id" ref="base.user_root" />
+    </record>
+    <record id="automatic_workflow_sale_done_filter" model="ir.filters">
+        <field name="name">Automatic Workflow Sale Done Filter</field>
+        <field name="model_id">sale.order</field>
+        <field
+            name="domain"
+        >[('state', '=', 'sale'),('invoice_status','=','invoiced')]</field>
+        <field name="user_id" ref="base.user_root" />
+    </record>
+    <record id="automatic_workflow_payment_filter" model="ir.filters">
+        <field name="name">Automatic Workflow Payment Filter</field>
+        <field name="model_id">account.move</field>
+        <field
+            name="domain"
+        >[('state', '=', 'posted'), ('move_type', '=', 'out_invoice'), ('payment_state','!=','paid')]</field>
+        <field name="user_id" ref="base.user_root" />
+    </record>
+    <record id="automatic_validation" model="sale.workflow.process">
+        <field name="name">Automatic</field>
+        <field name="picking_policy">one</field>
+        <field name="validate_order" eval="1" />
+        <field name="send_order_confirmation_mail" eval="1" />
+        <field name="order_filter_id" eval="automatic_workflow_order_filter" />
+        <field name="create_invoice" eval="1" />
+        <field
+            name="create_invoice_filter_id"
+            eval="automatic_workflow_create_invoice_filter"
+        />
+        <field name="validate_invoice" eval="1" />
+        <field
+            name="validate_invoice_filter_id"
+            eval="automatic_workflow_validate_invoice_filter"
+        />
+        <field name="send_invoice" eval="1" />
+        <field
+            name="send_invoice_filter_id"
+            eval="automatic_workflow_send_invoice_filter"
+        />
+        <field name="invoice_date_is_order_date" eval="0" />
+        <field name="validate_picking" eval="0" />
+        <field name="picking_filter_id" eval="automatic_workflow_picking_filter" />
+        <field name="sale_done" eval="0" />
+        <field name="sale_done_filter_id" eval="automatic_workflow_sale_done_filter" />
+        <field name="register_payment" eval="0" />
+        <field name="payment_filter_id" ref="automatic_workflow_payment_filter" />
+        <field
+            name="warning"
+        >Be careful, if you save the order with this setting, it could be auto-confirmed, even if you are editing it.</field>
+    </record>
+    <record id="manual_validation" model="sale.workflow.process">
+        <field name="name">Manual</field>
+        <field name="picking_policy">one</field>
+        <field name="validate_order" eval="0" />
+        <field name="validate_invoice" eval="0" />
+        <field name="invoice_date_is_order_date" eval="0" />
+        <field name="validate_picking" eval="0" />
+        <field name="order_filter_id" eval="automatic_workflow_order_filter" />
+        <field
+            name="create_invoice_filter_id"
+            eval="automatic_workflow_create_invoice_filter"
+        />
+        <field
+            name="validate_invoice_filter_id"
+            eval="automatic_workflow_validate_invoice_filter"
+        />
+        <field name="picking_filter_id" eval="automatic_workflow_picking_filter" />
+        <field name="sale_done_filter_id" eval="automatic_workflow_sale_done_filter" />
+        <field name="register_payment" eval="0" />
+        <field name="payment_filter_id" ref="automatic_workflow_payment_filter" />
+    </record>
+    <record forcecreate="True" id="ir_cron_automatic_workflow_job" model="ir.cron">
+        <field name="name">Automatic Workflow Job</field>
+        <field ref="model_automatic_workflow_job" name="model_id" />
+        <field name="state">code</field>
+        <field name="code">model.run()</field>
+        <field eval="True" name="active" />
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field eval="False" name="doall" />
+    </record>
+</odoo>

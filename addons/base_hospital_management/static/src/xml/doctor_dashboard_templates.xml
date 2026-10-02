@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Doctor dashboard template-->
+<template>
+    <t t-name="DoctorDashboard">
+        <div class="oh_dashboards">
+            <div class="container-fluid o_pj_dashboard">
+                <div style="width:100%; margin:0; padding:0;">
+                    <div class="row">
+                        <div class="col-md-2 bg-white r_dashButtonContainer">
+                            <div class="row r_dashButton outpatient_button"
+                                 id="consultation" style="margin-top: 45px;">
+                                Consultation
+                            </div>
+                            <div class="row r_dashButton patient_data"
+                                 id="patient">
+                                Patient
+                            </div>
+                            <div class="row r_dashButton inpatient_button"
+                                 id="inpatient">
+                                Inpatient
+                            </div>
+                            <div class="row r_dashButton scheduled_activity"
+                                 id="scheduled_activity">
+                                Surgery
+                            </div>
+                            <div class="row r_dashButton shift" id="shift">
+                                Shift Allocation
+                            </div>
+                        </div>
+                        <div id="view_main"
+                             class="col-md-5 bg-white n_Container">
+                            <center>
+                                <span id="welcome" style="font-size:25px;">
+                                    Welcome..!
+                                </span>
+                            </center>
+                            <div class="row r_AppntBtn"/>
+                            <div id="main-view"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>

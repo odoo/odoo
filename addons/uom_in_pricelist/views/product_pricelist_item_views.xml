@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Product Price list item view -->
+    <record id="product_pricelist_item_form_view" model="ir.ui.view">
+        <field name="name">
+            product.pricelist.item.view.form.inherit.uom.in.pricelist
+        </field>
+        <field name="model">product.pricelist.item</field>
+        <field name="inherit_id"
+               ref="product.product_pricelist_item_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='pricelist_rule_target']"
+                   position="inside">
+                <field name="product_uom_category_id" invisible="1"/>
+                <field name="product_uom_id"
+                       attrs="{'invisible':[('product_tmpl_id','=',False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

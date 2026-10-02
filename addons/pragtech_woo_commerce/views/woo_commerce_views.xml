@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="woo_menu_root"
+              name="WooCommerce"
+              active="True"
+              sequence="8"/>
+
+    <menuitem id="woo_config_menu"
+              name="Configuration"
+              parent="woo_menu_root"
+              sequence="100"/>
+
+    <menuitem id="menu_dashboard"
+              name="Dashboard"
+              parent="woo_menu_root"
+              action="action_woo_dashboard"
+              sequence="1"/>
+
+    <menuitem id="menu_export_data"
+              name="Export/Import"
+              parent="woo_menu_root"
+              sequence="2"/>
+
+    <menuitem id="menu_export_tax"
+              name="Tax"
+              parent="menu_export_data"
+              action="action_account_tax_woo"
+              sequence="1"/>
+
+
+    <menuitem id="menu_products"
+              name="Products"
+              parent="menu_export_data"
+              sequence="2"/>
+
+    <menuitem id="menu_export_products"
+              name="Products"
+              parent="menu_products"
+              action="action_product_template_woo"
+              sequence="3"/>
+
+    <menuitem id="menu_export_product_categ"
+              name="Product Category"
+              parent="menu_products"
+              action="action_product_category_woo"
+              sequence="4"/>
+
+    <menuitem id="menu_export_product_attr"
+              name="Product Attributes"
+              parent="menu_products"
+              action="action_product_attribute_woo"
+              sequence="5"/>
+
+    <menuitem id="menu_export_product_attr_term"
+              name="Product Attributes Term"
+              parent="menu_products"
+              action="action_product_attribute_term_woo"
+              sequence="6"/>
+
+    <menuitem id="menu_export_tag"
+              name="Product Tag"
+              parent="menu_products"
+              action="action_product_tag"
+              sequence="7"/>
+
+    <menuitem id="menu_order"
+              name="Orders"
+              parent="menu_export_data"
+              sequence="8"/>
+
+    <menuitem id="menu_quotations"
+              name="Quotations"
+              parent="menu_order"
+              action="action_quotation_woo"
+              sequence="9"/>
+
+    <menuitem id="menu_export_sale_order"
+              name="Orders"
+              parent="menu_order"
+              action="action_sale_order_woo"
+              sequence="10"/>
+
+    <menuitem id="menu_export_customers"
+              name="Customers"
+              parent="menu_order"
+              action="action_custom_res_partner"
+              sequence="11"/>
+
+    <menuitem id="menu_woo_coupon"
+              name="Coupons"
+              parent="menu_export_data"
+              action="action_woo_coupon_program"
+              sequence="12"/>
+
+    <menuitem id="menu_woo_delivery_carrier"
+              name="Shipping Method"
+              parent="menu_export_data"
+              action="action_woo_delivery_carrier"
+              sequence="13"/>
+
+    <menuitem id="menu_woo_payment_gateway"
+              name="Payment Method"
+              parent="menu_export_data"
+              action="action_woo_payment_acquirer"
+              sequence="14"/>
+
+    <menuitem id="menu_woo_order_refund"
+              name="Order Refund"
+              parent="menu_export_data"
+              action="action_woo_move_out_refund_type"
+              sequence="15"/>
+
+    <menuitem id="menu_instance"
+              name="Woo Instance"
+              parent="woo_config_menu"
+              action="action_woo_instance"
+              sequence="3"/>
+
+</odoo>
+

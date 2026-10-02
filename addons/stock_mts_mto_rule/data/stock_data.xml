@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--
+         Procurement rules
+    -->
+    <record id="route_mto_mts" model='stock.route'>
+        <field name="name">Make To Order + Make To Stock</field>
+        <field name="sequence">5</field>
+        <field name="product_selectable" eval="True" />
+        <field name="company_id" eval="False" />
+    </record>
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+<!--        inherited stock report picking-->
+        <template id="stock_picking_report" inherit_id="stock.report_picking">
+            <xpath expr="//table[hasclass('table')]//tr//th[@name='th_product']"
+                   position="before">
+                <th name="th_sequence" class="text-start">#</th>
+            </xpath>
+            <xpath expr="//tbody//tr//td"
+                   position="before">
+                <td name="td_sequence">
+                    <span t-esc="1 + ml_index"/>
+                </td>
+            </xpath>
+        </template>
+    </data>
+</odoo>

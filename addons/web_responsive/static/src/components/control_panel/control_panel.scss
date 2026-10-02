@@ -1,0 +1,306 @@
+/* Copyright 2018 Tecnativa - Jairo Llopis
+ * Copyright 2021 ITerra - Sergey Shebanin
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+// Make enough space for search panel filters buttons
+.o_control_panel {
+    // There is no media breakpoint for XL upper bound
+    @include media-breakpoint-up(lg) {
+        @media (max-width: 1360px) {
+            .o_cp_top_left,
+            .o_cp_bottom_left {
+                width: 40%;
+            }
+            .o_cp_top_right,
+            .o_cp_bottom_right {
+                width: 60%;
+            }
+        }
+    }
+    // For FULL HD devices
+    @media (min-width: 1900px) {
+        .o_cp_top_left,
+        .o_cp_bottom_left {
+            width: 60%;
+        }
+        .o_cp_top_right,
+        .o_cp_bottom_right {
+            width: 40%;
+        }
+    }
+    @include media-breakpoint-only(md) {
+        .o_search_options_hide_labels .o_dropdown_title {
+            display: none;
+        }
+    }
+    .o_cp_bottom_right {
+        height: 10%;
+    }
+    // Mobile Control panel (breadcrumbs, search box, buttons...)
+    @include media-breakpoint-down(sm) {
+        // Avoid horizontal scrolling of control panel.
+        // It doesn't work on iOS Safari, but it looks similar as
+        // without this patch. With this patch it looks better for
+        // other browsers.
+
+        // Arrange buttons to use space better
+        .o_cp_top_left,
+        .o_cp_top_right {
+            flex: 1 1 100%;
+        }
+
+        .o_cp_top_left {
+            flex-basis: 89%;
+            max-width: 89%;
+        }
+
+        .o_cp_top_right {
+            flex-basis: 11%;
+        }
+
+        .o_cp_bottom {
+            position: relative; // Necessary for dropdown menu positioning
+            display: block;
+            margin: 0;
+            min-height: 30px !important;
+        }
+
+        .o_cp_bottom_left {
+            float: left;
+            margin: 5px 0;
+        }
+
+        .o_cp_bottom_right {
+            float: right;
+            padding-left: 10px;
+            margin: 5px 0;
+        }
+
+        .o_cp_bottom_right,
+        .o_cp_pager {
+            white-space: nowrap;
+        }
+        .o_cp_pager {
+            margin-bottom: 0;
+        }
+        .o_list_selection_box {
+            padding-left: 5px !important;
+            padding-right: 5px;
+        }
+
+        .o_cp_action_menus {
+            padding-right: 0;
+            .o_dropdown_title,
+            .fa-chevron-right,
+            .fa-chevron-down {
+                display: none;
+            }
+            .dropdown-toggle {
+                margin: 0px 2px;
+                height: 100%;
+            }
+            .dropdown {
+                height: 100%;
+            }
+            @include media-breakpoint-down(xs) {
+                .dropdown {
+                    position: static;
+                }
+                .dropdown-menu {
+                    right: 0;
+                    left: 0;
+                    top: 35px;
+                }
+            }
+        }
+
+        // Hide all but 2 last breadcrumbs, and render 2nd-to-last as arrow
+        .breadcrumb-item {
+            &:not(.active):not(.o_back_button) {
+                padding-left: 0;
+                display: none;
+            }
+
+            &::before {
+                content: none;
+                padding-right: 0;
+            }
+
+            &.o_back_button {
+                &::before {
+                    color: var(--primary);
+                    content: "\f060"; // .fa-arrow-left
+                    cursor: pointer;
+                    font-family: FontAwesome;
+                }
+
+                a {
+                    display: none;
+                }
+            }
+        }
+
+        // Ellipsize long breadcrumbs
+        .breadcrumb {
+            max-width: 100%;
+            text-overflow: ellipsis;
+        }
+
+        // In case you install `mail`, there is a mess on BS vs inline styles
+        // we need to fix
+        .o_cp_buttons .btn.d-block:not(.d-none) {
+            display: inline-block !important;
+        }
+
+        .o_searchview_input_container > .o_searchview_autocomplete {
+            left: 0;
+            right: 0;
+            > li {
+                padding: 10px 0px;
+            }
+        }
+        .o_searchview_quick {
+            display: flex;
+            flex: 1 1 auto;
+            align-items: center;
+            .o_searchview_input_container {
+                flex: 1 1 auto;
+                margin-left: 5px;
+            }
+        }
+        .o_searchview {
+            padding: 1px 0px 3px 0px;
+            &.o_searchview_mobile {
+                cursor: pointer;
+            }
+        }
+    }
+    // Filter Menu
+    // Cut long filters names in the filters menu
+    .o_filter_menu {
+        .o_menu_item {
+            @include media-breakpoint-up(md) {
+                max-width: 250px;
+            }
+            a {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+    // Enable scroll on dropdowns
+    .o_cp_buttons .dropdown-menu {
+        max-height: 70vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    // Dropdown with buttons to switch the view type
+    .o_cp_switch_buttons.dropdown-menu {
+        align-content: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 0;
+
+        .btn {
+            border: {
+                bottom: 0;
+                radius: 0;
+                top: 0;
+            }
+            font-size: 1.3em;
+        }
+    }
+}
+// Mobile search bar full screen mode
+.o_cp_mobile_search {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    padding: 0;
+    width: 100%;
+    background-color: white;
+    z-index: $zindex-modal;
+    overflow: auto;
+    .o_mobile_search_header {
+        background-color: var(--mobileSearch__header-bg, #{$o-brand-odoo});
+        display: flex;
+        min-height: $o-navbar-height;
+        justify-content: space-between;
+        width: 100%;
+
+        .o_mobile_search_button {
+            color: white;
+
+            &:active {
+                background-color: darken($o-brand-primary, 10%);
+            }
+        }
+    }
+    .o_searchview_input_container {
+        display: flex;
+        padding: 15px 20px 0 20px;
+        position: relative;
+        .o_searchview_input {
+            width: 100%;
+            margin-bottom: 15px;
+            border-bottom: 1px solid $o-brand-primary;
+        }
+        .o_searchview_facet {
+            display: inline-flex;
+            order: 1;
+        }
+        .o_searchview_autocomplete {
+            top: 3rem;
+        }
+    }
+    .o_mobile_search_filter {
+        padding-bottom: 15%;
+        > .dropdown {
+            flex-direction: column;
+            line-height: 2rem;
+            width: 100%;
+            margin: 15px 5px 0px 5px;
+            border: solid 1px darken($gray-200, 20%);
+        }
+        .dropdown.show > .dropdown-toggle {
+            background-color: $gray-200;
+        }
+        .dropdown-toggle {
+            width: 100%;
+            text-align: left;
+            &:after {
+                top: auto;
+            }
+        }
+        .dropdown-item:before {
+            top: auto;
+        }
+        .dropdown-item.focus {
+            background-color: white;
+        }
+        .dropdown-menu {
+            // Here we use !important because of popper js adding custom style
+            // to element so to override it use !important
+            position: relative !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100%;
+            max-height: 100%;
+            box-shadow: none;
+            border: none;
+            color: $gray-600;
+            .divider {
+                margin: 0px;
+            }
+            > li > a {
+                padding: 10px 26px;
+            }
+        }
+    }
+    .o_mobile_search_show_result {
+        padding: 10px;
+        font-size: 15px;
+    }
+}

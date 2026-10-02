@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--  displaying mobile and phone number in kanban view-->
+    <record id="res_partner_view_kanban" model="ir.ui.view">
+        <field name="name">res.partner.view.kanban.inherit.partner.search.by.number</field>
+        <field name="model">res.partner</field>
+        <field name='inherit_id' ref='base.res_partner_kanban_view'/>
+        <field name='arch' type='xml'>
+            <xpath expr="//field[@name='email']" position="before">
+                <field name="phone"/>
+            </xpath>
+            <xpath expr="//li/field[@name='email']" position="after">
+                <br/>
+                <li t-if="record.phone.raw_value" class="o_text_overflow">
+                    <field name="phone"/>
+                </li>
+                <br/>
+                <li t-if="record.mobile.raw_value" class="o_text_overflow">
+                    <field name="mobile"/>
+                </li>
+            </xpath>
+        </field>
+    </record>
+</odoo>

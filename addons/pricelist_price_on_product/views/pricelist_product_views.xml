@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--        Defines the 'product_pricelist_action' record.-->
+    <record id="pricelist_product_action" model="ir.actions.act_window">
+        <field name="name">Product Pricelist</field>
+        <field name="res_model">pricelist.product</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <!--   tree view of ricelist.on.product-->
+    <record id="pricelist_product_view_tree" model="ir.ui.view">
+        <field name="name">pricelist.product.view.tree</field>
+        <field name="model">pricelist.product</field>
+        <field name="arch" type="xml">
+            <tree string="product">
+                <field name="product_price_id"/>
+                <field name="product_price"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

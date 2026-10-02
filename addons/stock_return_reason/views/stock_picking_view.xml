@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- inherited view of stock_picking to add a field #T7157 -->
+    <record
+        id="stock_return_reason_stock_picking_from_view_inherited"
+        model="ir.ui.view"
+    >
+        <field name="name">stock.return.reason.stock.picking.from.view.inherited</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <!-- adding a new page Return Reason for adding a new field 'return_reason' #T7157-->
+                <page
+                    name="Return Reason"
+                    attrs="{'invisible': [('return_reason', '=', False)]}"
+                >
+                    <field name="return_reason" readonly="1" nolabel="1" />
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

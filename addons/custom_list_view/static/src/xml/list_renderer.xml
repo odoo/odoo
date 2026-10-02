@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML template for rendering lists with pagination information -->
+<templates xml:space="preserve">
+	<t t-inherit="web.ListRenderer" t-inherit-mode="extension">
+		<xpath expr="//div[hasclass('o_list_renderer')]" position="after">
+			<!-- Pagination in lists -->
+			<div class="o_list_pagination" style=" text-align: end;">
+					Showing from
+				<t t-if="this.props.list.groups">
+					<t t-esc="this.env.config.pagerProps.offset+1"/>
+                    -
+					<t t-esc="this.env.config.pagerProps.offset + this.props.list.groups.length"/></t>
+				<t t-else="">
+					<t t-esc="this.env.config.pagerProps.offset+1"/>
+                    -
+					<t t-esc="this.env.config.pagerProps.offset+this.props.list.records.length"/></t>
+                of
+				<t t-esc="this.props.list.count"/>
+                Records
+			</div>
+		</xpath>
+		<xpath expr="//th[@t-if='hasSelectors']" position="before">
+			<th style="width: 60px">Sl No</th>
+			<t t-set="RowNumber" t-value="1"/>
+		</xpath>
+	</t>
+	<t t-inherit="account.ListRenderer" t-inherit-mode="extension">
+		<xpath expr="//div[hasclass('o_list_renderer')]" position="after">
+			<!-- Pagination in invoice list -->
+			<div class="o_list_pagination" style=" text-align: end;">
+					Showing from
+				<t t-if="this.props.list.groups">
+					<t t-esc="this.env.config.pagerProps.offset+1"/>
+                    -
+					<t t-esc="this.env.config.pagerProps.offset + this.props.list.groups.length"/></t>
+				<t t-else="">
+					<t t-esc="this.env.config.pagerProps.offset+1"/>
+                 -
+					<t t-esc="this.env.config.pagerProps.offset+this.props.list.records.length"/></t>
+             of
+				<t t-esc="this.props.list.count"/>
+             Records
+			</div>
+		</xpath>
+	</t>
+	<!--	Customization for adding row numbers (Sl No) to the list view in Odoo.-->
+	<t t-name="rowno_in_tree.ListRendererInsideView"
+			   t-inherit="account.sectionAndNoteListRenderer" t-inherit-mode="extension">
+		<xpath expr="//table[@class='o_section_and_note_list_view']/thead/tr/th[1]"
+				   position="before">
+			<th style="width: 60px">Sl No</th>
+		</xpath>
+	</t>
+	<t t-name="rowno_in_tree_account.AccountListRenderer"
+					   t-inherit="account.ListRenderer" t-inherit-mode="extension" owl="1">
+		<xpath expr="//table/thead/tr/th[@t-if='hasSelectors']" position="before">
+			<th style="width: 60px">Sl No</th>
+		</xpath>
+		<xpath expr="//div/table/tfoot/tr/td" position="before">
+			<td/>
+		</xpath>
+	</t>
+	<t t-name="rowno_in_tree.add_number" t-inherit="web.ListRenderer.Rows"
+	   t-inherit-mode="extension" >
+		<xpath expr="//t[@t-foreach='list.records']" position="before">
+			<t t-set="RowNumber" t-value="1"/>
+		</xpath>
+		<xpath expr="//t[@t-call='{{ constructor.recordRowTemplate }}']"
+			   position="after">
+			<t t-set="RowNumber" t-value="RowNumber+1"/>
+		</xpath>
+	</t>
+	<t t-name="rowno_in_tree.ListRenderer.RecordRowNumber"
+	   t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="extension">
+		<xpath expr="//td[hasclass('o_list_record_selector')]" position="before">
+			<td tabindex="-1">
+				<span t-esc="RowNumber"/>
+			</td>
+		</xpath>
+	</t>
+</templates>

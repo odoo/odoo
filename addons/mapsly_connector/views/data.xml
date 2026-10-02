@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="mapsly_frame_view">
+        <field name="model">ir.model</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <mapsly_frame>
+            </mapsly_frame>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="mapsly_frame_view_window">
+        <field name="name">Mapsly</field>
+        <field name="res_model">ir.model</field>
+        <field name="view_mode">mapsly_frame</field>
+        <field name="view_id" ref="mapsly_frame_view"/>
+    </record>
+
+    <menuitem id="main_mapsly_frame_menu" name="Mapsly" web_icon="mapsly_connector,static/description/icon.png"/>
+
+    <menuitem id="mapsly_frame_submenu" name="Mapsly App"
+              parent="main_mapsly_frame_menu" action="mapsly_frame_view_window"/>
+</odoo>

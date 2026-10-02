@@ -1,0 +1,205 @@
+/* Copyright 2018 Tecnativa - Jairo Llopis
+ * Copyright 2021 ITerra - Sergey Shebanin
+ * License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). */
+
+@mixin full-screen-dropdown {
+    border: none;
+    box-shadow: none;
+    min-height: calc(100vh - #{$o-navbar-height});
+    min-height: calc(var(--vh100, 100vh) - #{$o-navbar-height});
+    position: fixed;
+    margin: 0;
+    width: 100vw;
+    z-index: 1000;
+    left: 0 !important;
+}
+
+.o_apps_menu_opened .o_main_navbar {
+    .o_menu_brand,
+    .o_menu_sections {
+        display: none !important;
+    }
+}
+
+// Iconized full screen apps menu
+.o_navbar_apps_menu {
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 100ms ease;
+    }
+    .fade-enter,
+    .fade-leave-to {
+        opacity: 0;
+    }
+    .dropdown-menu-custom {
+        @include full-screen-dropdown();
+        cursor: pointer;
+        background: url("../../img/home-menu-bg-overlay.svg"),
+            linear-gradient(
+                to bottom,
+                $o-brand-odoo,
+                desaturate(lighten($o-brand-odoo, 20%), 15)
+            );
+        background-size: cover;
+        border-radius: 0;
+        // Display apps in a grid
+        align-content: flex-start;
+        display: flex !important;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+
+        @include media-breakpoint-up(lg) {
+            padding: {
+                left: calc((100vw - 850px) / 2);
+                right: calc((100vw - 850px) / 2);
+            }
+        }
+
+        .dropdown-item {
+            padding: 0;
+        }
+
+        .o_app {
+            outline: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            flex-direction: column;
+            justify-content: flex-start;
+            white-space: normal;
+            color: $white !important;
+            padding: 15px 0 10px;
+            font-size: 1.25rem;
+            text-shadow: 1px 1px 1px rgba($black, 0.4);
+            border-radius: 4px;
+            transition: 300ms ease;
+            transition-property: background-color;
+            &:focus {
+                background-color: rgba($white, 0.05) !important;
+            }
+            img {
+                box-shadow: none;
+                margin-bottom: 5px;
+                transition: 300ms ease;
+                transition-property: box-shadow, transform;
+            }
+
+            &:hover img,
+            a:focus img {
+                transform: translateY(-3px);
+                box-shadow: 0 9px 12px -4px rgba($black, 0.3);
+            }
+
+            // Size depends on screen
+            width: 33.33333333%;
+            @include media-breakpoint-up(sm) {
+                width: 25%;
+            }
+            @include media-breakpoint-up(md) {
+                width: 16.6666666%;
+            }
+        }
+
+        // Hide app icons when searching
+        .has-results ~ .o_app {
+            display: none;
+        }
+
+        .o-app-icon {
+            height: auto;
+            max-width: 6rem;
+            padding: 0;
+        }
+
+        // Search input for menus
+        .form-row {
+            width: 100%;
+        }
+
+        .search-container {
+            width: 100%;
+            margin: 1rem 1.5rem 0;
+
+            .search-input {
+                display: flex;
+                justify-items: center;
+                box-shadow: inset 0 1px 0 rgba($white, 0.1), 0 1px 0 rgba($black, 0.1);
+                text-shadow: 0 1px 0 rgba($black, 0.5);
+                border-radius: 4px;
+                padding: 0.4rem 0.8rem;
+                margin-bottom: 1rem;
+                background-color: rgba($white, 0.1);
+
+                @include media-breakpoint-up(md) {
+                    padding: 0.8rem 1.2rem;
+                }
+
+                .search-icon {
+                    color: $white;
+                    font-size: 1.5rem;
+                    margin-right: 1rem;
+                    padding-top: 1px;
+                }
+
+                .form-control {
+                    height: 2rem;
+                    background: none;
+                    border: none;
+                    color: $white;
+                    display: block;
+                    padding: 1px 2px 2px 2px;
+                    box-shadow: none;
+
+                    &::placeholder {
+                        color: $white;
+                        opacity: 0.5;
+                    }
+                }
+            }
+            // Allow to scroll only on results, keeping static search box above
+            .search-results {
+                .text-ellipsis {
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+                .text-primary {
+                    color: red !important;
+                }
+                margin-top: 1rem;
+                max-height: calc(100vh - #{$o-navbar-height} - 8rem) !important;
+                overflow: auto;
+                position: relative;
+            }
+            .search-result {
+                display: block;
+                align-items: center;
+                background-position: left;
+                background-repeat: no-repeat;
+                background-size: contain;
+                color: $white;
+                cursor: pointer;
+                line-height: 2.5rem;
+                padding-left: 3.5rem;
+                white-space: normal;
+                font-weight: 100;
+                &.highlight,
+                &:hover {
+                    background-color: rgba($black, 0.11);
+                }
+                b {
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+}
+
+.dropdown-menu-custom {
+    max-height: 70vh;
+    overflow: auto;
+    background-clip: border-box;
+    box-shadow: $o-dropdown-box-shadow;
+}

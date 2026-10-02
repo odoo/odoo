@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_woo_instance_form" model="ir.ui.view">
+        <field name="name">woo.instance.form</field>
+        <field name="model">woo.instance</field>
+        <field name="arch" type="xml">
+            <form string="Configure Instance">
+                <header>
+                    <button string='Authenticate' type="object" name="login" class="oe_highlight" icon="fa-plug"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" string="Name"/>
+                            <field name="active" invisible="1"/>
+                            <field name='woo_company_id' required="1"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}" string="Company"/>
+                        </group>
+
+                        <group>
+                            <field name='url' required="1" placeholder="http://www.example.com"/>
+                            <field name="version" invisible="1"/>
+                        </group>
+
+                    </group>
+
+                    <group>
+                        <group>
+                            <field name='client_id' required="1"/>
+                            <field name='client_secret' required="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_woo_instance_tree" model="ir.ui.view">
+        <field name="name">woo.instance.tree.view</field>
+        <field name="model">woo.instance</field>
+        <field name="arch" type="xml">
+            <tree string="Woo Instance">
+                <field name="name"/>
+                <field name="url"/>
+                <field name="woo_company_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_woo_commerce_instance_kanban" model="ir.ui.view">
+        <field name="name">woo.instance.kanban</field>
+        <field name="model">woo.instance</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_woo_kanban" create="false" sample="1"
+            >
+                <field name="name"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <t t-esc="record.name.value"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_manage_button_section">
+                                    <a class="o_kanban_manage_toggle_button" href="#">
+                                        <i class="fa fa-ellipsis-v" role="img" aria-label="Selection"
+                                           title="Selection"/>
+                                    </a>
+                                </div>
+                            </div>
+                            <div>
+                                <field name="dashboard_graph_data" widget="woo_dashboard_graph" graph_type="bar"/>
+                            </div>
+                        </div>
+                    </t>
+                    <br></br>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_instance_search" model="ir.ui.view">
+        <field name="name">view.instance.search.view</field>
+        <field name="model">woo.instance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_woo_instance" model="ir.actions.act_window">
+        <field name="name">WooCommerce Instances</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">woo.instance</field>
+        <field name="view_id" ref="view_woo_instance_tree"/>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <record id="action_woo_dashboard" model="ir.actions.act_window">
+        <field name="name">WooCommerce Dashboard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">woo.instance</field>
+        <field name="view_id" ref="view_woo_commerce_instance_kanban"/>
+        <field name="view_mode">kanban</field>
+        <field name="target">current</field>
+    </record>
+
+</odoo>
+

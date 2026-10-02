@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="om_account_followup_stat_by_partner_search" model="ir.ui.view">
+            <field name="name">followup.stat.by.partner.search</field>
+            <field name="model">followup.stat.by.partner</field>
+            <field name="arch" type="xml">
+                <search string="Partner to Remind">
+                    <field name="date_followup"/>
+                    <filter string="Balance > 0"
+                            domain="[('balance','&gt;',0)]" icon="terp-dolar"
+                            name="balance_positive"/>
+                    <field name="partner_id"/>
+                    <field name="max_followup_id"/>
+                    <field name="company_id"
+                           groups="base.group_multi_company"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="om_account_followup_stat_by_partner_tree" model="ir.ui.view">
+            <field name="name">followup.stat.by.partner.tree</field>
+            <field name="model">followup.stat.by.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Partner to Remind">
+                    <field name="partner_id"/>
+                    <field name="balance"/>
+                    <field name="max_followup_id"/>
+                    <field name="date_followup"/>
+                    <field name="date_move_last"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Template for adding a button in the view by inheriting the view -->
+<templates xml:space="preserve">
+    <t t-name="account.ListView.Buttons" t-inherit="web.ListView.Buttons"
+       t-inherit-mode="primary" owl="1" t-options="{'view_class': 'BillView'}">
+        <xpath expr="//button[hasclass('o_list_button_add')]" position="after">
+            <t t-if="this.props.context.default_move_type == 'in_invoice'">
+            <button id="button_digitize_id" t-if="this.state.button_state"
+                    class="btn btn-primary o_list_button_digitize"
+                    style="margin-left:10px;"
+                    t-on-click="onClickDigitize">
+                    Digitize Bill
+            </button>
+            </t>
+        </xpath>
+    </t>
+</templates>

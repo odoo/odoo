@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_partner_form_agent" model="ir.ui.view">
+        <field name="name">res.partner.form.agent</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="priority" eval="18" />
+        <field name="arch" type="xml">
+            <field name="vat" position="after">
+                <field name="agent" string="Agent" />
+            </field>
+            <xpath
+                expr="//page[@name='sales_purchases']//field[@name='user_id']"
+                position="after"
+            >
+                <field
+                    name="agent_ids"
+                    widget="many2many_tags"
+                    context="{'default_agent': True}"
+                />
+            </xpath>
+            <page name="sales_purchases" position="after">
+                <page
+                    name="agent_information"
+                    string="Agent information"
+                    groups="commission.group_commission_user"
+                    attrs="{'invisible': [('agent', '=', False)]}"
+                >
+                    <group>
+                        <group>
+                            <field
+                                name="agent_type"
+                                attrs="{'required': [('agent', '=', True)]}"
+                            />
+                            <field
+                                name="commission_id"
+                                attrs="{'required': [('agent', '=', True)]}"
+                            />
+                            <field
+                                name="settlement"
+                                attrs="{'required': [('agent', '=', True)]}"
+                            />
+                        </group>
+                        <group
+                            colspan="2"
+                            string="Settlements"
+                            attrs="{'invisible': [('settlement_ids', '=', [])]}"
+                        >
+                            <field colspan="2" name="settlement_ids" nolabel="1">
+                                <tree
+                                    decoration-danger="state == 'cancel'"
+                                    decoration-success="state == 'invoiced'"
+                                >
+                                    <field name="date_from" />
+                                    <field name="date_to" />
+                                    <field name="total" sum="Settled total" />
+                                    <field name="state" />
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+    <record id="res_partner_view_search" model="ir.ui.view">
+        <field name="name">res.partner.select</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter" />
+        <field name="arch" type="xml">
+            <filter name="inactive" position="before">
+                <filter
+                    string="Agents"
+                    name="agent"
+                    domain="[('agent', '=', 1)]"
+                    help="Agent Partners"
+                />
+                <separator />
+            </filter>
+        </field>
+    </record>
+    <record id="action_agent_form" model="ir.actions.act_window">
+        <field name="name">Agents</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,form,tree</field>
+        <field name="context">{"search_default_agent": 1, 'default_agent': 1}</field>
+        <field name="search_view_id" ref="res_partner_view_search" />
+    </record>
+    <menuitem
+        id="menu_agent_form"
+        parent="menu_commission"
+        action="action_agent_form"
+        sequence="10"
+    />
+</odoo>

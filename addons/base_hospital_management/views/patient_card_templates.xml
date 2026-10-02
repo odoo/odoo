@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--        Patient card template-->
+    <template id="patient_card_form">
+        <t t-call="website.layout">
+            <div id="patient_form">
+                <section
+                        class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24"
+                        data-vcss="001" data-snippet="s_title"
+                        data-scroll-background-ratio="1">
+                    <span class="s_parallax_bg oe_img_bg"
+                          style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+                    <div class="o_we_bg_filter bg-black-50"/>
+                    <div class="container-fluid">
+                        <h1 class="container">Patient Card</h1>
+                    </div>
+                </section>
+                <section class="p-3">
+                    <div class="container">
+                        <form action="/patient_card/success"
+                              method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="mb-3 col-8">
+                                    <label for="pname"
+                                           class="form-label">Patient Name
+                                    </label>
+                                    <input class="form-control" type="text"
+                                           id="pname" name="pname"
+                                           required="True"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-3">
+                                    <label for="dob"
+                                           class="form-label">Date of Birth
+                                    </label>
+                                    <input class="form-control" type="date"
+                                           id="dob" name="dob"
+                                           required="True"/>
+                                </div>
+                                <div class="mb-3 col-5">
+                                    <label for="gender"
+                                           class="form-label">Gender
+                                    </label>
+                                    <select class="form-control"
+                                            id="gender" name="gender"
+                                            required="True">
+                                        <option/>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female
+                                        </option>
+                                        <option value="others">Other
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-8">
+                                    <label for="mail"
+                                           class="form-label">Email
+                                    </label>
+                                    <input class="form-control" type="email"
+                                           id="mail" name="mail"
+                                           required="True"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-8">
+                                    <label for="phone"
+                                           class="form-label">Phone
+                                    </label>
+                                    <input class="form-control" type="text"
+                                           id="phone" name="phone"
+                                           required="True"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-8">
+                                    <label for="place"
+                                           class="form-label">Place
+                                    </label>
+                                    <input class="form-control" type="text"
+                                           id="place" name="place"
+                                           required="True"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-8">
+                                    <label for="file"
+                                           class="form-label">Upload your
+                                        photo here
+                                    </label>
+                                    <br/>
+                                    <input type="file"
+                                           id="file" name="file"
+                                           required="True"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 col-8">
+                                    <button type="submit"
+                                            class="btn btn-primary">
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

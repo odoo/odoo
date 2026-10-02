@@ -1,0 +1,44 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_inventory_location_tree_view">
+        <field name="name">eg.inventory.location.tree.view</field>
+        <field name="model">eg.inventory.location</field>
+        <field name="arch" type="xml">
+            <tree create="0" decoration-danger="update_required==True">
+                <field name="location_id"/>
+                <field name="instance_id"/>
+                <field name="name"/>
+                <field name="city"/>
+                <field name="update_required"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="eg_inventory_location_form_view">
+        <field name="name">eg.inventory.location.form.view</field>
+        <field name="model">eg.inventory.location</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="city"/>
+                        </group>
+                        <group>
+                            <field name="location_id"/>
+                            <field name="instance_id"/>
+                            <field name="provider" invisible="1"/>
+                            <field name="update_required"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="eg_inventory_location_action">
+        <field name="name">Inventory Locations</field>
+        <field name="res_model">eg.inventory.location</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Inventory Locations" id="eg_inventory_location_menu" action="eg_inventory_location_action"
+              parent="product_mapping_id" sequence="6"/>
+</odoo>

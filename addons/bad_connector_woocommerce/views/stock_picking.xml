@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Inherit Stock Picking view to add connector page and  Binding -->
+    <record id="stock_picking_form_view" model="ir.ui.view">
+        <field name="name">stock.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//page[@name='operations']//field[@name='move_ids_without_package']/form//field[@name='description_picking']"
+                position="after"
+            >
+                <field name="external_move" />
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <header>
+                    <field name="woo_return_bind_ids" invisible="1" />
+                    <field name="sale_woo_binding_ids" invisible="1" />
+                    <button
+                        name="export_refund"
+                        type="object"
+                        class="oe_highlight"
+                        string="Export Refund"
+                        attrs="{'invisible': ['|','|',('is_refund', '=', False),('woo_return_bind_ids', '!=', []),('sale_woo_binding_ids','=',[])]}"
+                    />
+                </header>
+            </xpath>
+            <xpath expr="//sheet/group/group/field[@name='origin']" position="after">
+                <field name="woo_return_bind_ids" invisible="1" />
+                <field name="sale_woo_binding_ids" invisible="1" />
+                <field name="is_return_stock_picking" invisible="1" />
+                <field
+                    name="is_refund"
+                    attrs="{'invisible':['|','|','|',('is_return_stock_picking','=',False),('state','not in','done'),('woo_return_bind_ids', '!=', []),('sale_woo_binding_ids','=',[])]}"
+                />
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page
+                    string="WooCommerce Connector"
+                    name="woo_connector"
+                    attrs="{'invisible': [('woo_return_bind_ids', '=', [])]}"
+                    groups="connector.group_connector_manager"
+                >
+                    <field name="woo_return_bind_ids" nolabel="1" readonly="1">
+                        <tree
+                            string="WooCommerce Stock Picking"
+                            delete="false"
+                            edit="false"
+                            create="false"
+                        >
+                            <field name="backend_id" widget="selection" />
+                            <field name="external_id" />
+                        </tree>
+                        <form
+                            string="WooCommerce Stock Picking"
+                            delete="false"
+                            edit="false"
+                            create="false"
+                        >
+                            <group>
+                                <group>
+                                    <field name="backend_id" widget="selection" />
+                                    <field name="external_id" />
+                                </group>
+                                <group>
+                                    <field name="woo_data" />
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

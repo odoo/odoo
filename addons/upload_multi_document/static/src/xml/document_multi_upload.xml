@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--The templates are defining the buttons to be displayed on different lists: UploadDocumentList, BillsListView, and ExpensesListView.-->
+<templates id="template" xml:space="preserve" owl="1">
+	<t t-inherit="web.ListView.Buttons" t-name="UploadDocumentList.Buttons"
+       t-inherit-mode="extension">
+		<xpath expr="//*[@class='btn btn-primary o_list_button_add']"
+               position="after">
+			<t t-log="this"/>
+            <button type="button" class="btn btn-secondary on_upload_doc_list"
+                    t-on-click="_onUploadList">
+                <i class="fa fa-paperclip"/>
+            </button>
+		</xpath>
+	</t>
+    <t t-extend="BillsListView.buttons">
+    <t t-jquery="button.o_list_export_xlsx" t-operation="after">
+      <button type="button" class="btn btn-secondary on_upload_doc_list">
+		  <i class="fa fa-paperclip"/>
+	  </button>
+    </t>
+  </t>
+    <t t-extend="ExpensesListView.buttons">
+    <t t-jquery="button.o_list_export_xlsx" t-operation="after">
+      <button type="button" class="btn btn-secondary on_upload_doc_list">
+		  <i class="fa fa-paperclip"/>
+	  </button>
+    </t>
+  </t>
+</templates>

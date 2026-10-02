@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- It defines a new view for the Sale Order model and adds some fields and buttons to it. Specifically, it adds a checkbox field named "apply_stock_reservation" and a hidden field named "state_reservation" to the view. It also adds a button named "Create stock reservation" that triggers the "create_reservation_form" action when clicked, and another button named "Cancel stock reservation" that triggers the "cancel_reservation" action when clicked. Finally, it adds a new page named "Reserved Stock" to the view, which contains a tree view displaying information about reserved stock for the order. The code uses the XPath language to locate and modify existing elements in the view definition.-->
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.sales.stock.reservation</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="apply_stock_reservation"/>
+                <field name="state_reservation" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="after">
+                <button name="action_create_stock_reservation"
+                        string="Create stock reservation"
+                        class="btn-primary"
+                        type="object"
+                        attrs="{'invisible': ['|','|',('apply_stock_reservation', '=', False), ('state', 'not in', 'draft'),('state_reservation', '=', 'reserved')]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_create_stock_reservation']"
+                   position="after">
+                <button name="action_cancel_reservation"
+                        string="Cancel stock reservation"
+                        class="btn-primary"
+                        type="object"
+                        attrs="{'invisible': ['|','|',('state_reservation', '!=', 'reserved'),('state', 'not in', 'draft'),('state_reservation', '=', 'cancel')]}"/>
+            </xpath>
+            <xpath expr="//page[@name='other_information']" position="after">
+                <page string="Reserved Stock" name="reserved_stock">
+                    <field name="reserved_stock_ids">
+                        <tree create="false" editable="0">
+                            <field name="name"/>
+                            <field name="order_line_name"/>
+                            <field name="product_id"/>
+                            <field name="reserved_quantity"/>
+                            <field name="status" decoration-success="status=='reserved'" decoration-danger="status=='cancelled'"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

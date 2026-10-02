@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="action_server_module_multi_uninstall" model="ir.actions.server">
+            <field name="name">Uninstall Modules</field>
+            <field name="type">ir.actions.server</field>
+            <field name="binding_model_id" ref="base.model_ir_module_module" />
+            <field name="model_id" ref="base.model_ir_module_module" />
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                records.module_multi_uninstall()
+            </field>
+        </record>
+
+        <record id="action_server_module_multi_refresh_po" model="ir.actions.server">
+            <field name="name">Refresh Translation</field>
+            <field name="type">ir.actions.server</field>
+            <field name="binding_model_id" ref="base.model_ir_module_module" />
+            <field name="model_id" ref="base.model_ir_module_module" />
+            <field name="state">code</field>
+            <field name="code">action=records.module_multi_refresh_po()</field>
+        </record>
+
+        <record id="action_server_module_multi_get_po" model="ir.actions.act_window">
+            <field name="name">Export Translation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="binding_model_id" ref="base.model_ir_module_module" />
+            <field name="res_model">base.language.export</field>
+            <field name="view_id" ref="base.wizard_lang_export"/>
+            <field name="target">new</field>
+            <field name="context">{
+                'default_lang': 'zh_CN',
+                'default_format': 'po',
+                'default_modules': active_ids,
+            }
+            </field>
+        </record>
+    </data>
+</odoo>

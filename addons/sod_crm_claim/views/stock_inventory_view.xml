@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019-2023 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details). -->
+<odoo>
+
+    <record id="view_stock_quant_tree_inventory_editable" model="ir.ui.view">
+        <field name="name">stock.quant.form</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.view_stock_quant_tree_inventory_editable" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+				<field
+                    name="claim_id"
+                    invisible="context.get('from_claim', True)"
+                    groups="!sod_crm_claim.group_crm_claim_manager"
+                />
+				<field
+                    name="claim_id"
+                    invisible="context.get('from_claim', True)"
+                    groups="sod_crm_claim.group_crm_claim_manager"
+                    readonly="False"
+                />
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

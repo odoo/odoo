@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--  Scheduled action for checking blood bank availability-->
+        <record id="ir_cron_scheduler_blood_availability" model="ir.cron">
+            <field name="name">Blood Bank Availability</field>
+            <field name="model_id" ref="model_blood_bank"/>
+            <field name="state">code</field>
+            <field name="code">model.action_change_availability()</field>
+            <field name="interval_number">3</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+        </record>
+    </data>
+</odoo>

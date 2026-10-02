@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2022 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details). -->
+<odoo>
+	<record id="res_config_settings_view_form" model="ir.ui.view">
+		<field name="name">res.config.settings.view.form.inherit.crm.claim</field>
+		<field name="model">res.config.settings</field>
+		<field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
+		<field name="arch" type="xml">
+			<xpath expr="//div[hasclass('settings')]" position="inside">
+				<div
+                    class="app_settings_block"
+                    data-string="Returns"
+                    string="Returns"
+                    data-key="crm_claim"
+                >
+					<h2>Returns Configuration</h2>
+					<div class="row mt16 o_settings_container">
+						<div class="col-xs-12 col-md-6 o_setting_box">
+							<div class="o_setting_right_pane">
+								<label string="Returns Location" for="return_location_id" />
+								<div class="text-muted">
+									Please choose the return's location
+								</div>
+								<div class="text-muted">
+									<field name="return_location_id" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</xpath>
+		</field>
+	</record>
+
+	<record id="action_rma_configuration" model="ir.actions.act_window">
+		<field name="name">Settings</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">res.config.settings</field>
+		<field name="view_mode">form</field>
+		<field name="target">inline</field>
+		<field name="context">{'module' : 'crm_claim'}</field>
+	</record>
+
+	<menuitem
+        id="menu_rma_global_settings"
+        name="Settings"
+        parent="menu_claim_config"
+        sequence="0"
+        action="action_rma_configuration"
+        groups="base.group_system"
+    />
+</odoo>

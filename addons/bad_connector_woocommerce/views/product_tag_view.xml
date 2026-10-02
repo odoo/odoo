@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <!-- Inherited product.tag form view to add backend -->
+        <record id="inherited_product_tag_form_form" model="ir.ui.view">
+            <field name="name">inherited.product.tag.form</field>
+            <field name="model">product.tag</field>
+            <field name="inherit_id" ref="product.product_tag_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <notebook>
+                        <page
+                            string="WooCommerce Connector"
+                            name="woo_connector"
+                            attrs="{'invisible': [('woo_bind_ids', '=', [])]}"
+                            groups="connector.group_connector_manager"
+                        >
+                            <field name="woo_bind_ids" nolabel="1" readonly="1">
+                                <tree
+                                    string="WooCommerce Product Tag"
+                                    delete="false"
+                                    edit="false"
+                                    create="false"
+                                >
+                                    <field name="backend_id" widget="selection" />
+                                    <field name="external_id" />
+                                </tree>
+                                <form
+                                    string="WooCommerce Product Tag"
+                                    delete="false"
+                                    edit="false"
+                                    create="false"
+                                >
+                                    <group>
+                                        <group>
+                                            <field name="slug" />
+                                            <field name="description" />
+                                            <field
+                                                name="backend_id"
+                                                widget="selection"
+                                            />
+                                            <field name="external_id" />
+                                        </group>
+                                        <group>
+                                            <field name="woo_data" />
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Product Tag menu button -->
+        <menuitem
+            id="inherited_menu_product_tag_action"
+            action="product.product_tag_action"
+            name="Product Tags"
+            parent="sale.prod_config_main"
+            groups="connector.group_connector_manager"
+            sequence="10"
+        />
+    </data>
+</odoo>

@@ -1,0 +1,60 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_commission_salesman
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-06-12 14:51+0000\n"
+"PO-Revision-Date: 2021-03-17 15:45+0000\n"
+"Last-Translator: Ana Suárez <ana.suarez@qubiq.es>\n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.3.2\n"
+
+#. module: sale_commission_salesman
+#: model:ir.model,name:sale_commission_salesman.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: sale_commission_salesman
+#: model:ir.model.fields,field_description:sale_commission_salesman.field_res_partner__salesman_as_agent
+#: model:ir.model.fields,field_description:sale_commission_salesman.field_res_users__salesman_as_agent
+msgid "Convert salesman into agent"
+msgstr "Convertir comercial a agente"
+
+#. module: sale_commission_salesman
+#: model:ir.model.fields,help:sale_commission_salesman.field_res_partner__salesman_as_agent
+#: model:ir.model.fields,help:sale_commission_salesman.field_res_users__salesman_as_agent
+msgid ""
+"If the user linked to this partner is put as salesman and no other "
+"commission rule is triggered, this agent will be added as the commission "
+"agent"
+msgstr ""
+"Si el usuario enlazado con este contacto se coloca como comercial y no hay "
+"otra regla de comisión, este agente se añadirá como comisionista"
+
+#. module: sale_commission_salesman
+#: model:ir.model,name:sale_commission_salesman.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
+
+#. module: sale_commission_salesman
+#: model:ir.model,name:sale_commission_salesman.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea de pedido de ventas"
+
+#. module: sale_commission_salesman
+#. odoo-python
+#: code:addons/sale_commission_salesman/models/res_partner.py:0
+#, python-format
+msgid "You can't have a salesman auto-agent without commission."
+msgstr "No puede tener un comercial auto-agente sin comisión definida."
+
+#~ msgid "Invoice Line"
+#~ msgstr "Linea de la Factura"

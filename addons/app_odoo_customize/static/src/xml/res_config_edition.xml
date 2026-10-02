@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+	<t t-inherit="web.res_config_edition" t-inherit-mode="extension" owl="1">
+		<xpath expr="//div[hasclass('user-heading')]//h3" position="replace">
+            <h3 class="px-0">
+                Odoo <t t-esc="serverVersion"/> (<a target="_blank" href="https://www.odooai.cn" style="text-decoration: underline;">odooai.cn</a> Edition)
+            </h3>
+		</xpath>
+    </t>
+</templates>

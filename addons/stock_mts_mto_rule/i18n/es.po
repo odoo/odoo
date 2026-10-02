@@ -1,0 +1,126 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_mts_mto_rule
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2017
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-11-30 03:53+0000\n"
+"PO-Revision-Date: 2017-11-30 03:53+0000\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2017\n"
+"Language-Team: Spanish (https://www.transifex.com/oca/teams/23907/es/)\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: stock_mts_mto_rule
+#: model:ir.model.fields,field_description:stock_mts_mto_rule.field_stock_rule__action
+msgid "Action"
+msgstr ""
+
+#. module: stock_mts_mto_rule
+#: model:ir.model.fields.selection,name:stock_mts_mto_rule.selection__stock_rule__action__split_procurement
+msgid "Choose between MTS and MTO"
+msgstr "Escoja entre \"bajo existencias\" o \"bajo pedido\""
+
+#. module: stock_mts_mto_rule
+#: model:ir.model.fields,help:stock_mts_mto_rule.field_stock_warehouse__mto_mts_management
+msgid ""
+"If this new route is selected on product form view, a purchase order will be "
+"created only if the virtual stock is less than 0 else, the product will be "
+"taken from stocks"
+msgstr ""
+"Si se selecciona esta nueva ruta en la vista formulario de producto, se "
+"creará un pedido de compra sólo si la cantidad virtual es menor de 0. Si no, "
+"se cogerá el producto desde existencias."
+
+#. module: stock_mts_mto_rule
+#. odoo-python
+#: code:addons/stock_mts_mto_rule/models/stock_rule.py:0
+#, python-format
+msgid ""
+"Inconsistency between the source locations of the mts and mto rules linked "
+"to the procurement rule: %s! It should be the same."
+msgstr ""
+
+#. module: stock_mts_mto_rule
+#: model:ir.model.fields,field_description:stock_mts_mto_rule.field_stock_rule__mto_rule_id
+msgid "MTO Rule"
+msgstr "Regla \"bajo pedido\""
+
+#. module: stock_mts_mto_rule
+#: model:ir.model.fields,field_description:stock_mts_mto_rule.field_stock_warehouse__mts_mto_rule_id
+msgid "MTO+MTS rule"
+msgstr "Regla MTO+MTS"
+
+#. module: stock_mts_mto_rule
+#: model:ir.model.fields,field_description:stock_mts_mto_rule.field_stock_rule__mts_rule_id
+msgid "MTS Rule"
+msgstr "Regla \"bajo existencias\""
+
+#. module: stock_mts_mto_rule
+#. odoo-python
+#: code:addons/stock_mts_mto_rule/models/stock_warehouse.py:0
+#, python-format
+msgid "MTS+MTO"
+msgstr "MTS+MTO"
+
+#. module: stock_mts_mto_rule
+#. odoo-python
+#: code:addons/stock_mts_mto_rule/models/stock_warehouse.py:0
+#: model:stock.route,name:stock_mts_mto_rule.route_mto_mts
+#, python-format
+msgid "Make To Order + Make To Stock"
+msgstr "Bajo pedido + bajo existencias"
+
+#. module: stock_mts_mto_rule
+#. odoo-python
+#: code:addons/stock_mts_mto_rule/models/stock_rule.py:0
+#, python-format
+msgid "No MTS or MTO rule configured on procurement rule: %s!"
+msgstr ""
+
+#. module: stock_mts_mto_rule
+#: model:ir.model,name:stock_mts_mto_rule.model_stock_rule
+#, fuzzy
+msgid "Stock Rule"
+msgstr "Regla \"bajo existencias\""
+
+#. module: stock_mts_mto_rule
+#: model:ir.model.fields,field_description:stock_mts_mto_rule.field_stock_warehouse__mto_mts_management
+msgid "Use MTO+MTS rules"
+msgstr "Usar reglas MTO+MTS"
+
+#. module: stock_mts_mto_rule
+#: model:ir.model,name:stock_mts_mto_rule.model_stock_warehouse
+msgid "Warehouse"
+msgstr "Almacén"
+
+#~ msgid "Can't find MTO Rule on the warehouse"
+#~ msgstr "No se puede encontrar un regla \"bajo pedido\" en el almacén"
+
+#~ msgid "Can't find MTS Rule on the warehouse"
+#~ msgstr "No se puede encontrar una regla \"bajo existencias\" en el almacén"
+
+#~ msgid "Can't find any generic MTS+MTO route."
+#~ msgstr ""
+#~ "No se puede encontrar una regla genérica MTS+MTO - \"bajo existencias"
+#~ "+bajo pedido\"."
+
+#~ msgid "Procurement Rule"
+#~ msgstr "Regla de abastecimiento"
+
+#~ msgid "Mto+Mts Procurement"
+#~ msgstr "Abastecimiento MTO+MTS"
+
+#~ msgid "Procurement"
+#~ msgstr "Abastecimiento"
+
+#~ msgid "Procurements"
+#~ msgstr "Abastecimientos"

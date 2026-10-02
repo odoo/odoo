@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="date_range_generator_view_form" model="ir.ui.view">
+        <field name="name">date.range.generator.form</field>
+        <field name="model">date.range.generator</field>
+        <field name="arch" type="xml">
+            <form string="Generate Date Ranges">
+                <sheet>
+                    <group>
+                        <group col="2" colspan="4" string="Parameters">
+                            <field name="type_id" />
+                            <field name="company_id" invisible="1" />
+                            <field
+                                groups="base.group_multi_company"
+                                name="company_id"
+                                options="{'no_create': True}"
+                            />
+                            <label for="duration_count" />
+                            <div>
+                                <field
+                                    class="oe_inline"
+                                    name="duration_count"
+                                />&amp;nbsp;
+                                <field class="oe_inline" name="unit_of_time" />
+                            </div>
+                            <field name="date_start" />
+                            <label for="date_end" string="Until" />
+                            <div>
+                                <field
+                                    class="oe_inline"
+                                    name="date_end"
+                                    attrs="{'required': [('count', '=', 0)]}"
+                                />,
+                                or generate <field
+                                    class="oe_inline"
+                                    name="count"
+                                    attrs="{'required': [('date_end', '=', False)]}"
+                                /> entries.
+                            </div>
+                            <label for="name_prefix" />
+                            <div>
+                                <field
+                                    name="name_prefix"
+                                    class="oe_inline"
+                                    attrs="{'required': [('unit_of_time', '!=', False), ('name_expr', '=', False)]}"
+                                /> or enter a complex expression below
+                            </div>
+                            <field
+                                name="name_expr"
+                                attrs="{'required': [('unit_of_time', '!=', False), ('name_prefix', '=', False)]}"
+                            />
+                            <field name="range_name_preview" />
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        class="btn btn-sm btn-primary"
+                        name="action_apply"
+                        string="Generate"
+                        type="object"
+                    />
+                    <button
+                        class="btn btn-sm btn-default"
+                        special="cancel"
+                        string="Cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="date_range_generator_action" model="ir.actions.act_window">
+        <field name="name">Generate Date Ranges</field>
+        <field name="res_model">date.range.generator</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="date_range_generator_view_form" />
+        <field name="target">new</field>
+    </record>
+    <menuitem
+        action="date_range_generator_action"
+        id="menu_date_range_generator_action"
+        parent="menu_date_range"
+    />
+</odoo>

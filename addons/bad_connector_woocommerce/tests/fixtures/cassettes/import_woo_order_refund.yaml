@@ -1,0 +1,83 @@
+interactions:
+    -   request:
+            body: null
+            headers:
+                Accept: ["*/*"]
+                Accept-Encoding: ["gzip, deflate, br"]
+                Connection: [keep-alive]
+                User-Agent: [python-requests/2.19.1]
+            method: GET
+            uri: https://localhost/wp-json/wc/v3/orders/71/refunds/1481
+        response:
+            body:
+                {
+                    string:
+                        '
+                            {
+                                "id": 1481,
+                                "date_created": "2024-02-28T08:39:56",
+                                "date_created_gmt": "2024-02-28T08:39:56",
+                                "amount": "2997.00",
+                                "reason": "",
+                                "refunded_by": 1,
+                                "refunded_payment": false,
+                                "meta_data": [],
+                                "line_items": [
+                                    {
+                                        "id": 2029,
+                                        "name": "Shirt",
+                                        "product_id": 50,
+                                        "variation_id": 0,
+                                        "quantity": -3,
+                                        "tax_class": "",
+                                        "subtotal": "0.00",
+                                        "subtotal_tax": "0.00",
+                                        "total": "0.00",
+                                        "total_tax": "0.00",
+                                        "taxes": [],
+                                        "sku": "shirt-sku",
+                                        "price": 0,
+                                        "image": {
+                                            "id": "",
+                                            "src": ""
+                                        },
+                                        "parent_name": null
+                                    }
+                                ],
+                                "shipping_lines": [],
+                                "tax_lines": [],
+                                "fee_lines": [],
+                                "_links": {
+                                    "self": [
+                                        {
+                                            "href": "http://localhost:8081/wp-json/wc/v3/orders/71/refunds/1481"
+                                        }
+                                    ],
+                                    "collection": [
+                                        {
+                                            "href": "http://localhost:8081/wp-json/wc/v3/orders/71/refunds"
+                                        }
+                                    ],
+                                    "up": [
+                                        {
+                                            "href": "http://localhost:8081/wp-json/wc/v3/orders/71"
+                                        }
+                                    ]
+                                }
+                            }
+                        ',
+                }
+            headers:
+                Cache-Control: ["no-store, no-cache, must-revalidate"]
+                Connection: [keep-alive]
+                Content-Type: [application/json; charset=utf-8]
+                Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+                Expires: ["Jan 23 23:59:59 2023 GMT"]
+                Server: [nginx/1.14.0 (Ubuntu)]
+                Set-Cookie:
+                  ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+                Transfer-Encoding: [chunked]
+                Vary: [Accept-Encoding]
+                X-Frame-Options: [SAMEORIGIN]
+                content-length: ["1378"]
+            status: {code: 200, message: OK}

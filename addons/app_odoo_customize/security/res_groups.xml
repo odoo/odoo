@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="0">
+        <record id="group_show_author_in_apps" model="res.groups">
+            <field name="name">Show Author in Apps Dashboard</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        <record id="group_show_quick_upgrade" model="res.groups">
+            <field name="name">Show Quick Upgrade in Apps Dashboard</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        <!--系统设置默认值-->
+        <!--1 默认显示快速升级-->
+        <record id="base.group_user" model="res.groups">
+            <field name="implied_ids"
+                   eval="[(4, ref('app_odoo_customize.group_show_quick_upgrade'))]"/>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_settled_wizard" model="ir.ui.view">
+        <field name="name">Select period to settle</field>
+        <field name="model">commission.make.settle</field>
+        <field name="arch" type="xml">
+            <form string="Settle commissions">
+                <field name="can_settle" invisible="1" />
+                <div
+                    class="alert alert-warning text-center"
+                    attrs="{'invisible': [('can_settle', '=', True)]}"
+                    role="alert"
+                >
+                    <span>
+                        No automatic settlements can be made. Install any extra
+                        commission module for having this feature enabled.
+                    </span>
+                </div>
+                <group>
+                    <p
+                        colspan="2"
+                    >Select the date up to which you want to make the settlements:
+                    </p>
+                </group>
+                <group colspan="2">
+                    <field name="date_to" />
+                    <field name="settlement_type" />
+                </group>
+                <group string="Agents">
+                    <p colspan="2">(keep empty for making the settlement of all agents)
+                    </p>
+                    <field name="agent_ids" nolabel="1" colspan="2" />
+                </group>
+                <footer>
+                    <button
+                        name="action_settle"
+                        string="Make settlements"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button
+                        name="action_cancel"
+                        string="Cancel"
+                        class="oe_link"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_agents_settlement" model="ir.actions.act_window">
+        <field name="name">Settle Commissions</field>
+        <field name="res_model">commission.make.settle</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_commission_make_settle" />
+    </record>
+    <menuitem
+        id="menu_commission_make_settle"
+        parent="menu_settlement_parent"
+        action="action_agents_settlement"
+        sequence="20"
+        groups="group_commission_manager"
+    />
+</odoo>

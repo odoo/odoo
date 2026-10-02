@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="account_bank_book_form_view" model="ir.ui.view">
+            <field name="name">account.bank.book.form.view</field>
+            <field name="model">account.bank.book.report</field>
+            <field name="arch" type="xml">
+                <form string="Bank Book Report">
+                    <field name="company_id" invisible="1"/>
+                    <group col="4">
+                        <field name="target_move" widget="radio"/>
+                        <field name="sortby" widget="radio"/>
+                        <field name="initial_balance"/>
+                        <newline/>
+                        <newline/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="account_ids" widget="many2many_tags"/>
+                        <field name="journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
+                    <footer>
+                        <button name="check_report" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                        <button string="Cancel" class="btn btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_bank_book_view" model="ir.actions.act_window">
+            <field name="name">Bank Book Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.bank.book.report</field>
+            <field name="view_id" ref="account_bank_book_form_view"/>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="account_bank_book_menu" name="Bank Book" action="action_account_bank_book_view"
+                  parent="base_accounting_kit.account_reports_daily_reports"/>
+    </data>
+</odoo>
