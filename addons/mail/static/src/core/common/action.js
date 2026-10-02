@@ -79,7 +79,6 @@ function toArray(val) {
  * @property {string|(params: ActionParams_T) => string} [badgeIcon]
  * @property {string|(params: ActionParams_T) => string} [badgeIconClass]
  * @property {string|(params: ActionParams_T) => string} [badgeText]
- * @property {string|(params: ActionParams_T) => string} [btnClass]
  * @property {Component} [component]
  * @property {Component} [extraContentComponent]
  * @property {boolean|(params: ActionParams_T) => boolean} [componentCondition=true]
@@ -322,17 +321,6 @@ export class Action {
             (typeof this.definition.badgeText === "function"
                 ? this.definition.badgeText.call(this, this.params)
                 : this.definition.badgeText)
-        );
-    }
-
-    /** @param {Action} action @returns {string|undefined} */
-    _btnClass(action) {}
-    get btnClass() {
-        return (
-            this._btnClass(this.params) ??
-            (typeof this.definition.btnClass === "function"
-                ? this.definition.btnClass.call(this, this.params)
-                : this.definition.btnClass)
         );
     }
 
