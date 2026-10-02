@@ -349,6 +349,11 @@ class ResConfigTest(models.Model):
         config_parameter='resConfigTest.parameter1',
         default=1000)
 
+    param_bool = fields.Boolean(
+        string='Test boolean parameter',
+        config_parameter='resConfigTest.parameter_bool',
+        default=True)
+
     param2 = fields.Many2one(
         'res.config',
         config_parameter="resConfigTest.parameter2")
