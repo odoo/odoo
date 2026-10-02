@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form string="Price Rules">
                 <group>
-                    <field name="name" invisible="1"/>
+                    <field name="name" invisible="1"/> <!-- computed name of the rule, read by the carrier rates loader widget -->
                 </group>
                 <group>
                     <label for="variable" string="Condition"/>
@@ -17,7 +17,7 @@
                         <field name="max_value"/>
                         <field name="variable_unit"/>
                     </div>
-                    <field name="currency_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/> <!-- currency of the monetary fields of this form -->
                     <label for="list_base_price" string="Delivery Cost"/>
                     <div>
                         <field name="list_base_price" widget="monetary" class="oe_inline"/>

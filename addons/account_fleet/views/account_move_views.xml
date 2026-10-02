@@ -12,13 +12,13 @@
                 </button>
             </xpath>
             <xpath expr="//field[@name='line_ids']//field[@name='account_id']" position="after">
-                <field name='need_vehicle' column_invisible="True"/>
+                <field name='need_vehicle' column_invisible="True"/> <!-- drives required of vehicle_id -->
                 <field name='vehicle_id'
                        required="need_vehicle and parent.move_type != 'entry'"
                        optional='hidden'/>
             </xpath>
             <xpath expr="//field[@name='invoice_line_ids']//field[@name='account_id']" position="after">
-                <field name='need_vehicle' column_invisible="True"/>
+                <field name='need_vehicle' column_invisible="True"/> <!-- drives required of vehicle_id -->
                 <field name='vehicle_id'
                        required="need_vehicle and parent.move_type != 'entry'"
                        optional='hidden'/>

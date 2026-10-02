@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <header position="inside">
                 <!-- modified through an onchange, must be present but not readonly -->
-                <field name="recompute_delivery_price" invisible="1"/>
+                <field name="recompute_delivery_price" invisible="1"/> <!-- drives invisible of the action_open_delivery_wizard button -->
             </header>
             <button id="create_invoice" position="before">
                 <button

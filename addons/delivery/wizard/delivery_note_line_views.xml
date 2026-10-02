@@ -6,7 +6,7 @@
         <field name="model">delivery.note.wizard.line</field>
         <field name="arch" type="xml">
             <list string="Delivery Note Line" create="false" delete="false" editable="bottom">
-                <field name="sol_id" column_invisible="1"/>
+                <field name="sol_id" column_invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
                 <field
                     name="product_image"
                     widget="image"

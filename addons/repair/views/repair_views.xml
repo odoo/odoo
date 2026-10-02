@@ -27,12 +27,12 @@
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
             <list string="Repairs order" multi_edit="1" sample="1" decoration-info="state == 'draft'">
-                <field name="company_id" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of location_dest_id, location_id, lot_id -->
                 <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                 <field name="name"/>
                 <field name="schedule_date" optional="show" widget="relative_date"/>
                 <field name="product_id" readonly="1" optional="show"/>
-                <field name="parts_availability_state" column_invisible="True"/>
+                <field name="parts_availability_state" column_invisible="True"/> <!-- drives decoration-danger/success/warning of parts_availability -->
                 <field name="parts_availability"
                     invisible="state != 'confirmed'"
                     optional="hide"
@@ -63,9 +63,9 @@
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
             <form string="Repair Order">
-                <field name="has_uncomplete_moves" invisible="1"/>
-                <field name="unreserve_visible" invisible="1"/>
-                <field name="reserve_visible" invisible="1"/>
+                <field name="has_uncomplete_moves" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+                <field name="unreserve_visible" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+                <field name="reserve_visible" invisible="1"/> <!-- drives invisible of the action_assign button -->
                <header>
                    <button name="action_validate" invisible="state != 'draft'" type="object" string="Confirm Repair" class="oe_highlight" data-hotkey="v"/>
                    <button name="action_repair_end" type="object" string="End Repair" class="oe_highlight" data-hotkey="x"
@@ -113,7 +113,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="allowed_lot_ids" invisible="1"/>
+                            <field name="allowed_lot_ids" invisible="1"/> <!-- used in the python-declared domain of lot_id -->
                             <field name="repair_request" invisible="not sale_order_line_id"/>
                             <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_identifier': True}" readonly="sale_order_id"/>
                             <field name="product_id" readonly="state in ['cancel', 'done']"/>
@@ -135,7 +135,7 @@
                             <field name="user_id" domain="[('share', '=', False)]"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
-                            <field name="parts_availability_state" invisible="True"/>
+                            <field name="parts_availability_state" invisible="True"/> <!-- drives decoration-danger/success/warning of parts_availability -->
                             <field name="parts_availability"
                                 invisible="state != 'confirmed'"
                                 decoration-success="parts_availability_state == 'available'"
@@ -155,20 +155,20 @@
                                     <button name="action_add_from_catalog_repair" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
                                 </control>
                                 <field name="sequence" widget="handle"/>
-                                <field name="company_id" column_invisible="True"/>
-                                <field name="state" column_invisible="True"/>
-                                <field name="picking_type_id" column_invisible="True"/>
-                                <field name="location_id" column_invisible="True"/>
-                                <field name="location_dest_id" column_invisible="True"/>
-                                <field name="partner_id" column_invisible="True" readonly="state == 'done'"/>
-                                <field name="picking_code" column_invisible="True"/>
-                                <field name="show_details_visible" column_invisible="True"/>
-                                <field name="additional" column_invisible="True"/>
-                                <field name="move_lines_count" column_invisible="True"/>
-                                <field name="is_locked" column_invisible="True"/>
-                                <field name="is_storable" column_invisible="True"/>
-                                <field name="has_tracking" column_invisible="True"/>
-                                <field name="display_assign_serial" column_invisible="True"/>
+                                <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of location_dest_id, location_id, lot_id -->
+                                <field name="state" column_invisible="True"/> <!-- drives invisible of the action_validate button, the action_create_invoice button and 5 more and readonly of product_id, lot_id and 9 more and required of lot_id -->
+                                <field name="picking_type_id" column_invisible="True"/> <!-- filled from the default_picking_type_id of the context when a line is added here -->
+                                <field name="location_id" column_invisible="True"/> <!-- filled from the default_location_id of the context when a line is added here -->
+                                <field name="location_dest_id" column_invisible="True"/> <!-- passed as default_location_dest_id in the context of the action_show_details button -->
+                                <field name="partner_id" column_invisible="True" readonly="state == 'done'"/> <!-- owner of the repaired product, kept with its readonly expression though the column is hidden -->
+                                <field name="picking_code" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                                <field name="show_details_visible" column_invisible="True"/> <!-- drives invisible of lot_ids, the action_show_details button -->
+                                <field name="additional" column_invisible="True"/> <!-- drives readonly of product_id, uom_id -->
+                                <field name="move_lines_count" column_invisible="True"/> <!-- drives readonly of product_id -->
+                                <field name="is_locked" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                                <field name="is_storable" column_invisible="True"/> <!-- read by the forecast_widget of forecast_availability to open the forecast report -->
+                                <field name="has_tracking" column_invisible="True"/> <!-- drives invisible of lot_ids -->
+                                <field name="display_assign_serial" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                                 <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0"/>
                                 <field name="forecast_availability" string="" column_invisible="parent.state == 'done'" widget="forecast_widget"/>
                                 <field name="description_picking" string="Description" optional="hide"/>
@@ -176,8 +176,8 @@
                                 <field name="date_deadline" optional="hide"/>
                                 <field name="repair_line_type" required="1"/>
                                 <field name="product_uom_qty" string="Demand" readonly="state in ('done', 'cancel')"/>
-                                <field name="forecast_expected_date" column_invisible="True"/>
-                                <field name="product_qty" readonly="1" column_invisible="True"/>
+                                <field name="forecast_expected_date" column_invisible="True"/> <!-- read by the forecast_widget of forecast_availability -->
+                                <field name="product_qty" readonly="1" column_invisible="True"/> <!-- target of the <label for="product_qty"> of this form -->
                                 <field name="quantity" string="Quantity" readonly="not product_id" optional="show"/>
                                 <field name="uom_id" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom"/>
                                 <field name="lot_ids" widget="many2many_tags"
