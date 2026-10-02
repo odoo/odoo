@@ -9,6 +9,7 @@ class XenditCommon(PaymentCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.company.country_id = cls.env.ref('base.id')
         cls.xendit = cls._prepare_provider('xendit', update_values={
             'xendit_secret_key': 'xnd_secret_key',
             'xendit_webhook_token': 'xnd_webhook_token',
