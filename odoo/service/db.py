@@ -3,6 +3,7 @@ import base64
 import json
 import logging
 import os
+import secrets
 import shutil
 import subprocess
 import tempfile
@@ -355,7 +356,11 @@ def restore_db(db, dump_file, copy=False, neutralize_database=False):
                     filestore_path = os.path.join(dump_dir, 'filestore')
 
             pg_cmd = 'psql'
-            pg_args = ['-q', '-f', os.path.join(dump_dir, 'dump.sql')]
+            pg_args = [
+                '-q',
+                '-c', f'\\restrict {secrets.token_hex()}',
+                '-f', os.path.join(dump_dir, 'dump.sql'),
+            ]
 
         else:
             # <= 7.0 format (raw pg_dump output)

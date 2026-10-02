@@ -103,6 +103,15 @@ class TestItEdi(AccountTestInvoicingCommon):
             'is_company': True,
         })
 
+        cls.italian_partner_no_VAT_no_codice = cls.env['res.partner'].create({
+            'name': 'Alessi',
+            'country_id': cls.env.ref('base.it').id,
+            'street': 'Via Privata Alessi 6',
+            'zip': '28887',
+            'city': 'Milan',
+            'is_company': True,
+        })
+
         cls.american_partner = cls.env['res.partner'].create({
             'name': 'Alessi',
             'vat': '00465840031',
