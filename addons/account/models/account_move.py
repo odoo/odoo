@@ -6017,16 +6017,9 @@ class AccountMove(models.Model):
 
     def _get_cogs_common_vals(self, line):
         return {
-            'name': line.name[:64] if line.name else '',
+            **line._prepare_cogs_line_vals(),
             'move_id': self.id,
             'partner_id': self.commercial_partner_id.id,
-            'product_id': line.product_id.id,
-            'product_uom_id': line.product_uom_id.id,
-            'quantity': line.quantity,
-            'analytic_distribution': line.analytic_distribution,
-            'display_type': 'cogs',
-            'tax_ids': [],
-            'cogs_origin_id': line.id,
         }
 
     def _get_cogs_lines_vals(self):
@@ -6040,14 +6033,12 @@ class AccountMove(models.Model):
 
         lines_vals_list = []
         for line in self.invoice_line_ids:
-            if not line._use_inventory_valuation():
+            if not line._can_create_cogs_lines():
                 continue
 
             accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.fiscal_position_id)
             stock_account = accounts['stock_valuation']
             expense_account = accounts['expense'] or self.journal_id.default_account_id
-            if not stock_account or not expense_account:
-                continue
 
             # `_get_cogs_value` always returns a price in the company currency (standard price,
             # or FIFO/AVCO cost from the stock valuation layers), so the resulting amount below

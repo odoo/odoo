@@ -3809,11 +3809,36 @@ class AccountMoveLine(models.Model):
                 qties[aml.product_id] -= qty
         return qties
 
+    def _prepare_cogs_line_vals(self):
+        """Prepare shared COGS values from an invoice line or an existing COGS line."""
+        self.ensure_one()
+        return {
+            'name': self.name[:64] if self.name else '',
+            'partner_id': self.partner_id.id,
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_uom_id.id,
+            'quantity': self.quantity,
+            'analytic_distribution': self.analytic_distribution,
+            'display_type': 'cogs',
+            'tax_ids': [],
+            'cogs_origin_id': (self.cogs_origin_id or self).id,
+        }
+
     def _get_cogs_value(self):
         """ Get the COGS price unit in the product's default unit of measure.
         """
         self.ensure_one()
         return self.product_id.standard_price
+
+    def _can_create_cogs_lines(self):
+        self.ensure_one()
+        if not self._use_inventory_valuation():
+            return False
+        accounts = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)
+        return bool(
+            accounts['stock_valuation']
+            and (accounts['expense'] or self.move_id.journal_id.default_account_id)
+        )
 
     def _use_inventory_valuation(self):
         """ Whether this line's product is valued in real time in the stock valuation account:
