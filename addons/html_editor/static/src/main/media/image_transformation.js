@@ -46,12 +46,16 @@ export class ImageTransformation extends Component {
         this.transfoContainer = useRef("transfoContainer");
         this.transfoControls = useRef("transfoControls");
         this.transfoCenter = useRef("transfoCenter");
+        this.transfoDragger = null;
         this.computeImageTransformations();
         onMounted(() => {
+            this.transfoDragger = this.document.createElement("div");
+            this.transfoDragger.className = "transfo-dragger";
+            this.transfoContainer.el.prepend(this.transfoDragger);
             this.positionTransfoContainer();
         });
-        useExternalListener(window, "mousemove", this.mouseMove);
-        useExternalListener(window, "mouseup", this.mouseUp);
+        useExternalListener(window, "pointermove", this.pointerMove);
+        useExternalListener(window, "pointerup", this.pointerUp);
         // When a character key is pressed and the image gets deleted,
         // close the image transform via selectionchange.
         useExternalListener(this.document, "selectionchange", () => this.props.destroy());
@@ -63,6 +67,16 @@ export class ImageTransformation extends Component {
             }
         });
         useHotkey("escape", () => this.props.destroy());
+        useExternalListener(
+            this.document,
+            "blur",
+            () => {
+                this.props.destroy();
+            },
+            {
+                capture: true,
+            }
+        );
         usePositionHook({ el: this.props.editable }, this.document, () => {
             if (!this.isCurrentlyTransforming) {
                 this.resetHandlers();
@@ -70,7 +84,7 @@ export class ImageTransformation extends Component {
         });
     }
 
-    mouseMove(ev) {
+    pointerMove(ev) {
         if (!this.transfo.active) {
             return;
         }
@@ -180,13 +194,13 @@ export class ImageTransformation extends Component {
         this.positionTransfoContainer();
     }
 
-    mouseUp() {
+    pointerUp() {
         this.isCurrentlyTransforming = false;
         this.transfo.active = null;
         this.props.onChange();
     }
 
-    mouseDown(ev) {
+    pointerDown(ev) {
         if (this.transfo.active) {
             return;
         }
@@ -273,7 +287,22 @@ export class ImageTransformation extends Component {
         this.transfo.settings.rotationStep = 5;
     }
 
+    getScrollContainer() {
+        let el = this.props.editable;
+        const doc = el.ownerDocument;
+        while (el && el !== doc.body && el !== doc.documentElement) {
+            const style = getComputedStyle(el);
+            if (el.scrollHeight > el.clientHeight && ["auto", "scroll"].includes(style.overflowY)) {
+                return el;
+            }
+            el = el.parentElement;
+        }
+        return doc.documentElement;
+    }
+
     positionTransfoContainer() {
+        const scrollContainer = this.getScrollContainer();
+
         const settings = this.transfo.settings;
         const width = parseFloat(settings.css.width);
         const height = parseFloat(settings.css.height);
@@ -281,19 +310,35 @@ export class ImageTransformation extends Component {
         settings.translateyp = Math.round((settings.translatey / height) * 1000) / 10;
 
         this.setImageTransformation(this.image);
+        const container = this.transfoContainer.el;
 
-        this.transfoContainer.el.style.position = "absolute";
-        this.transfoContainer.el.style.width = width + "px";
-        this.transfoContainer.el.style.height = height + "px";
-        this.transfoContainer.el.style.top = settings.pos.top + "px";
-        this.transfoContainer.el.style.left = settings.pos.left + "px";
+        container.style.position = "absolute";
+        container.style.width = width + "px";
+        container.style.height = height + "px";
+        container.style.top = settings.pos.top + "px";
+        container.style.left = settings.pos.left + "px";
+        container.style.pointerEvents = "none";
+        this.setImageTransformation(container);
+
+        const win = this.props.editable.ownerDocument.defaultView;
+        const frameElement = win.frameElement;
+        const frameTop = frameElement ? frameElement.getBoundingClientRect().top : 0;
+        const scrollRect = scrollContainer.getBoundingClientRect();
+        const scrollAbsTop = scrollRect.top + win.pageYOffset + frameTop;
+        const rect = container.getBoundingClientRect();
+        const realTop = rect.top + win.pageYOffset + frameTop;
+
+        const clipTop = Math.max(0, scrollAbsTop - realTop);
+        const dragger = this.transfoDragger;
+        dragger.style.width = width + "px";
+        dragger.style.height = height + "px";
+        dragger.style.clipPath = clipTop > 0 ? `inset(${clipTop}px 0px 0px 0px)` : "none";
 
         const controls = this.transfoControls.el;
-
-        this.setImageTransformation(controls);
         controls.style.width = width + "px";
         controls.style.height = height + "px";
         controls.style.cursor = "move";
+        controls.style.pointerEvents = "none";
 
         for (const child of controls.children) {
             child.style.transform =

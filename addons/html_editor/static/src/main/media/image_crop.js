@@ -54,6 +54,9 @@ export class ImageCrop extends Component {
         useExternalListener(this.document, "keydown", this.onDocumentKeydown, {
             capture: true,
         });
+        useExternalListener(this.document, "blur", () => this.closeCropper(), {
+            capture: true,
+        });
         useExternalListener(
             this.document,
             "selectionchange",
@@ -113,15 +116,16 @@ export class ImageCrop extends Component {
         const data = { ...this.media.dataset };
         this.initialSrc = src;
         this.aspectRatio = data.aspectRatio || "0/0";
-        const mimetype =
-            data.mimetype || src.endsWith(".png")
+        await loadImageInfo(this.media);
+        this.mimetype =
+            this.props.mimetype ||
+            this.media.dataset.mimetype ||
+            (src.endsWith(".png")
                 ? "image/png"
                 : src.endsWith(".webp")
                 ? "image/webp"
-                : "image/jpeg";
-        this.mimetype = this.props.mimetype || mimetype;
+                : "image/jpeg");
 
-        await loadImageInfo(this.media);
         const isIllustration = /^\/(?:html|web)_editor\/shape\/illustration\//.test(
             this.media.dataset.originalSrc
         );
