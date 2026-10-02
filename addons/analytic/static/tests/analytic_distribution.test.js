@@ -243,8 +243,7 @@ test("analytic field in multi_edit list view + search more", async () => {
     await contains(".modal-dialog .modal-title").click();
     await contains(".modal-dialog .o_data_row:nth-of-type(4) .o_data_cell:first-of-type").click();
     expect(".modal-dialog .o_list_renderer").toHaveCount(0);
-
-    await contains("[data-icon='close']").click();
+    await contains(".analytic_distribution_popup [data-icon='close']").click();
     await contains(".modal-dialog .btn-primary").click();
     await animationFrame();
     expect(".o_data_row .badge").toHaveCount(4);

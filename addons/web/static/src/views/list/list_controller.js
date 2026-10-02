@@ -36,6 +36,8 @@ import { SelectionBox } from "@web/views/view_components/selection_box";
 import { useDeleteRecords, useExportRecords } from "@web/views/view_hook";
 import { ListCogMenu } from "./list_cog_menu";
 import { ListConfirmationDialog } from "./list_confirmation_dialog";
+import { ListStatusIndicator } from "./list_status_indicator/list_status_indicator";
+import { useStatusIndicator } from "@web/views/form/form_status_indicator/form_status_indicator";
 
 // -----------------------------------------------------------------------------
 
@@ -52,6 +54,7 @@ export class ListController extends Component {
         CogMenu: ListCogMenu,
         DropdownItem,
         SelectionBox,
+        ListStatusIndicator,
     };
     props = useProps({
         ...standardViewProps,
@@ -200,6 +203,11 @@ export class ListController extends Component {
             this.getExportableFields()
         );
         this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
+
+        this.statusIndicator = useStatusIndicator(this.model, {
+            save: () => this.onClickSave(),
+            discard: () => this.onClickDiscard(),
+        });
     }
 
     get modelParams() {
