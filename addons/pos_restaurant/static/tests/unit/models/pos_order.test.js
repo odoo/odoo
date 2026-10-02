@@ -328,4 +328,43 @@ describe("pos.order restaurant patches", () => {
         order.amount_paid = order.priceIncl;
         expect(order.isTippedAfterPayment).toBe(false);
     });
+
+    test("cleanCourses renames courses after their new index", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const [line1, line2] = order.lines;
+        // First course takes the existing lines and comes with an empty "Course 2"
+        store.addCourse();
+        const course2 = order.courses[1];
+        line2.course_id = course2;
+        order.removeOrderline(line1);
+        order.cleanCourses();
+        expect(course2.index).toBe(1);
+        expect(course2.name).toBe("Course 1");
+        expect(store.addCourse().name).toBe("Course 2");
+    });
+
+    test("cleanCourses keeps the name of backend courses", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const course = store.addCourse({ backendCourse: store.models["pos.course"].get(1) });
+        order.cleanCourses();
+        expect(course.name).toBe("Default Course 1");
+    });
+
+    test("cleanCourses doesn't rename courses if use_course_allocation is enabled", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        const [line1, line2] = order.lines;
+        // First course takes the existing lines and comes with an empty "Course 2"
+        store.addCourse();
+        const course2 = order.courses[1];
+        line2.course_id = course2;
+        order.removeOrderline(line1);
+        store.config.use_course_allocation = true;
+        order.cleanCourses();
+        // The course is reindexed, but its name is left untouched
+        expect(course2.index).toBe(1);
+        expect(course2.name).toBe("Course 2");
+    });
 });
