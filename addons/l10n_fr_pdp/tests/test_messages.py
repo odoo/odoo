@@ -18,6 +18,7 @@ from .common import (
     TestL10nFrPdpCommon,
     mock_pdp_annuaire_lookup,
     mock_pdp_documents_retrieval,
+    mock_pdp_peppol_lookup_success,
     mock_pdp_send_document,
     mock_pdp_send_response,
 )
@@ -204,6 +205,37 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
             [{
                 'peppol_move_state': 'done',
                 'pdp_ppf_move_state': 'in_progress',
+                'peppol_message_uuid': FAKE_UUID[0],
+            }],
+        )
+        self.assertTrue(bool(move.ubl_cii_xml_id))
+
+    def test_pdp_send_success_message_peppol(self):
+        # should be able to send valid invoices correctly
+        # attachment should be generated
+        # peppol_move_state should be set to done
+        # pdp_ppf_move_state should be `False`
+        partner = self.belgian_partner
+        move = self._create_invoice(partner_id=partner.id)
+        move.action_post()
+
+        with (
+            mock_pdp_peppol_lookup_success(['0208:0239843188']),
+            mock_pdp_send_document(),
+            mock_pdp_documents_retrieval(),
+        ):
+            wizard = self.create_send_and_print(move)
+            self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
+            wizard.sending_methods = ['peppol']
+
+            wizard.action_send_and_print()
+
+            self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+        self.assertRecordValues(
+            move,
+            [{
+                'peppol_move_state': 'done',
+                'pdp_ppf_move_state': False,
                 'peppol_message_uuid': FAKE_UUID[0],
             }],
         )
