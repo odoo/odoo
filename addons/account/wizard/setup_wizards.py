@@ -51,7 +51,9 @@ class AccountFinancialYearOp(models.TransientModel):
         # one value at a time... so it is likely to fail.
         company_fields_to_update = {k: k for k in self._company_fields_to_update()}
         company_fields_to_update['opening_date'] = 'account_opening_date'
-        company_id.write({
+        # Accounting managers are allowed to use this wizard but have no write access on res.company
+        company_to_update = company_id.sudo() if company_id in self.env.companies else company_id
+        company_to_update.write({
             company_field: vals[wizard_field] for wizard_field, company_field in company_fields_to_update.items() if wizard_field in vals
         })
         opening_date = vals.get('opening_date', company_id.account_opening_date)
