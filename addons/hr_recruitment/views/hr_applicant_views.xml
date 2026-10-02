@@ -25,7 +25,6 @@
                         invisible="context.get('default_talent_pool_ids', False)"
                     />
                 </header>
-                <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="last_stage_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="date_last_stage_update" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="partner_name" string="Name" readonly="1" optional="show"/>
@@ -54,7 +53,6 @@
                 <field name="salary_proposed" optional="hide"/>
                 <field name="availability" optional="hide"/>
                 <field name="department_id" readonly="1" column_invisible="context.get('invisible_department', True)" optional="hide"/>
-                <field name="company_id" column_invisible="True"/> <!-- duplicate of the company_id column declared just below for multi-company users -->
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
             </list>
         </field>
@@ -84,7 +82,6 @@
             <field name="application_status" invisible="1"/> <!-- drives invisible of the Refused/Archived/Hired web_ribbon widgets and of kanban_state -->
             <field name="employee_id" invisible="1"/> <!-- drives invisible of the Create Employee button, of stage_id and of the Employee stat button -->
             <field name="meeting_ids" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
-            <field name="refuse_reason_id" invisible="1"/> <!-- duplicate of the refuse_reason_id declared below in the first group -->
             <field name="email_normalized" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
             <field name="partner_phone_sanitized" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
             <field name="emp_is_active" invisible="1"/> <!-- drives invisible of the Employee stat button -->
@@ -157,7 +154,6 @@
                 </div>
                 <group>
                     <group>
-                        <field name="partner_name" invisible="1"/> <!-- duplicate of the partner_name displayed in the title above -->
                         <field name="partner_id" invisible="1" /> <!-- kept loaded for record data though not shown in this form -->
                         <field name="refuse_reason_id" invisible="active"/>
                         <field name="email_from" placeholder="e.g. john.doe@example.com" widget="email"/>
