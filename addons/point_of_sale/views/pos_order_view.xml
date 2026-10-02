@@ -14,8 +14,8 @@
                         invisible="state == 'draft' or not has_refundable_lines"/>
                     <field name="state" widget="statusbar" invisible="state == 'cancel'" statusbar_visible="draft,paid,done"/>
                     <field name="state" widget="statusbar" invisible="state != 'cancel'" statusbar_visible="draft,cancel"/>
-                    <field name="has_refundable_lines" invisible="1" />
-                    <field name="is_refund" invisible="1"/>
+                    <field name="has_refundable_lines" invisible="1" /> <!-- drives invisible of the Refund button -->
+                    <field name="is_refund" invisible="1"/> <!-- drives create of lines and readonly of the order line columns -->
                 </header>
                 <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -86,7 +86,7 @@
                                 </t>
                             </kanban>
                             <list name="order_line_list" string="Order lines" editable="bottom">
-                                <field name="name" column_invisible="True"/>
+                                <field name="name" column_invisible="True"/> <!-- xpath anchor of l10n_es_pos which adds its simplified invoice column after it -->
                                 <field name="full_product_name" optional="hide" readonly="1"/>
                                 <field name="product_id" widget="account_product_field" readonly="parent.is_refund"/>
                                 <field name="is_edited" readonly="1" />
@@ -94,16 +94,16 @@
                                 <field name="customer_note" optional="hide"/>
                                 <field name="product_uom_id" groups="uom.group_uom"/>
                                 <field name="price_unit" widget="monetary" readonly="parent.is_refund"/>
-                                <field name="is_total_cost_computed" column_invisible="True"/>
+                                <field name="is_total_cost_computed" column_invisible="True"/> <!-- drives invisible of the total_cost, margin and margin_percent columns -->
                                 <field name="total_cost" invisible="not is_total_cost_computed" optional="hide" widget="monetary"/>
                                 <field name="margin" invisible="not is_total_cost_computed" optional="hide" widget="monetary"/>
                                 <field name="margin_percent" invisible="not is_total_cost_computed" optional="hide" widget="percentage"/>
                                 <field name="discount" width="50px" string="Disc.%" readonly="parent.is_refund"/>
                                 <field name="tax_ids_after_fiscal_position" widget="many2many_tax_tags" string="Taxes"/>
-                                <field name="tax_ids" widget="many2many_tax_tags" column_invisible="True" force_save="1"/>
+                                <field name="tax_ids" widget="many2many_tax_tags" column_invisible="True" force_save="1"/> <!-- raw taxes of the line, force_save so they are kept when the line is saved from this list -->
                                 <field name="price_subtotal" widget="monetary" force_save="1"/>
                                 <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
-                                <field name="currency_id" column_invisible="True"/>
+                                <field name="currency_id" column_invisible="True"/> <!-- currency of the monetary columns of this list -->
                                 <field name="refunded_qty" optional="hide" />
                             </list>
                             <form string="Order lines">
@@ -112,12 +112,12 @@
                                     <field name="qty"/>
                                     <field name="discount" readonly="parent.is_refund"/>
                                     <field name="price_unit" widget="monetary" readonly="parent.is_refund"/>
-                                    <field name="price_subtotal" invisible="1" widget="monetary" force_save="1"/>
-                                    <field name="price_subtotal_incl" invisible="1" widget="monetary" force_save="1"/>
+                                    <field name="price_subtotal" invisible="1" widget="monetary" force_save="1"/> <!-- computed subtotal kept in this form, force_save so the value is saved with the line -->
+                                    <field name="price_subtotal_incl" invisible="1" widget="monetary" force_save="1"/> <!-- computed subtotal kept in this form, force_save so the value is saved with the line -->
                                     <field name="tax_ids_after_fiscal_position" widget="many2many_tax_tags" string="Taxes"/>
-                                    <field name="tax_ids" widget="many2many_tax_tags" invisible="1" force_save="1"/>
+                                    <field name="tax_ids" widget="many2many_tax_tags" invisible="1" force_save="1"/> <!-- raw taxes of the line, force_save so they are kept when the line is saved from this form -->
                                     <field name="notice"/>
-                                    <field name="currency_id" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/> <!-- currency of the monetary fields of this order line form -->
                                     <field name="full_product_name" readonly="1" />
                                 </group>
                             </form>
@@ -148,15 +148,15 @@
                                 </span>
                                 <span class="o_field_widget o_readonly_modifier" invisible="is_total_cost_computed">To be determined</span>
                             </div>
-                            <field name="is_total_cost_computed" invisible="1"/>
-                            <field name="currency_id" invisible="1"/>
+                            <field name="is_total_cost_computed" invisible="1"/> <!-- drives invisible of the margin block -->
+                            <field name="currency_id" invisible="1"/> <!-- currency of the monetary fields of the margin block -->
                         </group>
                     </page>
                     <page string="Payments" name="payments">
                         <field name="payment_ids" colspan="4" nolabel="1" readonly="account_move or state == 'done' or nb_print > 0">
                             <list string="Payments" create="1" editable="bottom" open_form_view="True">
-                                <field name="currency_id" column_invisible="True" />
-                                <field name="foreign_currency_id" column_invisible="True" />
+                                <field name="currency_id" column_invisible="True" /> <!-- currency of the amount monetary column of this payments list -->
+                                <field name="foreign_currency_id" column_invisible="True" /> <!-- currency_field option of the amount_currency monetary column -->
                                 <field name="payment_date"/>
                                 <field name="payment_method_id" domain="[('id', 'in', parent.available_payment_method_ids)]" />
                                 <field name="amount"/>
@@ -178,7 +178,7 @@
                             <group string="Other Information" name="other_information">
                                 <field name="pos_reference"/>
                                 <field name="tracking_number"/>
-                                <field name="country_code" invisible="1"/>
+                                <field name="country_code" invisible="1"/> <!-- used by the localisations to show their country specific fields on this form -->
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="pricelist_id" groups="product.group_product_pricelist" readonly="state != 'draft'"/>
                                 <field name="preset_id" readonly="True" />
@@ -289,7 +289,7 @@
                 <header>
                     <button name="action_create_invoices" type="object" string="Create Invoices"/>
                 </header>
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- currency of the monetary columns of this list -->
                 <field name="name" decoration-bf="1"/>
                 <field name="session_id"  readonly="state != 'draft'"/>
                 <field name="date_order"/>
@@ -341,7 +341,7 @@
                 <field name="price_subtotal" readonly="1" sum="Sum of subtotals" widget="monetary"/>
                 <field name="price_subtotal_incl" readonly="1" sum="Sum of subtotals" widget="monetary"/>
                 <field name="create_date" readonly="1"/>
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- currency of the monetary columns of this list -->
             </list>
         </field>
     </record>
@@ -395,7 +395,7 @@
                 <field name="product_id" />
                 <field name="qty" />
                 <field name="price_unit" widget="monetary"/>
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- currency of the monetary columns of this list -->
             </list>
         </field>
     </record>
