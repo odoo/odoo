@@ -147,7 +147,7 @@ export class TourPlugin extends Plugin {
         else {
             if (!tourRegistry.contains(name)) {
                 const dbTour = await this.getDBTour(name);
-                if (dbTour?.steps.length) {
+                if (dbTour && dbTour.steps.length) {
                     return { ...dbTour };
                 }
             }
@@ -211,7 +211,7 @@ export class TourPlugin extends Plugin {
             return true;
         }
         return this.getDBTour(name).then(
-            (tour) => Boolean(tour?.steps.length) || tourRegistry.contains(name)
+            (tour) => Boolean(tour && tour.steps.length) || tourRegistry.contains(name)
         );
     }
 
