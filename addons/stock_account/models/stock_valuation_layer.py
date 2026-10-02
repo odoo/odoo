@@ -169,6 +169,37 @@ class StockValuationLayer(models.Model):
             'res_id': self.id,
         }
 
+    def _get_returned_qty(self):
+        """Returned qty to subtract from each layer, once per move and lot."""
+        pools = {}
+        for svl in self:
+            move = svl.stock_move_id
+            if not move:
+                continue
+            key = (move.id, svl.lot_id.id)
+            if key in pools:
+                continue
+            returned = 0.0
+            lot = svl.lot_id
+            for ret in move.returned_move_ids.filtered(lambda m: m.state == 'done'):
+                if lot:
+                    lines = ret.move_line_ids.filtered(lambda ml: ml.lot_id == lot)
+                    returned += sum(lines.mapped('quantity_product_uom'))
+                else:
+                    returned += ret.product_uom._compute_quantity(ret.quantity, svl.uom_id)
+            pools[key] = returned
+
+        result = {}
+        for svl in self:
+            move = svl.stock_move_id
+            key = (move.id, svl.lot_id.id) if move else None
+            available = pools.get(key, 0.0)
+            taken = min(abs(svl.quantity), available)
+            if key:
+                pools[key] = available - taken
+            result[svl.id] = taken
+        return result
+
     def _consume_specific_qty(self, qty_valued, qty_to_value):
         """
         Iterate on the SVL to first skip the qty already valued. Then, keep
@@ -178,19 +209,14 @@ class StockValuationLayer(models.Model):
         if not self:
             return 0, 0
 
+        returned_qties = self._get_returned_qty()
         qty_to_take_on_candidates = qty_to_value
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in self:
             rounding = candidate.product_id.uom_id.rounding
             if float_is_zero(candidate.quantity, precision_rounding=rounding):
                 continue
-            candidate_quantity = abs(candidate.quantity)
-            returned_qty = sum(
-                sm.product_uom._compute_quantity(sm.quantity, candidate.uom_id)
-                for sm in candidate.stock_move_id.returned_move_ids
-                if sm.state == 'done'
-            )
-            candidate_quantity -= returned_qty
+            candidate_quantity = abs(candidate.quantity) - returned_qties[candidate.id]
             if float_is_zero(candidate_quantity, precision_rounding=rounding):
                 continue
             if not float_is_zero(qty_valued, precision_rounding=rounding):
@@ -222,19 +248,14 @@ class StockValuationLayer(models.Model):
         value_total = -valued
         new_valued_qty = 0
         new_valuation = 0
+        returned_qties = self._get_returned_qty()
 
         for svl in self:
             rounding = svl.product_id.uom_id.rounding
             min_rounding = min(min_rounding, rounding)
             if float_is_zero(svl.quantity, precision_rounding=rounding):
                 continue
-            relevant_qty = abs(svl.quantity)
-            returned_qty = sum(
-                sm.product_uom._compute_quantity(sm.quantity, svl.uom_id)
-                for sm in svl.stock_move_id.returned_move_ids
-                if sm.state == 'done'
-            )
-            relevant_qty -= returned_qty
+            relevant_qty = abs(svl.quantity) - returned_qties[svl.id]
             if float_is_zero(relevant_qty, precision_rounding=rounding):
                 continue
             qty_total += relevant_qty
