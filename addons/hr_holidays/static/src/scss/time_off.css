@@ -55,7 +55,16 @@
             }
             .o_inner_group {
                 grid-template-columns: fit-content(150px) minmax(0, 1fr) !important;
-                row-gap: 8px !important;
+                row-gap: map-get($spacers, 4) !important;
+            }
+            .o_cell_custom:has(> .o_hr_leave_row) {
+                grid-column: 1 / -1;
+                display: grid;
+                grid-template-columns: subgrid;
+                align-items: baseline;
+            }
+            .o_hr_leave_column .o_inner_group + .o_inner_group {
+                margin-top: map-get($spacers, 2);
             }
         }
         .col_left {
