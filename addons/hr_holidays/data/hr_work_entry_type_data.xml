@@ -405,8 +405,8 @@
 
     <record id="hr_work_entry.l10n_be_work_entry_type_phc" model="hr.work.entry.type">
         <field name="name">Public Holiday Compensation</field>
-        <field name="requires_allocation">yes</field>
-        <field name="employee_requests">no</field>
+        <field name="requires_allocation" eval="True"/>
+        <field name="employee_requests" eval="False"/>
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
@@ -423,7 +423,7 @@
 
     <record id="hr_work_entry.l10n_be_work_entry_type_paid_compensatory_rest" model="hr.work.entry.type">
         <field name="count_days_as">calendar</field>
-        <field name="requires_allocation">yes</field>
+        <field name="requires_allocation" eval="True"/>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_unpaid_compensatory_rest" model="hr.work.entry.type">
@@ -687,7 +687,7 @@
         <field name="requires_allocation">True</field>
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
-        <field name="employee_requests">no</field>
+        <field name="employee_requests" eval="False"/>
         <field name="country_id" ref="base.eg"/>
     </record>
 
@@ -891,7 +891,7 @@
     </record>
 
     <record id="hr_work_entry.l10n_jo_work_entry_type_maternity" model="hr.work.entry.type">
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
         <field name="leave_validation_type">hr</field>
@@ -899,7 +899,7 @@
     </record>
 
     <record id="hr_work_entry.l10n_jo_work_entry_type_pilgrimage" model="hr.work.entry.type">
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
         <field name="leave_validation_type">hr</field>
@@ -907,7 +907,7 @@
     </record>
 
     <record id="hr_work_entry.l10n_jo_work_entry_type_paternity" model="hr.work.entry.type">
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
         <field name="leave_validation_type">hr</field>
@@ -915,7 +915,7 @@
     </record>
 
     <record id="hr_work_entry.l10n_jo_work_entry_type_study" model="hr.work.entry.type">
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
         <field name="leave_validation_type">hr</field>
@@ -933,42 +933,42 @@
 <!-- KW : Kuwait -->
     <record id="hr_work_entry.l10n_kw_work_entry_type_maternity_leave" model="hr.work.entry.type">
         <field name="name">Maternity Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.kw"/>
     </record>
 
     <record id="hr_work_entry.l10n_kw_work_entry_type_study_leave" model="hr.work.entry.type">
         <field name="name">Study Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.kw"/>
     </record>
 
     <record id="hr_work_entry.l10n_kw_work_entry_type_hajj_leave" model="hr.work.entry.type">
         <field name="name">Hajj Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.kw"/>
     </record>
 
     <record id="hr_work_entry.l10n_kw_work_entry_type_compassionate_leave" model="hr.work.entry.type">
         <field name="name">Compassionate Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.kw"/>
     </record>
 
     <record id="hr_work_entry.l10n_kw_work_entry_type_sick_leave" model="hr.work.entry.type">
         <field name="name">Sick Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="leave_validation_type">both</field>
         <field name="country_id" ref="base.kw"/>
     </record>
 
     <record id="hr_work_entry.l10n_kw_work_entry_type_annual_leave" model="hr.work.entry.type">
         <field name="name">Annual Leave</field>
-        <field name="requires_allocation">yes</field>
+        <field name="requires_allocation" eval="True"/>
         <field name="leave_validation_type">both</field>
         <field name="country_id" ref="base.kw"/>
     </record>
@@ -1047,77 +1047,77 @@
 <!-- OM : Oman -->
     <record id="hr_work_entry.l10n_om_work_entry_type_sick_leave_100" model="hr.work.entry.type">
         <field name="name">Sick Leave (100% Paid)</field>
-        <field name="requires_allocation">yes</field>
+        <field name="requires_allocation" eval="True"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.om"/>
     </record>
 
     <record id="hr_work_entry.l10n_om_work_entry_type_sick_leave_75" model="hr.work.entry.type">
         <field name="name">Sick Leave (75% Paid)</field>
-        <field name="requires_allocation">yes</field>
+        <field name="requires_allocation" eval="True"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.om"/>
     </record>
 
     <record id="hr_work_entry.l10n_om_work_entry_type_sick_leave_50" model="hr.work.entry.type">
         <field name="name">Sick Leave (50% Paid)</field>
-        <field name="requires_allocation">yes</field>
+        <field name="requires_allocation" eval="True"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.om"/>
     </record>
 
     <record id="hr_work_entry.l10n_om_work_entry_type_sick_leave_35" model="hr.work.entry.type">
         <field name="name">Sick Leave (35% Paid)</field>
-        <field name="requires_allocation">yes</field>
+        <field name="requires_allocation" eval="True"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.om"/>
     </record>
 
     <record id="hr_work_entry.l10n_om_work_entry_type_sick_leave_0" model="hr.work.entry.type">
         <field name="name">Sick Leave (Unpaid)</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.om"/>
     </record>
 
     <record id="hr_work_entry.l10n_om_work_entry_type_maternity" model="hr.work.entry.type">
         <field name="name">Maternity Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.om"/>
     </record>
 
     <record id="hr_work_entry.l10n_om_work_entry_type_paternity" model="hr.work.entry.type">
         <field name="name">Paternity Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.om"/>
     </record>
 
     <record id="hr_work_entry.l10n_om_work_entry_type_hajj" model="hr.work.entry.type">
         <field name="name">Hajj Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.om"/>
     </record>
 
     <record id="hr_work_entry.l10n_om_work_entry_type_iddah" model="hr.work.entry.type">
         <field name="name">Iddah Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.om"/>
     </record>
 
     <record id="hr_work_entry.l10n_om_work_entry_type_fdrcl" model="hr.work.entry.type">
         <field name="name">First Degree Relatives Compassionate Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.om"/>
     </record>
 
     <record id="hr_work_entry.l10n_om_work_entry_type_sdrcl" model="hr.work.entry.type">
         <field name="name">Second Degree Relatives Compassionate Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="leave_validation_type">hr</field>
         <field name="country_id" ref="base.om"/>
     </record>
@@ -1138,7 +1138,7 @@
     <record id="hr_work_entry.l10n_sa_work_entry_type_marriage" model="hr.work.entry.type">
         <field name="name">Marriage Leave</field>
         <field name="code">Marriage Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
         <field name="leave_validation_type">hr</field>
@@ -1146,7 +1146,7 @@
     </record>
 
     <record id="hr_work_entry.l10n_sa_work_entry_type_maternity" model="hr.work.entry.type">
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
         <field name="leave_validation_type">hr</field>
@@ -1156,7 +1156,7 @@
     <record id="hr_work_entry.l10n_sa_work_entry_type_iddah" model="hr.work.entry.type">
         <field name="name">Iddah Leave</field>
         <field name="code">Iddah Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
         <field name="leave_validation_type">hr</field>
@@ -1166,7 +1166,7 @@
     <record id="hr_work_entry.l10n_sa_work_entry_type_hajj" model="hr.work.entry.type">
         <field name="name">Hajj Leave</field>
         <field name="code">Hajj Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
         <field name="leave_validation_type">hr</field>
@@ -1176,7 +1176,7 @@
     <record id="hr_work_entry.l10n_sa_work_entry_type_paternity" model="hr.work.entry.type">
         <field name="name">Paternity Leave</field>
         <field name="code">Paternity Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
         <field name="leave_validation_type">hr</field>
@@ -1186,7 +1186,7 @@
     <record id="hr_work_entry.l10n_sa_work_entry_type_study" model="hr.work.entry.type">
         <field name="name">Study Leave</field>
         <field name="code">Study Leave</field>
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
         <field name="leave_validation_type">hr</field>
@@ -1194,7 +1194,7 @@
     </record>
 
     <record id="hr_work_entry.l10n_sa_work_entry_type_emergency" model="hr.work.entry.type">
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
         <field name="leave_validation_type">hr</field>
@@ -1218,7 +1218,7 @@
 
 <!-- PL : Poland -->
     <record id="hr_work_entry.l10n_pl_work_entry_type_sick_leave" model="hr.work.entry.type">
-        <field name="requires_allocation">no</field>
+        <field name="requires_allocation" eval="False"/>
         <field name="request_unit">half_day</field>
         <field name="unit_of_measure">day</field>
         <field name="support_document">True</field>
@@ -1298,16 +1298,16 @@
     </function>
 
     <record id="hr_work_entry.l10n_ph_hr_payroll_sil_leave" model="hr.work.entry.type">
-        <field name="employee_requests">yes</field>
-        <field name="requires_allocation">yes</field>
+        <field name="employee_requests" eval="True"/>
+        <field name="requires_allocation" eval="True"/>
         <field name="leave_validation_type">no_validation</field>
         <field name="allocation_validation_type">hr</field>
         <field name="request_unit">half_day</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
     </record>
     <record id="hr_work_entry.l10n_ph_hr_payroll_mat_leave" model="hr.work.entry.type">
-        <field name="employee_requests">yes</field>
-        <field name="requires_allocation">yes</field>
+        <field name="employee_requests" eval="True"/>
+        <field name="requires_allocation" eval="True"/>
         <field name="leave_validation_type">no_validation</field>
         <field name="allocation_validation_type">hr</field>
         <field name="request_unit">day</field>
@@ -1315,32 +1315,32 @@
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
     </record>
     <record id="hr_work_entry.l10n_ph_hr_payroll_pat_leave" model="hr.work.entry.type">
-        <field name="employee_requests">yes</field>
-        <field name="requires_allocation">yes</field>
+        <field name="employee_requests" eval="True"/>
+        <field name="requires_allocation" eval="True"/>
         <field name="leave_validation_type">no_validation</field>
         <field name="allocation_validation_type">hr</field>
         <field name="request_unit">day</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
     </record>
     <record id="hr_work_entry.l10n_ph_hr_payroll_spl_leave" model="hr.work.entry.type">
-        <field name="employee_requests">yes</field>
-        <field name="requires_allocation">yes</field>
+        <field name="employee_requests" eval="True"/>
+        <field name="requires_allocation" eval="True"/>
         <field name="leave_validation_type">no_validation</field>
         <field name="allocation_validation_type">hr</field>
         <field name="request_unit">day</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
     </record>
     <record id="hr_work_entry.l10n_ph_hr_payroll_slfw_leave" model="hr.work.entry.type">
-        <field name="employee_requests">yes</field>
-        <field name="requires_allocation">yes</field>
+        <field name="employee_requests" eval="True"/>
+        <field name="requires_allocation" eval="True"/>
         <field name="leave_validation_type">no_validation</field>
         <field name="allocation_validation_type">hr</field>
         <field name="request_unit">day</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
     </record>
     <record id="hr_work_entry.l10n_ph_hr_payroll_dvl_leave" model="hr.work.entry.type">
-        <field name="employee_requests">yes</field>
-        <field name="requires_allocation">yes</field>
+        <field name="employee_requests" eval="True"/>
+        <field name="requires_allocation" eval="True"/>
         <field name="leave_validation_type">no_validation</field>
         <field name="allocation_validation_type">hr</field>
         <field name="request_unit">day</field>
