@@ -41,6 +41,15 @@ class SaleOrderLine(models.Model):
                 delivered_qties[sale_line] += refund_qty
         return delivered_qties
 
+    def _get_qty_procurement(self, previous_product_uom_qty=False):
+        # The quantities settled in PoS are delivered by the PoS pickings: they must not be procured again by the SO.
+        qty = super()._get_qty_procurement(previous_product_uom_qty)
+        if self.is_downpayment:
+            return qty
+        pos_lines = self.sudo().pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+        refund_lines = pos_lines.refund_orderline_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+        return qty + sum(self._convert_qty(self, pos_line.qty, 'p2s') for pos_line in pos_lines | refund_lines)
+
     def _get_read_converted_extra_items(self, sale_line):
         extra_items = super()._get_read_converted_extra_items(sale_line)
         if sale_line.product_id.tracking in ['lot', 'serial']:
