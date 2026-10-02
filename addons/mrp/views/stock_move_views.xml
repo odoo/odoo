@@ -22,7 +22,7 @@
             <field name="inherit_id" ref="stock.view_stock_move_operations" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='show_lots_m2o']" position="after">
-                    <field name="quantity" invisible="1"/>
+                    <field name="quantity" invisible="1"/> <!-- duplicate of the quantity already declared in the inherited stock form -->
                 </xpath>
             </field>
         </record>
@@ -89,7 +89,7 @@
             <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
             <field name="arch" type="xml">
                 <field name="location_id" position="after">
-                    <field name="visual_lot_name" column_invisible="True"/>
+                    <field name="visual_lot_name" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 </field>
             </field>
         </record>

@@ -62,16 +62,16 @@
         <field name="priority" eval="100"/>
         <field name="arch" type="xml">
             <list multi_edit="1">
-                <field name="company_id" column_invisible="True"/>
-                <field name="is_produced" column_invisible="True"/>
-                <field name="is_user_working" column_invisible="True"/>
-                <field name="uom_id" readonly="0" column_invisible="True"/>
-                <field name="production_state" column_invisible="True"/>
-                <field name="production_bom_id" column_invisible="True"/>
-                <field name="qty_producing" column_invisible="True"/>
-                <field name="time_ids" column_invisible="True"/>
-                <field name="working_state" column_invisible="True"/>
-                <field name="operation_id" column_invisible="True" domain="['|', ('bom_id', '=', production_bom_id), ('bom_id', '=', False)]" context="{'default_workcenter_id': workcenter_id, 'default_company_id': company_id}"/>
+                <field name="company_id" column_invisible="True"/> <!-- passed as default_company_id in the context of operation_id and needed by the company-dependent domain of the check_company fields -->
+                <field name="is_produced" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                <field name="is_user_working" column_invisible="True"/> <!-- read by the mrp_timer widget of duration and drives invisible of the Start/Pause/Done buttons -->
+                <field name="uom_id" readonly="0" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                <field name="production_state" column_invisible="True"/> <!-- drives invisible of duration, of state and of the Start/Pause/Done buttons -->
+                <field name="production_bom_id" column_invisible="True"/> <!-- used in the domain of operation_id -->
+                <field name="qty_producing" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                <field name="time_ids" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                <field name="working_state" column_invisible="True"/> <!-- drives invisible of the two Start buttons -->
+                <field name="operation_id" column_invisible="True" domain="['|', ('bom_id', '=', production_bom_id), ('bom_id', '=', False)]" context="{'default_workcenter_id': workcenter_id, 'default_company_id': company_id}"/> <!-- kept loaded with its domain and context for the records created in this list -->
                 <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
                 <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                 <field name="product_id" optional="show"/>
@@ -99,7 +99,7 @@
                   options="{'no_open': True, 'display': 'badge'}"
                   column_invisible="parent and parent.state == 'draft'"
                   invisible="production_state == 'draft'"/>
-                <field name="has_planning_issues" column_invisible="1"/>
+                <field name="has_planning_issues" column_invisible="1"/> <!-- read by the workorder_planning_status widget of has_conflicts -->
                 <field name="has_conflicts" widget="workorder_planning_status" string="" readonly="1"/>
             </list>
         </field>
@@ -345,15 +345,15 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <form string="Production Workcenter" delete="0" create="0">
-            <field name="is_user_working" invisible="1"/>
-            <field name="working_state" invisible="1"/>
-            <field name="production_state" invisible="1"/>
-            <field name="operation_id" invisible="1"/>
-            <field name="sequence" invisible="1"/>
+            <field name="is_user_working" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+            <field name="working_state" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+            <field name="production_state" invisible="1"/> <!-- drives invisible of the state badge and readonly of qty_produced -->
+            <field name="operation_id" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+            <field name="sequence" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
             <sheet>
-                <field name="company_id" invisible="1"/>
-                <field name="product_tracking" invisible="1"/>
-                <field name="product_id" invisible="1"/>
+                <field name="company_id" invisible="1"/> <!-- needed by the company-dependent domain of the check_company fields of this form -->
+                <field name="product_tracking" invisible="1"/> <!-- drives invisible of production_lot_producing_id -->
+                <field name="product_id" invisible="1"/> <!-- duplicate of the product_id displayed in the first group below -->
                 <div invisible="not has_conflicts" class="h5 alert alert-warning text-center" role="alert">
                     This work order is planned at the same time as other work orders in this work center
                     <button name="%(action_mrp_workorder_workcenter)d" icon="east" type="action" string="View Planning" class="btn-link"
@@ -417,10 +417,10 @@
                             <list editable="bottom">
                                 <field name="user_id"/>
                                 <field name="duration" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" readonly="0" sum="Time Spent"/>
-                                <field name="workcenter_id" column_invisible="True"/>
+                                <field name="workcenter_id" column_invisible="True"/> <!-- passed as default_workcenter_id in the context of time_ids -->
                                 <field name="date_start" optional="hide"/>
                                 <field name="date_end" optional="hide"/>
-                                <field name="company_id" column_invisible="True"/>
+                                <field name="company_id" column_invisible="True"/> <!-- needed by the company-dependent domain of the check_company fields of this time tracking list -->
                                 <field name="loss_id" string="Productivity" optional="hide"/>
                             </list>
                             <form>
@@ -429,12 +429,12 @@
                                         <field name="date_start"/>
                                         <field name="date_end"/>
                                         <field name="duration" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}"/>
-                                        <field name="company_id" invisible="1"/>
+                                        <field name="company_id" invisible="1"/> <!-- needed by the company-dependent domain of the check_company fields of this time tracking form -->
                                     </group>
                                     <group>
                                         <field name="user_id"/>
                                         <field name="workcenter_id"/>
-                                        <field name="company_id" invisible="1"/>
+                                        <field name="company_id" invisible="1"/> <!-- duplicate of the company_id declared in the first group of this time tracking form -->
                                         <field name="loss_id"/>
                                     </group>
                                 </group>
@@ -452,7 +452,7 @@
                                     class="btn-link"
                                     context="{'order_id': parent.id}"/>
                             </control>
-                            <field name="state" column_invisible="True"/>
+                            <field name="state" column_invisible="True"/> <!-- drives readonly of the component columns of this list -->
                             <field name="product_id" readonly="1"/>
                             <field name="product_qty" readonly="1" string="Demand"/>
                             <field name="quantity" readonly="1" string="Quantity"/>
@@ -462,18 +462,18 @@
                         </list>
                     </field>
                 </page>
-                <field name="allow_workorder_dependencies" invisible="1"/>
+                <field name="allow_workorder_dependencies" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                 <page string="Blocked By" name="dependencies" invisible="not blocked_by_workorder_ids">
                     <field name="blocked_by_workorder_ids" nolabel="1" readonly="1">
                         <list>
-                            <field name="company_id" column_invisible="True"/>
+                            <field name="company_id" column_invisible="True"/> <!-- needed by the company-dependent domain of the check_company fields of this blocked by list -->
                             <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
                             <field name="company_id" optional="hide" groups="base.group_multi_company"/>
                             <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                             <field name="date_start" readonly="1"/>
                             <field name="date_finished" readonly="1"/>
                             <field name="duration_expected" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" sum="expected duration" readonly="state in ['cancel', 'done']"/>
-                            <field name="production_state" column_invisible="True"/>
+                            <field name="production_state" column_invisible="True"/> <!-- drives invisible of the state column of this blocked by list -->
                             <field name="state" widget="mo_view_list_dropdown"
                                 options="{'no_open': True, 'display': 'badge'}"
                                 column_invisible="parent.state == 'draft'"
