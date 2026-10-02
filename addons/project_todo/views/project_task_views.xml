@@ -29,23 +29,28 @@
                     <t t-name="card">
                         <t t-set="todoHasAssignees" t-value="record.user_ids.raw_value.length &gt; 1"/>
                         <div t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value)}">
+                        <div class="d-flex align-items-baseline gap-2 w-100">
                             <field name="name" class="fw-bold fs-5" widget="name_with_subtask_count"/>
+                            <div class="d-flex gap-1 ms-auto">
+                                <t t-call="menu"/>
+                                <field name="state" widget="todo_done_checkmark"/>
+                            </div>
+                        </div>
                             <field t-if="record.date_deadline.raw_value" name="date_deadline" widget="relative_date"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" context="{'use_user_history':True}"/>
                             <field t-if="record.displayed_image_id.value" name="displayed_image_id" widget="attachment_image"/>
                         </div>
-                        <div class="d-flex pt-2">
-                            <div class="d-flex" t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value)}">
-                                <field name="priority" class="me-2" widget="priority"/>
+                        <footer>
+                            <div class="d-flex align-items-center gap-1" t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value)}">
+                                <field name="priority" widget="priority"/>
                                 <field name="activity_ids" widget="kanban_activity"/>
                             </div>
                             <div class="d-flex ms-auto">
                                 <div t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value), 'o_todo_hide_avatar': !todoHasAssignees}">
                                     <field name="user_ids" widget="many2many_avatar_user" readonly="True"/>
                                 </div>
-                                <field name="state" widget="todo_done_checkmark"/>
                             </div>
-                        </div>
+                        </footer>
                     </t>
                 </templates>
             </kanban>
