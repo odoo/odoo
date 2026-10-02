@@ -1419,6 +1419,66 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             ])
             self.assertEqual(sum(invoice.line_ids.mapped('balance')), 0)
 
+    def test_cogs_replay_for_invoice_before_tax_lock(self):
+        journal = self.env['account.journal'].create({
+            'name': 'Inventory Valuation',
+            'code': 'COGS',
+            'type': 'general',
+        })
+        self.company.account_stock_journal_id = journal
+        with freeze_time('2026-09-30'):
+            product = self.product_fifo_auto.copy({'invoice_policy': 'delivery'})
+            receipt = self._make_in_move(product, 1, 10)
+            sale_order = self._so_deliver(product, 1, 100)
+            invoice = sale_order._create_invoices()
+            invoice.action_post()
+
+        cogs_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'cogs')
+        original_values = cogs_lines.read(['balance', 'amount_currency', 'price_unit'])
+        self.company.tax_lock_date = invoice.date
+        with freeze_time('2026-10-02'):
+            receipt.value_manual = 15
+            receipt._set_value()
+
+        self.assertEqual(cogs_lines.read(['balance', 'amount_currency', 'price_unit']), original_values)
+        adjustment_lines = self.env['account.move.line'].search([
+            ('cogs_origin_id', '=', invoice.invoice_line_ids.id),
+            ('move_id', '!=', invoice.id),
+            ('parent_state', '=', 'posted'),
+        ])
+        adjustment = adjustment_lines.move_id
+        self.assertEqual(adjustment.date, fields.Date.to_date('2026-10-02'))
+        self.assertRecordValues(adjustment.line_ids.sorted('balance'), [
+            {'account_id': self.account_stock_valuation.id, 'balance': -5},
+            {'account_id': self.account_expense.id, 'balance': 5},
+        ])
+        self.assertEqual(sale_order.picking_ids.move_ids.value, -15)
+
+    def test_cogs_replay_for_invoice_after_tax_lock(self):
+        with freeze_time('2026-10-01'):
+            product = self.product_fifo_auto.copy({'invoice_policy': 'delivery'})
+            receipt = self._make_in_move(product, 1, 10)
+            sale_order = self._so_deliver(product, 1, 100)
+            invoice = sale_order._create_invoices()
+            invoice.action_post()
+
+        cogs_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'cogs')
+        self.company.tax_lock_date = fields.Date.to_date('2026-09-30')
+        with freeze_time('2026-10-02'):
+            receipt.value_manual = 15
+            receipt._set_value()
+
+        self.assertRecordValues(cogs_lines.sorted('balance'), [
+            {'account_id': self.account_stock_valuation.id, 'balance': -15},
+            {'account_id': self.account_expense.id, 'balance': 15},
+        ])
+        self.assertFalse(self.env['account.move.line'].search([
+            ('cogs_origin_id', '=', invoice.invoice_line_ids.id),
+            ('move_id', '!=', invoice.id),
+            ('parent_state', '=', 'posted'),
+        ]))
+        self.assertEqual(sale_order.picking_ids.move_ids.value, -15)
+
     def test_fifo_several_invoices_reset_repost(self):
         self.product_fifo_auto.invoice_policy = 'delivery'
 
