@@ -93,10 +93,10 @@
 <t t-name="website.ThemeParagraphOption">
     <BuilderContext preview="false">
         <BuilderRow label.translate="Font Size">
-            <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'font-size-base'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
+            <BuilderNumberInput action="'previewWebsiteVariable'" actionParam="'font-size-base'" preview="true" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'small-font-size'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
+                    <BuilderNumberInput action="'previewWebsiteVariable'" actionParam="'small-font-size'" preview="true" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
                 </BuilderRow>
             </t>
         </BuilderRow>
@@ -115,7 +115,7 @@
             <!-- "×": \u00D7\u2000 -->
             <BuilderNumberInput action="'previewWebsiteVariable'" actionParam="'body-line-height'" preview="true" default="null" unit="'✕'" saveUnit="''"/>
         </BuilderRow>
-        <BuilderRow label.translate="Margins" action="'customizeWebsiteVariable'">
+        <BuilderRow label.translate="Margins" action="'previewWebsiteVariable'" preview="true">
             <BuilderNumberInput title.translate="Top" actionParam="'paragraph-margin-top'" unit="'px'" saveUnit="'px'"/>
             <BuilderNumberInput title.translate="Bottom" actionParam="'paragraph-margin-bottom'" unit="'px'" saveUnit="'px'"/>
         </BuilderRow>
