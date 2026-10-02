@@ -19,7 +19,9 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         # for the standard calendar and one for the one we created)
         self.test_company = self.env['res.company'].create({
             'name': 'My Test Company',
+            'country_id': self.env.ref('base.us').id,
         })
+        self.env.company.country_id = self.test_company.country_id
 
         attendance_ids = [
             (0, 0, {'dayofweek': '0', 'hour_from': 9, 'hour_to': 12}),
