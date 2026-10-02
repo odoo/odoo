@@ -34,7 +34,7 @@
             <div class="d-flex d-print-none gap-1 flex-shrink-0 mt-2 mx-3 mb-3 overflow-x-auto">
                 <t t-call="{{ this.props.buttonTemplate }}"/>
             </div>
-            <div t-if="this.model.hasData()" class="o_graph_canvas_container flex-grow-1 position-relative border-top px-3 py-3 bg-view" t-ref="this.containerRef">
+            <div t-if="this.model.hasData()" class="o_graph_canvas_container o_sample_data_disabled flex-grow-1 position-relative border-top px-3 py-3 bg-view" t-ref="this.containerRef">
                 <canvas t-custom-click="(ev, isMiddleClick) => this.onGraphClicked(ev, isMiddleClick)" t-ref="this.chart.ref"/>
             </div>
         </div>
