@@ -51,6 +51,7 @@ import freezegun
 import requests
 from lxml import etree, html
 from passlib.context import CryptContext
+from psycopg2.extensions import TRANSACTION_STATUS_INERROR
 from requests import PreparedRequest, Session
 
 import odoo.addons.base
@@ -1107,6 +1108,9 @@ class TransactionCase(BaseCase):
 
     def setUp(self):
         super().setUp()
+
+        if self.cr._cnx.info.transaction_status == TRANSACTION_STATUS_INERROR:
+            self.skipTest("transaction aborted by a previous test of the class")
 
         def _check_registry_lock():
             if _registry_test_lock.count == 0:
