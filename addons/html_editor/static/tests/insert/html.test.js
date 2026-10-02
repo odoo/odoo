@@ -343,21 +343,21 @@ describe("collapsed selection", () => {
 
     test("insert block in empty paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>[]<br></p>`);
-        insertHTML(`<div class="o-paragraph oe_unbreakable">a</div>`)(editor);
+        insertHTML(`<div class="oe_unbreakable">a</div>`)(editor);
         cleanHints(editor);
         expect(getContent(el)).toBe(
             '<p data-selection-placeholder=""><br></p>' +
-                '<div class="o-paragraph oe_unbreakable">a[]</div>' +
+                '<div class="oe_unbreakable">a[]</div>' +
                 '<p data-selection-placeholder=""><br></p>'
         );
     });
 
     test("insert block at the end of a paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>b[]</p>`);
-        insertHTML(`<div class="o-paragraph oe_unbreakable">a</div>`)(editor);
+        insertHTML(`<div class="oe_unbreakable">a</div>`)(editor);
         cleanHints(editor);
         expect(getContent(el)).toBe(
-            `<p>b</p><div class="o-paragraph oe_unbreakable">a[]</div><p data-selection-placeholder=""><br></p>`
+            `<p>b</p><div class="oe_unbreakable">a[]</div><p data-selection-placeholder=""><br></p>`
         );
     });
 
