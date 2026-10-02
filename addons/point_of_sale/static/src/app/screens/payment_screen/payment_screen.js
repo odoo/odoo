@@ -43,9 +43,7 @@ export class PaymentScreen extends Component {
     }
 
     get isForcedToInvoice() {
-        // When using customer account, is now mandatory to create an invoice.
-        const payments = this.currentOrder.payment_ids;
-        return payments.some((p) => p.payment_method_id.type === "pay_later");
+        return false;
     }
 
     get configPaymentMethods() {
