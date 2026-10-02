@@ -74,6 +74,13 @@ $o-website-values: $-actual-user-website-values-palette !default;
 @function o-website-value($key) {
     @return map-get($o-website-values, $key);
 }
+// The website values without the user's, except the fonts (their config sets
+// values too): what a value resets to.
+$-default-values-with-user-fonts: $-website-values-default;
+@each $key in map-values($o-font-aliases-to-keys) {
+    $-default-values-with-user-fonts: map-merge($-default-values-with-user-fonts, ($key: o-website-value($key)));
+}
+$o-default-website-values: o-add-font-config($-default-values-with-user-fonts);
 
 $o-theme-navbar-logo-height: o-website-value('logo-height') !default;
 $o-theme-navbar-fixed-logo-height: o-website-value('fixed-logo-height') !default;

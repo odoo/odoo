@@ -54,7 +54,7 @@ registerWebsitePreviewTour(
         ...goToTheme(),
         {
             content: "Change font size",
-            trigger: "[data-action-param='font-size-base'] input",
+            trigger: "[data-action-param='font-size-base'] input.o-hb-input-number",
             run: `edit ${TARGET_FONT_SIZE} && click body`,
         },
         {

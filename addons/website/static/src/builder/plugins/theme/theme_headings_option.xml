@@ -7,22 +7,7 @@
         <t t-set="display_label">Display</t>
         <!-- We don't use `display-font-sizes.5` and `display-font-sizes.6` -->
         <t t-set="used_display_font_sizes" t-value="[1, 2, 3, 4]"/>
-        <BuilderRow label.translate="Font Size" action="'previewWebsiteVariable'" preview="true">
-            <BuilderNumberInput title.translate="Heading 1" actionParam="'h1-font-size'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
-            <t t-set-slot="collapse">
-                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'h' + depth + '-font-size'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
-                    </BuilderRow>
-                </t>
-                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'display-' + depth + '-font-size'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
-                    </BuilderRow>
-                </t>
-            </t>
-        </BuilderRow>
-        <BuilderRow label.translate="Font Family" tooltip.translate="Heading 1">
+        <BuilderRow label.translate="Font Family" tooltip.translate="All headings. Expand to set a level apart.">
             <ThemeFontFamilyOption
                 cssVariable="'headings-font'"
                 buttonIcon="'delete'"
@@ -47,41 +32,69 @@
                 </t>
             </t>
         </BuilderRow>
+        <BuilderRow label.translate="Heading 1" tooltip.translate="Font size. Expand for the other levels." action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'h1-font-size'" unit="'px'" saveUnit="'rem'" min="16" max="120" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['h1-font-size', 'h2-font-size', 'h3-font-size', 'h4-font-size', 'h5-font-size', 'h6-font-size', 'display-1-font-size', 'display-2-font-size', 'display-3-font-size', 'display-4-font-size']"/>
+            <t t-set-slot="collapse">
+                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+                    <BuilderRow level="1" label="heading_label + ' ' + depth">
+                        <BuilderRange actionParam="'h' + depth + '-font-size'" unit="'px'" saveUnit="'rem'" min="10" max="96" withNumberInput="true"/>
+                    </BuilderRow>
+                </t>
+                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
+                    <BuilderRow level="1" label="display_label + ' ' + depth">
+                        <BuilderRange actionParam="'display-' + depth + '-font-size'" unit="'px'" saveUnit="'rem'" min="24" max="144" withNumberInput="true"/>
+                    </BuilderRow>
+                </t>
+            </t>
+        </BuilderRow>
         <ThemeFontWeightOption
             regularVariables="['headings-font-weight', 'display-font-weight']"
             boldVariables="['headings-font-weight-bold', 'display-font-weight-bold']"
             fontVariable="'headings-font'"
         />
-        <BuilderRow label.translate="Line Height" action="'previewWebsiteVariable'" preview="true">
-            <!-- "× ": \u00D7\u2000 -->
-            <BuilderNumberInput title.translate="Heading 1" actionParam="'headings-line-height'" default="null" unit="'✕'" saveUnit="''"/>
+        <BuilderRow label.translate="Line Height" tooltip.translate="All headings. Expand to set a level apart." action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'headings-line-height'" unit="'✕'" saveUnit="''" min="0.8" max="2.5" step="0.05" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['headings-line-height', 'h2-line-height', 'h3-line-height', 'h4-line-height', 'h5-line-height', 'h6-line-height', 'display-1-line-height', 'display-2-line-height', 'display-3-line-height', 'display-4-line-height']"/>
             <t t-set-slot="collapse">
                 <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'h' + depth + '-line-height'" default="null" unit="'✕'" saveUnit="''"/>
+                        <BuilderRange actionParam="'h' + depth + '-line-height'" unit="'✕'" saveUnit="''" min="0.8" max="2.5" step="0.05" withNumberInput="true"/>
                     </BuilderRow>
                 </t>
                 <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'display-' + depth + '-line-height'" default="null" unit="'✕'" saveUnit="''"/>
+                        <BuilderRange actionParam="'display-' + depth + '-line-height'" unit="'✕'" saveUnit="''" min="0.8" max="2.5" step="0.05" withNumberInput="true"/>
                     </BuilderRow>
                 </t>
             </t>
         </BuilderRow>
-        <BuilderRow label.translate="Margins" tooltip.translate="Heading 1" action="'previewWebsiteVariable'" preview="true">
-            <BuilderNumberInput title.translate="Top" actionParam="'headings-margin-top'" unit="'px'" saveUnit="'px'"/>
-            <BuilderNumberInput title.translate="Bottom" actionParam="'headings-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+        <BuilderRow label.translate="Space Above" tooltip.translate="All headings. Expand to set a level apart." action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'headings-margin-top'" unit="'px'" saveUnit="'px'" min="0" max="96" withNumberInput="true"/>
             <t t-set-slot="collapse">
                 <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput title.translate="Top" actionParam="'h' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
-                        <BuilderNumberInput title.translate="Bottom" actionParam="'h' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+                        <BuilderRange actionParam="'h' + depth + '-margin-top'" unit="'px'" saveUnit="'px'" min="0" max="96" withNumberInput="true"/>
                     </BuilderRow>
                 </t>
                 <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderNumberInput title.translate="Top" actionParam="'display-' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
-                        <BuilderNumberInput title.translate="Bottom" actionParam="'display-' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+                        <BuilderRange actionParam="'display-' + depth + '-margin-top'" unit="'px'" saveUnit="'px'" min="0" max="96" withNumberInput="true"/>
+                    </BuilderRow>
+                </t>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Space Below" tooltip.translate="All headings. Expand to set a level apart." action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'headings-margin-bottom'" unit="'px'" saveUnit="'px'" min="0" max="96" withNumberInput="true"/>
+            <t t-set-slot="collapse">
+                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+                    <BuilderRow level="1" label="heading_label + ' ' + depth">
+                        <BuilderRange actionParam="'h' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'" min="0" max="96" withNumberInput="true"/>
+                    </BuilderRow>
+                </t>
+                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
+                    <BuilderRow level="1" label="display_label + ' ' + depth">
+                        <BuilderRange actionParam="'display-' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'" min="0" max="96" withNumberInput="true"/>
                     </BuilderRow>
                 </t>
             </t>
