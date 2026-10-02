@@ -12,7 +12,7 @@
                 </attribute>
             </field>
             <field name="city" position="before">
-                <field name="country_enforce_cities" invisible="1"/>
+                <field name="country_enforce_cities" invisible="1"/> <!-- drives invisible of city_id -->
                 <!-- TDE FIXME: check it is correctly sync -->
                 <field
                     name="city_id"
@@ -34,7 +34,7 @@
                 </attribute>
             </xpath>
             <xpath expr="//field[@name='child_ids']//form//field[@name='city']" position="before">
-                <field name="country_enforce_cities" invisible="1"/>
+                <field name="country_enforce_cities" invisible="1"/> <!-- drives invisible of city_id -->
                 <field
                     name="city_id"
                     placeholder="City"

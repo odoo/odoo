@@ -7,9 +7,9 @@
             <form string="Payment Methods">
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <field name="active" invisible="1"/>
-                    <field name="type" invisible="1"/>
-                    <field name="all_providers_installed" invisible="1"/>
+                    <field name="active" invisible="1"/> <!-- drives invisible of the Archived web_ribbon widget -->
+                    <field name="type" invisible="1"/> <!-- drives invisible/required of the journal and account fields and of the blocks added by pos_online_payment and pos_sale_planning -->
+                    <field name="all_providers_installed" invisible="1"/> <!-- drives invisible of the pos_payment_provider_cards widget -->
                     <div class="d-flex justify-content-between">
                         <div class="oe_title">
                             <label for="name"/>
@@ -37,7 +37,7 @@
                         </group>
                         <div>
                             <group>
-                                <field name="hide_qr_code_method" invisible="1"/>
+                                <field name="hide_qr_code_method" invisible="1"/> <!-- drives invisible of qr_code_method -->
                                 <field name="payment_method_type" invisible="not available_payment_method_types" widget="filterable_selection" options="{'whitelist_fname': 'available_payment_method_types'}" />
                                 <field name="payment_provider" string="Integrate with" invisible="not available_payment_providers" widget="filterable_selection" options="{'whitelist_fname': 'available_payment_providers'}" placeholder="None"/>
                                 <field name="qr_code_method" invisible="hide_qr_code_method" required="payment_method_type == 'bank_qr_code'"/>
@@ -55,7 +55,7 @@
         <field name="model">pos.payment.method</field>
         <field name="arch" type="xml">
             <list string="Payment Methods" create="1" delete="1">
-                <field name="type" column_invisible="True"/>
+                <field name="type" column_invisible="True"/> <!-- drives invisible/required of the journal and account columns -->
                 <field name="sequence" widget="handle"/>
                 <field name="name" />
                 <field name="journal_id" required="type != 'pay_later'" />
