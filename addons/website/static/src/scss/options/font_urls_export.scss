@@ -25,3 +25,51 @@
 .o-website-icon-font {
     --o-icon-font-family: "#{o-website-value('icon-font-family')}";
 }
+
+// The theme settings that switch CSS rules on (see `website.scss`): the server
+// marks them on `<html data-o-theme-gates>`, which those rules are gated on.
+.o-website-theme-gates {
+    $-gates: ();
+    // Set: "Auto" (no value) compiles to no rule.
+    @each $key in ('headings-font-weight-bold', 'display-font-weight-bold', 'btn-font-weight-bold') {
+        @if o-website-value($key) {
+            $-gates: append($-gates, $key);
+        }
+    }
+    // Set apart from the value they otherwise follow.
+    @each $side in ('top', 'right', 'bottom', 'left') {
+        $-width: o-website-value('input-border-#{$side}-width');
+        @if $-width and $-width != o-website-value('input-border-width') {
+            $-gates: append($-gates, 'input-border-#{$side}-width');
+        }
+    }
+    @each $level in ('h2', 'h3', 'h4', 'h5', 'h6', 'display-1', 'display-2', 'display-3', 'display-4') {
+        @if o-get-font-info($level) and o-get-font-info($level) != $o-theme-headings-font {
+            $-gates: append($-gates, '#{$level}-font');
+        }
+    }
+    @each $level in ('display-1', 'display-2', 'display-3', 'display-4') {
+        @each $property in ('line-height', 'margin-top', 'margin-bottom') {
+            $-value: o-website-value('#{$level}-#{$property}');
+            @if $-value and $-value != o-website-value('headings-#{$property}') {
+                $-gates: append($-gates, '#{$level}-#{$property}');
+            }
+        }
+    }
+    // Header and portal cards.
+    @each $key in ('header-font-size', 'menu-border-width', 'menu-border-radius', 'portal-card-border-width', 'portal-card-border-radius') {
+        @if o-website-value($key) {
+            $-gates: append($-gates, $key);
+        }
+    }
+    @if o-website-value('header-bg-blur') != 0 {
+        $-gates: append($-gates, 'header-bg-blur');
+    }
+    @if index(('shadow', 'shadow-sm', 'shadow-lg', 'o-shadow-custom'), o-website-value('menu-shadow-class')) {
+        $-gates: append($-gates, 'menu-shadow-class');
+    }
+    @if $o-theme-navbar-font != $o-theme-font {
+        $-gates: append($-gates, 'navbar-font');
+    }
+    --o-theme-gates: "#{$-gates}";
+}

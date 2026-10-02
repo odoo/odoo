@@ -434,13 +434,28 @@ $offcanvas-horizontal-width: $o-offcanvas-horizontal-width !default;
 // Bootstrap paddings and margins. See FIXED_TEXT_COLUMNS.
 $--enable-no-overflow-of-text-columns: false !default;
 
+// Theme settings that switch rules on: the server marks them on
+// `<html data-o-theme-gates>` (see `font_urls_export.scss`), the builder while
+// previewing. `:where()` keeps the rules' specificity.
+@mixin o-theme-gate($gate) {
+    $-gate: ':where(html[data-o-theme-gates~="#{$gate}"])';
+    @if & {
+        #{$-gate} & {
+            @content;
+        }
+    } @else {
+        #{$-gate} {
+            @content;
+        }
+    }
+}
+
 // A side-specific "form field border width" is only applied if it differs
-// from the global border width that applies to all sides (so a side set apart
-// in the builder applies on save).
-.form-control {
-    @each $side, $width in (top: $input-border-top-width, right: $input-border-right-width, bottom: $input-border-bottom-width, left: $input-border-left-width) {
-        @if $width != $input-border-width {
-            border-#{$side}-width: if($width, var(--input-border-#{$side}-width, #{$width}), null) !important;
+// from the global border width that applies to all sides.
+@each $side, $width in (top: $input-border-top-width, right: $input-border-right-width, bottom: $input-border-bottom-width, left: $input-border-left-width) {
+    @include o-theme-gate('input-border-#{$side}-width') {
+        .form-control {
+            border-#{$side}-width: var(--input-border-#{$side}-width, #{$width or $input-border-width}) !important;
         }
     }
 }

@@ -83,6 +83,7 @@
         <t t-set="html_data" t-value="{
             'lang': lang.replace('_', '-'),
             'data-website-id': website.id,
+            'data-o-theme-gates': website._get_theme_gates() or None,
             'data-edit_translations': '1' if edit_translations else None,
             'data-main-object': repr(main_object) if main_object else None,
             'data-seo-object': repr(seo_object) if seo_object else None,
