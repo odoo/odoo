@@ -2669,11 +2669,16 @@ class IrModelData(models.Model):
         self = self.with_context({MODULE_UNINSTALL_FLAG: True})
         loaded_xmlids = self.pool.loaded_xmlids
 
-        query = """ SELECT id, module || '.' || name, model, res_id FROM ir_model_data
-                    WHERE module IN %s AND res_id IS NOT NULL AND COALESCE(noupdate, false) != %s ORDER BY id DESC
+        query = """ SELECT id, module || '.' || name AS xmlid, model, res_id,
+                           (SELECT COUNT(*) - 1 FROM ir_model_data AS other
+                            WHERE other.model = imd.model AND other.res_id = imd.res_id) AS other_count
+                    FROM ir_model_data AS imd
+                    WHERE module IN %s AND res_id IS NOT NULL AND noupdate IS NOT TRUE
+                    ORDER BY id DESC
                 """
-        self.env.cr.execute(query, (tuple(modules), True))
-        for (id, xmlid, model, res_id) in self.env.cr.fetchall():
+        self.env.cr.execute(query, (tuple(modules),))
+        other_imd_count = {}
+        for (id, xmlid, model, res_id, other_count) in self.env.cr.fetchall():
             if xmlid in loaded_xmlids:
                 continue
 
@@ -2707,13 +2712,10 @@ class IrModelData(models.Model):
             if keep:
                 continue
 
-            # if the record has other associated xids, only remove the xid
-            if self.search_count([
-                ("model", "=", model),
-                ("res_id", "=", res_id),
-                ("id", "!=", id),
-                ("id", "not in", bad_imd_ids),
-            ]):
+            # if the record has other associated xids, only remove the xid;
+            # the xids already queued for removal no longer count
+            if other_imd_count.setdefault((model, res_id), other_count) > 0:
+                other_imd_count[model, res_id] -= 1
                 bad_imd_ids.append(id)
                 continue
 
