@@ -165,14 +165,17 @@ class PaymentTransaction(models.Model):
             'access_token': access_token,
             'success': 'true',
         })
-        partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
+        partner_first_name, partner_last_name = (
+            re.sub(r'[^a-zA-Z0-9]', '', name)
+            for name in payment_utils.split_partner_name(self.partner_name)
+        )
 
         if self.operation == 'validation':
             session_type = 'SAVE'
             amount = 0
         else:
             session_type = 'PAY'
-            amount = self.amount
+            amount = self._get_rounded_amount()
 
         payload = {
             'reference_id': self.reference,
@@ -184,8 +187,8 @@ class PaymentTransaction(models.Model):
                 'reference_id': f'customer{self.partner_id.id}{uuid4().hex[:8]}',
                 'type': 'INDIVIDUAL',
                 'individual_detail': {
-                    'given_names': re.sub(r'[^a-zA-Z0-9]', '', partner_first_name),
-                    'surname': re.sub(r'[^a-zA-Z0-9]', '', partner_last_name),
+                    # Xendit requires the given names and rejects empty values.
+                    'given_names': partner_first_name or partner_last_name or 'Customer',
                 },
             },
             'success_return_url': f'{redirect_url}?{success_url_params}',
@@ -195,9 +198,10 @@ class PaymentTransaction(models.Model):
             ],
             'currency': self.currency_id.name,
         }
-        if self.partner_id.country_id:
-            payload['country'] = self.partner_id.country_id.code
-        elif self.company_id.country_code:
+        if partner_first_name and partner_last_name:
+            payload['customer']['individual_detail']['surname'] = partner_last_name
+        # The channels available depend on the merchant's country, not the customer's.
+        if self.company_id.country_code:
             payload['country'] = self.company_id.country_code
         if self.payment_method_code == 'fpx':
             payload['allowed_payment_channels'] = const.FPX_METHODS
@@ -260,7 +264,8 @@ class PaymentTransaction(models.Model):
         payload = {
             'reference_id': self.reference,
             'type': 'PAY',
-            'country': (self.partner_id.country_id or self.company_id.country_id).code,
+            # Xendit only accepts the countries it operates in, i.e. the merchant's.
+            'country': self.company_id.country_code,
             'currency': self.currency_id.name,
             'request_amount': self._get_rounded_amount(),
             'capture_method': 'AUTOMATIC',
@@ -389,7 +394,11 @@ class PaymentTransaction(models.Model):
 
         # Update payment method.
         channel_code = payment_data.get('channel_code', '')
-        if channel_code in const.FPX_METHODS:
+        # FPX banks are mapped back to FPX, unless they have a dedicated payment method (e.g. KFH).
+        if (
+            channel_code in const.FPX_METHODS
+            and channel_code not in const.PAYMENT_METHODS_MAPPING.values()
+        ):
             channel_code = 'fpx'
         payment_method_code = channel_code or payment_data.get('payment_method', '')
 
