@@ -98,6 +98,9 @@ export class SelfOrder extends Reactive {
             });
             this.data.connectWebSocket("PAYMENT_STATUS", ({ payment_result, data }) => {
                 if (payment_result === "Success") {
+                    const [orderData] = data["pos.order"];
+                    const localOrder = this.models["pos.order"].get(orderData.id);
+                    orderData.partner_id = localOrder?.raw.partner_id || false;
                     this.models.connectNewData(data);
                     const order = this.models["pos.order"].find(
                         (o) => o.access_token === data["pos.order"][0].access_token
@@ -743,12 +746,10 @@ export class SelfOrder extends Reactive {
             if (this.shouldUpdateLastOrderChange()) {
                 this.currentOrder.updateLastOrderChange();
             }
-            const serializedOrder = this.currentOrder.serializeForORM();
-            serializedOrder.partner_id = this.currentOrder.raw.partner_id || false;
             const data = await rpc(
                 `/pos-self-order/process-order/${this.config.self_ordering_mode}`,
                 {
-                    order: serializedOrder,
+                    order: this.currentOrder.serializeForORM(),
                     access_token: this.access_token,
                     table_identifier: tableIdentifier, // Always trust URL one, is the one user scanned
                 }

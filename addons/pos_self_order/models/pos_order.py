@@ -102,10 +102,11 @@ class PosOrder(models.Model):
 
     def _send_payment_result(self, payment_result):
         self.ensure_one()
+        order_fields = [field for field in self._load_pos_self_data_fields(self.config_id) if field != 'partner_id']
         self.config_id._notify('PAYMENT_STATUS', {
             'payment_result': payment_result,
             'data': {
-                'pos.order': self.read(self._load_pos_self_data_fields(self.config_id), load=False),
+                'pos.order': self.read(order_fields, load=False),
                 'pos.order.line': self.lines.read(self.lines._load_pos_self_data_fields(self.config_id), load=False),
             }
         })
@@ -315,7 +316,7 @@ class PosOrder(models.Model):
 
     @api.model
     def _get_self_partner_from_token(self, pos_config, signed_partner):
-        if not signed_partner or "-" not in signed_partner:
+        if not isinstance(signed_partner, str) or "-" not in signed_partner:
             return False
         raw_id, _sep, token = signed_partner.partition("-")
         try:
