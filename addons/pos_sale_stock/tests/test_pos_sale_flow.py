@@ -411,7 +411,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
     def test_settle_order_ship_later_effect_on_so(self):
         """This test create an order, settle it in the PoS and ship it later.
             We need to make sure that the quantity delivered on the original sale is updated correctly,
-            And that the picking associated to the original sale order is cancelled.
+            And that no picking is created for the original sale order, as the PoS picking delivers it.
         """
 
         product_a = self.env['product.product'].create({
@@ -465,8 +465,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PosSettleOrderShipLater', login="accountman")
 
-        self.assertEqual(len(sale_order_single.picking_ids), 1)
-        self.assertEqual(sale_order_single.picking_ids.state, "cancel")
+        self.assertFalse(sale_order_single.picking_ids)
         self.assertEqual(len(sale_order_single.pos_order_line_ids.order_id.picking_ids), 1)
         self.assertEqual(sale_order_single.pos_order_line_ids.order_id.picking_ids.state, "assigned")
 
@@ -483,8 +482,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         self.assertEqual(sale_order_multi.order_line[0].qty_delivered, 0)
         self.assertEqual(sale_order_multi.order_line[1].qty_delivered, 0)
 
-        self.assertEqual(len(sale_order_multi.picking_ids), 1)
-        self.assertEqual(sale_order_multi.picking_ids.state, "cancel")
+        self.assertFalse(sale_order_multi.picking_ids)
         self.assertEqual(len(sale_order_multi.pos_order_line_ids.order_id.picking_ids), 1)
         self.assertEqual(sale_order_multi.pos_order_line_ids.order_id.picking_ids.state, "assigned")
 
@@ -1007,6 +1005,162 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
             picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
         self.assertEqual(sale_order.order_line.qty_invoiced, 0)
+
+    def test_settle_quotation_reordering_rule(self):
+        """ Settling a quotation in the PoS should not make the reordering rule
+        replenish the demand twice (once for the PoS picking, once for the SO delivery).
+        """
+        warehouse = self.main_pos_config.warehouse_id
+        reserve_location = self.env['stock.location'].create({
+            'name': 'Reserve',
+            'location_id': warehouse.view_location_id.id,
+        })
+        replenish_route = self.env['stock.route'].create({
+            'name': 'Replenish from Reserve',
+            'product_selectable': True,
+            'rule_ids': [Command.create({
+                'name': 'Reserve -> Stock',
+                'action': 'pull',
+                'picking_type_id': warehouse.int_type_id.id,
+                'location_src_id': reserve_location.id,
+                'location_dest_id': warehouse.lot_stock_id.id,
+                'procure_method': 'make_to_stock',
+            })],
+        })
+        product = self.env['product.product'].create({
+            'name': 'Product with reordering rule',
+            'is_storable': True,
+            'available_in_pos': True,
+            'lst_price': 10.0,
+        })
+        self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 10.0)
+        # Keep the settled quantity below the min: otherwise the replenishment is linked to the SO
+        # reference and gets cancelled along with the SO delivery, which would hide the extra demand.
+        self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'route_id': replenish_route.id,
+            'product_min_qty': 7.0,
+            'product_max_qty': 10.0,
+            'trigger': 'auto',
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 4.0,
+                'price_unit': 10.0,
+            })],
+        })
+
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+        self.env['pos.order'].sync_from_ui([{
+            'amount_paid': 40.0,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': 40.0,
+            'company_id': self.env.company.id,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'partner_id': self.partner_a.id,
+            'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
+            'lines': [Command.create({
+                'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': 10.0,
+                'product_id': product.id,
+                'price_subtotal': 40.0,
+                'price_subtotal_incl': 40.0,
+                'sale_order_line_id': sale_order.order_line.id,
+                'sale_order_origin_id': sale_order.id,
+                'qty': 4.0,
+                'tax_ids': [],
+            })],
+            'name': 'Order 00044-003-0015',
+            'session_id': current_session.id,
+            'sequence_number': 1,
+            'payment_ids': [Command.create({
+                'amount': 40.0,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.main_pos_config.payment_method_ids[0].id,
+            })],
+            'user_id': self.env.uid,
+            'uuid': str(uuid.uuid4()),
+        }])
+        # The reordering rules are triggered by the PoS pickings when closing the session
+        current_session.close_session_from_ui()
+
+        self.assertEqual(sale_order.state, 'sale')
+        self.assertEqual(sale_order.order_line.qty_delivered, 4.0)
+        replenishment_moves = self.env['stock.move'].search([
+            ('product_id', '=', product.id),
+            ('location_id', '=', reserve_location.id),
+            ('state', '!=', 'cancel'),
+        ])
+        # The PoS order brought the stock from 10 to 6: 4 units are needed to reach the max of the reordering rule
+        self.assertEqual(sum(replenishment_moves.mapped('product_uom_qty')), 4.0)
+
+    def test_downpayment_goods_product_no_stock_move(self):
+        """ A down payment paid in the PoS is not a delivery: even when the down payment
+        product is a goods product, no stock move should be created for its sale order line.
+        """
+        self.main_pos_config.down_payment_product_id = self.env['product.product'].create({
+            'name': 'Down Payment Goods',
+            'type': 'consu',
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 100.0,
+                'tax_ids': False,
+            })],
+        })
+        sale_order.action_confirm()
+
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+        self.env['pos.order'].sync_from_ui([{
+            'amount_paid': 20.0,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': 20.0,
+            'company_id': self.env.company.id,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'partner_id': self.partner_a.id,
+            'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
+            'lines': [Command.create({
+                'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': 20.0,
+                'product_id': self.main_pos_config.down_payment_product_id.id,
+                'price_subtotal': 20.0,
+                'price_subtotal_incl': 20.0,
+                'sale_order_origin_id': sale_order.id,
+                'qty': 1.0,
+                'tax_ids': [],
+            })],
+            'name': 'Order 00044-003-0016',
+            'session_id': current_session.id,
+            'sequence_number': 1,
+            'payment_ids': [Command.create({
+                'amount': 20.0,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.main_pos_config.payment_method_ids[0].id,
+            })],
+            'user_id': self.env.uid,
+            'uuid': str(uuid.uuid4()),
+        }])
+
+        downpayment_line = sale_order.order_line.filtered('is_downpayment')
+        self.assertTrue(downpayment_line.pos_order_line_ids)
+        self.assertFalse(downpayment_line.move_ids)
 
     def test_variant_popup_qty_free(self):
         """
