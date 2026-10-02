@@ -1139,6 +1139,14 @@ class SaleOrder(models.Model):
         """
         return bool(self.order_line.product_id) and not self.only_services
 
+    def _get_checkout_delivery_address(self):
+        """Return the address to select in the delivery address list of the checkout.
+
+        :return: The delivery address to select.
+        :rtype: res.partner
+        """
+        return self.partner_shipping_id
+
     def _get_preferred_delivery_method(self, available_delivery_methods):
         """Get the preferred delivery method based on available delivery methods for the order.
 
