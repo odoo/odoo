@@ -370,6 +370,11 @@ def build_gsub(font: TTFont, ligatures: dict[str, str]) -> list[str]:
     how ``alternate_email_f`` ended up drawing ``mail_f`` (matching
     "e-**mail**-_f").  :func:`buildLigatureSubstSubtable` sorts every set
     longest-first, so the shaper always takes the longest match.
+
+    Ligatures of equal length are ordered by name before fontTools sees them:
+    from 4.47 on it keeps them in insertion order, where earlier releases sorted
+    them by components, and the same icons would otherwise compile differently
+    depending on the fontTools installed.
     """
     cmap = font.getBestCmap()
     mapping, unencodable = {}, []
@@ -383,7 +388,7 @@ def build_gsub(font: TTFont, ligatures: dict[str, str]) -> list[str]:
     liga_lookup = otTables.Lookup()
     liga_lookup.LookupType = 4
     liga_lookup.LookupFlag = 0
-    liga_lookup.SubTable = [buildLigatureSubstSubtable(mapping)]
+    liga_lookup.SubTable = [buildLigatureSubstSubtable(dict(sorted(mapping.items())))]
     liga_lookup.SubTableCount = 1
 
     lookups = [liga_lookup]
@@ -671,7 +676,8 @@ def save_font(font: TTFont, path) -> None:
     nothing about the icons.  The existing file is therefore compared against the
     new one with both dates equalized, and left untouched when they match --
     ``created`` is kept for the lifetime of the file, only ``modified`` follows a
-    real change.
+    real change.  Not rewriting it at all also keeps a different Brotli from
+    recompressing the same tables into different bytes.
     """
     head = font['head']
     head.created = head.modified = timeTools.timestampNow()
@@ -680,8 +686,9 @@ def save_font(font: TTFont, path) -> None:
         previous = TTFont(path, recalcTimestamp=False)
         head.created = previous['head'].created
         head.modified = previous['head'].modified
-        if compile_font(font) != compile_font(previous):
-            head.modified = timeTools.timestampNow()
+        if compile_font(font) == compile_font(previous):
+            return
+        head.modified = timeTools.timestampNow()
 
     font.save(path)
 
