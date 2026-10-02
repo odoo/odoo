@@ -128,6 +128,9 @@ patch(PosOrder.prototype, {
             })
             .map((course, newIndex) => {
                 course.index = newIndex + 1;
+                if (!this.config.use_course_allocation && !course.course_id) {
+                    course.name = _t("Course ") + course.index;
+                }
                 return course;
             });
         removedCourses.forEach((course) => course.delete());
