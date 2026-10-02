@@ -176,8 +176,7 @@ class PosOrder(models.Model):
 
     def _generate_order_invoice(self):
         self.ensure_one()
-        has_paylater_pm = any(payment.payment_method_id.type == 'pay_later' for payment in self.payment_ids)
-        if (self.to_invoice or has_paylater_pm) and self.state == 'paid' and self.config_id.journal_id and not self.is_singly_invoiced:
+        if self.to_invoice and self.state == 'paid' and self.config_id.journal_id and not self.is_singly_invoiced:
             self.to_invoice = True  # Ensure true if has_paylater_pm is true
             should_generate_pdf = self.env.context.get('generate_pdf') or self.config_id.use_download_invoice
             self.with_context(generate_pdf=should_generate_pdf)._generate_pos_order_invoice()
@@ -1427,7 +1426,12 @@ class PosOrder(models.Model):
             foreign_currency = payment.foreign_currency_id
             if foreign_currency == payment.currency_id:
                 foreign_currency = self.env['res.currency']
-            key = (pm, foreign_currency)
+
+            # Customer account payments are grouped per customer, so each
+            # one gets its own transfer to the customer receivable.
+            line_partner = payment.pos_order_id.partner_id if pm.type == 'pay_later' else partner
+            key = (pm, foreign_currency, line_partner)
+
             combined_currency.setdefault(key, {
                 'amount': 0.0,
                 'amount_currency': 0.0,
@@ -1438,16 +1442,23 @@ class PosOrder(models.Model):
 
         # Combined payments: aggregate all orders for a given PM into one slot
         result = []
-        for (pm, foreign_currency), data in combined_currency.items():
-            partner_account = partner.property_account_receivable_id if partner else None
-            destination_account = partner_account or session._get_receivable_account()
+        # All the payment_term lines share the same receivable: an invoice
+        # cannot hold several receivable accounts or partners. On the session
+        # invoice, customer account payments are moved to the customer
+        # receivable by a separate entry (see _create_pay_later_payment_line).
+        partner_account = partner.property_account_receivable_id if partner else None
+        destination_account = partner_account or session._get_receivable_account()
+        for (pm, foreign_currency, line_partner), data in combined_currency.items():
+            name = pm.name
+            if pm.type == 'pay_later' and line_partner:
+                name = f'{pm.name} - {line_partner.name}'
 
             result.append({
                 'account.move.line': {
                     'display_type': 'payment_term',
-                    'name': pm.name,
+                    'name': name,
                     'account_id': destination_account.id,
-                    'partner_id': partner.id if partner else None,
+                    'partner_id': line_partner.id if line_partner else None,
                     'date_maturity': today,
                     # Always expressed in the currency of the move: this line is summed
                     # with the other payment_term lines by account.move._compute_amount
@@ -1458,6 +1469,7 @@ class PosOrder(models.Model):
                 'metadata': {
                     'payment_method_id': pm,
                     'amount': data['amount'],
+                    'partner': line_partner,
                     # The currency actually handed over by the customer, only relevant
                     # for the payment side (liquidity) of the accounting.
                     'foreign_currency_id': foreign_currency,
@@ -1594,10 +1606,15 @@ class PosOrder(models.Model):
 
         company = self.company_id
         vals = self._prepare_invoice_vals()
+        vals['line_ids'] = []
 
-        lines = []
+        # Orders already in a session closing entry (closed session or
+        # periodic closing cron) are paid there, their part is reversed from
+        # that entry instead of registering their payments again.
+        globally_invoiced = self.filtered('is_globally_invoiced')
+
         total_payments_by_session = {}
-        for order in self:
+        for order in self - globally_invoiced:
             payments = order._prepare_account_move_line_data_for_payments(
                 order.partner_id,
             )
@@ -1605,11 +1622,10 @@ class PosOrder(models.Model):
             line_data = [pm['account.move.line'] for pm in payments]
             payment_commands = [Command.create(pm_data) for pm_data in line_data]
             extra_commands = order._prepare_invoice_extra_line_commands(payments)
-            lines += payment_commands + extra_commands
             total_payments_by_session.setdefault(order.session_id, [])
             total_payments_by_session[order.session_id] += payments
+            vals['line_ids'] += payment_commands + extra_commands
 
-        vals['line_ids'] = lines
         AccountMove = self.env['account.move'].sudo().with_company(company)
         move_ctx = AccountMove.with_context(
             default_move_type=vals['move_type'],
@@ -1621,6 +1637,17 @@ class PosOrder(models.Model):
         invoice_ctx = invoice.sudo().with_company(company).with_context(
             **self._get_invoice_post_context(),
         )
+
+        reversal_moves = []
+        grouped_by_move = {}
+        for order in globally_invoiced:
+            grouped_by_move.setdefault(order.account_move, self.env['pos.order'])
+            grouped_by_move[order.account_move] |= order
+
+        for move, orders in grouped_by_move.items():
+            reversal_move = orders.session_id._create_partial_reversal_move_from_session_closing(orders)
+            reversal_move._post()
+            reversal_moves.append((orders, reversal_move))
 
         # Create rounding line if needed
         data = self._prepare_account_move_line_data_for_rounding(invoice)
@@ -1634,32 +1661,36 @@ class PosOrder(models.Model):
         self.account_move = invoice
         invoice_ctx._post()
 
-        if not self.env.context.get('skip_payment'):
-            name_str = " - ".join(self.mapped('name')) if len(self) > 1 else self.name
-            all_payment_lines = self.env['account.move.line']
-            payment_term_lines = invoice.line_ids.filtered(
-                lambda line: line.display_type == 'payment_term',
-            )
+        # Only posted lines can be reconciled
+        for orders, move in reversal_moves:
+            session = orders.session_id
+            session._reconcile_partial_reversal_move(orders, invoice, move)
 
-            for session, payments in total_payments_by_session.items():
-                for payment in payments:
-                    metadata = payment['metadata']
-                    pm = metadata['payment_method_id']
+        name_str = " - ".join(self.mapped('name')) if len(self) > 1 else self.name
+        all_payment_lines = self.env['account.move.line']
+        payment_term_lines = invoice.line_ids.filtered(
+            lambda line: line.display_type == 'payment_term',
+        )
 
-                    all_payment_lines |= pm._create_payment_line(
-                        session,
-                        metadata['amount'],
-                        self.partner_id.property_account_receivable_id,
-                        f"POS Order {name_str}",
-                        self.partner_id,
-                        metadata['foreign_currency_id'].id,
-                        metadata['amount_currency'],
-                    )
+        for session, payments in total_payments_by_session.items():
+            for payment in payments:
+                metadata = payment['metadata']
+                pm = metadata['payment_method_id']
 
-            to_reconcile = (payment_term_lines | all_payment_lines).filtered(
-                lambda line: not line.reconciled,
-            )
-            to_reconcile.with_context(skip_invoice_sync=True).reconcile()
+                all_payment_lines |= pm._create_payment_line(
+                    session,
+                    metadata['amount'],
+                    self.partner_id.property_account_receivable_id,
+                    f"POS Order {name_str}",
+                    self.partner_id,
+                    metadata['foreign_currency_id'].id,
+                    metadata['amount_currency'],
+                )
+
+        to_reconcile = (payment_term_lines | all_payment_lines).filtered(
+            lambda line: not line.reconciled,
+        )
+        to_reconcile.with_context(skip_invoice_sync=True).reconcile()
 
         body = _("This invoice has been created from the point of sale session:%s",
             Markup().join(Markup("%s ") % order._get_html_link() for order in self),
@@ -1690,15 +1721,11 @@ class PosOrder(models.Model):
     def action_pos_order_invoice(self):
         self.ensure_one()
         account_move = self.account_move
-        globally = self.is_globally_invoiced
         singly = self.is_singly_invoiced
 
         if singly and account_move:
             # Already has a real customer invoice (account_move is not a session closing entry).
             move = self.account_move
-        elif (self.session_id and self.session_id.state == 'closed') or (globally and account_move):
-            # Session is closed: reverse the closing entry and create a proper invoice.
-            move = self._generate_invoice_after_session_closing()
         else:
             # Session still open: standard path (also handles pos_stock picking creation).
             move = self._prepare_missing_invoice_moves()
@@ -1713,41 +1740,3 @@ class PosOrder(models.Model):
             'target': 'current',
             'res_id': move.id,
         }
-
-    def _generate_invoice_after_session_closing(self):
-        """
-        This method will reverse the corresponding amount from the global
-        session closing entry and create a new invoice with the same
-        amount, so that the invoice will be correctly taken into account
-        in the fiscal report of the day of the order, and not in the day
-        of the session closing.
-        """
-        self.ensure_one()
-        if self.session_id.state != "closed" and not self.is_globally_invoiced:
-            return self._generate_pos_order_invoice()
-
-        session = self.session_id
-        refund_move = self.account_move if self.is_globally_invoiced or not session.refund_move_ids else session.refund_move_ids[-1]
-        sale_move = self.account_move if self.is_globally_invoiced or not session.sale_move_ids else session.sale_move_ids[-1]
-        global_move = refund_move if self.is_refund_or_negative() else sale_move
-
-        if not global_move or global_move.state != "posted":
-            return self.env['account.move']
-
-        invoice = self.with_context(
-            skip_payment=True,
-        )._generate_pos_order_invoice()
-        session = self.session_id
-        move = session._create_partial_reversal_move_from_session_closing(self)
-        move._post()
-
-        partner_receivable = invoice.partner_id.property_account_receivable_id.id
-        counter_part = move.line_ids.filtered(lambda line: line.account_id.id == partner_receivable)
-        to_reconcile = invoice.line_ids.filtered_domain([
-            ('account_id', '=', counter_part.account_id.id),
-            ('reconciled', '=', False),
-        ])
-        (to_reconcile | counter_part).with_context(
-            skip_invoice_sync=True,
-        ).reconcile()
-        return invoice

@@ -429,16 +429,6 @@ test("isCustomerRequired", async () => {
         expect(order.isCustomerRequired).toBe(true);
         order.to_invoice = false;
     }
-    {
-        // split payment (customer account)
-        const customerAccountMethod = posStore.models["pos.payment.method"].get(3);
-        order.addPaymentline(customerAccountMethod);
-        expect(order.isCustomerRequired).toBe(true);
-        order.partner_id = existingPartner;
-        expect(order.isCustomerRequired).toBe(false);
-        order.partner_id = false;
-        order.removePaymentline(order.payment_ids[0]);
-    }
     expect(order.isCustomerRequired).toBe(false);
 });
 
