@@ -19,10 +19,6 @@ class PaymentTransaction(models.Model):
 
     paypal_setup_token_ref = fields.Char(string="PayPal Setup Token ID")
 
-    # See https://developer.paypal.com/docs/api-basics/notifications/ipn/IPNandPDTVariables/
-    # this field has no use in Odoo except for debugging
-    paypal_type = fields.Char(string="PayPal Transaction Type")
-
     def _get_specific_processing_values(self, processing_values):
         """Override of `payment` to return the Paypal-specific processing values.
 
@@ -377,10 +373,8 @@ class PaymentTransaction(models.Model):
 
         # Update the provider reference.
         txn_id = payment_data.get("id")
-        txn_type = payment_data.get("txn_type")
 
         self.provider_reference = txn_id
-        self.paypal_type = txn_type
 
         # Update the payment method
         # TODO
