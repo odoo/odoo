@@ -211,6 +211,10 @@ export class CalendarModel extends Model {
 
     //--------------------------------------------------------------------------
 
+    _getCalendarContext(additionalContext = {}) {
+        return { ...this.meta.context, ...additionalContext };
+    }
+
     async createFilter(fieldName, filterValue) {
         const info = this.meta.filtersInfo[fieldName];
         if (!info || !info.writeFieldName || !info.writeResModel) {
@@ -283,7 +287,7 @@ export class CalendarModel extends Model {
         }
         if (records.length) {
             const createdRecords = await this.orm.create(this.meta.resModel, records, {
-                context: this.meta.context,
+                context: this._getCalendarContext(),
             });
             await this.load();
             return createdRecords;
@@ -333,7 +337,7 @@ export class CalendarModel extends Model {
                 const data = {
                     [info.filterFieldName]: active,
                 };
-                const context = this.meta.context;
+                const context = this._getCalendarContext();
                 await this.orm.write(info.writeResModel, filterIds, data, { context });
             }
         }
@@ -343,7 +347,7 @@ export class CalendarModel extends Model {
         const rawRecord = this.buildRawRecord(record, options);
         delete rawRecord.name; // name is immutable.
         await this.orm.write(this.meta.resModel, [record.id], rawRecord, {
-            context: this.meta.context,
+            context: this._getCalendarContext(),
         });
         await this.load();
     }
@@ -402,7 +406,7 @@ export class CalendarModel extends Model {
     makeContextDefaults(rawRecord) {
         const { fieldMapping, scale } = this.meta;
 
-        const context = { ...this.meta.context };
+        const context = this._getCalendarContext();
         const fieldNames = [
             fieldMapping.create_name_field || "name",
             fieldMapping.date_start,
@@ -686,7 +690,7 @@ export class CalendarModel extends Model {
         const domain = this.computeEventsToScheduleDomain(data);
         const result = await this.orm.webSearchRead(
             this.resModel,
-            domain.toList(this.meta.context),
+            domain.toList(this._getCalendarContext()),
             {
                 specification: { display_name: {} },
                 limit: limit || 20,
@@ -698,8 +702,10 @@ export class CalendarModel extends Model {
      * @protected
      */
     fetchRecords(data) {
-        const { context, fieldNames, resModel } = this.meta;
-        return this.orm.searchRead(resModel, this.computeDomain(data), fieldNames, { context });
+        const { fieldNames, resModel } = this.meta;
+        return this.orm.searchRead(resModel, this.computeDomain(data), fieldNames, {
+            context: this._getCalendarContext(),
+        });
     }
     /**
      * @protected
@@ -739,7 +745,7 @@ export class CalendarModel extends Model {
      * @private
      */
     _getScheduleContext() {
-        return { ...this.meta.context };
+        return this._getCalendarContext();
     }
     /**
      * @private
@@ -778,7 +784,7 @@ export class CalendarModel extends Model {
      * @private
      */
     _getUnscheduleContext() {
-        return { ...this.meta.context };
+        return this._getCalendarContext();
     }
     /**
      * @protected
@@ -941,7 +947,7 @@ export class CalendarModel extends Model {
                 model: writeResModel,
             },
             canAddFilter: !!filterInfo.writeResModel,
-            context: makeContext([filterInfo.context, this.meta.context]),
+            context: makeContext([filterInfo.context, this._getCalendarContext()]),
         };
     }
     /**

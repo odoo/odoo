@@ -1,17 +1,18 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { queryAllTexts, waitFor } from "@odoo/hoot-dom";
-import { mockDate } from "@odoo/hoot-mock";
+import { mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { mountView, onRpc } from "@web/../tests/web_test_helpers";
 import { clickDate } from "@web/../tests/views/calendar/calendar_test_helpers";
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
 import { HrLeave } from "@hr_holidays/../tests/mock_server/mock_models/hr_leave";
+import { TimeOffCalendarModel } from "@hr_holidays/views/calendar/calendar_model";
 
 describe.current.tags("desktop");
 defineHrHolidaysModels();
 
-async function mountYearCalendar() {
+async function mountYearCalendar(context = {}, getUnusualDays = () => ({})) {
     onRpc("get_mandatory_days", () => ({}));
-    onRpc("get_unusual_days", () => ({}));
+    onRpc("get_unusual_days", getUnusualDays);
     onRpc("get_special_days_data", () => ({ bankHolidays: [], mandatoryDays: [] }));
     onRpc("hr.employee", "get_time_off_dashboard_data", () => ({
         has_accrual_allocation: true,
@@ -21,6 +22,7 @@ async function mountYearCalendar() {
     await mountView({
         type: "calendar",
         resModel: "hr.leave",
+        context,
         arch: `
             <calendar js_class="time_off_calendar_dashboard"
                       date_start="date_from"
@@ -29,6 +31,7 @@ async function mountYearCalendar() {
                       quick_create="0"
                       create="0"
                       hide_time="1"
+                      show_unusual_days="1"
                       mode="year">
                 <field name="display_name" string=""/>
                 <field name="work_entry_type_id" filters="1" invisible="1" color="color"/>
@@ -36,6 +39,63 @@ async function mountYearCalendar() {
             </calendar>`,
     });
 }
+
+test("time off calendar uses the grid timezone for record reads and unusual days", async () => {
+    mockDate("2024-01-03 12:00:00", 0);
+    mockTimeZone("Pacific/Kiritimati");
+    const contexts = {};
+    onRpc("search_read", ({ model, kwargs }) => {
+        if (model === "hr.leave") {
+            contexts.records = kwargs.context;
+        }
+    });
+    await mountYearCalendar({ tz: "Europe/Brussels", employee_id: [100] }, ({ kwargs }) => {
+        contexts.unusualDays = kwargs.context;
+        return {};
+    });
+
+    expect(contexts.records.tz).toBe("Pacific/Kiritimati");
+    expect(contexts.unusualDays.tz).toBe("Pacific/Kiritimati");
+    expect(contexts.unusualDays.employee_id).toBe(100);
+});
+
+test("calendar context preserves defaults without mutating the action context", () => {
+    mockTimeZone("Pacific/Kiritimati");
+    const model = Object.create(TimeOffCalendarModel.prototype);
+    model.meta = { context: { tz: "Europe/Brussels", default_name: "Sick", active_id: 100 } };
+    const additionalContext = { tz: "Etc/GMT+12", default_name: "Annual leave" };
+
+    expect(model._getCalendarContext(additionalContext)).toEqual({
+        tz: "Pacific/Kiritimati", default_name: "Annual leave", active_id: 100,
+    });
+    expect(model._getScheduleContext().tz).toBe("Pacific/Kiritimati");
+    expect(model._getUnscheduleContext().tz).toBe("Pacific/Kiritimati");
+    expect(model.meta.context).toEqual({ tz: "Europe/Brussels", default_name: "Sick", active_id: 100 });
+    expect(additionalContext).toEqual({ tz: "Etc/GMT+12", default_name: "Annual leave" });
+});
+
+test("calendar rescheduling serializes grid bounds with the same timezone context", async () => {
+    mockTimeZone("Pacific/Kiritimati");
+    const model = Object.create(TimeOffCalendarModel.prototype);
+    model.meta = { resModel: "hr.leave", context: { tz: "Europe/Brussels", active_id: 100 } };
+    model.orm = {
+        async call(resModel, method, args, kwargs) {
+            expect(resModel).toBe("hr.leave");
+            expect(method).toBe("reschedule_from_calendar");
+            expect(args).toEqual([[1], "2024-01-08 19:00:00", "2024-01-08 22:00:00"]);
+            expect(kwargs.context).toEqual({ tz: "Pacific/Kiritimati", active_id: 100 });
+            expect.step("reschedule");
+        },
+    };
+    model.load = async () => expect.step("reload");
+
+    await model._rescheduleRecord({
+        id: 1,
+        start: luxon.DateTime.fromISO("2024-01-09T09:00:00"),
+        end: luxon.DateTime.fromISO("2024-01-09T12:00:00"),
+    });
+    expect.verifySteps(["reschedule", "reload"]);
+});
 
 test("a time off in days ends on the day its exclusive bound closes", async () => {
     mockDate("2024-01-03 12:00:00", 0);
