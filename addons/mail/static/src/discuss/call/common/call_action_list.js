@@ -44,14 +44,28 @@ export class JoinBackInlineAction extends PillCallInlineAction {
     }
 }
 
+/** Button of the voice settings, whose chevron self's talking bars stand in for until hovered. */
+export class QuickVoiceSettingsInlineAction extends InlineAction {
+    get classObj() {
+        return { ...super.classObj, "o-discuss-quickVoiceSettings": true };
+    }
+}
+
 /**
- * Picks the component of the inline buttons to join or leave a call: circles, except the button
- * to join the call again, and the button to reject next to it, which are pills.
+ * Picks the component of the inline buttons of a call: the voice settings, and the buttons to join
+ * or leave a call, which are circles, except the button to join the call again, and the button to
+ * reject next to it, which are pills.
  *
  * @type {import("@mail/core/common/action_list").GetActionComponent}
  */
 export function getCallActionComponent({ action, actions, inline }) {
-    if (!inline || !action.tags.includes(ACTION_TAGS.JOIN_LEAVE_CALL)) {
+    if (!inline) {
+        return undefined;
+    }
+    if (action.id === "quick-voice-settings") {
+        return QuickVoiceSettingsInlineAction;
+    }
+    if (!action.tags.includes(ACTION_TAGS.JOIN_LEAVE_CALL)) {
         return undefined;
     }
     if (action.id === "join-back") {
