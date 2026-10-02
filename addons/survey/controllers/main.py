@@ -579,6 +579,11 @@ class Survey(http.Controller):
 
             answer_sudo.last_displayed_page_id = page_or_question_id
 
+        # presence is used to check gamification challenges
+        if user := answer_sudo.partner_id.user_ids[:1]:
+            request.env['bus.presence']._update_presence(
+                inactivity_period=0, identity_field='user_id', identity_value=user.id)
+
         return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo)
 
     def _extract_comment_from_answers(self, question, answers):
