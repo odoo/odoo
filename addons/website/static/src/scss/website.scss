@@ -59,15 +59,21 @@
     // font-size dropdown
     @include print-variable('paragraph-margin-top', $paragraph-margin-top);
     @include print-variable('paragraph-margin-bottom', $paragraph-margin-bottom);
-    @include print-variable('h2-line-height', $h2-line-height);
-    @include print-variable('h3-line-height', $h3-line-height);
-    @include print-variable('h4-line-height', $h4-line-height);
-    @include print-variable('h5-line-height', $h5-line-height);
-    @include print-variable('h6-line-height', $h6-line-height);
-    @include print-variable('display-1-line-height', $display-1-line-height);
-    @include print-variable('display-2-line-height', $display-2-line-height);
-    @include print-variable('display-3-line-height', $display-3-line-height);
-    @include print-variable('display-4-line-height', $display-4-line-height);
+    // A heading level that isn't set apart follows the headings value, also
+    // while the builder previews it.
+    @each $property, $headings-value, $values in (
+        'line-height' $headings-line-height ('h2': $h2-line-height, 'h3': $h3-line-height, 'h4': $h4-line-height, 'h5': $h5-line-height, 'h6': $h6-line-height, 'display-1': $display-1-line-height, 'display-2': $display-2-line-height, 'display-3': $display-3-line-height, 'display-4': $display-4-line-height),
+        'margin-top' $headings-margin-top ('h2': $h2-margin-top, 'h3': $h3-margin-top, 'h4': $h4-margin-top, 'h5': $h5-margin-top, 'h6': $h6-margin-top, 'display-1': $display-1-margin-top, 'display-2': $display-2-margin-top, 'display-3': $display-3-margin-top, 'display-4': $display-4-margin-top),
+        'margin-bottom' $headings-margin-bottom ('h2': $h2-margin-bottom, 'h3': $h3-margin-bottom, 'h4': $h4-margin-bottom, 'h5': $h5-margin-bottom, 'h6': $h6-margin-bottom, 'display-1': $display-1-margin-bottom, 'display-2': $display-2-margin-bottom, 'display-3': $display-3-margin-bottom, 'display-4': $display-4-margin-bottom),
+    ) {
+        @each $level, $value in $values {
+            $-key: '#{$level}-#{$property}';
+            @if not o-website-value($-key) and $value == $headings-value {
+                $value: var(--headings-#{$property});
+            }
+            @include print-variable($-key, $value);
+        }
+    }
     // We cannot rely on $o-theme-hx-font because they contain the list of
     // fallback fonts (unicode...).
     $-headings-or-main-font: o-website-value('headings-font') or o-website-value('font');
@@ -93,24 +99,6 @@
     @include print-variable('headings-line-height', $headings-line-height);
     @include print-variable('headings-margin-top', $headings-margin-top);
     @include print-variable('headings-margin-bottom', $headings-margin-bottom);
-    @include print-variable('h2-margin-top', $h2-margin-top);
-    @include print-variable('h3-margin-top', $h3-margin-top);
-    @include print-variable('h4-margin-top', $h4-margin-top);
-    @include print-variable('h5-margin-top', $h5-margin-top);
-    @include print-variable('h6-margin-top', $h6-margin-top);
-    @include print-variable('display-1-margin-top', $display-1-margin-top);
-    @include print-variable('display-2-margin-top', $display-2-margin-top);
-    @include print-variable('display-3-margin-top', $display-3-margin-top);
-    @include print-variable('display-4-margin-top', $display-4-margin-top);
-    @include print-variable('h2-margin-bottom', $h2-margin-bottom);
-    @include print-variable('h3-margin-bottom', $h3-margin-bottom);
-    @include print-variable('h4-margin-bottom', $h4-margin-bottom);
-    @include print-variable('h5-margin-bottom', $h5-margin-bottom);
-    @include print-variable('h6-margin-bottom', $h6-margin-bottom);
-    @include print-variable('display-1-margin-bottom', $display-1-margin-bottom);
-    @include print-variable('display-2-margin-bottom', $display-2-margin-bottom);
-    @include print-variable('display-3-margin-bottom', $display-3-margin-bottom);
-    @include print-variable('display-4-margin-bottom', $display-4-margin-bottom);
 
     @include print-variable('set-buttons-font', o-get-font-info('buttons'));
 
@@ -684,18 +672,6 @@ $heading-font-families: map-merge((
     "display-3": $display-3-font-family,
     "display-4": $display-4-font-family,
 ), $heading-font-families);
-$heading-line-heights: () !default;
-$heading-line-heights: map-merge((
-    "h2": $h2-line-height,
-    "h3": $h3-line-height,
-    "h4": $h4-line-height,
-    "h5": $h5-line-height,
-    "h6": $h6-line-height,
-    "display-1": $display-1-line-height,
-    "display-2": $display-2-line-height,
-    "display-3": $display-3-line-height,
-    "display-4": $display-4-line-height,
-), $heading-line-heights);
 $heading-margin-tops: () !default;
 $heading-margin-tops: map-merge((
     "h2": $h2-margin-top,
@@ -721,26 +697,31 @@ $heading-margin-bottoms: map-merge((
     "display-4": $display-4-margin-bottom,
 ), $heading-margin-bottoms);
 
+// The typography values are read from the CSS variables printed on `:root`
+// above, which the builder overrides to preview them.
 h1, h2, h3, h4, h5, h6 {
-    line-height: $headings-line-height;
-    margin-top: $headings-margin-top;
-    margin-bottom: $headings-margin-bottom;
+    line-height: var(--headings-line-height);
+    margin-top: var(--headings-margin-top);
+    margin-bottom: var(--headings-margin-bottom);
 }
 @each $selector, $map-key in
 ("h2" "h2", "h3" "h3", "h4" "h4", "h5" "h5", "h6" "h6", ".display-1" "display-1",
 ".display-2" "display-2", ".display-3" "display-3", ".display-4" "display-4") {
+    // Always set on h2-h6, which get the headings value from the rule above
+    // otherwise. Same for the display line heights, which Bootstrap sets to the
+    // headings one. The display margins only when they differ: the classes
+    // also go on paragraphs, which keep their own margins.
+    $is-heading-tag: str-index($selector, '.') != 1;
     #{$selector} {
         @if ($headings-font-family != map-get($heading-font-families, $map-key)) {
             font-family: map-get($heading-font-families, $map-key);
         }
-        @if ($headings-line-height != map-get($heading-line-heights, $map-key)) {
-            line-height: map-get($heading-line-heights, $map-key);
+        line-height: var(--#{$map-key}-line-height);
+        @if $is-heading-tag or $headings-margin-top != map-get($heading-margin-tops, $map-key) {
+            margin-top: var(--#{$map-key}-margin-top);
         }
-        @if ($headings-margin-top != map-get($heading-margin-tops, $map-key)) {
-            margin-top: map-get($heading-margin-tops, $map-key);
-        }
-        @if ($headings-margin-bottom != map-get($heading-margin-bottoms, $map-key)) {
-            margin-bottom: map-get($heading-margin-bottoms, $map-key);
+        @if $is-heading-tag or $headings-margin-bottom != map-get($heading-margin-bottoms, $map-key) {
+            margin-bottom: var(--#{$map-key}-margin-bottom);
         }
     }
 }
@@ -753,7 +734,76 @@ h1, h2, h3, h4, h5, h6 {
 
 // Texts
 p {
-    margin-top: $paragraph-margin-top;
+    margin-top: var(--paragraph-margin-top);
+    margin-bottom: var(--paragraph-margin-bottom);
+}
+
+// Bootstrap's `font-size()` (rfs) for a size only known at runtime: rfs needs
+// a number at compile time. Same result: the size as is up to
+// `$rfs-base-value`, else a fluid size below `$rfs-breakpoint`.
+// `tan(atan2(a, b))` is `a / b` as a number (`calc()` can't divide lengths).
+// rfs keeps its base value and breakpoint in px, without the unit.
+@mixin o-font-size-var($size, $property: font-size) {
+    @if $enable-rfs {
+        $-base: $rfs-base-value * 1px;
+        $-min: "#{$-base} + (#{$size} - #{$-base}) / #{$rfs-factor}";
+        #{$property}: #{"min(#{$size}, calc(#{$-min} + (#{$size} - (#{$-min})) * tan(atan2(100vw, #{$rfs-breakpoint * 1px}))))"};
+        @include _rfs-media-query-rule {
+            #{$property}: #{$size};
+        }
+    } @else {
+        #{$property}: #{$size};
+    }
+}
+// The small size is a ratio of the base one, in `em` (see `$small-font-size`).
+$-small-font-size: "calc(tan(atan2(var(--small-font-size), var(--font-size-base))) * 1em)";
+$-small-font-size-is-ratio: $small-font-size == ($o-small-font-size / $font-size-base) * 1em;
+
+// The Bootstrap and html_editor rules that compile the font sizes, again with
+// the CSS variables, in their original order (they override each other).
+:root, [data-bs-theme="light"] {
+    @include o-font-size-var(var(--font-size-base), --#{$prefix}body-font-size);
+}
+@for $level from 1 through 6 {
+    h#{$level} {
+        @include o-font-size-var(var(--h#{$level}-font-size));
+    }
+}
+@if $-small-font-size-is-ratio {
+    small, .small {
+        font-size: #{$-small-font-size};
+    }
+}
+@if $lead-font-size == $font-size-base * $o-lead-ratio {
+    .lead {
+        @include o-font-size-var(calc(var(--font-size-base) * #{$o-lead-ratio}));
+    }
+}
+@for $level from 1 through 4 {
+    .display-#{$level} {
+        @include o-font-size-var(var(--display-#{$level}-font-size));
+    }
+}
+.o_small {
+    @include o-font-size-var(var(--small-font-size));
+}
+@for $level from 1 through 4 {
+    .display-#{$level}-fs {
+        @include o-font-size-var(var(--display-#{$level}-font-size));
+    }
+}
+@for $level from 1 through 6 {
+    .h#{$level}-fs {
+        @include o-font-size-var(var(--h#{$level}-font-size));
+    }
+}
+.base-fs {
+    @include o-font-size-var(var(--font-size-base));
+}
+@if $-small-font-size-is-ratio {
+    .o_small-fs {
+        font-size: #{$-small-font-size};
+    }
 }
 
 font[style*='background']:not(.text-gradient),
