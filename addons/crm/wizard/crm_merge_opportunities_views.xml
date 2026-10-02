@@ -25,7 +25,7 @@
                             <field name="email_from" optional="show"/>
                             <field name="phone" class="o_force_ltr" optional="hide"/>
                             <field name="user_id" widget="many2one_avatar_user"/>
-                            <field name="color" column_invisible="1"/>
+                            <field name="color" column_invisible="1"/> <!-- color_field option of stage_id -->
                             <field name="stage_id" widget="badge" options="{'color_field': 'color'}"/>
                             <field name="team_id" optional="hide"/>
                         </list>

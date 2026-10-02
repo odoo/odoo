@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='outgoing_mail_server_type']" position="after">
-                    <field name="has_access_livechat" invisible="1"/>
+                    <field name="has_access_livechat" invisible="1"/> <!-- drives invisible of livechat_username, livechat_lang_ids and 1 more -->
                     <field name="livechat_username" string="Live Chat Name" invisible="not has_access_livechat" help="Nickname used in live chat conversations to protect your real name from visitors."/>
                     <field name="livechat_lang_ids" string="Spoken Languages"
                            options="{'no_create': True, 'no_edit': True, 'no_create_edit': True}"
@@ -31,7 +31,7 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='outgoing_mail_server_type']" position="after">
-                    <field name="has_access_livechat" invisible="1"/>
+                    <field name="has_access_livechat" invisible="1"/> <!-- drives invisible of livechat_username, livechat_lang_ids and 1 more -->
                     <field name="livechat_username" string="Live Chat Name" invisible="not has_access_livechat" help="Nickname used in live chat conversations to protect your real name from visitors."/>
                     <field name="livechat_lang_ids" string="Spoken Languages"
                            options="{'no_create': True, 'no_edit': True}"

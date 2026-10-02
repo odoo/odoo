@@ -63,7 +63,7 @@
                     <button name="action_retry_failed" string="Retry" type="object"/>
                 </header>
                 <field name="mass_mailing_id" optional="hide"/>
-                <field name="model" column_invisible="True"/>
+                <field name="model" column_invisible="True"/> <!-- read by the mass mailing save-as-template cog menu and the html field -->
                 <field name="res_id" string="Recipient" widget="many2one_reference" options="{'no_open': True}"/>
                 <field name="email"/>
                 <field name="message_id" optional="hide"/>
@@ -95,7 +95,7 @@
                                 </div>
                         </button>
                     </div>
-                    <field name="is_test_trace" invisible="1"/>
+                    <field name="is_test_trace" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
                     <widget name="web_ribbon" title="Test" bg_color="text-bg-danger" invisible="is_test_trace != True"/>
                     <group>
                         <group string="Status">
@@ -109,7 +109,7 @@
                             <field name="reply_datetime" invisible="not reply_datetime"/>
                         </group>
                         <group string="Mailing">
-                            <field name="trace_type" invisible="1"/>
+                            <field name="trace_type" invisible="1"/> <!-- used by mass_mailing_sms.mailing_trace_view_form -->
                             <field name="email" string="Recipient Address"/>
                             <field name="mass_mailing_id"/>
                             <field name="mail_mail_id_int" string="Mail ID" groups="base.group_no_one"/>

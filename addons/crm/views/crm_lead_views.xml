@@ -21,14 +21,14 @@
                             invisible="type == 'lead'" readonly="won_status == 'lost' or not active"/>
                     </header>
                     <sheet>
-                        <field name="won_status" invisible="1"/>
-                        <field name="active" invisible="1"/>
-                        <field name="company_id" invisible="1"/>
-                        <field name="is_rotting" invisible="1"/>
-                        <field name="rotting_days" invisible="1"/>
-                        <field name="lang_code" invisible="1"/>
-                        <field name="company_currency" invisible="1"/>
-                        <field name="is_automated_probability" invisible="1"/>
+                        <field name="won_status" invisible="1"/> <!-- drives invisible of the action_set_won_rainbowman button, the action_restore button and 7 more and readonly of stage_id, probability -->
+                        <field name="active" invisible="1"/> <!-- drives invisible of the action_set_won_rainbowman button, the action_convert_to_opportunity button and 2 more and readonly of stage_id -->
+                        <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of partner_id, team_id, user_id -->
+                        <field name="is_rotting" invisible="1"/> <!-- read by the rotting_statusbar_duration widget of stage_id -->
+                        <field name="rotting_days" invisible="1"/> <!-- read by the rotting_statusbar_duration widget of stage_id -->
+                        <field name="lang_code" invisible="1"/> <!-- used in the context of partner_id -->
+                        <field name="company_currency" invisible="1"/> <!-- currency_field option of the expected_revenue monetary widget -->
+                        <field name="is_automated_probability" invisible="1"/> <!-- drives invisible of the action_set_automated_probability link, the pls_tooltip_button widget and 2 more -->
                         <div class="oe_button_box" name="button_box">
                             <button name="action_schedule_meeting" type="object"
                                 class="oe_stat_button" icon="calendar_today" icon_class="oi-filled"
@@ -68,7 +68,7 @@
                         <h2 class="d-none d-sm-flex d-touch-none align-items-end mb-4">
                             <!-- in this view, we want to have a different desktop UI, so we have two different 'touch' and 'desktop' templates -->
                             <div class="col-auto d-flex flex-column justify-content-between" invisible="type == 'lead'">
-                                <field name="company_currency" invisible="1"/>
+                                <field name="company_currency" invisible="1"/> <!-- currency_field option of the expected_revenue monetary widget -->
                                 <label for="expected_revenue" class="oe_edit_only mb-2"/>
                                 <div class="d-flex flex-wrap align-items-baseline">
                                     <field name="expected_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" class="o_input_16ch"/>
@@ -103,7 +103,7 @@
                                     </small>
                                 </div>
                                 <div id="probability" class="d-flex" style="width: 8ch;">
-                                    <field name="is_automated_probability" invisible="1"/>
+                                    <field name="is_automated_probability" invisible="1"/> <!-- drives invisible of the action_set_automated_probability link, the pls_tooltip_button widget and 2 more -->
                                     <field name="probability" widget="float"
                                         readonly="won_status != 'pending'"/>
                                     <span>%</span>
@@ -153,16 +153,16 @@
                             <group name="lead_partner">
                                 <!-- Preload all the partner's information -->
                                 <!-- common -->
-                                <field name="is_blacklisted" invisible="1"/>
-                                <field name="phone_blacklisted" invisible="1"/>
-                                <field name="email_state" invisible="1"/>
-                                <field name="phone_state" invisible="1"/>
-                                <field name="partner_email_update" invisible="1"/>
-                                <field name="partner_phone_update" invisible="1"/>
+                                <field name="is_blacklisted" invisible="1"/> <!-- drives invisible of the mail_action_blacklist_remove button -->
+                                <field name="phone_blacklisted" invisible="1"/> <!-- drives invisible of the phone_action_blacklist_remove button -->
+                                <field name="email_state" invisible="1"/> <!-- read by the predictive lead scoring tooltip of the crm form -->
+                                <field name="phone_state" invisible="1"/> <!-- read by the predictive lead scoring tooltip of the crm form -->
+                                <field name="partner_email_update" invisible="1"/> <!-- drives invisible of the oi text -->
+                                <field name="partner_phone_update" invisible="1"/> <!-- drives invisible of the oi text -->
                                 <!-- opportunity -->
-                                <field name="partner_is_blacklisted" invisible="1"/>
-                                <field name="date_conversion" invisible="1"/>
-                                <field name="user_company_ids" invisible="1"/>
+                                <field name="partner_is_blacklisted" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+                                <field name="date_conversion" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+                                <field name="user_company_ids" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
 
                                 <field name="partner_id" widget="res_partner_many2one"
                                     invisible="type == 'opportunity'"
@@ -218,8 +218,8 @@
                                         title="By saving this change, the customer email will also be updated."
                                         invisible="not partner_email_update"/>
                                 </div>
-                                <field name="phone_sanitized" invisible="1"/>
-                                <field name="phone_formatted" invisible="1"/>
+                                <field name="phone_sanitized" invisible="1"/> <!-- read by the phone widget of phone for the tel: link -->
+                                <field name="phone_formatted" invisible="1"/> <!-- read by the phone widget of phone for the displayed format -->
                                 <label for="phone" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
                                     <button name="phone_action_blacklist_remove" class="oi text-danger" data-icon="block"
@@ -265,7 +265,7 @@
                                             <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                             <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                         </div>
-                                        <field name="lang_active_count" invisible="1"/>
+                                        <field name="lang_active_count" invisible="1"/> <!-- drives invisible of lang_id -->
                                         <field name="lang_id" invisible="lang_active_count &lt;= 1"
                                             options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True}"/>
                                     </group>
@@ -291,7 +291,7 @@
                                             options="{'no_create': True}"
                                             placeholder="Visible to all"/>
                                         <field name="team_id" options="{'no_open': True, 'no_create': True}" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
-                                        <field name="type" invisible="1"/>
+                                        <field name="type" invisible="1"/> <!-- drives invisible of the action_set_won_rainbowman button, the action_convert_to_opportunity button and 8 more -->
                                     </group>
                                 </group>
                             </page>
@@ -323,11 +323,11 @@
                         <button name="%(action_crm_send_mass_convert)d" type="action" string="Convert to Opportunities"/>
                         <button name="%(crm.crm_lead_lost_action)d" type="action" string="Mark Lost"/>
                     </header>
-                    <field name="company_id" column_invisible="True"/>
-                    <field name="user_company_ids" column_invisible="True"/>
-                    <field name="date_deadline" column_invisible="True"/>
-                    <field name="phone_sanitized" column_invisible="1"/>
-                    <field name="phone_formatted" column_invisible="1"/>
+                    <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of partner_id, team_id, user_id -->
+                    <field name="user_company_ids" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                    <field name="date_deadline" column_invisible="True"/> <!-- read by the forecast kanban renderer and the fill temporal service -->
+                    <field name="phone_sanitized" column_invisible="1"/> <!-- read by the phone widget of phone for the tel: link -->
+                    <field name="phone_formatted" column_invisible="1"/> <!-- read by the phone widget of phone for the displayed format -->
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Lead" readonly="1"/>
                     <field name="contact_name" optional="show"/>
@@ -338,18 +338,18 @@
                     <field name="city" optional="hide"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="hide" options="{'no_open': True, 'no_create': True}"/>
-                    <field name="partner_id" column_invisible="True"/>
+                    <field name="partner_id" column_invisible="True"/> <!-- xpath anchor of website_crm_partner_assign -->
                     <!-- Explicit domain due to multi edit -> real company domain would be complicated -->
                     <field name="user_id" optional="show"  widget="many2one_avatar_user"
                         domain="[('share', '=', False)]"/>
                     <field name="team_id" optional="show"/>
-                    <field name="active" column_invisible="True"/>
+                    <field name="active" column_invisible="True"/> <!-- enables the Archive/Unarchive action in this list -->
                     <field name="campaign_id" optional="hide"/>
-                    <field name="referred" column_invisible="True"/>
+                    <field name="referred" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="medium_id" optional="hide"/>
                     <field name="source_id" optional="show"/>
                     <field name="probability" string="Probability (%)" optional="hide"/>
-                    <field name="message_needaction" column_invisible="True"/>
+                    <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                     <field name="priority" optional="hide"/>
                 </list>
@@ -430,8 +430,8 @@
                         </div>
                         <div class="d-flex align-items-center" colspan="2">
                             <i class="oi oi-lg" data-icon="smartphone" title="Contact Phone"/>
-                            <field name="phone_sanitized" invisible="1"/>
-                            <field name="phone_formatted" invisible="1"/>
+                            <field name="phone_sanitized" invisible="1"/> <!-- read by the phone widget of phone for the tel: link -->
+                            <field name="phone_formatted" invisible="1"/> <!-- read by the phone widget of phone for the displayed format -->
                             <field name="phone" string="Contact Phone" placeholder='Contact Phone' nolabel="1" class="o_field_highlight" widget="phone"/>
                         </div>
                         <div class="d-flex align-items-center" colspan="2">
@@ -444,23 +444,23 @@
                             <field name="recurring_revenue" class="o_field_highlight" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                             <field name="recurring_plan" placeholder='e.g. "Monthly"' required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
                         </div>
-                        <field name="company_currency" invisible="1"/>
-                        <field name="company_id" invisible="1"/>
-                        <field name="user_id" invisible="1"/>
-                        <field name="user_company_ids" invisible="1"/>
-                        <field name="team_id" invisible="1"/>
-                        <field name="type" invisible="1"/>
-                        <field name="partner_name" invisible="1"/>
-                        <field name="contact_name" invisible="1"/>
-                        <field name="country_id" invisible="1"/>
-                        <field name="state_id" invisible="1"/>
-                        <field name="city" invisible="1"/>
-                        <field name="street" invisible="1"/>
-                        <field name="street2" invisible="1"/>
-                        <field name="zip" invisible="1"/>
-                        <field name="website" invisible="1"/>
-                        <field name="function" invisible="1"/>
-                        <field name="activity_ids" invisible="1"/>
+                        <field name="company_currency" invisible="1"/> <!-- currency_field option of the expected_revenue monetary widget -->
+                        <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of partner_id, team_id, user_id -->
+                        <field name="user_id" invisible="1"/> <!-- used in the context of partner_id -->
+                        <field name="user_company_ids" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+                        <field name="team_id" invisible="1"/> <!-- used in the python-declared domain of stage_id -->
+                        <field name="type" invisible="1"/> <!-- passed as res_partner_search_mode in the context of partner_id -->
+                        <field name="partner_name" invisible="1"/> <!-- used in the context of partner_id -->
+                        <field name="contact_name" invisible="1"/> <!-- used in the context of partner_id -->
+                        <field name="country_id" invisible="1"/> <!-- used in the python-declared domain of state_id -->
+                        <field name="state_id" invisible="1"/> <!-- address field of the lead, read by the predictive lead scoring tooltip and posted on quick create -->
+                        <field name="city" invisible="1"/> <!-- address field of the lead, posted on quick create -->
+                        <field name="street" invisible="1"/> <!-- address field of the lead, posted on quick create -->
+                        <field name="street2" invisible="1"/> <!-- address field of the lead, posted on quick create -->
+                        <field name="zip" invisible="1"/> <!-- address field of the lead, posted on quick create -->
+                        <field name="website" invisible="1"/> <!-- read by the lead generation dropdown component -->
+                        <field name="function" invisible="1"/> <!-- read by the predictive lead scoring tooltip of the crm form -->
+                        <field name="activity_ids" invisible="1"/> <!-- read by the crm activity menu patch -->
                     </group>
                 </form>
             </field>
@@ -710,13 +710,13 @@
                         <button name="%(crm.crm_lead_lost_action)d" type="action" string="Mark Lost" />
                         <button name="%(crm.action_lead_mass_mail)d" type="action" string="Email" />
                     </header>
-                    <field name="company_id" column_invisible="True"/>
-                    <field name="user_company_ids" column_invisible="True"/>
-                    <field name="date_deadline" column_invisible="True"/>
-                    <field name="activity_calendar_event_id" column_invisible="True"/>
-                    <field name="won_status" column_invisible="True"/>
-                    <field name="phone_sanitized" column_invisible="1"/>
-                    <field name="phone_formatted" column_invisible="1"/>
+                    <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of partner_id, team_id, user_id -->
+                    <field name="user_company_ids" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                    <field name="date_deadline" column_invisible="True"/> <!-- read by the forecast kanban renderer and the fill temporal service -->
+                    <field name="activity_calendar_event_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                    <field name="won_status" column_invisible="True"/> <!-- drives invisible of the Email button -->
+                    <field name="phone_sanitized" column_invisible="1"/> <!-- read by the phone widget of phone for the tel: link -->
+                    <field name="phone_formatted" column_invisible="1"/> <!-- read by the phone widget of phone for the displayed format -->
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Opportunity" readonly="1"/>
                     <field name="partner_id" optional="hide"/>
@@ -738,7 +738,7 @@
                     <field name="campaign_id" optional="hide"/>
                     <field name="medium_id" optional="hide"/>
                     <field name="source_id" optional="hide"/>
-                    <field name="company_currency" column_invisible="True"/>
+                    <field name="company_currency" column_invisible="True"/> <!-- currency_field option of the expected_revenue monetary widget -->
                     <field name="expected_revenue" sum="Expected Revenues" optional="show" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                     <field name="date_deadline" optional="hide"/>
                     <field name="recurring_revenue_monthly" sum="Expected MRR" optional="show" widget="monetary"
@@ -747,15 +747,15 @@
                         options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
                     <field name="recurring_plan" optional="hide" groups="crm.group_use_recurring_revenues"/>
                     <field name="stage_id" optional="show" widget="rotting" options="{'no_open': True}"/>
-                    <field name="active" column_invisible="True"/>
+                    <field name="active" column_invisible="True"/> <!-- enables the Archive/Unarchive action in this list -->
                     <field name="probability" string="Probability (%)" optional="hide"/>
                     <field name="lost_reason_id" optional="hide"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
-                    <field name="referred" column_invisible="True"/>
-                    <field name="message_needaction" column_invisible="True"/>
+                    <field name="referred" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                    <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="lead_properties"/>
-                    <field name="is_rotting" column_invisible="True"/>
-                    <field name="rotting_days" column_invisible="True"/>
+                    <field name="is_rotting" column_invisible="True"/> <!-- read by the rotting widget of stage_id -->
+                    <field name="rotting_days" column_invisible="True"/> <!-- read by the rotting widget of stage_id -->
                     <widget name="mail_activity_mixin_list_reschedule_dropdown"/>
                     <button name="%(crm.action_lead_mail_compose)d" type="action" string="Email" icon="mail" icon_class="oi-filled" invisible="won_status == 'lost'"/>
                 </list>
@@ -792,7 +792,7 @@
                     <field name="email_from" optional="show"/>
                     <field name="user_id" widget="many2one_avatar_user"/>
                     <field name="expected_revenue" optional="show"/>
-                    <field name="color" column_invisible="True"/>
+                    <field name="color" column_invisible="True"/> <!-- color_field option of stage_id -->
                     <field name="stage_id" widget="badge" options="{'color_field': 'color'}" optional="show"/>
                 </list>
             </field>

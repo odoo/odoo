@@ -21,7 +21,7 @@
         <field name="arch" type="xml">
             <list string="Lead Generation Rules">
                 <field name="name"/>
-                <field name="lead_creation_basis" string="Lead Creation Type" column_invisible="True"/>
+                <field name="lead_creation_basis" string="Lead Creation Type" column_invisible="True"/> <!-- used by event_crm_sale.event_lead_rule_view_tree -->
                 <field name="lead_creation_trigger"/>
                 <field name="event_type_ids" widget="many2many_tags"/>
                 <field name="event_id"/>
@@ -44,8 +44,8 @@
                         <label for="name"/>
                         <h1><field name="name" placeholder="e.g. B2B Fairs"/></h1>
                     </div>
-                    <field name="active" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
+                    <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
+                    <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of event_id -->
                     <group name="lead_creation_configuration">
                         <group name="lead_creation_basis" invisible="1">
                             <field name="lead_creation_basis" widget="radio"/>

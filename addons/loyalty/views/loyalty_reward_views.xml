@@ -5,12 +5,12 @@
         <field name="model">loyalty.reward</field>
         <field name="arch" type="xml">
             <form>
-                <field name="program_type" invisible="1"/>
-                <field name="user_has_debug" invisible="1"/>
-                <field name="multi_product" invisible="1"/>
-                <field name="reward_product_uom_id" invisible="1"/>
-                <field name="reward_product_ids" invisible="1"/>
-                <field name="all_discount_product_ids" invisible="1"/>
+                <field name="program_type" invisible="1"/> <!-- drives invisible of the reward_type_group group, the Discount group and 3 more and readonly of reward_type -->
+                <field name="user_has_debug" invisible="1"/> <!-- drives invisible of the Points group, the Clear all promo point(s) label and 1 more -->
+                <field name="multi_product" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+                <field name="reward_product_uom_id" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+                <field name="reward_product_ids" invisible="1"/> <!-- drives required of reward_product_id, reward_product_tag_id -->
+                <field name="all_discount_product_ids" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                 <sheet>
                     <group>
                         <group string="Reward" name="reward_type_group" invisible="program_type in ('ewallet','gift_card')">

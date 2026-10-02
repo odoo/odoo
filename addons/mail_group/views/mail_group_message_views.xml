@@ -11,7 +11,7 @@
                 <field name="subject"/>
                 <field name="mail_group_id"/>
                 <field name="moderation_status"/>
-                <field name="is_group_moderated" column_invisible="True"/>
+                <field name="is_group_moderated" column_invisible="True"/> <!-- drives invisible of the action_moderate_accept button, the Reject button and 2 more -->
                 <button name="action_moderate_accept" string="Accept"
                     type="object" class="btn btn-primary"
                     invisible="moderation_status != 'pending_moderation' or not is_group_moderated"/>
@@ -68,9 +68,9 @@
                     <widget name="web_ribbon" title="Accepted" bg_color="text-bg-success"
                         invisible="moderation_status != 'accepted'"/>
                     <group>
-                        <field name="mail_message_id" invisible="1"/>
-                        <field name="moderation_status" invisible="1"/>
-                        <field name="is_group_moderated" invisible="1"/>
+                        <field name="mail_message_id" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+                        <field name="moderation_status" invisible="1"/> <!-- drives invisible of the action_moderate_accept button, the Reject button and 2 more -->
+                        <field name="is_group_moderated" invisible="1"/> <!-- drives invisible of the action_moderate_accept button, the Reject button and 2 more -->
                         <field name="subject"/>
                         <field name="author_id"/>
                         <label for="email_from" string="From"/>
@@ -78,7 +78,7 @@
                             <field name="email_from" nolabel="1"/>
                             <span class="ms-2 badge text-bg-success" invisible="author_moderation != 'allow'">Whitelisted</span>
                             <span class="ms-2 badge text-bg-danger" invisible="author_moderation != 'ban'">Banned</span>
-                            <field name="author_moderation" invisible="1"/>
+                            <field name="author_moderation" invisible="1"/> <!-- drives invisible of the badge text -->
                         </div>
                         <field name="mail_group_id"/>
                         <field name="create_date"/>

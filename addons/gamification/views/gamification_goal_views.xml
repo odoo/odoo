@@ -37,15 +37,15 @@
         <field name="model">gamification.goal</field>
         <field name="arch" type="xml">
             <list string="Goal List" decoration-danger="state == 'failed'" decoration-success="state == 'reached'" decoration-muted="state == 'canceled'" create="false">
-                <field name="definition_id" column_invisible="True" />
-                <field name="user_id" column_invisible="True" />
+                <field name="definition_id" column_invisible="True" /> <!-- kept loaded for record data though not shown in this list -->
+                <field name="user_id" column_invisible="True" /> <!-- kept loaded for record data though not shown in this list -->
                 <field name="start_date"/>
                 <field name="end_date"/>
                 <field name="current"/>
                 <field name="target_goal"/>
                 <field name="completeness" widget="progressbar"/>
-                <field name="state" column_invisible="True"/>
-                <field name="line_id" column_invisible="True"/>
+                <field name="state" column_invisible="True"/> <!-- drives decoration-danger/muted/success of the Goal List list -->
+                <field name="line_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
             </list>
         </field>
     </record>
@@ -73,7 +73,7 @@
                         <group string="Schedule">
                             <field name="start_date" readonly="state != 'draft'"/>
                             <field name="end_date" />
-                            <field name="computation_mode" invisible="1"/>
+                            <field name="computation_mode" invisible="1"/> <!-- drives invisible of the label, the block and 1 more -->
 
                             <label for="remind_update_delay" invisible="computation_mode != 'manually'"/>
                             <div invisible="computation_mode != 'manually'">

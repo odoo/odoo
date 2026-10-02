@@ -19,7 +19,7 @@
                                 <field name="email"/>
                                 <field name="phone" class="o_force_ltr"/>
                                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                                <field name="sale_order_line_id" column_invisible="True"/>
+                                <field name="sale_order_line_id" column_invisible="True"/> <!-- source record(s) the wizard works on, filled from the context -->
                             </list>
                         </field>
                     </sheet>

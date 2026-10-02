@@ -13,7 +13,7 @@
                         Convert the selected Leads to Opportunities and merge all duplicates listed below.
                     </span>
                 </div>
-                <field name="lead_tomerge_ids" invisible="1"/>
+                <field name="lead_tomerge_ids" invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
                 <group invisible="not duplicated_lead_ids">
                     <field name="name" class="oe_inline" widget="badges_selection" nolabel="1"/>
                 </group>

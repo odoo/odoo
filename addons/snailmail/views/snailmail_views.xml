@@ -8,7 +8,7 @@
                 <field name="attachment_id" string="Document"/>
                 <field name="partner_id"/>
                 <field name="user_id"/>
-                <field name="state" column_invisible="True"/>
+                <field name="state" column_invisible="True"/> <!-- drives decoration-danger/muted of the Letters list -->
                 <field name="info_msg" widget="html"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </list>
@@ -32,7 +32,7 @@
                     <group>
                         <field name="reference" widget="reference"/>
                         <field name="attachment_raw" filename="attachment_fname"/>
-                        <field name="attachment_fname" invisible="1"/>
+                        <field name="attachment_fname" invisible="1"/> <!-- filename of the attachment_raw binary widget -->
                         <field name="partner_id"/>
                         <field name="user_id"/>
                         <field name="info_msg" widget="html"/>

@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='stage_id']" position="before">
-                <field name="event_registrations_open" invisible="1"/>
+                <field name="event_registrations_open" invisible="1"/> <!-- drives invisible of the action_invite_contacts button -->
                 <button name="action_invite_contacts" type="object" string="Invite"
                     class="btn btn-primary"
                     groups="mass_mailing.group_mass_mailing_user"

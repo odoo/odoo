@@ -7,9 +7,9 @@
             <field name="arch" type="xml">
                 <form string="Email Template">
                     <group>
-                        <field name="subject" invisible="1"/>
-                        <field name="name" invisible="1"/>
-                        <field name="model" invisible="1"/>
+                        <field name="subject" invisible="1"/> <!-- required subject of the template, filled by default_get and posted on save -->
+                        <field name="name" invisible="1"/> <!-- required name of the template, filled by default_get and posted on save -->
+                        <field name="model" invisible="1"/> <!-- used in the python-declared domain of report_template_ids -->
                         <h3 colspan="2">Body</h3>
                         <field name="body_html" nolabel="1" colspan="2" widget="html_mail"/>
                         <field name="attachment_ids" nolabel="1" colspan="2"
