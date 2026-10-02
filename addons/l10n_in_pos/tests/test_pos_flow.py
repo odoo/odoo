@@ -57,8 +57,9 @@ class TestPosFlow(TestInPosBase):
         self.assertEqual(pos_order_going_to_invoice.reversed_move_ids, reversal_moves,
                         "Reversal move should be set for the order invoiced after the session is closed.")
         self.assertInvoiceValues(reversal_moves, [
-            {'product_id': self.product_a.id, 'l10n_in_hsn_code': '1111', 'product_uom_id': self.product_a.uom_id.id, 'debit': 200.0, 'credit': 0.0},
-            {'product_id': self.product_b.id, 'l10n_in_hsn_code': '2222', 'product_uom_id': self.product_b.uom_id.id, 'debit': 400.0, 'credit': 0.0},
+            # Same grouping as the closing entry it reverses: no product unless closing by product
+            {'product_id': False, 'l10n_in_hsn_code': '1111', 'product_uom_id': self.product_a.uom_id.id, 'debit': 200.0, 'credit': 0.0},
+            {'product_id': False, 'l10n_in_hsn_code': '2222', 'product_uom_id': self.product_b.uom_id.id, 'debit': 400.0, 'credit': 0.0},
             {'product_id': False, 'l10n_in_hsn_code': False, 'product_uom_id': False, 'debit': 15.0, 'credit': 0.0},
             {'product_id': False, 'l10n_in_hsn_code': False, 'product_uom_id': False, 'debit': 15.0, 'credit': 0.0},
             {'product_id': False, 'l10n_in_hsn_code': False, 'product_uom_id': False, 'debit': 0.0, 'credit': 630.0},

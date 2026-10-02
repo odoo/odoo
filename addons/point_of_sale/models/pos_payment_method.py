@@ -434,8 +434,59 @@ class PosPaymentMethod(models.Model):
             return self._create_cash_payment_line(session, amount, account, message, partner, foreign_currency, amount_currency)
         if self.type == 'bank':
             return self._create_bank_payment_line(session, amount, account, message, partner, foreign_currency, amount_currency)
+        if self.type == 'pay_later':
+            return self._create_pay_later_payment_line(session, amount, account, message, partner, foreign_currency, amount_currency)
 
         return self.env['account.move.line']
+
+    def _create_pay_later_payment_line(self, session, amount, account=None, message=None, partner=None, foreign_currency=None, amount_currency=None):
+        """
+        Customer account payments are kept on the POS receivable in the
+        session invoice, so the invoice only has one receivable account.
+        This entry moves the amount from the POS receivable to the customer
+        receivable, the POS receivable line is reconciled with the invoice
+        and the customer receivable line stays open until the customer pays.
+        """
+        self.ensure_one()
+        if not partner:
+            raise UserError(_("A customer is required to use the payment method %s.", self.name))
+
+        session_account = account or session._get_receivable_account()
+        partner_account = partner.with_company(session.company_id).property_account_receivable_id
+        if session_account == partner_account:
+            # Already on the customer receivable (e.g. invoiced order), the
+            # term line stays open until the customer pays.
+            return self.env['account.move.line']
+
+        move = self.env['account.move'].sudo().with_context(skip_invoice_sync=True).create({
+            'move_type': 'entry',
+            'company_id': session.company_id.id,
+            'journal_id': session.config_id.closing_journal_id.id,
+            'date': fields.Date.context_today(self),
+            'ref': message or _(
+                '%(payment_method)s POS session %(session)s',
+                payment_method=self.name,
+                session=session.name,
+            ),
+            'line_ids': [
+                Command.create({
+                    'name': self.name,
+                    'account_id': partner_account.id,
+                    'partner_id': partner.id,
+                    'balance': amount,
+                }),
+                Command.create({
+                    'name': self.name,
+                    'account_id': session_account.id,
+                    'partner_id': session.config_id.default_partner_id.id,
+                    'balance': -amount,
+                }),
+            ],
+        })
+        move._post()
+        return move.line_ids.filtered(
+            lambda line: line.account_id == session_account,
+        )
 
     def _create_bank_payment_line(self, session, amount, account=None, message=None, partner=None, foreign_currency=None, amount_currency=None):
         self.ensure_one()
@@ -445,7 +496,6 @@ class PosPaymentMethod(models.Model):
         destination_account = account or pm_account or session_account
         rounding = session.currency_id.rounding
 
-        # TODO: add a list of pos.order that was paid though this combined PM
         session_ref = _(
             '%(payment_method)s POS session %(session)s',
             payment_method=self.name,
@@ -513,6 +563,11 @@ class PosPaymentMethod(models.Model):
         destination_account = account or pm_account
         # The statement line stores both amounts, so they must agree on the sign.
         foreign_amount = copysign(amount_currency, amount) if foreign_currency and amount_currency else 0.0
+        session_ref = message or _(
+            '%(payment_method)s POS session %(session)s',
+            payment_method=self.name,
+            session=session.name,
+        )
         statement_line = BankStatementLine.sudo().create({
             # Keep the sign: a negative amount is a refund, i.e. cash going out.
             'amount': amount,
@@ -525,12 +580,9 @@ class PosPaymentMethod(models.Model):
             'statement_id': session.bank_statement_id.id,
             'pos_session_id': session.id,
             'counterpart_account_id': destination_account.id,
-            'payment_ref': message or _(
-                '%(payment_method)s POS session %(session)s',
-                payment_method=self.name,
-                session=session.name,
-            ),
+            'payment_ref': session_ref,
         })
+        statement_line.move_id.ref = session_ref
         return statement_line.move_id.line_ids.filtered(
             lambda line, acc=destination_account: line.account_id == acc,
         )
