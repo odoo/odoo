@@ -465,13 +465,7 @@ class ProductProduct(models.Model):
         if not website:
             return self.browse()
 
-        candidates = self.filtered(
-            lambda product: product.is_storable and not product.allow_out_of_stock_order
-        )
-
-        return candidates.filtered(
-            lambda product: website._get_product_available_qty(product.sudo()) <= 0
-        )
+        return self.filtered(lambda product: product._is_sold_out())
 
     def _has_stock_notification(self, partner, website):
         self.ensure_one()
