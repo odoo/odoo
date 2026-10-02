@@ -32,6 +32,7 @@ import { loadImage } from "@html_editor/utils/image_processing";
  * @property { CustomizeWebsitePlugin['loadConfigKey'] } loadConfigKey
  * @property { CustomizeWebsitePlugin['getConfigKey'] } getConfigKey
  * @property { CustomizeWebsitePlugin['getWebsiteVariableValue'] } getWebsiteVariableValue
+ * @property { CustomizeWebsitePlugin['getWebsiteVariableDefault'] } getWebsiteVariableDefault
  * @property { CustomizeWebsitePlugin['getPendingThemeRequests'] } getPendingThemeRequests
  * @property { CustomizeWebsitePlugin['setPendingThemeRequests'] } setPendingThemeRequests
  * @property { CustomizeWebsitePlugin['isPluginDestroyed'] } isPluginDestroyed
@@ -122,6 +123,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "loadConfigKey",
         "getConfigKey",
         "getWebsiteVariableValue",
+        "getWebsiteVariableDefault",
         "getPendingThemeRequests",
         "setPendingThemeRequests",
         "isPluginDestroyed",
@@ -136,6 +138,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             PreviewWebsiteVariableAction,
             CustomizeWebsiteSubVariablesAction,
             PreviewWebsiteSubVariablesAction,
+            ResetWebsiteVariablesAction,
             CustomizeWebsiteColorAction,
             SwitchThemeAction,
             AddLanguageAction,
@@ -289,6 +292,18 @@ export class CustomizeWebsitePlugin extends Plugin {
         }
         return finalValue;
     }
+    /**
+     * The value a website variable resets to, if the compiled CSS prints it
+     * (as `--o-default-<variable>`).
+     *
+     * @param {string} variable
+     * @returns {string|undefined}
+     */
+    getWebsiteVariableDefault(variable) {
+        return (
+            getCSSVariableValue(`o-default-${variable}`, getHtmlStyle(this.document)) || undefined
+        );
+    }
     async customizeWebsiteVariables(
         variables = {},
         nullValue = "null",
@@ -315,7 +330,8 @@ export class CustomizeWebsitePlugin extends Plugin {
      * CSS read it. Only works for the variables the compiled CSS reads through
      * `var()`. The SCSS customization is only written on save.
      *
-     * A reset (empty value, or `nullValue`) removes the override: the last
+     * A reset (empty value, or `nullValue`) previews the default, if printed
+     * (see `getWebsiteVariableDefault`), else removes the override: the last
      * saved value shows until save.
      *
      * @param {Object<string, string>} variables
@@ -335,13 +351,22 @@ export class CustomizeWebsitePlugin extends Plugin {
             const value = variables[name] === nullValue ? "" : variables[name];
             step.next[name] = {
                 pending: name in variables ? value || nullValue : this.pendingVariables[name],
-                inline: previewValues[name] ?? (value || ""),
+                inline: previewValues[name] ?? (value || this.getDefaultInlineValue(name)),
             };
         }
         // The root is outside the observed editable: the step goes to the
         // history as commit data, which reverts hover previews and undo.
         this.setPreviewState(step.next);
         this.pendingPreviewSteps.push(step);
+    }
+    /**
+     * Refers to the default rather than copying it: a default that is another
+     * value (e.g. a heading level's, the headings one) keeps following it.
+     *
+     * @param {string} name
+     */
+    getDefaultInlineValue(name) {
+        return this.getWebsiteVariableDefault(name) ? `var(--o-default-${name})` : "";
     }
     setPreviewState(state) {
         const style = this.document.documentElement.style;
@@ -1172,6 +1197,9 @@ export class CustomizeWebsiteVariableAction extends BuilderAction {
         const currentValue = this.dependencies.customizeWebsite.getWebsiteVariableValue(variable);
         return currentValue;
     }
+    getDefaultValue({ params: { mainParam: variable } }) {
+        return this.dependencies.customizeWebsite.getWebsiteVariableDefault(variable);
+    }
     async apply({ params: { mainParam: variable, nullValue = "null" }, value }) {
         await this.dependencies.customizeWebsite.customizeWebsiteVariables(
             {
@@ -1257,6 +1285,19 @@ export class PreviewWebsiteSubVariablesAction extends CustomizeWebsiteSubVariabl
         this.dependencies.customizeWebsite.previewWebsiteVariables(
             this.getVariablesToUpdate(params, value),
             params.nullValue
+        );
+    }
+}
+
+/**
+ * Resets website variables: previews their default, writes `null` on save.
+ */
+export class ResetWebsiteVariablesAction extends BuilderAction {
+    static id = "resetWebsiteVariables";
+    static dependencies = ["customizeWebsite"];
+    apply({ params: { mainParam: variables } }) {
+        this.dependencies.customizeWebsite.previewWebsiteVariables(
+            Object.fromEntries(variables.map((variable) => [variable, ""]))
         );
     }
 }
