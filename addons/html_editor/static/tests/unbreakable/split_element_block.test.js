@@ -2,7 +2,6 @@ import { expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { splitBlock } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
-import { SPLIT_OPERATION_TYPES } from "@html_editor/core/split_plugin";
 
 test("should replace splitElementBlock with insertLineBreak (selection start)", async () => {
     await testEditor({
@@ -28,7 +27,8 @@ test("should replace splitElementBlock with insertLineBreak (selection end)", as
 test("should return the inserted line break", async () => {
     const { editor } = await setupEditor(`<div class="oe_unbreakable">a[]b</div>`);
     const result = editor.shared.split.splitBlock();
-    expect(result.type).toBe(SPLIT_OPERATION_TYPES.LINE);
+    expect("before" in result).toBe(false);
+    expect("after" in result).toBe(false);
     expect(result.lineBreaks).toHaveLength(1);
     expect(result.lineBreaks[0].nodeName).toBe("BR");
 });

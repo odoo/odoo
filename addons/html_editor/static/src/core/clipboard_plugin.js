@@ -20,7 +20,6 @@ import { DIRECTIONS } from "../utils/position";
 import { isHtmlContentSupported } from "./selection_plugin";
 import { getRowIndex } from "@html_editor/utils/table";
 import { EMAIL_REGEX } from "@html_editor/main/link/utils";
-import { SPLIT_OPERATION_TYPES } from "./split_plugin";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -362,22 +361,22 @@ export class ClipboardPlugin extends Plugin {
                 ) {
                     this.dependencies.lineBreak.insertLineBreak();
                 } else {
-                    const splitResult = this.dependencies.split.splitBlock();
+                    const { before } = this.dependencies.split.splitBlock();
                     if (
                         block &&
+                        before &&
                         block.matches(baseContainerGlobalSelector) &&
-                        splitResult.type === SPLIT_OPERATION_TYPES.BLOCK &&
-                        !splitResult.before.matches(getBaseContainerSelector("DIV"))
+                        !before.matches(getBaseContainerSelector("DIV"))
                     ) {
                         // Do something only if blockBefore is not a DIV (which is the no-margin option)
                         // replace blockBefore by a DIV.
                         const div = this.dependencies.baseContainer.createBaseContainer({
                             nodeName: "DIV",
-                            children: [...childNodes(splitResult.before)],
+                            children: [...childNodes(before)],
                         });
                         const cursors = this.dependencies.selection.preserveSelection();
-                        splitResult.before.replaceWith(div);
-                        cursors.remapNode(splitResult.before, div).restore();
+                        before.replaceWith(div);
+                        cursors.remapNode(before, div).restore();
                     }
                 }
             }
