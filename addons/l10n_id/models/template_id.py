@@ -69,7 +69,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('id', 'account.journal')
     def _get_id_account_journal(self):
         return {
-            'bank': {'default_account_id': 'l10n_id_11120001'},
+            'bank': {'default_account_id': 'l10n_id_11120004'},
             'cash': {
                 'name': self.env._("Cash"),
                 'type': 'cash',
