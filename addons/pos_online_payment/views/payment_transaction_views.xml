@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="payment.payment_transaction_form"/>
         <field name="arch" type="xml">
             <button name="action_view_refunds" position="before">
-                <field name="pos_order_id" invisible="1"/>
+                <field name="pos_order_id" invisible="1"/> <!-- drives invisible of the POS Order button -->
                 <button name="action_view_pos_order" type="object"
                         class="oe_stat_button" icon="shopping_cart"
                         invisible="not pos_order_id">

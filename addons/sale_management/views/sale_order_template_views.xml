@@ -32,7 +32,7 @@
         <field name="arch" type="xml">
             <form string="Templates" js_class="sale_order_template_form">
                 <sheet>
-                    <field name="active" invisible="1"/>
+                    <field name="active" invisible="1"/> <!-- drives invisible of the Archived web_ribbon widget and xpath anchor of sale_subscription -->
                     <div name="button_box" class="oe_button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title" name="sale_order_template_title">
@@ -69,16 +69,16 @@
                                     We need the sequence field to be here for new lines to be added at the correct position.
                                     TODO: at some point we want to fix this in the framework so that an invisible field is not required.
                                 -->
-                                <field name="sequence" invisible="1"/>
-                                <field name="display_type" invisible="1"/>
-                                <field name="product_id" invisible="1"/>
-                                <field name="product_custom_attribute_value_ids" invisible="1">
+                                <field name="sequence" invisible="1"/> <!-- needed so that new lines are added at the correct position -->
+                                <field name="display_type" invisible="1"/> <!-- drives invisible/required of the line fields and pages of this form -->
+                                <field name="product_id" invisible="1"/> <!-- drives readonly/invisible of price_unit, tax_ids, discount and of the margin fields -->
+                                <field name="product_custom_attribute_value_ids" invisible="1"> <!-- written by the product configurator, must be in the view to be saved -->
                                     <list>
                                         <field name="custom_product_template_attribute_value_id"/>
                                         <field name="custom_value"/>
                                     </list>
                                 </field>
-                                <field name="product_no_variant_attribute_value_ids" invisible="1"/>
+                                <field name="product_no_variant_attribute_value_ids" invisible="1"/> <!-- written by the product configurator, must be in the view to be saved -->
                                 <group invisible="display_type">
                                     <group>
                                         <field
@@ -118,17 +118,17 @@
                                         context="{'order_id': parent.id}"
                                     />
                                 </control>
-                                <field name="display_type" column_invisible="True"/>
-                                <field name="is_optional" column_invisible="True"/>
-                                <field name="collapse_prices" column_invisible="True"/>
-                                <field name="collapse_composition" column_invisible="True"/>
-                                <field name="product_custom_attribute_value_ids" column_invisible="True">
+                                <field name="display_type" column_invisible="True"/> <!-- drives invisible/required of the columns of this lines list -->
+                                <field name="is_optional" column_invisible="True"/> <!-- read by the section_state widget through its is_optional option -->
+                                <field name="collapse_prices" column_invisible="True"/> <!-- read by the sale_order_template_line js field to collapse the section -->
+                                <field name="collapse_composition" column_invisible="True"/> <!-- read by the sale_order_template_line js field to collapse the section -->
+                                <field name="product_custom_attribute_value_ids" column_invisible="True"> <!-- written by the product configurator, must be in the view to be saved -->
                                     <list>
                                         <field name="custom_product_template_attribute_value_id"/>
                                         <field name="custom_value"/>
                                     </list>
                                 </field>
-                                <field name="product_no_variant_attribute_value_ids" column_invisible="True"/>
+                                <field name="product_no_variant_attribute_value_ids" column_invisible="True"/> <!-- written by the product configurator, must be in the view to be saved -->
                                 <field name="sequence" widget="handle"/>
                                 <column name="product_and_description" width="[80]">
                                     <field
