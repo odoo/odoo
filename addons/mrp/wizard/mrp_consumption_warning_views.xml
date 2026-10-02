@@ -8,7 +8,7 @@
             <field name="model">mrp.consumption.warning</field>
             <field name="arch" type="xml">
                 <form string="Consumption Warning">
-                    <field name="mrp_production_ids" invisible="1"/> <!-- kept loaded for record data though not shown in this wizard -->
+                    <field name="mrp_production_ids" invisible="1"/> <!-- filled from the default_mrp_production_ids of the context, used by action_confirm/action_set_qty and counted by mrp_production_count -->
                     <field name="mrp_production_count" invisible="1"/> <!-- drives column_invisible of the mrp_production_id column -->
                     <div class="m-2">
                         You consumed a different quantity than expected for the following products

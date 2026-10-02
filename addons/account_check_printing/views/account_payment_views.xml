@@ -14,7 +14,6 @@
                     <field name="check_amount_in_words" invisible="payment_method_code != 'check_printing'" groups="base.group_no_one"/>
                 </xpath>
                 <xpath expr="//field[@name='payment_method_line_id']" position="after">
-                    <field name="check_manual_sequencing" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                     <field name="show_check_number" invisible="1"/> <!-- drives invisible of check_number -->
                     <field name="check_number" invisible="not show_check_number"/>
                 </xpath>

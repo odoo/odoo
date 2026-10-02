@@ -9,10 +9,8 @@
             <xpath expr="//form" position="inside">
                 <t groups="point_of_sale.group_pos_manager">
                     <field name="use_kiosk_mode" invisible="1"/> <!-- drives invisible of the settings that do not apply to the kiosk mode -->
-                    <field name="pos_selectable_categ_ids" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                     <field name="pos_has_active_session" invisible="1"/> <!-- drives invisible of the opened session warning and readonly of the settings it locks -->
                     <field name="pos_allowed_pricelist_ids" invisible="1"/> <!-- used in the domain of pos_pricelist_id -->
-                    <field name="pos_cash_control" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                     <field name="pos_company_has_template" invisible="1"/> <!-- drives invisible of the chart of accounts warning and required of the accounting settings -->
                     <field name="group_cash_rounding" invisible="1"/> <!-- drives invisible of the cash rounding configuration button -->
                 </t>
