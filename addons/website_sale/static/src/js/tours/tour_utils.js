@@ -37,7 +37,7 @@ export function assertProductPagePrice(price) {
 export function assertProductPageStrikeThroughPrice(price) {
     return {
         content: "Check if the product strike-through price is correct",
-        trigger: `.product_price .oe_default_price .oe_currency_value:text(${price})`,
+        trigger: `.product_price .oe_list_price .oe_currency_value:text(${price})`,
     }
 }
 
