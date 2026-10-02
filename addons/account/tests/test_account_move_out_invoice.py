@@ -5013,6 +5013,30 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             }
         ])
 
+    def test_tax_recomputed_when_removing_base_line_and_changing_rate(self):
+        """ Removing a taxed base line and changing the currency rate in the same write must recompute the
+        taxes from the remaining base lines, not keep the tax amounts from before the write. """
+        percent_tax = self.company_data['default_tax_sale']
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.other_currency.id,
+            'invoice_date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({'name': 'line1', 'price_unit': 1000.0, 'tax_ids': [Command.set(percent_tax.ids)]}),
+                Command.create({'name': 'line2', 'price_unit': 200.0, 'tax_ids': [Command.set(percent_tax.ids)]}),
+            ],
+        })
+
+        invoice.write({
+            'invoice_line_ids': [Command.delete(invoice.invoice_line_ids[1].id)],
+            'invoice_currency_rate': 4.0,
+        })
+
+        self.assertRecordValues(invoice.line_ids.filtered('tax_repartition_line_id'), [
+            {'amount_currency': -150.0, 'balance': -37.5},
+        ])
+
     def test_out_invoice_custom_currency_rate(self):
         ''' Check the invoice_date will be set automatically at the post date. '''
         move = self.env['account.move'].create({
