@@ -3,13 +3,13 @@
 
 <t t-name="website.ThemeFontFamilyOption">
     <BuilderFontFamilyPicker
-        action="this.props.action"
+        action="'previewWebsiteFontFamily'"
         preview="true"
         actionParam="this.props.cssVariable"
         valueParamName="'actionValue'"/>
     <BuilderButton
         t-if="this.state.isFontSpecified"
-        action="this.props.action"
+        action="'previewWebsiteFontFamily'"
         actionParam="this.props.cssVariable"
         preview="false"
         className="'btn-danger-color-hover'"
