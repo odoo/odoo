@@ -1599,9 +1599,11 @@ class ProductTemplate(models.Model):
             tags = product.product_tag_ids.filtered("visible_to_customers").read(["name"])
             categories = product.public_categ_ids.filtered_domain(website_domain).read(["name"])
             data["badges"] = tags + categories + values.read(["name"])
-            price = self._search_render_results_prices(mapping, combination_info)
-            if price:
-                data["price"] = price
+
+            if not combination_info["hide_price"]:
+                data["price"] = self.env.website._render_template(
+                    "website_sale.price", values={"price_info": combination_info}
+                )
             data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
 
             if search_term:
@@ -1635,15 +1637,6 @@ class ProductTemplate(models.Model):
             lambda attribute_value: any(
                 word in (attribute_value.name or "").lower() for word in search_words
             )
-        )
-
-    def _search_render_results_prices(self, mapping, combination_info):
-        if combination_info.get("hide_price"):
-            return None
-
-        monetary_options = {"display_currency": mapping["search_item_metadata"]["display_currency"]}
-        return self.env["ir.qweb.field.monetary"].value_to_html(
-            combination_info["price"], monetary_options
         )
 
     def _get_google_analytics_data(self, product, combination_info):

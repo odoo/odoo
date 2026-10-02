@@ -215,13 +215,7 @@ export class ProductPage extends Interaction {
             ).toFixed(2)
         );
         if (currentPackagingPrice !== hoveredPackagingPrice) {
-            parent
-                .querySelector("p[name='packaging_price_value']")
-                .querySelector(".oe_currency_value").textContent = this._priceToStr(
-                hoveredPackagingPrice,
-                false
-            );
-            parent.querySelector("span[name='packaging_price']").classList.remove("d-none");
+            this._updatePrice(parent, "span[name='packaging_price']", hoveredPackagingPrice, false);
         }
     }
 
@@ -700,27 +694,15 @@ export class ProductPage extends Interaction {
     async _onChangeCombination(ev, parent, combination, attributeValueImages) {
         const isCombinationPossible = !!combination.is_combination_possible;
         const precision = combination.currency_precision;
-        const productPrice = parent.querySelector('.product_price');
-        if (productPrice && !productPrice.classList.contains('decimal_precision')) {
-            productPrice.classList.add('decimal_precision');
-            productPrice.dataset.precision = precision;
-        }
+
         const variantParent = parent.closest('#product_detail')
         if (variantParent) {
             variantParent.dataset.name = combination.display_name;
         }
-        const pricePerUom = parent.querySelector('.o_product_price_unit')
-            ?.querySelector('.oe_currency_value');
-        if (pricePerUom) {
-            const hasPrice = isCombinationPossible && combination.base_unit_price !== 0;
-            pricePerUom.closest('.o_product_price_unit').classList.toggle('d-none', !hasPrice);
-            if (hasPrice) {
-                pricePerUom.textContent = this._priceToStr(combination.base_unit_price, precision);
-                const unit = parent.querySelector('.oe_custom_base_unit');
-                if (unit) {
-                    unit.textContent = combination.base_unit_name;
-                }
-            }
+
+        this._updatePrice(parent, '.o_product_price_unit', combination.base_unit_price, precision);
+        for (const unit of parent.querySelectorAll('.oe_custom_base_unit')) {
+            unit.textContent = combination.base_unit_name;
         }
 
         if ("packaging_prices" in combination) {
@@ -738,29 +720,23 @@ export class ProductPage extends Interaction {
                 currency: combination["currency_name"],
             });
         }
-        const addToCart = parent.querySelector('#add_to_cart_wrap');
+
         const contactUsButton = parent.closest('#product_details')
             ?.querySelector('#contact_us_wrapper');
-        const quantity = parent.querySelector('.css_quantity');
-        const boxedPriceWrapper = parent.querySelector('#o_wsale_cta_wrapper_boxed_price');
-
-        const preventSale = combination.prevent_sale;
-        const hidePrice = combination.hide_price;
         const notifyMeButton = parent.querySelector("#stock_notification_button");
         const stockNotificationEl = parent.querySelector("#stock_notification_wrapper");
         const outOfStockWrapper = parent.querySelector("#out_of_stock_buttons_wrapper");
-        productPrice?.classList.toggle('d-inline-block', !hidePrice);
-        productPrice?.classList.toggle('d-none', hidePrice);
-        boxedPriceWrapper?.classList.toggle('d-flex', !hidePrice);
-        boxedPriceWrapper?.classList.toggle('d-none', hidePrice);
-        quantity?.classList?.toggle('d-inline-flex', !preventSale);
-        quantity?.classList?.toggle('d-none', preventSale);
-        addToCart?.classList.toggle('d-inline-flex', !preventSale);
-        addToCart?.classList.toggle('d-none', preventSale);
+
+        const preventSale = combination.prevent_sale;
+        const hidePrice = combination.hide_price;
+        parent.querySelector('.product_price')?.classList?.toggle('d-none', hidePrice);
+        parent.querySelector('#o_wsale_cta_wrapper_boxed_price')
+            ?.classList?.toggle('d-none', hidePrice);
+        parent.querySelector('.css_quantity')?.classList?.toggle('d-none', preventSale);
+        parent.querySelector('#add_to_cart_wrap')?.classList?.toggle('d-none', preventSale);
         contactUsButton?.classList?.toggle('d-none', !preventSale);
-        contactUsButton?.classList?.toggle('d-flex', preventSale);
-        stockNotificationEl?.classList?.replace("d-flex", "d-none")
-        outOfStockWrapper?.classList.replace("d-flex", "d-none");
+        stockNotificationEl?.classList?.add('d-none')
+        outOfStockWrapper?.classList?.add('d-none');
 
         if (contactUsButton) {
             const link = contactUsButton.querySelector('a');
@@ -775,23 +751,8 @@ export class ProductPage extends Interaction {
             notifyMeButton.disabled=false;
         }
 
-        const price = parent.querySelector('.oe_price')?.querySelector('.oe_currency_value');
-        const defaultPrice = parent.querySelector('.oe_default_price')
-            ?.querySelector('.oe_currency_value');
-        const comparePrice = parent.querySelector('.oe_compare_list_price');
-        if (price) {
-            price.textContent = this._priceToStr(combination.price, precision);
-        }
-        if (defaultPrice) {
-            defaultPrice.textContent = this._priceToStr(combination.list_price, precision);
-            defaultPrice.closest('.oe_website_sale').classList
-                .toggle('discount', combination.has_discounted_price);
-            defaultPrice.parentElement.classList
-                .toggle('d-none', !combination.has_discounted_price);
-        }
-        if (comparePrice) {
-            comparePrice.classList.toggle('d-none', combination.has_discounted_price);
-        }
+        this._updatePrice(parent, '.oe_price', combination.price, precision);
+        this._updatePrice(parent, '.oe_list_price', combination.list_price, precision);
 
         Object.entries(attributeValueImages || {}).forEach(([valueId, imageUrl]) => {
             const input = parent.querySelector(`input[data-value-id="${valueId}"]`);
@@ -910,17 +871,13 @@ export class ProductPage extends Interaction {
     }
 
     _toggleOutOfStockButtons(parent, combination, in_stock) {
-        const addToCartWrap = parent.querySelector("#add_to_cart_wrap");
-        const outOfStockWrapper = parent.querySelector("#out_of_stock_buttons_wrapper");
-        const notifyMeButton = parent.querySelector("#stock_notification_button");
-        const subscribedButton = parent.querySelector("#stock_notification_subscribed_button");
-
-        addToCartWrap.classList.toggle("d-inline-flex", in_stock);
-        addToCartWrap.classList.toggle("d-none", !in_stock);
-        outOfStockWrapper?.classList.toggle("d-flex", !in_stock);
-        outOfStockWrapper?.classList.toggle("d-none", in_stock);
-        notifyMeButton?.classList.toggle("d-none", combination.has_stock_notification);
-        subscribedButton?.classList.toggle("d-none", !combination.has_stock_notification);
+        parent.querySelector("#add_to_cart_wrap")?.classList?.toggle("d-none", !in_stock);
+        parent.querySelector("#out_of_stock_buttons_wrapper")
+            ?.classList?.toggle("d-none", in_stock);
+        parent.querySelector("#stock_notification_button")
+            ?.classList?.toggle("d-none", combination.has_stock_notification);
+        parent.querySelector("#stock_notification_subscribed_button")
+            ?.classList?.toggle("d-none", !combination.has_stock_notification);
     }
 
     async _getUnavailableQty(combination) {
@@ -952,6 +909,14 @@ export class ProductPage extends Interaction {
 
             el.dataset.packagingPrice = price;
         });
+    }
+
+    _updatePrice(parent, selector, price, precision = 2) {
+        const priceStr = this._priceToStr(price ?? 0, precision);
+        for (const priceEl of parent.querySelectorAll(selector)) {
+            priceEl.classList.toggle('d-none', price === undefined);
+            priceEl.querySelector('.oe_currency_value').textContent = priceStr;
+        }
     }
 
     /**

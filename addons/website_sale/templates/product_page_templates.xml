@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="website_sale.base_unit_price" name="Product Base unit price">
-        <small class="o_product_price_unit text-muted d-block">
-            (<span
-                t-out="base_unit_price"
-                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-             />
-            /
-            <span class="oe_custom_base_unit" t-field="product.base_unit_name"/>)
-        </small>
-    </template>
-
     <template id="website_sale.product" name="Product" track="1">
         <!-- Qweb variable defining the class suffix for navbar items.
              Change accordingly to the derired visual result (eg. `primary`, `dark`...)-->
@@ -34,8 +23,8 @@
                 <section
                     id="product_detail"
                     data-anchor="true"
-                    t-attf-class="oe_website_sale mt-1 mt-lg-2 mb-5 #{'discount'
-                       if combination_info['has_discounted_price'] else ''}
+                    t-attf-class="oe_website_sale mt-1 mt-lg-2 mb-5
+                       {{combination_info.get('list_price') and 'discount'}}
                        {{website._get_product_page_container() == 'regular' and 'o_wsale_container_lg container-lg' or (website._get_product_page_container() == 'fluid' and 'o_wsale_container_fluid container-fluid' or false)}}
                        o_wsale_product_page_opt_image_width_{{website.product_page_image_width}}
                        o_wsale_product_page_opt_image_ratio_{{website.product_page_image_ratio}}
@@ -131,11 +120,7 @@
                                         class="o_wsale_product_details_content_section o_wsale_product_details_content_section_price mb-4"
                                     >
                                         <t t-call="website_sale.product_price"/>
-                                        <t
-                                            t-if="'base_unit_price' in combination_info"
-                                            t-call="website_sale.base_unit_price"
-                                            base_unit_price="combination_info['base_unit_price']"
-                                        />
+                                        <t t-call="website_sale.base_unit_price"/>
                                     </div>
 
                                     <t name="variant_info">
@@ -542,7 +527,11 @@
         >
             <div
                 id="add_to_cart_wrap"
-                t-attf-class="{{'d-none' if combination_info['prevent_sale'] or combination_info.get('is_sold_out') else 'd-inline-flex'}} flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2 {{'' if is_50_pc else ' w-100'}}"
+                t-attf-class="
+                    d-inline-flex flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2
+                    {{not is_50_pc and 'w-100'}}
+                    {{(combination_info['prevent_sale'] or combination_info.get('is_sold_out')) and 'd-none'}}
+                "
             >
                 <!-- data-action="add_to_cart" is the default, but it's needed to distinguish this
                 button from the "buy now" button in xpaths. -->
@@ -562,12 +551,19 @@
             </div>
             <div
                 id="out_of_stock_buttons_wrapper"
-                t-attf-class="{{'d-flex' if combination_info.get('is_sold_out') and not combination_info.get('prevent_sale') else 'd-none'}} flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2 {{'' if is_50_pc else 'w-100'}}"
+                t-attf-class="
+                    d-flex flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2
+                    {{not is_50_pc and 'w-100'}}
+                    {{(not combination_info.get('is_sold_out') or combination_info.get('prevent_sale')) and 'd-none'}}
+                "
                 t-if="combination_info.get('is_storable')"
             >
                 <button
                     id="stock_notification_button"
-                    t-attf-class="{{'d-none' if combination_info.get('has_stock_notification') else ''}} btn btn-primary flex-grow-1 align-items-center"
+                    t-attf-class="
+                        btn btn-primary d-flex flex-grow-1 align-items-center
+                        {{combination_info.get('has_stock_notification') and 'd-none'}}
+                    "
                     t-att-data-product-id="product.id"
                 >
                     <i class="oi me-2" data-icon="mail"/>
@@ -575,7 +571,10 @@
                 </button>
                 <button
                     id="stock_notification_subscribed_button"
-                    t-attf-class="{{'' if combination_info.get('has_stock_notification') else 'd-none'}} btn btn-outline-primary flex-grow-1 align-items-center"
+                    t-attf-class="
+                        btn btn-outline-primary d-flex flex-grow-1 align-items-center
+                        {{not combination_info.get('has_stock_notification') and 'd-none'}}
+                    "
                     disabled=""
                 >
                     <i class="oi oi-filled me-2" data-icon="notifications"/>
@@ -584,7 +583,11 @@
             </div>
             <div
                 id="contact_us_wrapper"
-                t-attf-class="{{'d-flex' if combination_info['prevent_sale'] else 'd-none'}} flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2 {{'' if is_50_pc else 'w-100'}}"
+                t-attf-class="
+                    d-flex flex-grow-1 flex-lg-grow-0 flex-wrap align-items-center gap-2
+                    {{not is_50_pc and 'w-100'}}
+                    {{not combination_info['prevent_sale'] and 'd-none'}}
+                "
             >
                 <a
                     t-att-href="website._get_contact_us_url(combination_info.get('display_name', ''))"
@@ -652,17 +655,15 @@
         </xpath>
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="inside">
             <div
-                class="d-none gap-5 flex-grow-1 justify-content-between align-items-center order-first w-100 mb-3 pb-3 border-bottom"
                 id="o_wsale_cta_wrapper_boxed_price"
+                t-attf-class="
+                    d-flex gap-5 flex-grow-1 justify-content-between align-items-center order-first w-100 mb-3 pb-3 border-bottom
+                    {{combination_info['hide_price'] and 'd-none'}}
+                "
             >
                 <span name="o_wsale_cta_wrapper_boxed_price_label" class="text-muted">Price</span>
                 <div>
-                    <t t-call="website_sale.product_price"/>
-                    <t
-                        t-if="'base_unit_price' in combination_info"
-                        t-call="website_sale.base_unit_price"
-                        base_unit_price="combination_info['base_unit_price']"
-                    />
+                    <t t-call="website_sale.price_and_base_unit"/>
                 </div>
             </div>
         </xpath>
@@ -925,7 +926,10 @@
     >
         <div id="add_to_cart_wrap" position="inside">
             <div
-                t-attf-class="css_quantity input-group {{'d-none' if combination_info['prevent_sale'] else 'd-inline-flex order-first'}} align-middle border"
+                t-attf-class="
+                    css_quantity input-group d-inline-flex order-first align-middle border
+                    {{combination_info['prevent_sale'] and 'd-none'}}
+                "
                 contenteditable="false"
             >
                 <t t-set="minus_button_title"><t t-if="combination_info.get('minimum_qty_reached_message')" t-out="combination_info['minimum_qty_reached_message']"/><t t-else="">Remove one</t></t>
@@ -1019,48 +1023,16 @@
     <template id="website_sale.product_price">
         <div
             name="product_price"
-            t-attf-class="product_price {{'d-none' if combination_info['hide_price'] else 'd-inline-block'}}"
+            t-attf-class="product_price d-inline-block {{combination_info['hide_price'] and 'd-none'}}"
         >
             <div
                 name="product_price_container"
-                t-attf-class="css_editable_mode_hidden d-flex align-items-baseline {{is_view_active('website_sale.cta_wrapper_boxed') and 'justify-content-end'}} gap-2 flex-wrap h5 mb-0 text-wrap"
+                t-attf-class="
+                    d-flex flex-wrap align-items-baseline gap-2 h5 mb-0 text-wrap
+                    {{is_view_active('website_sale.cta_wrapper_boxed') and 'justify-content-end'}}
+                "
             >
-                <span class="oe_price"
-                      style="white-space: nowrap;"
-                      t-out="combination_info['price']"
-                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                <span t-attf-class="text-muted oe_default_price mb-0 h6 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
-                      style="text-decoration: line-through; white-space: nowrap;"
-                      t-out="combination_info['list_price']"
-                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-                      name="product_list_price"
-                />
-                <del
-                    name="product_price_strikethrough"
-                    t-if="combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])"
-                    class="text-muted ms-1 h6 oe_compare_list_price"
-                >
-                    <bdi dir="inherit">
-                    <span t-out="combination_info['compare_list_price']"
-                          t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                    </bdi>
-                </del>
-            </div>
-            <div
-                t-if="editable"
-                name="product_list_price_container"
-                class="css_non_editable_mode_hidden decimal_precision h5"
-                t-att-data-precision="str(website.currency_id.decimal_places)"
-            >
-                <span t-field="product.list_price"
-                      t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
-                <del t-if="combination_info.get('compare_list_price') and (combination_info['compare_list_price'] &gt; combination_info['price'])">
-                    <bdi dir="inherit">
-                    <span t-field="product.compare_list_price"
-                          t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"/>
-                    </bdi>
-                </del>
-
+                <t t-call="website_sale.price" _price_list_classes.f="h6 mb-0"/>
             </div>
             <div
                 name="tax_indicator"
@@ -1073,6 +1045,91 @@
                 <t t-out="combination_info['tax_disclaimer']"/>
             </small>
         </div>
+    </template>
+
+    <template id="website_sale.price">
+        <t t-set="price_info" t-value="price_info or combination_info"/>
+        <t t-if="not price_info['hide_price']">
+            <span
+                name="product_price"
+                t-attf-class="
+                    oe_price text-nowrap {{_price_classes}}
+                    {{editable and product and 'css_editable_mode_hidden'}}
+                "
+                t-out="price_info.get('price', 0)"
+                t-options="{'widget': 'monetary', 'display_currency': price_info['currency']}"
+                aria-label="Sale price"
+            />
+            <span
+                name="editable_product_price"
+                t-if="editable and product"
+                t-attf-class="css_non_editable_mode_hidden {{_price_classes}}"
+                t-field="product.list_price"
+                t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"
+            /> <!-- Allow direct edition -->
+            <t t-set="hide_list_price" t-value="not price_info.get('list_price')"/>
+            <t
+                t-set="editable_compare_list_price"
+                t-value="not hide_list_price and editable and product"
+            />
+            <del
+                name="product_list_price"
+                t-attf-class="
+                    oe_list_price bidi-isolate text-nowrap text-muted {{_list_price_classes or 'small'}}
+                    {{editable_compare_list_price and 'css_editable_mode_hidden'}}
+                    {{hide_list_price and 'd-none'}}
+                "
+                t-out="price_info.get('list_price', 0)"
+                t-options="{'widget': 'monetary', 'display_currency': price_info['currency']}"
+                aria-label="Original price"
+            />
+            <del
+                name="editable_compare_list_price"
+                t-if="editable_compare_list_price"
+                t-attf-class="
+                    oe_list_price css_non_editable_mode_hidden bidi-isolate text-nowrap text-muted
+                    {{_list_price_classes or 'small'}}
+                "
+                t-field="product.compare_list_price"
+                t-options="{'widget': 'monetary', 'display_currency': product.currency_id}"
+            /> <!-- Allow direct edition -->
+        </t>
+    </template>
+
+    <template id="website_sale.base_unit_price" name="Product Base unit price">
+        <t t-set="price_info" t-value="price_info or combination_info"/>
+        <small
+            t-if="not price_info['hide_price']"
+            t-attf-class="o_product_price_unit d-block text-muted {{not price_info.get('base_unit_price') and 'd-none'}}"
+        >
+            (<span
+                t-out="price_info.get('base_unit_price', 0)"
+                t-options="{'widget': 'monetary', 'display_currency': price_info['currency']}"
+                aria-label="Price per base unit"
+            />
+            /
+            <span
+                t-attf-class="oe_custom_base_unit {{editable and product and 'css_editable_mode_hidden'}}"
+                t-out="price_info.get('base_unit_name')"
+                aria-label="Base unit"
+            />
+            <span
+                t-if="editable and product"
+                class="oe_custom_base_unit css_non_editable_mode_hidden"
+                t-field="product.base_unit_name"
+            />) <!-- Allow direct edition -->
+        </small>
+    </template>
+
+    <template id="website_sale.price_and_base_unit">
+        <t t-set="price_info" t-value="price_info or combination_info"/>
+        <t t-if="not price_info['hide_price']">
+            <t
+                t-call="website_sale.price"
+                _price_list_classes.f="{{_price_list_classes or 'small'}} me-2"
+            />
+            <t t-call="website_sale.base_unit_price"/>
+        </t>
     </template>
 
     <!-- Product page documents -->

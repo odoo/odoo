@@ -1,36 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id='l10n_ar_website_sale_product_price_inherit' inherit_id='website_sale.product_price'>
-        <xpath expr='//div[1]'>
-            <small t-if='combination_info.get("l10n_ar_price_tax_excluded")' class='h6 text-muted'>
+    <template id="l10n_ar_website_sale_product_price_inherit" inherit_id="website_sale.product_price">
+        <div name="product_price" position="inside">
+            <small
+                name="l10n_ar_price_tax_excluded"
+                t-attf-class="
+                    o_l10n_ar_price_tax_excluded
+                    {{not combination_info.get('l10n_ar_price_tax_excluded') and 'd-none'}}
+                "
+            >
                 Precio s/Imp. Nac.:
                 <span
-                    class='o_l10n_ar_price_tax_excluded'
-                    t-out='combination_info["l10n_ar_price_tax_excluded"]'
-                    t-options='{
-                        "widget": "monetary",
-                        "display_currency": website.currency_id,
-                    }'
+                    class="bidi-isolate"
+                    t-out="combination_info.get('l10n_ar_price_tax_excluded', 0)"
+                    t-options="{'widget': 'monetary', 'display_currency': combination_info['currency']}"
                 />
             </small>
-        </xpath>
+        </div>
     </template>
 
-    <template id='l10n_ar_website_sale_products_item_inherit' inherit_id='website_sale.products_item'>
-        <xpath 
-            expr='//div[hasclass("product_price")]//t[@name="product_base_price"]'
-            position="after"
-        >
-            <small t-if='template_price_vals.get("l10n_ar_price_tax_excluded")' class='d-block text-muted'>
+    <template id="l10n_ar_website_sale_products_item_inherit" inherit_id="website_sale.products_item">
+        <xpath expr="//t[@name='product_base_price']" position="after">
+            <small
+                name="l10n_ar_price_tax_excluded"
+                t-attf-class="
+                    o_l10n_ar_price_tax_excluded d-block text-muted
+                    {{not template_price_vals.get('l10n_ar_price_tax_excluded') and 'd-none'}}
+                "
+            >
                 Precio s/Imp. Nac.
                 <span
-                    class='o_l10n_ar_price_tax_excluded'
-                    t-out='template_price_vals["l10n_ar_price_tax_excluded"]'
-                    t-options='{
-                        "widget": "monetary",
-                        "display_currency": website.currency_id,
-                    }'
+                    class="bidi-isolate"
+                    t-out="template_price_vals.get('l10n_ar_price_tax_excluded', 0)"
+                    t-options="{'widget': 'monetary', 'display_currency': template_price_vals['currency']}"
                 />
             </small>
         </xpath>
