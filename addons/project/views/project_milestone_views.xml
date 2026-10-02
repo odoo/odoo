@@ -30,7 +30,7 @@
                     </div>
                     <group>
                         <group name="main_details">
-                            <field name="project_id" invisible="1"/>
+                            <field name="project_id" invisible="1"/> <!-- passed as default_project_id in the context of the oe_stat_button button -->
                             <field name="name" placeholder="e.g: Product Launch"/>
                             <field name="deadline"/>
                             <field name="is_reached"/>
@@ -49,7 +49,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="deadline" optional="show"/>
-                <field name="project_id" column_invisible="1"/>
+                <field name="project_id" column_invisible="1"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="is_reached" optional="show"/>
                 <button name="action_view_tasks"
                         type="object"

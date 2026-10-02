@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.view_account_payment_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='button_box']" position="inside">
-                    <field name="expense_ids" invisible="1"/>
+                    <field name="expense_ids" invisible="1"/> <!-- drives invisible of the action_open_expense button -->
                     <button name="action_open_expense"
                             class="oe_stat_button"
                             icon="article"

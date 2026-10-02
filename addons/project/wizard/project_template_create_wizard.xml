@@ -14,7 +14,7 @@
                 </div>
                 <group>
                     <group>
-                        <field name="date" required="not template_has_dates and date_start" invisible="1"/>
+                        <field name="date" required="not template_has_dates and date_start" invisible="1"/> <!-- end of the date_start daterange widget (end_date_field option) -->
                         <field name="date_start" required="not template_has_dates and date" string="Planned Date" widget="daterange" options='{"end_date_field": "date", "always_range": True}'/>
                         <label for="alias_name" string="Project's Email"/>
                         <div class="d-flex align-items-baseline gap-2">

@@ -32,9 +32,9 @@
         <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//list/field[@name='name']" position="after">
-                <field name="commercial_partner_id" column_invisible="True" groups="sales_team.group_sale_salesman"/>
-                <field name="is_so_line_edited" column_invisible="True" groups="sales_team.group_sale_salesman"/>
-                <field name="allow_billable" column_invisible="True" groups="sales_team.group_sale_salesman"/>
+                <field name="commercial_partner_id" column_invisible="True" groups="sales_team.group_sale_salesman"/> <!-- used in the python-declared domain of so_line -->
+                <field name="is_so_line_edited" column_invisible="True" groups="sales_team.group_sale_salesman"/> <!-- read by the so_line_field widget of so_line -->
+                <field name="allow_billable" column_invisible="True" groups="sales_team.group_sale_salesman"/> <!-- drives invisible of so_line -->
                 <field name="so_line" widget="so_line_field" optional="show" options="{'no_create': True, 'no_open': True}" context="{'create': False, 'edit': False, 'delete': False}" invisible="not allow_billable" readonly="readonly_timesheet" column_invisible="context.get('hide_so_line')" placeholder="Non-billable" groups="sales_team.group_sale_salesman"/>
             </xpath>
         </field>
@@ -46,10 +46,10 @@
         <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='task_id']" position="after">
-                <field name="commercial_partner_id" invisible="1" groups="sales_team.group_sale_salesman"/>
-                <field name="is_so_line_edited" invisible="1" groups="sales_team.group_sale_salesman"/>
-                <field name="allow_billable" invisible="1" groups="sales_team.group_sale_salesman"/>
-                <field name="sale_order_state" invisible="1"/>
+                <field name="commercial_partner_id" invisible="1" groups="sales_team.group_sale_salesman"/> <!-- used in the python-declared domain of so_line -->
+                <field name="is_so_line_edited" invisible="1" groups="sales_team.group_sale_salesman"/> <!-- read by the so_line_field widget of so_line -->
+                <field name="allow_billable" invisible="1" groups="sales_team.group_sale_salesman"/> <!-- drives invisible of the label, the block -->
+                <field name="sale_order_state" invisible="1"/> <!-- drives invisible of the oi text -->
                 <label for="so_line" invisible="not allow_billable" groups="sales_team.group_sale_salesman"/>
                 <div class="o_row" invisible="not allow_billable" groups="sales_team.group_sale_salesman">
                     <field name="so_line" widget="so_line_field" options='{"no_create": True}' context="{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True, 'with_remaining_hours': True}" readonly="readonly_timesheet" placeholder="Non-billable"/>
@@ -62,8 +62,8 @@
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <t groups="sales_team.group_sale_salesman">
-                    <field name="order_id" invisible="1"/>
-                    <field name="reinvoice_move_id" invisible="1"/>
+                    <field name="order_id" invisible="1"/> <!-- drives invisible of the action_sale_order_from_timesheet button -->
+                    <field name="reinvoice_move_id" invisible="1"/> <!-- drives invisible of the action_invoice_from_timesheet button -->
                     <button name="action_sale_order_from_timesheet" type="object" class="oe_stat_button" icon="attach_money" invisible="not order_id">
                         <div class="o_stat_info">
                             <span class="o_stat_text">Sales Order</span>
@@ -271,7 +271,7 @@
         <field name="inherit_id" ref="hr_timesheet.view_calendar_account_analytic_line_multi_create"/>
         <field name="arch" type="xml">
             <field name="unit_amount" position="before">
-                <field name="allow_billable" invisible="1" groups="sales_team.group_sale_salesman"/>
+                <field name="allow_billable" invisible="1" groups="sales_team.group_sale_salesman"/> <!-- drives invisible of so_line -->
                 <field name="so_line" groups="sales_team.group_sale_salesman" options='{"no_create": True}' context="{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True}" invisible="not allow_billable" placeholder="Non-billable"/>
             </field>
         </field>

@@ -6,8 +6,8 @@
             <field name="model">hr.employee.delete.wizard</field>
             <field name="arch" type="xml">
                 <form string="Delete Employee">
-                    <field name="has_timesheet" invisible="1"/>
-                    <field name="has_active_employee" invisible="1"/>
+                    <field name="has_timesheet" invisible="1"/> <!-- drives invisible of the text, the footer -->
+                    <field name="has_active_employee" invisible="1"/> <!-- drives invisible of the text, the action_archive button and 1 more -->
                     <span invisible="not has_timesheet">
                         Uh-oh! The employee you’re trying to delete still has some timesheets hanging around and can’t be deleted.
                         <span invisible="not has_active_employee">

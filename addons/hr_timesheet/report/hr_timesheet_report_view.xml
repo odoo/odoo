@@ -10,7 +10,7 @@
                     <field name="employee_id"/>
                     <field name="project_id"/>
                     <field name="task_id"/>
-                    <field name="currency_id" column_invisible="1"/>
+                    <field name="currency_id" column_invisible="1"/> <!-- currency of the monetary columns of this list -->
                     <field name="amount" string="Timesheet Costs" optional="hide" sum="Total"/>
                     <field name="unit_amount" optional="show" widget="timesheet_uom" sum="Total"
                         decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0"
@@ -34,7 +34,7 @@
                             <group>
                                 <field name="employee_id"/>
                                 <field name="date"/>
-                                <field name="amount" invisible="1"/>
+                                <field name="amount" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                                 <field name="unit_amount" string="Time Spent" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"
                                     decoration-muted="unit_amount == 0"/>
                             </group>
