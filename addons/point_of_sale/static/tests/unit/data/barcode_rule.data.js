@@ -48,16 +48,7 @@ export class BarcodeRule extends models.ServerModel {
             pattern: "041",
             alias: "",
         },
-        {
-            id: 5,
-            name: "Coupon & Gift Card Barcodes",
-            barcode_nomenclature_id: 1,
-            sequence: 50,
-            type: "coupon",
-            encoding: "any",
-            pattern: "043|044",
-            alias: "",
-        },
+        // Record 5 in pos_loyalty
         {
             id: 6,
             name: "Price Barcodes",
