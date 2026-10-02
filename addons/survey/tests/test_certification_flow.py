@@ -102,6 +102,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         r = self._access_begin(certification, answer_token)
         self.assertResponse(r, 200)
 
+        self.assertFalse(self.env["bus.presence"].search([("user_id", "=", self.user_emp.id)], limit=1))
         with patch.object(IrMailServer, 'connect'):
             self._answer_question(q01, q01.suggested_answer_ids.ids[3], answer_token, csrf_token)
             self._answer_question(q02, q02.suggested_answer_ids.ids[1], answer_token, csrf_token)
@@ -110,6 +111,8 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
             self._answer_question(q03, "Just kidding, I don't like it...", answer_token, csrf_token)
             self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, csrf_token)
             self._answer_question(q05, [q05.suggested_answer_ids.ids[0], q05.suggested_answer_ids.ids[1], q05.suggested_answer_ids.ids[3]], answer_token, csrf_token)
+
+        self.assertTrue(self.env["bus.presence"].search([("user_id", "=", self.user_emp.id)], limit=1))
 
         user_inputs.invalidate_recordset()
         # Check that certification is successfully passed
