@@ -434,9 +434,7 @@
                     groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user"/>
                 <field name="no_of_hired_employee" optional="hide"
                     groups="hr_recruitment.group_hr_recruitment_interviewer"/>
-                <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
-                <field name="company_id" column_invisible="True"/> <!-- duplicate of the company_id column declared just above for multi-company users -->
                 <field name="alias_name" column_invisible="True"/> <!-- drives invisible of the alias_id column -->
                 <field name="alias_id" invisible="not alias_name" optional="hide"
                     groups="hr_recruitment.group_hr_recruitment_interviewer"/>

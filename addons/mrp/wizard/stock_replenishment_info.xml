@@ -27,7 +27,6 @@
         <field name="arch" type="xml">
             <xpath expr="//page" position="before">
                 <page string="Bills of Materials" name="page_boms" invisible="not show_bom_tab">
-                    <field name="bom_id" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                     <field name="bom_ids" readonly="1" context="{'list_view_ref': 'mrp.mrp_bom_replenishment_tree_view', 'stock_replenishment_info_id': id, 'orderpoint_id': orderpoint_id}"/>
                 </page>
             </xpath>

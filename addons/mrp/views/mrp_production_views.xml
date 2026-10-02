@@ -51,7 +51,6 @@
                     </header>
                     <field name="company_id" column_invisible="True"/> <!-- needed by the company-dependent domain of the check_company fields of this multi-edit list -->
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
-                    <field name="message_needaction" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="name" decoration-bf="1"/>
                     <field name="date_start" optional="show" widget="relative_date"/>
                     <field name="date_finished" optional="hide" widget="relative_date"/>
@@ -85,7 +84,6 @@
                            decoration-info="state == 'draft'"
                            optional="show" widget="badge" class="text-dark"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
-                    <field name="delay_alert_date" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                     <field name="is_delayed" column_invisible="True"/> <!-- drives decoration-danger/decoration-bf of date_deadline -->
                     <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                 </list>
@@ -273,7 +271,6 @@
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
                 <header>
-                    <field name="show_lock" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                     <button name="button_mark_done" type="object" string="Produce" class="oe_highlight" data-hotkey="g"
                             invisible="not move_raw_ids or validate_button_style != 'primary'"/>
                     <button name="button_mark_done" type="object" string="Produce" class="btn-secondary" data-hotkey="g"
@@ -301,9 +298,6 @@
                 <sheet>
                     <field name="reservation_state" invisible="1"/> <!-- drives decoration-success/warning/danger of components_availability -->
                     <field name="is_locked" invisible="1"/> <!-- drives readonly of qty_producing, date_finished and of the move lists -->
-                    <field name="qty_produced" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
-                    <field name="unreserve_visible" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
-                    <field name="reserve_visible" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                     <field name="is_planned" invisible="1"/> <!-- drives invisible of the Plan/Unplan buttons and readonly of the component quantities -->
                     <field name="show_allocation" invisible="1"/> <!-- drives invisible of the Allocation stat button -->
                     <field name="workorder_ids" invisible="1"/> <!-- drives invisible of the Plan button and of the two state statusbars -->
@@ -459,7 +453,6 @@
                                     help="Date at which you plan to start.
                                           Red if the scheduled end is forecasted after the production order deadline.
                                           Orange if the scheduled date is in the past."/>
-                                <field name="delay_alert_date" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                                 <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                             </div>
                             <field name="date_finished" string="End Date" readonly="is_locked" invisible="state != 'done'" help="Date at which you finished production."/>
@@ -469,7 +462,6 @@
                                 decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')"
                                 decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
                             <field name="user_id" widget="many2one_avatar" readonly="state in ['cancel', 'done']"/>
-                            <field name="show_final_lots" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                             <field name="production_location_id" invisible="1" readonly="1"/> <!-- passed as default_location_dest_id/default_location_id in the context of the move lists -->
                             <field name="move_finished_ids" invisible="1" readonly="state == 'cancel' or (state == 'done' and is_locked)"> <!-- kept loaded for record data, only the move_byproduct_ids subset is displayed in its own page -->
                                 <list editable="bottom">
@@ -546,7 +538,6 @@
                                     <field name="has_tracking" column_invisible="True"/> <!-- drives readonly of quantity and invisible of the two Details buttons -->
                                     <field name="operation_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                                     <field name="bom_line_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
-                                    <field name="sequence" column_invisible="True"/> <!-- duplicate of the sequence handle column declared at the top of this list -->
                                     <field name="warehouse_id" column_invisible="True"/> <!-- filled from the default_warehouse_id of the context when a component line is added -->
                                     <field name="is_locked" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                                     <field name="move_lines_count" column_invisible="True"/> <!-- drives readonly of product_id -->
@@ -619,7 +610,6 @@
                                     <field name="operation_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                                     <field name="bom_line_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                                     <field name="byproduct_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
-                                    <field name="sequence" column_invisible="True"/> <!-- duplicate of the sequence handle column declared at the top of this list -->
                                     <field name="location_id" column_invisible="True"/> <!-- filled from the default_location_id of the context when a by-product line is added -->
                                     <field name="warehouse_id" column_invisible="True"/> <!-- filled from the default_warehouse_id of the context when a by-product line is added -->
                                     <field name="is_locked" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
