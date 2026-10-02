@@ -50,6 +50,14 @@ export const m2oSupportedOptions = [
         type: "field",
         availableTypes: ["char"],
     },
+    {
+        label: _t("Pick in a bottom sheet"),
+        name: "bottom_sheet",
+        type: "boolean",
+        help: _t(
+            "If checked, options are picked in a bottom sheet instead of the fullscreen dialog on mobile."
+        ),
+    },
 ];
 /** @type {import("registries").FieldsRegistryItemShape["supportedTypes"]} */
 export const m2oSupportedTypes = ["many2one"];
@@ -75,6 +83,7 @@ export function extractM2OFieldProps(staticInfo, dynamicInfo) {
     const hasWritePermission = attrs.can_write ? evaluateBooleanExpr(attrs.can_write) : true;
     const canCreate = options.no_create ? false : hasCreatePermission;
     return {
+        bottomSheet: !!options.bottom_sheet,
         canCreate,
         canCreateEdit: canCreate && !options.no_create_edit,
         canOpen: !options.no_open,
@@ -94,6 +103,7 @@ export function extractM2OFieldProps(staticInfo, dynamicInfo) {
 
 export const many2OneFieldProps = {
     ...standardFieldProps,
+    bottomSheet: t.boolean().optional(),
     canCreate: t.boolean().optional(),
     canCreateEdit: t.boolean().optional(),
     canOpen: t.boolean().optional(),
@@ -121,6 +131,4 @@ export class Many2OneField extends Component {
     }
 }
 
-registry.category("fields").add("many2one", {
-    ...buildM2OFieldDescription(Many2OneField),
-});
+registry.category("fields").add("many2one", buildM2OFieldDescription(Many2OneField));
