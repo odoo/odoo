@@ -14,7 +14,7 @@
                     widget="res_partner_many2one"
                     options="{'no_create_edit': True, 'no_open': True}"
                 />
-                <field name="allow_billable" invisible="1"/>
+                <field name="allow_billable" invisible="1"/> <!-- drives invisible of the alert block -->
             </field>
             <xpath expr="//div[hasclass('oe_title')]" position="before">
                 <div class="alert alert-warning" role="alert" invisible="not sale_warning_text or not allow_billable">

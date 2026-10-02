@@ -8,8 +8,8 @@
         <field name="inherit_id" ref="project.project_sharing_project_task_view_form"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
-                <field name="display_sale_order_button" invisible="1"/>
-                <field name="allow_billable" invisible="1"/>
+                <field name="display_sale_order_button" invisible="1"/> <!-- drives invisible of the action_project_sharing_view_so button -->
+                <field name="allow_billable" invisible="1"/> <!-- used in the column_invisible, invisible attribute(s) this view sets on other fields -->
                 <button class="oe_stat_button"
                         type="object" name="action_project_sharing_view_so" icon="attach_money"
                         invisible="not display_sale_order_button">
@@ -25,10 +25,10 @@
                 <field name="sale_line_id" string="Sales Order Item" options='{"no_open": True}' readonly="1" invisible="not partner_id or sale_order_state != 'sale'" context="{'create': False, 'edit': False, 'delete': False}"/>
             </xpath>
             <xpath expr="//field[@name='child_ids']/list/field[@name='partner_id']" position="after">
-                <field name="allow_billable" column_invisible="1"/>
+                <field name="allow_billable" column_invisible="1"/> <!-- used in the column_invisible, invisible attribute(s) this view sets on other fields -->
             </xpath>
             <xpath expr="//field[@name='depend_on_ids']/list/field[@name='partner_id']" position="after">
-                <field name="allow_billable" column_invisible="1"/>
+                <field name="allow_billable" column_invisible="1"/> <!-- used in the column_invisible, invisible attribute(s) this view sets on other fields -->
             </xpath>
             <xpath expr="//field[@name='child_ids']/list/field[@name='partner_id']" position="attributes">
                 <attribute name="column_invisible">not parent.allow_billable</attribute>
@@ -48,7 +48,7 @@
         <field name="inherit_id" ref="project.project_sharing_project_task_view_tree"/>
         <field name="arch" type="xml">
             <field name="allow_milestones" position="after">
-                <field name="allow_billable" column_invisible="1"/>
+                <field name="allow_billable" column_invisible="1"/> <!-- used in the column_invisible attribute(s) this view sets on other fields -->
             </field>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="column_invisible">not allow_billable</attribute>

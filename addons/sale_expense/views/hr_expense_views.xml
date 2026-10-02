@@ -31,7 +31,7 @@
                         'list_view_ref': 'sale_expense.sale_order_reinvoice_tree_view'
                     }"
                 />
-                <field name="can_be_reinvoiced" invisible="1"/>
+                <field name="can_be_reinvoiced" invisible="1"/> <!-- drives invisible of sale_order_id -->
             </xpath>
         </field>
     </record>
@@ -42,7 +42,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date']" position="before">
                 <field name="sale_order_id" optional="hide" invisible="not can_be_reinvoiced" readonly="state in ['posted', 'refused']" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}"  context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"/>
-                <field name="can_be_reinvoiced" readonly="1" column_invisible="True"/>
+                <field name="can_be_reinvoiced" readonly="1" column_invisible="True"/> <!-- drives invisible of sale_order_id -->
             </xpath>
         </field>
     </record>
@@ -53,7 +53,7 @@
         <field name="inherit_id" ref="hr_expense.hr_expense_split"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='employee_id']" position="after">
-                <field name="can_be_reinvoiced" column_invisible="True"/>
+                <field name="can_be_reinvoiced" column_invisible="True"/> <!-- drives readonly of sale_order_id -->
                 <field name="sale_order_id" force_save="1" readonly="not can_be_reinvoiced"/>
             </xpath>
         </field>
