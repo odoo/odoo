@@ -19,7 +19,9 @@ export class TeamBoard extends Interaction {
     }
 
     destroy() {
-        this.closeModal();
+        if (this.closeModal){
+            this.closeModal();
+        }
     }
 
 
@@ -33,6 +35,7 @@ export class TeamBoard extends Interaction {
             description: card.querySelector('.card-text:not(.text-secondary)')?.textContent.trim(),
             picture: card.querySelector('img.o_card_img')?.getAttribute('src'),
         };
+        this.closeModal = this.dialog.add(SendMessageModal, {
         this.closeModal = this.dialog.add(SendMessageModal, {
             name : data.name,
             role: data.function,
