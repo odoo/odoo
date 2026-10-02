@@ -45,6 +45,15 @@ import { loadImage } from "@html_editor/utils/image_processing";
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 const USER_VALUES_URL = "/website/static/src/scss/options/user_values.scss";
+// Theme values that Bootstrap also names the button's own variables after:
+// `website.scss` prints them under another name, the one the CSS reads.
+const PRINTED_NAMES = {
+    "btn-padding-x": "o-btn-padding-x",
+    "btn-padding-y": "o-btn-padding-y",
+    "btn-font-size": "o-btn-font-size",
+    "btn-border-radius": "o-btn-border-radius",
+    "btn-font-weight": "o-btn-font-weight",
+};
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
@@ -200,7 +209,7 @@ export class CustomizeWebsitePlugin extends Plugin {
     }
     getWebsiteVariableValue(variable) {
         const style = getHtmlStyle(this.document);
-        let finalValue = getCSSVariableValue(variable, style);
+        let finalValue = getCSSVariableValue(PRINTED_NAMES[variable] || variable, style);
         /* TODO dedicated action ?
         if (!params.colorNames) {
             return finalValue;
@@ -266,7 +275,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         for (const name of new Set([...Object.keys(variables), ...Object.keys(previewValues)])) {
             step.previous[name] = {
                 pending: this.pendingVariables[name],
-                inline: style.getPropertyValue(`--${name}`),
+                inline: style.getPropertyValue(`--${PRINTED_NAMES[name] || name}`),
             };
             const value = variables[name];
             step.next[name] = {
@@ -287,10 +296,11 @@ export class CustomizeWebsitePlugin extends Plugin {
             } else {
                 this.pendingVariables[name] = pending;
             }
+            const printedName = PRINTED_NAMES[name] || name;
             if (inline) {
-                style.setProperty(`--${name}`, inline);
+                style.setProperty(`--${printedName}`, inline);
             } else {
-                style.removeProperty(`--${name}`);
+                style.removeProperty(`--${printedName}`);
             }
         }
     }

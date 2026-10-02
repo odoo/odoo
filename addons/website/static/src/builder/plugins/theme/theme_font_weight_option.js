@@ -16,7 +16,6 @@ export class FontWeightPicker extends BaseOptionComponent {
     props = useProps({
         variables: t.array(),
         weights: t.array(),
-        action: t.string(),
         disabled: t.boolean().optional(false),
     });
 }
@@ -27,7 +26,6 @@ export class ThemeFontWeightOption extends BaseOptionComponent {
     static dependencies = ["customizeWebsite", "themeTab"];
     props = useProps({
         fontVariable: t.string(),
-        action: t.string().optional("previewWebsiteFontWeight"),
         regularVariables: t.array(),
         lightVariables: t.array().optional(),
         boldVariables: t.array().optional(),

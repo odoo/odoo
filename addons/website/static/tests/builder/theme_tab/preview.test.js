@@ -86,6 +86,7 @@ test("theme tab: an emptied value removes the preview and is reset on save", asy
 // system ones, which load nothing.
 const PARAGRAPH = "[data-container-title='Paragraph']";
 const HEADINGS = "[data-container-title='Headings']";
+const BUTTONS = "[data-container-title='Button']";
 const SYSTEM_FONTS =
     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Noto Sans", Arial, "Odoo Unicode Support Noto", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
 // prettier-ignore
@@ -112,6 +113,15 @@ const PREVIEWED_VALUES = [
     { option: "font-weight-normal", value: "300", select: `${PARAGRAPH} [data-label='Font Weight']`, element: "p", property: "font-weight", expected: "300" },
     { option: "font-weight-bolder", value: "900", expand: `${PARAGRAPH} [data-label='Font Weight']`, select: `${PARAGRAPH} [data-label='Bold']`, element: "p b", property: "font-weight", expected: "900" },
     { option: "headings-font-weight", value: "700", select: `${HEADINGS} [data-label='Font Weight']`, element: "h2", property: "font-weight", expected: "700" },
+    { option: "btn-padding-y", value: "10", element: ".btn:not(.btn-lg, .btn-sm)", property: "padding-top", expected: "10px" },
+    { option: "btn-padding-x", value: "20", element: ".btn:not(.btn-lg, .btn-sm)", property: "padding-left", expected: "20px" },
+    { option: "btn-padding-y-lg", value: "14", expand: "btn-padding-y", element: ".btn-lg", property: "padding-top", expected: "14px" },
+    { option: "btn-font-size", value: "18", element: ".btn:not(.btn-lg, .btn-sm)", property: "font-size", expected: "18px" },
+    { option: "btn-font-size-sm", value: "12", expand: "btn-font-size", element: ".btn-sm", property: "font-size", expected: "12px" },
+    { option: "btn-border-radius", value: "12", element: ".btn:not(.btn-lg, .btn-sm)", property: "border-top-left-radius", expected: "12px" },
+    { option: "btn-border-radius-lg", value: "20", expand: "btn-border-radius", element: ".btn-lg", property: "border-top-left-radius", expected: "20px" },
+    { option: "buttons-font", value: "'SYSTEM_FONTS'", select: `${BUTTONS} [data-label='Font Family']`, element: ".btn:not(.btn-lg, .btn-sm)", property: "font-family", expected: SYSTEM_FONTS },
+    { option: "btn-font-weight", value: "300", select: `${BUTTONS} [data-label='Font Weight']`, element: ".btn:not(.btn-lg, .btn-sm)", property: "font-weight", expected: "300" },
 ];
 
 for (const { option, value, expand, select, element, property, expected } of PREVIEWED_VALUES) {
@@ -123,7 +133,10 @@ for (const { option, value, expand, select, element, property, expected } of PRE
             <h4 style="font-size: 20px">H4</h4><h5>H5</h5>
             <div class="display-1">Display 1</div>
             <div class="display-2" style="font-size: 20px">Display 2</div>
-            <div class="shadow">Shadow</div>`,
+            <div class="shadow">Shadow</div>
+            <a class="btn btn-primary">Button</a>
+            <a class="btn btn-primary btn-lg">Large</a>
+            <a class="btn btn-primary btn-sm">Small</a>`,
             {
                 loadIframeBundles: true,
                 // The page's fonts, with their weights (the page loads none).
