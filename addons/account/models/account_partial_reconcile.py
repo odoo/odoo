@@ -389,12 +389,13 @@ class AccountPartialReconcile(models.Model):
         }
 
     @api.model
-    def _prepare_cash_basis_tax_line_vals(self, tax_line, balance, amount_currency):
+    def _prepare_cash_basis_tax_line_vals(self, tax_line, balance, amount_currency, percentage=1.0):
         ''' Prepare the move line corresponding to a tax in the cash basis entry.
 
         :param tax_line:        An account.move.line record being a tax line.
         :param balance:         The balance to consider for this line.
         :param amount_currency: The balance in foreign currency to consider for this line.
+        :param percentage:      The part of the tax line paid by the current partial.
         :return:                A python dictionary that could be passed to the create method of
                                 account.move.line.
         '''
@@ -407,7 +408,7 @@ class AccountPartialReconcile(models.Model):
             'name': tax_line.name,
             'debit': balance if balance > 0.0 else 0.0,
             'credit': -balance if balance < 0.0 else 0.0,
-            'tax_base_amount': tax_line.tax_base_amount,
+            'tax_base_amount': tax_line.company_currency_id.round(tax_line.tax_base_amount * percentage),
             'tax_repartition_line_id': tax_line.tax_repartition_line_id.id,
             'tax_ids': [Command.set(tax_ids.ids)],
             'tax_tag_ids': [Command.set(all_tags.ids)],
@@ -566,7 +567,7 @@ class AccountPartialReconcile(models.Model):
                     if caba_treatment == 'tax':
                         # Tax line.
 
-                        cb_line_vals = self._prepare_cash_basis_tax_line_vals(line, balance, amount_currency)
+                        cb_line_vals = self._prepare_cash_basis_tax_line_vals(line, balance, amount_currency, partial_values['percentage'])
                         grouping_key = self._get_cash_basis_tax_line_grouping_key_from_vals(cb_line_vals)
                     elif caba_treatment == 'base':
                         # Base line.
