@@ -329,6 +329,24 @@
 // CSS Variables
 // ----------------------------------------------------------------------------
 
+// Bootstrap's `font-size()` (rfs) for a size only known at runtime (e.g. a CSS
+// variable): rfs needs a number at compile time. Same result: the size as is
+// up to `$rfs-base-value`, else a fluid size below `$rfs-breakpoint`.
+// `tan(atan2(a, b))` is `a / b` as a number (`calc()` can't divide lengths).
+// rfs keeps its base value and breakpoint in px, without the unit.
+@mixin o-font-size-var($size, $property: font-size) {
+    @if $enable-rfs {
+        $-base: $rfs-base-value * 1px;
+        $-min: "#{$-base} + (#{$size} - #{$-base}) / #{$rfs-factor}";
+        #{$property}: #{"min(#{$size}, calc(#{$-min} + (#{$size} - (#{$-min})) * tan(atan2(100vw, #{$rfs-breakpoint * 1px}))))"};
+        @include _rfs-media-query-rule {
+            #{$property}: #{$size};
+        }
+    } @else {
+        #{$property}: #{$size};
+    }
+}
+
 // Print a document property the right way (depending on the type of the
 // printed variable).
 @mixin print-variable($key, $value) {
