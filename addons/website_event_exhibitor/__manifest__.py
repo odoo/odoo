@@ -35,7 +35,7 @@
             'website_event_exhibitor/static/src/components/exhibitor_connect_closed_dialog/**/*',
         ],
         'web.report_assets_common': [
-            '/website_event_exhibitor/static/src/scss/event_full_page_ticket_report.scss',
+            '/website_event_exhibitor/static/src/scss/event_full_page_ticket_report.css',
         ],
         'website.website_builder_assets': [
             'website_event_exhibitor/static/src/website_builder/**/*',

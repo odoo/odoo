@@ -306,7 +306,7 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'web/static/src/**/*.dark.scss'),
         ],
         'mail.assets_markdown': [
-            'mail/static/src/markdown_assets/mail_markdown_assets.scss',
+            'mail/static/src/markdown_assets/mail_markdown_assets.css',
         ],
         'im_livechat.assets_embed_core': [
             ("include", "html_editor.assets_editor"),
