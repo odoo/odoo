@@ -43,7 +43,7 @@ class HrEmployeeDeparture(models.Model):
         help="Date at which the departure process starts. Differs from the actual departure date in case of a notice period.")
     departure_date = fields.Date(string="Departure Date", compute="_compute_departure_date",
         store=True, readonly=False, help="Date at which the departure actually takes place.")
-    action_date = fields.Date(string="Archive Employee On", help="Date at which the departure actually takes place.")
+    action_date = fields.Date(string="Archive Employee On", help="Date at which the employee is archived after the departure.")
     is_user_employee = fields.Boolean(
         compute='_compute_is_user_employee',
         export_string_translation=False,
@@ -51,6 +51,7 @@ class HrEmployeeDeparture(models.Model):
     apply_immediately = fields.Boolean(compute="_compute_apply_immediately")
     apply_date = fields.Date(readonly=True)
     last_contract_date_end = fields.Date()
+    activity_plan_ids = fields.Many2many("mail.activity.plan", string="Activity Plans")
 
     @api.depends('dismissal_date')
     def _compute_departure_date(self):
@@ -115,6 +116,19 @@ class HrEmployeeDeparture(models.Model):
                 lambda v: v.contract_date_start == version.contract_date_start
                 and v.contract_date_end == version.contract_date_end,
             ).with_context(sync_contract_dates=True).write(vals)
+            val_list = []
+            for plan in departure.activity_plan_ids:
+                val_list.append({
+                    'plan_id': plan.id,
+                    'plan_date': fields.Date.today(),
+                })
+            wizards = self.env['mail.activity.schedule'].with_context(
+                plan_mode=True,
+                active_model='hr.employee',
+                active_ids=departure.employee_id.ids,
+            ).create(val_list)
+            for wiz in wizards:
+                wiz.action_schedule_plan()
         return res
 
     def _cron_apply_departure(self):
