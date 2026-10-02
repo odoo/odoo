@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_journal_form_inherit_pt" model="ir.ui.view">
+            <field name="name">account.journal.form.inherit.pt</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='inbound_payment_method_line_ids']//field[@name='name']" position="after">
+                    <field name="l10n_pt_payment_mechanism"
+                           column_invisible="parent.country_code != 'PT'"
+                           optional="show"
+                           required="payment_type == 'inbound' and parent.country_code == 'PT'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
