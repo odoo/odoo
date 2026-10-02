@@ -6,11 +6,6 @@ import { user } from "@web/core/user";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { rpc } from "@web/core/network/rpc";
-import { usePicker } from "@web/core/emoji_picker/emoji_picker";
-
-export function useGifPicker(...args) {
-    return usePicker(GifPicker, ...args);
-}
 
 /**
  * @typedef {Object} TenorCategory

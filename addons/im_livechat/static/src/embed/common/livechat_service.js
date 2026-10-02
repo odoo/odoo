@@ -14,11 +14,6 @@ export const RATING = Object.freeze({
     BAD: 1,
 });
 
-export const ODOO_VERSION_KEY = `${location.origin.replace(
-    /:\/{0,2}/g,
-    "_"
-)}_im_livechat.odoo_version`;
-
 const OPERATOR_STORAGE_KEY = "im_livechat_previous_operator";
 
 export class LivechatService {

@@ -508,28 +508,6 @@ export function registerThemeHomepageTour(name, steps) {
     );
 }
 
-export function registerBackendAndFrontendTour(name, options, steps) {
-    if (typeof steps !== "function") {
-        throw new Error(`tour.steps has to be a function that returns TourStep[]`);
-    }
-    if (window.location.pathname === "/odoo") {
-        return registerWebsitePreviewTour(name, options, () => {
-            const newSteps = [];
-            for (const step of steps()) {
-                const newStep = Object.assign({}, step);
-                newStep.trigger = `:iframe ${step.trigger}`;
-                newSteps.push(newStep);
-            }
-            return newSteps;
-        });
-    }
-
-    return registry.category("web_tour.tours").add(name, {
-        ...options,
-        steps: () => steps(),
-    });
-}
-
 /**
  * Switches to a different website by clicking on the website switcher.
  *

@@ -141,33 +141,6 @@ function navigateInOdooMenuOnClick(getters, chartId, getDomainFromChartItem) {
     };
 }
 
-export function onOdooChartItemHover() {
-    return (event, items) => {
-        if (items.length > 0) {
-            event.native.target.style.cursor = "pointer";
-        } else {
-            event.native.target.style.cursor = "";
-        }
-    };
-}
-
-export function onGeoOdooChartItemHover() {
-    return (event, items) => {
-        if (!items.length) {
-            event.native.target.style.cursor = "";
-            return;
-        }
-
-        const item = items[0];
-        const data = event.chart.data.datasets?.[item.datasetIndex]?.data?.[item.index];
-        if (data?.value !== undefined) {
-            event.native.target.style.cursor = "pointer";
-        } else {
-            event.native.target.style.cursor = "";
-        }
-    };
-}
-
 export async function navigateToOdooMenu(env, odooMenuId, newWindow) {
     const { action: actionService, notification: notificationService } = env.services;
     const menu = env.model().getters.getIrMenu(odooMenuId);

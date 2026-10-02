@@ -118,15 +118,6 @@ export function copyAttributes(el, compiled) {
 }
 
 /**
- * Decodes a string within an attribute into an Object
- * @param  {string} str
- * @return {Object}
- */
-export function decodeObjectForTemplate(str) {
-    return JSON.parse(decodeURI(str));
-}
-
-/**
  * Encodes an object into a string usable inside a pre-compiled template
  * @param  {Object}
  * @return {string}

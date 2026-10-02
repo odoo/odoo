@@ -247,7 +247,3 @@ function openLeaveWindow(actionService, resModel, name, domain, context) {
         context: context,
     });
 }
-
-export class TimeOffCardMobile extends TimeOffCard {
-    static template = "hr_holidays.TimeOffCardMobile";
-}

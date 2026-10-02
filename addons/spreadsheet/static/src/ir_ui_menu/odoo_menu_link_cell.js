@@ -67,14 +67,6 @@ export function parseIrMenuIdLink(irMenuLink) {
 }
 
 /**
- * @param {number} menuId
- * @returns
- */
-export function buildIrMenuIdLink(menuId) {
-    return `${IR_MENU_ID_PREFIX}${menuId}`;
-}
-
-/**
  *
  * @param {string} url
  * @returns {boolean}
@@ -93,11 +85,4 @@ export function parseIrMenuXmlUrl(irMenuUrl) {
         return irMenuUrl.substring(IR_MENU_XML_ID_PREFIX.length);
     }
     throw new Error(`${irMenuUrl} is not a valid menu xml link`);
-}
-/**
- * @param {number} menuXmlId
- * @returns
- */
-export function buildIrMenuXmlLink(menuXmlId) {
-    return `${IR_MENU_XML_ID_PREFIX}${menuXmlId}`;
 }
