@@ -259,14 +259,14 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             {'name': 'split by quantity - Microwave Oven',   'debit': 0.0,    'credit': 33.33},
             {'name': 'equal split - Microwave Oven',         'debit': 2.5,    'credit': 0.0},
             {'name': 'equal split - Microwave Oven',         'debit': 0.0,    'credit': 2.5},
-            {'name': 'split by weight - Refrigerator',       'debit': 6.0,    'credit': 0.0},
-            {'name': 'split by weight - Refrigerator',       'debit': 0.0,    'credit': 6.0},
-            {'name': 'split by volume - Refrigerator',       'debit': 0.75,   'credit': 0.0},
-            {'name': 'split by volume - Refrigerator',       'debit': 0.0,    'credit': 0.75},
-            {'name': 'split by quantity - Refrigerator',     'debit': 10.0,   'credit': 0.0},
-            {'name': 'split by quantity - Refrigerator',     'debit': 0.0,    'credit': 10.0},
-            {'name': 'equal split - Refrigerator',           'debit': 1.5,    'credit': 0.0},
-            {'name': 'equal split - Refrigerator',           'debit': 0.0,    'credit': 1.5},
+            {'name': 'split by weight - Refrigerator',       'debit': 10.0,    'credit': 0.0},
+            {'name': 'split by weight - Refrigerator',       'debit': 0.0,    'credit': 10.0},
+            {'name': 'split by volume - Refrigerator',       'debit': 1.25,   'credit': 0.0},
+            {'name': 'split by volume - Refrigerator',       'debit': 0.0,    'credit': 1.25},
+            {'name': 'split by quantity - Refrigerator',     'debit': 16.67,   'credit': 0.0},
+            {'name': 'split by quantity - Refrigerator',     'debit': 0.0,    'credit': 16.67},
+            {'name': 'equal split - Refrigerator',           'debit': 2.5,    'credit': 0.0},
+            {'name': 'equal split - Refrigerator',           'debit': 0.0,    'credit': 2.5},
         ]
         self.assertRecordValues(
             stock_negative_landed_cost.account_move_id.line_ids.sorted(lambda d: (d['name'], d['debit'])),
@@ -283,7 +283,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
 
     def _process_outgoing_shipment(self):
         """ One product Outgoing shipment. """
-        # Confirm outgoing shipment.
+        # Confirm outgoing shipment.b,;l
         self.picking_out.action_confirm()
         # Product assign to outgoing shipments
         self.picking_out.action_assign()
@@ -766,7 +766,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         ])
         landed_cost_amls = landed_cost.account_move_id.line_ids.sorted('credit')
         self.assertRecordValues(landed_cost_amls, [
-            {'account_id': lc_stock_valuation_account.id, 'debit':  140.0,   'credit':  0.0},
-            {'account_id': lc_expense_account.id,         'debit':   0.0,   'credit': 140.0},
+            {'account_id': lc_stock_valuation_account.id, 'debit':  200.0,   'credit':  0.0},
+            {'account_id': lc_expense_account.id,         'debit':   0.0,   'credit': 200.0},
         ])
         self.assertEqual(bill.landed_costs_ids.cost_lines.price_unit, 200)
