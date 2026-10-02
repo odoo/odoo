@@ -16,7 +16,6 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: '.o_required_modifier[name=partner_id] input',
     run: "edit Agrolait",
 }, {
-    isActive: ["auto"],
     trigger: '.ui-menu-item > a:contains("Agrolait")',
     run: "click",
 }, {

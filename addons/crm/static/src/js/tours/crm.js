@@ -32,11 +32,6 @@ registry.category("web_tour.tours").add('crm_tour', {
     tooltipPosition: "top",
     run: "edit Brandon Freeman",
 }, {
-    isActive: ["auto"],
-    trigger: ".ui-menu-item > a:contains('Brandon Freeman')",
-    run: "click",
-}, {
-    isActive: ["manual"],
     trigger: ".o_kanban_quick_create .o_m2o_dropdown_option_create",
     content: _t("Create your new contact."),
     tooltipPosition: "top",

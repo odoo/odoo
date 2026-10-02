@@ -41,25 +41,6 @@ patch(PurchaseAdditionalTourSteps.prototype, {
             content: _t('Go back to the purchase order to generate the vendor bill.'),
             run: "click",
         }, {
-            isActive: ["auto", "mobile"],
-            trigger: ".o_statusbar_buttons",
-            async run({ queryFirst, click }) {
-                const buttonOutsideDropdownMenu = queryFirst("button:enabled:contains('Upload Bill')");
-                const node = queryFirst(".o_statusbar_buttons button.dropdown-toggle-split");
-                if (!buttonOutsideDropdownMenu && node) {
-                    await click(node);
-                }
-            },
-        }, {
-            isActive: ["auto"],
-            trigger: "button:contains('Upload Bill')",
-            content: _t("Generate the draft vendor bill."),
-            async run({ inputFiles }) {
-                const files = [new File(["hello, world"], "bill.txt", { type: "text/plain" })];
-                await inputFiles(".document_file_uploader", files);
-            },
-        }, {
-            isActive: ["manual"],
             trigger: "button:contains('Upload Bill')",
             content: _t("Generate the draft vendor bill."),
             run: "click",

@@ -234,68 +234,6 @@ test("robot mode waits for its trigger to re-enable if it got disabled after bei
     expect(state.value).toBe(1);
 });
 
-test("manual tour with inactive steps", async () => {
-    Tour._records = [{ name: "tour_de_wallonie" }];
-    registry.category("web_tour.tours").add("tour_de_wallonie", {
-        steps: () => [
-            {
-                isActive: ["auto"],
-                trigger: ".interval input",
-                run: "edit 5",
-            },
-            {
-                isActive: ["auto"],
-                trigger: ".interval input",
-                run: "edit 5",
-            },
-            {
-                isActive: ["manual"],
-                trigger: ".interval input",
-                run: "edit 5",
-            },
-            {
-                isActive: ["auto"],
-                trigger: "button.inc",
-                run: "click",
-            },
-            {
-                isActive: ["auto"],
-                trigger: "button.inc",
-                run: "click",
-            },
-            {
-                isActive: ["manual"],
-                trigger: "button.inc",
-                run: "click",
-            },
-            {
-                isActive: ["auto"],
-                trigger: "button.inc",
-                run: "click",
-            },
-        ],
-    });
-    class Root extends Component {
-        static components = { Counter };
-        static template = xml/*html*/ `
-            <t>
-                <Counter />
-            </t>
-        `;
-    }
-    await mountWithCleanup(Root);
-    await getService("tour_service").startTour("tour_de_wallonie", { mode: "manual" });
-    await animationFrame();
-    expect(".o_tour_pointer_tip").toHaveCount(1);
-    await contains(".interval input").edit(5);
-    await animationFrame();
-    expect(".o_tour_pointer_tip").toHaveCount(1);
-    await contains("button.inc").click();
-    await animationFrame();
-    expect(".o_tour_pointer_tip").toHaveCount(0);
-    expect(".counter .value").toHaveText("5");
-});
-
 test("manual tour with alternative trigger", async () => {
     patchWithCleanup(browser.console, {
         log: (s) => {

@@ -152,54 +152,14 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o_form_project_tasks",
 },
 {
-    isActive: ["auto"],
-    trigger: ".o_field_widget[name='user_ids'] input",
-    content: _t("Assign a responsible to your task"),
-    tooltipPosition: "right",
-    run: "edit Admin",
-},
-{
-    isActive: ["manual"],
     trigger: ".o_field_widget[name='user_ids']",
     content: _t("Assign a responsible to your task"),
     tooltipPosition: "right",
     run: "click",
 },
 {
-    isActive: ["desktop", "auto"],
-    trigger: "a.dropdown-item[id*='user_ids'] span",
-    content: _t("Select an assignee from the menu"),
-    run: "click",
-},
-{
     isActive: ["mobile"],
     trigger: "div.o_kanban_renderer > article.o_kanban_record",
-    run: "click",
-}, {
-    isActive: ["auto"],
-    trigger: 'button[name="sub_tasks_page"]',
-    content: _t('Open sub-tasks notebook section'),
-    run: 'click',
-}, {
-    isActive: ["auto"],
-    trigger: '.o_field_subtasks_one2many .o_list_renderer .o_field_x2many_list_row_add button',
-    content: _t('Add a sub-task'),
-    run: 'click',
-}, {
-    isActive: ["auto"],
-    trigger: '.o_field_subtasks_one2many div[name="name"] input',
-    content: markup(_t('Give the sub-task a <b>name</b>')),
-    run: "edit New Sub-task",
-},
-{
-    isActive: ["auto"],
-    trigger: ".o_form_project_tasks .o_form_dirty",
-},
-{
-    isActive: ["auto"],
-    trigger: ".o_form_button_save",
-    content: markup(_t("You have unsaved changes - no worries! Odoo will automatically save it as you navigate.<br/> You can discard these changes from here or manually save your task.<br/>Let's save it manually.")),
-    tooltipPosition: "bottom",
     run: "click",
 },
 {
@@ -210,57 +170,4 @@ registry.category("web_tour.tours").add('project_tour', {
     content: markup(_t("Let's go back to the <b>kanban view</b> to have an overview of your next tasks.")),
     tooltipPosition: "right",
     run: 'click',
-}, {
-    isActive: ["auto"],
-    trigger: ".o_kanban_record .o_widget_subtask_counter .subtask_list_button",
-    content: _t("You can open sub-tasks from the kanban card!"),
-    run: "click",
-},
-{
-    isActive: ["auto"],
-    trigger: ".o_widget_subtask_kanban_list .subtask_list",
-},
-{
-    isActive: ["auto"],
-    trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create",
-    content: _t("Create a new sub-task"),
-    run: "click",
-},
-{
-    isActive: ["auto"],
-    trigger: ".subtask_create_input",
-},
-{
-    isActive: ["auto"],
-    trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create_input input",
-    content: markup(_t("Give the sub-task a <b>name</b>")),
-    run: "edit Newer Sub-task && click body",
-}, {
-    isActive: ["auto"],
-    trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:contains(newer sub-task) .o_field_project_task_state_selection button",
-    content: _t("You can change the sub-task state here!"),
-    run: "click",
-},
-{
-    isActive: ["auto"],
-    trigger: ".project_task_state_selection_menu.dropdown-menu",
-},
-{
-    isActive: ["auto"],
-    trigger: ".project_task_state_selection_menu.dropdown-menu span.text-danger",
-    content: markup(_t("Mark the task as <b>Cancelled</b>")),
-    run: "click",
-}, {
-    isActive: ["auto"],
-    trigger: ".o-overlay-container:not(:visible):not(:has(.project_task_state_selection_menu))",
-}, {
-    isActive: ["auto"],
-    trigger: ".o_kanban_record .o_widget_subtask_counter .subtask_list_button:contains('1/2')",
-    content: _t("Close the sub-tasks list"),
-    run: "click",
-}, {
-    isActive: ["auto"],
-    trigger: '.o_kanban_renderer',
-    // last step to confirm we've come back before considering the tour successful
-    run: "click",
 }]});

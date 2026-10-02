@@ -28,12 +28,8 @@ export const stepUtils = {
     },
 
     autoExpandMoreButtons(isActiveMobile = false) {
-        const isActive = ["auto"];
-        if (isActiveMobile) {
-            isActive.push("mobile");
-        }
         return {
-            isActive,
+            isActive: isActiveMobile ? ["mobile"] : [],
             content: `autoExpandMoreButtons`,
             trigger: ".o-form-buttonbox",
             async run({ queryFirst, click }) {
@@ -69,13 +65,13 @@ export const stepUtils = {
         const steps = [];
         if (trigger) {
             steps.push({
-                isActive: ["auto", "mobile"],
+                isActive: ["mobile"],
                 trigger,
             });
         }
         steps.push(
             {
-                isActive: ["auto", "mobile"],
+                isActive: ["mobile"],
                 trigger: ".o_statusbar_buttons",
                 async run({ queryFirst, click }) {
                     const buttonOutSideDropdownMenu = queryFirst(
@@ -149,7 +145,6 @@ export const stepUtils = {
     discardForm() {
         return [
             {
-                isActive: ["auto"],
                 content: "discard the form",
                 trigger: ".o_form_button_cancel",
                 run: "click",
@@ -164,7 +159,6 @@ export const stepUtils = {
 
     goToUrl(url) {
         return {
-            isActive: ["auto"],
             content: `Navigate to ${url}`,
             trigger: "body",
             run: `goToUrl ${url}`,

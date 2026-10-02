@@ -29,7 +29,6 @@ registry.category("web_tour.tours").add("hr_expense_test_tour", {
             run: "edit [COMM] Communication",
         },
         {
-            isActive: ["auto"],
             trigger: ".ui-autocomplete > li > a:contains('[COMM] Communication')",
             run: "click",
         },
