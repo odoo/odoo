@@ -3,15 +3,16 @@
     <t t-name="mail.Meeting">
         <div t-if="this.store.rtc.channel" class="o-mail-Meeting h-100 w-100 d-flex flex-column" t-att-class="{'o-fullscreen': this.store.rtc.isFullscreen, 'p-2': this.ui.isSmall, 'p-1 pb-0': !this.ui.isSmall and this.props.isPip, 'px-3 pt-3': !this.ui.isSmall and !this.props.isPip}" t-att-data-active="this.store.meetingViewOpened">
             <div class="d-flex flex-grow-1 h-100 o-min-height-0 gap-1 position-relative">
-                <div class="o-mail-Meeting-callContainer h-100 flex-grow-1 min-w-0" t-att-class="{'d-none': this.ui.isSmall and this.threadActions.activeAction?.actionPanelComponentCondition, 'pb-0': this.ui.isSmall}">
+                <t t-set="activePanel" t-value="this.threadActions.activePanel"/>
+                <div class="o-mail-Meeting-callContainer h-100 flex-grow-1 min-w-0" t-att-class="{'d-none': this.ui.isSmall and activePanel, 'pb-0': this.ui.isSmall}">
                     <Call hasOverlay="false" isPip="this.props.isPip"/>
                 </div>
-                <div t-if="this.threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer h-100 border flex-shrink-0 rounded-4" t-att-class="{
+                <div t-if="activePanel" class="o-mail-DiscussContent-panelContainer h-100 border flex-shrink-0 rounded-4" t-att-class="{
                     'w-100': this.ui.isSmall,
-                    'o-mail-DiscussApp-sidebarBgColor': this.threadActions.activeAction.id === 'meeting-chat',
-                    'bg-view': this.threadActions.activeAction.id !== 'meeting-chat',
+                    'o-mail-DiscussApp-sidebarBgColor bg-100': activePanel.action.id === 'meeting-chat',
+                    'bg-view': activePanel.action.id !== 'meeting-chat',
                 }">
-                    <t t-component="this.threadActions.activeAction.actionPanelComponent" t-props="this.threadActions.activeAction.actionPanelComponentProps"/>
+                    <t t-component="activePanel.component" t-props="activePanel.props"/>
                 </div>
                 <MeetingReadyBanner t-if="this.showInviteBanner"/>
             </div>

@@ -1,4 +1,5 @@
 import {
+    actionPanel,
     click,
     contains as mailContains,
     defineMailModels,
@@ -883,17 +884,17 @@ test("[text composer] show typing in member list", async () => {
             is_typing: true,
         })
     );
-    await waitFor(".o-discuss-ChannelMemberList [title='Other 10 is typing...']:count(1)");
+    await waitFor(`${actionPanel("Members")} [title='Other 10 is typing...']:count(1)`);
     await insertText(".o-mail-Composer-input", "HelloWorld!");
     await waitFor(
-        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']:count(1)`
+        `${actionPanel("Members")} [title='${serverState.partnerName} is typing...']:count(1)`
     );
     await click(".o-mail-Composer button:enabled[aria-label='Send']");
     await waitForNone(
-        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`
+        `${actionPanel("Members")} [title='${serverState.partnerName} is typing...']`
     );
     await advanceTime(Store.OTHER_LONG_TYPING);
-    await waitForNone(".o-discuss-ChannelMemberList [title='Other 10 is typing...']");
+    await waitForNone(`${actionPanel("Members")} [title='Other 10 is typing...']`);
     // check editing doesn't trigger is typing
     await waitFor(".o-mail-Message-content:has(:text('HelloWorld!')):count(1)");
     await hover(".o-mail-Message");
@@ -909,9 +910,9 @@ test("[text composer] show typing in member list", async () => {
         })
     );
     await animationFrame();
-    await waitFor(".o-discuss-ChannelMemberList [title='Other 10 is typing...']:count(1)");
+    await waitFor(`${actionPanel("Members")} [title='Other 10 is typing...']:count(1)`);
     await waitForNone(
-        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`
+        `${actionPanel("Members")} [title='${serverState.partnerName} is typing...']`
     );
 });
 
@@ -939,7 +940,7 @@ test("show typing in member list", async () => {
             is_typing: true,
         })
     );
-    await waitFor(".o-discuss-ChannelMemberList [title='Other 10 is typing...']:count(1)");
+    await waitFor(`${actionPanel("Members")} [title='Other 10 is typing...']:count(1)`);
     const threadComposerEditor = {
         document,
         editable: document.querySelector(
@@ -948,14 +949,14 @@ test("show typing in member list", async () => {
     };
     await htmlInsertText(threadComposerEditor, "HelloWorld!");
     await waitFor(
-        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']:count(1)`
+        `${actionPanel("Members")} [title='${serverState.partnerName} is typing...']:count(1)`
     );
     await click(".o-mail-Composer button:enabled[aria-label='Send']");
     await waitForNone(
-        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`
+        `${actionPanel("Members")} [title='${serverState.partnerName} is typing...']`
     );
     await advanceTime(Store.OTHER_LONG_TYPING);
-    await waitForNone(".o-discuss-ChannelMemberList [title='Other 10 is typing...']");
+    await waitForNone(`${actionPanel("Members")} [title='Other 10 is typing...']`);
     // check editing doesn't trigger is typing
     await waitFor(".o-mail-Message-content:has(:text('HelloWorld!')):count(1)");
     await hover(".o-mail-Message");
@@ -978,9 +979,9 @@ test("show typing in member list", async () => {
         })
     );
     await animationFrame();
-    await waitFor(".o-discuss-ChannelMemberList [title='Other 10 is typing...']:count(1)");
+    await waitFor(`${actionPanel("Members")} [title='Other 10 is typing...']:count(1)`);
     await waitForNone(
-        `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`
+        `${actionPanel("Members")} [title='${serverState.partnerName} is typing...']`
     );
 });
 

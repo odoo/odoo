@@ -1,4 +1,5 @@
 import {
+    actionPanel,
     click,
     contains as mailContains,
     defineMailModels,
@@ -186,7 +187,7 @@ test("[text composer] can @user in restricted (group_public_id) channels", async
     });
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
     await contains("button[title='Add People']:count(1)").click();
     await waitFor(
         ".o-discuss-ChannelInvitation-invitationBox:text('Access restricted to group \"Custom Channel Group\"'):count(1)"
@@ -218,7 +219,7 @@ test("can @user in restricted (group_public_id) channels", async () => {
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
     await openDiscuss(channelId);
-    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
     await contains("button[title='Add People']:count(1)").click();
     await waitFor(
         ".o-discuss-ChannelInvitation-invitationBox:text('Access restricted to group \"Custom Channel Group\"'):count(1)"

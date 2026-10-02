@@ -41,18 +41,17 @@ export class MessageCardList extends Component {
 
     /**
      * Highlight the given message and scrolls to it. In small mode, the
-     * pin/search menus are closed beforewards
+     * panels are closed beforewards
      *
      * @param {import('@mail/core/common/message_model').Message} message
      */
     async onClickJump(message) {
         this.props.onClickJump?.();
         if (this.ui.isSmall || this.ancestors.inChatWindow || this.ancestors.inMeetingView) {
-            this.env.pinMenu?.close();
-            this.env.searchMenu?.close();
+            this.ancestors.inActionPanel?.close({ closeAll: true });
             this.ancestors.inMeetingView?.openChat();
         }
-        // Give the time for menus to close before scrolling to the message.
+        // Give the time for panels to close before scrolling to the message.
         await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
         await this.messageHighlight?.highlightMessage(message);
     }

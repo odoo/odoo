@@ -1,11 +1,12 @@
 import {
+    actionPanel,
     defineMailModels,
     mockGetMedia,
     openDiscuss,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test, waitFor } from "@odoo/hoot";
+import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
 
 import { Command, contains, serverState } from "@web/../tests/web_test_helpers";
 
@@ -40,6 +41,22 @@ test("channel video conference exposes Members as a side action", async () => {
     await contains("[title='Start Video Call']:count(1)").click();
     await waitFor(".o-mail-MeetingSideActions button[title='Members']:count(1)");
     await waitFor(".o-mail-MeetingSideActions button[title='Chat']:count(1)");
+});
+
+test("meeting More opens the notification settings in a closable panel", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Start Video Call']:count(1)").click();
+    await contains(".o-mail-MeetingSideActions button[name^='more-action']:count(1)").click();
+    await contains(".o-dropdown--menu button[name='notification-settings']:count(1)").click();
+    await waitFor(`${actionPanel("Notification Settings")}:count(1)`);
+    await contains(
+        `${actionPanel("Notification Settings")} button[title='Close panel']:count(1)`
+    ).click();
+    await waitForNone(actionPanel("Notification Settings"));
 });
 
 test("Start Call in a group chat stays inline (not fullscreen)", async () => {

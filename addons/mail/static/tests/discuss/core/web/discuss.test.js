@@ -1,4 +1,5 @@
 import {
+    actionPanel,
     click,
     contains as mailContains,
     defineMailModels,
@@ -336,9 +337,7 @@ test("Can join accessible channel via thread action", async () => {
         tag: "mail.action_discuss",
         type: "ir.actions.client",
     });
-    await waitFor(
-        ".o-mail-ActionPanel:has(.o-mail-ActionPanel-header:contains('Members')):count(1)"
-    );
+    await waitFor(`${actionPanel("Members")}:count(1)`);
     await waitForNone(".o-discuss-ChannelMember");
     await contains("[title='Join Channel']:count(1)").click();
     await waitFor(".o-discuss-ChannelMember:text('Mitchell Admin'):count(1)");

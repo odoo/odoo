@@ -1,7 +1,8 @@
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { isRecord, STORE_SYM } from "@mail/model/misc";
 import { computedShallowEqual } from "@mail/utils/common/signal";
-import { Component, computed, proxy, signal, useScope } from "@odoo/owl";
+import { Component, computed, markRaw, proxy, signal, t, useProps, useScope, xml } from "@odoo/owl";
+import { Dialog } from "@web/core/dialog/dialog";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -32,7 +33,6 @@ function toArray(val) {
     return Array.isArray(val) ? val : [val];
 }
 
-/** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("@mail/model/record").Record} Record */
 /** @typedef {Component|Record} ActionOwner */
 
@@ -51,7 +51,7 @@ function toArray(val) {
 
 /**
  * @template Action_T
- * @typedef {{actionPanels: Action_T[], quick: Action_T[], group: Array<Action_T[]>, other: Action_T[]}} PartitionedActions
+ * @typedef {{panelActions: Action_T[], quick: Action_T[], group: Array<Action_T[]>, other: Action_T[]}} PartitionedActions
  */
 
 /**
@@ -62,6 +62,82 @@ function toArray(val) {
 
 /** @typedef {number} ActionGroupId id of group is a number that also represents its sequence between groups! */
 
+/**
+ * Kinds of container in which the panel of an action is shown, @see PanelContainer:
+ * - PANEL: in the panel of the owner of the action, e.g. beside or in place of the conversation;
+ * - DROPDOWN: in a dropdown of the button of the action;
+ * - POPOVER: in a popover on the button of the action;
+ * - DIALOG: in a dialog.
+ */
+export const PANEL_CONTAINER_TYPE = Object.freeze({
+    PANEL: "panel",
+    DROPDOWN: "dropdown",
+    POPOVER: "popover",
+    DIALOG: "dialog",
+});
+
+/**
+ * Where the panel of an action is shown, which the place that mounts the action decides, @see
+ * ActionList (`panelContainer` prop). The other keys than `type` are options of how the container
+ * looks, e.g. the position of a dropdown.
+ *
+ * @typedef {typeof PANEL_CONTAINER_TYPE[keyof typeof PANEL_CONTAINER_TYPE]} PanelContainerType
+ * @typedef {{ type: PanelContainerType, arrow?: boolean, contentClass?: string, fixedPosition?: boolean, menuClass?: string, popoverClass?: string, position?: string, target?: HTMLElement, title?: string }} PanelContainer
+ */
+/** @type {PanelContainer} */
+export const PANEL = Object.freeze({ type: PANEL_CONTAINER_TYPE.PANEL });
+
+/** Dialog showing the panel of an action, @see PanelContainer */
+class ActionPanelDialog extends Component {
+    static components = { Dialog };
+    static template = xml`
+        <Dialog size="'md'" title="this.props.title" footer="false" contentClass="'o-bg-body ' + (this.props.contentClass ?? '')" bodyClass="'p-3'">
+            <t t-component="this.props.component" t-props="this.props.componentProps"/>
+        </Dialog>
+    `;
+    props = useProps({
+        close: t.function().optional(),
+        component: t.component(),
+        componentProps: t.object(),
+        contentClass: t.string().optional(),
+        title: t.string().optional(),
+    });
+}
+
+/**
+ * What an action opens when it is selected, wherever it is shown, @see PanelContainer. The
+ * component can describe its content with static properties, so that the place showing the action
+ * picks a container that suits it:
+ * - `compact`: the content is small, e.g. a short form, so that a place with a large panel can
+ *   rather show it on the button of the action, e.g. in a popover;
+ * - `menu`: the content is a menu, e.g. a list of choices, which opens in a dropdown of the button
+ *   of the action unless the place picks another container.
+ *
+ * @template ActionParams_T
+ * @template Action_T
+ * @typedef {Object} PanelDefinition
+ * @property {typeof Component & { compact?: boolean, menu?: boolean }} component
+ * @property {(params: ActionParams_T) => Object} [props]
+ * @property {TranslatedString|(params: ActionParams_T) => TranslatedString} [name] defaults to
+ *   the name of the action
+ * @property {(params: ActionParams_T) => void} [onOpen]
+ * @property {(params: ActionParams_T & ActionPanelCloseSpecificParams<Action_T>) => void} [onClose]
+ */
+
+/**
+ * Options of closing the panel of an action, e.g. from its content, @see Panel
+ *
+ * @typedef {Object} PanelCloseOptions
+ * @property {boolean} [closeAll] Whether to also close the panels kept to go back to, instead of
+ *   going back to the previous one
+ */
+
+/**
+ * The panel of an action as shown in a container, @see Action.getPanel
+ *
+ * @typedef {{ action: Action, component: typeof Component, name: string, props: { close: (options?: PanelCloseOptions) => void } & Object }} Panel
+ */
+
 /** @typedef {{ name: string?, tags?: string|string[] }} ActionGroupDescriptionDefinition */
 /** @typedef {ActionGroupDescriptionDefinition & {id: ActionGroupId, tags: string[] }} ActionGroupDescription */
 
@@ -69,12 +145,6 @@ function toArray(val) {
  * @template ActionParams_T
  * @template Action_T
  * @typedef {Object} ActionDefinition
- * @property {(params: ActionParams_T & ActionPanelCloseSpecificParams<Action_T>) => void} [actionPanelClose]
- * @property {Component} [actionPanelComponent]
- * @property {(params: ActionParams_T) => Object} [actionPanelComponentProps]
- * @property {TranslatedString|((params: ActionParams_T) => TranslatedString)} [actionPanelName]
- * @property {(params: ActionParams_T) => void} [actionPanelOpen]
- * @property {string|(params: ActionParams_T) => string} [actionPanelOuterClass]
  * @property {boolean|(params: ActionParams_T) => boolean} [availableOffline]
  * @property {boolean|(params: ActionParams_T) => boolean} [badge]
  * @property {string|(params: ActionParams_T) => string} [badgeIcon]
@@ -84,14 +154,6 @@ function toArray(val) {
  * @property {(params: ActionParams_T) => Component<Props, Env>} [extraContentComponentProps]
  * @property {boolean|(params: ActionParams_T) => boolean} [condition=true]
  * @property {boolean|(params: ActionParams_T) => boolean} [disabledCondition]
- * @property {boolean|(params: ActionParams_T) => boolean} [dropdownTrigger]
- * @property {Component|(params: ActionParams_T) => Component} [dropdownComponent]
- * @property {Object|(params: ActionParams_T) => Object} [dropdownComponentProps]
- * @property {string|(params: ActionParams_T) => string} [dropdownMenuClass]
- * @property {string|(params: ActionParams_T) => string} [dropdownPosition]
- * @property {DropdownState|(params: ActionParams_T) => DropdownState} [dropdownState]
- * @property {string|(params: ActionParams_T) => string} [dropdownTemplate]
- * @property {Object|(params: ActionParams_T) => Object} [dropdownTemplateParams]
  * @property {Component} [extraContentComponent]
  * @property {(params: ActionParams_T) => Object} [extraContentComponentProps]
  * @property {boolean|(params: ActionParams_T) => boolean} [hasBtnBg]
@@ -102,6 +164,7 @@ function toArray(val) {
  * @property {TranslatedString|((params: ActionParams_T) => TranslatedString)} [name]
  * @property {string|(params: ActionParams_T) => string} [nameClass]
  * @property {(params: ActionParams_T, ev: Event) => void} [onSelected]
+ * @property {PanelDefinition<ActionParams_T, Action_T>} [panel]
  * @property {number|(params: ActionParams_T) => number} [sequence]
  * @property {ActionGroupId|(params: ActionParams_T) => ActionGroupId} [sequenceGroup]
  * @property {number|(params: ActionParams_T) => number} [sequenceQuick]
@@ -119,13 +182,6 @@ export class Action {
     owner;
     /** @type {Readonly<Record<string, any>>} Named ancestors of the owner, @see useAncestors */
     ancestors;
-    /**
-     * When this action opens a popover, must save usePopover() in this attribute, i.e. action.popover = usePopover().
-     * Useful for action that open an action panel in some contexts and popovers in others. See @actionPanel
-     *
-     * @type {import("@web/core/popover/popover_hook").PopoverHookReturnType}
-     */
-    popover = null;
     /** @type {string} Unique id of this action. */
     id;
     /** @type {import("@odoo/owl").Signal<HTMLElement>} */
@@ -133,6 +189,8 @@ export class Action {
     /** @type {import("models").Store} */
     store;
     actionRef = signal.ref();
+    /** Closes the popover or the dialog showing the panel, @see openPanel. Not reactive. */
+    overlay = markRaw({ close: undefined });
 
     /**
      * param `store` is required for actions made with new Action() by hand in components and outside component.setup()
@@ -165,6 +223,11 @@ export class Action {
         this._sequenceComputed = computed(() => this._computeSequence());
         this._sequenceGroupComputed = computed(() => this._computeSequenceGroup());
         this._sequenceQuickComputed = computed(() => this._computeSequenceQuick());
+        /** Open state of the panel when its container is not the panel of the owner, @see PANEL */
+        this.overlayState = new DropdownState({
+            onOpen: () => this._onOverlayOpen(),
+            onClose: () => this._onOverlayClose(),
+        });
     }
 
     get params() {
@@ -178,95 +241,136 @@ export class Action {
         };
     }
 
-    /** Determines whether this action is a one time effect or can be toggled (on or off). */
-    get actionPanel() {
-        return Boolean(this.definition.actionPanelComponent);
+    /** Whether this action opens a panel, @see PanelDefinition */
+    get hasPanel() {
+        return Boolean(this.definition.panel);
+    }
+
+    /** @returns {Panel|undefined} */
+    getPanel() {
+        const definition = this.definition.panel;
+        if (!definition) {
+            return undefined;
+        }
+        return {
+            action: this,
+            component: definition.component,
+            name:
+                (typeof definition.name === "function"
+                    ? definition.name.call(this, this.params)
+                    : definition.name) ?? this.name,
+            props: {
+                close: ({ closeAll } = {}) => this.closePanel({ closeAll }),
+                ...definition.props?.call(this, this.params),
+            },
+        };
     }
 
     /**
-     * Closes the action panel of this action.
+     * Opens the panel of this action in the given container, by default in the panel of its
+     * owner. A dropdown shows the panel by itself, from the open state of the panel.
      *
-     * @param {Object} [param0={}]
-     * @param {Action} [param0.nextActiveAction] When action panel is closed by opening another panel,
-     *   this param tells which is the next active action
-     * @param {boolean} [param0.closeAll] When true, all action panels in the stack are closed without returning to a previous panel
+     * @param {object} [param0]
+     * @param {PanelContainer} [param0.container] Container picked by the place showing the action,
+     *   when the action is selected there, @see PanelContainer
+     * @param {boolean} [param0.keepPrevious] Whether the panel shown in the panel of the owner
+     *   should be kept so that closing this one goes back to it.
      */
-    actionPanelClose({ nextActiveAction, closeAll = false } = {}) {
-        this.popover?.close();
+    openPanel({ container = PANEL, keepPrevious } = {}) {
+        if (container.type !== PANEL.type) {
+            this.overlayState.open();
+            this.overlay.close = this._openOverlay(container);
+            return;
+        }
+        if (this.actions) {
+            const panelAction = this.actions.panelAction;
+            if (panelAction?.id === this.id) {
+                return;
+            }
+            if (panelAction) {
+                if (keepPrevious) {
+                    this.actions.panelStack.push(panelAction);
+                } else {
+                    panelAction.closePanel({ nextActiveAction: this });
+                }
+            }
+            this.actions.panelAction = this;
+        }
+        this.definition.panel?.onOpen?.call(this, this.params);
+    }
+
+    /**
+     * Closes the panel of this action.
+     *
+     * @param {PanelCloseOptions & { nextActiveAction?: Action }} [param0={}]
+     * @param {Action} [param0.nextActiveAction] When the panel is closed by opening another one,
+     *   the action of the other panel
+     */
+    closePanel({ nextActiveAction, closeAll = false } = {}) {
+        if (this.overlayState.isOpen) {
+            this.overlayState.close();
+            return;
+        }
         if (this.actions) {
             if (closeAll) {
-                this.actions.actionStack = [];
-                this.actions.activeAction = null;
+                this.actions.panelStack = [];
+                this.actions.panelAction = null;
             } else {
-                this.actions.activeAction = this.actions.actionStack.pop();
+                this.actions.panelAction = this.actions.panelStack.pop() ?? null;
             }
         }
-        this.definition.actionPanelClose?.call(
+        this.definition.panel?.onClose?.call(
             this,
             Object.assign(this.params, { nextActiveAction })
         );
     }
 
-    /** Optional component that is used as action panel of this component, i.e. when action is active. */
-    get actionPanelComponent() {
-        return this.definition.actionPanelComponent;
-    }
-
-    /** Condition to display the action panel component of this action. */
-    get actionPanelComponentCondition() {
-        return this.isActive && this.actionPanelComponent && this.condition && !this.popover;
-    }
-
-    /** Props to pass to the action panel component of this action. */
-    get actionPanelComponentProps() {
-        return {
-            close: (opts) => this.actionPanelClose(opts),
-            ...(this.definition.actionPanelComponentProps?.call(this, this.params) ?? {}),
-        };
-    }
-
-    /** @param {Action} action @returns {string|undefined} */
-    _actionPanelName(action) {}
-    /** Name of this action, displayed to the user. */
-    get actionPanelName() {
-        return (
-            this._actionPanelName(this.params) ??
-            (typeof this.definition.actionPanelName === "function"
-                ? this.definition.actionPanelName.call(this, this.params)
-                : this.definition.actionPanelName ?? this.name)
-        );
-    }
-
     /**
-     * Opens action panel of this action.
+     * Shows the panel of this action in a popover or a dialog, @see openPanel.
      *
-     * @param {object} [param0]
-     * @param {boolean} [param0.keepPrevious] Whether the previous action
-     * should be kept so that closing the current action goes back
-     * to the previous one.
-     * */
-    actionPanelOpen({ keepPrevious } = {}) {
-        if (this.actions) {
-            if (this.actions.activeAction) {
-                if (this.actions.activeAction.id === this.id) {
-                    // Panel already open, do nothing.
-                    return;
-                }
-                if (keepPrevious) {
-                    this.actions.actionStack.push(this.actions.activeAction);
-                } else {
-                    this.actions.activeAction.actionPanelClose({ nextActiveAction: this });
-                }
+     * @param {PanelContainer} container
+     * @returns {(() => void)|undefined} closes what was opened
+     */
+    _openOverlay(container) {
+        const { popover, dialog } = this.store.env.services;
+        const panel = this.getPanel();
+        const onClose = () => {
+            if (this.overlayState.isOpen) {
+                this.overlayState.close();
             }
-            this.actions.activeAction = this;
+        };
+        if (container.type === PANEL_CONTAINER_TYPE.POPOVER) {
+            return popover.add(container.target ?? this.actionRef(), panel.component, panel.props, {
+                arrow: container.arrow,
+                fixedPosition: container.fixedPosition,
+                onClose,
+                popoverClass: container.popoverClass,
+                position: container.position,
+            });
         }
-        this.definition.actionPanelOpen?.call(this, this.params);
+        if (container.type === PANEL_CONTAINER_TYPE.DIALOG) {
+            return dialog.add(
+                ActionPanelDialog,
+                {
+                    component: panel.component,
+                    componentProps: panel.props,
+                    contentClass: container.contentClass,
+                    title: container.title ?? panel.name,
+                },
+                { onClose }
+            );
+        }
     }
 
-    get actionPanelOuterClass() {
-        return typeof this.definition.actionPanelOuterClass === "function"
-            ? this.definition.actionPanelOuterClass.call(this, this.params)
-            : this.definition.actionPanelOuterClass;
+    _onOverlayOpen() {
+        this.definition.panel?.onOpen?.call(this, this.params);
+    }
+
+    _onOverlayClose() {
+        const close = this.overlay.close;
+        this.overlay.close = undefined;
+        close?.();
+        this.definition.panel?.onClose?.call(this, this.params);
     }
 
     /** @param {Action} action @returns {boolean|undefined} */
@@ -356,107 +460,6 @@ export class Action {
         );
     }
 
-    /** @param {Action} action @returns {boolean|undefined} */
-    _dropdownTrigger(action) {}
-    /** Determines whether this action opens a dropdown on selection. */
-    get dropdownTrigger() {
-        return (
-            this._dropdownTrigger(this.params) ??
-            (typeof this.definition.dropdownTrigger === "function"
-                ? this.definition.dropdownTrigger.call(this, this.params)
-                : this.definition.dropdownTrigger)
-        );
-    }
-
-    /** @param {Action} action @returns {Component|undefined} */
-    _dropdownComponent(action) {}
-    /** When action is a dropdown @see dropdownTrigger, this determines an optional component to use for the content slot */
-    get dropdownComponent() {
-        return (
-            this._dropdownComponent(this.params) ??
-            (typeof this.definition.dropdownComponent === "function" &&
-            Object.getPrototypeOf(this.definition.dropdownComponent) !== Component
-                ? this.definition.dropdownComponent.call(this, this.params)
-                : this.definition.dropdownComponent)
-        );
-    }
-
-    /** @param {Action} action @returns {Object|undefined} */
-    _dropdownComponentProps(action) {}
-    /** When action is a dropdown @see dropdownTrigger, this determines optional props to pass to component of the content slot of dropdown. */
-    get dropdownComponentProps() {
-        return (
-            this._dropdownComponentProps(this.params) ??
-            (typeof this.definition.dropdownComponentProps === "function"
-                ? this.definition.dropdownComponentProps.call(this, this.params)
-                : this.definition.dropdownComponentProps)
-        );
-    }
-
-    /** @param {Action} action @returns {string|undefined} */
-    _dropdownMenuClass(action) {}
-    /** When action is a dropdown @see dropdownTrigger, this determines an optional menu class for the dropdown, in addition to default dropdown menu classes */
-    get dropdownMenuClass() {
-        return (
-            this._dropdownMenuClass(this.params) ??
-            (typeof this.definition.dropdownMenuClass === "function"
-                ? this.definition.dropdownMenuClass.call(this, this.params)
-                : this.definition.dropdownMenuClass)
-        );
-    }
-
-    /** @param {Action} action @returns {string|undefined} */
-    _dropdownPosition(action) {}
-    /** When action is a dropdown @see dropdownTrigger, this determines the preferred position of the dropdown */
-    get dropdownPosition() {
-        return (
-            this._dropdownPosition(this.params) ??
-            (typeof this.definition.dropdownPosition === "function"
-                ? this.definition.dropdownPosition.call(this, this.params)
-                : this.definition.dropdownPosition)
-        );
-    }
-
-    /** @param {Action} action @returns {DropdownState|undefined} */
-    _dropdownState(action) {}
-    /** When action is a dropdown @see dropdownTrigger, this determines the preferred position of the dropdown */
-    get dropdownState() {
-        return (
-            this._dropdownState(this.params) ??
-            (typeof this.definition.dropdownState === "function"
-                ? this.definition.dropdownState.call(this, this.params)
-                : this.definition.dropdownState)
-        );
-    }
-
-    /** @param {Action} action @returns {string|undefined} */
-    _dropdownTemplate(action) {}
-    /** When action is a dropdown @see dropdownTrigger, this determines an optional template to use for the content slot */
-    get dropdownTemplate() {
-        return (
-            this._dropdownTemplate(this.params) ??
-            (typeof this.definition.dropdownTemplate === "function"
-                ? this.definition.dropdownTemplate.call(this, this.params)
-                : this.definition.dropdownTemplate)
-        );
-    }
-
-    /** @param {Action} action @returns {Object|undefined} */
-    _dropdownTemplateParams(action) {}
-    /**
-     * When action is a dropdown @see dropdownTrigger, this determines optional params to pass to template of the content slot of dropdown.
-     * The params are provided to template in object `templateParams` with named parameters as given by explicit definition.
-     * For example: `{ myParam1: 1 }` is retrieved in template with `templateParams.myParam1`.
-     */
-    get dropdownTemplateParams() {
-        return (
-            this._dropdownTemplateParams(this.params) ??
-            (typeof this.definition.dropdownTemplateParams === "function"
-                ? this.definition.dropdownTemplateParams.call(this, this.params)
-                : this.definition.dropdownTemplateParams)
-        );
-    }
-
     /** @param {Action} action @returns {Component|undefined} */
     _extraContentComponent(action) {}
     /** When action needs a small widget on the action button (toggle, checkbox, etc), this allows loading an extra widget that gets aligned to the right */
@@ -530,8 +533,11 @@ export class Action {
     _isActive(action) {}
     /** States whether this action is currently active. */
     get isActive() {
-        if (this.actions && this.actionPanel) {
-            return this.id === this.actions.activeAction?.id;
+        if (this.overlayState.isOpen) {
+            return true;
+        }
+        if (this.actions && this.hasPanel) {
+            return this.id === this.actions.panelAction?.id;
         }
         return (
             this._isActive(this.params) ??
@@ -562,16 +568,21 @@ export class Action {
 
     /** @param {Action} action @param {Event} ev @returns {true|undefined} */
     _onSelected(action, ev) {}
-    /** Action to execute when this action is selected @param {Event} ev */
-    onSelected(ev, { keepPrevious } = {}) {
+    /**
+     * Action to execute when this action is selected
+     *
+     * @param {Event} ev
+     * @param {Object} [param1] @see openPanel
+     */
+    onSelected(ev, { container, keepPrevious } = {}) {
         if (ev) {
             markEventHandled(ev, "Action.onSelected");
         }
-        if (this.actionPanel) {
+        if (this.hasPanel) {
             if (this.isActive) {
-                this.actionPanelClose();
+                this.closePanel();
             } else {
-                this.actionPanelOpen({ keepPrevious });
+                this.openPanel({ container, keepPrevious });
             }
         }
         return (
@@ -670,10 +681,10 @@ export class UseActions {
     transformedActions;
     /** @type {import("models").Store} */
     store;
-    /** @type {Action_T[]} */
-    actionStack = [];
-    /** @type {Action_T} */
-    activeAction = null;
+    /** @type {Action_T[]} Actions whose panel closing the current one goes back to, @see panelAction */
+    panelStack = [];
+    /** @type {Action_T|null} Action whose panel is shown in the panel of the owner, @see PANEL */
+    panelAction = null;
 
     /**
      * @param {Component} component
@@ -722,10 +733,7 @@ export class UseActions {
                     // a reused more-action gets its list swapped in place
                     actionsSignal: signal(data.actions),
                     availableOffline: true,
-                    dropdownState: new DropdownState(),
-                    dropdownTrigger: true,
                     icon: data?.icon ?? "more_vert",
-                    isActive: ({ action }) => action.dropdownState.isOpen,
                     isMoreAction: true,
                     sequence: data.sequence ?? 1000,
                 },
@@ -739,6 +747,29 @@ export class UseActions {
     /** @returns {Action_T[]} */
     get actions() {
         return this.actionsComputed();
+    }
+
+    /**
+     * @param {string} id
+     * @returns {Action_T|undefined} the available action with the given id, @see actions
+     */
+    get(id) {
+        return this.actions.find((action) => action.id === id);
+    }
+
+    /** @returns {Panel|undefined} shown in the panel of the owner, @see panelAction */
+    get activePanel() {
+        return this.panelAction?.condition ? this.panelAction.getPanel() : undefined;
+    }
+
+    /** Closes the panel shown in the panel of the owner, and those open in another container. */
+    closePanels() {
+        for (const action of this.actions) {
+            if (action.overlayState.isOpen) {
+                action.closePanel();
+            }
+        }
+        this.panelAction?.closePanel();
     }
 
     _computeActions() {
@@ -776,16 +807,16 @@ export class UseActions {
         const other = actions
             .filter((a) => !a.sequenceQuick && !a.sequenceGroup)
             .sort((a1, a2) => a1.sequence - a2.sequence);
-        const groupedActionPanels = Object.groupBy(
-            actions.filter((a) => a.actionPanel),
+        const groupedPanelActions = Object.groupBy(
+            actions.filter((a) => a.hasPanel),
             (a) => (a.sequenceQuick ? "quick" : "other")
         );
-        groupedActionPanels.quick?.sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);
-        groupedActionPanels.other?.sort((a1, a2) => a1.sequence - a2.sequence);
-        const actionPanels = (groupedActionPanels.other ?? []).concat(
-            groupedActionPanels.quick ?? []
+        groupedPanelActions.quick?.sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);
+        groupedPanelActions.other?.sort((a1, a2) => a1.sequence - a2.sequence);
+        const panelActions = (groupedPanelActions.other ?? []).concat(
+            groupedPanelActions.quick ?? []
         );
-        return { actionPanels, quick, group, other };
+        return { panelActions, quick, group, other };
     }
 }
 

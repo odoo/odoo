@@ -2,43 +2,38 @@ import { registerThreadAction } from "@mail/core/common/thread_actions";
 
 import { _t } from "@web/core/l10n/translation";
 import { LivechatChannelInfoList } from "@im_livechat/core/web/livechat_channel_info_list";
+import { LivechatStatusSelection } from "@im_livechat/core/web/livechat_status_selection";
 import { patch } from "@web/core/utils/patch";
 import { joinChannelAction } from "@mail/discuss/core/public_web/thread_actions";
 
 registerThreadAction("livechat-info", {
-    actionPanelComponent: LivechatChannelInfoList,
-    actionPanelComponentProps: ({ thread }) => ({ thread }),
-    actionPanelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
     condition: ({ channel, owner, store }) =>
         channel?.channel_type === "livechat" &&
         store.self_user?.share === false &&
         !owner.isDiscussSidebarChannelActions,
     icon: "info",
     name: _t("Information"),
-    actionPanelOpen: ({ store }) => {
-        store.discuss.isLivechatInfoPanelOpenByDefault = true;
-    },
-    actionPanelClose: ({ action, store }) => {
-        if (action.condition) {
-            store.discuss.isLivechatInfoPanelOpenByDefault = false;
-        }
+    panel: {
+        component: LivechatChannelInfoList,
+        onClose: ({ action, store }) => {
+            if (action.condition) {
+                store.discuss.isLivechatInfoPanelOpenByDefault = false;
+            }
+        },
+        onOpen: ({ store }) => {
+            store.discuss.isLivechatInfoPanelOpenByDefault = true;
+        },
+        props: ({ thread }) => ({ thread }),
     },
     sequence: 10,
     sequenceGroup: 7,
 });
 registerThreadAction("livechat-status", {
-    actionPanelComponent: LivechatChannelInfoList,
-    actionPanelComponentProps: ({ thread }) => ({ thread }),
-    actionPanelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
     condition: ({ channel, store, owner }) =>
         channel?.channel_type === "livechat" &&
         store.has_access_livechat &&
         !channel.livechat_end_dt &&
         !owner.isDiscussContent,
-    dropdownMenuClass: "p-0",
-    dropdownTemplate: "im_livechat.LivechatStatusSelection",
-    dropdownTemplateParams: ({ thread }) => ({ livechatThread: thread }),
-    dropdownTrigger: true,
     icon: ({ channel, store }) => {
         const btn = store.livechatStatusButtons.find(
             (btn) => btn.status === channel.livechat_status
@@ -53,6 +48,10 @@ registerThreadAction("livechat-status", {
     },
     name: ({ channel }) => channel.livechatStatusLabel,
     nameClass: "fst-italic small",
+    panel: {
+        component: LivechatStatusSelection,
+        props: ({ thread }) => ({ thread }),
+    },
     sequence: ({ owner }) => (owner.isDiscussSidebarChannelActions ? 10 : 5),
     sequenceGroup: ({ owner }) => (owner.isDiscussSidebarChannelActions ? 5 : 7),
 });

@@ -26,10 +26,14 @@ export class MeetingChat extends Component {
         this.state = proxy({ jumpPresent: 0 });
         this.panelContentRef = signal.ref();
         this.isMobileOS = isMobileOS();
-        useAncestors({ inMeetingChat: true });
+        this.ancestors = useAncestors({ inMeetingChat: true });
     }
 
     get channel() {
         return this.store.rtc.channel;
+    }
+
+    get pinnedMessagesAction() {
+        return this.ancestors.threadActions?.get("pinned-messages");
     }
 }

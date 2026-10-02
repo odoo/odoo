@@ -1,6 +1,12 @@
 import { describe, test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
+import {
+    actionPanel,
+    contains,
+    openDiscuss,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
 
 describe.current.tags("desktop");
@@ -38,6 +44,6 @@ test("on leave members are categorised correctly in online/offline", async () =>
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-discuss-ChannelMemberList h6", { text: "Online - 4" });
-    await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 1" });
+    await contains(`${actionPanel("Members")} h6`, { text: "Online - 4" });
+    await contains(`${actionPanel("Members")} h6`, { text: "Offline - 1" });
 });
