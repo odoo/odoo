@@ -366,7 +366,7 @@ export function getFieldsSpec(activeFields, fields, evalContext, { orderBys, wit
     const fieldsSpec = {};
     const properties = [];
     for (const fieldName in activeFields) {
-        if (fields[fieldName].relatedPropertyField) {
+        if (!fields[fieldName] || fields[fieldName].relatedPropertyField) {
             continue;
         }
         const { related, limit, defaultOrderBy, invisible } = activeFields[fieldName];
