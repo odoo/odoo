@@ -178,7 +178,7 @@
 
     @include print-variable('input-padding-y', $input-padding-y);
     @include print-variable('input-padding-x', $input-padding-x);
-    @include print-variable('input-font-size', $input-font-size);
+    @include print-variable('input-font-size', if(not o-website-value('input-font-size') and $input-font-size == $font-size-base, var(--font-size-base), $input-font-size));
     @include print-variable('input-padding-y-sm', $input-padding-y-sm);
     @include print-variable('input-padding-x-sm', $input-padding-x-sm);
     @include print-variable('input-font-size-sm', $input-font-size-sm);
@@ -186,10 +186,10 @@
     @include print-variable('input-padding-x-lg', $input-padding-x-lg);
     @include print-variable('input-font-size-lg', $input-font-size-lg);
     @include print-variable('input-border-width', $input-border-width);
-    @include print-variable('input-border-top-width', $input-border-top-width or $input-border-width);
-    @include print-variable('input-border-right-width', $input-border-right-width or $input-border-width);
-    @include print-variable('input-border-bottom-width', $input-border-bottom-width or $input-border-width);
-    @include print-variable('input-border-left-width', $input-border-left-width or $input-border-width);
+    // A side not set apart follows the global width.
+    @each $side, $width in (top: $input-border-top-width, right: $input-border-right-width, bottom: $input-border-bottom-width, left: $input-border-left-width) {
+        @include print-variable('input-border-#{$side}-width', if($width and $width != $input-border-width, $width, var(--input-border-width)));
+    }
     @include print-variable('input-border-radius', $input-border-radius);
     @include print-variable('input-border-radius-sm', $input-border-radius-sm);
     @include print-variable('input-border-radius-lg', $input-border-radius-lg);

@@ -435,26 +435,20 @@ $offcanvas-horizontal-width: $o-offcanvas-horizontal-width !default;
 $--enable-no-overflow-of-text-columns: false !default;
 
 // A side-specific "form field border width" is only applied if it differs
-// from the global border width that applies to all sides.
+// from the global border width that applies to all sides (so a side set apart
+// in the builder applies on save).
 .form-control {
-    @if $input-border-top-width != $input-border-width {
-        border-top-width: $input-border-top-width !important;
-    }
-    @if $input-border-right-width != $input-border-width {
-        border-right-width: $input-border-right-width !important;
-    }
-    @if $input-border-bottom-width != $input-border-width {
-        border-bottom-width: $input-border-bottom-width !important;
-    }
-    @if $input-border-left-width != $input-border-width {
-        border-left-width: $input-border-left-width !important;
+    @each $side, $width in (top: $input-border-top-width, right: $input-border-right-width, bottom: $input-border-bottom-width, left: $input-border-left-width) {
+        @if $width != $input-border-width {
+            border-#{$side}-width: if($width, var(--input-border-#{$side}-width, #{$width}), null) !important;
+        }
     }
 }
 
-// Typography: Bootstrap's rules that compile the theme values, again with the
-// CSS variables `website.scss` prints, right after Bootstrap's own (see
-// `import_bootstrap.scss`). The fallbacks are the compiled values, for the
-// other bundles compiled with these variables.
+// Bootstrap's rules that compile the theme values, again with the CSS
+// variables `website.scss` prints, right after Bootstrap's own (see
+// `o-bootstrap-hook`). The fallbacks are the compiled values, for the other
+// bundles compiled with these variables.
 
 // A font weight is printed only when set: unset ("Auto"), the compiled one
 // applies. When a theme sets the Bootstrap variable itself, it wins over the
@@ -470,6 +464,14 @@ $--enable-no-overflow-of-text-columns: false !default;
         @return $small-font-size;
     }
     @return calc(tan(atan2(var(--small-font-size, #{$o-small-font-size}), var(--font-size-base, #{$font-size-base}))) * 1em);
+}
+
+@mixin o-after-bootstrap($part) {
+    @if $part == type {
+        @include o-after-bootstrap-type;
+    } @else if $part == forms {
+        @include o-after-bootstrap-forms;
+    }
 }
 
 @mixin o-after-bootstrap-type {
@@ -511,5 +513,140 @@ $--enable-no-overflow-of-text-columns: false !default;
     }
     .display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
         font-weight: o-font-weight-var('display-font-weight', $display-font-weight);
+    }
+}
+
+// The input values, by size ('', '-sm', '-lg'), with their compiled values as
+// fallbacks.
+@function o-input-var($name, $size) {
+    $-compiled: map-get((
+        'padding-y': ('': $input-padding-y, '-sm': $input-padding-y-sm, '-lg': $input-padding-y-lg),
+        'padding-x': ('': $input-padding-x, '-sm': $input-padding-x-sm, '-lg': $input-padding-x-lg),
+        'font-size': ('': $input-font-size, '-sm': $input-font-size-sm, '-lg': $input-font-size-lg),
+        'border-radius': ('': $input-border-radius, '-sm': $input-border-radius-sm, '-lg': $input-border-radius-lg),
+    ), $name);
+    @return var(--input-#{$name}#{$size}, #{map-get($-compiled, $size)});
+}
+// Bootstrap's `$input-height` (and `-sm`, `-lg`).
+@function o-input-height-var($size) {
+    @return calc(#{$input-line-height} * 1em + #{o-input-var('padding-y', $size)} * 2 + var(--input-border-width, #{$input-border-width}) * 2);
+}
+@mixin o-input-size($size) {
+    padding: o-input-var('padding-y', $size) o-input-var('padding-x', $size);
+    @include o-font-size-var(o-input-var('font-size', $size));
+    @if $enable-rounded {
+        border-radius: o-input-var('border-radius', $size);
+    }
+}
+
+@mixin o-after-bootstrap-forms {
+    $-border-width: var(--input-border-width, #{$input-border-width});
+    .col-form-label {
+        padding-top: calc(#{o-input-var('padding-y', '')} + #{$-border-width});
+        padding-bottom: calc(#{o-input-var('padding-y', '')} + #{$-border-width});
+    }
+    @each $size in ('-lg', '-sm') {
+        .col-form-label#{$size} {
+            padding-top: calc(#{o-input-var('padding-y', $size)} + #{$-border-width});
+            padding-bottom: calc(#{o-input-var('padding-y', $size)} + #{$-border-width});
+            @include o-font-size-var(o-input-var('font-size', $size));
+        }
+    }
+    .form-control {
+        @include o-input-size('');
+        border-width: $-border-width;
+        &::file-selector-button {
+            padding: o-input-var('padding-y', '') o-input-var('padding-x', '');
+            margin: calc(#{o-input-var('padding-y', '')} * -1) calc(#{o-input-var('padding-x', '')} * -1);
+            margin-inline-end: o-input-var('padding-x', '');
+            border-inline-end-width: $-border-width;
+        }
+    }
+    .form-control-plaintext {
+        padding: o-input-var('padding-y', '') 0;
+        border-width: $-border-width 0;
+    }
+    @each $size in ('-sm', '-lg') {
+        .form-control#{$size} {
+            min-height: o-input-height-var($size);
+            @include o-input-size($size);
+            &::file-selector-button {
+                padding: o-input-var('padding-y', $size) o-input-var('padding-x', $size);
+                margin: calc(#{o-input-var('padding-y', $size)} * -1) calc(#{o-input-var('padding-x', $size)} * -1);
+                margin-inline-end: o-input-var('padding-x', $size);
+            }
+        }
+    }
+    textarea {
+        &.form-control { min-height: o-input-height-var(''); }
+        &.form-control-sm { min-height: o-input-height-var('-sm'); }
+        &.form-control-lg { min-height: o-input-height-var('-lg'); }
+    }
+    .form-control-color {
+        height: o-input-height-var('');
+        padding: o-input-var('padding-y', '');
+        @if $enable-rounded {
+            &::-moz-color-swatch, &::-webkit-color-swatch {
+                border-radius: o-input-var('border-radius', '');
+            }
+        }
+        &.form-control-sm { height: o-input-height-var('-sm'); }
+        &.form-control-lg { height: o-input-height-var('-lg'); }
+    }
+    // Selects, while Bootstrap derives their values from the inputs'.
+    @if $form-select-padding-y == $input-padding-y and $form-select-padding-x == $input-padding-x
+            and $form-select-font-size == $input-font-size and $form-select-border-width == $input-border-width
+            and $form-select-border-radius == $input-border-radius and $form-select-indicator-padding == $form-select-padding-x * 3 {
+        .form-select {
+            padding: o-input-var('padding-y', '') calc(#{o-input-var('padding-x', '')} * 3) o-input-var('padding-y', '') o-input-var('padding-x', '');
+            @include o-font-size-var(o-input-var('font-size', ''));
+            border-width: $-border-width;
+            @if $enable-rounded {
+                border-radius: o-input-var('border-radius', '');
+            }
+            background-position: right o-input-var('padding-x', '') center;
+            &[multiple], &[size]:not([size="1"]) {
+                padding-right: o-input-var('padding-x', '');
+            }
+        }
+    }
+    @each $size, $padding-y, $padding-x, $font-size, $radius in (
+        '-sm' $form-select-padding-y-sm $form-select-padding-x-sm $form-select-font-size-sm $form-select-border-radius-sm,
+        '-lg' $form-select-padding-y-lg $form-select-padding-x-lg $form-select-font-size-lg $form-select-border-radius-lg,
+    ) {
+        @if $padding-y == map-get(('-sm': $input-padding-y-sm, '-lg': $input-padding-y-lg), $size)
+                and $padding-x == map-get(('-sm': $input-padding-x-sm, '-lg': $input-padding-x-lg), $size)
+                and $font-size == map-get(('-sm': $input-font-size-sm, '-lg': $input-font-size-lg), $size)
+                and $radius == map-get(('-sm': $input-border-radius-sm, '-lg': $input-border-radius-lg), $size) {
+            .form-select#{$size} {
+                padding-top: o-input-var('padding-y', $size);
+                padding-bottom: o-input-var('padding-y', $size);
+                padding-left: o-input-var('padding-x', $size);
+                @include o-font-size-var(o-input-var('font-size', $size));
+                @if $enable-rounded {
+                    border-radius: o-input-var('border-radius', $size);
+                }
+            }
+        }
+    }
+    @if $input-group-addon-padding-y == $input-padding-y and $input-group-addon-padding-x == $input-padding-x {
+        .input-group-text {
+            @include o-input-size('');
+            border-width: $-border-width;
+        }
+    }
+    @each $size in ('-lg', '-sm') {
+        .input-group#{$size} > .form-control,
+        .input-group#{$size} > .form-select,
+        .input-group#{$size} > .input-group-text,
+        .input-group#{$size} > .btn {
+            @include o-input-size($size);
+        }
+    }
+    @if $form-select-padding-x == $input-padding-x and $form-select-indicator-padding == $form-select-padding-x * 3 {
+        .input-group-lg > .form-select,
+        .input-group-sm > .form-select {
+            padding-right: calc(#{o-input-var('padding-x', '')} * 4);
+        }
     }
 }
