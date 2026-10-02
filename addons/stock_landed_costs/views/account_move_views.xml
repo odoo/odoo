@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
                 <t groups="stock.group_stock_manager">
-                    <field name="landed_costs_ids" invisible="1"/>
+                    <field name="landed_costs_ids" invisible="1"/> <!-- drives invisible of the action_view_landed_costs button -->
                     <button string="Landed Costs" type="object"
                         name="action_view_landed_costs"
                         class="oe_stat_button" icon="add_box" icon_class="oi-filled"
@@ -17,19 +17,19 @@
 
             <field name="state" position="before">
                 <t groups="stock.group_stock_manager">
-                    <field name="landed_costs_visible" invisible="1" />
+                    <field name="landed_costs_visible" invisible="1" /> <!-- drives invisible of the button_create_landed_costs button -->
                     <button name="button_create_landed_costs" class="oe_highlight" string="Create Landed Costs" data-hotkey="l" type="object" groups="account.group_account_invoice" invisible="not landed_costs_visible"/>
                 </t>
             </field>
 
             <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='quantity']" position="before">
-                <field name="product_type" column_invisible="True" groups="stock.group_stock_manager"/>
+                <field name="product_type" column_invisible="True" groups="stock.group_stock_manager"/> <!-- drives readonly of is_landed_costs_line -->
                 <field name="is_landed_costs_line" string="Landed Costs" column_invisible="parent.move_type not in ('in_invoice', 'in_receipt')" readonly="product_type != 'service'" optional="hide" groups="stock.group_stock_manager"/>
             </xpath>
 
             <xpath expr="//field[@name='line_ids']/list/field[@name='name']" position="after">
-                <field name="product_type" column_invisible="True" groups="stock.group_stock_manager"/>
-                <field name="is_landed_costs_line" column_invisible="True" groups="stock.group_stock_manager"/>
+                <field name="product_type" column_invisible="True" groups="stock.group_stock_manager"/> <!-- drives readonly of is_landed_costs_line -->
+                <field name="is_landed_costs_line" column_invisible="True" groups="stock.group_stock_manager"/> <!-- kept loaded for record data though not shown in this list -->
             </xpath>
         </field>
     </record>

@@ -19,10 +19,10 @@
               <data>
                 <xpath expr="//group[@name='other_infos']" position="before">
                     <group name='carrier_data' string="Shipping Information">
-                        <field name="is_return_picking" invisible="1"/>
+                        <field name="is_return_picking" invisible="1"/> <!-- drives invisible of the print_return_label button -->
                         <field name="carrier_id" readonly="state in ('done', 'cancel')" options="{'no_create': True, 'no_open': True}"/>
-                        <field name="integration_level" invisible="1"/>
-                        <field name="delivery_type" invisible="True"/>
+                        <field name="integration_level" invisible="1"/> <!-- used in the required attribute(s) this view sets on other fields -->
+                        <field name="delivery_type" invisible="True"/> <!-- drives invisible of the cancel_shipment button, the open_website_url button and 1 more -->
                         <label for="carrier_tracking_ref"/>
                         <div name="tracking">
                             <field name="carrier_tracking_ref" class="oe_inline text-break"/>

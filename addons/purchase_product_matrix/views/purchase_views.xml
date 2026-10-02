@@ -24,14 +24,14 @@
                 />
             </xpath>
             <column name="product_and_description" position="after">
-                <field name="product_template_attribute_value_ids" column_invisible="1"/>
-                <field name="product_no_variant_attribute_value_ids" column_invisible="1"/>
-                <field name="is_configurable_product" column_invisible="1"/>
+                <field name="product_template_attribute_value_ids" column_invisible="1"/> <!-- written by the product matrix configurator, must be in the view to be saved -->
+                <field name="product_no_variant_attribute_value_ids" column_invisible="1"/> <!-- written by the product matrix configurator, must be in the view to be saved -->
+                <field name="is_configurable_product" column_invisible="1"/> <!-- read by the purchase_product_field widget to open the matrix -->
             </column>
             <field name="partner_id" position="after">
-                <field name="grid" invisible="1"/>
-                <field name="grid_product_tmpl_id" invisible="1"/>
-                <field name="grid_update" invisible="1"/>
+                <field name="grid" invisible="1"/> <!-- serialized matrix exchanged with the product matrix dialog -->
+                <field name="grid_product_tmpl_id" invisible="1"/> <!-- product template the matrix dialog was opened for -->
+                <field name="grid_update" invisible="1"/> <!-- flag telling the server the matrix dialog returned a new grid -->
             </field>
         </field>
     </record>

@@ -74,7 +74,7 @@
                 <attribute name="readonly">1</attribute>
             </xpath>
             <xpath expr="//field[@name='move_raw_ids']" position="replace">
-                <field name="bom_product_ids" invisible="1"/>
+                <field name="bom_product_ids" invisible="1"/> <!-- used in the context of move_line_raw_ids -->
                 <field name="move_line_raw_ids" force_save="1"
                     context="{'list_view_ref': 'mrp_subcontracting.mrp_subcontracting_portal_stock_move_line_tree_view', 'default_company_id': company_id, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'bom_product_ids': bom_product_ids}"
                     />

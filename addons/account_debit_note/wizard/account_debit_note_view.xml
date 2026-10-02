@@ -6,9 +6,9 @@
             <field name="model">account.debit.note</field>
             <field name="arch" type="xml">
                 <form string="Create Debit Note">
-                    <field name="move_type" invisible="1"/>
-                    <field name="journal_type" invisible="1"/>
-                    <field name="move_ids" invisible="1"/>
+                    <field name="move_type" invisible="1"/> <!-- drives invisible of copy_lines -->
+                    <field name="journal_type" invisible="1"/> <!-- used in the domain of journal_id -->
+                    <field name="move_ids" invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
                     <group>
                          <group>
                              <field name="reason"/>

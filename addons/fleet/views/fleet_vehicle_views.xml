@@ -6,7 +6,7 @@
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
             <form string="Vehicle" js_class="fleet_form">
-                <field name="service_activity" invisible="1"/>
+                <field name="service_activity" invisible="1"/> <!-- drives invisible of the return_action_to_open button -->
                 <header>
                     <button string="Apply New Driver"
                         class="btn btn-primary"
@@ -16,9 +16,9 @@
                     <field name="state_id"  widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
-                    <field name="company_id" invisible="1"/>
-                    <field name="currency_id" invisible="1"/>
-                    <field name="country_code" invisible="1"/>
+                    <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of driver_employee_id, future_driver_employee_id, future_driver_id -->
+                    <field name="currency_id" invisible="1"/> <!-- currency of the monetary fields of this form -->
+                    <field name="country_code" invisible="1"/> <!-- used by the localisations to show their country specific fields on this form -->
                     <div class="oe_button_box" name="button_box">
                         <button name="open_assignation_logs"
                             type="object"
@@ -84,8 +84,8 @@
                     </div>
                     <group col="2">
                         <group string="Driver">
-                            <field name="active" invisible="1"/>
-                            <field name="vehicle_type" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
+                            <field name="vehicle_type" invisible="1"/> <!-- drives invisible of seats, doors and 5 more -->
                             <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]" widget="many2one_avatar_user"/>
                             <field name="future_driver_id" widget="many2one_avatar_user"/>
                             <field name="next_assignation_date" placeholder="Available"/>
@@ -187,21 +187,21 @@
                 decoration-danger="contract_renewal_overdue"
                 multi_edit="1"
                 sample="1">
-                <field name="active" column_invisible="True"/>
+                <field name="active" column_invisible="True"/> <!-- enables the Archive/Unarchive action in this list -->
                 <field name="license_plate" readonly="1"/>
                 <field name="model_id" widget="many2one_avatar" readonly="1"/>
                 <field name="category_id"/>
                 <field name="manager_id" optional="hide" widget="many2one_avatar_user"/>
                 <field name="driver_id" widget="many2one_avatar_user" readonly="1" optional="show"/>
                 <field name="future_driver_id"  widget="many2one_avatar_user" readonly="1" optional="show"/>
-                <field name="log_drivers" column_invisible="True"/>
+                <field name="log_drivers" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="vin_sn" readonly="1" optional="hide"/>
                 <field name="co2" string="CO2 Emissions" optional="hide" readonly="1"/>
                 <field name="acquisition_date" readonly="1"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1"/>
                 <field name="state_id" widget="badge" readonly="1" optional="hide"/>
-                <field name="contract_renewal_due_soon" invisible="1"/>
-                <field name="contract_renewal_overdue" invisible="1"/>
+                <field name="contract_renewal_due_soon" invisible="1"/> <!-- drives decoration-warning of the Vehicle list -->
+                <field name="contract_renewal_overdue" invisible="1"/> <!-- drives decoration-danger/warning of the Vehicle list -->
                 <field name="vehicle_properties"/>
                 <field name="contract_state" widget="badge" decoration-info="contract_state == 'open'"
                     decoration-success="contract_state == 'done'"
@@ -452,7 +452,7 @@
             <list string="Service Types" editable="bottom">
                 <field name="name"/>
                 <field name="company_id" options="{'no_create': True}"/>
-                <field name="category" column_invisible="True"/>
+                <field name="category" column_invisible="True"/> <!-- read by the fleet form js class -->
             </list>
         </field>
     </record>

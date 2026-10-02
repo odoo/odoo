@@ -11,8 +11,8 @@
                         <button icon="close" name="action_discard" type="object" string="Archive Suggestions" class="btn-secondary"/>
                         <button icon="undo" name="action_undiscard" type="object" string="Unarchive Suggestions" class="btn-secondary"/>
                     </header>
-                    <field name="active" column_invisible="True" />
-                    <field name="res_model_name" column_invisible="True" />
+                    <field name="active" column_invisible="True" /> <!-- drives invisible of the action_validate button, the action_discard button and 1 more -->
+                    <field name="res_model_name" column_invisible="True" /> <!-- read by the data cleaning common list component -->
                     <field name="res_id" widget="many2one_reference_integer" />
                     <field name="recycle_model_id" string="Recycle Rule" optional="hide" />
                     <field name="name" />
