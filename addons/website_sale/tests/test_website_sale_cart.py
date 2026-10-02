@@ -226,3 +226,24 @@ class WebsiteSaleCart(TransactionCaseWithUserPortal):
             self.assertRecordValues(order.order_line, [{
                 "display_type": "line_note",
             }])
+
+    def test_confirmed_order_in_session_is_not_retrieved(self):
+        partner = self.env['res.partner'].create({'name': 'Customer A'})
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'sale_ok': True,
+            'website_published': True,
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'website_id': self.website.id,
+            'order_line': [Command.create({'product_id': product.id})],
+        })
+        order.action_confirm()
+
+        website = self.website.with_user(self.user_portal)
+        with MockRequest(website.env, website=website, sale_order_id=order.id):
+            cart = website.sale_get_order()
+
+        self.assertEqual(order.partner_id, partner)
+        self.assertFalse(cart)
