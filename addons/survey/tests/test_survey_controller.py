@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from freezegun import freeze_time
+
 from odoo import Command, fields
 from odoo.addons.survey.tests import common
 from odoo.tests.common import HttpCase
@@ -106,9 +108,12 @@ class TestSurveyController(common.TestSurveyCommon, HttpCase):
                     post_data['page_id'] = page0.id
 
                 # Submit answers and check the submit route is returning the accurate correct answers
-                response = self._access_submit(survey, answer_token, post_data)
-                self.assertResponse(response, 200)
-                self.assertEqual(response.json()['result'][0], expected_correct_answers)
+                with freeze_time("2026-10-01"):
+                    response = self._access_submit(survey, answer_token, post_data)
+                    self.assertResponse(response, 200)
+                    self.assertEqual(response.json()['result'][0], expected_correct_answers)
+                bus_presence = self.env["bus.presence"].sudo.search([("user_id", "=", self.env.user_id)])
+                self.assertEqual(bus_presence.last_presence, "2026-10-01")
 
                 user_input.invalidate_recordset() # TDE note: necessary as lots of sudo in controllers messing with cache
 

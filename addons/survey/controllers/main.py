@@ -579,6 +579,12 @@ class Survey(http.Controller):
 
             answer_sudo.last_displayed_page_id = page_or_question_id
 
+        request.env['bus.presence'].update_presence(
+            inactivity_period=0,
+            identity_field='user_id',
+            identity_value=request.env.uid
+        )
+
         return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo)
 
     def _extract_comment_from_answers(self, question, answers):
