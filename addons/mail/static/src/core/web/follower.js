@@ -2,12 +2,10 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, types, useProps } from "@odoo/owl";
 import { FollowerSubtypeDialog } from "@mail/core/web/follower_subtype_dialog";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 export class Follower extends Component {
     static template = "mail.Follower";
-    static components = { DropdownItem };
 
     setup() {
         this.store = useService("mail.store");
@@ -40,6 +38,6 @@ export class Follower extends Component {
     async onClickRemove() {
         const thread = this.props.follower.thread;
         await this.props.follower.remove();
-        this.props.onFollowerChanged?.(thread);
+        this.props.onFollowerChanged?.(thread, { removed: true });
     }
 }
