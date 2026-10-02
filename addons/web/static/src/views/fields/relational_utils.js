@@ -26,7 +26,7 @@ import { createElement, parseXML } from "@web/core/utils/xml";
 import { extractFieldsFromArchInfo, useRecordObserver } from "@web/model/relational_model/utils";
 import { render, useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
-import { loadSubViews, useFormViewInDialog } from "@web/views/form/form_controller";
+import { loadSubViews } from "@web/views/form/form_controller";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { computeViewClassName, isNull } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
@@ -775,7 +775,6 @@ export class X2ManyFieldDialog extends Component {
                 () => [this.record.isInEdition]
             );
         }
-        useFormViewInDialog();
     }
 
     get dialogProps() {

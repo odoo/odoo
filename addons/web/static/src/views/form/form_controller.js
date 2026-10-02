@@ -12,7 +12,7 @@ import { omit } from "@web/core/utils/objects";
 import { createElement, parseXML } from "@web/core/utils/xml";
 import { useModel } from "@web/model/model";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { render, useEnv, useSubEnv } from "@web/owl2/utils";
+import { render, useSubEnv } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
@@ -42,7 +42,6 @@ import {
     onMounted,
     onPatched,
     onWillDestroy,
-    onWillUnmount,
     proxy,
     signal,
     t,
@@ -115,16 +114,6 @@ export async function loadSubViews(fieldNodes, fields, context, resModel, viewSe
     }
 }
 
-export function useFormViewInDialog() {
-    const env = useEnv();
-    onMounted(() => {
-        env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:ADD");
-    });
-
-    onWillUnmount(() => {
-        env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE");
-    });
-}
 // -----------------------------------------------------------------------------
 
 export const formControllerProps = {
@@ -184,10 +173,6 @@ export class FormController extends Component {
         if (this.env.inDialog) {
             this.display.controlPanel = false;
         }
-
-        this.formInDialog = 0;
-        useBus(this.env.bus, "FORM-CONTROLLER:FORM-IN-DIALOG:ADD", () => this.formInDialog++);
-        useBus(this.env.bus, "FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE", () => this.formInDialog--);
 
         this.disableSaveOnVisibilityChange = false;
 
@@ -348,10 +333,6 @@ export class FormController extends Component {
                     focusPrimaryButton();
                 }
             });
-        }
-
-        if (this.env.inDialog) {
-            useFormViewInDialog();
         }
 
         this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
@@ -559,7 +540,11 @@ export class FormController extends Component {
                 root.data[fieldName].editedRecord
             );
         });
-        if (document.visibilityState === "hidden" && this.formInDialog === 0 && !isEditingX2Many) {
+        if (
+            document.visibilityState === "hidden" &&
+            !this.dialogService.hasOpenDialogs &&
+            !isEditingX2Many
+        ) {
             // calling isDirty forces all fields to commit their changes
             const isDirty = await this.model.root.isDirty();
             if (isDirty && !this.disableSaveOnVisibilityChange) {

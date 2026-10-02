@@ -101,6 +101,10 @@ export class DialogPlugin extends Plugin {
         return remove;
     }
 
+    get hasOpenDialogs() {
+        return this.stack.length > 0;
+    }
+
     closeAll(params) {
         for (const dialog of [...this.stack].reverse()) {
             dialog.close(params);

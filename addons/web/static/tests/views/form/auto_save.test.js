@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { press, unload, waitFor } from "@odoo/hoot-dom";
-import { animationFrame, mockSendBeacon } from "@odoo/hoot-mock";
+import { animationFrame, mockSendBeacon, runAllTimers } from "@odoo/hoot-mock";
 import {
     contains,
     defineActions,
@@ -17,6 +17,7 @@ import {
     onRpc,
 } from "../../web_test_helpers";
 
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { WebClient } from "@web/webclient/webclient";
 
 onRpc("has_group", () => true);
@@ -1367,6 +1368,120 @@ test(`doesn't autosave while a x2many list row is being edited (visibility chang
     await contains(`.o_form_view`).click();
     expect(`.o_selected_row`).toHaveCount(0);
 
+    await hideTab();
+    expect.verifySteps(["web_save"]);
+});
+
+test.tags("desktop");
+test(`doesn't autosave when a many2one create and edit dialog is open (visibility change)`, async () => {
+    Partner._fields.product_id = fields.Many2one({ relation: "product" });
+
+    class Product extends models.Model {
+        name = fields.Char();
+        _views = {
+            form: `<form><field name="name"/></form>`,
+        };
+    }
+    defineModels([Product]);
+
+    onRpc("web_save", () => {
+        expect.step("web_save");
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="expertise"/><field name="product_id"/></form>`,
+        resId: 1,
+    });
+    await fieldInput("expertise").edit("HR");
+    await contains("div[name=product_id] input").edit("abc", { confirm: false });
+    await runAllTimers();
+    await contains("div[name=product_id] .o_m2o_dropdown_option_create_edit").click();
+    expect(`.modal .o_form_view`).toHaveCount(1);
+
+    await hideTab();
+    await animationFrame();
+    expect(`.modal .o_form_view`).toHaveCount(1);
+    expect.verifySteps([]);
+});
+
+test(`doesn't autosave when an action dialog (target new) is open (visibility change)`, async () => {
+    class Product extends models.Model {
+        name = fields.Char();
+        _records = [{ id: 1, name: "xphone" }];
+        _views = {
+            form: `<form><field name="name"/></form>`,
+        };
+    }
+    defineModels([Product]);
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            res_id: 1,
+            views: [[false, "form"]],
+        },
+        {
+            id: 2,
+            name: "Wizard",
+            res_model: "product",
+            res_id: 1,
+            target: "new",
+            views: [[false, "form"]],
+        },
+    ]);
+    Partner._views = {
+        form: `
+            <form>
+                <button type="action" name="2" string="Open wizard"/>
+                <field name="expertise"/>
+            </form>`,
+    };
+    onRpc("partner", "web_save", () => {
+        expect.step("web_save");
+    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    await contains("button[name='2']").click();
+    expect(`.modal .o_form_view`).toHaveCount(1);
+    expect.verifySteps([]);
+    // make the host dirty while the wizard is open
+    await fieldInput("expertise").edit("HR", { force: true });
+
+    await hideTab();
+    await animationFrame();
+    expect(`.modal .o_form_view`).toHaveCount(1);
+    expect.verifySteps([]);
+});
+
+test(`doesn't autosave when a non-form dialog is open (visibility change)`, async () => {
+    onRpc("web_save", () => {
+        expect.step("web_save");
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="expertise"/></form>`,
+        resId: 1,
+    });
+    await fieldInput("expertise").edit("HR");
+    getService("dialog").add(ConfirmationDialog, {
+        body: "Are you sure?",
+        confirm() {},
+        cancel() {},
+    });
+    await animationFrame();
+    expect(`.modal`).toHaveCount(1);
+
+    await hideTab();
+    await animationFrame();
+    expect(`.modal`).toHaveCount(1);
+    expect.verifySteps([]);
+
+    // once the dialog is closed, hiding the tab saves again
+    await contains(`.modal .btn-secondary`).click();
+    expect(`.modal`).toHaveCount(0);
     await hideTab();
     expect.verifySteps(["web_save"]);
 });

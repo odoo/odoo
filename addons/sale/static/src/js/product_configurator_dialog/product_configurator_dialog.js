@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, useProps, proxy, t } from "@odoo/owl";
+import { Component, useProps, proxy, t } from "@odoo/owl";
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -92,8 +92,6 @@ export class ProductConfiguratorDialog extends Component {
         }
         this._checkExclusions(this.state.products[0]);
 
-        onMounted(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:ADD"));
-        onWillUnmount(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE"));
     }
 
     get totalMessage() {

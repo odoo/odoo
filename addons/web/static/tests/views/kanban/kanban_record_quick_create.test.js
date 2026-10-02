@@ -45,6 +45,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { AnimatedNumber } from "@web/views/view_components/animated_number";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { WebClient } from "@web/webclient/webclient";
 
 const { IrAttachment } = webModels;
@@ -1791,6 +1792,90 @@ test("quick create record: hiding tab doesn't close it while a dialog it opened 
     expect(".o_dialog").toHaveCount(1, {
         message: "the dialog opened from the quick create should not be closed either",
     });
+});
+
+test.tags("desktop");
+test("quick create record: hiding tab doesn't close it while an x2many dialog it opened is still open", async () => {
+    Partner._fields.child_ids = fields.One2many({ relation: "partner" });
+    Partner._views["form,some_view_ref"] = `
+        <form>
+            <field name="foo"/>
+            <field name="child_ids">
+                <kanban>
+                    <templates>
+                        <t t-name="card"><field name="foo"/></t>
+                    </templates>
+                </kanban>
+                <form><field name="foo"/></form>
+            </field>
+        </form>
+    `;
+
+    onRpc("partner", "web_save", () => {
+        throw new Error("should not save/close the quick create while the dialog is open");
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        groupBy: ["bar"],
+        arch: `
+            <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    await quickCreateKanbanRecord();
+    await editKanbanRecordQuickCreateInput("foo", "test");
+    await contains(".o_kanban_quick_create .o-kanban-button-new").click();
+    expect(".o_dialog").toHaveCount(1);
+
+    await hideTab();
+    await animationFrame();
+    expect(".o_kanban_quick_create").toHaveCount(1);
+    expect(".o_dialog").toHaveCount(1);
+});
+
+test.tags("desktop");
+test("quick create record: hiding tab doesn't close it while a non-form dialog is open", async () => {
+    Partner._views["form,some_view_ref"] = `<form><field name="foo"/></form>`;
+
+    onRpc("partner", "web_save", () => {
+        throw new Error("should not save/close the quick create while the dialog is open");
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        groupBy: ["bar"],
+        arch: `
+            <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    await quickCreateKanbanRecord();
+    await editKanbanRecordQuickCreateInput("foo", "test");
+    getService("dialog").add(ConfirmationDialog, {
+        body: "Are you sure?",
+        confirm() {},
+        cancel() {},
+    });
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+
+    await hideTab();
+    await animationFrame();
+    expect(".o_kanban_quick_create").toHaveCount(1);
+    expect(".o_dialog").toHaveCount(1);
 });
 
 test("quick create record: cancel when dirty", async () => {
