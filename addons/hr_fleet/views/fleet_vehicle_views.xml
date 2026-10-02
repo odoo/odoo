@@ -53,10 +53,10 @@
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='driver_id']" position="after">
-                <field name="driver_employee_id" invisible="1"/>
+                <field name="driver_employee_id" invisible="1"/> <!-- drives invisible of the action_open_employee button -->
             </xpath>
             <xpath expr="//field[@name='future_driver_id']" position="after">
-                <field name="future_driver_employee_id" invisible="1"/>
+                <field name="future_driver_employee_id" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
             </xpath>
             <button name="open_assignation_logs" position="before">
                 <button name="action_open_employee" type="object" class="oe_stat_button" icon="badge" groups="hr.group_hr_user" invisible="not driver_employee_id">

@@ -36,7 +36,7 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_see_packages']" position="after">
-                <field name="repair_ids" invisible="1"/>
+                <field name="repair_ids" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                 <button name="action_view_repairs" type="object"
                         class="oe_stat_button" icon="build"
                         invisible="nbr_repairs == 0">

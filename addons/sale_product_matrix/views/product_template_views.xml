@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
             <group name="upsell" position="inside">
-                <field name="has_configurable_attributes" invisible="1"/>
+                <field name="has_configurable_attributes" invisible="1"/> <!-- drives invisible of product_add_mode -->
                 <field name="product_add_mode" invisible="not has_configurable_attributes"/>
             </group>
         </field>
@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="sale.product_template_view_form"/>
         <field name="arch" type="xml">
             <field name="optional_product_ids" position="before">
-                <field name="product_add_mode" widget="radio" invisible="1"/>
+                <field name="product_add_mode" widget="radio" invisible="1"/> <!-- used in the invisible attribute(s) this view sets on other fields -->
             </field>
             <field name="optional_product_ids" position="attributes">
                 <attribute name="invisible">product_add_mode == 'grid'</attribute>
