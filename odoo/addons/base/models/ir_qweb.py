@@ -1465,7 +1465,7 @@ class IrQweb(models.AbstractModel):
         attributes.
         """
         return el.tag != 't' and 'groups' not in el.attrib and not any(
-            att.startswith('t-') and att not in ('t-tag-open', 't-inner-content')
+            att.startswith('t-') and att not in ('t-tag-open', 't-tag-close', 't-inner-content')
             for att in el.attrib
         )
 
