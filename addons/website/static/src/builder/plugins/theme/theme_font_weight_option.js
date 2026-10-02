@@ -16,6 +16,7 @@ export class FontWeightPicker extends BaseOptionComponent {
     props = useProps({
         variables: t.array(),
         weights: t.array(),
+        action: t.string(),
         disabled: t.boolean().optional(false),
     });
 }
@@ -26,6 +27,7 @@ export class ThemeFontWeightOption extends BaseOptionComponent {
     static dependencies = ["customizeWebsite", "themeTab"];
     props = useProps({
         fontVariable: t.string(),
+        action: t.string().optional("previewWebsiteFontWeight"),
         regularVariables: t.array(),
         lightVariables: t.array().optional(),
         boldVariables: t.array().optional(),
@@ -105,5 +107,27 @@ export class CustomizeWebsiteFontWeightAction extends CustomizeWebsiteVariableAc
             variableNames.map((variableName) => [variableName, value])
         );
         await this.dependencies.customizeWebsite.customizeWebsiteVariables(variables, nullValue);
+    }
+}
+
+export class PreviewWebsiteFontWeightAction extends CustomizeWebsiteFontWeightAction {
+    static id = "previewWebsiteFontWeight";
+    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
+    setup() {}
+    apply({ params: { mainParam: variableNames, nullValue = "null" }, value }) {
+        const variables = {};
+        const previewValues = {};
+        for (const name of variableNames) {
+            variables[name] = value;
+            if (!value) {
+                // "Auto": the CSS falls back to the compiled weight.
+                previewValues[name] = "initial";
+            }
+        }
+        this.dependencies.customizeWebsite.previewWebsiteVariables(
+            variables,
+            nullValue,
+            previewValues
+        );
     }
 }

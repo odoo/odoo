@@ -256,16 +256,23 @@ export class CustomizeWebsitePlugin extends Plugin {
      *
      * @param {Object<string, string>} variables
      * @param {string} [nullValue="null"]
+     * @param {Object<string, string>} [previewValues] values set on the root
+     *        but never written, e.g. a font's family next to its name. For a
+     *        name also in `variables`, what to show instead of its value.
      */
-    previewWebsiteVariables(variables, nullValue = "null") {
+    previewWebsiteVariables(variables, nullValue = "null", previewValues = {}) {
         const style = this.document.documentElement.style;
         const step = { previous: {}, next: {} };
-        for (const [name, value] of Object.entries(variables)) {
+        for (const name of new Set([...Object.keys(variables), ...Object.keys(previewValues)])) {
             step.previous[name] = {
                 pending: this.pendingVariables[name],
                 inline: style.getPropertyValue(`--${name}`),
             };
-            step.next[name] = { pending: value || nullValue, inline: value || "" };
+            const value = variables[name];
+            step.next[name] = {
+                pending: name in variables ? value || nullValue : this.pendingVariables[name],
+                inline: previewValues[name] ?? (value || ""),
+            };
         }
         // The root is outside the observed editable: the step goes to the
         // history as commit data, which reverts hover previews and undo.
