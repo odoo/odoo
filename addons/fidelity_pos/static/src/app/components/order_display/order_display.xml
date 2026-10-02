@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="fidelity_pos.OrderDisplay" t-inherit="point_of_sale.OrderDisplay" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('order-summary')]" position="inside" >
+            <div t-foreach="this.fidelityPointsByPrograms"
+                t-as="fidelity"
+                t-key="fidelity_index"
+                class="subentry d-flex justify-content-between w-100 fs-6 text-muted">
+                <span t-esc="fidelity.name" />
+                <span t-esc="fidelity.points"/>
+            </div>
+        </xpath>
+    </t>
+</templates>
