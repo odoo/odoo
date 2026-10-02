@@ -741,7 +741,8 @@
             <field name="name">mrp.production.kanban</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" card_id="%(mrp.mrp_production_card_view)d" sample="1" default_group_by="date_start:week" js_class="mrp_production_kanban">
+            <kanban class="o_kanban_mobile" card_id="%(mrp.mrp_production_card_view)d" quick_create="0" sample="1"
+                default_group_by="date_start:week" js_class="mrp_production_kanban">
                     <progressbar field="state" colors='{"draft": "info", "confirmed": "300", "progress": "warning", "to_close": "success", "done": "success", "cancel": "danger"}'/>
                 </kanban>
             </field>
