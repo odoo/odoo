@@ -7,7 +7,6 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { SelectTemplateAction } from "../customize_website_plugin";
-import { closestBlock } from "@html_editor/utils/blocks";
 
 export class CountdownOption extends BaseOptionComponent {
     static id = "countdown_option";
@@ -30,14 +29,10 @@ export class CountdownOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         so_content_addition_selectors: [".s_countdown"],
-        fragment_to_insert_processors: (fragment) => {
-            const block = closestBlock(
-                this.dependencies.selection.getEditableSelection().anchorNode
-            );
-            if (block.closest(".s_countdown_metrics")) {
-                fragment.innerHTML = "";
+        should_bypass_insertion_predicates: (selection) => {
+            if (closestElement(selection.focusNode, ".s_countdown_metrics")) {
+                return false;
             }
-            return fragment;
         },
         builder_actions: {
             SetEndActionAction,

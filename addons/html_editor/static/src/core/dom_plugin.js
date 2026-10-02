@@ -107,6 +107,10 @@ const nodeToText = (node, isMultiline, doc) => {
 };
 
 /**
+ * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
+ */
+
+/**
  * @typedef {Object} DomShared
  * @property { DomPlugin['normalize'] } normalize
  * @property { DomPlugin['insert'] } insert
@@ -132,6 +136,7 @@ const nodeToText = (node, isMultiline, doc) => {
  * @typedef {((insertedNodes: Node[]) => void)[]} inserted_content_processors
  * @typedef {((position: [node: Node, offset: number]) => void)[]} position_after_insertion_processors
  *
+ * @typedef {((selection: EditorSelection, nodes: Node[]) => boolean)[]} should_bypass_insertion_predicates
  * @typedef {((element: HTMLElement) => boolean | void)[]} can_hold_selection_after_insertion_predicates
  * @typedef {((block: HTMLElement, parent: HTMLElement) => boolean | void)[]} can_insert_block_in_parent_predicates
  * @typedef {((block: HTMLElement) => boolean)[]} is_retagging_safe_predicates
@@ -338,7 +343,7 @@ export class DomPlugin extends Plugin {
         const fragment = this.makeFragment(content, plainTextMode);
         this.dependencies.delete.deleteSelection();
         const nodes = this.processFragmentToInsert(fragment, plainTextMode);
-        if (!nodes.length) {
+        if (!nodes.length || this.shouldBypassInsertion(getNodesFromNodesAndFragments(nodes))) {
             return [];
         }
 
@@ -352,13 +357,23 @@ export class DomPlugin extends Plugin {
     }
 
     /**
+     * @see {insert}
+     * @param {Node[]} nodes to insert
+     * @returns {boolean} true if the insertion should be bypassed
+     */
+    shouldBypassInsertion(nodes) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        return !!this.checkPredicates("should_bypass_insertion_predicates", selection, nodes);
+    }
+
+    /**
      * Based on the given selection (or the current editable selection), use
      * selector resources to determine whether inserting should be done as plain
      * text or not and if so, whether multiline insertion (with `\n` characters)
      * is supported. Return the plain text mode, or `false` if neither is
      * applicable.
      *
-     * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
+     * @param {EditorSelection} selection
      * @returns {keyof typeof PLAIN_TEXT_MODES | false}
      */
     shouldInsertAsPlainText(selection = this.dependencies.selection.getEditableSelection()) {
