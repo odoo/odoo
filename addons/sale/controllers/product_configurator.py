@@ -53,7 +53,11 @@ class SaleProductConfiguratorController(Controller):
                 product_template.attribute_line_ids - combination.attribute_line_id).filtered(
                 lambda ptal: ptal.attribute_id.display_type != 'multi')
             combination += unconfigured_ptals.mapped(
-                lambda ptal: ptal.product_template_value_ids._only_active()[:1]
+                # `_only_active()` checks `ptav_active`, per-template; also require the
+                # underlying value's own `active`, global to the attribute.
+                lambda ptal: ptal.product_template_value_ids._only_active().filtered(
+                    lambda ptav: ptav.product_attribute_value_id.active
+                )[:1]
             )
         if not combination:
             combination = product_template._get_first_possible_combination()

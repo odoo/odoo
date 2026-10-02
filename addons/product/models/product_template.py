@@ -912,7 +912,8 @@ class ProductTemplate(models.Model):
                 tuple(product.product_template_attribute_value_ids.ids)
                 for product in archived_products
                 if product.product_template_attribute_value_ids and all(
-                    ptav.ptav_active or combination_ids and ptav.id in combination_ids
+                    (ptav.ptav_active and ptav.product_attribute_value_id.active)
+                    or combination_ids and ptav.id in combination_ids
                     for ptav in product.product_template_attribute_value_ids
                 )
             ) - active_combinations),
