@@ -48,28 +48,7 @@
                                     <t t-set="product_price">
                                         <br t-if="combination_info['hide_price']"/>
                                         <div t-else="" class="align-middle o_wish_price">
-                                            <span aria-label="Sale price">
-                                                <t t-out="combination_info['price']"
-                                                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-                                                />
-                                            </span>
-                                            <small
-                                                t-if="combination_info['has_discounted_price']"
-                                                class="cart_product_base_unit_price text-muted"
-                                            >
-                                                <del
-                                                    aria-label="Original price"
-                                                    t-out="combination_info['list_price']"
-                                                    class="text-nowrap"
-                                                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-                                                    name="product_list_price"
-                                                />
-                                            </small>
-                                            <t
-                                                t-if="combination_info.get('base_unit_price')"
-                                                t-call="website_sale.base_unit_price"
-                                                base_unit_price="combination_info['base_unit_price']"
-                                            />
+                                            <t t-call="website_sale.product_price_and_base_unit"/>
                                         </div>
                                     </t>
                                     <t t-set="product_actions">

@@ -803,6 +803,7 @@ class ProductTemplate(models.Model):
                     taxes=taxes,
                     website=website,
                 ),
+                "currency": currency,
             }
             pricelist_item_sudo = (
                 template.env["product.pricelist.item"].sudo().browse(pricelist_rule_id)
@@ -1000,7 +1001,7 @@ class ProductTemplate(models.Model):
 
         combination_info = {
             **price_info,
-            "prevent_sale": "price" not in price_info
+            "prevent_sale": price_info["hide_price"]
             or website._prevent_product_sale(product_or_template, False),
             "show_extra_price": pricelist_rule.compute_price != "fixed",
         }
@@ -1126,7 +1127,7 @@ class ProductTemplate(models.Model):
         if website.prevent_sale and website.prevent_sale_for == "zero_price" and is_zero_price:
             # If the price should be hidden, we don't want to send any price information regarding
             # the product
-            return {}
+            return {"hide_price": True}
 
         pricelist_rule = self.env["product.pricelist.item"].browse(pricelist_rule_id)
         list_price = self._get_price_before_discount(
@@ -1140,11 +1141,12 @@ class ProductTemplate(models.Model):
         taxes = fiscal_position.map_tax(product_taxes) if product_taxes else self.env["account.tax"]
 
         price_info = {
+            "hide_price": False,
             "price": price,
             "list_price": list_price,
             "has_discounted_price": has_discounted_price,
-            # Additional info to simplify overrides
             "currency": currency,
+            # Additional info to simplify overrides
             "pricelist_rule": pricelist_rule,
             "untaxed_price": price,
             "product_taxes": product_taxes,  # taxes before fpos mapping
@@ -1199,7 +1201,9 @@ class ProductTemplate(models.Model):
             quantity,
             uom or self._get_main_uom(),
             website or self.env.website,
-            pricelist or request.pricelist.with_context(self.env.context),
+            pricelist
+            if pricelist is not None
+            else request.pricelist.with_context(self.env.context),
             fiscal_position or request.fiscal_position,
             **kwargs,
         )

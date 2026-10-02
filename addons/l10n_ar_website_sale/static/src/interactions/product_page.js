@@ -11,6 +11,7 @@ patch(ProductPage.prototype, {
      * @param {Object} combination
      */
     async _onChangeCombination(ev, parent, combination) {
+        return;
         await super._onChangeCombination(...arguments);
         const currencyValue = parent.querySelector(
             '.o_l10n_ar_price_tax_excluded .oe_currency_value'

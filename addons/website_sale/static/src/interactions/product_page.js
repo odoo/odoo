@@ -207,6 +207,7 @@ export class ProductPage extends Interaction {
     }
 
     onHoverPackagingButton(ev) {
+        return;
         const parent = ev.target.closest(".js_product");
         const currentPackagingPrice = Number(this._getUoMPrice(parent).toFixed(2));
         const hoveredPackagingPrice = Number(
@@ -698,6 +699,7 @@ export class ProductPage extends Interaction {
      * @param {Object} attributeValueImages
      */
     async _onChangeCombination(ev, parent, combination, attributeValueImages) {
+        return;
         const isCombinationPossible = !!combination.is_combination_possible;
         const precision = combination.currency_precision;
         const productPrice = parent.querySelector('.product_price');
@@ -776,7 +778,7 @@ export class ProductPage extends Interaction {
         }
 
         const price = parent.querySelector('.oe_price')?.querySelector('.oe_currency_value');
-        const defaultPrice = parent.querySelector('.oe_default_price')
+        const defaultPrice = parent.querySelector('.oe_list_price')
             ?.querySelector('.oe_currency_value');
         const comparePrice = parent.querySelector('.oe_compare_list_price');
         if (price) {

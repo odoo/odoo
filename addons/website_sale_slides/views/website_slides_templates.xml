@@ -4,12 +4,12 @@
 <!-- LESSON -->
 <template id="lesson_content_quiz" inherit_id="website_slides.lesson_content_quiz">
     <xpath expr="//div[hasclass('o_wslides_js_lesson_quiz')]" position="attributes">
-        <attribute name="t-att-data-price">product_info['price'] if product_info else None</attribute>
-        <attribute name="t-att-data-currency-name">product_info['currency'].name if product_info else None</attribute>
-        <attribute name="t-att-data-currency-symbol">product_info['currency'].symbol if product_info else None</attribute>
-        <attribute name="t-att-data-has-discounted-price">product_info['has_discounted_price'] if product_info else None</attribute>
+        <attribute name="t-att-data-price">price_info.get('price')</attribute>
+        <attribute name="t-att-data-currency-name">price_info['currency'].name if price_info.get('currency') else None</attribute>
+        <attribute name="t-att-data-currency-symbol">price_info['currency'].symbol if price_info.get('currency') else None</attribute>
+        <attribute name="t-att-data-has-discounted-price">price_info.get('has_discounted_price')</attribute>
         <attribute name="t-att-data-product-id">slide.channel_id.product_id.id if slide.channel_id.product_id else None</attribute>
-        <attribute name="t-att-data-list-price">product_info['list_price'] if product_info else None</attribute>
+        <attribute name="t-att-data-list-price">price_info.get('list_price')</attribute>
     </xpath>
 </template>
 
@@ -52,12 +52,12 @@
 <!-- FULLSCREEN -->
 <template id="slide_fullscreen" inherit_id="website_slides.slide_fullscreen">
     <xpath expr="//div[hasclass('o_wslides_fs_main')]" position="attributes">
-        <attribute name="t-att-data-price">product_info['price'] if product_info else None</attribute>
-        <attribute name="t-att-data-currency-name">product_info['currency'].name if product_info else None</attribute>
-        <attribute name="t-att-data-currency-symbol">product_info['currency'].symbol if product_info else None</attribute>
-        <attribute name="t-att-data-has-discounted-price">product_info['has_discounted_price'] if product_info else None</attribute>
-        <attribute name="t-att-data-product-id">slide.channel_id.product_id.id if product_info else None</attribute>
-        <attribute name="t-att-data-list-price">product_info['list_price'] if product_info else None</attribute>
+        <attribute name="t-att-data-price">price_info.get('price')</attribute>
+        <attribute name="t-att-data-currency-name">price_info['currency'].name if price_info.get('currency') else None</attribute>
+        <attribute name="t-att-data-currency-symbol">price_info['currency'].symbol if price_info.get('currency') else None</attribute>
+        <attribute name="t-att-data-has-discounted-price">price_info.get('has_discounted_price')</attribute>
+        <attribute name="t-att-data-product-id">slide.channel_id.product_id.id if slide.channel_id.product_id else None</attribute>
+        <attribute name="t-att-data-list-price">price_info.get('list_price')</attribute>
     </xpath>
 </template>
 
@@ -111,24 +111,19 @@
 </template>
 
 <template name="Buy Course Button" id="course_buy_course_button">
-    <t t-if="product_info and channel.product_id.website_published and not channel.is_member">
-        <div t-attf-class="text-center d-flex align-items-center text-center pb-1 #{'justify-content-between' if product_info['has_discounted_price'] else 'justify-content-around'}">
-            <div class="css_editable_mode_hidden">
-                <!-- real price -->
-                <div t-attf-class="oe_price fw-bold text-nowrap my-2 #{'h4' if len(str(product_info['price'])) > 10 else 'h2'}"
-                     t-out="product_info['price']"
-                     t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
-                <span style="display:none;" t-out="product_info['price']"/>
-                <span style="display:none;" t-out="product_info['currency'].name"/>
-                <!-- original discounted price, if any -->
-                <del t-att-class="'text-600 text-nowrap oe_default_price %s' % ('' if product_info['has_discounted_price'] else 'd-none')"
-                     t-out="product_info['list_price']"
-                     t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
-            </div>
-            <div class="css_non_editable_mode_hidden decimal_precision oe_price fw-bold text-nowrap h2 my-2"
-                 t-att-data-precision="str(product_info['currency'].decimal_places)">
-                <span t-field="channel.product_id.list_price" t-options="{'widget': 'monetary', 'display_currency': product_info['currency']}"/>
-            </div>
+    <t t-if="channel.product_id.website_published and not channel.is_member">
+        <div
+            t-if="not price_info['hide_price']"
+            t-attf-class="
+                d-flex align-items-center text-center pb-1
+                #{'justify-content-between' if price_info['has_discounted_price'] else 'justify-content-around'}
+            "
+        >
+            <t
+                t-call="website_sale.product_price"
+                product="channel.product_id"
+                _price_classes.f="fw-bold my-2 {{'h4' if len(str(price_info['price'])) > 10 else 'h2'}}"
+            />
         </div>
         <t t-if="not invite_preview and channel.prerequisite_channel_ids and not channel.prerequisite_user_has_completed">
             <small t-if="len(channel.prerequisite_channel_ids) == 1" class="text-center mb-2">
