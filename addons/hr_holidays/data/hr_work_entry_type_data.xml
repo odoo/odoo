@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo><data noupdate="1">
-<!-- Global Leave Types -->
+<!-- Time off configuration of the types every country defines, by code -->
     <!-- Paid Time Off -->
     <function model="hr.work.entry.type" name="write">
         <value model="hr.work.entry.type" eval="obj().sudo().search([('code', '=', '016.00')]).ids"/>
