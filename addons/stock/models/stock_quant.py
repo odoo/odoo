@@ -442,8 +442,12 @@ class StockQuant(models.Model):
             self._quant_tasks()
 
         ctx = dict(self.env.context or {})
-        if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
+        is_manager = self.env.user.has_group('stock.group_stock_manager')
+        is_user = self.env.user.has_group('stock.group_stock_user')
+        if is_user and not is_manager:
             ctx['search_default_my_count'] = True
+        if is_manager:
+            ctx['create_locations'] = True
         view_id = self.env.ref('stock.view_stock_quant_tree_inventory_editable').id
         action = {
             'name': _('Physical Inventory'),
@@ -1328,16 +1332,22 @@ class StockQuant(models.Model):
 
     def _set_view_context(self):
         """ Adds context when opening quants related views. """
+        ctx = {}
         if not self.env.user.has_group('stock.group_stock_multi_locations'):
             company_user = self.env.company
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
             if warehouse:
-                self = self.with_context(default_location_id=warehouse.lot_stock_id.id, hide_location=not self.env.context.get('always_show_loc', False))
+                ctx['default_location_id'] = warehouse.lot_stock_id.id
+                ctx['hide_location'] = not self.env.context.get('always_show_loc', False)
+
+        if self.env.user.has_group('stock.group_stock_manager'):
+            ctx['create_locations'] = True
 
         # If user have rights to write on quant, we set quants in inventory mode.
         if self.env.user.has_group('stock.group_stock_user'):
-            self = self.with_context(inventory_mode=True)
-        return self
+            ctx['inventory_mode'] = True
+
+        return self.with_context(ctx)
 
     @api.model
     def _get_quants_action(self, extend=False):
