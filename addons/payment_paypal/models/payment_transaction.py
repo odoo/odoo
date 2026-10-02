@@ -144,9 +144,7 @@ class PaymentTransaction(models.Model):
         )
 
     def _get_paypal_3ds_policy(self):
-        is_3ds_required = (
-            self.env["ir.config_parameter"].sudo().get_bool("payment_paypal.is_3ds_required")
-        )
+        is_3ds_required = self.provider_id.paypal_is_3ds_required
         return "SCA_ALWAYS" if is_3ds_required else "SCA_WHEN_REQUIRED"
 
     def _send_payment_request(self):

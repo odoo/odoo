@@ -117,6 +117,13 @@
                     />
                 </div>
             </group>
+            <group name="provider_options" position="inside">
+                <field
+                    name="paypal_is_3ds_required"
+                    invisible="code != 'paypal'"
+                    groups="base.group_no_one"
+                />
+            </group>
         </field>
     </record>
 

@@ -8,5 +8,6 @@ UPDATE payment_provider
        paypal_is_oauth_onboarded = NULL,
        paypal_payments_receivable = NULL,
        paypal_email_confirmed = NULL,
+       paypal_is_3ds_required = NULL,
        paypal_access_token = NULL,
        paypal_access_token_expiry = NULL;
