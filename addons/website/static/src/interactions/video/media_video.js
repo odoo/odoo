@@ -14,10 +14,9 @@ export class MediaVideo extends Interaction {
     dynamicContent = {
         _popup: {
             "t-on-shown.bs.modal": () => {
-                // TODO still oeExpression to remove someday
                 this.services.website_cookies.manageIframeSrc(
                     this.el.querySelector("iframe"),
-                    this.el.dataset.embedUrl || this.el.dataset.src || this.el.dataset.oeExpression
+                    this.iframeSrc
                 );
             },
             "t-on-hide.bs.modal": () => {
@@ -47,6 +46,8 @@ export class MediaVideo extends Interaction {
         if (!iframeEl) {
             iframeEl = generateVideoIframe(this.el, this.services.website_cookies.manageIframeSrc);
         }
+
+        this.iframeSrc = iframeEl?.dataset.nocookieSrc || iframeEl?.getAttribute("src") || "";
 
         if (iframeEl && !iframeEl.getAttribute("aria-label")) {
             iframeEl.setAttribute("aria-label", _t("Media video"));
