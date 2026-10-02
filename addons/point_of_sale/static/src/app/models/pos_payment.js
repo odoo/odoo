@@ -117,10 +117,6 @@ export class PosPayment extends Base {
             : false;
     }
 
-    setCashierReceipt(value) {
-        this.cashier_receipt = value;
-    }
-
     isElectronic() {
         return Boolean(this.getPaymentStatus());
     }

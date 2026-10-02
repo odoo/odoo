@@ -53,10 +53,6 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
         );
     }
 
-    get isCurrentUserOrganizer() {
-        return this.props.record.rawRecord.partner_id[0] === user.partnerId;
-    }
-
     get isEventPrivate() {
         return this.props.record.rawRecord.privacy === "private";
     }
@@ -66,10 +62,6 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
             this.props.record.rawRecord.partner_ids.some((partner) => partner !== user.partnerId) &&
             this.props.record.isCurrentPartner
         );
-    }
-
-    get isEventDetailsVisible() {
-        return this.isEventPrivate ? this.isEventEditable : true;
     }
 
     /**

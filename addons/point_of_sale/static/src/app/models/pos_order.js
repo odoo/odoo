@@ -248,16 +248,6 @@ export class PosOrder extends PosOrderAccounting {
         return true;
     }
 
-    getOrderline(id) {
-        const orderlines = this.lines;
-        for (let i = 0; i < orderlines.length; i++) {
-            if (orderlines[i].id === id) {
-                return orderlines[i];
-            }
-        }
-        return null;
-    }
-
     getLastOrderline() {
         const orderlines = this.lines;
         return this.lines.at(orderlines.length - 1);
@@ -674,18 +664,6 @@ export class PosOrder extends PosOrderAccounting {
 
     get floatingOrderName() {
         return this.floating_order_name || this.tracking_number.toString() || "";
-    }
-
-    sortBySequenceAndCategory(a, b) {
-        const seqA = a.product_id?.pos_categ_ids[0]?.sequence ?? 0;
-        const seqB = b.product_id?.pos_categ_ids[0]?.sequence ?? 0;
-        const pos_categ_id_A = a.product_id?.pos_categ_ids[0]?.id ?? 0;
-        const pos_categ_id_B = b.product_id?.pos_categ_ids[0]?.id ?? 0;
-
-        if (seqA !== seqB) {
-            return seqA - seqB;
-        }
-        return pos_categ_id_A - pos_categ_id_B;
     }
 
     get discountLines() {

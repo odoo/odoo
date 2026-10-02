@@ -43,10 +43,6 @@ export class ComboPage extends Component {
         }
     }
 
-    get currentCombo() {
-        return this.props.productTemplate;
-    }
-
     get selectedChoice() {
         return this.comboChoices[this.state.selectedChoiceIndex];
     }

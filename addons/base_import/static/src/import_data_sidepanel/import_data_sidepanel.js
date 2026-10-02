@@ -63,11 +63,6 @@ export class ImportDataSidepanel extends Component {
         this.props.onOptionChanged(name, isNaN(parseFloat(value)) ? value : Number(value));
     }
 
-    // Start at row 1 = skip 0 lines
-    onLimitChange(ev) {
-        this.props.onOptionChanged("skip", ev.target.value ? ev.target.value - 1 : 0);
-    }
-
     get binaryFilesLabel() {
         const files = this.props.binaryFilesParams.binaryFiles.value;
         const number = Object.keys(files).length;

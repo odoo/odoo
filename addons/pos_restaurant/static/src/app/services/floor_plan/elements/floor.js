@@ -125,15 +125,6 @@ export class Floor {
         return [...this.tables, ...this.decorations];
     }
 
-    clearDecor() {
-        this.decorations.forEach((decorData) => {
-            decorData.setFloor(null);
-            this.elementsMap.delete(decorData.uuid);
-        });
-        this.decorations = [];
-        this.clearSizeCache();
-    }
-
     getDecorPosition(uuid) {
         const element = this.elementsMap.get(uuid);
         if (!element || !(element instanceof Decor)) {
@@ -216,18 +207,6 @@ export class Floor {
         }
 
         return true;
-    }
-
-    getTableCount() {
-        return this.tables.length;
-    }
-
-    getDecorCount() {
-        return this.decorations.length;
-    }
-
-    getTotalCount() {
-        return this.tables.length + this.decorations.length;
     }
 
     hasBgOpacity() {

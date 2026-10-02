@@ -589,12 +589,6 @@ export class CallDebrief extends Component {
         this.state.playbackRate = parseFloat(ev.target.value);
     }
 
-    adjustVolume(delta) {
-        const newVolume = Math.max(0, Math.min(1, this.state.volume + delta));
-        this.state.volume = newVolume;
-        this.state.isMuted = this.state.volume === 0;
-    }
-
     setVolume(ev) {
         this.state.volume = parseFloat(ev.target.value);
         this.state.isMuted = this.state.volume === 0;

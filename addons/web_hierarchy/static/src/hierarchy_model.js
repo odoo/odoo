@@ -238,12 +238,6 @@ export class HierarchyNode {
         );
     }
 
-    removeParentNode() {
-        this.parentNode?.removeChildNode(this);
-        this.parentNode = null;
-        this.data[this.parentFieldName] = false;
-    }
-
     /**
      * Fetch parent node
      */
@@ -478,17 +472,6 @@ export class HierarchyForest {
         );
     }
 
-    addNewRootNode(node) {
-        const tree = new HierarchyTree(this.model, this._config, null, this);
-        tree.root = node;
-        node.tree = tree;
-        tree.addNode(node);
-        for (const subNode of node.getDescendantNodes()) {
-            tree.addNode(subNode);
-        }
-        this._trees.push(tree);
-    }
-
     removeTree(tree) {
         this.nodePerNodeId = Object.fromEntries(
             Object.entries(this.nodePerNodeId).filter(([nodeId]) => !(nodeId in tree.nodePerNodeId))
@@ -566,15 +549,6 @@ export class HierarchyModel extends Model {
         return new Domain(this.env.searchModel.globalDomain).toList(
             this.env.searchModel.domainEvalContext
         );
-    }
-
-    /**
-     * Get active fields name
-     *
-     * @returns {String[]} active fields name
-     */
-    get activeFieldNames() {
-        return Object.keys(this.activeFields);
     }
 
     get context() {

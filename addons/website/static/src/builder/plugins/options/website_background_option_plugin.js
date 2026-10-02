@@ -12,7 +12,6 @@ export const WEBSITE_BACKGROUND_BG_COLOR_OPTION_EXCLUDE = `.s_col_no_bgcolor, .s
 
 export class WebsiteBackgroundOptionPlugin extends Plugin {
     static id = "websiteOption";
-    carouselApplyTo = ":scope > .carousel:not(.s_carousel_cards)";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         mark_color_level_selector_params: [

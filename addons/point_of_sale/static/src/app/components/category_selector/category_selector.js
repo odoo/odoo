@@ -58,9 +58,6 @@ export class CategorySelector extends Component {
         return selectedCategory ? [...selectedCategory.child_ids] : this.pos.rootCategories;
     }
 
-    getAllSelected() {
-        return this.getAncestorsAndCurrent().filter(Boolean).length === 0;
-    }
     hasParent() {
         const selectedCategory = this.pos.selectedCategory;
         return !!(selectedCategory && selectedCategory.parent_id);

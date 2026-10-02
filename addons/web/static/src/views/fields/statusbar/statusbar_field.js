@@ -215,9 +215,7 @@ export class StatusBarField extends Component {
      */
     adjustVisibleItems() {
         // Get all visible buttons
-        const itemEls = [
-            ...this.rootRef().querySelectorAll(".o_arrow_button_wrap"),
-        ];
+        const itemEls = [...this.rootRef().querySelectorAll(".o_arrow_button_wrap")];
         const selectedIndex = itemEls.findIndex((el) =>
             el.querySelector(".o_arrow_button_current")
         );
@@ -229,7 +227,9 @@ export class StatusBarField extends Component {
         hide(this.dropdownRef(), this.beforeRef());
         if (this.items.folded.length) {
             show(this.afterRef());
-            itemEls.forEach((el) => el.querySelector(".o_arrow_button").classList.remove("o_first"));
+            itemEls.forEach((el) =>
+                el.querySelector(".o_arrow_button").classList.remove("o_first")
+            );
         } else {
             hide(this.afterRef());
             itemEls[0]?.querySelector(".o_arrow_button").classList.add("o_first");
@@ -275,8 +275,10 @@ export class StatusBarField extends Component {
         }
         const style = getComputedStyle(root);
         const verticalOffset =
-            parseFloat(style.paddingTop) + parseFloat(style.paddingBottom) +
-            parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+            parseFloat(style.paddingTop) +
+            parseFloat(style.paddingBottom) +
+            parseFloat(style.borderTopWidth) +
+            parseFloat(style.borderBottomWidth);
         const { height: currentHeight } = root.getBoundingClientRect();
         const { height: targetHeight } = firstItem.getBoundingClientRect();
         // Add 1 pixel to tolerate sub-pixel measurement noise at some zoom/DPI ratios.
@@ -365,13 +367,6 @@ export class StatusBarField extends Component {
                 ? { id: item.value, display_name: item.label }
                 : item.value;
         await record.update({ [name]: value });
-    }
-
-    /**
-     * @param {CustomEvent<{ payload: StatusBarItem }>} ev
-     */
-    onDropdownItemSelected(ev) {
-        this.selectItem(ev.detail.payload);
     }
 }
 

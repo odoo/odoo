@@ -4,7 +4,6 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class MediaListOptionPlugin extends Plugin {
     static id = "mediaListOption";
-    mediaListItemOptionSelector = ".s_media_list_item";
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {

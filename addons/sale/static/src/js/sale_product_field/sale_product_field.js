@@ -63,10 +63,6 @@ export class SaleOrderLineProductField extends AccountProductField {
         );
     }
 
-    get isDownpayment() {
-        return this.props.record.data.is_downpayment;
-    }
-
     get m2oProps() {
         const props = super.m2oProps;
         let value = props.value;
