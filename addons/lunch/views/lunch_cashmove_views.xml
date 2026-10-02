@@ -18,7 +18,7 @@
         <field name="model">lunch.cashmove</field>
         <field name="arch" type="xml">
             <list string="cashmove list">
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- currency of the amount monetary widget -->
                 <field name="date"/>
                 <field name="user_id"/>
                 <field name="description"/>
@@ -34,7 +34,7 @@
             <form string="cashmove form">
                 <sheet>
                     <group>
-                        <field name="currency_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/> <!-- currency of the amount monetary widget -->
                         <field name="user_id" required="1"/>
                         <field name="date"/>
                         <field name="amount" widget="monetary"/>

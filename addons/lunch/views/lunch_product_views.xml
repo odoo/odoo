@@ -38,7 +38,7 @@
         <field name="model">lunch.product</field>
         <field name="arch" type="xml">
             <list string="Products List">
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- currency of the price monetary widget -->
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="supplier_id"/>
@@ -67,8 +67,8 @@
         <field name="model">lunch.product</field>
         <field name="arch" type="xml">
             <form string="Products Form">
-                <field name="company_id" invisible="1"/>
-                <field name="currency_id" invisible="1"/>
+                <field name="company_id" invisible="1"/> <!-- company the related currency_id is read from -->
+                <field name="currency_id" invisible="1"/> <!-- currency of the price monetary widget -->
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="d-flex flex-column-reverse flex-md-row align-items-center gap-3">
@@ -82,7 +82,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="active" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives invisible of the Archived web_ribbon widget -->
                             <field name='category_id'/>
                             <field name='supplier_id'/>
                             <field name='price' widget="monetary"/>
