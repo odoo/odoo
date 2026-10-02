@@ -7,10 +7,14 @@ import { ThemeShadowOption } from "./theme_shadow_option";
 import { ThemeButtonOption } from "./theme_button_option";
 import { ThemeColorsOption } from "./theme_colors_option";
 import { ThemeHeadingsOption } from "./theme_headings_option";
-import { CustomizeWebsiteFontFamilyAction } from "./theme_fontfamily_option";
+import {
+    CustomizeWebsiteFontFamilyAction,
+    PreviewWebsiteFontFamilyAction,
+} from "./theme_fontfamily_option";
 import {
     CustomizeWebsiteFontWeightAction,
     getParsedWeight,
+    PreviewWebsiteFontWeightAction,
     ThemeFontWeightOption,
 } from "./theme_font_weight_option";
 import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
@@ -117,7 +121,9 @@ export class ThemeTabPlugin extends Plugin {
             CustomizeGrayAction,
             ChangeColorPaletteAction,
             CustomizeWebsiteFontFamilyAction,
+            PreviewWebsiteFontFamilyAction,
             CustomizeWebsiteFontWeightAction,
+            PreviewWebsiteFontWeightAction,
             EditCustomCodeAction,
             ConfigureApiKeyAction,
         },
