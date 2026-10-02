@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div class="pe-1 flex-shrink-0 ms-auto d-print-none">
-                <ActionList actions="this.headerActionsList" inline="true" hasBtnBg="true" actionComponent.bind="this.getActionComponent"/>
+                <ActionList actions="this.headerActionsList" inline="true" hasBtnBg="true" actionComponent.bind="this.getActionComponent" panelContainer.bind="this.getPanelContainer"/>
             </div>
             <div t-if="this.store.inPublicPage and !this.ui.isSmall" class="d-flex align-items-center">
                 <img class="o-mail-DiscussContent-selfAvatar me-1 rounded-3 object-fit-cover flex-shrink-0 smaller" alt="Avatar" t-att-src="this.store.self.avatarUrl"/>
@@ -56,17 +56,17 @@
             </div>
         </div>
         <div class="o-mail-DiscussContent-main d-flex overflow-hidden flex-grow-1 gap-2" t-att-class="{ 'position-relative': this.ui.isSmall }">
-            <t t-set="hasActivePanel" t-value="this.threadActions.activeAction?.actionPanelComponentCondition"/>
-            <div class="o-mail-DiscussContent-core overflow-auto o-scrollbar-thin d-flex flex-grow-1 w-100 gap-2" t-att-class="{ 'me-1': hasActivePanel, 'me-2': !hasActivePanel }">
+            <t t-set="activePanel" t-value="this.threadActions.activePanel"/>
+            <div class="o-mail-DiscussContent-core overflow-auto o-scrollbar-thin d-flex flex-grow-1 w-100 gap-2" t-att-class="{ 'me-1': activePanel, 'me-2': !activePanel }">
                 <t name="core-content">
                     <t t-if="this.thread">
-                        <div t-if="!this.ui.isSmall or !hasActivePanel" class="d-flex flex-column flex-grow-1 bg-inherit min-w-0 mt-1">
+                        <div t-if="!this.ui.isSmall or !activePanel" class="d-flex flex-column flex-grow-1 bg-inherit min-w-0 mt-1">
                             <t name="thread"><Thread thread="this.thread" t-key="this.thread.localId" jumpPresent="this.state.jumpThreadPresent" autofocus="this.thread.channel?.composerHidden"/></t>
                             <Composer t-if="!this.thread.channel?.composerHidden" t-key="this.thread.localId" composer="this.thread.composer" autofocus="true" onDiscardCallback="() => (this.thread.composer.replyToMessage = undefined)" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="this.rootRef" type="this.thread.composer.replyToMessage ? (this.thread.composer.replyToMessage.isNote ? 'note' : 'message') : undefined"/>
                             <span t-if="this.thread.channel?.composerHidden and this.thread.channel?.composerHiddenText" class="bg-200 py-1 text-center fst-italic fw-bold text-muted rounded-pill border" t-out="this.thread.channel?.composerHiddenText"/>
                         </div>
-                        <div t-if="hasActivePanel" t-attf-class="{{ this.threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer rounded-4 border mt-1 flex-shrink-0 d-print-none" t-att-class="{ 'w-100': this.ui.isSmall }">
-                            <t t-component="this.threadActions.activeAction.actionPanelComponent" t-props="this.threadActions.activeAction.actionPanelComponentProps"/>
+                        <div t-if="activePanel" t-attf-class="{{ activePanel.class }}" class="o-mail-DiscussContent-panelContainer rounded-4 border mt-1 flex-shrink-0 d-print-none" t-att-class="{ 'w-100': this.ui.isSmall }">
+                            <t t-component="activePanel.component" t-props="activePanel.props"/>
                         </div>
                     </t>
                     <div t-elif="(!this.ui.isSmall or this.isNotificationTabActive) and this.store.discuss.hasRestoredThread" class="d-flex flex-grow-1 align-items-center justify-content-center w-100">

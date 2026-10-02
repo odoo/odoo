@@ -139,8 +139,8 @@ export class ChatWindow extends Component {
     }
 
     onKeydown(ev) {
-        if (ev.key === "Escape" && this.threadActions.activeAction) {
-            this.threadActions.activeAction.actionPanelClose();
+        if (ev.key === "Escape" && this.threadActions.panelAction) {
+            this.threadActions.panelAction.closePanel();
             ev.stopPropagation();
             return;
         }

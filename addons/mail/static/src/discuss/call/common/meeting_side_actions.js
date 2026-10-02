@@ -47,6 +47,23 @@ export class MeetingSideActions extends Component {
         return MeetingInlineAction;
     }
 
+    /**
+     * "More" opens a dropdown with the look of the menus of the meeting, the other actions open
+     * their panel in the meeting.
+     *
+     * @type {import("@mail/core/common/action_list").ActionPanelContainer}
+     */
+    getPanelContainer({ action }) {
+        if (action.definition.isMoreAction) {
+            return {
+                type: "dropdown",
+                menuClass: attClassObjectToString({
+                    "o-discuss-CallActionList-menu": Boolean(this.env.inMeetingView),
+                }),
+            };
+        }
+    }
+
     get callActionsParams() {
         return { channel: () => this.store.rtc.channel };
     }
@@ -66,9 +83,6 @@ export class MeetingSideActions extends Component {
             actions.push(
                 threadActions.more(this.callActionsParams, {
                     actions: meetingMoreActionGroups(threadActions, QUICK_ACTION_IDS),
-                    dropdownMenuClass: attClassObjectToString({
-                        "o-discuss-CallActionList-menu": Boolean(this.env.inMeetingView),
-                    }),
                 })
             );
             return actions;
