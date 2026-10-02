@@ -7,13 +7,13 @@
         <field name="arch" type="xml">
             <form js_class="event_booth_configurator_form">
                 <group>
-                    <field name="product_id" invisible="1"/>
+                    <field name="product_id" invisible="1"/> <!-- used in the domain of event_booth_ids, event_id -->
                     <field name="event_id" options="{'no_open': True, 'no_create': True}"
                            domain="[
                                 ('event_booth_ids.product_id', '=', product_id),
                                 ('is_finished', '=', False)
                            ]"/>
-                    <field name="event_booth_category_available_ids" invisible="1"/>
+                    <field name="event_booth_category_available_ids" invisible="1"/> <!-- used in the domain of event_booth_category_id -->
                     <field name="event_booth_category_id" options="{'no_open': True, 'no_create': True}"
                            invisible="not event_id"
                            domain="[('id', 'in', event_booth_category_available_ids)]"/>

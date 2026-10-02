@@ -6,7 +6,7 @@
         <field name="model">chatbot.script.step</field>
         <field name="arch" type="xml">
             <form disable_autofocus="1">
-                <field name="is_forward_operator_child" invisible="1"/>
+                <field name="is_forward_operator_child" invisible="1"/> <!-- drives invisible of the alert block -->
                 <div class="alert alert-info text-center mb-0" role="alert" invisible="not is_forward_operator_child">
                     <span>Reminder: This step will only be played if no operator is available.</span>
                 </div>
@@ -16,10 +16,10 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="sequence" invisible="1"/>
+                            <field name="sequence" invisible="1"/> <!-- used in the python-declared domain of triggering_answer_ids -->
                             <field name="message" placeholder="e.g. 'How can I help you?'"
                                 required="step_type != 'forward_operator'"/>
-                            <field name="chatbot_script_id" invisible="1"/>
+                            <field name="chatbot_script_id" invisible="1"/> <!-- used in the python-declared domain of triggering_answer_ids -->
                             <field name="step_type"/>
                             <field name="operator_expertise_ids" widget="many2many_tags" options="{'on_tag_click': 'open_form'}" invisible="step_type != 'forward_operator'"/>
                             <field name="triggering_answer_ids" widget="many2many_tags" options="{'no_create': True}"/>
@@ -28,7 +28,7 @@
                             <field name="answer_ids" invisible="step_type != 'question_selection'" nolabel="1">
                                 <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="display_name" column_invisible="True"/>
+                                    <field name="display_name" column_invisible="True"/> <!-- kept loaded for record data though not shown in this form -->
                                     <field name="name"/>
                                     <field name="redirect_link" string="Optional Link"/>
                                 </list>

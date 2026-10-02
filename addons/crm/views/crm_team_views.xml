@@ -138,8 +138,8 @@
             <field name="priority">12</field>
             <field name="arch" type="xml">
                 <xpath expr="//form/*[1]" position="before">
-                    <field name="use_leads" invisible="1"/>
-                    <field name="use_opportunities" invisible="1"/>
+                    <field name="use_leads" invisible="1"/> <!-- target of the <label for="use_leads"> of this form -->
+                    <field name="use_opportunities" invisible="1"/> <!-- target of the <label for="use_opportunities"> of this form -->
                     <header invisible="not use_leads and not use_opportunities or not assignment_enabled">
                         <button name="action_assign_leads" type="object"
                             string="Assign Leads"
@@ -182,9 +182,9 @@
                     <attribute name="invisible">not assignment_enabled</attribute>
                 </xpath>
                 <xpath expr="//group[@name='right']" position="inside">
-                    <field name="assignment_enabled" invisible="1"/>
-                    <field name="assignment_auto_enabled" invisible="1"/>
-                    <field name="lead_all_assigned_month_exceeded" invisible="1"/>
+                    <field name="assignment_enabled" invisible="1"/> <!-- drives invisible of the header, the action_assign_leads button and 3 more -->
+                    <field name="assignment_auto_enabled" invisible="1"/> <!-- drives invisible of assignment_optout -->
+                    <field name="lead_all_assigned_month_exceeded" invisible="1"/> <!-- drives invisible of the Exceeded i -->
                     <field name="assignment_optout" widget="boolean_toggle" invisible="not assignment_auto_enabled"/>
                     <label for="lead_all_assigned_month_count" invisible="assignment_optout"/>
                     <div class="d-flex align-items-baseline gap-1" invisible="assignment_optout">

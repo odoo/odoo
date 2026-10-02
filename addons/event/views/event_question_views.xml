@@ -70,7 +70,7 @@
                         <group>
                             <field name="once_per_order"/>
                             <field name="is_default"/>
-                            <field name="event_type_ids" invisible="1"/>
+                            <field name="event_type_ids" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                             <field name="is_reusable" readonly="is_default"/>
                         </group>
                     </group>
@@ -79,7 +79,7 @@
                             <field name="answer_ids">
                                 <list editable="bottom">
                                     <!-- 'display_name' is necessary for the many2many_tags to work on the event view -->
-                                    <field name="display_name" column_invisible="True" />
+                                    <field name="display_name" column_invisible="True" /> <!-- kept loaded for record data though not shown in this form -->
                                     <field name="sequence" widget="handle" />
                                     <field name="name"/>
                                 </list>

@@ -9,8 +9,8 @@
         group. -->
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <field name="code" invisible="1" position="after">
-                <field name="custom_mode" invisible="1"/>
+            <field name="code" invisible="1" position="after"> <!-- drives invisible of the provider_config_bank group, the provider_credentials group -->
+                <field name="custom_mode" invisible="1"/> <!-- drives invisible of qr_code, the provider_config_bank group and required of partner_bank_id -->
             </field>
             <field name="is_live" position="attributes">
                 <attribute name="invisible" separator="or" add="code == 'custom'"/>

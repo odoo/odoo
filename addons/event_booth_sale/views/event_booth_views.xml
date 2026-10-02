@@ -15,14 +15,14 @@
                             <span class="o_stat_text">Sale Order</span>
                         </div>
                 </button>
-                <field name="sale_order_id" invisible="1"/>
+                <field name="sale_order_id" invisible="1"/> <!-- drives invisible of the action_view_sale_order button -->
             </div>
             <div name="button_box" position="after">
-                <field name="is_paid" invisible="1"/>
+                <field name="is_paid" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
                 <widget name="web_ribbon" title="Paid" invisible="not is_paid"/>
             </div>
             <field name="booth_category_id" position="after">
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/> <!-- currency_field option of the price monetary widget -->
                 <field name="product_id" invisible="not booth_category_id"/>
                 <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"
                        invisible="not booth_category_id"/>
@@ -50,7 +50,7 @@
         <field name="inherit_id" ref="event_booth.event_booth_view_tree_from_event"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- currency_field option of the price monetary widget -->
                 <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total"/>
             </field>
         </field>

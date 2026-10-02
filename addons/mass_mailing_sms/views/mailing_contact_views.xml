@@ -38,7 +38,7 @@
                 <field name="mobile" class="o_force_ltr" readonly="1"/>
             </xpath>
             <xpath expr="//field[@name='is_blacklisted']" position="after">
-                <field name="phone_sanitized" column_invisible="True"/>
+                <field name="phone_sanitized" column_invisible="True"/> <!-- read by the phone widget of phone for the tel: link -->
                 <field name="phone_sanitized_blacklisted" string="&#x1F4F5; Blacklisted"/>
             </xpath>
         </field>
@@ -57,7 +57,7 @@
                         type="object" context="{'default_phone': mobile}" groups="base.group_user"
                         invisible="not phone_blacklisted"/>
                     <field name="mobile" string="Phone" widget="phone" options="{'enable_sms': True}"/>
-                    <field name="phone_sanitized" invisible="1"/>
+                    <field name="phone_sanitized" invisible="1"/> <!-- read by the phone widget of phone for the tel: link -->
                 </div>
             </xpath>
         </field>

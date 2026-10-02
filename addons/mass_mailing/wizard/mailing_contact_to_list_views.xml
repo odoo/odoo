@@ -10,8 +10,8 @@
                         <field name="mailing_list_ids" widget="many2many_tags"
                             options="{'no_create_edit': True, 'no_open': True, 'color_field': 'color'}"
                             placeholder="Select lists..."/>
-                        <field name="contact_ids" invisible="1"/>
-                        <field name="partner_ids" invisible="1"/>
+                        <field name="contact_ids" invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
+                        <field name="partner_ids" invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
                     </group>
                     <footer>
                         <button string="Add to Lists" name="action_add_contacts" type="object" class="btn-primary" data-hotkey="q"/>

@@ -5,7 +5,7 @@
             <field name="model">crm.lead.lost</field>
             <field name="arch" type="xml">
                 <form string="Lost Lead">
-                    <field name="lead_ids" invisible="1"></field>
+                    <field name="lead_ids" invisible="1"> <!-- source record(s) the wizard works on, filled from the context --></field>
                     <field name="lost_reason_id" placeholder="Select a Lost Reason..." widget="badges_many2one" options="{'badge_limit': 8}" />
                     <group>
                         <label for="lost_feedback" class="o_form_label">Closing Note</label>

@@ -52,13 +52,13 @@
                     ]"
                     required="service_tracking == 'event'"
                     options="{'no_open': True, 'no_create': True}"
-                    placeholder="All Events"/>
+                    placeholder="All Events"/> <!-- drives invisible of event_ticket_id and required of event_ticket_id -->
                 <field
                     name="event_slot_id"
                     column_invisible="True"
                     domain="[('event_id','=', event_id)]"
                     required="is_multi_slots and service_tracking == 'event'"
-                    options="{'no_open': True, 'no_create': True}"/>
+                    options="{'no_open': True, 'no_create': True}"/> <!-- read by the event configurator of the order line, kept with its domain and required expression -->
                 <field name="event_ticket_id"
                     column_invisible="True"
                     domain="[
@@ -66,7 +66,7 @@
                          '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
                     ]"
                     required="service_tracking == 'event' and event_id"
-                    options="{'no_open': True, 'no_create': True}"/>
+                    options="{'no_open': True, 'no_create': True}"/> <!-- used by event_booth_sale.sale_order_view_form -->
             </xpath>
         </field>
     </record>
