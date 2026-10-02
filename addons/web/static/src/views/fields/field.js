@@ -16,7 +16,7 @@ const formatterRegistry = registry.category("formatters");
 const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");
 
-const validFieldTypes = {
+export const validFieldTypes = {
     binary: { availableOffline: false },
     boolean: { availableOffline: true },
     json: { availableOffline: true },
