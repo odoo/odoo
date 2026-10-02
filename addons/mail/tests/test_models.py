@@ -25,7 +25,6 @@ class TestModel(TransactionCase):
         # Setup company currency by default
         cls.env.company.currency_id = cls.env.ref('base.EUR').id
 
-
     def test_find_value_from_field_path_monetary(self):
         """ Check the format of the return in case of monetary value (Digits after comma """
         self.partner_eur = self.env['res.partner'].create({
