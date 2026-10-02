@@ -286,3 +286,64 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         self.assertEqual(oven_val_line.additional_landed_cost, 25)
         self.assertEqual(refrigerator_val_line.additional_landed_cost, 75)
         self.assertFalse(valuation_lines.filtered(lambda line: line.product_id == self.product_a))
+
+
+class TestStockLandedCostsReevaluation(TestStockLandedCostsCommon):
+
+    def test_landed_cost_reevaluates_out_move(self):
+        """ Make sure that processing a landed cost after the partial delivery of the quantity received earlier
+            correctly updates the delivery values.
+        """
+        self.product_refrigerator.categ_id.property_cost_method = 'fifo'
+        product = self.product_refrigerator
+        product.standard_price = 10
+
+        picking_in = self.Picking.create({
+            'partner_id': self.supplier_id,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.supplier_location_id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'move_ids': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 10,
+                'uom_id': product.uom_id.id,
+                'location_id': self.supplier_location_id,
+                'location_dest_id': self.warehouse.lot_stock_id.id,
+            })],
+        })
+        picking_in.action_confirm()
+        picking_in.button_validate()
+
+        picking_out = self.Picking.create({
+            'partner_id': self.customer_id,
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.warehouse.lot_stock_id.id,
+            'location_dest_id': self.customer_location_id,
+            'move_ids': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 3,
+                'uom_id': product.uom_id.id,
+                'location_id': self.warehouse.lot_stock_id.id,
+                'location_dest_id': self.customer_location_id,
+            })],
+        })
+        picking_out.action_confirm()
+        picking_out.action_assign()
+        picking_out.button_validate()
+        out_move = picking_out.move_ids
+        self.assertEqual(out_move.value, -30)
+
+        landed_cost = self.LandedCost.create({
+            'picking_ids': [Command.set(picking_in.ids)],
+            'account_journal_id': self.expenses_journal.id,
+            'cost_lines': [Command.create({
+                'name': 'equal split',
+                'split_method': 'equal',
+                'price_unit': 20,
+                'product_id': self.landed_cost.id,
+            })],
+        })
+        landed_cost.compute_landed_cost()
+        landed_cost.button_validate()
+
+        self.assertEqual(out_move.value, -36)
