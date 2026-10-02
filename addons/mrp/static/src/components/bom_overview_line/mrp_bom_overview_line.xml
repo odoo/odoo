@@ -7,7 +7,7 @@
                 <t t-if="this.hasFoldButton">
                     <t t-set="title_fold">Fold</t>
                     <t t-set="title_unfold">Unfold</t>
-                    <span class="o_mrp_bom_unfoldable btn btn-light p-0" t-att-aria-label="this.props.isFolded ? title_unfold : title_fold" t-att-title="this.props.isFolded ? title_unfold : title_fold" style="margin-right: 1px">
+                    <span class="btn btn-light p-0" t-att-aria-label="this.props.isFolded ? title_unfold : title_fold" t-att-title="this.props.isFolded ? title_unfold : title_fold" style="margin-right: 1px">
                         <i class="oi oi-fw" t-attf-data-icon="{{ this.props.isFolded ? 'arrow_right' : 'arrow_drop_down' }}" role="img"/>
                     </span>
                 </t>
