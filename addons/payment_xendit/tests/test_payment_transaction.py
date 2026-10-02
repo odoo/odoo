@@ -121,7 +121,7 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
                 "cancel_return_url": return_url,
                 "allowed_payment_channels": [self.payment_method_code.upper()],
                 "currency": tx.currency_id.name,
-                "country": tx.partner_id.country_id.code,
+                "country": "ID",
             },
         )
 
@@ -288,7 +288,7 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
             {
                 "reference_id": tx.reference,
                 "type": "PAY",
-                "country": tx.partner_id.country_id.code,
+                "country": "ID",
                 "currency": "IDR",
                 "request_amount": 1000,
                 "capture_method": "AUTOMATIC",
