@@ -9,6 +9,41 @@
             aria-label="Shipping method"
         >
             <label
+                name="delivery_availability"
+                t-if="Object.keys(this.state.deliveryData.stock_data || {}).length !== 0"
+                class="o_wsale_collect_option d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 gap-md-3 w-100 p-3 cursor-pointer"
+            >
+                <input
+                    type="radio"
+                    class="visually-hidden"
+                    name="o_wsale_collect_mode"
+                    t-att-checked="!this.state.isInStoreSelected"
+                    t-on-click="() => this.state.deliveryData.stock_data.in_stock ? this.selectStandardDelivery() : null"
+                />
+                <strong class="small">
+                    <i class="oi oi-fw me-1" data-icon="local_shipping"/>
+                    Shipping
+                    <i
+                        class="d-none d-sm-inline oi cursor-pointer ms-1"
+                        data-icon="info"
+                        data-tooltip="Restrictions may apply"
+                        data-tooltip-delay="0"
+                    />
+                </strong>
+                <div class="flex-shrink-0 small text-nowrap">
+                    <t t-if="this.deliveryAvailabilityFromLabel" t-set="deliveryAvailableLabel">Delivery</t>
+                    <t t-else="" t-set="deliveryAvailableLabel">Delivery available</t>
+                    <t t-call="website_sale_collect.StockAvailabilityMessage"
+                        available="this.state.deliveryData.stock_data.in_stock"
+                        stockData="this.state.deliveryData.stock_data"
+                        hasOutOfStockMessage="this.state.hasOutOfStockMessage"
+                        outOfStockMessage="this.state.outOfStockMessage"
+                        availabilityFromLabel="this.deliveryAvailabilityFromLabel"
+                        availableLabel="deliveryAvailableLabel"
+                    />
+                </div>
+            </label>
+            <label
                 name="click_and_collect_availability"
                 class="o_wsale_collect_option d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 gap-md-3 w-100 p-3 cursor-pointer"
             >
@@ -53,41 +88,6 @@
                         outOfStockMessage="this.state.outOfStockMessage"
                         availabilityFromLabel="this.availabilityFromLabel"
                         availableLabel="pickupAvailableLabel"
-                    />
-                </div>
-            </label>
-            <label
-                name="delivery_availability"
-                t-if="Object.keys(this.state.deliveryData.stock_data || {}).length !== 0"
-                class="o_wsale_collect_option d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 gap-md-3 w-100 p-3 cursor-pointer"
-            >
-                <input
-                    type="radio"
-                    class="visually-hidden"
-                    name="o_wsale_collect_mode"
-                    t-att-checked="!this.state.isInStoreSelected"
-                    t-on-click="() => this.state.deliveryData.stock_data.in_stock ? this.selectStandardDelivery() : null"
-                />
-                <strong class="small">
-                    <i class="oi oi-fw me-1" data-icon="local_shipping"/>
-                    Shipping
-                    <i
-                        class="d-none d-sm-inline oi cursor-pointer ms-1"
-                        data-icon="info"
-                        data-tooltip="Restrictions may apply"
-                        data-tooltip-delay="0"
-                    />
-                </strong>
-                <div class="flex-shrink-0 small text-nowrap">
-                    <t t-if="this.deliveryAvailabilityFromLabel" t-set="deliveryAvailableLabel">Delivery</t>
-                    <t t-else="" t-set="deliveryAvailableLabel">Delivery available</t>
-                    <t t-call="website_sale_collect.StockAvailabilityMessage"
-                        available="this.state.deliveryData.stock_data.in_stock"
-                        stockData="this.state.deliveryData.stock_data"
-                        hasOutOfStockMessage="this.state.hasOutOfStockMessage"
-                        outOfStockMessage="this.state.outOfStockMessage"
-                        availabilityFromLabel="this.deliveryAvailabilityFromLabel"
-                        availableLabel="deliveryAvailableLabel"
                     />
                 </div>
             </label>
