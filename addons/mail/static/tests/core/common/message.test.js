@@ -3,6 +3,7 @@ import {
     contains as mailContains,
     defineMailModels,
     insertText,
+    MENU_ACTIVE_IDS,
     openFormView,
     openMessagingMenu,
     start,
@@ -11,8 +12,8 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { contains, preloadBundle } from "@web/../tests/web_test_helpers";
+import { animationFrame, click as hootClick, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { contains, mockService, preloadBundle, serverState } from "@web/../tests/web_test_helpers";
 import { cookie } from "@web/core/browser/cookie";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -153,4 +154,36 @@ test("read more button of an email message keeps its pill in dark theme", async 
     expect(".o-mail-Message-body > div:shadow .o-mail-ellipsis").toHaveStyle({
         backgroundColor: "rgb(239, 239, 239)",
     });
+});
+
+test("record link in a user notification's body opens the record", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const messageId = pyEnv["mail.message"].create({
+        body: '<p>Signed by <a href="#" data-oe-id="250" data-oe-model="some.model">some.model_250</a></p>',
+        message_type: "user_notification",
+        needaction: true,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    mockService("action", {
+        doAction(action) {
+            expect.step(`do-action:${action.res_model}_${action.res_id}`);
+        },
+    });
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.NOTIFICATION);
+    await contains(
+        ".o-mail-NotificationItem-text:text('You: Signed by some.model_250'):count(1)"
+    ).click();
+    await mailContains("a:text('some.model_250')", {
+        parent: [".o_dialog .o-mail-Message-shadowBody", { shadowRoot: true }],
+    });
+    // hoot click: the event must be composed to reach the message outside the shadow root
+    await hootClick(".o_dialog .o-mail-Message-shadowBody:shadow a:text('some.model_250')");
+    await expect.waitForSteps(["do-action:some.model_250"]);
 });

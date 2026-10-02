@@ -356,6 +356,13 @@ export class Message extends Record {
         return !this.is_transient;
     }
 
+    /** Email or template-generated body, isolated from the webclient's styles. */
+    get hasEmailLikeBody() {
+        return ["email", "email_outgoing", "user_notification", "auto_comment"].includes(
+            this.message_type
+        );
+    }
+
     get isNotification() {
         return this.message_type === "notification" && this.thread?.channel;
     }
