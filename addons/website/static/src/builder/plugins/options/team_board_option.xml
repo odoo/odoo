@@ -14,6 +14,13 @@
                 <BuilderSelectItem classAction="'s_team_board_list'">List</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
+
+        <BuilderRow label.translate="Member">
+            <BuilderButton action="'addItem'" actionParam="'.s_team_board_member:last-child'" preview="false">Add Member</BuilderButton>
+        </BuilderRow>
+        <BuilderRow label.translate="Sort">
+            <BuilderButton action="'sortTeamBoardMembers'" preview="false">Sort A-Z</BuilderButton>
+        </BuilderRow>
     </t>
 
     <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
