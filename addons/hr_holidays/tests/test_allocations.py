@@ -119,6 +119,32 @@ class TestAllocations(TestHrHolidaysCommon):
 
         self.assertEqual(employee_allocation.name, "Custom Time Off Test (10.0 day(s))")
 
+    def test_allocation_request_default_work_entry_type(self):
+        company = self.env['res.company'].create({'name': 'Antarctic Company', 'country_id': self.env.ref('base.aq').id})
+        employee = self.env['hr.employee'].create({'name': 'Penguin', 'company_id': company.id})
+        legal, requestable = self.env['hr.work.entry.type'].create([{
+            'name': name,
+            'code': name,
+            'count_as': 'absence',
+            'country_id': company.country_id.id,
+            'requires_allocation': True,
+            'employee_requests': employee_requests,
+            'allocation_validation_type': 'no_validation',
+            'sequence': sequence,
+        } for name, employee_requests, sequence in [('Legal Time Off', False, 1), ('Requestable Time Off', True, 2)]])
+        self.env['hr.leave.allocation'].create({
+            'employee_id': employee.id,
+            'work_entry_type_id': legal.id,
+            'number_of_days': 10,
+            'date_from': date(date.today().year, 1, 1),
+        }).action_approve()
+
+        Allocation = self.env['hr.leave.allocation'].with_context(default_employee_id=employee.id)
+        self.assertEqual(Allocation.default_get(['employee_id', 'work_entry_type_id'])['work_entry_type_id'], legal.id)
+        # an allocation requested by the employee is of a time type they can request
+        employee_request_defaults = Allocation.with_context(is_employee_allocation=True).default_get(['employee_id', 'work_entry_type_id'])
+        self.assertEqual(employee_request_defaults['work_entry_type_id'], requestable.id)
+
     def test_allocation_request_half_days(self):
         self.work_entry_type.write({
             'name': 'Custom Time Off Test',
