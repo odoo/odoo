@@ -17,7 +17,7 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
-                <field name="mailing_contact_ids" invisible="1"/>
+                <field name="mailing_contact_ids" invisible="1"/> <!-- drives invisible of the action_open_mailing_contacts button, the o_stat_text text -->
                 <button class="oe_stat_button" name="action_open_mailing_contacts" type="object"
                     icon="send" icon_class="oi-filled" groups="mass_mailing.group_mass_mailing_user"
                     invisible="not mailing_contact_ids"
