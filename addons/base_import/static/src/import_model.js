@@ -382,10 +382,6 @@ export class BaseImportModel {
         this._updateComments(column);
     }
 
-    isColumnFieldSet(column) {
-        return column.fieldInfo != null;
-    }
-
     /*
      * We must wait the current iteration of execute_import to conclude and it
      * will stop at the start of the next batch with handleInterruption

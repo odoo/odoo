@@ -420,14 +420,6 @@ export class Store extends BaseStore {
         await this.env.services["discuss.rtc"].startMeetingCall(channel, { fullscreen: true });
     }
 
-    /**
-     * @param {import("menu_tabs").MenuTabs[keyof import("menu_tabs").MenuTabs]} tabId
-     * @returns Thread types matching the given tab.
-     */
-    tabIdToThreadTypes(tabId) {
-        return tabId === "chat" ? ["chat", "group"] : [tabId];
-    }
-
     handleClickOnLink(ev, thread) {
         const link = ev.target.closest("a");
         if (!link) {
@@ -726,12 +718,6 @@ export class Store extends BaseStore {
             params.canned_response_ids = cannedResponseIds;
         }
         return params;
-    }
-
-    notifySendFromMailbox(recordName) {
-        this.env.services.notification.add(_t('Message posted on "%s"', recordName), {
-            type: "info",
-        });
     }
 
     /**

@@ -21,13 +21,6 @@ export default class DeviceIdentifierSequence {
         return data.unsynced_number_stack || [];
     }
 
-    get nextNumber() {
-        const data = this.data;
-        return data.unsynced_number_stack.length
-            ? data.unsynced_number_stack.sort((a, b) => a - b)[0]
-            : data.next_number;
-    }
-
     async initialize() {
         const localStorageKey = DeviceIdentifierSequence.uniqueDeviceIdentifierKey;
         const deviceIdentifier = localStorage.getItem(localStorageKey);

@@ -16,10 +16,6 @@ export class SnoozeTracker {
         this.refresh();
     }
 
-    getSnoozes() {
-        return this.snoozes;
-    }
-
     refresh() {
         if (this.updateTimeout) {
             clearTimeout(this.updateTimeout);

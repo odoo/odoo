@@ -546,8 +546,6 @@ export class Action {
         );
     }
 
-    /** @param {Action} action @returns {string|Object|undefined} */
-    _iconClass(action) {}
     /**
      * Icon classes for the button this action.
      * - When a string, this is considered as classes for icon

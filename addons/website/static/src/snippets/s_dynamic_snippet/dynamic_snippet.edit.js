@@ -7,7 +7,6 @@ const DynamicSnippetEdit = (I) =>
             super.setup();
             this.withSample = true;
         }
-        callToAction() {}
     };
 
 registry.category("public.interactions.edit").add("website.dynamic_snippet", {

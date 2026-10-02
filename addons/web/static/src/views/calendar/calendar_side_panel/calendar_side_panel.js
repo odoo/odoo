@@ -55,11 +55,6 @@ export class CalendarSidePanel extends Component {
             value: this.props.model.date,
         };
     }
-    get filterPanelProps() {
-        return {
-            model: this.props.model,
-        };
-    }
 
     get showDatePicker() {
         return this.props.model.showDatePicker && !this.uiService.isSmall;

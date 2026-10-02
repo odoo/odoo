@@ -401,19 +401,6 @@ export class ProductConfiguratorDialog extends Component {
     }
 
     /**
-     * Return the selected PTAVs of the parent product, as a list of
-     * `product.template.attribute.value` ids.
-     *
-     * @param {Object} product - The product for which to find the parent combination.
-     * @return {Array} - The combination of the parent product.
-     */
-    _getParentsCombination(product) {
-        return product.parent_product_tmpl_id
-            ? this._getCombination(this._findProduct(product.parent_product_tmpl_id))
-            : [];
-    }
-
-    /**
      * Check if a product has a valid combination.
      *
      * @param {Object} product - The product for which to check the combination.

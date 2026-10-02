@@ -662,10 +662,6 @@ export class TitleDescription extends Component {
         return this.props.url.replace(this.seoNameUrl, this.props.seoNameDefault);
     }
 
-    get titleOrDescriptionNotSet() {
-        return !this.seoContext.title || !this.seoContext.description;
-    }
-
     get title() {
         return this.seoContext.title || this.props.defaultTitle;
     }

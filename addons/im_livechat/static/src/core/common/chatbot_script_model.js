@@ -7,7 +7,6 @@ export class ChatbotScript extends Record {
     id;
     /** @type {string} */
     title;
-    isLivechatTourRunning = false;
     operator_partner_id = fields.One("res.partner");
 }
 ChatbotScript.register();

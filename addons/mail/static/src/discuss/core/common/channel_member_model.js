@@ -2,7 +2,6 @@ import { Store } from "@mail/core/common/store_plugin";
 import { fields, Record } from "@mail/model/export";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
-import { user } from "@web/core/user";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -232,13 +231,6 @@ export class ChannelMember extends Record {
      */
     hasSeen(message) {
         return this.persona.eq(message.author) || this.seen_message_id?.id >= message.id;
-    }
-    get lastSeenDt() {
-        return this.last_seen_dt
-            ? this.last_seen_dt.toLocaleString(DateTime.TIME_24_SIMPLE, {
-                  locale: user.lang,
-              })
-            : undefined;
     }
 
     get isInvitationPending() {

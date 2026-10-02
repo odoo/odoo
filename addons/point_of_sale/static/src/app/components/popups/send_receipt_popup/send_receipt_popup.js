@@ -117,8 +117,4 @@ export class SendReceiptPopup extends Component {
     showPhoneInput() {
         return false;
     }
-
-    actionSendReceiptOnPhone() {
-        return false;
-    }
 }

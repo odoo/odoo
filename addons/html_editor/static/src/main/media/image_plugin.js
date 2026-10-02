@@ -288,18 +288,6 @@ export class ImagePlugin extends Plugin {
         return targetedNodes.find((node) => node.tagName === "IMG");
     }
 
-    hasImageSize(size) {
-        const targetedImg = this.getTargetedImage();
-        return targetedImg?.style?.width === size;
-    }
-
-    isSelectionShaped(shape) {
-        const targetedNodes = this.dependencies.selection
-            .getTargetedNodes()
-            .filter((n) => n.tagName === "IMG" && n.classList.contains(shape));
-        return targetedNodes.length > 0;
-    }
-
     /**
      * @param {string} url
      */

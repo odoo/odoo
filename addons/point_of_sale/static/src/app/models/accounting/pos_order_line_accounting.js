@@ -115,16 +115,6 @@ export class PosOrderlineAccounting extends Base {
         return data.tax_details;
     }
 
-    get productProductPrice() {
-        return this.product_id.getPrice(
-            this.config.pricelist_id,
-            1,
-            this.price_extra,
-            false,
-            this.product_id
-        );
-    }
-
     get comboTotalPrice() {
         const childLines = this.getAllLinesInCombo().filter((line) => !line.combo_line_ids.length);
         return childLines.reduce((total, line) => total + line.displayPrice, 0);
@@ -133,11 +123,6 @@ export class PosOrderlineAccounting extends Base {
     get comboTotalPriceWithoutTax() {
         const childLines = this.getAllLinesInCombo().filter((line) => !line.combo_line_ids.length);
         return childLines.reduce((total, line) => total + line.displayPriceUnitExcl, 0);
-    }
-
-    get comboTotalBasePrice() {
-        const allLines = this.getAllLinesInCombo();
-        return allLines.reduce((total, line) => total + line.basePriceUnit, 0);
     }
 
     get taxGroupLabels() {

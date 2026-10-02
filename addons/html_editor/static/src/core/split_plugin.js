@@ -8,7 +8,6 @@ import {
     isContentEditable,
     isContentEditableAncestor,
     isPhrasingContent,
-    isElement,
     isTextNode,
     isVisible,
 } from "../utils/dom_info";
@@ -20,7 +19,6 @@ import {
     lastLeaf,
     ancestors,
     createDOMPathGenerator,
-    descendants,
     findUpTo,
 } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
@@ -338,29 +336,6 @@ export class SplitPlugin extends Plugin {
             beforeSplit = this.splitElement(limitAncestor, childNodeIndex(before) + 1)[1];
         }
         return beforeSplit || afterSplit || limitAncestor;
-    }
-
-    /**
-     * Fix for stable to remove empty nodes created by `splitAroundUntil`
-     * and properly manage the cursor.
-     * @param {Node} node
-     * @param {HTMLElement} limitAncestor
-     * @returns { Node }
-     */
-    fixSplitAroundUntilEmptyNodes(node, cursors) {
-        node &&
-            descendants(node)
-                .filter(
-                    (node) =>
-                        isElement(node) &&
-                        node.childNodes.length &&
-                        [...node.childNodes].every((n) => isTextNode(n)) &&
-                        !node.textContent.replaceAll("\ufeff", "")
-                )
-                .forEach((node) => {
-                    cursors?.update(callbacksForCursorUpdate.remove(node));
-                    node.remove();
-                });
     }
 
     splitSelection() {
