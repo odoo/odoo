@@ -91,7 +91,6 @@
                     <page name="private_information" string="Private">
                         <group>
                             <group string="Private Information">
-                                <field name="employee_ids" invisible="1"/> <!-- related employees the private_* fields of this page are read from through employee_id -->
                                 <label for="private_street" string="Private Address"/>
                                 <div class="o_address_format">
                                     <field name="private_street" placeholder="Street..." class="o_address_street"/>
@@ -177,7 +176,6 @@
 
                 <xpath expr="//header" position="inside">
                     <field name="share" invisible="1"/> <!-- drives invisible of the Create employee button and of the work location fields -->
-                    <field name="employee_ids" invisible="1"/> <!-- related employees employee_id is computed from -->
                     <field name="employee_id" invisible="1"/> <!-- drives invisible of the Create employee button and of the HR settings of this form -->
                     <button string="Create employee"
                             type="object" name="action_create_employee"

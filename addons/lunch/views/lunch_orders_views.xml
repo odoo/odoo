@@ -193,13 +193,11 @@
                 <field name="quantity" invisible="1"/> <!-- required quantity kept writable so its default is posted when the line is added to the cart -->
                 <field name="product_id" invisible="1"/> <!-- required product set from the context, source of the name/price/image and toppings computes -->
                 <field name="state" invisible="1"/> <!-- drives readonly of date -->
-                <field name="category_id" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                 <field name="available_toppings_1" invisible="1"/> <!-- drives invisible of topping_label_1 and topping_ids_1 -->
                 <field name="available_toppings_2" invisible="1"/> <!-- drives invisible of topping_label_2 and topping_ids_2 -->
                 <field name="available_toppings_3" invisible="1"/> <!-- drives invisible of topping_label_3 and topping_ids_3 -->
                 <field name="supplier_id" invisible="1"/> <!-- used in the domain of the three topping_ids fields -->
                 <field name="order_deadline_passed" invisible="1"/> <!-- drives invisible of the deadline warning and of the Add To Cart button -->
-                <field name="available_today" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                 <div class="d-flex">
                     <div class="flex-grow-0 pe-5">
                         <field name="image_1920" widget="image" class="o_lunch_image" options="{'image_preview': 'image_128'}"/>
