@@ -63,8 +63,6 @@
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
             <form string="Repair Order">
-                <field name="has_uncomplete_moves" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
-                <field name="unreserve_visible" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                 <field name="reserve_visible" invisible="1"/> <!-- drives invisible of the action_assign button -->
                <header>
                    <button name="action_validate" invisible="state != 'draft'" type="object" string="Confirm Repair" class="oe_highlight" data-hotkey="v"/>

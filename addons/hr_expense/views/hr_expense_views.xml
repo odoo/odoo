@@ -221,7 +221,6 @@
                     <group>
                         <group>
                             <field name="product_has_cost" invisible="1"/> <!-- drives invisible of the action_split_wizard button, price_unit and 4 more and readonly of total_amount -->
-                            <field name="product_has_tax" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                             <field name="is_multiple_currency" invisible="1"/> <!-- drives invisible of the text, the total_amount_product_cost_label label and 2 more -->
                             <field name="is_editable" invisible="1"/> <!-- drives invisible of the fst-italic block and readonly of name, product_id and 16 more -->
                             <field name="currency_id" invisible="1"/> <!-- currency_field option of the expense_job_position_limit_amount_currency monetary widget -->
@@ -231,7 +230,6 @@
                             <field name="nb_attachment" invisible="1"/> <!-- drives invisible of the action_submit button, the action_approve button and 1 more -->
                             <field name="total_amount" invisible="1"/> <!-- target of the <label for="total_amount"> of this form -->
                             <field name="duplicate_expense_ids" invisible="1"/> <!-- drives invisible of the warning_duplicate_expense block -->
-                            <field name="currency_rate" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                             <field name="selectable_payment_method_line_ids" invisible="1"/> <!-- used in the python-declared domain of payment_method_line_id -->
                             <field name="can_edit_account" invisible="1"/> <!-- drives readonly of account_id, analytic_distribution -->
                             <field name="is_own_expense" invisible="1"/> <!-- drives invisible of the warning_expense_job_position_limit block, the warning_manager_expense_job_position_limit block -->

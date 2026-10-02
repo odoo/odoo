@@ -823,7 +823,7 @@
             <field name="model">project.task</field>
             <field name="arch" type="xml">
                 <list string="Tasks" sample="1" default_order="priority desc, sequence, state, date_deadline asc, id desc">
-                    <field name="sequence" readonly="1" column_invisible="True"/> <!-- duplicate of the sequence handle column of this list -->
+                    <field name="sequence" readonly="1" column_invisible="True"/> <!-- used in the default_order of this list -->
                     <field name="allow_milestones" column_invisible="True"/> <!-- drives invisible of milestone_id -->
                     <field name="subtask_count" column_invisible="True"/> <!-- read by the subtask counter widget of name -->
                     <field name="closed_subtask_count" column_invisible="True"/> <!-- read by the subtask counter widget of name -->
