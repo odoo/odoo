@@ -27,7 +27,7 @@
                     <i class="oi d-flex align-items-center justify-content-center" data-icon="arrow_right" role="img" aria-label="Unfold" title="Unfold" />
                 </button>
             </div>
-            <div t-if="(this.uiService.isSmall or !this.group.isFolded) and this.progressBar" class="o_kanban_counter position-relative d-flex align-items-center justify-content-between" t-att-class="{ 'opacity-25': !this.group.count }">
+            <div t-if="(this.uiService.isSmall or !this.group.isFolded) and this.progressBar" class="o_kanban_counter o_sample_data_disabled position-relative d-flex align-items-center justify-content-between" t-att-class="{ 'opacity-25': !this.group.count }">
                 <ColumnProgress group="this.group" progressBar="this.progressBar" aggregate="this.groupAggregate" onBarClicked.bind="this.onBarClicked" />
             </div>
         </div>

@@ -407,15 +407,3 @@
         --KanbanGroup-width: calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
     }
 }
-
-/* ------- Sample mode ------- */
-.o_kanban_view .o_view_sample_data {
-    /* all records */
-    .o_kanban_record,
-    /* load more buttons */
-    .o_kanban_load_more,
-    /* progress bars and counters */
-    .o_kanban_counter {
-        @include o-sample-data-disabled;
-    }
-}

@@ -2,7 +2,7 @@
 <templates>
     <t t-name="web.FileUploadProgressKanbanRecord">
         <t t-set="progressTexts" t-value="this.getProgressTexts()"/>
-        <div class="o_kanban_record d-flex flex-grow-1 flex-md-shrink-1 flex-shrink-0">
+        <div class="o_kanban_record o_sample_data_disabled d-flex flex-grow-1 flex-md-shrink-1 flex-shrink-0">
             <div class="o_kanban_progress_card o_kanban_attachment position-relative p-0 cursor-pointer">
                 <div class="o_kanban_image_wrapper">
                     <div class="o_image o_image_thumbnail" t-att-data-mimetype="this.props.fileUpload.type"/>

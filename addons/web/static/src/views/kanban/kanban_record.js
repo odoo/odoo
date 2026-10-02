@@ -118,7 +118,7 @@ export class KanbanRecord extends CardRenderer {
     getCardClasses() {
         const classes = super.getCardClasses().split(" ");
 
-        classes.push("o_kanban_record");
+        classes.push("o_kanban_record", "o_sample_data_disabled");
 
         const {
             canOpenRecords,

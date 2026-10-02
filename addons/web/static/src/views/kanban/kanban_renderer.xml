@@ -59,13 +59,13 @@
                                 />
                             </t>
                             <t t-set="unloadedCount" t-value="this.getGroupUnloadedCount(group)" />
-                            <div t-if="unloadedCount > 0" class="o_kanban_load_more" t-key="unloadedCount">
+                            <div t-if="unloadedCount > 0" class="o_kanban_load_more o_sample_data_disabled" t-key="unloadedCount">
                                 <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.loadMore(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
                             </div>
                         </t>
                         <t t-elif="this.uiService.isSmall">
                             <t t-set="unloadedCount" t-value="this.getGroupUnloadedCount(group)" />
-                            <div t-if="unloadedCount > 0" class="o_kanban_load_more">
+                            <div t-if="unloadedCount > 0" class="o_kanban_load_more o_sample_data_disabled">
                                 <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.toggleGroup(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
                             </div>
                         </t>
@@ -113,12 +113,12 @@
                 </t>
             </t>
             <t t-else="">
-                <button t-if="this.props.addLabel" class="o_kanban_record o-kanban-button-new btn btn-link border d-print-none py-4" accesskey="shift+c" t-on-click.stop.prevent="() => this.props.onAdd()">
+                <button t-if="this.props.addLabel" class="o_kanban_record o_sample_data_disabled o-kanban-button-new btn btn-link border d-print-none py-4" accesskey="shift+c" t-on-click.stop.prevent="() => this.props.onAdd()">
                     <i class="oi me-1" data-icon="add_2" aria-hidden="true"/>
                     <t t-out="this.props.addLabel" />
                 </button>
                 <!-- kanban ghost cards are used to properly space last elements. -->
-                <div t-foreach="[,,,,,,]" t-as="i" t-key="i_index" class="o_kanban_record o_kanban_ghost flex-grow-1 flex-md-shrink-1 flex-shrink-0 my-0" />
+                <div t-foreach="[,,,,,,]" t-as="i" t-key="i_index" class="o_kanban_record o_kanban_ghost o_sample_data_disabled flex-grow-1 flex-md-shrink-1 flex-shrink-0 my-0" />
             </t>
 	    <t t-if="this.showNoContentHelper">
 			<ActionHelper noContentHelp="this.props.noContentHelp"/>
