@@ -13,11 +13,9 @@
                     </div>
                 </button>
            </xpath>
-            <!-- The reference of a received bill is the number the supplier gave to the e-invoice. -->
             <xpath expr="//group[@id='header_left_group']//field[@name='ref']" position="attributes">
                 <attribute name="readonly">l10n_my_edi_received_document_id</attribute>
             </xpath>
-            <!-- Next to the other dates, as it decides the tax period in which the bill can be claimed. -->
             <xpath expr="//group[@id='header_right_group']/field[@name='date']" position="after">
                 <field name="l10n_my_edi_validation_time" invisible="not l10n_my_edi_received_document_id"/>
             </xpath>

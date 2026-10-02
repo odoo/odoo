@@ -139,8 +139,7 @@ class AccountMove(models.Model):
     @api.depends('move_type', 'state', 'country_code', 'company_id', 'l10n_my_edi_received_document_id')
     def _compute_l10n_my_edi_is_applicable(self):
         """ Whether MyInvois is relevant for this invoice at all, regardless of the state of its document(s).
-        Callers that care about the document's state check 'l10n_my_edi_state' on top of this.
-        Bills received from MyInvois already are e-invoices, issued by the supplier: we must never send them again. """
+        Callers that care about the document's state check 'l10n_my_edi_state' on top of this. """
         for move in self:
             move.l10n_my_edi_is_applicable = bool(
                 move.is_invoice()
@@ -167,18 +166,15 @@ class AccountMove(models.Model):
 
     def write(self, vals):
         # EXTENDS 'account'
-        # A received bill records a document issued by the supplier: its type is the type of that document.
         if 'move_type' in vals and any(move.l10n_my_edi_received_document_id and move.move_type != vals['move_type'] for move in self):
             raise UserError(self.env._("The type of a bill received from MyInvois cannot be changed."))
         return super().write(vals)
 
     def _post(self, soft=True):
         # EXTENDS 'account'
-        # The user may split the single line of a received bill, but the bill must still match its e-invoice.
         mismatched_bills = self.env['account.move']
         for move in self.filtered(lambda m: m.l10n_my_edi_state == 'received'):
             document = move.l10n_my_edi_received_document_id
-            # The received total is in MYR, whatever the currency of the bill or of the company.
             total = move.currency_id._convert(move.amount_total, document.currency_id, move.company_id, move.invoice_date or move.date)
             if document.currency_id.compare_amounts(total, document.myinvois_amount_total):
                 mismatched_bills |= move
