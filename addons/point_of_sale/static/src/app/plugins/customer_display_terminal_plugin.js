@@ -6,7 +6,6 @@ import { getOnNotified, getColorScheme } from "@point_of_sale/utils";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 export const CONSOLE_COLOR = "#F5B427";
-export const REGISTER_NOTIFICATION = "REGISTER_CUSTOMER_DISPLAY_DEVICE";
 
 /**
  * Terminal half of the customer display: derives the payload from the current

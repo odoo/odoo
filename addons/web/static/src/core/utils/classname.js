@@ -1,25 +1,4 @@
 /**
- * Adds the given classes to an element, whether the classes
- * are strings or objects.
- *
- * @param {HTMLElement} el
- * @param {String|Object|undefined} classes
- *
- * @example
- * addClassesToElement(el, "hello", { "world": 0 == 1, }...)
- */
-export function addClassesToElement(el, ...classes) {
-    for (const classDefinition of classes) {
-        const classObj = toClassObj(classDefinition);
-        for (const className in classObj) {
-            if (classObj[className]) {
-                el.classList.add(className.trim());
-            }
-        }
-    }
-}
-
-/**
  * Merges two classes to a single class object, whether the
  * classes are strings or objects.
  *

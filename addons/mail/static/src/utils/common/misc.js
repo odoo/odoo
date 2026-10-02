@@ -24,15 +24,6 @@ export function assignGetter(obj, data) {
     return obj;
 }
 
-export function assignIn(obj, data, keys = Object.keys(data)) {
-    for (const key of keys) {
-        if (key in data) {
-            obj[key] = data[key];
-        }
-    }
-    return obj;
-}
-
 /**
  * @template T
  * @param {T[]} list

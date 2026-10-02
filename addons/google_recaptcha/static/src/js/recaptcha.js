@@ -49,7 +49,3 @@ export class ReCaptcha {
         }
     }
 }
-
-export default {
-    ReCaptcha: ReCaptcha,
-};

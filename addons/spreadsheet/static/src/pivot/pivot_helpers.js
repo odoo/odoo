@@ -11,8 +11,6 @@ const { isDateOrDatetimeField, parseDimension } = helpers;
  * @typedef {import("@odoo/o-spreadsheet").Granularity} Granularity
  * */
 
-export const pivotFormulaRegex = /^=.*PIVOT/;
-
 const AGGREGATOR_NAMES = {
     count: _t("Count"),
     count_distinct: _t("Count Distinct"),

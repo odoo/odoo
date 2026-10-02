@@ -30,20 +30,6 @@
         </div>
     </div>
 
-    <t t-name="hr_holidays.TimeOffCardMobile">
-        <t t-set="data" t-value="this.props.data"/>
-        <t t-set="duration" t-value="this.props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken" />
-
-        <span class="float-end o_timeoff_card_mobile">
-            <t t-if="this.props.requires_allocation" name="duration_type">
-                <strong t-out="duration" class="o_timeoff_green text-success"/> / <span t-out="data.max_leaves"/> <t t-if="data.unit_of_measure == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green text-success">Available</span>
-            </t>
-            <t t-else="">
-                <strong t-out="duration"/> <t t-if="data.unit_of_measure == 'hour'">Hours</t><t t-else="">Days</t> <span class="text-primary">Taken</span>
-            </t>
-        </span>
-    </t>
-
     <t t-name="hr_holidays.TimeOffCardPopover">
         <ul class="list-unstyled p-3 mb-0">
             <li class="d-flex justify-content-between btn-link p-0 cursor-pointer" t-on-click="this.allocatedLeaves">
