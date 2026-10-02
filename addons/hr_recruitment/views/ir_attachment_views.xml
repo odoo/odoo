@@ -28,9 +28,9 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <list>
-                    <field name="name" column_invisible="True"/>
-                    <field name="res_id" column_invisible="True"/>
-                    <field name="res_model" column_invisible="True"/>
+                    <field name="name" column_invisible="True"/> <!-- filename of the raw binary widget below -->
+                    <field name="res_id" column_invisible="True"/> <!-- read by the applicant_char widget of res_name to open the applicant -->
+                    <field name="res_model" column_invisible="True"/> <!-- drives invisible of res_name and read by its applicant_char widget -->
                     <field name="raw" widget="binary" filename="name" string="File"/>
                     <field name="res_name" widget="applicant_char" string="Applicant" invisible="res_model != 'hr.applicant'"/>
                     <field name="create_date"/>

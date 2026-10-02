@@ -35,9 +35,9 @@
                 <field name="create_uid" optional="hidden"/>
                 <field name="write_uid" optional="hidden"/>
                 <field name="write_date" optional="hidden"/>
-                <field name="color" column_invisible="1"/>
-                <field name="time_rule_id" column_invisible="1"/>
-                <field name="source_stale" column_invisible="1"/>
+                <field name="color" column_invisible="1"/> <!-- drives decoration-success/decoration-danger of the list -->
+                <field name="time_rule_id" column_invisible="1"/> <!-- drives decoration-it of the list and invisible of the Mark as Reviewed button -->
+                <field name="source_stale" column_invisible="1"/> <!-- drives invisible of the Mark as Reviewed button -->
                 <button name="action_mark_reviewed" type="object"
                         icon="warning"
                         title="Source changed — click to mark as reviewed"
@@ -96,9 +96,9 @@
                 </header>
                 <sheet>
                     <!-- invisible fields needed for the stale-source warning -->
-                    <field name="source_stale" invisible="1"/>
-                    <field name="source_attendance_id" invisible="1"/>
-                    <field name="time_rule_id" invisible="1"/>
+                    <field name="source_stale" invisible="1"/> <!-- drives invisible of the stale source warning below -->
+                    <field name="source_attendance_id" invisible="1"/> <!-- drives invisible of the deleted/modified wording of the stale source warning -->
+                    <field name="time_rule_id" invisible="1"/> <!-- drives invisible of the stale source warning below -->
                     <div class="alert alert-warning mb-3 d-flex align-items-center gap-3" role="alert"
                          invisible="not source_stale or not time_rule_id">
                         <div class="flex-grow-1">
@@ -142,7 +142,7 @@
                                     widget="daterange"
                                     options="{'end_date_field': 'check_out', 'always_range': True, 'rounding': 0}"
                                     readonly="not can_edit"/>
-                                <field name="check_out" options="{'rounding': 0}" invisible="1" readonly="not can_edit"/>
+                                <field name="check_out" options="{'rounding': 0}" invisible="1" readonly="not can_edit"/> <!-- end datetime of the check_in daterange widget and drives invisible of the Check Out log section -->
                                 <field name="resource_calendar_id" groups="base.group_no_one"/>
                             </group>
                             <group col="2" name="group_worked_hours">

@@ -27,7 +27,7 @@
                     <attribute name="required">1</attribute>
                 </field>
                 <field name="tz" position="after">
-                    <field name="is_system" invisible="1"/>
+                    <field name="is_system" invisible="1"/> <!-- drives the invisible attribute set on the Install Language button by the xpath below -->
                 </field>
                 <xpath expr="//button[@name='%(base.action_view_base_language_install)d']" position="attributes">
                     <attribute name="invisible">not is_system</attribute>
@@ -91,7 +91,7 @@
                     <page name="private_information" string="Private">
                         <group>
                             <group string="Private Information">
-                                <field name="employee_ids" invisible="1"/>
+                                <field name="employee_ids" invisible="1"/> <!-- related employees the private_* fields of this page are read from through employee_id -->
                                 <label for="private_street" string="Private Address"/>
                                 <div class="o_address_format">
                                     <field name="private_street" placeholder="Street..." class="o_address_street"/>
@@ -139,8 +139,8 @@
                     </div>
                 </xpath>
                 <xpath expr="//group[@name='access_groups']" position="inside">
-                    <field name="create_employee_id" force_save="1" invisible="1"/>
-                    <field name="create_employee" force_save="1" string="Create Employee" invisible="1" groups="hr.group_hr_user"/>
+                    <field name="create_employee_id" force_save="1" invisible="1"/> <!-- non-stored flag set by the user form, force_save to carry it to the server on save -->
+                    <field name="create_employee" force_save="1" string="Create Employee" invisible="1" groups="hr.group_hr_user"/> <!-- non-stored flag set by the user form, force_save to carry it to the server on save -->
                     <!-- It is required to stay create_employee field defined here to make it true because store value is false -->
                 </xpath>
             </field>
@@ -176,9 +176,9 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//header" position="inside">
-                    <field name="share" invisible="1"/>
-                    <field name="employee_ids" invisible="1"/>
-                    <field name="employee_id" invisible="1"/>
+                    <field name="share" invisible="1"/> <!-- drives invisible of the Create employee button and of the work location fields -->
+                    <field name="employee_ids" invisible="1"/> <!-- related employees employee_id is computed from -->
+                    <field name="employee_id" invisible="1"/> <!-- drives invisible of the Create employee button and of the HR settings of this form -->
                     <button string="Create employee"
                             type="object" name="action_create_employee"
                             invisible="not id or share or employee_id"
@@ -237,7 +237,7 @@
                     <label for="work_email" class="d-md-none" invisible="not employee_id or login == work_email"/>
                     <div class="d-flex align-items-baseline w-md-50 gap-2" invisible="not employee_id or login == work_email">
                         <i class="d-none d-md-inline-flex oi oi-filled oi-fw" data-icon="mail" title="Work Email"/>
-                        <field name="email_domain_placeholder" invisible="1" />
+                        <field name="email_domain_placeholder" invisible="1" /> <!-- placeholder_field option of work_email -->
                         <field name="work_email" widget="email" options="{'placeholder_field': 'email_domain_placeholder'}"/>
                     </div>
                     <label for="work_phone" class="d-md-none" invisible="not employee_id"/>
