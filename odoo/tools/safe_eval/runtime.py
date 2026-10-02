@@ -151,6 +151,7 @@ class _SafeTransformer(ast.NodeTransformer):
     DECO_ID = '_safe_eval_deco'
     GEN_FUNC_ID = '_safe_eval_gen_func'
     GEN_ITER_ID = '_safe_eval_gen_iter'
+    GEN_ITER_OPTI_ID = '_safe_eval_gen_iter_opti'
 
     def visit_Call(self, node):
         """
@@ -234,8 +235,14 @@ class _SafeTransformer(ast.NodeTransformer):
             _safe_eval_gen_iter((_ for _ in []))
         """
         self.generic_visit(node)
+
+        id_ = self.GEN_ITER_OPTI_ID
+        # Remove optimization if side-effect
+        if any(isinstance(child, (ast.Call, ast.NamedExpr)) for child in ast.walk(node)):
+            id_ = self.GEN_ITER_ID
+
         call = ast.Call(
-            func=ast.Name(id=self.GEN_ITER_ID, ctx=ast.Load()),
+            func=ast.Name(id=id_, ctx=ast.Load()),
             args=[node],
             keywords=[],
         )
@@ -641,6 +648,26 @@ class _SafeGenerator(_GeneratorWrapper):  # noqa: OLS01002
     __await__ = __iter__
 
 
+class _SafeGeneratorOpti(_SafeGenerator):
+
+    def __init__(self, gen):
+        super().__init__(gen)
+        self._in_eager = False
+
+    def __next__(self, *args):
+        if not self._in_eager:
+            return super().__next__(*args)
+
+        # In eager consumer, we can skip the per-step whole context re-walk.
+        # The generator is drained with no user code running between steps.
+        val = _GeneratorWrapper.__next__(self, *args)
+        try:
+            safe_checker.check(val)
+        except UnsafeObjectError as e:
+            handle_unsafe_error(e)
+        return val
+
+
 def safe_gen_wrapper(func):
 
     def _wrapper(*args, **kwargs):
@@ -650,12 +677,31 @@ def safe_gen_wrapper(func):
     return _wrapper
 
 
+# Builtins that consume a generator eagerly, i.e. they iterate it from
+# start (to end), in order, in C, without short-circuiting.
+_EAGER_CONSUMERS = frozenset((
+    sum, min, max, list, tuple, set, dict, sorted, any, all,
+))
+
+
 def safe_call(callee, /, *args, **kwargs):
     """ Ensure objects used for the call are safe """
     try:
         safe_checker.check((callee, args, kwargs))
     except UnsafeError as e:
         handle_unsafe_error(e)
+
+    if (
+        callee in _EAGER_CONSUMERS
+        and args and not kwargs
+        and isinstance(args[0], _SafeGeneratorOpti)
+    ):
+        args[0]._in_eager = True
+        try:
+            return callee(*args, **kwargs)
+        finally:
+            args[0]._in_eager = False
+
     return callee(*args, **kwargs)
 
 
@@ -669,7 +715,7 @@ safe_transform = safe_transformer.visit
 safe_whitelist = _SafeWhitelist()
 safe_checker = _SafeChecker()
 
-safe_whitelist.TRUSTED_CLASSES |= {_SafeGenerator}
+safe_whitelist.TRUSTED_CLASSES |= {_SafeGenerator, _SafeGeneratorOpti}
 safe_whitelist.TRUSTED_FUNCTIONS |= {safe_call, safe_call_deco, safe_gen_wrapper}
 
 # ==========
@@ -679,7 +725,7 @@ safe_whitelist.TRUSTED_FUNCTIONS |= {safe_call, safe_call_deco, safe_gen_wrapper
 
 def monitoring_call(code, instruction_offset, callee, arg0):
     """ Ensure `_MONITORING_BUILTINS` are not overridden """
-    if callee in (safe_call, safe_call_deco, _SafeGenerator, safe_gen_wrapper):
+    if callee in (safe_call, safe_call_deco, _SafeGenerator, _SafeGeneratorOpti, safe_gen_wrapper):
         return
 
     frame = sys._getframe(1)
@@ -714,6 +760,7 @@ _MONITORING_BUILTINS = {
     safe_transformer.DECO_ID: safe_call_deco,
     safe_transformer.GEN_FUNC_ID: safe_gen_wrapper,
     safe_transformer.GEN_ITER_ID: _SafeGenerator,
+    safe_transformer.GEN_ITER_OPTI_ID: _SafeGeneratorOpti,
 }
 
 EVENTS = sys.monitoring.events
