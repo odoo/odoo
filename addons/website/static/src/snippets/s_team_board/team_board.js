@@ -18,6 +18,10 @@ export class TeamBoard extends Interaction {
         this.dialog = useService("dialog");
     }
 
+    destroy() {
+        this.closeModal();
+    }
+
 
     _onClickCard(ev) {
         const card = ev.target.closest('.o_team_board_card');
@@ -29,7 +33,7 @@ export class TeamBoard extends Interaction {
             description: card.querySelector('.card-text:not(.text-secondary)')?.textContent.trim(),
             picture: card.querySelector('img.o_card_img')?.getAttribute('src'),
         };
-        this.dialog.add(SendMessageModal, {
+        this.closeModal = this.dialog.add(SendMessageModal, {
             name : data.name,
             role: data.function,
             description: data.description,

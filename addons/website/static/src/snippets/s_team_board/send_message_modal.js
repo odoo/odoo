@@ -55,5 +55,4 @@ export class SendMessageModal extends Component {
             }, 2000);
         });
     }
-
 }
