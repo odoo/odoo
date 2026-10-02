@@ -44,6 +44,12 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             order_line_label = ellipsis(order_line.name, 20)
             qty_to_bill, price_unit = self._get_purchase_accrual_qty_and_price_unit(order_line, accrual_entry_date)
 
+            accrual_account = self.account_id or product.product_tmpl_id._get_product_accounts()[
+                'bills_to_receive' if qty_to_bill > 0 else 'billed_not_received'
+            ]
+            if not accrual_account:
+                continue
+
             account = self._get_computed_account(order, product, True)
             if any(tax.price_include for tax in order_line.tax_ids):
                 # price_unit ignores included taxes, so recompute the subtotal.
@@ -68,9 +74,6 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
             expense_vals = self._get_aml_vals(True, order, amount, amount_currency, account.id, label=label, analytic_distribution=distribution)
 
-            accrual_account = self.account_id or product.product_tmpl_id._get_product_accounts()[
-                'bills_to_receive' if qty_to_bill > 0 else 'billed_not_received'
-            ]
             counterpart_vals = self._get_aml_vals(
                 True, order, -amount, -amount_currency, accrual_account.id,
                 label=_('Accrued total'), analytic_distribution=distribution,

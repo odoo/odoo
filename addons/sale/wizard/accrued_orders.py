@@ -45,6 +45,12 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             order_line_label = ellipsis(order_line.name, 20)
             qty_to_invoice, price_unit, amount, amount_currency = self._get_accrual_qty_price_and_amount(order_line)
 
+            accrual_account = self.account_id or product.product_tmpl_id._get_product_accounts()[
+                'invoices_to_issue' if qty_to_invoice > 0 else 'invoiced_not_delivered'
+            ]
+            if not accrual_account:
+                continue
+
             account = self._get_computed_account(order, product, False)
             label = _(
                 '%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %(quantity_delivered)s Delivered at %(unit_price)s each',
@@ -57,9 +63,6 @@ class AccountAccruedOrdersWizard(models.TransientModel):
             distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
             revenue_vals = self._get_aml_vals(False, order, amount, amount_currency, account.id, label=label, analytic_distribution=distribution)
 
-            accrual_account = self.account_id or product.product_tmpl_id._get_product_accounts()[
-                'invoices_to_issue' if qty_to_invoice > 0 else 'invoiced_not_delivered'
-            ]
             counterpart_vals = self._get_aml_vals(
                 False, order, -amount, -amount_currency, accrual_account.id,
                 label=_('Accrued total'), analytic_distribution=distribution,
