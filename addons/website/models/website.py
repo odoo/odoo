@@ -1372,6 +1372,13 @@ class Website(models.CachedModel):
         """Return the list of font URLs to emit as <link> tags in <head>."""
         return re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', self._get_scss_exports())
 
+    def _get_theme_gates(self):
+        """Return the theme settings that switch CSS rules on, separated by
+        spaces, for `<html data-o-theme-gates>`: the website's CSS gates those
+        rules on it."""
+        match = re.search(r'--o-theme-gates:\s*"([^"]*)"', self._get_scss_exports())
+        return match[1] if match else ''
+
     def _get_icon_font_family(self):
         """Return the icon font the website renders with, empty if the default
         one is used."""

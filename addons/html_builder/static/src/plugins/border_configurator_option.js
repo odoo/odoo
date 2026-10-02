@@ -12,6 +12,8 @@ export class BorderConfigurator extends BaseOptionComponent {
         // TODO remove, and actually configure propertly in caller
         withBSClass: t.boolean().optional(true),
         action: t.string().optional("styleAction"),
+        // The color's action, when it differs.
+        colorAction: t.string().optional(),
         level: t.number().optional(),
     });
 

@@ -11,6 +11,7 @@ export class PortalOptionPlugin extends Plugin {
     resources = {
         builder_actions: {
             SetStylePortalCardAction,
+            SetStylePortalCardColorAction,
             UpdatePortalCardListAction,
         },
         anchor_excluded_selectors: ".o_portal_index_card",
@@ -105,37 +106,32 @@ export class PortalOptionPlugin extends Plugin {
 export class SetStylePortalCardAction extends StyleAction {
     static id = "setStylePortalCard";
     static dependencies = ["customizeWebsite", "color"];
+    setup() {}
+    /**
+     * Previews the specified style of the portal cards.
+     *
+     * @param {Object} params - Contains mainParam with the CSS property name
+     * @param {string} value - The value to apply for the style property
+     */
+    apply({ params: { mainParam: styleName }, value }) {
+        this.dependencies.customizeWebsite.previewWebsiteVariables({
+            [`portal-card-${styleName}`]: value,
+        });
+    }
+}
 
+// The color is written right away, until colors are previewed too.
+export class SetStylePortalCardColorAction extends StyleAction {
+    static id = "setStylePortalCardColor";
+    static dependencies = ["customizeWebsite", "color"];
     setup() {
         this.preview = false;
         this.dependencies.customizeWebsite.withCustomHistory(this);
     }
-    /**
-     * Applies the specified style to portal cards.
-     *
-     * @param {Object} params - Contains mainParam with the CSS property name
-     * @param {string} value - The value to apply for the style property
-     *
-     */
-    async apply({ params, value }) {
-        const styleName = params.mainParam;
-        const variableMap = {
-            "border-style": "portal-card-border-style",
-            "border-radius": "portal-card-border-radius",
-            "border-width": "portal-card-border-width",
-            "border-color": "portal-card-border-color",
-        };
-
-        if (styleName in variableMap) {
-            if (styleName === "border-color") {
-                return this.dependencies.customizeWebsite.customizeWebsiteColors({
-                    [variableMap[styleName]]: value,
-                });
-            }
-            return this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                [variableMap[styleName]]: value,
-            });
-        }
+    async apply({ value }) {
+        return this.dependencies.customizeWebsite.customizeWebsiteColors({
+            "portal-card-border-color": value,
+        });
     }
 }
 

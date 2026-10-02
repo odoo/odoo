@@ -54,6 +54,58 @@ const PRINTED_NAMES = {
     "btn-border-radius": "o-btn-border-radius",
     "btn-font-weight": "o-btn-font-weight",
 };
+// Theme settings that switch CSS rules on (`o-theme-gate` in the SCSS): the
+// server marks the saved ones on `<html data-o-theme-gates>`. While a setting
+// is previewed, its gate follows it:
+// - `set`: on when the setting has a value (that `isOn`, if given);
+// - `apart`: on when the setting differs from the one it otherwise follows.
+const THEME_GATES = {};
+for (const key of [
+    "headings-font-weight-bold",
+    "display-font-weight-bold",
+    "btn-font-weight-bold",
+]) {
+    THEME_GATES[key] = { set: key };
+}
+for (const side of ["top", "right", "bottom", "left"]) {
+    THEME_GATES[`input-border-${side}-width`] = {
+        apart: [`input-border-${side}-width`, "input-border-width"],
+    };
+}
+for (const level of [
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "display-1",
+    "display-2",
+    "display-3",
+    "display-4",
+]) {
+    THEME_GATES[`${level}-font`] = { apart: [`${level}-font`, "headings-font"] };
+    if (level.startsWith("display")) {
+        for (const property of ["line-height", "margin-top", "margin-bottom"]) {
+            THEME_GATES[`${level}-${property}`] = {
+                apart: [`${level}-${property}`, `headings-${property}`],
+            };
+        }
+    }
+}
+for (const key of [
+    "header-font-size",
+    "menu-border-width",
+    "menu-border-radius",
+    "menu-shadow-class",
+    "portal-card-border-width",
+    "portal-card-border-radius",
+]) {
+    THEME_GATES[key] = { set: key };
+}
+THEME_GATES["header-bg-blur"] = { set: "header-bg-blur", isOn: (value) => value !== "0" };
+THEME_GATES["navbar-font"] = { apart: ["navbar-font", "font"] };
+const THEME_GATES_ATTRIBUTE = "data-o-theme-gates";
+const NULL_VALUES = ["null", "NULL", "''"];
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
@@ -200,6 +252,8 @@ export class CustomizeWebsitePlugin extends Plugin {
     pendingVariables = {};
     /** Preview steps not committed to the history yet. */
     pendingPreviewSteps = [];
+    /** @type {Set<string>} the theme gates of the saved values */
+    savedThemeGates;
     colorsToCustomize = {};
     resolves = {};
     getPendingThemeRequests() {
@@ -304,6 +358,34 @@ export class CustomizeWebsitePlugin extends Plugin {
                 style.removeProperty(`--${printedName}`);
             }
         }
+        this.updateThemeGates();
+    }
+    /**
+     * Turns the theme gates of the previewed settings on or off (the others
+     * keep their saved state). Computed from the current values, so they
+     * follow undo and redo without being part of the history steps.
+     */
+    updateThemeGates() {
+        const htmlEl = this.document.documentElement;
+        this.savedThemeGates ??= new Set(
+            (htmlEl.getAttribute(THEME_GATES_ATTRIBUTE) || "").split(" ").filter(Boolean)
+        );
+        const gates = new Set(this.savedThemeGates);
+        for (const [gate, { set, isOn: isValueOn, apart }] of Object.entries(THEME_GATES)) {
+            if (!(set ? [set] : apart).some((name) => name in this.pendingVariables)) {
+                continue;
+            }
+            const value = this.pendingVariables[set];
+            const isOn = set
+                ? !NULL_VALUES.includes(value) && (!isValueOn || isValueOn(value))
+                : this.getWebsiteVariableValue(apart[0]) !== this.getWebsiteVariableValue(apart[1]);
+            if (isOn) {
+                gates.add(gate);
+            } else {
+                gates.delete(gate);
+            }
+        }
+        htmlEl.setAttribute(THEME_GATES_ATTRIBUTE, [...gates].join(" "));
     }
     debouncedSCSSVariablesCusto = debounce(async (nullValue) => {
         const variables = this.variablesToCustomize;
@@ -1172,20 +1254,9 @@ export class PreviewWebsiteSubVariablesAction extends CustomizeWebsiteSubVariabl
     // Drop the parent's `preview = false` and blocking `withCustomHistory`.
     setup() {}
     apply({ params, value }) {
-        const { nullValue = "null", subVariablesConfig = {} } = params;
-        const variables = this.getVariablesToUpdate(params, value);
-        const previewValues = {};
-        // A sub-variable set apart only applies on save (the compiled CSS has
-        // no rule for it before): meanwhile, the global value stays as shown.
-        const globalVariable = Object.keys(subVariablesConfig)[0];
-        if (variables[globalVariable] === nullValue) {
-            previewValues[globalVariable] =
-                this.dependencies.customizeWebsite.getWebsiteVariableValue(globalVariable);
-        }
         this.dependencies.customizeWebsite.previewWebsiteVariables(
-            variables,
-            nullValue,
-            previewValues
+            this.getVariablesToUpdate(params, value),
+            params.nullValue
         );
     }
 }

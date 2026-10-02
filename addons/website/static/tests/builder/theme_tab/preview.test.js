@@ -115,6 +115,9 @@ const PREVIEWED_VALUES = [
     { option: "font-weight-normal", value: "300", select: `${PARAGRAPH} [data-label='Font Weight']`, element: "p", property: "font-weight", expected: "300" },
     { option: "font-weight-bolder", value: "900", expand: `${PARAGRAPH} [data-label='Font Weight']`, select: `${PARAGRAPH} [data-label='Bold']`, element: "p b", property: "font-weight", expected: "900" },
     { option: "headings-font-weight", value: "700", select: `${HEADINGS} [data-label='Font Weight']`, element: "h2", property: "font-weight", expected: "700" },
+    { option: "headings-font-weight-bold", value: "900", expand: `${HEADINGS} [data-label='Font Weight']`, select: `${HEADINGS} [data-label='Bold']`, element: "h2 b", property: "font-weight", expected: "900" },
+    { option: "display-2-font", value: "'SYSTEM_FONTS'", expand: "headings-font", select: `${HEADINGS} [data-label='Display 2']`, element: ".display-2", property: "font-family", expected: SYSTEM_FONTS },
+    { option: "display-1-margin-top", value: "30", expand: "headings-margin-top", element: ".display-1", property: "margin-top", expected: "30px" },
     { option: "btn-padding-y", value: "10", element: ".btn:not(.btn-lg, .btn-sm)", property: "padding-top", expected: "10px" },
     { option: "btn-padding-x", value: "20", element: ".btn:not(.btn-lg, .btn-sm)", property: "padding-left", expected: "20px" },
     { option: "btn-padding-y-lg", value: "14", expand: "btn-padding-y", element: ".btn-lg", property: "padding-top", expected: "14px" },
@@ -140,7 +143,7 @@ for (const { option, value, expand, select, input, element, property, expected }
         mockThemeRpcs();
         await setupWebsiteBuilder(
             `<p>Text <small>small</small> <b>bold</b></p>
-            <h1>H1</h1><h2>H2</h2><h3>H3</h3>
+            <h1>H1</h1><h2>H2 <b>bold</b></h2><h3>H3</h3>
             <h4 style="font-size: 20px">H4</h4><h5>H5</h5>
             <div class="display-1">Display 1</div>
             <div class="display-2" style="font-size: 20px">Display 2</div>
@@ -183,16 +186,17 @@ for (const { option, value, expand, select, input, element, property, expected }
     });
 }
 
-test("theme tab: a border side set apart keeps the widths shown until save", async () => {
+test("theme tab: a border side set apart is previewed", async () => {
     mockThemeRpcs();
     await setupWebsiteBuilder(`<input class="form-control"/>`, { loadIframeBundles: true });
     await contains("#theme-tab").click();
     await contains(`${INPUTS} [data-label='Border Width'] input`).edit("2");
     await contains(`${INPUTS} [data-label='Border Width'] .o_hb_collapse_toggler`).click();
     await contains(`${INPUTS} [data-label='Bottom'] input`).edit("5");
-    // The side applies on save: the compiled CSS has no rule for it before.
+    // Its rule is gated on `data-o-theme-gates`.
+    expect(":iframe html").toHaveAttribute("data-o-theme-gates", /input-border-bottom-width/);
     expect(":iframe .form-control").toHaveStyle({ "border-top-width": "2px" });
-    expect(":iframe .form-control").toHaveStyle({ "border-bottom-width": "2px" });
+    expect(":iframe .form-control").toHaveStyle({ "border-bottom-width": "5px" });
 
     await save();
     expect.verifySteps([
