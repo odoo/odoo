@@ -1,4 +1,5 @@
 import {
+    actionPanel,
     click,
     contains,
     defineMailModels,
@@ -41,7 +42,7 @@ test("Attachment panel sort by date", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
     await click(".o-mail-DiscussContent-header button[title='Attachments']");
     await contains(".o-mail-AttachmentCard-info:text('file2.pdf')", {
         after: [".o-mail-DateSection:text('September, 2023')"],

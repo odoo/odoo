@@ -238,7 +238,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             run: "edit text.txt",
         },
         {
-            trigger: `.o-mail-SearchMessagesPanel ${editedMessageSelector} .o-mail-AttachmentContainer:contains("text.txt")`,
+            trigger: `.o-mail-ActionPanel:has(.o-mail-ActionPanel-header:contains('Search Messages')) ${editedMessageSelector} .o-mail-AttachmentContainer:contains("text.txt")`,
         },
     ],
 });

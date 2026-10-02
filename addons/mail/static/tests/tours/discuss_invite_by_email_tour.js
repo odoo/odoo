@@ -4,7 +4,7 @@ registry.category("web_tour.tours").add("discuss.invite_by_email", {
     steps: () => [
         // Wait for the auto-open of the memberlist. Otherwise, it will
         // conflict with the opening of the invite panel.
-        { trigger: ".o-discuss-ChannelMemberList" },
+        { trigger: ".o-mail-ActionPanel:has(.o-mail-ActionPanel-header:contains('Members'))" },
         {
             trigger: "button[title='Add People']",
             run: "click",

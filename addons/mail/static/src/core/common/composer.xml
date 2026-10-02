@@ -103,14 +103,15 @@
                     t-if="this.props.composer.attachments.length > 0"
                     attachmentGroups="this.attachmentGroups"
                     unlinkAttachments.bind="this.unlinkAttachments"/>
-                <div t-if="!this.extended and !this.props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': this.composerActions.activeAction and this.ui.isSmall }" t-ref="this.pickerContainerRef">
-                    <div t-if="this.composerActions.partition.actionPanels.length > 1 and this.composerActions.activeAction and this.ui.isSmall" class="btn-group w-100">
-                        <button t-foreach="this.composerActions.partition.actionPanels" t-as="action" t-key="'ACTION_PANEL_' + action.id" class="btn btn-secondary" t-out="action.actionPanelName" t-on-click="(ev) => action.onSelected(ev)" t-att-class="{
+                <div t-if="!this.extended and !this.props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': this.composerActions.panelAction and this.ui.isSmall }" t-ref="this.pickerContainerRef">
+                    <div t-if="this.composerActions.partition.panelActions.length > 1 and this.composerActions.panelAction and this.ui.isSmall" class="btn-group w-100">
+                        <button t-foreach="this.composerActions.partition.panelActions" t-as="action" t-key="'ACTION_PANEL_' + action.id" class="btn btn-secondary" t-out="action.getPanel().name" t-on-click="(ev) => action.onSelected(ev)" t-att-class="{
                             'active': action.isActive
                         }"/>
                     </div>
-                    <div t-if="this.ui.isSmall and this.composerActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.composerActions.activeAction.actionPanelOuterClass }}" class="print-none w-100">
-                        <t t-component="this.composerActions.activeAction.actionPanelComponent" t-props="this.composerActions.activeAction.actionPanelComponentProps"/>
+                    <t t-set="activePanel" t-value="this.composerActions.activePanel"/>
+                    <div t-if="this.ui.isSmall and activePanel" class="print-none w-100">
+                        <t t-component="activePanel.component" t-props="activePanel.props"/>
                     </div>
                 </div>
                 <div t-else="" class="d-flex align-items-center gap-1 w-100 pe-1">
@@ -151,7 +152,7 @@
 <t t-name="mail.Composer.quickActions">
     <div class="o-mail-Composer-quickActions o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}" t-ref="this.quickActionsRef">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
-            <ActionList actions="this.quickActionsList" inline="true" actionComponent.bind="this.getActionComponent"/>
+            <ActionList actions="this.quickActionsList" inline="true" actionComponent.bind="this.getActionComponent" panelContainer.bind="this.getPanelContainer"/>
         </div>
     </div>
 </t>
@@ -159,7 +160,7 @@
 <t t-name="mail.Composer.moreActions">
     <div class="o-mail-Composer-moreActions o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}" t-ref="this.moreActionsRef">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
-            <ActionList actions="this.moreActionsList" inline="true" actionComponent.bind="this.getActionComponent"/>
+            <ActionList actions="this.moreActionsList" inline="true" actionComponent.bind="this.getActionComponent" panelContainer.bind="this.getPanelContainer"/>
         </div>
     </div>
 </t>
@@ -167,7 +168,7 @@
 <t t-name="mail.Composer.extraActions">
     <div class="o-mail-Composer-extraActions" t-attf-class="{{ actionsContainerClass }}" t-ref="this.extraActionsRef">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
-            <ActionList actions="this.extraActionsList" inline="true" actionComponent.bind="this.getActionComponent"/>
+            <ActionList actions="this.extraActionsList" inline="true" actionComponent.bind="this.getActionComponent" panelContainer.bind="this.getPanelContainer"/>
         </div>
     </div>
 </t>

@@ -1,5 +1,6 @@
 import { waitForChannels } from "@bus/../tests/bus_test_helpers";
 import {
+    actionPanel,
     click,
     defineMailModels,
     MENU_ACTIVE_IDS,
@@ -75,7 +76,7 @@ test("bus subscription updated when joining non-member thread open in discuss", 
     await start();
     await openDiscuss(channelId);
     await waitForChannels([`discuss.channel_${channelId}`]);
-    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
     await click("[title='Add People']");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('Mitchell Admin'))");
     await click(".o-discuss-ChannelInvitation button:text('Invite'):enabled");

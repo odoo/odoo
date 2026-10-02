@@ -1,6 +1,7 @@
 import { defineCrmLivechatModels } from "@crm_livechat/../tests/crm_livechat_test_helpers";
 
 import {
+    actionPanel,
     click,
     contains,
     insertText,
@@ -37,7 +38,7 @@ test("can create a lead from the thread action after the conversation ends", asy
     });
     await start();
     await openDiscuss(channel_id);
-    await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
+    await contains(actionPanel("Information")); // wait for auto-open of this panel
     await click(".o-mail-DiscussContent-header button[title='Create Lead']");
     await insertText(".o-livechat-LivechatCommandDialog-form input", "testlead");
     await click(".o-mail-ActionPanel button", { text: "Create Lead" });

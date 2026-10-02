@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Action, ACTION_TAGS } from "@mail/core/common/action";
+import { Action, ACTION_TAGS, PANEL_CONTAINER_TYPE } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import {
     cameraOnAction,
@@ -34,6 +34,16 @@ export class CallPreview extends Component {
 
     audioRef = signal.ref();
     videoRef = signal.ref();
+    /**
+     * The preview has no panel of its own: the quick settings open theirs in a dropdown above it.
+     *
+     * @type {import("@mail/core/common/action_list").ActionPanelContainer}
+     */
+    panelContainer = {
+        type: PANEL_CONTAINER_TYPE.DROPDOWN,
+        position: "top-end",
+        menuClass: "p-1 overflow-x-hidden",
+    };
 
     scope = useScope();
 

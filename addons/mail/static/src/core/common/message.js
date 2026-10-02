@@ -55,6 +55,7 @@ import { useLayoutEffect } from "@web/owl2/utils";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 import { computedShallowEqual } from "@mail/utils/common/signal";
+import { PANEL_CONTAINER_TYPE } from "@mail/core/common/action";
 import { QuickReactionAction } from "@mail/core/common/quick_reaction_menu";
 
 /** Button of the dropdown of the actions that do not fit in the quick actions of a message. */
@@ -280,6 +281,20 @@ export class Message extends Component {
         return action.definition.isMoreAction ? MoreMessageInlineAction : CircleInlineAction;
     }
 
+    /**
+     * The menu of "Expand" opens beside the message, away from its side.
+     *
+     * @type {import("@mail/core/common/action").PanelContainer}
+     */
+    get actionPanelContainer() {
+        const side = this.isAlignedRight ? "left" : "right";
+        return {
+            type: PANEL_CONTAINER_TYPE.DROPDOWN,
+            menuClass: "o-mail-Message-moreMenu",
+            position: `${side}-${this.message.threadAsNewest ? "end" : "start"}`,
+        };
+    }
+
     get messageActionsParams() {
         return {
             message: () => this.message,
@@ -312,14 +327,6 @@ export class Message extends Component {
         return moreActions?.length
             ? this.messageActions.more(this.messageActionsParams, {
                   actions: moreActions,
-                  dropdownMenuClass: "o-mail-Message-moreMenu",
-                  dropdownPosition: this.isAlignedRight
-                      ? this.message.threadAsNewest
-                          ? "left-end"
-                          : "left-start"
-                      : this.message.threadAsNewest
-                      ? "right-end"
-                      : "right-start",
                   name: _t("Expand"),
               })
             : undefined;

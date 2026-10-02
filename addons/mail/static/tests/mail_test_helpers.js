@@ -954,6 +954,17 @@ export async function hover(selector) {
     await hootHover(selector);
 }
 
+/**
+ * Selector of the action panel with the given title, as shown in its header, e.g.
+ * `actionPanel("Members")` for the member list of a channel.
+ *
+ * @param {string} title
+ * @returns {string}
+ */
+export function actionPanel(title) {
+    return `.o-mail-ActionPanel:has(.o-mail-ActionPanel-header:contains('${title}'))`;
+}
+
 function toChatHubData(opened, folded) {
     return JSON.stringify({
         opened: opened.map((data) => convertChatHubParam(data)),

@@ -5,14 +5,23 @@ import { _t } from "@web/core/l10n/translation";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useBackButton, useService } from "@web/core/utils/hooks";
 
+/** @see import("@mail/core/common/action").PanelCloseOptions */
+const panelCloseOptionsSchema = t.object({ closeAll: t.boolean().optional() });
+
 export class ActionPanel extends Component {
     static template = "mail.ActionPanel";
     static components = { ResizablePanel };
     setup() {
         super.setup();
-        this.ancestors = useAncestors({ inDiscussCallTheme: false });
+        this.ancestors = useAncestors({
+            inActionPanel: {
+                /** @param {import("@mail/core/common/action").PanelCloseOptions} [options] */
+                close: (options) => this.props.close?.(options),
+            },
+            inDiscussCallTheme: false,
+        });
         this.props = useProps({
-            close: t.function([]).optional(),
+            close: t.function([panelCloseOptionsSchema.optional()]).optional(),
             contentPadding: t.boolean().optional(true),
             icon: t.string().optional(),
             iconClass: t.string().optional(),

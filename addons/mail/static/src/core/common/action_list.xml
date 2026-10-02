@@ -31,17 +31,11 @@
 
 <!-- Shared by the templates of InlineAction and DropdownAction, which give their button as body. -->
 <t t-name="mail.Action">
-    <t t-if="this.action.dropdownTrigger">
-        <t t-component="this.Dropdown" menuClass="(this.action.dropdownMenuClass ?? '') + ' ' + this.store.discussDropdownMenuClass(this.ancestors)" position="this.action.dropdownPosition" state="this.action.dropdownState">
+    <t t-if="this.hasPanelDropdown">
+        <t t-component="this.Dropdown" menuClass="this.panelMenuClass" position="this.panelContainer.position" state="this.action.overlayState">
             <t t-out="0"/>
             <t t-set-slot="content">
-                <t t-if="this.action.dropdownComponent" t-component="this.action.dropdownComponent" t-props="this.action.dropdownComponentProps"/>
-                <t t-elif="this.action.dropdownTemplate" t-call="{{ this.action.dropdownTemplate }}"
-                    templateParams="this.action.dropdownTemplateParams"/>
-                <t t-elif="this.action.definition?.isMoreAction">
-                    <t t-component="this.ActionList" actions="this.action.definition.actionsSignal" dropdown="true" actionComponent="this.dropdownActionComponent" parentAction="this.action"/>
-                </t>
-                <t t-else="">No content.</t>
+                <t t-component="this.panel.component" t-props="this.panelProps"/>
             </t>
         </t>
     </t>

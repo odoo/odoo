@@ -13,7 +13,6 @@ import {
 } from "@mail/core/common/action";
 import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -79,32 +78,25 @@ registerComposerAction("send-message", {
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.PRIMARY : undefined),
 });
 registerComposerAction("add-emoji", {
-    actionPanelComponent: EmojiPicker,
-    actionPanelComponentProps: ({ action, owner }) => ({
-        onSelect: (emoji) => owner.addEmoji(emoji),
-        onClose: () => action.actionPanelClose(),
-        storeScroll: action.emojiStoreScroll,
-    }),
-    actionPanelName: _t("Emoji"),
-    actionPanelOpen(...args) {
-        const anchorEl = pickerGetAnchor(...args);
-        this.popover?.open(anchorEl, this.actionPanelComponentProps);
-    },
     disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
     icon: "sentiment_satisfied",
     name: _t("Add Emojis"),
     onSelected(params, ev) {
         markEventHandled(ev, "Composer.onClickAddEmoji");
     },
+    panel: {
+        component: EmojiPicker,
+        name: _t("Emoji"),
+        props: ({ action, owner }) => ({
+            onSelect: (emoji) => owner.addEmoji(emoji),
+            onClose: () => action.closePanel(),
+            storeScroll: action.emojiStoreScroll,
+        }),
+    },
     setup({ store }) {
-        if (store.env.services.ui.isSmall) {
-            return;
+        if (!store.env.services.ui.isSmall) {
+            this.emojiStoreScroll = useEmojiPickerStoreScroll();
         }
-        this.emojiStoreScroll = useEmojiPickerStoreScroll();
-        this.popover = usePopover(EmojiPicker, {
-            arrow: false,
-            onClose: () => this.actionPanelClose(),
-        });
     },
     sequenceQuick: 20,
 });

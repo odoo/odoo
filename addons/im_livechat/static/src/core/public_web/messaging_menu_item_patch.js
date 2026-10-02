@@ -4,6 +4,7 @@ import { computedUntilStale } from "@mail/utils/common/signal";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
+import { PANEL_CONTAINER_TYPE } from "@mail/core/common/action";
 
 /** @type {MessagingMenuItem} */
 const messagingMenuItemPatch = {
@@ -40,6 +41,17 @@ const messagingMenuItemPatch = {
             },
             ({ ms }) => ms
         );
+    },
+    /**
+     * The status selection is a list that fills the dropdown on its own.
+     *
+     * @type {MessagingMenuItem["getPanelContainer"]}
+     */
+    getPanelContainer(params) {
+        if (this.channel && params.action.id === "livechat-status") {
+            return { type: PANEL_CONTAINER_TYPE.DROPDOWN, menuClass: "p-0" };
+        }
+        return super.getPanelContainer(params);
     },
 };
 patch(MessagingMenuItem.prototype, messagingMenuItemPatch);

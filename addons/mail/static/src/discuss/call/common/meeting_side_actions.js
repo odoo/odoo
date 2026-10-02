@@ -8,6 +8,7 @@ import { Component, types, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { computedShallowEqual } from "@mail/utils/common/signal";
+import { PANEL_CONTAINER_TYPE } from "@mail/core/common/action";
 
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
@@ -50,6 +51,25 @@ export class MeetingSideActions extends Component {
         return getCallControlComponent;
     }
 
+    /**
+     * "More" opens a dropdown with the look of the menus of the meeting, the other actions open
+     * their panel in the meeting.
+     *
+     * @type {import("@mail/core/common/action_list").GetPanelContainer}
+     */
+    getPanelContainer({ action }) {
+        if (action.definition.isMoreAction) {
+            return {
+                type: PANEL_CONTAINER_TYPE.DROPDOWN,
+                menuClass: attClassObjectToString({
+                    "o-discuss-CallActionList-menu o-inMeetingView border-0 shadow": Boolean(
+                        this.ancestors.inMeetingView
+                    ),
+                }),
+            };
+        }
+    }
+
     get callActionsParams() {
         return { channel: () => this.store.rtc.channel };
     }
@@ -66,11 +86,6 @@ export class MeetingSideActions extends Component {
         actions.push(
             threadActions.more(this.callActionsParams, {
                 actions: meetingMoreActionGroups(threadActions, QUICK_ACTION_IDS),
-                dropdownMenuClass: attClassObjectToString({
-                    "o-discuss-CallActionList-menu o-inMeetingView border-0 shadow": Boolean(
-                        this.ancestors.inMeetingView
-                    ),
-                }),
             })
         );
         return actions;
