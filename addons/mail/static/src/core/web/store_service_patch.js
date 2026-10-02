@@ -202,10 +202,11 @@ const StorePatch = {
         );
     },
     handleClickOnLink(ev, thread) {
-        const model = ev.target.dataset.oeModel;
-        const id = Number(ev.target.dataset.oeId);
+        const target = ev.composedPath()[0] ?? ev.target;
+        const model = target.dataset?.oeModel;
+        const id = Number(target.dataset?.oeId);
         const isLinkHandledBySuper = super.handleClickOnLink(...arguments);
-        if (!isLinkHandledBySuper && ev.target.tagName === "A" && id && model) {
+        if (!isLinkHandledBySuper && target.tagName === "A" && id && model) {
             ev.preventDefault();
             Promise.resolve(
                 this.env.services.action.doAction({

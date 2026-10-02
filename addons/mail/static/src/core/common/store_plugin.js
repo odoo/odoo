@@ -428,7 +428,8 @@ export class Store extends BaseStore {
     }
 
     handleClickOnLink(ev, thread) {
-        const link = ev.target.closest("a");
+        // composedPath to also find links inside email-like shadow bodies
+        const link = (ev.composedPath()[0] ?? ev.target).closest?.("a");
         if (!link) {
             return;
         }
