@@ -3,16 +3,41 @@
     font-size: 7pt;
     font-weight: normal;
     page-break-after: always;
-    &:last-child { page-break-after: auto; }
+}
 
-    table { width: 100%;}
-    td { padding: 0.5em;}
-    th { font-weight: bold; padding: 0.8em; }
+.o_report_cmr:last-child {
+    page-break-after: auto;
+}
 
-    .cmr-label, .cmr-label + .cmr-translated,
-    .cmr-field-label, .cmr-field-label + .cmr-translated { font-weight: bold; line-height: 0.8;}
+.o_report_cmr table {
+    width: 100%;
+}
 
-    &.cmr-copy-copy_sender    { color: #cc0000; }
-    &.cmr-copy-copy_consignee { color: #0044cc; }
-    &.cmr-copy-copy_carrier   { color: #006600; }
+.o_report_cmr td {
+    padding: 0.5em;
+}
+
+.o_report_cmr th {
+    font-weight: bold;
+    padding: 0.8em;
+}
+
+.o_report_cmr .cmr-label,
+.o_report_cmr .cmr-label + .cmr-translated,
+.o_report_cmr .cmr-field-label,
+.o_report_cmr .cmr-field-label + .cmr-translated {
+    font-weight: bold;
+    line-height: 0.8;
+}
+
+.o_report_cmr.cmr-copy-copy_sender {
+    color: #cc0000;
+}
+
+.o_report_cmr.cmr-copy-copy_consignee {
+    color: #0044cc;
+}
+
+.o_report_cmr.cmr-copy-copy_carrier {
+    color: #006600;
 }
