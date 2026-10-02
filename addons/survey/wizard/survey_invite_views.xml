@@ -35,7 +35,6 @@
                                 placeholder="e.g.  'Rick Sanchez' &lt;rick_sanchez@example.com&gt;, hictor_vugo@example.com"/>
                         </group>
                         <field name="existing_partner_ids" invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
-                        <field name="existing_emails" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                         <div col="2" class="alert alert-warning pb-0" role="alert"
                             invisible="survey_access_mode == 'public' or not existing_text">
                             <field name="existing_text"/>

@@ -171,11 +171,8 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='user_ids']" position="after">
-                    <field name="is_project_map_empty" invisible="1" groups="hr_timesheet.group_hr_timesheet_user"/> <!-- kept loaded for record data though not shown in this form -->
-                    <field name="has_multi_sol" invisible="1" groups="hr_timesheet.group_hr_timesheet_user"/> <!-- kept loaded for record data though not shown in this form -->
                 </xpath>
                  <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="pricing_type" invisible="1" groups="hr_timesheet.group_hr_timesheet_user"/> <!-- kept loaded for record data though not shown in this form -->
                 </xpath>
                 <xpath expr="//field[@name='timesheet_ids']/list" position="inside">
                     <!-- <field name="timesheet_ids"/> is already inside a block groups="hr_timesheet.group_hr_timesheet_user"  -->
