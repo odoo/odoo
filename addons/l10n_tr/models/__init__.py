@@ -1,6 +1,5 @@
 from . import account_journal
 from . import account_move_line
-from . import ir_http
 from . import l10n_tr_tax_office
 from . import product
 from . import res_company
