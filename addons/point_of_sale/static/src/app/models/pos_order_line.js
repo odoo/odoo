@@ -101,10 +101,6 @@ export class PosOrderline extends PosOrderlineAccounting {
         this.setUnitPrice(this.price_unit);
     }
 
-    get preparationKey() {
-        return this.uuid;
-    }
-
     get quantityStr() {
         let unitPart = "";
         let decimalPart = "";

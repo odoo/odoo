@@ -169,10 +169,6 @@ export class FloorElement {
         this.floor = floor;
     }
 
-    getFloor() {
-        return this.floor;
-    }
-
     clearBoundsCache() {
         this.cachedBounds = null;
         this.floor?.clearSizeCache();

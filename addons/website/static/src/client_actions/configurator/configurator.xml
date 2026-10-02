@@ -295,50 +295,6 @@
     </div>
 </t>
 
-<t t-name="website.Configurator.FeatureSelection">
-    <div class="o_configurator_screen h-100 d-flex flex-column o_feature_selection_screen">
-        <div class="o_configurator_screen_content container d-flex flex-grow-1 align-items-center">
-            <div class="m-auto d-flex mh-100 flex-column">
-                <div class="o_configurator_typing_text o_configurator_show_fast">Add <b class="text-info">Pages</b> and <b class="text-warning">Features</b></div>
-                <h2 class="o_configurator_show_fast text-muted pb-lg-3">You'll be able to create your pages later on.</h2>
-                <div class="page_feature_selection o_configurator_show mt-lg-3 mx-n2">
-                    <div class="w-100 page_feature_selection d-flex flex-wrap">
-                        <t t-foreach="this.state.getFeatures()" t-as="feature" t-key="feature_index">
-                            <t t-set='isInstalled' t-value="feature.module_state == 'installed'"/>
-                            <div class="o_feature_card_container p-2 w-25" t-if="feature.type != 'empty'">
-                                <div t-attf-class="card h-100 {{isInstalled ? 'card_installed' : (feature.selected ? 'border-success' : '')}}"
-                                     t-on-click="() => this.state.toggleFeature(feature.id)"
-                                     t-on-keydown="this.onKeydown"
-                                     tabindex="0"
-                                     role="button">
-                                    <div class="h3 card-body py-3 px-4 mb-0">
-                                        <t t-if="isInstalled">
-                                            <i t-attf-class="oi oi-filled o_configurator_feature_status text-success" data-icon="check_circle" title="Already installed"/>
-                                        </t>
-                                        <t t-else="">
-                                            <i t-attf-class="oi o_configurator_feature_status {{feature.selected ? 'text-success' : 'text-300'}}"  t-attf-data-icon="{{feature.selected ? 'check_circle' : 'circle'}}"/>
-                                        </t>
-                                        <div t-attf-class="h2 mb-0 card-title d-flex align-items-center {{isInstalled ? 'text-muted' : ''}}">
-                                            <i t-attf-class="me-2 oi {{isInstalled ? 'text-muted' : (feature.type == 'page' ? 'text-info' : 'text-warning')}} {{feature.icon_class}}" t-attf-data-icon="{{feature.icon}}"/>
-                                            <h3 class="m-1">
-                                                <t t-out="feature.name"/>
-                                            </h3>
-                                        </div>
-                                        <p class="small card-text text-muted" t-out="feature.description"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                    </div>
-                </div>
-                <div class="pt-2">
-                    <button class="btn btn-primary btn-lg" t-on-click="this.buildWebsite">Build my website</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</t>
-
 <t t-name="website.Configurator.ThemePreviewCard">
     <div class="o_theme_selection_col g-col-12 g-col-sm-6 g-col-xl-4">
         <t t-if="previewTheme and previewTheme.name">

@@ -50,10 +50,6 @@ export class EventRegistrationSummaryDialog extends Component {
         return this.props.registration;
     }
 
-    get needManualConfirmation() {
-        return this.registrationStatus.value === "need_manual_confirmation";
-    }
-
     async onRegistrationClose() {
         this.props.close();
         if (this.props.doNextScan) {

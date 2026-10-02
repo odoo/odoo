@@ -64,7 +64,10 @@ export class SearchBar extends Component {
     facetContainerRef = signal.ref();
     // The input element is either owned by the parent (`inputRef` prop, e.g. so it can
     // focus it itself once mounted) or local, like `Dropdown.menuRef`.
-    inputRef = useProps.static("inputRef", t.signal(t.ref()).optional(() => signal.ref()));
+    inputRef = useProps.static(
+        "inputRef",
+        t.signal(t.ref()).optional(() => signal.ref())
+    );
 
     setup() {
         this.dialogService = useService("dialog");
@@ -386,20 +389,6 @@ export class SearchBar extends Component {
     }
 
     /**
-     * @param {number} [index]
-     */
-    focusFacet(index) {
-        const facets = this.root().getElementsByClassName("o_searchview_facet");
-        if (facets.length) {
-            if (index === undefined) {
-                facets[facets.length - 1].focus();
-            } else {
-                facets[index].focus();
-            }
-        }
-    }
-
-    /**
      * @param {Object} facet
      */
     removeFacet(facet) {
@@ -701,10 +690,6 @@ export class SearchBar extends Component {
                 this.selectItem(item);
             }
         }
-    }
-
-    onToggleSearchBar() {
-        this.state.showSearchBar = !this.state.showSearchBar;
     }
 
     onInputDropdownChanged(isOpen) {

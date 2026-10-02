@@ -2168,17 +2168,6 @@ export class Rtc extends Record {
         };
     }
 
-    logSnapshot() {
-        if (!this.localChannel) {
-            // a snapshot out of a call would not collect any data
-            return;
-        }
-        window.navigator.serviceWorker?.controller?.postMessage({
-            name: SW_MESSAGE_TYPE.POST_RTC_LOGS,
-            logs: [this.buildSnapshot()],
-        });
-    }
-
     async ping() {
         const data = await rpc(
             "/discuss/channel/ping",

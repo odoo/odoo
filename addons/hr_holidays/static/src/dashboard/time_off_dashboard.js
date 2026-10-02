@@ -55,11 +55,6 @@ export class TimeOffDashboard extends Component {
         this.hasFutureAllocation = dashboardData["has_future_allocation"];
     }
 
-    resetDate() {
-        this.state.date = luxon.DateTime.now();
-        this.loadDashboardData();
-    }
-
     openNewAllocation() {
         this.newAllocRequest({
             employeeId: this.props.employeeId,
@@ -72,7 +67,10 @@ export class TimeOffDashboard extends Component {
             type: "ir.actions.act_window",
             name: _t("Pending Allocations"),
             res_model: "hr.leave.allocation",
-            views: [[false, "list"], [false, "form"]],
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
             domain: [["state", "in", ["confirm", "validate1"]]],
             context,
         });

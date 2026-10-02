@@ -211,10 +211,6 @@ export class RtcSession extends Record {
         return this.is_muted || this.is_deaf;
     }
 
-    get mainVideoStream() {
-        return this.isMainVideoStreamActive && this.videoStreams.get(this.mainVideoStreamType);
-    }
-
     get isMainVideoStreamActive() {
         if (!this.mainVideoStreamType) {
             return false;

@@ -1,19 +1,6 @@
 // @ts-check
 
 /**
- * Get the intersection of two arrays
- *
- * @param {Array} a
- * @param {Array} b
- *
- * @private
- * @returns {Array} intersection between a and b
- */
-export function intersect(a, b) {
-    return a.filter((x) => b.includes(x));
-}
-
-/**
  * Convert a spreadsheet date representation to an odoo
  * server formatted date
  *
@@ -52,26 +39,6 @@ export function camelToSnakeObject(obj) {
         result[camelToSnakeKey(key)] = isPojo ? camelToSnakeObject(value) : value;
     }
     return result;
-}
-
-/**
- * Check if the argument is falsy or is an empty object/array
- *
- * TODO : remove this and replace it by the one in o_spreadsheet xlsx import when its merged
- */
-export function isEmpty(item) {
-    if (!item) {
-        return true;
-    }
-    if (typeof item === "object") {
-        if (
-            Object.values(item).length === 0 ||
-            Object.values(item).every((val) => val === undefined)
-        ) {
-            return true;
-        }
-    }
-    return false;
 }
 
 /**

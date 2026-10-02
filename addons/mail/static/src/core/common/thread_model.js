@@ -149,7 +149,6 @@ export class Thread extends Record {
         onDelete: (r) => r?.delete(),
     });
     counter = 0;
-    counter_bus_id = 0;
     /** @type {string} */
     defaultSubject;
     /** @type {string} */

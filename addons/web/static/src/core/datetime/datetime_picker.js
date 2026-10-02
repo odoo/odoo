@@ -521,13 +521,6 @@ export class DateTimePicker extends Component {
     }
 
     /**
-     * @param {DateItem} item
-     */
-    isSelectedDate({ range }) {
-        return this.values().some((value) => isInRange(value, range));
-    }
-
-    /**
      * Goes to the next panel (e.g. next month if precision is "days").
      * If an event is given it will be prevented.
      * @param {PointerEvent} ev

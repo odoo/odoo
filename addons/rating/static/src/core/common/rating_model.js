@@ -1,5 +1,4 @@
 import { Record } from "@mail/model/export";
-import { convertLineBreakToBr } from "@mail/utils/common/format";
 
 export class Rating extends Record {
     static _name = "rating.rating";
@@ -14,10 +13,5 @@ export class Rating extends Record {
     rating_text;
     /** @type {string} */
     feedback;
-
-    /** @returns {markup} */
-    get markupFeedback() {
-        return convertLineBreakToBr(this.feedback);
-    }
 }
 Rating.register();

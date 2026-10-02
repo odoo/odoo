@@ -185,10 +185,6 @@ export class AttachmentList extends Component {
         return this.env.inChatWindow && this.env.alignedRight;
     }
 
-    get isInChatWindowAndIsAlignedLeft() {
-        return this.env.inChatWindow && !this.env.alignedRight;
-    }
-
     /**
      * Compute the action items for the given attachment.
      *
@@ -230,12 +226,5 @@ export class AttachmentList extends Component {
             this.env.message.hasTextContent ||
             (this.env.message && this.props.attachmentGroups.length > 1)
         );
-    }
-
-    /**
-     * @param {import("models").Attachment} attachment
-     */
-    showUploaded(attachment) {
-        return !attachment.isImage && !attachment.uploading && this.env.inComposer;
     }
 }

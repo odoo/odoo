@@ -212,10 +212,6 @@ export class BuilderList extends Component {
         this.commit(newRecords);
     }
 
-    removeAllItems() {
-        this.commit([]);
-    }
-
     deleteItem(itemId) {
         const items = this.includedRecords();
         this.commit(items.filter((item) => item._id !== itemId));

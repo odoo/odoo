@@ -51,10 +51,6 @@ export class ForecastedDetails extends Component {
         return !line.document_in && !line.in_transit && line.replenishment_filled && line.document_out;
     }
 
-    _reconciledCondition(line){
-        return line.document_in && !line.in_transit && line.replenishment_filled && line.document_out;
-    }
-
     _freeStockCondition(line){
         return !line.document_in && !line.in_transit && line.replenishment_filled && !line.document_out;
     }

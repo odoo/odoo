@@ -191,32 +191,6 @@ export class TimeOffCard extends Component {
             : -data.exceeding_duration > 0;
     }
 
-    async navigateTimeOffType() {
-        const { employeeId, holidayStatusId, data } = this.props;
-        const isInHolidaysUserGroup = await user.hasGroup("hr_holidays.group_hr_holidays_user");
-
-        const resModel = "hr.leave";
-        const name = "My Time Off";
-        const domain = [
-            ["work_entry_type_id", "=", holidayStatusId],
-            ["company_id", "=", data.employee_company],
-            employeeId ? ["employee_id", "=", employeeId] : ["user_id", "=", user.userId],
-        ];
-        const context = isInHolidaysUserGroup
-            ? {
-                  search_default_group_date_from: true,
-                  expand_leave_list: true,
-              }
-            : {
-                  list_view_ref: "hr_holidays.hr_leave_view_tree_my",
-                  form_view_ref: "hr_holidays.hr_leave_view_form",
-                  search_default_group_date_from: true,
-                  expand_leave_list: true,
-              };
-
-        openLeaveWindow(this.actionService, resModel, name, domain, context);
-    }
-
     /**
      * Background utility matching the color configured on the time off type
      * The color picker is 0-indexed over `$o-colors`
@@ -246,8 +220,4 @@ function openLeaveWindow(actionService, resModel, name, domain, context) {
         domain: domain,
         context: context,
     });
-}
-
-export class TimeOffCardMobile extends TimeOffCard {
-    static template = "hr_holidays.TimeOffCardMobile";
 }

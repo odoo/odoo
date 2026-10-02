@@ -1,4 +1,4 @@
-import { EDITOR_COLOR_CSS_VARIABLES, isColorCombinationName } from "@html_editor/utils/color";
+import { EDITOR_COLOR_CSS_VARIABLES } from "@html_editor/utils/color";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { convertNumericToUnit, getCSSVariableValue } from "@html_editor/utils/formatting";
 import { backgroundImageCssToParts, getBgImageURLFromURL } from "@html_editor/utils/image";
@@ -228,26 +228,6 @@ export function isCSSVariable(value) {
     return /^var\(--.+?\)$/.test(value);
 }
 /**
- * @param {string[]} colorNames
- * @param {string} [prefix='bg-']
- * @returns {string[]}
- */
-export function computeColorClasses(colorNames, prefix = "bg-") {
-    let hasCCClasses = false;
-    const isBgPrefix = prefix === "bg-";
-    const classes = colorNames.map((c) => {
-        if (isBgPrefix && isColorCombinationName(c)) {
-            hasCCClasses = true;
-            return `o_cc${c}`;
-        }
-        return prefix + c;
-    });
-    if (hasCCClasses) {
-        classes.push("o_cc");
-    }
-    return classes;
-}
-/**
  * Normalize a color in case it is a variable name so it can be used outside of
  * css.
  *
@@ -271,32 +251,6 @@ export function getBgImageURLFromEl(el) {
     const parts = backgroundImageCssToParts(style.backgroundImage);
     const string = parts.url || "";
     return getBgImageURLFromURL(string);
-}
-/**
- * Returns the class of the element that matches the specified prefix.
- *
- * @private
- * @param {Element} el element from which to recover the color class
- * @param {string[]} colorNames
- * @param {string} prefix prefix of the color class to recover
- * @returns {string} color class matching the prefix or an empty string
- */
-export function getColorClass(el, colorNames, prefix) {
-    const prefixedColorNames = computeColorClasses(colorNames, prefix);
-    return el.classList.value
-        .split(" ")
-        .filter((cl) => prefixedColorNames.includes(cl))
-        .join(" ");
-}
-/**
- * Add one or more new attributes related to background images in the
- * BACKGROUND_IMAGE_ATTRIBUTES set.
- *
- * @param {...string} newAttributes The new attributes to add in the
- * BACKGROUND_IMAGE_ATTRIBUTES set.
- */
-export function addBackgroundImageAttributes(...newAttributes) {
-    BACKGROUND_IMAGE_ATTRIBUTES.add(...newAttributes);
 }
 /**
  * Check if an attribute is in the BACKGROUND_IMAGE_ATTRIBUTES set.
@@ -330,15 +284,6 @@ export function shouldEditableMediaBeEditable(mediaEl) {
         (mediaEl.parentElement && !!mediaEl.parentElement.closest(".o_savable")) ||
         mediaEl.matches(".o_savable_attribute")
     );
-}
-/**
- * Returns the label of a link element.
- *
- * @param {HTMLElement} linkEl
- * @returns {string}
- */
-export function getLinkLabel(linkEl) {
-    return linkEl.textContent.replaceAll("\u200B", "").replaceAll("\uFEFF", "");
 }
 /**
  * Forwards an image source to its carousel thumbnail.

@@ -1,5 +1,4 @@
 import { Component, useProps, proxy, t } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
 
 
 export class StockValuationReportLine extends Component {
@@ -53,10 +52,6 @@ export class StockValuationReportLine extends Component {
         return false;
     }
 
-    get displayTotalOnSeparateLine() {
-        return Boolean(this.props.value && this.state.displaySublines);
-    }
-
     get formattedValue() {
         if (this.props.value !== undefined) {
             return this.env.formatMonetary(this.props.value);
@@ -66,19 +61,6 @@ export class StockValuationReportLine extends Component {
 
     get label() {
         return this.props.label || this.props.line.account?.display_name;
-    }
-
-    get totalProps() {
-        const props = {
-            class: "total",
-            label: _t("Total"),
-            level: this.props.level,
-            value: this.props.value,
-        };
-        if (this.props.onClickMethod) {
-            props.onClickMethod = this.props.onClickMethod;
-        }
-        return props;
     }
 
     // On Click Methods --------------------------------------------------------

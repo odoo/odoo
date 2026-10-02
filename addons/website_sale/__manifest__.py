@@ -171,7 +171,6 @@
         ],
         "website.assets_wysiwyg": [
             "website_sale/static/src/scss/website_sale.editor.scss",
-            "website_sale/static/src/js/website_sale_form_editor.js",
         ],
         "website.assets_editor": [
             "website_sale/static/src/js/systray_items/*.js",
