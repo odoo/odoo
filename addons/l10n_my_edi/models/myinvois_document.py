@@ -327,7 +327,7 @@ class MyInvoisDocument(models.Model):
         self.ensure_one()
         if not self.myinvois_issuance_date:
             return SQL("FALSE")
-        condition = SQL("journal_id = %s AND name != '/' AND NOT is_received_document", self.journal_id.id)
+        condition = SQL("journal_id = %s AND name != '/' AND is_received_document IS NOT TRUE", self.journal_id.id)
 
         if not relaxed:
             domain = [('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', '', False)), ('journal_id', '=', self.journal_id.id), ('is_consolidated_invoice', '=', self.is_consolidated_invoice)]

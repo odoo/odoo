@@ -88,6 +88,27 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
         self.assertEqual(document.name, document._get_starting_sequence()[:-5] + '00001')
 
     @freeze_time('2024-08-15 10:00:00')
+    def test_own_sequence_continues_with_null_received_flag(self):
+        values = {
+            'company_id': self.company_data['company'].id,
+            'currency_id': self.env.ref('base.MYR').id,
+            'journal_id': self.company_data['default_journal_purchase'].id,
+            'move_type': 'in_invoice',
+            'myinvois_issuance_date': '2024-07-10',
+        }
+        predecessor = self.env['myinvois.document'].create({
+            **values,
+            'name': 'CPUR/2024/00147',
+        })
+        predecessor.flush_recordset()
+        # Existing rows have NULL when the optional received flag is added at module upgrade.
+        self.env.cr.execute('UPDATE myinvois_document SET is_received_document = NULL WHERE id = %s', [predecessor.id])
+        predecessor.invalidate_recordset(['is_received_document'])
+        self._sync([[self._document_data('DOC1', internal_id='INV/2024/00999')]])
+        document = self.env['myinvois.document'].create({**values, 'myinvois_issuance_date': '2024-07-11'})
+        self.assertEqual(document.name, 'CPUR/2024/00148')
+
+    @freeze_time('2024-08-15 10:00:00')
     def test_received_document_cannot_be_deleted(self):
         self._sync([[self._document_data('DOC1')]])
         document = self._get_received_bills(['DOC1']).l10n_my_edi_received_document_id
