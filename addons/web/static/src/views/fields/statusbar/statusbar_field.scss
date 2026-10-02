@@ -30,15 +30,15 @@
         --o-statusbar-point-bottom-right:  calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-caret-gap)) 100%;
 
         .o_arrow_button:not(.d-none) {
-            --#{$prefix}btn-hover-bg: var(--gray-200);
-            --#{$prefix}btn-active-bg: var(--gray-300);
-            --#{$prefix}btn-disabled-bg: var(--o-component-active-bg);
-            --#{$prefix}btn-disabled-color: var(--#{$prefix}btn-active-color);
-            --#{$prefix}btn-focus-box-shadow: 0;
+            --btn-hover-bg: var(--gray-200);
+            --btn-active-bg: var(--gray-300);
+            --btn-disabled-bg: var(--o-component-active-bg);
+            --btn-disabled-color: var(--btn-active-color);
+            --btn-focus-box-shadow: 0;
             --gradient: none;
 
             @media screen and (min-width: 768px), print and (min-width: 188mm) {
-                --#{$prefix}btn-bg: transparent;
+                --btn-bg: transparent;
 
                 margin-left: calc(-1 * var(--o-statusbar-caret-width) - var(--o-statusbar-border-width) * sqrt(3));
                 border: 0;
@@ -61,7 +61,7 @@
                     padding-inline-start: var(--o-statusbar-button-padding-x);
 
                     &:not(.o_first) {
-                        --#{$prefix}btn-border-radius: var(--o-statusbar-radius) 0 0 var(--o-statusbar-radius);
+                        --btn-border-radius: var(--o-statusbar-radius) 0 0 var(--o-statusbar-radius);
                     }
                 }
 
@@ -73,12 +73,12 @@
                     padding-inline-end: var(--o-statusbar-button-padding-x);
 
                     &:not(.o_last) {
-                        --#{$prefix}btn-border-radius: 0 var(--o-statusbar-radius) var(--o-statusbar-radius) 0;
+                        --btn-border-radius: 0 var(--o-statusbar-radius) var(--o-statusbar-radius) 0;
                     }
                 }
 
                 &.o_first.o_last {
-                    --#{$prefix}btn-border-radius: var(--o-statusbar-radius);
+                    --btn-border-radius: var(--o-statusbar-radius);
                 }
 
                 &.dropdown-toggle::after {
@@ -86,7 +86,7 @@
                 }
 
                 &:not(.o_last, .o_first) {
-                    --#{$prefix}btn-border-radius: 0;
+                    --btn-border-radius: 0;
                 }
 
                 .o_rtl & {
@@ -101,25 +101,25 @@
                         --o-statusbar-point-top-right: 100% 0;
                         --o-statusbar-point-middle-right: 100% 50%;
                         --o-statusbar-point-bottom-right: 100% 100%;
-                        --#{$prefix}btn-border-radius: 0 var(--o-statusbar-radius) var(--o-statusbar-radius) 0;
+                        --btn-border-radius: 0 var(--o-statusbar-radius) var(--o-statusbar-radius) 0;
                     }
 
                     &.o_first {
                         --o-statusbar-point-top-left: 0 0;
                         --o-statusbar-point-middle-left: 0 50%;
                         --o-statusbar-point-bottom-left: 0 100%;
-                        --#{$prefix}btn-border-radius: var(--o-statusbar-radius) 0 0 var(--o-statusbar-radius);
+                        --btn-border-radius: var(--o-statusbar-radius) 0 0 var(--o-statusbar-radius);
                     }
 
                     &.o_first.o_last {
-                        --#{$prefix}btn-border-radius: var(--o-statusbar-radius);
+                        --btn-border-radius: var(--o-statusbar-radius);
                     }
                 }
             }
 
             &:not(.o_arrow_button_current) {
-                --#{$prefix}btn-disabled-bg: transparent;
-                --#{$prefix}btn-disabled-border-color: transparent;
+                --btn-disabled-bg: transparent;
+                --btn-disabled-border-color: transparent;
             }
 
             &:disabled {
