@@ -27,19 +27,26 @@ class PosSession(models.Model):
             base_domain + [('product_id.l10n_in_hsn_code', '=', False)]
         )
 
-    def _prepare_account_move_line_commands_for_reversal(self, order, invoice_to_reverse):
-        commands = super()._prepare_account_move_line_commands_for_reversal(order, invoice_to_reverse)
+    def _prepare_account_move_line_commands_for_reversal(self, order, original_move):
+        commands = super()._prepare_account_move_line_commands_for_reversal(order, original_move)
         if not order.config_id.company_id.l10n_in_gst_registration_type:
             return commands
 
-        product_lines = invoice_to_reverse.line_ids.filtered(
+        # The commands are rebuilt from the order, match them with the
+        # closing entry line they reverse using the same grouping.
+        product_lines = original_move.line_ids.filtered(
             lambda line: line.display_type == 'product',
         )
-
-        for idx, line in enumerate(product_lines):
-            command = commands[idx]
-            command[2]["l10n_in_hsn_code"] = line.l10n_in_hsn_code
-            command[2]["product_uom_id"] = line.product_uom_id.id
+        for command in commands:
+            vals = command[2]
+            line = product_lines.filtered(
+                lambda line, vals=vals: line.account_id.id == vals['account_id']
+                and line.product_id.id == (vals.get('product_id') or False)
+                and set(line.tax_ids.ids) == set(vals['tax_ids'][0][2]),
+            )[:1]
+            if line:
+                vals["l10n_in_hsn_code"] = line.l10n_in_hsn_code
+                vals["product_uom_id"] = line.product_uom_id.id
 
         return commands
 
