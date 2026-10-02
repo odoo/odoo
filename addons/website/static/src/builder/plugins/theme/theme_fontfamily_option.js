@@ -11,7 +11,6 @@ export class ThemeFontFamilyOption extends BaseOptionComponent {
     static template = "website.ThemeFontFamilyOption";
     props = useProps({
         cssVariable: t.string(),
-        action: t.string().optional("previewWebsiteFontFamily"),
         buttonIcon: t.string(),
         buttonIconClass: t.string().optional(),
         buttonTitle: t.string(),
@@ -75,6 +74,10 @@ export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteVariableActi
      */
     async load({ params: { mainParam: variable }, value }) {
         const customizeWebsite = this.dependencies.customizeWebsite;
+        if (!value && variable === "buttons-font") {
+            // Buttons inherit their font.
+            return { name: "var(--font)", family: "initial" };
+        }
         if (!value && variable !== "headings-font") {
             // A heading level follows the headings font.
             return { name: "var(--headings-font)", family: "var(--headings-font-family)" };

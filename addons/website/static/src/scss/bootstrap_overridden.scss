@@ -450,3 +450,66 @@ $--enable-no-overflow-of-text-columns: false !default;
         border-left-width: $input-border-left-width !important;
     }
 }
+
+// Typography: Bootstrap's rules that compile the theme values, again with the
+// CSS variables `website.scss` prints, right after Bootstrap's own (see
+// `import_bootstrap.scss`). The fallbacks are the compiled values, for the
+// other bundles compiled with these variables.
+
+// A font weight is printed only when set: unset ("Auto"), the compiled one
+// applies. When a theme sets the Bootstrap variable itself, it wins over the
+// user's value, as before: the compiled value only.
+@function o-font-weight-var($key, $compiled) {
+    $-value: o-website-value($key);
+    @return if($-value == null or $-value == $compiled, var(--#{$key}, #{$compiled}), $compiled);
+}
+
+// The small size is a ratio of the base one, in `em` (see `$small-font-size`).
+@function o-small-font-size-var() {
+    @if $small-font-size != ($o-small-font-size / $font-size-base) * 1em {
+        @return $small-font-size;
+    }
+    @return calc(tan(atan2(var(--small-font-size, #{$o-small-font-size}), var(--font-size-base, #{$font-size-base}))) * 1em);
+}
+
+@mixin o-after-bootstrap-type {
+    :root, [data-bs-theme="light"] {
+        @include o-font-size-var(var(--font-size-base, #{$font-size-base}), --#{$prefix}body-font-size);
+        @if $font-weight-base == $font-weight-normal {
+            --#{$prefix}body-font-weight: #{o-font-weight-var('font-weight-normal', $font-weight-base)};
+        }
+    }
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--headings-font-family, #{inspect($headings-font-family)});
+        font-weight: o-font-weight-var('headings-font-weight', $headings-font-weight);
+    }
+    @each $level, $size, $family in (1 $h1-font-size null, 2 $h2-font-size $h2-font-family, 3 $h3-font-size $h3-font-family, 4 $h4-font-size $h4-font-family, 5 $h5-font-size $h5-font-family, 6 $h6-font-size $h6-font-family) {
+        h#{$level} {
+            @include o-font-size-var(var(--h#{$level}-font-size, #{$size}));
+            @if $family {
+                font-family: var(--h#{$level}-font-family, #{inspect($family)});
+            }
+        }
+    }
+    b, strong {
+        font-weight: o-font-weight-var('font-weight-bolder', $font-weight-bolder);
+    }
+    small, .small {
+        font-size: o-small-font-size-var();
+    }
+    .lead {
+        @if $lead-font-size == $font-size-base * $o-lead-ratio {
+            @include o-font-size-var(calc(var(--font-size-base, #{$font-size-base}) * #{$o-lead-ratio}));
+        }
+        font-weight: o-font-weight-var('lead-font-weight', $lead-font-weight);
+    }
+    @each $level, $line-height in (1: $display-1-line-height, 2: $display-2-line-height, 3: $display-3-line-height, 4: $display-4-line-height) {
+        .display-#{$level} {
+            @include o-font-size-var(var(--display-#{$level}-font-size, #{map-get($display-font-sizes, $level)}));
+            line-height: var(--display-#{$level}-line-height, #{$line-height});
+        }
+    }
+    .display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+        font-weight: o-font-weight-var('display-font-weight', $display-font-weight);
+    }
+}
