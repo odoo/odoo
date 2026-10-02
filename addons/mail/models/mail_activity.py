@@ -181,12 +181,8 @@ class MailActivity(models.Model):
     def _filter_access_rules(self, operation):
         # write / unlink: valid for creator / assigned
         if operation in ('write', 'unlink'):
-            valid = super(MailActivity, self)._filter_access_rules(operation)
-            if valid and valid == self:
-                return self
-        else:
-            valid = self.env[self._name]
-        return self._filter_access_rules_remaining(valid, operation, '_filter_access_rules')
+            return super(MailActivity, self)._filter_access_rules(operation)
+        return self._filter_access_rules_remaining(self.env[self._name], operation, '_filter_access_rules')
 
     def _filter_access_rules_python(self, operation):
         # write / unlink: valid for creator / assigned
