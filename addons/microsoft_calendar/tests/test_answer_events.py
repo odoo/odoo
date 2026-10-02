@@ -32,6 +32,8 @@ class TestAnswerEvents(TestCommon):
                 )
             )
         (self.organizer_user | self.attendee_user).microsoft_calendar_token_validity = datetime.now() + timedelta(hours=1)
+        self.organizer_user.microsoft_calendar_token = mock_get_token(self.organizer_user)
+        self.attendee_user.microsoft_calendar_token = mock_get_token(self.attendee_user)
 
     @patch.object(MicrosoftCalendarService, '_get_single_event')
     @patch.object(MicrosoftCalendarService, 'answer')
@@ -180,8 +182,8 @@ class TestAnswerEvents(TestCommon):
             data=json.dumps(payload),
             headers={'Content-Type': 'application/json'}
         ).json()
-        # the status must be need_auth
-        self.assertEqual(response['result']['status'], 'need_auth')
+        # the status must be sync_stopped
+        self.assertEqual(response['result']['status'], 'sync_stopped')
 
     @patch.object(MicrosoftCalendarService, '_get_single_event')
     @patch.object(MicrosoftCalendarService, 'answer')

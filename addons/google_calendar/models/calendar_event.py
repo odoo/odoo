@@ -130,8 +130,10 @@ class CalendarEvent(models.Model):
 
     def _skip_send_mail_status_update(self):
         """If a google calendar is not syncing with the user, don't send a mail."""
-        user_id = self._get_event_user()
-        if user_id.is_google_calendar_synced() and user_id.res_users_settings_id._is_google_calendar_valid():
+        user_id = self._get_event_owner() or self.env.user
+        if (user_id._get_google_sync_status() == 'sync_active'
+                and user_id.res_users_settings_id._is_google_calendar_valid()
+                and self._should_be_synced()):
             return True
         return super()._skip_send_mail_status_update()
 

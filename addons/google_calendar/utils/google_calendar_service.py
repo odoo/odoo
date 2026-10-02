@@ -203,7 +203,7 @@ class GoogleCalendarService:
     #################################
 
     def is_authorized(self, user):
-        return bool(user.sudo().google_calendar_rtoken) and not user.sudo().google_synchronization_stopped
+        return bool(user.sudo().google_calendar_rtoken)
 
     def _get_calendar_scope(self, RO=False):
         readonly = '.readonly' if RO else ''

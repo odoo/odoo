@@ -5,5 +5,5 @@ from odoo.http import request
 class MicrosoftCalendarAuth(MicrosoftAuth):
 
     def _post_microsoft_auth_success_hook(self):
-        request.env.user.sudo().microsoft_synchronization_stopped = False
+        request.env.user.sudo().restart_microsoft_synchronization()
         return super()._post_microsoft_auth_success_hook()
