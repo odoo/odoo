@@ -361,6 +361,35 @@ describe("operations", () => {
         expect(".o-snippets-top-actions [data-icon='undo']").not.toBeEnabled();
         expect(".o-snippets-top-actions [data-icon='redo']").not.toBeEnabled();
     });
+    test("an incomplete number is not previewed", async () => {
+        addBuilderAction({
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.innerHTML;
+                }
+                apply({ editingElement, value }) {
+                    expect.step(`customAction ${value}`);
+                    editingElement.innerHTML = value;
+                }
+            },
+        });
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'"/>`,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">10</div>`);
+        await contains(":iframe .test-options-target").click();
+        // What the browser reports while "10." is typed in a number input.
+        // Typing it with Hoot sets the value instead, which the input sanitizes.
+        const inputEl = queryFirst(".options-container input");
+        Object.defineProperty(inputEl, "validity", { value: { badInput: true } });
+        inputEl.value = "";
+        inputEl.dispatchEvent(new Event("input", { bubbles: true }));
+        await animationFrame();
+        expect.verifySteps([]);
+        expect(":iframe .test-options-target").toHaveInnerHTML("10");
+    });
     test("should commit changes", async () => {
         addBuilderAction({
             customAction: class extends BuilderAction {
