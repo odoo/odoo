@@ -59,30 +59,31 @@ DEFAULT_PAYMENT_METHOD_CODES = {
 }
 
 # FPX is an online payment method in Malaysia that allows customers to make payments directly from their bank accounts.
-# Items prefixed with "DD_" are for individual account and doing direct debit
+# Items suffixed with "_FPX" are for individual accounts
 # Items suffixed with "_BUSINESS" are for business accounts
 # When user chooses FPX in Odoo, this list becomes filtered payment options in Xendit dashboard
 # When webhook is received from Xendit, we can map all of these options back to 'fpx' in Odoo
 FPX_METHODS = [
-    "DD_UOB_FPX",
-    "DD_PUBLIC_FPX",
-    "DD_AFFIN_FPX",
-    "DD_AGRO_FPX",
-    "DD_ALLIANCE_FPX",
-    "DD_AMBANK_FPX",
-    "DD_ISLAM_FPX",
-    "DD_MUAMALAT_FPX",
-    "DD_BOC_FPX",
-    "DD_RAKYAT_FPX",
-    "DD_BSN_FPX",
-    "DD_CIMB_FPX",
-    "DD_HLB_FPX",
-    "DD_HSBC_FPX",
-    "DD_KFH_FPX",
-    "DD_MAYB2U_FPX",
-    "DD_OCBC_FPX",
-    "DD_RHB_FPX",
-    "DD_SCH_FPX",
+    "UOB_FPX",
+    "PUBLIC_FPX",
+    "AFFIN_FPX",
+    "AGRO_FPX",
+    "ALLIANCE_FPX",
+    "AMBANK_FPX",
+    "ISLAM_FPX",
+    "MUAMALAT_FPX",
+    "BOC_FPX",
+    "RAKYAT_FPX",
+    "BSN_FPX",
+    "CIMB_FPX",
+    "HLB_FPX",
+    "HSBC_FPX",
+    "KFH_FPX",
+    "MAYB2E_FPX",
+    "MAYB2U_FPX",
+    "OCBC_FPX",
+    "RHB_FPX",
+    "SCH_FPX",
     "AFFIN_FPX_BUSINESS",
     "AGRO_FPX_BUSINESS",
     "ALLIANCE_FPX_BUSINESS",
@@ -107,18 +108,26 @@ FPX_METHODS = [
 
 # Mapping of payment code to channel code according to Xendit API
 PAYMENT_METHODS_MAPPING = {
-    'bank_bca': 'BCA',
-    'bank_permata': 'PERMATA',
-    'bpi': 'DD_BPI',
+    'bank_bca': 'BCA_VIRTUAL_ACCOUNT',
+    'bank_permata': 'PERMATA_VIRTUAL_ACCOUNT',
+    'bni': 'BNI_VIRTUAL_ACCOUNT',
+    'bri': 'BRI_VIRTUAL_ACCOUNT',
+    'bsi': 'BSI_VIRTUAL_ACCOUNT',
+    'cimb_niaga': 'CIMB_VIRTUAL_ACCOUNT',
+    'mandiri': 'MANDIRI_VIRTUAL_ACCOUNT',
+    'vietcapital': 'VIETCAPITAL_VIRTUAL_ACCOUNT',
+    'vpb': 'VPB_VIRTUAL_ACCOUNT',
+    'woori': 'WOORI_VIRTUAL_ACCOUNT',
+    'bpi': 'BPI_DIRECT_DEBIT',
     'card': 'CARDS',
     'maya': 'PAYMAYA',
     'wechat_pay': 'WECHATPAY',
-    'scb': 'DD_SCB_MB',
-    'krungthai_bank': 'DD_KTB_MB',
-    'bangkok_bank': 'DD_BBL_MB',
+    'scb': 'SCB_MOBILE_BANKING',
+    'krungthai_bank': 'KTB_MOBILE_BANKING',
+    'bangkok_bank': 'BBL_MOBILE_BANKING',
     'touch_n_go': 'TOUCHNGO',
     'paynow': 'SGQR',
-    **{method: 'fpx' for method in FPX_METHODS}
+    'KFH': 'KFH_FPX',
 }
 
 # Mapping of transaction states to Xendit payment statuses.
