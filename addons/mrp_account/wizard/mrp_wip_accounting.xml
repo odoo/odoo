@@ -16,14 +16,14 @@
                             <field name="reversal_date"/>
                         </group>
                     </group>
-                    <field name="mo_ids" invisible="1"/>
+                    <field name="mo_ids" invisible="1"/> <!-- manufacturing orders the entry is posted for, filled from the active_ids of the context -->
                     <field name="line_ids">
                         <list editable="bottom">
                             <field name="account_id"/>
                             <field name="label"/>
                             <field name="debit" sum="Total Debit"/>
                             <field name="credit" sum="Total Credit"/>
-                            <field name="currency_id" column_invisible="True"/>
+                            <field name="currency_id" column_invisible="True"/> <!-- currency of the debit/credit monetary columns -->
                         </list>
                     </field>
                     <footer>
