@@ -24,15 +24,13 @@ from odoo.addons.account.tools import dict_to_xml
 SUBMISSION_MAX_SIZE = 100
 MAX_SUBMISSION_UPDATE = 25
 CANCELLED_STATES = {'invalid', 'cancelled'}
-# The move type of the bill created for each type of document received. Self-billed documents (11 to 14) received by a
-# company are issued by its customers on its behalf: they are sales, not bills.
+# Self-billed documents (11 to 14) received by a company are issued by its customers: they are sales, not bills.
 RECEIVED_DOCUMENT_MOVE_TYPES = {
     '01': 'in_invoice',
     '02': 'in_refund',
     '03': 'in_invoice',
     '04': 'in_refund',
 }
-# MyInvois throttles the searches of each taxpayer to one every 5 seconds.
 SEARCH_TAXPAYER_INTERVAL = 5
 
 
@@ -106,7 +104,7 @@ class MyInvoisDocument(models.Model):
             ('rejected', 'Rejected'),  # Technically not a state on MyInvois, but having it here helps with managing bills.
             ('invalid', 'Invalid'),
             ('cancelled', 'Cancelled'),
-            ('received', 'Received'),  # Valid document issued by a supplier to this company.
+            ('received', 'Received'),  # Technically not a state on MyInvois: a valid document a supplier issued to this company.
         ],
         copy=False,
         readonly=True,
@@ -228,7 +226,6 @@ class MyInvoisDocument(models.Model):
         readonly=True,
     )
 
-    # Two syncs running at the same time cannot see the documents the other one is importing.
     _received_document_uuid_unique = models.UniqueIndex(
         "(myinvois_external_uuid) WHERE is_received_document",
         "This document was already received from MyInvois.",
@@ -307,8 +304,6 @@ class MyInvoisDocument(models.Model):
     # -----------------------
 
     def _must_check_constrains_date_sequence(self):
-        # EXTENDS 'sequence.mixin'
-        # The number of a received document comes from the supplier, not from our sequence.
         return not self.is_received_document and super()._must_check_constrains_date_sequence()
 
     def _get_starting_sequence(self):
@@ -434,7 +429,6 @@ class MyInvoisDocument(models.Model):
         new_documents_data = []
         errored_doc_messages = {}
         for document in self:
-            # The file of a received document is the supplier's; we must not build our own.
             if document.is_received_document:
                 continue
             if document.myinvois_file_id:

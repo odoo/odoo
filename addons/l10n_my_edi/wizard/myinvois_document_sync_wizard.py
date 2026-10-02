@@ -9,7 +9,6 @@ from odoo.exceptions import UserError
 from odoo.tools import date_utils
 from odoo.tools.misc import format_date
 
-# MyInvois keeps two years of history.
 SYNC_MONTH_COUNT = 24
 
 
@@ -54,7 +53,6 @@ class MyInvoisDocumentSyncWizard(models.TransientModel):
     @api.model
     def _selection_month(self):
         """ The current month and the ones before it, as far back as MyInvois keeps documents. """
-        # The search window is in Malaysian time: so must be the current month.
         current_month = date_utils.start_of(fields.Date.context_today(self.with_context(tz='Asia/Kuala_Lumpur')), 'month')
         months = [current_month - relativedelta(months=index) for index in range(SYNC_MONTH_COUNT)]
         return [(fields.Date.to_string(month), format_date(self.env, month, date_format='MMM yyyy')) for month in months]
@@ -72,7 +70,7 @@ class MyInvoisDocumentSyncWizard(models.TransientModel):
     # --------------
 
     def button_sync(self):
-        """ Create a draft bill for each new document received during the selected month. """
+        """ Create a draft bill for each new document issued between the selected dates. """
         self.ensure_one()
         # The journal can be set through RPC: it must be one the user has access to.
         self.journal_id.check_access('read')
