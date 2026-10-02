@@ -147,10 +147,7 @@ export class BaseAction extends Component {
     }
 
     get dynamicClass() {
-        return {
-            [this.action.btnClass ?? ""]: true,
-            [this.action.tagClassNames]: true,
-        };
+        return { [this.action.tagClassNames]: true };
     }
 
     get hasBtnBg() {
@@ -160,14 +157,6 @@ export class BaseAction extends Component {
     /** Whether the component of the action definition replaces the button of the action. */
     get hasDefinitionComponent() {
         return Boolean(this.action.component && this.action.componentCondition);
-    }
-
-    /**
-     * The list then adds no rounding of its own: its segmented-control shape only rounds the outer
-     * corners, which would leave the rest lopsided.
-     */
-    get hasOwnRounding() {
-        return /(^|\s)rounded(-|\s|$)/.test(this.action.btnClass ?? "");
     }
 
     get iconClass() {
@@ -221,8 +210,8 @@ export class InlineAction extends BaseAction {
 
     get roundnessClass() {
         return {
-            "rounded-start-3": !this.hasOwnRounding && this.props.isFirstInGroup,
-            "rounded-end-3": !this.hasOwnRounding && this.props.isLastInGroup,
+            "rounded-start-3": this.props.isFirstInGroup,
+            "rounded-end-3": this.props.isLastInGroup,
         };
     }
 
@@ -258,7 +247,7 @@ export class CircleInlineAction extends InlineAction {
         if (!this.isCircle) {
             return super.roundnessClass;
         }
-        return { "rounded-circle": !this.hasOwnRounding };
+        return { "rounded-circle": true };
     }
 }
 

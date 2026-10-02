@@ -76,6 +76,17 @@ export const COMPOSER_TYPES = {
     NOTE: "note",
     MESSAGE: "message",
 };
+
+/** Button to send the message, highlighted once there is something to send. */
+class SendMessageInlineAction extends CircleInlineAction {
+    get classObj() {
+        return {
+            ...super.classObj,
+            "o-sendMessageActive o-text-white shadow-sm": this.action.isActive,
+        };
+    }
+}
+
 class FullComposerRecoveryPopover extends Component {
     static template = "mail.FullComposerRecoveryPopover";
 
@@ -508,8 +519,12 @@ export class Composer extends Component {
         return this.props.mode === "extended";
     }
 
-    get actionComponent() {
-        return CircleInlineAction;
+    /** @type {import("@mail/core/common/action_list").GetActionComponent} */
+    getActionComponent({ action, inline }) {
+        if (!inline) {
+            return undefined;
+        }
+        return action.id === "send-message" ? SendMessageInlineAction : CircleInlineAction;
     }
 
     get CANCEL_OR_SAVE_EDIT_TEXT() {

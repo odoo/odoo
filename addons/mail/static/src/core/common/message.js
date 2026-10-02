@@ -56,6 +56,13 @@ import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 
+/** Button of the dropdown of the actions that do not fit in the quick actions of a message. */
+class MoreMessageInlineAction extends CircleInlineAction {
+    get classObj() {
+        return { ...super.classObj, "o-mail-Message-moreAction": true };
+    }
+}
+
 export class Message extends Component {
     // This is the darken version of #71639e
     static SHADOW_LINK_COLOR = "#66598f";
@@ -254,8 +261,12 @@ export class Message extends Component {
         );
     }
 
-    get actionComponent() {
-        return CircleInlineAction;
+    /** @type {import("@mail/core/common/action_list").GetActionComponent} */
+    getActionComponent({ action, inline }) {
+        if (!inline) {
+            return undefined;
+        }
+        return action.definition.isMoreAction ? MoreMessageInlineAction : CircleInlineAction;
     }
 
     get messageActionsParams() {
@@ -296,7 +307,6 @@ export class Message extends Component {
         return moreActions?.length
             ? this.messageActions.more(this.messageActionsParams, {
                   actions: moreActions,
-                  btnClass: "o-mail-Message-moreAction",
                   dropdownMenuClass: "o-mail-Message-moreMenu",
                   dropdownPosition: this.isAlignedRight
                       ? this.message.threadAsNewest
