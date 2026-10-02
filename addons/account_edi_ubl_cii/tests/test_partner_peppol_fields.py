@@ -3,7 +3,7 @@
 from contextlib import contextmanager
 from unittest.mock import patch
 
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 
@@ -27,6 +27,13 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
         """ Mock _build_error_peppol_endpoint"""
         if eas == "0184" and endpoint != "12345674":
             return f"(0184, {endpoint}) is not a valid peppol couple."
+
+    def _create_be_peppol_partner(self, **vals):
+            return self.env['res.partner'].create({
+                'name': "BE partner",
+                'country_id': self.env.ref('base.be').id,
+                **vals,
+            })
 
     @patch(
         'odoo.addons.account_edi_ubl_cii.models.res_partner.ResPartner._build_error_peppol_endpoint',
@@ -109,3 +116,34 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
             self.assertEqual(partner_au._get_suggested_ubl_cii_edi_format(), 'cii')  # AU matches 2 formats but 'cii' has a lower sequence
             self.assertEqual(partner_nz._get_suggested_ubl_cii_edi_format(), 'peppol')
             self.assertFalse(partner_be._get_suggested_ubl_cii_edi_format())
+
+    def test_peppol_endpoint_cleared_when_vat_removed(self):
+        """ The endpoint derived from the VAT must be cleared when the VAT is removedand recomputed when the VAT is added back. """
+        partner = self._create_be_peppol_partner(vat='BE0477472701')
+        self.assertRecordValues(partner, [{'peppol_eas': '0208', 'peppol_endpoint': '0477472701'}])
+
+        partner.vat = False
+        self.assertRecordValues(partner, [{'peppol_eas': '0208', 'peppol_endpoint': False}])
+
+        partner.vat = 'BE0477472701'
+        self.assertRecordValues(partner, [{'peppol_eas': '0208', 'peppol_endpoint': '0477472701'}])
+
+    def test_peppol_endpoint_cleared_when_vat_removed_from_form(self):
+        """ The same flow as the issue, passing through the form (general information tab). """
+        partner = self._create_be_peppol_partner(vat='BE0477472701')
+        with Form(partner) as partner_form:
+            partner_form.vat = False
+        self.assertRecordValues(partner, [{'peppol_eas': '0208', 'peppol_endpoint': False}])
+
+    def test_peppol_manual_endpoint_kept_when_vat_removed(self):
+        """ A manually entered endpoint (different from the VAT) should not be cleared when the VAT is removed. """
+        partner = self._create_be_peppol_partner(vat='BE0477472701')
+        partner.peppol_endpoint = '0123456749'
+        partner.vat = False
+        self.assertRecordValues(partner, [{'peppol_eas': '0208', 'peppol_endpoint': '0123456749'}])
+
+    def test_peppol_endpoint_from_company_registry_kept_when_vat_removed(self):
+        """ If the endpoint comes from the company registry, removing the VAT should not affect it. """
+        partner = self._create_be_peppol_partner(vat='BE0477472701', company_registry='0477472701')
+        partner.vat = False
+        self.assertRecordValues(partner, [{'peppol_eas': '0208', 'peppol_endpoint': '0477472701'}])

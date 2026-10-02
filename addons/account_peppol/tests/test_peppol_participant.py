@@ -437,3 +437,48 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             'peppol_eas': '0208',
             'peppol_endpoint': '0475646428',
         }])
+
+    def test_do_not_clear_registered_company_endpoint_when_vat_removed(self):
+        """ The endpoint of a company registered on Peppol must not be cleared when its VAT is removed,
+        even if the endpoint was derived from the VAT. """
+        self.env.company.write({
+            'country_id': self.env.ref('base.be').id,
+            'vat': 'BE0477472701',
+        })
+        with self._mock_requests([
+            self._mock_can_connect(),
+            self._mock_lookup_participant(),
+            self._mock_connect(),
+        ]):
+            wizard = self.env['peppol.registration'].create({
+                'peppol_eas': '0208',
+                'peppol_endpoint': '0477472701',
+                'phone_number': '+32483123456',
+                'contact_email': 'yourcompany@test.example.com',
+            })
+            wizard.button_register_with_kyc()
+        with self._mock_requests([self._mock_participant_status('sender')]):
+            self.env.company.account_edi_proxy_client_ids._peppol_get_participant_status()
+
+        self.env.company.vat = False
+        self.assertRecordValues(self.env.company.partner_id, [{
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0477472701',
+        }])
+
+    def test_peppol_verification_state_reset_when_endpoint_cleared(self):
+        """ When the endpoint is cleared because its source was removed,
+        the Peppol verification state must be reset to 'not_verified'. """
+        with self._mock_requests([self._mock_lookup_participant()]):
+            self.partner_a.write({
+                'country_id': self.env.ref('base.be').id,
+                'vat': 'BE0477472701',
+            })
+        self.assertRecordValues(self.partner_a, [{'peppol_eas': '0208', 'peppol_endpoint': '0477472701'}])
+        self.partner_a.peppol_verification_state = 'valid'
+
+        self.partner_a.vat = False
+        self.assertRecordValues(self.partner_a, [{
+            'peppol_endpoint': False,
+            'peppol_verification_state': 'not_verified',
+        }])
