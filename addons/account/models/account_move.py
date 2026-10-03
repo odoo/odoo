@@ -6057,6 +6057,11 @@ class AccountMove(models.Model):
         label = self.adjusting_entry_origin_label if len(self.adjusting_entries_move_ids) == 1 else 'Invoices'
         return self.adjusting_entry_origin_move_ids._get_records_action(name=label)
 
+    def action_open_journal_items(self):
+        self.ensure_one()
+        lines = self.line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_subsection', 'line_note'))
+        return lines._get_records_action(name=self.env._("Journal Items"), views=[(False, 'list')])
+
     def action_switch_move_type(self):
         if any((move.posted_before and move.name) for move in self):
             raise ValidationError(_("You cannot switch the type of a document with an existing sequence number."))
