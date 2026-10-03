@@ -185,9 +185,14 @@ export class ProductScreen extends Component {
             return;
         }
         if (this.pos.selectedOrder.isRefund && buttonValue !== "Backspace") {
+            const mode = this.pos.numpadMode;
+            const title = mode !== "Backspace" ? `${mode} update` : "Action";
             return this.dialog.add(AlertDialog, {
-                title: _t("%s update not allowed", capitalize(this.pos.numpadMode)),
-                body: _t("You can not change the %s of the refund order.", this.pos.numpadMode),
+                title: _t("%s not allowed", capitalize(title)),
+                body:
+                    mode !== "Backspace"
+                        ? _t("You cannot change the %s of a refund order.", mode)
+                        : _t("You cannot modify a refund order."),
             });
         }
         this.numberBuffer.sendKey(buttonValue);
