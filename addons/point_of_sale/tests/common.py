@@ -156,7 +156,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'country_id': cls.env['res.country'].create({
                 'name': 'PoS Land',
                 'code': 'WOW',
-            }),
+            }).id,
         })
 
         # Set basic defaults
