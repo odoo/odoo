@@ -1433,6 +1433,30 @@ class StockPicking(models.Model):
             bo_to_assign.action_assign()
         return backorders
 
+    def _get_aggregated_backorder_lines(self):
+        self.ensure_one()
+        if self.picking_type_id.code != 'outgoing':
+            return []
+        move_ids = self.move_ids._rollup_move_origs()
+        all_moves = self.env['stock.move'].browse(move_ids)
+        pickings = self | all_moves.picking_id
+        all_backorders = pickings.backorder_ids | pickings.backorder_id
+        pending_backorders = all_backorders.filtered(lambda p: p.state not in ('done', 'cancel'))
+        aggregated_backorders = {}
+        for move in pending_backorders.move_ids.filtered('product_uom_qty'):
+            description = move._get_report_description_picking()
+            key = (move.product_id, description, move.uom_id)
+            if key not in aggregated_backorders:
+                aggregated_backorders[key] = {
+                    'product_id': move.product_id,
+                    'description': description,
+                    'qty_ordered': move.product_uom_qty,
+                    'uom_id': move.uom_id,
+                }
+            else:
+                aggregated_backorders[key]['qty_ordered'] += move.product_uom_qty
+        return list(aggregated_backorders.values())
+
     def _log_activity_get_documents(self, orig_obj_changes, stream_field, stream, groupby_method=False):
         """ Generic method to log activity. To use with
         _log_activity method. It either log on uppermost
