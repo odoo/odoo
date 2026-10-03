@@ -435,6 +435,25 @@ class IrHttp(models.AbstractModel):
         return translations_per_module, lang_params
 
     @api.model
+    def _get_web_translations_modules(self):
+        """ Return the modules whose translations are served to the web client
+        when it doesn't ask for specific ones. """
+        return self.env.registry._init_modules.union(odoo.tools.config['server_wide_modules'])
+
+    @api.model
+    def _get_web_translations_lang(self, lang):
+        """ Return ``lang`` if it is an installed language, ``None`` otherwise.
+
+        Normalize the language with this method before calling
+        ``_get_web_translations_hash``, so that the hash served by the
+        translations endpoints and the one precomputed in the session info
+        are computed on the same language.
+        """
+        if lang and lang not in {code for code, _ in self.env['res.lang'].sudo().get_installed()}:
+            return None
+        return lang
+
+    @api.model
     @tools.ormcache('frozenset(modules)', 'lang')
     def _get_web_translations_hash(self, modules, lang):
         translations, lang_params = self._get_translations_for_webclient(modules, lang)
@@ -448,6 +467,17 @@ class IrHttp(models.AbstractModel):
             # put in the transactional cache
             self.env.cr.cache['translation_data'] = translation_cache
         return hashlib.sha1(json.dumps(translation_cache, sort_keys=True, default=json_default).encode()).hexdigest()
+
+    @api.model
+    def _get_cached_web_translations_hash(self, modules, lang):
+        """ Return the result of ``_get_web_translations_hash`` if it is in
+        the ormcache, an empty string otherwise.
+
+        Computing the hash requires building all the translations, which is
+        too expensive to do while rendering a page. On a cold cache, the client
+        gets no hash and asks the translations endpoint, which fills the cache.
+        """
+        return self._get_web_translations_hash.__cache__.get_value(self, modules, lang, cache_default='')
 
     @classmethod
     def _is_allowed_cookie(cls, cookie_type):
