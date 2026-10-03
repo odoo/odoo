@@ -38,18 +38,21 @@
                                             <div class="d-flex flex-row gap-1">
                                                 <BuilderColorPicker
                                                     title.translate="Primary"
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'"
+                                                    preview="true"
                                                     actionParam="'o-color-1'"
                                                     enabledTabs="['solid', 'custom']"
                                                     selectedTab="'custom'"/>
                                                 <BuilderColorPicker
                                                     title.translate="Secondary"
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'"
+                                                    preview="true"
                                                     actionParam="'o-color-2'"
                                                     enabledTabs="['solid', 'custom']"
                                                     selectedTab="'custom'"/>
                                                 <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'"
+                                                    preview="true"
                                                     actionParam="'o-color-3'"
                                                     enabledTabs="['solid', 'custom']"
                                                     selectedTab="'custom'"/>
@@ -59,12 +62,14 @@
                                             <span class="fst-italic" data-text-truncate-tooltip="">Light &amp; Dark</span>
                                             <div class="d-flex flex-row gap-1">
                                                 <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'"
+                                                    preview="true"
                                                     actionParam="'o-color-4'"
                                                     enabledTabs="['solid', 'custom']"
                                                     selectedTab="'custom'"/>
                                                 <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'"
+                                                    preview="true"
                                                     actionParam="'o-color-5'"
                                                     enabledTabs="['solid', 'custom']"
                                                     selectedTab="'custom'"/>
@@ -72,7 +77,7 @@
                                         </div>
                                         <div class="d-flex flex-column h-100">
                                             <div class="d-flex flex-column h-100 justify-content-center">
-                                                <BuilderSelect action="'changeColorPalette'" actionParam="'color-palettes-name'" dropdownContainerClass="'o-color-palette-dropdown'">
+                                                <BuilderSelect action="'previewColorPalette'" actionParam="'color-palettes-name'" dropdownContainerClass="'o-color-palette-dropdown'">
                                                     <t t-set-slot="fixedButton">
                                                         <i class="oi oi-filled fs-4" data-icon="palette"/>
                                                     </t>
@@ -116,26 +121,30 @@
                                             <BuilderRow label.translate="Background">
                                                 <BuilderColorPicker
                                                     enabledTabs="['solid', 'custom', 'gradient']"
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'"
+                                                    preview="true"
                                                     actionParam="{ mainParam: `o-cc${preset.id}-bg`, gradientColor: `o-cc${preset.id}-bg-gradient` }"
                                                 />
                                             </BuilderRow>
                                             <BuilderRow label.translate="Text">
                                                 <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'"
+                                                    preview="true"
                                                     actionParam="`o-cc${preset.id}-text`"
                                                     enabledTabs="['solid', 'custom']"/>
                                             </BuilderRow>
                                             <BuilderRow label.translate="Headings">
                                                 <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'"
+                                                    preview="true"
                                                     actionParam="`o-cc${preset.id}-headings`"
                                                     enabledTabs="['solid', 'custom']"/>
                                                 <t t-set-slot="collapse">
                                                     <t t-foreach="[2, 3, 4, 5, 6]" t-as="j" t-key="j">
                                                         <BuilderRow label="`Headings ${j}`">
                                                             <BuilderColorPicker
-                                                                action="'customizeWebsiteColor'"
+                                                                action="'previewWebsiteColor'"
+                                                                preview="true"
                                                                 actionParam="`o-cc${preset.id}-h${j}`"
                                                                 enabledTabs="['solid', 'custom']"/>
                                                         </BuilderRow>
@@ -144,30 +153,35 @@
                                             </BuilderRow>
                                             <BuilderRow label.translate="Links">
                                                 <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'"
+                                                    preview="true"
                                                     actionParam="`o-cc${preset.id}-link`"
                                                     enabledTabs="['solid', 'custom']"/>
                                             </BuilderRow>
                                             <BuilderRow label.translate="Primary Buttons">
                                                 <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'"
+                                                    preview="true"
                                                     actionParam="`o-cc${preset.id}-btn-primary`"
                                                     enabledTabs="['solid', 'custom']"
                                                     tooltip.translate="Fill Color"/>
                                                 <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'"
+                                                    preview="true"
                                                     actionParam="`o-cc${preset.id}-btn-primary-border`"
                                                     enabledTabs="['solid', 'custom']"
                                                     tooltip.translate="Border Color"/>
                                             </BuilderRow>
                                             <BuilderRow label.translate="Secondary Buttons">
                                                 <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'"
+                                                    preview="true"
                                                     actionParam="`o-cc${preset.id}-btn-secondary`"
                                                     enabledTabs="['solid', 'custom']"
                                                     tooltip.translate="Fill Color"/>
                                                 <BuilderColorPicker
-                                                    action="'customizeWebsiteColor'"
+                                                    action="'previewWebsiteColor'"
+                                                    preview="true"
                                                     actionParam="`o-cc${preset.id}-btn-secondary-border`"
                                                     enabledTabs="['solid', 'custom']"
                                                     tooltip.translate="Border Color"/>
@@ -180,25 +194,29 @@
                                 <BuilderRow label.translate="Status Colors">
                                     <BuilderColorPicker title.translate="Success"
                                         enabledTabs="['solid', 'custom']"
-                                        action="'customizeWebsiteColor'"
+                                        action="'previewWebsiteColor'"
+                                        preview="true"
                                         actionParam="{colorType: 'theme', mainParam: 'success'}"
                                         selectedTab="'custom'"
                                     />
                                     <BuilderColorPicker title.translate="Info"
                                         enabledTabs="['solid', 'custom']"
-                                        action="'customizeWebsiteColor'"
+                                        action="'previewWebsiteColor'"
+                                        preview="true"
                                         actionParam="{colorType: 'theme', mainParam: 'info'}"
                                         selectedTab="'custom'"
                                     />
                                     <BuilderColorPicker title.translate="Warning"
                                         enabledTabs="['solid', 'custom']"
-                                        action="'customizeWebsiteColor'"
+                                        action="'previewWebsiteColor'"
+                                        preview="true"
                                         actionParam="{colorType: 'theme', mainParam: 'warning'}"
                                         selectedTab="'custom'"
                                     />
                                     <BuilderColorPicker title.translate="Error"
                                         enabledTabs="['solid', 'custom']"
-                                        action="'customizeWebsiteColor'"
+                                        action="'previewWebsiteColor'"
+                                        preview="true"
                                         actionParam="{colorType: 'theme', mainParam: 'danger'}"
                                         selectedTab="'custom'"
                                     />
@@ -210,7 +228,7 @@
                                             <span t-att-title="this.getGrayTitle(grayCode)"
                                                 t-attf-variable="#{grayCode}"
                                                 t-attf-class="o_we_user_value_widget o_we_gray_preview bg-#{grayCode}"
-                                                t-attf-style="background-color: {{this.grays[grayCode]}} !important"
+                                                t-attf-style="background-color: var(--hb-cp-{{grayCode}}) !important"
                                             />
                                         </t>
                                     </div>

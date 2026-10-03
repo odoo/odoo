@@ -2,6 +2,11 @@
 // the values the server needs to know to build the <head>: the Google/local
 // font URLs to load and the icon font the page renders with.
 
+// The contrast settings of the frontend (see website's
+// `bootstrap_overridden.scss`), which this bundle doesn't compile.
+$white: o-color('white') !default;
+$black: o-color('black') !default;
+
 .o-website-font-urls {
     $-i: 1;
     $-seen-urls: ();
@@ -70,6 +75,29 @@
     }
     @if $o-theme-navbar-font != $o-theme-font {
         $-gates: append($-gates, 'navbar-font');
+    }
+    // A dark body background (see `website.scss`).
+    @if lightness(o-color(o-color('o-cc1-bg'))) < 50 {
+        $-gates: append($-gates, 'body-dark');
+    }
+    // A dark header color (see `website.scss`).
+    $-dark: o-color('900');
+    // (Here, a color preset's number is resolved to its background apart.)
+    $-menu-color: o-color('menu-custom') or o-color(o-color('menu'));
+    @if ($-menu-color and color-contrast($-menu-color, $-dark, o-color('white'), $o-frontend-min-contrast-ratio, o-color('o-cc1-bg')) != $-dark) {
+        $-gates: append($-gates, 'menu-dark');
+    }
+    // Color combinations: headings colors and gradients are only applied
+    // when set.
+    @for $index from 1 through length($o-color-combinations) {
+        @each $key in ('headings', 'h2', 'h3', 'h4', 'h5', 'h6') {
+            @if map-get($o-color-palette, 'o-cc#{$index}-#{$key}') {
+                $-gates: append($-gates, 'o-cc#{$index}-#{$key}');
+            }
+        }
+        @if o-website-value('o-cc#{$index}-bg-gradient') {
+            $-gates: append($-gates, 'o-cc#{$index}-bg-gradient');
+        }
     }
     --o-theme-gates: "#{$-gates}";
 }

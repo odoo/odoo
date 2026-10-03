@@ -26,11 +26,23 @@ function verifyShapeColorsUpdated(trigger, expectedHex) {
                     "Updating the theme color should also update the background shape color."
                 );
             }
-            await assertSvgColors(
-                this.anchor.querySelector("img[data-shape]"),
-                "Updating the theme color should update the image shape SVG color.",
-                [`#${expectedHex}`]
-            );
+            // The image shape is recomputed asynchronously (the theme colors
+            // are previewed, without a loading screen to wait for).
+            for (let tries = 1; ; tries++) {
+                try {
+                    await assertSvgColors(
+                        this.anchor.querySelector("img[data-shape]"),
+                        "Updating the theme color should update the image shape SVG color.",
+                        [`#${expectedHex}`]
+                    );
+                    break;
+                } catch (error) {
+                    if (tries === 50) {
+                        throw error;
+                    }
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+                }
+            }
         },
     };
 }

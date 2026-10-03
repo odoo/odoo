@@ -62,7 +62,8 @@
         </BuilderRow>
         <BuilderRow label.translate="Background" level="1" t-if="!this.isActiveItem('layout_full_opt')">
             <BuilderColorPicker enabledTabs="['solid', 'custom']"
-                action="'customizeWebsiteColor'"
+                action="'previewWebsiteColor'"
+                preview="true"
                 actionParam="'body'"/>
         </BuilderRow>
         <BuilderRow label.translate="Image" level="1" t-if="this.isActiveItem('body_bg_image_opt')">
@@ -218,7 +219,8 @@
         <BuilderRow label.translate="Background">
             <BuilderColorPicker noTransparency="true"
                 enabledTabs="['solid', 'custom']"
-                action="'customizeWebsiteColor'"
+                action="'previewWebsiteColor'"
+                preview="true"
                 actionParam="'input'"
             />
         </BuilderRow>
