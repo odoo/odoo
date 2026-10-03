@@ -4,7 +4,7 @@
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/india.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['in'],
-    'version': '2.2',
+    'version': '2.3',
     'description': """
 Indian Accounting: Chart of Account.
 ====================================
