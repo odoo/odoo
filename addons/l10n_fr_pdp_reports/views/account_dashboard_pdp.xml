@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_fr_pdp_reports_account_journal_dashboard_view" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.l10n_fr_pdp</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//t[@t-name='JournalTop']/div" position="inside">
+                <t t-if="dashboard.pdp_is_ereporting_journal &amp;&amp; dashboard.pdp_has_warning">
+                    <div t-att-class="'alert mt-2 mb-0 ' + (dashboard.pdp_has_danger ? 'alert-danger' : 'alert-warning')">
+                        <strong>
+                            <t t-if="dashboard.pdp_has_danger">
+                                Urgent e-reporting errors
+                            </t>
+                            <t t-else="">
+                                E-reporting errors to review
+                            </t>
+                        </strong>
+                        <span class="ms-2">
+                            <t t-out="dashboard.pdp_error_count"/> documents in error
+                        </span>
+                    </div>
+                </t>
+            </xpath>
+
+            <xpath expr="//t[@t-name='JournalBodySalePurchase']/div[@class='col-12 col-sm-5 mb-3 mb-sm-0 o_kanban_primary_left']"
+                   position="replace">
+                <div class="col-12 col-sm-5 mb-3 mb-sm-0 o_kanban_primary_left">
+                    <t t-if="dashboard.pdp_is_ereporting_journal">
+                        <div class="mb-3 mt-2">
+                            <t t-if="dashboard.pdp_tx_due">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span style="white-space: nowrap;">Next due date for transactions:</span>
+                                    <span class="ms-1" t-out="dashboard.pdp_tx_due"/>
+                                </div>
+                            </t>
+                            <t t-if="dashboard.pdp_pay_due">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span style="white-space: nowrap;">Next due date for payments:</span>
+                                    <span class="ms-1" t-out="dashboard.pdp_pay_due"/>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="mt-3">
+                            <button type="action"
+                                    name="%(l10n_fr_pdp_reports_action_flows)d"
+                                    class="btn btn-primary btn-sm me-2 mb-1">
+                                <span>View reports</span>
+                            </button>
+                            <t t-if="dashboard.pdp_error_count">
+                                <button type="action"
+                                        name="%(l10n_fr_pdp_reports_action_error_moves)d"
+                                        class="btn btn-secondary btn-sm mb-1">
+                                    <span>View errors</span>
+                                </button>
+                            </t>
+                        </div>
+                    </t>
+
+                    <t t-if="!(dashboard.pdp_is_ereporting_journal)">
+                        <!--
+                            TODO : si tu veux remettre le comportement d'origine pour les autres journaux,
+                            copie ici le bloc original de la colonne gauche de JournalBodySalePurchase.
+                        -->
+                    </t>
+                </div>
+            </xpath>
+            <xpath expr="//t[@t-call='JournalBodyGraph']" position="attributes">
+                <attribute name="t-if">
+                    ['bank', 'cash', 'sale', 'purchase'].includes(journal_type)
+                    &amp;&amp; !(dashboard &amp;&amp; dashboard.pdp_is_ereporting_journal)
+                </attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
