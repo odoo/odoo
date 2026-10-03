@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* product_images
+# * product_images
 #
 # Translators:
 # Martin Trigaux, 2023
@@ -11,14 +11,14 @@
 # Vida Potočnik <vida.potocnik@mentis.si>, 2023
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2023
 # Aleš Pipan, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-08-08 07:47+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-01 13:36+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-17/"
 "product_images/sl/>\n"
 "Language: sl\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: product_images
 #. odoo-python
@@ -37,6 +37,8 @@ msgid ""
 "%(matching_images_count)s matching images have been found for "
 "%(product_count)s products."
 msgstr ""
+"Najdenih je bilo %(matching_images_count)s ujemajočih se slik za %"
+"(product_count)s izdelkov."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -97,7 +99,7 @@ msgstr ""
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "Get Pictures"
-msgstr ""
+msgstr "Pridobi slike"
 
 #. module: product_images
 #: model:ir.actions.act_window,name:product_images.product_product_action_get_pic_with_barcode
@@ -133,17 +135,17 @@ msgstr "Zadnjič posodobljeno"
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_unable_to_process
 msgid "Number of product unprocessable"
-msgstr ""
+msgstr "Število izdelkov, ki jih ni mogoče obdelati"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_to_process
 msgid "Number of products to process"
-msgstr ""
+msgstr "Število izdelkov za obdelavo"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_selected
 msgid "Number of selected products"
-msgstr ""
+msgstr "Število izbranih izdelkov"
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -167,12 +169,12 @@ msgstr "Različica izdelka"
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
 msgid "Product images"
-msgstr ""
+msgstr "Slike izdelka"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__products_to_process
 msgid "Products To Process"
-msgstr ""
+msgstr "Izdelki za obdelavo"
 
 #. module: product_images
 #. odoo-python
@@ -181,7 +183,7 @@ msgstr ""
 msgid ""
 "Products are processed in the background. Images will be updated "
 "progressively."
-msgstr ""
+msgstr "Izdelki se obdelujejo v ozadju. Slike bodo posodobljene postopoma."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
@@ -216,6 +218,8 @@ msgid ""
 "The list of selected products that meet the criteria (have a barcode and no "
 "image)"
 msgstr ""
+"Seznam izbranih izdelkov, ki izpolnjujejo merila (imajo črtno kodo in nimajo "
+"slike)"
 
 #. module: product_images
 #. odoo-python
@@ -242,7 +246,7 @@ msgstr "Sprožena dejanja"
 #. module: product_images
 #: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
 msgid "Whether an image must be fetched for this product. Handled by a cron."
-msgstr ""
+msgstr "Ali je treba za ta izdelek pridobiti sliko. To obdela opravilo cron."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form

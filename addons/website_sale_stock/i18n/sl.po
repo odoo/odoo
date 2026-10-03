@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_sale_stock
+# * website_sale_stock
 #
 # Translators:
 # Tadej Lupšina <tadej@hbs.si>, 2023
@@ -12,14 +12,14 @@
 # Lancelot Semal, 2024
 # Gregor Flajs, 2025
 # Aleš Pipan, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:38+0000\n"
-"PO-Revision-Date: 2026-08-06 23:12+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-03 14:33+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-17/"
 "website_sale_stock/sl/>\n"
 "Language: sl\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -38,7 +38,7 @@ msgstr ""
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
 msgid "Back in stock Notifications"
-msgstr ""
+msgstr "Obvestila o ponovni zalogi"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
@@ -56,12 +56,12 @@ msgstr "Nadaljuj prodajo"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__allow_out_of_stock_order
 msgid "Continue selling when out-of-stock"
-msgstr ""
+msgstr "Nadaljuj prodajo, ko ni na zalogi"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Dear Customer,"
-msgstr ""
+msgstr "Spoštovani kupec,"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -69,6 +69,8 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
+"Privzeti način razpoložljivosti, nastavljen za novo ustvarjene izdelke, ki "
+"jih je mogoče skladiščiti. To je mogoče spremeniti na ravni izdelka."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -99,12 +101,12 @@ msgstr "Neveljaven e-poštni naslov"
 #: code:addons/website_sale_stock/static/src/js/website_sale.js:0
 #, python-format
 msgid "Invalid email"
-msgstr ""
+msgstr "Neveljaven e-poštni naslov"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory Defaults"
-msgstr ""
+msgstr "Privzete nastavitve zaloge"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -129,20 +131,20 @@ msgstr "Ni na zalogi"
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Out-of-Stock"
-msgstr ""
+msgstr "Ni na zalogi"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__out_of_stock_message
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
-msgstr ""
+msgstr "Sporočilo o pomanjkanju zaloge"
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/controllers/main.py:0
 #, python-format
 msgid "Please sign in to proceed."
-msgstr ""
+msgstr "Za nadaljevanje se prijavite."
 
 #. module: website_sale_stock
 #. odoo-python
@@ -160,7 +162,7 @@ msgstr "Različica izdelka"
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
 msgid "Product: send email regarding products availability"
-msgstr ""
+msgstr "Izdelek: pošlji e-pošto glede razpoložljivosti izdelkov\n"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -181,21 +183,21 @@ msgstr "Postavka naročila"
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Show Available Qty"
-msgstr ""
+msgstr "Prikaži razpoložljivo količino"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
 msgid "Show Threshold"
-msgstr ""
+msgstr "Prikaži prag"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__show_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__show_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__show_availability
 msgid "Show availability Qty"
-msgstr ""
+msgstr "Prikaži razpoložljivo količino"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -205,6 +207,8 @@ msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry "
 "for the inconvenience."
 msgstr ""
+"Nekateri izdelki niso več na voljo in vaša košarica je bila posodobljena. "
+"Opravičujemo se za nevšečnosti."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -230,7 +234,7 @@ msgstr "Izdelek '%(product_name)s' je zdaj na voljo"
 #: code:addons/website_sale_stock/controllers/main.py:0
 #, python-format
 msgid "This product is not eligible for stock notifications."
-msgstr ""
+msgstr "Za ta izdelek ni mogoče prejemati obvestil o zalogi."
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -273,6 +277,8 @@ msgstr "Spletna stran"
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website where this order has been placed, for eCommerce orders."
 msgstr ""
+"Spletno mesto, prek katerega je bilo oddano to naročilo, za naročila v e-"
+"trgovini."
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -303,6 +309,7 @@ msgid ""
 "You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
 "available"
 msgstr ""
+"Zahtevate %(desired_qty)s %(product_name)s, vendar je na voljo le %(new_qty)s"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -336,11 +343,11 @@ msgstr "na zalogi."
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "only if below"
-msgstr ""
+msgstr "le če spodaj"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "youremail@gmail.com"
-msgstr ""
+msgstr "youremail@gmail.com"

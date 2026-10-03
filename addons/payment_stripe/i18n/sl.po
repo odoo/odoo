@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2026-08-03 01:21+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-01 13:36+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-17/"
 "payment_stripe/sl/>\n"
 "Language: sl\n"
@@ -25,14 +25,14 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: payment_stripe
 #. odoo-javascript
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "Cannot display the payment form"
-msgstr ""
+msgstr "Plačilnega obrazca ni mogoče prikazati"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__code
@@ -42,14 +42,14 @@ msgstr "Oznaka"
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Connect Stripe"
-msgstr ""
+msgstr "Poveži Stripe"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
-msgstr ""
+msgstr "Povezave z API-jem ni bilo mogoče vzpostaviti."
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -73,12 +73,12 @@ msgstr "Brezplačna dostava"
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Generate your webhook"
-msgstr ""
+msgstr "Ustvari svoj webhook"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Get your Secret and Publishable keys"
-msgstr ""
+msgstr "Pridobite svoj skrivni ključ in javni ključ"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_webhook_secret
@@ -86,13 +86,16 @@ msgid ""
 "If a webhook is enabled on your Stripe account, this signing secret must be "
 "set to authenticate the messages sent from Stripe to Odoo."
 msgstr ""
+"Če je spletna kljuka omogočena v vašem računu Stripe, mora biti ta podpisna "
+"skrivnost nastavljena za preverjanje pristnosti sporočil, poslanih iz Stripe "
+"v Odoo."
 
 #. module: payment_stripe
 #. odoo-javascript
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "Incorrect payment details"
-msgstr ""
+msgstr "Napačni podatki o plačilu"
 
 #. module: payment_stripe
 #. odoo-python
@@ -106,7 +109,7 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Other Payment Providers"
-msgstr ""
+msgstr "Drugi ponudniki plačil"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_provider
@@ -140,12 +143,12 @@ msgstr "Payment processing failed"
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Please use live credentials to enable Apple Pay."
-msgstr ""
+msgstr "Za omogočanje Apple Paya uporabite produkcijske poverilnice."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_publishable_key
 msgid "Publishable Key"
-msgstr ""
+msgstr "Javni ključ"
 
 #. module: payment_stripe
 #. odoo-python
@@ -159,7 +162,7 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing intent status."
-msgstr ""
+msgstr "Prejeti podatki z manjkajočim statusom plačilnega namena."
 
 #. module: payment_stripe
 #. odoo-python
@@ -192,12 +195,12 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_mandate
 msgid "Stripe Mandate"
-msgstr ""
+msgstr "Stripeovo pooblastilo"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Stripe Payment Method ID"
-msgstr ""
+msgstr "ID plačilnega sredstva Stripe"
 
 #. module: payment_stripe
 #. odoo-python
@@ -236,12 +239,12 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "The customer left the payment page."
-msgstr ""
+msgstr "Stranka je zapustila plačilno stran."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_publishable_key
 msgid "The key solely used to identify the account with Stripe"
-msgstr ""
+msgstr "Ključ, ki se uporablja izključno za identifikacijo računa pri Stripe"
 
 #. module: payment_stripe
 #. odoo-python
@@ -251,6 +254,9 @@ msgid ""
 "The refund did not go through. Please log into your Stripe Dashboard to get "
 "more information on that matter, and address any accounting discrepancies."
 msgstr ""
+"Vračilo ni bilo izvedeno. Prijavite se v svojo nadzorno ploščo Stripe, da "
+"pridobite več informacij o tej zadevi, in odpravite morebitna računovodska "
+"neskladja."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__code
@@ -269,19 +275,19 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_token.py:0
 #, python-format
 msgid "Unable to convert payment token to new API."
-msgstr ""
+msgstr "Plačilnega žetona ni mogoče pretvoriti v novi API."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_webhook_secret
 msgid "Webhook Signing Secret"
-msgstr ""
+msgstr "Skrivnost za podpis spletnega kaveljčka"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "You Stripe Webhook was successfully set up!"
-msgstr ""
+msgstr "Vaš spletni kavelj Stripe je bil uspešno nastavljen!"
 
 #. module: payment_stripe
 #. odoo-python
@@ -290,6 +296,8 @@ msgstr ""
 msgid ""
 "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
 msgstr ""
+"Stripe spletnega kavlja ne morete ustvariti, če vaš skrivni ključ Stripe ni "
+"nastavljen."
 
 #. module: payment_stripe
 #. odoo-python
@@ -299,6 +307,8 @@ msgid ""
 "You cannot set the provider state to Enabled until your onboarding to Stripe "
 "is completed."
 msgstr ""
+"Stanja ponudnika ne morete nastaviti na Omogočeno, dokler ne dokončate "
+"uvajanja v Stripe."
 
 #. module: payment_stripe
 #. odoo-python
@@ -308,24 +318,26 @@ msgid ""
 "You cannot set the provider to Test Mode while it is linked with your Stripe "
 "account."
 msgstr ""
+"Ponudnika ne morete nastaviti na preskusni način, dokler je povezan z vašim "
+"računom Stripe."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Your Stripe Webhook is already set up."
-msgstr ""
+msgstr "Vaš Stripe webhook je že nastavljen."
 
 #. module: payment_stripe
 #. odoo-javascript
 #: code:addons/payment_stripe/static/src/js/express_checkout_form.js:0
 #, python-format
 msgid "Your order"
-msgstr ""
+msgstr "Vaše naročilo"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Your web domain was successfully verified."
-msgstr ""
+msgstr "Vaša spletna domena je bila uspešno preverjena."
