@@ -113,6 +113,8 @@ def upgrade(file_manager: FileManager):
     group_files = {
         coa: f for f in file_manager if (coa := csv_template_file_to_coa(f, 'account.group'))
     }
+    if not group_files:
+        return
     account_files = {
         coa: f for f in file_manager if (coa := csv_template_file_to_coa(f, 'account.account'))
     }
