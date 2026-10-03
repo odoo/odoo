@@ -195,11 +195,17 @@
                     </record>
                     <record id="tax_report_vat_return_net_3" model="account.report.line">
                         <field name="name">13. Net VAT Due</field>
+                        <field name="code">EG_13</field>
                         <field name="expression_ids">
                             <record id="tax_report_net_vat_due" model="account.report.expression">
                                 <field name="label">tax</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">EG_5.tax - EG_10.tax</field>
+                            </record>
+                            <record id="tax_report_net_vat_due_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">EG_13.tax</field>
                             </record>
                         </field>
                     </record>
@@ -382,6 +388,7 @@
             </record>
             <record id="tax_report_withholding_total" model="account.report.line">
                 <field name="name">Total</field>
+                <field name="code">EG_W_TOTAL</field>
                 <field name="expression_ids">
                     <record id="tax_report_withholding_total_base" model="account.report.expression">
                         <field name="label">base</field>
@@ -392,6 +399,12 @@
                         <field name="label">tax</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">EG_1W.tax + EG_2W.tax + EG_3W.tax</field>
+                    </record>
+                    <!-- "Total" is the combined withholding tax due across all 3 categories - the amount owed to the tax authority. -->
+                    <record id="tax_report_withholding_total_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">EG_W_TOTAL.tax</field>
                     </record>
                 </field>
             </record>

@@ -475,6 +475,11 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">T16.vat + T17.vat + T18.vat</field>
                             </record>
+                            <record id="mu_tr_T19_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">T19.vat</field>
+                            </record>
                         </field>
                     </record>
                 </field>

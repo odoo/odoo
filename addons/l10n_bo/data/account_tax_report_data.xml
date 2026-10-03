@@ -850,6 +850,12 @@
                                         <field name="formula">l10n_bo_tax_report_iva_693.balance + l10n_bo_tax_report_iva_635.balance + l10n_bo_tax_report_iva_648.balance - l10n_bo_tax_report_iva_909.balance</field>
                                         <field name="subformula">if_above(BOB(0))</field>
                                     </record>
+                                    <record id="l10n_bo_tax_report_iva_592_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_bo_tax_report_iva_592.balance</field>
+                                        <field name="subformula">if_above(BOB(0))</field>
+                                    </record>
                                 </field>
                             </record>
                             <record id="l10n_bo_tax_report_iva_469" model="account.report.line">
@@ -888,6 +894,12 @@
                                         <field name="formula">l10n_bo_tax_report_iva_643.balance - l10n_bo_tax_report_iva_955.balance</field>
                                         <field name="subformula">if_above(BOB(0))</field>
                                     </record>
+                                    <record id="l10n_bo_tax_report_iva_747_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_bo_tax_report_iva_747.balance</field>
+                                        <field name="subformula">if_above(BOB(0))</field>
+                                    </record>
                                 </field>
                             </record>
                             <record id="l10n_bo_tax_report_iva_646" model="account.report.line">
@@ -905,6 +917,12 @@
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">l10n_bo_tax_report_iva_955.balance - l10n_bo_tax_report_iva_643.balance</field>
+                                        <field name="subformula">if_above(BOB(0))</field>
+                                    </record>
+                                    <record id="l10n_bo_tax_report_iva_646_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_bo_tax_report_iva_646.balance</field>
                                         <field name="subformula">if_above(BOB(0))</field>
                                     </record>
                                 </field>

@@ -657,11 +657,18 @@
                                 <field name="name@nl">71 - Aan de Staat verschuldigde belasting</field>
                                 <field name="name@fr">71 - Taxe due à l'Etat</field>
                                 <field name="name@de">71 - Dem Staat geschuldete Steuer</field>
+                                <field name="code">c71</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_71_formula" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">(c54.balance + c55.balance + c56.balance + c57.balance + c61.balance + c63.balance) - (c59.balance + c62.balance + c64.balance)</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_line_71_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c71.balance</field>
                                         <field name="subformula">if_above(EUR(0))</field>
                                     </record>
                                 </field>
@@ -671,11 +678,18 @@
                                 <field name="name@nl">72 - Sommen verschuldigd door de Staat</field>
                                 <field name="name@fr">72 - Sommes dues par l'Etat</field>
                                 <field name="name@de">72 - Vom Staat geschuldeter Betrag</field>
+                                <field name="code">c72</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_72_formula" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">(c59.balance + c62.balance + c64.balance) - (c54.balance + c55.balance + c56.balance + c57.balance + c61.balance + c63.balance)</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_line_72_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">c72.balance</field>
                                         <field name="subformula">if_above(EUR(0))</field>
                                     </record>
                                 </field>

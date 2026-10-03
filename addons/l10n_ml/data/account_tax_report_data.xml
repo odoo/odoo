@@ -298,6 +298,12 @@
                         <field name="formula">ML_SALES.tax - ML_DEDUCTIONS.tax</field>
                         <field name="subformula">if_above(XOF(0))</field>
                     </record>
+                    <record id="account_tax_report_line_ml_to_pay_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ML_TO_PAY.tax</field>
+                        <field name="subformula">if_above(XOF(0))</field>
+                    </record>
                 </field>
             </record>
             <record id="account_tax_report_line_ml_credit_report" model="account.report.line">
@@ -343,6 +349,12 @@
                         <field name="engine">aggregation</field>
                         <field name="formula">ML_CREDIT_REPROT_DEDU.tax</field>
                         <field name="carryover_target">ML_CREDIT_REPORTED._applied_carryover_tax</field>
+                    </record>
+                    <record id="account_tax_report_line_ml_credit_report_deductions_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ML_CREDIT_REPROT_DEDU.tax</field>
+                        <field name="subformula">if_above(XOF(0))</field>
                     </record>
                 </field>
             </record>

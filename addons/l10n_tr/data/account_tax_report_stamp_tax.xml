@@ -166,6 +166,12 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">4STMP.tax + 5STMP.tax + 6STMP.tax</field>
                             </record>
+                            <!-- Stamp tax due for the period across both sale and purchase transactions. -->
+                            <record id="stamp_tax_purchase_total_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">1STMP.tax + 2STMP.tax + 3STMP.tax + 4STMP.tax + 5STMP.tax + 6STMP.tax</field>
+                            </record>
                         </field>
                     </record>
                 </field>

@@ -768,6 +768,11 @@
                                 <field name="engine">text</field>
                                 <field name="formula">(30)</field>
                             </record>
+                            <record id="l10n_kr_general_tp_vat_tpt_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">KR_TPT.tax</field>
+                            </record>
                         </field>
                     </record>
                     <record id="l10n_kr_general_tp_vat_tptmb" model="account.report.line">
@@ -2074,7 +2079,7 @@
                                         <field name="label">tax</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">KR_FRB.tax + KR_FITIDI.tax + KR_FITIDR.tax + KR_FITIFI.tax +
-                                            KR_FIOTI.tax + KR_FIETIDI.tax + KR_FIETIFI.tax + KR_FASTICPFS.tax + KR_FASTICPDS.tax + 
+                                            KR_FIOTI.tax + KR_FIETIDI.tax + KR_FIETIFI.tax + KR_FASTICPFS.tax + KR_FASTICPDS.tax +
                                             KR_FFRURG.tax + KR_FFRURI.tax + KR_FFRURUERG.tax + KR_FFRURUERI.tax +
                                             KR_FFRURNPUT.tax + KR_FFRURURZR.tax + KR_FFRURDCS.tax + KR_FFRURFSSP.tax +
                                             KR_STPVATPFTA.tax + KR_STPVATPDPTA.tax + KR_STPVATPFSCCS.tax
