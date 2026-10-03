@@ -237,7 +237,7 @@ class AccountMove(models.Model):
 
     def _pdp_get_tax_extract_state(self):
         self.ensure_one()
-        if not self.peppol_message_uuid or not self.peppol_is_sent:
+        if not self.peppol_message_uuid or not self.pdp_is_sent or self.partner_id._get_pdp_receiver_identification_info()[0] != 'pdp':
             return False
         tax_extract_responses = self.peppol_response_ids.filtered(lambda l: l.pdp_flow_number == '1' and l.peppol_state == 'done')
         if not tax_extract_responses:
