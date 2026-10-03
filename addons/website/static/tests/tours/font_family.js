@@ -60,3 +60,43 @@ registerWebsitePreviewTour(
         },
     ]
 );
+
+registerWebsitePreviewTour(
+    "website_delete_uploaded_font",
+    {
+        url: "/",
+        edition: true,
+    },
+    () => [
+        ...goToTheme(),
+        {
+            content: "Open the font family selector",
+            trigger: "we-select[data-variable='font'] we-toggler",
+            run: "click",
+        },
+        {
+            content: "Check that only the uploaded font can be deleted",
+            trigger: "we-select[data-variable='font'] we-selection-items",
+            run() {
+                const deleteBtnCount = this.anchor.querySelectorAll(".o_we_delete_font_btn").length;
+                if (deleteBtnCount !== 1) {
+                    throw new Error(`Expected 1 font to be deletable, found ${deleteBtnCount}`);
+                }
+            },
+        },
+        {
+            content: "Click on the delete button of the uploaded font",
+            trigger: `we-button[data-font-family='demo,font'] .o_we_delete_font_btn`,
+            run: "click",
+        },
+        {
+            content: "Confirm the font deletion",
+            trigger: ".modal-footer .btn-primary",
+            run: "click",
+        },
+        {
+            content: "Check that the font was deleted without any error",
+            trigger: ":iframe body:not(:has(.o_notification_bar.bg-danger))",
+        },
+    ]
+);
