@@ -80,6 +80,8 @@
 }
 
 @mixin o-hb-select-dropdown {
+    --SelectMenu-padding: 0;
+
     // Besides the horizontal padding ($o-hb-row-padding-left + map-get($spacers, 2)),
     // we also need to reduce the width by an extra “Spacer 2” to compensate for the
     // editor’s scrollbar.
@@ -94,6 +96,7 @@
     .o_select_menu_searchbox {
         --o-hb-select-color: #{$o-we-fg-lighter};
 
+        @include border-top-radius(var(--#{$prefix}popover-inner-border-radius));
         background-color: $o-we-sidebar-content-field-input-bg;
 
         &:hover, &:focus-within {
