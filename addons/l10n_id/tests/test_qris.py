@@ -1,9 +1,11 @@
 from markupsafe import Markup
 
+from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.l10n_id.controllers.portal import Portal
 from odoo.tests import tagged
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from freezegun import freeze_time
 
 
@@ -168,6 +170,62 @@ class TestQris(AccountTestInvoicingCommon):
             )
             # One of the QRIS transactions linked to the invoice should be paid already
             self.assertTrue(any(self.qris_qr_invoice.l10n_id_qris_transaction_ids.mapped('paid')))
+
+    @freeze_time("2024-02-27 04:15:00")
+    def test_portal_update_qris_status_paid(self):
+        """ Displaying the invoice on the portal registers the QRIS payment, only once """
+        with patch(
+            'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', return_value=self.success_qris_get
+        ):
+            self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code()
+
+        with patch(
+            'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', return_value=self.qris_status_success
+        ) as patched:
+            self.assertTrue(self.qris_qr_invoice._l10n_id_portal_update_qris_status())
+            self.assertEqual(self.qris_qr_invoice.payment_state, self.env['account.move']._get_invoice_in_payment_state())
+            self.assertEqual(len(self.qris_qr_invoice.matched_payment_ids), 1)
+
+            # Displaying it again should neither call the API nor register another payment, and the QR is no longer shown
+            patched.reset_mock()
+            self.assertTrue(self.qris_qr_invoice._l10n_id_portal_update_qris_status())
+            self.assertIsNone(self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code())
+            self.assertEqual(len(self.qris_qr_invoice.matched_payment_ids), 1)
+            patched.assert_not_called()
+
+    @freeze_time("2024-02-27 04:15:00")
+    def test_portal_update_qris_status_api_error(self):
+        """ QRIS being unreachable must not break the portal page """
+        with patch(
+            'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', return_value=self.success_qris_get
+        ):
+            self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code()
+
+        with patch(
+            'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', side_effect=ValidationError("QRIS down")
+        ), self.assertLogs('odoo.addons.l10n_id.models.account_move', level='WARNING'):
+            self.assertFalse(self.qris_qr_invoice._l10n_id_portal_update_qris_status())
+            self.assertEqual(self.qris_qr_invoice.payment_state, 'not_paid')
+
+    @freeze_time("2024-02-27 04:15:00")
+    def test_portal_qris_payment_status_route(self):
+        """ The route polled by the portal returns the payment status, only to users allowed to access the invoice """
+        with patch(
+            'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', return_value=self.success_qris_get
+        ):
+            self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code()
+
+        public_env = self.env(user=self.env.ref('base.public_user'))
+        with patch(
+            'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', return_value=self.qris_status_success
+        ) as patched:
+            with patch('odoo.addons.portal.controllers.portal.request', Mock(env=public_env)):
+                self.assertFalse(Portal().l10n_id_qris_payment_status(self.qris_qr_invoice.id))
+                patched.assert_not_called()
+                self.assertTrue(Portal().l10n_id_qris_payment_status(
+                    self.qris_qr_invoice.id, access_token=self.qris_qr_invoice._portal_ensure_token(),
+                ))
+            self.assertEqual(self.qris_qr_invoice.payment_state, self.env['account.move']._get_invoice_in_payment_state())
 
     @freeze_time("2024-02-27 04:15:00")
     def test_gc_no_remove_transactions_unpaid_within_30(self):
