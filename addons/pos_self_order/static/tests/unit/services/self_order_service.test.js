@@ -238,6 +238,16 @@ test("getProductPriceInfo", async () => {
     store.config.default_fiscal_position_id = savedDefaultFp;
 });
 
+test("getProductDisplayPrice ignores the taxes of a combo parent", async () => {
+    const store = await setupSelfPosEnv();
+    const productCombo = store.models["product.template"].get(7);
+
+    // The parent carries a 25% tax-excluded tax, which never applies on the order.
+    expect(productCombo.taxes_id.map((tax) => tax.id)).toEqual([2]);
+    expect(store.getProductPriceInfo(productCombo).pricelist_price).toBe(100);
+    expect(store.getProductDisplayPrice(productCombo)).toBe(100);
+});
+
 describe("addToCart", () => {
     test("simple flow", async () => {
         const store = await setupSelfPosEnv();
