@@ -1099,9 +1099,9 @@ class HrLeave(models.Model):
     @api.depends('number_of_hours', 'number_of_days')
     def _compute_duration_display(self):
         for leave in self:
-            duration = leave.number_of_days
-            unit = _('days')
-            display = "%g %s" % (float_round(duration, precision_digits=2), unit)
+            duration = float_round(leave.number_of_days, precision_digits=2)
+            unit = _('day') if duration == 1 else _('days')
+            display = "%g %s" % (duration, unit)
             if leave.work_entry_type_request_unit == "hour" \
                     or (leave.work_entry_type_request_unit in ('day', 'half_day')
                         and (leave.is_time_rule_trimmed or leave.source_leave_id)
