@@ -355,7 +355,10 @@
                         <t t-foreach="column.fields" t-as="fieldInfo" t-key="fieldInfo.id">
                             <t t-set="subIsInvisible" t-value="!this.isColumnGroupFieldVisible(column, fieldInfo, record)"/>
                             <div t-if="!subIsInvisible" class="o_column_group_field" t-att-class="this.getColumnGroupFieldClasses(fieldInfo, record)" t-att-data-field-name="fieldInfo.name">
-                                <t t-if="this.canUseFormatter(fieldInfo, record)" t-out="this.getFormattedValue(fieldInfo, record)"/>
+                                <t t-if="this.canUseFormatter(fieldInfo, record)">
+                                    <t t-set="value" t-value="this.getFormattedValue(fieldInfo, record)"/>
+                                    <t t-out="value === '' ? '\u00a0' : value"/>
+                                </t>
                                 <Field t-else=""
                                     name="fieldInfo.name"
                                     record="record"
