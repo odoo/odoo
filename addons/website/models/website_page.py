@@ -366,6 +366,7 @@ class WebsitePage(models.Model):
             request.httprequest.path,
             request.session.debug,
             request.website._allConsentsGranted(),
+            request.geoip.country_code,
         )
 
     def _get_response(self, request):
