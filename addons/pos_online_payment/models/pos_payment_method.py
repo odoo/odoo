@@ -193,7 +193,7 @@ class PosPaymentMethod(models.Model):
             lambda line: line.account_id == pos_receivable,
         )
 
-    def _create_payment_line(self, session, amount, account=None, message=None, partner=None, foreign_currency=None, amount_currency=None):
+    def _create_payment_line(self, session, amount, account=None, message=None, partner=None, foreign_currency=None, amount_currency=None, move=None):
         if self.type == 'online':
             return self._create_online_payment_line_transfer(session)
-        return super()._create_payment_line(session, amount, account, message, partner, foreign_currency, amount_currency)
+        return super()._create_payment_line(session, amount, account, message, partner, foreign_currency, amount_currency, move=move)
