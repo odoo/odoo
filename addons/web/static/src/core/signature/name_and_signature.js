@@ -46,7 +46,7 @@ export class NameAndSignature extends Component {
         useEffect(() => {
             const el = this.signInputLoad();
             if (el) {
-                el.click();
+                untrack(() => el.click());
             }
         });
 
