@@ -163,6 +163,26 @@ class BaseFollowersTest(MailCommon):
         self.assertEqual(document.message_partner_ids, self.partner_portal, 'No active test: customer not visible')
         self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal | customer)
 
+    def test_followers_public_user_self_added(self):
+        """ The public user cannot subscribe themselves to followers """
+        public_user = self.env.ref('base.public_user')
+        public_partner = public_user.partner_id
+        test_record = self.test_record.with_user(public_user).sudo()
+
+        self.assertNotIn(public_partner, test_record.message_partner_ids)
+        test_record.message_subscribe(partner_ids=public_partner.ids)
+        self.assertNotIn(public_partner, test_record.message_partner_ids)
+
+    def test_followers_public_user_added_by_other_user(self):
+        """ The public user cannot be subscribed by other users """
+        public_user = self.env.ref('base.public_user')
+        public_partner = public_user.partner_id
+        test_record = self.test_record
+
+        self.assertNotEqual(test_record.env.user, public_user)
+        test_record.message_subscribe(partner_ids=public_partner.ids)
+        self.assertNotIn(public_partner, test_record.message_partner_ids)
+
     @users('employee')
     @mute_logger('odoo.models.unlink')
     def test_followers_inverse_message_partner(self):
