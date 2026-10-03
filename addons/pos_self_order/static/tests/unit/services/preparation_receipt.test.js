@@ -47,20 +47,29 @@ describe("preparation ticket", () => {
         ]);
         expect(result).toBe(true);
     });
-    test("name entered for a name-required preset shows as the prep ticket order_label", async () => {
-        const store = await setupSelfPosEnv();
+
+    test("delivery preset shows name, address, phone and email", async () => {
+        const store = await setupSelfPosEnv("kiosk");
         store.config.company_id.country_id.state_ids = [];
         store.config.company_id.country_id.phone_code = 1;
         const order = await getFilledSelfOrder(store);
-        const preset = store.models["pos.preset"].get(3);
+        const preset = store.models["pos.preset"].get(1);
+        preset.identification = "address";
         order.preset_id = preset;
 
         const comp = await mountWithCleanup(PresetInfoPopup, {
             props: { close: () => {}, getPayload: () => {} },
         });
-        comp.state.name = "Mitchell";
+        comp.state.name = "Robin";
+        comp.state.email = "robin@example.com";
+        comp.state.phoneLocal = "2025551234";
+        comp.state.street = "21, Wonderfull Street";
+        comp.state.city = "Vice City";
+        comp.state.zip = "000021";
         await comp.setInformations();
-        expect(store.currentOrder.floating_order_name).toBe("Mitchell");
+        // Mirrors what cart_page.js does once the popup closes.
+        store.currentOrder.email = store.currentOrder.partner_id.email;
+        store.currentOrder.mobile = comp.getFullPhone();
 
         const categoryIds = store.config.preparationCategories;
         const generator = store.ticketPrinter.getGenerator({
@@ -68,6 +77,40 @@ describe("preparation ticket", () => {
             order: store.currentOrder,
         });
         const changes = generator.generatePreparationData(categoryIds, {});
-        expect(changes[0].extra_data.order_label).toBe("Mitchell");
+        expect(changes[0].extra_data.order_label).toBe("Robin");
+        const customer = changes[0].extra_data.customer;
+        expect(customer.address).toInclude("21, Wonderfull Street");
+        expect(customer.phone).toBe(comp.getFullPhone());
+        expect(customer.email).toBe("robin@example.com");
+    });
+
+    test("name-only preset shows name and phone but no address", async () => {
+        const store = await setupSelfPosEnv("kiosk");
+        store.config.company_id.country_id.state_ids = [];
+        store.config.company_id.country_id.phone_code = 1;
+        const order = await getFilledSelfOrder(store);
+        const preset = store.models["pos.preset"].get(1);
+        preset.identification = "name";
+        order.preset_id = preset;
+
+        const comp = await mountWithCleanup(PresetInfoPopup, {
+            props: { close: () => {}, getPayload: () => {} },
+        });
+        comp.state.name = "Sam";
+        comp.state.phoneLocal = "2025551234";
+        await comp.setInformations();
+        expect(store.currentOrder.floating_order_name).toBe("Sam");
+        store.currentOrder.mobile = comp.getFullPhone();
+
+        const categoryIds = store.config.preparationCategories;
+        const generator = store.ticketPrinter.getGenerator({
+            models: store.models,
+            order: store.currentOrder,
+        });
+        const changes = generator.generatePreparationData(categoryIds, {});
+        expect(changes[0].extra_data.order_label).toBe("Sam");
+        const customer = changes[0].extra_data.customer;
+        expect(customer.phone).toBe(comp.getFullPhone());
+        expect(customer.address).toBe(false);
     });
 });
