@@ -14,6 +14,7 @@ import { getContent, setContent, setSelection } from "./_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { processThroughCleanForSave } from "./_helpers/dispatch";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { openToolbarMenu } from "./_helpers/toolbar";
 import { EditorVersionPlugin } from "../src/core/editor_version_plugin";
 
 const config = { includePlugins: [QWebPlugin] };
@@ -388,12 +389,15 @@ test("formatting toolbar items are disabled on t-att-class and t-att-style (and 
 
     await waitFor(".o-we-toolbar button[name=expand_toolbar]");
     await click(".o-we-toolbar button[name=expand_toolbar]");
-    await waitFor("button[name=remove_format]");
+    await waitFor("button[name=more_formatting]");
 
     expect(`button[name="bold"]`).not.toHaveAttribute("disabled");
     expect(`button[name="italic"]`).not.toHaveAttribute("disabled");
     expect(`button[name="underline"]`).not.toHaveAttribute("disabled");
+    await openToolbarMenu("more_formatting");
     expect(`button[name="strikethrough"]`).not.toHaveAttribute("disabled");
+    await click(".o-we-toolbar button[name=more_formatting]");
+    await animationFrame();
     expect(`button[name="font_type"]`).not.toHaveAttribute("disabled");
     expect(`button[name="font_family"]`).not.toHaveAttribute("disabled");
     expect(`button[name="font_size"]`).not.toHaveAttribute("disabled");

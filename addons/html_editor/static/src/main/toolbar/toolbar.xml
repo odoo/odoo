@@ -8,7 +8,16 @@
                 <div t-if="!buttonGroup_first" class="vr my-2"/>
                 <div class="o-we-toolbar-group d-flex" role="group" t-att-name="buttonGroup.id">
                     <t t-foreach="buttonGroup.buttons" t-as="button" t-key="button.id">
-                            <t t-if="button.Component">
+                            <ToolbarMenu t-if="button.isMenu"
+                                id="button.id"
+                                title="button.description"
+                                icon="button.icon"
+                                isActive="button.isActive"
+                                isDisabled="button.isDisabled"
+                                items="button.items"
+                                getSelection.bind="this.props.getSelection"
+                                onItemSelected.bind="this.onButtonClick"/>
+                            <t t-elif="button.Component">
                                 <t t-component="button.Component"
                                     t-props="button.props"
                                     title="button.description"
