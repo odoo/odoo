@@ -26,7 +26,7 @@ except ImportError:
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, MissingError
-from odoo.http import request, Response, ROUTING_KEYS, Stream
+from odoo.http import request, Response, ROUTING_KEYS, Stream, JsonRPCDispatcher
 from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.tools import get_lang, submap
@@ -197,7 +197,11 @@ class IrHttp(models.AbstractModel):
         # otherwise fallback on the company lang, english or the first
         # lang installed
         env = request.env if request.env.uid else request.env['base'].with_user(SUPERUSER_ID).env
-        request.update_context(lang=get_lang(env)._get_cached('code'))
+        if isinstance(request.dispatcher, JsonRPCDispatcher) and not request.env.uid:
+            lang = env['ir.default']._get('res.partner', 'lang') or 'en_US'
+            request.update_context(lang=lang)
+        else:
+            request.update_context(lang=get_lang(env)._get_cached('code'))
 
         for key, val in list(args.items()):
             if not isinstance(val, models.BaseModel):
