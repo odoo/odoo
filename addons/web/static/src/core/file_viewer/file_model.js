@@ -49,7 +49,21 @@ export const FileModelMixin = (T) =>
         }
 
         get downloadUrl() {
-            return url(this.urlRoute, { ...this.urlQueryParams, download: true });
+            const params = {
+                ...this.urlQueryParams,
+                download: true,
+            };
+            // Hacky way to minimally encode url with WHATWG URL API, without modifying widely used url function, toString must be called to run encoding
+            const searchParams = new URLSearchParams(params || {});
+            const encodedString = searchParams.toString();
+            const encodedObject = Object.fromEntries(
+                encodedString.split("&").map((pair) => {
+                    const [key, value] = pair.split("=");
+                    return [key, value];
+                })
+            );
+
+            return url(this.urlRoute, encodedObject);
         }
 
         get isImage() {
