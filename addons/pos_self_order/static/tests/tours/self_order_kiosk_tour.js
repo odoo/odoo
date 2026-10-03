@@ -197,6 +197,7 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_combo_sides", {
     ],
 });
 
+<<<<<<< 8e95474acda7745612b201c8d357c4c09ceb7209
 registry.category("web_tour.tours").add("test_self_order_kiosk_combo_qty_max_free", {
     steps: () => [
         Utils.clickBtn("Order Now"),
@@ -211,6 +212,39 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_combo_qty_max_fre
 });
 
 registry.category("web_tour.tours").add("test_self_order_pricelist", {
+||||||| ab3f85fe24ecfc7bea690f759399716f466eee7e
+registry.category("web_tour.tours").add("self_order_pricelist", {
+=======
+registry.category("web_tour.tours").add("self_order_kiosk_combo_fixed_choice", {
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Test Fixed Combo"),
+        ...ProductPage.setupCombo([
+            {
+                product: "Variable Side 1",
+                attributes: [],
+            },
+        ]),
+        Utils.clickBtn("Order"),
+        ...CartPage.checkCombo("Test Fixed Combo", [
+            {
+                product: "Variable Side 1",
+                attributes: [],
+            },
+            {
+                product: "Fixed Side",
+                attributes: [],
+            },
+        ]),
+        Utils.clickBtn("Pay"),
+        Utils.clickBtn("Close"),
+        Utils.checkIsNoBtn("My Order"),
+    ],
+});
+
+registry.category("web_tour.tours").add("self_order_pricelist", {
+>>>>>>> b907d47b469618e81cd9a64dd88259d2a9d231db
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
