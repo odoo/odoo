@@ -352,6 +352,18 @@ export class Message extends Record {
         return !this.is_transient;
     }
 
+    /**
+     * Whether the body is email-like: either an actual email, or generated from
+     * a mail template (e.g. `message_notify`, stage templates, automated actions).
+     * Such bodies come with their own styling, so they are isolated from the
+     * webclient (and its theme) in a shadow DOM.
+     */
+    get hasEmailLikeBody() {
+        return ["email", "email_outgoing", "user_notification", "auto_comment"].includes(
+            this.message_type
+        );
+    }
+
     get isNotification() {
         return this.message_type === "notification" && this.thread?.channel;
     }
