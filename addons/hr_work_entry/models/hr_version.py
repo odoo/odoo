@@ -629,7 +629,9 @@ class HrVersion(models.Model):
         for version in self:
             date_start = fields.Datetime.to_datetime(version.date_start)
             if version.date_generated_from < date_start:
-                we_to_remove = self.env['hr.work.entry'].search([('date', '<', date_start), ('version_id', '=', version.id)])
+                we_to_remove = self.env['hr.work.entry'].search([
+                    ('date', '<', date_start), ('version_id', '=', version.id), ('state', '!=', 'validated'),
+                ])
                 if we_to_remove:
                     version.date_generated_from = date_start
                     all_we_to_unlink |= we_to_remove
@@ -637,7 +639,9 @@ class HrVersion(models.Model):
                 continue
             date_end = datetime.combine(version.date_end, datetime.max.time())
             if version.date_generated_to > date_end:
-                we_to_remove = self.env['hr.work.entry'].search([('date', '>', date_end), ('version_id', '=', version.id)])
+                we_to_remove = self.env['hr.work.entry'].search([
+                    ('date', '>', date_end), ('version_id', '=', version.id), ('state', '!=', 'validated'),
+                ])
                 if we_to_remove:
                     version.date_generated_to = date_end
                     all_we_to_unlink |= we_to_remove
