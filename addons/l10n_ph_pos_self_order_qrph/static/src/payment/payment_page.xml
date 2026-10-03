@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_ph_pos_self_order_qrph.PaymentPage" t-inherit="pos_self_order.PaymentPage" t-inherit-mode="extension">
+        <xpath expr="//t[@name='external_qr']/div[hasclass('qr-code')]" position="after">
+            <t t-if="this.isKioskQrph and !this.selfOrder.paymentError">
+                <p t-if="this.state.qrphCountdown" class="o_qrph_countdown text-center fs-4 fw-bold mt-3">
+                    Time remaining: <t t-out="this.formattedQrphCountdown"/>
+                </p>
+                <t t-else="">
+                    <p class="text-center fs-5 mt-3">Already paid? We will check with your bank.</p>
+                    <button class="btn btn-primary btn-lg w-100"
+                            t-att-disabled="this.state.qrphChecking"
+                            t-on-click="() => this.checkQrphPayment()">
+                        <t t-if="this.state.qrphChecking">Checking your payment...</t>
+                        <t t-else="">Check my payment</t>
+                    </button>
+                </t>
+            </t>
+        </xpath>
+    </t>
+
+</templates>
