@@ -213,7 +213,7 @@ class AccountEdiProxyClientUser(models.Model):
         '''
         try:
             with self.env.cr.savepoint(flush=False):
-                self.env.cr.execute('SELECT * FROM account_edi_proxy_client_user WHERE id IN %s FOR UPDATE NOWAIT', [tuple(self.ids)])
+                self.env.cr.execute('SELECT * FROM account_edi_proxy_client_user WHERE id IN %s FOR UPDATE', [tuple(self.ids)])
         except OperationalError as e:
             if e.pgcode == '55P03':
                 return
