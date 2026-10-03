@@ -51,3 +51,49 @@ class TestOrderReceiptPosLoyalty(TestPosOrderReceipt):
             loyalty_backend = data['backend_data']['extra_data']['loyalties']
             for [backend, frontend] in zip(loyalty_backend, loyalty_frontend):
                 self.comparator(backend, frontend)
+
+    def test_receipt_next_order_coupon_value(self):
+        program = self.env['loyalty.program'].create({
+            'name': 'Next Order 0.1/pt',
+            'program_type': 'next_order_coupons',
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount_mode': 'per_point',
+                'discount': 0.1,
+                'discount_applicability': 'order',
+            })],
+        })
+        self.assertEqual(program._get_per_point_discount(), 0.1)
+
+        coupon = self.env['loyalty.card'].create({
+            'program_id': program.id,
+            'code': 'TEST_NOC_0001',
+            'points': 100,
+        })
+
+        self.main_pos_config.open_ui()
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'amount_total': 0, 'amount_paid': 0, 'amount_tax': 0, 'amount_return': 0,
+        })
+        self.env['loyalty.history'].create({
+            'card_id': coupon.id,
+            'order_model': 'pos.order',
+            'order_id': order.id,
+            'issued': 100,
+            'description': 'Test next order coupon',
+        })
+
+        new_coupons = order.order_receipt_generate_data()['extra_data']['new_coupons']
+        self.assertEqual(len(new_coupons), 1)
+        self.assertEqual(new_coupons[0]['code'], 'TEST_NOC_0001')
+        self.assertEqual(
+            new_coupons[0]['discount_value'],
+            order._order_receipt_format_currency(100 * 0.1),
+        )
+
+        program.reward_ids.discount_mode = 'percent'
+        self.assertIsNone(program._get_per_point_discount())
+        new_coupons = order.order_receipt_generate_data()['extra_data']['new_coupons']
+        self.assertFalse(new_coupons[0]['discount_value'])
