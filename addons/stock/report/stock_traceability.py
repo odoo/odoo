@@ -239,9 +239,15 @@ class StockTraceabilityReport(models.TransientModel):
                 rcontext['company_id'] = active_record.company_id
 
         body = self.env['ir.ui.view'].with_context(context)._render_template(
-            "stock.report_stock_inventory_print",
+            "stock.report_stock_body_print",
             values=dict(rcontext, lines=lines, report=self, context=self),
         )
+        # wrap the body in the minimal layout, it provides the <base> tag and
+        # the report assets without which wkhtmltopdf renders an unstyled page
+        body = self.env['ir.actions.report']._render_template(
+            "web.minimal_layout",
+            values=dict(rcontext, subst=False, body=body),
+        ).decode()
 
         header = self.env['ir.actions.report']._render_template("web.internal_layout", values=rcontext)
         header = self.env['ir.actions.report']._render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=Markup(header.decode())))
