@@ -46,6 +46,13 @@ class IrModuleModule(models.Model):
             " For exact pricing details, please contact your account manager or visit odoo.com/pricing.",
     )
 
+    def _register_hook(self):
+        super()._register_hook()
+        self._set_missing_module_type()
+
+    def _set_missing_module_type(self):
+        self.search([('module_type', '=', False)]).write({'module_type': 'official'})
+
     @api.model
     @api.ormcache(cache='stable')
     def _get_imported_module_names(self):
