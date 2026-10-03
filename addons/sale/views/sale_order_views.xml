@@ -649,6 +649,7 @@
                                     name="discount"
                                     string="Disc.%"
                                     groups="sale.group_discount_per_so_line"
+                                    readonly="qty_invoiced &gt; 0"
                                     width="50px"
                                     optional="show"/>
                                 <field name="is_downpayment" column_invisible="True"/>
