@@ -654,24 +654,28 @@ class SaleOrderLine(models.Model):
                 line.label = line.name
                 continue
 
-            product_with_lang = line.product_id.with_context(lang=line.order_id._get_lang())
+            product_display_name = line._get_product_display_name()
             if not line.name:
-                line.label = product_with_lang.display_name
-            elif line.name.splitlines()[0] == product_with_lang.display_name:
+                line.label = product_display_name
+            elif line.name.splitlines()[0] == product_display_name:
                 # If description already holds the product name, use it as label
                 line.label = line.name
             else:
-                line.label = product_with_lang.display_name + "\n" + line.name
+                line.label = product_display_name + "\n" + line.name
 
     def _inverse_label(self):
         for line in self:
             if line.product_id and line.label:
-                display_name = line.product_id.with_context(
-                    lang=line.order_id._get_lang()
-                ).display_name
+                display_name = line._get_product_display_name()
                 line.name = line.label.removeprefix(display_name).removeprefix("\n")
             else:
                 line.name = line.label
+
+    def _get_product_display_name(self):
+        """Get the product display name for this sale order line, in the context of the order's
+        partner."""
+        self.ensure_one()
+        return self.product_id.with_context(lang=self.order_id._get_lang()).display_name
 
     @api.depends("display_type", "product_id")
     def _compute_product_uom_qty(self):
