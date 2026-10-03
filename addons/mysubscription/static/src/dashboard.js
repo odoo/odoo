@@ -24,6 +24,7 @@ export class MySubscriptionDashboard extends Component {
             this.enterpriseCode = data.enterprise_code;
             this.baseUrl = data.base_url;
             this.hasSubscription = data.has_subscription;
+            this.showDatabaseAction = data.show_database_action;
 
             this.iapAccounts = await this.loadIap();
         });
