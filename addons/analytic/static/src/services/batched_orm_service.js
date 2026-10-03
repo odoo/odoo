@@ -69,7 +69,6 @@ class RequestBatcherORM extends ORM {
 
 export const batchedOrmService = {
     async: [
-        "call",
         "create",
         "nameGet",
         "read",
