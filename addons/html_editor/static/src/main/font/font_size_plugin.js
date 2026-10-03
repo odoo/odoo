@@ -111,6 +111,7 @@ export class FontSizePlugin extends Plugin {
         ),
         on_history_commit_undone_handlers: this.updateFontSizeSelectorParams.bind(this),
         on_history_commit_redone_handlers: this.updateFontSizeSelectorParams.bind(this),
+        on_collapsed_formats_removed_handlers: this.updateFontSizeSelectorParams.bind(this),
         on_will_set_tag_handlers: this.removeFontSizeFormat.bind(this),
         on_all_formats_removed_handlers: this.updateFontSizeSelectorParams.bind(this),
         normalize_processors: this.normalize.bind(this),
@@ -235,6 +236,12 @@ export class FontSizePlugin extends Plugin {
     }
 
     get fontSizeName() {
+        const pendingIntent = this.dependencies.format.getPendingIntents()["fontSize"];
+        const className = pendingIntent?.applyStyle && pendingIntent.formatProps?.className;
+        const item = this.fontSizeItems.find((i) => i.className === className);
+        if (item) {
+            return item.name;
+        }
         const sel = this.dependencies.selection.getSelectionData().deepEditableSelection;
         if (!sel) {
             return fontSizeItems[0].name;

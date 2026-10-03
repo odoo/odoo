@@ -97,6 +97,7 @@ export class FormatPlugin extends Plugin {
         "mergeAdjacentInlines",
         "removeSelectionFormats",
         "requestFormat",
+        "getPendingIntents",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -468,7 +469,10 @@ export class FormatPlugin extends Plugin {
      */
     requestFormat(formatName, options) {
         const sel = this.dependencies.selection.getEditableSelection();
-        if (!sel.isCollapsed) {
+        if (
+            !sel.isCollapsed ||
+            !(this.checkPredicates("should_defer_format_predicates", sel) ?? true)
+        ) {
             this.formatSelection(formatName, options);
             return;
         }
@@ -943,6 +947,14 @@ export class FormatPlugin extends Plugin {
             return false;
         }
         return isHtmlContentSupported(selection);
+    }
+
+    /**
+     * Returns the pending format intent for a collapsed selection.
+     * @returns {{ applyStyle: boolean, formatProps?: Object }}
+     */
+    getPendingIntents() {
+        return this.activeFormats;
     }
 }
 
