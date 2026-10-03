@@ -1,7 +1,7 @@
+import { loadBundle } from "@web/core/assets";
 import { location } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
-import { ProfileDialog } from "../components/profile_dialog/profile_dialog";
 
 export class ProfileEditor extends Interaction {
     static selector = ".o_wprofile_editor";
@@ -11,7 +11,11 @@ export class ProfileEditor extends Interaction {
         },
     };
 
-    openDialog() {
+    async openDialog() {
+        await this.waitFor(loadBundle("website_profile.assets_html_editor"));
+        const { ProfileDialog } = odoo.loader.modules.get(
+            "@website_profile/components/profile_dialog/profile_dialog"
+        );
         this.services.dialog.add(ProfileDialog, {
             confirm: () => {
                 location.reload();
