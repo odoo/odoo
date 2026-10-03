@@ -55,6 +55,9 @@ patch(OrderPaymentValidation.prototype, {
         }
 
         if (this.order.state === "done") {
+            await this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
+                orderDone: true,
+            });
             this.afterOrderValidation(false);
             return false;
         }
@@ -241,6 +244,9 @@ patch(OrderPaymentValidation.prototype, {
 
         await this.postPushOrderResolve([this.order.id]);
 
+        await this.pos.checkPreparationStateAndSentOrderInPreparation(this.order, {
+            orderDone: true,
+        });
         await this.afterOrderValidation(true);
         const nextPage = this.nextPage;
         this.pos.navigate(nextPage.page, nextPage.params);
