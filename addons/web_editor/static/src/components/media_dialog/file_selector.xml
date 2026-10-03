@@ -55,7 +55,8 @@
             search="(needle) => this.handleSearch(needle)"
             useMediaLibrary="props.useMediaLibrary"
             validateUrl="validateUrl"
-            multiSelect="props.multiSelect"/>
+            multiSelect="props.multiSelect"
+            isValidForConvertInline="props.isValidForConvertInline"/>
         <t t-call="{{ constructor.attachmentsListTemplate }}"/>
         <div name="load_more_attachments"
             class="pt-3 pb-1 text-center mx-auto o_we_load_more"
