@@ -531,10 +531,10 @@ class test_m2m(CreatorCase):
             self.export(self.commands, fields=['const', 'value/value'], context={'import_compat': False}),
             [
                 [4, 4],
-                ['', 42],
-                ['', 36],
-                ['', 4],
-                ['', 13],
+                [4, 42],
+                [4, 36],
+                [4, 4],
+                [4, 13],
             ],
         )
 
@@ -550,10 +550,10 @@ class test_m2m(CreatorCase):
             self.export(self.commands, fields=['const', 'value'], context={'import_compat': False}),
             [
                 [4, 'export.many2many.other:4'],
-                ['', 'export.many2many.other:42'],
-                ['', 'export.many2many.other:36'],
-                ['', 'export.many2many.other:4'],
-                ['', 'export.many2many.other:13'],
+                [4, 'export.many2many.other:42'],
+                [4, 'export.many2many.other:36'],
+                [4, 'export.many2many.other:4'],
+                [4, 'export.many2many.other:13'],
             ],
         )
 
@@ -592,11 +592,11 @@ class test_m2m(CreatorCase):
 
         self.assertEqual(
             r.with_context(import_compat=False)._export_rows([['id'], ['value', 'id'], ['value', 'value']]),
-            [[xid, '__t__.record000', 4], ['', '__t__.record001', 42], ['', '__t__.record010', 36], ['', '__t__.record011', 4], ['', '__t__.record100', 13]],
+            [[xid, '__t__.record000', 4], [xid, '__t__.record001', 42], [xid, '__t__.record010', 36], [xid, '__t__.record011', 4], [xid, '__t__.record100', 13]],
         )
         self.assertEqual(
             r.with_context(import_compat=False)._export_rows([['id'], ['value', 'value'], ['value', 'id']]),
-            [[xid, 4, '__t__.record000'], ['', 42, '__t__.record001'], ['', 36, '__t__.record010'], ['', 4, '__t__.record011'], ['', 13, '__t__.record100']],
+            [[xid, 4, '__t__.record000'], [xid, 42, '__t__.record001'], [xid, 36, '__t__.record010'], [xid, 4, '__t__.record011'], [xid, 13, '__t__.record100']],
         )
 
 

@@ -516,7 +516,7 @@ class TestGroupedExport(XlsxCreatorCase):
                 ['Int Sum', 'One2many/Value'],
                 ['10 (1)', ''],
                 ['10', '8'],
-                ['', '9'],
+                ['10', '9'],
             ],
         )
 

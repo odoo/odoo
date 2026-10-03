@@ -586,7 +586,7 @@ class ExportFormat:
             for row in export_data:
                 if row[0]:  # First column is the record ID
                     current_id = int(row[0])
-                    record_rows[current_id] = []
+                    record_rows.setdefault(current_id, [])
                 record_rows[current_id].append(row[1:])
 
             # To preserve the natural model order, base the data order on the result of `export_data`,
