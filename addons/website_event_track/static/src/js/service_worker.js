@@ -247,6 +247,9 @@ const matchCache = async (request) => {
  * @returns {Promise<Response>}
  */
 const processFetchRequest = async (request, options) => {
+    if (request.cache === "only-if-cached" && request.mode !== "same-origin") {
+        request = new Request(request, { cache: "default" });
+    }
     const requestCopy = request.clone();
     let response;
     try {
