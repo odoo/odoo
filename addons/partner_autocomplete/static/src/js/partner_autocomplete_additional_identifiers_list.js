@@ -1,4 +1,3 @@
-import { signal } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
@@ -18,8 +17,6 @@ export class PartnerAutoCompleteAdditionalIdentifiersList extends AdditionalIden
 
         this.orm = useService("orm");
         this.partnerAutocomplete = usePartnerAutocomplete();
-
-        this.inputRef = signal.ref();
     }
 
     async getSearchConfig(fieldName, request, shouldSearchWorldWide) {
