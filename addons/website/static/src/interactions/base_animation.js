@@ -1,4 +1,5 @@
 import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
 import { getScrollingElement, isScrollableY } from "@web/core/utils/scrolling";
 import { isVisible } from "@web/core/utils/ui";
@@ -110,3 +111,8 @@ export class BaseAnimation extends Interaction {
         return { visible, elTop, elHeight, windowsHeight };
     }
 }
+
+registry.category("public.interactions.edit").add("website.base_animation", {
+    Interaction: BaseAnimation,
+    isAbstract: true,
+});
