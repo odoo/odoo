@@ -58,6 +58,26 @@ class TestStockPickingTour(HttpCase):
         ])
         self.assertEqual(len(serial), 5)
 
+    def test_generate_serial_paged(self):
+        """generating more move lines than the list's page size keeps the list paged"""
+        self.env['product.product'].create({
+            'name': 'Product Serial',
+            'is_storable': True,
+            'tracking': 'serial',
+        })
+        url = self._get_picking_url(self.receipt.id)
+
+        self.start_tour(url, 'test_generate_serial_paged', login='admin', timeout=60)
+        # The tour generates 50 lines, pages to the last page, then regenerates 5
+        # lines without keeping the previous ones: only those 5 must remain, even
+        # though the list never rendered more than one page at a time.
+        move_lines = self.receipt.move_ids.move_line_ids
+        self.assertEqual(len(move_lines), 5)
+        self.assertEqual(
+            move_lines.mapped('lot_name'),
+            ['sn_b_1', 'sn_b_2', 'sn_b_3', 'sn_b_4', 'sn_b_5'],
+        )
+
     def test_generate_serial_2(self):
         """ Generate lot numbers in the detailed operation modal """
         product_lot_1 = self.env['product.product'].create({
