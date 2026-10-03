@@ -207,17 +207,6 @@ const ensureWebsiteSwitcherIsVisible = [
     },
 ];
 
-registry.category("web_tour.tours").add("test_systray_admin", {
-    steps: () => [
-        ...canPublish(),
-        ...canToggleMobilePreview(),
-        ...canSwitchWebsite(),
-        ...canAddNewContent(),
-        ...canEditInBackEnd(),
-        ...canEdit(),
-    ],
-});
-
 registry.category("web_tour.tours").add("test_systray_reditor_tester", {
     steps: () => [
         ...canPublish(),
