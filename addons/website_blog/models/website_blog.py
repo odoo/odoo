@@ -3,12 +3,13 @@
 
 from datetime import datetime
 import random
+import re
 
 from odoo import api, models, fields, _
 from odoo.addons.website.tools import text_from_html
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
-from odoo.tools import html_escape
+from odoo.tools import SQL, html_escape
 
 
 class BlogBlog(models.Model):
@@ -167,6 +168,12 @@ class BlogPost(models.Model):
         help="Next blog post that will be shown as the next article to users at the bottom of the blog post.")
     tag_ids = fields.Many2many('blog.tag', string='Tags')
     content = fields.Html('Content', default=_default_content, translate=html_translate, sanitize=False)
+    searchable_content = fields.Html(
+        translate=True,
+        compute='_compute_searchable_content',
+        compute_sql='_compute_sql_searchable_content',
+        compute_sudo=True,
+    )
     teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser', translate=True)
     teaser_manual = fields.Text(string='Teaser Content', translate=True)
 
@@ -179,6 +186,19 @@ class BlogPost(models.Model):
     write_uid = fields.Many2one('res.users', 'Last Contributor', readonly=True)
     visits = fields.Integer('No of Views', copy=False, default=0, readonly=True)
     website_id = fields.Many2one(related='blog_id.website_id', readonly=True, store=True)
+
+    @api.depends('content')
+    def _compute_searchable_content(self):
+        for blog in self:
+            blog.searchable_content = re.sub('<[^>]+>', '', blog.content or '', flags=re.IGNORECASE)
+
+    def _compute_sql_searchable_content(self, table):
+        return SQL("""
+            (
+            SELECT jsonb_object_agg(key, regexp_replace(value, '<[^>]+>', '', 'gi'))
+              FROM jsonb_each_text(%(content_column)s)
+            )
+        """, content_column=table.content)
 
     @api.depends('content', 'teaser_manual')
     def _compute_teaser(self):
@@ -304,7 +324,7 @@ class BlogPost(models.Model):
                 domain.append([("publish_on", "!=", False)])
         else:
             domain.append([("website_published", "=", True)])
-        search_fields = ['name', 'author_name', 'tag_ids.name', 'content']
+        search_fields = ['name', 'author_name', 'tag_ids.name', 'searchable_content']
         fetch_fields = ['name', 'website_url', 'author_name', 'content']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
