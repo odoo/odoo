@@ -100,10 +100,21 @@ export class Attachment extends FileModelMixin(Record) {
      */
     async remove() {
         if (this.id > 0) {
-            await rpc(
-                "/mail/attachment/delete",
-                assignDefined({ attachment_id: this.id }, { access_token: this.ownership_token })
-            );
+            try {
+                await rpc(
+                    "/mail/attachment/delete",
+                    assignDefined({ attachment_id: this.id }, { access_token: this.ownership_token }),
+                    { silent: true }
+                );
+            } catch {
+                if (this.store && this.store.env) {
+                    this.store.env.services.notification.add(
+                        _t("You do not have the rights to delete this attachment, or it has already been deleted."),
+                        { type: "danger" }
+                    );
+                }
+                return; 
+            }
         }
         this.delete();
     }
