@@ -76,6 +76,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             CustomizeButtonStyleAction,
             WebsiteConfigAction,
             PreviewableWebsiteConfigAction,
+            PreviewableFooterWebsiteConfigAction,
             TemplatePreviewableWebsiteConfigAction,
             SelectTemplateAction,
             ToggleBodyBgImageAction,
@@ -825,6 +826,38 @@ export class WebsiteConfigAction extends BuilderAction {
             }
         }, 0);
         return def.promise;
+    }
+}
+
+/**
+ * Same as `websiteConfig` (toggles views then reloads) but previews the result
+ * by toggling `previewClass` on the editing element. The DOM is only touched
+ * while previewing (and reverted by the preview mechanism), so that the edited
+ * element is not marked dirty and its rendered classes are not saved.
+ */
+export class PreviewableFooterWebsiteConfigAction extends WebsiteConfigAction {
+    static id = "previewableFooterWebsiteConfig";
+    setup() {
+        super.setup();
+        this.preview = true;
+    }
+    async apply(action) {
+        if (action.isPreviewing) {
+            this._togglePreviewClass(action, true);
+            return;
+        }
+        return super.apply(action);
+    }
+    async clean(action) {
+        if (action.isPreviewing) {
+            this._togglePreviewClass(action, false);
+            return;
+        }
+        return super.clean(action);
+    }
+    _togglePreviewClass({ editingElement: el, params }, force) {
+        const classes = (params.previewClass || "").split(/\s+/).filter(Boolean);
+        classes.forEach((cls) => el.classList.toggle(cls, force));
     }
 }
 
