@@ -212,6 +212,8 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
                                                                         "be number of days * hours per day")
 
     def test_leave_change_working_schedule(self):
+        self.jules_emp.tz = 'UTC'
+        self.calendar_40h.tz = 'UTC'
         calendar_20h = self.env['resource.calendar'].create({
             'name': '20h calendar',
             'attendance_ids': [
