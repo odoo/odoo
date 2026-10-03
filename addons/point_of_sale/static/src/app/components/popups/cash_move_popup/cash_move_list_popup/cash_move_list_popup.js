@@ -32,6 +32,10 @@ export class CashMoveListPopup extends Component {
         return cm.amount < 0 ? _t("Out") : _t("In");
     }
 
+    getBadgeClass(cm) {
+        return cm.amount >= 0 ? 'success' : 'danger';
+    }
+
     getAmount(cm) {
         return this.env.utils.formatCurrency(Math.abs(cm.amount));
     }
