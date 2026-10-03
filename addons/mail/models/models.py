@@ -390,6 +390,11 @@ class BaseModel(models.AbstractModel):
         templates = E.templates(activity_box)
         return E.activity(templates, string=self._description)
 
+    @api.model
+    def _has_model_formview_access(self):
+        """ To be overridden. """
+        return True
+
     # ------------------------------------------------------------
     # DISCUSS
     # ------------------------------------------------------------
