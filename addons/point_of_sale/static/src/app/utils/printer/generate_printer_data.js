@@ -182,21 +182,32 @@ export class GeneratePrinterData {
     }
 
     generateLineData() {
-        return this.order.lines.map((line) => {
-            const productData = { ...line.product_id.raw };
-            productData.display_name = line.getFullProductName();
-            return {
-                ...line.raw,
-                product_data: productData,
-                product_uom_name: line.product_id.uom_id?.name || "",
-                unit_price: line.currencyDisplayPriceUnit,
-                product_unit_price: line.product_id.displayPriceUnit,
-                price_subtotal_incl: line.currencyDisplayPrice,
-                is_service_fee_line: line.isServiceFeeLine(),
-                service_fee_display_info: line.getServiceFeeDisplayInfo(),
-                no_discount_price: formatCurrency(line.displayPriceNoDiscount, line.currency.id),
-            };
-        });
+        return this.order.lines
+            .filter((l) => !l.combo_parent_id)
+            .map((line) => {
+                const productData = { ...line.product_id.raw };
+                if (line.isDiscountLine) {
+                    productData.display_name = line.getFullProductName();
+                }
+                return {
+                    ...line.raw,
+                    product_data: productData,
+                    attribute_value_ids: line.constructAttributeString().replaceAll(", ", " - "),
+                    child_combo_lines: line.combo_line_ids
+                        .map((x) => `${x.qty} ${x.full_product_name}`)
+                        .join(" - "),
+                    product_uom_name: line.product_id.uom_id?.name || "",
+                    unit_price: line.currencyDisplayPriceUnit,
+                    product_unit_price: line.product_id.displayPriceUnit,
+                    price_subtotal_incl: line.currencyDisplayPrice,
+                    is_service_fee_line: line.isServiceFeeLine(),
+                    service_fee_display_info: line.getServiceFeeDisplayInfo(),
+                    no_discount_price: formatCurrency(
+                        line.displayPriceNoDiscount,
+                        line.currency.id
+                    ),
+                };
+            });
     }
 
     generatePaymentData() {

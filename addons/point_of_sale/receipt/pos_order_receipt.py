@@ -139,13 +139,22 @@ class PosOrderReceipt(models.AbstractModel):
         for line in self.lines:
             data = line.read(lines_fields, load=False)[0]
             display_price_incl = line.order_id.config_id.iface_tax_included == 'total'
-
             data['qty'] = int(line.qty) if float(line.qty).is_integer() else line.qty
             data['product_data'] = {**product_by_id[data['product_id']]}
-            data['product_data']['display_name'] = line.full_product_name or data['product_data']['display_name']
+            if line.extra_tax_data and line.extra_tax_data.get('discount_value'):
+                data['product_data']['display_name'] = line.full_product_name
+            else:
+                data['product_data']['display_name'] = data['product_data']['display_name']
             data['product_uom_name'] = line.product_id.uom_id.name
             data['price_subtotal_incl'] = self._order_receipt_format_currency(data['price_subtotal_incl'])
             data['no_discount_price'] = self._order_receipt_format_currency(line._get_price_no_discount(self.config_id))
+            data['child_combo_lines'] = " - ".join(
+                f"{child.qty:g} {child.full_product_name}"
+                for child in line.combo_line_ids
+            )
+            data['attribute_value_ids'] = " - ".join(
+                line.attribute_value_ids.mapped('name')
+            )
 
             # Compute line unit price
             taxes = line._compute_amount_line_all(1)
