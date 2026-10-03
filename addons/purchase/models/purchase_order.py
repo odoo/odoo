@@ -921,13 +921,16 @@ class PurchaseOrder(models.Model):
                 # Merge RFQs into the oldest purchase order
                 rfqs -= oldest_rfq
                 for rfq_line in rfqs.order_line:
-                    existing_line = oldest_rfq.order_line.filtered(lambda l: l.display_type not in ['line_section', 'line_subsection', 'line_note'] and
-                                                                                l.product_id == rfq_line.product_id and
-                                                                                l.uom_id == rfq_line.uom_id and
-                                                                                l.analytic_distribution == rfq_line.analytic_distribution and
-                                                                                l.discount == rfq_line.discount and
-                                                                                abs(l.date_planned - rfq_line.date_planned).total_seconds() <= 86400  # 24 hours in seconds
-                                                                        )
+                    existing_line = oldest_rfq.order_line.filtered(
+                        lambda l: l.display_type not in ['line_section', 'line_subsection', 'line_note']
+                        and l.product_id == rfq_line.product_id
+                        and l.uom_id == rfq_line.uom_id
+                        and l.analytic_distribution == rfq_line.analytic_distribution
+                        and l.discount == rfq_line.discount
+                        and l.name == rfq_line.name
+                        and l.price_unit == rfq_line.price_unit
+                        and abs(l.date_planned - rfq_line.date_planned).total_seconds() <= 86400  # 24 hours in seconds
+                    )
                     if len(existing_line) > 1:
                         existing_line[0].product_qty += sum(existing_line[1:].mapped('product_qty'))
                         existing_line[1:].unlink()
