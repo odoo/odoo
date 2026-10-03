@@ -199,9 +199,6 @@
                                         </div>
                                     </div>
                                 </setting>
-                                <setting invisible="use_kiosk_mode" help="Display products grouped by categories.">
-                                    <field name="pos_iface_group_by_categ"/>
-                                </setting>
                             </block>
                             <block id="product_and_category_block" title="Product &amp; PoS categories">
                                 <setting help="Pick which product PoS categories are available">
@@ -215,6 +212,9 @@
                                 </setting>
                                 <setting id="margin_and_cost" string="Show margins &amp; costs" help="Show margins &amp; costs on product information">
                                     <field name="pos_is_margins_costs_accessible_to_every_user"/>
+                                </setting>
+                                <setting help="Display products grouped by categories.">
+                                    <field name="pos_iface_group_by_categ"/>
                                 </setting>
                                 <setting id="barcode_scanner" invisible="use_kiosk_mode">
                                     <span class="o_form_label">Barcodes</span>

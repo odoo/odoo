@@ -426,6 +426,38 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             product_ids = [d['product_id'] for d in ticket['changes']['data']]
             self.assertEqual(product_ids, [product_a.id], "Standalone ticket should only have product A")
 
+    def test_group_by_categ_receipts(self):
+        """Receipt lines are sorted by category, preparation lines grouped by category id."""
+        food, drinks_bar, drinks_shop = self.env['pos.category'].create([
+            {'name': 'Food', 'sequence': 1},
+            {'name': 'Drinks', 'sequence': 5},
+            {'name': 'Drinks', 'sequence': 10},
+        ])
+        beer, burger, soda = self.env['product.product'].create([
+            {'name': 'Beer', 'available_in_pos': True, 'pos_categ_ids': [Command.set(drinks_bar.ids)]},
+            {'name': 'Burger', 'available_in_pos': True, 'pos_categ_ids': [Command.set(food.ids)]},
+            {'name': 'Soda', 'available_in_pos': True, 'pos_categ_ids': [Command.set(drinks_shop.ids)]},
+        ])
+        self.main_pos_config.iface_group_by_categ = True
+        order, _ = self.create_backend_pos_order({
+            'pos_config': self.main_pos_config,
+            'line_data': [
+                {'product_id': soda.id, 'qty': 1},
+                {'product_id': beer.id, 'qty': 1},
+                {'product_id': burger.id, 'qty': 1},
+            ],
+        })
+
+        lines_data = order.order_receipt_generate_data()['lines']
+        self.assertEqual([data['product_id'] for data in lines_data], [burger.id, beer.id, soda.id])
+
+        prep_data = order._generate_preparation_change_for_categories(set((food | drinks_bar | drinks_shop).ids))
+        receipt = order._generate_preparation_receipt_data(prep_data)[0]
+        self.assertEqual(
+            [(group['name'], [data['product_id'] for data in group['data']]) for group in receipt['changes']['groupedData']],
+            [('Food', [burger.id]), ('Drinks', [beer.id]), ('Drinks', [soda.id])],
+        )
+
     def test_total_item_count(self):
         setup_product_combo_items(self)
         self.weighted_product = self.env['product.template'].create({
