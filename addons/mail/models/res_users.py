@@ -4,7 +4,7 @@ from collections import defaultdict
 import contextlib
 
 from odoo import _, api, Command, fields, models, modules, tools
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.tools import email_normalize, split_every
 from odoo.tools.misc import limited_field_access_token
@@ -207,6 +207,10 @@ class ResUsers(models.Model):
         return users
 
     def write(self, vals):
+        if 'notification_type' in vals and not self.env.su and not self.env.user._is_admin():
+            if any(user.role == 'light_user' for user in self):
+                raise AccessError(_("Light users cannot change their notification preference."))
+
         log_portal_access = 'group_ids' in vals and not self.env.context.get('mail_create_nolog') and not self.env.context.get('mail_notrack')
         user_portal_access_dict = {
             user.id: user._is_portal()
