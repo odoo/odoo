@@ -202,7 +202,7 @@ export class ClosePosPopup extends Component {
         return true;
     }
     async closeSession() {
-        this.pos.accessRight.resetCashier();
+        this.pos.accessRight.forgetConnectedCashier();
         // If there are orders in the db left unsynced, we try to sync.
         const syncSuccess = await this.pos.pushOrdersWithClosingPopup();
         if (!syncSuccess) {
@@ -232,14 +232,18 @@ export class ClosePosPopup extends Component {
 
             this.pos.session.state = "closed";
             try {
+                await this.postCloseSession();
                 await this.pos.ticketPrinter.printSaleDetailsReceipt({ download: true });
             } finally {
+                this.pos.resetCashier();
                 this.pos.router.close();
             }
         } finally {
             localStorage.removeItem(`pos.session.${odoo.pos_config_id}`);
         }
     }
+    // Hook called once the session has been successfully closed in the backend, overrode inside `l10n_be_pos_blackbox`
+    async postCloseSession() {}
     async handleClosingError(response) {
         if (response.type === "session_already_closed") {
             return await makeAwaitable(

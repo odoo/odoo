@@ -83,4 +83,8 @@ patch(ProductScreen.prototype, {
         this.pos.cleanAutoCourseAllocation(result, allocation);
         return result;
     },
+    async clickNew() {
+        await this.pos.syncAllOrders({ orders: [this.pos.getOrder()] });
+        this.pos.showDefault();
+    },
 });
