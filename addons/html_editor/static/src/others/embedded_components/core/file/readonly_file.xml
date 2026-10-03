@@ -18,7 +18,18 @@
                 </EmbeddedComponentToolbar>
             </span>
         </xpath>
-       
+ 
+        <xpath expr="//span[hasclass('alert-info')]" position="after">
+            <t t-if="this.fileModel.isViewable">
+                <t t-if="this.state.isPreviewInline and this.fileModel.isViewable">
+                    <iframe class="o_file_preview_iframe"
+                        t-att-alt="this.fileModel.filename"
+                        t-att-src="this.fileModel.downloadUrl.replace('&amp;download=true', '')"
+                        t-att-name="this.fileModel.filename"
+                    />
+                </t>
+            </t>
+        </xpath>
     </t>
 
 </templates>

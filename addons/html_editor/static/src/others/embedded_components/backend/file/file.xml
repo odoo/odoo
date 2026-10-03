@@ -8,6 +8,13 @@
                 t-on-blur="this.onBlurNameInput" t-on-input.stop="" t-on-keydown.stop="this.onKeydownNameInput"
                 t-att-value="this.fileModel.filename"/>
         </xpath>
+        <xpath expr="//EmbeddedComponentToolbar" position="after">
+            <t t-if="this.fileModel.isViewable">
+                <button class="oi btn" data-icon="push_pin" t-on-click="this.toggleInlinePreview"
+                    t-att-class="{ 'oi-filled': this.state.isPreviewInline }"
+                />
+            </t>
+        </xpath>
         <xpath expr="//span[hasclass('o_file_name_container')]" position="attributes">
             <attribute name="t-att-class">{
                 "d-none": this.localState.editFileName,
