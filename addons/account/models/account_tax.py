@@ -3,7 +3,6 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import frozendict, groupby, html2plaintext, is_html_empty, split_every, SQL
 from odoo.tools.float_utils import float_is_zero, float_repr, float_round, float_compare
-from odoo.tools.misc import clean_context, formatLang
 from odoo.tools.translate import html_translate
 
 from collections import defaultdict
@@ -656,7 +655,10 @@ class AccountTax(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        context = clean_context(self.env.context)
+        context = {
+            k: v for k, v in self.env.context.items()
+            if not k.startswith('default_') or k.removeprefix('default_') in self._fields
+        }
         context.update({
             'mail_create_nosubscribe': True,  # At create or message_post, do not subscribe the current user to the record thread
             'mail_auto_subscribe_no_notify': True,  # Do no notify users set as followers of the mail thread
