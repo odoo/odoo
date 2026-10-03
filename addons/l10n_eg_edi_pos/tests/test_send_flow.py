@@ -1,3 +1,5 @@
+from urllib.parse import parse_qs, urlsplit
+
 from odoo import Command
 from odoo.tests import tagged
 
@@ -118,3 +120,58 @@ class TestL10nEgEdiPosSendFlow(TestL10nEgEdiPosCommon):
         with self._mock_eta(send_response=self._eta_accepts_any_uuid()):
             self._pay(refund)
         self.assertEqual(self.eg_pos_config.sudo().l10n_eg_edi_pos_last_uuid, refund.l10n_eg_edi_pos_uuid)
+
+    def _create_sent_order(self):
+        """An order accepted by ETA as an e-receipt, so it carries a QR."""
+        order = self._create_unpaid_order()
+        with self._mock_eta(send_response=self._eta_accepts_any_uuid()):
+            self._pay(order)
+        self.assertEqual(order.l10n_eg_edi_pos_state, "sent_test")
+        self.assertTrue(order.l10n_eg_edi_pos_qr)
+        return order
+
+    def test_invoicing_a_sent_receipt_does_not_submit_it_as_an_e_invoice(self):
+        """The sale is already reported through the receipt, so the invoice is
+        created without going through the ETA e-invoice flow."""
+        order = self._create_sent_order()
+        with self._assert_no_eta_call():
+            order.action_pos_order_invoice()
+        self.assertTrue(order.account_move)
+        for mode in ("demo", "preproduction", "production"):
+            self.assertFalse(order.account_move._is_l10n_eg_edi_applicable(mode))
+
+    def test_invoice_of_a_sent_receipt_carries_the_receipt_qr(self):
+        """The QR printed on the receipt is the one printed on the invoice, and
+        it is not gated by the e-invoice submission state."""
+        order = self._create_sent_order()
+        order.action_pos_order_invoice()
+        invoice = order.account_move
+        self.assertEqual(invoice.l10n_eg_qr_code, order.l10n_eg_edi_pos_qr)
+        self.assertEqual(invoice.l10n_eg_edi_submission_state, "to_send")
+        qr_code_src = invoice._l10n_eg_eta_qr_code()
+        self.assertTrue(qr_code_src.startswith("/report/barcode/"))
+        qr_params = parse_qs(urlsplit(qr_code_src).query)
+        self.assertEqual(qr_params["value"], [order.l10n_eg_edi_pos_qr])
+
+    def test_signing_an_invoice_of_a_sent_receipt_is_a_no_op(self):
+        """The Sign (ETA) server action must skip an invoice whose sale was
+        already fiscalised as an e-receipt."""
+        order = self._create_sent_order()
+        order.action_pos_order_invoice()
+        invoice = order.account_move
+        invoice.action_post_sign_invoices()
+        self.assertFalse(invoice.l10n_eg_is_signed)
+        self.assertFalse(invoice.l10n_eg_eta_json_doc_file)
+
+    def test_invoicing_a_refused_receipt_also_skips_e_invoicing(self):
+        """Reporting belongs to the pos.order whatever its state: a rejected
+        receipt is resent from the order, never submitted as an e-invoice."""
+        order = self._create_unpaid_order()
+        rejection = self._eta_rejects_any_uuid(message="Bad VAT")
+        with self._mock_eta(send_response=rejection):
+            self._pay(order)
+        self.assertEqual(order.l10n_eg_edi_pos_state, "rejected_test")
+        with self._assert_no_eta_call():
+            order.action_pos_order_invoice()
+        for mode in ("demo", "preproduction", "production"):
+            self.assertFalse(order.account_move._is_l10n_eg_edi_applicable(mode))
