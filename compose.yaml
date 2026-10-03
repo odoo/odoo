@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  odoo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["python3", "/opt/odoo-src/odoo-bin", "-c", "/etc/odoo/odoo.conf"]
+    ports:
+      - "8069:8069"
+    volumes:
+      - ./:/opt/odoo-src:ro
+      - ./custom_addons:/mnt/extra-addons:ro
+      - ./docker/odoo.conf:/etc/odoo/odoo.conf:ro
+      - odoo-web-data:/var/lib/odoo
+    restart: unless-stopped
+
+volumes:
+  odoo-db-data:
+  odoo-web-data:

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_custom_payroll_potongan_tetap_form" model="ir.ui.view">
+        <field name="name">custom.payroll.potongan.tetap.form</field>
+        <field name="model">custom.payroll.potongan.tetap</field>
+        <field name="arch" type="xml">
+            <form string="Fixed Deduction">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g. Cicilan Koperasi, Kasbon Karyawan"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Information">
+                            <field name="employee_id"/>
+                            <field name="amount" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Period">
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="active"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1" placeholder="Notes (optional)..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="view_custom_payroll_potongan_tetap_list" model="ir.ui.view">
+        <field name="name">custom.payroll.potongan.tetap.list</field>
+        <field name="model">custom.payroll.potongan.tetap</field>
+        <field name="arch" type="xml">
+            <list string="Fixed Deductions">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="amount" widget="monetary"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="active"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_custom_payroll_potongan_tetap_search" model="ir.ui.view">
+        <field name="name">custom.payroll.potongan.tetap.search</field>
+        <field name="model">custom.payroll.potongan.tetap</field>
+        <field name="arch" type="xml">
+            <search string="Fixed Deductions">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <separator/>
+                <filter name="filter_active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="filter_inactive" string="Inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_custom_payroll_potongan_tetap" model="ir.actions.act_window">
+        <field name="name">Fixed Deductions</field>
+        <field name="res_model">custom.payroll.potongan.tetap</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_custom_payroll_potongan_tetap_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first fixed deduction (e.g. cooperative installment, loan).
+            </p>
+        </field>
+    </record>
+</odoo>

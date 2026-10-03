@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Idempotent native-structure and approval ownership backfills. -->
+    <function model="hr.work.location" name="_presenly_migrate_native_structure"/>
+    <function model="hr.leave.type" name="_presenly_enable_single_approval_flow"/>
+    <function model="presenly.permission" name="_presenly_backfill_pending_approvers"/>
+    <function model="hr.leave" name="_presenly_backfill_pending_approvers"/>
+</odoo>

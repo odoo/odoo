@@ -1,0 +1,77 @@
+PRESENLY RESET, LEGACY MIGRATION, AND MOBILE API POST-CHECK
+Date: 2026-09-05
+Database: odoo
+Module: Presenly Attendance Tools 19.0.5.0.0
+
+RESET RESULT
+- hr.attendance: 0
+- hr.leave: 0
+- hr.leave.allocation: 0
+- presenly.permission: 0
+- presenly.attendance.event: 0
+- presenly.work.location.schedule: 0
+- Remaining Employees: Mitchell Admin (1), Feri (42), Yusril Falih (43)
+- Built-in demo employees IDs 2-21: removed through Odoo ORM.
+- Built-in demo user ID 5: archived as archived_demo_5 and disabled because
+  cross-application audit records still reference the user.
+- Ad-hoc Permission Type named test: removed.
+
+SCOPE
+- Presenly and HR demo/transaction data was reset.
+- Accounting, Sales, Project, and other installed-application history was not
+  deleted. This avoids breaking audit records and foreign-key integrity.
+- Administrator identity and required native Odoo configuration were retained.
+
+AUTOMATIC LEGACY MIGRATION
+- Upgrade migration: migrations/19.0.5.0.0/post-cleanup-legacy-structure.py
+- Migration is idempotent and guarded.
+- Cleanup runs only when legacy Work Location has no rows, all known legacy
+  foreign-key columns contain no values, and no unknown addon FK depends on
+  the retired tables.
+- On this database, checks passed and cleanup completed.
+- Removed models: presenly.unit, presenly.work.location.
+- Removed tables: presenly_unit, presenly_work_location and legacy relations.
+- Removed FK columns from Attendance, Time Off, Permission, Evidence, and
+  Approval Rule.
+- Removed ACL, rules, actions, menus, and source definitions for legacy models.
+- API unit_id remains a temporary request/response alias for native
+  hr.work.location ID and does not require a legacy database table.
+
+MOBILE API DOCUMENTATION
+- Main guide: docs/MOBILE_API.md
+- Includes Odoo 19 login endpoint /web/session/authenticate.
+- Includes session cookie storage, session check, logout, attendance,
+  Time Off, Permission, curl examples, JSON-RPC envelopes, and errors.
+- Executable smoke test: scripts/check_mobile_api.sh
+
+REAL HTTP SMOKE RESULT
+- GET /web/login: HTTP 200.
+- POST /web/session/authenticate: successful; uid and session_id received.
+- POST /api/presenly/v1/attendance/status: successful.
+- POST /web/session/destroy: successful.
+- Reuse of destroyed session: rejected as expected.
+
+VALIDATION
+- Module upgrade: passed.
+- Module state/version: installed / 19.0.5.0.0.
+- Python compile: passed.
+- XML parse: passed (16 files).
+- Shell script syntax: passed.
+- git diff --check: passed.
+- Isolated cloned database: 16 test cases / 24 test stats,
+  0 failures, 0 errors.
+- Test clone removed after validation.
+- Main database remained transaction-empty after tests.
+
+IMPORTANT MOBILE SETUP
+- Mitchell Admin is linked to active Odoo login admin and was used only for
+  local smoke validation.
+- Feri and Yusril currently have no Related User, so they cannot log in to the
+  mobile API until an active internal user is created/linked from Employee.
+- Work Locations currently report Geofence Ready = false; configure valid
+  Work Address coordinates, positive radius, and GPS accuracy limit before
+  testing check-in/check-out.
+
+BACKUPS
+- backups/presenly-migration/odoo-before-demo-reset-20260905.dump
+- backups/presenly-migration/odoo-after-demo-reset-before-legacy-cleanup-20260905.dump
