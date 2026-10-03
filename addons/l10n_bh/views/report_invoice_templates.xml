@@ -1,0 +1,26 @@
+<odoo>
+    <template id="document_tax_totals_company_currency_template" inherit_id="account.document_tax_totals_company_currency_template">
+        <xpath expr="//div[hasclass('totals_taxes_company_currency')]//table" position="attributes">
+            <attribute name="class"/>
+            <attribute name="t-attf-class">table table-borderless mb-0{{ '' if o.company_id.country_id.code == 'BH' else ' table-sm' }}</attribute>
+        </xpath>
+
+        <xpath expr="//tr[hasclass('o_subtotal')]/td/strong" position="attributes">
+            <attribute name="t-attf-style">{{ 'font-weight: normal;' if o.company_id.country_id.code == 'BH' else '' }}</attribute>
+        </xpath>
+
+        <xpath expr="//tr[hasclass('o_subtotal')]" position="attributes">
+            <attribute name="class"/>
+            <attribute name="t-attf-class">o_subtotal{{ '' if o.company_id.country_id.code == 'BH' else ' border-black' }}</attribute>
+        </xpath>
+
+        <xpath expr="//p[hasclass('tax_computation_company_currency')]" position="after">
+            <tr t-if="o.company_id.country_id.code == 'BH'" class="border-black o_subtotal">
+                <t t-set="exchange_rate" t-if="o.amount_total" t-value="abs(o.amount_total_signed) / o.amount_total"/>
+                <t t-set="exchange_rate" t-else="" t-value="o.env['res.currency']._get_conversion_rate(o.currency_id, o.company_id.currency_id, o.company_id, o.invoice_date or datetime.date.today())"/>
+                <td>Exchange Rate</td>
+                <td class="text-end" t-out="exchange_rate" t-options='{"widget": "float", "precision": 5}'/>
+            </tr>
+        </xpath>
+    </template>
+</odoo>
