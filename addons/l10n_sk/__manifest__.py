@@ -5,6 +5,7 @@
     'countries': ['sk'],
     'author': '26HOUSE (http://www.26house.com)',
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',
+    'version': '1.1',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Slovakia accounting chart and localization: Chart of Accounts 2020, basic VAT rates +
