@@ -121,7 +121,6 @@ class AccountMove(models.Model):
         readonly=True,
         copy=False,
     )
-
     # TODO: remove in master
     @api.model
     def fields_get(self, allfields=None, attributes=None):
@@ -638,8 +637,59 @@ class AccountMove(models.Model):
             return [error] if error else []
         return list(check())
 
+    def _l10n_fr_pdp_get_sale_origin_invoices(self):
+        """Posted customer invoices linked through sales order lines.
+
+        ``sale`` is optional. Without ``sale_line_ids`` there is no origin to follow.
+        """
+        self.ensure_one()
+        if 'sale_line_ids' not in self.env['account.move.line']._fields:
+            return self.env['account.move']
+        origins = self.invoice_line_ids.sale_line_ids.invoice_lines.move_id
+        return origins.filtered(
+            lambda move: move != self and move.state == 'posted' and move.move_type == 'out_invoice'
+        )
+
+    def _l10n_fr_pdp_is_document_type_262(self):
+        """UNTDID 262 only for French companies (l10n_fr_pdp is auto-installed on all-l10n CI)."""
+        self.ensure_one()
+        return bool(
+            self.company_id.account_fiscal_country_id.code == 'FR'
+            and self.move_type == 'out_refund'
+            and not self.reversed_entry_id
+            and not self._is_downpayment()
+            and not self._l10n_fr_pdp_get_sale_origin_invoices()
+        )
+
+    def _l10n_fr_pdp_get_contract_reference(self):
+        """BT-12: Studio Peppol field, enterprise contract_reference, else customer ref."""
+        self.ensure_one()
+        studio_field = 'x_studio_peppol_contract_document_reference_id'
+        if studio_field in self._fields:
+            studio_ref = (self[studio_field] or '').strip()
+            if studio_ref:
+                return studio_ref
+        if 'contract_reference' in self._fields and self.contract_reference:
+            return self.contract_reference
+        return (self.ref or '').strip()
+
+    def _l10n_fr_pdp_get_invoicing_period(self):
+        """BG-14: Studio Peppol dates if set, else invoice date / due date."""
+        self.ensure_one()
+        start_field = 'x_studio_peppol_invoice_period_start_date'
+        end_field = 'x_studio_peppol_invoice_period_end_date'
+        if start_field in self._fields and end_field in self._fields:
+            start, end = self[start_field], self[end_field]
+            if start and end:
+                return start, end
+        start = self.invoice_date
+        end = self.invoice_date_due or self.invoice_date
+        return start, end
+
     def _l10n_fr_pdp_get_referenced_documents(self):
         self.ensure_one()
+        if self._l10n_fr_pdp_is_document_type_262():
+            return self.env['account.move']
         referenced = self.reversed_entry_id
         if 'debit_origin_id' in self._fields:
             referenced += self.debit_origin_id
