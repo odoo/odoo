@@ -407,3 +407,11 @@ class TestKeysCertificates(TransactionCase):
         self.assertTrue(leaf_record.private_key_id)
         self.assertFalse(unrelated_record)
         self.assertEqual(len(leaf_record._get_certificate_chain()), 1)
+
+    def test_write_certificate_password(self):
+        certificate = self.env['certificate.certificate'].create({
+           'name': 'Test PEM Certificate',
+           'content': BinaryBytes(self.certificate_1.public_bytes(encoding=serialization.Encoding.PEM)),
+        })
+        certificate.write({'pkcs12_password': 'newpassword'})
+        self.assertEqual(certificate.pkcs12_password, 'newpassword')
