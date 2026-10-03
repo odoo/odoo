@@ -1,5 +1,5 @@
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblBis3Common, TestUblCiiBECommon
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 from freezegun import freeze_time
 
@@ -26,13 +26,13 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
                 {
                     'quantity': 150.0,
                     'price_unit': 0.53073,
-                    'discount': 11.996055747115614,
+                    'discount': 11.996055747115609,
                     'tax_ids': tax_21.ids,
                 },
                 {
                     'quantity': 200.0,
                     'price_unit': 0.6369,
-                    'discount': 12.00345423143351,
+                    'discount': 12.003454231433505,
                     'tax_ids': tax_21.ids,
                 },
             ],
@@ -47,6 +47,25 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
                 },
             ],
         )
+
+    @freeze_time('2020-01-01')
+    def test_import_unrounded_discount_then_edit(self):
+        """Test that editing a bill imported with a discount more precise than the
+        'Discount' decimal accuracy doesn't change its amounts."""
+        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
+        self.percent_tax(6.0, type_tax_use='purchase')
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan'})
+        analytic_account = self.env['account.analytic.account'].create({'name': 'Account', 'plan_id': analytic_plan.id})
+
+        invoice = self._import_invoice_as_attachment_on(test_name='test_import_unrounded_discount_edit')
+        expected_amounts = [{'amount_untaxed': 2000.01, 'amount_tax': 120.0, 'amount_total': 2120.01}]
+        self.assertRecordValues(invoice, expected_amounts)
+
+        self.env.invalidate_all()
+        with Form(invoice) as invoice_form:
+            with invoice_form.invoice_line_ids.edit(0) as line_form:
+                line_form.analytic_distribution = {str(analytic_account.id): 100}
+        self.assertRecordValues(invoice, expected_amounts)
 
     @freeze_time('2020-01-01')
     def test_import_lot_of_decimals_in_quantities(self):

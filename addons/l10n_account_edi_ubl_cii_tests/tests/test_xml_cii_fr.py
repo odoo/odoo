@@ -452,7 +452,7 @@ class TestCIIFR(TestUBLCommon):
             'invoice_lines': [
                 {'price_unit': 95.24, 'price_subtotal': 95.24, 'quantity': 1, 'discount': 0, 'tax_ids': self.tax_5_purchase.ids},
                 {'price_unit': 100, 'price_subtotal': 100, 'quantity': 1, 'discount': 0, 'tax_ids': self.tax_5_purchase.ids},
-                {'price_unit': 190.48, 'price_subtotal': 171.43, 'quantity': 1, 'discount': 10.001049979000411, 'tax_ids': self.tax_5_purchase.ids},
+                {'price_unit': 190.48, 'price_subtotal': 171.43, 'quantity': 1, 'discount': 10.00104997900042, 'tax_ids': self.tax_5_purchase.ids},
                 {'price_unit': 200, 'price_subtotal': 180, 'quantity': 1, 'discount': 10.0, 'tax_ids': self.tax_5_purchase.ids},
             ]
         }
