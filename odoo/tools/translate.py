@@ -1281,7 +1281,10 @@ class TranslationModuleReader(TranslationReader):
             self._export_imdinfo(model, imd_per_id)
 
     def _get_module_from_path(self, path):
-        for (mp, rec) in self._path_list:
+        # match the most specific addons path first: when an addons directory
+        # is nested inside another one (both in addons_path), the first
+        # segment under the outer path is the inner directory, not the module
+        for (mp, rec) in sorted(self._path_list, key=lambda p: len(p[0]), reverse=True):
             mp = os.path.join(mp, '')
             dirname = os.path.join(os.path.dirname(path), '')
             if rec and path.startswith(mp) and dirname != mp:
@@ -1348,9 +1351,14 @@ class TranslationModuleReader(TranslationReader):
 
         spreadsheet_files_regex = re.compile(r".*_dashboard(\.osheet)?\.json$")
 
+        addons_dirs = {join(p, '') for (p, rec) in self._path_list if rec}
         for (path, recursive) in self._path_list:
             _logger.debug("Scanning files of modules at %s", path)
-            for root, dummy, files in os.walk(path, followlinks=True):
+            for root, dirs, files in os.walk(path, followlinks=True):
+                # a nested addons path is walked on its own iteration of the
+                # outer loop: pruning it here avoids extracting its files
+                # twice, which would duplicate the '#:' references in the PO
+                dirs[:] = [d for d in dirs if join(root, d, '') not in addons_dirs]
                 for fname in fnmatch.filter(files, '*.py'):
                     self._babel_extract_terms(fname, path, root, 'python',
                                               extra_comments=[PYTHON_TRANSLATION_COMMENT],
