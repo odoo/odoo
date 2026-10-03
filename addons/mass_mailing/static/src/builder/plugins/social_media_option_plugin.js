@@ -383,10 +383,6 @@ class ToggleSocialMediaLinkAction extends BuilderAction {
                 editingElement: referenceIcon,
                 params: { mainParam: "background-color" },
             });
-            const color = this.styleAction.getValue({
-                editingElement: referenceIcon,
-                params: { mainParam: "color" },
-            });
             const appliedClasses = LINK_OPTIONS_CLASSLIST.filter((className) =>
                 this.classAction.isApplied({
                     editingElement: referenceIcon,
@@ -397,8 +393,8 @@ class ToggleSocialMediaLinkAction extends BuilderAction {
             if (backgroundColor) {
                 icon.style.backgroundColor = backgroundColor;
             }
-            if (color) {
-                icon.style.color = color;
+            if (referenceIcon.style.color) {
+                icon.style.color = referenceIcon.style.color;
             }
             icon.classList.remove("fa-stack");
             icon.classList.add(...appliedClasses);
