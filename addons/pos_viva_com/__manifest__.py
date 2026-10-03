@@ -12,6 +12,7 @@
             'pos_viva_com/static/src/**/*',
         ],
         'point_of_sale.payment_terminals': [
+            'pos_viva_com/static/src/app/utils/error_messages.js',
             'pos_viva_com/static/src/app/payment_viva_com.js',
             'pos_viva_com/static/src/overrides/models/pos_payment.js',
         ],
