@@ -68,6 +68,7 @@ class Message(models.Model):
     _description = 'Message'
     _order = 'id desc'
     _rec_name = 'record_name'
+    _allow_sudo_display_name = False
 
     @api.model
     def default_get(self, fields):
