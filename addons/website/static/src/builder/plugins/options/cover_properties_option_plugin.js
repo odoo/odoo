@@ -17,8 +17,22 @@ class CoverPropertiesOptionPlugin extends Plugin {
             SetCoverBackgroundAction,
             MarkCoverPropertiesToBeSavedAction,
         },
-        savable_selectors: "#wrapwrap .o_record_cover_container[data-res-model]",
-        content_not_editable_selectors: ".o_savable.o_record_cover_container[data-res-model]",
+        // The cover is not a savable area: only its `cover_properties` are
+        // written back, so a block dropped in it would be lost. It is collected
+        // for saving on its own, through the flag set by its options.
+        get_dirty_els: () => {
+            const coverEls = [
+                ...this.editable.querySelectorAll(
+                    ".o_record_cover_container[data-res-model][data-cover-properties-to-be-saved]"
+                ),
+            ];
+            // The flag is cleared here as `saveCoverProperties` only receives a
+            // clone of the element.
+            for (const coverEl of coverEls) {
+                delete coverEl.dataset.coverPropertiesToBeSaved;
+            }
+            return coverEls;
+        },
         before_save_handlers: this.savePendingBackgroundImage.bind(this),
         save_element_handlers: this.saveCoverProperties.bind(this),
     };
@@ -66,11 +80,9 @@ class CoverPropertiesOptionPlugin extends Plugin {
     }
 
     saveCoverProperties(el) {
-        if (!el.dataset.coverPropertiesToBeSaved) {
+        if (!el.matches(".o_record_cover_container[data-res-model]")) {
             return;
         }
-        delete el.dataset.coverPropertiesToBeSaved;
-
         const resModel = el.dataset.resModel;
         const resID = Number(el.dataset.resId);
 
