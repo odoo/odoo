@@ -61,7 +61,7 @@
                                     <group>
                                         <field name="account_type" widget="account_type_selection"/>
                                         <field name="tax_ids" widget="many2many_tax_tags" invisible="account_type == 'off_balance'" options="{'no_quick_create': True}"/>
-                                        <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '=', 'accounts')]" context="{'default_applicability': 'accounts'}" options="{'no_create_edit': True}"/>
+                                        <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '=', 'accounts')]" context="{'default_applicability': 'accounts'}" options="{'no_create_edit': True, 'color_field': 'color'}"/>
                                         <field name="account_stock_variation_id" invisible="account_type != 'asset_current'" decoration-muted="not account_stock_variation_active"/>
                                         <field name="account_stock_expense_id" invisible="account_type != 'asset_current'" placeholder="For Perpetual Continental Only" groups="base.group_no_one" decoration-muted="not account_stock_expense_active"/>
                                     </group>
@@ -109,7 +109,7 @@
                     <field name="active" optional="hide" widget="boolean_toggle"/>
                     <field name="non_trade" widget="boolean_toggle" invisible="account_type not in ('liability_payable', 'asset_receivable')" optional="hide"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tax_tags"/>
-                    <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" optional="hide" widget="many2many_tags"/>
+                    <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                     <field name="company_ids" widget="many2many_tags" readonly="True" groups="base.group_multi_company"/>
                 </list>
@@ -127,7 +127,7 @@
                     <field name="description" width="240px"/>
                     <field name="account_type" widget="account_type_selection"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tax_tags"/>
-                    <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" optional="hide" widget="many2many_tags"/>
+                    <field name="tag_ids" domain="[('applicability', '=', 'accounts')]" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 </list>
             </field>
         </record>
