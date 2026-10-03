@@ -6,6 +6,7 @@ from freezegun import freeze_time
 
 from odoo import Command
 
+from odoo.exceptions import UserError
 from odoo.tests import common, tagged, Form
 from odoo.tools import mute_logger
 
@@ -502,6 +503,30 @@ class TestDropship(common.TransactionCase):
             {'product_id': self.dropship_product.id, 'date_planned': datetime(2026, 1, 1)},
             {'product_id': subscription_dropship_product.id, 'date_planned': datetime(2026, 1, 1)},
         ])
+
+    def test_dropship_without_customer_location(self):
+        dropship_picking_type = self.env["stock.picking.type"].search(
+            [("name", "=", "Dropship"), ("company_id", "=", self.env.company.id)],
+            limit=1,
+        )
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.supplier.id,
+            'picking_type_id': dropship_picking_type.id,
+            'dest_address_id': self.customer.id,
+            'order_line': [Command.create({
+                'name': self.lot_dropship_product.name,
+                'product_id': self.lot_dropship_product.id,
+                'product_qty': 1.0,
+                'product_uom_id': self.lot_dropship_product.uom_id.id,
+                'price_unit': 50.0,
+            })],
+        })
+        self.customer.property_stock_customer = False
+        with self.assertRaisesRegex(
+            UserError,
+            f"You must set a Customer Location for partner {self.customer.display_name}",
+        ):
+            purchase_order.button_confirm()
 
 
 @tagged('post_install', '-at_install')
