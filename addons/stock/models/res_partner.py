@@ -7,7 +7,8 @@ from odoo import fields, models
 class ResPartner(models.Model):
     _inherit = 'res.partner'
     _check_company_auto = True
-
+    _order = "sequence,id"
+    sequence = fields.Integer(string="Partner Sequence")
     property_stock_customer = fields.Many2one(
         'stock.location', string="Customer Location", company_dependent=True, check_company=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', allowed_company_ids[0])]",
