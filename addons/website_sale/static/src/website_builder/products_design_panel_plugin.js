@@ -228,9 +228,6 @@ export class SetGapAction extends BuilderAction {
 
     apply({ editingElement, value }) {
         editingElement.style.setProperty("--o-wsale-products-grid-gap", value);
-        if (this.panel?.needsDbPersistence) {
-            editingElement.dataset.gapToSave = value;
-        }
     }
 
     setPanel(panel) {
