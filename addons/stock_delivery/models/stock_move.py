@@ -14,7 +14,7 @@ class StockRoute(models.Model):
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    weight = fields.Float(compute='_cal_move_weight', digits='Stock Weight', store=True, compute_sudo=True,
+    weight = fields.Float(compute='_compute_weight', digits='Stock Weight', store=True, compute_sudo=True,
         # In case of a big database with a lot of stock moves, the RAM gets exhausted
         # To prevent a process from being killed We create the column 'weight' manually
         # Then we do the computation in a query by multiplying product weight with qty
@@ -27,11 +27,11 @@ class StockMove(models.Model):
                 """),
     )
 
-    @api.depends('product_id', 'product_uom_qty', 'uom_id')
-    def _cal_move_weight(self):
+    @api.depends('product_id', 'quantity', 'uom_id')
+    def _compute_weight(self):
         moves_with_weight = self.filtered(lambda moves: moves.product_id.weight > 0.00)
         for move in moves_with_weight:
-            move.weight = (move.product_qty * move.product_id.weight)
+            move.weight = (move.quantity * move.product_id.weight)
         (self - moves_with_weight).weight = 0
 
     def _get_new_picking_values(self):
