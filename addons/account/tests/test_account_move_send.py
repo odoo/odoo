@@ -773,6 +773,14 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
                     {"id": invoice2.id, "name": invoice2.name, "partner_name": "partner_b"},
                 ],
             },
+            "email_missing": {
+                "count": 1,
+                "label": "without email address",
+                "moves": [
+                    {"id": invoice1.id, "name": invoice1.name, "partner_name": "partner_a"},
+                ],
+                "is_error": True,
+            },
         }
 
         self.assertEqual(wizard.summary_data, expected_batch_wizard_result)
