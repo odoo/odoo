@@ -97,11 +97,13 @@ export const localizationService = {
             JSON.stringify({ lang })
         );
 
-        const translationProm = fetchTranslations(storedTranslations?.hash);
         if (storedTranslations) {
+            if (storedTranslations.hash !== session.translation_hash) {
+                fetchTranslations(storedTranslations.hash);
+            }
             updateTranslations(storedTranslations);
         } else {
-            await translationProm;
+            await fetchTranslations();
         }
 
         translatedTerms[translationLoaded] = true;

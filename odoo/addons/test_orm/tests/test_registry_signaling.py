@@ -81,6 +81,26 @@ class TestOrmCache(TransactionCase):
         self.assertEqual(counter.tx_miss, tx_miss + 1)
         self.assertIn(key, cache)
 
+    def test_ormcache_get_value(self):
+        """ get_value() returns the cached value without ever computing it,
+        and keeps the statistics like a regular lookup. """
+        IMD = self.env['ir.model.data']
+        XMLID = 'base.group_no_one'
+        cache, key, counter = get_cache_key_counter(IMD._xmlid_lookup, XMLID)
+        hit = counter.hit
+        miss = counter.miss
+
+        self.env.registry.clear_cache()
+        self.assertEqual(IMD._xmlid_lookup.__cache__.get_value(IMD, XMLID, cache_default='none'), 'none')
+        self.assertNotIn(key, cache, "get_value() should not compute the value")
+        self.assertEqual(counter.hit, hit)
+        self.assertEqual(counter.miss, miss + 1)
+
+        value = IMD._xmlid_lookup(XMLID)
+        self.assertEqual(IMD._xmlid_lookup.__cache__.get_value(IMD, XMLID), value)
+        self.assertEqual(counter.hit, hit + 1)
+        self.assertEqual(counter.miss, miss + 2)
+
     def test_invalidation(self):
         self.assertEqual(self.env.registry.cache_invalidated, set())
         self.env.registry.clear_cache()
