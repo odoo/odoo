@@ -25,7 +25,7 @@ class MassCancelOrders(models.TransientModel):
     def _compute_has_confirmed_order(self):
         for wizard in self:
             wizard.has_confirmed_order = bool(
-                wizard.sale_order_ids.filtered(lambda so: so.state in ['sale', 'done'])
+                wizard.sale_order_ids.filtered(lambda so: so.state == 'sale')
             )
 
     def action_mass_cancel(self):
