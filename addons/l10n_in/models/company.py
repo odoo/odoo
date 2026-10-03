@@ -215,7 +215,7 @@ class ResCompany(models.Model):
 
     def _update_l10n_in_gst_registration_type(self):
         for company in self:
-            if company.country_code == "IN" and company.vat and not company.l10n_in_gst_registration_type and company.id in self.env.user._get_company_ids():
+            if company.country_code == "IN" and company.id in self.env.user._get_company_ids():
                 company.l10n_in_gst_registration_type = 'regular' if company.partner_id.check_vat_in(company.vat) else False
 
     def action_update_state_as_per_gstin(self):
