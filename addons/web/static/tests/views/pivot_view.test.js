@@ -4111,3 +4111,43 @@ test("Measure from arch is not lost after update", async () => {
     await contains(".o_pivot_buttons button.dropdown-toggle").click();
     expect(".dropdown-menu .dropdown-item:contains(Product)").toHaveCount(1);
 });
+
+test("measure cells support decoration-danger and decoration-success", async () => {
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+            <pivot>
+                <field name="customer" type="row"/>
+                <field name="foo" type="measure" decoration-danger="foo &lt; 15" decoration-success="foo &gt; 15"/>
+            </pivot>`,
+    });
+
+    expect("tbody tr td.o_pivot_cell_value.text-success").toHaveCount(2, {
+        message: "The positive measure cells should have text-success applied",
+    });
+    expect("tbody tr td.o_pivot_cell_value.text-danger").toHaveCount(1, {
+        message: "The lower measure cell should have text-danger applied",
+    });
+    expect('tbody tr:contains("First") td.o_pivot_cell_value').toHaveClass("text-danger", {
+        message: "The First customer measure should have text-danger applied",
+    });
+    expect('tbody tr:contains("Second") td.o_pivot_cell_value').toHaveClass("text-success", {
+        message: "The Second customer measure should have text-success applied",
+    });
+});
+
+test("decorations on non-measure fields are not applied to measure cells", async () => {
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+            <pivot>
+                <field name="customer" type="row" decoration-danger="customer == 1"/>
+                <field name="foo" type="measure"/>
+            </pivot>`,
+    });
+
+    expect("td.o_pivot_cell_value.text-danger").toHaveCount(0);
+    expect("td.o_pivot_cell_value.text-success").toHaveCount(0);
+});

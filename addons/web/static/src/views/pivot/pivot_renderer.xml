@@ -32,6 +32,7 @@
                                         o_empty: cell.value === undefined,
                                         'cursor-pointer': cell.value !== undefined and !this.model.metaData.disableLinking,
                                         'fw-bold': cell.isBold,
+                                        ...this.getCellDecorationClasses(cell)
                                     }" t-custom-click.synthetic="(ev, isMiddleClick) => this.onOpenView(cell, isMiddleClick)"
                                     t-on-mouseover="this.onMouseEnter" t-on-mouseout="this.onMouseLeave">
                                     <t t-if="cell.value !== undefined">

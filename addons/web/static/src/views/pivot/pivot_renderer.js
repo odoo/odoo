@@ -7,6 +7,7 @@ import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { sortBy } from "@web/core/utils/arrays";
@@ -17,6 +18,7 @@ import { getIntervalOptions } from "@web/search/utils/dates";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { MultiCurrencyPopover } from "@web/views/view_components/multi_currency_popover";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
+import { getClassNameFromDecoration } from "@web/views/utils";
 
 const formatters = registry.category("formatters");
 
@@ -350,5 +352,34 @@ export class PivotRenderer extends Component {
 
         const group = { rowValues: cell.groupId[0], colValues: cell.groupId[1] };
         this.openView(this.model.getGroupDomain(group), this.views, context, newWindow);
+    }
+
+    /**
+     * Evaluates field decorations and returns an object of CSS classes
+     * @param {Object} cell
+     * @returns {Object}
+     */
+    getCellDecorationClasses(cell) {
+        const classes = {};
+        if (cell.value === undefined) {
+            return classes;
+        }
+
+        const fieldAttrs = this.model.metaData.fieldAttrs[cell.measure] || {};
+        const decorations = Array.isArray(fieldAttrs.decorations)
+            ? fieldAttrs.decorations
+            : Object.entries(fieldAttrs.decorations || {}).map(([decoration, condition]) => ({
+                  class: decoration.startsWith("decoration-")
+                      ? getClassNameFromDecoration(decoration.slice("decoration-".length))
+                      : decoration,
+                  condition,
+              }));
+
+        const context = { [cell.measure]: cell.value };
+
+        for (const { class: cssClass, condition } of decorations) {
+            classes[cssClass] = evaluateExpr(condition, context);
+        }
+        return classes;
     }
 }
