@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_ph_pos_restaurant.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='this.props.showRemainingButtons']/div/t[@name='o_pricelist_button']" position="before">
+            <t t-if="this.showDiscountPrivileges" t-call="point_of_sale.controlButton"
+                icon="'percent'"
+                btnText.translate="Discount Privileges"
+                btnClasses="'btn-secondary '"
+                onClick="this.clickDiscountPrivileges">
+            </t>
+        </xpath>
+    </t>
+</templates>

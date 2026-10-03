@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.l10n_ph_pos_restaurant</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='identifiers']" position="after">
+                <label for="l10n_ph_discount_privilege_id" string="SC/PWD Discount" invisible="'PH' not in fiscal_country_codes"/>
+                <div class="d-flex align-items-baseline gap-2" invisible="'PH' not in fiscal_country_codes">
+                    <field name="l10n_ph_discount_privilege_id" class="w-auto me-5" options="{'no_create': True}"/>
+                    <field name="l10n_ph_discount_privilege_id_number"
+                            placeholder="ID #"
+                            invisible="not l10n_ph_discount_privilege_id"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
