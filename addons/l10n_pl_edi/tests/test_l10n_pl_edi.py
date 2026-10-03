@@ -222,6 +222,15 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             post=True)
         self._assert_export_invoice(invoice, 'standard_fa3_format_invoice_reverse_charge.xml')
 
+        invoice = self._create_invoice(
+            invoice_date=fields.Date.today(),
+            partner_id=self.partner_pl,
+            invoice_line_ids=[
+                Command.create({'product_id': self.product_a.id, 'quantity': 1, 'price_unit': 500.0, 'tax_ids': K_12_tax.ids}),
+            ],
+            post=True)
+        self._assert_export_invoice(invoice, 'standard_fa3_format_invoice_reverse_charge_only_np_II.xml')
+
     @freeze_time('2026-01-23')
     def test_payment_logic_partial_mixed_methods(self):
         """
