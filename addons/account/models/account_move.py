@@ -5616,7 +5616,7 @@ class AccountMove(models.Model):
         self.sending_data = False
 
         self._detach_attachments()
-        return True
+        return {}
 
     def _get_fields_to_detach(self):
         """"
