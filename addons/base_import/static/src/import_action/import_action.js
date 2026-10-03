@@ -199,7 +199,13 @@ export class ImportAction extends Component {
 
     async reload() {
         this.model.block();
-        await this.model.updateData();
+        const { res, error } = await this.model.updateData();
+        if (error) {
+            this.state.previewError = error;
+        } else {
+            this.state.numRows = res.num_rows;
+            this.state.previewError = undefined;
+        }
         this.model.unblock();
     }
 
