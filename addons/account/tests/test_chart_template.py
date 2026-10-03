@@ -922,3 +922,175 @@ class TestChartTemplate(TransactionCase):
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
         self.assertEqual(company.country_id.code, "BE")
+
+    def test_chart_template_different_fiscal_country(self):
+        """
+            Tests that when loading a chart template for a country (e.g. 'cz'),
+            while the company's fiscal country is different (e.g. 'BE'),
+            the tax groups and taxes are created with the correct country_id.
+        """
+        company = self.env['res.company'].create({
+            'name': 'Test Company CZ-BE',
+            'country_id': self.env.ref('base.cz').id,
+            'account_fiscal_country_id': self.env.ref('base.be').id,
+        })
+
+        def local_get_mapping(self, get_all=False):
+            return {'cz': {
+                'name': 'cz',
+                'country_id': self.env.ref('base.cz').id,
+                'country_code': 'CZ',
+                'module': 'account',
+                'parent': None,
+            }}
+
+        def local_get_data(self, template_code):
+            return {
+                'template_data': {
+                    'code_digits': 6,
+                    'property_account_receivable_id': 'test_account_receivable',
+                    'property_account_payable_id': 'test_account_payable',
+                    'property_account_expense_categ_id': 'test_account_expense_template',
+                    'property_account_income_categ_id': 'test_account_income_template',
+                },
+                'res.company': {
+                    company.id: {
+                        'bank_account_code_prefix': '1000',
+                        'cash_account_code_prefix': '2000',
+                        'transfer_account_code_prefix': '3000',
+                    },
+                },
+                'account.journal': self._get_account_journal(template_code),
+                'account.tax.group': {
+                    'tax_group_cz': {
+                        'name': 'Tax Group CZ',
+                        'country_id': 'base.cz',
+                    }
+                },
+                'account.tax': {
+                    'tax_cz': {
+                        'name': 'Tax CZ',
+                        'amount': 21.0,
+                        'amount_type': 'percent',
+                        'tax_group_id': 'tax_group_cz',
+                        'type_tax_use': 'sale',
+                    }
+                },
+                'account.account': {
+                    'test_account_receivable': {
+                        'name': 'Receivable',
+                        'code': '411111',
+                        'account_type': 'asset_receivable',
+                    },
+                    'test_account_payable': {
+                        'name': 'Payable',
+                        'code': '441111',
+                        'account_type': 'liability_payable',
+                    },
+                    'test_account_expense_template': {
+                        'name': 'Expense',
+                        'code': '600000',
+                        'account_type': 'expense',
+                    },
+                    'test_account_income_template': {
+                        'name': 'Income',
+                        'code': '700000',
+                        'account_type': 'income',
+                    },
+                },
+            }
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_mapping', side_effect=local_get_mapping, autospec=True):
+            with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+                self.env['account.chart.template'].try_loading('cz', company=company, install_demo=False)
+
+        tax_group = self.env['account.tax.group'].search([('company_id', '=', company.id)])
+        tax = self.env['account.tax'].search([('company_id', '=', company.id)])
+
+        self.assertEqual(tax_group.country_id, self.env.ref('base.cz'))
+        self.assertEqual(tax.country_id, self.env.ref('base.cz'))
+
+    def test_tax_group_compute_on_account_tax(self):
+        """
+            Tests that when loading a chart template if the tax group is not added to the tax then `_compute_tax_group_id`
+            assigns the correct tax group to the tax. And accordingly, correct country_id is assigned to the tax.
+        """
+        company = self.env['res.company'].create({
+            'name': 'Test Company CZ',
+            'country_id': self.env.ref('base.cz').id,
+            'account_fiscal_country_id': self.env.ref('base.cz').id,
+        })
+
+        def local_get_mapping(self, get_all=False):
+            return {'cz': {
+                'name': 'cz',
+                'country_id': self.env.ref('base.cz').id,
+                'country_code': 'CZ',
+                'module': 'account',
+                'parent': None,
+            }}
+
+        def local_get_data(self, template_code):
+            return {
+                'template_data': {
+                    'code_digits': 6,
+                    'property_account_receivable_id': 'test_account_receivable',
+                    'property_account_payable_id': 'test_account_payable',
+                    'property_account_expense_categ_id': 'test_account_expense_template',
+                    'property_account_income_categ_id': 'test_account_income_template',
+                },
+                'res.company': {
+                    company.id: {
+                        'bank_account_code_prefix': '1000',
+                        'cash_account_code_prefix': '2000',
+                        'transfer_account_code_prefix': '3000',
+                    },
+                },
+                'account.journal': self._get_account_journal(template_code),
+                'account.tax.group': {
+                    'tax_group_cz': {
+                        'name': 'Tax Group CZ',
+                        'country_id': 'base.cz',
+                    }
+                },
+                'account.tax': {
+                    'tax_cz': {
+                        'name': 'Tax CZ',
+                        'amount': 21.0,
+                        'amount_type': 'percent',
+                        'type_tax_use': 'sale',
+                    }
+                },
+                'account.account': {
+                    'test_account_receivable': {
+                        'name': 'Receivable',
+                        'code': '411111',
+                        'account_type': 'asset_receivable',
+                    },
+                    'test_account_payable': {
+                        'name': 'Payable',
+                        'code': '441111',
+                        'account_type': 'liability_payable',
+                    },
+                    'test_account_expense_template': {
+                        'name': 'Expense',
+                        'code': '600000',
+                        'account_type': 'expense',
+                    },
+                    'test_account_income_template': {
+                        'name': 'Income',
+                        'code': '700000',
+                        'account_type': 'income',
+                    },
+                },
+            }
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_mapping', side_effect=local_get_mapping, autospec=True):
+            with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+                self.env['account.chart.template'].try_loading('cz', company=company, install_demo=False)
+
+        tax_group = self.env['account.tax.group'].search([('company_id', '=', company.id)])
+        tax = self.env['account.tax'].search([('company_id', '=', company.id)])
+
+        self.assertEqual(tax_group.country_id, self.env.ref('base.cz'))
+        self.assertEqual(tax.country_id, self.env.ref('base.cz'))
