@@ -1,8 +1,39 @@
-from odoo import models
+from odoo import api, fields, models
+
+from odoo.addons.account.wizard.account_move_send_wizard import AccountMoveSendWizard as AccountMoveSendWizardAccount
 
 
 class AccountMoveSendWizard(models.TransientModel):
     _inherit = 'account.move.send.wizard'
+
+    l10n_fr_pdp_force_send_einvoicing = fields.Boolean(
+        string='Force French E-Invoicing',
+        help='Send the invoice to the DGFiP via your Approved Platform even when the buyer '
+             'is not registered in the annuaire yet.',
+    )
+    l10n_fr_pdp_show_force_send = fields.Boolean(
+        compute='_compute_l10n_fr_pdp_show_force_send',
+    )
+
+    @api.depends('move_id', 'company_id')
+    def _compute_l10n_fr_pdp_show_force_send(self):
+        for wizard in self:
+            partner = wizard.move_id.commercial_partner_id.with_company(wizard.company_id)
+            wizard.l10n_fr_pdp_show_force_send = bool(wizard.move_id) and partner._l10n_fr_pdp_is_not_in_annuaire()
+
+    @api.onchange('l10n_fr_pdp_force_send_einvoicing')
+    def _onchange_l10n_fr_pdp_force_send_einvoicing(self):
+        self._compute_sending_method_checkboxes()
+        if self.l10n_fr_pdp_force_send_einvoicing and self.sending_method_checkboxes.get('peppol'):
+            peppol_checkbox = self.sending_method_checkboxes['peppol']
+            self.sending_method_checkboxes = {
+                **self.sending_method_checkboxes,
+                'peppol': {
+                    **peppol_checkbox,
+                    'checked': True,
+                    'readonly': False,
+                },
+            }
 
     # -------------------------------------------------------------------------
     # DEFAULTS
@@ -16,6 +47,14 @@ class AccountMoveSendWizard(models.TransientModel):
 
     def _get_peppol_checkbox_addendum_disable_reason(self):
         self.ensure_one()
+        if self.l10n_fr_pdp_force_send_einvoicing:
+            pdp_partner = self.move_id.partner_id.commercial_partner_id.with_company(self.company_id)
+            if pdp_partner._l10n_fr_pdp_is_not_in_annuaire():
+                if pdp_partner._l10n_fr_pdp_is_b2c():
+                    return self.env._(" (No Siren/Siret)")
+                if self.move_id.peppol_is_sent:
+                    return self.env._(" (Previously sent)")
+                return ""
         if self.move_id.peppol_is_sent:
             return super()._get_peppol_checkbox_addendum_disable_reason()
         pdp_partner = self.move_id.partner_id.commercial_partner_id.with_company(self.company_id)
@@ -76,3 +115,15 @@ class AccountMoveSendWizard(models.TransientModel):
                 })
 
         super()._compute_sending_method_checkboxes()
+
+    def action_send_and_print(self, allow_fallback_pdf=False):
+        self.ensure_one()
+        if not self.l10n_fr_pdp_force_send_einvoicing:
+            return super().action_send_and_print(allow_fallback_pdf=allow_fallback_pdf)
+        self = self.with_context(l10n_fr_pdp_force_send_einvoicing=True)
+        if self.sending_methods and 'peppol' in self.sending_methods:
+            move = self.move_id.with_company(self.move_id.company_id)
+            if registration_action := self._do_peppol_pre_send(move):
+                return registration_action
+        # Skip the Peppol wizard guard that rejects a buyer who is not in the annuaire.
+        return AccountMoveSendWizardAccount.action_send_and_print(self, allow_fallback_pdf=allow_fallback_pdf)

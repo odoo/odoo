@@ -105,3 +105,58 @@ class AccountMoveSend(models.AbstractModel):
         if edi_user.proxy_type == 'pdp':
             return self.env._("The invoice has been sent to the Approved Platform. The following attachments were sent with the XML:")
         return super()._get_peppol_attachments_linked_message(edi_user)
+
+    @api.model
+    def _l10n_fr_pdp_force_send_einvoicing_enabled(self, move=None):
+        if self.env.context.get('l10n_fr_pdp_force_send_einvoicing'):
+            return True
+        sending_data = move.sending_data if move else False
+        return bool(sending_data and sending_data.get('l10n_fr_pdp_force_send_einvoicing'))
+
+    def _l10n_fr_pdp_can_force_send_move(self, move, partner, invoice_edi_format):
+        """Buyer is absent from the annuaire but routing data is enough to deposit via the PA."""
+        return (
+            self._l10n_fr_pdp_force_send_einvoicing_enabled(move)
+            and move.company_id._get_peppol_proxy_type() == 'pdp'
+            and partner._get_pdp_receiver_identification_info()[0] == 'pdp'
+            and partner.peppol_eas == '0225'
+            and partner.peppol_verification_state == 'not_valid'
+            and not partner._l10n_fr_pdp_is_b2c()
+            and partner.peppol_endpoint
+            and invoice_edi_format == 'ubl_21_fr'
+        )
+
+    def _is_applicable_to_move(self, method, move, **move_data):
+        # EXTENDS 'account_peppol'
+        if method == 'peppol':
+            partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
+            invoice_edi_format = move_data.get('invoice_edi_format') or partner._get_peppol_edi_format()
+            if self._l10n_fr_pdp_can_force_send_move(move, partner, invoice_edi_format):
+                # Do not call the endpoint button: it would store "valid" while the
+                # lookup still says the buyer is not in the annuaire.
+                return all([
+                    self._is_applicable_to_company(method, move.company_id),
+                    move.company_id.account_peppol_proxy_state != 'rejected',
+                    move._need_ubl_cii_xml(invoice_edi_format) or move.ubl_cii_xml_id and not move.peppol_is_sent,
+                ])
+        return super()._is_applicable_to_move(method, move, **move_data)
+
+    def _call_web_service_after_invoice_pdf_render(self, invoices_data):
+        # EXTENDS 'account_peppol'
+        regular = {}
+        forced = {}
+        for invoice, invoice_data in invoices_data.items():
+            partner = invoice.partner_id.commercial_partner_id.with_company(invoice.company_id)
+            invoice_edi_format = invoice_data.get('invoice_edi_format') or partner._get_peppol_edi_format()
+            if (
+                'peppol' in invoice_data.get('sending_methods', ())
+                and self._l10n_fr_pdp_can_force_send_move(invoice, partner, invoice_edi_format)
+            ):
+                forced[invoice] = invoice_data
+            else:
+                regular[invoice] = invoice_data
+        if regular:
+            super()._call_web_service_after_invoice_pdf_render(regular)
+        if forced:
+            forced_send = self.with_context(l10n_fr_pdp_force_send_einvoicing=True)
+            super(AccountMoveSend, forced_send)._call_web_service_after_invoice_pdf_render(forced)

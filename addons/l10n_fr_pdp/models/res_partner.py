@@ -33,6 +33,11 @@ class ResPartner(models.Model):
         string='E-Invoicing State',
         compute="_compute_pdp_verification_display_state",
     )
+    l10n_fr_pdp_not_in_annuaire = fields.Boolean(
+        string='Not in annuaire',
+        compute='_compute_l10n_fr_pdp_not_in_annuaire',
+        search='_search_l10n_fr_pdp_not_in_annuaire',
+    )
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):
@@ -54,6 +59,50 @@ class ResPartner(models.Model):
     def _compute_pdp_verification_display_state(self):
         for partner in self:
             partner.pdp_verification_display_state = partner._get_pdp_display_verification_state(partner.peppol_verification_state)
+
+    @api.depends('peppol_eas', 'peppol_verification_state', 'vat', 'country_id')
+    @api.depends_context('company')
+    def _compute_l10n_fr_pdp_not_in_annuaire(self):
+        for partner in self:
+            partner.l10n_fr_pdp_not_in_annuaire = partner._l10n_fr_pdp_is_not_in_annuaire()
+
+    def _l10n_fr_pdp_is_not_in_annuaire(self):
+        """French B2B partner with a VAT number whose annuaire lookup is not valid.
+
+        Callers must use ``with_company`` of the invoice company: Peppol fields
+        are company-dependent.
+        """
+        self.ensure_one()
+        return (
+            self.country_code == 'FR'
+            and bool(self.vat)
+            and self.vat != '/'
+            and self.peppol_eas == '0225'
+            and self.peppol_verification_state == 'not_valid'
+        )
+
+    @api.model
+    def _search_l10n_fr_pdp_not_in_annuaire(self, operator, value):
+        if operator not in ('=', '!=') or not isinstance(value, bool):
+            return NotImplemented
+        is_true = (operator == '=') == value
+        not_in_annuaire_domain = [
+            ('country_id.code', '=', 'FR'),
+            ('vat', '!=', False),
+            ('vat', '!=', '/'),
+            ('peppol_eas', '=', '0225'),
+            ('peppol_verification_state', '=', 'not_valid'),
+        ]
+        if is_true:
+            return not_in_annuaire_domain
+        return [
+            '|', '|', '|', '|',
+            ('country_id.code', '!=', 'FR'),
+            ('vat', '=', False),
+            ('vat', '=', '/'),
+            ('peppol_eas', '!=', '0225'),
+            ('peppol_verification_state', '!=', 'not_valid'),
+        ]
 
     # -------------------------------------------------------------------------
     # CONSTRAINT
@@ -208,6 +257,10 @@ class ResPartner(models.Model):
             return 'not_valid_format'
         participant_info = self._pdp_annuaire_lookup_participant(edi_identification)
         if (participant_info or {}).get('in_annuaire'):
+            return 'valid'
+        # Forced send must not persist "valid": callers that write the returned
+        # state (the endpoint button) must not run under this context.
+        if self.env.context.get('l10n_fr_pdp_force_send_einvoicing'):
             return 'valid'
         return 'not_valid'
 

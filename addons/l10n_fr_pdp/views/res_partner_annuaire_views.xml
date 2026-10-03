@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_partner_form_annuaire_send" model="ir.ui.view">
+        <field name="name">res.partner.form.annuaire.send</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <field name="l10n_fr_pdp_not_in_annuaire" invisible="1"/>
+                <div class="alert alert-warning" role="alert"
+                     invisible="not l10n_fr_pdp_not_in_annuaire">
+                    This partner has a French VAT number but is not registered in the
+                    French e-invoicing annuaire. Electronic invoices will require manual
+                    confirmation before sending.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_view_tree_annuaire_send" model="ir.ui.view">
+        <field name="name">res.partner.list.annuaire.send</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.res_partner_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_edi_format']" position="after">
+                <field name="l10n_fr_pdp_not_in_annuaire" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_view_search_annuaire_send" model="ir.ui.view">
+        <field name="name">res.partner.search.annuaire.send</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.res_partner_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='supplier']" position="after">
+                <separator/>
+                <filter name="l10n_fr_pdp_not_in_annuaire"
+                        string="Not in annuaire (FR FE)"
+                        domain="[('l10n_fr_pdp_not_in_annuaire', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
