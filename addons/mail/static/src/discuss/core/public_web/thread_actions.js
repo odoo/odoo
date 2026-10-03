@@ -35,7 +35,7 @@ registerThreadAction("show-threads", {
             "o-mail-SubChannelList-panel": true,
             [store.discussDropdownMenuClass(owner)]: !owner.env.inMeetingView,
         }),
-    btnAttrs: { "data-available-offline": true },
+    availableOffline: true,
     condition: ({ channel, owner }) =>
         (channel?.hasSubChannelFeature || channel?.parent_channel_id?.hasSubChannelFeature) &&
         !owner.isDiscussSidebarChannelActions,

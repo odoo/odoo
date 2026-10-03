@@ -248,7 +248,7 @@ registerCallAction("record-call", {
 });
 
 registerCallAction("fullscreen", {
-    btnAttrs: { "data-available-offline": true },
+    availableOffline: true,
     condition: ({ channel, owner, store }) =>
         channel?.isSelfInCall && !owner.env.pipWindow && !store.rtc.isBrowserFullscreen,
     name: _t("Fullscreen"),

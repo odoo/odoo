@@ -74,11 +74,11 @@ function toArray(val) {
  * @property {TranslatedString|((params: ActionParams_T) => TranslatedString)} [actionPanelName]
  * @property {(params: ActionParams_T) => void} [actionPanelOpen]
  * @property {string|(params: ActionParams_T) => string} [actionPanelOuterClass]
+ * @property {boolean|(params: ActionParams_T) => boolean} [availableOffline]
  * @property {boolean|(params: ActionParams_T) => boolean} [badge]
  * @property {string|(params: ActionParams_T) => string} [badgeIcon]
  * @property {string|(params: ActionParams_T) => string} [badgeIconClass]
  * @property {string|(params: ActionParams_T) => string} [badgeText]
- * @property {Object|(params: ActionParams_T) => Object} [btnAttrs]
  * @property {string|(params: ActionParams_T) => string} [btnClass]
  * @property {Component} [component]
  * @property {Component} [extraContentComponent]
@@ -266,6 +266,18 @@ export class Action {
     }
 
     /** @param {Action} action @returns {boolean|undefined} */
+    _availableOffline(action) {}
+    /** Whether this action stays usable while offline, i.e. its button is not disabled then. */
+    get availableOffline() {
+        return (
+            this._availableOffline(this.params) ??
+            (typeof this.definition.availableOffline === "function"
+                ? this.definition.availableOffline.call(this, this.params)
+                : this.definition.availableOffline)
+        );
+    }
+
+    /** @param {Action} action @returns {boolean|undefined} */
     _badge(action) {}
     /** Condition for showing badge on this action */
     get badge() {
@@ -310,17 +322,6 @@ export class Action {
             (typeof this.definition.badgeText === "function"
                 ? this.definition.badgeText.call(this, this.params)
                 : this.definition.badgeText)
-        );
-    }
-
-    /** @param {Action} action @returns {Object|undefined} */
-    _btnAttrs(action) {}
-    get btnAttrs() {
-        return (
-            this._btnAttrs(this.params) ??
-            (typeof this.definition.btnAttrs === "function"
-                ? this.definition.btnAttrs.call(this, this.params)
-                : this.definition.btnAttrs)
         );
     }
 
@@ -755,7 +756,7 @@ export class UseActions {
                     // signal: the dropdown's inner ActionList observes it, and
                     // a reused more-action gets its list swapped in place
                     actionsSignal: signal(data.actions),
-                    btnAttrs: { "data-available-offline": true },
+                    availableOffline: true,
                     dropdownState: new DropdownState(),
                     dropdownTrigger: true,
                     icon: data?.icon ?? "more_vert",

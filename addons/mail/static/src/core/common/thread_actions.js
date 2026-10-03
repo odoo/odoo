@@ -48,7 +48,7 @@ export function describeThreadActionGroup(id, definition) {
 }
 
 registerThreadAction("fold-chat-window", {
-    btnAttrs: { "data-available-offline": true },
+    availableOffline: true,
     condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
     icon: "remove",
     name: ({ owner }) => (!owner.props.chatWindow?.isOpen ? _t("Open") : _t("Fold")),
@@ -67,7 +67,7 @@ registerThreadAction("rename-thread", {
     setup: ({ action }) => (action.editingName = useMaybePlugin(RenameThreadPlugin)?.editingName),
 });
 registerThreadAction("close", {
-    btnAttrs: { "data-available-offline": true },
+    availableOffline: true,
     condition: ({ owner }) => owner.props.chatWindow && !owner.isDiscussSidebarChannelActions,
     icon: "close_small",
     name: _t("Close Chat Window (ESC)"),
@@ -103,12 +103,12 @@ registerThreadAction("search-messages", {
 registerThreadAction("meeting-chat", {
     actionPanelComponent: MeetingChat,
     actionPanelOuterClass: "bg-100 border",
+    availableOffline: true,
     badge: ({ thread }) => thread.isUnread,
     badgeIcon: ({ channel }) => !channel.importantCounter && "circle",
     badgeIconClass: ({ channel }) =>
         !channel.importantCounter && "oi-filled o-text-white opacity-75",
     badgeText: ({ channel }) => channel.importantCounter || undefined,
-    btnAttrs: { "data-available-offline": true },
     condition: ({ owner }) => owner.env.inMeetingView,
     icon: "forum",
     name: _t("Chat"),
