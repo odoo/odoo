@@ -56,6 +56,7 @@ _intervalTypes = {
     'weeks': lambda interval: relativedelta(days=7 * interval),
     'months': lambda interval: relativedelta(months=interval),
     'minutes': lambda interval: relativedelta(minutes=interval),
+    'never': lambda _: relativedelta(year=2099),
 }
 
 
@@ -110,12 +111,16 @@ class IrCron(models.Model):
     cron_name = fields.Char('Name', compute='_compute_cron_name', store=True)
     user_id = fields.Many2one('res.users', string='Scheduler User', default=lambda self: self.env.user, required=True)
     active = fields.Boolean(default=True)
-    interval_number = fields.Integer(default=1, help="Repeat every x.", required=True, aggregator='avg')
-    interval_type = fields.Selection([('minutes', 'Minutes'),
-                                      ('hours', 'Hours'),
-                                      ('days', 'Days'),
-                                      ('weeks', 'Weeks'),
-                                      ('months', 'Months')], string='Interval Unit', default='months', required=True)
+    state = fields.Selection(related='ir_actions_server_id.state', inherited=True, default='code')
+    interval_number = fields.Integer(default=1, help="Repeat every x.", required=True, aggregator=None)
+    interval_type = fields.Selection([
+        ('minutes', 'Minutes'),
+        ('hours', 'Hours'),
+        ('days', 'Days'),
+        ('weeks', 'Weeks'),
+        ('months', 'Months'),
+        ('never', 'Never'),
+    ], string='Interval Unit', default='never', required=True)
     nextcall = fields.Datetime(string='Next Execution Date', required=True, default=fields.Datetime.now, help="Next planned execution date for this job.")
     lastcall = fields.Datetime(string='Last Execution Date', help="Previous time the cron ran successfully, provided to the job through the context on the `lastcall` key")
     priority = fields.Integer(default=5, aggregator=None, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
@@ -873,7 +878,7 @@ class IrCron(models.Model):
         ctx = self.env.context
         progress = self.env['ir.cron.progress'].sudo().browse(ctx.get('ir_cron_progress_id'))
         if not progress:
-            # not called during a cron, just commit
+            _logger.warning("_commit_progress not called during a cron, just commit", stack_info=True)
             self.env.cr.commit()
             return float('inf')
         assert processed >= 0, 'processed must be positive'
@@ -895,6 +900,8 @@ class IrCron(models.Model):
     @api.model
     def _rollback_progress(self) -> None:
         """The rollback with the same logic as the commit for cron jobs."""
+        if not self.env.context.get('ir_cron_progress_id'):
+            _logger.warning("_rollback_progress not called during a cron, just rollback", stack_info=True)
         self.env.cr.rollback()
 
     def action_open_parent_action(self):
