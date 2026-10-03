@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { parseFloat } from "@web/views/fields/parsers";
 import { Dialog } from "@web/core/dialog/dialog";
-import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
+import { ConnectionLostError } from "@web/core/network/rpc";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 class CustomDialog extends Dialog {
@@ -52,14 +52,7 @@ export class OpeningControlPopup extends Component {
                 });
                 return;
             }
-            if (
-                error instanceof RPCError &&
-                error.data.name === "odoo.exceptions.MissingError" &&
-                (await this.pos.isSessionDeleted())
-            ) {
-                return window.location.reload();
-            }
-            throw error;
+            await this.pos.reloadIfSessionDeleted(error);
         }
         this.pos.session.state = "opened";
         this.props.close();
