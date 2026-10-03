@@ -206,7 +206,7 @@
             <!-- P_18: Reverse charge mechanism. 1=Yes, 2=No. -->
             <P_18 t-out="'1' if reverse_charge else '2'"/>
             <!-- P_18A: Split payment mechanism. 1=Yes, 2=No. -->
-            <P_18A t-out="2"/>
+            <P_18A t-out="'1' if invoice.l10n_pl_mpp else '2'"/>
             <!-- Zwolnienie: Tax exemption details. -->
             <Zwolnienie>
                 <!-- P_19N: Flag indicating if the invoice contains tax-exempt items. 1=No -->
