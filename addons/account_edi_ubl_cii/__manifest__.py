@@ -29,6 +29,7 @@ Pro rules and show the errors.
         'data/ubl_21_templates.xml',
         'views/account_move_views.xml',
         'views/res_partner_views.xml',
+        'views/res_partner_bank_views.xml',
         'report/account_edi_ubl_cii_report_templates.xml',
     ],
     'assets': {

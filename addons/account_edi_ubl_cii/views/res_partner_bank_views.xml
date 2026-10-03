@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_bank_form_inherit_account_edi_payee" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit.account.edi.payee</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="account.view_partner_bank_form_inherit_account"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='acc_holder_name']" position="after">
+                <field name="acc_holder_partner_id" domain="[('is_company', '=', True)]" context="{'default_is_company': True}"/>
+                <field name="is_factoring"/>
+                <field name="payment_note" placeholder="Payment instruction exported on e-invoices"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
