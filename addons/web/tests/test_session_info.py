@@ -83,6 +83,36 @@ class TestSessionInfo(common.HttpCase):
             expected_user_companies,
             "The session_info['user_companies'] does not have the expected structure")
 
+    def test_session_info_translation_hash(self):
+        """ Once cached, the session info gives the hash of the translations
+        served by /web/webclient/translations, so the client doesn't need to
+        fetch them when its cached version is up to date. On a cold cache,
+        the session info doesn't compute it: the client gets no hash and
+        fetches them, which fills the cache. """
+        self.authenticate(self.user.login, self.user_password)
+        # Avoid the create part of res.users.settings since get_session_info
+        # route is readonly
+        self.env['res.users.settings']._find_or_create_for_user(self.user)
+
+        def get_session_hash():
+            response = self.url_open("/web/session/get_session_info", data=self.payload, headers=self.headers)
+            return response.json()['result']['translation_hash']
+
+        def assert_session_hash_after_fetch():
+            self.env.registry.clear_cache()
+            self.assertEqual(get_session_hash(), '')
+            response = self.url_open('/web/webclient/translations', params={'lang': self.user.lang})
+            endpoint_hash = response.json()['hash']
+            self.assertEqual(get_session_hash(), endpoint_hash)
+            return endpoint_hash
+
+        old_hash = assert_session_hash_after_fetch()
+        # change the translations served to the client
+        lang = self.env['res.lang']._lang_get(self.user.lang)
+        lang.date_format = '%d.%m.%Y' if lang.date_format != '%d.%m.%Y' else '%Y-%m-%d'
+        new_hash = assert_session_hash_after_fetch()
+        self.assertNotEqual(new_hash, old_hash)
+
     def test_session_modules(self):
         self.authenticate(self.user.login, self.user_password)
         response = self.url_open("/web/session/modules", data=self.payload, headers=self.headers)
