@@ -216,6 +216,11 @@ export class FontPlugin extends Plugin {
                     },
                     onBlur: () => this.dependencies.selection.focusEditable(),
                     document: this.document,
+                    preserveSelection: () => this.dependencies.selection.preserveSelection(),
+                    isSelectionInEditable: () =>
+                        this.dependencies.selection.isSelectionInEditable(
+                            this.document.getSelection()
+                        ),
                 },
                 isAvailable: isHtmlContentSupported,
             }),
