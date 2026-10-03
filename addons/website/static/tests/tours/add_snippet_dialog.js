@@ -12,8 +12,30 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Ensure that snippets are displayed.",
+            content: "Ensure that snippets are displayed with the website fonts.",
             trigger: ":iframe .o_add_snippets_preview [data-snippet-id]",
+            run() {
+                const websiteIframeEl = document.querySelector(
+                    ".o_iframe_container iframe:not(.o_ignore_in_tour)"
+                );
+                const fontLinkEls = websiteIframeEl.contentDocument.head.querySelectorAll(
+                    'link[rel="stylesheet"]:not([type])'
+                );
+                const previewHrefs = new Set(
+                    [
+                        ...this.anchor.ownerDocument.head.querySelectorAll(
+                            'link[rel="stylesheet"]'
+                        ),
+                    ].map((linkEl) => linkEl.getAttribute("href"))
+                );
+                for (const fontLinkEl of fontLinkEls) {
+                    if (!previewHrefs.has(fontLinkEl.getAttribute("href"))) {
+                        throw new Error(
+                            "A website font stylesheet is missing from the snippet dialog."
+                        );
+                    }
+                }
+            },
         },
         {
             content:
