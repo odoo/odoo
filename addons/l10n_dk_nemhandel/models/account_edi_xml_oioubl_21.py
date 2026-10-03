@@ -66,7 +66,7 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
         for partner_type in ('supplier', 'customer'):
             partner = vals[partner_type]
             building_number = tools.street_split(partner.street).get('street_number')
-            if not building_number:
+            if not building_number and partner.country_code == 'DK':
                 constraints[f"oioubl21_{partner_type}_building_number_required"] = _("The following partner's street number is missing: %s", partner.display_name)
             if partner.country_code == "FR" and not partner.commercial_partner_id.company_registry:
                 constraints["oioubl21_company_registry_required_for_french_partner"] = _("The company registry is required for french partner: %s", partner.display_name)
@@ -113,14 +113,19 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_20
         address_node = super()._get_address_node(vals)
         # https://www.oioubl.info/Classes/en/Address.html
-        address = tools.street_split(vals['partner'].street)
+        partner = vals['partner']
+        address = tools.street_split(partner.street)
         street_name = address.get('street_name')
         building_number = address.get('street_number')
+        # The address of a bank is rendered through this same helper, and res.bank
+        # stores its country in `country`, not in `country_id`.
+        country = partner.country if partner._name == 'res.bank' else partner.country_id
         address_node.update({
             'cbc:AddressFormatCode': {
-                # could be 'UN/CEFACT codelist 3477' instead of StructuredDK' for partner out of DK
-                # not implemented yet because `StructuredDK` seems more than enough
-                '_text': 'StructuredDK',
+                # StructuredDK makes PostalZone and BuildingNumber mandatory, which are
+                # Danish requirements a foreign address has no reason to meet.
+                # StructuredLax is the same structured format without them.
+                '_text': 'StructuredDK' if country.code == 'DK' else 'StructuredLax',
                 'listAgencyID': DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID,
                 'listID': 'urn:oioubl:codelist:addressformatcode-1.1',
             },
@@ -165,12 +170,19 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
                 '_text': f'{prefix}{partner.nemhandel_identifier_value}',
                 'schemeID': SCHEME_ID_MAPPING[partner.nemhandel_identifier_type],
             }
-        if partner.nemhandel_identifier_value or partner.ref:
+        # A partner outside Denmark never gets a Nemhandel identifier type, and there is
+        # no scheme to report the identification under without one. The generic node
+        # built by ubl_20 has no schemeID at all, which the OIOUBL codelist rejects
+        # ([F-LIB183]), so it is dropped rather than left behind.
+        scheme_id = SCHEME_ID_MAPPING.get(partner.nemhandel_identifier_type)
+        if not scheme_id:
+            party_node['cac:PartyIdentification'] = None
+        elif partner.nemhandel_identifier_value or partner.ref:
             prefix = 'DK' if partner.nemhandel_identifier_type in {'0184', '0198'} else ''
             party_node['cac:PartyIdentification'] = {
                 'cbc:ID': {
                     '_text': f'{prefix}{partner.nemhandel_identifier_value or partner.ref}',
-                    'schemeID': SCHEME_ID_MAPPING[partner.nemhandel_identifier_type],
+                    'schemeID': scheme_id,
                 }
             }
 
