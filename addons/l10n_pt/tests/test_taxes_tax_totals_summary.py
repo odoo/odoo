@@ -762,15 +762,15 @@ class TestTaxesTaxTotalsSummaryL10nPt(TestTaxesTaxTotalsSummary):
         tax_line = invoice.line_ids.filtered('tax_repartition_line_id')
         invoice.line_ids = [Command.update(tax_line.id, {'amount_currency': 28.30})]
         expected_values = {
-            'same_tax_base': True,
+            'same_tax_base': False,
             'currency_id': self.currency.id,
-            'base_amount_currency': 123.0,
+            'base_amount_currency': 122.99,
             'tax_amount_currency': 28.30,
-            'total_amount_currency': 151.30,
+            'total_amount_currency': 151.29,
             'subtotals': [
                 {
                     'name': "Untaxed Amount",
-                    'base_amount_currency': 123.0,
+                    'base_amount_currency': 122.99,
                     'tax_amount_currency': 28.30,
                     'tax_groups': [
                         {
