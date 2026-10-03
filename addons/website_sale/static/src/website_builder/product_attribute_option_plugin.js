@@ -8,34 +8,52 @@ export class ProductAttributeOptionPlugin extends Plugin {
     resources = {
         builder_actions: {
             ProductAttributeDisplayAction,
+            ProductAttributeThumbnailAction,
         },
     };
 
 }
 
-export class ProductAttributeDisplayAction extends BuilderAction {
-    static id = "productAttributeDisplay";
-
+export class BaseProductAttributeAction extends BuilderAction {
     setup() {
         this.reload = {};
     }
-    isApplied({ editingElement: el, value }) {
-        return value === this.getProductAttributeDisplay(el);
+    getAttributeEl(el) {
+        return el.closest(".variant_attribute");
     }
-    getValue({ editingElement: el }) {
-        return this.getProductAttributeDisplay(el);
-    }
-    async apply({ editingElement: el, value }) {
-        const attributeID = parseInt(
-            el.closest("[data-attribute-id]").dataset.attributeId
-        );
-        await rpc("/shop/config/attribute", {
-            attribute_id: attributeID,
-            display_type: value,
+    saveAttributeConfig(el, displayVals) {
+        return rpc("/shop/config/attribute", {
+            attribute_id: parseInt(this.getAttributeEl(el).dataset.attributeId),
+            ...displayVals,
         });
     }
-    getProductAttributeDisplay(el) {
-        return el.closest("[data-attribute-display-type]").dataset.attributeDisplayType;
+}
+
+export class ProductAttributeDisplayAction extends BaseProductAttributeAction {
+    static id = "productAttributeDisplay";
+
+    isApplied({ editingElement: el, value }) {
+        return value === this.getValue({ editingElement: el });
+    }
+    getValue({ editingElement: el }) {
+        return this.getAttributeEl(el).dataset.attributeDisplayType;
+    }
+    apply({ editingElement: el, value }) {
+        return this.saveAttributeConfig(el, { display_type: value });
+    }
+}
+
+export class ProductAttributeThumbnailAction extends BaseProductAttributeAction {
+    static id = "productAttributeThumbnail";
+
+    isApplied({ editingElement: el }) {
+        return !!this.getAttributeEl(el).dataset.attributeIsThumbnailVisible;
+    }
+    apply({ editingElement: el }) {
+        return this.saveAttributeConfig(el, { is_thumbnail_visible: true });
+    }
+    clean({ editingElement: el }) {
+        return this.saveAttributeConfig(el, { is_thumbnail_visible: false });
     }
 }
 
