@@ -405,10 +405,11 @@ class IrHttp(models.AbstractModel):
             request.registry['ir.http']._auth_method_public({})  # it calls update_env
             nearest_url_lang = request.env['ir.http'].get_nearest_lang(request.env['res.lang']._get_data(url_code=url_lang_str).code or url_lang_str)
             cookie_lang = request.env['ir.http'].get_nearest_lang(request.cookies.get('frontend_lang'))
+            query_lang = request.env['ir.http'].get_nearest_lang(request.httprequest.args.get('frontend_lang'))
             context_lang = request.env['ir.http'].get_nearest_lang(real_env.context.get('lang'))
             default_lang = request.env['ir.http']._get_default_lang()
             request.lang = request.env['res.lang']._get_data(code=(
-                nearest_url_lang or cookie_lang or context_lang or default_lang.code
+                nearest_url_lang or query_lang or cookie_lang or context_lang or default_lang.code
             ))
             request_url_code = request.lang.url_code
         finally:
