@@ -77,11 +77,13 @@ export class LocalizationPlugin extends Plugin {
             JSON.stringify({ lang: this.lang })
         );
 
-        const translationProm = this.fetchTranslations(storedTranslations?.hash);
         if (storedTranslations) {
+            if (storedTranslations.hash !== session.translation_hash) {
+                this.fetchTranslations(storedTranslations.hash);
+            }
             this.updateTranslations(storedTranslations);
         } else {
-            await translationProm;
+            await this.fetchTranslations('');
         }
 
         translatedTerms[translationLoaded] = true;
