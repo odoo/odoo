@@ -4,7 +4,9 @@
     <Dropdown state="this.dropdown" menuClass="'o_text_effect_popover'" focusToggleOnClosed="false" disabled="this.state.isDisabled" manual="true">
         <button class="btn btn-light o_hb_select_text_effect" t-att-class="{ active: this.state.isActive }" t-att-title="this.props.title"
                 t-att="{ disabled: this.state.isDisabled }" t-on-click.stop="this.onClickTextEffect">
-            <t t-call="html_builder.TextEffectSelectorSvg"/>
+            <span class="oi-fw d-inline-flex justify-content-center align-middle">
+                <t t-call="html_builder.TextEffectSelectorSvg"/>
+            </span>
         </button>
         <t t-set-slot="content">
             <TextEffectOption/>

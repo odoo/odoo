@@ -3,7 +3,9 @@
         <Dropdown state="this.dropdown" menuClass="'o-we-toolbar-dropdown'" menuRef="this.menuRef" focusToggleOnClosed="false">
             <button t-ref="this.tableAlignSelector" class="btn btn-light" t-att-title="this.props.title" name="vertical_align">
                 <t t-set="selectedItem" t-value="this.items.find(item => item.mode === this.state.displayName)" />
-                <t t-call="{{ selectedItem ? selectedItem.template : 'html_editor.VerticalAlignTop' }}" />
+                <span class="oi-fw d-inline-flex justify-content-center align-middle">
+                    <t t-call="{{ selectedItem ? selectedItem.template : 'html_editor.VerticalAlignTop' }}" />
+                </span>
             </button>
             <t t-set-slot="content">
                 <div data-prevent-closing-overlay="true">

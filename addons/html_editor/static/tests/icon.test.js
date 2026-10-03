@@ -38,7 +38,7 @@ async function setupIcon(icon = "local_bar", extraClass = "") {
 
 test("icon toolbar is displayed", async () => {
     await setupIcon();
-    expect(".btn-group[name='icon_size']").toHaveCount(1);
+    expect(".o-we-toolbar-group[name='icon_size']").toHaveCount(1);
 });
 
 test("icon toolbar is displayed (2)", async () => {
@@ -59,30 +59,30 @@ test("icon toolbar is displayed (2)", async () => {
         `<p>abc\ufeff[<span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>]\ufeffdef</p>`
     );
     await waitFor(".o-we-toolbar");
-    expect(".btn-group[name='icon_size']").toHaveCount(1);
+    expect(".o-we-toolbar-group[name='icon_size']").toHaveCount(1);
 });
 
 test("icon toolbar is not displayed on rating stars", async () => {
     const { el } = await setupIcon("local_bar");
-    expect(".btn-group[name='icon_size']").toHaveCount(1);
+    expect(".o-we-toolbar-group[name='icon_size']").toHaveCount(1);
     setContent(
         el,
         `<p>\u200B<span contenteditable="false" class="o_stars"><i class="oi" data-icon="star" contenteditable="false">\u200B</i><i class="oi" data-icon="star" contenteditable="false">\u200B</i>[<i class="oi" data-icon="star" contenteditable="false">\u200B</i></span>]\u200B</p>`
     );
-    await waitForNone(".o-we-toolbar .btn-group[name='icon_size']");
-    expect(".btn-group[name='icon_size']").toHaveCount(0);
+    await waitForNone(".o-we-toolbar .o-we-toolbar-group[name='icon_size']");
+    expect(".o-we-toolbar-group[name='icon_size']").toHaveCount(0);
 });
 
 test("toolbar should not be namespaced for icon", async () => {
     await setupEditor(`<p>a[bc<span class="oi" data-icon="local_bar"></span>]def</p>`);
     await waitFor(".o-we-toolbar");
-    expect(".btn-group[name='icon_size']").toHaveCount(0);
+    expect(".o-we-toolbar-group[name='icon_size']").toHaveCount(0);
 });
 
 test("toolbar should not be namespaced for icon (2)", async () => {
     await setupEditor(`<p>abc[<span class="oi" data-icon="local_bar"></span>de]f</p>`);
     await waitFor(".o-we-toolbar");
-    expect(".btn-group[name='icon_size']").toHaveCount(0);
+    expect(".o-we-toolbar-group[name='icon_size']").toHaveCount(0);
 });
 
 test("Can resize an icon", async () => {
@@ -256,16 +256,16 @@ test("Should be able to undo after adding spin effect to an icon", async () => {
         `<p>\ufeff[<span class="oi" data-icon="local_bar" contenteditable="false">\u200b</span>]\ufeff</p>`
     );
     await waitFor(".o-we-toolbar");
-    expect(".btn-group[name='icon_spin']").toHaveCount(1);
-    expect(".btn-group[name='icon_spin']").not.toHaveClass("active");
+    expect(".o-we-toolbar-group[name='icon_spin']").toHaveCount(1);
+    expect(".o-we-toolbar-group[name='icon_spin']").not.toHaveClass("active");
     await click("button[name='icon_spin']");
     await animationFrame();
     expect("span[data-icon='local_bar'].oi-spin").toHaveCount(1);
-    await expectElementCount(".btn-group[name='icon_spin'] button.active", 1);
+    await expectElementCount(".o-we-toolbar-group[name='icon_spin'] button.active", 1);
     undo(editor);
     await animationFrame();
     expect("span[data-icon='local_bar'].oi-spin").toHaveCount(0);
-    await expectElementCount(".btn-group[name='icon_spin'].active", 0);
+    await expectElementCount(".o-we-toolbar-group[name='icon_spin'].active", 0);
     expect("span[data-icon='local_bar']").toHaveCount(1);
     expect("span[data-icon='local_bar'].oi-spin").toHaveCount(0);
 });
@@ -396,7 +396,7 @@ test("icon toolbar when only an icon is selected", async () => {
     await waitFor(".o-we-toolbar");
 
     // Check that the toolbar contains exactly these 5 groups
-    const toolbarGroups = queryAll(".o-we-toolbar .btn-group");
+    const toolbarGroups = queryAll(".o-we-toolbar .o-we-toolbar-group");
     expect(toolbarGroups).toHaveCount(5);
     expect(toolbarGroups.map((g) => g.getAttribute("name"))).toEqual([
         "icon_color",
@@ -407,37 +407,37 @@ test("icon toolbar when only an icon is selected", async () => {
     ]);
 
     // icon_color: exactly 2 buttons, one for font color and one for background color
-    expect(queryAll(".o-we-toolbar .btn-group[name='icon_color'] button")).toHaveCount(2);
+    expect(queryAll(".o-we-toolbar .o-we-toolbar-group[name='icon_color'] button")).toHaveCount(2);
     expect(
-        queryAll(".o-we-toolbar .btn-group[name='icon_color'] .o-select-color-foreground")
+        queryAll(".o-we-toolbar .o-we-toolbar-group[name='icon_color'] .o-select-color-foreground")
     ).toHaveCount(1);
     expect(
-        queryAll(".o-we-toolbar .btn-group[name='icon_color'] .o-select-color-background")
+        queryAll(".o-we-toolbar .o-we-toolbar-group[name='icon_color'] .o-select-color-background")
     ).toHaveCount(1);
 
     // icon_size: exactly 5 buttons to resize the icon from 1x to 5x
-    expect(queryAll(".o-we-toolbar .btn-group[name='icon_size'] button")).toHaveCount(5);
+    expect(queryAll(".o-we-toolbar .o-we-toolbar-group[name='icon_size'] button")).toHaveCount(5);
     for (const size of [1, 2, 3, 4, 5]) {
         expect(
-            queryAll(`.o-we-toolbar .btn-group[name='icon_size'] button[name='icon_size_${size}']`)
+            queryAll(`.o-we-toolbar .o-we-toolbar-group[name='icon_size'] button[name='icon_size_${size}']`)
         ).toHaveCount(1);
     }
 
     // icon_spin: exactly 1 button to toggle the icon spin animation
-    expect(queryAll(".o-we-toolbar .btn-group[name='icon_spin'] button")).toHaveCount(1);
+    expect(queryAll(".o-we-toolbar .o-we-toolbar-group[name='icon_spin'] button")).toHaveCount(1);
     expect(
-        queryAll(".o-we-toolbar .btn-group[name='icon_spin'] button[name='icon_spin']")
+        queryAll(".o-we-toolbar .o-we-toolbar-group[name='icon_spin'] button[name='icon_spin']")
     ).toHaveCount(1);
 
     // icon_replace: exactly 1 button to replace the icon
-    expect(queryAll(".o-we-toolbar .btn-group[name='icon_replace'] button")).toHaveCount(1);
+    expect(queryAll(".o-we-toolbar .o-we-toolbar-group[name='icon_replace'] button")).toHaveCount(1);
     expect(
-        queryAll(".o-we-toolbar .btn-group[name='icon_replace'] button[name='icon_replace']")
+        queryAll(".o-we-toolbar .o-we-toolbar-group[name='icon_replace'] button[name='icon_replace']")
     ).toHaveCount(1);
 
     // image_link: exactly 1 button to add a link to the icon
-    expect(queryAll(".o-we-toolbar .btn-group[name='image_link'] button")).toHaveCount(1);
-    expect(queryAll(".o-we-toolbar .btn-group[name='image_link'] button[name='link']")).toHaveCount(
+    expect(queryAll(".o-we-toolbar .o-we-toolbar-group[name='image_link'] button")).toHaveCount(1);
+    expect(queryAll(".o-we-toolbar .o-we-toolbar-group[name='image_link'] button[name='link']")).toHaveCount(
         1
     );
 });

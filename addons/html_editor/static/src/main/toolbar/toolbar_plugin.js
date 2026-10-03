@@ -295,7 +295,7 @@ export class ToolbarPlugin extends Plugin {
         }
         this.isToolbarExpanded = false;
         this.toolbarProps = {
-            class: "shadow rounded my-2",
+            class: "my-2",
             getSelection: () => this.dependencies.selection.getSelectionData(),
             focusEditable: () => this.dependencies.selection.focusEditable(),
             state: this.state,
@@ -593,14 +593,9 @@ class MobileToolbarOverlay {
     }
 
     open({ props }) {
-        props.class = "shadow";
+        props.class = "";
         props.editable = this.editable;
         if (!this.isOpen) {
-            const modal = this.editable.closest(".o_modal_full");
-            if (modal) {
-                // Same height of the toolbar
-                modal.style.paddingBottom = "40px";
-            }
             registry.category("main_components").add(this.overlayId, {
                 Component: ToolbarMobile,
                 props,
