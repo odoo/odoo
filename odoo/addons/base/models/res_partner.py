@@ -1465,6 +1465,15 @@ class ResPartner(models.Model):
                 except ValidationError:
                     msg = self._build_vat_error_message(code_to_check, vat_to_return, partner_label)
                     raise ValidationError(msg + "\n\n" + self.env._('If you are trying to input a European number, this is the expected format: ') + _ref_vat[country_code.lower()])
+
+            company_country = self.env.company.country_id
+            if company_country and company_country != country:
+                if self._get_vat_validation_method(company_country.code):
+                    try:
+                        return self._run_vat_checks(company_country, vat, partner_name, validation)
+                    except ValidationError:
+                        pass
+
             if validation == 'error':
                 msg = self._build_vat_error_message(code_to_check, vat_to_return, partner_label)
                 raise ValidationError(msg)
@@ -1529,6 +1538,14 @@ class ResPartner(models.Model):
                 vat_base = re.sub(r"\s*(TVA|IVA|MWST)?$", "", vat_formatted.upper())
                 vat_variants.extend([f'{vat_base} {suffix}' for suffix in ('TVA', 'IVA', 'MWST')])
         return vat_variants
+
+    @api.model
+    def _get_vat_validation_method(self, country_code):
+        country_code = EU_EXTRA_VAT_CODES_INV.get(country_code.upper(), country_code).lower()
+        check_func_name = 'check_vat_' + country_code
+        stdnum_vat_module = stdnum.util.get_cc_module(country_code, 'vat')
+
+        return getattr(self, check_func_name, None) or getattr(stdnum_vat_module, 'is_valid', None)
 
     @api.model
     def _format_vat_number(self, country_code, vat):
