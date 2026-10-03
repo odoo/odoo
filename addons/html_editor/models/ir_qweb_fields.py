@@ -24,7 +24,6 @@ from werkzeug import urls
 from odoo import _, api, models, fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import posix_to_ldml
-from odoo.tools.json import scriptsafe as json_safe
 from odoo.tools.misc import file_open, get_lang, babel_locale_parse
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
@@ -137,7 +136,7 @@ class IrQwebFieldMany2one(models.AbstractModel):
             domain = field._description_domain(self.env)
             if isinstance(domain, str):
                 domain = []
-            attrs['data-oe-many2one-domain'] = json_safe.dumps(domain)
+            attrs['data-oe-many2one-domain'] = json.dumps(domain)
         return attrs
 
     @api.model
