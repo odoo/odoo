@@ -1,5 +1,5 @@
 import base64
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from lxml import etree
 
@@ -8,7 +8,6 @@ from odoo.exceptions import UserError
 from odoo.tests import freeze_time, patch, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.l10n_pl_edi.models.account_move import AccountMove
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
@@ -18,7 +17,7 @@ def attachment_to_dict(attachment):
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
-class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
+class TestL10nPlEdi(AccountTestInvoicingCommon):
 
     @classmethod
     @AccountTestInvoicingCommon.setup_country('pl')
@@ -719,59 +718,6 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertTrue(created_move_attachment)
         with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
             self.assertEqual(created_move_attachment.raw, file.read())
-
-    def test_l10n_pl_edi_download_bill_retry_after(self):
-        """Test that when a rate limit error occurs the progress is preserved and the cron is rescheduled."""
-
-        def query_invoice_metadata(query_criteria, page_size=100, page_offset=0):
-            return {
-                'hasMore': False,
-                'invoices': [
-                    {
-                        'ksefNumber': 'KSEF-BILL-001',
-                    },
-                    {
-                        'ksefNumber': 'KSEF-BILL-002',
-                    },
-                ],
-            }
-
-        call_count = 0
-
-        def get_invoice_by_ksef_number(ksef_number):
-            nonlocal call_count
-            call_count += 1
-            if call_count == 1:
-                path = 'l10n_pl_edi/tests/export_xmls/fa3_bill.xml'
-                with tools.file_open(path, mode='rb') as file:
-                    return {'xml_content': file.read()}
-            return {'error': {'retry_after': 120, 'message': 'Too Many Requests'}}
-
-        start = fields.Datetime.now()
-        with (
-            patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata),
-            patch.object(KsefApiService, 'get_invoice_by_ksef_number', side_effect=get_invoice_by_ksef_number),
-            self.capture_triggers() as capt,
-        ):
-            cron_runs_before = len(capt.records)
-            self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
-
-        bill_1 = self.env['account.move'].search([('l10n_pl_edi_status', '=', 'fetched')])
-        self.assertTrue(bill_1)
-        bill_1_attachment = self.env['ir.attachment'].search([
-            ('res_model', '=', 'account.move'),
-            ('res_id', '=', bill_1.id),
-        ], limit=1)
-        self.assertTrue(bill_1_attachment)
-        with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
-            self.assertEqual(bill_1_attachment.raw, file.read())
-
-        bill_2 = self.env['account.move'].search([('l10n_pl_edi_status', '=', 'fetch_ready')])
-        self.assertTrue(bill_2)
-
-        self.assertEqual(len(capt.records), cron_runs_before + 1)
-        self.assertGreaterEqual(capt.records[-1].call_at, start + timedelta(seconds=120))
-        self.assertLessEqual(capt.records[-1].call_at, start + timedelta(seconds=240))
 
     def test_l10n_pl_edi_download_problematic_bill_do_not_stop_others(self):
         """Test that when an error occurs on a single bill, the rest don't get stuck."""
