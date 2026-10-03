@@ -8,7 +8,7 @@ from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
 from odoo import fields
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
 from odoo.osv import expression
@@ -1635,6 +1635,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         self._include_country_and_state_in_address(billing_address)
         billing_address, _side_values = self._parse_form_data(billing_address)
         if order_sudo._is_anonymous_cart():
+            fpos_before = order_sudo.fiscal_position_id
 
             # Pricelist are recomputed every time the partner is changed. We don't want to recompute
             # the price with another pricelist at this state since the customer has already accepted
@@ -1650,6 +1651,19 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
             # Add the new partner as follower of the cart
             order_sudo._message_subscribe(order_sudo.partner_id.ids)
+            if order_sudo.fiscal_position_id != fpos_before:
+                # The customer approved a total in the express payment sheet for the previous fiscal
+                # position; recompute the taxes and abort rather than silently charge a different
+                # amount. The JS reloads the page so the updated prices are re-accepted.
+                try:
+                    order_sudo.with_context(is_express_checkout_flow=True)._recompute_taxes()
+                except UserError:
+                    pass  # Don't block the flow if the external tax computation (e.g. Avatax) fails.
+                order_sudo.shop_warning = _(
+                    "Taxes have been updated based on your address."
+                    " Your payment method has not been charged."
+                )
+                return False
         elif not self._are_same_addresses(billing_address, order_sudo.partner_invoice_id):
             # Check if a child partner doesn't already exist with the same informations. The
             # phone isn't always checked because it isn't sent in shipping information with
