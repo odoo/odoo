@@ -972,6 +972,10 @@ class HrLeave(models.Model):
         invalid_holidays = holidays.filtered(lambda l: l.employee_id in (employees_without_allocation | zero_duration_employees))
         holidays -= invalid_holidays
         invalid_holidays.unlink()
+        # A base.automation during create can flush duration before dates are set (storing 0);
+        # recompute now that create returned and date_from/date_to are correct.
+        holidays._compute_duration()
+        holidays._check_validity()
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
 
         for holiday in holidays:
