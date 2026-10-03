@@ -115,7 +115,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         operation_cost_by_product = defaultdict(float)
         for bp_move in production.move_byproduct_ids:
             # Byproducts without cost share are irrelevant in a cost breakdrown.
-            if bp_move.state == 'cancel' or float_is_zero(bp_move.cost_share, precision_digits=2):
+            if bp_move.quantity <= 0 or float_is_zero(bp_move.cost_share, precision_digits=2):
                 continue
             # As UoMs can vary, we use the default UoM of each product
             quantities_by_product[bp_move.product_id] += bp_move.uom_id._compute_quantity(bp_move.quantity, bp_move.product_id.uom_id, rounding_method='HALF-UP')
@@ -176,6 +176,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             'receipt': self._check_planned_start(production.date_deadline, self._get_replenishment_receipt(production, components)),
             'unit_cost': self._get_unit_cost(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id)),
             'mo_cost': currency.round(mo_cost),
+            'cost_share': remaining_cost_share,
             'currency_id': currency.id,
             'currency': currency,
         }
@@ -333,7 +334,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         total_mo_cost = 0
         for index, move_bp in enumerate(production.move_byproduct_ids):
             product = move_bp.product_id
-            cost_share = move_bp.cost_share / 100
+            quantity = move_bp.product_uom_qty if production.state != 'done' else move_bp.quantity
+            cost_share = move_bp.cost_share / 100 if quantity > 0 else 0
             byproducts_cost_portion += cost_share
             mo_cost = current_mo_cost * cost_share
             total_mo_cost += mo_cost
@@ -343,7 +345,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'model': product._name,
                 'id': product.id,
                 'name': product.display_name,
-                'quantity': move_bp.product_uom_qty if move_bp.state != 'done' else move_bp.quantity,
+                'quantity': quantity,
                 'uom_name': move_bp.uom_id.display_name,
                 'uom_precision': self._get_uom_precision(),
                 'unit_cost': self._get_unit_cost(move_bp),
@@ -537,6 +539,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 remaining_cost_share, byproducts = self._get_byproducts_data(doc_in, initial_mo_cost, level + 2, replenishment_index)
                 replenishment['byproducts'] = byproducts
                 replenishment['summary']['mo_cost'] = initial_mo_cost * remaining_cost_share
+                replenishment['summary']['cost_share'] = remaining_cost_share
 
             if self._is_doc_in_done(doc_in):
                 replenishment['summary']['receipt'] = self._format_receipt_date('available')
