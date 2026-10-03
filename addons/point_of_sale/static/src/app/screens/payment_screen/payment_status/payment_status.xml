@@ -5,7 +5,7 @@
         <div t-if="this.props.order.payment_ids.length == 0" class="d-flex justify-content-center align-items-center text-center fs-4 flex-grow-1">
             Please select a payment method
         </div>
-        <section t-elif="this.currentTip.amount > 0 or this.showStatus" t-attf-class="paymentlines-container border-top pt-3 {{ !this.isComplete ? 'text-danger' : 'text-success'}}">
+        <section t-elif="this.currentTip.amount > 0 or this.showStatus" t-attf-class="paymentlines-container {{ !this.isComplete ? 'text-danger' : 'text-success'}}">
             <div t-if="this.currentTip.amount > 0" class="tip-container d-flex flex-lg-row justify-content-between align-items-center fs-2 mb-2 text-dark position-relative">
                 <span class="label pe-2" t-out="this.tipLabel" />
                 <span class="align-self-end me-5 pe-5">
@@ -18,6 +18,9 @@
             <div t-if="this.showStatus" class="payment-status-container d-flex flex-column-reverse flex-lg-row justify-content-between fs-2">
                 <div class="payment-status-amount d-flex justify-content-between flex-grow-1 px-1" t-attf-class=" {{ this.isIncompleteAndPositive ? 'text-danger' : 'text-success' }}">
                     <span class="label pe-2" t-out="this.order.remainingDueLabel" />
+                    <button class="btn btn-primary" t-on-click="() => this.onClickSplitAndPay()">
+                        Split and pay
+                    </button>
                     <span class="amount align-self-end highlight fw-bolder" t-att-amount="this.amountText">
                         <PriceFormatter price="this.amountText" />
                     </span>
