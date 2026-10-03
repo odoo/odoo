@@ -189,11 +189,11 @@
                 <field name="manager_id" optional="hide" widget="many2one_avatar_user"/>
                 <field name="driver_id" widget="many2one_avatar" readonly="1" optional="show"/>
                 <field name="future_driver_id"  widget="many2one_avatar" readonly="1" optional="show"/>
-                <field name="log_drivers" column_invisible="True"/>
+                <field name="log_drivers" column_invisible="True" groups="fleet.fleet_group_user"/>
                 <field name="vin_sn" readonly="1" optional="hide"/>
                 <field name="co2" string="CO2 Emissions g/km" optional="hide"  readonly="1"/>
                 <field name="acquisition_date" readonly="1"/>
-                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1" groups="fleet.fleet_group_user"/>
                 <field name="state_id" widget="badge" readonly="1" optional="hide"/>
                 <field name="contract_renewal_due_soon" column_invisible="1"/>
                 <field name="contract_renewal_overdue" column_invisible="1"/>
@@ -217,10 +217,10 @@
                     ('log_drivers.driver_id', 'ilike', self),
                     ('driver_id', 'ilike', self),
                     ('future_driver_id', 'ilike', self),
-                ]"/>
+                ]" groups="fleet.fleet_group_user"/>
                 <field string="Model" name="model_id"/>
                 <field string="License Plate" name="license_plate"/>
-                <field name="tag_ids"/>
+                <field name="tag_ids" groups="fleet.fleet_group_user"/>
                 <field string="Status" name="state_id"/>
                 <field string="Properties" name="vehicle_properties"/>
                 <filter string="Available" name="available"
