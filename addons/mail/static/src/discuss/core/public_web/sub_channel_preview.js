@@ -1,11 +1,13 @@
+import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { propComputed } from "@mail/utils/common/hooks";
 
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, computed, t, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { highlightText } from "@web/core/utils/html";
 
 /** @param {import("models").Store} store */
 export const subChannelPreviewOnClickType = (store) =>
@@ -23,6 +25,10 @@ export class SubChannelPreview extends Component {
         this.store = useService("mail.store");
         this.channel = propComputed("channel", t.instanceOf(this.store["discuss.channel"]));
         this.class = propComputed("class", t.string().optional());
+        this.searchTerm = propComputed("searchTerm", t.string().optional());
+        this.highlightedThreadName = computed(() =>
+            highlightText(this.searchTerm(), this.channel().displayName, HIGHLIGHT_CLASS)
+        );
         this.onClick = useProps.static(
             "onClick",
             subChannelPreviewOnClickType(this.store).optional()
