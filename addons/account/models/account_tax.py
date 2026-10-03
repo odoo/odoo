@@ -1776,8 +1776,72 @@ class AccountTax(models.Model):
                 'is_refund': base_line['is_refund'],
             }
 
+        def grouping_function_per_taxes(base_line, tax_data):
+            return {
+                **grouping_function(base_line, tax_data),
+                'tax_ids': tuple(tax_data['tax'].id for tax_data in base_line['tax_details']['taxes_data']),
+            }
+
+        def get_delta_and_target_factors(values, current_mode, delta_currency_indicator, delta_currency):
+            if current_mode == 'excluded':
+                # Price-excluded rounding.
+                raw_total_excluded = values[f'target_total_excluded{delta_currency_indicator}']
+                if not raw_total_excluded:
+                    return None, []
+
+                rounded_raw_total_excluded = delta_currency.round(raw_total_excluded)
+                total_excluded = values[f'total_excluded{delta_currency_indicator}']
+                delta_total_excluded = rounded_raw_total_excluded - total_excluded
+                target_factors = [
+                    {
+                        'factor': base_line['tax_details'][f'raw_total_excluded{delta_currency_indicator}'],
+                        'base_line': base_line,
+                    }
+                    for base_line, _taxes_data in values['base_line_x_taxes_data']
+                ]
+            else:
+                # Price-included rounding.
+                raw_total_included = (
+                    values[f'target_total_excluded{delta_currency_indicator}']
+                    + values[f'target_tax_amount{delta_currency_indicator}']
+                )
+                if not raw_total_included:
+                    return None, []
+
+                rounded_raw_total_included = delta_currency.round(raw_total_included)
+                total_included = (
+                    values[f'total_excluded{delta_currency_indicator}']
+                    + values[f'tax_amount{delta_currency_indicator}']
+                )
+                delta_total_excluded = rounded_raw_total_included - total_included
+                target_factors = [
+                    {
+                        'factor': base_line['tax_details'][f'raw_total_included{delta_currency_indicator}'],
+                        'base_line': base_line,
+                    }
+                    for base_line, _taxes_data in values['base_line_x_taxes_data']
+                ]
+            return delta_total_excluded, target_factors
+
+        def distribute_delta(delta_currency, delta_total_excluded, target_factors, delta_currency_indicator):
+            amounts_to_distribute = self._distribute_delta_amount_smoothly(
+                precision_digits=delta_currency.decimal_places,
+                delta_amount=delta_total_excluded,
+                target_factors=target_factors,
+            )
+            for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
+                base_line = target_factor['base_line']
+                base_line['tax_details'][f'delta_total_excluded{delta_currency_indicator}'] += amount_to_distribute
+
         base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, grouping_function)
         values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+
+        # The delta of a set of taxes is first distributed on the base lines having the same taxes.
+        # This way, the rounding of a tax doesn't end up on a base line of another tax. Otherwise, the
+        # base amount of the journal items would no longer match the 'tax_base_amount' of the tax line.
+        base_lines_aggregated_values_per_taxes = self._aggregate_base_lines_tax_details(base_lines, grouping_function_per_taxes)
+        values_per_taxes_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values_per_taxes)
+
         for grouping_key, values in values_per_grouping_key.items():
             current_mode = mode
             if mode == 'mixed':
@@ -1795,57 +1859,29 @@ class AccountTax(models.Model):
                         break
 
             currency = grouping_key['currency']
+            sub_values_list = [
+                sub_values
+                for sub_grouping_key, sub_values in values_per_taxes_grouping_key.items()
+                if sub_grouping_key['currency'] == currency and sub_grouping_key['is_refund'] == grouping_key['is_refund']
+            ]
             for delta_currency_indicator, delta_currency in (
                 ('_currency', currency),
                 ('', company.currency_id),
             ):
-                if current_mode == 'excluded':
-                    # Price-excluded rounding.
-                    raw_total_excluded = values[f'target_total_excluded{delta_currency_indicator}']
-                    if not raw_total_excluded:
+                # Distribute the delta of each set of taxes on its own base lines.
+                distributed_delta = 0.0
+                for sub_values in sub_values_list:
+                    sub_delta, sub_target_factors = get_delta_and_target_factors(sub_values, current_mode, delta_currency_indicator, delta_currency)
+                    if sub_delta is None:
                         continue
+                    distribute_delta(delta_currency, sub_delta, sub_target_factors, delta_currency_indicator)
+                    distributed_delta += sub_delta
 
-                    rounded_raw_total_excluded = delta_currency.round(raw_total_excluded)
-                    total_excluded = values[f'total_excluded{delta_currency_indicator}']
-                    delta_total_excluded = rounded_raw_total_excluded - total_excluded
-                    target_factors = [
-                        {
-                            'factor': base_line['tax_details'][f'raw_total_excluded{delta_currency_indicator}'],
-                            'base_line': base_line,
-                        }
-                        for base_line, _taxes_data in values['base_line_x_taxes_data']
-                    ]
-                else:
-                    # Price-included rounding.
-                    raw_total_included = (
-                        values[f'target_total_excluded{delta_currency_indicator}']
-                        + values[f'target_tax_amount{delta_currency_indicator}']
-                    )
-                    if not raw_total_included:
-                        continue
-
-                    rounded_raw_total_included = delta_currency.round(raw_total_included)
-                    total_included = (
-                        values[f'total_excluded{delta_currency_indicator}']
-                        + values[f'tax_amount{delta_currency_indicator}']
-                    )
-                    delta_total_excluded = rounded_raw_total_included - total_included
-                    target_factors = [
-                        {
-                            'factor': base_line['tax_details'][f'raw_total_included{delta_currency_indicator}'],
-                            'base_line': base_line,
-                        }
-                        for base_line, _taxes_data in values['base_line_x_taxes_data']
-                    ]
-
-                amounts_to_distribute = self._distribute_delta_amount_smoothly(
-                    precision_digits=delta_currency.decimal_places,
-                    delta_amount=delta_total_excluded,
-                    target_factors=target_factors,
-                )
-                for target_factor, amount_to_distribute in zip(target_factors, amounts_to_distribute):
-                    base_line = target_factor['base_line']
-                    base_line['tax_details'][f'delta_total_excluded{delta_currency_indicator}'] += amount_to_distribute
+                # The remaining delta (due to the rounding of each set of taxes) is distributed on the whole document.
+                delta_total_excluded, target_factors = get_delta_and_target_factors(values, current_mode, delta_currency_indicator, delta_currency)
+                if delta_total_excluded is None:
+                    continue
+                distribute_delta(delta_currency, delta_total_excluded - distributed_delta, target_factors, delta_currency_indicator)
 
     def _turn_base_line_is_refund_flag_off(self, base_line):
         """ Reverse the sign of the quantity plus all data in tax details.
