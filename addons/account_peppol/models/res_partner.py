@@ -238,6 +238,7 @@ class ResPartner(models.Model):
         self._origin.invalidate_recordset(['routing_identifier'])
         self_partner = self.with_company(company)
         if not self_partner.routing_identifier:
+            self_partner.peppol_verification_state = 'not_verified'
             return False
         old_value = self_partner.peppol_verification_state
         new_value = self_partner._get_peppol_verification_state(
@@ -245,6 +246,28 @@ class ResPartner(models.Model):
             self_partner._get_peppol_edi_format(),
             partner=self_partner,
         )
+
+        if new_value == 'not_valid' and self_partner.routing_scheme in ('0208', '9925'):
+            if self_partner.routing_scheme == '0208':
+                routing_scheme = '9925'
+                routing_endpoint = f'BE{self_partner.routing_endpoint}'
+            else:
+                routing_scheme = '0208'
+                routing_endpoint = self_partner.routing_endpoint[2:]
+
+            routing_identifier = f'{routing_scheme}:{routing_endpoint}'
+            fallback_value = self._get_peppol_verification_state(
+                routing_identifier,
+                self_partner._get_peppol_edi_format(),
+                partner=self_partner,
+            )
+            if fallback_value in ('valid', 'not_valid_format'):
+                if self_partner.routing_identifier_override:
+                    self_partner.routing_identifier_override = routing_identifier
+                else:
+                    self_partner.routing_identifier = routing_identifier
+                new_value = fallback_value
+
         if old_value != new_value:
             self_partner.peppol_verification_state = new_value
             (self_partner._origin or self_partner)._log_verification_state_update(old_value, new_value)

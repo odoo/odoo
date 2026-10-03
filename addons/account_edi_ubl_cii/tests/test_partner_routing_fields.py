@@ -49,6 +49,7 @@ class TestPartnerRoutingFields(AccountTestInvoicingCommon):
         # Create a partner, fill the peppol fields, then set the country
         partner_1 = self.env['res.partner'].create({
             'name': "A new partner",
+            'vat': '12345674',
             'routing_scheme': '0184',
             'routing_endpoint': '12345674'
         })
@@ -64,6 +65,7 @@ class TestPartnerRoutingFields(AccountTestInvoicingCommon):
             'country_id': self.env.ref('base.ba').id,
         })
         partner_2.write({
+            'vat': '12345674',
             'routing_scheme': '0184',
             'routing_endpoint': '12345674',
         })
@@ -73,7 +75,7 @@ class TestPartnerRoutingFields(AccountTestInvoicingCommon):
         )
 
         # Change the country, the value is not changed since there is no better value so far
-        partner_2.country_id = self.env.ref('base.be')
+        partner_2.country_id = self.env.ref('base.dk')
         self.assertEqual(
             (partner_2.routing_scheme, partner_2.routing_endpoint),
             ('0184', '12345674'),
@@ -151,3 +153,21 @@ class TestPartnerRoutingFields(AccountTestInvoicingCommon):
         # An invalid France VAT is rejected with a VAT validation error.
         with self.assertRaisesRegex(ValidationError, "for partner does not seem to be valid"):
             partner.routing_identifier = '9957:FR00000000000'
+
+    def test_routing_identifier_override(self):
+        """ Test that the routing identifier override updates the routing scheme and endpoint."""
+        partner = self.env['res.partner'].create({
+            'name': "Route Partner",
+            'country_id': self.env.ref('base.be').id,
+            'vat': 'BE0477472701',
+        })
+
+        # Without routing_identifier_override, the routing_identifier is computed from the VAT.
+        self.assertTrue(partner.routing_identifier)
+
+        # Setting the routing_identifier_override updates the routing scheme, endpoint and identifier.
+        partner.routing_identifier_override = '9925:BE0505665156'
+        self.assertEqual(
+            (partner.routing_scheme, partner.routing_endpoint, partner.routing_identifier),
+            ('9925', 'BE0505665156', '9925:BE0505665156')
+        )

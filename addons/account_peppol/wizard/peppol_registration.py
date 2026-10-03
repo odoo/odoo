@@ -443,6 +443,7 @@ class PeppolRegistration(models.TransientModel):
         company.write({
             'account_peppol_proxy_state': response['peppol_state'],
             'routing_identifier': peppol_identifier,
+            'routing_identifier_override': False,
         })
         if self.env['account.move']._can_commit():
             self.env.cr.commit()
