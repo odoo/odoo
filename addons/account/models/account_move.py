@@ -4365,6 +4365,40 @@ class AccountMove(models.Model):
         """
         return None
 
+    def _keep_attachment_on_edi_import_error(self, file_data):
+        """Keep the incoming EDI file on the invoice when decoding fails.
+
+        Mail aliases unlink attachments that are not in ALLOWED_MIMETYPES unless they
+        are returned by ``_extend_with_attachments``. Factur-X also extracts XML in
+        memory only (empty ``file_data['attachment']``).
+        """
+        self.ensure_one()
+        Attachment = self.env['ir.attachment']
+        stored = file_data.get('attachment') or Attachment
+        originator_pdf = file_data.get('originator_pdf') or Attachment
+        to_keep = stored or originator_pdf
+
+        # XML extracted from a Factur-X PDF is not stored as an ir.attachment.
+        if file_data.get('type') == 'xml' and file_data.get('content') and not stored:
+            xml_attachment = Attachment.create({
+                'name': file_data.get('filename') or 'document.xml',
+                'raw': file_data['content'],
+                'type': 'binary',
+                'mimetype': 'application/xml',
+            })
+            file_data['attachment'] = xml_attachment
+            to_keep |= xml_attachment
+            if originator_pdf:
+                to_keep |= originator_pdf
+
+        for attachment in to_keep:
+            if not attachment.res_id:
+                attachment.write({
+                    'res_model': self._name,
+                    'res_id': self.id,
+                })
+        return to_keep
+
     def _extend_with_attachments(self, attachments, new=False):
         """Main entry point to extend/enhance invoices with attachments.
 
@@ -4479,7 +4513,22 @@ class AccountMove(models.Model):
                             _("This specific error occurred during the import:"),
                             str(e),
                         )
-                    current_invoice.sudo().message_post(body=message)
+                    invoice = current_invoice or invoices[-1:]
+                    keep_attachment = (
+                        invoice._keep_attachment_on_edi_import_error(file_data)
+                        if invoice else self.env['ir.attachment']
+                    )
+                    if invoice and keep_attachment:
+                        add_file_data_results(file_data, invoice)
+                        for att in keep_attachment:
+                            if att not in attachments_by_invoice:
+                                attachments_by_invoice[att] = invoice
+                    if invoice:
+                        # Skip _message_post_after_hook import to avoid decoding the same file again.
+                        invoice.sudo().with_context(no_new_invoice=True).message_post(
+                            body=message,
+                            attachment_ids=keep_attachment.ids,
+                        )
 
             passed_file_data_list.append(file_data)
             close_file(file_data)
