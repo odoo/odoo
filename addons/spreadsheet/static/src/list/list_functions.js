@@ -51,8 +51,11 @@ const ODOO_LIST_HEADER = {
         }
         assertListsExists(id, this.getters);
         const displayName = toString(fieldDisplayName);
-        const translatedDisplayName = this.getters.getListHeaderValue(id, _fieldName);
-        return displayName || translatedDisplayName;
+        // Custom headers from dashboard JSON are translated at runtime (like chart titles)
+        if (displayName) {
+            return this.getters.dynamicTranslate(displayName);
+        }
+        return this.getters.getListHeaderValue(id, _fieldName);
     },
     returns: ["NUMBER", "STRING"],
 };
