@@ -615,7 +615,12 @@ class DiscussChannel(models.Model):
             # Notify that the visitor has left the conversation
             # sudo: mail.message - posting visitor leave message is allowed
             self.sudo().message_post(
+<<<<<<< 1325c17f5b0930854f5db31ae2b374bd5bba44eb
                 author_id=self.env.ref("base.partner_root").id,
+||||||| 7ccb350dc2021cc31c884ceb0ef6ece2fbefa7c2
+                author_id=self.env.ref('base.partner_root').id,
+=======
+>>>>>>> b08fc7d45091a8e8962b25703cc3ba59ad2b6058
                 body=Markup('<div class="o_mail_notification o_hide_author">%s</div>') % message,
                 message_type="notification",
                 subtype_xmlid="mail.mt_comment",
