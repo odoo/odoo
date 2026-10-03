@@ -11,11 +11,18 @@ from odoo.tools.sql import SQL
 class MailingList(models.Model):
     """Model of a contact list. """
     _name = 'mailing.list'
-    _order = 'name'
     _description = 'Mailing List'
     _mailing_enabled = True
+<<<<<<< d42074b2041b9b63aa1964513b4b8572dff7fe64
     _order = 'create_date DESC'
     # As this model has their own data merge, avoid to enable the generic data_cleaning on that model.
+||||||| 360fd6a9c526e12ec2eaf8b362f84e75d7328399
+    _order = 'create_date DESC'
+    # As this model has their own data merge, avoid to enable the generic data_merge on that model.
+=======
+    _order = 'create_date DESC, id DESC'
+    # As this model has their own data merge, avoid to enable the generic data_merge on that model.
+>>>>>>> 3b673940adb2da0d8ec5bc47b739c3962ced5df1
     _disable_data_merge = True
 
     name = fields.Char(string='Mailing List', required=True)
