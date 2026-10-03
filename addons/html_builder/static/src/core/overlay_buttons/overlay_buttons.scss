@@ -4,7 +4,16 @@
 
     button {
         &.oi {
-            min-width: min-content;
+            // The icon is the button itself here: give it the line height and
+            // the fixed icon width that the editor toolbar buttons get from
+            // their inner icon, so both bars share the same button box.
+            --btn-padding-x: #{map-get($spacers, 1)};
+            line-height: var(--btn-line-height);
+
+            &::before {
+                width: 1.28571429em; // Same as .oi-fw
+                text-align: center;
+            }
         }
     }
 

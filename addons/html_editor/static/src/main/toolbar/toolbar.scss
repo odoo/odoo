@@ -14,48 +14,75 @@
     display: none;
 }
 
+// Height of a toolbar button, read from the variables of the button itself so
+// that the touch and theme overrides carry over. Icon buttons are as wide as
+// they are tall.
+$o-we-toolbar-btn-size: calc(var(--btn-font-size) * var(--btn-line-height) + 2 * (var(--btn-padding-y) + var(--btn-border-width)));
+
 .o-we-toolbar {
-    height: 40px;
-    padding: 0 2px;
-    border-bottom: 1px solid lightgrey;
-    background-color: #fff;
-    
-    .btn-group {
-        padding: 0 2px;
+    // Half of the first spacer step: buttons keep their own corners without
+    // making the bar wider than it needs to be.
+    gap: map-get($spacers, 1) * .5;
+    // Same surface as the menus and panels the bar opens.
+    border: $popover-border-width solid $popover-border-color;
+    border-radius: $popover-border-radius;
+    background-color: var(--o-we-toolbar-bg, #{$popover-bg});
+    box-shadow: $popover-box-shadow;
+
+    .o-toolbar-above-keyboard & {
+        border-width: $popover-border-width 0 0;
         border-radius: 0;
+        box-shadow: none;
     }
 
-    .o-we-toolbar-vertical-separator:not(:first-child) {
-        margin: unset;
-        padding: unset;
-        height: 70%;
-        border-left: 1px solid lightgrey;
+    .o-we-toolbar-group {
+        gap: map-get($spacers, 1) * .5;
+    }
+
+    .btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        white-space: nowrap;
+        // Concentric with the bar: its radius minus its padding (.p-1).
+        --btn-border-radius: calc(#{$popover-border-radius} - #{map-get($spacers, 1)});
+
+        // The touch rule of the webclient outranks this one, so touch devices
+        // keep their larger targets.
+        &:has(> .oi-fw:only-child, > svg:only-child) {
+            --btn-padding-x: #{map-get($spacers, 1)};
+        }
+
+        // Square icon buttons, also when the icon is an SVG. The buttons of the
+        // block options are the icon themselves.
+        &:has(> .oi-fw:only-child, > svg:only-child), &.oi {
+            min-width: $o-we-toolbar-btn-size;
+        }
+
+        &.disabled {
+            pointer-events: auto;
+            cursor: auto;
+            &:active {
+                border-color: var(--btn-disabled-border-color);
+                background-color: var(--btn-disabled-bg);
+                color: var(--btn-disabled-color);
+            }
+        }
     }
 }
 
-.o-we-toolbar .btn-group > .btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+.o-we-toolbar-dropdown {
+    min-width: fit-content;
+    // Same padding and gap as the bar.
+    padding: map-get($spacers, 1);
 
-.o-we-toolbar .btn-group, .o-we-toolbar-dropdown {
     .btn {
         white-space: nowrap;
         padding-left: 4px;
         padding-right: 4px;
-        height: 32px;
-        min-width: 28px;
-
-        &:not(:first-child) {
-            border-top-left-radius: 0 !important;
-            border-bottom-left-radius: 0 !important;
-        }
-        
-        &:not(:last-child) {
-            border-top-right-radius: 0 !important;
-            border-bottom-right-radius: 0 !important;
-        }
+        // Same square as the buttons of the bar.
+        height: $o-we-toolbar-btn-size;
+        min-width: $o-we-toolbar-btn-size;
 
         &:not(.active):focus {
             background-color: $dropdown-link-hover-bg;
@@ -77,22 +104,19 @@
             }
         }
     }
-}
-
-.o-we-toolbar-dropdown {
-    min-width: fit-content;
-    padding: 2px;
 
     [data-prevent-closing-overlay]:not([data-vertical]) {
         display: flex;
         justify-content: space-evenly;
+        gap: map-get($spacers, 1) * .5;
     }
 
     .o-dropdown-item {
         display: flex;
         justify-content: center;
         align-items: center;
-        border-radius: var(--border-radius) !important;
+        // Concentric with the menu: its radius minus its padding.
+        border-radius: calc(#{$dropdown-border-radius} - #{map-get($spacers, 1)}) !important;
 
         &:not(.active) {
             border: none;

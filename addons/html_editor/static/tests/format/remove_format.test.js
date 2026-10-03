@@ -972,7 +972,7 @@ describe("Toolbar", () => {
     test("Remove format button should be the last one in the decoration button group", async () => {
         await setupEditor("<p>[abc]</p>");
         await expandToolbar();
-        const formatButtons = queryAll(".o-we-toolbar .btn-group[name='decoration'] .btn");
+        const formatButtons = queryAll(".o-we-toolbar .o-we-toolbar-group[name='decoration'] .btn");
         expect(formatButtons.at(-1)).toHaveAttribute("name", "remove_format");
     });
 

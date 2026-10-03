@@ -1,13 +1,16 @@
-.o-we-toolbar .btn {
-    border-color: white;
-    padding-top: 0;
-    padding-bottom: 0;
-    &:not(:hover):not(.active) {
-        background-color: white;
+// Website themes restyle buttons and popovers: the toolbar keeps a neutral
+// look in the frontend.
+.o-we-toolbar {
+    --o-we-toolbar-bg: white;
+
+    .btn {
+        border-color: white;
+        &:not(:hover):not(.active) {
+            background-color: white;
+        }
     }
 }
 
 .o-we-powerbox {
     background-color: white !important;
 }
-

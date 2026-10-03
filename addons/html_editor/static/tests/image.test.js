@@ -22,7 +22,7 @@ test("image can be selected", async () => {
 
     await click("img");
     await waitFor(".o-we-toolbar");
-    expect(".btn-group button[name='image_preview']").toHaveCount(1);
+    expect(".o-we-toolbar-group button[name='image_preview']").toHaveCount(1);
     const selectionPlugin = plugins.get("selection");
     expect(selectionPlugin.getTargetedNodes()[0].tagName).toBe("IMG");
 });
@@ -458,7 +458,7 @@ test("test order of image options in image toolbar", async () => {
     await click("img");
     await waitFor(".o-we-toolbar");
 
-    const toolbarGroups = queryAll(".o-we-toolbar .btn-group");
+    const toolbarGroups = queryAll(".o-we-toolbar .o-we-toolbar-group");
     expect(toolbarGroups).toHaveCount(5);
     expect(toolbarGroups.map((g) => g.getAttribute("name"))).toEqual([
         "image_modifiers",
@@ -469,13 +469,13 @@ test("test order of image options in image toolbar", async () => {
     ]);
 
     expect(
-        queryAll(".o-we-toolbar .btn-group[name='image_modifiers'] .btn").map((b) =>
+        queryAll(".o-we-toolbar .o-we-toolbar-group[name='image_modifiers'] .btn").map((b) =>
             b.getAttribute("title")
         )
     ).toMatchObject(["Set image alignment", "Set image padding", "Crop image"]);
 
     expect(
-        queryAll(".o-we-toolbar .btn-group[name='image_actions'] .btn").map((b) =>
+        queryAll(".o-we-toolbar .o-we-toolbar-group[name='image_actions'] .btn").map((b) =>
             b.getAttribute("title")
         )
     ).toMatchObject(["Resize image", "Preview image"]);

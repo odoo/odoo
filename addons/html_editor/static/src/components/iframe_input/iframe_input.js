@@ -57,9 +57,14 @@ export class IframeInput extends Component {
                     input[type="number"] {
                         -moz-appearance: textfield;
                     }
+                    /* Same scheme as the page, so the iframe stays transparent */
+                    :root {
+                        color-scheme: ${isDarkMode ? "dark" : "light"};
+                    }
                     body {
                         padding: 0;
                         margin: 0;
+                        background-color: transparent;
                     }
                     input {
                         width: 100%;
@@ -67,7 +72,8 @@ export class IframeInput extends Component {
                         outline: none;
                         text-align: center;
                         border: none;
-                        background-color: ${isDarkMode ? "#25262b" : "#FFF"};
+                        /* The button holding the iframe shows its own states */
+                        background-color: transparent;
                         color: ${inputColor || (isDarkMode ? "#FFF" : "#000")};
                         ${this.props.inputStyle || ""}
                     }

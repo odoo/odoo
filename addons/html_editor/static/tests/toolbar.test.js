@@ -1518,9 +1518,9 @@ test("toolbar correctly show namespace button group and stop showing when namesp
     const { el } = await setupEditor("<div>[<section><p>abc</p></section><div>d]ef</div></div>", {
         config: { includePlugins: [TestPlugin] },
     });
-    await expectElementCount(".o-we-toolbar .btn-group[name='test_group']", 1);
+    await expectElementCount(".o-we-toolbar .o-we-toolbar-group[name='test_group']", 1);
     setContent(el, "<div><section><p>[abc]</p></section><div>def</div></div>");
-    await expectElementCount(".o-we-toolbar .btn-group[name='test_group']", 0);
+    await expectElementCount(".o-we-toolbar .o-we-toolbar-group[name='test_group']", 0);
 });
 
 test("toolbar does not evaluate isActive when namespace does not match", async () => {
@@ -1738,8 +1738,8 @@ test("toolbar should open with image namespace the selection spans an image and 
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
     expect(".o-we-toolbar").toHaveAttribute("data-namespace", "compact");
-    expect(".o-we-toolbar .btn-group[name='font']").toHaveCount(1);
-    expect(".o-we-toolbar .btn-group[name='decoration']").toHaveCount(1);
+    expect(".o-we-toolbar .o-we-toolbar-group[name='font']").toHaveCount(1);
+    expect(".o-we-toolbar .o-we-toolbar-group[name='decoration']").toHaveCount(1);
     setContent(
         el,
         `<p>[
@@ -1748,8 +1748,8 @@ test("toolbar should open with image namespace the selection spans an image and 
     );
     await waitFor(".o-we-toolbar[data-namespace='image']");
     expect(".o-we-toolbar").toHaveAttribute("data-namespace", "image");
-    expect(".o-we-toolbar .btn-group[name='font']").toHaveCount(0);
-    expect(".o-we-toolbar .btn-group[name='decoration']").toHaveCount(0);
+    expect(".o-we-toolbar .o-we-toolbar-group[name='font']").toHaveCount(0);
+    expect(".o-we-toolbar .o-we-toolbar-group[name='decoration']").toHaveCount(0);
 });
 
 test.tags("desktop");
@@ -1783,36 +1783,15 @@ test("plugins can create buttons with text in toolbar", async () => {
     expect("button[name='test_btn']").toHaveText("Text button");
 });
 
-test("toolbar buttons should have rounded corners at the edges of a group", async () => {
+test("toolbar buttons should keep their rounded corners inside a group", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
-    const buttonGroups = queryAll(".o-we-toolbar .btn-group");
-    for (const group of buttonGroups) {
-        for (let i = 0; i < group.children.length; i++) {
-            const button = group.children[i];
-            const computedStyle = getComputedStyle(button);
-            const borderRadius = Object.fromEntries(
-                ["top-left", "top-right", "bottom-left", "bottom-right"].map((corner) => [
-                    corner,
-                    Number.parseInt(computedStyle[`border-${corner}-radius`]),
-                ])
-            );
-            // Should have rounded corners on the left only if first button
-            if (i === 0) {
-                expect(borderRadius["top-left"]).toBeGreaterThan(0);
-                expect(borderRadius["bottom-left"]).toBeGreaterThan(0);
-            } else {
-                expect(borderRadius["top-left"]).toBe(0);
-                expect(borderRadius["bottom-left"]).toBe(0);
-            }
-            // Should have rounded corners on the right only if last button
-            if (i === group.children.length - 1) {
-                expect(borderRadius["top-right"]).toBeGreaterThan(0);
-                expect(borderRadius["bottom-right"]).toBeGreaterThan(0);
-            } else {
-                expect(borderRadius["top-right"]).toBe(0);
-                expect(borderRadius["bottom-right"]).toBe(0);
-            }
+    const buttons = queryAll(".o-we-toolbar .o-we-toolbar-group > .btn");
+    expect(buttons.length).toBeGreaterThan(1);
+    for (const button of buttons) {
+        const computedStyle = getComputedStyle(button);
+        for (const corner of ["top-left", "top-right", "bottom-left", "bottom-right"]) {
+            expect(Number.parseInt(computedStyle[`border-${corner}-radius`])).toBeGreaterThan(0);
         }
     }
 });
@@ -2020,7 +1999,7 @@ test.tags("desktop", "iframe");
 test("toolbar should close when clicked outside the iframe (even if selection got in the toolbar)", async () => {
     await setupEditor("<p>[a]</p>", { props: { iframe: true } });
     await expectElementCount(".o-we-toolbar", 1);
-    const sepEl = queryFirst(".o-we-toolbar .o-we-toolbar-vertical-separator");
+    const sepEl = queryFirst(".o-we-toolbar .vr");
     setSelection({ anchorNode: sepEl, anchorOffset: 0 });
     await expectElementCount(".o-we-toolbar", 1);
     // click outside the iframe
