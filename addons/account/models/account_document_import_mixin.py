@@ -421,7 +421,9 @@ class AccountDocumentImportMixin(models.AbstractModel):
 
     def _should_attach_to_record(self, attachment):
         """ Indicate whether a given attachment should be displayed in the record's attachments. """
-        return attachment and not attachment.res_field and attachment.mimetype in {
+        return attachment and not attachment.res_field and (
+        attachment.mimetype.startswith('image/')
+        or attachment.mimetype in {
             'text/csv',
             'application/pdf',
             'application/vnd.ms-excel',
@@ -432,7 +434,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
             'application/vnd.ms-powerpoint',
             'application/vnd.openxmlformats-officedocument.presentationml.presentation',
             'application/vnd.oasis.opendocument.presentation',
-        }
+        })
 
     # -------------------------------------------------------------------------
     # Helpers to convert between ir.attachment and file_data dicts
