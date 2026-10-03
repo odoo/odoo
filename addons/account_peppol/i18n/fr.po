@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-07 17:38+0000\n"
-"PO-Revision-Date: 2026-09-03 16:31+0000\n"
+"PO-Revision-Date: 2026-10-03 17:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-18/"
 "account_peppol/fr/>\n"
@@ -109,6 +109,9 @@ msgid ""
 "A 0% tax cannot use Tax Category 'S' (Standard). Please update the Tax "
 "Category in the Advanced Options of the tax configuration."
 msgstr ""
+"Une taxe à 0 % ne peut pas utiliser la catégorie de taxe 'S' (Standard). "
+"Veuillez mettre à jour la catégorie de taxe dans les options avancées de la "
+"configuration de la taxe."
 
 #. module: account_peppol
 #. odoo-python
@@ -120,7 +123,7 @@ msgstr "Une connexion à \"%s\" existe déjà."
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "A contact email is required."
-msgstr ""
+msgstr "Un email de contact est requis."
 
 #. module: account_peppol
 #. odoo-python
@@ -514,6 +517,9 @@ msgid ""
 "reason code is 'VATEX-EU-O'. You can change this in the Advanced Options of "
 "the tax configuration."
 msgstr ""
+"Pour la/les taxe(s) %(taxes)s : la catégorie de taxe 'O' doit être utilisée "
+"lorsque le code motif d’exonération est 'VATEX-EU-O'. Vous pouvez modifier "
+"cela dans les options avancées de la configuration de la taxe."
 
 #. module: account_peppol
 #. odoo-python
@@ -562,6 +568,9 @@ msgid ""
 "If you are not subject to VAT, you should not have a VAT number on your "
 "company/contacts and your clients should not have one either."
 msgstr ""
+"Si vous n’êtes pas assujetti à la TVA, vous ne devriez pas avoir de numéro "
+"de TVA sur votre société/vos contacts, et vos clients ne devraient pas en "
+"avoir non plus."
 
 #. module: account_peppol
 #. odoo-python
@@ -619,6 +628,9 @@ msgid ""
 "Invoice lines using Tax Category 'O' cannot use a percentage-based tax. "
 "Please update the tax type in Advanced Options."
 msgstr ""
+"Les lignes de facture utilisant la catégorie de taxe 'O' ne peuvent pas "
+"utiliser une taxe basée sur un pourcentage. Veuillez mettre à jour le type "
+"de taxe dans les options avancées."
 
 #. module: account_peppol
 #. odoo-python
@@ -627,6 +639,9 @@ msgid ""
 "Invoice lines with Tax Category 'Exempt from VAT' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"Les lignes de facture avec la catégorie de taxe 'Exonéré de TVA' doivent "
+"avoir un taux de taxe de 0. Vous pouvez modifier cela dans les options "
+"avancées de la configuration de la taxe."
 
 #. module: account_peppol
 #. odoo-python
@@ -635,6 +650,9 @@ msgid ""
 "Invoice lines with Tax Category 'Reverse charge' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"Les lignes de facture avec la catégorie de taxe 'Autoliquidation' doivent "
+"avoir un taux de taxe de 0. Vous pouvez modifier cela dans les options "
+"avancées de la configuration de la taxe."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -693,6 +711,8 @@ msgid ""
 "Missing Buyer Country. Please add the Country Code to the client's contact "
 "information."
 msgstr ""
+"Pays de l’acheteur manquant. Veuillez ajouter le code pays aux informations "
+"de contact du client."
 
 #. module: account_peppol
 #. odoo-python
@@ -701,6 +721,8 @@ msgid ""
 "Missing Invoiced Item VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"Code de catégorie TVA de l’article facturé manquant. Action requise : "
+"installez le module account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #. odoo-python
@@ -709,6 +731,9 @@ msgid ""
 "Missing Reverse Charge details. Please set the Exemption Reason to 'Reverse "
 "charge' in the Advanced Options of the tax configuration."
 msgstr ""
+"Détails d’autoliquidation manquants. Veuillez définir le motif d’exonération "
+"sur 'Autoliquidation' dans les options avancées de la configuration de la "
+"taxe."
 
 #. module: account_peppol
 #. odoo-python
@@ -717,6 +742,8 @@ msgid ""
 "Missing VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"Code de catégorie TVA manquant. Action requise : installez le module "
+"account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__phone_number
@@ -892,7 +919,7 @@ msgstr "Nom de la société mère Peppol"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_purchase_journal_required
 msgid "Peppol Purchase Journal Required"
-msgstr ""
+msgstr "Journal d’achats Peppol requis"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -1198,6 +1225,9 @@ msgid ""
 "The Peppol endpoint is missing in the XML file. Action Required: Update the "
 "account and account_edi_ubl_cii modules to resolve this."
 msgstr ""
+"Le point de terminaison Peppol est manquant dans le fichier XML. Action "
+"requise : mettez à jour les modules account et account_edi_ubl_cii pour "
+"résoudre ce problème."
 
 #. module: account_peppol
 #. odoo-python
@@ -1206,6 +1236,9 @@ msgid ""
 "The Tax Category must be 'AE' when using Exemption Reason code 'VATEX-EU-"
 "AE'. You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"La catégorie de taxe doit être 'AE' lors de l’utilisation du code motif "
+"d’exonération 'VATEX-EU-AE'. Vous pouvez modifier cela dans les options "
+"avancées de la configuration de la taxe."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1230,6 +1263,8 @@ msgid ""
 "The exemption reason code is invalid. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"Le code motif d'exemption n'est pas valide. Action requise : installez le "
+"module account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #. odoo-python

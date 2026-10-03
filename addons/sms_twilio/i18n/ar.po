@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-08-28 15:48+0000\n"
+"PO-Revision-Date: 2026-09-28 16:18+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-18/"
 "sms_twilio/ar/>\n"
@@ -152,7 +152,7 @@ msgstr "نوع الفشل"
 #: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_from_to
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_from_to
 msgid "From / To identic"
-msgstr ""
+msgstr "المصدر والوجهة متطابقان"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__id
@@ -164,7 +164,7 @@ msgstr "المُعرف"
 #: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_callback
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_callback
 msgid "Incorrect callback URL"
-msgstr ""
+msgstr "عنوان URL غير صحيح لصفحة إعادة التوجيه"
 
 #. module: sms_twilio
 #. odoo-python
@@ -217,7 +217,7 @@ msgstr "إشعارات الرسائل"
 #: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_from_missing
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_from_missing
 msgid "Missing From Number"
-msgstr ""
+msgstr "رقم المرسل غير موجود"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
@@ -226,6 +226,9 @@ msgid ""
 "                            <i class=\"fa fa-external-link\" aria-"
 "hidden=\"true\"/>"
 msgstr ""
+"هل تحتاج إلى مساعدة؟\n"
+"                           <i class=\"fa fa-external-link\" aria-"
+"hidden=\"true\"/>"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_res_company__sms_twilio_number_ids
@@ -264,7 +267,7 @@ msgstr "مزود خدمة الرسائل النصية القصيرة"
 #. module: sms_twilio
 #: model:ir.model,name:sms_twilio.model_sms_twilio_account_manage
 msgid "SMS Twilio Connection Wizard"
-msgstr ""
+msgstr "معالج إعداد وربط حساب Twilio للرسائل النصية القصيرة"
 
 #. module: sms_twilio
 #: model:ir.model,name:sms_twilio.model_sms_composer
@@ -279,12 +282,12 @@ msgstr "إرسال رسالة نصية قصيرة تجريبية"
 #. module: sms_twilio
 #: model:ir.model.fields.selection,name:sms_twilio.selection__res_company__sms_provider__iap
 msgid "Send via Odoo"
-msgstr ""
+msgstr "إرسال عن طريق أودو"
 
 #. module: sms_twilio
 #: model:ir.model.fields.selection,name:sms_twilio.selection__res_company__sms_provider__twilio
 msgid "Send via Twilio"
-msgstr ""
+msgstr "إرسال عبر Twilio"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__sequence
@@ -309,7 +312,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "The SMS has been sent from %s"
-msgstr ""
+msgstr "تم إرسال الرسالة النصية القصيرة من %s"
 
 #. module: sms_twilio
 #. odoo-python
@@ -321,19 +324,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "This is a test SMS from Odoo"
-msgstr ""
+msgstr "هذه رسالة نصية قصيرة تجريبية من أودو"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Trial Account Limitation"
-msgstr ""
+msgstr "قيود الحساب التجريبي"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Twilio Authentication Error"
-msgstr ""
+msgstr "خطأ في المصادقة في Twilio"
 
 #. module: sms_twilio
 #: model:ir.model,name:sms_twilio.model_sms_twilio_number
@@ -350,37 +353,37 @@ msgstr "الرسائل النصية القصيرة باستخدام Twilio"
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "Twilio SMS Manage Connection"
-msgstr ""
+msgstr "إدارة وعرض اتصال خدمة Twilio للرسائل النصية القصيرة"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_sms__sms_twilio_sid
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_tracker__sms_twilio_sid
 msgid "Twilio SMS SID"
-msgstr ""
+msgstr "رقم تعريف المرسل (SID) لرسائل Twilio SMS"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Twilio StatusCallback URL is incorrect"
-msgstr ""
+msgstr "Twilio StatusCallback URL غير صحيح"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Unknown error, please contact Odoo support"
-msgstr ""
+msgstr "حدث خطأ غير معروف، يُرجى التواصل مع دعم أودو"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Unknown failure at sending, please contact Odoo support"
-msgstr ""
+msgstr "حدث خطأ غير معروف أثناء الإرسال، يرجى الاتصال بقسم الدعم لدى أودو"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Unverified recipient on Trial Account"
-msgstr ""
+msgstr "تعذر الإرسال بسبب مستلم غير موثق على حساب تجريبي"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form

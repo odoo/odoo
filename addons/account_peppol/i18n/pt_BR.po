@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-07 17:38+0000\n"
-"PO-Revision-Date: 2026-08-08 14:10+0000\n"
+"PO-Revision-Date: 2026-10-03 17:33+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "18/account_peppol/pt_BR/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -108,6 +108,8 @@ msgid ""
 "A 0% tax cannot use Tax Category 'S' (Standard). Please update the Tax "
 "Category in the Advanced Options of the tax configuration."
 msgstr ""
+"Um imposto de 0% não pode usar a Categoria de Imposto 'S' (Padrão). Atualize "
+"a Categoria de Imposto nas Opções Avançadas da configuração de impostos."
 
 #. module: account_peppol
 #. odoo-python
@@ -513,6 +515,9 @@ msgid ""
 "reason code is 'VATEX-EU-O'. You can change this in the Advanced Options of "
 "the tax configuration."
 msgstr ""
+"Para impostos %(taxes)s: A categoria de imposto 'O' deve ser usada quando o "
+"código do motivo da isenção for 'VATEX-EU-O'. Você pode alterar isso nas "
+"Opções Avançadas da configuração de impostos."
 
 #. module: account_peppol
 #. odoo-python
@@ -560,6 +565,8 @@ msgid ""
 "If you are not subject to VAT, you should not have a VAT number on your "
 "company/contacts and your clients should not have one either."
 msgstr ""
+"Se você não estiver sujeito ao IVA, não deve ter um número de IVA em seus "
+"dados da empresa/Contatos, e seus clientes também não devem ter um."
 
 #. module: account_peppol
 #. odoo-python
@@ -616,6 +623,9 @@ msgid ""
 "Invoice lines using Tax Category 'O' cannot use a percentage-based tax. "
 "Please update the tax type in Advanced Options."
 msgstr ""
+"As linhas de fatura que utilizam a categoria tributária 'O' não podem usar "
+"um imposto baseado em porcentagem. Atualize o tipo de imposto nas Opções "
+"Avançadas."
 
 #. module: account_peppol
 #. odoo-python
@@ -624,6 +634,9 @@ msgid ""
 "Invoice lines with Tax Category 'Exempt from VAT' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"As linhas da nota fiscal com a categoria tributária “Isenta de IVA” devem "
+"ter uma alíquota de 0. Você pode alterar isso nas Opções Avançadas da "
+"configuração tributária."
 
 #. module: account_peppol
 #. odoo-python
@@ -632,6 +645,9 @@ msgid ""
 "Invoice lines with Tax Category 'Reverse charge' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"As linhas de fatura com a categoria de imposto “Autoliquidação” devem ter "
+"uma alíquota de 0. É possível alterar isso nas Opções Avançadas da "
+"configuração de impostos."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -691,6 +707,8 @@ msgid ""
 "Missing Buyer Country. Please add the Country Code to the client's contact "
 "information."
 msgstr ""
+"País do comprador ausente. Adicione o código do país às informações de "
+"contato do cliente."
 
 #. module: account_peppol
 #. odoo-python
@@ -699,6 +717,8 @@ msgid ""
 "Missing Invoiced Item VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"Código de categoria de IVA do item de faturamento ausente. Ação necessária: "
+"Instale o módulo account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #. odoo-python
@@ -707,6 +727,8 @@ msgid ""
 "Missing Reverse Charge details. Please set the Exemption Reason to 'Reverse "
 "charge' in the Advanced Options of the tax configuration."
 msgstr ""
+"Detalhes da autoliquidação ausente. Defina o Motivo da Isenção como “"
+"Autoliquidação” nas Opções Avançadas da configuração tributária."
 
 #. module: account_peppol
 #. odoo-python
@@ -715,6 +737,8 @@ msgid ""
 "Missing VAT category code. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"Código de categoria de IVA ausente. Ação necessária: Instale o módulo "
+"account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__phone_number
@@ -891,7 +915,7 @@ msgstr "Nome da empresa matriz da Peppol"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_purchase_journal_required
 msgid "Peppol Purchase Journal Required"
-msgstr ""
+msgstr "Diário de compras Peppol obrigatório"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -1188,6 +1212,8 @@ msgid ""
 "The Peppol endpoint is missing in the XML file. Action Required: Update the "
 "account and account_edi_ubl_cii modules to resolve this."
 msgstr ""
+"O endpoint Peppol está faltando no arquivo XML. Ação necessária: atualize os "
+"módulos account e account_edi_ubl_cii para resolver isso."
 
 #. module: account_peppol
 #. odoo-python
@@ -1196,6 +1222,9 @@ msgid ""
 "The Tax Category must be 'AE' when using Exemption Reason code 'VATEX-EU-"
 "AE'. You can change this in the Advanced Options of the tax configuration."
 msgstr ""
+"A categoria tributária deve ser 'AE' ao usar o código de motivo de isenção "
+"'VATEX-EU-AE'. Você pode alterar isso nas Opções Avançadas da configuração "
+"tributária."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1220,6 +1249,8 @@ msgid ""
 "The exemption reason code is invalid. Action Required: Install the module "
 "account_edi_ubl_cii_tax_extension."
 msgstr ""
+"O código do motivo da isenção é inválido. Ação necessária: Instale o módulo "
+"account_edi_ubl_cii_tax_extension."
 
 #. module: account_peppol
 #. odoo-python
