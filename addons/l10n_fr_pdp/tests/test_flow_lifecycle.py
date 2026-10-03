@@ -891,6 +891,45 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         }])
         self.assertFalse(payment_move.l10n_fr_pdp_last_flow_id)
 
+    def test_force_update_with_start_date_change(self):
+        """ Changing the anuaire start date must re-classify the moves entering the flow 10 scope,
+        payments included, and clear the classification of the moves leaving it. """
+        out_of_scope = {'l10n_fr_pdp_flow_10_report_type': False, 'l10n_fr_pdp_status': 'out_of_scope'}
+        invoice = self._create_reporting_invoice(partner=self.b2bi_customer, invoice_date='2024-12-05')
+        payment_move = self._register_payment(invoice, '2024-12-05').move_id
+        self.assertRecordValues(invoice + payment_move, [out_of_scope, out_of_scope])
+
+        # invoice and its payment enter in the scope
+        self.company.l10n_fr_pdp_annuaire_start_date = '2024-12-01'
+        self.company._force_update_l10n_fr_f10_moves()
+        self.assertRecordValues(invoice + payment_move, [
+            {'l10n_fr_pdp_flow_10_report_type': 'transaction', 'l10n_fr_pdp_flow_10_operation_type': 'sale', 'l10n_fr_pdp_status': 'pending'},
+            {'l10n_fr_pdp_flow_10_report_type': 'payment', 'l10n_fr_pdp_flow_10_operation_type': 'sale', 'l10n_fr_pdp_status': 'pending'},
+        ])
+
+        # invoice and its payment leaves the scope
+        self.company.l10n_fr_pdp_annuaire_start_date = '2025-01-01'
+        self.company._force_update_l10n_fr_f10_moves()
+        self.assertRecordValues(invoice + payment_move, [out_of_scope, out_of_scope])
+
+    def test_force_update_on_reporting_activation(self):
+        """ Activating the flow 10 reporting must classify the existing moves """
+        self.company.l10n_fr_pdp_send_to_ppf = False
+        self.assertFalse(self.company.l10n_fr_f10_enable_reporting)
+        invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
+        payment_move = self._register_payment(invoice, '2025-02-05').move_id
+        self.assertRecordValues(invoice + payment_move, [{
+            'l10n_fr_pdp_flow_10_report_type': False,
+            'l10n_fr_pdp_flow_10_operation_type': False,
+        }] * 2)
+
+        self.company.l10n_fr_pdp_send_to_ppf = True
+        self.assertTrue(self.company.l10n_fr_f10_enable_reporting)
+        self.assertRecordValues(invoice + payment_move, [
+            {'l10n_fr_pdp_flow_10_report_type': 'transaction', 'l10n_fr_pdp_flow_10_operation_type': 'sale'},
+            {'l10n_fr_pdp_flow_10_report_type': 'payment', 'l10n_fr_pdp_flow_10_operation_type': 'sale'},
+        ])
+
     def test_partial_payment_reports_only_reconciled_amount(self):
         invoice = self._create_reporting_invoice(
             partner=self.b2bi_customer,
