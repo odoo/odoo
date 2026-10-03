@@ -1,4 +1,3 @@
-import math
 from num2words import num2words
 
 from odoo import _, api, models
@@ -61,20 +60,29 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         if vals['vals'].get('buyer_reference'):
             del vals['vals']['buyer_reference']
 
-        vals['vals']['note_vals'].append({'note': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual_signed, self.env.ref('base.TRY')), 'note_attrs': {}})
+        vals["vals"]["note_vals"].append(
+            {
+                "note": self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_total_signed, self.env.ref("base.TRY")),
+                "note_attrs": {},
+            }
+        )
         if vals['invoice'].currency_id.name != 'TRY':
-            vals['vals']['note_vals'].append({'note': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual, vals['invoice'].currency_id), 'note_attrs': {}})
+            vals["vals"]["note_vals"].append(
+                {
+                    "note": self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_total, vals["invoice"].currency_id),
+                    "note_attrs": {},
+                }
+            )
             vals['vals']['note_vals'].append({'note': self._get_invoice_currency_exchange_rate(invoice)})
         return vals
 
     @api.model
     def _l10n_tr_get_amount_integer_partn_text_note(self, amount, currency):
-        sign = math.copysign(1.0, amount)
         amount_integer_part, amount_decimal_part = divmod(abs(amount), 1)
         amount_decimal_part = round(amount_decimal_part * 100)
 
-        text_i = num2words(amount_integer_part * sign, lang="tr") or 'Sifir'
-        text_d = num2words(amount_decimal_part * sign, lang="tr") or 'Sifir'
+        text_i = num2words(amount_integer_part, lang="tr") or 'Sifir'
+        text_d = num2words(amount_decimal_part, lang="tr") or 'Sifir'
         return f'YALNIZ : {text_i} {currency.name} {text_d} {currency.currency_subunit_label}'.upper()
 
     def _get_invoice_currency_exchange_rate(self, invoice):
