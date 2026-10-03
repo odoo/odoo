@@ -14,6 +14,7 @@ class TestL10nFrPdpXmlCii(TestL10nFrPdpCommon):
         cls.startClassPatcher(freeze_time('2026-01-01 10:00:00'))
         cls.partner_a.invoice_edi_format = 'facturx'
         cls.company_data['company'].email = 'my_company@test.com'
+        cls.company_data['company'].l10n_fr_pdp_late_payment_penalties_automatic = False
         cls.recipient_bank = cls.env['res.partner.bank'].create({
             'acc_number': 'FR7630004028379876543210943',
             'partner_id': cls.partner_fr.id,

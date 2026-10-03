@@ -1,5 +1,6 @@
 {
     'name': 'France - E-Invoicing (Approved Platform)',
+    'version': '1.1',
     'category': 'Accounting/Localizations/EDI',
     'website': "https://www.odoo.com/documentation/18.0/applications/finance/fiscal_localizations/france.html#PDP",
     'description': """
