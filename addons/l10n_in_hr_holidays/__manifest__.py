@@ -12,6 +12,7 @@
         'views/hr_leave_views.xml',
         'views/hr_work_entry_type_views.xml',
         'views/l10n_in_hr_leave_optional_holiday_views.xml',
+        'views/resource_calendar_views.xml',
         'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
