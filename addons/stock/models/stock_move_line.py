@@ -1290,7 +1290,7 @@ class StockMoveLine(models.Model):
         return define_package_type and not from_package_wizard and (not package_id and not package_type_id and not package_name)
 
     def _should_set_package(self):
-        package_type = self.picking_id.picking_type_id
+        package_type = self.picking_type_id
         return len(package_type) == 1 and package_type.set_package_type
 
     def _split(self, quantity_to_split, package_id):
