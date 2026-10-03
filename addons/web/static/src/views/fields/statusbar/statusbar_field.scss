@@ -1,8 +1,10 @@
 .o_field_statusbar {
     > .o_statusbar_status {
         @include media-breakpoint-up(md) {
+            --o-statusbar-border-color: #{$border-color};
+
             border-radius: calc(var(--o-statusbar-radius) + var(--o-statusbar-padding));
-            border: $border-width solid $border-color;
+            border: $border-width solid var(--o-statusbar-border-color);
             padding: var(--o-statusbar-padding);
             background: $o-view-background-color;
         }
@@ -129,6 +131,17 @@
                 &:not(.o_arrow_button_current) {
                     color: $text-muted;
                 }
+            }
+        }
+    }
+
+    &.o_field_invalid {
+        > .o_statusbar_status {
+            --o-statusbar-border-color: var(--o-input-border-color);
+
+            .o_arrow_button {
+                border-color: var(--o-input-border-color);
+                background-color: var(--o-input-background-color);
             }
         }
     }
