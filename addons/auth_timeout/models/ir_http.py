@@ -7,6 +7,9 @@ from odoo.exceptions import AccessDenied
 from odoo.http import request, root, SessionExpiredException
 
 
+_logger = logging.getLogger(__name__)
+
+
 class CheckIdentityException(SessionExpiredException):
     """Exception raised when a user is requested to re-authenticate."""
 
@@ -69,6 +72,12 @@ class IrHttp(models.AbstractModel):
                             timestamp_1fa, auth_method_1fa = first_fa
                             if timestamp_1fa > threshold:
                                 res["1fa"] = auth_method_1fa
+                    if reauth_type == 'logout':
+                        reason = f"Logged out after {timeout} seconds of inactivity."
+                    else:
+                        fa_type = '2FA' if mfa and session.get('identity-check-1fa') else '1FA'
+                        reason = f"Locked after {timeout} seconds of inactivity ({fa_type})."
+                    res["log_reason"] = reason
                     return res
 
     @classmethod
@@ -180,9 +189,14 @@ class IrHttp(models.AbstractModel):
         super()._authenticate(endpoint)
         if endpoint.routing["auth"] == "user" and request.session.uid is not None:
             if must_check_identity := cls._must_check_identity():
+                log_reason = must_check_identity.get("log_reason")
                 if must_check_identity.get("logout"):
+                    if log_reason:
+                        _logger.info("User %r (uid: %s): %s", request.session.login, request.session.uid, log_reason)
                     raise SessionExpiredException(f"User {request.session.uid} needs to login again")
                 elif endpoint.routing.get("check_identity", True) and must_check_identity.get("check_identity"):
+                    if log_reason:
+                        _logger.info("User %r (uid: %s): %s", request.session.login, request.session.uid, log_reason)
                     raise CheckIdentityException(f"User {request.session.uid} needs to confirm his identity")
 
     @classmethod
