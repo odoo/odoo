@@ -1,6 +1,6 @@
 import { Interaction } from "@web/public/interaction";
 
-import { getScrollingElement, isScrollableY } from "@web/core/utils/scrolling";
+import { isScrollableY } from "@web/core/utils/scrolling";
 import { isVisible } from "@web/core/utils/ui";
 
 export class BaseAnimation extends Interaction {
@@ -39,7 +39,7 @@ export class BaseAnimation extends Interaction {
     }
 
     findScrollingElement() {
-        return getScrollingElement(this.el.ownerDocument);
+        return this.el.ownerDocument.scrollingElement;
     }
 
     /**

@@ -172,28 +172,3 @@ export function compensateScrollbar(
         bordersWidth;
     el.style.setProperty(cssProperty, `${newValue}px`, "important");
 }
-
-export function getScrollingElement(document = window.document) {
-    const baseScrollingElement = document.scrollingElement;
-    if (isScrollableY(baseScrollingElement)) {
-        return baseScrollingElement;
-    }
-    const bodyHeight = window.getComputedStyle(document.body).height;
-    for (const el of document.body.children) {
-        // Search for a body child which is at least as tall as the body
-        // and which has the ability to scroll if enough content in it. If
-        // found, suppose this is the top scrolling element.
-        if (bodyHeight - el.scrollHeight > 1.5) {
-            continue;
-        }
-        if (isScrollableY(el)) {
-            return el;
-        }
-    }
-    return baseScrollingElement;
-}
-
-export function getScrollingTarget(scrollingElement = window.document) {
-    const document = scrollingElement.ownerDocument;
-    return scrollingElement === document.scrollingElement ? document.defaultView : scrollingElement;
-}

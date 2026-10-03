@@ -34,16 +34,22 @@ export class NoBackdropPopup extends Interaction {
         const modalContentEl = this.el.querySelector(".modal-content");
         const isOverflowing = isScrollableY(modalContentEl);
         const bsModal = this.bootstrap.getOrCreateInstance(window.Modal, this.el);
+        // Always reset first: hiding an already hidden scrollbar would save
+        // the compensated padding as the initial one.
+        bsModal._scrollBar.reset();
         if (isOverflowing) {
             // If the "no-backdrop" modal has a scrollbar, the page's scrollbar
             // must be hidden. This is because if the two scrollbars overlap, it
             // is no longer possible to scroll using the modal's scrollbar.
+            bsModal._scrollBar.hide();
+            document.body.classList.add("modal-open");
             bsModal._adjustDialog();
         } else {
             // If the "no-backdrop" modal does not have a scrollbar, the page
             // scrollbar must be displayed because we must be able to scroll the
             // page (e.g. a "cookies bar" popup at the bottom of the page must
             // not prevent scrolling the page).
+            document.body.classList.remove("modal-open");
             bsModal._resetAdjustments();
         }
     }

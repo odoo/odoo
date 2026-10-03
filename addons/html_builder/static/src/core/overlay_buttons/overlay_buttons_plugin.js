@@ -1,7 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
 import { OverlayButtons } from "./overlay_buttons";
 import { withSequence } from "@html_editor/utils/resource";
 
@@ -100,10 +99,8 @@ export class OverlayButtonsPlugin extends Plugin {
 
         // Hide the buttons when scrolling. Show them again when the scroll is
         // over.
-        const scrollingElement = getScrollingElement(this.document);
-        const scrollingTarget = getScrollingTarget(scrollingElement);
         this.addDomListener(
-            scrollingTarget,
+            this.document.defaultView,
             "scroll",
             throttleForAnimation(() => {
                 this.hideOverlayButtons();
