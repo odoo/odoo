@@ -143,6 +143,7 @@
                 <filter name="refused_leaves" string="Refused" domain="[('state', '=', 'refuse')]"/>
                 <filter name="exclude_refused_leaves" string="Exclude Refused" domain="[('state', '!=', 'refuse')]"/>
                 <filter string="Waiting for Approval" name="approve" domain="[('state','in',('confirm','validate1'))]"/>
+                <filter name="groupby_employee_id" string="Employee" context="{'group_by': 'employee_id'}"/>
                 <filter name="groupby_job_id" string="Job Position" context="{'group_by': 'job_id'}"/>
                 <filter name="groupby_time_off_type" string="Time Type" context="{'group_by': 'work_entry_type_id'}"/>
                 <filter name="groupby_company_id" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
@@ -158,7 +159,7 @@
         <field name="view_mode">calendar</field>
         <field name="search_view_id" ref="hr_leave_report_calendar_view_search"/>
         <field name="domain">[('employee_id.active','=',True), ("state", "!=", "refuse")]</field>
-        <field name="context">{'hide_employee_name': 1, 'search_default_current_year': 1}</field>
+        <field name="context">{'hide_employee_name': 1, 'search_default_current_year': 1, 'search_default_groupby_employee_id': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Nobody here ? All of the people you're looking for will be working at that time.

@@ -8,6 +8,7 @@ import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
+import { HrHolidaysSearchModel } from "@hr_holidays/search/hr_holidays_search_model";
 
 class TimeOffCalendarControllerHrLeave extends TimeOffCalendarController {
     setup() {
@@ -30,6 +31,7 @@ export const timeOffCalendarHrLeaveView = {
     Controller: TimeOffCalendarControllerHrLeave,
     Renderer: TimeOffCalendarRenderer,
     Model: TimeOffCalendarModel,
+    SearchModel: HrHolidaysSearchModel,
     buttonTemplate: "hr_holidays.CalendarController.Buttons",
 };
 

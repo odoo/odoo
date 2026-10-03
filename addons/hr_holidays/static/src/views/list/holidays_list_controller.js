@@ -1,5 +1,6 @@
 import { userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
 import { exportTimeOffRecords } from "@hr_holidays/views/hr_leave_export";
+import { HrHolidaysSearchModel } from "@hr_holidays/search/hr_holidays_search_model";
 import { onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -120,6 +121,7 @@ export class HolidaysListController extends ListController {
 export const holidaysListView = {
     ...listView,
     Controller: HolidaysListController,
+    SearchModel: HrHolidaysSearchModel,
 };
 
 registry.category("views").add("hr_holidays_payslip_list", holidaysListView);
