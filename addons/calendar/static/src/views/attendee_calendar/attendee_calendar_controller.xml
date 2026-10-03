@@ -33,7 +33,7 @@
                 <t t-elif="(this.model.credentialStatus.google_calendar or this.model.credentialStatus.microsoft_calendar)
                 and (!this.model.syncStatus.google_calendar or ['sync_stopped', 'missing_credentials'].includes(this.model.syncStatus.google_calendar))
                 and (!this.model.syncStatus.microsoft_calendar or ['sync_stopped', 'missing_credentials'].includes(this.model.syncStatus.microsoft_calendar))">
-                    <h5 id="synchronize_with" class="d-none d-sm-inline-flex my-auto">Synchronize with</h5>
+                    <h5 id="synchronize_with" class="d-none d-sm-inline-flex my-auto">Sync with</h5>
                 </t>
                 <t t-elif="(this.model.googleCredentialsSet and this.model.syncStatus.google_calendar === 'sync_active')
                 or (this.model.microsoftCredentialsSet and this.model.syncStatus.microsoft_calendar === 'sync_active')">
