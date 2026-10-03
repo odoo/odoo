@@ -1,4 +1,5 @@
 import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/l10n/translation";
 import { logPosMessage } from "./pretty_console_log";
 
 const CONSOLE_COLOR = "#b56be3";
@@ -21,11 +22,71 @@ export default class DevicesSynchronisation {
     setup(dynamicModels, staticModels, posStore) {
         this.dynamicModels = new Set(dynamicModels);
         this.staticModels = new Set(staticModels);
+        this.orderNotifications = new Map();
+
         this.pos = posStore;
+        this.sound = posStore.sound;
+        this.notification = posStore.notification;
         this.models = posStore.models;
 
         // Connect websocket to receive synchronisation notification
         this.pos.data.connectWebSocket("SYNCHRONISATION", this.collect.bind(this));
+        this.pos.data.connectWebSocket("SNOOZE_NOTIFICATION", (orderId) =>
+            this.snoozeNotification(orderId, false)
+        );
+    }
+
+    /**
+     * When an order is received from another device, display a notification to the user.
+     * @param {Object} order - The order object received from another device.
+     */
+    async displayNotification(order, notificationOpts, sound = "order-receive-tone") {
+        if (this.orderNotifications.has(order.id)) {
+            return;
+        }
+
+        if (this.orderNotifications.size === 0) {
+            this.sound.play(sound, {
+                loop: true,
+                volume: 1,
+            });
+        }
+
+        const button = {
+            name: _t(notificationOpts.name),
+            onClick: notificationOpts.onClick,
+        };
+        const closeNotification = this.notification.add(_t(notificationOpts.message), {
+            type: "success",
+            sticky: true,
+            buttons: [button],
+        });
+
+        this.orderNotifications.set(order.id, closeNotification);
+    }
+
+    /**
+     * When another device snoozes a notification for an order.
+     * @param {Number} orderId - The ID of the order for which the notification was snoozed.
+     */
+    snoozeNotification(orderId, sound, notify = false) {
+        const snoozer = this.orderNotifications.get(orderId);
+        if (!snoozer) {
+            return;
+        }
+
+        // Delete before closing: the notification's onClose calls back into
+        // this method, and it would recurse until the stack blows otherwise.
+        this.orderNotifications.delete(orderId);
+        snoozer();
+
+        if (!this.orderNotifications.size) {
+            this.sound.stop(sound);
+        }
+
+        if (notify) {
+            this.pos.data.call("pos.order", "snooze_notification", [orderId]);
+        }
     }
 
     /**
