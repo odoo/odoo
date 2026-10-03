@@ -22,7 +22,8 @@ class ProjectTask(models.Model):
             task.leave_types_count = timesheet_count_per_task.get(task.id, 0)
 
     def _compute_is_timeoff_task(self):
-        timeoff_tasks = self.filtered(lambda task: task.leave_types_count or task.company_id.leave_timesheet_task_id == task)
+        config_timeoff_tasks = self.env.companies.leave_timesheet_task_id
+        timeoff_tasks = self.filtered(lambda task: task in config_timeoff_tasks)
         timeoff_tasks.is_timeoff_task = True
         (self - timeoff_tasks).is_timeoff_task = False
 
@@ -30,13 +31,4 @@ class ProjectTask(models.Model):
         if operator != 'in':
             return NotImplemented
 
-        timeoff_tasks_ids = {row[0] for row in self.env.execute_query(
-            self.env['account.analytic.line']._search(
-                [('task_id', '!=', False), '|', ('holiday_id', '!=', False), ('global_leave_id', '!=', False)],
-            ).select('DISTINCT task_id')
-        )}
-
-        if self.env.company.leave_timesheet_task_id:
-            timeoff_tasks_ids.add(self.env.company.leave_timesheet_task_id.id)
-
-        return Domain('id', 'in', tuple(timeoff_tasks_ids))
+        return Domain('id', 'in', self.env.companies.leave_timesheet_task_id.ids)
