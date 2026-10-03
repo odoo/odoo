@@ -958,3 +958,141 @@ class TestPosMrp(TestPointOfSaleCommon):
         # Close the PoS session - this should not raise a singleton error
         current_session.action_pos_session_closing_control()
         self.assertEqual(current_session.state, 'closed')
+
+    def test_bom_kit_variant_specific_bom_with_lot_component(self):
+        """
+        Tests that ordering a kit variant (not the first one) alongside its lot-tracked component
+        does not crash when variant-specific BOMs are used.
+        """
+        color_attr = self.env['product.attribute'].create({'name': 'Color'})
+        color_red = self.env['product.attribute.value'].create({'name': 'Red', 'attribute_id': color_attr.id})
+        color_blue = self.env['product.attribute.value'].create({'name': 'Blue', 'attribute_id': color_attr.id})
+
+        kit_tmpl = self.env['product.template'].create({
+            'name': 'Dinner Set',
+            'available_in_pos': True,
+            'is_storable': True,
+            'list_price': 20.0,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': color_attr.id,
+                'value_ids': [Command.set([color_red.id, color_blue.id])],
+            })],
+        })
+        component = self.env['product.product'].create({
+            'name': 'Cup',
+            'available_in_pos': True,
+            'is_storable': True,
+            'tracking': 'lot',
+            'list_price': 5.0,
+        })
+        kit_red, kit_blue = kit_tmpl.product_variant_ids
+        for kit_variant in (kit_red, kit_blue):
+            self.env['mrp.bom'].create({
+                'product_tmpl_id': kit_tmpl.id,
+                'product_id': kit_variant.id,
+                'product_qty': 1.0,
+                'type': 'phantom',
+                'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 2.0})],
+            })
+
+        self.pos_config.open_ui()
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'partner_id': self.partner1.id,
+            'lines': [
+                Command.create({
+                    'product_id': kit_blue.id,
+                    'price_unit': 20.0,
+                    'qty': 1.0,
+                    'price_subtotal': 20.0,
+                    'price_subtotal_incl': 20.0,
+                }),
+                Command.create({
+                    'product_id': component.id,
+                    'price_unit': 5.0,
+                    'qty': 1.0,
+                    'price_subtotal': 5.0,
+                    'price_subtotal_incl': 5.0,
+                    'pack_lot_ids': [Command.create({'lot_name': 'lot-001'})],
+                }),
+            ],
+            'amount_total': 25.0,
+            'amount_tax': 0.0,
+            'amount_paid': 25.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {'active_ids': order.ids, 'active_id': order.id}
+        self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        }).with_context(**payment_context).check()
+        self.assertTrue(order.picking_ids, "Expected a stock picking to be created")
+
+    def test_bom_kit_template_level_bom_with_lot_component(self):
+        """
+        Tests that ordering a kit variant (not the first one) alongside its lot-tracked component
+        does not crash when a template-level BOM is used.
+        """
+        color_attr = self.env['product.attribute'].create({'name': 'Color'})
+        color_red = self.env['product.attribute.value'].create({'name': 'Red', 'attribute_id': color_attr.id})
+        color_blue = self.env['product.attribute.value'].create({'name': 'Blue', 'attribute_id': color_attr.id})
+
+        kit_tmpl = self.env['product.template'].create({
+            'name': 'Dinner Set',
+            'available_in_pos': True,
+            'is_storable': True,
+            'list_price': 20.0,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': color_attr.id,
+                'value_ids': [Command.set([color_red.id, color_blue.id])],
+            })],
+        })
+        component = self.env['product.product'].create({
+            'name': 'Cup',
+            'available_in_pos': True,
+            'is_storable': True,
+            'tracking': 'lot',
+            'list_price': 5.0,
+        })
+        _kit_red, kit_blue = kit_tmpl.product_variant_ids
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_tmpl.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 2.0})],
+        })
+
+        self.pos_config.open_ui()
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'partner_id': self.partner1.id,
+            'lines': [
+                Command.create({
+                    'product_id': kit_blue.id,
+                    'price_unit': 20.0,
+                    'qty': 1.0,
+                    'price_subtotal': 20.0,
+                    'price_subtotal_incl': 20.0,
+                }),
+                Command.create({
+                    'product_id': component.id,
+                    'price_unit': 5.0,
+                    'qty': 1.0,
+                    'price_subtotal': 5.0,
+                    'price_subtotal_incl': 5.0,
+                    'pack_lot_ids': [Command.create({'lot_name': 'lot-001'})],
+                }),
+            ],
+            'amount_total': 25.0,
+            'amount_tax': 0.0,
+            'amount_paid': 25.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {'active_ids': order.ids, 'active_id': order.id}
+        self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        }).with_context(**payment_context).check()
+        self.assertTrue(order.picking_ids, "Expected a stock picking to be created")
