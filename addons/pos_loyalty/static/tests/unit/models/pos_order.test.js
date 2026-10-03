@@ -458,6 +458,29 @@ describe("pos.order - loyalty", () => {
         expect(loyaltyStats2[0].points.balance).toBe(3);
     });
 
+    test("getLoyaltyPoints with a reward line without coupon", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+        order.setPartner(models["res.partner"].get(1));
+
+        // A promotion reward line of a draft loaded from the server: its
+        // temporary negative coupon id is not serialized.
+        await addProductLineToOrder(store, order, {
+            is_reward_line: true,
+            reward_id: models["loyalty.reward"].get(4),
+            points_cost: 0,
+        });
+        order.uiState.couponPointChanges = {
+            1: { coupon_id: 1, program_id: 1, points: 25 },
+        };
+
+        const loyaltyStats = order.getLoyaltyPoints();
+        expect(loyaltyStats).toHaveLength(1);
+        expect(loyaltyStats[0].points.won).toBe(25);
+        expect(loyaltyStats[0].points.spent).toBe(0);
+    });
+
     test("reward amount tax included cheapest product", async () => {
         const store = await setupPosEnv();
         const order = store.addNewOrder();

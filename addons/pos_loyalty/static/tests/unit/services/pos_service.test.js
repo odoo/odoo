@@ -65,4 +65,32 @@ describe("PosStore - loyalty essentials", () => {
 
         expect(card.id).toBe(2);
     });
+
+    test("postProcessLoyalty with a reward line without coupon", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+        const card = models["loyalty.card"].get(1);
+        order.uiState.couponPointChanges = {
+            [card.id]: { coupon_id: card.id, program_id: 1, points: 100 },
+        };
+
+        // A promotion reward line of a draft loaded from the server: its
+        // temporary negative coupon id is not serialized.
+        await addProductLineToOrder(store, order, {
+            is_reward_line: true,
+            reward_id: models["loyalty.reward"].get(4),
+            points_cost: 0,
+        });
+
+        let couponData;
+        onRpc("pos.order", "confirm_coupon_programs", ({ args }) => {
+            couponData = args[1];
+            return {};
+        });
+        await store.postProcessLoyalty(order);
+
+        expect(Object.keys(couponData)).toEqual([String(card.id)]);
+        expect(couponData[card.id].points).toBe(100);
+    });
 });

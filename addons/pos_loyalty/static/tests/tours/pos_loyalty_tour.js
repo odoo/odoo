@@ -866,3 +866,37 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountNegativeLine"
             PosLoyalty.finalizeOrder("Cash", "850"),
         ].flat(),
 });
+
+registry
+    .category("web_tour.tours")
+    .add("test_promotion_reward_of_order_loaded_on_another_device_make_order", {
+        steps: () =>
+            [
+                Chrome.startPoS(),
+                Dialog.confirm("Open Register"),
+                ProductScreen.clickPartnerButton(),
+                ProductScreen.clickCustomer("AAAA"),
+                ProductScreen.addOrderline("Whiteboard Pen", "1", "100"),
+                PosLoyalty.hasRewardLine("10% on Whiteboard Pen", "-10.00"),
+                PosLoyalty.pointsAwardedAre("90"),
+                ProductScreen.saveOrder(),
+            ].flat(),
+    });
+
+registry.category("web_tour.tours").add("test_promotion_reward_of_order_loaded_on_another_device", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("001"),
+            TicketScreen.loadSelectedOrder(),
+            PosLoyalty.hasRewardLine("10% on Whiteboard Pen", "-10.00"),
+            PosLoyalty.pointsAwardedAre("90"),
+            ProductScreen.totalAmountIs("90.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.totalIs("90.00"),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
