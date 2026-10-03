@@ -4,17 +4,61 @@
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
         <xpath expr="//div[@id='payment_term']" position="after">
             <t t-set="mydata_values" t-value="o._l10n_gr_edi_get_extra_invoice_report_values()"/>
-            <div class="row avoid-page-break-inside" t-if="mydata_values">
-                <div class="col-4">
-                    <img alt="Greece Barcode" t-att-src="mydata_values['barcode_src']"/>
+            <div class="row avoid-page-break-inside mt-3" t-if="mydata_values">
+                <div class="col-4" t-if="mydata_values.get('barcode_src')">
+                    <img alt="Invoice Verification QR Code"
+                         t-att-src="mydata_values['barcode_src']"/>
                 </div>
-                <div class="col-8">
-                    <div style="margin:5px;">
-                        <ul style="list-style: none">
-                            <li>myDATA Mark <t t-out="mydata_values['mydata_mark']"/></li>
-                            <li t-if="mydata_values.get('mydata_cls_mark')">myDATA Expense Classification Mark <t t-out="mydata_values['mydata_cls_mark']"/></li>
-                        </ul>
-                    </div>
+                <div t-att-class="'col-8' if mydata_values.get('barcode_src') else 'col-12'">
+                    <ul class="list-unstyled mb-0">
+                        <li t-if="mydata_values.get('provider_name')">
+                            <strong>Electronic Invoicing Provider:</strong>
+                            <span t-out="mydata_values['provider_name']"/>
+                        </li>
+                        <li t-if="mydata_values.get('provider_website')">
+                            <strong>Provider Website:</strong>
+                            <a t-att-href="mydata_values['provider_website']"
+                               t-out="mydata_values['provider_website']"/>
+                        </li>
+                        <li t-if="mydata_values.get('provider_software_license')">
+                            <strong>YPAHES Software Licence:</strong>
+                            <span t-out="mydata_values['provider_software_license']"/>
+                        </li>
+                        <li t-if="mydata_values.get('invoice_datetime')">
+                            <strong>Issuance Date and Time:</strong>
+                            <span t-out="mydata_values['invoice_datetime']"
+                                  t-options="{
+                                      'widget': 'datetime',
+                                      'format': 'yyyy-MM-dd HH:mm:ss',
+                                      'tz_name': 'Europe/Athens',
+                                  }"/>
+                        </li>
+                        <li t-if="mydata_values.get('mydata_mark')">
+                            <strong>MARK:</strong>
+                            <span t-out="mydata_values['mydata_mark']"/>
+                        </li>
+                        <li t-if="mydata_values.get('mydata_uid')">
+                            <strong>UID:</strong>
+                            <span t-out="mydata_values['mydata_uid']"/>
+                        </li>
+                        <li t-if="mydata_values.get('mydata_authentication_code')">
+                            <strong>Authentication Code:</strong>
+                            <span t-out="mydata_values['mydata_authentication_code']"/>
+                        </li>
+                        <li t-if="mydata_values.get('provider_invoice_identifier')">
+                            <strong>Invoice Identifier:</strong>
+                            <span t-out="mydata_values['provider_invoice_identifier']"/>
+                        </li>
+                        <li t-if="mydata_values.get('mydata_cls_mark')">
+                            <strong>myDATA Expense Classification MARK:</strong>
+                            <span t-out="mydata_values['mydata_cls_mark']"/>
+                        </li>
+                        <li t-if="mydata_values.get('verification_url')">
+                            <a t-att-href="mydata_values['verification_url']">
+                                Verify Invoice
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </xpath>
