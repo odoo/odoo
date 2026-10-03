@@ -995,9 +995,8 @@ export class PivotModel extends Model {
             if (aggregator === "array_agg_distinct") {
                 return measurements;
             }
-            if (aggregator === "sum_currency") {
-                const currencies =
-                    group[metaData.fields[fieldName].currency_field + ":array_agg_distinct"];
+            if (aggregator === "sum_currency" && metaData.fields[fieldName].aggregator !== "sum_currency") {
+                const currencies = group[metaData.fields[fieldName].currency_field + ":array_agg_distinct"];
                 if (currencies.length === 1) {
                     return measurements;
                 }
