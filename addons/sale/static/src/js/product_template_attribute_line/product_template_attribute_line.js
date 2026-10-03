@@ -35,7 +35,6 @@ export class ProductTemplateAttributeLine extends Component {
             (type) => ["always", "dynamic", "no_variant"].includes(type)
         ),
         customValue: t.or([t.literal(false), t.string()]).optional(),
-        show_extra_price: t.boolean(),
     });
 
     //--------------------------------------------------------------------------

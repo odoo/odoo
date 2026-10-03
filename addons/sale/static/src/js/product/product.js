@@ -28,7 +28,6 @@ export const productProps = {
     parent_product_tmpl_id: t.number().optional(),
     price_info: t.string().optional(),
     selectedComboItems: t.array(t.object({ name: t.string() })).optional(),
-    show_extra_price: t.boolean().optional(true),
 };
 
 export class Product extends Component {
