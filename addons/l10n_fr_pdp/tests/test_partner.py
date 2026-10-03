@@ -12,6 +12,21 @@ from .common import TestL10nFrPdpCommon, mock_pdp_annuaire_lookup, mock_pdp_pepp
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
 
+    def test_compact_identifiers_in_test_mode(self):
+        partner = self.env['res.partner'].create({
+            'name': 'French partner',
+            'country_id': self.env.ref('base.fr').id,
+            'l10n_fr_siret': '397 471 822 00114',
+        })
+        self.assertEqual(partner.additional_identifiers['FR_SIRET'], '39747182200114')
+
+        partner.write({
+            'l10n_fr_siret': '397 471 822 00110',
+            'l10n_fr_siren': '397 471 822',
+        })
+        self.assertEqual(partner.additional_identifiers['FR_SIRET'], '39747182200110')
+        self.assertEqual(partner.additional_identifiers['FR_SIREN'], '397471822')
+
     def test_pdp_identifier_derivation(self):
         # SIREN is derived from the FR SIRET/SIREN identifier and `routing_identifier` computed from SIREN
         partner = self.env["res.partner"].create({
