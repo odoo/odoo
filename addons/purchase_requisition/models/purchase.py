@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, get_lang
 
 
@@ -9,6 +9,22 @@ class PurchaseOrder(models.Model):
 
     requisition_id = fields.Many2one('purchase.requisition', string='Agreement', copy=False, index='btree_not_null')
     requisition_type = fields.Selection(related='requisition_id.requisition_type')
+    date_order_warning = fields.Char(compute='_compute_date_order_warning')
+
+    @api.depends('date_order', 'requisition_id.date_start', 'requisition_id.date_end')
+    def _compute_date_order_warning(self):
+        for order in self:
+            if not order.date_order or not order.requisition_id or not order.requisition_id.date_end or not order.requisition_id.date_start:
+                order.date_order_warning = False
+                continue
+
+            order_date = order.date_order.date()
+            before_purchase_agreement_start = order_date < order.requisition_id.date_start
+            after_purchase_agreement_end = order_date > order.requisition_id.date_end
+            if before_purchase_agreement_start or after_purchase_agreement_end:
+                order.date_order_warning = _("You are placing an order outside the %s validity period", order.requisition_id.name)
+            else:
+                order.date_order_warning = False
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
@@ -102,6 +118,26 @@ class PurchaseOrder(models.Model):
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
+
+    order_too_big_warning = fields.Char(compute='_compute_order_too_big_warning')
+
+    def _compute_order_too_big_warning(self):
+        for pol in self:
+            requisition = pol.order_id.requisition_id
+            if not requisition:
+                pol.order_too_big_warning = False
+                continue
+
+            remaining_quantities = {line.product_id.id: (line.product_qty - line.qty_ordered) for line in requisition.line_ids if line.product_id}
+            if pol.product_id.id not in remaining_quantities:
+                pol.order_too_big_warning = False
+                continue
+
+            if pol.product_qty > remaining_quantities[pol.product_id.id]:
+                pol.order_too_big_warning = _("Ordering this quantity will make the total ordered quantity for %s exceed the agreed-upon quantity", requisition.display_name)
+                continue
+
+            pol.order_too_big_warning = False
 
     def _compute_price_unit_and_date_planned_and_name(self):
         po_lines_without_requisition = self.env['purchase.order.line']
