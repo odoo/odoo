@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import fields, models, api, _
+from odoo import Command, fields, models, api, _
 from odoo.exceptions import AccessError
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.tools.misc import OrderedSet
@@ -185,6 +185,43 @@ class StockMove(models.Model):
     def _get_subcontract_production(self):
         return self.filtered(lambda m: m.is_subcontract).move_orig_ids.production_id
 
+    def _split_per_subcontract_production(self):
+        """ Give each subcontracting production its own subcontract receipt move.
+
+        Splitting a subcontracting MO propagates the finished move's `move_dest_ids`
+        to every backorder (see `_get_backorder_move_vals`), which would leave several
+        productions sharing one receipt move. Untracked receipts require a 1:1 link,
+        so split the receipt move to match. This is the counterpart of the split done
+        in `stock.picking._subcontracted_produce` for the backorder case.
+        """
+        for move in self:
+            if move.state in ('done', 'cancel') or move.has_tracking != 'none':
+                continue
+            productions = move._get_subcontract_production().filtered(lambda p: p.state != 'cancel')
+            if len(productions) < 2:
+                continue
+            # Keep the first production on this move and detach the others upfront, so
+            # that the moves created below do not inherit every origin link. The recordset
+            # is resolved before the write, as the unlink empties `move.move_orig_ids`.
+            extra_finished_moves = productions[1:].move_finished_ids & move.move_orig_ids
+            extra_finished_moves.move_dest_ids = [Command.unlink(move.id)]
+            for finished_move in extra_finished_moves:
+                split_vals = move._split(finished_move.production_id.product_qty)
+                if not split_vals:
+                    continue
+                # `_split` copies the origin links, but the new move belongs to a single
+                # production. Without this, `_subcontracted_produce` would see a finished
+                # move with several destination moves and split the production once more.
+                for vals in split_vals:
+                    vals['move_orig_ids'] = [Command.set(finished_move.ids)]
+                new_move = self.env['stock.move'].create(split_vals)
+                new_move._action_confirm(merge=False, create_proc=False)
+                new_move._action_assign()
+            # `_split` only shrinks the demand, the move lines still hold the quantity of
+            # the whole receipt, so bring them back in line with what this move expects.
+            if move.product_uom.compare(move.quantity, move.product_uom_qty) > 0:
+                move.with_context(unreserve_unpicked_only=True).quantity = move.product_uom_qty
+
     def _prepare_move_split_vals(self, qty):
         vals = super(StockMove, self)._prepare_move_split_vals(qty)
         vals['location_id'] = self.location_id.id
@@ -271,7 +308,7 @@ class StockMove(models.Model):
                 # 2. Create new MOs where needed, by splitting them from an existing subcontracting MO
                 if mos_to_create:
                     production_to_split = move._get_subcontract_production()[0]
-                    new_mos = production_to_split.sudo().with_context(allow_more=True, mrp_subcontracting=False)._split_productions({
+                    new_mos = production_to_split.sudo().with_context(allow_more=True, mrp_subcontracting=False, skip_subcontract_move_split=True)._split_productions({
                         production_to_split: [production_to_split.product_qty] + list(mos_to_create.values())
                     }, cancel_remaining_qty=True)[1:]
                     mos_to_assign |= new_mos
