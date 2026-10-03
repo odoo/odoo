@@ -111,7 +111,7 @@ class PosConfig(models.Model):
             'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant', 'is_header_or_footer',
             'rounding_method', 'cash_rounding', 'only_round_cash_method', 'has_active_session',
             'available_preset_ids', 'default_preset_id', 'epson_printer_ip', 'use_presets', 'iface_tax_included',
-            'status', 'self_ordering_image_background_ids', 'other_devices',
+            'status', 'self_ordering_image_background_ids', 'other_devices', 'iface_group_by_categ',
         ]
 
     def _update_access_token(self):

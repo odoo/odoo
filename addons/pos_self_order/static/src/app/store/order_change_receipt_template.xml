@@ -25,30 +25,44 @@
             <div class="pos-receipt-title">
                 NEW
             </div>
-            <t t-foreach="changes.new" t-as="change" t-key="change_index">
-                <div class="product-details d-flex mx-1" t-att-class="{'ms-5': change.combo_parent_id}" style="font-size: 150%;">
-                    <span class="product-quantity me-3" t-esc="change.qty"/>
-                    <span class="product-name" t-esc="change.product_id.name"/>
-                </div>
-                <div class="mx-1" t-att-class="{'ms-5': change.combo_parent_id}" style="font-size: 150%;">
-                   <t t-set="attribute_names" t-value="changes.getLineAttributeNames(change)" />
-                   <div t-if="attribute_names.length" class="ms-5" style="font-size: 91%;">
-                        <div t-foreach="attribute_names" t-as="attr" t-key="attr_index">
-                            - <t t-esc="attr" />
-                        </div>
-                   </div>
-                </div>
-                <t t-if="change.customer_note">
-                    <div>
-                        NOTE
-                        <span class="pos-receipt-right-align">...</span>
-                    </div>
-                    <div><span class="pos-receipt-left-padding">--- <t t-esc="change.customer_note" /></span></div>
-                    <br/>
+            <t t-if="changes.groupedData">
+                <t t-foreach="changes.groupedData" t-as="group" t-key="group_index">
+                    <div t-if="group.name" style="border-bottom: 1px dashed black;" class="mb-2 pb-1 fw-bold" t-att-class="{'mt-1': !group_first}" t-esc="group.name"/>
+                    <t t-foreach="group.data" t-as="change" t-key="change_index">
+                        <t t-call="pos_self_order.KioskOrderChangeLine"/>
+                    </t>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-foreach="changes.new" t-as="change" t-key="change_index">
+                    <t t-call="pos_self_order.KioskOrderChangeLine"/>
                 </t>
             </t>
             <br />
         </div>
+    </t>
+
+    <t t-name="pos_self_order.KioskOrderChangeLine">
+        <div class="product-details d-flex mx-1" t-att-class="{'ms-5': change.combo_parent_id}" style="font-size: 150%;">
+            <span class="product-quantity me-3" t-esc="change.qty"/>
+            <span class="product-name" t-esc="change.product_id.name"/>
+        </div>
+        <div class="mx-1" t-att-class="{'ms-5': change.combo_parent_id}" style="font-size: 150%;">
+            <t t-set="attribute_names" t-value="changes.getLineAttributeNames(change)"/>
+            <div t-if="attribute_names.length" class="ms-5" style="font-size: 91%;">
+                <div t-foreach="attribute_names" t-as="attr" t-key="attr_index">
+                    - <t t-esc="attr"/>
+                </div>
+            </div>
+        </div>
+        <t t-if="change.customer_note">
+            <div>
+                NOTE
+                <span class="pos-receipt-right-align">...</span>
+            </div>
+            <div><span class="pos-receipt-left-padding">--- <t t-esc="change.customer_note"/></span></div>
+            <br/>
+        </t>
     </t>
 
 </templates>
