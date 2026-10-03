@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, time, timedelta
+from unittest.mock import patch
+from zoneinfo import ZoneInfo
+
+from odoo import modules
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
 from freezegun import freeze_time
 
 from odoo.tests import tagged
+from odoo.tools import config
 
 @tagged('global_leaves')
 class TestGlobalLeaves(TestHrHolidaysCommon):
@@ -178,6 +183,50 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'request_date_to': global_leave.date_to + timedelta(days=1),
         })
         self.assertEqual(leave.number_of_days, 2, 'There is a global leave')
+
+    @freeze_time('2026-09-22')
+    def test_generate_public_holidays_company_timezone(self):
+        """Ensure holidays cover each company's full local day regardless of the
+        user's timezone, and repeated generation skips existing holidays.
+        """
+        self.company.country_id = self.env.ref('base.mx')
+        self.company.tz = 'America/Mexico_City'
+
+        self.external_company.country_id = self.env.ref('base.in')
+        self.external_company.tz = 'Asia/Kolkata'
+
+        companies = self.company + self.external_company
+        leaves = self.env['resource.calendar.leaves'].with_context(
+            allowed_company_ids=companies.ids,
+            tz='UTC',
+        )
+        domain = [('company_id', 'in', companies.ids), ('resource_id', '=', False)]
+        existing_leaves = leaves.search(domain)
+
+        # Enable automatic generation, which is normally skipped during tests.
+        with (
+            patch.dict(config._runtime_options, {'test_enable': False}),
+            patch.object(modules.module, 'current_test', None),
+        ):
+            leaves._cron_generate_public_holidays()
+            generated_leaves = leaves.search(domain) - existing_leaves
+            leaves._cron_generate_public_holidays()
+
+        self.assertEqual(leaves.search(domain) - existing_leaves, generated_leaves)
+
+        christmas = date(2026, 12, 25)
+        for company in companies:
+            holiday = generated_leaves.filtered(
+                lambda leave: leave.company_id == company and leave.name == 'Christmas Day'
+            )
+            self.assertEqual(len(holiday), 1)
+
+            company_timezone = ZoneInfo(company.tz)
+            local_day_start = datetime.combine(christmas, time.min, tzinfo=company_timezone)
+            local_day_end = datetime.combine(christmas, time.max, tzinfo=company_timezone)
+
+            self.assertEqual(holiday.date_from, local_day_start.astimezone(UTC).replace(tzinfo=None))
+            self.assertEqual(holiday.date_to, local_day_end.astimezone(UTC).replace(tzinfo=None))
 
     @freeze_time('2026-03-19')
     def test_load_public_holidays_opens_preview_wizard(self):
