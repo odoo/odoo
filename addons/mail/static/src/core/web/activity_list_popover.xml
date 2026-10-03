@@ -3,7 +3,7 @@
     <t t-name="mail.ActivityListPopover">
         <div class="o-mail-ActivityListPopover d-flex flex-column" t-ref="root">
             <div class="overflow-y-auto d-flex flex-column flex-grow-1">
-                <span t-if="activities.length === 0" class="p-3 text-center fst-italic text-500 border-bottom fs-6">Schedule activities to help you get things done.</span>
+                <span t-if="activities.length === 0 and props.canCreate" class="p-3 text-center fst-italic text-500 border-bottom fs-6">Schedule activities to help you get things done.</span>
                 <t t-if="overdueActivities.length > 0">
                     <div class="d-flex bg-100 py-2 border-bottom">
                         <span class="text-danger fw-bold mx-3">Overdue</span>
@@ -37,7 +37,7 @@
                     <ActivityListPopoverItem t-foreach="doneActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="props.onActivityChanged"/>
                 </t>
             </div>
-            <button class="btn btn-secondary p-3 text-center" t-on-click="onClickAddActivityButton">
+            <button t-if="props.canCreate" class="btn btn-secondary p-3 text-center" t-on-click="onClickAddActivityButton">
                 <t t-if="props.resIds"><i class="fa fa-plus fa-fw"/><strong>Schedule an activity on selected records</strong></t>
                 <t t-else=""><i class="fa fa-plus fa-fw"/><strong>Schedule an activity</strong></t>
             </button>

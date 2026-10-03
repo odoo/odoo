@@ -25,6 +25,7 @@ export class ActivityCell extends Component {
         },
         activityTypeId: Number,
         reportingDate: String,
+        canCreate: { type: Boolean, optional: true },
         countByState: Object,
         reloadFunc: Function,
         resId: Number,
@@ -76,6 +77,7 @@ export class ActivityCell extends Component {
                 },
                 resId: this.props.resId,
                 resModel: this.props.resModel,
+                canCreate: this.props.canCreate,
             });
         }
     }
