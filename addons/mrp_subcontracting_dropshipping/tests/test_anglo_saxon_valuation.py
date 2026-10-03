@@ -238,3 +238,43 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
 
         self.assertEqual(avco_product.standard_price, 0)
         self.assertEqual(avco_product_2.standard_price, 0)
+
+    def test_resupply_dropship_bill_accounts(self):
+        """
+        Verify that a dropship resupply vendor bill uses the stock valuation
+        account for Anglo-Saxon accounting and the expense account for
+        continental accounting.
+        """
+        self.product_b.write({
+            'route_ids': [Command.link(self.dropship_route.id)],
+            'categ_id': self.categ_avco_auto,
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_b.id,
+                'price': 100,
+            })],
+        })
+        self.product_a.seller_ids = [Command.create({'partner_id': self.partner_a.id})]
+        for anglo_saxon_accounting, account_name in [(True, 'Stock Valuation'), (False, 'Expenses')]:
+            self.env.company.anglo_saxon_accounting = anglo_saxon_accounting
+            self.env['purchase.order'].create({
+                'partner_id': self.partner_a.id,
+                'order_line': [Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100,
+                })],
+            }).button_confirm()
+            resupply_po = self.env['purchase.order'].search([
+                ('product_id', '=', self.product_b.id),
+                ('partner_id', '=', self.partner_b.id),
+                ('dest_address_id', '=', self.partner_a.id),
+                ('state', '=', 'draft'),
+            ], limit=1)
+            resupply_po.button_confirm()
+            resupply_po.picking_ids.button_validate()
+            resupply_po.action_create_invoice()
+            self.assertRecordValues(resupply_po.invoice_ids.line_ids, [
+                {'account_name': account_name, 'debit': 100.0, 'credit': 0.0},
+                {'account_name': 'Tax Paid', 'debit': 15.0, 'credit': 0.0},
+                {'account_name': 'Account Payable (copy)', 'debit': 0.0, 'credit': 34.5},
+                {'account_name': 'Account Payable (copy)', 'debit': 0.0, 'credit': 80.5},
+            ])

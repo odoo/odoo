@@ -19,19 +19,25 @@ class StockMove(models.Model):
             or (
                 self.partner_id.property_stock_subcontractor.parent_path
                 and (
-                    (
-                        self.partner_id.property_stock_subcontractor.parent_path
-                        in self.location_id.parent_path
-                        and self.location_dest_id.usage == "customer"
-                    )
+                    self._is_subcontractor_to_customer_dropship()
                     # Vendor -> subcontractor location
-                    or (
-                        self.partner_id.property_stock_subcontractor.parent_path
-                        in self.location_dest_id.parent_path
-                        and self.location_id.usage == "supplier"
-                    )
+                    or self._is_resupply_dropship()
                 )
             )
+        )
+
+    def _is_resupply_dropship(self):
+        return (
+            self.partner_id.property_stock_subcontractor.parent_path
+            in self.location_dest_id.parent_path
+            and self.location_id.usage == "supplier"
+        )
+
+    def _is_subcontractor_to_customer_dropship(self):
+        return (
+            self.partner_id.property_stock_subcontractor.parent_path
+            in self.location_id.parent_path
+            and self.location_dest_id.usage == "customer"
         )
 
     def _is_dropshipped_returned(self):
