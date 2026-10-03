@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_attendance_form_presenly" model="ir.ui.view">
+        <field name="name">hr.attendance.form.presenly.tools</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="create">0</attribute>
+                <attribute name="edit">0</attribute>
+                <attribute name="delete">0</attribute>
+                <attribute name="duplicate">false</attribute>
+            </xpath>
+
+            <xpath expr="//header" position="inside">
+                <button name="action_presenly_delete" type="object"
+                        string="Delete" confirm="Delete this attendance record and its evidence?"
+                        class="btn-danger"
+                        groups="presenly.group_presenly_hr,presenly.group_presenly_manager"/>
+            </xpath>
+
+            <!-- Native overtime (Extra Hours) is managed by Presenly Overtime
+                 requests: hide all native affordances in the form. -->
+            <xpath expr="//header/field[@name='overtime_status']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='overtime_hours']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//label[@for='validated_overtime_hours']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='validated_overtime_hours']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_approve_overtime']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse_overtime']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//sheet/group[1]" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_open_presenly_evidence" type="object"
+                            class="oe_stat_button" icon="fa-camera"
+                            invisible="not presenly_evidence_count"
+                            groups="presenly.group_presenly_hr">
+                        <field name="presenly_evidence_count" widget="statinfo" string="Evidence"/>
+                    </button>
+                </div>
+            </xpath>
+
+            <!-- Employee is identity, not an employee self-service selector. -->
+            <xpath expr="//group[@name='group_employee']" position="inside">
+                <field name="presenly_can_change_employee" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@id='employee_no_officer']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@id='employee_no_manager']" position="attributes">
+                <attribute name="readonly">not presenly_can_change_employee</attribute>
+                <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@id='employee_manager']" position="attributes">
+                <attribute name="readonly">not presenly_can_change_employee</attribute>
+                <attribute name="options">{'no_create': True, 'no_open': True}</attribute>
+            </xpath>
+
+            <!-- Context appears once. Check-in/out timestamps remain only in the
+                 native summary above; event sections below contain evidence. -->
+            <xpath expr="//separator[following-sibling::group[@name='check_in_group']][1]" position="replace">
+                <separator string="Attendance Context"/>
+                <group name="presenly_attendance_metadata" colspan="2">
+                    <group>
+                        <field name="presenly_attendance_mode" readonly="1"/>
+                        <field name="presenly_source" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="presenly_company_id" readonly="1"
+                               groups="base.group_multi_company"/>
+                        <field name="presenly_work_location_id" readonly="1"
+                               options="{'no_open': True}"/>
+                    </group>
+                    <group>
+                        <field name="presenly_schedule_id" readonly="1"
+                               options="{'no_open': True}"/>
+                    </group>
+                </group>
+                <separator string="Check-In Evidence"/>
+            </xpath>
+            <xpath expr="//separator[@name='check_out_separator']" position="attributes">
+                <attribute name="string">Check-Out Evidence</attribute>
+            </xpath>
+
+            <xpath expr="//group[@name='check_in_group']" position="replace">
+                <group name="check_in_group" colspan="2">
+                    <group string="Device and Validation">
+                        <field name="in_mode" readonly="1"/>
+                        <field name="in_ip_address" readonly="1"
+                               invisible="presenly_source == 'mobile' or in_mode == 'manual' or not device_tracking_enabled"/>
+                        <field name="in_browser" readonly="1"
+                               invisible="presenly_source == 'mobile' or in_mode == 'manual' or not device_tracking_enabled"/>
+                        <field name="presenly_check_in_distance" string="Distance from Work Location (m)"
+                               readonly="1" invisible="presenly_source != 'mobile'"/>
+                        <field name="presenly_check_in_accuracy" readonly="1"
+                               invisible="presenly_source != 'mobile'"/>
+                    </group>
+                    <group string="Location and Selfie"
+                           invisible="in_mode == 'manual' or (presenly_source != 'mobile' and not device_tracking_enabled)">
+                        <field name="in_location" readonly="1"
+                               invisible="presenly_source == 'mobile'"/>
+                        <label for="in_latitude" string="GPS Coordinates"/>
+                        <div>
+                            <div class="o_row">
+                                <span><field name="in_latitude" readonly="1"/></span>,
+                                <span><field name="in_longitude" nolabel="1" readonly="1"/></span>
+                            </div>
+                            <button name="action_in_attendance_maps" type="object"
+                                    class="btn btn-link ps-0 pt-0 pb-2"
+                                    icon="oi-arrow-right" string="View on Maps"
+                                    invisible="not in_latitude and not in_longitude"/>
+                        </div>
+                        <field name="presenly_selfie_in_attachment_id"
+                               widget="presenly_attachment_image_viewer" readonly="1"
+                               nolabel="1" invisible="not presenly_selfie_in_attachment_id"/>
+                    </group>
+                </group>
+            </xpath>
+
+            <xpath expr="//group[@name='check_out_group']" position="replace">
+                <group colspan="2" name="check_out_group" invisible="not check_out">
+                    <group string="Device and Validation">
+                        <field name="out_mode" string="Mode" readonly="1"/>
+                        <field name="out_ip_address" string="IP Address" readonly="1"
+                               invisible="presenly_source == 'mobile' or out_mode == 'manual' or not device_tracking_enabled"/>
+                        <field name="out_browser" string="Browser" readonly="1"
+                               invisible="presenly_source == 'mobile' or out_mode == 'manual' or not device_tracking_enabled"/>
+                        <field name="presenly_check_out_distance" string="Distance from Work Location (m)"
+                               readonly="1" invisible="presenly_source != 'mobile'"/>
+                        <field name="presenly_check_out_accuracy" readonly="1"
+                               invisible="presenly_source != 'mobile'"/>
+                    </group>
+                    <group string="Location and Selfie"
+                           invisible="out_mode == 'manual' or (presenly_source != 'mobile' and not device_tracking_enabled)">
+                        <field name="out_location" readonly="1"
+                               invisible="presenly_source == 'mobile'"/>
+                        <label for="out_latitude" string="GPS Coordinates"/>
+                        <div>
+                            <div class="o_row">
+                                <span><field name="out_latitude" readonly="1"/></span>,
+                                <span><field name="out_longitude" nolabel="1" readonly="1"/></span>
+                            </div>
+                            <button name="action_out_attendance_maps" type="object"
+                                    class="btn btn-link ps-0 pt-0 pb-2"
+                                    icon="oi-arrow-right" string="View on Maps"
+                                    invisible="not out_latitude and not out_longitude"/>
+                        </div>
+                        <field name="presenly_selfie_out_attachment_id"
+                               widget="presenly_attachment_image_viewer" readonly="1"
+                               nolabel="1" invisible="not presenly_selfie_out_attachment_id"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_attendance_list_presenly" model="ir.ui.view">
+        <field name="name">hr.attendance.list.presenly.tools</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="create">0</attribute>
+                <attribute name="edit">0</attribute>
+                <attribute name="delete">0</attribute>
+                <attribute name="duplicate">false</attribute>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_presenly_delete" type="object"
+                        string="Delete" confirm="Delete this attendance record and its evidence?"
+                        class="btn-danger"
+                        groups="presenly.group_presenly_hr,presenly.group_presenly_manager"/>
+            </xpath>
+            <xpath expr="//header/button[@name='action_approve_overtime']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='action_refuse_overtime']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <field name="overtime_hours" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="validated_overtime_hours" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="overtime_status" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="employee_id" position="after">
+                <field name="presenly_company_id" optional="hide" groups="base.group_multi_company"/>
+                <field name="presenly_attendance_mode" optional="show"/>
+                <field name="presenly_work_location_id" optional="show"/>
+                <field name="presenly_schedule_id" optional="hide"/>
+                <field name="presenly_source" optional="hide"/>
+            </field>
+            <field name="worked_hours" position="after">
+                <field name="presenly_evidence_count" string="Evidence" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_hr_attendance_management_list_presenly" model="ir.ui.view">
+        <field name="name">hr.attendance.management.list.presenly.readonly</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree_management"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="create">0</attribute>
+                <attribute name="edit">0</attribute>
+                <attribute name="delete">0</attribute>
+                <attribute name="duplicate">false</attribute>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_presenly_delete" type="object"
+                        string="Delete" confirm="Delete this attendance record and its evidence?"
+                        class="btn-danger"
+                        groups="presenly.group_presenly_hr,presenly.group_presenly_manager"/>
+            </xpath>
+            <xpath expr="//header/button[@name='action_approve_overtime']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='action_refuse_overtime']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_approve_overtime']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse_overtime']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <field name="overtime_hours" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="validated_overtime_hours" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_hr_attendance_search_presenly" model="ir.ui.view">
+        <field name="name">hr.attendance.search.presenly.tools</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_filter"/>
+        <field name="arch" type="xml">
+            <field name="department_id" position="after">
+                <field name="presenly_company_id"/>
+                <field name="presenly_attendance_mode"/>
+                <field name="presenly_work_location_id"/>
+                <field name="presenly_schedule_id"/>
+                <field name="presenly_source"/>
+            </field>
+            <filter name="auto_check" position="after">
+                <filter name="presenly_mobile" string="Mobile Presenly" domain="[('presenly_source', '=', 'mobile')]"/>
+                <filter name="presenly_wfa" string="Work From Anywhere" domain="[('presenly_attendance_mode', '=', 'wfa')]"/>
+                <filter name="presenly_has_evidence" string="Has Evidence" domain="[('presenly_event_ids', '!=', False)]"/>
+            </filter>
+            <filter name="groupby_mode_in" position="after">
+                <filter name="groupby_presenly_company" string="Operational Company"
+                        context="{'group_by': 'presenly_company_id'}" groups="base.group_multi_company"/>
+                <filter name="groupby_presenly_location" string="Work Location"
+                        context="{'group_by': 'presenly_work_location_id'}"/>
+                <filter name="groupby_presenly_attendance_mode" string="Attendance Mode"
+                        context="{'group_by': 'presenly_attendance_mode'}"/>
+                <filter name="groupby_presenly_source" string="Presenly Source"
+                        context="{'group_by': 'presenly_source'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- Native Extra Hours settings are managed by Presenly Overtime requests.
+         Hide the whole block from company settings. -->
+    <record id="res_config_settings_overtime_hidden_presenly" model="ir.ui.view">
+        <field name="name">res.config.settings.overtime.hidden.presenly</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_attendance.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='overtime_settings']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

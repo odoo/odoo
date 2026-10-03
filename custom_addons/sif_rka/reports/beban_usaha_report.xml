@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_beban_usaha" model="ir.actions.report">
+        <field name="name">Laporan Beban Usaha</field>
+        <field name="model">sif.rka.budget</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sif_rka.beban_usaha_report</field>
+        <field name="report_file">sif_rka.beban_usaha_report</field>
+        <field name="binding_model_id" ref="model_sif_rka_budget"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="beban_usaha_report">
+
+        <t t-call="web.html_container">
+
+            <t t-foreach="docs" t-as="o">
+
+                <t t-call="web.external_layout">
+
+                    <div class="page">
+
+                        <h2 style="text-align: center;">
+                            LAPORAN BEBAN USAHA
+                        </h2>
+
+                        <p style="text-align: center;">
+                            Tahun
+                            <strong>
+                                <t t-esc="o.tahun"/>
+                            </strong>
+                        </p>
+
+                        <br/>
+
+                        <t t-set="report_data"
+                           t-value="o._get_beban_usaha_report_data()"/>
+
+                        <table
+                            class="table table-sm"
+                            style="width: 100%;"
+                        >
+
+                            <thead>
+
+                                <tr>
+                                    <th style="width: 15%;">
+                                        Kode
+                                    </th>
+
+                                    <th style="width: 45%;">
+                                        Nama Akun
+                                    </th>
+
+                                    <th style="width: 20%; text-align: right;">
+                                        <t t-esc="report_data['tahun']"/>
+                                    </th>
+
+                                    <th style="width: 20%; text-align: right;">
+                                        <t t-esc="report_data['tahun_sebelumnya']"/>
+                                    </th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <t t-foreach="report_data['rows']" t-as="row">
+
+                                    <tr>
+
+                                        <td>
+                                            <t t-esc="row['code']"/>
+                                        </td>
+
+                                        <td>
+                                            <t t-esc="row['name']"/>
+                                        </td>
+
+                                        <td style="text-align: right;">
+
+                                            <span
+                                                t-esc="row['current_amount']"
+                                                t-options="{
+                                                    'widget': 'monetary',
+                                                    'display_currency': o.currency_id
+                                                }"
+                                            />
+
+                                        </td>
+
+                                        <td style="text-align: right;">
+
+                                            <span
+                                                t-esc="row['previous_amount']"
+                                                t-options="{
+                                                    'widget': 'monetary',
+                                                    'display_currency': o.currency_id
+                                                }"
+                                            />
+
+                                        </td>
+
+                                    </tr>
+
+                                </t>
+
+                                <tr>
+
+                                    <td colspan="2">
+                                        <strong>
+                                            Total Beban Usaha
+                                        </strong>
+                                    </td>
+
+                                    <td style="text-align: right;">
+
+                                        <strong>
+
+                                            <span
+                                                t-esc="report_data['total_current_realization']"
+                                                t-options="{
+                                                    'widget': 'monetary',
+                                                    'display_currency': o.currency_id
+                                                }"
+                                            />
+
+                                        </strong>
+
+                                    </td>
+
+                                    <td style="text-align: right;">
+
+                                        <strong>
+
+                                            <span
+                                                t-esc="report_data['total_previous_realization']"
+                                                t-options="{
+                                                    'widget': 'monetary',
+                                                    'display_currency': o.currency_id
+                                                }"
+                                            />
+
+                                        </strong>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </t>
+
+            </t>
+
+        </t>
+
+    </template>
+
+</odoo>

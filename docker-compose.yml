@@ -1,0 +1,21 @@
+services:
+  web:
+    image: odoo:19.0
+    ports:
+      - "8099:8069"
+    command: odoo -d db_sifnext -i base --proxy-mode
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./custom_addons:/mnt/extra-addons
+    env_file:
+      - .env
+    networks:
+      - dokploy-network
+    restart: always
+
+volumes:
+  odoo-web-data:
+
+networks:
+  dokploy-network:
+    external: true

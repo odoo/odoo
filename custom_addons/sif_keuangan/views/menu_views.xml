@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menu Utama Modul SIFNEXT Keuangan -->
+    <menuitem id="menu_sif_keuangan_root" 
+              name="Jurnal Besar" 
+              sequence="20" 
+              web_icon="sif_keuangan,static/description/icon.png"/>
+
+    <!-- Kategori 1: Transaksi -->
+    <menuitem id="menu_sif_transaksi" 
+              name="Transaksi" 
+              parent="menu_sif_keuangan_root" 
+              sequence="10"/>
+
+    <menuitem id="menu_sif_jurnal_entry_sub" 
+              name="Jurnal Transaksi" 
+              parent="menu_sif_transaksi" 
+              action="action_sif_jurnal_entry" 
+              sequence="10"/>
+
+    <!-- Kategori 2: Laporan (Membuka Wizard Filter Tanggal) -->
+    <menuitem id="menu_sif_laporan" 
+              name="Laporan" 
+              parent="menu_sif_keuangan_root" 
+              sequence="20"/>
+
+    <menuitem id="menu_sif_buku_besar_sub" 
+              name="Buku Besar" 
+              parent="menu_sif_laporan" 
+              action="action_sif_buku_besar_wizard" 
+              sequence="10"/>
+
+    <!-- Kategori 3: Master Data -->
+    <menuitem id="menu_sif_master" 
+              name="Master Data" 
+              parent="menu_sif_keuangan_root" 
+              sequence="30"/>
+
+    <menuitem id="menu_sif_coa_sub" 
+              name="Chart of Accounts (COA)" 
+              parent="menu_sif_master" 
+              action="action_sif_coa" 
+              sequence="10"/>
+
+</odoo>

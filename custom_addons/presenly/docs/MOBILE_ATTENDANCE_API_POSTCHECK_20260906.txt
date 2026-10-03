@@ -1,0 +1,140 @@
+PRESENLY MOBILE ATTENDANCE API — POST-CHECK
+Date: 2026-09-06
+Database: odoo
+Module: presenly 19.0.8.0.0
+
+SCOPE
+- Mobile contract is limited to Odoo session login/logout and attendance.
+- Documented operations: login, session check, attendance status, check-in, check-out, and logout.
+- Time Off, Permission, and Approval endpoints are not part of docs/MOBILE_API.md.
+- Existing non-attendance backend routes were not deleted, preserving compatibility for other clients.
+
+ENDPOINTS
+- POST /web/session/authenticate
+- POST /web/session/get_session_info
+- POST /api/presenly/v1/attendance/status
+- POST /api/presenly/v1/attendance/check-in
+- POST /api/presenly/v1/attendance/check-out
+- POST /web/session/destroy
+
+CRITICAL FIX
+- Odoo JSON-RPC dispatches each property in params as a controller keyword argument.
+- Check-in/check-out now consume those keyword parameters directly.
+- The previous implementation reread the raw JSON envelope and could treat jsonrpc/method/params/id as the attendance payload instead of using params.
+- Mobile payload must be placed directly in the JSON-RPC params object.
+
+AUTHORIZATION
+- Authentication uses the native Odoo session_id cookie; no custom JWT was introduced.
+- Employee identity is always taken from the authenticated session.
+- Client cannot provide employee_id, check_in, or check_out.
+- Check-in and check-out timestamps use server time.
+- Employee company must be included in the authenticated user's Allowed Companies.
+- Native hr.attendance create/write is performed with controlled elevation only for the authenticated Employee's attendance record, because a regular internal Odoo user has read-only ACL on own attendance.
+
+STATUS CONTRACT
+- Returns server_time, Employee and Company identity, attendance state, active attendance, location snapshot, and available Work Locations.
+- Returns can_check_in and can_check_out for mobile button state.
+- can_check_in is false when there is no active location or the scheduled location is not geofence-ready.
+- Returns Work Location geofence radius, GPS accuracy policy, and check-in/check-out selfie policy.
+- Status no longer returns approved_leave, leave_id, leave_type, or approved_permission.
+
+CHECK-IN VALIDATION
+- Requires finite numeric latitude, longitude, and accuracy.
+- Latitude must be -90..90 and longitude -180..180.
+- Accuracy must be greater than zero and within the Work Location policy.
+- Employee must not already have an active attendance.
+- Work Location must be valid for the server time according to Specific Date, Weekly, native daily, or primary-location resolution.
+- Location must be geofence-ready and coordinates must be inside its radius.
+- Selfie must be present when required by Work Location policy.
+- Successful response includes explicit validation status, distance, accuracy, and selfie_received.
+
+CHECK-OUT VALIDATION
+- Employee must have an active attendance.
+- Check-out uses the immutable Work Location snapshot selected at check-in.
+- Provided work_location_id must match the snapshot.
+- Check-out coordinates must be inside that same Work Location geofence.
+- GPS accuracy and selfie policy are validated again.
+- Successful response includes explicit geofence_valid and same_work_location values.
+
+SELFIE SECURITY
+- Accepted formats: JPEG, PNG, WebP.
+- Maximum decoded size: 5 MB.
+- Raw base64 only; data URL prefixes are rejected.
+- Base64, actual file signature, safe image decoding, and excessive image resolution are validated.
+- Attachments are private.
+- Check-in and check-out use separate attachments.
+- Invalid selfie bytes are never copied into failed-attempt audit records.
+
+DEVICE IDENTIFIER
+- device_id is optional text of 1..255 characters.
+- The raw identifier is not stored.
+- Only its SHA-256 digest is stored in presenly.attendance.event.device_id_hash.
+
+EVIDENCE
+- Successful check-in/check-out creates a presenly.attendance.event with GPS, accuracy, distance, location, schedule, selfie attachment, source, and validation result.
+- Failed business attempts continue to use the independent-cursor audit mechanism so they survive request rollback in normal runtime.
+
+COMPATIBILITY
+- work_location_id is canonical.
+- unit_id remains accepted temporarily as an alias for the same native hr.work.location ID.
+- Existing /api/presenly/v1 paths were preserved.
+
+ADDITIONAL ODOO 19 FIX
+- _presenly_work_locations_for_period() now reads the already-selected Employee's technical location configuration with controlled sudo.
+- This avoids Odoo 19 field-level access failures on hr.employee.version_id for a regular Employee.
+- Employee ID and Company filters remain explicit; callers cannot use this to select another Employee.
+
+DOCUMENTATION
+- custom_addons/presenly/docs/MOBILE_API.md was replaced by an attendance-only guide.
+- It includes request/response examples, curl commands, mobile state machine, GPS/selfie capture rules, timeout/retry behavior, session storage, errors, backend configuration, and implementation checklist.
+- custom_addons/presenly/README.md now identifies this document as the login/session/attendance contract.
+- custom_addons/presenly/scripts/check_mobile_api.sh validates the attendance-only status schema.
+
+ISOLATED VALIDATION
+- Tests ran only on cloned databases.
+- Final clean clone: odoo_presenly_mobile_api_final_20260906.
+- Result: 28 test cases / 36 test stats.
+- Failures: 0.
+- Errors: 0.
+- HTTP coverage includes anonymous session rejection, authenticated status, params payload parsing, Employee-role check-in, status transition, check-out, private selfie attachments, device hash, invalid GPS, and invalid data URL selfie.
+- Attendance, Approval, Permission, schedule, geofence, and API session suites all passed together.
+- All mobile API validation clones were removed.
+
+STATIC VALIDATION
+- Python compile: passed.
+- XML parse: 17 files passed.
+- Shell syntax: passed.
+- git diff --check: passed.
+
+BACKUP
+- backups/presenly-migration/odoo-before-mobile-attendance-api-20260906-013816.dump
+- Size at rollout: 4,457,523 bytes.
+
+MAIN DATABASE ROLLOUT
+- Before: presenly 19.0.7.0.0.
+- After: presenly 19.0.8.0.0, installed.
+- Upgrade completed without Presenly ERROR, CRITICAL, or traceback.
+- Main Odoo server restarted as PID 90615.
+- http://127.0.0.1:8069/web/login returned HTTP 200.
+- Anonymous attendance status request was rejected with Odoo Session Expired code 100.
+- Server startup log contained no ERROR, CRITICAL, or traceback.
+
+MAIN DATABASE COUNTS AFTER ROLLOUT
+- hr.attendance: 0
+- presenly.attendance.event: 0
+- hr.leave: 0
+- presenly.permission: 0
+- No test attendance or evidence was written to the main database.
+
+OPERATIONAL REQUIREMENTS BEFORE REAL MOBILE UAT
+1. Employee must have an active Related User with Presenly Employee role.
+2. User Allowed Companies must include the Employee company.
+3. Employee Working Hours and current Work Location assignment must be configured.
+4. Work Location address, decimal latitude/longitude, geofence radius, and GPS accuracy limit must be valid.
+5. Work Location must show Geofence Ready.
+6. Real device must grant precise-location and camera permissions.
+7. Production must use HTTPS.
+8. Run real-device status, check-in, status, check-out, and final-status UAT with a dedicated Employee account.
+
+NO COMMIT
+- No Git commit was created.

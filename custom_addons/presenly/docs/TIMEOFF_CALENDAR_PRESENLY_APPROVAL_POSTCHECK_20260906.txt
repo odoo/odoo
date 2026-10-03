@@ -1,0 +1,79 @@
+PRESENLY TIME OFF OVERVIEW CALENDAR APPROVAL — ROLLOUT POST-CHECK
+Date: 2026-09-06
+Database: odoo
+Module: presenly 19.0.13.3.0
+
+PURPOSE
+- Replace the native Approve/Refuse buttons on the Time Off Overview calendar
+  popup (`/odoo/time-off-overview`) with Presenly Approval actions.
+- Keep Presenly Approval Routes as the single approval path everywhere.
+
+ROOT CAUSE
+- `/odoo/time-off-overview` uses model `hr.leave.report.calendar`, not
+  `hr.leave`.
+- `hr.leave.report.calendar` is a SQL view with its own footer buttons:
+  - action_approve (native)
+  - action_refuse (native)
+- Those buttons were controlled by the SQL-view model's `is_manager`, and were
+  not affected by the `hr.leave` native can_* flag override from the previous
+  rollout.
+
+CHANGES
+1. New model inherit file:
+   custom_addons/presenly/models/presenly_report_calendar.py
+   - `_inherit = 'hr.leave.report.calendar'`
+   - Adds:
+     - presenly_approval_state (related leave_id)
+     - presenly_approval_progress (related leave_id)
+     - presenly_can_approve (computed)
+     - presenly_can_reject (computed)
+     - action_presenly_approve()
+     - action_presenly_open_reject_wizard()
+2. New view inherit:
+   custom_addons/presenly/views/hr_leave_report_calendar_views.xml
+   - Hides native footer approve/refuse buttons.
+   - Adds Presenly approve/reject buttons driven by presenly_can_* flags.
+3. Registered new view in __manifest__.py.
+4. Version bump to 19.0.13.3.0.
+
+VERIFICATION (composed popup form)
+- Native Approve: invisible = 1
+- Native Refuse: invisible = 1
+- Presenly Approve Current Level: visible only when presenly_can_approve
+- Presenly Reject: visible only when presenly_can_reject
+
+TESTING
+- Isolated clone: odoo_presenly_calendar_approval_test_20260906_153000.
+- Final result: 42 test cases / 54 test stats.
+- Failures: 0.
+- Errors: 0.
+- Clone database and filestore were removed.
+
+STATIC VALIDATION
+- Python compilation: passed.
+- XML parsing: 19 files passed.
+- git diff --check: passed.
+
+DATA PRESERVATION
+Business fingerprint before and after rollout is identical:
+- Attendance: 4; ID sum 12.
+- Evidence: 10; ID sum 55.
+- Referenced selfie attachments: 7; ID sum 1210.
+- Permission requests: 0.
+- Time Off requests: 3; ID sum 48.
+- Approval routes: 2; ID sum 4.
+- Approval journeys: 1; ID sum 1.
+
+BACKUP
+- backups/presenly-migration/odoo-before-calendar-presenly-approval-20260906-153000.dump
+- Backup retained after clone cleanup.
+
+ROLLOUT
+- Before: presenly 19.0.13.2.0.
+- After: presenly 19.0.13.3.0.
+- Main server PID: 28699.
+- http://127.0.0.1:8069/web/login returned HTTP 200.
+- Upgrade and active server logs contain no ERROR, CRITICAL, or traceback.
+
+NO COMMIT
+- No Git commit was created.
