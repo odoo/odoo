@@ -51,6 +51,6 @@ registerThreadAction("show-threads", {
         }
         useSubEnv({ subChannelMenu: { open: () => this.actionPanelOpen() } });
     },
-    sequence: ({ owner }) => (owner.props.chatWindow ? 40 : 5),
+    sequence: ({ owner }) => (owner.env.inChatWindow ? 40 : 5),
     sequenceGroup: 10,
 });

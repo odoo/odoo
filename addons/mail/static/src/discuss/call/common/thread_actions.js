@@ -38,7 +38,7 @@ registerThreadAction("call-settings", {
     actionPanelComponentProps: () => ({ isCompact: true }),
     condition: ({ channel, owner, store }) =>
         channel?.allowCalls &&
-        (owner.props.chatWindow?.isOpen || store.inPublicPage) &&
+        (owner.env.inChatWindow || store.inPublicPage) &&
         !owner.isDiscussSidebarChannelActions,
     icon: "settings",
     iconClass: "oi-filled oi-fw",
