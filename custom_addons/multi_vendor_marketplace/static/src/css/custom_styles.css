@@ -1,0 +1,1990 @@
+/* ############################################################################################################################################################## */
+/* ПРОФИЛЬ */
+/* ############################################################################################################################################################## */
+.btn-warning {
+    background-color: #ff7300 !important; /* Ярко-оранжевый */
+    color: #fff !important;
+    font-weight: bold;
+    border-radius: 15px;
+    padding: 20px 30px;
+    text-transform: uppercase;
+    width: 100%;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    border: none;
+    font-size: 16px;
+}
+
+.btn-warning:hover, .btn-warning:focus, .btn-warning:active {
+    background-color: #ff9100 !important; /* Ещё ярче при наведении */
+    color: #fff !important;
+    outline: none;
+}
+
+/* Стиль для контейнера с группой кнопок */
+.button-group-container {
+    border: 2px solid #e0e0e0; /* Обводка вокруг группы кнопок */
+    border-radius: 20px; /* Скругленные углы контейнера */
+    padding: 20px; /* Внутренние отступы контейнера */
+    margin-bottom: 25px; /* Отступ между группами кнопок */
+    background-color: #ffffff; /* Белый фон контейнера */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Легкая тень */
+}
+
+/* ############################################################################################################################################################## */
+/* LIVECHAT BUTTON STYLING */
+/* ############################################################################################################################################################## */
+#o_livechat_button {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+#o_livechat_button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+#o_livechat_button i {
+    font-size: 18px;
+}
+
+/* ############################################################################################################################################################## */
+/* CКРЫТИЯ КНОПОК */
+/* ############################################################################################################################################################## */
+
+li.o_no_autohide_item {
+    display: none !important;
+}
+
+li.o_wsale_my_cart {
+    display: none !important;
+}
+
+/* ############################################################################################################################################################## */
+/* МАГАЗ ОСНОВНОЙ */
+/* ############################################################################################################################################################## */
+
+/* Основные стили карточки */
+.oe_product_cart {
+    border: none !important;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    background: white;
+    /* Новые свойства */
+    width: 100%; /* Занимает всю доступную ширину */
+    margin: 0 auto; /* Центрирование */
+}
+
+/* Стиль при наведении - только тень и увеличение изображения */
+.oe_product_cart:hover {
+    box-shadow: 0 0 15px rgba(0,0,0,0.1); /* Тень по периметру */
+    transform: none; /* Убрали подъем карточки */
+}
+
+/* Стили для изображения */
+.oe_product_cart .oe_product_image {
+    border-radius: 15px;
+    width: 100%;
+    height: auto;
+    transition: filter 0.3s ease;
+}
+
+/* Product detail page - rounded images - with border removal */
+#product_detail .product_detail_img {
+    border-radius: 12px;
+    overflow: hidden;
+    border: none !important;
+}
+
+#product_detail .o_wsale_product_images img {
+    border-radius: 12px;
+    border: none !important;
+}
+
+/* Fix for product image borders - ensure containers and borders match the rounded corners */
+#product_detail .carousel-item,
+#product_detail .carousel-inner,
+#product_detail .carousel,
+#product_detail .o_wsale_product_images_image,
+#product_detail .o_wsale_product_images_image .img-fluid,
+#product_detail .product_detail_img img,
+#product_detail .oe_product_image,
+#product_detail .o_image_64_contain,
+#product_detail .o_wsale_product_images .carousel-inner,
+#product_detail .o_wsale_product_images .carousel-item,
+#product_detail .o_wsale_product_images .o_wsale_product_images_image,
+.product-gallery-img,
+.product-gallery .carousel-item {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    border: none !important;
+}
+
+/* Complete border removal from all product thumbnails and images */
+#product_detail .o_wsale_product_images .border,
+#product_detail .o_wsale_product_images [class*="border-"],
+#product_detail .o_wsale_product_images img.border,
+#product_detail .o_wsale_product_images .img-thumbnail,
+.product-gallery .border,
+.product-gallery [class*="border-"],
+.product-gallery .img-thumbnail,
+.o_carousel_product_indicators img,
+.o_wsale_product_info .carousel-inner img,
+.o_wsale_product_info .carousel-indicators img,
+.o_wsale_product_info .carousel-indicators li,
+.o_wsale_product_images .carousel-indicators img,
+.o_wsale_product_images .carousel-indicators li,
+.o_wsale_product_cart_options .carousel-indicators li,
+.o_wsale_product_cart_options .carousel-indicators img {
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 12px !important;
+}
+
+/* Additional styling to ensure no borders anywhere in product images */
+.o_wsale_product_images *,
+#product_detail .o_wsale_product_images *,
+.carousel-inner img,
+.carousel-indicators li,
+.carousel-indicators img,
+.o_carousel_product_indicators li,
+.o_carousel_product_indicators img {
+    border: none !important;
+}
+
+/* Стили для текстовой информации */
+.oe_product_cart .o_wsale_product_information {
+    padding: 15px;
+    font-size: 17px;
+}
+
+/* Заголовок товара */
+.o_wsale_product_information .o_wsale_products_item_title a {
+    color: black !important;  /* Черный цвет текста */
+    font-weight: 500 !important;  /* Жирное начертание */
+    font-size: 19px !important;
+}
+
+/* Стили для цены */
+.oe_product_cart .product_price {
+    color: #ff6600 !important;
+    font-weight: 900 !important;
+    font-size: 26px;
+    margin-top: 5px;
+}
+
+/* Дополнительная информация */
+.oe_product_cart .text-muted {
+    color: #999 !important;
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Убираем лишние элементы */
+.oe_product_cart .oe_subdescription {
+    display: none !important;
+}
+
+/* Иконка дома для /shop */
+.navbar-nav .nav-link[href="/shop"]:before {
+    content: "\f015"; /* fa-home */
+    font-family: 'FontAwesome';
+    font-size: 1.2rem;
+}
+
+/* Иконка корзины для /shop/cart */
+.navbar-nav .nav-link[href="/shop/cart"]:before {
+    content: "\f07a"; /* fa-shopping-cart */
+    font-family: 'FontAwesome';
+    font-size: 1.2rem;
+}
+
+/* Иконка пользователя для /profile */
+.navbar-nav .nav-link[href="/profile"]:before {
+    content: "\f007"; /* fa-user */
+    font-family: 'FontAwesome';
+    font-size: 1.2rem;
+}
+
+/* Иконка видео для /videos */
+.navbar-nav .nav-link[href="/videos"]:before {
+    content: "\f04b"; /* fa-play */
+    font-family: 'FontAwesome';
+    font-size: 1.2rem;
+}
+
+/* Убираем текст */
+.navbar-nav .nav-link[href="/shop"],
+.navbar-nav .nav-link[href="/shop/cart"],
+.navbar-nav .nav-link[href="/profile"],
+.navbar-nav .nav-link[href="/videos"] {
+    font-size: 0;
+}
+
+/* Общий стиль для иконок */
+.navbar-nav .nav-link:before {
+    display: inline-block;
+}
+
+/* Общие стили кнопок */
+.navbar-nav .nav-link {
+    position: relative;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+}
+
+/* Подсказки при наведении */
+.navbar-nav .nav-link[href="/shop"]:hover:after {
+    content: "Store";
+    /* ...остальные стили */
+}
+
+.navbar-nav .nav-link[href="/shop/cart"]:hover:after {
+    content: "Cart";
+    /* ...остальные стили */
+}
+
+.navbar-nav .nav-link[href="/profile"]:hover:after {
+    content: "Profile";
+    /* ...остальные стили */
+}
+
+.navbar-nav .nav-link[href="/videos"]:hover:after {
+    content: "Videos";
+    /* ...остальные стили, если нужно */
+}
+
+/* Оранжевый цвет для активного пункта меню */
+.navbar-nav .nav-link.active:before {
+    color: #f08106 !important;
+}
+
+/* ############################################################################################################################################################## */
+/* ПРОДУКТ ДЕТАЛИ - в стиле второго изображения */
+/* ############################################################################################################################################################## */
+
+/* Шапка магазина с рейтингом */
+.store-header {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.store-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.store-rating {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.rating-stars {
+    color: #ffc300;
+    margin-right: 5px;
+}
+
+.rating-score {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+/* Продукт заголовок */
+#product_detail h1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Продукт цена */
+#product_detail .product_price h3 {
+    font-size: 24px;
+    color: #f76b00 !important;
+    font-weight: bold;
+}
+
+/* Доставка инфо */
+#product_detail .delivery-info {
+    background-color: #f9f9f9;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 15px 0;
+}
+
+/* Кнопки действий */
+#product_detail .action-buttons {
+    display: flex;
+    gap: 0;
+    margin: 20px 0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: none;
+}
+
+/* Селектор количества */
+#product_detail .quantity-selector .input-group {
+    width: 120px;
+}
+
+#product_detail .quantity-selector .form-control {
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Информация о продавце */
+#product_detail .seller-info {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+#product_detail .seller-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+#product_detail .seller-name {
+    font-weight: 500;
+    color: #333;
+}
+
+#product_detail .seller-rating {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+#product_detail .rating-stars {
+    color: #ffc300;
+    margin-right: 5px;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+    #product_detail .action-buttons {
+        flex-direction: column;
+    }
+    
+    #product_detail .seller-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    #product_detail .seller-rating {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+
+/* ############################################################################################################################################################## */
+/* МОДАЛЬНОЕ ОКНО ПРОДУКТА */
+/* ############################################################################################################################################################## */
+
+/* Стили для модального окна */
+#product_variants_modal .modal-content {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+#product_variants_modal .modal-header {
+    border-bottom: 1px solid #eee;
+    padding: 15px 20px;
+}
+
+#product_variants_modal .modal-title {
+    font-weight: 600;
+    font-size: 18px;
+    color: #333;
+}
+
+#product_variants_modal .close {
+    font-size: 28px;
+    opacity: 0.7;
+    padding: 0;
+    margin: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f5f5f5;
+    border: none;
+    cursor: pointer;
+}
+
+#product_variants_modal .close:hover {
+    opacity: 1;
+    background: #eee;
+}
+
+#product_variants_modal .modal-body {
+    padding: 20px;
+}
+
+#product_variants_modal .modal-footer {
+    border-top: 1px solid #eee;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Блок выбора количества */
+#product_variants_modal .quantity-section {
+    margin-bottom: 20px;
+}
+
+#product_variants_modal .quantity-section h6 {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+#product_variants_modal .input-group {
+    border-radius: 4px;
+    overflow: hidden;
+    width: 120px;
+}
+
+#product_variants_modal .input-group button {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    color: #333;
+    font-size: 14px;
+    width: 36px;
+    padding: 0;
+}
+
+#product_variants_modal .input-group button:hover {
+    background-color: #e9e9e9;
+}
+
+#product_variants_modal .input-group input {
+    text-align: center;
+    font-weight: 600;
+    border-left: none;
+    border-right: none;
+    border-color: #ddd;
+}
+
+/* Кнопки действий */
+#product_variants_modal .btn-cancel {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+}
+
+#product_variants_modal .btn-buy-now,
+#product_variants_modal .btn-add-to-cart {
+    background-color: #089454;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+#product_variants_modal .btn-buy-now:hover,
+#product_variants_modal .btn-add-to-cart:hover {
+    background-color: #067a45;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Атрибуты товара */
+#product_variants_modal .variant-option {
+    margin-bottom: 20px;
+}
+
+#product_variants_modal .variant-option h6 {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+#product_variants_modal .form-check {
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+#product_variants_modal .form-check-input {
+    margin-top: 0.25rem;
+}
+
+#product_variants_modal .form-check-label {
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Стили для кнопок продавца */
+.store-actions .btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.store-actions .btn-outline-primary {
+    color: #0d6efd !important;
+    border-color: #dbe6fd !important;
+    background-color: #f0f9ff !important;
+}
+
+.store-actions .btn-primary {
+    background-color: #2c88a2 !important;
+    border-color: #2c88a2 !important;
+    color: white !important;
+}
+
+.store-actions .btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Make modal trigger work properly */
+.o_show_variants_modal {
+    cursor: pointer;
+}
+
+/* Styles for product images */
+#product_detail .product_detail_img {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#product_detail .o_wsale_product_images img {
+    border-radius: 12px;
+}
+
+/* Contact modal styling */
+#contact_seller_modal .social-links .btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+#contact_seller_modal .social-links .btn:hover {
+    transform: translateY(-3px);
+}
+
+/* Product options modal styling to match mockup */
+#product_variants_modal .modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+#product_variants_modal .modal-footer .btn-primary {
+    background-color: #089454 !important;
+    border-color: #089454 !important;
+    color: white !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#product_variants_modal .modal-footer .btn-secondary {
+    color: white !important;
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+}
+
+/* Fix for button text */
+#product_variants_modal .modal-footer .btn-primary i {
+    margin-right: 0.5rem;
+}
+
+#product_variants_modal .quantity_modal {
+    max-width: 80px;
+    text-align: center;
+}
+
+#product_variants_modal .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* Quantity control styling */
+.input-group .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#product_detail .action-buttons button span {
+    font-weight: 700;
+    font-size: 1.15em;
+}
+
+.product-gallery-img {
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: contain;
+    background: #f8f8f8;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .product-gallery {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 16px;
+    }
+    .product-gallery-img {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+        object-fit: contain;
+        background: #f8f8f8;
+        display: block;
+    }
+}
+
+/* Специальный шрифт для цены */
+.product_price .oe_currency_value {
+    font-family: 'Schnebel Sans ME Condensed Bold', Arial, sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #ff6600;
+}
+.product_price .h6 {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+/* Красивый блок выбора количества */
+.quantity-wrapper {
+  display: inline-flex;
+  border: 1px solid #ced4da; /* Серая обводка */
+  border-radius: 6px;
+  padding: 0 2px;
+  background: #fff;
+  margin-bottom: 18px;
+  align-items: center;
+}
+
+.oe_currency_value {
+  color: #ff6600 !important; /* Цвет как у цены */
+  vertical-align: baseline;
+  font-size: 1em;
+  margin-left: 6px;
+  margin-right: 0;
+  position: static;
+  display: inline-block;
+}
+
+.qty-btn {
+  background: #fff;
+  border: none;
+  color: #222;
+  font-size: 1em;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+.qty-btn:hover, .qty-btn:focus {
+  background: #fff !important;
+  color: #6c757d !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.qty-input {
+  width: 32px;
+  font-size: 1em;
+}
+
+/* Оранжевая цена с кастомным шрифтом */
+.product_price .oe_price_h4 .text-success {
+    color: #ff6600 !important;
+    font-family: 'Schnebel Sans ME Condensed Bold', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1.5em;
+}
+
+/* Оранжевая валюта рядом с ценой */
+.product_price .currency,
+.oe_product_cart .product_price .currency {
+    color: #ff6600 !important;
+    font-family: 'Schnebel Sans ME Condensed Bold', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1em;
+    margin-left: 0.25em;
+}
+
+/* ############################################################################################################################################################## */
+/* КНОПКИ КОЛИЧЕСТВА (белые с серой обводкой, без эффекта наведения) */
+/* ############################################################################################################################################################## */
+.css_quantity {
+    width: 100px !important;
+    min-width: 0 !important;
+    max-width: 120px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    font-size: 14px !important;
+}
+
+.css_quantity .btn {
+    background-color: #fff !important;   /* Белый фон */
+    color: #007bff !important;           /* Синий текст/иконка */
+    border: 1px solid #ced4da !important;/* Серая рамка */
+    box-shadow: none !important;
+    min-width: 28px;
+    min-height: 28px;
+    padding: 0 !important;
+    font-size: 16px !important;
+    border-radius: 4px !important;
+    transition: none !important;
+}
+
+.css_quantity .btn:hover, 
+.css_quantity .btn:focus {
+    background-color: #fff !important; /* Без изменения фона */
+    color: #007bff !important;         /* Без изменения цвета */
+    border: 1px solid #ced4da !important; /* Серая рамка */
+    box-shadow: none !important;
+}
+
+.css_quantity .btn i {
+    color: #6c757d !important; /* Серый цвет иконки */
+    font-size: 16px !important;
+}
+
+.css_quantity .form-control.quantity {
+    height: 28px !important;
+    padding: 0 4px !important;
+    font-size: 15px !important;
+    text-align: center;
+    border: 1px solid #ced4da !important;
+    border-radius: 4px !important;
+    margin: 0 2px !important;
+    width: 36px !important;
+    min-width: 0 !important;
+    max-width: 40px !important;
+}
+
+body {
+  background: #fff !important; /* Changed to plain white */
+}
+
+.oe_search_box {
+  border: 2.5px solid #ced4da !important;
+  border-radius: 2em !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  color: #222 !important;
+  padding-left: 18px !important;
+  padding-right: 18px !important;
+  height: 40px !important;
+}
+
+.input-group .oe_search_box:focus {
+  border-color: #ff6600 !important;
+  box-shadow: 0 0 0 2px #ffe5d1 !important;
+}
+
+.input-group .oe_search_button {
+  border-radius: 2em !important;
+  margin-left: -44px;
+  background: none !important;
+  color: #ff6600 !important;
+  border: none !important;
+  z-index: 2;
+}
+
+.s_hr hr {
+  display: none !important;
+}
+
+.o_wsale_filmstip .btn-light {
+  background: rgba(255, 102, 0, 0.08) !important;
+  border: none !important;
+  transition: background 0.2s;
+}
+
+/* Скрыть верхний блок продавца */
+#product_detail .store-header {
+    display: none !important;
+}
+
+/* Центрировать нижний кастомный блок продавца */
+.product-detail-seller-bottom {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 40px auto 0 auto;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Жёстко скрыть стандартную панель продавца Odoo eCommerce на странице товара */
+#product_detail .seller-info, /* типовой класс Odoo */
+#product_detail .o_wsale_seller_info, /* ещё один вариант */
+#product_detail .o_product_seller_info, /* и такой бывает */
+#product_detail .oe_website_sale .seller-info, /* на всякий случай */
+#product_detail .store-header, /* если вдруг остался */
+#product_detail .o_wsale_product_seller, /* для некоторых тем */
+#product_detail .o_product_seller, /* для некоторых тем */
+#product_detail .o_wsale_product_information .seller-info {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* Жёстко скрыть блок продавца с inline-стилями, если он вдруг появляется */
+div[style*="width:354px"][style*="height: 90px"] {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* Стили для вариантов товара — как на втором скриншоте */
+.js_add_cart_variants label,
+.js_add_cart_variants span {
+    cursor: pointer;
+    border-radius: 8px;
+    border: 2px solid #d1d1d1;
+    padding: 7px 18px;
+    margin: 0 7px 7px 0;
+    background: #fff;
+    color: #484444;
+    font-size: 1em;
+    font-weight: 500;
+    transition: all 0.15s;
+    display: inline-block;
+    box-shadow: none;
+}
+
+.js_add_cart_variants .active,
+.js_add_cart_variants .selected,
+.js_add_cart_variants input:checked + label,
+.js_add_cart_variants input[type="radio"]:checked + span,
+.js_add_cart_variants input[type="checkbox"]:checked + span {
+    background: #fff !important;
+    border-color: #ff6600 !important;
+    color: #ff6600 !important;
+    box-shadow: none !important;
+    font-weight: 600;
+}
+
+/* Скрыть стандартный radio, стилизовать всю область выбора */
+.js_add_cart_variants .form-check-input[type="radio"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+/* Стилизуем всю .form-check как кнопку */
+.js_add_cart_variants .form-check {
+    border: 2px solid #d1d1d1;
+    border-radius: 10px;
+    background: #fff;
+    color: #484444;
+    font-size: 1em;
+    font-weight: 500;
+    margin: 0 10px 10px 0;
+    padding: 7px 18px;
+    display: inline-flex;
+    align-items: center;
+    min-width: 120px;
+    min-height: 44px;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: none;
+    position: relative;
+}
+
+/* При выборе — оранжевая рамка и текст */
+.js_add_cart_variants .form-check-input[type="radio"]:checked + .form-check-label .form-check,
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .form-check {
+    border-color: #ff6600 !important;
+    color: #ff6600 !important;
+}
+
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .radio_input_value,
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .form-check-label {
+    color: #ff6600 !important;
+}
+
+/* При наведении — легкая тень */
+.js_add_cart_variants .form-check:hover {
+    box-shadow: 0 2px 8px rgba(255, 102, 0, 0.08);
+}
+
+/* Убрать ВСЕ внутренние рамки и фон у значений и цен */
+.js_add_cart_variants .form-check-label,
+.js_add_cart_variants .radio_input_value,
+.js_add_cart_variants .badge,
+.js_add_cart_variants .variant_price_extra,
+.js_add_cart_variants .radio_input_value > span,
+.js_add_cart_variants .radio_input_value .badge,
+.js_add_cart_variants .radio_input_value .variant_price_extra {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 0 0 8px !important;
+    color: inherit !important;
+    font-size: 1em !important;
+}
+
+.js_add_cart_variants .form-check-label,
+.js_add_cart_variants .radio_input_value {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.js_add_cart_variants .badge,
+.js_add_cart_variants .variant_price_extra {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 0 0 8px !important;
+}
+
+/* --- Варианты товара: стилизация по вашей структуре --- */
+.js_add_cart_variants .js_attribute_value > label > .form-check {
+    border: 2px solid #d1d1d1;
+    border-radius: 10px;
+    background: #fff;
+    color: #484444;
+    font-size: 1em;
+    font-weight: 500;
+    margin: 0 10px 10px 0;
+    padding: 7px 18px;
+    display: flex;
+    align-items: center;
+    min-width: 120px;
+    min-height: 44px;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: none;
+    position: relative;
+}
+
+.js_add_cart_variants .form-check-input[type="radio"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .radio_input_value,
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .form-check-label {
+    color: #ff6600 !important;
+    font-weight: 600;
+}
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .radio_input_value .variant_price_extra {
+    color: #ff6600 !important;
+}
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .radio_input_value .badge {
+    color: #ff6600 !important;
+    border-color: #ff6600 !important;
+}
+
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .form-check,
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .radio_input_value,
+.js_add_cart_variants .form-check-input[type="radio"]:checked ~ .form-check-label {
+    border-color: #ff6600 !important;
+    color: #ff6600 !important;
+    box-shadow: 0 0 0 2px #ffe5b4 !important;
+}
+
+.js_add_cart_variants .radio_input_value,
+.js_add_cart_variants .badge,
+.js_add_cart_variants .variant_price_extra {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 0 0 8px !important;
+    color: inherit !important;
+    font-size: 1em !important;
+}
+
+/* Заголовки вариантов — более жирные */
+.custom-variant-title {
+    font-weight: 600;
+    font-size: 1.08em;
+    margin-bottom: 6px;
+    color: #222;
+}
+
+/* Только одна рамка у кнопки, никакой внутренней */
+.custom-variant-btn,
+.custom-variant-btn.btn {
+    border: 2px solid #d1d1d1 !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    color: #484444 !important;
+    box-shadow: none !important;
+    outline: none !important;
+    font-size: 1em;
+    font-weight: 500;
+    padding: 7px 18px;
+    min-width: 120px;
+    min-height: 44px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+/* Убрать рамки и фон у вложенных элементов */
+.custom-variant-btn span,
+.custom-variant-btn > * {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* При выборе — только одна оранжевая рамка */
+.custom-variant-btn.active,
+.custom-variant-btn:focus {
+    border-color: #ff6600 !important;
+    color: #ff6600 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.custom-variant-price {
+    color: #ff6600;
+    font-size: 0.95em;
+    font-weight: 600;
+}
+
+/* Убрать рамки у контейнеров вариантов */
+.custom-variant-row,
+.custom-variant-options,
+.custom-variant-row.mb-2,
+.custom-variant-options.d-flex {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+}
+
+/* Жёстко скрыть все модальные окна и backdrop */
+.modal,
+.modal-backdrop,
+#product_variants_modal,
+.oe_advanced_configurator_modal,
+.modal-dialog,
+.modal-content {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+}
+body.modal-open {
+    overflow: auto !important;
+}
+
+/* Убрать оранжевую обводку при фокусе на поиске */
+.form-control:focus {
+    border-color: #e0e0e0 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Белый фон и скругление для панели рекомендаций по магазину */
+.seller-recommendations {
+    background: #fff !important;
+    border-radius: 18px !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    padding: 32px 0 24px 0;
+}
+
+/* Кнопка 'Изменить инфо' белый текст */
+.o_custom_profile_page .btn-primary {
+    color: #fff !important;
+    background: #ff7300 !important;
+    border: none !important;
+    font-weight: 600;
+    border-radius: 15px;
+    padding: 10px 28px;
+    font-size: 17px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.o_custom_profile_page .btn-primary:hover, .o_custom_profile_page .btn-primary:focus {
+    background: #ff9100 !important;
+    color: #fff !important;
+    outline: none;
+}
+
+.btn-save {
+    background: #ff7300 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 17px;
+    padding: 10px 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    transition: background 0.2s;
+}
+.btn-save:hover, .btn-save:focus {
+    background: #ff9100 !important;
+    color: #fff !important;
+}
+
+.btn-cancel {
+    background: #bdbdbd !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 17px;
+    padding: 10px 28px;
+    margin-left: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    transition: background 0.2s;
+}
+.btn-cancel:hover, .btn-cancel:focus {
+    background: #9e9e9e !important;
+    color: #fff !important;
+}
+
+/* New Catalog Button Styles */
+.catalog-button-container {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+}
+
+.catalog-button {
+    background: #ff7300 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 32px !important;
+    padding: 8px 22px !important;
+    font-size: 15px !important;
+    min-width: 110px !important;
+    height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+    box-shadow: none !important;
+}
+
+.catalog-button:hover {
+    background: #ff9100 !important;
+    transform: translateY(-1px);
+}
+
+.catalog-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    padding: 24px 20px 20px 20px;
+    margin-top: 10px;
+    display: none;
+    z-index: 1000;
+    min-width: 280px;
+}
+
+.catalog-dropdown.active {
+    display: block;
+}
+
+.catalog-dropdown .o_wsale_products_categories_list {
+    display: block !important;
+    margin: 0;
+    padding: 0;
+}
+
+.catalog-dropdown .category-item {
+    margin-bottom: 12px;
+}
+
+.catalog-dropdown .category-item:last-child {
+    margin-bottom: 0;
+}
+
+.catalog-dropdown .category-link {
+    color: #333;
+    font-size: 15px;
+    text-decoration: none;
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.catalog-dropdown .category-link:hover {
+    background: #f8f8f8;
+    color: #ff7300;
+}
+
+/* Hide old catalog button */
+#catalog-toggle-btn {
+    display: none !important;
+}
+
+/* Desktop Navigation Icons Next to Search */
+.desktop-nav-icons {
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+    gap: 15px;
+}
+
+.nav-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-icon-btn:hover {
+    background-color: #ebebeb;
+    color: #ff6600;
+    transform: translateY(-2px);
+}
+
+.nav-icon-btn.active {
+    background-color: #ff6600;
+    color: #fff;
+}
+
+.nav-icon-btn i {
+    font-size: 18px;
+}
+
+/* Make search bar and nav icons row */
+.o_wsale_products_searchbar_form {
+    display: flex;
+    flex-grow: 1;
+}
+
+/* Layout adjustments for search + nav */
+.navbar-collapse form.o_wsale_products_searchbar_form {
+    max-width: calc(100% - 200px);
+}
+
+/* Fix search bar to take available space */
+.oe_search_box {
+    width: 100%;
+}
+
+/* Ensure only logo is visible in header */
+header .navbar-brand.logo {
+    margin: 0 auto;
+}
+
+/* Hide original navbar items but keep the navbar */
+header .navbar ul.navbar-nav:not(.ml-auto) {
+    display: none !important;
+}
+
+/* Mobile bottom nav adjustments */
+@media (max-width: 767.98px) {
+    .desktop-nav-icons {
+        display: none !important;
+    }
+}
+
+/* Adjusted Desktop Navigation Icons */
+.desktop-nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: auto; /* Push to the right side */
+    padding-right: 20px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.nav-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-icon-btn:hover {
+    background-color: #ebebeb;
+    color: #ff6600;
+    transform: translateY(-2px);
+}
+
+.nav-icon-btn.active {
+    background-color: #ff6600;
+    color: #fff;
+}
+
+.nav-icon-btn i {
+    font-size: 18px;
+}
+
+/* Position the navbar correctly */
+header .navbar {
+    position: relative; /* Make sure relative positioning is applied for absolute children */
+}
+
+/* Center the logo */
+header .navbar-brand.logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+}
+
+/* Hide original navigation items */
+header .navbar-collapse {
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+}
+
+/* Simpler Desktop Navigation Icon Styling */
+.desktop-nav-icons {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1000;
+}
+
+.nav-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-icon-btn:hover {
+    background-color: #ebebeb;
+    color: #ff6600;
+    transform: translateY(-2px);
+}
+
+.nav-icon-btn.active {
+    background-color: #ff6600;
+    color: #fff;
+}
+
+.nav-icon-btn i {
+    font-size: 18px;
+}
+
+/* Center logo in header */
+header .navbar-brand.logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+}
+
+/* Make header position relative for absolute positioning */
+header.position-relative {
+    position: relative;
+}
+
+/* Hide navbar items using CSS instead of XPath for greater reliability */
+header .navbar-collapse ul.navbar-nav {
+    display: none !important;
+}
+
+/* Improved Header Layout */
+header .navbar {
+    min-height: 80px !important;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+}
+
+/* Fixed position for navigation icons at search level */
+.desktop-nav-icons {
+    position: absolute !important;
+    top: 50% !important;
+    right: 20px !important;
+    transform: translateY(-50%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 15px !important;
+    z-index: 100 !important;
+}
+
+/* Better navigation icon styling */
+.nav-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+/* Make sure the catalog button is visible */
+#catalog-toggle-btn {
+    display: block !important; /* Override the previous display: none */
+}
+
+/* Logo positioning */
+header .navbar-brand.logo {
+    margin: 0 auto !important;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    max-height: 60px;
+}
+
+/* Fix search bar positioning if needed */
+.navbar-collapse form.o_wsale_products_searchbar_form {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Center the search bar */
+.o_wsale_products_searchbar_form {
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Ensure elements are at proper z-index */
+header .navbar {
+    position: relative;
+    z-index: 1000;
+}
+
+/* Hide navbar items but with important flag */
+header .navbar-collapse ul.navbar-nav {
+    display: none !important;
+}
+
+/* Fix for the hidden catalog button - remove or override the previous rule */
+#catalog-toggle-btn {
+    display: block !important; /* Make button visible again */
+    z-index: 1001;
+}
+
+/* Position navigation icons next to search */
+.desktop-nav-icons {
+    position: absolute !important;
+    top: 50% !important;
+    right: 20px !important; /* Keep right positioned */
+    transform: translateY(-50%) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    z-index: 1000 !important;
+}
+
+/* Adjust navbar layout to accommodate search and icons */
+.navbar-collapse form.o_wsale_products_searchbar_form {
+    max-width: calc(100% - 200px) !important; /* Leave space for the icons */
+    display: inline-flex !important;
+    margin-right: auto !important;
+}
+
+/* Make search bar container display as flex to align its contents */
+.o_wsale_products_searchbar_form {
+    display: flex !important;
+}
+
+/* Ensure the navbar has space for search and icons */
+header .navbar > .container {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Make navbar taller */
+header .navbar {
+    min-height: 80px !important;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+}
+
+/* Center logo with more space */
+header .navbar-brand.logo {
+    margin: 0 auto !important; 
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    max-height: 60px !important;
+}
+
+/* Essential navigation icon styling - keeping it simple */
+
+/* Fix for the hidden catalog button */
+#catalog-toggle-btn {
+    display: block !important; /* Override previous display:none rule */
+}
+
+/* Simple positioning of nav icons with !important to override other styles */
+.desktop-nav-icons {
+    position: absolute;
+    top: 50%;
+    right: 85px; /* Position to the right, next to search form */
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1000;
+}
+
+/* Taller navbar for more space */
+header .navbar {
+    min-height: 80px !important;
+    padding: 15px 0 !important;
+}
+
+/* Center logo with more space */
+header .navbar-brand.logo {
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin: 0 !important;
+    max-height: 60px !important;
+}
+
+/* Hide all navbar items with !important */
+header .navbar-collapse ul.navbar-nav {
+    display: none !important;
+}
+
+/* Specific positioning for navigation icons to be next to search */
+.desktop-nav-icons {
+    position: absolute !important;
+    right: 20px !important; 
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    z-index: 1001 !important;
+    margin-left: 0 !important;
+}
+
+/* Adjust the search form to leave space for the icons */
+.products_header .o_wsale_products_searchbar_form {
+    max-width: calc(100% - 200px) !important;
+    margin-right: 180px !important; /* Leave space for icons */
+}
+
+/* Hide navigation icons in the header itself */
+header > .desktop-nav-icons {
+    display: none !important;
+}
+
+/* Make sure catalog button is visible */
+#catalog-toggle-btn {
+    display: block !important;
+}
+
+/* Style for products header to position elements properly */
+.products_header {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Fix positioning for nav icons using more specific CSS */
+
+/* Override all previous rules for navigation icons with this one */
+.desktop-nav-icons {
+    position: fixed !important;
+    top: 25px !important; /* Adjust as needed to vertically align with search */
+    right: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    z-index: 1010 !important; /* Higher z-index to ensure visibility */
+}
+
+/* Ensure icons are visible and styled properly */
+.nav-icon-btn {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #f5f5f5 !important;
+    color: #333 !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.nav-icon-btn:hover {
+    background-color: #ebebeb !important;
+    color: #ff6600 !important;
+    transform: translateY(-2px) !important;
+}
+
+.nav-icon-btn.active {
+    background-color: #ff6600 !important;
+    color: #fff !important;
+}
+
+/* Ensure catalog button is visible */
+#catalog-toggle-btn {
+    display: block !important;
+}
+
+/* Always show icons on desktop */
+@media (min-width: 768px) {
+    .desktop-nav-icons {
+        display: flex !important;
+    }
+}
+
+/* Make search form leave space for icons */
+.o_wsale_products_searchbar_form {
+    max-width: calc(100% - 240px) !important;
+    margin-right: 220px !important;
+}
+
+/* Улучшенный стиль строки поиска и иконок */
+
+/* Улучшенное размещение иконок навигации */
+.desktop-nav-icons {
+    position: static !important;  /* Отменяем fixed позицию */
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    margin-left: 15px !important;
+    z-index: 100 !important;
+    transform: none !important;
+    top: auto !important;
+    right: auto !important;
+}
+
+/* Улучшенный стиль иконок */
+.nav-icon-btn {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #f5f5f5 !important;
+    color: #333 !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.nav-icon-btn:hover {
+    background-color: #ebebeb !important;
+    color: #ff6600 !important;
+    transform: translateY(-2px) !important;
+}
+
+.nav-icon-btn.active {
+    background-color: #ff6600 !important;
+    color: #fff !important;
+}
+
+/* Стиль контейнера products_header, чтобы там поместилось всё */
+.products_header {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+}
+
+/* Расширяем строку поиска */
+.products_header .o_wsale_products_searchbar_form {
+    flex: 1 !important;
+    max-width: none !important;
+    margin-right: 0 !important;
+}
+
+.o_wsale_products_searchbar_form .input-group {
+    width: 100% !important;
+}
+
+.oe_search_box {
+    width: 100% !important;
+}
+
+/* Контейнер для иконок в header */
+.header-icons-container {
+    display: flex !important;
+    align-items: center !important;
+    margin-left: 15px !important;
+    white-space: nowrap !important;
+}
+
+/* Убираем скрытие иконок при перемещении */
+.header-icons-container .desktop-nav-icons.d-none {
+    display: flex !important;
+}
+
+/* Мобильная версия */
+@media (max-width: 767px) {
+    .header-icons-container {
+        display: none !important;
+    }
+}
+
+/* Обновленные стили для навигационных иконок, чтобы они всегда отображались рядом с поиском */
+
+/* Контейнер поиска и иконок в одной строке */
+.products_header {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+    position: relative !important;
+}
+
+/* Стиль для поисковой формы */
+.o_wsale_products_searchbar_form {
+    flex: 1 !important;
+    display: flex !important;
+    margin-right: 15px !important;
+}
+
+/* Иконки навигации */
+.desktop-nav-icons {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    margin-left: auto !important;
+}
+
+/* Стиль иконок */
+.nav-icon-btn {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #f5f5f5 !important;
+    color: #333 !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+}
+
+.nav-icon-btn:hover {
+    background-color: #ebebeb !important;
+    color: #ff6600 !important;
+    transform: translateY(-2px) !important;
+}
+
+.nav-icon-btn.active {
+    background-color: #ff6600 !important;
+    color: #fff !important;
+}
+
+/* Мобильная версия */
+@media (max-width: 767px) {
+    .desktop-nav-icons {
+        display: none !important;
+    }
+}
+
+/* Центральная панель навигации для страниц без поиска */
+.center-nav-container {
+    margin: 15px auto 25px auto;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.center-nav-container .desktop-nav-icons {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 20px !important;
+}
+
+/* Улучшение стилей для иконок в деталях продукта */
+.product-detail-search-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-top: 18px !important;
+    margin-bottom: 10px !important;
+    max-width: 800px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.product-detail-search-container form {
+    flex: 1 !important;
+}
+
+/* Updated Navigation Icon Styling */
+.desktop-nav-icons {
+    display: flex !important;
+    align-items: center !important;
+    border: none !important;
+    border-radius: 8px !important; 
+    padding: 4px 8px !important;
+    background: #fff !important;
+    gap: 0 !important;
+}
+
+.nav-icon-btn {
+    background: none !important;
+    margin: 0 7px !important;
+    position: relative !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 12px !important;
+    border-radius: 4px !important;
+    color: #333 !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.nav-icon-btn.active {
+    color: #ff6600 !important;
+    background: none !important;
+    box-shadow: none !important;
+}
+
+.nav-icon-btn:hover {
+    background-color: transparent !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.nav-icon-btn i {
+    font-size: 22px !important;
+}
+
+/* Enhanced tooltip styling */
+.has-tooltip {
+    position: relative !important;
+}
+
+.icon-tooltip {
+    position: absolute !important;
+    bottom: -32px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: #333 !important;
+    color: white !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.2s ease !important;
+    z-index: 9999 !important; /* Higher z-index to ensure visibility */
+    display: block !important; /* Ensure it's a block element */
+}
+
+.icon-tooltip:after {
+    content: '' !important;
+    position: absolute !important;
+    top: -6px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    border-width: 0 6px 6px 6px !important;
+    border-style: solid !important;
+    border-color: transparent transparent #333 transparent !important;
+}
+
+.has-tooltip:hover .icon-tooltip {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+/* Add more spacing for tooltip display */
+.nav-icon-btn {
+    margin-bottom: 10px !important; /* Add bottom space for tooltip */
+}
+
+

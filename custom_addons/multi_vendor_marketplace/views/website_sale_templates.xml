@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit the product template to add our clean variant styling -->
+    <template id="clean_product_variants_style" inherit_id="website_sale.product">
+        <xpath expr="//div[hasclass('js_product')]" position="before">
+            <style>
+                /* Clean styling for product variant buttons */
+                
+                /* Remove all possible extras that might be creating double borders */
+                .css_attribute_color::before,
+                .css_attribute_color::after,
+                .css_attribute_color > *::before,
+                .css_attribute_color > *::after {
+                    display: none !important;
+                    content: none !important;
+                    border: none !important;
+                    background: none !important;
+                    box-shadow: none !important;
+                }
+                
+                /* Button container reset */
+                .css_attribute_color {
+                    margin: 0 8px 8px 0 !important;
+                    padding: 0 !important;
+                    background: none !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                    border-radius: 0 !important;
+                    outline: none !important;
+                }
+                
+                /* Clean style for the actual button content */
+                .css_attribute_color span {
+                    display: inline-block !important;
+                    padding: 8px 16px !important;
+                    border: 1px solid #ddd !important;
+                    border-radius: 8px !important;
+                    min-width: 90px !important;
+                    text-align: center !important;
+                    font-size: 14px !important;
+                    font-weight: normal !important;
+                    color: #333 !important;
+                    background-color: white !important;
+                    transition: all 0.2s ease !important;
+                    box-shadow: none !important;
+                }
+                
+                /* Selected state - clean orange border */
+                .css_attribute_color.active span {
+                    border: 2px solid #ff7300 !important;
+                    padding: 7px 15px !important; /* Adjust for thicker border */
+                    font-weight: 500 !important;
+                    color: #ff7300 !important;
+                }
+                
+                /* Hover state */
+                .css_attribute_color:hover span {
+                    border-color: #bbb !important;
+                    background-color: #f9f9f9 !important;
+                }
+                
+                /* Hide all radio inputs but keep them functional */
+                .js_variant_change,
+                .css_attribute_color input {
+                    position: absolute !important;
+                    opacity: 0 !important;
+                    width: 1px !important;
+                    height: 1px !important;
+                    margin: -1px !important;
+                    padding: 0 !important;
+                    overflow: hidden !important;
+                    clip: rect(0, 0, 0, 0) !important;
+                    border: 0 !important;
+                }
+                
+                /* Wrapper around variant options */
+                .variant_attribute {
+                    margin-bottom: 15px !important;
+                }
+                
+                /* Disabled variant styling */
+                .css_not_available span {
+                    opacity: 0.5 !important;
+                    cursor: not-allowed !important;
+                    border-color: #eee !important;
+                }
+            </style>
+        </xpath>
+    </template>
+</odoo>

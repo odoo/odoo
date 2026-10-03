@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Custom Product Detail Template -->
+    <template id="custom_product_detail" name="Custom Product Detail" inherit_id="website_sale.product">
+        <!-- Override main product detail section -->
+        <xpath expr="//section[@id='product_detail']" position="replace">
+            <section t-attf-class="container py-4 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail"
+                    t-att-data-view-track="view_track and '1' or '0'"
+                    t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))">
+                <style type="text/css">
+                    @media (max-width: 767.98px) { /* Target screens smaller than md breakpoint */
+                        .product-detail-search-container {
+                            display: flex !important; /* Explicitly set display type */
+                            gap: 0 !important; /* Remove gap as only one item (search form) is visible on mobile */
+                            max-width: 100% !important; /* Allow container to be full width */
+                            width: 100% !important;
+                            margin: 0 !important; /* Override all inline margins */
+                            padding: 0 !important; /* Ensure no internal padding affects width/alignment */
+                            justify-content: flex-start !important; /* Align content (the form) to the start */
+                        }
+                        .product-detail-search-container > form {
+                            display: flex !important; /* Ensure form is flex for its children (input, button) */
+                            flex-grow: 1 !important; /* Make the form expand to fill its parent container */
+                            width: 100% !important; /* Make the form take full container width */
+                            max-width: none !important; /* Override inline max-width for mobile */
+                        }
+                    }
+                </style>
+                
+                <!-- Заменяем блок поиска и иконок, чтобы они отображались в одной строке -->
+                <div class="product-detail-search-container" style="margin-top: 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; max-width: 800px; margin-left: auto; margin-right: auto; gap: 30px;">
+                    <form action="/shop" method="get" class="d-flex flex-grow-1" style="max-width: 600px;">
+                        <input type="text" name="search" class="form-control" placeholder="Поиск товаров..." style="border-radius: 24px 0 0 24px; height: 44px; font-size: 16px; border-right: none;"/>
+                        <button type="submit" class="btn" style="background: #ff7300; color: #fff; border-radius: 0 24px 24px 0; height: 44px; min-width: 48px;">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </form>
+                    
+                    <!-- Иконки навигации справа от поиска - обновленный дизайн с белым фоном без рамки -->
+                    <div class="desktop-nav-icons d-none d-md-flex" style="display: flex !important; align-items: center; border: none; border-radius: 8px; padding: 4px 8px; background: #fff;">
+                        <a href="/shop" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                            <i class="fa fa-home" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Главная</span>
+                        </a>
+                        <a href="/videos" class="nav-icon-btn has-tooltip" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                            <i class="fa fa-play" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Видео</span>
+                        </a>
+                        <a href="/shop/cart" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                            <i class="fa fa-shopping-cart" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Корзина</span>
+                        </a>
+                        <a href="/profile" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                            <i class="fa fa-user" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Профиль</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Add tooltip styles -->
+                <style>
+                    .has-tooltip {
+                        position: relative;
+                    }
+                    
+                    .icon-tooltip {
+                        position: absolute;
+                        bottom: -32px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        background: #333;
+                        color: white;
+                        padding: 4px 8px;
+                        border-radius: 4px;
+                        font-size: 12px;
+                        white-space: nowrap;
+                        opacity: 0;
+                        visibility: hidden;
+                        transition: all 0.2s ease;
+                        z-index: 100;
+                    }
+                    
+                    .icon-tooltip:after {
+                        content: '';
+                        position: absolute;
+                        top: -6px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        border-width: 0 6px 6px 6px;
+                        border-style: solid;
+                        border-color: transparent transparent #333 transparent;
+                    }
+                    
+                    /* Remove background on hover that causes square effect */
+                    .has-tooltip:hover {
+                        background-color: transparent;
+                        border-radius: 0;
+                        box-shadow: none !important;
+                    }
+                    
+                    .has-tooltip:hover .icon-tooltip {
+                        opacity: 1;
+                        visibility: visible;
+                    }
+                    
+                    .nav-icon-btn.active {
+                        color: #ff6600;
+                    }
+                    
+                    .desktop-nav-icons .nav-icon-btn:hover {
+                        transform: none;
+                        box-shadow: none !important;
+                    }
+
+                    /* Ensure no shadow on any nav button */
+                    .nav-icon-btn {
+                        box-shadow: none !important;
+                    }
+                </style>
+                
+                <!-- Удаляем старый блок с иконками, который был отдельно под поиском -->
+                <div class="desktop-nav-icons ms-3 d-none d-md-flex">
+                    <!-- Пустой блок для удаления старых иконок -->
+                </div>
+                
+                <!-- Breadcrumb section -->
+                <div class="row align-items-center mb-4">
+                    <div class="col-12">
+                        <ol class="breadcrumb p-0 m-0">
+                            <li class="breadcrumb-item o_not_editable">
+                                <a t-att-href="keep(category=0)">All Products</a>
+                            </li>
+                            <li t-if="category" class="breadcrumb-item">
+                                <a t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name" />
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span t-field="product.name" />
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <!-- Main product section -->
+                <div class="row" id="product_detail_main">
+                    <!-- Product Images -->
+                    <t t-set="image_cols" t-value="website._get_product_page_proportions()"/>
+                    <div t-attf-class="col-lg-#{image_cols[0]} mt-lg-4 o_wsale_product_images position-relative" t-if="website.product_page_image_width != 'none'">
+                        <t t-call="website_sale.shop_product_images"/>
+                    </div>
+                    
+                    <!-- Product Info -->
+                    <div t-attf-class="col-lg-#{image_cols[1]} mt-md-4" id="product_details">
+                        <!-- Product Title -->
+                        <h1 class="mb-2" t-field="product.name">Product Name</h1>
+                        
+                        <!-- Product Description -->
+                        <p t-field="product.description_sale" class="text-muted mb-3" placeholder="A short description that will also appear on documents." />
+                        
+                        <!-- Product form for cart actions -->
+                        <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="js_product js_main_product">
+                                <div>
+                                    <!-- Price display in larger font and with currency symbol -->
+                                    <div class="product_price mt-2 mb-3 d-inline-block">
+                                        <h3 class="oe_price_h4 css_editable_mode_display">
+                                            <span t-if="combination_info['has_discounted_price']" style="text-decoration: line-through; white-space: nowrap;" t-out="combination_info['list_price']" class="text-danger me-2"/>
+                                            <span style="white-space: nowrap; font-size: 1.5em; font-weight: bold;" class="text-success">
+                                                <t t-esc="combination_info['price']"/>
+                                            </span>
+                                            <span t-if="pricelist.currency_id" class="ms-1 text-muted oe_currency_value" style="font-size: 1.1em;">
+                                                <t t-esc="pricelist.currency_id.symbol"/>
+                                            </span>
+                                            <span t-if="combination_info['base_unit_price']" class="ms-1 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
+                                                <t t-call='website_sale.base_unit_price'/>
+                                            </span>
+                                        </h3>
+                                    </div>
+                                    
+                                    <!-- Variants section - important for fixing the error -->
+                                    <t t-placeholder="select">
+                                        <input type="hidden" class="product_id" name="product_id" t-att-value="product_variant.id" />
+                                        <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
+                                        <input t-if="product.public_categ_ids.ids" type="hidden" class="product_category_id" name="product_category_id" t-att-value="product.public_categ_ids.ids[0]" />
+                                        
+                                        <t t-if="product.attribute_line_ids">
+                                            <div class="js_add_cart_variants" t-att-data-attribute_exclusions="product._get_attribute_exclusions()">
+                                                <t t-call="multi_vendor_marketplace.custom_product_variants"/>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <ul class="list-unstyled js_add_cart_variants d-none" t-att-data-attribute_exclusions="product._get_attribute_exclusions()"/>
+                                        </t>
+                                    </t>
+                                    
+                                    <!-- Required elements for JS variant handling -->
+                                    <div class="css_not_available_msg alert alert-warning" style="display: none;">This combination does not exist.</div>
+                                    <div id="add_to_cart_wrap" class="d-inline-flex align-items-center mb-2 me-auto"></div>
+                                    <div id="product_option_block" class="d-flex flex-wrap w-100"></div>
+                                    
+                                    <!-- Stock status element with required format for _onChangeCombinationStock method -->
+                                    <div id="stock_status" class="o_not_editable mb-2">
+                                        <span id="availability_message" class="oe_availability text-success o_hidden">
+                                            <i class="fa fa-check"></i> In Stock
+                                        </span>
+                                        <span id="availability_label" class="availability_label o_hidden">
+                                            <i class="fa fa-info-circle"></i> 
+                                            Available in <b><span id="available_threshold">5</span> days</b>
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- Add the product availability message div with the right structure -->
+                                    <div t-if="product.type == 'product'" class="availability mt-2">
+                                        <div id="product_availability_message" class="alert alert-warning" role="alert" style="display: none;"></div>
+                                    </div>
+                                    
+                                    <!-- Delivery info -->
+                                    <div class="delivery-info mb-3" style="display: none;">
+                                        <div class="d-flex align-items-center text-muted">
+                                            <i class="fa fa-truck me-2"></i>
+                                            <span>Free Shipping within 24 hours</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Новый красивый блок выбора количества -->
+                                    <div class="input-group">
+                                    <div class="quantity-wrapper">
+                                        <button type="button" class="qty-btn js_remove_qty">-</button>
+                                            <input type="text" class="qty-input js_quantity" name="add_qty" value="1" readonly="readonly" />
+                                        <button type="button" class="qty-btn js_add_qty">+</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Action buttons row (Buy Now and Add to Cart) -->
+                                    <div class="action-buttons d-flex mb-3" style="padding: 0; background: none; border-radius: 12px; overflow: hidden; width: 100%;">
+                                        <div id="o_wsale_cta_wrapper" class="d-flex w-100" style="width: 100%;">
+                                            <!-- Buy Now Button (левая, оранжевый) -->
+                                            <button type="submit" id="buy_now" name="express" class="btn btn-lg d-flex align-items-center justify-content-center o_we_buy_now"
+                                                style="background: linear-gradient(90deg, #ff7300 0%, #ffb300 100%); color: #fff; border: none; border-radius: 16px 0 0 16px; font-weight: 700; font-size: 1.25rem; height: 56px; flex: 1; transition: filter 0.2s; min-width: 0;">
+                                                <span>Купить</span>
+                                            </button>
+                                            
+                                            <!-- Pure HTML button that triggers the standard add to cart -->
+                                            <button type="button" id="add_to_cart_button" class="btn btn-lg d-flex align-items-center justify-content-center"
+                                                style="background: linear-gradient(90deg, #ffd600 0%, #ffb300 100%); color: #fff; border: none; border-radius: 0 16px 16px 0; font-weight: 700; height: 56px; flex: 1; transition: filter 0.2s; min-width: 0;">
+                                                <span class="d-none d-sm-block" style="font-size: 1.1rem; white-space: nowrap;">Добавить в корзину</span>
+                                                <span class="d-block d-sm-none" style="font-size: 1.25rem;">Добавить в корзину</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <!-- Create separate form for cart add to prevent conflicts -->
+                        <form id="cart_add_form" action="/shop/cart/update" method="POST" style="display:none;">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="product_id" t-att-value="product_variant.id or product.id"/>
+                            <input type="hidden" name="add_qty" id="cart_add_qty" value="1"/>
+                        </form>
+                        
+                        <!-- Add direct, clean JavaScript for cart add -->
+                        <t t-if="True">
+                        <script type="text/javascript">
+                        //<![CDATA[
+                            document.addEventListener('DOMContentLoaded', function() {
+                                // Get elements
+                                var addButton = document.getElementById('add_to_cart_button');
+                                var qtyInput = document.querySelector('.js_quantity');
+                                var cartForm = document.getElementById('cart_add_form');
+                                var cartQtyInput = document.getElementById('cart_add_qty');
+                                var cartProductIdInput = document.querySelector('#cart_add_form input[name="product_id"]');
+                                
+                                // Add click handler for cart button
+                                if (addButton) {
+                                    addButton.addEventListener('click', function(e) {
+                                        // Get the currently selected product variant ID from the main form
+                                        var currentProductId = document.querySelector('.js_product input.product_id').value;
+                                        
+                                        // Update quantity from the visible input
+                                        if (qtyInput && cartQtyInput) {
+                                            cartQtyInput.value = qtyInput.value;
+                                        }
+                                        
+                                        // Update the product ID with the currently selected variant
+                                        if (cartProductIdInput && currentProductId) {
+                                            cartProductIdInput.value = currentProductId;
+                                        }
+                                        
+                                        // Submit the dedicated cart form
+                                        if (cartForm) {
+                                            cartForm.submit();
+                                        }
+                                    });
+                                }
+                                
+                                // Add event listener to update our hidden product_id when variant changes
+                                $(document).on('change', '.js_product .js_variant_change', function(ev) {
+                                    setTimeout(function() {
+                                        var selectedProductId = $('.js_product input.product_id').val();
+                                        $('#cart_add_form input[name="product_id"]').val(selectedProductId);
+                                    }, 100); // Small delay to ensure Odoo's handlers have updated the product_id
+                                });
+                            });
+                        //]]>
+                        </script>
+                        </t>
+
+                        <p t-if="not product._is_add_to_cart_possible() and not product.active" class="alert alert-warning">This product is no longer available.</p>
+                        <p t-if="not product._is_add_to_cart_possible() and product.active" class="alert alert-warning">This product has no valid combination.</p>
+                        
+                        <!-- Блок информации и параметров -->
+                        <div class="container-fluid px-0 my-4">
+                            <div style="background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.04); padding: 18px 16px; width: 100%; margin: 0; border-radius: 12px;" class="d-md-none">
+                                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px; white-space: nowrap;">Информация и параметры</h3>
+                                <div style="color: #333; font-size: 16px;">
+                                    <t t-if="product.description">
+                                        <t t-raw="product.description"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="text-muted">Нет дополнительной информации.</span>
+                                    </t>
+                                </div>
+                            </div>
+                            
+                            <!-- Desktop version with rounded corners -->
+                            <div style="background: #fff; border-radius: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); padding: 32px; max-width: 900px; margin: 0 auto;" class="d-none d-md-block">
+                                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 18px;">Информация и параметры</h3>
+                                <div style="color: #333; font-size: 16px;">
+                                    <t t-if="product.description">
+                                        <t t-raw="product.description"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="text-muted">Нет дополнительной информации.</span>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product attributes -->
+                        <div id="product_attributes_simple">
+                            <t t-set="single_value_attributes" t-value="product.valid_product_template_attribute_line_ids._prepare_single_value_for_display()"/>
+                            <table t-attf-class="table table-sm text-muted {{'' if single_value_attributes else 'd-none'}}">
+                                <t t-foreach="single_value_attributes" t-as="attribute">
+                                    <tr>
+                                        <td>
+                                            <span t-field="attribute.name"/>:
+                                            <t t-foreach="single_value_attributes[attribute]" t-as="ptal">
+                                                <span t-field="ptal.product_template_value_ids._only_active().name"/><t t-if="not ptal_last">, </t>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                        
+                        <!-- Terms and conditions, no OdooBot chat -->
+                        <!--
+                        <div id="o_product_terms_and_share" class="d-flex justify-content-between flex-column flex-md-row align-items-md-end mb-3">
+                            <p class="text-muted mb-0">
+                                <a href="/terms" class="text-muted"><u>Terms and Conditions</u></a><br/>
+                                30-day money-back guarantee<br/>
+                                Shipping: 2-3 Business Days
+                            </p>
+                            <div class="h4 mt-3 mb-0 d-flex justify-content-md-end flex-shrink-0" style="display: none;">
+                                <button class="btn btn-primary rounded-circle" aria-label="Chat with OdooBot" title="Chat with OdooBot" id="o_livechat_button" style="display: none;">
+                                    <i class="fa fa-comments"></i>
+                                </button>
+                            </div>
+                        </div>
+                        -->
+                        <div id="o_product_terms_and_share" style="display:none"></div>
+                    </div>
+                </div>
+            </section>
+            <!-- Product images gallery at the bottom -->
+            <div class="container my-5">
+                <t t-set="product_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
+                <t t-foreach="product_images" t-as="img">
+                    <div class="w-100 d-flex justify-content-center mb-4">
+                        <t t-if="img and img.image_1920">
+                            <img t-att-src="image_data_uri(img.image_1920)"
+                                 class="img-fluid product-gallery-img"
+                                 style="max-width: 1050px; width: 100%; height: auto; border-radius: 12px; object-fit: contain; background: #f8f8f8; display: block;" 
+                                 alt="Product image"/>
+                        </t>
+                        <t t-else="">
+                            <img src="/multi_vendor_marketplace/static/src/img/product.png"
+                                 class="img-fluid product-gallery-img"
+                                 style="max-width: 1050px; width: 100%; height: auto; border-radius: 12px; object-fit: contain; background: #f8f8f8; display: block;" 
+                                 alt="No image"/>
+                        </t>
+                    </div>
+                </t>
+            </div>
+            <!-- Новый красивый блок продавца с улучшенным мобильным отображением -->
+            <div class="seller-info-card" style="background:#fff; border-radius:18px; box-shadow:0 2px 12px rgba(0,0,0,0.04); padding:32px; max-width:900px; margin:32px auto;">
+                <div class="product-detail-seller-bottom" style="width:100%;">
+                    <!-- Desktop layout (row) and Mobile layout (column) -->
+                    <div class="seller-container" style="display:flex; flex-wrap:wrap;">
+                        <!-- Logo and main info section -->
+                        <div class="seller-main-info" style="display:flex; flex-direction:column; align-items:center; flex:1; min-width:280px; margin-bottom:24px;">
+                            <!-- Logo centered on mobile -->
+                            <div class="card" style="width:90px; height:90px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px auto;">
+                                <img width="70" height="70" alt="" src="/multi_vendor_marketplace/static/src/img/user.png" loading="lazy" style="border-radius:50%;"/>
+                            </div>
+                            
+                            <!-- Shop name centered on mobile -->
+                            <div class="seller-name" style="font-weight:600; font-size:18px; margin-bottom:8px; text-align:center;">Administrator</div>
+                            
+                            <!-- Rating centered on mobile -->
+                            <div class="o_website_rating_static mb-3" style="text-align:center;">
+                                <i class="fa fa-star-o" role="img"></i>
+                                <i class="fa fa-star-o" role="img"></i>
+                                <i class="fa fa-star-o" role="img"></i>
+                                <i class="fa fa-star-o" role="img"></i>
+                                <i class="fa fa-star-o" role="img"></i>
+                            </div>
+                            
+                            <!-- Button centered and with full width on mobile -->
+                            <a role="button" class="btn btn-outline-primary" t-att-href="'/seller_shop?product_id=%s' % product.id" 
+                               style="min-width:200px; font-weight:500; margin:0 auto;">
+                                Перейти в магазин
+                            </a>
+                        </div>
+                        
+                        <!-- Contact info section -->
+                        <div class="seller-contact-info" style="display:flex; flex-direction:column; min-width:280px; flex:1; align-items:center;">
+                            <div style="font-weight:600; font-size:16px; margin-bottom:16px; text-align:center; width:100%;">Контакты:</div>
+                            <div style="margin-bottom:10px; color:#333; font-size:15px; text-align:center; width:100%;"><i class="fa fa-phone me-2"></i>+1 (555) 123-4567</div>
+                            <div style="margin-bottom:16px; color:#333; font-size:15px; text-align:center; width:100%;"><i class="fa fa-envelope me-2"></i>seller@example.com</div>
+                            <div style="display:flex; gap:20px; margin-top:4px; justify-content:center; width:100%;">
+                                <a href="https://wa.me/15551234567" target="_blank" style="color:#25D366; font-size:24px;"><i class="fa fa-whatsapp"></i></a>
+                                <a href="https://instagram.com/yourshop" target="_blank" style="color:#C13584; font-size:24px;"><i class="fa fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- конец блока -->
+            
+            <!-- Блок рекомендаций по магазину -->
+            <div class="seller-recommendations py-4 mb-4" style="background:#f8f8f8; border-radius:0;">
+                <div class="container">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="mb-0" style="font-size: 20px; font-weight: 600;">Рекомендации по магазину</h3>
+                        <a href="#" class="text-decoration-none" style="color: #999; font-size: 15px;">Все <i class="fa fa-angle-right"></i></a>
+                    </div>
+                    
+                    <div class="owl-carousel owl-theme">
+                        <t t-if="product and product.seller_id">
+                            <t t-set="seller_products" t-value="request.env['product.template'].sudo().search([('seller_id', '=', product.seller_id.id), ('id', '!=', product.id)], limit=10)"/>
+                            <t t-foreach="seller_products" t-as="seller_product">
+                                <div class="item">
+                                    <div class="card h-100 border" style="border-radius: 12px; overflow: hidden; min-width: 170px; max-width: 200px; min-height: 260px; max-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+                                        <a t-att-href="'/shop/product/%s' % slug(seller_product)" class="text-decoration-none" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                                            <t t-if="seller_product.image_1920">
+                                                <img t-att-src="image_data_uri(seller_product.image_1920)" class="card-img-top" alt="Product Image"
+                                                     style="height: 130px; width: auto; object-fit: contain; margin: 16px auto 8px auto; display: block;"/>
+                                            </t>
+                                            <t t-else="">
+                                                <img src="/multi_vendor_marketplace/static/src/img/product.png" class="card-img-top" alt="No Image"
+                                                     style="height: 130px; width: auto; object-fit: contain; margin: 16px auto 8px auto; display: block;"/>
+                                            </t>
+                                            <div class="card-body p-2" style="width: 100%; text-align: center;">
+                                                <h5 class="card-title mb-1" style="font-size: 14px; font-weight: 500; color: #333; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; min-height: 38px;">
+                                                    <t t-esc="seller_product.name"/>
+                                                </h5>
+                                                <p class="card-text mb-0" style="color: #FF6000; font-weight: 600; font-size: 16px;">
+                                                    <t t-esc="seller_product.list_price" t-options="{'widget': 'monetary', 'display_currency': request.env.user.company_id.currency_id}"/>
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- JavaScript for Owl Carousel with properly wrapped CDATA -->
+            <t t-if="True">
+            <script type="text/javascript">
+            //<![CDATA[
+                odoo.define('multi_vendor_marketplace.seller_products_carousel', function (require) {
+                    'use strict';
+                    
+                    var publicWidget = require('web.public.widget');
+                    
+                    publicWidget.registry.SellerProductsCarousel = publicWidget.Widget.extend({
+                        selector: '.seller-recommendations',
+                        
+                        start: function () {
+                            var self = this;
+                            
+                            this.$('.owl-carousel').owlCarousel({
+                                loop: true,
+                                margin: 10,
+                                nav: true,
+                                navText: [
+                                    '<i class="fa fa-chevron-left"></i>',
+                                    '<i class="fa fa-chevron-right"></i>'
+                                ],
+                                responsive: {
+                                    0: {
+                                        items: 2
+                                    },
+                                    576: {
+                                        items: 3
+                                    },
+                                    768: {
+                                        items: 4
+                                    },
+                                    992: {
+                                        items: 5
+                                    }
+                                }
+                            });
+                            
+                            return this._super.apply(this, arguments);
+                        }
+                    });
+                });
+            //]]>
+            </script>
+            </t>
+            
+            <!-- Remove the potentially problematic script -->
+            
+            <!-- Fix the mobile navigation -->
+            <div class="mobile-bottom-nav d-md-none">
+                <div class="nav-btns">
+                    <a href="/shop" class="nav-btn" t-attf-class="nav-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}"><i class="fa fa-home"></i></a>
+                    <a href="/shop/cart" class="nav-btn" t-attf-class="nav-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}"><i class="fa fa-shopping-cart"></i></a>
+                    <a href="/profile" class="nav-btn" t-attf-class="nav-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}"><i class="fa fa-user"></i></a>
+                    <!-- Remove the duplicated links -->
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
