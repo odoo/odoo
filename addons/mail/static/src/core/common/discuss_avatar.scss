@@ -1,24 +1,20 @@
-.o-mail-DiscussAvatar.o-isBrowserSafari g {
-    // Safari bug: when there's opacity in foreignobject, position of foreignobject is reset to (0, 0)
-    // https://github.com/bkrem/react-d3-tree/issues/284
-    // https://bugs.webkit.org/show_bug.cgi?id=23113
-    // Trick here is moving the opacity classname to the parent svg, so that no opacity on foreignobject and safari doesn't reset position.
-    @each $opacity_class, $opacity_value in ("opacity-25": .25, "opacity-50": .5, "opacity-75": .75) {
-        &:has(foreignObject .#{$opacity_class}) {
-            opacity: #{$opacity_value};
-            foreignObject .#{$opacity_class} {
-                opacity: 100% !important;
-            }
-        }
+$o-mail-DiscussAvatar-botIconShift: map-get($spacers, 1) / 2;
+
+.o-mail-DiscussAvatar-icon {
+    // Icon is centered where the avatar circle meets its bottom-right diagonal, so that any icon
+    // (e.g. wide typing indicator) is placed consistently.
+    top: calc(50% + 50% * cos(45deg));
+    left: calc(50% + 50% * cos(45deg));
+    transform: translate(-50%, -50%) scale(var(--o-mail-DiscussAvatar-iconScale, 1));
+
+    .o-mail-ImStatus.o-imStatus-bot {
+        position: relative;
+        top: $o-mail-DiscussAvatar-botIconShift;
     }
 }
 
-.o-mail-DiscussAvatar .o-mail-ImStatus.o-imStatus-bot {
-    padding-top: map-get($spacers, 1) / 2;
-}
-
 .o-mail-DiscussAvatar-imStatusMask.o-imStatus-bot {
-    baseline-shift: -.125rem;
+    baseline-shift: -$o-mail-DiscussAvatar-botIconShift;
 }
 
 // `data-icon` is renamed in the mask, so icons.scss can't select the font.
