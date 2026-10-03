@@ -28,12 +28,13 @@
                                 t-on-pointerup="this.onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
                                 t-on-keydown="(ev) => this.onCellKeydown(ev)"
-                                data-tooltip-delay="1000"
                                 tabindex="-1">
                                 <t t-if="column.hasLabel and column.widget !== 'handle'">
+                                    <t t-set="tooltipTemplate" t-value="this.getColumnTooltipTemplate(column)"/>
                                     <div class="d-flex align-items-center"
-                                        t-att-data-tooltip-template="this.debugMode.isActive() ? 'web.FieldTooltip' : 'web.ListHeaderTooltip'"
-                                        t-att-data-tooltip-info="this.makeTooltip(column)">
+                                        t-att-data-tooltip="column.label"
+                                        t-att-data-tooltip-template="tooltipTemplate"
+                                        t-att-data-tooltip-info="tooltipTemplate and this.makeTooltip(column)">
                                         <span class="d-block min-w-0 text-truncate flex-grow-1 flex-shrink-1" t-att-class="isNumeric ? 'o_list_number_th' : ''"
                                               t-out="column.label"/>
                                         <div class="o_list_header_label_spacer"/>
@@ -449,9 +450,9 @@
         </tr>
     </t>
 
-    <t t-name="web.ListHeaderTooltip">
+    <t t-name="web.ListHeaderHelpTooltip">
         <t t-out="field.label"/>
-        <div t-if="field.help" class="mt-2" t-out="field.help"/>
+        <div class="mt-2" t-out="field.help"/>
     </t>
 
 </templates>
