@@ -19,6 +19,7 @@ test("can add, replace, and remove emojis to a poll option", async () => {
     await click(".o-mail-Composer button[title='More Actions']");
     await click(".o-dropdown-item:text('Create Poll')");
     await contains(".modal-header:text('Create Poll')");
+    await contains("input[name='poll_question']:focus");
     await click(".o-mail-CreatePollOptionDialog:first [data-icon='sentiment_satisfied']");
     await click(".o-Emoji:text('😀')");
     await click(".o-mail-CreatePollOptionDialog:first span:text('😀')");
@@ -27,6 +28,10 @@ test("can add, replace, and remove emojis to a poll option", async () => {
     await click(".o-mail-CreatePollOptionDialog:first span:text('😁')");
     await click(".o-dropdown-item:text('Remove Emoji')");
     await contains(".o-mail-CreatePollOptionDialog:first [data-icon='sentiment_satisfied']");
+    // The initial two options skip autofocus; a newly added option (index > 1) receives focus.
+    await click("button:text('Add another option')");
+    await contains(".o-mail-CreatePollOptionDialog", { count: 3 });
+    await contains(".o-mail-CreatePollOptionDialog:last input:focus");
 });
 
 test("poll creation should be disabled during message editing", async () => {

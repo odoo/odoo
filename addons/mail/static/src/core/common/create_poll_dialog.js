@@ -20,7 +20,7 @@ export class CreatePollDialog extends Component {
             close: types.function([types.instanceOf(MouseEvent)]),
             thread: types.instanceOf(this.store["mail.thread"]),
         });
-        useAutofocus({ ref: this.questionRef });
+        useAutofocus({ ref: this.questionRef, mobile: true });
         this.state = proxy({
             allowMultipleOptions: false,
             duration: "10",
