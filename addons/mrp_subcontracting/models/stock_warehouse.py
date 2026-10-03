@@ -8,8 +8,14 @@ from odoo.fields import Command
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
-    subcontracting_to_resupply = fields.Boolean(
-        'Resupply Subcontractors', default=True)
+    subcontracting_to_resupply = fields.Selection(
+        selection=[
+            ('on_order', "On Order"),
+            ('periodic', "Periodically"),
+            ('never', "Never"),
+        ],
+        string="Resupply Subcontractors", default='on_order', required=True,
+    )
     subcontracting_mto_pull_id = fields.Many2one(
         'stock.rule', 'Subcontracting MTO Rule', copy=False)
     subcontracting_pull_id = fields.Many2one(
@@ -29,7 +35,7 @@ class StockWarehouse(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         # if new warehouse has resupply enabled, enable global route
-        if any([vals.get('subcontracting_to_resupply', False) for vals in vals_list]):
+        if any(vals.get('subcontracting_to_resupply', 'never') != 'never' for vals in vals_list):
             res._update_global_route_resupply_subcontractor()
         return res
 
@@ -57,11 +63,16 @@ class StockWarehouse(models.Model):
     def _update_global_route_resupply_subcontractor(self):
         route_id = self._find_or_create_global_route('mrp_subcontracting.route_resupply_subcontractor_mto',
                                            _('Resupply Subcontractor on Order'))
-        if not route_id.sudo().rule_ids.filtered(lambda r: r.active):
-            route_id.active = False
-        else:
-            route_id.active = True
-            self.route_ids = [Command.link(route_id.id)]
+
+        self.route_ids = [Command.link(route_id.id)]
+        rules = route_id.sudo().with_context(active_test=False).rule_ids
+        active_rules = rules.filtered(lambda r: r.active)
+        if route_id.active == bool(active_rules):
+            return
+        # setting route.active sets the rules to active, so need to archive the archived ones again
+        route_id.active = bool(active_rules)
+        (rules - active_rules).action_archive()
+        active_rules.action_unarchive()
 
     def _get_routes_values(self):
         routes = super(StockWarehouse, self)._get_routes_values()
@@ -78,10 +89,10 @@ class StockWarehouse(models.Model):
                     'name': self._format_routename(name=_('Resupply Subcontractor'))
                 },
                 'route_update_values': {
-                    'active': self.subcontracting_to_resupply,
+                    'active': self.subcontracting_to_resupply != 'never',
                 },
                 'rules_values': {
-                    'active': self.subcontracting_to_resupply,
+                    'active': self.subcontracting_to_resupply != 'never',
                 }
             }
         })
@@ -106,7 +117,7 @@ class StockWarehouse(models.Model):
                     'picking_type_id': self.subcontracting_resupply_type_id.id
                 },
                 'update_values': {
-                    'active': self.subcontracting_to_resupply
+                    'active': self.subcontracting_to_resupply != 'never'
                 }
             },
             'subcontracting_pull_id': {
@@ -123,7 +134,7 @@ class StockWarehouse(models.Model):
                     'picking_type_id': self.subcontracting_resupply_type_id.id
                 },
                 'update_values': {
-                    'active': self.subcontracting_to_resupply
+                    'active': self.subcontracting_to_resupply == 'on_order'
                 }
             },
         })
@@ -185,7 +196,7 @@ class StockWarehouse(models.Model):
                 'default_location_src_id': self.lot_stock_id.id,
                 'default_location_dest_id': subcontract_location_id.id,
                 'barcode': self.code.replace(" ", "").upper() + "RESUP",
-                'active': self.subcontracting_to_resupply and self.active
+                'active': self.subcontracting_to_resupply != 'never' and self.active
             },
         })
         return data
@@ -199,12 +210,13 @@ class StockWarehouse(models.Model):
     def _update_resupply_rules(self):
         '''update (archive/unarchive) any warehouse subcontracting location resupply rules'''
         subcontracting_locations = self._get_subcontracting_locations()
-        warehouses_to_resupply = self.filtered(lambda w: w.subcontracting_to_resupply and w.active)
+        warehouses_to_resupply = self.filtered(lambda w: w.subcontracting_to_resupply != 'never' and w.active)
         if warehouses_to_resupply:
-            self.env['stock.rule'].with_context(active_test=False).search([
+            rules_to_resupply = self.env['stock.rule'].with_context(active_test=False).search([
                 '&', ('picking_type_id', 'in', warehouses_to_resupply.subcontracting_resupply_type_id.ids),
                 '|', ('location_src_id', 'in', subcontracting_locations.ids),
-                ('location_dest_id', 'in', subcontracting_locations.ids)]).action_unarchive()
+                ('location_dest_id', 'in', subcontracting_locations.ids)])
+            (rules_to_resupply - warehouses_to_resupply.subcontracting_pull_id).action_unarchive()
 
         warehouses_not_to_resupply = self - warehouses_to_resupply
         if warehouses_not_to_resupply:
