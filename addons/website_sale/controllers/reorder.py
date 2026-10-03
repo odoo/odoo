@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from itertools import chain
 
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.http import request, route
@@ -39,9 +40,25 @@ class CustomerPortal(sale_portal.CustomerPortal):
         Cart_controller = Cart()
         order_sudo = request.cart or request.website._create_cart()
         warnings_to_aggregate = set()
-        values = {
-            'tracking_info': [],
-        }
+        all_cart_values = []
+        product_lines = lines_to_reorder.filtered(lambda l: l.product_id.type != 'combo')
+
+        # Create new sols for product_lines in batch to speedup add_to_cart call.
+        new_cart_line_vals = []
+        for line in product_lines:
+            new_cart_line_vals.append(
+                order_sudo._prepare_order_line_values(
+                    product_id=line.product_id.id,
+                    quantity=0.0,
+                    uom_id=line.product_id.uom_id.id,
+                    product_custom_attribute_values=[{
+                        'custom_product_template_attribute_value_id': pcav.custom_product_template_attribute_value_id.id,
+                        'custom_value': pcav.custom_value,
+                    } for pcav in line.product_custom_attribute_value_ids],
+                    no_variant_attribute_value_ids=line.product_no_variant_attribute_value_ids.ids,
+                )
+            )
+        self.env['sale.order.line'].sudo().create(new_cart_line_vals)
         for line in lines_to_reorder:
 
             linked_products = []
@@ -75,15 +92,18 @@ class CustomerPortal(sale_portal.CustomerPortal):
                 } for pcav in line.product_custom_attribute_value_ids],
                 no_variant_attribute_value_ids=line.product_no_variant_attribute_value_ids.ids,
                 linked_products=linked_products,
+                add_reorder_info=True,
             )
             if not cart_values['quantity']:
                 # Only aggregate order warnings
                 warnings_to_aggregate.add(order_sudo.shop_warning)
-
-            values['tracking_info'].extend(cart_values['tracking_info'])
+            all_cart_values.append(cart_values)
 
         if warnings_to_aggregate:
             order_sudo.shop_warning = '\n'.join(warnings_to_aggregate)
-
-        values['cart_quantity'] = order_sudo.cart_quantity
+        line_ids = set(chain.from_iterable(cart_values['tracking_info']['line_values'] for cart_values in all_cart_values))
+        values = {
+            'cart_quantity': order_sudo.cart_quantity,
+            'tracking_info': self._get_tracking_information(order_sudo, line_ids),
+        }
         return values
