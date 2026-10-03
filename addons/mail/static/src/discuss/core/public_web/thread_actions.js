@@ -1,10 +1,56 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { ACTION_TAGS } from "@mail/core/common/action";
-import { registerThreadAction } from "@mail/core/common/thread_actions";
+import { registerThreadAction, ThreadAction } from "@mail/core/common/thread_actions";
 import { SubChannelList } from "@mail/discuss/core/public_web/sub_channel_list";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { patch } from "@web/core/utils/patch";
+
+const SIDE_CHANNEL_ACTIONS = [
+    "notification-settings",
+    "join-channel",
+    "open-thread",
+    "close-side-channel",
+];
+
+patch(ThreadAction.prototype, {
+    _condition({ action, channel, owner }) {
+        if (
+            owner.isDiscussContent &&
+            channel?.discussAppAsSideChannel &&
+            !SIDE_CHANNEL_ACTIONS.includes(action.id)
+        ) {
+            return false;
+        }
+        return super._condition(...arguments);
+    },
+    actionPanelOpen() {
+        const { store } = this.params;
+        if (this.actionPanelComponent && !this.popover) {
+            store.discuss.sideChannel = undefined;
+        }
+        return super.actionPanelOpen(...arguments);
+    },
+});
+
+registerThreadAction("open-thread", {
+    condition: ({ channel, owner }) => owner.isDiscussContent && channel?.discussAppAsSideChannel,
+    icon: "expand_content",
+    name: _t("Open in Full View"),
+    onSelected: ({ channel }) => channel.open({ focus: true }),
+    sequence: 10,
+    sequenceGroup: 5,
+});
+
+registerThreadAction("close-side-channel", {
+    condition: ({ channel, owner }) => owner.isDiscussContent && channel?.discussAppAsSideChannel,
+    icon: "close_small",
+    name: _t("Close"),
+    onSelected: ({ store }) => (store.discuss.sideChannel = undefined),
+    sequence: 10,
+    sequenceGroup: 1,
+});
 
 export const joinChannelAction = {
     condition: ({ channel, store }) =>
@@ -15,7 +61,7 @@ export const joinChannelAction = {
         (store.self_user || store.self_guest?.id > 0),
     onSelected: ({ channel }) => channel.joinRpc(),
     icon: "login",
-    name: _t("Join Channel"),
+    name: ({ channel }) => (channel.parent_channel_id ? _t("Join Thread") : _t("Join Channel")),
     sequence: 20,
     sequenceGroup: ({ owner }) => (owner.isDiscussContent ? undefined : 5),
     tags: [ACTION_TAGS.PRIMARY],

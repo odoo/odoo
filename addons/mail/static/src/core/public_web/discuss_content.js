@@ -19,7 +19,8 @@ import { attClassObjectToString } from "@mail/utils/common/format";
 
 import { FileUploader } from "@web/views/fields/file_handler";
 import { useService } from "@web/core/utils/hooks";
-import { propSignal } from "@mail/utils/common/hooks";
+import { propSignal, useMessageScrolling } from "@mail/utils/common/hooks";
+import { useSubEnv } from "@web/owl2/utils";
 
 export class DiscussContent extends Component {
     static components = {
@@ -40,6 +41,8 @@ export class DiscussContent extends Component {
         this.channel = propSignal("channel", types.instanceOf(this.store["discuss.channel"]), {
             optional: true,
         });
+        this.messageHighlight = useMessageScrolling({ thread: () => this.thread });
+        useSubEnv({ messageHighlight: this.messageHighlight });
         this.ui = useService("ui");
         this.notification = useService("notification");
         this.rootRef = signal.ref(HTMLDivElement);

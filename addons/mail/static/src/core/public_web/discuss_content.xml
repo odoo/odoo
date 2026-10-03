@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.DiscussContent">
-    <t t-set="partitionedActions" t-value="this.threadActions.partition"/>
-    <div class="o-mail-DiscussContent d-flex flex-column h-100 flex-grow-1 overflow-auto o-scrollbar-thin" t-ref="this.rootRef">
+    <div class="o-mail-DiscussContent d-flex flex-column h-100 overflow-auto o-scrollbar-thin" t-att-class="{ 'o-mail-DiscussContent-sideChannel': this.thread?.channel?.discussAppAsSideChannel }" t-ref="this.rootRef">
         <div t-if="this.thread" class="o-mail-DiscussContent-header d-flex flex-shrink-0 align-items-center gap-1 z-1 flex-grow-0">
             <div class="o-mail-DiscussContent-headerInfo flex-grow-1 min-w-0 d-flex">
                 <div class="o-mail-DiscussContent-headerBox rounded-4 border d-flex min-w-0 ps-3 pe-2 align-items-center" t-att-class="{ 'py-1': !this.correspondentLocalDateTimeFormatted() }">
-                    <div class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit" t-att-class="this.threadAvatarAttClass" t-ref="this.threadAvatarRef">
+                    <i t-if="this.thread.channel?.discussAppAsSideChannel" class="oi oi-lg text-muted mx-1" data-icon="forum" role="presentation"/>
+                    <div t-else="" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit" t-att-class="this.threadAvatarAttClass" t-ref="this.threadAvatarRef">
                         <DiscussAvatar record="this.thread" size="26"/>
                         <FileUploader t-if="this.isThreadAvatarEditable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
                             <t t-set-slot="toggler">
@@ -19,7 +19,7 @@
                     </div>
                     <div class="flex-grow-1 min-w-0 align-self-center align-items-center h-100 py-1" t-att-class="{ 'lh-sm': this.showsChatLocalDateTime }">
                         <div class="d-flex">
-                            <div t-if="this.thread.channel?.parent_channel_id" class="d-flex align-items-center gap-1 o-ms-1_5">
+                            <div t-if="this.thread.channel?.parent_channel_id and !this.thread.channel.discussAppAsSideChannel" class="d-flex align-items-center gap-1 o-ms-1_5">
                                 <span class="fw-bold cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-out="this.thread.channel.parent_channel_id.displayName" t-on-click="() => this.thread?.channel?.parent_channel_id?.open({ focus: true })"/>
                                 <i class="oi o-xsmaller o-ms-0_5" data-icon="chevron_forward"/>
                             </div>
@@ -30,7 +30,7 @@
                                 onValidate.bind="this.renameThread"
                                 value="this.threadDisplayName"
                             />
-                            <t t-if="this.thread.channel?.allowDescription and (this.thread.channel?.allowEditDescription or this.thread.description)">
+                            <t t-if="this.thread.channel?.allowDescription and !this.thread.channel.discussAppAsSideChannel and (this.thread.channel?.allowEditDescription or this.thread.description)">
                                 <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
                                 <AutoresizeInput
                                     className="'flex-shrink-1 small ms-2'"
@@ -49,7 +49,7 @@
             <div class="pe-1 flex-shrink-0 ms-auto d-print-none">
                 <ActionList actions="this.headerActionsList" inline="true" hasBtnBg="true" actionComponent.bind="this.getActionComponent"/>
             </div>
-            <div t-if="this.store.inPublicPage and !this.ui.isSmall" class="d-flex align-items-center">
+            <div t-if="this.store.inPublicPage and !this.ui.isSmall and !this.thread.channel?.discussAppAsSideChannel" class="d-flex align-items-center">
                 <img class="o-mail-DiscussContent-selfAvatar me-1 rounded-3 object-fit-cover flex-shrink-0 smaller" alt="Avatar" t-att-src="this.store.self.avatarUrl"/>
                 <div t-if="this.store.self_user" class="text-nowrap px-1 me-2" t-out="this.store.self_user.name"/>
                 <AutoresizeInput t-else="" className="'py-1'" onValidate.bind="this.renameGuest" value="this.selfGuestName"/>

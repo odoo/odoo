@@ -547,7 +547,9 @@ export class Composer extends Component {
     }
 
     get showComposerAvatar() {
-        return !this.compact && this.props.sidebar;
+        return (
+            !this.compact && this.props.sidebar && !this.thread?.channel?.discussAppAsSideChannel
+        );
     }
 
     get showComposerAvatarImage() {
