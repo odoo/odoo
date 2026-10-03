@@ -459,29 +459,39 @@ class TestPeppolParticipant(TransactionCase):
             'routing_identifier': '0088:9780471117094',
         }])
 
-    def test_do_not_recompute_routing_for_valid_peppol_partner(self):
-        """A partner whose Peppol status is 'valid' keeps its routing scheme/endpoint,
-        even when a field the routing identifier depends on changes.
-        """
-        partner = self.env['res.partner'].create({
-            'name': 'Valid Peppol Partner',
-            'country_id': self.env.ref('base.be').id,
-            'invoice_edi_format': 'ubl_bis3',
+    def test_do_not_recompute_routing_for_my_company(self):
+        """Test that once my company is registered on Peppol, changing the VAT
+        afterward will not change what is actually registered on the network."""
+
+        be_country = self.env.ref('base.be')
+        self.env.company.write({
+            'country_id': be_country.id,
+            'vat': 'BE0477472701',
         })
-        partner.routing_identifier = '0208:0475646428'
 
-        with mock_lookup_success(peppol_identifier='0208:0475646428'):
-            partner.button_account_peppol_check_partner_endpoint()
-        self.assertEqual(partner.peppol_verification_state, 'valid')
+        with (
+            mock_lookup_success(peppol_identifier='0208:0477472701'),
+            mock_can_connect(),
+            mock_connect(peppol_state='sender'),
+        ):
+            wizard = self.env['peppol.registration'].create({
+                'peppol_eas': '0208',
+                'peppol_endpoint': '0477472701',
+                'phone_number': '+32483123456',
+                'contact_email': 'yourcompany@test.example.com',
+            })
+            wizard.button_register_peppol_participant()
 
-        # Setting a VAT would normally recompute the routing scheme/endpoint (to
-        # '0208'/'0477472701'), but the partner is a valid Peppol participant whose
-        # scheme/endpoint are already set, so its routing must be left untouched.
-        partner.vat = 'BE0477472701'
-        self.assertRecordValues(partner, [{
-            'routing_scheme': '0208',
-            'routing_endpoint': '0475646428',
+        self.assertRecordValues(self.env.company.partner_id, [{
+            'routing_identifier': '0208:0477472701',
         }])
+        self.assertEqual(self.env.company.partner_id._get_additional_identifier('BE_EN'), '0477472701')
+
+        self.env.company.vat = 'BE0475646428'
+        self.assertRecordValues(self.env.company.partner_id, [{
+            'routing_identifier': '0208:0477472701',
+        }])
+        self.assertEqual(self.env.company.partner_id._get_additional_identifier('BE_EN'), '0475646428')
 
     def test_recompute_routing_for_unverified_peppol_partner(self):
         """A partner whose Peppol status is not 'valid' still has its routing
@@ -502,3 +512,35 @@ class TestPeppolParticipant(TransactionCase):
             'routing_scheme': '0208',
             'routing_endpoint': '0477472701',
         }])
+
+    def test_routing_endpoint_recompute_for_valid_peppol_partner(self):
+        """Test that once a partner is a verified ('valid') Peppol participant,
+        changing its VAT will still update the routing scheme/endpoint."""
+
+        partner = self.env['res.partner'].create({
+            'name': 'Valid Peppol Partner',
+            'country_id': self.env.ref('base.be').id,
+            'vat': 'BE0411905847',
+            'invoice_edi_format': 'ubl_bis3',
+        })
+
+        with mock_lookup_success(peppol_identifier='0208:0411905847'):
+            partner.button_account_peppol_check_partner_endpoint()
+        self.assertEqual(partner.peppol_verification_state, 'valid')
+
+        self.assertEqual(partner._get_additional_identifier('BE_EN'), '0411905847')
+        self.assertRecordValues(partner, [{
+            'routing_scheme': '0208',
+            'routing_endpoint': '0411905847',
+        }])
+
+        partner.vat = 'BE0691480435'
+        with mock_lookup_success(peppol_identifier='0208:0691480435'):
+            partner.button_account_peppol_check_partner_endpoint()
+
+        self.assertEqual(partner._get_additional_identifier('BE_EN'), '0691480435')
+        self.assertRecordValues(partner, [{
+            'routing_scheme': '0208',
+            'routing_endpoint': '0691480435',
+        }])
+        self.assertEqual(partner.peppol_verification_state, 'valid')
