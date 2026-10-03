@@ -6,28 +6,7 @@
     </ram:GuidelineSpecifiedDocumentContextParameter>
   </rsm:ExchangedDocumentContext>
 
-  <rsm:ExchangedDocument>
-    <ram:ID>INV/2026/00001</ram:ID>
-    <ram:TypeCode>380</ram:TypeCode>
-    <ram:IssueDateTime>
-      <udt:DateTimeString format="102">20260101</udt:DateTimeString>
-    </ram:IssueDateTime>
-    <ram:IncludedNote>
-        <ram:Content>The prepaid amount of 106.70€ corresponds to the withholding tax applied.</ram:Content>
-    </ram:IncludedNote>
-    <ram:IncludedNote>
-        <ram:Content>In the event of late payment, a flat-rate fee of €40 for collection costs will be charged (Articles L.441-10 and D.441-5 of the Code de commerce).</ram:Content>
-        <ram:SubjectCode>PMT</ram:SubjectCode>
-    </ram:IncludedNote>
-    <ram:IncludedNote>
-        <ram:Content>Late payment penalties at an annual rate of 10% are applied if the payment is made after the due date.</ram:Content>
-        <ram:SubjectCode>PMD</ram:SubjectCode>
-    </ram:IncludedNote>
-    <ram:IncludedNote>
-        <ram:Content>No discount for early payment.</ram:Content>
-        <ram:SubjectCode>AAB</ram:SubjectCode>
-    </ram:IncludedNote>
-  </rsm:ExchangedDocument>
+  <rsm:ExchangedDocument>___ignore___</rsm:ExchangedDocument>
 
   <rsm:SupplyChainTradeTransaction>
     <ram:IncludedSupplyChainTradeLineItem>
@@ -54,8 +33,46 @@
           <ram:CategoryCode>S</ram:CategoryCode>
           <ram:RateApplicablePercent>20.0</ram:RateApplicablePercent>
         </ram:ApplicableTradeTax>
+        <ram:BillingSpecifiedPeriod>
+            <ram:StartDateTime>
+                <udt:DateTimeString format="102">20260201</udt:DateTimeString>
+            </ram:StartDateTime>
+            <ram:EndDateTime>
+                <udt:DateTimeString format="102">20260501</udt:DateTimeString>
+            </ram:EndDateTime>
+        </ram:BillingSpecifiedPeriod>
         <ram:SpecifiedTradeSettlementLineMonetarySummation>
           <ram:LineTotalAmount>1000.00</ram:LineTotalAmount>
+        </ram:SpecifiedTradeSettlementLineMonetarySummation>
+      </ram:SpecifiedLineTradeSettlement>
+    </ram:IncludedSupplyChainTradeLineItem>
+
+    <ram:IncludedSupplyChainTradeLineItem>
+      <ram:AssociatedDocumentLineDocument>
+        <ram:LineID>2</ram:LineID>
+      </ram:AssociatedDocumentLineDocument>
+      <ram:SpecifiedTradeProduct>
+        <ram:Name>Test Product</ram:Name>
+      </ram:SpecifiedTradeProduct>
+      <ram:SpecifiedLineTradeAgreement>
+        <ram:GrossPriceProductTradePrice>
+            <ram:ChargeAmount>2000.00</ram:ChargeAmount>
+        </ram:GrossPriceProductTradePrice>
+        <ram:NetPriceProductTradePrice>
+          <ram:ChargeAmount>2000.00</ram:ChargeAmount>
+        </ram:NetPriceProductTradePrice>
+      </ram:SpecifiedLineTradeAgreement>
+      <ram:SpecifiedLineTradeDelivery>
+        <ram:BilledQuantity unitCode="C62">1.0</ram:BilledQuantity>
+      </ram:SpecifiedLineTradeDelivery>
+      <ram:SpecifiedLineTradeSettlement>
+        <ram:ApplicableTradeTax>
+          <ram:TypeCode>VAT</ram:TypeCode>
+          <ram:CategoryCode>S</ram:CategoryCode>
+          <ram:RateApplicablePercent>20.0</ram:RateApplicablePercent>
+        </ram:ApplicableTradeTax>
+        <ram:SpecifiedTradeSettlementLineMonetarySummation>
+          <ram:LineTotalAmount>2000.00</ram:LineTotalAmount>
         </ram:SpecifiedTradeSettlementLineMonetarySummation>
       </ram:SpecifiedLineTradeSettlement>
     </ram:IncludedSupplyChainTradeLineItem>
@@ -122,7 +139,7 @@
         </ram:ShipToTradeParty>
           <ram:ActualDeliverySupplyChainEvent>
             <ram:OccurrenceDateTime>
-              <udt:DateTimeString format="102">20260101</udt:DateTimeString>
+              <udt:DateTimeString format="102">20260115</udt:DateTimeString>
             </ram:OccurrenceDateTime>
           </ram:ActualDeliverySupplyChainEvent>
       </ram:ApplicableHeaderTradeDelivery>
@@ -137,25 +154,25 @@
           </ram:PayeePartyCreditorFinancialAccount>
       </ram:SpecifiedTradeSettlementPaymentMeans>
       <ram:ApplicableTradeTax>
-        <ram:CalculatedAmount>200.00</ram:CalculatedAmount>
+        <ram:CalculatedAmount>600.00</ram:CalculatedAmount>
         <ram:TypeCode>VAT</ram:TypeCode>
-        <ram:BasisAmount>1000.00</ram:BasisAmount>
+        <ram:BasisAmount>3000.00</ram:BasisAmount>
         <ram:CategoryCode>S</ram:CategoryCode>
         <ram:DueDateTypeCode>5</ram:DueDateTypeCode>
         <ram:RateApplicablePercent>20.0</ram:RateApplicablePercent>
       </ram:ApplicableTradeTax>
         <ram:SpecifiedTradePaymentTerms>
             <ram:DueDateDateTime>
-                <udt:DateTimeString format="102">20260101</udt:DateTimeString>
+                <udt:DateTimeString format="102">___ignore___</udt:DateTimeString>
             </ram:DueDateDateTime>
         </ram:SpecifiedTradePaymentTerms>
       <ram:SpecifiedTradeSettlementHeaderMonetarySummation>
-        <ram:LineTotalAmount>1000.00</ram:LineTotalAmount>
-        <ram:TaxBasisTotalAmount>1000.00</ram:TaxBasisTotalAmount>
-        <ram:TaxTotalAmount currencyID="EUR">200.00</ram:TaxTotalAmount>
-        <ram:GrandTotalAmount>1200.00</ram:GrandTotalAmount>
-        <ram:TotalPrepaidAmount>106.70</ram:TotalPrepaidAmount>
-        <ram:DuePayableAmount>1093.30</ram:DuePayableAmount>
+        <ram:LineTotalAmount>3000.00</ram:LineTotalAmount>
+        <ram:TaxBasisTotalAmount>3000.00</ram:TaxBasisTotalAmount>
+        <ram:TaxTotalAmount currencyID="EUR">600.00</ram:TaxTotalAmount>
+        <ram:GrandTotalAmount>3600.00</ram:GrandTotalAmount>
+        <ram:TotalPrepaidAmount>0.00</ram:TotalPrepaidAmount>
+        <ram:DuePayableAmount>3600.00</ram:DuePayableAmount>
       </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
     </ram:ApplicableHeaderTradeSettlement>
   </rsm:SupplyChainTradeTransaction>

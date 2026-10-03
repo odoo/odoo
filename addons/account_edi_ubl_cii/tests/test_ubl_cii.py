@@ -332,10 +332,10 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
             'name': 'test_invoice.xml',
         })
         xml_tree = etree.fromstring(xml_attachment.raw)
-        start_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
-        end_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
-        self.assertEqual(start_date.text, '20241201')
-        self.assertEqual(end_date.text, '20241231')
+        # The line has no dates: no invoicing period, the invoice date is exported as delivery date instead.
+        self.assertIsNone(xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod', self.namespaces))
+        actual_delivery_date = xml_tree.find('.//ram:ActualDeliverySupplyChainEvent/ram:OccurrenceDateTime/udt:DateTimeString', self.namespaces)
+        self.assertEqual(actual_delivery_date.text, '20241201')
 
     def test_export_import_billing_dates(self):
         if self.env.ref('base.module_accountant').state != 'installed':
@@ -384,11 +384,8 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
         line_end_dates = xml_tree.findall('.//ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
         self.assertEqual([value.text for value in line_end_dates], ['20241211', '20241226', '20241215'])
 
-        global_start_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:StartDateTime/udt:DateTimeString', self.namespaces)
-        self.assertEqual(global_start_date.text, '20241119')
-
-        global_end_date = xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod/ram:EndDateTime/udt:DateTimeString', self.namespaces)
-        self.assertEqual(global_end_date.text, '20241226')
+        # One line has no dates: no invoicing period in the header.
+        self.assertIsNone(xml_tree.find('.//ram:ApplicableHeaderTradeSettlement/ram:BillingSpecifiedPeriod', self.namespaces))
 
         line_vals = [
             {

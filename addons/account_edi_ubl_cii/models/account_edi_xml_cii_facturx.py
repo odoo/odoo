@@ -212,14 +212,14 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         # [BR - IC - 11] - In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is
         # "Intra-community supply" the Actual delivery date (BT-72) or the Invoicing period (BG-14) shall not be blank.
-        billing_start_dates = [invoice.invoice_date] if invoice.invoice_date else []
-        billing_start_dates += [line_vals['billing_start'] for line_vals in template_values['invoice_line_vals_list'] if line_vals.get('billing_start')]
-        billing_end_dates = [invoice.invoice_date_due] if invoice.invoice_date_due else []
-        billing_end_dates += [line_vals['billing_end'] for line_vals in template_values['invoice_line_vals_list'] if line_vals.get('billing_end')]
-        if billing_start_dates:
-            template_values['billing_start'] = min(billing_start_dates)
-        if billing_end_dates:
-            template_values['billing_end'] = max(billing_end_dates)
+        # The invoicing period is only exported when every line has a start and an end date: it then goes from the
+        # earliest start to the latest end, so that it contains every line period (PEPPOL-EN16931-R110/R111), and
+        # the delivery date is not needed. The due date is never used: it is a payment deadline, not a period end.
+        invoice_line_vals_list = template_values['invoice_line_vals_list']
+        if invoice_line_vals_list and all(line_vals.get('billing_start') and line_vals.get('billing_end') for line_vals in invoice_line_vals_list):
+            template_values['billing_start'] = min(line_vals['billing_start'] for line_vals in invoice_line_vals_list)
+            template_values['billing_end'] = max(line_vals['billing_end'] for line_vals in invoice_line_vals_list)
+            template_values['scheduled_delivery_time'] = None
 
         # data used for ApplicableHeaderTradeSettlement / ApplicableTradeTax (at the end of the xml)
         for tax_detail_vals in template_values['tax_details']['tax_details'].values():

@@ -36,13 +36,24 @@ class AccountEdiCii(models.AbstractModel):
             vals['supplier'], vals['customer'] = vals['customer'], vals['supplier']
             vals['partner_shipping'] = vals['customer'].child_ids.filtered(lambda p: p.type == 'delivery')[:1] or vals['customer']
 
-        self._cii_add_values_delivery_date(vals, invoice.delivery_date or invoice.invoice_date)
-
         vals['base_lines'], vals['tax_lines'] = invoice._get_rounded_base_and_tax_lines()
 
         self._turn_price_unit_positive(vals)
         self._cii_extract_cash_rounding_lines(vals)
         self._cii_extract_early_pay_discount_lines(vals)
+
+        # [BR-IC-11] An intra-community supply needs a delivery date (BT-72) or an invoicing period (BG-14).
+        # The invoicing period is only exported when every line has a start and an end date: it then goes from the
+        # earliest start to the latest end, so that it contains every line period (PEPPOL-EN16931-R110/R111), and
+        # the delivery date is not needed. The due date is never used: it is a payment deadline, not a period end.
+        line_periods = [(base_line.get('deferred_start_date'), base_line.get('deferred_end_date')) for base_line in vals['base_lines']]
+        if line_periods and all(start_date and end_date for start_date, end_date in line_periods):
+            start_dates, end_dates = zip(*line_periods)
+            self._cii_add_values_billing_dates(vals, min(start_dates), max(end_dates))
+            self._cii_add_values_delivery_date(vals, None)
+        else:
+            self._cii_add_values_billing_dates(vals, None, None)
+            self._cii_add_values_delivery_date(vals, invoice.delivery_date or invoice.invoice_date)
 
         AccountTax = self.env['account.tax']
         AccountTax._round_raw_total_excluded(vals['base_lines'], invoice.company_id)
@@ -680,18 +691,8 @@ class AccountEdiCii(models.AbstractModel):
         }
 
     def _cii_get_billing_specified_period_node(self, vals):
-        invoice = vals['invoice']
-        billing_start_dates = [invoice.invoice_date] if invoice.invoice_date else []
-        billing_end_dates = [invoice.invoice_date_due] if invoice.invoice_date_due else []
-        if "deferred_start_date" in invoice.invoice_line_ids._fields:
-            # only checking the existence of the first of the enterprise fields
-            billing_start_dates += [move_line.deferred_start_date for move_line in invoice.invoice_line_ids if move_line.deferred_start_date]
-            billing_end_dates += [move_line.deferred_end_date for move_line in invoice.invoice_line_ids if move_line.deferred_end_date]
-        start_date = end_date = None
-        if billing_start_dates:
-            start_date = min(billing_start_dates)
-        if billing_end_dates:
-            end_date = max(billing_end_dates)
+        start_date = vals['billing_start_date']
+        end_date = vals['billing_end_date']
         return {
             'ram:StartDateTime': self._cii_get_date_time_string_node(vals, start_date) if start_date else None,
             'ram:EndDateTime': self._cii_get_date_time_string_node(vals, end_date) if end_date else None,
