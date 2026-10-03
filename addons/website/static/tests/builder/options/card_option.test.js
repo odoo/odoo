@@ -294,6 +294,30 @@ test("cover image set to wide aspect ratio can be vertically aligned", async () 
     );
 });
 
+test("cover image position overlay blocks the builder sidebar", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilderWithSnippet("s_card", {
+        loadIframeBundles: true,
+    });
+    queryOne(":iframe .s_card figure img").src = dummyBase64Img;
+    await contains(":iframe .s_card").click();
+    await waitSidebarUpdated();
+    await waitFor("[data-label='Position'] [data-action-id='coverImagePositionOverlay']");
+    await contains("[data-label='Position'] [data-action-id='coverImagePositionOverlay']").click();
+    await waitFor(".o-overlay-container .o_we_image_position_overlay");
+
+    const positionButton = queryOne(
+        "[data-label='Position'] [data-action-id='coverImagePositionOverlay']"
+    );
+    const rect = positionButton.getBoundingClientRect();
+    const hitTarget = document.elementFromPoint(
+        rect.left + rect.width / 2,
+        rect.top + rect.height / 2
+    );
+    expect(hitTarget.closest(".o_we_image_position_overlay")).toBe(
+        queryOne(".o-overlay-container .o_we_image_position_overlay")
+    );
+});
+
 const nestedCardsWithTwoCovers = `
     <div class="s_card o_card_img_top card outer_card o_draggable" data-snippet="s_card" data-name="Card">
         <figure class="o_card_img_wrapper mb-0 ratio ratio-16x9">
