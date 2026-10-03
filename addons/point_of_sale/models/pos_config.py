@@ -293,7 +293,13 @@ class PosConfig(models.Model):
 
     @api.model
     def _load_pos_data_read(self, records, config):
-        read_records = super()._load_pos_data_read(records, config)
+        try:
+            read_records = super()._load_pos_data_read(records, config)
+        except AccessError:
+            read_records = super()._load_pos_data_read(records.sudo(), config)
+            for record in read_records:
+                if record.get('advanced_employee_ids'):
+                    record['advanced_employee_ids'] = self.env['hr.employee.public'].search([('id', 'in', record['advanced_employee_ids'])]).ids
         if not read_records:
             return read_records
 
