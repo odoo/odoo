@@ -123,7 +123,8 @@ class ResPartnerBank(models.Model):
 
     @api.depends('country_id')
     def _compute_show_clearing_number(self):
-        sepa_countries = self.env.ref('base.sepa_zone').country_ids
+        sepa_zone = self.env.ref('base.sepa_zone', raise_if_not_found=False)
+        sepa_countries = sepa_zone.country_ids if sepa_zone else self.env['res.country']
         clearing_label_countries = self.env['clearing.label'].search([]).country_id
         excluded_countries = sepa_countries - clearing_label_countries
         for account in self:
