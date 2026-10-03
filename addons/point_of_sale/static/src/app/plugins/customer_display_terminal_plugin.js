@@ -4,6 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 import { formatCurrency } from "@web/core/currency";
 import { getOnNotified, getColorScheme } from "@point_of_sale/utils";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+import DeviceIdentifierSequence from "../utils/devices_identifier_sequence";
 
 export const CONSOLE_COLOR = "#F5B427";
 export const REGISTER_NOTIFICATION = "REGISTER_CUSTOMER_DISPLAY_DEVICE";
@@ -154,6 +155,35 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
                 [error]
             );
             this.channel.postMessage(payloadStr);
+        }
+    }
+
+    /**
+     * Re-associate the customer display with the new device identifier after a PoS data reload.
+     */
+    async syncCustomerDisplayIdentifier() {
+        const previousDeviceIdentifier = localStorage.getItem(
+            DeviceIdentifierSequence.previousDeviceIdentifierKey
+        );
+        if (!previousDeviceIdentifier) {
+            return;
+        }
+        const payload = JSON.stringify({ newIdentifier: this.context.identifier });
+        try {
+            await this.orm.call("pos.config", "update_customer_display", [
+                [odoo.pos_config_id],
+                payload,
+                previousDeviceIdentifier,
+            ]);
+        } catch (error) {
+            logPosMessage(
+                "CustomerDisplay",
+                "syncCustomerDisplayIdentifier",
+                "Failed to update customer display identifier",
+                CONSOLE_COLOR,
+                [error]
+            );
+            this.channel.postMessage(payload);
         }
     }
 

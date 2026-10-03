@@ -61,6 +61,7 @@ import { PosTicketPrinterPlugin } from "../plugins/pos_ticket_printer_plugin";
 import { PosAlertPlugin } from "../plugins/pos_alert_plugin";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import DeviceIdentifierSequence from "../utils/devices_identifier_sequence";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -436,8 +437,15 @@ export class PosStore extends WithLazyGetterTrap {
             const orders = this.models["pos.order"].getAll();
             this.device.saveUnusedNumber(orders);
             await this.data.resetIndexedDB();
+            const oldDeviceIdentifier = this.device.identifier;
             sessionStorage.clear();
             localStorage.clear();
+            // Preserve the identifier so the customer display can be associated with the
+            // new device identifier after the reload.
+            localStorage.setItem(
+                DeviceIdentifierSequence.previousDeviceIdentifierKey,
+                oldDeviceIdentifier
+            );
             window.location.reload();
         };
         if (showWarning) {
@@ -3085,6 +3093,7 @@ export class PosStore extends WithLazyGetterTrap {
                 );
             }
         }
+        await this.customerDisplay.syncCustomerDisplayIdentifier();
     }
 
     sendOrderToCustomerDisplay() {
