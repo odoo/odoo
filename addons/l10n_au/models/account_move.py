@@ -29,3 +29,25 @@ class AccountMove(models.Model):
                 # In this case, we want the balancing line to balance IN THE SAME ACCOUNT.
                 return self.invoice_line_ids.account_id.id
         return super()._get_automatic_balancing_account()
+
+    def _get_base_document_title(self):
+        self.ensure_one()
+
+        if (
+            self.company_id.account_fiscal_country_id.code != 'AU'
+            or (self.is_debit_note() and self.move_type == 'out_invoice')
+            or not self.company_id.l10n_au_is_gst_registered
+            or (self.is_purchase_document() and self.journal_id.is_self_billing)
+        ):
+            return super()._get_base_document_title()
+
+        if self.move_type == 'out_invoice':
+            return self.env._("Tax Invoice")
+        if self.move_type == 'out_refund':
+            return self.env._("Tax Credit Note")
+        if self.move_type == 'in_refund':
+            return self.env._("Tax Vendor Credit Note")
+        if self.move_type == 'in_invoice':
+            return self.env._("Tax Vendor Bill")
+
+        return ""

@@ -11,18 +11,20 @@ class AccountMove(models.Model):
             return 'l10n_ae.l10n_ae_report_invoice_document'
         return super()._get_name_invoice_report()
 
-    def _l10n_gcc_get_invoice_title(self):
-        # EXTENDS l10n_gcc_invoice
+    def _get_base_document_title(self):
         self.ensure_one()
-        if self.company_id.country_code != 'AE':
-            return super()._l10n_gcc_get_invoice_title()
 
-        if self._l10n_ae_is_simplified():
-            return self.env._('Simplified Tax Invoice')
+        if (
+            self.company_id.country_code == 'AE'
+            and self.state == 'posted'
+            and self.is_sale_document()
+            and not (self.is_debit_note() and self.move_type == 'out_invoice')
+        ):
+            if self.move_type == 'out_invoice':
+                if self.commercial_partner_id.is_company:
+                    return self.env._("Tax Invoice")
+                return self.env._("Simplified Tax Invoice")
+            if self.move_type == 'out_refund':
+                return self.env._("Tax Credit Note")
 
-        return self.env._('Tax Invoice')
-
-    def _l10n_ae_is_simplified(self):
-        """Returns True if the customer is an individual, i.e: The invoice is B2C"""
-        self.ensure_one()
-        return not self.commercial_partner_id.is_company
+        return super()._get_base_document_title()
