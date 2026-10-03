@@ -81,3 +81,35 @@ class TestL10nInCompany(L10nInTestInvoicingCommon):
         """
         in_company = self._create_company(country_code='IN')
         self.assertTrue(self.env['account.chart.template'].with_company(in_company).ref('cash_rounding_in_half_up', raise_if_not_found=False))
+
+    def test_l10n_in_registration_type_activates_expected_taxes(self):
+        company = self.default_company
+
+        with self.subTest(registration_type='regular'):
+            # Regular: standard GST and 0% on, composition off
+            self.assertTrue(self.sgst_sale_5.active)
+            self.assertTrue(self.sgst_purchase_5.active)
+            self.assertTrue(self.exempt.active)
+            self.assertTrue(self.exempt_purchase.active)
+            self.assertFalse(self.sgst_purchase_5_composition.active)
+
+        with self.subTest(registration_type='composition'):
+            # Composition: composition (No ITC) + reverse-charge purchase + 0% on, standard GST off
+            company.l10n_in_gst_registration_type = 'composition'
+            company.l10n_in_composition_tax_rate = '1'
+            self.assertTrue(self.sgst_purchase_5_composition.active)
+            self.assertTrue(self.sgst_purchase_5_rc.active)
+            self.assertTrue(self.exempt_purchase.active)
+            self.assertTrue(self.exempt.active)
+            self.assertFalse(self.sgst_sale_5.active)
+            self.assertFalse(self.sgst_purchase_5.active)
+
+        with self.subTest(registration_type='unregistered'):
+            # Unregistered: composition (No ITC) taxes and 0% purchase on, standard GST and sale 0% percent off
+            company.vat = False
+            company.l10n_in_gst_registration_type = False
+            self.assertTrue(self.sgst_purchase_5_composition.active)
+            self.assertTrue(self.exempt_purchase.active)
+            self.assertFalse(self.exempt.active)
+            self.assertFalse(self.sgst_sale_5.active)
+            self.assertFalse(self.sgst_purchase_5.active)
