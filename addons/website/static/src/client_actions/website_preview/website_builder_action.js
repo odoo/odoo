@@ -563,10 +563,14 @@ export class WebsiteBuilderClientAction extends Component {
             const urlObj = new URL(url, this.websiteContent.el.contentWindow.location);
             const pathSegments = urlObj.pathname.split("/").map(encodeURIComponent);
             const encodedPath = pathSegments.join("/");
-            this.websiteContent.el.contentWindow.location.href = new URL(
+            const newUrl = new URL(
                 encodedPath,
                 this.websiteContent.el.contentWindow.location
             );
+            if (history.state?.skipRouteChange) {
+                history.pushState({}, "", newUrl);
+            }
+            this.websiteContent.el.contentWindow.location.href = newUrl;
         } else {
             this.websiteContent.el.contentWindow.location.reload();
         }

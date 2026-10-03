@@ -667,7 +667,11 @@ actual arch.
 
     def unlink(self):
         # if in uninstall mode and has children views, emulate an ondelete cascade
-        if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
+        if (
+            (self.env.context.get('_force_unlink', False) or
+            self.env.context.get('cascade_unlink_views')) and
+            self.inherit_children_ids
+        ):
             self.inherit_children_ids.unlink()
         self.env.registry.clear_cache('templates')
         return super().unlink()
