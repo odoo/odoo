@@ -58,6 +58,7 @@ class AccountMove(models.Model):
 
     def _need_ubl_cii_xml(self, ubl_cii_format):
         res = super()._need_ubl_cii_xml(ubl_cii_format)
-        if ubl_cii_format == 'oioubl_21' and (not self.partner_id.vat or self.partner_id._get_nemhandel_verification_state(ubl_cii_format) != 'valid'):
+        commercial_partner = self.commercial_partner_id.with_company(self.company_id)
+        if ubl_cii_format == 'oioubl_21' and (not commercial_partner.vat or commercial_partner._get_nemhandel_verification_state(ubl_cii_format) != 'valid'):
             return False
         return res
