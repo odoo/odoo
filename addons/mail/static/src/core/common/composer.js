@@ -574,12 +574,22 @@ export class Composer extends Component {
         return groupAttachments(this.props.composer.attachments);
     }
 
+    get isSendButtonHidden() {
+        return false;
+    }
+
+    get isEmpty() {
+        return (
+            isHtmlEmpty(this.props.composer.composerHtml) &&
+            this.props.composer.attachments.length === 0
+        );
+    }
+
     get isSendButtonDisabled() {
-        const attachments = this.props.composer.attachments;
         return (
             !this.state.active ||
-            (isHtmlEmpty(this.props.composer.composerHtml) && attachments.length === 0) ||
-            attachments.some(({ uploading }) => Boolean(uploading))
+            this.isEmpty ||
+            this.props.composer.attachments.some(({ uploading }) => Boolean(uploading))
         );
     }
 

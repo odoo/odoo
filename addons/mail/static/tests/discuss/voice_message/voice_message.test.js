@@ -67,10 +67,9 @@ test("make voice message in chat", async () => {
     await start();
     await openDiscuss(channelId);
     await loadLamejs(); // simulated AudioProcess.process() requires lamejs fully loaded
-    await click(".o-mail-Composer button[title='More Actions']");
-    await contains(".dropdown-item:contains('Voice Message')");
+    await contains(".o-mail-Composer button[title='Voice Message']");
     mockDate("2023-07-31 13:00:00");
-    await click(".dropdown-item:contains('Voice Message')");
+    await click(".o-mail-Composer button[title='Voice Message']");
     await contains(".o-mail-VoiceRecorder:text('00 : 00')");
     /**
      * Simulate 10 sec elapsed.

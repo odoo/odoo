@@ -14,6 +14,19 @@ patch(Composer.prototype, {
             { rootRef: this.rootRef }
         );
     },
+    get showQuickVoiceStart() {
+        const composer = this.props.composer;
+        return Boolean(
+            composer.targetThread?.channel &&
+                this.voiceRecorder &&
+                !this.voiceRecorder.recording &&
+                !composer.voiceAttachment &&
+                this.isEmpty
+        );
+    },
+    get isSendButtonHidden() {
+        return this.showQuickVoiceStart || super.isSendButtonHidden;
+    },
     get isSendButtonDisabled() {
         return this.voiceRecorder?.recording || super.isSendButtonDisabled;
     },

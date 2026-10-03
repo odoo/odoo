@@ -492,6 +492,7 @@ test("Show send button in mobile", async () => {
     await openDiscuss();
     await click("button:text('Channels')");
     await click(".o-mail-NotificationItem-name:text('minecraft-wii-u')");
+    await insertText(".o-mail-Composer-input", "Hello");
     await contains(".o-mail-Composer button[title='Send']");
     await contains(".o-mail-Composer button[title='Send'] i[data-icon='send']");
 });

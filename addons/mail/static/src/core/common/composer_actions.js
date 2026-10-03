@@ -61,8 +61,9 @@ export function pickerGetAnchor({ action, owner }) {
 registerComposerAction("send-message", {
     btnClass: ({ action }) => (action.isActive ? "o-sendMessageActive o-text-white shadow-sm" : ""),
     condition: ({ composer, owner, store }) =>
-        (store.env.services.ui.isSmall && composer.message) ||
-        (!owner.env.inChatter && !composer.message),
+        ((store.env.services.ui.isSmall && composer.message) ||
+            (!owner.env.inChatter && !composer.message)) &&
+        !owner.isSendButtonHidden,
     disabledCondition: ({ owner }) => owner.isSendButtonDisabled,
     hasBtnBg: true,
     icon: "send",

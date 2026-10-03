@@ -60,3 +60,20 @@ test('Receives visitor typing status "is typing"', async () => {
     );
     await contains(".o-discuss-Typing", { text: "Visitor 20 is typing..." });
 });
+
+test("Voice message stays in more actions on empty livechat composer", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 12" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer button[title='Send']:disabled");
+    await click(".o-mail-Composer button[title='More Actions']");
+    await contains(".dropdown-item:contains('Voice Message')");
+});

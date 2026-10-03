@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: `edit SomeText_${new Date().getTime()}`,
         },
         {
-            trigger: ".o-sendMessageActive",
+            trigger: ".o-mail-Composer button[title='Send']:enabled",
             content: _t("Post your message on the thread"),
             tooltipPosition: "top",
             run: "click",
