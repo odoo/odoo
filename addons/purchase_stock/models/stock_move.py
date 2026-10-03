@@ -114,11 +114,19 @@ class StockMove(models.Model):
         self.write({'created_purchase_line_ids': [Command.clear()]})
 
     def _get_upstream_documents_and_responsibles(self, visited):
-        created_pl = self.created_purchase_line_ids.filtered(lambda cpl: cpl.state != 'cancel' and (cpl.state != 'draft' or self.env.context.get('include_draft_documents')))
+        """
+        self.sudo() is used because this method may be called
+        when canceling a sales order by a user who does not have
+        permission to access the purchase.order.line records.
+        """
+        self = self.sudo()  # noqa: PLW0642
+        created_pl = self.created_purchase_line_ids.filtered(
+            lambda cpl: cpl.state != 'cancel' and (cpl.state != 'draft' or self.env.context.get('include_draft_documents'))
+        )
         if created_pl:
             return [(pl.order_id, pl.order_id.user_id, visited) for pl in created_pl]
         elif self.purchase_line_id and self.purchase_line_id.state != 'cancel':
-            return[(self.purchase_line_id.order_id, self.purchase_line_id.order_id.user_id, visited)]
+            return [(self.purchase_line_id.order_id, self.purchase_line_id.order_id.user_id, visited)]
         else:
             return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
