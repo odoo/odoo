@@ -26,10 +26,5 @@ from purchase order.
     'depends': ['mrp', 'purchase_stock'],
     'installable': True,
     'auto_install': True,
-    'assets': {
-        'web.assets_backend': [
-            'mrp/static/src/**/*.js',
-        ],
-    },
     'license': 'LGPL-3',
 }
