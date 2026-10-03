@@ -3551,6 +3551,173 @@ test(`Loading a filter with a sort attribute`, async () => {
     expect.verifySteps(["date ASC, foo DESC", "date DESC, foo ASC"]);
 });
 
+test(`restore local sort after returning from a form with a filter`, async () => {
+    Foo._filters = [
+        {
+            context: "{}",
+            domain: "[]",
+            id: 7,
+            is_default: false,
+            name: "My favorite",
+            sort: '["foo asc"]',
+            user_ids: [2],
+        },
+    ];
+    Foo._views = {
+        list: `
+            <list>
+                <field name="foo"/>
+                <field name="amount"/>
+            </list>
+        `,
+        form: `<form><field name="foo"/></form>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Foo",
+            res_model: "foo",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+        },
+    ]);
+
+    onRpc("web_search_read", ({ kwargs }) => expect.step(kwargs.order));
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My favorite");
+    await contains(`th.o_column_sortable[data-name=amount]`).click();
+    await contains(`.o_data_row .o_data_cell`).click();
+    await contains(`.breadcrumb-item, .o_back_button`).click();
+
+    expect(`th.o_column_sortable.table-active[data-name=amount]`).toHaveCount(1);
+    expect.verifySteps(["", "foo ASC", "amount ASC, foo ASC", "amount ASC, foo ASC"]);
+});
+
+test(`removing a favorite clears its sort`, async () => {
+    Foo._filters = [
+        {
+            context: "{}",
+            domain: "[]",
+            id: 7,
+            is_default: false,
+            name: "My favorite",
+            sort: '["date asc", "foo desc"]',
+            user_ids: [2],
+        },
+    ];
+
+    onRpc("web_search_read", ({ kwargs }) => expect.step(kwargs.order));
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="date"/>
+            </list>
+        `,
+        loadIrFilters: true,
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My favorite");
+    await removeFacet("My favorite");
+
+    expect(`th.o_column_sortable.table-active`).toHaveCount(0);
+    expect.verifySteps(["", "date ASC, foo DESC", ""]);
+});
+
+test(`removing a favorite keeps a local sort override`, async () => {
+    Foo._filters = [
+        {
+            context: "{}",
+            domain: "[]",
+            id: 7,
+            is_default: false,
+            name: "My favorite",
+            sort: '["date asc", "foo desc"]',
+            user_ids: [2],
+        },
+    ];
+
+    onRpc("web_search_read", ({ kwargs }) => expect.step(kwargs.order));
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list default_order="foo">
+                <field name="foo"/>
+                <field name="date"/>
+                <field name="amount"/>
+            </list>
+        `,
+        loadIrFilters: true,
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My favorite");
+    await contains(`th.o_column_sortable[data-name=amount]`).click();
+    await removeFacet("My favorite");
+
+    expect(`th.o_column_sortable.table-active[data-name=amount]`).toHaveCount(1);
+    expect.verifySteps([
+        "foo ASC",
+        "date ASC, foo DESC",
+        "amount ASC, date ASC, foo DESC",
+        "amount ASC, date ASC, foo DESC",
+    ]);
+});
+
+test(`applying search preserves a local sort after a favorite sort`, async () => {
+    Foo._filters = [
+        {
+            context: "{}",
+            domain: "[]",
+            id: 7,
+            is_default: false,
+            name: "My favorite",
+            sort: '["date asc", "foo desc"]',
+            user_ids: [2],
+        },
+    ];
+
+    onRpc("web_search_read", ({ kwargs }) => expect.step(kwargs.order));
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list default_order="foo">
+                <field name="foo"/>
+                <field name="date"/>
+                <field name="amount"/>
+            </list>
+        `,
+        searchViewArch: `
+            <search>
+                <filter name="extra_filter" string="Extra filter" domain="[('bar', '=', True)]"/>
+            </search>
+        `,
+        loadIrFilters: true,
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My favorite");
+    await contains(`th.o_column_sortable[data-name=amount]`).click();
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Extra filter");
+
+    expect(`th.o_column_sortable.table-active[data-name=amount]`).toHaveCount(1);
+    expect(queryAllTexts(`.o_data_row td[name='foo']`)).toEqual(["gnap", "blip", "yop"]);
+    expect.verifySteps([
+        "foo ASC",
+        "date ASC, foo DESC",
+        "amount ASC, date ASC, foo DESC",
+        "amount ASC, date ASC, foo DESC",
+    ]);
+});
+
 test(`many2one field rendering`, async () => {
     await mountView({
         resModel: "foo",
