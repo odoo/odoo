@@ -53,7 +53,7 @@ import {
     simulateTripleClickSelect,
     thirdClick,
 } from "./_helpers/selection";
-import { expandToolbar } from "./_helpers/toolbar";
+import { expandToolbar, openToolbarMenu } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { insertText } from "./_helpers/user_actions";
 import { getIframeInput } from "./_helpers/iframe_input";
@@ -342,16 +342,19 @@ test("toolbar buttons react to selection change", async () => {
     // check that bold button is not active
     expect(".btn[name='bold']").not.toHaveClass("active");
     // check that remove format buton isdisabled and have correct title
-    expect(".btn[name='remove_format']").toHaveAttribute("disabled");
-    expect(".btn[name='remove_format']").toHaveAttribute("title", "Selection has no format");
+    await openToolbarMenu("more_formatting");
+    expect("[name='remove_format']").toHaveAttribute("disabled");
+    expect("[name='remove_format']").toHaveAttribute("title", "Selection has no format");
 
     // click on toggle bold
     await contains(".btn[name='bold']").click();
     await waitFor(".btn[name='bold'].active");
     expect(getContent(el)).toBe("<p><strong>[test]</strong> some text</p>");
     expect(".btn[name='bold']").toHaveClass("active");
-    expect(".btn[name='remove_format']").not.toHaveAttribute("disabled");
-    expect(".btn[name='remove_format']").toHaveAttribute("title", "Remove Format (Ctrl + Space)");
+    await openToolbarMenu("more_formatting");
+    expect("[name='remove_format']").not.toHaveAttribute("disabled");
+    expect("[name='remove_format']").toHaveAttribute("title", "Remove Format (Ctrl + Space)");
+    await contains(".o-we-toolbar .btn[name='more_formatting']").click();
 
     // set selection where text is not bold
     setContent(el, "<p><strong>test</strong> some [text]</p>");
@@ -700,7 +703,8 @@ test("toolbar font size selector reflects heading size after remove format", asy
     );
     expect(inputEl).toHaveValue(getFontSizeFromVar("display-3-font-size"));
 
-    await click(".btn[name='remove_format']");
+    await openToolbarMenu("more_formatting");
+    await click("[name='remove_format']");
     await animationFrame();
 
     expect(getContent(el)).toBe(`<h2>[heading 2]</h2>`);
@@ -1792,6 +1796,60 @@ test("plugins can create buttons with text in toolbar", async () => {
     expect("button[name='test_btn']").toHaveText("Text button");
 });
 
+test("toolbar menus list their items, or show the only available one as a button", async () => {
+    let isSecondAvailable = true;
+    class TestPlugin extends Plugin {
+        static id = "TestPlugin";
+        resources = {
+            user_commands: [
+                { id: "test_cmd_a", run: () => null },
+                { id: "test_cmd_b", run: () => null, isAvailable: () => isSecondAvailable },
+            ],
+            toolbar_groups: withSequence(24, { id: "test_group" }),
+            toolbar_items: [
+                {
+                    id: "test_menu",
+                    groupId: "test_group",
+                    isMenu: true,
+                    icon: "more_horiz",
+                    description: "Test menu",
+                },
+                {
+                    id: "test_item_a",
+                    menuId: "test_menu",
+                    commandId: "test_cmd_a",
+                    description: "Item A",
+                    label: "Item A",
+                    icon: "check",
+                },
+                {
+                    id: "test_item_b",
+                    menuId: "test_menu",
+                    commandId: "test_cmd_b",
+                    description: "Item B",
+                    label: "Item B",
+                    shortcut: "Ctrl + B",
+                    icon: "check",
+                },
+            ],
+        };
+    }
+    const { el } = await setupEditor(`<p>[Foo]</p><p>Bar</p>`, {
+        config: { includePlugins: [TestPlugin] },
+    });
+    await expandToolbar();
+    expect(".o-we-toolbar .btn[name='test_item_a']").toHaveCount(0);
+    await openToolbarMenu("test_menu");
+    expect(".o-we-toolbar-menu .dropdown-item").toHaveCount(2);
+    expect(".o-we-toolbar-menu [name='test_item_b'] span:first-of-type").toHaveText("Item B");
+    expect(".o-we-toolbar-menu [name='test_item_b'] span:last-of-type").toHaveText("Ctrl + B");
+
+    isSecondAvailable = false;
+    setContent(el, "<p>Foo</p><p>[Bar]</p>");
+    await waitFor(".o-we-toolbar .btn[name='test_item_a']");
+    expect(".o-we-toolbar .btn[name='test_menu']").toHaveCount(0);
+});
+
 test("toolbar buttons should keep their rounded corners inside a group", async () => {
     await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
@@ -2420,18 +2478,22 @@ test("toolbar strikethrough buttons should not be active when checked list is st
         '<ul class="o_checklist"><li class="o_checked">[test]</li></ul>'
     );
     await expandToolbar();
-    expect(".o-we-toolbar .btn[name='strikethrough']").toHaveCount(1);
-    expect(".o-we-toolbar .btn[name='strikethrough']").not.toHaveClass("active");
-    await contains(".o-we-toolbar .btn[name='strikethrough']").click();
-    await waitFor(".btn[name='strikethrough'].active");
+    expect(".o-we-toolbar .btn[name='more_formatting']").not.toHaveClass("active");
+    await openToolbarMenu("more_formatting");
+    expect("[name='strikethrough']").toHaveCount(1);
+    expect("[name='strikethrough']").not.toHaveAttribute("aria-checked");
+    await contains("[name='strikethrough']").click();
+    await waitFor(".o-we-toolbar .btn[name='more_formatting'].active");
     expect(getContent(el)).toBe(
         '<ul class="o_checklist"><li class="o_checked"><s>[test]</s></li></ul>'
     );
-    expect(".o-we-toolbar .btn[name='strikethrough']").toHaveClass("active");
-    await contains(".o-we-toolbar .btn[name='strikethrough']").click();
-    await waitFor(".btn[name='strikethrough']:not(.active)");
+    await openToolbarMenu("more_formatting");
+    expect("[name='strikethrough']").toHaveAttribute("aria-checked", "true");
+    await contains("[name='strikethrough']").click();
+    await waitFor(".o-we-toolbar .btn[name='more_formatting']:not(.active)");
     expect(getContent(el)).toBe('<ul class="o_checklist"><li class="o_checked">[test]</li></ul>');
-    expect(".o-we-toolbar .btn[name='strikethrough']").not.toHaveClass("active");
+    await openToolbarMenu("more_formatting");
+    expect("[name='strikethrough']").not.toHaveAttribute("aria-checked");
 });
 
 test.tags("desktop");

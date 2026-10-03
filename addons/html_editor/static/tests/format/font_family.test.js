@@ -5,7 +5,7 @@ import { getContent } from "../_helpers/selection";
 import { setFontFamily, undo, redo, insertText, deleteBackward } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
 import { animationFrame } from "@odoo/hoot-mock";
-import { expandToolbar } from "../_helpers/toolbar";
+import { expandToolbar, openToolbarMenu } from "../_helpers/toolbar";
 import { expectElementCount } from "../_helpers/ui_expectations";
 
 test("should give a few characters a fontFamily", async () => {
@@ -116,7 +116,8 @@ test("should remove font family on the selected content using remove format", as
     );
     await expandToolbar();
     expect(queryOne(".btn[name='font_family']").textContent).toBe("Arial");
-    await click(".btn[title='Remove Format (Ctrl + Space)']");
+    await openToolbarMenu("more_formatting");
+    await click("[title='Remove Format (Ctrl + Space)']");
     await waitFor(".btn[name='font_family']:contains('Default font')");
     expect(queryOne(".btn[name='font_family']").textContent).toBe("Default font");
     expect(getContent(el)).toBe("<p>ab[cde]fg</p>");

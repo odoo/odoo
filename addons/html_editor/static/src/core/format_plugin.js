@@ -177,10 +177,19 @@ export class FormatPlugin extends Plugin {
                 isActive: () =>
                     this.activeFormats["underline"]?.applyStyle ?? this.isFormatActive("underline"),
             },
+            withSequence(30, {
+                id: "more_formatting",
+                groupId: "decoration",
+                isMenu: true,
+                icon: "more_horiz",
+                description: _t("More formatting"),
+            }),
             {
                 id: "strikethrough",
                 description: _t("Strikethrough (Ctrl + 5)"),
-                groupId: "decoration",
+                menuId: "more_formatting",
+                label: _t("Strikethrough"),
+                shortcut: _t("Ctrl + 5"),
                 commandId: "formatStrikethrough",
                 isActive: () =>
                     this.activeFormats["strikeThrough"]?.applyStyle ??
@@ -188,7 +197,8 @@ export class FormatPlugin extends Plugin {
             },
             withSequence(20, {
                 id: "remove_format",
-                groupId: "decoration",
+                menuId: "more_formatting",
+                label: _t("Clear formatting"),
                 commandId: "removeFormat",
                 isDisabled: (sel, nodes) => !this.canRemoveFormat(nodes),
             }),

@@ -27,7 +27,7 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {string[]} [namespaces]
  *
  *
- * @typedef {ToolbarCommandItem | ToolbarComponentItem} ToolbarItem
+ * @typedef {ToolbarCommandItem | ToolbarComponentItem | ToolbarMenuItem} ToolbarItem
  *
  * @typedef {Object} ToolbarCommandItem
  * Regular button: derives from a user command specified by commandId.
@@ -42,9 +42,24 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {string} [icon] *
  * @property {string} [iconClass] *
  * @property {string} [text] Can be used with (or instead of) `icon`
+ * @property {string} [menuId] Id of a toolbar menu item: the item is shown in
+ * that menu instead of on the bar
+ * @property {TranslatedString} [label] Text of the item in a menu
+ * @property {string} [shortcut] Shortcut hint shown next to the label in a menu
  * @property {(selection: EditorSelection) => boolean} [isAvailable] ? *
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isDisabled]
+ *
+ * @typedef {Object} ToolbarMenuItem
+ * Button opening a menu made of the items that declare its id as `menuId`.
+ * The menu is hidden when none of them is available, replaced by the item
+ * itself when only one is available, and active when one of them is active.
+ * @property {string} id
+ * @property {string} groupId
+ * @property {true} isMenu
+ * @property {string} [icon]
+ * @property {string[]} [namespaces]
+ * @property {TranslatedString | TranslatedStringGetter} [description]
  *
  * @typedef {Object} ToolbarComponentItem
  * Adds a custom component to the toolbar.
@@ -341,9 +356,20 @@ export class ToolbarPlugin extends Plugin {
                 item.description instanceof Function ? item.description : () => item.description,
         });
 
-        return toolbarItems.map((item) =>
-            "Component" in item ? componentItemToButton(item) : commandItemToButton(item)
-        );
+        /** @type {(item: ToolbarMenuItem) => ToolbarButton} */
+        const menuItemToButton = (item) => ({
+            ...item,
+            isAvailable: () => true,
+            description:
+                item.description instanceof Function ? item.description : () => item.description,
+        });
+
+        return toolbarItems.map((item) => {
+            if (item.isMenu) {
+                return menuItemToButton(item);
+            }
+            return "Component" in item ? componentItemToButton(item) : commandItemToButton(item);
+        });
     }
 
     getButtonGroups() {
@@ -357,10 +383,13 @@ export class ToolbarPlugin extends Plugin {
             return {
                 ...omit(group, "namespaces"),
                 buttons: buttons
-                    .filter((button) => button.groupId === group.id)
+                    .filter((button) => button.groupId === group.id && !button.menuId)
                     .map((button) => ({
                         ...button,
                         namespaces: button.namespaces || groupNamespaces || ["expanded"],
+                        ...(button.isMenu && {
+                            items: buttons.filter((item) => item.menuId === button.id),
+                        }),
                     })),
             };
         });
@@ -530,20 +559,49 @@ export class ToolbarPlugin extends Plugin {
                 id: group.id,
                 buttons: group.buttons
                     .filter((button) => availableButtons.has(button))
-                    .map((button) => ({
-                        id: button.id,
-                        description: button.description(selection, targetedNodes),
-                        isDisabled: !!button.isDisabled?.(selection, targetedNodes),
-                        ...(button.Component
-                            ? pick(button, "Component", "props")
-                            : {
-                                  ...pick(button, "run", "icon", "iconClass", "text"),
-                                  isActive: !!button.isActive?.(selection, targetedNodes),
-                              }),
-                    })),
+                    .map((button) => this.getButtonState(button, selection, targetedNodes))
+                    // Filter out menus left empty
+                    .filter(Boolean),
             }))
             // Filter out groups left empty
             .filter((group) => group.buttons.length > 0);
+    }
+
+    /**
+     * @param {ToolbarButton} button
+     * @param {EditorSelection} selection
+     * @param {Node[]} targetedNodes
+     */
+    getButtonState(button, selection, targetedNodes) {
+        if (button.isMenu) {
+            const items = button.items
+                .filter((item) => item.isAvailable(selection))
+                .map((item) => this.getButtonState(item, selection, targetedNodes));
+            if (items.length <= 1) {
+                // A menu of one item is that item.
+                return items[0];
+            }
+            return {
+                id: button.id,
+                description: button.description(selection, targetedNodes),
+                icon: button.icon,
+                isMenu: true,
+                items,
+                isActive: items.some((item) => item.isActive),
+                isDisabled: items.every((item) => item.isDisabled),
+            };
+        }
+        return {
+            id: button.id,
+            description: button.description(selection, targetedNodes),
+            isDisabled: !!button.isDisabled?.(selection, targetedNodes),
+            ...(button.Component
+                ? pick(button, "Component", "props")
+                : {
+                      ...pick(button, "run", "icon", "iconClass", "text", "label", "shortcut"),
+                      isActive: !!button.isActive?.(selection, targetedNodes),
+                  }),
+        };
     }
 
     /**

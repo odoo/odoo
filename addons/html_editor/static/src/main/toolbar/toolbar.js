@@ -2,6 +2,7 @@ import { Component, onPatched, proxy, signal, t, useProps } from "@odoo/owl";
 import { omit, pick } from "@web/core/utils/objects";
 import { trapFocus } from "@html_editor/utils/dom_traversal";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { ToolbarMenu } from "./toolbar_menu";
 
 const componentButtonSchema = {
     Component: t.component(),
@@ -20,10 +21,23 @@ const genericButtonSchema = {
     isDisabled: t.boolean(),
     run: t.function(),
     text: t.string().optional(),
+    label: t.string().optional(),
+    shortcut: t.string().optional(),
+};
+
+const menuButtonSchema = {
+    description: t.string(),
+    icon: t.string().optional(),
+    id: t.string(),
+    isActive: t.boolean(),
+    isDisabled: t.boolean(),
+    isMenu: t.boolean(),
+    items: t.array(t.or([t.object(componentButtonSchema), t.object(genericButtonSchema)])),
 };
 
 export class Toolbar extends Component {
     static template = "html_editor.Toolbar";
+    static components = { ToolbarMenu };
     props = useProps({
         class: t.string().optional(),
         getSelection: t.function(),
@@ -34,7 +48,11 @@ export class Toolbar extends Component {
                 t.object({
                     id: t.string(),
                     buttons: t.array(
-                        t.or([t.object(componentButtonSchema), t.object(genericButtonSchema)])
+                        // Unions of more than two types do not validate reliably.
+                        t.or([
+                            t.object(componentButtonSchema),
+                            t.or([t.object(genericButtonSchema), t.object(menuButtonSchema)]),
+                        ])
                     ),
                 })
             ),

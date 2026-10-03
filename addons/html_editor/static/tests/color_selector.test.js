@@ -19,7 +19,7 @@ import {
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
-import { expandToolbar } from "./_helpers/toolbar";
+import { expandToolbar, openToolbarMenu } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { execCommand } from "./_helpers/userCommands";
 import { unformat } from "./_helpers/format";
@@ -593,7 +593,8 @@ test("selected text color is not shown in the toolbar after removeFormat", async
     await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
     expect("i[data-icon='A']").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
-    await click(".btn [data-icon='ink_eraser']");
+    await openToolbarMenu("more_formatting");
+    await click("[name='remove_format']");
     await animationFrame();
     expect(getContent(el)).toBe(`<p>
             <font style="color: rgb(255, 0, 0);">t</font>[es]<font style="color: rgb(255, 0, 0);">t</font>
