@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api, _
-from odoo.exceptions import UserError, ValidationError, RedirectWarning
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountJournal(models.Model):
@@ -83,9 +83,9 @@ class AccountJournal(models.Model):
             },
         }
         if not self.company_id.l10n_ar_afip_responsibility_type_id:
-            action = self.env.ref('base.action_res_company_form')
-            msg = _('Can not create chart of account until you configure your company AFIP Responsibility and VAT.')
-            raise RedirectWarning(msg, action.id, _('Go to Companies'))
+            # If company has no AFIP responsibility configured, return empty list to allow viewing existing invoices
+            # Creation of new invoices will be prevented by other validations in the flow
+            return []
 
         letters = letters_data['issued' if self.l10n_ar_is_pos else 'received'][
             self.company_id.l10n_ar_afip_responsibility_type_id.code]
