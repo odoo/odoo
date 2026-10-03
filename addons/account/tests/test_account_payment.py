@@ -909,3 +909,158 @@ class TestAccountPayment(AccountTestInvoicingCommon, MailCommon):
         payment.action_draft()
         with self.assertRaises(UserError):
             payment.amount = 300.0
+
+    def test_payments_invoices_reconciled_payment_ids(self):
+        """
+        Verify `reconciled_payment_ids` on invoices and `reconciled_invoice_ids`
+        on the payment across multiple reconciliation scenarios.
+        When the payment amount isn't fully used in other invoices, the creator
+        invoice stays linked to the payment.
+        """
+        def _reset_payment_links():
+            (payment.move_id.line_ids.matched_debit_ids | payment.move_id.line_ids.matched_credit_ids).unlink()
+
+        def _link_payment_with_invoice(invoice):
+            credit_line = payment.move_id.line_ids.filtered(lambda l: l.credit and l.account_id == self.company_data['default_account_receivable'])
+            invoice.js_assign_outstanding_line(credit_line.id)
+
+        invoice_1, invoice_2, invoice_3 = [self._create_invoice(
+            date='2024-01-01',
+            invoice_line_ids=[self._prepare_invoice_line(
+                price_unit=price_unit
+            )],
+            post=True,
+        ) for price_unit in (1000, 1000, 200)]
+
+        invoices = (invoice_1 | invoice_2 | invoice_3)
+
+        # Payment of 500 created from Invoice 1 (full match of payment 500/500): only Invoice 1 is linked
+        payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice_1.ids).create({
+            'amount': 500,
+        })._create_payments()
+        self.assertRecordValues(invoices, [
+            {'reconciled_payment_ids': payment.ids},
+            {'reconciled_payment_ids': []},
+            {'reconciled_payment_ids': []},
+        ])
+        self.assertEqual(payment.reconciled_invoice_ids, invoice_1)
+        _reset_payment_links()
+
+        # Linked to Invoice 2 (full match of payment 500/500): Invoice 2 replaces Invoice 1
+        _link_payment_with_invoice(invoice_2)
+        self.assertRecordValues(invoices, [
+            {'reconciled_payment_ids': []},
+            {'reconciled_payment_ids': payment.ids},
+            {'reconciled_payment_ids': []},
+        ])
+        self.assertEqual(payment.reconciled_invoice_ids, invoice_2)
+        _reset_payment_links()
+
+        # Linked to Invoice 3 (partial match of payment 200/500): creator Invoice 1 stays linked alongside Invoice 3
+        _link_payment_with_invoice(invoice_3)
+        self.assertRecordValues(invoices, [
+            {'reconciled_payment_ids': payment.ids},
+            {'reconciled_payment_ids': []},
+            {'reconciled_payment_ids': payment.ids},
+        ])
+        self.assertEqual(payment.reconciled_invoice_ids, invoice_1 + invoice_3)
+        _reset_payment_links()
+
+        # Linked to Invoice 3 then Invoice 2 (full match of payment 200+300/500): creator Invoice 1 is displaced
+        _link_payment_with_invoice(invoice_3)
+        _link_payment_with_invoice(invoice_2)
+        self.assertRecordValues(invoices, [
+            {'reconciled_payment_ids': []},
+            {'reconciled_payment_ids': payment.ids},
+            {'reconciled_payment_ids': payment.ids},
+        ])
+        self.assertEqual(payment.reconciled_invoice_ids, invoice_2 + invoice_3)
+        _reset_payment_links()
+
+        # Linked to Invoice 3 then Invoice 1 (full match of payment 200+300/500): both stay linked
+        _link_payment_with_invoice(invoice_3)
+        _link_payment_with_invoice(invoice_1)
+        self.assertRecordValues(invoices, [
+            {'reconciled_payment_ids': payment.ids},
+            {'reconciled_payment_ids': []},
+            {'reconciled_payment_ids': payment.ids},
+        ])
+        self.assertEqual(payment.reconciled_invoice_ids, invoice_1 + invoice_3)
+
+    def test_payments_bills_reconciled_payment_ids(self):
+        """
+        Verify `reconciled_payment_ids` on bills and `reconciled_bill_ids`
+        on the payment across multiple reconciliation scenarios.
+        When the payment amount isn't fully used in other bills, the creator
+        bill stays linked to the payment.
+        """
+        def _reset_payment_links():
+            (payment.move_id.line_ids.matched_debit_ids | payment.move_id.line_ids.matched_credit_ids).unlink()
+
+        def _link_payment_with_bill(bill):
+            debit_line = payment.move_id.line_ids.filtered(lambda l: l.debit and l.account_id == self.company_data['default_account_payable'])
+            bill.js_assign_outstanding_line(debit_line.id)
+
+        bill_1, bill_2, bill_3 = bills = [self._create_invoice(
+            move_type='in_invoice',
+            date='2024-01-01',
+            invoice_line_ids=[self._prepare_invoice_line(
+                price_unit=price_unit
+            )],
+            post=True,
+        ) for price_unit in (1000, 1000, 200)]
+
+        bills = (bill_1 | bill_2 | bill_3)
+
+        # Payment of 500 created from Bill 1 (full match of payment 500/500): only Bill 1 is linked
+        payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=bill_1.ids).create({
+            'amount': 500,
+        })._create_payments()
+        self.assertRecordValues(bills, [
+            {'reconciled_payment_ids': payment.ids},
+            {'reconciled_payment_ids': []},
+            {'reconciled_payment_ids': []},
+        ])
+        self.assertEqual(payment.reconciled_bill_ids, bill_1)
+        _reset_payment_links()
+
+        # Linked to Bill 2 (full match of payment 500/500): Bill 2 replaces Bill 1
+        _link_payment_with_bill(bill_2)
+        self.assertRecordValues(bills, [
+            {'reconciled_payment_ids': []},
+            {'reconciled_payment_ids': payment.ids},
+            {'reconciled_payment_ids': []},
+        ])
+        self.assertEqual(payment.reconciled_bill_ids, bill_2)
+        _reset_payment_links()
+
+        # Linked to Bill 3 (partial match of payment 200/500): creator Bill 1 stays linked alongside Bill 3
+        _link_payment_with_bill(bill_3)
+        self.assertRecordValues(bills, [
+            {'reconciled_payment_ids': payment.ids},
+            {'reconciled_payment_ids': []},
+            {'reconciled_payment_ids': payment.ids},
+        ])
+        self.assertEqual(payment.reconciled_bill_ids, bill_1 + bill_3)
+        _reset_payment_links()
+
+        # Linked to Bill 3 then Bill 2 (full match of payment 200+300/500): creator Bill 1 is displaced
+        _link_payment_with_bill(bill_3)
+        _link_payment_with_bill(bill_2)
+        self.assertRecordValues(bills, [
+            {'reconciled_payment_ids': []},
+            {'reconciled_payment_ids': payment.ids},
+            {'reconciled_payment_ids': payment.ids},
+        ])
+        self.assertEqual(payment.reconciled_bill_ids, bill_2 + bill_3)
+        _reset_payment_links()
+
+        # Linked to Bill 3 then Bill 1 (full match of payment 200+300/500): both stay linked
+        _link_payment_with_bill(bill_3)
+        _link_payment_with_bill(bill_1)
+        self.assertRecordValues(bills, [
+            {'reconciled_payment_ids': payment.ids},
+            {'reconciled_payment_ids': []},
+            {'reconciled_payment_ids': payment.ids},
+        ])
+        self.assertEqual(payment.reconciled_bill_ids, bill_1 + bill_3)
