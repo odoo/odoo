@@ -18,6 +18,21 @@ export function clickOrderButton(fakePrint = false) {
         },
     ];
 }
+
+export function clickReprintButton(fakePrint = false) {
+    const steps = [];
+    if (fakePrint) {
+        steps.push(Chrome.fakePrintChange());
+    }
+    return [
+        ...steps,
+        {
+            content: "click reprint button",
+            trigger: ".actionpad .reprint-btn",
+            run: "click",
+        },
+    ];
+}
 export function orderlinesHaveNoChange() {
     return Order.doesNotHaveLine({ withClass: ".has-change" });
 }
