@@ -620,6 +620,85 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             invoice._get_l10n_fr_pdp_errors(),
         )
 
+    def test_b2bi_french_vat_is_reported(self):
+        """A foreign customer alone must not turn French VAT into foreign VAT."""
+        invoice = self._create_reporting_invoice(
+            partner=self.b2bi_customer,
+            tax_ids=self._get_tax_on_payment_20(),
+        )
+
+        self.assertFalse(invoice._l10n_fr_pdp_uses_foreign_vat())
+        invoice_node = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id).find(
+            './TransactionsReport/Invoice'
+        )
+        tax_subtotal = invoice_node.find('TaxSubTotal')
+        self.assertEqual(float(invoice_node.findtext('MonetaryTotal/TaxAmount')), 20.0)
+        self.assertEqual(float(tax_subtotal.findtext('TaxAmount')), 20.0)
+        self.assertEqual(tax_subtotal.findtext('TaxCategory/Code'), 'S')
+        self.assertEqual(float(tax_subtotal.findtext('TaxCategory/Percent')), 20.0)
+
+    def test_b2bi_foreign_vat_is_reported_as_zero(self):
+        """Foreign VAT stays on the invoice but is excluded from French e-reporting."""
+        belgium = self.env.ref('base.be')
+        foreign_vat_fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'Belgian VAT registration',
+            'company_id': self.company.id,
+            'country_id': belgium.id,
+            'foreign_vat': 'BE0477472701',
+        })
+        belgian_tax_group = self.env['account.tax.group'].create({
+            'name': 'Belgian VAT',
+            'country_id': belgium.id,
+        })
+        belgian_tax = self.env['account.tax'].create({
+            'name': '21% Belgian VAT',
+            'amount': 21,
+            'amount_type': 'percent',
+            'company_id': self.company.id,
+            'country_id': belgium.id,
+            'tax_group_id': belgian_tax_group.id,
+            'type_tax_use': 'sale',
+        })
+
+        # The commercial invoice is issued under the company's Belgian VAT registration.
+        invoice = self._create_invoice_one_line(
+            move_type='out_invoice',
+            partner_id=self.b2bi_customer,
+            product_id=self.product_a,
+            price_unit=100,
+            discount=10,
+            tax_ids=belgian_tax,
+            fiscal_position_id=foreign_vat_fiscal_position,
+            invoice_date=fields.Date.to_date('2025-02-05'),
+            post=False,
+        )
+        invoice.action_post()
+        invoice.is_move_sent = True
+        self._refresh_pdp_fields(invoice)
+
+        # Accounting and the commercial invoice keep the Belgian 21% VAT.
+        self.assertTrue(invoice._l10n_fr_pdp_uses_foreign_vat())
+        self.assertEqual(invoice.tax_country_id, belgium)
+        self.assertEqual(invoice.amount_untaxed, 90.0)
+        self.assertAlmostEqual(invoice.amount_tax, 18.9)
+        self.assertFalse(invoice._get_l10n_fr_pdp_errors())
+
+        # Flow 10 keeps a detailed B2B invoice but reports no French VAT.
+        xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
+        invoice_nodes = xml.findall('./TransactionsReport/Invoice')
+        self.assertEqual(len(invoice_nodes), 1)
+        self.assertFalse(xml.findall('./TransactionsReport/Transactions'))
+        tax_subtotal = invoice_nodes[0].find('TaxSubTotal')
+        allowance_charge = invoice_nodes[0].find('AllowanceCharge')
+        self.assertEqual(float(invoice_nodes[0].findtext('MonetaryTotal/TaxAmount')), 0.0)
+        self.assertEqual(float(tax_subtotal.findtext('TaxableAmount')), 90.0)
+        self.assertEqual(float(tax_subtotal.findtext('TaxAmount')), 0.0)
+        self.assertEqual(tax_subtotal.findtext('TaxCategory/Code'), 'S')
+        self.assertEqual(float(tax_subtotal.findtext('TaxCategory/Percent')), 0.0)
+        self.assertEqual(allowance_charge.findtext('TaxCategoryCode'), 'S')
+        self.assertEqual(float(allowance_charge.findtext('TaxPercent')), 0.0)
+        self.assertAlmostEqual(invoice.amount_tax, 18.9)
+
     def test_oss_b2c_transaction_excludes_foreign_vat(self):
         """OSS VAT remains on the invoice but is not reported as French VAT."""
         oss_tag = self.env.ref('l10n_eu_oss.tag_oss', raise_if_not_found=False)
