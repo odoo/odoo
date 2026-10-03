@@ -9,6 +9,6 @@ class MailActivity(models.Model):
 
     request_partner_id = fields.Many2one("res.partner", string="Requesting Partner", ondelete="cascade")
 
-    def _store_rating_fields(self, res: Store.FieldList):
-        super()._store_rating_fields(res)
+    def _store_activity_fields(self, res: Store.FieldList):
+        super()._store_activity_fields(res)
         res.attr("request_partner_id")

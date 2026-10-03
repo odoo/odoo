@@ -239,6 +239,23 @@ class TestSlidesManagement(slides_common.SlidesCase, HttpCase):
         )
 
     @users('user_officer')
+    def test_request_access_activity_format(self):
+        channel = self.env['slide.channel'].create({
+            'name': 'Test Course Invite',
+            'enroll': 'invite',
+            'user_id': self.env.user.id,
+        })
+        activity = channel._action_request_access(self.user_portal.partner_id)
+        self.assertTrue(activity)
+
+        store_data = activity.activity_format()
+        self.assertEqual(
+            store_data['mail.activity'][0]['request_partner_id'],
+            self.user_portal.partner_id.id,
+            'Requesting partner must be sent to the client, it drives the Grant / Refuse Access buttons',
+        )
+
+    @users('user_officer')
     def test_share_without_template(self):
         channel_without_template = self.env['slide.channel'].create({
             'name': 'Course Without Template',
