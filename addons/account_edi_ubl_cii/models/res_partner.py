@@ -260,7 +260,7 @@ class ResPartner(models.Model):
 
         if (
             country_code == 'BE'
-            and field == 'company_registry'
+            and eas == '0208'
             and not value
             and self.vat
         ):
