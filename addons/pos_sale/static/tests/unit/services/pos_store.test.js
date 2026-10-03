@@ -184,6 +184,35 @@ describe("onClickSaleOrder", () => {
         expect(cell(2, 4)).toHaveText(`$ 150.00 (tax incl.)`);
     });
 
+    test("settle → keeps sale order document tax mode", async () => {
+        // SO 5 is in "Tax Incl." document mode (document_tax_mode = 'tax_included')
+        // but its line uses a tax-excluded tax (15%, id 1). Settling it must keep the
+        // tax-included total (256) instead of adding tax on top (294.40).
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+
+        const promiseResult = store.onClickSaleOrder(5);
+        const button = ".modal-body button:contains('Settle the order')";
+        await waitFor(button);
+        await click(button);
+        await promiseResult;
+
+        const settledLine = store.getOrder().lines.at(-1);
+
+        // The document tax mode is inherited from the linked sale order.
+        expect(settledLine.qty).toBe(1);
+        expect(settledLine.price_unit).toBe(320);
+        expect(settledLine.getDiscount()).toBe(20);
+
+        // 256 is interpreted as tax included (not excluded), so the total stays 256
+        // and the tax (15%) is extracted from it.
+        expect(settledLine.priceIncl).toBe(256);
+        expect(settledLine.priceExcl).toBe(222.61);
+        expect(order.priceIncl).toBe(256);
+        expect(order.amountTaxes).toBe(33.39);
+    });
+
     test("sale order: ignore lines with zero quantity", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
