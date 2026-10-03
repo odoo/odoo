@@ -46,6 +46,11 @@ class PurchaseOrder(models.Model):
             order.amount_total = tax_totals['total_amount_currency']
             order.amount_total_cc = tax_totals['total_amount']
 
+    @api.depends('order_line.amount_invoiced')
+    def _compute_amount_invoiced(self):
+        for order in self:
+            order.amount_invoiced = sum(order.order_line.mapped('amount_invoiced'))
+
     @api.depends('state', 'order_line.qty_to_invoice')
     def _get_invoiced(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit')
@@ -142,6 +147,7 @@ class PurchaseOrder(models.Model):
     tax_totals = fields.Json(compute='_compute_tax_totals', exportable=False)
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
+    amount_invoiced = fields.Monetary(string='Already Invoiced', compute='_compute_amount_invoiced')
     amount_total_cc = fields.Monetary(string="Total in currency", store=True, readonly=True, compute="_amount_all", currency_field="company_currency_id")
 
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")

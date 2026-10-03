@@ -688,6 +688,7 @@
                     <field name="origin" optional="show"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
                     <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="1"/>
+                    <field name="amount_invoiced" sum="Total invoiced amount" widget="monetary" optional="show"/>
                     <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'purchase']"/>
                     <field name="state" column_invisible="True"/>
                     <field name="amount_total_cc" sum="Total amount" widget="monetary" optional="hide"/>

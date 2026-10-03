@@ -60,6 +60,7 @@ class PurchaseOrderLine(models.Model):
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
     price_subtotal_to_invoice = fields.Monetary(compute='_compute_price_subtotal_to_invoice', string='To Invoice')
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
+    amount_invoiced = fields.Monetary(string='Invoiced Amount', compute='_compute_amount_invoiced', compute_sudo=True)
     price_tax = fields.Float(compute='_compute_amount', string='Tax', store=True)
     non_deductible_tax = fields.Float(compute='_compute_amount', store=True)
 
@@ -241,6 +242,16 @@ class PurchaseOrderLine(models.Model):
     def _compute_price_subtotal_to_invoice(self):
         for line in self:
             line.price_subtotal_to_invoice = line.price_subtotal / line.product_qty * line.qty_to_invoice
+
+    @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.move_id.state')
+    def _compute_amount_invoiced(self):
+        for line in self:
+            amount_invoiced = 0.0
+            for invoice_line in line._get_invoice_lines():
+                invoice = invoice_line.move_id
+                if invoice.state == 'posted':
+                    amount_invoiced += invoice_line.currency_id._convert(invoice_line.price_total, line.currency_id, line.company_id, invoice.invoice_date) * invoice.direction_sign
+            line.amount_invoiced = amount_invoiced
 
     @api.depends('product_qty', 'qty_invoiced')
     def _compute_qty_to_invoice_raw(self):

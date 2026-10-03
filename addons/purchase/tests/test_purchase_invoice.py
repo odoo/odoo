@@ -830,6 +830,26 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.assertEqual(analytic_account.purchase_order_count, 1)
         self.assertEqual(analytic_account.action_view_purchase_orders()['domain'], [['id', 'in', purchase_order.ids]])
 
+    def test_amount_invoiced(self):
+        purchase_order = self.init_purchase(partner=self.partner_a, confirm=True, products=[self.product_order])
+        purchase_order.order_line.price_unit = 100
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_date = fields.Date.today()
+
+        self.assertEqual(purchase_order.amount_invoiced, 0.0)
+
+        bill.action_post()
+        self.assertEqual(purchase_order.order_line.amount_invoiced, bill.amount_total)
+        self.assertEqual(purchase_order.amount_invoiced, bill.amount_total)
+
+        refund = self.init_invoice(move_type='in_refund', partner=self.partner_a, products=[self.product_order])
+        refund.invoice_line_ids.purchase_line_id = purchase_order.order_line
+        self.assertEqual(purchase_order.amount_invoiced, bill.amount_total)
+
+        refund.action_post()
+        self.assertEqual(purchase_order.amount_invoiced, bill.amount_total - refund.amount_total)
+
 
 @tagged('post_install', '-at_install')
 class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
