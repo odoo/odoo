@@ -50,7 +50,9 @@ export class DocModel extends Component {
         DocLoadingIndicator,
         DocErrorDialog,
     };
-    static props = {};
+    static props = {
+        showAside: { type: Boolean, optional: true },
+    };
 
     setup() {
         this.state = proxy({

@@ -3,8 +3,11 @@
 <t t-name="api_doc.DocClient">
     <div class="o-doc-client-root">
         <header class="position-fixed bg-1 d-flex flex-nowrap gap-1 align-items-center justify-content-between w-100">
-            <div class="d-flex flex-nowrap">
-                <h2>Odoo Runtime Doc</h2>
+            <div class="d-flex flex-nowrap align-items-center gap-2">
+                <button class="btn" t-on-click="() => this.state.showSidebar = !this.state.showSidebar">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </button>
+                <h2 class="m-0">Odoo Runtime Doc</h2>
             </div>
             <div>
                 <input
@@ -19,12 +22,15 @@
                 <button class="btn" t-on-click="() => this.toggleTheme()">
                     <i class="fa fa-moon-o" aria-hidden="true"></i>
                 </button>
+                <button class="btn" t-on-click="() => this.state.showAside = !this.state.showAside" title="Toggle Right Sidebar">
+                    <i class="fa fa-columns" aria-hidden="true"></i>
+                </button>
             </div>
         </header>
         <main class="position-relative d-flex flex-nowrap">
-            <DocSidebar t-if="!this.ui.isSmall"/>
+            <DocSidebar t-if="this.state.showSidebar and !this.ui.isSmall"/>
             <t t-if="this.modelStore.models.length > 0">
-                <DocModel t-if="this.modelStore.activeModel"/>
+                <DocModel t-if="this.modelStore.activeModel" showAside="this.state.showAside"/>
             </t>
             <div t-elif="!this.modelStore.error" class="h-100 w-100 d-flex flex-nowrap align-items-center justify-content-center gap-1">
                 <i class="fa fa-spinner o-doc-spinner" aria-hidden="true"></i>
