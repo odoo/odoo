@@ -33,5 +33,4 @@ class StockPicking(models.Model):
 
     def _prepare_return_move_default_values(self, move_id):
         vals = super()._prepare_return_move_default_values(move_id)
-        vals['to_refund'] = move_id.to_refund
         return vals
