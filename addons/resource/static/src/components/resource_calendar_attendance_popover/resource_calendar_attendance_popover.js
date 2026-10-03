@@ -54,6 +54,11 @@ export class ResourceCalendarAttendancePopover extends Component {
         });
     }
 
+    async confirmAttendanceChanges() {
+        // The popover can be opened without the plugin, nothing to confirm in that case.
+        return (await this.props.resourceCalendarPlugin?.confirmAttendanceChanges()) ?? true;
+    }
+
     getDateWithDelta(date) {
         return date.plus(this.props.delta);
     }
@@ -112,8 +117,10 @@ export class ResourceCalendarAttendancePopover extends Component {
     async onSave(record, mode) {
         await executeButtonCallback(this.popoverRef(), async () => {
             if (await record.checkValidity()) {
+                if (!(await this.confirmAttendanceChanges())) {
+                    return;
+                }
                 try {
-                    this.props.resourceCalendarPlugin?.newAttendances.set(true);
                     switch (mode) {
                         case "one": {
                             await record.update({
@@ -168,7 +175,9 @@ export class ResourceCalendarAttendancePopover extends Component {
 
     async onDelete(record, mode) {
         await executeButtonCallback(this.popoverRef(), async () => {
-            this.props.resourceCalendarPlugin.newAttendances.set(true);
+            if (!(await this.confirmAttendanceChanges())) {
+                return;
+            }
             switch (mode) {
                 case "one":
                     await this.orm.call(record.resModel, "exclude_occurence", [
