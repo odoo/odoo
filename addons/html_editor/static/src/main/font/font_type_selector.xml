@@ -9,6 +9,7 @@
                     <t t-foreach="this.items" t-as="item" t-key="item_index">
                         <DropdownItem
                             attrs="{ name: item.tagName }"
+                            class="{ selected: item.name.toString() === this.state.currentName }"
                             onSelected="() => this.onSelected(item)" t-on-pointerdown.prevent="() => {}">
                             <t t-out="item.name"/>
                         </DropdownItem>

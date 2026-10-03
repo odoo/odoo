@@ -588,6 +588,15 @@ test("toolbar works: show the right font name", async () => {
     }
 });
 
+test("toolbar works: mark the current font type in the menu", async () => {
+    await setupEditor("<h2>[test]</h2>");
+    await waitFor(".o-we-toolbar");
+    await contains(".o-we-toolbar [name='font_type'].dropdown-toggle").click();
+    await animationFrame();
+    expect(".o_font_type_selector_menu .dropdown-item.selected").toHaveCount(1);
+    expect(".o_font_type_selector_menu .dropdown-item.selected").toHaveText("Header 2");
+});
+
 test("toolbar works: show the right font name after undo", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
