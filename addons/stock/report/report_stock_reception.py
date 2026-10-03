@@ -97,7 +97,7 @@ class ReceptionReport(models.AbstractModel):
         for product_id, outs in products_to_outs.items():
             for out in outs:
                 # we expect len(source) = 2 when picking + origin [e.g. SO] and len() = 1 otherwise [e.g. MO]
-                source = (out._get_source_document(),)
+                source = (out.sudo()._get_source_document(),)
                 if not source:
                     continue
                 if out.picking_id and source[0] != out.picking_id:
@@ -147,7 +147,7 @@ class ReceptionReport(models.AbstractModel):
                     # it is possible there are different in moves linked to the same out moves due to batch
                     # => we guess as to which outs correspond to this report...
                     continue
-                source = (out_move._get_source_document(),)
+                source = (out_move.sudo()._get_source_document(),)
                 if not source:
                     continue
                 if out_move.picking_id and source[0] != out_move.picking_id:
