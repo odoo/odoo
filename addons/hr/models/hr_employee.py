@@ -1960,14 +1960,54 @@ class HrEmployee(models.Model):
                         employee[field] = False
         return res
 
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self._origin:
-            return {'warning': {
-                'title': self.env._("Warning"),
-                'message': self.env._("To avoid multi company issues (losing the access to your previous contracts, leaves, ...), you should create another employee in the new company instead.")
-            }}
-        return None
+    def action_duplicate_employee(self, new_company_id):
+        self.ensure_one()
+        vals = self.copy_data()[0]
+
+        keys_to_remove = [
+            'version_id', 'version_ids', 'current_version_id',
+            'departure_id', 'employee_id', 'resource_id',
+            'department_id', 'job_id', 'parent_id', 'coach_id',
+            'address_id', 'work_location_id'
+        ]
+        for key in keys_to_remove:
+            vals.pop(key, None)
+
+        vals['name'] = self.name
+        vals['company_id'] = new_company_id
+        vals['date_version'] = fields.Date.today()
+        vals['contract_date_start'] = fields.Date.today()
+        vals['contract_date_end'] = False
+
+        new_employee = self.env['hr.employee'].with_context(mail_create_nolog=True).create(vals)
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.employee',
+            'res_id': new_employee.id,
+            'views': [[False, 'form']],
+            'target': 'current',
+        }
+
+    def action_duplicate_and_archive_employee(self, new_company_id):
+        self.ensure_one()
+        action = self.action_duplicate_employee(new_company_id)
+
+        if self.is_in_contract:
+            departure_reason = self.env['hr.departure.reason'].search([], limit=1)
+            departure = self.env['hr.employee.departure'].create({
+                'employee_id': self.id,
+                'departure_reason_id': departure_reason.id if departure_reason else False,
+                'dismissal_date': fields.Date.today(),
+                'departure_date': fields.Date.today(),
+                'action_date': fields.Date.today(),
+                'departure_description': 'Automatically archived due to company transfer.',
+            })
+            departure.action_register()
+        else:
+            self.action_archive()
+
+        return action
 
     def _load_scenario(self):
         demo_tag = self.env.ref('hr.employee_category_demo', raise_if_not_found=False)
