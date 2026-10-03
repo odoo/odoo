@@ -1,0 +1,43 @@
+.s_team_board {
+    &.o_team_board_list {
+        .row {
+            flex-direction: column;
+
+            > div {
+                width: 100%;
+            }
+        }
+
+        .s_team_board_card {
+            display: flex;
+            flex-direction: row;
+
+            .o_card_img_wrapper {
+                width: 15%;
+                margin: 0;
+            }
+
+            .card-body {
+                flex: 1;
+            }
+        }
+    }
+
+     &.o_team_board_compact {
+        .s_team_board_card {
+            .card-body {
+                padding: 1rem;
+
+                h3 {
+                    font-size: 1.5rem;
+                    margin-bottom: 0.25rem;
+                }
+
+                p {
+                    font-size: 0.9rem;
+                    margin-bottom: 0.5rem;
+                }
+            }
+        }
+    }
+}
