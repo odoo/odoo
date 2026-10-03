@@ -3290,6 +3290,32 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(report_lines[-1].quantity, 3)
         self.assertEqual(report_lines[-1].added_value, 30)
 
+    def test_avco_report_for_lot_valuated_product(self):
+        """Ensure that the AVCO justification report for lot valuated
+        product is accurate at all steps.
+        """
+        self.product_avco.write({
+            'tracking': 'lot',
+            'lot_valuated': True,
+        })
+        lot1, lot2 = self.env['stock.lot'].create([{
+            'name': f'Lot{i}',
+            'product_id': self.product_avco.id,
+        } for i in range(0, 2)])
+        self._make_in_move(self.product_avco, quantity=1, unit_cost=10, lot_ids=lot1)
+        self._make_in_move(self.product_avco, quantity=1, unit_cost=20, lot_ids=lot2)
+        self._make_out_move(self.product_avco, quantity=1, lot_ids=lot2)
+        report_lines = self.env['stock.avco.report'].search([('product_id', '=', self.product_avco.id)]).sorted('date, id')[1:]
+        self.assertEqual(report_lines[-1].avco_value, self.product_avco.standard_price)
+        self.assertRecordValues(
+            report_lines,
+            [
+                {'added_value': 10, 'total_quantity': 1, 'total_value': 10, 'avco_value': 10},
+                {'added_value': 20, 'total_quantity': 2, 'total_value': 30, 'avco_value': 15},
+                {'added_value': -20, 'total_quantity': 1, 'total_value': 10, 'avco_value': 10},
+            ],
+        )
+
     def test_avco_report_after_cost_method_change(self):
         """Ensure that the AVCO justification report for a product is accurate at all steps, even if
         the cost method changed after some moves.
