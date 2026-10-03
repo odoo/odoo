@@ -67,7 +67,6 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                                         "id": attachment.id,
                                         "mimetype": "text/x-python",
                                         "name": "__init__.py",
-                                        "ownership_token": attachment._get_ownership_token(),
                                         "raw_access_token": attachment._get_raw_access_token(),
                                         "res_name": False,
                                         "res_model": attachment.res_model,
