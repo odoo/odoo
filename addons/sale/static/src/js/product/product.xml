@@ -50,8 +50,16 @@
                 >
                     <t t-call="sale.product_price" name="sale_product_configurator_price"/>
                 </div>
+<<<<<<< f7987e29efaf74e3c13bcb82c71380feb6e4d46c
                 <t t-set="isComboProduct" t-value="this.isMainProduct &amp;&amp; this.props.selectedComboItems.length"/>
                 <t t-if="this.env.showQuantity &amp;&amp; !isComboProduct">
+||||||| 8c7f04364bc86acf9fb4bf563d38d6bdcda73f8e
+                <t t-set="isComboProduct" t-value="isMainProduct &amp;&amp; this.props.selectedComboItems.length"/>
+                <t t-if="env.showQuantity &amp;&amp; !isComboProduct">
+=======
+                <t t-set="isComboProduct" t-value="!!this.props.selectedComboItems?.length"/>
+                <t t-if="env.showQuantity &amp;&amp; !(isMainProduct &amp;&amp; isComboProduct)">
+>>>>>>> e24d2d84f86b74cd88b551bfddc4129adb86ed37
                     <QuantityButtons
                         quantity="this.props.quantity"
                         setQuantity="quantity => this.env.setQuantity(this.props.product_tmpl_id, quantity)"
@@ -59,7 +67,13 @@
                     />
                 </t>
                 <span
+<<<<<<< f7987e29efaf74e3c13bcb82c71380feb6e4d46c
                     t-elif="this.env.showQuantity &amp;&amp; isComboProduct"
+||||||| 8c7f04364bc86acf9fb4bf563d38d6bdcda73f8e
+                    t-elif="env.showQuantity &amp;&amp; isComboProduct"
+=======
+                    t-elif="env.showQuantity &amp;&amp; isMainProduct &amp;&amp; isComboProduct"
+>>>>>>> e24d2d84f86b74cd88b551bfddc4129adb86ed37
                     t-out="this.props.quantity"
                     class="h5"
                 />
