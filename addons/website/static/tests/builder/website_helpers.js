@@ -153,6 +153,9 @@ export async function setupWebsiteBuilder(
                 "data-main-object",
                 "website.page(4,)"
             );
+            if (translateMode) {
+                iframe.contentDocument.documentElement.setAttribute("data-edit_translations", "1");
+            }
             iframe.contentDocument.body.innerHTML = bodyHTML;
             if (loadIframeBundles && loadAssetsFrontendJS) {
                 await waitFor("body[is-ready=true]", {
