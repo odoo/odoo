@@ -103,6 +103,19 @@
         </field>
     </record>
 
+    <record id="hr_kanban_view_applicant" model="ir.ui.view">
+        <field name="name">hr.kanban.view.applicant.inherit.skills</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_kanban_view_applicant"/>
+        <field name="arch" type="xml">
+            <xpath expr="//a[@name='action_open_attachments']" position="before">
+                <span class="text-primary me-1 rounded-pill badge" invisible="matching_score == 0">
+                    <span><field name="matching_score"/>%</span>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
     <record id="crm_case_tree_view_job" model="ir.ui.view">
         <field name="name">hr.applicant.view.list.inherit.hr.recruitment.skills</field>
         <field name="model">hr.applicant</field>
@@ -192,6 +205,28 @@
             </field>
             <field name="recruiter_id" position="after">
                 <xpath expr="//field[@name='kanban_state']" position="move"/>
+            </field>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="crm_case_pivot_view_job">
+        <field name="name">crm.case.pivot.view.job.inherit.skills</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.crm_case_pivot_view_job"/>
+        <field name="arch" type="xml">
+            <field name="color" position="after">
+                <field name="degree_score" invisible="1"/>
+                <field name="skills_score" invisible="1"/>
+            </field>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="crm_case_graph_view_job">
+        <field name="name">crm.case.graph.view.job.inherit.skills</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.crm_case_graph_view_job"/>
+        <field name="arch" type="xml">
+            <field name="color" position="after">
+                <field name="degree_score" invisible="1"/>
+                <field name="skills_score" invisible="1"/>
             </field>
         </field>
     </record>
