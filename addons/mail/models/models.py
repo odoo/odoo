@@ -9,7 +9,7 @@ from markupsafe import Markup
 
 from odoo import _, api, exceptions, models, tools
 from odoo.fields import Domain
-from odoo.tools import parse_contact_from_email
+from odoo.tools import float_repr, parse_contact_from_email
 from odoo.tools.mail import email_normalize, email_split_and_format
 
 from odoo.addons.mail.tools.alias_error import AliasError
@@ -859,6 +859,15 @@ class Base(models.AbstractModel):
             return ' '.join(
                 last_field.convert_to_export(value, last_model)
                 for value in field_value
+            )
+        if last_field.type == 'monetary':
+            return ' '.join(
+                float_repr(float(value), precision_digits=(
+                    record[last_field.currency_field].decimal_places)
+                    if record[last_field.currency_field]
+                    else record.env.company.currency_id.decimal_places  # Fallback to 2 if the currency_field is not define
+                    )
+                for record, value in zip(last_model, field_value)
             )
         return ' '.join(str(value if value is not False and value is not None else '') for value in field_value)
 
