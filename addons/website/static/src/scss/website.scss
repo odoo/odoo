@@ -1577,8 +1577,8 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             }
             .active.carousel-item-end + .carousel-item-prev.carousel-item-end,
             .carousel-item-prev.carousel-item-end ~ .carousel-item {
-                right: var(--o-carousel-item-width-percentage);
-                transform: translateX(100%);
+                right: calc(var(--o-carousel-item-width-percentage) + var(--o-carousel-gap));
+                transform: translateX(calc(100% + var(--o-carousel-gap)));
                 display: block;
                 margin-right: 0;
             }
@@ -1587,7 +1587,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             .carousel-item-start.active,
             .carousel-item-start:not(.active),
             .carousel-item-start:not(.active) ~ .carousel-item {
-                transform: translateX(-100%);
+                transform: translateX(calc(-100% - var(--o-carousel-gap)));
             }
             .carousel-item.active:not(.carousel-item-start):not(.carousel-item-end),
             .carousel-item.active:not(.carousel-item-start):not(.carousel-item-end) ~ .carousel-item {
