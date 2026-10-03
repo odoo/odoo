@@ -1420,6 +1420,18 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return self.product_template_image_ids.sorted("sequence") or self
 
+    def _get_shop_images(self):
+        """Return the primary and secondary images to display on the shop page.
+
+        If the template has no primary or secondary images, fall back on the first 2 product images.
+        """
+        self.ensure_one()
+        all_images = self.product_template_image_ids.sorted("sequence")
+        images_with_type = all_images.filtered("type")
+        primary_image = images_with_type.filtered(lambda i: i.type == "primary")[:1]
+        secondary_image = images_with_type.filtered(lambda i: i.type == "secondary")[:1]
+        return (primary_image or all_images[:1]) + (secondary_image or all_images[1:2])
+
     def _get_product_page_documents(self, variant=None):
         self.ensure_one()
         docs = self.sudo().product_document_ids
