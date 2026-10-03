@@ -138,6 +138,14 @@
                     decoration-muted="not commitment_date"
                     decoration-danger="(commitment_date and (expected_date &lt; commitment_date or commitment_date &lt; context_today().strftime('%Y-%m-%d'))) and state in ['draft', 'sent']"/>
                 <field name="commitment_date" readonly="1" optional="show"/>
+                <field
+                    name="delivery_status"
+                    decoration-success="delivery_status == 'full'"
+                    decoration-warning="delivery_status == 'partial'"
+                    decoration-info="delivery_status in ['pending', 'started']"
+                    widget="badge"
+                    optional="hide"
+                />
                 <field name="partner_id" widget="many2one_avatar" readonly="1"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="hide"/>
                 <field name="team_id" optional="hide"/>
@@ -187,30 +195,11 @@
         </field>
     </record>
 
-    <record id="view_order_tree" model="ir.ui.view">
-        <field name="name">sale.order.list (orders)</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale_order_tree"/>
-        <field name="mode">primary</field>
-        <field name="priority">2</field>
-        <field name="arch" type="xml">
-            <field name="invoice_status" position="before">
-                <field
-                    name="delivery_status"
-                    decoration-success="delivery_status == 'full'"
-                    decoration-warning="delivery_status == 'partial'"
-                    decoration-info="delivery_status in ['pending', 'started']"
-                    widget="badge"
-                    optional="hide"/>
-            </field>
-        </field>
-    </record>
-
     <!-- TODO Remove me and merge upload list & dashboard ? -->
     <record id="sale_order_list_upload" model="ir.ui.view">
         <field name="name">sale.order.tree.upload (orders)</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="view_order_tree"/>
+        <field name="inherit_id" ref="sale_order_tree"/>
         <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
