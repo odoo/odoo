@@ -673,6 +673,7 @@ class RecipientsNotificationTest(MailCommon):
                     self.assertEqual(partner_data['groups'], set())
                     self.assertEqual(partner_data['notif'], 'email')
                     self.assertFalse(partner_data['uid'])
+                self.assertEqual(partner_data['uids'], partner.user_ids.sorted(lambda u: (u.share, u.id)).ids)
                 if record:
                     self.assertEqual(partner_data['is_follower'], partner in record.message_partner_ids)
                 else:

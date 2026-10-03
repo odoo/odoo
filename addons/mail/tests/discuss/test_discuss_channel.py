@@ -409,8 +409,8 @@ class TestChannelInternals(MailCommon, HttpCase):
             }),
         )
         self.assertEqual(
-            {r["id"]: r["uid"] for r in recipients if r["notif"] != "web_push"},
-            {archived_only.id: None, two_logins.id: new_login.id},
+            {r["id"]: (r["uid"], r["uids"]) for r in recipients if r["notif"] != "web_push"},
+            {archived_only.id: (None, []), two_logins.id: (new_login.id, [new_login.id])},
         )
 
     @mute_logger("odoo.models.unlink")
