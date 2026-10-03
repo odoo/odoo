@@ -131,3 +131,16 @@ class TestWorkorder(TestMrpCommon):
             ],
             field_names=['operation_id'],
         )
+
+    def test_update_workorder_qty_produced_from_mo_form(self):
+        """Updating a work order's produced quantity in its dialog form, opened from
+        the MO's Work Orders tab, should not raise an error when saving the MO.
+        """
+        mo = self.env['mrp.production'].create({'bom_id': self.bom_4.id})
+        mo.action_confirm()
+        mo.button_plan()
+
+        mo_form = Form(mo)
+        with mo_form.workorder_ids.edit(0) as wo_form:
+            wo_form.qty_produced = 1
+        mo_form.save()
