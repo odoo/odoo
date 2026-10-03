@@ -1618,6 +1618,38 @@ class TestHrAttendanceOvertime(HttpCase):
         attendances._update_overtime()
         assert_overtime_durations(attendances)
 
+    def test_regenerate_overtime_with_two_working_schedules(self):
+        """ Checks that the extra hours are computed against the schedule of the version covering
+         the attendance, and not against the schedule of the most recent version. """
+        calendar_20h = self.env['resource.calendar'].create({
+            'name': 'Standard 20h/week',
+            'attendance_ids': [Command.create({
+                'dayofweek': weekday,
+                'hour_from': 8,
+                'hour_to': 12,
+            }) for weekday in ['0', '1', '2', '3', '4']],
+        })
+        self.employee.version_id.resource_calendar_id = calendar_20h
+        self.employee.create_version({
+            'date_version': date(2023, 2, 1),
+            'resource_calendar_id': self.calendar_40h.id,
+            'ruleset_id': self.ruleset.id,
+        })
+        part_time_attendance, full_time_attendance = self.env['hr.attendance'].create([{
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 4, 8, 0),
+            'check_out': datetime(2023, 1, 4, 18, 0),  # 10 hours worked, 4 expected
+        }, {
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 2, 1, 8, 0),
+            'check_out': datetime(2023, 2, 1, 18, 0),  # 10 hours worked, 8 expected
+        }])
+
+        self.ruleset.action_regenerate_overtimes()
+
+        self.assertEqual(part_time_attendance.overtime_hours, 6, "The 20h/week schedule of the first version should be used")
+        self.assertEqual(full_time_attendance.overtime_hours, 2, "The 40h/week schedule of the second version should be used")
+
     def test_regenerate_weekly_overtime_flexible_employee(self):
         self.ruleset.rule_ids.write({
             'expected_hours_from_contract': True,
