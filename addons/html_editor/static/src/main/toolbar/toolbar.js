@@ -1,4 +1,4 @@
-import { Component, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, onPatched, proxy, signal, t, useProps } from "@odoo/owl";
 import { omit, pick } from "@web/core/utils/objects";
 import { trapFocus } from "@html_editor/utils/dom_traversal";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -45,6 +45,7 @@ export class Toolbar extends Component {
 
     setup() {
         this.state = proxy(this.props.state);
+        this.shouldFocusFirstButton = false;
 
         useHotkey("alt+f", () => this.focusFirstToolbarButton(), {
             bypassEditableProtection: true,
@@ -58,6 +59,13 @@ export class Toolbar extends Component {
                 !document.activeElement.closest(
                     ".o-we-toolbar[data-namespace], [data-prevent-closing-overlay]"
                 ),
+        });
+
+        onPatched(() => {
+            if (this.shouldFocusFirstButton) {
+                this.shouldFocusFirstButton = false;
+                this.focusFirstToolbarButton();
+            }
         });
     }
 
@@ -86,7 +94,8 @@ export class Toolbar extends Component {
     onButtonClick(button) {
         button.run();
         if (button.id === "expand_toolbar") {
-            this.focusFirstToolbarButton();
+            // Toolbar update is async, defer focus until after OWL re-renders the DOM.
+            this.shouldFocusFirstButton = true;
         } else {
             this.props.focusEditable();
         }
