@@ -33,9 +33,6 @@ class Integer(Field[int]):
         return int(value or 0)
 
     def convert_to_cache(self, value, records, validate=True):
-        if isinstance(value, dict):
-            # special case, when an integer field is used as inverse for a one2many
-            return value.get('id', None)
         return int(value or 0)
 
     def convert_to_record(self, value, record):
@@ -47,9 +44,6 @@ class Integer(Field[int]):
         if value and value > MAXINT:
             return float(value)
         return value
-
-    def _update_inverse(self, records: BaseModel, value: BaseModel):
-        self._update_cache(records, value.id or 0)
 
     def convert_to_export(self, value, record):
         if value or value == 0:

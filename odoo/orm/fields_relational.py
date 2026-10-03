@@ -898,8 +898,8 @@ class One2many(_RelationalMulti):
 
     :param str comodel_name: name of the target model
 
-    :param str inverse_name: name of the inverse ``Many2one`` field in
-        ``comodel_name``
+    :param str inverse_name: name of the inverse ``Many2one`` or reference field
+        in ``comodel_name``
 
     :param domain: an optional domain to set on candidate values on the
         client side (domain or a python expression that will be evaluated
@@ -950,8 +950,9 @@ class One2many(_RelationalMulti):
             invf = registry[self.comodel_name]._fields[self.inverse_name]
             if isinstance(invf, (Many2one, Many2oneReference)):
                 # setting one2many fields only invalidates many2one inverses;
-                # integer inverses (res_model/res_id pairs) are not supported
                 inverses.add(self, invf)
+            else:
+                self._setup_warning(f"inverse field {invf} is not a many2one or many2one_reference")
             inverses.add(invf, self)
 
     _description_relation_field = property(attrgetter('inverse_name'))
