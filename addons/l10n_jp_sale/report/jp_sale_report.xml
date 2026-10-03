@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Low priority yields the price cell to l10n_din5008_sale, as on the invoice. -->
+        <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document" priority="10">
+            <xpath expr="//t[@t-call='web.external_layout']" position="before">
+                <t t-set="jp_recipient_partner" t-value="doc.partner_id"/>
+                <t t-set="jp_order_lines" t-value="doc._get_order_lines_to_report()"/>
+                <t t-set="jp_hide_zero_decimals"
+                   t-value="doc.company_id.sudo()._l10n_jp_hide_zero_decimals(jp_order_lines.mapped('price_unit'))
+                            and not any(line.discount &lt; 0 for line in jp_order_lines)"/>
+            </xpath>
+
+            <xpath expr="//div[@t-field='doc.partner_id']" position="attributes">
+                <attribute name="t-options">{"widget": "contact", "fields": ["address"], "no_marker": True}</attribute>
+            </xpath>
+
+            <!-- The column drops its decimals only when every unit price in it is whole.
+                 The surcharged price a negative discount prints is left alone: the
+                 column keeps its decimals whenever one is on the order. -->
+            <xpath expr="//td[@name='td_product_priceunit']/span[@t-field='line.price_unit']" position="attributes">
+                <attribute name="t-options">{'min_precision': 0} if jp_hide_zero_decimals else {}</attribute>
+            </xpath>
+
+            <xpath expr="//th[@name='th_priceunit']" position="replace">
+                <t t-set="jp_currency_label" t-value="doc.currency_id.name if doc.currency_id.name != 'JPY' else '円'"/>
+                <th name="th_priceunit" t-att-class="'text-end text-nowrap' if company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard' else 'text-end'">
+                    <span>Unit Price<span t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'" t-out="' (%s)' % jp_currency_label"/></span>
+                </th>
+            </xpath>
+
+            <xpath expr="//th[@name='th_subtotal']" position="attributes">
+                <attribute name="t-att-class">'text-end text-nowrap' if company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard' else 'text-end'</attribute>
+            </xpath>
+            <xpath expr="//th[@name='th_subtotal']/span" position="replace">
+                <t t-set="jp_currency_label" t-value="doc.currency_id.name if doc.currency_id.name != 'JPY' else '円'"/>
+                <span>Amount<span t-if="company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'" t-out="' (%s)' % jp_currency_label"/></span>
+            </xpath>
+        </template>
+    </data>
+</odoo>
