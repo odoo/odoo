@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import threading
 from collections.abc import Mapping, Sequence
 from functools import partial
 
-from odoo import api
+from odoo import api, netsvc
 from odoo.exceptions import (
     AccessDenied,
     UserError,
@@ -75,7 +74,7 @@ def dispatch(method, params):
         raise AccessDenied
     # access checked once we open a cursor
 
-    threading.current_thread().uid = uid
+    netsvc.ExecutionInfo.get().uid = uid
     if method == 'execute':
         kw = {}
     elif method == 'execute_kw':
@@ -100,7 +99,7 @@ def execute_cr(cr, uid, obj, method, args, kw):
     recs = env.get(obj)
     if recs is None:
         raise UserError(f"Object {obj} doesn't exist")  # pylint: disable=missing-gettext
-    threading.current_thread().rpc_model_method = f'{obj}.{method}'
+    netsvc.ExecutionInfo.get().rpc_model_method = f'{obj}.{method}'
     result = retrying(partial(call_kw, recs, method, args, kw), env)
     # force evaluation of lazy values before the cursor is closed, as it would
     # error afterwards if the lazy isn't already evaluated (and cached)

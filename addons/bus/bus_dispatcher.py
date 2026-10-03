@@ -22,6 +22,7 @@ from psycopg2 import InterfaceError
 from psycopg2.pool import PoolError
 
 import odoo
+from odoo.netsvc import ExecutionInfo
 from odoo.service.server import CommonServer
 from odoo.tools import config
 
@@ -366,7 +367,7 @@ class BusDispatcher(threading.Thread):
                 continue
             success = False
             try:
-                with acquire_cursor(dbname) as cr:
+                with ExecutionInfo('bus_worker', db_name=dbname), acquire_cursor(dbname) as cr:
                     self._kick_invalid_sessions(cr, topics)
                     notifications_by_channel = self._fetch(cr, topics)
                 self._dispatch(topics, notifications_by_channel)

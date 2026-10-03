@@ -22,6 +22,7 @@ import psycopg2.sql
 
 from odoo import sql_db
 from odoo.exceptions import ConcurrencyError
+from odoo.netsvc import ExecutionInfo
 from odoo.tools import (
     SQL,
     OrderedSet,
@@ -100,8 +101,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """ Return the registry for the given database name."""
         assert db_name, "Missing database name"
         # set the database name for logging
-        current_thread = threading.current_thread()
-        current_thread.dbname = db_name
+        ExecutionInfo.get().db_name = db_name
         with cls._lock:
             try:
                 registry = cls.registries[db_name]
@@ -152,9 +152,21 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """
         if (registry := cls.registries.get(db_name)) and not registry.ready:
             raise Exception('Registry for database %s can not be loaded recursively' % db_name)
+        execution_info = ExecutionInfo('registry', db_name=db_name)
 
         from odoo.modules import db  # noqa: PLC0415
         from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
+
+        def load(registry, cr):
+            with execution_info:
+                load_modules(registry, cr,
+                    update_module=update_module,
+                    upgrade_modules=upgrade_modules,
+                    install_modules=install_modules,
+                    reinit_modules=reinit_modules,
+                    new_db_demo=new_db_demo,
+                )
+                cr.commit()
 
         t0 = time.time()
         registry: Registry = object.__new__(cls)
@@ -219,17 +231,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     # load_modules multiple times in case there are modules to be uninstalled
                     # the load happens in a new context to be independent from things such as requests
                     try:
-                        contextvars.Context().run(
-                            load_modules,
-                            registry,
-                            cr=cr,
-                            update_module=update_module,
-                            upgrade_modules=upgrade_modules,
-                            install_modules=install_modules,
-                            reinit_modules=reinit_modules,
-                            new_db_demo=new_db_demo,
-                        )
-                        cr.commit()
+                        contextvars.Context().run(load, registry, cr)
                     except Exception:
                         cr.rollback()
                         reset_modules_state(cr)
@@ -1161,7 +1163,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 except psycopg2.OperationalError:
                     self._db_readonly_failed_time = time.monotonic()
                     _logger.warning("Failed to open a readonly cursor, falling back to read-write cursor for %dmin %dsec", *divmod(_REPLICA_RETRY_TIME, 60))
-            threading.current_thread().cursor_mode = 'ro->rw'
+            ExecutionInfo.get().cursor_mode = 'ro->rw'
         return self._db.cursor()
 
 
