@@ -9,6 +9,7 @@ except ImportError:
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.urls import urljoin
+from odoo.tools import single_email_re
 
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import DEPRECATED_PEPPOL_EAS
@@ -275,6 +276,8 @@ class PeppolRegistration(models.TransientModel):
             raise ValidationError(_("Please select a country for your company."))
         if not self.contact_email or not self.phone_number:
             raise ValidationError(_("Contact email and phone number are required."))
+        if not single_email_re.match(self.contact_email):
+            raise ValidationError(_("Please make sure the Contact email is a valid email address."))
         if not self.peppol_eas or not self.peppol_endpoint:
             raise ValidationError(_("Peppol Address should be provided."))
         if self._branch_with_same_address():
