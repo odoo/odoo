@@ -400,3 +400,46 @@ class TestPacking(TestPackingCommon):
         return_picking.button_validate()
         self.test_carrier.can_generate_return = True
         self.assertFalse(return_picking.is_return_picking)
+
+    def test_package_weight_rounding(self):
+        """
+        Tests that even in cases where we have a rounding issue in
+        the package's total weight, the total number of package is
+        correctly computed.
+        """
+        package_type = self.env['stock.package.type'].create({
+            'name': 'Box 16.8',
+            'max_weight': 16.8,
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
+            'order_line': [Command.create({
+                'name': 'Test Product',
+                'product_id': self.product_aw.id,
+                'product_uom_qty': 21.0,
+                'price_unit': 10.0,
+            })],
+        })
+        packages = self.test_carrier._get_packages_from_order(order, package_type)
+        self.assertEqual([p.weight for p in packages], [16.8] * 3)
+
+    def test_package_weight_below_precision(self):
+        """
+        An order too light to reach the weight precision still ships in a
+        single package.
+        """
+        package_type = self.env['stock.package.type'].create({
+            'name': 'Box 16.8',
+            'max_weight': 16.8,
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
+            'order_line': [Command.create({
+                'name': 'Test Product',
+                'product_id': self.product_bw.id,
+                'product_uom_qty': 0.01,
+                'price_unit': 10.0,
+            })],
+        })
+        packages = self.test_carrier._get_packages_from_order(order, package_type)
+        self.assertEqual(len(packages), 1)
