@@ -175,10 +175,11 @@ class AccountMove(models.Model):
     def _compute_show_reset_to_draft_button(self):
         # EXTEND 'account'
         super()._compute_show_reset_to_draft_button()
-        if self.move_type == "out_invoice":
-            self.filtered(lambda m: m.l10n_tw_edi_state and m.l10n_tw_edi_state != "invalid").show_reset_to_draft_button = False
-        elif self.move_type == "out_refund":
-            self.filtered(lambda m: m.l10n_tw_edi_refund_state).show_reset_to_draft_button = False
+        for move in self:
+            if move.move_type == 'out_invoice' and move.l10n_tw_edi_state and move.l10n_tw_edi_state != 'invalid':
+                move.show_reset_to_draft_button = False
+            if move.move_type == 'out_refund' and move.l10n_tw_edi_refund_state:
+                move.show_reset_to_draft_button = False
 
     def _need_cancel_request(self):
         # EXTENDS 'account'
