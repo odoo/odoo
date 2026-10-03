@@ -669,3 +669,18 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             'value': '20.99',
         })
         self.assertEqual(self.action._eval_value()[self.action.id], 20.99)
+
+
+class TestActWindowActions(TransactionCase):
+
+    def test_action_res_model_transient(self):
+        # A non-transient model
+        action = self.env['ir.actions.act_window'].create({
+            'name': 'Test Action',
+            'res_model': 'res.partner',
+        })
+        self.assertFalse(action.res_model_transient)
+
+        # A transient model
+        action.res_model = 'base.language.install'
+        self.assertTrue(action.res_model_transient)
