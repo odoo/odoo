@@ -118,6 +118,18 @@ class AccountTax(models.Model):
         ]
     )
     ubl_cii_requires_exemption_reason = fields.Boolean(compute='_compute_ubl_cii_requires_exemption_reason')
+    ubl_cii_available_tax_category_codes = fields.Json(compute='_compute_ubl_cii_available_tax_category_codes')
+    ubl_cii_available_tax_exemption_reason_codes = fields.Json(compute='_compute_ubl_cii_available_tax_exemption_reason_codes')
+
+    def _compute_ubl_cii_available_tax_category_codes(self):
+        # TO OVERRIDE
+        for tax in self:
+            tax.ubl_cii_available_tax_category_codes = list(dict(tax._fields['ubl_cii_tax_category_code'].selection))
+
+    def _compute_ubl_cii_available_tax_exemption_reason_codes(self):
+        # TO OVERRIDE
+        for tax in self:
+            tax.ubl_cii_available_tax_exemption_reason_codes = list(dict(tax._fields['ubl_cii_tax_exemption_reason_code'].selection))
 
     @api.depends('ubl_cii_tax_category_code')
     def _compute_ubl_cii_requires_exemption_reason(self):
