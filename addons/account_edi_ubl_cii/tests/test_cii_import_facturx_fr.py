@@ -143,3 +143,23 @@ class CiiImportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
                 },
             ],
         )
+
+    def test_import_invoice_price_unit_precision(self):
+        tax_5_5 = self.percent_tax(5.5, type_tax_use='purchase')
+
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_invoice_price_unit_precision',
+        )
+
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'name': "Test Product",
+            'quantity': 10368.0,
+            'price_subtotal': 31321.73,
+            'tax_ids': tax_5_5.ids,
+        }])
+        self.assertAlmostEqual(invoice.invoice_line_ids.price_unit, 5.328 + 0.02 / 10368)
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 31321.73,
+            'amount_tax': 1722.70,
+            'amount_total': 33044.43,
+        }])
