@@ -2,8 +2,7 @@
 from datetime import timedelta
 
 from odoo import Command
-from odoo.fields import Date
-from odoo.fields import Domain
+from odoo.fields import Date, Domain
 from odoo.tools import float_is_zero
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
@@ -1946,3 +1945,51 @@ class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
         ])._compute_so_line()
         self.assertEqual(first_sol.qty_delivered, 3.0)
         self.assertEqual(second_sol.qty_delivered, 5.0)
+
+    def test_archive_employee_with_invoiced_timesheet(self):
+        """ Test that registering departure ignores future timesheets linked to posted invoices,
+            allowing the departure to succeed while preserving the invoiced timesheet. """
+        today = Date.context_today(self.env.user)
+        yesterday = today - timedelta(days=1)
+        tomorrow = today + timedelta(days=1)
+
+        invoiced_timesheet = self.env['account.analytic.line'].create({
+            'project_id': self.project_global.id,
+            'name': 'Future Invoiced Timesheet',
+            'unit_amount': 2,
+            'employee_id': self.employee_manager.id,
+            'date': tomorrow,
+        })
+
+        standard_timesheet = self.env['account.analytic.line'].create({
+            'project_id': self.project_global.id,
+            'name': 'Future Standard Timesheet',
+            'unit_amount': 2,
+            'employee_id': self.employee_manager.id,
+            'date': tomorrow,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': today,
+            'invoice_line_ids': [Command.create({
+                'name': 'Consulting Services',
+                'price_unit': 100.0,
+                'quantity': 2.0,
+            })],
+        })
+        invoice.action_post()
+
+        invoiced_timesheet.sudo().write({
+            'timesheet_invoice_id': invoice.id
+        })
+
+        self.env['hr.departure.wizard'].sudo().with_context(employee_termination=True).create({
+            'employee_ids': [Command.set([self.employee_manager.id])],
+            'departure_date': yesterday,
+        }).action_register_departure()
+
+        self.assertFalse(self.employee_manager.active, "The employee should be successfully archived.")
+        self.assertFalse(standard_timesheet.exists(), "The standard future timesheet should be deleted.")
+        self.assertTrue(invoiced_timesheet.exists(), "The invoiced future timesheet should be ignored and kept in the database.")
