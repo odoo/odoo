@@ -1205,6 +1205,10 @@ class PosOrder(models.Model):
         """
         return True
 
+    def snooze_notification(self):
+        self.ensure_one()
+        self.config_id._notify('SNOOZE_NOTIFICATION', self.id)
+
     ##############################################################
     #                 Accounting related methods                 #
     ##############################################################
