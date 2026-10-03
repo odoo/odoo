@@ -5,7 +5,7 @@
             <table class="o_list_table table table-sm table-hover position-relative mb-0 o_list_table_ungrouped table-striped mb-3 overflow-hidden o_skill_table table-borderless">
                 <thead style="visibility: collapse;">
                     <tr>
-                        <th style="width: 32px; min-width: 32px;"></th>
+                        <th class="o_resume_timeline_header pe-0"></th>
                         <th class="w-100"></th>
                         <th style="width: 32px; min-width: 32px;"></th>
                     </tr>
@@ -22,7 +22,7 @@
                     </t>
                     <t t-foreach="this.internalResumeLines()" t-as="record" t-key="record.id">
                         <tr class="o_data_row">
-                            <td class="o_resume_timeline_cell position-relative pe-lg-2">
+                            <td class="o_resume_timeline_cell position-relative pe-0">
                                 <div class="rounded-circle bg-info position-relative"/>
                             </td>
                             <td class="o_data_cell pt-0">

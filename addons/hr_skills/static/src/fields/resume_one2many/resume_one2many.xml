@@ -14,7 +14,7 @@
         <xpath expr="//div[@name='skills_header']" position="replace"/>
         <xpath expr="//thead/tr" position="replace">
             <tr>
-                <th style="width: 32px; min-width: 32px;"></th>
+                <th class="o_resume_timeline_header pe-0"></th>
                 <th class="w-100"></th>
                 <th t-if="this.isEditable" class="o_list_actions_header" style="width: 32px; min-width: 32px"></th>
             </tr>
@@ -37,7 +37,7 @@
     <t t-name="hr_skills.ResumeListRenderer.RecordRow" t-inherit-mode="primary" t-inherit="web.ListRenderer.RecordRow">
         <xpath expr="//t[@t-foreach='this.getColumns(record)']" position="replace">
             <t t-set="data" t-value="record.data"/>
-            <td class="o_resume_timeline_cell position-relative pe-lg-2">
+            <td class="o_resume_timeline_cell position-relative pe-0 overflow-hidden">
                 <div class="rounded-circle bg-info position-relative"/>
             </td>
             <td class="o_data_cell pt-0" t-on-click="(ev) => this.onCellClicked(record, null, ev)">
