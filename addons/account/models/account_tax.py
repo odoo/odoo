@@ -305,19 +305,26 @@ class AccountTax(models.Model):
 
     @api.depends('account_move_line_ids', 'account_reconcile_model_line_ids')
     def _compute_is_used(self):
-        used_taxes = set(self.sudo().search([
-            '|',
+        ids = set(self._origin.ids)
+        taxes = self.sudo()
+        used_taxes = set(taxes.search([
+            ('id', 'in', list(ids)),
             ('account_move_line_ids', '!=', False),
-            ('account_reconcile_model_line_ids', '!=', False),
         ]).ids)
-        taxes_to_compute = set(self.ids) - used_taxes
+        pending = ids - used_taxes
+        if pending:
+            used_taxes.update(taxes.search([
+                ('id', 'in', list(pending)),
+                ('account_reconcile_model_line_ids', '!=', False),
+            ]).ids)
+        taxes_to_compute = ids - used_taxes
 
         # Fetch for tax used in custom modules. To be removed in master.
         if taxes_to_compute:
             used_taxes.update(self._hook_compute_is_used(taxes_to_compute))
 
         for tax in self:
-            tax.is_used = tax.id in used_taxes
+            tax.is_used = tax._origin.id in used_taxes
 
     @api.depends('is_used', 'repartition_line_ids.account_id', 'repartition_line_ids.sequence', 'repartition_line_ids.factor_percent', 'repartition_line_ids.use_in_tax_closing', 'repartition_line_ids.tag_ids')
     def _compute_repartition_lines_str(self):
