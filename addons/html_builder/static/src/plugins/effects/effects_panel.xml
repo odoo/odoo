@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.EffectsButton">
+    <button t-ref="this.buttonRef" class="btn btn-light o-select-effects" t-att-class="{ active: this.isActive }"
+            t-att-title="this.props.title" t-att-disabled="this.props.isDisabled" t-on-click="this.onClick">
+        <t t-call="html_builder.TextEffectSelectorSvg"/>
+    </button>
+</t>
+
+<t t-name="html_builder.EffectsPanel">
+    <div class="o-we-effects-panel" data-prevent-closing-overlay="true" t-att-data-revision="this.state.revision">
+        <t t-foreach="this.sections" t-as="section" t-key="section.id">
+            <t t-set="isOpen" t-value="this.state.openId === section.id"/>
+            <section class="o-we-effects-section" t-att-class="{ 'o-we-effects-section-open': isOpen, 'o-we-effects-section-active': section.isActive() }" t-att-data-section="section.id">
+                <div class="o-we-effects-section-head d-flex align-items-center gap-1">
+                    <button type="button" class="o-we-effects-section-toggle btn d-flex align-items-center gap-2 flex-grow-1"
+                            t-att-aria-expanded="isOpen ? 'true' : 'false'" t-on-click="() => this.toggle(section)">
+                        <span class="fw-medium text-nowrap me-auto" t-out="section.title"/>
+                        <!-- An open section shows its value in its own fields. -->
+                        <span t-if="!isOpen" class="o-we-effects-section-summary text-truncate" t-att-class="{ 'text-muted': !section.isActive() }" t-out="section.getSummary()"/>
+                        <i class="oi oi-fw text-muted" t-att-data-icon="isOpen ? 'expand_less' : 'expand_more'" role="img" aria-hidden="true"/>
+                    </button>
+                </div>
+                <div t-if="isOpen" class="o-we-effects-section-body">
+                    <t t-component="section.Component" t-props="section.props"/>
+                </div>
+            </section>
+        </t>
+    </div>
+</t>
+
+</templates>

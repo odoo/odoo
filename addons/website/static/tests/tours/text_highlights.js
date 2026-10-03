@@ -2,15 +2,22 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
     clickToolbarButton,
+    openEffectsPanelSection,
 } from "@website/js/tours/tour_utils";
 import { editorsWeakMap } from "@html_editor/../tests/tours/helpers/editor";
 
 function applyHighlight(target, targetName, highlight) {
     return [
-        ...clickToolbarButton(targetName, target, "Apply highlight", true),
+        ...clickToolbarButton(targetName, target, "Text effects", true),
+        ...openEffectsPanelSection("highlight"),
         {
-            content: "Check that the highlights grid was displayed",
-            trigger: ".o_popover .o_text_highlight",
+            content: "Open the highlight shapes",
+            trigger: ".o_popover #highlightPicker",
+            run: "click",
+        },
+        {
+            content: "Check that the highlight shapes were displayed",
+            trigger: ".o-we-highlight-menu .o_text_highlight",
         },
         {
             content: "Select the highlight effect",
@@ -101,8 +108,9 @@ registerWebsitePreviewTour(
             },
         },
         {
-            content: "Check that the highlights grid was displayed",
-            trigger: ".o_popover .o_text_highlight",
+            content: "Open the highlight shapes",
+            trigger: ".o_popover #highlightPicker",
+            run: "click",
         },
         {
             content: "Select the highlight effect",
@@ -118,10 +126,6 @@ registerWebsitePreviewTour(
             content: "Click on highlight picker to change the highlight effect",
             trigger: ".o_popover #highlightPicker",
             run: "click",
-        },
-        {
-            content: "Check that the highlights grid was displayed",
-            trigger: ".o_popover .o_text_highlight",
         },
         {
             content: "Change the highlight effect",

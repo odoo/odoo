@@ -1,19 +1,5 @@
 <templates xml:space="preserve">
 
-<t t-name="html_builder.TextEffectSelector">
-    <Dropdown state="this.dropdown" menuClass="'o_text_effect_popover'" focusToggleOnClosed="false" disabled="this.state.isDisabled" manual="true">
-        <button class="btn btn-light o_hb_select_text_effect" t-att-class="{ active: this.state.isActive }" t-att-title="this.props.title"
-                t-att="{ disabled: this.state.isDisabled }" t-on-click.stop="this.onClickTextEffect">
-            <span class="oi-fw d-inline-flex justify-content-center align-middle">
-                <t t-call="html_builder.TextEffectSelectorSvg"/>
-            </span>
-        </button>
-        <t t-set-slot="content">
-            <TextEffectOption/>
-        </t>
-    </Dropdown>
-</t>
-
 <t t-name="html_builder.TextEffectSelectorSvg">
     <svg xmlns="http://www.w3.org/2000/svg" height="18px" width="18px" viewBox="0 0 18 18">
         <text x="12" y="17" text-anchor="middle" font-size="20" font-family="Arial, sans-serif" font-weight="bold" fill="var(--btn-color)" fill-opacity="0.2">A</text>
@@ -21,77 +7,57 @@
     </svg>
 </t>
 
-<t t-name="html_builder.TextEffectPresetSelection">
-    <t t-foreach="this.state.presets" t-as="preset" t-key="preset.id">
-        <DropdownItem closingMode="'none'" class="'o_hb_select_dropdown_item d-flex flex-column cursor-pointer' + (this.state.appliedPreset === preset.id ? ' active' : '')"
-                      onSelected="() => this.onSelectedTextEffect(preset.effectJson)">
-            <div class="o_hb_text_effect_preset d-flex align-items-center justify-content-between gap-2"
-                t-on-mouseenter="() => this.onPreviewTextEffect(preset.effectJson)"
-                t-on-mouseleave="() => this.restoreTextEffectPreview(preset.effectJson)">
-                <div class="d-flex align-items-center gap-2">
-                    <div class="o_hb_text_effect_preview d-flex align-items-center justify-content-center"
-                         t-att-class="{ 'o_hb_text_effect_preview_dark': preset.previewBackground === 'dark' }">
-                        <div class="overflow-visible position-relative fw-bolder text-center">
-                            <div class="o_hb_text_effect_preview_sample">
-                                <span data-text-effect="preset.effectJson" t-att-style="preset.effectStyle" t-out="'Aa'"/>
-                            </div>
-                        </div>
-                    </div>
-                    <span t-out="preset.name"/>
-                </div>
-            </div>
-        </DropdownItem>
-    </t>
-</t>
-
 <t t-name="html_builder.TextEffectOption">
-    <t t-if="this.state.showPresetDropdown">
-        <div data-prevent-closing-overlay="true">
-            <t t-call="html_builder.TextEffectPresetSelection"/>
+    <div data-prevent-closing-overlay="true" class="o_hb_text_effect_options d-grid gap-2">
+        <div class="o_hb_text_effect_presets" role="group" aria-label="Presets">
+            <t t-foreach="this.domState.presets" t-as="preset" t-key="preset.id">
+                <button type="button" class="o_hb_text_effect_preset btn p-0"
+                        t-att-class="{ active: this.domState.appliedPreset === preset.id, 'o_hb_text_effect_preview_dark': preset.previewBackground === 'dark' }"
+                        t-att-title="preset.name" t-att-aria-label="preset.name"
+                        t-att-aria-pressed="this.domState.appliedPreset === preset.id ? 'true' : 'false'"
+                        t-on-click="() => this.onSelectedTextEffect(preset.effectJson)"
+                        t-on-mouseenter="() => this.onPreviewTextEffect(preset.effectJson)"
+                        t-on-mouseleave="() => this.restoreTextEffectPreview(preset.effectJson)">
+                    <i t-if="preset.id === 'no_shadow'" class="oi" data-icon="block" role="img" aria-hidden="true"/>
+                    <span t-else="" class="o_hb_text_effect_preview_sample" t-att-data-text-effect="preset.effectJson" t-att-style="preset.effectStyle">Aa</span>
+                </button>
+            </t>
         </div>
-    </t>
-    <t t-else="">
-        <div data-prevent-closing-overlay="true" class="o_hb_text_effect_options p-2">
-            <BuilderContext action="'updateTextEffect'">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                    <div class="d-flex align-items-center gap-1">
-                        <button type="button" class="oi o_hb_btn btn btn-secondary" data-icon="chevron_backward" t-on-click="this.onClickBack"
-                                title="Go back to effect selection" aria-label="Go back to effect selection"/>
-                        <span>Text Shadow</span>
-                    </div>
-                </div>
+        <div class="o_hb_text_effect_section">
+            <div class="o_hb_text_effect_caption d-flex align-items-center justify-content-between">
+                <span>Shadow<t t-if="(this.domState.shadowIndexes || []).length > 1"> · <t t-out="this.domState.shadowIndexes.length"/></t></span>
+                <button type="button" class="o_hb_text_effect_add_shadow btn btn-light" t-on-click="this.onClickAddShadow"
+                        title="Add a shadow" aria-label="Add a shadow">
+                    <i class="oi oi-fw" data-icon="add" role="img" aria-hidden="true"/>
+                </button>
+            </div>
+            <BuilderContext t-if="this.state.hasElement" action="'updateTextEffect'">
                 <t t-foreach="this.domState.shadowIndexes || []" t-as="shadowIndex" t-key="shadowIndex">
-                    <div class="o_hb_text_effect_shadow d-flex align-items-stretch mb-2">
-                        <div class="o_hb_text_effect_shadow_options pb-2 flex-grow-1">
-                            <BuilderRow label.translate="Color" actionParam="{ mainParam: 'shadowColor', shadowIndex: shadowIndex }">
-                                <BuilderColorPicker enabledTabs="['custom', 'solid']" selectedTab="'solid'"
-                                                    colorPickerClassName="''" colorPickerPopoverClassName="''"/>
-                            </BuilderRow>
-                            <BuilderRow label.translate="Offset" tooltip.translate="Vertical and Horizontal offset">
-                                <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetY', shadowIndex: shadowIndex }" unit="'px'" tooltip.translate="Vertical offset" prefixIcon="'height'"/>
-                                <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetX', shadowIndex: shadowIndex }" unit="'px'" tooltip.translate="Horizontal offset" prefixIcon="'arrow_range'"/>
-                            </BuilderRow>
-                            <BuilderRow label.translate="Blur">
-                                <BuilderNumberInput actionParam="{ mainParam: 'shadowBlur', shadowIndex: shadowIndex }" unit="'px'" min="0"/>
-                            </BuilderRow>
-                        </div>
-                        <div>
-                            <button type="button" class="oi oi-fw oi-filled o_hb_text_effect_remove_shadow m-auto o_hb_btn btn text-danger h-100" data-icon="delete"
-                                    t-on-click="() => this.onClickRemoveShadow(shadowIndex)" title="Remove shadow" aria-label="Remove shadow"/>
-                        </div>
+                    <div class="o_hb_text_effect_shadow d-flex align-items-center gap-1">
+                        <BuilderColorPicker actionParam="{ mainParam: 'shadowColor', shadowIndex: shadowIndex }" tooltip.translate="Shadow color" enabledTabs="['custom', 'solid']" selectedTab="'solid'"
+                                            colorPickerClassName="''" colorPickerPopoverClassName="''"/>
+                        <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetY', shadowIndex: shadowIndex }" unit="'px'" prefixIcon="'height'" tooltip.translate="Vertical offset"/>
+                        <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetX', shadowIndex: shadowIndex }" unit="'px'" prefixIcon="'arrow_range'" tooltip.translate="Horizontal offset"/>
+                        <BuilderNumberInput actionParam="{ mainParam: 'shadowBlur', shadowIndex: shadowIndex }" unit="'px'" min="0" prefixIcon="'grain'" tooltip.translate="Blur"/>
+                        <button type="button" class="o_hb_text_effect_remove_shadow btn btn-light" t-on-click="() => this.onClickRemoveShadow(shadowIndex)"
+                                title="Remove shadow" aria-label="Remove shadow">
+                            <i class="oi oi-fw" data-icon="close" role="img" aria-hidden="true"/>
+                        </button>
                     </div>
                 </t>
-                <button type="button" class="o_hb_text_effect_add_shadow o_hb_btn btn btn-secondary h-100 w-100 mb-2" t-on-click="this.onClickAddShadow">Add Shadow</button>
-                <div style="padding-right: 33px;">
-                    <BuilderRow label.translate="Outline">
-                        <BuilderNumberInput actionParam="'outline'" min="0" max="10" unit="'px'"/>
-                        <BuilderColorPicker actionParam="'outlineColor'" enabledTabs="['custom', 'solid']" selectedTab="'solid'"
-                                            colorPickerClassName="''" colorPickerPopoverClassName="''" t-if="this.domState.hasOutline"/>
-                    </BuilderRow>
-                </div>
+            </BuilderContext>
+            <p t-if="!this.state.hasElement or !(this.domState.shadowIndexes || []).length" class="text-muted mb-0">No shadow. Pick a preset or add one.</p>
+        </div>
+        <div t-if="this.state.hasElement" class="o_hb_text_effect_section">
+            <BuilderContext action="'updateTextEffect'">
+                <BuilderRow label.translate="Outline">
+                    <BuilderNumberInput actionParam="'outline'" min="0" max="10" unit="'px'" tooltip.translate="Thickness"/>
+                    <BuilderColorPicker actionParam="'outlineColor'" tooltip.translate="Outline color" enabledTabs="['custom', 'solid']" selectedTab="'solid'"
+                                        colorPickerClassName="''" colorPickerPopoverClassName="''" t-if="this.domState.hasOutline"/>
+                </BuilderRow>
             </BuilderContext>
         </div>
-    </t>
+    </div>
 </t>
 
 </templates>

@@ -2,41 +2,48 @@
 <templates xml:space="preserve">
 
 <t t-name="website.highlightConfigurator">
-    <div class="o_hb_row d-flex position-relative pe-2">
-        <div class="o_hb_row_label d-flex align-items-center">
-            <label for="highlightPicker" class="text-nowrap text-truncate">Highlight</label>
-        </div>
-        <div class="o_hb_row_content d-flex">
-            <button id="highlightPicker" title="highlightPicker" class="o_hb_btn btn btn-secondary" t-on-click="this.openHighlightPicker">
-                <t t-if="this.state.highlightId === 'multiple'">
-                    <span class="mx-3 d-inline-block"></span>
-                </t>
-                <t t-else="" t-out="this.highlightIdToName[this.state.highlightId]"/>
+    <div class="o-we-panel-row">
+        <label for="highlightPicker" class="o-we-panel-label text-truncate">Shape</label>
+        <Dropdown state="this.dropdown" menuClass="'o-we-highlight-menu'">
+            <button id="highlightPicker" title="Select a highlight" class="o-we-panel-select o_hb_btn btn btn-secondary o-we-panel-control d-flex align-items-center gap-2 text-start">
+                <span t-if="this.state.highlightId and this.state.highlightId !== 'multiple'" class="o-we-highlight-sample">
+                    <span t-ref="this.sampleRef" t-key="this.state.highlightId" t-att-style="this.sampleStyle"
+                          t-attf-class="o_text_highlight o_text_highlight_{{ this.state.highlightId }}">Text</span>
+                </span>
+                <span class="text-truncate">
+                    <t t-if="!this.state.highlightId">None</t>
+                    <t t-elif="this.state.highlightId === 'multiple'">Multiple</t>
+                    <t t-else="" t-out="this.highlightIdToName[this.state.highlightId]"/>
+                </span>
+                <i class="oi ms-auto" data-icon="arrow_drop_down" role="img" aria-hidden="true"/>
             </button>
-            <button class="btn btn-sm btn-light oi oi-filled" data-icon="delete" aria-label="Reset" title="Reset" t-on-click="this.deleteHighlight"/>
-        </div>
+            <t t-set-slot="content">
+                <div data-prevent-closing-overlay="true">
+                    <HighlightPicker
+                        selectHighlight.bind="this.selectHighlight"
+                        previewHighlight="this.props.previewHighlight"
+                        revertHighlight="this.props.revertHighlight"
+                        currentHighlightId="this.state.highlightId"
+                        removeHighlight.bind="this.removeHighlight"
+                        style="this.sampleStyle"/>
+                </div>
+            </t>
+        </Dropdown>
     </div>
-
-    <div class="o_hb_row o_hb_row_sublevel o_hb_row_sublevel_1 d-flex position-relative pe-2">
-        <div class="o_hb_row_label d-flex align-items-center">
-            <label for="colorButton" class="text-nowrap text-truncate">Color</label>
+    <t t-if="this.state.highlightId">
+        <div class="o-we-panel-row">
+            <label for="colorButton" class="o-we-panel-label text-truncate">Color</label>
+            <div class="o-we-panel-control">
+                <button id="colorButton" title="color" class="o_we_color_preview" t-attf-style="background-color:{{this.state.color}}" t-on-click="this.openColorPicker"/>
+            </div>
         </div>
-        <div class="o_hb_row_content d-flex">
-            <button id="colorButton" title="color" class="o_we_color_preview" t-attf-style="background-color:{{this.state.color}}" t-on-click="this.openColorPicker">
-            </button>
-        </div>
-    </div>
-
-    <div class="o_hb_row o_hb_row_sublevel o_hb_row_sublevel_1 d-flex position-relative pe-2">
-        <div class="o_hb_row_label d-flex align-items-center">
-            <label for="thicknessInput" class="text-nowrap text-truncate">Thickness</label>
-        </div>
-        <div class="o_hb_row_content d-flex">
-            <div class="d-flex flex-row flex-nowrap align-items-center o_hb_input_field_number justify-content-end">
+        <div class="o-we-panel-row">
+            <label for="thicknessInput" class="o-we-panel-label text-truncate">Thickness</label>
+            <div class="o-we-panel-control o-we-panel-field d-flex flex-row flex-nowrap align-items-center o_hb_input_field_number">
                 <input type="number" id="thicknessInput" class="o_hb_input_base o_hb_input_number text-end" t-att-value="this.state.thickness" t-on-input="this.onThicknessChange"/>
                 <span class="o_hb_input_field_unit">px</span>
             </div>
         </div>
-    </div>
+    </t>
 </t>
 </templates>

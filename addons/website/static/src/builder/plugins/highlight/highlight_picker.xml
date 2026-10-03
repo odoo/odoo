@@ -2,19 +2,30 @@
 <templates xml:space="preserve">
 
 <t t-name="website.highlightPicker">
-    <div t-ref="this.rootRef" class="p-2 grid gap-1" style="overflow: auto; scrollbar-width: thin; --text-highlight-color: #000000; --text-highlight-width: .15em;">
+    <div t-ref="this.rootRef" class="o_highlight_picker" role="menu">
+        <button t-if="this.props.removeHighlight" type="button" role="menuitemradio"
+                class="o_highlight_none dropdown-item d-flex align-items-center gap-2"
+                t-att-class="{ active: !this.props.currentHighlightId }"
+                t-att-aria-checked="!this.props.currentHighlightId ? 'true' : 'false'"
+                t-on-click="() => this.props.removeHighlight()">
+            <span class="o-we-highlight-sample"><i class="oi text-muted" data-icon="block" role="img" aria-hidden="true"/></span>
+            <span>None</span>
+        </button>
         <t t-foreach="this.getHighlightFactory()" t-as="highlight" t-key="highlight">
-                <div class="btn btn-secondary g-col-4 position-relative align-content-center"
-                    style="aspect-ratio: 1; --btn-border-color: transparent; --btn-bg: transparent;"
-                    t-att-class="{ active: highlight === this.props.currentHighlightId }"
+            <t t-set="isCurrent" t-value="highlight === this.props.currentHighlightId"/>
+            <button type="button" role="menuitemradio"
+                    class="dropdown-item d-flex align-items-center gap-2"
+                    t-att-class="{ active: isCurrent }"
+                    t-att-aria-checked="isCurrent ? 'true' : 'false'"
+                    t-att-data-highlight="highlight"
                     t-on-click="() => this.props.selectHighlight(highlight)"
                     t-on-mouseenter="() => this.props.previewHighlight(highlight)"
                     t-on-mouseleave="() => this.props.revertHighlight()">
-                <div class="overflow-visible position-relative fw-bolder fs-3 text-center">
-                    <span t-att-style="this.props.style"
-                          t-attf-class="o_text_highlight o_text_highlight_{{highlight}}">Text</span>
-                </div>
-            </div>
+                <span class="o-we-highlight-sample">
+                    <span t-att-style="this.props.style" t-attf-class="o_text_highlight o_text_highlight_{{highlight}}">Text</span>
+                </span>
+                <span class="text-truncate" t-out="this.highlightIdToName[highlight] or highlight"/>
+            </button>
         </t>
     </div>
 </t>

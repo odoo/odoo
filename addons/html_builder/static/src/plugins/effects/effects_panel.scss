@@ -1,0 +1,125 @@
+// One shell for the option panels of the toolbar: one width, the popover type
+// size, labels at the panel edge, sections split by hairlines.
+.o-we-effects-panel {
+    width: 280px;
+    max-width: 100%;
+    max-height: inherit;
+    overflow-y: auto;
+    padding: map-get($spacers, 1) * 1.5 map-get($spacers, 3) * .75;
+    // Inputs and ranges of the builder, with the borders of a popover.
+    --o-hb-input-border: #{$border-color};
+    --o-hb-range-progress-bg: #{$border-color};
+    // Text color of a focused input. The builder rows of a popover set it, but
+    // not every field of the panel is in a row (e.g. the shadow offsets): the
+    // fallback is the light text of the sidebar.
+    --o-hb-row-color-active: currentColor;
+
+    // As in the sidebar: the arrow keys step the values, without spin buttons.
+    @include o-input-number-no-arrows();
+
+    .o-we-effects-section + .o-we-effects-section {
+        border-top: $border-width solid $border-color;
+    }
+
+    .o-we-effects-section-head {
+        min-height: 38px;
+    }
+
+    .o-we-effects-section-toggle {
+        min-width: 0;
+        --btn-padding-x: 0;
+        --btn-border-width: 0;
+        --btn-font-size: 1em;
+        text-align: start;
+
+        &:focus-visible {
+            box-shadow: $btn-focus-box-shadow;
+        }
+    }
+
+    .o-we-effects-section-body {
+        display: grid;
+        gap: map-get($spacers, 2);
+        padding-bottom: map-get($spacers, 3);
+    }
+
+    // One grid for the rows of the panel and the rows of the builder sidebar
+    // it reuses: a label column, 32px rows, 8px apart.
+    .o-we-panel-row, .o_hb_row {
+        display: grid;
+        grid-template-columns: 92px minmax(0, 1fr);
+        align-items: center;
+        gap: map-get($spacers, 2);
+        min-height: 32px;
+    }
+
+    // Builder rows, without the indent, tree connectors and hover color of
+    // the sidebar. Rows with nothing to show keep their .d-none.
+    .o_hb_row {
+        &:not(.d-none) {
+            display: grid !important; // over .d-flex
+        }
+        padding: 0 !important; // over .pe-2
+        --o-hb-row-color-popover: currentColor;
+        --o-hb-row-color-active-popover: currentColor;
+
+        & + .o_hb_row {
+            margin-top: map-get($spacers, 2);
+        }
+
+        .o_hb_row_label {
+            padding: 0 !important; // over the sublevel indents
+            background-color: transparent;
+        }
+
+        .o_hb_row_content {
+            width: auto;
+            min-width: 0;
+        }
+
+        .o_hb_row_label::after, &::after {
+            content: none !important;
+        }
+    }
+
+    // Values in the type of the panel, units muted.
+    .o_hb_input_field_number {
+        font-family: inherit;
+
+        .o_hb_input_field_unit {
+            color: $text-muted;
+        }
+    }
+
+    .o-we-panel-label {
+        margin: 0;
+    }
+
+    .o-we-panel-control {
+        min-width: 0;
+    }
+
+    // Number fields keep a short width: the values have a few digits. Two of
+    // them share a row (e.g. a scroll zone): they shrink to fit it.
+    .o-we-panel-field, .o_hb_row_content > .o_hb_input_field_number {
+        flex: 0 1 68px;
+        width: 68px;
+        min-width: 0;
+    }
+
+    // Selects and pickers: outlined, 28px tall, at the type size of the panel.
+    .o_hb_select_toggle.o_hb_btn.btn, .o-we-panel-select.btn {
+        --btn-font-size: 1em;
+        --btn-padding-y: 0;
+        --btn-bg: transparent;
+        --btn-border-color: var(--o-hb-input-border);
+        height: 28px;
+        min-height: 28px;
+        line-height: 26px;
+    }
+}
+
+// Second pages of a section (the highlight color) start at the panel edge.
+.o-we-effects-panel .o_stacking_component_head {
+    padding-inline: 0 !important;
+}

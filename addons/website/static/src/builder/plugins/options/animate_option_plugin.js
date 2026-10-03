@@ -3,7 +3,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { getScrollingElement } from "@web/core/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
-import { AnimateText } from "./animate_text";
+import { AnimateSection } from "./animate_text";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { unwrapContents } from "@html_editor/utils/dom";
 import { ancestors, closestElement, findFurthest } from "@html_editor/utils/dom_traversal";
@@ -20,6 +20,7 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
  * @property { AnimateOptionPlugin['forceAnimation'] } forceAnimation
  * @property { AnimateOptionPlugin['getDirectionsItems'] } getDirectionsItems
  * @property { AnimateOptionPlugin['getEffectsItems'] } getEffectsItems
+ * @property { AnimateOptionPlugin['unwrapAnimatedText'] } unwrapAnimatedText
  */
 
 /**
@@ -38,6 +39,7 @@ export class AnimateOptionPlugin extends Plugin {
     static dependencies = ["history", "selection", "split"];
     static shared = [
         "forceAnimation",
+        "unwrapAnimatedText",
         "getDirectionsItems",
         "getEffectsItems",
         "hasAnimationEffect",
@@ -46,22 +48,21 @@ export class AnimateOptionPlugin extends Plugin {
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        toolbar_items: [
-            {
-                id: "animateText",
-                groupId: "websiteDecoration",
-                description: _t("Animate Text"),
-                Component: AnimateText,
-                props: {
-                    config: this.config.getAnimateTextConfig(),
-                    getAnimatedTextOrCreateDefault: this.getAnimatedTextOrCreateDefault.bind(this),
-                    isActive: this.isAnimatedTextActive.bind(this),
-                    animateOptionProps: { ...this.animateOptionProps, requireAnimation: true },
-                },
-                isAvailable: isHtmlContentSupported,
+        effects_panel_sections: withSequence(30, {
+            id: "animateText",
+            title: _t("Animation"),
+            Component: AnimateSection,
+            props: {
+                config: this.config.getAnimateTextConfig(),
+                getAnimatedTexts: this.getAnimatedTexts.bind(this),
+                getAnimatedTextOrCreateDefault: this.getAnimatedTextOrCreateDefault.bind(this),
                 isDisabled: this.isAnimatedTextDisabled.bind(this),
+                animateOptionProps: { ...this.animateOptionProps, requireAnimation: true },
             },
-        ],
+            isAvailable: isHtmlContentSupported,
+            isActive: this.isAnimatedTextActive.bind(this),
+            getSummary: this.getAnimatedTextSummary.bind(this),
+        }),
         toolbar_namespace_providers: [
             withSequence(90, (targetedNodes, editableSelection) =>
                 closestElement(editableSelection.commonAncestorContainer, ".o_animated_text")
@@ -430,6 +431,30 @@ export class AnimateOptionPlugin extends Plugin {
         );
         return animatedTextEls.length && selectionText === animatedText ? animatedTextEls : [];
     }
+    /**
+     * @returns {string} the effect of the animated text of the selection, for
+     * the Effects panel
+     */
+    getAnimatedTextSummary() {
+        const [animatedTextEl] = this.getAnimatedTexts();
+        if (!animatedTextEl) {
+            return _t("None");
+        }
+        const effect = this.getEffectsItems(() => false).find(({ className }) =>
+            animatedTextEl.classList.contains(className)
+        );
+        return effect ? effect.label : _t("Custom");
+    }
+    /**
+     * Removes an animated text span, keeping the selection on its text.
+     *
+     * @param {HTMLElement} animatedTextEl
+     */
+    unwrapAnimatedText(animatedTextEl) {
+        const cursors = this.dependencies.selection.preserveSelection();
+        unwrapContents(animatedTextEl);
+        cursors.restore();
+    }
     isAnimatedTextActive() {
         return !!this.getAnimatedTexts().length;
     }
@@ -537,6 +562,11 @@ export class SetAnimationModeAction extends BuilderAction {
     }
 
     async apply({ editingElement, value: effectName, params: { forceAnimation } }) {
+        if (!effectName && editingElement.classList.contains("o_animated_text")) {
+            // "None" on animated text: the span only exists for the animation.
+            this.dependencies.animateOption.unwrapAnimatedText(editingElement);
+            return;
+        }
         const { hasAnimationEffect, getEffectsItems } = this.dependencies.animateOption;
         // Remove appearance-only effects when switching to "On Scroll" so the
         // default "Fade" effect can be applied.

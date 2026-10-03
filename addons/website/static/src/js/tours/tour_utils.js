@@ -748,6 +748,27 @@ export function clickToolbarButton(elementName, selector, button, expand = false
     return steps;
 }
 
+/**
+ * Opens a section of the text effects panel of the toolbar, once the panel is
+ * open (see clickToolbarButton with "Text effects").
+ *
+ * @param {string} section e.g. "textEffect", "highlight", "animateText"
+ * @returns {Array} The steps to open the section.
+ */
+export function openEffectsPanelSection(section) {
+    return [
+        {
+            content: `Open the ${section} section of the text effects`,
+            trigger: `.o-we-effects-section[data-section='${section}'] .o-we-effects-section-toggle`,
+            async run(helpers) {
+                if (this.anchor.getAttribute("aria-expanded") !== "true") {
+                    await helpers.click();
+                }
+            },
+        },
+    ];
+}
+
 export function changeBackgroundShape(shape = "html_builder/Connections/01") {
     return [
         {

@@ -7,6 +7,8 @@ import { useProps, t } from "@odoo/owl";
 export const animateOptionProps = {
     dropdownClass: t.string().optional("o_hb_select_dropdown"),
     requireAnimation: t.boolean().optional(false),
+    // In / Out of "On Scroll" on a row of their own, for narrow containers.
+    onScrollRow: t.boolean().optional(false),
     slots: t.object().optional(),
 };
 

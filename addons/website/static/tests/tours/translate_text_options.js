@@ -4,6 +4,7 @@ import {
     registerWebsitePreviewTour,
     selectFullText,
     clickToolbarButton,
+    openEffectsPanelSection,
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
@@ -20,15 +21,32 @@ registerWebsitePreviewTour(
         ...clickToolbarButton(
             "first text block in the snippet",
             "#wrap .s_text_block p",
-            "Animate Text",
+            "Text effects",
             true
         ),
+        ...openEffectsPanelSection("animateText"),
+        {
+            content: "Open the animation choices",
+            trigger: ".o_animate_text_section [data-label='Animation'] .o_hb_select_toggle",
+            run: "click",
+        },
+        {
+            content: "Animate the selected text",
+            trigger: ".o-dropdown--menu .o-dropdown-item:contains('On Appearance')",
+            run: "click",
+        },
         ...clickToolbarButton(
             "second text block in the snippet",
             "#wrap .s_text_block p:last",
-            "Apply highlight",
+            "Text effects",
             true
         ),
+        ...openEffectsPanelSection("highlight"),
+        {
+            content: "Open the highlight shapes",
+            trigger: ".o_popover #highlightPicker",
+            run: "click",
+        },
         {
             content: "Apply underline highlight option from highlight options",
             trigger: ".o_popover .o_text_highlight_underline",
@@ -66,10 +84,11 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Check that the highlight options were displayed and open highlight options",
-            trigger: ".o-we-toolbar button[title='Apply highlight'].active",
+            content: "Check that the text effects are active and open them",
+            trigger: ".o-we-toolbar button.o-select-effects.active",
             run: "click",
         },
+        ...openEffectsPanelSection("highlight"),
         {
             content: "Open highlight options picker",
             trigger: ".o_popover button#highlightPicker",
@@ -88,8 +107,8 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Check that the animate options were displayed",
-            trigger: ".o-we-toolbar button[title='Animate Text'].active",
+            content: "Check that the text effects are active",
+            trigger: ".o-we-toolbar button.o-select-effects.active",
         },
         // Select a text content without any option.
         selectFullText("text content without any option", "footer .s_text_block p:first span"),
@@ -99,9 +118,8 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Check that all text options are removed",
-            trigger:
-                ".o-we-toolbar button[title='Apply highlight']:not(:has(.active)), .o-we-toolbar button[title='Animate Text']:not(:has(.active))",
+            content: "Check that no text effect is active",
+            trigger: ".o-we-toolbar button.o-select-effects:not(.active)",
         },
         selectFullText(
             "highlighted text content again",
@@ -113,9 +131,14 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Check that only the highlight options are displayed",
+            content: "Open the text effects",
+            trigger: ".o-we-toolbar button.o-select-effects.active",
+            run: "click",
+        },
+        {
+            content: "Check that only the highlight is applied",
             trigger:
-                ".o-we-toolbar button[title='Apply highlight'].active, .o-we-toolbar button[title='Animate Text']:not(.active)",
+                ".o-we-effects-section-active[data-section='highlight'] ~ .o-we-effects-section[data-section='animateText']:not(.o-we-effects-section-active)",
         },
         ...clickOnSave(),
         {

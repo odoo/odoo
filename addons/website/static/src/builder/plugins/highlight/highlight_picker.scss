@@ -1,0 +1,20 @@
+// The shape menu of the Highlight section: rows of a sample and a name, at the
+// type size of the panel, scrolling past a few rows.
+.o-we-highlight-menu {
+    max-height: 320px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+
+    .dropdown-item {
+        min-height: 32px;
+    }
+}
+
+// Sample of a shape: same box in the menu and on the Shape select.
+.o-we-highlight-sample {
+    flex: 0 0 auto;
+    min-width: 36px;
+    font-weight: $font-weight-bold;
+    line-height: 1.1;
+    white-space: nowrap;
+}

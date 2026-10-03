@@ -635,3 +635,21 @@ export function setupCORSProtectedImg() {
         throw new Error("simulated cors error");
     });
 }
+
+/**
+ * Opens the Effects panel of the toolbar, unless it is open, and opens one of
+ * its sections.
+ *
+ * @param {string} sectionId e.g. "textEffect", "highlight", "animateText"
+ */
+export async function openEffectsSection(sectionId) {
+    if (!queryFirst(".o-we-effects-panel")) {
+        await contains(".o-we-toolbar .o-select-effects").click();
+        await waitFor(".o-we-effects-panel");
+    }
+    const section = `.o-we-effects-section[data-section='${sectionId}']`;
+    if (!queryFirst(`${section}.o-we-effects-section-open`)) {
+        await contains(`${section} .o-we-effects-section-toggle`).click();
+    }
+    return waitFor(`${section}.o-we-effects-section-open .o-we-effects-section-body`);
+}
