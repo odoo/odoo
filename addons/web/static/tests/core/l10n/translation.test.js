@@ -99,6 +99,9 @@ test("can translate a text node", async () => {
 });
 
 test("[cache] write into the cache", async () => {
+    patchWithCleanup(session, {
+        translation_hash: "ab5379cf", // hash of the translations served by the server
+    });
     patchWithCleanup(IndexedDB.prototype, {
         write(table, key, value) {
             expect.step(`table: ${table}`);
@@ -139,6 +142,9 @@ test("[cache] write into the cache", async () => {
 });
 
 test("[cache] read from cache, and don't wait to render", async () => {
+    patchWithCleanup(session, {
+        translation_hash: "ab5379cf", // hash of the translations served by the server
+    });
     patchWithCleanup(IndexedDB.prototype, {
         read() {
             return {
@@ -174,7 +180,43 @@ test("[cache] read from cache, and don't wait to render", async () => {
     expect.verifySteps(["hash: 30b70a0e"]); //Fetch with the hash of the translation in cache
 });
 
+test("[cache] don't fetch if the cache is up to date with the session hash", async () => {
+    patchWithCleanup(session, {
+        translation_hash: "30b70a0e",
+    });
+    patchWithCleanup(IndexedDB.prototype, {
+        read() {
+            return {
+                lang: "en",
+                lang_parameters: {
+                    date_format: "%m/%d/%Y",
+                    decimal_point: ".",
+                    direction: "ltr",
+                    grouping: "[3,0]",
+                    time_format: "%H:%M:%S",
+                    thousands_sep: ",",
+                    week_start: 7,
+                },
+                modules: { web: { messages: [{ id: "Hello", string: "Bonjour" }] } },
+                multi_lang: false,
+                hash: "30b70a0e",
+            };
+        },
+    });
+    onRpc("/web/webclient/translations", () => {
+        expect.step("fetch translations");
+    });
+    TestComponent._template = `<div id="main" t-translation-context="web">Hello</div>`;
+    await mountWithCleanup(TestComponent);
+    expect("#main").toHaveText("Bonjour");
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
 test("[cache] update the cache if hash are different - template", async () => {
+    patchWithCleanup(session, {
+        translation_hash: "ab5379cf", // hash of the translations served by the server
+    });
     patchWithCleanup(IndexedDB.prototype, {
         read() {
             return {
@@ -242,6 +284,9 @@ test("[cache] update the cache if hash are different - template", async () => {
 });
 
 test("[cache] update the cache if hash are different - js", async () => {
+    patchWithCleanup(session, {
+        translation_hash: "5a528fc2", // hash of the translations served by the server
+    });
     patchWithCleanup(IndexedDB.prototype, {
         read() {
             return {

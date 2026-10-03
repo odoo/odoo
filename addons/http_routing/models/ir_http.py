@@ -269,8 +269,10 @@ class IrHttp(models.AbstractModel):
         if request.is_frontend:
             lang = request.lang.code
             session_info['bundle_params']['lang'] = lang
+        lang = self._get_web_translations_lang(session_info['bundle_params']['lang'])
         session_info.update({
             'translationURL': '/website/translations',
+            'translation_hash': self._get_web_translations_hash(self.get_translation_frontend_modules(), lang),
         })
         return session_info
 
