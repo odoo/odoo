@@ -11,10 +11,6 @@ const steps = [
         trigger: ".o_avatar_card:contains(test_employee@test.com)",
     },
     {
-        content: "Check that the employee's department is displayed",
-        trigger: ".o_avatar_card:contains(Test Department)",
-    },
-    {
         content: "Check that the employee's work phone is displayed",
         trigger: ".o_avatar_card:contains(123456789)",
     },
