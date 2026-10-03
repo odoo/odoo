@@ -2,8 +2,14 @@ import { queryFirst, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 
+/**
+ * Expands the toolbar, unless it opened expanded (see MIN_HIDDEN_FOR_COMPACT).
+ */
 export async function expandToolbar() {
-    await contains(".o-we-toolbar .btn[name='expand_toolbar'").click();
+    await waitFor(".o-we-toolbar[data-namespace]");
+    if (!queryFirst(".o-we-toolbar[data-namespace='expanded']")) {
+        await contains(".o-we-toolbar .btn[name='expand_toolbar'").click();
+    }
     await waitFor(".o-we-toolbar[data-namespace='expanded']");
 }
 
