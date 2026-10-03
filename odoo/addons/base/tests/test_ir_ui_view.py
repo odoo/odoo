@@ -3538,24 +3538,52 @@ class TestViews(ViewCase):
     def test_valid_accessibility_icon_text(self):
         self.assertWarning(
             '<form><span class="oi" data-icon="warning"/></form>',
-            'A <span> with data-icon attribute (warning) must have title in its tag, parents, descendants or have text',
+            'A <span> with data-icon attribute (warning) must have title in its tag, parents, descendants or have text or be aria-hidden',
         )
         self.assertWarning(
-            '<form><button icon="warning"/></form>',
-            'A button with icon attribute (warning) must have title in its tag, parents, descendants or have text',
+            '<form><button class="oi" data-icon="warning"/></form>',
+            'A <button> with data-icon attribute (warning) must have title in its tag, parents, descendants or have text or be aria-hidden',
         )
         self.assertWarning(
             '<form><span class="oi" data-icon="warning"/><label for="key"/><field name="key"/></form>',
-            'A <span> with data-icon attribute (warning) must have title in its tag, parents, descendants or have text',
+            'A <span> with data-icon attribute (warning) must have title in its tag, parents, descendants or have text or be aria-hidden',
         )
-        self.assertValid('<form><button icon="warning"/>text</form>')
-        self.assertValid('<form><span class="oi" data-icon="warning"/>text</form>')
-        self.assertValid('<form><span class="oi" data-icon="warning"/><label for="key" string="Some Text"/><field name="key"/></form>')
-        self.assertValid('<form><span class="oi" data-icon="warning"/><field name="key" string="Some Text"/></form>')
-        self.assertValid('<form>text<span class="oi" data-icon="warning"/></form>')
+        self.assertWarning(
+            '<form><span class="oi" data-icon="warning"/>text</form>',
+            'A <span> with data-icon attribute (warning) must have title in its tag, parents, descendants or have text or be aria-hidden'
+        )
+        self.assertWarning(
+            '<form><button class="oi" data-icon="warning"/>text</form>',
+            'A <button> with data-icon attribute (warning) must have title in its tag, parents, descendants or have text or be aria-hidden'
+        )
+        self.assertWarning(
+            '<form><span class="oi" data-icon="warning"/><label for="key" string="Some Text"/><field name="key"/></form>',
+            'A <span> with data-icon attribute (warning) must have title in its tag, parents, descendants or have text or be aria-hidden'
+        )
+        self.assertWarning(
+            '<form><span class="oi" data-icon="warning"/><field name="key" string="Some Text"/></form>',
+            'A <span> with data-icon attribute (warning) must have title in its tag, parents, descendants or have text or be aria-hidden'
+        )
+        self.assertWarning(
+            '<form>text<span class="oi" data-icon="warning"/></form>',
+            'A <span> with data-icon attribute (warning) must have title in its tag, parents, descendants or have text or be aria-hidden'
+        )
+        self.assertWarning(
+            '<form><button class="oi" data-icon="warning" aria-hidden="true"/></form>',
+            'A <button> with data-icon attribute (warning) is a focusable element and cannot be hidden'
+        )
+        self.assertWarning(
+            '<form><span class="oi" data-icon="warning" role="button" aria-hidden="true"/></form>',
+            'A <span> with data-icon attribute (warning) and role button is a focusable element and cannot be hidden'
+        )
+        self.assertWarning(
+            '<form><span class="oi" data-icon="warning" tabindex="0" aria-hidden="true"/></form>',
+            'A <span> with data-icon attribute (warning) and tabindex attribute is a focusable element and cannot be hidden'
+        )
         self.assertValid('<form><span class="oi" data-icon="warning">text</span></form>')
         self.assertValid('<form><span title="text" class="oi" data-icon="warning"/></form>')
         self.assertValid('<form><span aria-label="text" class="oi" data-icon="warning"/></form>')
+        self.assertValid('<form><span aria-hidden="true" class="oi" data-icon="warning"/>text</form>')
 
     def test_valid_simili_button(self):
         self.assertWarning('<form><a class="btn"/></form>')
