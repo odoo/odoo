@@ -3041,6 +3041,31 @@ class TestComposerResultsMass(TestMailComposer):
                 )
 
     @users('employee')
+    def test_mail_composer_layout_nothread(self):
+        """ Test email layout rendering for non-thread models """
+        test_records, test_partners = self._create_records_for_batch('mail.test.nothread', 2)
+        template = self.env['mail.template'].sudo().create({
+            'body_html': '<p>TemplateBody</p>',
+            'email_layout_xmlid': 'mail.test_layout',
+            'model_id': self.env['ir.model']._get_id('mail.test.nothread'),
+            'partner_to': '{{ object.customer_id.id }}',
+        })
+        composer = self.env["mail.compose.message"].with_context(
+            self._get_web_context(test_records, default_template_id=template.id),
+            ).create({})
+
+        with self.mock_mail_gateway():
+            composer._action_send_mail()
+
+        for partner in test_partners:
+            self.assertMailMail(
+                partner,
+                'sent',
+                author=self.partner_employee,
+                email_values={'body_content': 'English Layout for NoThread Model'},
+            )
+
+    @users('employee')
     def test_mail_composer_scalability(self):
         """ Test scalability (big batch of emails) and related configuration """
         batch_records, _partners = self._create_records_for_batch(
