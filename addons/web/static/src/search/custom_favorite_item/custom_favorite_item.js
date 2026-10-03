@@ -10,6 +10,31 @@ const favoriteMenuRegistry = registry.category("favoriteMenu");
 
 export const customFavoriteItemProps = {};
 
+/**
+ * @param {import("@web/search/search_model").SearchModel} searchModel
+ * @returns {boolean}
+ */
+export function computeShowSaveFavorite(searchModel) {
+    const hasSelectedFavorite = searchModel
+        .getSearchItems((searchItem) => searchItem.type === "favorite")
+        .some((item) => item.isActive);
+    if (!hasSelectedFavorite) {
+        return true;
+    }
+    const filterOrGroupByTypes = [
+        "filter",
+        "dateFilter",
+        "parentFilter",
+        "lazyParentFilter",
+        "relativeFilter",
+        "groupBy",
+        "dateGroupBy",
+    ];
+    return searchModel
+        .getSearchItems((searchItem) => filterOrGroupByTypes.includes(searchItem.type))
+        .some((item) => item.isActive);
+}
+
 export class CustomFavoriteItem extends Component {
     static template = "web.CustomFavoriteItem";
     static components = { CheckBox, AccordionItem };
@@ -23,6 +48,10 @@ export class CustomFavoriteItem extends Component {
             description: this.env.config.getDisplayName(),
             isDefault: false,
         });
+    }
+
+    get showSaveFavorite() {
+        return computeShowSaveFavorite(this.env.searchModel);
     }
 
     /**

@@ -117,21 +117,20 @@
                     <div class="o_dropdown_container o_favorite_menu w-100 w-lg-auto p-3">
                         <t t-set="sharedFavoritesItems" t-value="this.sharedFavorites" />
                         <t t-set="favoriteItems" t-value="this.favorites" />
-                        <div class="fs-5 mb-2">
+                        <div t-if="favoriteItems.length or sharedFavoritesItems.length" class="fs-5 mb-2">
                             <i class="o_dropdown_title_icon oi oi-filled text-favourite" t-att-data-icon="this.facet_icons.favorite"/>
                             <h5 class="o_dropdown_title d-inline">Favorites</h5>
                         </div>
                         <t t-foreach="favoriteItems" t-as="item" t-key="item.id">
                             <t t-call="web.SearchBarMenu.FavoriteItem" />
                         </t>
-                        <t t-if="favoriteItems.length">
-                            <div role="separator" class="dropdown-divider"/>
-                        </t>
+                        <div t-if="sharedFavoritesItems.length and favoriteItems.length" role="separator" class="dropdown-divider hello"/>
+                        <div t-if="sharedFavoritesItems.length" class="dropdown-header">Shared</div>
                         <t t-foreach="sharedFavoritesItems" t-as="item" t-key="item.id">
                             <t t-call="web.SearchBarMenu.FavoriteItem" />
                         </t>
                         <DropdownItem t-if="!this.state.sharedFavoritesExpanded" class="'o_menu_item o_expand_shared_favorites'" closingMode="'none'" onSelected.bind="() => this.state.sharedFavoritesExpanded = true">More...</DropdownItem>
-                        <div t-if="sharedFavoritesItems.length" role="separator" class="dropdown-divider"/>
+                        <div t-if="this.showSaveFavorite" role="separator" class="dropdown-divider"/>
                         <t t-set="currentGroup" t-value="null"/>
                         <t t-foreach="this.otherItems" t-as="item" t-key="item.key">
                             <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
