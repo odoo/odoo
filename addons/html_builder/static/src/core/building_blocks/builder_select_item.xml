@@ -30,4 +30,16 @@
     </BuilderComponent>
 </t>
 
+<t t-name="html_builder.BuilderSelectItemEdit">
+    <div class="d-flex align-items-center">
+        <div class="o-hb-select-item-content">
+            <t t-out="0"/>
+        </div>
+        <a t-if="edit"
+            class="fa fa-pencil btn o-hb-select-item-edit"
+            t-att-title="edit.title"
+            t-on-click="edit.onClick"/>
+    </div>
+</t>
+
 </templates>
