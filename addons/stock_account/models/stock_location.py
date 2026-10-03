@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 
@@ -24,6 +24,7 @@ class StockLocation(models.Model):
             return domain
         return ~domain
 
+    @api.depends('company_id', 'usage')
     def _compute_is_valued(self):
         for location in self:
             if location._should_be_valued():
