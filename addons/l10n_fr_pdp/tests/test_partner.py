@@ -78,6 +78,18 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'peppol_eas': '0225',
         }])
 
+        partner = self.env["res.partner"].create({
+            'name': 'SUPER FRENCH PARTNER 2',
+            'country_id': self.env.ref('base.fr').id,
+            'vat': 'FR23334175221',
+            'invoice_edi_format': 'ubl_21_fr',
+        })
+        self.assertRecordValues(partner, [{
+            'peppol_endpoint': '334175221',
+            'peppol_eas': '0225',
+        }])
+        self.assertEqual(partner._l10n_fr_pdp_get_base_identifier(), ('siren', '334175221'))
+
     def test_pdp_edi_formats(self):
         partner = self.partner_a
         partner.invoice_sending_method = 'peppol'
