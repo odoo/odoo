@@ -689,6 +689,23 @@ class TestPosMrp(TestPointOfSaleCommon):
                         'lot_name': 'lot',
                     })],
                 }),
+                Command.create({
+                    'product_id': kit.product_variant_id.id,
+                    'price_unit': 10.0,
+                    'qty': 1.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                }),
+                Command.create({
+                    'product_id': component.product_variant_id.id,
+                    'price_unit': 5.0,
+                    'qty': 2.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                    'pack_lot_ids': [Command.create({
+                        'lot_name': 'lot',
+                    })],
+                }),
             ],
             'amount_total': 20.0,
             'amount_tax': 0.0,
@@ -702,8 +719,8 @@ class TestPosMrp(TestPointOfSaleCommon):
         })
         order_payment.with_context(**payment_context).check()
 
-        self.assertEqual(order.picking_ids.move_ids[0].quantity, 2)
-        self.assertEqual(order.picking_ids.move_ids[1].quantity, 0.5)
+        self.assertEqual(order.picking_ids.move_ids[0].quantity, 4)
+        self.assertEqual(order.picking_ids.move_ids[1].quantity, 1)
 
     def test_kit_with_lot_tracked_component_multiple_orders(self):
         """
@@ -829,3 +846,181 @@ class TestPosMrp(TestPointOfSaleCommon):
         # Close the PoS session - this should not raise a singleton error
         current_session.action_pos_session_closing_control()
         self.assertEqual(current_session.state, 'closed')
+
+    def test_kit_component_lot_assignment(self):
+        """
+        Tests that when ordering a kit and its component, the kit does not blindly take the
+        same lot as the component, but choses depending on availabilities
+        """
+        kit, component = self.env['product.template'].create([
+            {
+                'name': 'Kit Product',
+                'available_in_pos': True,
+                'list_price': 10.0,
+                'type': 'product',
+            },
+            {
+                'name': 'Kit Component',
+                'available_in_pos': True,
+                'list_price': 5.0,
+                'tracking': 'lot',
+                'type': 'product',
+            }
+        ])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': component.product_variant_id.id,
+                'product_qty': 1.0,
+            })],
+        })
+        lot1, lot2 = self.env['stock.lot'].create([
+            {
+                'name': 'lot1',
+                'product_id': component.product_variant_id.id,
+                'company_id': self.env.company.id
+            }, {
+                'name': 'lot2',
+                'product_id': component.product_variant_id.id,
+                'company_id': self.env.company.id
+            }
+        ])
+        stock_location = self.pos_config.picking_type_id.default_location_src_id
+        self.env['stock.quant']._update_available_quantity(component.product_variant_id, stock_location, 1.0, lot_id=lot1)
+        self.env['stock.quant']._update_available_quantity(component.product_variant_id, stock_location, 1.0, lot_id=lot2)
+
+        self.pos_config.open_ui()
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [
+                Command.create({
+                    'product_id': component.product_variant_id.id,
+                    'price_unit': 5.0,
+                    'qty': 1.0,
+                    'price_subtotal': 5.0,
+                    'price_subtotal_incl': 5.0,
+                    'pack_lot_ids': [Command.create({
+                        'lot_name': 'lot1',
+                    })],
+                }),
+                Command.create({
+                    'product_id': kit.product_variant_id.id,
+                    'price_unit': 10.0,
+                    'qty': 1.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                })
+            ],
+            'amount_total': 15.0,
+            'amount_tax': 0.0,
+            'amount_paid': 15.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        order_payment.with_context(**payment_context).check()
+        picking = order.picking_ids
+        standalone_move = picking.move_ids.filtered(lambda m: not m.bom_line_id)
+        kit_move = picking.move_ids.filtered(lambda m: m.bom_line_id)
+
+        self.assertEqual(standalone_move.move_line_ids.lot_id, lot1)
+        self.assertEqual(kit_move.move_line_ids.lot_id, lot2)
+
+    def test_pos_picking_kit_qty_ship_later(self):
+        """
+        Tests that when ordering a kit and its component, the move quantity in the generated
+        picking is the kit's quantity and not the component's with the ship later option enabled.
+        """
+        self.pos_config.ship_later = True
+        warehouse = self.company_data['default_warehouse']
+        self.pos_config.route_id = warehouse.delivery_route_id.id
+        kit, component = self.env['product.template'].create([
+            {
+                'name': 'Kit Product',
+                'available_in_pos': True,
+                'list_price': 10.0,
+                'type': 'product',
+            },
+            {
+                'name': 'Kit Component',
+                'available_in_pos': True,
+                'list_price': 5.0,
+                'tracking': 'lot',
+                'type': 'product',
+            }
+        ])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': component.product_variant_id.id,
+                'product_qty': 0.5,
+            })],
+        })
+        self.pos_config.open_ui()
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'partner_id': self.partner1.id,
+            'shipping_date': fields.Date.today(),
+            'lines': [
+                Command.create({
+                    'product_id': kit.product_variant_id.id,
+                    'price_unit': 10.0,
+                    'qty': 1.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                }),
+                Command.create({
+                    'product_id': component.product_variant_id.id,
+                    'price_unit': 5.0,
+                    'qty': 1.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                    'pack_lot_ids': [Command.create({
+                        'lot_name': 'lot',
+                    })],
+                }),
+                Command.create({
+                    'product_id': kit.product_variant_id.id,
+                    'price_unit': 10.0,
+                    'qty': 1.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                }),
+                Command.create({
+                    'product_id': component.product_variant_id.id,
+                    'price_unit': 5.0,
+                    'qty': 1.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                    'pack_lot_ids': [Command.create({
+                        'lot_name': 'lot',
+                    })],
+                }),
+            ],
+            'amount_total': 20.0,
+            'amount_tax': 0.0,
+            'amount_paid': 20.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        order_payment.with_context(**payment_context).check()
+
+        moves = order.picking_ids.move_ids
+        component_move = moves.filtered(lambda m: not m.bom_line_id)
+        kit_move = moves.filtered(lambda m: m.bom_line_id)
+        self.assertEqual(component_move.product_uom_qty, 2)
+        self.assertEqual(kit_move.product_uom_qty, 1)
