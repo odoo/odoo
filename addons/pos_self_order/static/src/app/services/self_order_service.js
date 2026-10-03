@@ -30,6 +30,8 @@ import { PosTicketPrinterPlugin } from "@point_of_sale/app/plugins/pos_ticket_pr
 
 const { DateTime } = luxon;
 
+export const PENDING_PREPARATION_KEY = "self_order_pending_preparation";
+
 export class SelfOrder extends Reactive {
     static serviceDependencies = ["notification", "router", "barcode", "bus_service", "dialog"];
 
@@ -807,6 +809,48 @@ export class SelfOrder extends Reactive {
         } catch (error) {
             this.handleErrorNotification(error);
         }
+    }
+
+    // Print the pending preparation ticket (precedent order that have been made on this Kiosk in another language)
+    async printPendingPreparation() {
+        const accessToken = sessionStorage.getItem(PENDING_PREPARATION_KEY);
+        if (!accessToken || this.config.self_ordering_mode !== "kiosk") {
+            return;
+        }
+
+        sessionStorage.removeItem(PENDING_PREPARATION_KEY);
+        let order = false;
+        try {
+            order = await this.getOrderByAccessToken(accessToken);
+            if (order) {
+                await this.ticketPrinter.printOrderChanges({ order, webFallback: false });
+            }
+        } catch (error) {
+            this.handleErrorNotification(error);
+        } finally {
+            // The order was only fetched to be printed, the kiosk keeps no order
+            order?.delete();
+        }
+    }
+
+    setPendingPreparation(accessToken) {
+        sessionStorage.setItem(PENDING_PREPARATION_KEY, accessToken);
+    }
+
+    /**
+     * Kiosk orders are not kept in the local database, so they have to be fetched
+     * back from the server after a page load
+     */
+    async getOrderByAccessToken(accessToken) {
+        const orders = this.models["pos.order"];
+        let order = orders.find((o) => o.access_token === accessToken);
+
+        if (!order) {
+            await this.getUserDataFromServer([accessToken]);
+            order = orders.find((o) => o.access_token === accessToken);
+        }
+
+        return order;
     }
 
     shouldUpdateLastOrderChange() {
