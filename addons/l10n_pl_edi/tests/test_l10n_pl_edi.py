@@ -160,10 +160,27 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.standard_invoice.action_post()
         self._assert_export_invoice(self.standard_invoice, "standert_fa3_format.xml")
 
+    @freeze_time('2026-09-29')
+    def test_p6_include_taxable_supply_date(self):
+        """
+        P_6 (Taxable Supply Date) must be emitted when the Taxable Supply Date differs from the
+        invoice issue date (invoice_date).
+        """
+        invoice = self._create_invoice(
+            partner_id=self.partner_pl,
+            invoice_date='2026-09-29',
+            date='2026-10-01',
+            taxable_supply_date='2026-10-01',
+            post=True
+        )
+
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml, "//ns:Fa/ns:P_6"), '2026-10-01')
+
     @freeze_time('2026-01-23')
     def test_p6_delivery_date_differs_from_invoice_date(self):
         """
-        P_6 (delivery date) must be emitted when the delivery date differs from the
+        P_6 (delivery date) must be emitted when the Taxable Supply Date is not set and delivery date differs from the
         invoice issue date (invoice_date), regardless of the accounting date (date).
         """
         invoice = self._create_invoice(
