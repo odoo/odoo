@@ -46,11 +46,11 @@ export class PosTicketPrinterService {
     }
 
     get receiptPrinters() {
-        return this.config.receipt_printer_ids;
+        return this.config.receipt_printer_ids || [];
     }
 
     get preparationPrinters() {
-        return this.config.preparation_printer_ids;
+        return this.config.preparation_printer_ids || [];
     }
 
     get hasReceiptPrinters() {
@@ -94,11 +94,11 @@ export class PosTicketPrinterService {
         window.print();
     }
 
-    showPrinterErrorDialog(message, retryFunction, fallbackFunction = undefined) {
+    showPrinterErrorDialog(message, retryFunction, fallbackFunction = undefined, canRetry = true) {
         return this.dialog.add(RetryPrintPopup, {
             title: message.title,
             message: message.body,
-            canRetry: true,
+            canRetry: canRetry,
             retry: retryFunction,
             download: fallbackFunction,
         });
@@ -287,7 +287,9 @@ export class PosTicketPrinterService {
                         orderChange: rawChangeForRetry,
                     },
                     retryPrinters,
-                })
+                }),
+                undefined,
+                !opts.prepOrderLines // no retry from kitchen
             );
         }
 
