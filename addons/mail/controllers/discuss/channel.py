@@ -130,6 +130,9 @@ class DiscussChannelWebclientController(WebclientController):
 
     @store_handler("/discuss/get_or_create_chat", audience="everyone", readonly=False)
     def store_get_or_create_chat(self, store: Store, partners_to):
+        request.env["res.partner"].with_context(active_test=False).search(
+            [("id", "in", partners_to)],
+        )._check_can_be_added_to_channel()
         if resolve_channel := request.env["discuss.channel"]._get_or_create_chat(
             partners_to=partners_to,
         ):
@@ -184,6 +187,7 @@ class DiscussChannelWebclientController(WebclientController):
             # Non-internal users can only add themselves as guest.
             _, guest = self.env["res.users"]._get_current_persona()
             guests = guest if guest.id in (guest_ids or []) else request.env["mail.guest"]
+        (partners | users.partner_id)._check_can_be_added_to_channel()
         channel._add_members(
             partners=partners,
             users=users,
@@ -201,8 +205,10 @@ class DiscussChannelWebclientController(WebclientController):
         default_display_mode=False,
         name="",
     ):
+        users_to = request.env["res.users"].with_context(active_test=False).search_fetch([("id", "in", users_to)])
+        users_to.partner_id._check_can_be_added_to_channel()
         if resolve_channel := request.env["discuss.channel"]._create_group(
-            users_to=request.env["res.users"].with_context(active_test=False).search_fetch([("id", "in", users_to)]),
+            users_to=users_to,
             name=name,
             default_display_mode=default_display_mode,
         ):

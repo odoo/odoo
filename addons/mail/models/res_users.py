@@ -587,6 +587,8 @@ class ResUsers(models.Model):
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
         res.attr("share")
+        # sudo: res.users - the role of an accessible user can be known, e.g. to hide "Send message"
+        res.attr("role", sudo=True)
         res.one("partner_id", "_store_avatar_card_fields")
         res.attr("is_public", lambda u: u._is_public())
         res.from_method("_store_im_status_fields", internal=True)

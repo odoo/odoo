@@ -1365,7 +1365,9 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertCountEqual(actual_member_ids, expected_member_ids)
 
     def test_channel_add_members_push_notification(self):
-        invited_user = mail_new_test_user(self.env, login="invitee_push_lang", groups="base.group_user")
+        invited_user = mail_new_test_user(
+            self.env, login="invitee_push_lang", groups="base.group_user,base.group_user_regular"
+        )
         invited_user.partner_id.lang = False
         channel = self.env["discuss.channel"].create({"name": "Push Invite", "channel_type": "channel"})
         push_device = self._setup_push_devices_for_partners(invited_user.partner_id)

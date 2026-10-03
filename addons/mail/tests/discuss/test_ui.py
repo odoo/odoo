@@ -58,7 +58,12 @@ class TestUi(HttpCase):
 
     def test_05_can_create_channel_tour(self):
         self.env["discuss.channel"].create({"name": "Sports"})
-        test_user = new_test_user(self.env, login="test_user", password="test_user")
+        test_user = new_test_user(
+            self.env,
+            login="test_user",
+            password="test_user",
+            groups="base.group_user,base.group_user_regular",
+        )
         settings = test_user.res_users_settings_id
         settings.set_res_users_settings({"channel_notifications": "all"})
         self.start_tour("odoo/discuss", "can_create_channel_from_form_view", login=test_user.login)

@@ -814,10 +814,25 @@ class DiscussChannel(models.Model):
     def _subscribe_users_automatically(self):
         if not (new_members_to_create := self._subscribe_users_automatically_get_members()):
             return
+        light_partner_ids = set()
+        if partner_ids := set().union(*new_members_to_create.values()):
+            # light users are not meant to use Discuss, do not subscribe them
+            # sudo: res.users - checking the role of the users to subscribe is acceptable
+            light_partner_ids = set(
+                self.env["res.users"]
+                .sudo()
+                .search_fetch(
+                    Domain("partner_id", "in", list(partner_ids))
+                    & self.env["res.users"]._get_light_users_domain(),
+                    ["partner_id"],
+                )
+                .partner_id.ids
+            )
         to_create = [
             {"channel_id": channel_id, "partner_id": partner_id}
             for channel_id in new_members_to_create
             for partner_id in new_members_to_create[channel_id]
+            if partner_id not in light_partner_ids
         ]
         # sudo: discuss.channel.member - adding member of other users based on channel auto-subscribe
         new_members = self.env["discuss.channel.member"].sudo().create(to_create)
