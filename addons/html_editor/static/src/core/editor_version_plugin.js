@@ -10,10 +10,10 @@ export class EditorVersionPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         clean_for_save_processors: this.cleanForSave.bind(this),
-        normalize_processors: this.normalize.bind(this),
+        html_compatibility_processors: this.stripVersionMarkers.bind(this),
     };
 
-    normalize(element) {
+    stripVersionMarkers(element) {
         if (element.matches(VERSION_SELECTOR) && element !== this.editable) {
             delete element.dataset.oeVersion;
         }

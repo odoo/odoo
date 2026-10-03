@@ -198,12 +198,11 @@ export class TablePlugin extends Plugin {
         on_will_split_block_handlers: this.resetTableSelection.bind(this),
 
         /** Processors */
-        before_insert_processors: this.normalizeTableStructure.bind(this),
         clean_for_save_processors: (root) => {
             this.deselectTable(root);
             return root;
         },
-        normalize_processors: this.normalizeTable.bind(this),
+        html_compatibility_processors: this.adaptTables.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         resize_target_processors: this.processTableResizeTargets.bind(this),
         resize_width_reset_processors: this.processTableWidthReset.bind(this),
@@ -286,8 +285,6 @@ export class TablePlugin extends Plugin {
             }
         });
         this.onMousemove = this.onMousemove.bind(this);
-
-        this.normalizeTableStructure(this.editable);
     }
 
     processTableResizeTargets(item, neighbor, position, defaultMinSize) {
@@ -384,6 +381,7 @@ export class TablePlugin extends Plugin {
         if (clipboardRoot.childNodes.length !== 1 || sourceTable?.nodeName !== "TABLE") {
             return false;
         }
+        this.fillMissingCells(sourceTable);
 
         // Source table size.
         const sourceRows = sourceTable.rows;
@@ -505,14 +503,48 @@ export class TablePlugin extends Plugin {
     }
 
     /**
-     * Inherits table-level colors to all child tds to make it
-     * easier to add/remove style on tables.
+     * Adapts the tables contained in `root` to the structure the table
+     * operations rely on:
+     * - the cells missing from ragged rows are filled in, so that every
+     *   table forms a complete grid.
+     * - every table has a `<tbody>`, `<thead>` elements being merged or
+     *   converted into it.
+     * - the inline widths of the first row's cells are moved to the `<col>`
+     *   elements of a `<colgroup>`.
+     * - table-level colors are inherited by all child tds, to make it easier
+     *   to add/remove style on tables.
      *
-     * @param {Element} root
+     * @param {HTMLElement | DocumentFragment} root
+     * @returns {HTMLElement | DocumentFragment}
      */
-    normalizeTable(root) {
-        const tables = root.querySelectorAll("table");
-        for (const table of tables) {
+    adaptTables(root) {
+        for (const table of root.querySelectorAll("table")) {
+            this.fillMissingCells(table);
+            let tbody = table.tBodies[0];
+            const thead = table.tHead;
+
+            if (thead) {
+                const thChildren = thead.querySelectorAll("th");
+                thChildren.forEach((th) => th.classList.add("o_table_header"));
+
+                if (tbody) {
+                    // If a <tbody> already exists, move all rows from
+                    // <thead> into the start of <tbody>.
+                    tbody.prepend(...thead.rows);
+                    thead.remove();
+                } else {
+                    // Otherwise, replace the <thead> with <tbody>
+                    tbody = this.dependencies.dom.setTagName(thead, "TBODY");
+                }
+            }
+
+            if (!tbody) {
+                tbody = table.ownerDocument.createElement("tbody");
+                const row = tbody.insertRow();
+                row.insertCell().append(this.dependencies.baseContainer.createBaseContainer());
+                table.append(tbody);
+            }
+
             const firstRow = table.rows[0];
             let colgroup;
             for (const cell of firstRow?.children || []) {
@@ -534,7 +566,6 @@ export class TablePlugin extends Plugin {
                 table.prepend(colgroup);
             }
 
-            // --- Normalize table colors ---
             const tableColor = table.style.color;
             const tableBgColor = table.style.backgroundColor;
 
@@ -1981,45 +2012,6 @@ export class TablePlugin extends Plugin {
     }
 
     /**
-     * Normalize the structure of all tables contained in `container`.
-     *
-     * Ensures every table has a `<tbody>` and merges or converts `<thead>`
-     * elements when necessary. Table operations rely on the presence of a
-     * `<tbody>`, so every table must contain one.
-     *
-     * @param {HTMLElement | DocumentFragment} container
-     * @returns {HTMLElement | DocumentFragment}
-     */
-    normalizeTableStructure(container) {
-        container.querySelectorAll("table").forEach((table) => {
-            let tbody = table.tBodies[0];
-            const thead = table.tHead;
-
-            if (thead) {
-                const thChildren = thead.querySelectorAll("th");
-                thChildren.forEach((th) => th.classList.add("o_table_header"));
-
-                if (tbody) {
-                    // If a <tbody> already exists, move all rows from
-                    // <thead> into the start of <tbody>.
-                    tbody.prepend(...thead.rows);
-                    thead.remove();
-                } else {
-                    // Otherwise, replace the <thead> with <tbody>
-                    tbody = this.dependencies.dom.setTagName(thead, "TBODY");
-                }
-            }
-
-            if (!tbody) {
-                tbody = table.ownerDocument.createElement("tbody");
-                tbody.innerHTML = `<tr><td><div class="o-paragraph"><br></div></td></tr>`;
-                table.append(tbody);
-            }
-        });
-        return container;
-    }
-
-    /**
      * @param {DocumentFragment} clonedContents
      * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
      */
@@ -2118,5 +2110,42 @@ export class TablePlugin extends Plugin {
         }
         this.tableGridMap.set(table, grid);
         return grid;
+    }
+
+    /**
+     * Adds the cells missing from the rows of a ragged table.
+     *
+     * @param {HTMLTableElement} table
+     */
+    fillMissingCells(table) {
+        const rows = [...table.rows];
+        if (!rows.length) {
+            return;
+        }
+        const grid = this.buildTableGrid(table);
+        const width = Math.max(...grid.map((gridRow) => gridRow.length));
+        let hasMissingCells = false;
+        for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+            const row = rows[rowIndex];
+            const isHeaderRow =
+                row.cells.length > 0 && [...row.cells].every((cell) => cell.nodeName === "TH");
+            for (let colIndex = 0; colIndex < width; colIndex++) {
+                if (grid[rowIndex][colIndex]) {
+                    continue;
+                }
+                const newCell = this.document.createElement(isHeaderRow ? "th" : "td");
+                if (isHeaderRow) {
+                    newCell.classList.add("o_table_header");
+                }
+                newCell.append(this.dependencies.baseContainer.createBaseContainer());
+                // The cells lost by a partial copy are the leading ones of
+                // the first row, and the trailing ones of any other.
+                row.insertBefore(newCell, rowIndex === 0 ? row.firstChild : null);
+                hasMissingCells = true;
+            }
+        }
+        if (hasMissingCells) {
+            this.tableGridMap.delete(table);
+        }
     }
 }

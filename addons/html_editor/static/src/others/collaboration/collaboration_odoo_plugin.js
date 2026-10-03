@@ -607,6 +607,7 @@ export class CollaborationOdooPlugin extends Plugin {
             this.editable.replaceChildren(this.dependencies.baseContainer.createBaseContainer());
         }
         this.handleHistoryIds();
+        this.processThrough("html_compatibility_processors", this.editable);
         this.dependencies.dom.normalize(this.editable);
 
         this.dependencies.history.reset();
