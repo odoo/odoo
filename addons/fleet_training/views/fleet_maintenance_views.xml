@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_training_maintenance_view_list" model="ir.ui.view">
+        <field name="name">fleet_training.maintenance.list</field>
+        <field name="model">fleet_training.maintenance</field>
+        <field name="arch" type="xml">
+            <list string="Maintenance Records">
+                <field name="vehicle_id"/>
+                <field name="date"/>
+                <field name="maintenance_type"/>
+                <field name="odometer"/>
+                <field name="cost" sum="Total"/>
+                <field name="currency_id" column_invisible="1"/>  <!-- Needed for cost's Monetary widget -->
+            </list>
+        </field>
+    </record>
+
+    <record id="fleet_training_maintenance_view_form" model="ir.ui.view">
+        <field name="name">fleet_training.maintenance.form</field>
+        <field name="model">fleet_training.maintenance</field>
+        <field name="arch" type="xml">
+            <form string="Maintenance Record">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="vehicle_id"/>
+                            <field name="date"/>
+                            <field name="maintenance_type"/>
+                        </group>
+                        <group>
+                            <field name="odometer"/>
+                            <field name="cost"/>
+                            <field name="currency_id" invisible="1"/>  <!-- Needed for cost's Monetary widget -->
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_fleet_training_maintenance" model="ir.actions.act_window">
+        <field name="name">Maintenance Records</field>
+        <field name="res_model">fleet_training.maintenance</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_fleet_training_maintenance"
+              name="Maintenance"
+              parent="menu_fleet_training_root"
+              action="action_fleet_training_maintenance"
+              sequence="30"/>
+</odoo>
