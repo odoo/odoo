@@ -11,7 +11,13 @@
 
         <template id="l10n_fr_pos_cert.pos_orderline_receipt_information" inherit_id="point_of_sale.pos_orderline_receipt_information">
             <span name="standard-unit-price" position="after">
+<<<<<<< 53b04123100626cd1cd4e3dc336c9ae699d92c45
                 <t t-if="order['l10n_fr_hash'] and not conditions['basic_receipt'] and line.get('show_old_unit_price')">
+||||||| 9e578bcc868ce28e19eee83822a279c6e334e986
+                <t t-if="order['l10n_fr_hash'] and line['price_type'] != 'original' and not conditions['basic_receipt']">
+=======
+                <t t-if="order['l10n_fr_hash'] and line['price_type'] == 'manual' and not conditions['basic_receipt']">
+>>>>>>> 3a4d55d3b5dfa0046b0d759c82190215729e6f98
                     <div class="text-small" name="combo-unit-price">
                         <span>Old unit price </span>
                         <s><span class="font-monospace" t-out="line['product_unit_price']" /></s> / <span class="font-monospace" t-out="line['product_uom_name']" />
