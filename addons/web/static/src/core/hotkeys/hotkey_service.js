@@ -295,7 +295,13 @@ export const hotkeyService = {
                         document.activeElement.blur();
                     }
                     el.focus();
-                    setTimeout(() => el.click());
+                    setTimeout(() => {
+                        el.dispatchEvent(new PointerEvent("pointerdown", {
+                            bubbles: true,
+                            cancelable: true,
+                        }));
+                        el.click();
+                    });
                 },
             }));
         }
