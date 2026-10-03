@@ -139,6 +139,7 @@ class DiscussChannel(models.Model):
     # sudo: discuss.channel - sudo for performance, self member can be accessed on accessible channel
     self_member_id = fields.Many2one("discuss.channel.member", compute="_compute_self_member_id", search="_search_self_member_id", compute_sudo=True)
     can_self_edit_readonly_channel = fields.Boolean(compute="_compute_can_self_edit_readonly_channel")
+    can_self_edit_avatar = fields.Boolean(compute="_compute_can_self_edit_avatar")
     # sudo: discuss.channel - sudo for performance, invited members can be accessed on accessible channel
     invited_member_ids = fields.One2many("discuss.channel.member", compute="_compute_invited_member_ids", compute_sudo=True)
     meeting_start_dt = fields.Datetime("Meeting Start", compute="_compute_meeting_dt")
@@ -441,6 +442,17 @@ class DiscussChannel(models.Model):
                 or self.env.user._is_admin()
             )
 
+    @api.depends_context("uid", "guest")
+    @api.depends("channel_type", "self_member_id.channel_role")
+    def _compute_can_self_edit_avatar(self):
+        for channel in self:
+            channel.can_self_edit_avatar = (
+                channel.channel_type not in ("channel", "group")
+                # sudo: discuss.channel.member - anyone can have access to their own role
+                or channel.self_member_id.sudo().channel_role in ("admin", "owner")
+                or self.env.is_admin()
+            )
+
     @api.depends("channel_member_ids.rtc_inviting_session_id")
     def _compute_invited_member_ids(self):
         members_by_channel = {
@@ -686,6 +698,15 @@ class DiscussChannel(models.Model):
         ):
             raise AccessError(
                 self.env._("Only the channel owner or database admins can convert a meeting to a chat."),
+            )
+        if "image_128" in vals and (
+            failing_channels := self.filtered(lambda channel: not channel.can_self_edit_avatar)
+        ):
+            raise AccessError(
+                self.env._(
+                    "Only channel owners, channel administrators or database admins can change the avatar of: %(channels)s.",
+                    channels=", ".join(failing_channels.mapped("display_name")),
+                ),
             )
         result = super().write(vals)
         if vals.get('group_ids'):

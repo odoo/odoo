@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from odoo import Command, fields
 from odoo.tests import new_test_user, users
+from odoo.tools import BinaryBytes
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon, TestGetOperatorCommon
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCase
@@ -154,6 +155,22 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertTrue(operator.has_access_livechat)
         channel.with_user(operator).channel_change_description("Updated by non-member operator")
         self.assertEqual(channel.description, "Updated by non-member operator")
+
+    def test_livechat_avatar_not_restricted_by_channel_role(self):
+        """Channel roles do not apply to livechat conversations: agents are identified through
+        `livechat_member_type` and must not be blocked by the owner/admin avatar restriction."""
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session", {"channel_id": self.livechat_channel.id}
+        )
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        agent_member = channel.channel_member_ids.filtered(
+            lambda m: m.livechat_member_type == "agent"
+        )
+        self.assertFalse(agent_member.channel_role)
+        channel.with_user(agent_member.partner_id.main_user_id).write(
+            {"image_128": BinaryBytes(b"<svg/>")}
+        )
+        self.assertEqual(channel.image_128.content, b"<svg/>")
 
     def test_livechat_note_sync_to_internal_user_bus(self):
         """Test that a livechat note is sent to the internal user bus."""
