@@ -635,7 +635,20 @@ class CustomerPortal(Controller):
         ResPartner = request.env['res.partner']
         partner_fields = ResPartner._fields
         authorized_partner_fields = request.env['res.partner']._get_frontend_writable_fields()
-        all_additional_identifiers = request.env["res.partner"]._get_all_additional_identifiers_metadata()
+
+        country_id = form_data.get('country_id')
+        country = request.env['res.country'].browse(
+            int(country_id) if country_id and str(country_id).isdigit() else None
+        ).exists()
+        portal_identifiers_whitelist = ResPartner._get_portal_additional_identifiers_whitelist(
+            company=request.env.company,
+            country=country,
+        )
+        all_additional_identifiers = {
+            key: metadata
+            for key, metadata in request.env["res.partner"]._get_all_additional_identifiers_metadata().items()
+            if key in portal_identifiers_whitelist
+        }
         for key, value in form_data.items():
             if isinstance(value, str):
                 value = value.strip()
@@ -665,9 +678,7 @@ class CustomerPortal(Controller):
         if 'zipcode' in form_data and not form_data.get('zip'):
             address_values['zip'] = form_data.pop('zipcode', '')
 
-        country_id = address_values.get("country_id")
-        country_sudo = request.env['res.country'].browse(country_id)
-        if country_sudo._enforce_city_choice() and form_data.get("city_id"):
+        if country._enforce_city_choice() and form_data.get("city_id"):
             if city := request.env["res.city"].browse(int(form_data["city_id"])):
                 address_values["city"] = city.name
 
