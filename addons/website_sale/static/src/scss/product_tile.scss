@@ -340,8 +340,18 @@
                 margin: var(--o-wsale-card-btn-submit-margin);
                 padding-left: var(--o-wsale-card-btn-submit-padding-x, var(--#{$prefix}btn-padding-x));
                 padding-right: var(--o-wsale-card-btn-submit-padding-x, var(--#{$prefix}btn-padding-x));
+                min-width: 0;
+
+                > * {
+                    min-width: 0;
+                }
+
+                .fa {
+                    flex-shrink: 0;
+                }
 
                 .o_label {
+                    @include text-truncate;
                     display: var(--o-wsale-card-btn-submit-label-display,  var(--o-wsale-card-btn-label-display));
                     font-size: var(--o-wsale-card-btn-submit-label-font-size, .8em);
                     line-height: 1;
