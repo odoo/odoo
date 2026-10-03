@@ -628,27 +628,12 @@ class HrEmployee(models.Model):
         if not self.env.su and not self.env.user.has_group("hr.group_hr_user"):
             raise AccessError(self.env._("Only HR users can access first version date on an employee."))
 
-        def has_work_hours_between_versions(version_from, version_to):
-            # we consider two versions to be consecutive if no work hours are
-            # in the period between the two versions
-            tz = ZoneInfo(version_from._get_tz())
-            date_from = datetime.combine(version_from.date_end, time.max, tz) if version_from.date_end else date.max
-            date_to = datetime.combine(version_to.date_start, time.min, tz)
-            calendar_id = version_from.resource_calendar_id
-            if not calendar_id:
-                return False
-            elif version_from.date_end and version_from.date_end + relativedelta(days=1) == version_to.date_start:
-                # fast path: back-to-back versions cannot have work hours between them.
-                # We can bypass the expensive calendar lookup
-                return False
-            return bool(calendar_id.get_work_hours_count(date_from, date_to, compute_leaves=False))
-
         versions = self._get_first_versions(date_limit).sorted('date_start')
         # index of the earliest consecutive version
         first_version_index = len(versions) - 1
 
         while first_version_index > 0:
-            if has_work_hours_between_versions(versions[first_version_index - 1], versions[first_version_index]):
+            if versions[first_version_index - 1]._has_work_hours_between_versions(versions[first_version_index]):
                 break  # version_before is not consecutive with first_version
             first_version_index -= 1
         return versions[first_version_index:]
