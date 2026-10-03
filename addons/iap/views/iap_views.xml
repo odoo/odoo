@@ -32,6 +32,7 @@
                             <field name="company_ids" widget="many2many_tags" domain="[('id', 'in', allowed_company_ids)]" />
                             <field name="account_token" groups="base.group_no_one"/>
                         </group>
+<<<<<<< fd9df5a2e9624ef556b33fbc7b3b79fb36ca72ad
                         <group name="external" string="Email Alert">
                             <field name="warning_threshold"/>
                             <field name="warning_user_ids"
@@ -42,6 +43,34 @@
                                    domain="[('email', '!=', False)]"
                                    context="{'list_view_ref': 'iap.view_iap_users_tree'}"
                             />
+||||||| bce5c19eca5678e7f174d3c3785eb0712e36ccb4
+                        <group name="external">
+                            <label for="balance" class="oe_inline"/>
+                            <div>
+                                <field name="balance" class="oe_inline"/>
+                                <button type="object"
+                                    name="action_buy_credits" class="btn-link py-0">
+                                    <i class="oi oi-arrow-right"/>
+                                    Buy Credit
+                                </button>
+                            </div>
+                            <field name="warning_threshold"/>
+                            <field name="warning_user_ids"
+                                   invisible="warning_threshold == 0"
+                                   required="warning_threshold > 0"
+                                   widget="many2many_tags" />
+=======
+                        <group name="external">
+                            <label for="balance" class="oe_inline"/>
+                            <div>
+                                <field name="balance" class="oe_inline"/>
+                                <button type="object"
+                                    name="action_buy_credits" class="btn-link py-0">
+                                    <i class="oi oi-arrow-right"/>
+                                    Buy Credit
+                                </button>
+                            </div>
+>>>>>>> 4b0248bcfa792b839b1b6f886dfaf4e8450a58bd
                         </group>
                         <group/>
                     </group>
@@ -53,6 +82,7 @@
         <field name="name">iap.account.list</field>
         <field name="model">iap.account</field>
         <field name="arch" type="xml">
+<<<<<<< fd9df5a2e9624ef556b33fbc7b3b79fb36ca72ad
             <list string="In-App Purchase Accounts" duplicate="false">
                 <field name="name"/>
                 <field name="description"/>
@@ -72,6 +102,28 @@
                 <field name="credit"/>
                 <field name="price"/>
                 <field name="service_id"/>
+||||||| bce5c19eca5678e7f174d3c3785eb0712e36ccb4
+            <list string="IAP Accounts" duplicate="false">
+                <field name="name" />
+                <field name="service_id" />
+                <field name="company_ids" widget="many2many_tags" />
+                <field name="account_token" groups="base.group_no_one"/>
+                <field name="balance" />
+                <field name="warning_threshold" optional="hidden" />
+                <field name="description" optional="hidden" />
+=======
+            <list string="In-App Purchase Accounts" duplicate="false" multi_edit="1" editable="bottom">
+                <field name="name"/>
+                <field name="service_id"/>
+                <field name="description"/>
+                <field name="company_ids" widget="many2many_tags"/>
+                <field name="balance"/>
+                <field name="account_token" optional="hidden"/>
+                <button name="action_manage" type="object" string="Manage" class="btn btn-primary" icon="fa-gear"/>
+                <button name="action_rotate_token" type="object" string="Rotate" class="btn btn-secondary" icon="fa-lock"
+                        confirm="This is useful if you think it may have leaked. It will also deactivate auto-refill if set. Are you sure to rotate your IAP token? "
+                />
+>>>>>>> 4b0248bcfa792b839b1b6f886dfaf4e8450a58bd
             </list>
         </field>
     </record>

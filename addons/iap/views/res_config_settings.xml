@@ -8,8 +8,16 @@
             <xpath expr="//div[@id='contacts_settings']" position="inside">
                 <div id="iap_portal">
                     <block class='iap_portal' name="iap_purchases_setting_container">
+<<<<<<< fd9df5a2e9624ef556b33fbc7b3b79fb36ca72ad
                         <setting id="iap_credits_setting" string="Odoo In-App Purchase" help ="View your IAP Services and recharge your credits" documentation="/applications/general/in_app_purchase.html">
                             <button name="iap.iap_account_action" icon="oi-arrow-right" type="action" string="View My Services" class="btn-link"/>
+||||||| bce5c19eca5678e7f174d3c3785eb0712e36ccb4
+                        <setting id="iap_credits_setting" string="Odoo IAP" help ="View your IAP Services and recharge your credits" documentation="/applications/general/in_app_purchase.html">
+                            <button name="iap.iap_account_action" icon="oi-arrow-right" type="action" string="View My Services" class="btn-link"/>
+=======
+                        <setting id="iap_credits_setting" string="Odoo IAP" help ="View your IAP Services and recharge your credits" documentation="/applications/general/in_app_purchase.html">
+                            <button name="iap_action_view_my_services" icon="oi-arrow-right" type="object" string="View My Services" class="btn-link"/>
+>>>>>>> 4b0248bcfa792b839b1b6f886dfaf4e8450a58bd
                         </setting>
                     </block>
                 </div>
