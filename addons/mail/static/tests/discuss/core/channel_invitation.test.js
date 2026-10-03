@@ -13,14 +13,13 @@ import { Command, getService, serverState, withUser } from "@web/../tests/web_te
 describe.current.tags("desktop");
 defineMailModels();
 
-test("should display the channel invitation form after clicking on the invite button of a chat", async () => {
-    const pyEnv = await startServer();
+function createChannelWithPartner(pyEnv) {
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    const channelId = pyEnv["discuss.channel"].create({
+    return pyEnv["discuss.channel"].create({
         name: "TestChannel",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -28,10 +27,47 @@ test("should display the channel invitation form after clicking on the invite bu
         ],
         channel_type: "channel",
     });
+}
+
+test("should display the channel invitation form after clicking on the invite button of a chat", async () => {
+    const pyEnv = await startServer();
+    const channelId = createChannelWithPartner(pyEnv);
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Invite People']");
     await contains(".o-discuss-ChannelInvitation");
+});
+
+test("opening the invite popover from the header should keep member list open", async () => {
+    const pyEnv = await startServer();
+    const channelId = createChannelWithPartner(pyEnv);
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList");
+    await click(".o-mail-Discuss-header button[title='Invite People']");
+    await contains(".o-discuss-ChannelInvitation");
+    await contains(".o-discuss-ChannelMemberList");
+});
+
+test("other header actions should be disabled only while a popover action is open", async () => {
+    const pyEnv = await startServer();
+    const channelId = createChannelWithPartner(pyEnv);
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Discuss-header button[title='Invite People']");
+    await contains(".o-mail-Discuss-header button[title='Members']:disabled");
+    await contains(".o-mail-Discuss-header button[title='Notification Settings']:disabled");
+    await contains(".o-mail-Discuss-header button[title='Invite People']:not(:disabled)");
+    await click(".o-mail-Discuss-header button[title='Invite People']");
+    await contains(".o-discuss-ChannelInvitation", { count: 0 });
+    await contains(".o-mail-Discuss-header button[title='Members']:not(:disabled)");
+    await contains(".o-mail-Discuss-header button[title='Notification Settings']:not(:disabled)");
+    await click(".o-mail-Discuss-header button[title='Invite People']");
+    await contains(".o-mail-Discuss-header button[title='Members']:disabled");
+    await click(document.body);
+    await contains(".o-discuss-ChannelInvitation", { count: 0 });
+    await contains(".o-mail-Discuss-header button[title='Members']:not(:disabled)");
+    await contains(".o-mail-Discuss-header button[title='Notification Settings']:not(:disabled)");
 });
 
 test("can invite users in channel from chat window", async () => {

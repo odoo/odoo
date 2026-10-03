@@ -22,7 +22,7 @@ threadActionsRegistry.add("show-threads", {
         const component = useComponent();
         if (!component.props.chatWindow) {
             action.popover = usePopover(SubChannelList, {
-                onClose: () => action.close(),
+                onClose: () => action.onPopoverClose(),
                 fixedPosition: true,
                 popoverClass: action.panelOuterClass,
             });
