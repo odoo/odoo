@@ -252,6 +252,7 @@ class AccountChartTemplate(models.AbstractModel):
             try:
                 with self.env.cr.savepoint():
                     self = self.with_context(lang=original_context_lang)
+                    self.env.cr.cache.pop('account_product_accounts', None)
                     self._install_demo(company.with_env(self.env))
             except Exception:
                 # Do not rollback installation of CoA if demo data failed
