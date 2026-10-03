@@ -25,6 +25,12 @@ export const FONT_SIZE_CLASSES = [
 
 export const TEXT_STYLE_CLASSES = ["display-1", "display-2", "display-3", "display-4", "lead"];
 
+/**
+ * Inline decoration tags (<s>, <u>) that are split around and preserved as
+ * wrappers inside a link when a link is created over decorated text.
+ */
+export const INLINE_DECORATION_TAGS = ["S", "U"];
+
 export const formatsSpecs = {
     italic: {
         tagName: "em",
