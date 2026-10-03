@@ -390,6 +390,82 @@ class TestL10nPkEdiPos(CommonPosTest):
             send.assert_not_called()
         self.assertEqual(disabled.l10n_pk_edi_pos_state, "to_send")
 
+    def test_receipt_prints_the_fbr_layout(self):
+        """The receipt carries the SRO 1006(I)/2021 fields, with the line taxes the FBR was sent."""
+        tax18 = self._create_tax("GST 18", amount=18.0)
+        product18 = self.env["product.product"].create(
+            {
+                "name": "PK Product 18",
+                "type": "consu",
+                "list_price": 100.0,
+                "taxes_id": [Command.set(tax18.ids)],
+                "hs_code": "2202.1010",
+                "default_code": "PK-002",
+            },
+        )
+        fee_product = self.env.ref("l10n_pk_edi_pos.product_product_fbr_service_fee")
+        order = self._create_order(
+            [
+                {"product_id": self.pk_product.id, "qty": 2},
+                {"product_id": product18.id, "qty": 1, "discount": 10},
+                {"product_id": fee_product.id, "qty": 1},
+            ],
+        )
+        self._send(order)
+
+        data = order.order_receipt_generate_data()
+        self.assertTrue(data["conditions"]["l10n_pk_edi_pos_enabled"])
+        self.assertTrue(data["image"]["l10n_pk_edi_pos_fbr_logo"].startswith("data:image/png;base64,"))
+        keys = [
+            "l10n_pk_edi_pos_is_service_fee",
+            "unit_price",
+            "l10n_pk_edi_pos_tax_rate",
+            "l10n_pk_edi_pos_tax_amount",
+            "l10n_pk_edi_pos_total",
+        ]
+        self.assertEqual(
+            [[line[key] for key in keys] for line in data["lines"]],
+            [
+                [False, "$ 100.00", "17%", "34.00", "234.00"],
+                [False, "$ 90.00", "18%", "16.20", "106.20"],
+                [True, "$ 1.00", "0%", "0.00", "1.00"],
+            ],
+        )
+        self.assertEqual(
+            [(item["TaxRate"], item["TaxCharged"], item["TotalAmount"]) for item in order._l10n_pk_edi_pos_generate_json()["Items"]],
+            [(17.0, 34.0, 234.0), (18.0, 16.2, 106.2)],
+        )
+        extra_data = data["extra_data"]
+        self.assertEqual(
+            [extra_data["prices"]["subtotal_amount"], extra_data["l10n_pk_edi_pos_service_fee"], extra_data["l10n_pk_edi_pos_received"]],
+            ["$ 290.00", "$ 1.00", "$ 341.20"],
+        )
+        self.assertEqual(extra_data["total_item_count"], 3)
+
+        html = str(order.order_receipt_generate_html())
+        self.assertIn("POS Invoice Number:", html)
+        self.assertIn(OK_RESPONSE["InvoiceNumber"], html)
+        self.assertIn("Verify this invoice through FBR Tax Asaan Mobile App", html)
+
+        refund = self._make_refund()
+        line = refund.order_receipt_generate_data()["lines"][0]
+        self.assertEqual(line["qty"], -2)
+        self.assertEqual(
+            [line[key] for key in ("unit_price", "l10n_pk_edi_pos_tax_amount", "l10n_pk_edi_pos_total")],
+            ["$ 100.00", "-34.00", "-234.00"],
+        )
+
+    def test_receipt_keeps_the_default_layout_without_fbr(self):
+        """Without the FBR, the receipt stays the Point of Sale one."""
+        self.pos_config_usd.l10n_pk_edi_pos_enabled = False
+        order = self._make_order()
+        data = order.order_receipt_generate_data()
+        self.assertNotIn("l10n_pk_edi_pos_enabled", data["conditions"])
+        self.assertNotIn("l10n_pk_edi_pos_tax_rate", data["lines"][0])
+        html = str(order.order_receipt_generate_html())
+        self.assertIn("Ticket", html)
+        self.assertNotIn("POS Invoice Number:", html)
+
 
 @tagged("post_install_l10n", "post_install", "-at_install")
 class TestL10nPkEdiPosTours(TestPointOfSaleHttpCommon):
