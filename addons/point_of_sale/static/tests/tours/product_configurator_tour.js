@@ -41,12 +41,16 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             // Fill in custom attribute
             ProductConfigurator.fillCustomAttribute("Custom Fabric"),
 
+            // Pick Multi
+            ProductConfigurator.pickMulti("Wheels"),
+
             // Confirm configuration
             Dialog.confirm(),
 
             // Check that the product has been added to the order with correct attributes and price
+            // Attribute order must follow the product's attribute_line_ids sequence
             ProductScreen.selectedOrderlineHas(
-                "Configurable Chair (Fabrics: Other: Custom Fabric, Metal, Red)",
+                "Configurable Chair (Red, Metal, Fabrics: Other: Custom Fabric, Wheels)",
                 "1.0",
                 "11.0"
             ),
@@ -57,9 +61,10 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductConfigurator.pickSelect("Metal"),
             ProductConfigurator.pickRadio("Other"),
             ProductConfigurator.fillCustomAttribute("Custom Fabric"),
+            ProductConfigurator.pickMulti("Wheels"),
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
-                "Configurable Chair (Fabrics: Other: Custom Fabric, Metal, Red)",
+                "Configurable Chair (Red, Metal, Fabrics: Other: Custom Fabric, Wheels)",
                 "2.0",
                 "22.0"
             ),
@@ -71,7 +76,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             ProductConfigurator.pickRadio("Leather"),
             Dialog.confirm(),
             ProductScreen.selectedOrderlineHas(
-                "Configurable Chair (Leather, Metal, Blue)",
+                "Configurable Chair (Blue, Metal, Leather)",
                 "1.0",
                 "10.0"
             ),
