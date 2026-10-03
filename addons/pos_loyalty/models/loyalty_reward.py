@@ -4,7 +4,6 @@
 from odoo import models, api
 from odoo.fields import Domain
 
-import ast
 import json
 
 
