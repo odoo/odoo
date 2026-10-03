@@ -483,7 +483,7 @@ class IrAttachment(models.Model):
                 if not self.env.is_system():
                     if not res_id and create_uid != self.env.uid:
                         raise AccessError(_("Sorry, you are not allowed to access this document."))
-                    if res_field:
+                    if res_model and res_field:
                         field = self.env[res_model]._fields[res_field]
                         if not field.is_accessible(self.env):
                             raise AccessError(_("Sorry, you are not allowed to access this document."))
