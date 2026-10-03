@@ -149,12 +149,68 @@
                                 groups="product.group_product_pricelist"
                             />
                             <label for="fixed_price" invisible="compute_price != 'fixed'"/>
-                            <div class="o_row" invisible="compute_price != 'fixed'" style="width: 60% !important;">
-                                <field name="fixed_price"
-                                    widget="monetary"
-                                    options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                                <span class="d-flex gap-2 p-0" invisible="not product_uom_name">per<field
-                                        name="product_uom_name"/></span>
+                            <div invisible="compute_price != 'fixed'">
+                                <span class="d-flex gap-2">
+                                    <field
+                                        name="packaging_price"
+                                        widget="monetary"
+                                        class="w-auto"
+                                        invisible="not product_tmpl_id or not relative_uom_id"
+                                        options="{
+                                            'currency_field': 'currency_id',
+                                            'field_digits': True
+                                        }"
+                                    />
+                                    <field
+                                        name="fixed_price"
+                                        widget="monetary"
+                                        class="w-auto"
+                                        invisible="product_tmpl_id and relative_uom_id"
+                                        options="{
+                                            'currency_field': 'currency_id',
+                                            'field_digits': True
+                                        }"
+                                    />
+                                    <span
+                                        class="d-flex gap-2"
+                                        invisible="not product_uom_name"
+                                        groups="uom.group_uom"
+                                    >
+                                        per
+                                        <field
+                                            name="uom_id"
+                                            placeholder="Units"
+                                            domain="[('id', 'in', allowed_uom_ids)] if allowed_uom_ids else []"
+                                            widget="many2one_uom"
+                                            options="{
+                                                'no_create': 1,
+                                                'product_field': 'product_tmpl_id'
+                                            }"
+                                        />
+                                    </span>
+                                </span>
+                                <span
+                                    class="d-flex gap-1 text-muted"
+                                    invisible="not relative_uom_id"
+                                >
+                                    (
+                                    <field
+                                        name="fixed_price"
+                                        widget="monetary"
+                                        class="text-truncate"
+                                        style="width:15% !important;"
+                                        options="{
+                                            'currency_field': 'currency_id',
+                                            'field_digits': True
+                                        }"
+                                    />
+                                    per
+                                    <field
+                                        name="product_uom_name"
+                                        class="w-auto"
+                                    />
+                                    )
+                                </span>
                             </div>
                         </group>
                         <div name="pricelist_rule_limits">

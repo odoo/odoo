@@ -266,6 +266,13 @@
                                         string="Unit Price"
                                         widget="monetary"
                                         options="{'currency_field': 'currency_id'}"
+                                        optional="hide"
+                                    />
+                                    <field
+                                        name="packaging_price"
+                                        string="Price"
+                                        widget="monetary"
+                                        options="{'currency_field': 'currency_id'}"
                                     />
                                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
 

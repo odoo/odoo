@@ -120,7 +120,18 @@ class ProductPricelistItem(models.Model):
         required=True,
     )
 
-    fixed_price = fields.Float(string="Fixed Price", min_display_digits='Product Price')
+    fixed_price = fields.Float(
+        string="Fixed Price",
+        compute="_compute_fixed_price",
+        min_display_digits='Product Price',
+        readonly=False,
+        store=True
+    )
+    packaging_price = fields.Float(
+        compute="_compute_packaging_price",
+        readonly=False,
+        store=True
+    )
 
     price_discount = fields.Float(
         string="Price Discount",
@@ -170,7 +181,33 @@ class ProductPricelistItem(models.Model):
         search='_search_is_plain_discount',
         help="Whether the rule lowers the price by exactly its discount percentage.")
 
+    relative_uom_id = fields.Many2one(
+        "uom.uom",
+        related="uom_id.relative_uom_id",
+    )
+
     #=== COMPUTE METHODS ===#
+
+    @api.depends('fixed_price', 'uom_id', 'min_quantity')
+    def _compute_packaging_price(self):
+        for item in self:
+            min_qty = item.min_quantity or 1
+            if item.relative_uom_id:
+                uom_id = item.uom_id or item.product_tmpl_id.uom_id
+                item.packaging_price = item.fixed_price * uom_id.relative_factor * min_qty
+            else:
+                item.packaging_price = item.fixed_price * min_qty
+
+    @api.depends('packaging_price', 'uom_id')
+    def _compute_fixed_price(self):
+        for item in self:
+            min_qty = item.min_quantity or 1
+            if item.relative_uom_id:
+                uom_id = item.uom_id or item.product_tmpl_id.uom_id
+                if uom_id.relative_factor:
+                    item.fixed_price = item.packaging_price / (min_qty * uom_id.relative_factor)
+            else:
+                item.fixed_price = item.packaging_price / min_qty
 
     def _compute_is_pricelist_required(self):
         self.is_pricelist_required = True
@@ -443,6 +480,7 @@ class ProductPricelistItem(models.Model):
             self.product_id = False
         if self.product_tmpl_id:
             self.categ_id = False
+            self.uom_id = self.product_tmpl_id.uom_id
 
     @api.onchange('categ_id')
     def _onchange_categ_id(self):
