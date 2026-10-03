@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.sale_gelato.tests.common import GelatoCommon
@@ -122,6 +124,43 @@ class TestProductTemplate(GelatoCommon):
             variant_attribute_value,
             orange_attribute_value,
             msg="Existing attribute values should be used instead of creating new ones.",
+        )
+
+    def test_synchronizing_template_removes_obsolete_attributes(self):
+        """Test that attributes whose values were all removed in Gelato are unassigned from the
+        template."""
+        color_attribute = self._create_attribute(name="Color")
+        orange_attribute_value = self.env["product.attribute.value"].create({
+            "name": "Orange",
+            "attribute_id": color_attribute.id,
+        })
+        self.gelato_template.attribute_line_ids = [
+            Command.create({
+                "attribute_id": color_attribute.id,
+                "value_ids": [Command.link(orange_attribute_value.id)],
+            })
+        ]
+        template_data_without_color = dict(
+            self.template_data_two_variants,
+            variants=[
+                {
+                    "productUid": "m_tshirt_uid",
+                    "variantOptions": [{"name": "Size", "value": "M"}],
+                    "imagePlaceholders": [{"printArea": "front"}],
+                },
+                {
+                    "productUid": "l_tshirt_uid",
+                    "variantOptions": [{"name": "Size", "value": "L"}],
+                    "imagePlaceholders": [{"printArea": "front"}],
+                },
+            ],
+        )
+        try:
+            self.gelato_template._create_attributes_from_gelato_info(template_data_without_color)
+        except ValidationError:
+            self.fail("Synchronizing should remove missing attributes.")
+        self.assertEqual(
+            self.gelato_template.attribute_line_ids.attribute_id.mapped("name"), ["Size"]
         )
 
     def test_creating_attributes_sets_product_uids_on_variants(self):
