@@ -19,8 +19,8 @@ class DiscussCallHistory(models.Model):
     has_recording = fields.Boolean(compute="_compute_recording_media")
     has_audio = fields.Boolean(compute="_compute_recording_media")
     has_video = fields.Boolean(compute="_compute_recording_media")
-    start_dt = fields.Datetime(index=True, required=True)
-    end_dt = fields.Datetime()
+    start_dt = fields.Datetime(string="Start Date", index=True, required=True)
+    end_dt = fields.Datetime(string="End Date")
     start_call_message_id = fields.Many2one("mail.message", index=True)
 
     _channel_id_not_null_constraint = models.Constraint(
