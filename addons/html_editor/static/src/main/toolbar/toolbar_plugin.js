@@ -43,7 +43,8 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {string} [iconClass] *
  * @property {string} [text] Can be used with (or instead of) `icon`
  * @property {string} [menuId] Id of a toolbar menu item: the item is shown in
- * that menu instead of on the bar
+ * that menu instead of on the bar. If no such menu exists, the item stays in
+ * its group.
  * @property {TranslatedString} [label] Text of the item in a menu
  * @property {string} [shortcut] Shortcut hint shown next to the label in a menu
  * @property {(selection: EditorSelection) => boolean} [isAvailable] ? *
@@ -62,7 +63,8 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {TranslatedString | TranslatedStringGetter} [description]
  *
  * @typedef {Object} ToolbarComponentItem
- * Adds a custom component to the toolbar.
+ * Adds a custom component to the toolbar. In a menu, the component receives
+ * `isInMenu: true` and should render as a menu item.
  * @property {string} id
  * @property {string} groupId
  * @property {string[]} [namespaces]
@@ -377,13 +379,16 @@ export class ToolbarPlugin extends Plugin {
         /** @type {ToolbarGroup[]} */
         const groups = this.getResource("toolbar_groups");
 
+        const menuIds = new Set(buttons.filter((button) => button.isMenu).map(({ id }) => id));
+        const isInMenu = (button) => menuIds.has(button.menuId);
+
         return groups.map((group) => {
             const groupNamespaces =
                 group.id === "expand_toolbar" ? this.expandableNamespaces : group.namespaces;
             return {
                 ...omit(group, "namespaces"),
                 buttons: buttons
-                    .filter((button) => button.groupId === group.id && !button.menuId)
+                    .filter((button) => button.groupId === group.id && !isInMenu(button))
                     .map((button) => ({
                         ...button,
                         namespaces: button.namespaces || groupNamespaces || ["expanded"],

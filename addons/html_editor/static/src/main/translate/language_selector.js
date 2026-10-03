@@ -13,6 +13,7 @@ export class LanguageSelector extends Component {
     props = useProps({
         ...toolbarButtonProps,
         onSelected: t.function(),
+        isInMenu: t.boolean().optional(false),
     });
     static components = { Dropdown, DropdownItem };
 

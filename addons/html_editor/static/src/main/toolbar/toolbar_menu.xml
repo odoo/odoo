@@ -9,7 +9,7 @@
                 <div data-prevent-closing-overlay="true">
                     <t t-foreach="this.props.items" t-as="item" t-key="item.id">
                         <t t-if="item.Component">
-                            <t t-component="item.Component" t-props="item.props" title="item.description" getSelection="this.props.getSelection" isDisabled="!!item.isDisabled"/>
+                            <t t-component="item.Component" t-props="item.props" title="item.description" getSelection="this.props.getSelection" isDisabled="!!item.isDisabled" isInMenu="true"/>
                         </t>
                         <DropdownItem t-else=""
                             tag="'button'"
