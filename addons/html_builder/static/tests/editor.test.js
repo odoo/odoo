@@ -291,6 +291,19 @@ describe("font types", () => {
             );
         });
     });
+    test("Display headings show their name on the toolbar and are marked in the menu", async () => {
+        const { getEditor } = await setupHTMLBuilder(`<h1 class="display-3">abc</h1>`);
+        const editor = getEditor();
+        const h1 = editor.editable.querySelector("h1");
+        setSelection({ anchorNode: h1, anchorOffset: 0, focusOffset: 1 });
+        await waitFor(".o-we-toolbar");
+        expect(".o-we-toolbar .btn[name='font_type']").toHaveText("Header 1 Display 3");
+        click(".o-we-toolbar .btn[name='font_type']");
+        await waitFor(".o_font_type_selector_menu");
+        expect(".o_font_type_selector_menu .o-dropdown-item.selected").toHaveText(
+            "Header 1 Display 3"
+        );
+    });
     test("'Light' is available", async () => {
         const { getEditor } = await setupHTMLBuilder(`<p>abc</p>`);
         const editor = getEditor();
