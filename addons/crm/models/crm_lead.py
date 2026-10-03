@@ -2194,9 +2194,18 @@ class Lead(models.Model):
 
         # Get all won, lost and total count for all records in frequencies per team_id
         for team_id in result:
+            t_won, t_lost, t_total = self._pls_get_won_lost_total_count(result[team_id])
+            # Fallback on team's first stage, different if team-specific (e.g. all stages are team-specific). Clean in master.
+            if t_won == 0 and t_lost == 0 and t_total == 0 and team_id and team_id > 0:
+                first_stage_id = self.env['crm.stage'].search([
+                    ('team_id', 'in', [team_id, False])
+                ], order='sequence, id', limit=1)
+                if str(first_stage_id.id) in result[team_id].get('stage_id', []):
+                    stage_result = result[team_id]['stage_id'][str(first_stage_id.id)]
+                    t_won, t_lost, t_total = stage_result['won'], stage_result['lost'], stage_result['won'] + stage_result['lost']
             result[team_id]['team_won'], \
             result[team_id]['team_lost'], \
-            result[team_id]['team_total'] = self._pls_get_won_lost_total_count(result[team_id])
+            result[team_id]['team_total'] = t_won, t_lost, t_total
 
         save_team_id = None
         p_won, p_lost = 1, 1
