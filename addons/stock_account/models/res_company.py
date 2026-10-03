@@ -73,11 +73,107 @@ class ResCompany(models.Model):
     def _get_closing_date_field(self):
         return 'closing_datetime'
 
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
     def _get_last_closing_date(self):
         closing = self._get_last_closing_move()
         if not closing:
             return datetime.min
         return closing.closing_datetime
+||||||| 9b1d65acc28ea8af10bb9d8e3da535cc503097b2
+        vals_list = self._get_continental_realtime_variation_vals(accounts_by_product, at_date, aml_vals_list)
+        if vals_list:
+            aml_vals_list += vals_list
+        return aml_vals_list
+
+    @api.model
+    def _cron_post_stock_valuation(self):
+        periods = ['daily']
+        if fields.Date.today() == fields.Date.today() + relativedelta(day=31):
+            periods.append('monthly')
+        domain = Domain([
+            ('inventory_period', 'in', periods),
+            ('inventory_valuation', '!=', 'real_time'),
+        ])
+        companies = self.env['res.company'].search(domain)
+        for company in companies:
+            company.with_context(closing_cron=True).action_close_stock_valuation(auto_post=True)
+
+    def _get_valuation_product_domain(self):
+        return [('is_storable', '=', True)]
+
+    def _get_accounts_by_product(self, products=None):
+        if not products:
+            products = self.env['product.product'].with_company(self).search_fetch(
+                self._get_valuation_product_domain(), ['categ_id'],
+            )
+
+        accounts_by_product = {}
+        for product in products:
+            accounts = product._get_product_accounts()
+            accounts_by_product[product] = {
+                'valuation': accounts['stock_valuation'],
+                'variation': accounts['stock_variation'],
+                'expense': accounts['expense'],
+            }
+        return accounts_by_product
+
+    @api.model
+    def _get_extra_balance(self, vals_list=None):
+        extra_balance = defaultdict(float)
+        if not vals_list:
+            return extra_balance
+        for vals in vals_list:
+            extra_balance[vals['account_id']] += (vals['debit'] - vals['credit'])
+        return extra_balance
+=======
+        vals_list = self._get_continental_realtime_variation_vals(accounts_by_product, at_date, aml_vals_list)
+        if vals_list:
+            aml_vals_list += vals_list
+        return aml_vals_list
+
+    @api.model
+    def _cron_post_stock_valuation(self):
+        periods = ['daily']
+        if fields.Date.today() == fields.Date.today() + relativedelta(day=31):
+            periods.append('monthly')
+        domain = Domain([
+            ('inventory_period', 'in', periods),
+        ])
+        companies = self.env['res.company'].search(domain)
+        for company in companies:
+            try:
+                company.with_context(closing_cron=True).action_close_stock_valuation(auto_post=True)
+            except UserError:
+                continue
+
+    def _get_valuation_product_domain(self):
+        return [('is_storable', '=', True)]
+
+    def _get_accounts_by_product(self, products=None):
+        if not products:
+            products = self.env['product.product'].with_company(self).search_fetch(
+                self._get_valuation_product_domain(), ['categ_id'],
+            )
+
+        accounts_by_product = {}
+        for product in products:
+            accounts = product._get_product_accounts()
+            accounts_by_product[product] = {
+                'valuation': accounts['stock_valuation'],
+                'variation': accounts['stock_variation'],
+                'expense': accounts['expense'],
+            }
+        return accounts_by_product
+
+    @api.model
+    def _get_extra_balance(self, vals_list=None):
+        extra_balance = defaultdict(float)
+        if not vals_list:
+            return extra_balance
+        for vals in vals_list:
+            extra_balance[vals['account_id']] += (vals['debit'] - vals['credit'])
+        return extra_balance
+>>>>>>> 26d8f1fefcf4b0e2ee2534e35e4eaee59271ba34
 
     def _get_location_valuation_vals(self, at_date=None, location_domain=False):
         """ Reclassification entries between stock locations with their own valuation account. """
