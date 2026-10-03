@@ -10,24 +10,72 @@ patch(TicketScreen.prototype, {
         const discountLines = order.discountLines;
         const destinationOrder = this.pos.getOrder();
 
-        if (discountLines?.length && destinationOrder) {
-            const { value, type } = order.globalDiscountPc;
-            this.pos.applyDiscount(value, type, destinationOrder);
+        const globalDiscountPc = order.globalDiscountPc;
+        if (discountLines?.length && destinationOrder && globalDiscountPc.type !== "fixed") {
+            this.pos.applyDiscount(globalDiscountPc.value, globalDiscountPc.type, destinationOrder);
         }
     },
 
     _onUpdateSelectedOrderline() {
-        const selectedOrderlineId = this.getSelectedOrderlineId();
-        const orderline = this.getSelectedOrder().lines.find(
-            (line) => line.id == selectedOrderlineId
-        );
-        if (orderline && orderline.product_id.id === this.pos.config.discount_product_id?.id) {
+        const order = this.getSelectedOrder();
+        const lines = order.lines;
+        const selectedOrderline = lines.find((line) => line.id === this.getSelectedOrderlineId());
+
+        if (selectedOrderline && selectedOrderline.isDiscountLine) {
             return this.dialog.add(AlertDialog, {
                 title: _t("Oh snap !"),
                 body: _t("You cannot edit a discount line."),
             });
         }
-        return super._onUpdateSelectedOrderline(...arguments);
+        const result = super._onUpdateSelectedOrderline(...arguments);
+        if (order.globalDiscountPc.type !== "fixed") {
+            return result;
+        }
+
+        const taxKey = (taxIds) =>
+            taxIds
+                .map((tax) => tax.id)
+                .sort((a, b) => a - b)
+                .join("_");
+
+        const refundableLines = lines.filter((line) => !line.isDiscountLine);
+        const totalPriceMap = new Map();
+        for (const line of refundableLines) {
+            const key = taxKey(line.tax_ids);
+            totalPriceMap.set(key, line.price_subtotal_incl + (totalPriceMap.get(key) || 0));
+        }
+
+        const ratios = new Map();
+        for (const orderline of refundableLines) {
+            const key = taxKey(orderline.tax_ids);
+            const total = totalPriceMap.get(key);
+            if (!total) {
+                continue;
+            }
+            const detail = this.getToRefundDetail(orderline);
+            ratios.set(
+                key,
+                (ratios.get(key) || 0) +
+                    (detail.qty / orderline.qty) *
+                        (orderline.price_subtotal_incl / totalPriceMap.get(key))
+            );
+        }
+
+        for (const discountLine of order.discountLines) {
+            const discountRefundDetail = this.getToRefundDetail(discountLine);
+            if (!discountLine.price_unit) {
+                continue;
+            }
+            const qty =
+                this.pos.currency.round(
+                    (ratios.get(taxKey(discountLine.tax_ids)) || 0) * discountLine.price_unit
+                ) / discountLine.price_unit;
+            if (qty !== discountRefundDetail.qty) {
+                this._setToRefundDetail(discountRefundDetail, qty.toString());
+            }
+        }
+
+        return result;
     },
 
     onClickOrderline(orderline) {
