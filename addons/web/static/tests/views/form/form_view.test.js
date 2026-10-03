@@ -12557,6 +12557,100 @@ test("onchange returns values w.r.t. extended record specs, for not extended one
     expect.verifySteps(["web_save"]);
 });
 
+test("onchange: update an existing x2m record after an invisible x2m update", async () => {
+    Partner._records[0].child_ids = [2];
+    Partner._onChanges = {
+        foo(record) {
+            record.child_ids = [[1, 2, { name: "first update", type_ids: [[4, 12]] }]];
+        },
+        int_field(record) {
+            record.child_ids = [[1, 2, { name: "second update" }]];
+        },
+    };
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].child_ids).toEqual([[1, 2, { name: "second update", type_ids: [[4, 12]] }]]);
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="foo"/>
+                <field name="int_field"/>
+                <field name="child_ids">
+                    <list editable="bottom">
+                        <field name="name"/>
+                        <field name="type_ids" column_invisible="1"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    await contains(`.o_field_widget[name=foo] input`).edit("trigger");
+    expect(queryAllTexts(`.o_data_cell`)).toEqual(["first update"]);
+    await contains(`.o_field_widget[name=int_field] input`).edit("3");
+    expect(queryAllTexts(`.o_data_cell`)).toEqual(["second update"]);
+    await contains(`.o_form_button_save`).click();
+    expect.verifySteps(["web_save"]);
+});
+
+test("onchange: update a new x2m record after an invisible x2m update", async () => {
+    Partner._onChanges = {
+        foo() {},
+        int_field() {},
+    };
+    onRpc("onchange", ({ args }) => {
+        const [fieldName] = args[2];
+        if (fieldName !== "foo" && fieldName !== "int_field") {
+            return;
+        }
+        const virtualId = args[1].child_ids[0][1];
+        const values =
+            fieldName === "foo"
+                ? { name: "first update", type_ids: [[4, 12, { id: 12 }]] }
+                : { name: "second update" };
+        return { value: { child_ids: [[1, virtualId, values]] } };
+    });
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        const [command] = args[1].child_ids;
+        expect(command[0]).toBe(0);
+        expect(command[2].name).toBe("second update");
+        expect(command[2].type_ids).toEqual([[4, 12]]);
+    });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="foo"/>
+                <field name="int_field"/>
+                <field name="child_ids">
+                    <list editable="bottom">
+                        <field name="name"/>
+                        <field name="type_ids" column_invisible="1"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    await contains(`.o_field_x2many_list_row_add a`).click();
+    await contains(`.o_data_row .o_field_widget[name=name] input`).edit("new line", {
+        confirm: "blur",
+    });
+    await contains(`.o_field_widget[name=foo] input`).edit("trigger");
+    expect(queryAllTexts(`.o_data_cell`)).toEqual(["first update"]);
+    await contains(`.o_field_widget[name=int_field] input`).edit("3");
+    expect(queryAllTexts(`.o_data_cell`)).toEqual(["second update"]);
+    await contains(`.o_form_button_save`).click();
+    expect.verifySteps(["web_save"]);
+});
+
 test(`do not perform button action for records with invalid datas`, async () => {
     mockService("action", {
         doActionButton(params) {
