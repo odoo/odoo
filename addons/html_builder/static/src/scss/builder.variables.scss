@@ -246,7 +246,13 @@ $o-we-sidebar-content-field-toggle-control-bg: $o-we-fg-lighter !default;
             // gradient) take precedence over a theme preset with a gradient.
             background-image: none;
         }
-        @include o-bg-color($-color, $with-extras: $with-extras, $background: $background, $important: false);
+        @if $-color and type-of($identifier) == 'string' {
+            // A named color is read from its custom property (with the colors
+            // computed from it), so that it can change at runtime.
+            @include o-bg-color-var($identifier, $-color, $with-extras: $with-extras, $important: false, $background: $background);
+        } @else {
+            @include o-bg-color($-color, $with-extras: $with-extras, $background: $background, $important: false);
+        }
     }
 }
 

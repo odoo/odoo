@@ -239,10 +239,12 @@ class TestWebsiteThemeGates(odoo.tests.HttpCase):
         return self.website.with_context(website_id=self.website.id)._get_theme_gates().split()
 
     def test_theme_gates(self):
-        # The default header has a shadow.
-        self.assertEqual(self._get_theme_gates(), ['menu-shadow-class'])
+        # The default header has a shadow, the default palette sets the
+        # headings color of two color presets.
+        default = ['menu-shadow-class', 'o-cc2-headings', 'o-cc5-headings']
+        self.assertEqual(self._get_theme_gates(), default)
         self.assertIn(
-            'data-o-theme-gates="menu-shadow-class"', self.url_open('/').text.partition('<head')[0])
+            f'data-o-theme-gates="{' '.join(default)}"', self.url_open('/').text.partition('<head')[0])
 
         self._set_values({
             'headings-font-weight-bold': '800',
@@ -251,9 +253,25 @@ class TestWebsiteThemeGates(odoo.tests.HttpCase):
             # Same as the headings value: not set apart.
             'display-1-margin-top': '0',
         })
-        expected = ['headings-font-weight-bold', 'input-border-bottom-width', 'menu-shadow-class']
+        expected = ['headings-font-weight-bold', 'input-border-bottom-width', *default]
         self.assertEqual(self._get_theme_gates(), expected)
         self.assertIn(
             f'data-o-theme-gates="{' '.join(expected)}"',
             self.url_open('/').text.partition('<head')[0],
         )
+
+    def test_color_gates(self):
+        self.env['website.assets'].with_context(website_id=self.website.id).make_scss_customization(
+            '/website/static/src/scss/options/colors/user_color_palette.scss', {
+                'o-cc1-headings': '#123456',
+                # A dark header.
+                'menu-custom': '#000000',
+            })
+        self._set_values({'o-cc3-bg-gradient': 'linear-gradient(#FFFFFF, #000000)'})
+        self.assertEqual(self._get_theme_gates(), [
+            'menu-shadow-class', 'menu-dark',
+            'o-cc1-headings', 'o-cc2-headings', 'o-cc3-bg-gradient', 'o-cc5-headings',
+        ])
+        # A dark palette: dark body background too.
+        self._set_values({'color-palettes-name': "'default-dark-1'"})
+        self.assertIn('body-dark', self._get_theme_gates())

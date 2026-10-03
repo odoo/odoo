@@ -68,7 +68,7 @@
 
 // Update the border color when hovering form-select elements
 .form-select:where(:not(:disabled)):hover {
-    border-color: $form-check-input-checked-border-color;
+    border-color: o-component-active-bg-var($form-check-input-checked-border-color);
 }
 
 // Disable RTL for the dropdown position
@@ -129,7 +129,7 @@ $o-datetime-picker-reduced-width: calc(5px * 7 * 7 + (2 * #{map-get($spacers, 2)
 .btn {
     &:focus-visible {
         // Make sure to have a fallback for :focus-visible state when the element use only the `.btn` class.
-        box-shadow: var(--#{$prefix}btn-focus-box-shadow, 0 0 0 #{$btn-focus-width} RGBA(#{$btn-link-focus-shadow-rgb}, .5));
+        box-shadow: var(--#{$prefix}btn-focus-box-shadow, 0 0 0 #{$btn-focus-width} RGBA(var(--o-btn-link-focus-shadow-rgb, #{$btn-link-focus-shadow-rgb}), .5));
     }
 
     &.btn-link.btn-link-inline {

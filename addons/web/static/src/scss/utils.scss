@@ -157,7 +157,7 @@
     }
 
     &:hover, &:hover .form-check-input:not(:disabled) {
-        border-color: $form-check-input-checked-border-color;
+        border-color: o-component-active-bg-var($form-check-input-checked-border-color);
     }
 }
 
@@ -352,6 +352,12 @@
     } @else {
         #{$property}: #{$size};
     }
+}
+
+// Bootstrap's `$component-active-bg` (or `$color`, if different) as its custom
+// property, which a module can print to change it at runtime.
+@function o-component-active-bg-var($color) {
+    @return if($color == $component-active-bg, var(--o-component-active-bg, #{$color}), $color);
 }
 
 // Print a document property the right way (depending on the type of the
