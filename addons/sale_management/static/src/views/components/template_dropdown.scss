@@ -1,24 +1,28 @@
 .o_sale_management_template {
+    .o_template_icon_group {
+        // The icons are secondary to the row label, so they sit one step below it.
+        --oi-font-size: #{$o-font-size-base-smaller};
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: $spacer * 1.5; // 24px is the minimum target size
+            min-height: $spacer * 1.5;
+        }
+    }
+
     @include media-breakpoint-up(sm) {
         .o_template_icon_group {
-            visibility: hidden;
+            // opacity so buttons stay focusable for keyboard navigation
+            opacity: 0;
+            pointer-events: none;
         }
 
-        &:hover, &.focus {
+        &:hover, &.focus, &:focus-within {
             .o_template_icon_group {
-                visibility: visible;
-
-                .btn {
-                    color: $text-muted !important;
-
-                    &.btn-link:hover {
-                        color: $btn-link-hover-color !important;
-                    }
-
-                    &[data-icon='delete']:hover {
-                        color: $o-danger !important;
-                    }
-                }
+                opacity: 1;
+                pointer-events: auto;
             }
         }
     }
