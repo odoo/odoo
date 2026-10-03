@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Composer.suggestionPartner" t-inherit-mode="extension">
+        <xpath expr="//span[@t-if='partner.email']" position="before">
+            <span t-if="partner.inMeetingEndText" class="text-success me-1 smaller fw-bold opacity-75 flex-shrink-0">
+                <i class="oi oi-filled me-1" data-icon="calendar_today"/>
+                <t t-out="partner.inMeetingEndText"/>
+            </span>
+        </xpath>
+    </t>
+</templates>
