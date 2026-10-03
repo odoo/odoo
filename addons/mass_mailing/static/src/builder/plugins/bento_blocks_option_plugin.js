@@ -32,7 +32,9 @@ export class BentoBlocksAddCardOption extends BaseOptionComponent {
     static template = "mass_mailing.BentoBlocksAddCardOption";
 }
 
-registry.category("mass_mailing-plugins").add(BentoBlocksOptionPlugin.id, BentoBlocksOptionPlugin);
+registry
+    .category("mass_mailing-builder-plugins")
+    .add(BentoBlocksOptionPlugin.id, BentoBlocksOptionPlugin);
 
 registry
     .category("mass_mailing-options")

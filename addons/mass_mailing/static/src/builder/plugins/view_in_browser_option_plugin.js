@@ -78,5 +78,5 @@ export class ToggleViewInBrowserAction extends BuilderAction {
 }
 
 registry
-    .category("mass_mailing-plugins")
+    .category("mass_mailing-builder-plugins")
     .add(ViewInBrowserOptionPlugin.id, ViewInBrowserOptionPlugin);
