@@ -259,6 +259,22 @@ const VariantMixin = {
         }
     },
 
+    _updateBaseUnitPrice(parent, combination) {
+        const pricePerUom = parent.querySelector('.o_base_unit_price')
+            ?.querySelector('.oe_currency_value');
+        if (pricePerUom) {
+            const hasPrice = combination.is_combination_possible && combination.base_unit_price !== 0;
+            pricePerUom.closest('.o_base_unit_price_wrapper').classList.toggle('d-none', !hasPrice);
+            if (hasPrice) {
+                pricePerUom.textContent = this._priceToStr(combination.base_unit_price, combination.currency_precision);
+                const unit = parent.querySelector('.oe_custom_base_unit');
+                if (unit) {
+                    unit.textContent = combination.base_unit_name;
+                }
+            }
+        }
+    },
+
     /**
      * @see onChangeVariant
      *
@@ -275,19 +291,7 @@ const VariantMixin = {
             productPrice.classList.add('decimal_precision');
             productPrice.dataset.precision = precision;
         }
-        const pricePerUom = parent.querySelector('.o_base_unit_price')
-            ?.querySelector('.oe_currency_value');
-        if (pricePerUom) {
-            const hasPrice = isCombinationPossible && combination.base_unit_price !== 0;
-            pricePerUom.closest('.o_base_unit_price_wrapper').classList.toggle('d-none', !hasPrice);
-            if (hasPrice) {
-                pricePerUom.textContent = this._priceToStr(combination.base_unit_price, precision);
-                const unit = parent.querySelector('.oe_custom_base_unit');
-                if (unit) {
-                    unit.textContent = combination.base_unit_name;
-                }
-            }
-        }
+        this._updateBaseUnitPrice(parent, combination);
 
         // Triggers a new JS event with the correct payload, which is then handled
         // by the google analytics tracking code.
