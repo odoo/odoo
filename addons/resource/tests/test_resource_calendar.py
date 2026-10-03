@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime, UTC
+from datetime import date, datetime, UTC
 from zoneinfo import ZoneInfo
 
+from odoo.fields import Command
 from odoo.tests import Form
 from odoo.tests.common import tagged, TransactionCase
 
@@ -209,3 +210,62 @@ class TestResourceCalendar(TransactionCase):
             self.assertEqual(len(calendar.attendance_ids_1st_week), 5)
             self.assertEqual(len(calendar.attendance_ids_2nd_week), 5)
             self.assertTrue(calendar.two_weeks_calendar)
+
+    def test_duration_based_work_hours_and_attendance_intervals(self):
+        """
+            Verifies that a duration-based calendar correctly computes daily work hours and
+            generates attendance intervals that adapt to the requested time range,
+            including full-day and partial-day queries.
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Duration based Calendar',
+            'attendance_ids': [
+                Command.clear(),
+                Command.create({'dayofweek': '0', 'duration_hours': 8, 'hour_from': 0, 'hour_to': 0}),  # Monday
+            ],
+        })
+        self.assertEqual(calendar._get_duration_based_work_hours_on_date(date(2025, 11, 3)), 8)
+        self.assertEqual(calendar._get_duration_based_work_hours_on_date(date(2025, 11, 4)), 0)
+
+        resource = self.env['resource.resource'].create({'name': 'Test Resource', 'tz': 'UTC'})
+        resources_per_tz = {UTC: resource}
+
+        def _get_intervals(start_dt, end_dt):
+            intervals = calendar._attendance_intervals_batch(start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
+            return [(start, stop) for start, stop, _ in intervals._items]
+
+        self.assertEqual(
+            _get_intervals(datetime(2025, 11, 3, 0, 0, 0, tzinfo=UTC), datetime(2025, 11, 3, 23, 59, 59, tzinfo=UTC)),
+            [(datetime(2025, 11, 3, 8, 0, tzinfo=UTC), datetime(2025, 11, 3, 16, 0, tzinfo=UTC))],
+        )
+        self.assertEqual(
+            _get_intervals(datetime(2025, 11, 3, 0, 0, 0, tzinfo=UTC), datetime(2025, 11, 3, 3, 0, 0, tzinfo=UTC)),
+            [(datetime(2025, 11, 3, 0, 0, tzinfo=UTC), datetime(2025, 11, 3, 3, 0, tzinfo=UTC))],
+        )
+        self.assertEqual(
+            _get_intervals(datetime(2025, 11, 3, 0, 0, 0, tzinfo=UTC), datetime(2025, 11, 3, 15, 0, 0, tzinfo=UTC)),
+            [(datetime(2025, 11, 3, 7, 0, tzinfo=UTC), datetime(2025, 11, 3, 15, 0, tzinfo=UTC))],
+        )
+
+        start_dt, end_dt = datetime(2025, 11, 3, 10, 0, 0, tzinfo=UTC), datetime(2025, 11, 3, 18, 0, 0, tzinfo=UTC)
+        self.assertEqual(_get_intervals(start_dt, end_dt), [(start_dt, end_dt)])
+        start_dt, end_dt = datetime(2025, 11, 3, 18, 0, 0, tzinfo=UTC), datetime(2025, 11, 3, 23, 59, 59, tzinfo=UTC)
+        self.assertEqual(_get_intervals(start_dt, end_dt), [(start_dt, end_dt)])
+
+    def test_fixed_hours_work_hours(self):
+        """
+            Verifies that fixed-hour calendars correctly compute work hours for a full day
+            and by morning/afternoon periods.
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Fixed Calendar',
+            'attendance_ids': [
+                Command.clear(),
+                Command.create({'dayofweek': '1', 'hour_from': 8, 'hour_to': 11}),
+                Command.create({'dayofweek': '1', 'hour_from': 13, 'hour_to': 18}),
+            ],
+        })
+
+        self.assertEqual(calendar._get_fixed_hours_on_date(date(2025, 11, 4)), 8)
+        self.assertEqual(calendar._get_fixed_hours_on_date(date(2025, 11, 4), day_period='morning'), 3)
+        self.assertEqual(calendar._get_fixed_hours_on_date(date(2025, 11, 4), day_period='afternoon'), 5)
