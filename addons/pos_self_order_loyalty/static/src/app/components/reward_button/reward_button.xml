@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_loyalty.RewardButton">
+        <button
+            class="btn btn-secondary btn-lg d-flex align-items-center gap-2 btn-reward px-3 text-nowrap"
+            t-att-class="{
+                'btn-reward-glow': this.hasRewards,
+            }"
+            t-att-disabled="this.isDisabled"
+            t-on-click.stop="this.clickRewardButton"
+            >
+            <t t-if="this.router.activeSlot === 'cart'">
+                <t t-if="this.ui.isSmall">
+                    <t t-if="!this.selfOrder.currentOrder.getPartner()">
+                        <i class="oi" data-icon="account_circle" aria-hidden="true"/>
+                    </t>
+                    <t t-else="">
+                        <i class="oi" data-icon="card_giftcard" aria-hidden="true"/>
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-if="!this.selfOrder.currentOrder.getPartner()">
+                        <span class="text-truncate">Identify yourself</span>
+                    </t>
+                    <t t-else="">
+                        <span class="fs-3 text-truncate">Apply Rewards</span>
+                    </t>
+                </t>
+            </t>
+            <t t-else="">
+                <i class="oi flex-shrink-0" data-icon="card_giftcard" aria-hidden="true"/>
+                <div class="position-relative" t-if="!this.ui.isSmall">
+                    <t t-set="loyalty_points" t-value="this.getPartnerLoyaltyPoints()"/>
+                    <!-- in flow: sets the button's width and height -->
+                    <span class="d-block fs-3 px-1 invisible" aria-hidden="true">Claim your rewards</span>
+                    <!-- out of flow: centered on the ghost, may overflow into the padding -->
+                    <div class="position-absolute top-50 start-0 w-100 translate-middle-y">
+                        <t t-if="!this.selfOrder.currentOrder.getPartner() and !this.hasRewards">
+                            <span class="d-block text-truncate">Rewards</span>
+                        </t>
+                        <t t-else="">
+                            <div class="lh-1" t-att-class="{'roller': this.hasRewards}">
+                                <ul class="list-unstyled m-0 p-0 w-100">
+                                    <li class="d-flex flex-column justify-content-center">
+                                        <span class="fs-3 text-truncate" t-out="this.selfOrder.currentOrder.getPartner().name"/>
+                                        <span t-if="loyalty_points" class="fs-5 fw-normal text-truncate" t-out="loyalty_points"/>
+                                    </li>
+                                    <li t-if="this.hasRewards" class="d-flex align-items-center">
+                                        <span class="fs-3 px-1 text-truncate">Claim your rewards</span>
+                                    </li>
+                                    <li t-if="this.hasRewards" class="d-flex flex-column justify-content-center" aria-hidden="true">
+                                        <span class="fs-3 text-truncate" t-out="this.selfOrder.currentOrder.getPartner().name"/>
+                                        <span t-if="loyalty_points" class="fs-5 fw-normal text-truncate" t-out="loyalty_points"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </button>
+    </t>
+</templates>

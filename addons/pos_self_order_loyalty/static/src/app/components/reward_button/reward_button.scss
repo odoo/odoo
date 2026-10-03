@@ -1,0 +1,25 @@
+.btn-reward-glow {
+    background: linear-gradient(110deg, #f5b300 0%, #ffd766 45%, #fff1b8 50%, #ffd766 55%, #f5b300 100%);
+    background-size: 250% 100%;
+    color: #1f1a0e;
+}
+
+.roller {
+    --roller-h: 3rem;
+    height: var(--roller-h);
+    overflow: hidden;
+
+    ul {
+        animation: roll 6s ease-in-out infinite;
+    }
+
+    li {
+        height: var(--roller-h);
+    }
+}
+
+@keyframes roll {
+    0%, 40%  { transform: translateY(0); }
+    50%, 90% { transform: translateY(calc(-1 * var(--roller-h))); }
+    100%     { transform: translateY(calc(-2 * var(--roller-h))); }
+}
