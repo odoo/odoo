@@ -578,6 +578,15 @@ class Field[T]:
             if not isinstance(self.readonly, bool):
                 warnings.warn(f'Property {self}.readonly should be a boolean ({self.readonly}).', stacklevel=1)
 
+            if self.aggregator == 'sum_currency':
+                # the webclient already requests '<field>:sum_currency' next to the field's own
+                # aggregator; declaring it here makes both specs collide and the measure is dropped
+                raise ValueError(
+                    f"Field {self}: 'sum_currency' cannot be a field aggregator, use 'sum'. "
+                    f"To aggregate in the company currency, pass '{self.name}:sum_currency' "
+                    f"in the read_group aggregates instead."
+                )
+
             if self.store and self._depends_context and not all(
                 (self.translate and c == 'lang')
                 or (self.company_dependent and c == 'company')
