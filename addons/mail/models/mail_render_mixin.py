@@ -405,6 +405,11 @@ class MailRenderMixin(models.AbstractModel):
         Supporting only QWeb allowed expressions, no custom variable in that mode.
         """
         records = self.env[model].browse(res_ids)
+
+        # normalize the HTML (add a parent div to avoid modification of the template
+        # it will be removed by html_normalize)
+        template_src_normalized = html_normalize(f'<div>{template_src}</div>')
+
         result = {}
         for record in records:
             def replace(match):
@@ -422,14 +427,10 @@ class MailRenderMixin(models.AbstractModel):
                 value = escape(value or '')
                 return value if tag.lower() == 't' else f"<{tag}>{value}</{tag}>"
 
-            # normalize the HTML (add a parent div to avoid modification of the template
-            # it will be removed by html_normalize)
-            template_src = html_normalize(f'<div>{template_src}</div>')
-
             result[record.id] = Markup(re.sub(
                 r'''<(\w+)[\s|\n]+t-out=[\s|\n]*(\'|\")((\w|\.)+)(\2)[\s|\n]*((\/>)|(>[\s|\n]*([^<>]*?))[\s|\n]*<\/\1>)''',
                 replace,
-                template_src,
+                template_src_normalized,
                 flags=re.DOTALL,
             ))
 
