@@ -123,7 +123,8 @@ test("should have a button linking to theme tab", async () => {
     );
 
     await contains(":iframe p > a.test-target").click();
-    await contains("a.o-hb-theme-tab-link").click();
+    await contains("[data-label='Type'] .o-hb-select-toggle").click();
+    await contains(".o_popover a.o-hb-theme-tab-link").click();
 
     // Hoot disables transitions by default, so the tab switch relies on the
     // fallback instead of a transitionend event.
