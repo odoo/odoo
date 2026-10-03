@@ -453,8 +453,12 @@
     <record id="hr_attendance_my_action" model="ir.actions.act_window">
         <field name="name">My Attendances</field>
         <field name="res_model">hr.attendance</field>
-        <field name="view_mode">calendar,list,pivot,graph</field>
-        <field name="view_id" ref="hr_attendance_my_calendar_view"/>
+        <field name="view_mode">calendar,list,form,pivot,graph</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'calendar', 'view_id': ref('hr_attendance_my_calendar_view')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_attendance_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('hr_attendance_my_form_view')}),
+        ]"/>
         <field name="domain">[('employee_id.user_id', '=', uid)]</field>
         <field name="search_view_id" ref="hr_attendance_view_filter"/>
         <field name="context">{"search_default_groupby_week": 1}</field>
