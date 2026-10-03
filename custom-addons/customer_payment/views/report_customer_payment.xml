@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Report Action -->
+    <record id="action_report_customer_payment" model="ir.actions.report">
+        <field name="name">Customer Payment Statement</field>
+        <field name="model">customer.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">customer_payment.report_customer_payment_document</field>
+        <field name="report_file">customer_payment.report_customer_payment_document</field>
+        <field name="binding_model_id" ref="model_customer_payment"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Customer Payment - %s' % object.name</field>
+    </record>
+
+    <!-- Report Template -->
+    <template id="report_customer_payment_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Header -->
+                        <div class="row mb-4">
+                            <div class="col-12 text-center">
+                                <h2>Customer Payment Statement</h2>
+                                <p>
+                                    <strong>Period:</strong>
+                                    <span t-esc="'01-' + str(o.year)"/> to <span t-esc="'31-12-' + str(o.year)"/>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Customer Information -->
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <strong>Customer:</strong> <span t-field="o.partner_id.name"/><br/>
+                                <t t-if="o.partner_id.street">
+                                    <span t-field="o.partner_id.street"/><br/>
+                                </t>
+                                <t t-if="o.partner_id.phone">
+                                    <strong>Phone:</strong> <span t-field="o.partner_id.phone"/><br/>
+                                </t>
+                            </div>
+                            <div class="col-6 text-end">
+                                <strong>Reference:</strong> <span t-field="o.name"/><br/>
+                                <strong>Year:</strong> <span t-field="o.year"/><br/>
+                                <strong>Status:</strong>
+                                <span t-if="o.state == 'draft'" class="badge bg-secondary">Draft</span>
+                                <span t-if="o.state == 'processed'" class="badge bg-success">Processed</span>
+                            </div>
+                        </div>
+
+                        <!-- Invoices Section -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h4>Invoices</h4>
+                                <table class="table table-sm table-bordered">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Date</th>
+                                            <th>Invoice</th>
+                                            <th class="text-end">Amount</th>
+                                            <!-- <th>Status</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="inv_no" t-value="1"/>
+                                        <tr t-foreach="o.invoice_ids" t-as="invoice">
+                                            <td><span t-esc="inv_no"/></td>
+                                            <td><span t-field="invoice.invoice_date"/></td>
+                                            <td><span t-field="invoice.name"/></td>
+                                            <td class="text-end">
+                                                <span t-field="invoice.amount_total"
+                                                      t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                                            </td>
+                                            <!-- <td>
+                                                <span t-if="invoice.state == 'draft'" class="badge bg-secondary">Draft</span>
+                                                <span t-if="invoice.state == 'posted'" class="badge bg-info">Posted</span>
+                                                <span t-if="invoice.state == 'cancel'" class="badge bg-danger">Cancelled</span>
+                                            </td> -->
+                                            <t t-set="inv_no" t-value="inv_no + 1"/>
+                                        </tr>
+                                        <tr class="table-secondary fw-bold">
+                                            <td colspan="3" class="text-end">Total Invoices</td>
+                                            <td class="text-end">
+                                                <span t-field="o.total_invoice_amount"
+                                                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Payment Entries Section -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h4>Payment Entries</h4>
+
+                                <!-- All Payment Entries (Combined) -->
+                                <t t-set="all_payments" t-value="(o.previous_payment_entry_ids + o.payment_entry_ids).sorted(key=lambda p: p.payment_date)"/>
+                                <t t-if="all_payments">
+                                    <table class="table table-sm table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>No.</th>
+                                                <th>Date</th>
+                                                <th class="text-end">Amount</th>
+                                                <th>Note</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-set="pay_no" t-value="1"/>
+                                            <tr t-foreach="all_payments" t-as="payment">
+                                                <td><span t-esc="pay_no"/></td>
+                                                <td><span t-field="payment.payment_date"/></td>
+                                                <td class="text-end">
+                                                    <span t-field="payment.amount"
+                                                          t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                                </td>
+                                                <td><span t-field="payment.note"/></td>
+                                                <t t-set="pay_no" t-value="pay_no + 1"/>
+                                            </tr>
+                                            <tr class="table-success fw-bold">
+                                                <td colspan="2" class="text-end">Total Payments</td>
+                                                <td class="text-end">
+                                                    <span t-field="o.total_payment_amount"
+                                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </t>
+                                <t t-if="not all_payments">
+                                    <p class="text-muted">No payment entries recorded.</p>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Summary Section -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h4>Summary</h4>
+                                <table class="table table-sm table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width: 70%;"><strong>Total Invoices</strong></td>
+                                            <td class="text-end" style="width: 30%;">
+                                                <span t-field="o.total_invoice_amount"
+                                                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Total Payments</strong></td>
+                                            <td class="text-end">
+                                                <span t-field="o.total_payment_amount"
+                                                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                        <tr class="table-warning fw-bold">
+                                            <td><strong>Balance (Remaining)</strong></td>
+                                            <td class="text-end">
+                                                <span t-field="o.balance"
+                                                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Notes Section -->
+                        <div class="row mt-4" t-if="o.notes">
+                            <div class="col-12">
+                                <h5>Notes</h5>
+                                <p t-field="o.notes"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>
