@@ -440,7 +440,7 @@ class CertificateCertificate(models.Model):
                 for record in self
                 if record.content and not record.loading_error
                 for ca_vals in self._parse_chain_missing_ca_vals({
-                    'content': record.content.content,
+                    'content': record.content,
                     'pkcs12_password': record.pkcs12_password,
                     'company_id': record.company_id.id,
                     **vals,
