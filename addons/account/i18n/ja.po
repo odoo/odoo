@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-09-23 02:33+0000\n"
+"POT-Creation-Date: 2026-10-02 17:39+0000\n"
+"PO-Revision-Date: 2026-09-28 07:33+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/account/"
 "ja/>\n"
@@ -709,8 +709,9 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (参照番号: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        金額： <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        金額： <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        請求元：<t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            この請求書はすでにお支払い済みです。\n"
@@ -820,8 +821,9 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (参照番号: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        金額： <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        金額： <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"143,750.00</span>\n"
 "        発行元：<t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            このセルフビリング請求書はすでにお支払い済みです。\n"
@@ -1437,7 +1439,8 @@ msgstr "<span> 請求書</span>"
 msgid ""
 "<span> already exists for this period. Posting this entry will replace it.</"
 "span>"
-msgstr "<span>がこの期間に既に存在します。この仕訳を記帳すると上書きされます。</span>"
+msgstr ""
+"<span>がこの期間に既に存在します。この仕訳を記帳すると上書きされます。</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3299,43 +3302,43 @@ msgstr "未払金合計"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
-msgid "Accumulated Amortization - Buildings"
-msgstr "減価償却累計 - 建物"
+msgid "Accumulated Depreciation - Buildings"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
-msgid "Accumulated Amortization - Furniture & Fixtures"
-msgstr "減価償却累計 - 家具・備品"
+msgid "Accumulated Depreciation - Furniture & Fixtures"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
-msgid "Accumulated Amortization - Improvements"
-msgstr "減価償却累計 - 改良費"
+msgid "Accumulated Depreciation - Improvements"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
-msgid "Accumulated Amortization - Machines & Tools"
-msgstr "減価償却累計 - 機械・工具"
+msgid "Accumulated Depreciation - Machines & Tools"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
-msgid "Accumulated Amortization - Other Property"
-msgstr "減価償却累計 - その他の不動産"
+msgid "Accumulated Depreciation - Other Property"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
-msgid "Accumulated Amortization - Technology"
-msgstr "減価償却累計 - テクノロジー"
+msgid "Accumulated Depreciation - Technology"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
-msgid "Accumulated Amortization - Vehicles"
-msgstr "減価償却累計 - 車両"
+msgid "Accumulated Depreciation - Vehicles"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
-msgid "Accumulated Depreciation"
-msgstr "減価償却累計額"
+msgid "Accumulated Depreciation Misc"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.21_retained_earnings
@@ -4100,7 +4103,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "An individual identifier cannot be combined with a VAT number."
-msgstr "個人識別番号とVAT(付加価値税)番号を組み合わせて使用することはできません。"
+msgstr ""
+"個人識別番号とVAT(付加価値税)番号を組み合わせて使用することはできません。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4767,7 +4771,7 @@ msgstr "残高割合が0になることはありません"
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.21_bank_journal_default_account_163
-#: model:account.account,name:account.22_bank_journal_default_account_296
+#: model:account.account,name:account.22_bank_journal_default_account_297
 #: model:account.journal,name:account.21_bank
 #: model:account.journal,name:account.22_bank
 #: model:ir.model.fields,field_description:account.field_res_partner__bank_account_count
@@ -5196,12 +5200,12 @@ msgstr "請求書参照番号"
 #. odoo-python
 #: code:addons/account/report/account_stock_valuation_report.py:0
 msgid "Billed Not Received"
-msgstr "請求済・未入荷"
+msgstr "請求済未入荷"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_accrued_orders_wizard__accrual_type__billed_not_received
 msgid "Billed not received"
-msgstr "請求済・未入荷"
+msgstr "請求済未入荷"
 
 #. module: account
 #. odoo-python
@@ -5600,7 +5604,7 @@ msgstr "以下へ繰越す："
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
-#: model:account.account,name:account.21_cash_journal_default_account_306
+#: model:account.account,name:account.21_cash_journal_default_account_307
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.account_bank_statement_line_view_search_cashflow
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -5614,12 +5618,12 @@ msgid "Cash Account"
 msgstr "現金アカウント"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_303
+#: model:account.account,name:account.21_cash_journal_default_account_304
 msgid "Cash Bakery"
 msgstr "現金 ベーカリー"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_305
+#: model:account.account,name:account.21_cash_journal_default_account_306
 msgid "Cash Bar"
 msgstr "現金バー"
 
@@ -5661,7 +5665,7 @@ msgid "Cash Basis Transition Account"
 msgstr "現金基準移行勘定"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_302
+#: model:account.account,name:account.21_cash_journal_default_account_303
 msgid "Cash Clothes Shop"
 msgstr "現金 洋服店"
 
@@ -5723,7 +5727,7 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "現金値引損償却口座"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_301
+#: model:account.account,name:account.21_cash_journal_default_account_302
 msgid "Cash Furn. Shop"
 msgstr "現金 家具屋"
 
@@ -5738,7 +5742,7 @@ msgid "Cash Out"
 msgstr "出金"
 
 #. module: account
-#: model:account.account,name:account.21_cash_journal_default_account_304
+#: model:account.account,name:account.21_cash_journal_default_account_305
 msgid "Cash Restaurant"
 msgstr "現金レストラン"
 
@@ -6937,7 +6941,9 @@ msgid "Created on"
 msgstr "作成日"
 
 #. module: account
+#. odoo-javascript
 #. odoo-python
+#: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.xml:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
@@ -7069,39 +7075,39 @@ msgstr "口座の累積残高。"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
-msgid "Cumulative amortization recorded for building assets."
-msgstr "建物資産に計上された減価償却累計額。"
+msgid "Cumulative depreciation recorded for building assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
-msgid "Cumulative amortization recorded for capitalized technology assets."
-msgstr "資産計上されたテクノロジー資産に計上された減価償却累計額。"
+msgid "Cumulative depreciation recorded for capitalized technology assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
-msgid "Cumulative amortization recorded for furniture and fixture assets."
-msgstr "家具・什器資産に計上された減価償却累計額。"
+msgid "Cumulative depreciation recorded for furniture and fixture assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
-"Cumulative amortization recorded for leasehold or property improvements."
-msgstr "賃借物件の改良費（資産）に計上された減価償却累計額。"
+"Cumulative depreciation recorded for leasehold or property improvements."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
-msgid "Cumulative amortization recorded for machinery and tool assets."
-msgstr "機械・工具資産に計上された減価償却累計額。"
+msgid "Cumulative depreciation recorded for machinery and tool assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
-msgid "Cumulative amortization recorded for other depreciable property assets."
-msgstr "その他の減価償却資産(不動産)に計上された減価償却累計額。"
+msgid "Cumulative depreciation recorded for other depreciable property assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
-msgid "Cumulative amortization recorded for vehicle assets."
-msgstr "車両資産に計上された減価償却累計額。"
+msgid "Cumulative depreciation recorded for vehicle assets."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_retained_earnings
@@ -7556,7 +7562,9 @@ msgid "Days on the next month"
 msgstr "翌月指定日"
 
 #. module: account
+#. odoo-javascript
 #. odoo-python
+#: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.xml:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
@@ -7866,6 +7874,11 @@ msgstr "非推奨リンク"
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
 msgid "Depreciation"
 msgstr "減価償却"
+
+#. module: account
+#: model:account.account,name:account.22_account_account_us_deprec_amort_expense
+msgid "Depreciation & Amortization Expense"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_buildings
@@ -10627,9 +10640,9 @@ msgid ""
 "will                                            depend upon the output of "
 "the verification by the European VIES Service."
 msgstr ""
-"このチェックボックスをオンにした場合、適用されるデフォルトの会計ポジションは"
-"、                                            欧州VIESサービスによる検証の出"
-"力によって異なります。"
+"このチェックボックスをオンにした場合、適用されるデフォルトの会計ポジション"
+"は、                                            欧州VIESサービスによる検証の"
+"出力によって異なります。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__is_journal_hash
@@ -11244,6 +11257,7 @@ msgstr "在庫期間"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#: code:addons/account/report/account_stock_valuation_report.py:0
 #: model:account.account,name:account.21_stock_valuation
 #: model:account.account,name:account.22_account_account_us_inventory_valuation
 #: model:account.journal,name:account.21_inventory_valuation
@@ -11552,12 +11566,12 @@ msgstr "請求済"
 #. odoo-python
 #: code:addons/account/report/account_stock_valuation_report.py:0
 msgid "Invoiced Not Delivered"
-msgstr "請求済・未納品"
+msgstr "請求済未出荷"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_accrued_orders_wizard__accrual_type__invoiced_not_delivered
 msgid "Invoiced not delivered"
-msgstr "請求済・未納品"
+msgstr "請求済未出荷"
 
 #. module: account
 #. odoo-python
@@ -11653,12 +11667,12 @@ msgstr "確認待ち請求書"
 #. odoo-python
 #: code:addons/account/report/account_stock_valuation_report.py:0
 msgid "Invoices to be Issued"
-msgstr "未発行の請求書"
+msgstr "発行予定請求書"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_accrued_orders_wizard__accrual_type__invoice_to_be_issued
 msgid "Invoices to be issued"
-msgstr "未発行の請求書"
+msgstr "発行予定請求書"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
@@ -11955,6 +11969,7 @@ msgstr "仕訳通貨"
 #: model:ir.actions.act_window,name:account.action_move_journal_line
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#: model_terms:ir.ui.view,arch_db:account.account_move_view_list_stock_closing
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
@@ -14346,6 +14361,12 @@ msgstr "その他収益"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Other Info"
 msgstr "その他情報"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.js:0
+msgid "Other Stock Variation"
+msgstr ""
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_other_property
@@ -17992,8 +18013,8 @@ msgstr "在庫勘定"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
-msgid "Stock Closing"
-msgstr "在庫期末処理"
+msgid "Stock Closing as of %(date)s"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_stock_journal
@@ -18021,7 +18042,7 @@ msgstr "在庫評価勘定 有効"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/account/report/account_stock_valuation_report.py:0
-#: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.xml:0
+#: code:addons/account/static/src/components/stock_valuation/stock_valuation_report.js:0
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
 msgid "Stock Variation"
 msgstr "在庫変動"
@@ -20323,7 +20344,8 @@ msgstr "この仕訳は%sから逆仕訳されました"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reviewed by accountants, only them can edit it now."
-msgstr "この仕訳は会計士による確認が完了しているため、会計士のみが編集できます。"
+msgstr ""
+"この仕訳は会計士による確認が完了しているため、会計士のみが編集できます。"
 
 #. module: account
 #. odoo-python
@@ -20648,6 +20670,7 @@ msgstr "本日の活動"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_total
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
+#: model_terms:ir.ui.view,arch_db:account.account_move_view_list_stock_closing
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
@@ -20687,12 +20710,6 @@ msgstr "貸方合計"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Total Debit"
 msgstr "借方合計"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/report/account_stock_valuation_report.py:0
-msgid "Total Inventory Valuation"
-msgstr "総在庫評価額"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__total_invoiced
@@ -21850,7 +21867,8 @@ msgstr "この銀行口座に関連する台帳に名前を付けるために使
 msgid ""
 "With perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
-msgstr "継続記録評価の場合、この勘定には標準価格と請求価格の差額が計上されます。"
+msgstr ""
+"継続記録評価の場合、この勘定には標準価格と請求価格の差額が計上されます。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -23379,8 +23397,61 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.payment_receipt_title }} (参照{{ "
-"object.name or 'n/a' }})"
+"{{ object.company_id.name }} {{ object.payment_receipt_title }} (参照"
+"{{ object.name or 'n/a' }})"
+
+#~ msgid "Accumulated Amortization - Buildings"
+#~ msgstr "減価償却累計 - 建物"
+
+#~ msgid "Accumulated Amortization - Furniture & Fixtures"
+#~ msgstr "減価償却累計 - 家具・備品"
+
+#~ msgid "Accumulated Amortization - Improvements"
+#~ msgstr "減価償却累計 - 改良費"
+
+#~ msgid "Accumulated Amortization - Machines & Tools"
+#~ msgstr "減価償却累計 - 機械・工具"
+
+#~ msgid "Accumulated Amortization - Other Property"
+#~ msgstr "減価償却累計 - その他の不動産"
+
+#~ msgid "Accumulated Amortization - Technology"
+#~ msgstr "減価償却累計 - テクノロジー"
+
+#~ msgid "Accumulated Amortization - Vehicles"
+#~ msgstr "減価償却累計 - 車両"
+
+#~ msgid "Accumulated Depreciation"
+#~ msgstr "減価償却累計額"
+
+#~ msgid "Cumulative amortization recorded for building assets."
+#~ msgstr "建物資産に計上された減価償却累計額。"
+
+#~ msgid "Cumulative amortization recorded for capitalized technology assets."
+#~ msgstr "資産計上されたテクノロジー資産に計上された減価償却累計額。"
+
+#~ msgid "Cumulative amortization recorded for furniture and fixture assets."
+#~ msgstr "家具・什器資産に計上された減価償却累計額。"
+
+#~ msgid ""
+#~ "Cumulative amortization recorded for leasehold or property improvements."
+#~ msgstr "賃借物件の改良費（資産）に計上された減価償却累計額。"
+
+#~ msgid "Cumulative amortization recorded for machinery and tool assets."
+#~ msgstr "機械・工具資産に計上された減価償却累計額。"
+
+#~ msgid ""
+#~ "Cumulative amortization recorded for other depreciable property assets."
+#~ msgstr "その他の減価償却資産(不動産)に計上された減価償却累計額。"
+
+#~ msgid "Cumulative amortization recorded for vehicle assets."
+#~ msgstr "車両資産に計上された減価償却累計額。"
+
+#~ msgid "Stock Closing"
+#~ msgstr "在庫期末処理"
+
+#~ msgid "Total Inventory Valuation"
+#~ msgstr "総在庫評価額"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0px; padding: 0px;\">\n"

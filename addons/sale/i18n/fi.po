@@ -41,8 +41,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:38+0000\n"
-"PO-Revision-Date: 2026-09-26 09:33+0000\n"
+"POT-Creation-Date: 2026-10-02 17:40+0000\n"
+"PO-Revision-Date: 2026-10-01 09:33+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/sale/fi/"
 ">\n"
@@ -107,8 +107,16 @@ msgstr "%(attribute)s: %(values)s"
 #. odoo-python
 #: code:addons/sale/wizard/accrued_orders.py:0
 msgid ""
-"%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
-"delivered at %(unit_price)s"
+"%(order)s - %(order_line)s: Goods Delivered not Invoiced (perpetual "
+"valuation)"
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/accrued_orders.py:0
+msgid ""
+"%(order)s - %(order_line)s: Goods Invoiced not Delivered (perpetual "
+"valuation)"
 msgstr ""
 
 #. module: sale
@@ -2664,7 +2672,7 @@ msgstr "Toimitusosoite"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivery Date"
-msgstr "Toimituspvm"
+msgstr "Toimituspäivä"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
@@ -3056,7 +3064,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
 msgid "Expected Date"
-msgstr "Oletettu päivämäärä"
+msgstr "Odotettu päivä"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
@@ -3231,18 +3239,6 @@ msgstr "Yleinen alennus"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Go ahead and send the quotation."
 msgstr "Lähetä tarjous."
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/wizard/accrued_orders.py:0
-msgid "Goods Delivered not Invoiced (perpetual valuation)"
-msgstr ""
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/wizard/accrued_orders.py:0
-msgid "Goods Invoiced not Delivered (perpetual valuation)"
-msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -3758,7 +3754,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/date_filter_button/date_filter_button.js:0
 msgid "Last 365 days"
-msgstr ""
+msgstr "Viimeiset 365 päivää"
 
 #. module: sale
 #. odoo-javascript
@@ -3770,7 +3766,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/date_filter_button/date_filter_button.js:0
 msgid "Last 90 days"
-msgstr ""
+msgstr "Viimeiset 90 päivää"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -4316,7 +4312,7 @@ msgstr "Tilausmäärä"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Order Date"
-msgstr "Tilauksen pvm"
+msgstr "Tilauspäivä"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4390,7 +4386,7 @@ msgstr "Tilaukset"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/dashboard/dashboard.js:0
 msgid "Orders to Confirm"
-msgstr ""
+msgstr "Vahvistettavat tilaukset"
 
 #. module: sale
 #. odoo-javascript
@@ -4530,7 +4526,7 @@ msgstr "Maksutapahtumien määrä"
 #: model:ir.ui.menu,name:sale.payment_provider_menu
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Payments"
-msgstr ""
+msgstr "Maksut"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pending_email_template_id
@@ -4557,7 +4553,7 @@ msgstr "Portaalin osoite"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
 msgid "Prepayment"
-msgstr ""
+msgstr "Ennakkomaksu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__prepayment_amount
@@ -4724,7 +4720,7 @@ msgstr "Tuotteet"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
 msgid "Promised Delivery"
-msgstr ""
+msgstr "Luvattu toimitus"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4834,7 +4830,7 @@ msgstr "Tarjousten määrä"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quotation Date"
-msgstr "Tarjouksen päiväys"
+msgstr "Tarjouspäivä"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__sent
@@ -5279,7 +5275,7 @@ msgstr "Myyntitilaukset"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/dashboard/dashboard.js:0
 msgid "Sales Revenue"
-msgstr ""
+msgstr "Myyntitulot"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
@@ -5581,6 +5577,9 @@ msgid ""
 "Sold in the last 365 days. Outgoing represents confirmed sales orders not "
 "delivered, or partially delivered"
 msgstr ""
+"Myyty viimeisten 365 päivän aikana. Lähtevät tuotteet ovat vahvistettuja "
+"myyntitilauksia, joita ei ole toimitettu tai jotka on toimitettu vain "
+"osittain"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form

@@ -16,11 +16,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 16:39+0000\n"
+"POT-Creation-Date: 2026-10-02 17:39+0000\n"
+"PO-Revision-Date: 2026-10-01 17:33+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
-"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-4/hr_expense/pt_BR/>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
+"odoo-20/hr_expense/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +55,29 @@ msgid ""
 "on timesheet module so that you are able to automatically re-invoice your "
 "customers' expenses if your work by project.\n"
 msgstr ""
+"\n"
+"Gerenciamento de despesas por funcionários\n"
+"============================\n"
+"\n"
+"Este aplicativo permite que você gerencie as despesas diárias de seus "
+"funcionários. Ele oferece acesso às notas de despesas dos funcionários e lhe "
+"dá o direito de preencher, validar ou recusar as notas. Após a validação, "
+"ele cria uma nota fiscal para o funcionário.\n"
+"O funcionário pode registrar suas próprias despesas, e o fluxo de validação "
+"as insere automaticamente no sistema Financeiro após a aprovação pelos "
+"gerentes.\n"
+"\n"
+"\n"
+"Todo o fluxo é implementado da seguinte forma:\n"
+"---------------------------------\n"
+"* Rascunho de despesa\n"
+"* Enviado pelo funcionário ao seu gerente\n"
+"* Aprovado pelo gerente\n"
+"* Validação pelo contador e criação dos lançamentos contábeis\n"
+"\n"
+"Este módulo também utiliza contabilidade analítica e é compatível com o "
+"módulo de faturamento por planilha de Horas, para que você possa refaturar "
+"automaticamente as despesas de seus clientes caso trabalhe por projetos.\n"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__has_existing_bill
@@ -118,6 +141,8 @@ msgid ""
 "'Expense - %s - %s' % (object.employee_id.name, (object.name or "
 "'').replace('/', ''))"
 msgstr ""
+"'Despesas - %s - %s' % (object.employee_id.name, (object.name or "
+"'').replace('/', ''))"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
@@ -160,7 +185,7 @@ msgstr "<span class=\"o_stat_text\">Lançamento no diário</span>"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "<span class=\"o_stat_text\">Payment</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Pagamento</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -188,6 +213,8 @@ msgid ""
 "<span>This bill was already paid by an employee and the bill has been sent "
 "to you. Don't pay the supplier</span>"
 msgstr ""
+"<span>Essa fatura já foi paga por um funcionário e foi enviada a você. Não "
+"pague ao fornecedor</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
@@ -300,7 +327,7 @@ msgstr "Valor devido"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Amount reimbursed"
-msgstr ""
+msgstr "Valor reembolsado"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -442,7 +469,7 @@ msgstr "Autovalidação"
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__bill_paid_by_employee
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__bill_paid_by_employee
 msgid "Bill Paid By Employee"
-msgstr ""
+msgstr "Conta paga pelo funcionário"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
@@ -461,7 +488,7 @@ msgstr "Pode aprovar"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__can_edit_account
 msgid "Can Edit Account"
-msgstr ""
+msgstr "Pode editar a conta"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__can_reset
@@ -471,7 +498,7 @@ msgstr "Pode redefinir"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Cap Reimbursement to Policy"
-msgstr ""
+msgstr "Reembolso de limite máximo de apólice"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -487,13 +514,13 @@ msgstr "Checksum/SHA1"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Click here to create your employee profile."
-msgstr ""
+msgstr "Clique aqui para criar seu perfil de funcionário."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Click on all expenses"
-msgstr ""
+msgstr "Clique em todas as despesas"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_communication_product_template
@@ -523,7 +550,7 @@ msgstr "Configuração"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__company_currency_id
 msgid "Cost Currency"
-msgstr ""
+msgstr "Moeda de custo"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_kanban_view
@@ -539,7 +566,7 @@ msgstr "Criar uma nova despesa"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Create and edit a new employee profile."
-msgstr ""
+msgstr "Crie e edite um novo perfil de funcionário."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -730,7 +757,7 @@ msgstr "Funcionário"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
 msgid "Employee (Through a Purchase Receipt)"
-msgstr ""
+msgstr "Funcionário (por meio de um recibo de compra)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -765,19 +792,19 @@ msgstr "Digite um nome, escolha um produto e defina o valor das suas despesas."
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Enter the total amount of the expense."
-msgstr ""
+msgstr "Insira o valor total das despesas."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Enter your name to create your employee profile."
-msgstr ""
+msgstr "Digite seu nome para criar seu perfil de funcionário."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Exceeds company limit"
-msgstr ""
+msgstr "Excede o limite da empresa"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__existing_bill_id
@@ -789,7 +816,7 @@ msgstr "Projeto de lei existente"
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__existing_expense_ids
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__existing_expense_ids
 msgid "Existing Expense"
-msgstr ""
+msgstr "Despesa existente"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -835,7 +862,7 @@ msgstr "Aprovador de despesas"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_expense
 msgid "Expense Bills"
-msgstr ""
+msgstr "Notas de despesas"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -860,7 +887,7 @@ msgstr "Gerente de despesas"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_product_job_position_limit
 msgid "Expense Product Limit by Job Position"
-msgstr ""
+msgstr "Limite de despesas por cargo"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -914,7 +941,7 @@ msgstr "Despesa criada a partir de uma divisão."
 #. odoo-python
 #: code:addons/hr_expense/models/account_journal.py:0
 msgid "Expense linked moves"
-msgstr ""
+msgstr "Movimentações vinculadas a despesas"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
@@ -1013,7 +1040,7 @@ msgstr "Despesas para Processar"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_account_invoice_filter_inherit_expense
 msgid "Expenses to post"
-msgstr ""
+msgstr "Despesas com postagem"
 
 #. module: hr_expense
 #. odoo-python
@@ -1088,13 +1115,13 @@ msgstr "Ir para a conta"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Go to expense(s)"
-msgstr ""
+msgstr "Ir para despesas"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Go to the Settings tab to configure the expense approver."
-msgstr ""
+msgstr "Acesse a guia “Configurações” para definir quem aprova as despesas."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1109,7 +1136,7 @@ msgstr "Tem conta existente"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_expense_job_position_limit
 msgid "Has Expense Job Position Limit"
-msgstr ""
+msgstr "Possui limite de despesas por cargo"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
@@ -1129,7 +1156,7 @@ msgstr "Hotel, passagens de avião, táxi, etc."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_tax__hr_expense_ids
 msgid "Hr Expense"
-msgstr ""
+msgstr "Despesas com RH"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
@@ -1213,7 +1240,7 @@ msgstr "Anexos inválidos!"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_account_invoice_filter_inherit_expense
 msgid "Invoices from an expense, approved but not posted yet"
-msgstr ""
+msgstr "Fatura de uma despesa, aprovadas, mas ainda não lançadas"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
@@ -1223,7 +1250,7 @@ msgstr "É editável pelo usuário atual"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_expense_exceeding_job_position_limit
 msgid "Is Expense Exceeding Job Position Limit"
-msgstr ""
+msgstr "É despesa excedendo o limite do cargo"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_is_follower
@@ -1233,7 +1260,7 @@ msgstr "É um seguidor"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_own_expense
 msgid "Is Own Expense"
-msgstr ""
+msgstr "É despesa própria"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_multiple_currency
@@ -1254,22 +1281,22 @@ msgstr "Tudo começa por aqui – vamos lá!"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__expense_job_position_limit_amount
 msgid "Job Position Limit"
-msgstr ""
+msgstr "Limite de cargos"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__expense_job_position_limit_amount_currency
 msgid "Job Position Limit in Currency"
-msgstr ""
+msgstr "Limite do cargo em moeda"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__expense_job_position_limit_ids
 msgid "Job Position Limits"
-msgstr ""
+msgstr "Limites do cargo"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__job_ids
 msgid "Job Positions"
-msgstr ""
+msgstr "Cargos"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_journal
@@ -1358,7 +1385,7 @@ msgstr "Atividades atrasadas"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_product_job_position_limit__job_ids
 msgid "Leave empty to define the limit for all job positions."
-msgstr ""
+msgstr "Deixe em branco para definir o limite para todas as vagas."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_use_mailgateway
@@ -1382,12 +1409,12 @@ msgstr "Vamos voltar às suas despesas."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__limit_amount
 msgid "Limit"
-msgstr ""
+msgstr "Limite"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Limits"
-msgstr ""
+msgstr "Limites"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_stripe
@@ -1429,13 +1456,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Managers can inspect and select expenses from here."
-msgstr ""
+msgstr "Os gerentes podem verificar e selecionar despesas a partir daqui."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Managers can inspect expenses from here."
-msgstr ""
+msgstr "Os gerentes podem verificar as despesas a partir daqui."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -1445,7 +1472,7 @@ msgstr "Marc Demo"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Ícone de símbolos de material, por exemplo, lista de verificação"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_meal_product_template
@@ -1476,19 +1503,19 @@ msgstr "Michel Admin"
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
 msgid "Multiple Managers"
-msgstr ""
+msgstr "Vários gerentes"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
 msgid "Multiple employees"
-msgstr ""
+msgstr "Vários funcionários"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
 msgid "Multiple payment modes"
-msgstr ""
+msgstr "Várias formas de pagamento"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -1547,7 +1574,7 @@ msgstr "Tipo da próxima atividade"
 #. module: hr_expense
 #: model:res.groups.privilege,placeholder:hr_expense.res_groups_privilege_expenses
 msgid "No"
-msgstr ""
+msgstr "Não"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1570,7 +1597,7 @@ msgstr "Sem dados ainda!"
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
 msgid "No employee"
-msgstr ""
+msgstr "Sem funcionários"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
@@ -1588,13 +1615,13 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__company_account
 msgid "None (Paid by Company)"
-msgstr ""
+msgstr "Nenhum (pago pela empresa)"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
 msgid "None (automatic)"
-msgstr ""
+msgstr "Nenhum (automático)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_categories_tree_view
@@ -1710,25 +1737,27 @@ msgstr "Somente uma despesa pode ser vinculada a um determinado pagamento"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_product_job_position_limit.py:0
 msgid "Only one generic expense limit can be defined per product."
-msgstr ""
+msgstr "É possível definir apenas um limite de despesas genérico por produto."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only submitted expenses exceeding a job position limit can be capped."
 msgstr ""
+"Somente despesas enviadas que excedam o limite de um cargo podem ser "
+"limitadas."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Open burger menu."
-msgstr ""
+msgstr "Abrir o menu tipo hambúrguer."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Open the actions menu."
-msgstr ""
+msgstr "Abra o menu de ações."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__split_expense_origin_id
@@ -1835,7 +1864,7 @@ msgstr "Preço:"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Print"
-msgstr ""
+msgstr "Imprimir"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
@@ -1905,6 +1934,9 @@ msgid ""
 "don't <em>need to save</em> - Odoo will save everything for you when you "
 "navigate."
 msgstr ""
+"Pronto? Você pode salvar manualmente ou descartar as alterações a partir "
+"daqui. Você não <em>precisa salvar</em> — o Odoo salvará tudo para você "
+"quando você navegar."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__reason
@@ -2025,7 +2057,7 @@ msgstr "Despesas com o mesmo recibo"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Save the employee profile."
-msgstr ""
+msgstr "Salve o perfil do funcionário."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -2054,13 +2086,13 @@ msgstr "Selecione um produto para continuar."
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Select an employee to proceed."
-msgstr ""
+msgstr "Selecione um funcionário para continuar."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Select the expense approver."
-msgstr ""
+msgstr "Selecione o aprovador das despesas."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -2102,13 +2134,13 @@ msgstr "Enviar faturas em OCR para gerar despesas"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Sequência"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Set an expense approver for this employee."
-msgstr ""
+msgstr "Defina um aprovador de despesas para este funcionário."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
@@ -2187,7 +2219,7 @@ msgstr "Enviar despesa"
 #. module: hr_expense
 #: model:ir.module.module,summary:base.module_hr_expense
 msgid "Submit, validate and reinvoice employee expenses"
-msgstr ""
+msgstr "Envie, valide e fature novamente as despesas do funcionário"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__approval_state__submitted
@@ -2210,7 +2242,7 @@ msgstr "Subtotal na moeda"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Switch to the list view."
-msgstr ""
+msgstr "Alternar para a visualização em lista."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_tax
@@ -2306,6 +2338,19 @@ msgid "The employee expense journal must be a purchase journal."
 msgstr "O diário de despesas dos funcionários deve ser um diário de compras."
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "The existing bill must be set."
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid ""
+"The expense existing bill is not linked, please reference it before "
+"approving."
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
 "The first word of the email subject did not correspond to any product code. "
@@ -2361,6 +2406,9 @@ msgid ""
 "payment method.\n"
 "Please set a vendor on the expenses."
 msgstr ""
+"É necessário indicar um fornecedor para despesas que utilizem a "
+"Transferência de Crédito SEPA como método de pagamento.\n"
+"Por favor, indique um fornecedor nas despesas."
 
 #. module: hr_expense
 #. odoo-python
@@ -2381,7 +2429,7 @@ msgstr "Aqui vamos nós – gerenciamento de despesas em poucas palavras!"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "This expense exceeds the limit of"
-msgstr ""
+msgstr "Essa despesa excede o limite de"
 
 #. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
@@ -2504,7 +2552,7 @@ msgstr "Preço unitário"
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
 msgid "Unknown"
-msgstr ""
+msgstr "Desconhecido"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -2628,6 +2676,8 @@ msgid ""
 "You can't create move for employee-paid expenses belonging to different "
 "companies at the same time"
 msgstr ""
+"Não é possível criar uma movimentação para despesas pagas por funcionários "
+"pertencentes a diferentes empresas ao mesmo tempo"
 
 #. module: hr_expense
 #. odoo-python
@@ -2653,6 +2703,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot cancel an expense linked to a journal entry"
 msgstr ""
+"Não é possível cancelar uma despesa vinculada a um lançamento no diário"
 
 #. module: hr_expense
 #. odoo-python
@@ -2697,6 +2748,8 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot reset to draft an expense linked to a journal entry."
 msgstr ""
+"Não é possível reverter para rascunho uma despesa vinculada a um lançamento "
+"no diário."
 
 #. module: hr_expense
 #. odoo-python
@@ -2746,7 +2799,7 @@ msgstr "Sua despesa foi registrada com sucesso."
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Your job position has a limit of"
-msgstr ""
+msgstr "Sua vaga tem um limite de"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -2756,7 +2809,7 @@ msgstr "alias"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "defined for this job position."
-msgstr ""
+msgstr "definidos para esta vaga."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -2786,7 +2839,7 @@ msgstr "despesa"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "for this expense. You may not be fully reimbursed!"
-msgstr ""
+msgstr "para essa despesa. Você pode não ser totalmente reembolsado!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason

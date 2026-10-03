@@ -10,10 +10,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.2a1+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 19:43+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-01 19:35+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-4/hr_holidays_attendance/pt_BR/>\n"
+"20/hr_holidays_attendance/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +27,8 @@ msgid ""
 "\n"
 "Convert employee's extra hours to leave allocations.\n"
 msgstr ""
+"\n"
+"Converta horas extras de funcionários em alocações de licença.\n"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_accrual_level_view_form
@@ -36,6 +38,10 @@ msgid ""
 "on attendances)</span>\n"
 "            </span>"
 msgstr ""
+"<span name=\"yearly_gain\" position=\"inside\">\n"
+"                <span invisible=\"frequency != 'worked_hours'\"> (dependendo "
+"do Controle de Presença)</span>\n"
+"            </span>"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_accrual_level
@@ -65,12 +71,12 @@ msgstr "Funcionários arquivados"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
 msgid "Attendance"
-msgstr ""
+msgstr "Controle de presenças"
 
 #. module: hr_holidays_attendance
 #: model:ir.module.module,summary:base.module_hr_holidays_attendance
 msgid "Attendance Holidays"
-msgstr ""
+msgstr "Controle de Presença - Férias"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_form
@@ -80,7 +86,7 @@ msgstr "Registros de frequência"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_company__attendance_work_entry_type_id
 msgid "Attendance Time Type"
-msgstr ""
+msgstr "Tipo de horário de presença"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_attendance_report
@@ -95,7 +101,7 @@ msgstr "Controle de presença"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__date
@@ -144,7 +150,7 @@ msgstr "Funcionário"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_version
 msgid "Employee Contract"
-msgstr ""
+msgstr "Contrato do Funcionário"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_attendance_report_view_search
@@ -164,7 +170,7 @@ msgstr "Frequência"
 #. module: hr_holidays_attendance
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_attendance
 msgid "HR Attendance Holidays"
-msgstr ""
+msgstr "RH - Controle de Presença - Folga"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_attendance__id
@@ -219,7 +225,7 @@ msgstr "Nova solicitação de alocação"
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_search_inherit_holidays
 msgid "Overtime Entries"
-msgstr ""
+msgstr "Registros de horas extras"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency__worked_hours
@@ -234,7 +240,7 @@ msgstr "Detalhe de Folga de Recurso"
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_overtime_leave_form
 msgid "Rules Outputs"
-msgstr ""
+msgstr "Resultados das regras"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_manager_view_form
@@ -244,7 +250,7 @@ msgstr "Salvar"
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_search_inherit_holidays
 msgid "Source Attendances"
-msgstr ""
+msgstr "Presença original"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave
@@ -270,7 +276,7 @@ msgstr "Folgas"
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_time_rule
 msgid "Time Rule"
-msgstr ""
+msgstr "Regra de tempo"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__work_entry_type_names
@@ -280,18 +286,20 @@ msgstr "Tipos de tempo"
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_overtime_leave_form
 msgid "Time type"
-msgstr ""
+msgstr "Tipo de hora"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.view_attendance_tree_inherit_holidays
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_res_company__attendance_work_entry_type_id
 msgid ""
 "Work entry type assigned to attendances and read by the time rule engine."
 msgstr ""
+"Tipo de registro de trabalho atribuído ao Controle de Presença e lido pelo "
+"mecanismo de regras de tempo."
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_attendance_report__worked_hours

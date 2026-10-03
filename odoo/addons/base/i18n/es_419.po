@@ -10,10 +10,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-06 17:49+0000\n"
-"PO-Revision-Date: 2026-09-10 21:07+0000\n"
+"PO-Revision-Date: 2026-10-02 22:05+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-master/base/es_419/>\n"
+"odoo-20/base/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18635,6 +18635,9 @@ msgid ""
 "Technical field indicating whether the Tax ID is not a placeholder.Returns "
 "False for placeholder values such as '/', 'NA', 'na', or an empty string."
 msgstr ""
+"Campo técnico que indica si el ID fiscal no es un marcador de posición. "
+"Devuelve False para valores que son marcadores de posición, como '/', 'NA', "
+"'na' o una cadena vacía."
 
 #. module: base
 #: model:ir.actions.report,name:base.ir_module_reference_print
@@ -19104,6 +19107,10 @@ msgid ""
 "with higher privileges previously modified it, and you are therefore not "
 "able to modify it yourself while preserving the content."
 msgstr ""
+"El valor del campo que estás guardando (%(model)s %(field)s)(%(record)s) "
+"incluye contenido restringido por motivos de seguridad. Es posible que "
+"alguien con más permisos lo haya modificado antes y, por lo tanto, no puedas "
+"modificarlo sin alterar su contenido."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__first_failure_date
@@ -19170,6 +19177,11 @@ msgid ""
 "most values are empty; trigram indexes speed up text pattern searches. "
 "Leaving this empty does not remove an index that already exists."
 msgstr ""
+"El tipo de índice de base de datos solicitado para este campo. Los índices "
+"de árbol B admiten búsquedas de igualdad y de rangos; excluir valores nulos "
+"hace que el índice sea más pequeño cuando la mayoría de los valores están "
+"vacíos; los índices de trigrama agilizan las búsquedas de patrones de texto. "
+"Dejar esto vacío no elimina un índice que ya existe."
 
 #. module: base
 #. odoo-python
@@ -19375,6 +19387,10 @@ msgid ""
 "You can't traverse non-relational fields (even in the quantum realm). Make "
 "sure only the last field in the path is non-relational."
 msgstr ""
+"La ruta contenida en el campo \"%(searched_field)s\" incluye un campo no "
+"relacional (%(current_field)s) que no es el último en la ruta. No puedes "
+"recorrer campos no relacionales, así que asegúrate de que solo el último "
+"campo de la ruta sea no relacional."
 
 #. module: base
 #. odoo-python

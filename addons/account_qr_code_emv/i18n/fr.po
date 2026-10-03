@@ -4,14 +4,15 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 16:03+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-02 10:28+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/"
 "account_qr_code_emv/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -27,6 +28,9 @@ msgid ""
 "Bridge module addings support for EMV Merchant-Presented QR-code generation "
 "for Payment System.\n"
 msgstr ""
+"\n"
+"Module passerelle ajoutant la prise en charge de la génération de QR codes "
+"EMV présentés par le marchand pour le système de paiement.\n"
 
 #. module: account_qr_code_emv
 #. odoo-python
@@ -38,7 +42,7 @@ msgstr "La création d'un code QR EMV nécessite un compte bancaire."
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_type
 msgid "Account Identifier Type"
-msgstr ""
+msgstr "Type d’identifiant de compte"
 
 #. module: account_qr_code_emv
 #: model:ir.model,name:account_qr_code_emv.model_res_partner_bank
@@ -60,7 +64,7 @@ msgstr "Nom d'affichage"
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__company_qr_code
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__company_qr_code
 msgid "Display QR-code on invoices"
-msgstr ""
+msgstr "Afficher le QR code sur les factures"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__display_qr_setting
@@ -83,7 +87,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_value
 msgid "Identifier Value"
-msgstr ""
+msgstr "Valeur de l’identifiant"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
@@ -101,13 +105,13 @@ msgstr "Inclure la référence dans le code QR."
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 msgid "Missing Account Identifier Type."
-msgstr ""
+msgstr "Type d’identifiant de compte manquant."
 
 #. module: account_qr_code_emv
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 msgid "Missing Identifier Value."
-msgstr ""
+msgstr "Valeur de l’identifiant manquante."
 
 #. module: account_qr_code_emv
 #. odoo-python
@@ -138,7 +142,7 @@ msgstr "Aucun"
 #. module: account_qr_code_emv
 #: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
 msgid "Payment QR Settings"
-msgstr ""
+msgstr "Paramètres du QR code de paiement"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
@@ -147,6 +151,9 @@ msgid ""
 "The identification method linked to this bank account (e.g., Mobile Number, "
 "Company ID) used to route QR payments to this account."
 msgstr ""
+"La méthode d’identification liée à ce compte bancaire (par ex. numéro de "
+"mobile, ID de société) utilisée pour acheminer les paiements par QR code "
+"vers ce compte."
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
@@ -155,8 +162,10 @@ msgid ""
 "The specific number or ID linked to this bank account that matches the "
 "chosen Identifier Type."
 msgstr ""
+"Le numéro ou l’ID spécifique lié à ce compte bancaire qui correspond au type "
+"d’identifiant choisi."
 
 #. module: account_qr_code_emv
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_emv
 msgid "account_qr_code_emv"
-msgstr ""
+msgstr "account_qr_code_emv"

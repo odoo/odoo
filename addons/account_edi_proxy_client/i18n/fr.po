@@ -4,14 +4,15 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 19:18+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-02 08:34+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/"
 "account_edi_proxy_client/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -36,6 +37,20 @@ msgid ""
 "- Authentication offers an additionnal level of security to avoid "
 "impersonification, in case someone gains to the user's database.\n"
 msgstr ""
+"\n"
+"Ce module ajoute des fonctionnalités génériques pour enregistrer une base de "
+"données Odoo sur le proxy chargé de recevoir les données (via des requêtes "
+"de services web).\n"
+"- Un edi_proxy_user dispose d’une identification unique sur un type de proxy "
+"spécifique (par ex. l10n_it_edi, peppol), ce qui\n"
+"permet de l’identifier lors de la réception d’un document qui lui est "
+"adressé. Il est lié à une société spécifique sur une base de données\n"
+"Odoo spécifique.\n"
+"- Les fonctionnalités de chiffrement permettent de déchiffrer toutes les "
+"données de l’utilisateur lors de leur réception depuis le proxy.\n"
+"- L’authentification offre un niveau de sécurité supplémentaire afin "
+"d’éviter l’usurpation d’identité, au cas où quelqu’un accéderait à la base "
+"de données de l’utilisateur.\n"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -51,7 +66,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 msgid "A user already exists with this identification."
-msgstr ""
+msgstr "Un utilisateur existe déjà avec cette identification."
 
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_proxy_client_user
@@ -176,7 +191,7 @@ msgstr "Type de proxy"
 #. module: account_edi_proxy_client
 #: model:ir.module.module,shortdesc:base.module_account_edi_proxy_client
 msgid "Proxy features for account_edi"
-msgstr ""
+msgstr "Fonctionnalités proxy pour account_edi"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__refresh_token
