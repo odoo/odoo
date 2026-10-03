@@ -912,7 +912,8 @@ class ProductTemplate(models.Model):
                 tuple(product.product_template_attribute_value_ids.ids)
                 for product in archived_products
                 if product.product_template_attribute_value_ids and all(
-                    ptav.ptav_active or combination_ids and ptav.id in combination_ids
+                    (ptav.ptav_active and ptav.product_attribute_value_id.active)
+                    or combination_ids and ptav.id in combination_ids
                     for ptav in product.product_template_attribute_value_ids
                 )
             ) - active_combinations),
@@ -948,6 +949,13 @@ class ProductTemplate(models.Model):
         """
         self.ensure_one()
         product_template_attribute_values = self.valid_product_template_attribute_line_ids.product_template_value_ids
+        if combination_ids:
+            # Re-include a ptav whose line was emptied by archiving its last value, same as an
+            # inactive ptav is re-included below: ptav_active isn't tied to the value's own active.
+            stale_lines = self.attribute_line_ids - self.valid_product_template_attribute_line_ids
+            product_template_attribute_values |= stale_lines.product_template_value_ids.filtered(
+                lambda ptav: ptav.id in combination_ids
+            )
         result = {}
 
         domain_ptav = [('ptav_active', '=', True)]

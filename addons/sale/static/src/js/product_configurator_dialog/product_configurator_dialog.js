@@ -254,14 +254,20 @@ export class ProductConfiguratorDialog extends Component {
         }
         this._checkExclusions(product);
         if (this._isPossibleCombination(product)) {
-            const updatedValues = await this._updateCombination(product, product.quantity);
-            Object.assign(product, updatedValues);
-            // When a combination should exist but was deleted from the database, it should not be
-            // selectable and considered as an exclusion.
-            if (!product.id && product.attribute_lines.every(ptal => ptal.create_variant === "always")) {
-                const combination = this._getCombination(product);
-                product.archived_combinations = product.archived_combinations.concat([combination]);
-                this._checkExclusions(product);
+            product.loadingPtalIds ??= new Set();
+            product.loadingPtalIds.add(ptalId);
+            try {
+                const updatedValues = await this._updateCombination(product, product.quantity);
+                Object.assign(product, updatedValues);
+                // When a combination should exist but was deleted from the database, it should not be
+                // selectable and considered as an exclusion.
+                if (!product.id && product.attribute_lines.every(ptal => ptal.create_variant === "always")) {
+                    const combination = this._getCombination(product);
+                    product.archived_combinations = product.archived_combinations.concat([combination]);
+                    this._checkExclusions(product);
+                }
+            } finally {
+                product.loadingPtalIds.delete(ptalId);
             }
         }
     }
@@ -275,9 +281,14 @@ export class ProductConfiguratorDialog extends Component {
      */
     _updatePTAVCustomValue(productTmplId, ptavId, customValue) {
         const product = this._findProduct(productTmplId);
-        product.attribute_lines.find(
+        const ptal = product.attribute_lines.find(
             ptal => ptal.selected_attribute_value_ids.includes(ptavId)
-        ).customValue = customValue;
+        );
+        // A leftover custom value can point at a ptav no line has selected anymore (e.g. the
+        // product's own combination changed since), in which case there's nothing to set.
+        if (ptal) {
+            ptal.customValue = customValue;
+        }
     }
 
     /**
@@ -407,11 +418,14 @@ export class ProductConfiguratorDialog extends Component {
     /**
      * Check if all the products selected have a valid combination.
      *
+     * Also false while any line's `_updateCombination` is still pending, per `loadingPtalIds`:
+     * confirming then would save stale `attribute_values` instead of the RPC's answer.
+     *
      * @return {Boolean} - Whether all the products selected have a valid combination or not.
      */
     isPossibleConfiguration() {
         return [...this.state.products].every(
-            p => this._isPossibleCombination(p)
+            p => this._isPossibleCombination(p) && !p.loadingPtalIds?.size
         );
     }
 

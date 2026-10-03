@@ -26,6 +26,7 @@ export class Product extends Component {
         parent_exclusions: Object,
         parent_product_tmpl_id: { type: Number, optional: true },
         price_info: { type: String, optional: true },
+        loadingPtalIds: { type: Set, optional: true },
     };
 
     //--------------------------------------------------------------------------
