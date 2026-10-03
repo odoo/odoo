@@ -3,6 +3,7 @@ import { ExpertiseTagsAutocomplete } from "@im_livechat/core/web/expertise_tags_
 
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { prettifyMessageContent } from "@mail/utils/common/format";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { Component, t, useEffect, useProps } from "@odoo/owl";
 
@@ -21,6 +22,7 @@ export class LivechatChannelInfoList extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.actionService = useService("action");
         this.store = useService("mail.store");
         this.ui = useService("ui");

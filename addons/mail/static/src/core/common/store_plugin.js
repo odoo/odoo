@@ -180,10 +180,11 @@ export class Store extends BaseStore {
     /** @type {DebugModePlugin} */
     debugMode;
 
-    discussDropdownMenuClass(ctx) {
+    /** @param {Readonly<Record<string, any>>} [ancestors] @see useAncestors */
+    discussDropdownMenuClass(ancestors) {
         return attClassObjectToString({
             "o-discuss-dropdownMenu d-flex flex-column": true,
-            "o-discussCallTheme": Boolean(ctx?.env?.inDiscussCallTheme),
+            "o-discussCallTheme": Boolean(ancestors?.inDiscussCallTheme),
         });
     }
 

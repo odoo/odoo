@@ -60,9 +60,9 @@ export function pickerGetAnchor({ action, owner }) {
 
 registerComposerAction("send-message", {
     btnClass: ({ action }) => (action.isActive ? "o-sendMessageActive o-text-white shadow-sm" : ""),
-    condition: ({ composer, owner, store }) =>
+    condition: ({ ancestors, composer, store }) =>
         (store.env.services.ui.isSmall && composer.message) ||
-        (!owner.env.inChatter && !composer.message),
+        (!ancestors.inChatter && !composer.message),
     disabledCondition: ({ owner }) => owner.isSendButtonDisabled,
     hasBtnBg: true,
     icon: "send",
@@ -123,11 +123,11 @@ registerComposerAction("upload-files", {
     sequence: 20,
 });
 registerComposerAction("open-full-composer", {
-    condition: ({ composer, owner }) =>
+    condition: ({ ancestors, composer, owner }) =>
         owner.props.showFullComposer &&
         composer.targetThread &&
         composer.targetThread.model !== "discuss.channel" &&
-        !owner.env.inFrontendPortalChatter,
+        !ancestors.inFrontendPortalChatter,
     hasBtnBg: ({ composer, owner }) =>
         (composer.restoredFromFullComposer && !owner.state.isFullComposerOpen) || undefined,
     hotkey: "shift+c",

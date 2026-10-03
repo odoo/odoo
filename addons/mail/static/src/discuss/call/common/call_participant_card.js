@@ -23,6 +23,7 @@ import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { attClassObjectToString } from "@mail/utils/common/format";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 
@@ -37,6 +38,7 @@ export class CallParticipantCard extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.cardBgColor = signal();
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
@@ -300,7 +302,7 @@ export class CallParticipantCard extends Component {
         const clientX = ev.clientX ?? ev.touches[0].clientX;
         const clientY = ev.clientY ?? ev.touches[0].clientY;
         if (this.dragPos) {
-            this.env.inDiscussCallView.dragInsetBy(
+            this.ancestors.inDiscussCallView.dragInsetBy(
                 this.props.cardData.key,
                 clientX - this.dragPos.posX,
                 clientY - this.dragPos.posY
@@ -314,6 +316,6 @@ export class CallParticipantCard extends Component {
             return;
         }
         this.dragPos = undefined;
-        this.env.inDiscussCallView.dropInset(this.props.cardData.key);
+        this.ancestors.inDiscussCallView.dropInset(this.props.cardData.key);
     }
 }

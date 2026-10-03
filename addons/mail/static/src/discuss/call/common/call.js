@@ -1,4 +1,3 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { BlurPerformanceWarning } from "@mail/discuss/call/common/blur_performance_warning";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
@@ -15,6 +14,7 @@ import {
 import { CallProfile } from "@mail/discuss/call/common/call_profile";
 import { SurfaceManager } from "@mail/discuss/call/common/stage/surface_manager";
 import { attClassObjectToString } from "@mail/utils/common/format";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import {
     Component,
@@ -103,6 +103,13 @@ export class Call extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors({
+            inDiscussCallTheme: true,
+            inDiscussCallView: {
+                dragInsetBy: (surfaceKey, dX, dY) => this.dragInsetBy(surfaceKey, dX, dY),
+                dropInset: (surfaceKey) => this.dropInset(surfaceKey),
+            },
+        });
         this.notification = useService("notification");
         this.rtc = useService("discuss.rtc");
         this.isMobileOs = isMobileOS();
@@ -163,13 +170,6 @@ export class Call extends Component {
         useHotkey("shift+d", () => this.rtc.toggleDeafen());
         useHotkey("shift+m", ({ target }) => this.rtc.toggleMicrophone({ rootRef: () => target }));
         useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand));
-        useSubEnv({
-            inDiscussCallTheme: true,
-            inDiscussCallView: {
-                dragInsetBy: (surfaceKey, dX, dY) => this.dragInsetBy(surfaceKey, dX, dY),
-                dropInset: (surfaceKey) => this.dropInset(surfaceKey),
-            },
-        });
     }
 
     get isAnyonePresenting() {

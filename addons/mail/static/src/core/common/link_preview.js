@@ -1,5 +1,6 @@
 import { Gif } from "@mail/core/common/gif";
 import { LinkPreviewConfirmDelete } from "@mail/core/common/link_preview_confirm_delete";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { Component, proxy, signal, types, useOnChange, useProps } from "@odoo/owl";
 
@@ -14,6 +15,7 @@ export class LinkPreview extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.store = useService("mail.store");
         this.props = useProps({
             messageLinkPreview: types.instanceOf(this.store["mail.message.link.preview"]),
@@ -50,6 +52,6 @@ export class LinkPreview extends Component {
         const aspectRatio = img.naturalWidth / img.naturalHeight;
         // Determine if image is squarish (aspect ratio between 2:3 and 3:2)
         this.linkPreview.hasSquarishCardImage = aspectRatio >= 0.67 && aspectRatio <= 1.5;
-        this.env.onImageLoaded?.();
+        this.ancestors.inThread?.onImageLoaded();
     }
 }

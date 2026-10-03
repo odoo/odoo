@@ -9,6 +9,7 @@ import { ActionList, CircleInlineAction, InlineAction } from "@mail/core/common/
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { nestedShallowEqual } from "@mail/utils/common/signal";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 /**
  * What a small screen keeps in its bar; everything else goes into "More". "deafen" is there
@@ -108,6 +109,7 @@ export class CallActionList extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.store = useService("mail.store");
         this.props = useProps({
             channel: types.instanceOf(this.store["discuss.channel"]),
@@ -155,7 +157,7 @@ export class CallActionList extends Component {
                                       dropdownMenuClass: attClassObjectToString({
                                           "m-0 mb-1 overflow-x-hidden": true,
                                           "o-discuss-CallActionList-menu": Boolean(
-                                              this.env.inMeetingView
+                                              this.ancestors.inMeetingView
                                           ),
                                       }),
                                       dropdownPosition: "top-end",
@@ -184,7 +186,7 @@ export class CallActionList extends Component {
                                 dropdownMenuClass: attClassObjectToString({
                                     "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden": true,
                                     "o-discuss-CallActionList-menu o-inMeetingView": Boolean(
-                                        this.env.inMeetingView
+                                        this.ancestors.inMeetingView
                                     ),
                                 }),
                                 dropdownPosition: "top-end",
@@ -252,7 +254,9 @@ export class CallActionList extends Component {
                           actions: moreGroups,
                           dropdownMenuClass: attClassObjectToString({
                               "m-0 mb-1 overflow-x-hidden": true,
-                              "o-discuss-CallActionList-menu": Boolean(this.env.inMeetingView),
+                              "o-discuss-CallActionList-menu": Boolean(
+                                  this.ancestors.inMeetingView
+                              ),
                           }),
                           dropdownPosition: "top-end",
                           id: "small-screen-more",
@@ -271,7 +275,7 @@ export class CallActionList extends Component {
             return undefined;
         }
         const callActionComponent = getCallActionComponent(params);
-        if (this.env.inMeetingView) {
+        if (this.ancestors.inMeetingView) {
             return getMeetingAction(callActionComponent ?? InlineAction);
         }
         return callActionComponent;

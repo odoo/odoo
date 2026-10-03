@@ -5,6 +5,7 @@ import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_di
 import { Component, onWillStart, proxy, signal, t, useProps } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
@@ -37,6 +38,7 @@ export class ChannelInvitation extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.orm = useService("orm");
         this.store = useService("mail.store");
         this.props = useProps({

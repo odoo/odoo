@@ -59,13 +59,13 @@ registerThreadAction("add-to-favorites", {
      * @param {import("models").DiscussChannel} param0.channel
      * @param {import("models").Store} param0.store
      */
-    onSelected: async ({ channel, store, owner }) => {
+    onSelected: async ({ ancestors, channel, owner, store }) => {
         store.fetchStoreData(
             "/discuss/channel/favorite",
             { channel_id: channel.id, is_favorite: true },
             { silent: false }
         );
-        if (owner.env.inDiscussApp && !owner.env.services.ui.isSmall) {
+        if (ancestors.inDiscussApp && !owner.env.services.ui.isSmall) {
             return;
         }
         store.env.services.notification.add(
@@ -90,13 +90,13 @@ registerThreadAction("remove-from-favorites", {
      * @param {import("models").DiscussChannel} param0.channel
      * @param {import("models").Store} param0.store
      */
-    onSelected: async ({ channel, store, owner }) => {
+    onSelected: async ({ ancestors, channel, owner, store }) => {
         store.fetchStoreData(
             "/discuss/channel/favorite",
             { channel_id: channel.id, is_favorite: false },
             { silent: false }
         );
-        if (owner.env.inDiscussApp && !owner.env.services.ui.isSmall) {
+        if (ancestors.inDiscussApp && !owner.env.services.ui.isSmall) {
             return;
         }
         store.env.services.notification.add(
@@ -118,7 +118,7 @@ registerThreadAction("notification-settings", {
             );
         }
     },
-    actionPanelOuterClass: ({ owner, store }) => store.discussDropdownMenuClass(owner),
+    actionPanelOuterClass: ({ ancestors, store }) => store.discussDropdownMenuClass(ancestors),
     dropdownComponent: NotificationSettings,
     dropdownComponentProps: ({ channel }) => ({ channel }),
     dropdownTrigger: ({ owner }) => !owner.isDiscussContent,
@@ -159,7 +159,7 @@ registerThreadAction("attachments", {
 registerThreadAction("invite-people", {
     actionPanelComponent: ChannelInvitation,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
-    actionPanelOpen({ owner, store, channel, rootRef }) {
+    actionPanelOpen({ ancestors, channel, owner, rootRef, store }) {
         if (owner.isDiscussSidebarChannelActions) {
             store.env.services.dialog?.add(ChannelActionDialog, {
                 title: channel.displayName,
@@ -169,18 +169,18 @@ registerThreadAction("invite-people", {
                     close: () => store.env.services.dialog.closeAll(),
                 },
             });
-        } else if (!owner.env.inMeetingView) {
+        } else if (!ancestors.inMeetingView) {
             this.popover?.open(
                 rootRef().querySelector(`[name="${this.id}"]`),
                 this.actionPanelComponentProps
             );
         }
     },
-    actionPanelOuterClass: ({ owner, store }) =>
+    actionPanelOuterClass: ({ ancestors, owner, store }) =>
         attClassObjectToString({
             "o-discuss-ChannelInvitation border": true,
             "bg-inherit": owner.props.chatWindow,
-            [store.discussDropdownMenuClass(owner)]: !owner.env.inMeetingView,
+            [store.discussDropdownMenuClass(ancestors)]: !ancestors.inMeetingView,
         }),
     condition: ({ channel, owner }) =>
         channel &&
@@ -191,8 +191,8 @@ registerThreadAction("invite-people", {
     name: _t("Invite People"),
     sequence: 20,
     sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 20),
-    setup({ owner }) {
-        if (!owner.props.chatWindow && !owner.env.inMeetingView) {
+    setup({ ancestors, owner }) {
+        if (!owner.props.chatWindow && !ancestors.inMeetingView) {
             this.popover = usePopover(ChannelInvitation, {
                 onClose: () => this.actionPanelClose(),
                 popoverClass: this.actionPanelOuterClass,
@@ -212,10 +212,10 @@ registerThreadAction("copy-invite-link", {
     sequenceGroup: ({ owner }) => (owner.isDiscussContent ? 10 : 20),
 });
 registerThreadAction("member-list", {
-    actionPanelClose: ({ action, owner, store, nextActiveAction }) => {
+    actionPanelClose: ({ action, ancestors, nextActiveAction, store }) => {
         if (
             action.condition &&
-            owner.env.inDiscussApp &&
+            ancestors.inDiscussApp &&
             store.discuss?.shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction)
         ) {
             store.discuss.isMemberPanelOpenByDefault = false;
@@ -223,8 +223,8 @@ registerThreadAction("member-list", {
     },
     actionPanelComponent: ChannelMemberList,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
-    actionPanelOpen: ({ owner, store }) => {
-        if (owner.env.inDiscussApp) {
+    actionPanelOpen: ({ ancestors, store }) => {
+        if (ancestors.inDiscussApp) {
             store.discuss.isMemberPanelOpenByDefault = true;
         }
     },

@@ -1,4 +1,5 @@
 import { propComputed, propSignal, useHover } from "@mail/utils/common/hooks";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { Component, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -19,6 +20,7 @@ export class MessageReactionList extends Component {
 
     setup() {
         super.setup(...arguments);
+        this.ancestors = useAncestors();
         this.loadEmoji = useLoadEmoji();
         this.store = useService("mail.store");
         this.message = propSignal("message", t.instanceOf(this.store["mail.message"]));

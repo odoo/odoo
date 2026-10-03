@@ -6,6 +6,7 @@ import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { useService } from "@web/core/utils/hooks";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 /** @typedef {import("@web/core/emoji_picker/emoji_picker").EmojiPicker} EmojiPicker */
 
@@ -18,6 +19,7 @@ export class QuickReactionMenu extends Component {
 
     setup() {
         super.setup(...arguments);
+        this.ancestors = useAncestors();
         this.store = useService("mail.store");
         this.props = useProps({
             action: t.instanceOf(Action),
@@ -37,7 +39,7 @@ export class QuickReactionMenu extends Component {
         );
         this.dropdown = useDropdownState({
             onClose: () => {
-                const currentThread = this.env.getCurrentThread?.();
+                const currentThread = this.ancestors.inThread?.thread;
                 if (!currentThread || currentThread.notEq(this.props.message.thread)) {
                     return;
                 }

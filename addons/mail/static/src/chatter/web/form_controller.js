@@ -1,4 +1,3 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { EventBus, t } from "@odoo/owl";
 
 import { x2ManyCommands } from "@web/core/orm_plugin";
@@ -7,6 +6,7 @@ import { createDocumentFragmentFromContent, isHtmlEmpty } from "@web/core/utils/
 import { patch } from "@web/core/utils/patch";
 import { FormController, formControllerProps } from "@web/views/form/form_controller";
 
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { discussComponentRegistry } from "@mail/core/common/discuss_component_registry";
 
 Object.assign(formControllerProps, {
@@ -19,11 +19,11 @@ patch(FormController.prototype, {
         if (this.env.services["mail.store"]) {
             this.mailStore = useService("mail.store");
         }
-        useSubEnv({ chatter: { fetchThreadData: true } });
+        this.ancestors = useAncestors({ inFormController: { fetchThreadData: true } });
     },
     onWillLoadRoot(nextConfiguration) {
         super.onWillLoadRoot(...arguments);
-        this.env.chatter.fetchThreadData = true;
+        this.ancestors.inFormController.fetchThreadData = true;
         const isSameThread =
             this.model.root?.resId === nextConfiguration.resId &&
             this.model.root?.resModel === nextConfiguration.resModel;

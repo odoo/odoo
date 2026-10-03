@@ -22,17 +22,17 @@ registerThreadAction("create-lead", {
             this.actionPanelComponentProps
         );
     },
-    actionPanelOuterClass: ({ owner, store }) =>
+    actionPanelOuterClass: ({ ancestors, store }) =>
         attClassObjectToString({
-            [store.discussDropdownMenuClass(owner)]: !owner.env.inMeetingView,
+            [store.discussDropdownMenuClass(ancestors)]: !ancestors.inMeetingView,
         }),
     condition: false, // managed by ThreadAction patch
     icon: "handshake",
     name: _t("Create Lead"),
     sequence: 10,
     sequenceGroup: 25,
-    setup({ owner }) {
-        if (!owner.env.inChatWindow) {
+    setup({ ancestors }) {
+        if (!ancestors.inChatWindow) {
             this.popover = usePopover(LivechatCommandDialog, {
                 onClose: () => this.actionPanelClose(),
                 popoverClass: this.actionPanelOuterClass,
