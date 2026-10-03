@@ -4,6 +4,9 @@
         <xpath expr="//div[hasclass('before-footer')]" position="after">
             <t t-if="props.data.l10n_es_edi_verifactu_qr_code">
                 <br/><br/>
+                <span class="verifactu-invoice-name">
+                    <t t-if="props.data.is_simplified">Simplified </t>Invoice: <t t-out="props.data.invoice_name"/>
+                </span>
                 <div class="pos-receipt-order-data mb-2"><strong>QR tributario:</strong></div>
                 <img t-att-src="props.data.l10n_es_edi_verifactu_qr_code" class="pos-receipt-qrcode"/>
                 <div class="pos-receipt-order-data mt-2"><strong>VERI*FACTU</strong></div>
