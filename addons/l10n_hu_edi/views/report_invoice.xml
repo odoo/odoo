@@ -10,11 +10,15 @@
     <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
         <xpath expr="//t[@t-set='forced_vat']" position="replace"/>
         <xpath expr="//t[@t-set='o']" position="after">
+            <t t-set="is_sale_document" t-value="o.is_sale_document(include_receipts=True)" />
             <t t-set="sign" t-value="-1 if 'refund' in o.move_type else 1"/>
             <t t-set="custom_header" t-value="'l10n_hu_edi.custom_header'"/>
             <t t-set="information_block">
             <div class="col-6">
-                <div><strong>Supplier:</strong></div>
+                <div>
+                    <strong t-if="is_sale_document">Supplier:</strong>
+                    <strong t-else="">Customer:</strong>
+                </div>
                 <div class="float-start company_address">
                     <ul class="list-unstyled">
                         <li><t t-out="o.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
@@ -41,7 +45,8 @@
             <attribute name="t-if">o.move_type == 'out_invoice' or (o.move_type == 'out_refund' and not o.reversed_entry_id)</attribute>
         </xpath>
         <xpath expr="//div[@name='address_not_same_as_shipping']//address" position="before">
-            <strong>Customer:</strong>
+            <strong t-if="is_sale_document">Customer:</strong>
+            <strong t-else="">Supplier:</strong>
         </xpath>
         <xpath expr="//div[@name='shipping_address_block']/../.." position="replace"/>
         <xpath expr="//div[@name='address_not_same_as_shipping']//span[@t-field='o.partner_id.vat']/.." position="after">
@@ -53,14 +58,16 @@
             </div>
         </xpath>
         <xpath expr="//div[@name='address_same_as_shipping']//address" position="before">
-            <strong>Customer:</strong>
+            <strong t-if="is_sale_document">Customer:</strong>
+            <strong t-else="">Supplier:</strong>
         </xpath>
         <xpath expr="//div[@name='address_same_as_shipping']//span[@t-field='o.partner_id.vat']/.." position="after">
             <div t-if="o.partner_id.l10n_hu_group_vat">Group Member Tax ID: <span t-field="o.partner_id.l10n_hu_group_vat"/></div>
             <div t-if="o.move_type == 'out_refund' and o.partner_bank_id">Bank Account: <span t-field="o.partner_bank_id.acc_number"/></div>
         </xpath>
         <xpath expr="//div[@name='no_shipping']//address" position="before">
-            <strong>Customer:</strong>
+            <strong t-if="is_sale_document">Customer:</strong>
+            <strong t-else="">Supplier:</strong>
         </xpath>
         <xpath expr="//div[@name='no_shipping']//span[@t-field='o.partner_id.vat']/.." position="after">
             <div t-if="o.partner_id.l10n_hu_group_vat">Group Member Tax ID: <span t-field="o.partner_id.l10n_hu_group_vat"/></div>
