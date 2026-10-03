@@ -51,6 +51,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
     def donation_transaction(self, amount, currency_id, partner_id, access_token, minimum_amount=0, **kwargs):
         if float(amount) < float(minimum_amount):
             raise ValidationError(_('Donation amount must be at least %.2f.', float(minimum_amount)))
+        if not request.env['ir.http']._verify_request_recaptcha_token('donation'):
+            raise ValidationError(
+                _('Suspicious activity detected by Google reCaptcha.')
+            )
         use_public_partner = request.env.user._is_public() or not partner_id
         if use_public_partner:
             details = kwargs['partner_details']
@@ -66,7 +70,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             partner_id = request.env.user.partner_id.id
 
         self._validate_transaction_kwargs(kwargs, additional_allowed_keys=(
-            'donation_comment', 'donation_recipient_email', 'partner_details', 'reference_prefix'
+            'donation_comment', 'donation_recipient_email', 'partner_details', 'reference_prefix', 'recaptcha_token_response'
         ))
         if use_public_partner:
             kwargs['custom_create_values'] = {'tokenize': False}
