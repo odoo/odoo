@@ -220,12 +220,25 @@ export class WebsiteForum extends Interaction {
             ev.preventDefault();
             const currentTarget = ev.currentTarget;
             this.waitForTimeout(() => {
+<<<<<<< 6c6a869c6267df5e6a00e33d5d0296c8fe20fb4f
                 currentTarget
                     .querySelectorAll("button[type='submit'], a.a-submit")
                     .forEach((btnEl) => {
                         btnEl.querySelector("i").remove();
                         btnEl.disabled = false;
                     });
+||||||| b504342af3d8a85b5fb06a00139b60a7dea5ad73
+                currentTargetEl.querySelectorAll("button[type='submit'], a.a-submit").forEach((btnEl) => {
+                    btnEl.querySelector("i").remove();
+                    btnEl.disabled = false;
+                });
+=======
+                currentTargetEl.querySelectorAll("button[type='submit'], a.a-submit").forEach((btnEl) => {
+                    btnEl.querySelector("span").remove();
+                    btnEl.disabled = false;
+                    btnEl.classList.remove("o_btn_loading", "disabled", "pe-none");
+                });
+>>>>>>> 01baed790285c6ac7c63718ff3836722b0d0ef0e
             }, 0);
         }
     }
