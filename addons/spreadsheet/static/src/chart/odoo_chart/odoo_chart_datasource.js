@@ -38,6 +38,12 @@ chartDataSourceRegistry.add("odoo", {
     validate: (dataSource) => CommandResult.Success,
     transform: (dataSource) => dataSource,
     extractData: (dataSource, chartId, getters) => {
+        if (!getters.isEvaluationActive()) {
+            return {
+                dataSetsValues: [],
+                labelValues: [],
+            };
+        }
         const { datasets, labels } = getters.getChartDataSource(chartId).getData();
         for (const ds of datasets) {
             if (ds.cumulatedStart) {
@@ -53,6 +59,12 @@ chartDataSourceRegistry.add("odoo", {
         };
     },
     extractHierarchicalData: (dataSource, chartId, getters) => {
+        if (!getters.isEvaluationActive()) {
+            return {
+                dataSetsValues: [],
+                labelValues: [],
+            };
+        }
         const { datasets, labels } = getters.getChartDataSource(chartId).getHierarchicalData();
         return {
             dataSetsValues: datasets.map((ds) => ({
