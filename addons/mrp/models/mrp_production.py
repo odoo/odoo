@@ -2383,6 +2383,9 @@ class MrpProduction(models.Model):
         productions_auto = self.env['mrp.production'].browse(production_auto_ids)
         for production in productions_auto:
             production._set_quantities()
+
+        self.move_raw_ids.filtered(lambda m: m._should_be_auto_picked()).picked = True
+
         # Produce by-products also for not auto productions.
         (self - productions_auto)._mark_byproducts_as_produced()
 
