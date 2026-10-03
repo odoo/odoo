@@ -112,7 +112,8 @@ class PaymentProvider(models.Model):
             else:
                 domain = provider._get_journal_domain()
                 provider.journal_id = self.env["account.journal"].search(domain, limit=1)
-                if provider.id:
+                # Don't create the payment method line on read-only cursors (e.g. web reads).
+                if provider.id and not self.env.cr.readonly:
                     provider._ensure_payment_method_line()
 
     def _get_journal_domain(self):
