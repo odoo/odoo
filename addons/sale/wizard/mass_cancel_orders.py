@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class MassCancelOrders(models.TransientModel):
@@ -29,4 +30,6 @@ class MassCancelOrders(models.TransientModel):
             )
 
     def action_mass_cancel(self):
+        if any(order.locked for order in self.sale_order_ids):
+            raise UserError(_("You cannot cancel a locked order. Please unlock it first."))
         self.sale_order_ids._action_cancel()
