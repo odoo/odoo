@@ -117,6 +117,7 @@ export const htmlToCanvas = async (el, options) => {
     }
     sanitizeNodeText(el);
     return await applyWhenMounted({
+        ...options,
         el,
         container: document.querySelector(".render-container"),
         callback: async (el) => {
