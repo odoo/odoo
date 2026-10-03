@@ -52,28 +52,32 @@
     </record>
 
     <record id="mail_template_data_stock_move_line_recall" model="mail.template">
-        <field name="name">Stock Move Line: Product Recall</field>
-        <field name="model_id" ref="model_stock_move_line"/>
-        <field name="subject">Product recall: {{ object.product_id.display_name or 'n/a' }}</field>
-        <field name="partner_to">{{ object.picking_partner_id.id if object.picking_partner_id else '' }}</field>
+        <field name="name">Transfer: Product Recall</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="subject">Product recall for Delivery {{ object.name }}</field>
+        <field name="partner_to">{{ object.partner_id.id if object.partner_id else '' }}</field>
         <field name="reply_to">{{ object.company_id.email_formatted or user.email_formatted or '' }}</field>
         <field name="use_default_to" eval="False"/>
         <field name="description">Product recall from lot/serial number</field>
         <field name="body_html" type="html">
-<div style="margin: 0px; padding: 0px;">
-    <p style="margin: 0px; padding: 0px; font-size: 13px;">
-        Dear <t t-out="object.picking_partner_id.display_name or ''"></t><br/><br/>
-        We would like to issue a product recall regarding the following product:<br/><br/>
-        Product:<br/>
-        <t t-out="object.product_id.display_name or ''"></t><br/><br/>
-        Lot / Serial Number:<br/>
-        <t t-out="object.lot_id.name or object.lot_name or ''"></t><br/><br/>
-        We apologize for the inconvenience caused.<br/><br/>
-        Best wishes,
-    </p>
-</div>
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Dear <t t-out="object.partner_id.display_name or ''">Marc Demo</t><br/><br/>
+                    We would like to issue a product recall regarding the following items from your delivery
+                    <strong><t t-out="object.name">WH/OUT/EXAMPLE</t></strong>:<br/><br/>
+
+                    <strong>Product(s):</strong><br/>
+                    <t t-out="ctx.get('recalled_products_dict', {}).get(str(object.id))">[EXAMPLE] Drawer</t><br/><br/>
+                    <strong>Lot / Serial Number(s):</strong><br/>
+                    <t t-out="ctx.get('recalled_lots_dict', {}).get(str(object.id))">0000000000029</t><br/><br/>
+
+                    We apologize for the inconvenience caused.<br/><br/>
+                    Best wishes,
+                </p>
+            </div>
         </field>
         <field name="auto_delete" eval="False"/>
     </record>
+
 </data>
 </odoo>

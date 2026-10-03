@@ -714,23 +714,30 @@ class StockMoveLine(models.Model):
 
     def action_send_recall_email(self):
         move_lines = self.filtered('picking_partner_id')
-        if not move_lines:
-            return {}
-        template = self.env.ref('stock.mail_template_data_stock_move_line_recall', raise_if_not_found=False)
-        return {
-            'name': _('Send Email'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'mail.compose.message',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {
-                'default_composition_mode': 'mass_mail',
-                'default_model': 'stock.move.line',
-                'default_res_ids': move_lines.ids,
-                'default_template_id': template.id if template else False,
-                'default_use_template': bool(template),
-            },
-        }
+        if move_lines:
+            template = self.env.ref('stock.mail_template_data_stock_move_line_recall', raise_if_not_found=False)
+            recalled_lots_dict = {}
+            recalled_products_dict = {}
+            for picking, ml in move_lines.grouped('picking_id').items():
+                recalled_lots_dict[picking.id] = ', '.join(ml.mapped('lot_id.name'))
+                recalled_products_dict[picking.id] = ', '.join(ml.mapped('product_id.display_name'))
+            return {
+                'name': _('Send Email'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'mail.compose.message',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {
+                    'default_composition_mode': 'mass_mail',
+                    'default_partner_ids': move_lines.picking_partner_id.ids,
+                    'default_model': 'stock.picking',
+                    'default_res_ids': move_lines.picking_id.ids,
+                    'default_template_id': template.id if template else False,
+                    'default_use_template': bool(template),
+                    'recalled_lots_dict': recalled_lots_dict,
+                    'recalled_products_dict': recalled_products_dict,
+                }
+            }
 
     def _synchronize_quant(self, quantity, location, action="available", in_date=False, **quants_value):
         """ quantity should be express in product's UoM"""
