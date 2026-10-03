@@ -18,6 +18,12 @@ class ProjectTask(models.Model):
                 return related_project.sale_line_employee_ids.sale_line_id.order_partner_id[:1]
         return res
 
+    def _get_portal_timesheet_domain(self):
+        return Domain.AND([
+            super()._get_portal_timesheet_domain(),
+            ['|', ('so_line', '=', False), ('sale_order_state', '=', 'sale')],
+        ])
+
     sale_order_id = fields.Many2one(domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id.commercial_partner_id.id', 'parent_of', partner_id), ('partner_id', 'parent_of', partner_id)]")
     pricing_type = fields.Selection(related="project_id.pricing_type")
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
@@ -26,7 +32,6 @@ class ProjectTask(models.Model):
     remaining_hours_so = fields.Float('Time Remaining on SO', compute='_compute_remaining_hours_so', search='_search_remaining_hours_so', compute_sudo=True)
     remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
     last_sol_of_customer = fields.Many2one('sale.order.line', compute='_compute_last_sol_of_customer')
-    portal_timesheet_ids = fields.One2many('account.analytic.line', 'task_id', domain=['|', ('so_line', '=', False), ('sale_order_state', '=', 'sale')], export_string_translation=False)
 
     @property
     def TASK_PORTAL_READABLE_FIELDS(self):
