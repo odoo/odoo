@@ -139,6 +139,35 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         })
         self.assertTrue(product, "The default purchase UOM should be in the same category as the sale UOM.")
 
+    def test_change_uom_sale_user_no_purchase_access(self):
+        """A user without any Purchase access group should be able to change
+        the UoM of a product already used on a purchase order line."""
+        sale_user = self.env['res.users'].with_context(no_reset_password=True).create({
+            'name': 'Sale user',
+            'login': 'saleUomUser',
+            'email': 'sale.uom.user@example.com',
+            'group_ids': [Command.set([
+                self.env.ref('base.group_user').id,
+                self.env.ref('product.group_product_manager').id,
+            ])],
+        })
+        product = self.env['product.template'].create({
+            'name': 'Test Product UOM Change',
+            'type': 'consu',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+        })
+        self.env['purchase.order'].create({
+            'partner_id': self.vendor.id,
+            'order_line': [Command.create({
+                'product_id': product.product_variant_id.id,
+                'name': product.name,
+                'product_qty': 1,
+                'price_unit': 10,
+            })],
+        })
+
+        product.with_user(sale_user).uom_id = self.env.ref('uom.product_uom_dozen')
+
     def test_prepare_purchase_order_line_from_branch_company(self):
         """Check that a purchase order line can be created from a nested branch company."""
         self.env.company.child_ids = [Command.create({
