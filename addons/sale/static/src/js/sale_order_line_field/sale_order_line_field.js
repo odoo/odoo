@@ -58,6 +58,7 @@ function getComboRecords(listRecords, record) {
 }
 
 export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRender {
+    static template = "sale.SaleOrderLineListRenderer";
     static recordRowTemplate = 'sale.ListRenderer.RecordRow';
 
     setup() {
