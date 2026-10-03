@@ -97,6 +97,9 @@ function containsActiveElement(parent) {
     return parent !== activeElement && parent.contains(activeElement);
 }
 
+const READONLY_COLUMN_GROUP_FIELD =
+    ".o_column_group_field.o_readonly_modifier, .o_readonly_modifier > .o_column_group_field";
+
 /**
  * Tabable elements of a cell, or of a single one of its column group fields,
  * ignoring those of readonly column group fields, e.g. the link of a readonly
@@ -105,9 +108,7 @@ function containsActiveElement(parent) {
  * @param {HTMLElement} parent
  */
 function getEditableTabableElements(parent) {
-    return getTabableElements(parent).filter(
-        (el) => !el.closest(".o_column_group_field.o_readonly_modifier")
-    );
+    return getTabableElements(parent).filter((el) => !el.closest(READONLY_COLUMN_GROUP_FIELD));
 }
 
 /**
@@ -126,7 +127,14 @@ function getElementToFocus(cell, index) {
  */
 function hasOnlyReadonlyFields(cell) {
     const fields = [...cell.children];
-    return fields.length > 0 && fields.every((el) => el.classList.contains("o_readonly_modifier"));
+    return (
+        fields.length > 0 &&
+        fields.every(
+            (el) =>
+                el.classList.contains("o_readonly_modifier") ||
+                el.matches(READONLY_COLUMN_GROUP_FIELD)
+        )
+    );
 }
 
 export const listRendererProps = {
@@ -1178,23 +1186,37 @@ export class ListRenderer extends Component {
             this.cellClassByColumn[column.id] = classNames;
         }
         const classNames = [...this.cellClassByColumn[column.id]];
+        // The cell takes the modifiers of the field it displays, a column group
+        // displaying a lone field included. When it stacks several of them, the cell
+        // takes none and each field styles itself (see getColumnGroupFieldClasses).
+        let cellField = null;
         if (column.type === "field") {
-            if (evaluateBooleanExpr(column.required, record.evalContextWithVirtualIds)) {
+            cellField = column;
+        } else if (column.type === "column_group") {
+            const visibleFields = this.getVisibleColumnGroupFields(column, record);
+            if (visibleFields.length > 1) {
+                classNames.push("o_stacked_fields");
+            } else {
+                cellField = visibleFields[0] || null;
+            }
+        }
+        if (cellField) {
+            if (evaluateBooleanExpr(cellField.required, record.evalContextWithVirtualIds)) {
                 classNames.push("o_required_modifier");
             }
-            if (record.isFieldInvalid(column.name)) {
+            if (record.isFieldInvalid(cellField.name)) {
                 classNames.push("o_invalid_cell");
             }
-            if (this.isFieldReadonly(column, record)) {
+            if (this.isFieldReadonly(cellField, record)) {
                 classNames.push("o_readonly_modifier");
             }
-            if (this.canUseFormatter(column, record)) {
-                classNames.push(...this.getDecorationClassNames(column, record));
+            if (this.canUseFormatter(cellField, record)) {
+                classNames.push(...this.getDecorationClassNames(cellField, record));
             }
             if (
                 record.isInEdition &&
                 this.editedRecord() &&
-                this.isFieldReadonly(column, this.editedRecord())
+                this.isFieldReadonly(cellField, this.editedRecord())
             ) {
                 classNames.push("text-muted");
             } else if (this.isRecordAvailable(record)) {
@@ -1241,33 +1263,49 @@ export class ListRenderer extends Component {
 
     /**
      * Classes to apply on the element displaying a given field of a column group.
-     * When the field is displayed by the Field component, that component already
-     * applies the arch class and the decorations itself.
+     * The modifiers and decorations only go there when several fields are stacked,
+     * a lone field has them on its cell (see getCellClass). When the field is
+     * displayed by the Field component, that component already applies the arch
+     * class and the decorations itself.
      *
      * @param {Column} fieldInfo
      * @param {RelationalRecord} record
+     * @param {boolean} isStacked
      */
-    getColumnGroupFieldClasses(fieldInfo, record) {
+    getColumnGroupFieldClasses(fieldInfo, record, isStacked) {
         const classNames = [];
-        if (evaluateBooleanExpr(fieldInfo.required, record.evalContextWithVirtualIds)) {
-            classNames.push("o_required_modifier");
-        }
-        if (record.isFieldInvalid(fieldInfo.name)) {
-            classNames.push("o_invalid_cell");
-        }
-        if (this.isFieldReadonly(fieldInfo, record)) {
-            classNames.push("o_readonly_modifier");
-            if (record.isInEdition) {
-                classNames.push("text-muted");
+        const canUseFormatter = this.canUseFormatter(fieldInfo, record);
+        if (isStacked) {
+            if (evaluateBooleanExpr(fieldInfo.required, record.evalContextWithVirtualIds)) {
+                classNames.push("o_required_modifier");
+            }
+            if (record.isFieldInvalid(fieldInfo.name)) {
+                classNames.push("o_invalid_cell");
+            }
+            if (this.isFieldReadonly(fieldInfo, record)) {
+                classNames.push("o_readonly_modifier");
+                if (record.isInEdition) {
+                    classNames.push("text-muted");
+                }
+            }
+            if (canUseFormatter) {
+                classNames.push(...this.getDecorationClassNames(fieldInfo, record));
             }
         }
-        if (this.canUseFormatter(fieldInfo, record)) {
-            classNames.push(...this.getDecorationClassNames(fieldInfo, record));
-            if (this.getFieldClass(fieldInfo)) {
-                classNames.push(this.getFieldClass(fieldInfo));
-            }
+        if (canUseFormatter && this.getFieldClass(fieldInfo)) {
+            classNames.push(this.getFieldClass(fieldInfo));
         }
         return classNames.join(" ");
+    }
+
+    /**
+     * @param {Column} column
+     * @param {RelationalRecord} record
+     */
+    getVisibleColumnGroupFields(column, record) {
+        return column.fields.filter((fieldInfo) =>
+            this.isColumnGroupFieldVisible(column, fieldInfo, record)
+        );
     }
 
     isColumnGroupFieldVisible(column, fieldInfo, record) {
