@@ -2343,6 +2343,10 @@ class MrpProduction(models.Model):
         production_auto_ids = set()
         production_missing_lot_ids = set()
         for production in self:
+            if not production.product_uom_id.is_zero(production.qty_producing) and production.move_raw_ids.filtered(
+                lambda m: not m.manual_consumption and m._should_be_auto_picked()
+            ):
+                production._set_qty_producing(False)
             if production._auto_production_checks():
                 production_auto_ids.add(production.id)
             elif not production.lot_producing_ids:
