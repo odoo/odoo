@@ -82,6 +82,10 @@ export class DropZonePlugin extends Plugin {
         this.iframe = this.document.defaultView.frameElement;
     }
 
+    isIgnored(el) {
+        return el.matches(".o_we_no_overlay") || !isVisible(el);
+    }
+
     /**
      * Returns the root element in which the elements can be dropped.
      * (e.g. if a modal or a dropdown is open, the snippets must be dropped only
@@ -410,11 +414,15 @@ export class DropZonePlugin extends Plugin {
      * @returns {Object} - `vertical[Boolean]`: true if the dropzone is vertical
      *                   - `style[Object]`: the style to add to the dropzone
      */
-    setDropzoneDirection(hookEl, parentEl, toInsertInline) {
+    setDropzoneDirection({
+        hookEl,
+        parentEl,
+        toInsertInline,
+        parentStyle = window.getComputedStyle(parentEl),
+    }) {
         let vertical = false;
         const style = {};
         const hookStyle = window.getComputedStyle(hookEl);
-        const parentStyle = window.getComputedStyle(parentEl);
 
         const float = hookStyle.float || hookStyle.cssFloat;
         const { display, flexDirection } = parentStyle;
@@ -428,6 +436,8 @@ export class DropZonePlugin extends Plugin {
             if (!toInsertInline) {
                 style.float = float;
             }
+            const hookRect = hookEl.getBoundingClientRect();
+
             // Compute the parent content width and the element outer width.
             const parentPaddingX =
                 parseFloat(parentStyle.paddingLeft) + parseFloat(parentStyle.paddingRight);
@@ -438,11 +448,11 @@ export class DropZonePlugin extends Plugin {
 
             const parentContentWidth =
                 parentEl.getBoundingClientRect().width - parentPaddingX - parentBorderX;
-            const hookOuterWidth = hookEl.getBoundingClientRect().width + hookMarginX;
+            const hookOuterWidth = hookRect.width + hookMarginX;
 
             if (parseInt(parentContentWidth) !== parseInt(hookOuterWidth)) {
                 vertical = true;
-                const hookOuterHeight = hookEl.getBoundingClientRect().height;
+                const hookOuterHeight = hookRect.height;
                 // Combined with the 1px top margin added by the CSS, removing
                 // 2px from the height here prevents two vertical dropzones from
                 // touching when one is placed below the other.
@@ -487,44 +497,36 @@ export class DropZonePlugin extends Plugin {
         { selectorSiblings, selectorChildren, selectorSanitized, selectorGrids },
         { toInsertInline, isContentInIframe = true } = {}
     ) {
-        const isIgnored = (el) => el.matches(".o_we_no_overlay") || !isVisible(el);
-        let hookEls = [];
+        const parentMap = new Map();
+
+        const addHookEl = (el) => {
+            const parentEl = el.parentElement;
+            if (!parentEl) {
+                return;
+            }
+            if (!parentMap.has(parentEl)) {
+                parentMap.set(parentEl, new Set());
+            }
+            parentMap.get(parentEl).add(el);
+        };
+
         for (const parentEl of selectorChildren) {
-            const validChildrenEls = [...parentEl.children].filter((el) => !isIgnored(el));
-            hookEls.push(...validChildrenEls);
+            // Add valid children to be processed for the dropzones.
+            for (const child of parentEl.children) {
+                if (!this.isIgnored(child)) {
+                    addHookEl(child);
+                }
+            }
             parentEl.prepend(this.createDropzone(parentEl));
         }
-        hookEls.push(...selectorSiblings);
         const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
-        if (systemNodeSelectors) {
-            hookEls = hookEls.filter((el) => !closestElement(el, systemNodeSelectors));
-        }
-
-        // Inserting the normal dropzones.
-        for (const hookEl of hookEls) {
-            const parentEl = hookEl.parentElement;
-            const { vertical, style } = this.setDropzoneDirection(hookEl, parentEl, toInsertInline);
-
-            let previousEl = hookEl.previousElementSibling;
-            while (previousEl && isIgnored(previousEl)) {
-                previousEl = previousEl.previousElementSibling;
-            }
-            if (!previousEl || !previousEl.classList.contains("oe_drop_zone")) {
-                hookEl.before(this.createDropzone(parentEl, vertical, style));
-            }
-
-            if (hookEl.classList.contains("oe_drop_clone")) {
-                continue;
-            }
-
-            let nextEl = hookEl.nextElementSibling;
-            while (nextEl && isIgnored(nextEl)) {
-                nextEl = nextEl.nextElementSibling;
-            }
-            if (!nextEl || !nextEl.classList.contains("oe_drop_zone")) {
-                hookEl.after(this.createDropzone(parentEl, vertical, style));
+        for (const el of selectorSiblings) {
+            if (systemNodeSelectors && !closestElement(el, systemNodeSelectors)) {
+                addHookEl(el);
             }
         }
+
+        this.processDropzones(parentMap, toInsertInline);
 
         // Inserting a sanitized dropzone for each sanitized area.
         for (const sanitizedZoneEl of selectorSanitized) {
@@ -556,6 +558,77 @@ export class DropZonePlugin extends Plugin {
         }
 
         return [...this.editable.querySelectorAll(".oe_drop_zone:not(.oe_sanitized_drop_zone)")];
+    }
+
+    /**
+     * Creates dropzones between elements.
+     * It processes elements grouped by parent to avoid reflows and redundant work.
+     *
+     * @param {Map<HTMLElement, Set<HTMLElement>>} parentMap Map of parent elements to their hook children.
+     * @param {boolean} toInsertInline
+     */
+    processDropzones(parentMap, toInsertInline) {
+        for (const [parentEl, hookElsSet] of parentMap.entries()) {
+            const parentStyle = window.getComputedStyle(parentEl);
+
+            const visibleChildren = [...parentEl.children].filter((el) => !this.isIgnored(el));
+
+            if (visibleChildren.length < 1) {
+                continue;
+            }
+
+            const insertions = [];
+
+            // Handle dropzone before the first element
+            const firstChild = visibleChildren[0];
+            if (hookElsSet.has(firstChild) && !firstChild.classList.contains("oe_drop_clone")) {
+                let previousEl = firstChild.previousElementSibling;
+                while (previousEl && this.isIgnored(previousEl)) {
+                    previousEl = previousEl.previousElementSibling;
+                }
+
+                if (!previousEl || !previousEl.classList.contains("oe_drop_zone")) {
+                    const { vertical, style } = this.setDropzoneDirection({
+                        hookEl: firstChild,
+                        parentEl,
+                        parentStyle,
+                        toInsertInline,
+                    });
+                    const dropzone = this.createDropzone(parentEl, vertical, style);
+                    insertions.push({ reference: firstChild, placement: "before", node: dropzone });
+                }
+            }
+            // Handle dropzone after each element
+            for (let i = 0; i < visibleChildren.length; i++) {
+                const currentEl = visibleChildren[i];
+                const nextEl = visibleChildren[i + 1];
+
+                if (!hookElsSet.has(currentEl) || currentEl.classList.contains("oe_drop_clone")) {
+                    continue;
+                }
+
+                // If the next visible element is not a dropzone, we need one.
+                if (!nextEl || !nextEl.classList.contains("oe_drop_zone")) {
+                    const { vertical, style } = this.setDropzoneDirection({
+                        hookEl: currentEl,
+                        parentEl,
+                        parentStyle,
+                        toInsertInline,
+                    });
+                    const dropzone = this.createDropzone(parentEl, vertical, style);
+                    insertions.push({ reference: currentEl, placement: "after", node: dropzone });
+                }
+            }
+
+            for (let i = insertions.length - 1; i >= 0; i--) {
+                const { reference, placement, node } = insertions[i];
+                if (placement === "after") {
+                    reference.after(node);
+                } else {
+                    reference.before(node);
+                }
+            }
+        }
     }
 
     /**
