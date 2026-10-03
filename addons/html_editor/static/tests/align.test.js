@@ -11,17 +11,20 @@ import {
 } from "./_helpers/user_actions";
 import { expandToolbar } from "./_helpers/toolbar";
 
-test("should have align tool only if the block is content editable", async () => {
-    for (const [contenteditable, count] of [
-        [false, 0],
-        [true, 1],
-    ]) {
-        await setupEditor(
-            `<div contenteditable="${contenteditable}"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
-        );
-        await expandToolbar();
-        expect(".btn[name='text_align']").toHaveCount(count);
-    }
+test("should have align tool if the block is content editable", async () => {
+    await setupEditor(
+        `<div contenteditable="true"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
+    );
+    await expandToolbar();
+    expect(".btn[name='text_align']").toHaveCount(1);
+});
+
+test("should not have align tool if the block is not content editable", async () => {
+    await setupEditor(
+        `<div contenteditable="false"><p><span contenteditable="true">ab[cde]fg</span></p></div>`
+    );
+    await expandToolbar();
+    expect(".btn[name='text_align']").toHaveCount(0);
 });
 
 describe("start", () => {

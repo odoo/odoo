@@ -739,13 +739,25 @@ export function clickToolbarButton(elementName, selector, button, expand = false
         },
     ];
     if (expand) {
-        steps.splice(1, 0, {
-            content: "Expand the toolbar for more buttons",
-            trigger: ".o-we-toolbar button[name='expand_toolbar']",
-            run: "click",
-        });
+        steps.splice(1, 0, expandToolbar());
     }
     return steps;
+}
+
+/**
+ * Expands the editor toolbar, unless it opened expanded (it does when the
+ * compact form would hide few buttons).
+ *
+ * @returns {Object} The step expanding the toolbar.
+ */
+export function expandToolbar() {
+    return {
+        content: "Expand the toolbar for more buttons",
+        trigger: ".o-we-toolbar[data-namespace]",
+        async run() {
+            this.anchor.querySelector("button[name='expand_toolbar']")?.click();
+        },
+    };
 }
 
 /**

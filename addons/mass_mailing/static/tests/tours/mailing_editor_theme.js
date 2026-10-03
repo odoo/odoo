@@ -117,8 +117,12 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         },
         {
             content: "Expand Toolbar",
-            trigger: ".o-we-toolbar button[name='expand_toolbar']",
-            run: "click",
+            trigger: ".o-we-toolbar[data-namespace]",
+            async run() {
+                // The toolbar opens expanded when the compact form would hide
+                // few buttons.
+                this.anchor.querySelector("button[name='expand_toolbar']")?.click();
+            },
         },
         {
             content: "Open the color picker",

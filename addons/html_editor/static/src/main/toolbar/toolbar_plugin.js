@@ -109,6 +109,12 @@ import { removeStyle } from "@html_editor/utils/dom";
 export const DELAY_TOOLBAR_OPEN = 300;
 /** Number of buttons below which toolbar will open directly in its expanded form */
 const MIN_SIZE_FOR_COMPACT = 7;
+/**
+ * Number of buttons that the compact toolbar must hide to be worth the click
+ * on "Expand toolbar". Below it, the floating toolbar opens expanded. The
+ * toolbar docked above the keyboard keeps its compact form.
+ */
+const MIN_HIDDEN_FOR_COMPACT = 7;
 /** Special namespace that prevents the toolbar from opening */
 export const DISABLED_NAMESPACE = "disabled";
 /** Toolbar namespaces that allow expanding to the full toolbar */
@@ -635,11 +641,15 @@ export class ToolbarPlugin extends Plugin {
         const isAvailable = memoize((button) => button.isAvailable(selection));
         const compact = this.getButtonsForNamespace("compact").filter(isAvailable);
         const expanded = this.getButtonsForNamespace("expanded").filter(isAvailable);
+        // The compact version includes the "Expand toolbar" button.
+        const hiddenCount = expanded.length - (compact.length - 1);
         const shouldDisplayCompactToolbar =
             // Expanded version is big enough
             expanded.length >= MIN_SIZE_FOR_COMPACT &&
             // Expanded version is bigger than the compact version
-            expanded.length > compact.length;
+            expanded.length > compact.length &&
+            // Compact version hides enough buttons
+            (this.isMobileToolbar || hiddenCount >= MIN_HIDDEN_FOR_COMPACT);
         if (shouldDisplayCompactToolbar) {
             return new Set(compact);
         }

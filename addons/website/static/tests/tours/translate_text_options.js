@@ -4,6 +4,7 @@ import {
     registerWebsitePreviewTour,
     selectFullText,
     clickToolbarButton,
+    expandToolbar,
     openEffectsPanelSection,
 } from "@website/js/tours/tour_utils";
 
@@ -35,12 +36,19 @@ registerWebsitePreviewTour(
             trigger: ".o-dropdown--menu .o-dropdown-item:contains('On Appearance')",
             run: "click",
         },
-        ...clickToolbarButton(
-            "second text block in the snippet",
-            "#wrap .s_text_block p:last",
-            "Text effects",
-            true
-        ),
+        selectFullText("second text block in the snippet", "#wrap .s_text_block p:last"),
+        {
+            content: "Wait for the toolbar of the second text block",
+            // The toolbar of the animated block lingers until the next render,
+            // and a panel opened from it is destroyed with it.
+            trigger: ".o-we-toolbar[data-namespace]:not(:has(.o-select-effects.active))",
+        },
+        expandToolbar(),
+        {
+            content: "Open the text effects of the second text block",
+            trigger: ".o-we-toolbar button.o-select-effects:not(.active)",
+            run: "click",
+        },
         ...openEffectsPanelSection("highlight"),
         {
             content: "Open the highlight shapes",
@@ -78,11 +86,7 @@ registerWebsitePreviewTour(
             "snippet highlighted text content",
             "#wrap .s_text_block p:last .o_text_highlight"
         ),
-        {
-            content: "Expand the toolbar for more buttons",
-            trigger: ".o-we-toolbar button[name='expand_toolbar']",
-            run: "click",
-        },
+        expandToolbar(),
         {
             content: "Check that the text effects are active and open them",
             trigger: ".o-we-toolbar button.o-select-effects.active",
@@ -101,22 +105,14 @@ registerWebsitePreviewTour(
         },
         // Select the animated text content and check animate options were displayed.
         selectFullText("animated text content", "#wrap .s_text_block p:first span"),
-        {
-            content: "Expand the toolbar for more buttons",
-            trigger: ".o-we-toolbar button[name='expand_toolbar']",
-            run: "click",
-        },
+        expandToolbar(),
         {
             content: "Check that the text effects are active",
             trigger: ".o-we-toolbar button.o-select-effects.active",
         },
         // Select a text content without any option.
         selectFullText("text content without any option", "footer .s_text_block p:first span"),
-        {
-            content: "Expand the toolbar for more buttons",
-            trigger: ".o-we-toolbar button[name='expand_toolbar']",
-            run: "click",
-        },
+        expandToolbar(),
         {
             content: "Check that no text effect is active",
             trigger: ".o-we-toolbar button.o-select-effects:not(.active)",
@@ -125,11 +121,7 @@ registerWebsitePreviewTour(
             "highlighted text content again",
             "#wrap .s_text_block p:last .o_text_highlight"
         ),
-        {
-            content: "Expand the toolbar for more buttons",
-            trigger: ".o-we-toolbar button[name='expand_toolbar']",
-            run: "click",
-        },
+        expandToolbar(),
         {
             content: "Open the text effects",
             trigger: ".o-we-toolbar button.o-select-effects.active",
