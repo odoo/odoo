@@ -74,7 +74,7 @@ class AccountMove(models.Model):
     def _compute_amount(self):
         super()._compute_amount()
         for move in self:
-            if move.move_type == 'entry' and move.reversed_pos_order_id:
+            if move.move_type == 'entry' and len(move.reversed_entry_id.pos_order_ids):
                 move.amount_total_signed = move.amount_total_signed * -1
 
     def _compute_tax_totals(self):
@@ -85,7 +85,7 @@ class AccountMove(models.Model):
         super()._compute_is_storno()
         for move in self:
             move.is_storno = move.is_storno or (
-                move.company_id.account_storno and move.reversed_pos_order_id
+                move.company_id.account_storno and len(move.reversed_entry_id.pos_order_ids)
             )
 
     def action_view_source_pos_orders(self):
