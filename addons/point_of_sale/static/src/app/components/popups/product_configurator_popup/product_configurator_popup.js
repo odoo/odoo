@@ -240,6 +240,24 @@ export class ProductConfiguratorPopup extends Component {
         );
     }
 
+    isDeletedCombination() {
+        const isDynamic = this.attributes.some(
+            (line) => line.attribute_id.create_variant === "dynamic"
+        );
+        const selectedValuesIds = this.selectedValues
+            .filter((value) => value.attribute_id.create_variant !== "no_variant")
+            .map(({ id }) => id);
+        if (isDynamic || !selectedValuesIds.length) {
+            return false;
+        }
+        return !this.props.productTemplate.product_variant_ids.some((variant) => {
+            const variantValuesIds = variant.product_template_attribute_value_ids.map(
+                ({ id }) => id
+            );
+            return selectedValuesIds.every((id) => variantValuesIds.includes(id));
+        });
+    }
+
     isValidCombination() {
         return !this.selectedValues.some((value) =>
             this.pos.doHaveConflictWith(value, this.selectedValues)
