@@ -1,5 +1,6 @@
 import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { ProductTemplate } from "@point_of_sale/app/models/product_template";
+import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useScrollShadow } from "@pos_self_order/app/utils/scroll_shadow_hook";
 import { useStickyTitleObserver } from "@pos_self_order/app/utils/sticky_title_observer";
 
@@ -15,6 +16,7 @@ export class ProductInterface extends Component {
     scrollContainerRef = signal(null);
 
     setup() {
+        this.selfOrder = useSelfOrder();
         this.state = proxy({
             showStickyTitle: false,
         });
