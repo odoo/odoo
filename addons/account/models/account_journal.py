@@ -284,7 +284,7 @@ class AccountJournal(models.Model):
         compute='_compute_show_refresh_out_einvoices_status_button',
     )
 
-    incoming_einvoice_notification_email = fields.Char(  # no longer incoming-specific, rename in master
+    journal_notification_emails = fields.Char(
         string="Send Copy To",
         help="Email addresses that will receive copy for sent and received invoices. Separate entries with ';'.",
     )
@@ -703,15 +703,10 @@ class AccountJournal(models.Model):
                                         "2/ filter on this journal and on 'Unposted' entries\n"
                                         "3/ select them all and post or delete them through the action menu"))
 
-    @api.constrains('type', 'incoming_einvoice_notification_email')
-    def _check_incoming_einvoice_notification_email(self):
-        # to remove in master
-        pass
-
-    @api.onchange('incoming_einvoice_notification_email')
-    def _onchange_incoming_einvoice_notification_email(self):
+    @api.onchange('journal_notification_emails')
+    def _onchange_journal_notification_emails(self):
         for journal in self:
-            journal.incoming_einvoice_notification_email = ', '.join(email_normalize_all(journal.incoming_einvoice_notification_email or ''))
+            journal.journal_notification_emails = ', '.join(email_normalize_all(journal.journal_notification_emails or ''))
 
     @api.depends('type')
     def _compute_refund_sequence(self):
@@ -1286,11 +1281,11 @@ class AccountJournal(models.Model):
     def _unsubscribe_invoice_notification_email(self, email_to_remove):
         self.ensure_one()
         normalized_to_remove = email_normalize(email_to_remove, strict=False)
-        subscribed_emails = set(email_normalize_all(self.incoming_einvoice_notification_email or ''))
+        subscribed_emails = set(email_normalize_all(self.journal_notification_emails or ''))
         if not normalized_to_remove or normalized_to_remove not in subscribed_emails:
             return False
         remaining = subscribed_emails - {normalized_to_remove}
-        self.incoming_einvoice_notification_email = ', '.join(remaining or [])
+        self.journal_notification_emails = ', '.join(remaining or [])
         return True
 
     def _notify_einvoices_received(self, moves):
@@ -1301,7 +1296,7 @@ class AccountJournal(models.Model):
             # if module was upgraded, this is handled in _notify_invoice_subscribers
             return
 
-        emails = set(email_normalize_all(self.incoming_einvoice_notification_email or ''))
+        emails = set(email_normalize_all(self.journal_notification_emails or ''))
         if not moves or not emails:
             return
 
@@ -1310,16 +1305,11 @@ class AccountJournal(models.Model):
 
         mail_template.with_context(einvoices=moves).send_mail(self.id, force_send=True)
 
-    def button_unsubscribe_from_invoice_notifications(self):
-        # deprecated, to remove in master
-        self.ensure_one()
-        self.incoming_einvoice_notification_email = False
-
     def _notify_invoice_subscribers(self, invoice, mail_params=None):
         self.ensure_one()
         invoice.ensure_one()
 
-        recipients = set(email_normalize_all(self.incoming_einvoice_notification_email or ''))
+        recipients = set(email_normalize_all(self.journal_notification_emails or ''))
         if not recipients:
             return
 
