@@ -689,6 +689,13 @@ class IrUiView(models.Model):
         if not view._are_archs_equal(old_arch, new_arch):
             view._set_noupdate()
             view.write({'arch': etree.tostring(new_arch, encoding='unicode')})
+            if not view.website_id and (website_id := self.env.context.get('website_id')):
+                # The write triggered the COW of the generic view: the
+                # translations must be copied on the new website specific view
+                view = view.search([
+                    ('key', '=', view.key),
+                    ('website_id', '=', website_id),
+                ], limit=1) or view
             view._copy_custom_snippet_translations(view, 'arch_db')
 
     @api.model
