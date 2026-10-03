@@ -86,6 +86,9 @@ class Many2oneReference(Integer):
             value = value._ids[0] if value._ids else None
         return super().convert_to_cache(value, records, validate)
 
+    def _update_inverse(self, records: BaseModel, value: BaseModel):
+        self._update_cache(records, self.convert_to_cache(value, records))
+
     def _update_inverses(self, records: BaseModel, value):
         """ Add `records` to the cached values of the inverse fields of `self`. """
         if not value:
