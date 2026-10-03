@@ -1,13 +1,64 @@
 import re
 import urllib.parse
 
-__all__ = ['urljoin']
+# IDNA2008. Beware of the standard library ``str.encode('idna')``: it is
+# IDNA2003 and encodes e.g. ``faß.de`` to ``fass.de``, not ``xn--fa-hia.de``.
+import idna
+from urllib3.exceptions import LocationParseError
+from urllib3.util import parse_url
+
+__all__ = ['idna_domain', 'urljoin']
 
 
 def _contains_dot_segments(path: str | bytes) -> bool:
     # most servers decode url before doing dot segment resolutions
     decoded_path = urllib.parse.unquote(path, errors='strict')
     return any(seg in ('.', '..') for seg in decoded_path.split('/'))
+
+
+def idna_domain(domain: str, with_port: bool = True) -> str | None:
+    """
+    Encode the host of ``domain`` in the ASCII (punycode) form that is
+    actually sent over DNS, using IDNA2008. Everything but the host and,
+    optionally, the port is dropped.
+
+    Encoding every domain the same way is what makes a Unicode domain and
+    its punycode equivalent match each other.
+
+    :param str domain: An URL (``https://exämple.com/path``), a netloc
+        (``exämple.com:443``) or a bare host name.
+    :param bool with_port: Whether the port is kept in the returned value.
+    :returns: The encoded ``host`` or ``host:port``, or ``None`` when
+        there is no host at all or when it is not a valid domain name.
+
+    Examples::
+
+        >>> idna_domain('https://faß.de/hello')
+        'xn--fa-hia.de'
+        >>> idna_domain('dü sseldorf.com') is None
+        True
+    """
+    if not domain:
+        return None
+    try:
+        url = parse_url(domain if '://' in domain else f'//{domain}')
+    except LocationParseError:
+        return None
+    host = url.host
+    if not host:
+        return None
+    # an IPv6 literal has nothing to encode
+    if not host.startswith('['):
+        # ``parse_url`` only encodes the hosts that are not ASCII already,
+        # encoding again validates the ASCII ones too: a bogus ``xn--``
+        # label, an underscore or an over-long label are rejected here.
+        try:
+            host = idna.encode(host, uts46=True).decode('ascii')
+        except idna.IDNAError:
+            return None
+    if with_port and url.port:
+        return f'{host}:{url.port}'
+    return host
 
 
 def urljoin(base: str, extra: str) -> str:
