@@ -186,6 +186,33 @@ class BaseAutomationModelWithRecnameChar(models.Model):
     user_id = fields.Many2one('res.users', string='Responsible')
 
 
+class BaseAutomationTransientTest(models.Model):
+    _name = 'base_automation.transient.test'
+    _description = "Automated Rule Transient Compute State Test"
+    _inherit = ['mail.activity.mixin']
+
+    # reading `immediate` wakes up base_automation; `delayed` is then
+    # corrected by hand in write(), after that read.
+    immediate_setter = fields.Integer()
+    immediate = fields.Integer(compute='_compute_immediate', store=True)
+    delayed = fields.Integer()
+    # `delayed` is propagated to the peer in the same write() as the record itself
+    peer_id = fields.Many2one('base_automation.transient.test')
+    restricted = fields.Integer(groups='base.group_system')
+
+    @api.depends('immediate_setter')
+    def _compute_immediate(self):
+        for record in self:
+            record.immediate = record.immediate_setter
+
+    def write(self, vals):
+        result = super().write(vals)
+        if 'immediate_setter' in vals:
+            # guards against the recursive write() below (vals={'delayed': ...})
+            (self | self.peer_id).delayed = self.immediate
+        return result
+
+
 class BaseAutomationModelWithRecnameM2o(models.Model):
     _name = 'base.automation.model.with.recname.m2o'
     _description = "Model with Many2one as _rec_name and name_create"
