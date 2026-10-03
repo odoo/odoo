@@ -163,21 +163,40 @@ class StockMove(models.Model):
             # Since aml.date are Date, we don't need the extra precision here.
             at_date = Date.to_date(at_date)
 
-        aml_quantity = 0
-        value = 0
-        aml_ids = set()
+        return_qty_on_line = 0
+        for move in self.purchase_line_id.move_ids:
+            if move.product_id != self.product_id:
+                continue
+            if at_date and Date.to_date(move.date) > at_date:
+                continue
+            if move._is_purchase_return():
+                return_qty_on_line += move._get_valued_qty()
+
+        bill_qty = bill_value = 0
+        refund_qty = refund_value = 0
+        bill_aml_ids = set()
+        refund_aml_ids = set()
         for aml in self.purchase_line_id.invoice_lines:
             if at_date and aml.date > at_date:
                 continue
             if aml.move_id.state != 'posted':
                 continue
-            aml_ids.add(aml.id)
             if aml.move_type == 'in_invoice':
-                aml_quantity += self._get_quantity_from_bill(aml, quantity)
-                value += self._get_value_from_bill(aml)
+                bill_aml_ids.add(aml.id)
+                bill_qty += self._get_quantity_from_bill(aml, quantity)
+                bill_value += self._get_value_from_bill(aml)
             elif aml.move_type == 'in_refund':
-                aml_quantity -= self._get_quantity_from_bill(aml, quantity)
-                value -= self._get_value_from_bill(aml)
+                refund_aml_ids.add(aml.id)
+                refund_qty += self._get_quantity_from_bill(aml, quantity)
+                refund_value += self._get_value_from_bill(aml)
+
+        refund_unit_value = refund_value / refund_qty if refund_qty else 0
+        leftover_refund_qty = max(refund_qty - return_qty_on_line, 0)
+        leftover_refund_value = refund_unit_value * leftover_refund_qty
+
+        aml_quantity = bill_qty - leftover_refund_qty
+        value = bill_value - leftover_refund_value
+        aml_ids = bill_aml_ids | (refund_aml_ids if leftover_refund_qty else set())
 
         if aml_quantity <= 0:
             return valuation_data
