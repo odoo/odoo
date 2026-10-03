@@ -2204,3 +2204,36 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
 
         self.assertRecordValues(payment_a, [{'amount': 1100.0, 'partner_id': self.partner_a.id}])
         self.assertRecordValues(payment_b, [{'amount': 3000.0, 'partner_id': self.partner_b.id}])
+
+    def test_batch_payment_multi_vendor_same_currency(self):
+        """
+        Verify registering payment for multiple vendors with identical invoice
+        currencies retains the invoice currency on the wizard instead of falling back
+        to company currency.
+        """
+        in_invoice_multi_1 = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.other_currency.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 500.0, 'tax_ids': []})],
+        })
+        in_invoice_multi_2 = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2017-01-01',
+            'invoice_date': '2017-01-01',
+            'partner_id': self.partner_b.id,
+            'currency_id': self.other_currency.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 800.0, 'tax_ids': []})],
+        })
+        (in_invoice_multi_1 + in_invoice_multi_2).action_post()
+
+        moves = in_invoice_multi_1 | in_invoice_multi_2
+
+        register_wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=moves.ids,
+        ).create({})
+
+        self.assertEqual(register_wizard.currency_id, self.other_currency)
