@@ -23,13 +23,13 @@ test("should remove `style.color` from table and apply it to tds", async () => {
             `),
         contentBeforeEdit: unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table class="o_selected_table">
+            <div class="o_table_wrapper"><table class="o_selected_table">
                 <tbody>
                     <tr><td class="o_selected_td" style="color: red;">ab</td></tr>
                     <tr><td style="color: red;">ab</td></tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder=""><br></p>
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `),
     });
 });
@@ -44,13 +44,13 @@ test("should remove `style.color` from table and apply it to td without `style.c
             `),
         contentBeforeEdit: unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table>
+            <div class="o_table_wrapper"><table>
                 <tbody>
                     <tr><td style="color: red;">ab</td></tr>
                     <tr><td style="color: green;">ab</td></tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder=""><br></p>
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `),
     });
 });
@@ -114,7 +114,7 @@ test("should not distribute table color to tds of a nested table", async () => {
             `),
         contentBeforeEdit: unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table>
+            <div class="o_table_wrapper"><table>
                 <tbody>
                     <tr><td style="color: red;">ab</td></tr>
                     <tr><td style="color: red;">
@@ -125,8 +125,8 @@ test("should not distribute table color to tds of a nested table", async () => {
                         </table>
                     </td></tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder=""><br></p>
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `),
     });
 });
