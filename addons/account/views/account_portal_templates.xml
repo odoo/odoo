@@ -21,7 +21,7 @@
         </t>
         <t t-if="invoices" t-call="portal.portal_table">
             <thead>
-                <tr class="active">
+                <tr class="active o_not_editable">
                     <th name="invoice_number">Invoice #</th>
                     <th name="invoice_date">Invoice Date</th>
                     <th name="due_date" class='d-none d-md-table-cell'>Due Date</th>
@@ -39,13 +39,12 @@
                                 <em t-else="">Draft Invoice</em>
                             </a>
                         </td>
-                        <td><span t-field="invoice.invoice_date"/></td>
-                        <td class='d-none d-md-table-cell'
-                            t-att-class="'d-none d-md-table-cell text-danger' if invoice.invoice_date_due and invoice.invoice_date_due &lt; datetime.date.today() and invoice.payment_state in ['not_paid', 'partial'] else 'd-none d-md-table-cell'">
+                        <td class="o_not_editable"><span t-field="invoice.invoice_date"/></td>
+                        <td t-attf-class="o_not_editable d-none d-md-table-cell {{ 'text-danger' if invoice.invoice_date_due and invoice.invoice_date_due &lt; datetime.date.today() and invoice.payment_state in ['not_paid', 'partial'] else '' }}">
                             <span t-field="invoice.invoice_date_due"/>
                         </td>
                         <td name="invoice_amount" class="text-end pe-3"><span t-out="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
-                        <td name="invoice_status">
+                        <td name="invoice_status" class="o_not_editable">
                             <t t-if="invoice.state == 'posted'" name="invoice_status_posted">
                                 <span t-if="invoice.currency_id.is_zero(invoice.amount_residual)"
                                       class="badge rounded-pill text-bg-success">
