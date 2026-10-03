@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_form_inherit_l10n_sk_dic" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.l10n.sk.dic</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_sk.res_partner_view_form_inherit_l10n_sk"/>
+        <field name="arch" type="xml">
+            <field name="company_registry" position="after">
+                <field name="l10n_sk_dic" invisible="country_code != 'SK'"/>
+            </field>
+        </field>
+    </record>
+</odoo>
