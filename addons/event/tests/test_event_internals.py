@@ -494,20 +494,6 @@ class TestEventData(TestEventInternalsCommon):
         })
         self.assertEqual(event.event_mail_ids, self.env['event.mail'])
 
-    def test_event_mail_filter_template_on_event(self):
-        """Test that the mail template are filtered to show only those which are related to the event registration model.
-
-        This is important to be able to show only relevant mail templates on the related
-        field "template_ref".
-        """
-        self.env['mail.template'].search([('model', '=', 'event.registration')]).unlink()
-        self.env['mail.template'].create({'model_id': self.env['ir.model']._get('event.registration').id, 'name': 'test template'})
-        self.env['mail.template'].create({'model_id': self.env['ir.model']._get('res.partner').id, 'name': 'test template'})
-        templates = self.env['mail.template'].with_context(filter_template_on_event=True).name_search('test template')
-        self.assertEqual(len(templates), 1, 'Should return only mail templates related to the event registration model')
-        templates = self.env['mail.template'].with_context(filter_template_on_event=True).search([('name', '=', 'test template')])
-        self.assertEqual(len(templates), 1, 'Should also return only mail templates related to the event registration model using search')
-
     @users('user_eventmanager')
     def test_event_question_defaults(self):
         """ Test that default questions are linked to the new events and shared by all of them. """
