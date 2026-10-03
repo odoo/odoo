@@ -9,7 +9,9 @@
 
     <t t-inherit="web.ControlPanel" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o_control_panel_main_buttons')]" position="before">
-            <t t-call="project.ProjectSharingControlPanelNavigationButton" />
+            <t t-if="env.searchModel.resModel === 'project.task'">
+                <t t-call="project.ProjectSharingControlPanelNavigationButton"/>
+            </t>
         </xpath>
     </t>
 
