@@ -341,6 +341,7 @@ class PosConfig(models.Model):
         record['_has_cash_move_perm'] = self.env.user._has_cash_move_permission()
         record['_has_cash_delete_perm'] = self.env.user._has_cash_delete_permission()
         record["_unit_uom_id"] = self.env.ref('uom.product_uom_unit').id
+        record['_limited_partner_count'] = config._get_limited_partner_count()
 
         session = config.current_session_id
         last_opening = config._get_opening_balance() if session else 0.0
@@ -1105,7 +1106,7 @@ class PosConfig(models.Model):
                 partner.company_id=%s OR partner.company_id IS NULL
             )
             ORDER BY  COALESCE(pm.order_count, 0) DESC,
-                      NAME limit %s offset %s;
+                      NAME, partner.id limit %s offset %s;
         """, self.company_id.id, self._get_limited_partner_count(), offset))
 
     def action_pos_config_modal_edit(self):
