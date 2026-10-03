@@ -10,24 +10,23 @@ class StockForecasted_Product_Product(models.AbstractModel):
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
         line = super()._prepare_report_line(quantity, move_out, move_in, replenishment_filled, product, reserved_move, in_transit, read)
 
-        if not move_out or not move_out.picking_id or not move_out.picking_id.sale_id:
+        # If read is False, line['move_out'] is a stock.move record and will trigger a record update
+        if not read or not move_out or not move_out.picking_id or not move_out.picking_id.sale_id:
             return line
 
         picking = move_out.picking_id
-        # If read is False, line['move_out'] is a stock.move record and will trigger a record update
-        if read:
-            line['move_out'].update({
-                'picking_id': {
-                    'id': picking.id,
-                    'priority': picking.priority,
-                    'sale_id': {
-                        'id': picking.sale_id.id,
-                        'amount_untaxed': picking.sale_id.amount_untaxed,
-                        'currency_id': picking.sale_id.currency_id.read(fields=['id', 'name'])[0],
-                        'partner_id': picking.sale_id.partner_id.read(fields=['id', 'display_name'])[0],
-                    }
+        line['move_out'].update({
+            'picking_id': {
+                'id': picking.id,
+                'priority': picking.priority,
+                'sale_id': {
+                    'id': picking.sale_id.id,
+                    'amount_untaxed': picking.sale_id.amount_untaxed,
+                    'currency_id': picking.sale_id.currency_id.read(fields=['id', 'name'])[0],
+                    'partner_id': picking.sale_id.partner_id.read(fields=['id', 'display_name'])[0],
                 }
-            })
+            }
+        })
         return line
 
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):

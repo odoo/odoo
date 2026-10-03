@@ -5,7 +5,7 @@ from datetime import date, datetime
 
 from odoo import api, models
 from odoo.fields import Domain
-from odoo.tools import float_is_zero, format_date, OrderedSet
+from odoo.tools import float_compare, float_is_zero, format_date, OrderedSet
 
 
 class StockForecasted_Product_Product(models.AbstractModel):
@@ -173,6 +173,15 @@ class StockForecasted_Product_Product(models.AbstractModel):
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
         product = product or (move_out.product_id if move_out else move_in.product_id)
+        if self.env.context.get('forecast_availability_only'):
+            # called from _get_forecast_availability_outgoing, which only reads these keys:
+            # skip the documents and dates lookups, this runs once per open move
+            return {
+                'quantity': product.uom_id.round(quantity),
+                'move_out': move_out,
+                'move_in': move_in,
+                'replenishment_filled': replenishment_filled,
+            }
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
         delivery_late = move_out.state != 'done' and move_out.date < datetime.now() if move_out else False
         receipt_late = move_in.state != 'done' and move_in.date < datetime.now() if move_in else False
@@ -237,28 +246,33 @@ class StockForecasted_Product_Product(models.AbstractModel):
         return [('location_id', 'in', location_ids), ('quantity', '>', 0), ('product_id', 'in', products.ids)]
 
     def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
+        # resolved once: the helpers below run for every open move of the products
+        digits = self.env['decimal.precision'].precision_get('Product Unit')
 
         def _get_out_move_reserved_data(out, linked_moves, used_reserved_moves, currents, wh_stock_location, wh_stock_sub_location_ids):
             reserved_out = 0
             # the move to show when qty is reserved
             reserved_move = self.env['stock.move']
+            product_id = out.product_id.id
+            out_qty = out.product_qty
             for move in linked_moves:
                 if move.state not in ('partially_available', 'assigned'):
                     continue
                 # count reserved stock.
                 reserved = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
                 # check if the move reserved qty was counted before (happens if multiple outs share pick/pack)
-                reserved = min(reserved - used_reserved_moves[move], out.product_qty)
+                reserved = min(reserved - used_reserved_moves[move], out_qty)
                 if reserved and not reserved_move:
                     reserved_move = move
                 # add to reserved line data
                 reserved_out += reserved
                 used_reserved_moves[move] += reserved
                 # any sublocation qties needs to be reserved to the main stock location qty as well
-                if move.location_id.id in wh_stock_sub_location_ids:
-                    currents[out.product_id.id, wh_stock_location.id] -= reserved
-                currents[(out.product_id.id, move.location_id.id)] -= reserved
-                if move.product_id.uom_id.compare(reserved_out, out.product_qty) >= 0:
+                location_id = move.location_id.id
+                if location_id in wh_stock_sub_location_ids:
+                    currents[product_id, wh_stock_location.id] -= reserved
+                currents[product_id, location_id] -= reserved
+                if float_compare(reserved_out, out_qty, precision_digits=digits) >= 0:
                     break
 
             return {
@@ -272,15 +286,17 @@ class StockForecasted_Product_Product(models.AbstractModel):
             demand_out = out.product_qty - reserved_out
             linked_moves = reserved_data['linked_moves']
             taken_from_stock_out = 0
+            product_id = out.product_id.id
             for move in linked_moves:
                 if move.state in ('draft', 'cancel', 'assigned', 'done'):
                     continue
-                reserved = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+                reserved = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id) if move.quantity else 0.0
                 demand = max(move.product_qty - reserved, 0)
                 # to make sure we don't demand more than the out (useful when same pick/pack goes to multiple out)
                 demand = min(demand, demand_out)
-                if move.product_id.uom_id.is_zero(demand):
+                if float_is_zero(demand, precision_digits=digits):
                     continue
+                location_id = move.location_id.id
                 # check available qty for move if chained, move available is what was move by orig moves
                 if move.move_orig_ids:
                     move_in_qty = sum(move.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('quantity'))
@@ -288,15 +304,15 @@ class StockForecasted_Product_Product(models.AbstractModel):
                     move_out_qty = sum(sibling_moves.filtered(lambda m: m.state == 'done').mapped('quantity'))
                     move_available_qty = move_in_qty - move_out_qty - reserved
                 else:
-                    move_available_qty = currents[(out.product_id.id, move.location_id.id)]
+                    move_available_qty = currents[product_id, location_id]
                 # count taken from stock, but avoid taking more than whats in stock in case of move origs,
                 # this can happen if stock adjustment is done after orig moves are done
-                taken_from_stock = min(demand, move_available_qty, currents[(out.product_id.id, move.location_id.id)])
+                taken_from_stock = min(demand, move_available_qty, currents[product_id, location_id])
                 if taken_from_stock > 0:
                     # any sublocation qties needs to be removed to the main stock location qty as well
-                    if move.location_id.id in wh_stock_sub_location_ids:
-                        currents[out.product_id.id, wh_stock_location.id] -= taken_from_stock
-                    currents[(out.product_id.id, move.location_id.id)] -= taken_from_stock
+                    if location_id in wh_stock_sub_location_ids:
+                        currents[product_id, wh_stock_location.id] -= taken_from_stock
+                    currents[product_id, location_id] -= taken_from_stock
                     taken_from_stock_out += taken_from_stock
                 demand_out -= taken_from_stock
             return {
@@ -346,6 +362,10 @@ class StockForecasted_Product_Product(models.AbstractModel):
         linked_moves_per_out = {}
         ins_ids = set(ins._ids)
         for out in outs:
+            if not out.move_orig_ids:
+                # no chain, nothing to roll up
+                linked_moves_per_out[out] = out
+                continue
             # stop the rollup at the in moves: what feeds them is still outside the warehouse
             linked_move_ids = out._rollup_move_origs(seen=OrderedSet(ins._ids)) - ins_ids
             linked_moves_per_out[out] = self.env['stock.move'].browse(linked_move_ids)
