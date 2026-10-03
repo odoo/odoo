@@ -18,7 +18,7 @@ export class SlideTogglePreview extends Interaction {
     };
 
     setup() {
-        this.isPreview = false;
+        this.isPreview = !!this.el.dataset.isPreview;
     }
 
     async toggleSlidePreview() {
