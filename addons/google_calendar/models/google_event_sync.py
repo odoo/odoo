@@ -410,7 +410,7 @@ class GoogleEventSync(models.AbstractModel):
         if calendar.is_primary:
             # For the primary calendar, we want to sync all events attended by the user,
             # which do not already belong to one of their secondary calendars
-            domain &= Domain(
+            domain &= Domain('calendar_id', '!=', False) & Domain(
             'calendar_id',
                 'not in',
                 self.env.user.calendar_user_ids.filtered(lambda l: not (l.is_primary and l.access_role == 'owner')).calendar_id.ids
@@ -439,7 +439,7 @@ class GoogleEventSync(models.AbstractModel):
 
     @api.model
     def _create_from_google(self, gevents, calendar, vals_list):
-        return self.create(vals_list)
+        return self.with_context(imported_from_google=True).create(vals_list)
 
     @api.model
     def _get_sync_partner(self, emails):

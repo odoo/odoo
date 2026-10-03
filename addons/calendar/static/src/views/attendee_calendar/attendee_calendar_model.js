@@ -123,6 +123,7 @@ export class AttendeeCalendarModel extends CalendarModel {
     async loadFilterSection(fieldName, filterInfo, previousSection) {
         const result = await super.loadFilterSection(fieldName, filterInfo, previousSection);
         if (result?.fieldName === "calendar_id") {
+            result.label = _t("My Calendars");  // Override the string from the field definition ("Calendar").
             result?.filters?.forEach(f => {
                 if (f.isPrimary) {
                     // reuse existing canRemove field on parent component
@@ -211,8 +212,6 @@ export class AttendeeCalendarModel extends CalendarModel {
 
     /**
      * Split the events to display an event for each attendee with the correct status.
-     * If the all filter is activated, we don't display an event for each attendee and keep
-     * the previous behavior to display a single event.
      *
      * If any calendar filters are activated, we consider the current user as an attendee
      * even if they are not selected in the attendee filters.
@@ -221,15 +220,10 @@ export class AttendeeCalendarModel extends CalendarModel {
         const attendeeFilters = data.filterSections.partner_ids;
         const calendarFilters = data.filterSections.calendar_id;
         const currentPartnerId = user.partnerId;
-        let isEveryoneFilterActive = false;
         let attendeeIds = [];
         const eventIds = Object.keys(data.records).map((id) => Number.parseInt(id));
         if (attendeeFilters) {
-            const allFilter = attendeeFilters.filters.find((filter) => filter.type === "all");
-            isEveryoneFilterActive = (allFilter && allFilter.active) || false;
-            attendeeIds = attendeeFilters.filters
-                .filter((filter) => filter.type !== "all" && filter.value)
-                .map((filter) => filter.value);
+            attendeeIds = attendeeFilters.filters.map((filter) => filter.value);
         }
         // If we show events based on calendar filters, we want to get the current
         // user's attendee data even if they are not selected in attendee filters
@@ -241,7 +235,7 @@ export class AttendeeCalendarModel extends CalendarModel {
             attendeeIds,
             eventIds,
         ]);
-        if (!isEveryoneFilterActive && attendeeFilters) {
+        if (attendeeFilters) {
             const activeAttendeeIds = new Set(this.getActivePartnerIds(data));
             // Duplicate records per attendee
             const newRecords = {};

@@ -145,6 +145,7 @@ class CalendarEvent(models.Model):
             '|',
                 ('partner_ids.user_ids', 'in', self.env.user.id),
                 ('calendar_id', 'in', self.env.user.writable_calendar_ids.ids),
+            ('user_id', '!=', False),
             ('stop', '>', lower_bound),
             ('start', '<', upper_bound),
             # Do not sync events that follow the recurrence, they are already synced at recurrence creation
@@ -241,6 +242,9 @@ class CalendarEvent(models.Model):
         partners_by_email = {(p.email_normalized or p.email): p for p in partners}
         for google_attendee in google_attendees:
             attendee_email = google_attendee.get('email')
+            if google_attendee.get('resource'):
+                # do not include rooms in the attendee list
+                continue
             attendee_email_normalized = tools.email_normalize(attendee_email)
             if attendee_email in attendees_by_emails:
                 # Update existing attendees
@@ -306,7 +310,13 @@ class CalendarEvent(models.Model):
                         reminder_type=alarm_type_label,
                         duration=duration,
                     )
-                commands += [(0, 0, {'duration': duration, 'interval': interval, 'name': name, 'alarm_type': alarm_type})]
+                alarm = self.env['calendar.alarm'].create({
+                    'duration': duration,
+                    'interval': interval,
+                    'name': name,
+                    'alarm_type': alarm_type,
+                })
+                commands += [(4, alarm.id)]
         return commands
 
     def action_mass_archive(self, recurrence_update_setting):
@@ -448,3 +458,9 @@ class CalendarEvent(models.Model):
         # specifically first (e.g.: mass selection from a list view) before deleting the calendar.
         self.write({'google_id': False})
         return super()._before_calendar_cascade_unlink()
+
+    def _creation_message(self):
+        if self.env.context.get('imported_from_google'):
+            doc_name = self.env['ir.model']._get(self._name).name
+            return _('%s imported from Google', doc_name)
+        return super()._creation_message()
