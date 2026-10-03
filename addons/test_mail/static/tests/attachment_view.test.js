@@ -1,7 +1,7 @@
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import { beforeEach, describe, test, expect } from "@odoo/hoot";
 import { queryOne, waitUntil } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, mockUserAgent } from "@odoo/hoot-mock";
 import {
     click,
     contains,
@@ -130,6 +130,80 @@ test("Attachment view popout controls test", async () => {
     await contains(".o_attachment_preview iframe");
     await click(".o_attachment_preview .o_attachment_control");
     await animationFrame();
+    expect(".o_attachment_preview").not.toBeVisible();
+});
+
+async function hasFloatingPopoutControl(count) {
+    await contains(".o_attachment_preview .o_attachment_control", { count });
+}
+
+function registerFormWithAttachmentPreview() {
+    registerArchs({
+        "mail.test.simple.main.attachment,false,form": `
+            <form string="Test document">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <chatter/>
+            </form>`,
+    });
+}
+
+function createRecordWithAttachment(pyEnv) {
+    const recordId = pyEnv["mail.test.simple.main.attachment"].create({});
+    pyEnv["ir.attachment"].create({
+        mimetype: "image/jpeg",
+        res_id: recordId,
+        res_model: "mail.test.simple.main.attachment",
+    });
+    return recordId;
+}
+
+test("Floating popout control is shown on desktop", async () => {
+    registerFormWithAttachmentPreview();
+    const pyEnv = await startServer();
+    const recordId = createRecordWithAttachment(pyEnv);
+    patchUiSize({ size: SIZES.XXL });
+    await start();
+    await openFormView("mail.test.simple.main.attachment", recordId);
+    await hasFloatingPopoutControl(1);
+});
+
+test("Floating popout control is hidden on mobile", async () => {
+    registerFormWithAttachmentPreview();
+    const pyEnv = await startServer();
+    const recordId_mobileBrowser = createRecordWithAttachment(pyEnv);
+    const recordId_mobileApp = createRecordWithAttachment(pyEnv);
+    patchUiSize({ size: SIZES.XXL });
+    await start();
+
+    // Mobile browser (e.g. Chrome on Android)
+    mockUserAgent("android");
+    await openFormView("mail.test.simple.main.attachment", recordId_mobileBrowser);
+    await contains(".o-mail-Attachment");
+    await hasFloatingPopoutControl(0);
+
+    // Odoo Mobile App (native WebView wrapper)
+    mockUserAgent("OdooMobile (iOS)");
+    await openFormView("mail.test.simple.main.attachment", recordId_mobileApp);
+    await contains(".o-mail-Attachment");
+    await hasFloatingPopoutControl(0);
+});
+
+test("Popout does not crash when the browser blocks the popup", async () => {
+    registerFormWithAttachmentPreview();
+    const pyEnv = await startServer();
+    const recordId = createRecordWithAttachment(pyEnv);
+    patchUiSize({ size: SIZES.XXL });
+    patchWithCleanup(browser, { open: () => null });
+    await start();
+    await openFormView("mail.test.simple.main.attachment", recordId);
+    await click(".o_attachment_preview .o_attachment_control");
+    await animationFrame();
+    // No crash occurred (an uncaught error would be reported as unverified by Hoot).
+    // Known limitation: the inline attachment view stays hidden since the popout
+    // was aborted before it could be shown again.
     expect(".o_attachment_preview").not.toBeVisible();
 });
 
