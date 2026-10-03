@@ -68,10 +68,17 @@ class CalendarEvent(models.Model):
     def create(self, vals_list):
         description_context = self.env.context.get('skip_contact_description', False)
         notify_context = self.env.context.get('dont_notify', False)
-        return super(CalendarEvent, self.with_context(dont_notify=notify_context, skip_contact_description=description_context)).create([
+        events = super(CalendarEvent, self.with_context(dont_notify=notify_context, skip_contact_description=description_context)).create([
             dict(vals, need_sync=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
+
+        if any(not event.recurrency for event in events):
+            cron = self.env.ref('google_calendar.ir_cron_sync_light_cals', raise_if_not_found=False)
+            if cron:
+                cron._trigger()
+
+        return events
 
     @api.model
     def _check_values_to_sync(self, values):
