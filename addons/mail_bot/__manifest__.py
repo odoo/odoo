@@ -8,7 +8,7 @@
     'summary': 'Add OdooBot in discussions',
     'website': 'https://www.odoo.com/app/discuss',
     'depends': ['mail'],
-    'auto_install': True,
+    'auto_install': False,
     'installable': True,
     'data': [
         'views/res_users_views.xml',
