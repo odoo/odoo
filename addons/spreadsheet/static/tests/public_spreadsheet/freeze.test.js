@@ -44,7 +44,7 @@ test("odoo pivot functions are replaced with their value", async function () {
     const cells = data.sheets[0].cells;
     expect(cells.A3).toBe("No", { message: "the content is replaced with the value" });
     expect(cells.C3).toBe("15", { message: "the content is replaced with the value" });
-    expect(data.formats[data.sheets[0].formats.C3]).toBe("#,##0.00");
+    expect(data.formats[data.sheets[0].formats["B3:F5"]]).toBe("#,##0.00");
 });
 
 test("Pivot with a type different of ODOO is not converted", async function () {
@@ -75,6 +75,7 @@ test("Pivot with a type different of ODOO is not converted", async function () {
     setCellContent(model, "A1", `=PIVOT.VALUE(1, "probability:avg")`);
     setCellContent(model, "A2", `=PIVOT.HEADER(1, "measure", "probability:avg")`);
     const data = await freezeOdooData(model);
+    await animationFrame();
     const cells = data.sheets[0].cells;
     expect(cells.A1).toBe(`=PIVOT.VALUE(1,"probability:avg")`, {
         message: "the content is not replaced with the value",
@@ -244,8 +245,7 @@ test("from/to global filters are exported", async function () {
     const filterSheet = data.sheets[1];
     expect(filterSheet.cells.B2).toBe("43831");
     expect(filterSheet.cells.C2).toBe("44197");
-    expect(filterSheet.formats.B2).toBe(1);
-    expect(filterSheet.formats.C2).toBe(1);
+    expect(filterSheet.formats["B2:C2"]).toBe(1);
     expect(data.formats[1]).toBe("m/d/yyyy");
     expect(data.globalFilters.length).toBe(1);
     expect(data.globalFilters[0].label).toBe("Date Filter");
@@ -262,10 +262,9 @@ test("from/to global filter without value is exported", async function () {
     const data = await freezeOdooData(model);
     const filterSheet = data.sheets[1];
     expect(filterSheet.cells.A2).toBe("Date Filter");
-    expect(filterSheet.cells.B2).toBe("");
-    expect(filterSheet.cells.B2).toBe("");
-    expect(filterSheet.formats.B2).toBe(1);
-    expect(filterSheet.formats.C2).toBe(1);
+    expect(filterSheet.cells.B2).toBe(undefined);
+    expect(filterSheet.cells.C2).toBe(undefined);
+    expect(filterSheet.formats["B2:C2"]).toBe(1);
     expect(data.formats[1]).toBe("m/d/yyyy");
     expect(data.globalFilters.length).toBe(1);
     expect(data.globalFilters[0].label).toBe("Date Filter");
