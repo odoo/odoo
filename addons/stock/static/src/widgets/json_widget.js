@@ -25,15 +25,16 @@ export const jsonPopOver = {
 // Lead Days
 // --------------------------------------------------------------------------
 
-export class PopOverLeadDays extends JsonPopOver {
+export class LeadDaysWidgets extends JsonPopOver {
     static template = "stock.leadDays";
 }
 
-export const popOverLeadDays = {
+export const leadDaysWidgets = {
     ...jsonPopOver,
-    component: PopOverLeadDays,
+    component: LeadDaysWidgets,
 };
-registry.category("fields").add("lead_days_widget", popOverLeadDays);
+registry.category("fields").add("lead_days_widget", leadDaysWidgets);
+
 
 // --------------------------------------------------------------------------
 // Forecast Graph
