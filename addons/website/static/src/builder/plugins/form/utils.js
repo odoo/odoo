@@ -1,3 +1,4 @@
+import { parseJSON } from "@html_builder/utils/json";
 import { _t } from "@web/core/l10n/translation";
 import { escape } from "@web/core/utils/strings";
 import { renderToElement } from "@web/core/utils/render";
@@ -25,7 +26,7 @@ export function getParsedDataFor(formId, parentEl) {
     if (!dataForEl) {
         return;
     }
-    return JSON.parse(
+    return parseJSON(
         dataForEl.dataset.values
             // replaces `True` by `true` if they are after `,` or `:` or `[`
             .replace(/([,:[]\s*)True/g, "$1true")

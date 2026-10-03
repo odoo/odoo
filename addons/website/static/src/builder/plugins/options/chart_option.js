@@ -1,3 +1,4 @@
+import { parseJSON } from "@html_builder/utils/json";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { useState } from "@odoo/owl";
@@ -54,7 +55,7 @@ export class ChartOption extends BaseOptionComponent {
     }
 
     getData(editingElement) {
-        return JSON.parse(editingElement.dataset.data);
+        return parseJSON(editingElement.dataset.data) || { labels: [], datasets: [] };
     }
     /**
      * Parse the data from the DOM and make sure there are `key` properties

@@ -1,3 +1,4 @@
+import { parseJSON } from "@html_builder/utils/json";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
@@ -18,7 +19,11 @@ export class Chart extends Interaction {
     }
 
     start() {
-        const data = JSON.parse(this.el.dataset.data);
+        const data = parseJSON(this.el.dataset.data);
+        if (!data) {
+            // Missing or malformed chart data: do not render the chart.
+            return;
+        }
         data.datasets.forEach((el) => {
             el.backgroundColor = this.convertToCSS(el.backgroundColor);
             el.borderColor = this.convertToCSS(el.borderColor);

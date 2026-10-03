@@ -1,3 +1,4 @@
+import { parseJSON } from "@html_builder/utils/json";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
@@ -51,13 +52,13 @@ export class InstagramPage extends Interaction {
         ) {
             return;
         }
-        if (typeof ev.data === 'object') {
+        if (typeof ev.data === "object") {
             // Ignore messages that have object data instead of string (eg. internal
             // iOS chrome message)
             return;
         }
-        const evDataJSON = JSON.parse(ev.data);
-        if (evDataJSON.type !== "MEASURE") {
+        const evDataJSON = parseJSON(ev.data);
+        if (evDataJSON?.type !== "MEASURE") {
             return;
         }
         const height = parseInt(evDataJSON.details.height);

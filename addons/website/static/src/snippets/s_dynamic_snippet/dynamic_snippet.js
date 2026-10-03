@@ -1,3 +1,4 @@
+import { parseJSON } from "@html_builder/utils/json";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
@@ -119,7 +120,7 @@ export class DynamicSnippet extends Interaction {
                             with_sample: this.withSample,
                         },
                         this.getRpcParameters(),
-                        JSON.parse(this.el.dataset?.customTemplateData || "{}")
+                        parseJSON(this.el.dataset.customTemplateData) || {}
                     )
                 )
             );

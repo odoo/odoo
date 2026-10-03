@@ -1,3 +1,4 @@
+import { parseJSON } from "@html_builder/utils/json";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { selectElements } from "@html_editor/utils/dom_traversal";
@@ -111,8 +112,9 @@ class VisibilityOptionPlugin extends Plugin {
         const onlyAttributes = [];
         const hideAttributes = [];
         for (const attribute of this.optionsAttributes) {
-            if (target.dataset[attribute.saveAttribute]) {
-                let records = JSON.parse(target.dataset[attribute.saveAttribute]).map((record) => ({
+            const savedRecords = parseJSON(target.dataset[attribute.saveAttribute]);
+            if (Array.isArray(savedRecords)) {
+                let records = savedRecords.map((record) => ({
                     id: record.id,
                     value: record[attribute.callWith],
                 }));

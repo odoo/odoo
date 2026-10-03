@@ -1,3 +1,4 @@
+import { parseJSON } from "@html_builder/utils/json";
 import { SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
@@ -339,16 +340,16 @@ export class DynamicSnippetTemplateAction extends BuilderAction {
 export class CustomizeTemplateAction extends BuilderAction {
     static id = "customizeTemplate";
     isApplied({ editingElement: el, params: { mainParam: customDataKey } }) {
-        const customData = JSON.parse(el.dataset.customTemplateData);
+        const customData = parseJSON(el.dataset.customTemplateData) || {};
         return customData[customDataKey];
     }
     apply({ editingElement: el, params: { mainParam: customDataKey }, value }) {
-        const customData = JSON.parse(el.dataset.customTemplateData);
+        const customData = parseJSON(el.dataset.customTemplateData) || {};
         customData[customDataKey] = true;
         el.dataset.customTemplateData = JSON.stringify(customData);
     }
     clean({ editingElement: el, params: { mainParam: customDataKey }, value }) {
-        const customData = JSON.parse(el.dataset.customTemplateData);
+        const customData = parseJSON(el.dataset.customTemplateData) || {};
         customData[customDataKey] = false;
         el.dataset.customTemplateData = JSON.stringify(customData);
     }
