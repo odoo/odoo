@@ -65,10 +65,13 @@ class EventBoothRegistration(models.Model):
             ('event_booth_id', 'in', self.event_booth_id.ids),
             ('id', 'not in', self.ids)
         ])
-        for order in other_registrations.sale_order_line_id.order_id:
+        # Registrations of cancelled orders are kept: those orders released their booths and may be confirmed again.
+        to_cancel = other_registrations.filtered(
+            lambda registration: registration.sale_order_line_id.order_id.state != 'cancel')
+        for order in to_cancel.sale_order_line_id.order_id:
             order.sudo().message_post(
                 body=body,
                 partner_ids=order.user_id.partner_id.ids,
             )
             order.sudo()._action_cancel()
-        other_registrations.unlink()
+        to_cancel.unlink()
