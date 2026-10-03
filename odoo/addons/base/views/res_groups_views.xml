@@ -115,17 +115,30 @@
                 <form string="Groups">
                   <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button type="object" name="action_view_implied_ids"
-                            class="oe_stat_button" icon="south">
-                            <field name="implied_count" widget="statinfo" string="Implied Groups"/>
+                        <button type="object" name="action_view_all_implied_ids"
+                            class="oe_stat_button" icon="account_tree"
+                            help="Audit all the implied groups">
+                            <field name="all_implied_count" widget="statinfo" string="Implied Groups"/>
                         </button>
-                        <button type="object" name="action_view_implied_by_ids"
-                            class="oe_stat_button" icon="north">
-                            <field name="implied_by_count" widget="statinfo" string="Implying Groups"/>
+                        <button type="object" name="action_show_all_users"
+                            class="oe_stat_button" icon="group"
+                            help="Audit all the implied users">
+                            <field name="all_users_count" widget="statinfo" string="Implied Users"/>
                         </button>
-                        <button type="object" name="action_view_access_ids"
-                            class="oe_stat_button" icon="lock">
-                            <field name="access_count" widget="statinfo" string="Access Rights"/>
+                        <button type="object" name="action_view_all_access_ids"
+                            class="oe_stat_button" icon="lock"
+                            help="Audit all the implied access rights">
+                            <field name="all_access_count" widget="statinfo" string="Implied Rights"/>
+                        </button>
+                        <button type="object" name="action_view_all_menu_access"
+                            class="oe_stat_button" icon="menu"
+                            help="Audit all the implied menus">
+                            <field name="all_menu_count" widget="statinfo" string="Implied Menus"/>
+                        </button>
+                        <button type="object" name="action_view_all_view_access"
+                            class="oe_stat_button" icon="tv" groups="base.group_system"
+                            help="Audit all the implied views">
+                            <field name="all_view_count" widget="statinfo" string="Implied Views"/>
                         </button>
                     </div>
 
@@ -138,15 +151,15 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Users" name="user_ids">
-                            <field name="user_ids" context="{'search_default_filter_no_share':1}"/>
-                        </page>
                         <page string="Dependencies" name="inherit_groups">
                             <group>
-                                <field name="implied_ids" widget="many2many_tags" options="{'on_tag_click': 'open_form'}"/>
-                                <field name="implied_by_ids" widget="many2many_tags" options="{'on_tag_click': 'open_form'}"/>
+                                <field name="implied_ids" string="Implies" widget="many2many_tags" options="{'on_tag_click': 'open_form'}"/>
+                                <field name="implied_by_ids" string="Implied by" widget="many2many_tags" options="{'on_tag_click': 'open_form'}"/>
                                 <field name="disjoint_ids" widget="many2many_tags" options="{'on_tag_click': 'open_form'}"/>
                             </group>
+                        </page>
+                        <page string="Users" name="user_ids">
+                            <field name="user_ids" context="{'search_default_filter_no_share':1}"/>
                         </page>
                         <page string="Access Rights" name="access_rights">
                             <field name="access_ids">
