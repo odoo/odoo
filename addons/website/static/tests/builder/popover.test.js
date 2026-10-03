@@ -3,17 +3,15 @@ import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
 import { expect, test } from "@odoo/hoot";
 import {
     click,
-    pointerDown,
-    pointerUp,
     queryFirst,
     queryOne,
     scroll,
     waitFor,
-    waitForNone,
     waitUntil,
 } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import { openEffectsSection } from "@html_builder/../tests/helpers";
 import { animationFrame } from "@odoo/hoot-mock";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 
@@ -58,14 +56,8 @@ test("Popovers scroll with iframe", async () => {
     await contains(".o-we-toolbar button.o-select-color-background").click();
     await expectScroll(".o_popover:has(> .o_font_color_selector)");
 
-    await contains(".o-we-toolbar div[name=websiteDecoration] > button").click();
-    await expectScroll(".o_popover");
-
-    await contains(".o-we-toolbar button.o_hb_select_highlight").click();
-    await expectScroll(".o_popover");
-
-    await contains(".o-we-toolbar button[title='Animate Text']").click();
-    await expectScroll(".o_popover:has(> .o_animate_text_popover)");
+    await contains(".o-we-toolbar button.o-select-effects").click();
+    await expectScroll(".o_popover:has(.o-we-effects-panel)");
 });
 
 test("Floating toolbar visual consistency and usability", async () => {
@@ -81,24 +73,27 @@ test("Floating toolbar visual consistency and usability", async () => {
     await waitFor(".o-we-toolbar");
     await expandToolbar();
 
+    // All effects are in one panel of one width
+    await openEffectsSection("animateText");
+    expect(".o-we-effects-panel").toHaveRect({ width: 280 });
+
     // Verify animation option dropdown matches font style popover design
-    await contains(".o-we-toolbar button[title='Animate Text']").click();
-    await contains(".o_animate_text_popover .o_hb_row_content button").click();
+    await contains(".o_animate_text_section .o_hb_row_content button").click();
+    await contains(".o-dropdown--menu .o-dropdown-item:contains('On Appearance')").click();
+    await contains(".o_animate_text_section .o_hb_row_content button").click();
     const animationPopover = await waitFor(".o_popover:has([data-action-value='onAppearance'])");
     expect(animationPopover).not.toHaveClass("o_hb_select_dropdown");
 
-    // Verify highlight picker grid is scrollable and scrollbar is hidden
-    await pointerDown(".o-we-toolbar button[title='Apply highlight']");
-    await waitForNone(".o_popover:has([data-action-value='onAppearance'])");
-    await pointerUp(".o-we-toolbar button[title='Apply highlight']");
-    const textHighlightPopover = await waitFor(".o_popover .grid");
-    expect(textHighlightPopover).toHaveStyle({ overflow: "auto", scrollbarWidth: "thin" });
+    // Verify the highlight shapes are a scrollable menu
+    await openEffectsSection("highlight");
+    await contains("#highlightPicker").click();
+    const textHighlightMenu = await waitFor(".o-we-highlight-menu");
+    expect(textHighlightMenu).toHaveStyle({ overflowY: "auto", scrollbarWidth: "thin" });
 
-    // Verify highlight color picker has sublevel rows for hierarchy
+    // Verify the rows of the panel start at its edge, without tree connectors
     await contains(".o_popover .o_text_highlight_underline").click();
     const colorLabel = await waitFor(".o_popover label[for='colorButton']");
-    const sublevelRow = colorLabel.closest(".o_hb_row_sublevel_1");
-    expect(sublevelRow).toHaveClass("o_hb_row_sublevel_1");
+    expect(colorLabel.closest(".o_hb_row_sublevel")).toBe(null);
 });
 
 test("closing the link popover should re-open the toolbar", async () => {

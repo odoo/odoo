@@ -5,13 +5,12 @@ import { isTextNode } from "@html_editor/utils/dom_info";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
-import { Component, proxy, signal, xml, useProps, t } from "@odoo/owl";
+import { Component, proxy, xml, useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import { isCSSColor, rgbaToHex } from "@web/core/utils/colors";
 import { getCurrentTextHighlight } from "@website/js/highlight_utils";
-import { HighlightConfigurator } from "./highlight_configurator";
+import { HighlightConfigurator, highlightIdToName } from "./highlight_configurator";
 import { StackingComponent, useStackingComponentState } from "./stacking_component";
 
 export class HighlightPlugin extends Plugin {
@@ -54,31 +53,36 @@ export class HighlightPlugin extends Plugin {
                 },
             },
         ],
-        toolbar_groups: [withSequence(50, { id: "websiteDecoration" })],
-        toolbar_items: [
-            {
-                id: "highlight",
-                groupId: "websiteDecoration",
-                description: _t("Apply highlight"),
-                Component: HighlightToolbarButton,
-                props: {
-                    highlightConfiguratorProps: {
-                        applyHighlight: this.applyHighlight.bind(this),
-                        previewHighlight: this.previewHighlight.bind(this),
-                        revertHighlight: this.revertHighlight.bind(this),
-                        applyHighlightStyle: this.applyHighlightStyle.bind(this),
-                        previewHighlightStyle: this.previewHighlightStyle.bind(this),
-                        revertHighlightStyle: this.revertHighlightStyle.bind(this),
-                        getHighlightState: () => this.highlightState,
-                        getUsedCustomColors: this.getUsedCustomColors.bind(this),
-                        deleteHighlight: this.deleteSelectedHighlight.bind(this),
-                        getMaxFontSize: this.getMaxFontSize.bind(this),
-                    },
-                    onClick: this.completeHighlightSelection.bind(this),
+        effects_panel_sections: withSequence(20, {
+            id: "highlight",
+            title: _t("Highlight"),
+            Component: HighlightSection,
+            props: {
+                highlightConfiguratorProps: {
+                    applyHighlight: this.applyHighlight.bind(this),
+                    previewHighlight: this.previewHighlight.bind(this),
+                    revertHighlight: this.revertHighlight.bind(this),
+                    applyHighlightStyle: this.applyHighlightStyle.bind(this),
+                    previewHighlightStyle: this.previewHighlightStyle.bind(this),
+                    revertHighlightStyle: this.revertHighlightStyle.bind(this),
+                    getHighlightState: () => this.highlightState,
+                    getUsedCustomColors: this.getUsedCustomColors.bind(this),
+                    deleteHighlight: this.deleteSelectedHighlight.bind(this),
                 },
-                isAvailable: isHtmlContentSupported,
             },
-        ],
+            prepare: this.completeHighlightSelection.bind(this),
+            isAvailable: isHtmlContentSupported,
+            isActive: () => !!this.highlightState.highlightId,
+            getSummary: () => {
+                const { highlightId } = this.highlightState;
+                if (!highlightId) {
+                    return _t("None");
+                }
+                return highlightId === "multiple"
+                    ? _t("Multiple")
+                    : highlightIdToName[highlightId] || highlightId;
+            },
+        }),
         toolbar_namespace_providers: [
             withSequence(
                 90,
@@ -123,25 +127,6 @@ export class HighlightPlugin extends Plugin {
             color: "",
             thickness: undefined,
         });
-    }
-
-    getMaxFontSize() {
-        const nodes = this.dependencies.selection
-            .getTargetedNodes()
-            .map((n) => closestElement(n, "*"))
-            .filter(Boolean);
-        const uniqueNodes = new Set(nodes);
-        if (uniqueNodes.size === 0) {
-            uniqueNodes.add(this.document.body);
-        }
-        let max = 0;
-        for (const node of uniqueNodes) {
-            const size = parseFloat(getComputedStyle(node).fontSize);
-            if (size > max) {
-                max = size;
-            }
-        }
-        return max;
     }
 
     updateSelectedHighlight() {
@@ -286,44 +271,22 @@ export class HighlightPlugin extends Plugin {
 registry.category("website-plugins").add(HighlightPlugin.id, HighlightPlugin);
 registry.category("translation-plugins").add(HighlightPlugin.id, HighlightPlugin);
 
-class HighlightToolbarButton extends Component {
+/**
+ * Highlight as a section of the Effects panel: the configurator, with the
+ * color picker as a second page of the section.
+ */
+class HighlightSection extends Component {
+    static template = xml`<StackingComponent stackState="this.componentStack" class="'d-flex flex-column'"/>`;
+    static components = { StackingComponent };
     props = useProps({
-        // from toolbarButtonProps
-        isDisabled: t.boolean(),
         highlightConfiguratorProps: t.object(),
-        onClick: t.function(),
-        title: t.string(),
-        getSelection: t.function(),
     });
-    static template = xml`
-        <button t-ref="this.root" t-attf-class="btn btn-light o_hb_select_highlight {{this.highlightState.highlightId ? 'active' : ''}}" t-on-click="this.openHighlightConfigurator" t-att-title="this.props.title">
-            <i class="oi oi-fw" data-icon="stylus_laser_pointer" role="img" aria-hidden="true"/>
-        </button>
-    `;
-    root = signal.ref();
 
     setup() {
-        this.highlightState = proxy(this.props.highlightConfiguratorProps.getHighlightState());
         this.componentStack = useStackingComponentState();
         this.componentStack.push(HighlightConfigurator, {
             componentStack: this.componentStack,
             ...this.props.highlightConfiguratorProps,
-        });
-        this.configuratorPopover = usePopover(StackingComponent, {
-            onClose: () => {
-                while (this.componentStack.stack.length > 1) {
-                    this.componentStack.pop();
-                }
-            },
-            withScope: true,
-        });
-    }
-    openHighlightConfigurator() {
-        this.props.onClick();
-        this.configuratorPopover.open(this.root(), {
-            stackState: this.componentStack,
-            style: "max-height: 320px; width: 250px",
-            class: "d-flex flex-column p-2",
         });
     }
 }

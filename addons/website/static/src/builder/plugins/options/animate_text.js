@@ -1,56 +1,36 @@
-import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { DependencyManager } from "@html_builder/core/dependency_manager";
-import { Component, onMounted, onWillDestroy, proxy, signal, useProps, t } from "@odoo/owl";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { POSITION_BUS } from "@web/core/position/position_hook";
+import { Component, proxy, useListener, useProps, t } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useSubEnv } from "@web/owl2/utils";
 import { AnimateOption, animateOptionProps } from "./animate_option";
 
-export class AnimateTextPopover extends BaseOptionComponent {
-    static template = "website_builder.AnimateTextPopover";
+/**
+ * Animation as a section of the Effects panel. Opening it does not animate
+ * anything: the text is animated when an animation is picked, and "None"
+ * removes it.
+ */
+export class AnimateSection extends Component {
+    static template = "website_builder.AnimateSection";
+    static components = { AnimateOption, Dropdown, DropdownItem };
     props = useProps({
-        animateOptionProps: t.object(animateOptionProps),
-        onReset: t.function(),
-
-        // Popover service
-        close: t.function().optional(),
-    });
-    static components = { AnimateOption };
-    contentRef = signal.ref();
-
-    setup() {
-        super.setup();
-        this.resizeObserver = new ResizeObserver(() => {
-            this.env[POSITION_BUS]?.trigger("update");
-        });
-        onMounted(() => {
-            this.resizeObserver.observe(this.contentRef());
-        });
-        onWillDestroy(() => {
-            this.resizeObserver.disconnect();
-        });
-    }
-}
-
-export class AnimateText extends Component {
-    static template = "website_builder.AnimateText";
-    props = useProps({
-        // from toolbarButtonProps
-        title: t.or([t.string(), t.function()]),
-        getSelection: t.function(),
         config: t.object({ editor: t.object(), editorBus: t.object() }),
         animateOptionProps: t.object(animateOptionProps),
+        getAnimatedTexts: t.function(),
         getAnimatedTextOrCreateDefault: t.function(),
-        isActive: t.function(),
-        isDisabled: t.boolean(),
+        isDisabled: t.function(),
     });
 
-    root = signal.ref();
-
     setup() {
-        this.state = proxy({});
-        this.updateState();
-
+        this.activeElements = this.props.getAnimatedTexts();
+        this.state = proxy({ hasAnimation: this.activeElements.length > 0 });
+        // Follow the page: "None" unwraps the animated text.
+        useListener(this.props.config.editorBus, "DOM_UPDATED", () => {
+            if (this.activeElements.some((el) => !el.isConnected)) {
+                this.activeElements = this.props.getAnimatedTexts();
+                this.state.hasAnimation = this.activeElements.length > 0;
+            }
+        });
         useSubEnv({
             dependencyManager: new DependencyManager(),
             getEditingElement: () => this.activeElements?.[0],
@@ -60,37 +40,26 @@ export class AnimateText extends Component {
             editorBus: this.props.config.editorBus,
             services: this.props.config.editor.services,
         });
-        this.popover = usePopover(AnimateTextPopover, {
-            onClose: () => {
-                if (!this.props.config.editor.isDestroyed) {
-                    this.updateState();
-                }
-            },
-            withScope: true,
-        });
     }
 
-    onClick() {
-        if (this.popover.isOpen) {
-            return;
-        }
-        const { elements, onReset } = this.props.getAnimatedTextOrCreateDefault();
+    /**
+     * @param {boolean} [onScroll] animate on scroll instead of on appearance
+     */
+    addAnimation(onScroll = false) {
+        const { elements } = this.props.getAnimatedTextOrCreateDefault();
         if (!elements?.length) {
             return;
         }
+        if (onScroll) {
+            // Same classes and zone as the "On Scroll" item of the option.
+            for (const el of elements) {
+                el.classList.add("o_animate_on_scroll");
+                el.dataset.scrollZoneStart = 0;
+                el.dataset.scrollZoneEnd = 100;
+            }
+            this.props.config.editor.shared.history.commit();
+        }
         this.activeElements = elements;
-
-        this.updateState();
-        this.popover.open(this.root(), {
-            animateOptionProps: this.props.animateOptionProps,
-            onReset: () => {
-                onReset(this.activeElements);
-                this.popover.close();
-            },
-        });
-    }
-
-    updateState() {
-        this.state.isActive = this.props.isActive();
+        this.state.hasAnimation = true;
     }
 }

@@ -2,15 +2,22 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
     clickToolbarButton,
+    openEffectsPanelSection,
 } from "@website/js/tours/tour_utils";
 import { editorsWeakMap } from "@html_editor/../tests/tours/helpers/editor";
 
 function applyHighlight(target, targetName, highlight) {
     return [
-        ...clickToolbarButton(targetName, target, "Apply highlight", true),
+        ...clickToolbarButton(targetName, target, "Text effects", true),
+        ...openEffectsPanelSection("highlight"),
         {
-            content: "Check that the highlights grid was displayed",
-            trigger: ".o_popover .o_text_highlight",
+            content: "Open the highlight shapes",
+            trigger: ".o_popover #highlightPicker",
+            run: "click",
+        },
+        {
+            content: "Check that the highlight shapes were displayed",
+            trigger: ".o-we-highlight-menu .o_text_highlight",
         },
         {
             content: "Select the highlight effect",
@@ -68,8 +75,13 @@ registerWebsitePreviewTour(
             trigger: ":iframe .s_cover h1 span.o_text_highlight_underline svg.o_text_highlight_svg",
         },
         {
+            content: "Open the highlight shapes",
+            trigger: ".o_popover #highlightPicker",
+            run: "click",
+        },
+        {
             content: "Disable the highlight effect",
-            trigger: ".o_popover button[title='Reset']",
+            trigger: ".o-we-highlight-menu .o_highlight_none",
             run: "click",
         },
         {
@@ -101,8 +113,9 @@ registerWebsitePreviewTour(
             },
         },
         {
-            content: "Check that the highlights grid was displayed",
-            trigger: ".o_popover .o_text_highlight",
+            content: "Open the highlight shapes",
+            trigger: ".o_popover #highlightPicker",
+            run: "click",
         },
         {
             content: "Select the highlight effect",
@@ -120,10 +133,6 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            content: "Check that the highlights grid was displayed",
-            trigger: ".o_popover .o_text_highlight",
-        },
-        {
             content: "Change the highlight effect",
             trigger: ".o_popover span.o_text_highlight_jagged",
             run: "click",
@@ -134,8 +143,13 @@ registerWebsitePreviewTour(
                 ":iframe span.o_text_highlight_jagged:contains('Text content line A') + br + span.o_text_highlight_jagged:contains('Text content line B')",
         },
         {
+            content: "Open the highlight shapes",
+            trigger: ".o_popover #highlightPicker",
+            run: "click",
+        },
+        {
             content: "Disable the highlight effect",
-            trigger: ".o_popover button[title='Reset']",
+            trigger: ".o-we-highlight-menu .o_highlight_none",
             run: "click",
         },
         {

@@ -17,7 +17,7 @@ export class StackingComponent extends Component {
     static template = xml`
         <t t-foreach="this.stack" t-as="componentSpec" t-key="componentSpec.id">
             <div data-prevent-closing-overlay="true" t-if="componentSpec_last" t-attf-class="{{this.props.class}} {{componentSpec_last ? '': 'd-none' }}" t-att-style="this.props.style">
-                <div t-if="this.stack.length > 1 || componentSpec.title" class="d-flex align-items-center p-2 pb-0">
+                <div t-if="this.stack.length > 1 || componentSpec.title" class="o_stacking_component_head d-flex align-items-center p-2 pb-0">
                     <button t-if="this.stack.length > 1 and componentSpec.withPrevious" class="oi btn btn-secondary bg-transparent border-0" data-icon="keyboard_arrow_left" aria-label="Go back" t-on-click="this.props.stackState.pop"></button>
                     <span class="fw-medium" t-out="componentSpec.title" t-att-class="{ 'cursor-pointer': componentSpec.withPrevious }" t-on-click="this.props.stackState.pop"/>
                 </div>

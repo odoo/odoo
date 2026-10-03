@@ -1,37 +1,17 @@
-import { Component, onWillStart, proxy, useProps, t } from "@odoo/owl";
+import { Component, proxy, signal, useEffect, useProps, t } from "@odoo/owl";
 import { ColorPicker } from "@html_editor/components/color_picker/color_picker";
-import { HighlightPicker } from "./highlight_picker";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { HighlightPicker, highlightIdToName } from "./highlight_picker";
+import { applyTextHighlight } from "@website/js/highlight_utils";
 import { normalizeColor } from "@html_builder/utils/utils_css";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
-import { _t } from "@web/core/l10n/translation";
 
-export const highlightIdToName = {
-    underline: "Underline",
-    freehand_1: "Freehand 1",
-    freehand_2: "Freehand 2",
-    freehand_3: "Freehand 3",
-    double: "Double",
-    wavy: "Wavy",
-    circle_1: "Circle 1",
-    circle_2: "Circle 2",
-    circle_3: "Circle 3",
-    over_underline: "Over and underline",
-    scribble_1: "Scribble 1",
-    scribble_2: "Scribble 2",
-    scribble_3: "Scribble 3",
-    scribble_4: "Scribble 4",
-    jagged: "Jagged",
-    cross: "Cross",
-    diagonal: "Diagonal",
-    strikethrough: "Strikethrough",
-    bold: "Bold",
-    bold_1: "Bold 1",
-    bold_2: "Bold 2",
-};
+export { highlightIdToName };
 
 export class HighlightConfigurator extends Component {
     static template = "website.highlightConfigurator";
-    static components = { ColorPicker };
+    static components = { ColorPicker, Dropdown, HighlightPicker };
     props = useProps({
         applyHighlight: t.function(),
         applyHighlightStyle: t.function(),
@@ -43,42 +23,39 @@ export class HighlightConfigurator extends Component {
         revertHighlightStyle: t.function(),
         componentStack: t.object(),
         getUsedCustomColors: t.function(),
-        getMaxFontSize: t.function(),
     });
+
+    sampleRef = signal.ref();
 
     setup() {
         this.state = proxy(this.props.getHighlightState());
         this.highlightIdToName = highlightIdToName;
-        onWillStart(() => {
-            if (!this.state.highlightId) {
-                this.openHighlightPicker(false);
+        this.dropdown = useDropdownState();
+        // Draw the current shape, color and thickness on the sample of the
+        // Shape select.
+        useEffect(() => {
+            const sampleEl = this.sampleRef();
+            const { highlightId } = this.state;
+            if (!sampleEl || !highlightId) {
+                return;
             }
+            for (const svg of sampleEl.querySelectorAll("svg")) {
+                svg.remove();
+            }
+            applyTextHighlight(sampleEl, highlightId);
         });
     }
 
-    openHighlightPicker(withPrevious = true) {
-        // Picker's samples use the fs-3 class
-        const fs3 = document.createElement("div");
-        fs3.classList.add("fs-3");
-        document.body.append(fs3);
-        const fs3Size = parseFloat(getComputedStyle(fs3).fontSize);
-        fs3.remove();
-        const fontRatio = this.props.getMaxFontSize() / fs3Size;
-        this.props.componentStack.push(
-            HighlightPicker,
-            {
-                selectHighlight: this.selectHighlight.bind(this),
-                previewHighlight: this.props.previewHighlight,
-                revertHighlight: this.props.revertHighlight,
-                currentHighlightId: this.state.highlightId,
-                style: `
-                    --text-highlight-width: ${(this.state.thickness || 2) / fontRatio}px;
-                    --text-highlight-color: ${this.state.color || "var(--hb-cp-o-color-1)"};
-                `,
-            },
-            _t("Select a highlight"),
-            withPrevious
-        );
+    /**
+     * Color and thickness of the samples, the thickness kept readable at the
+     * size of the panel text.
+     */
+    get sampleStyle() {
+        const { color, thickness } = this.state;
+        return [
+            `--text-highlight-color: ${color || "var(--hb-cp-o-color-1)"}`,
+            `--text-highlight-width: ${Math.min(Math.max(thickness || 2, 1), 3)}px`,
+        ].join("; ");
     }
 
     openColorPicker() {
@@ -105,7 +82,7 @@ export class HighlightConfigurator extends Component {
     }
 
     selectHighlight(highlightId) {
-        this.props.componentStack.pop();
+        this.dropdown.close();
         this.props.applyHighlight(highlightId);
     }
 
@@ -117,9 +94,9 @@ export class HighlightConfigurator extends Component {
         this.props.applyHighlightStyle("--text-highlight-color", highlightColor);
     }
 
-    deleteHighlight() {
+    removeHighlight() {
+        this.dropdown.close();
         this.props.deleteHighlight();
-        this.openHighlightPicker(false);
     }
 
     onThicknessChange(ev) {

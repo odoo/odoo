@@ -55,6 +55,15 @@ export function updateTextEffectPresetHash(textEffect) {
     }
 }
 
+/**
+ * An edited effect is no longer the preset it started from: it becomes a custom
+ * effect, offered as a preset of its own and marked as the current one.
+ */
+export function makeTextEffectCustom(textEffect) {
+    textEffect.preset = "custom";
+    updateTextEffectPresetHash(textEffect);
+}
+
 export function getTextEffectPresetId(textEffect) {
     return textEffect.preset === "custom"
         ? textEffect[TEXT_EFFECT_PRESET_HASH] || getTextEffectPresetHash(textEffect)

@@ -8,8 +8,32 @@ import {
 } from "@website/../tests/builder/website_helpers";
 import { setSelection, thirdClick } from "@html_editor/../tests/_helpers/selection";
 import { advanceTime } from "@odoo/hoot-mock";
+import { openEffectsSection } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
+
+const animationSelect = ".o_animate_text_section [data-label='Animation'] .o_hb_select_toggle";
+
+/**
+ * Opens the Animation section of the Effects panel and animates the selected
+ * text on appearance if it is not animated yet.
+ */
+async function openAnimateSection() {
+    await openEffectsSection("animateText");
+    // Without animation, the row is a plain dropdown instead of the option.
+    if (queryFirst(".o_animate_text_section > .o_hb_row:not(:has(.o_hb_select_wrapper))")) {
+        await contains(animationSelect).click();
+        await contains(".o-dropdown--menu .o-dropdown-item:contains('On Appearance')").click();
+    }
+}
+
+/**
+ * Sets the animation of the Animation section to "None".
+ */
+async function removeAnimation() {
+    await contains(animationSelect).click();
+    await contains(".o-dropdown--menu [data-action-value='']").click();
+}
 
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -424,8 +448,8 @@ describe("animate text in toolbar", () => {
 
         // click on animate and it create a span with the animation
         await expandToolbar();
-        expect("button[title='Animate Text']").not.toHaveClass("active");
-        await contains("button[title='Animate Text']").click();
+        expect(".o-we-toolbar .o-select-effects").not.toHaveClass("active");
+        await openAnimateSection();
         expect(":iframe span").toHaveText("bc");
         expect(":iframe span:contains('bc')").toHaveClass("o_animate");
 
@@ -459,7 +483,7 @@ describe("animate text in toolbar", () => {
         );
 
         await expandToolbar();
-        await contains("button[title='Animate Text']").click();
+        await openAnimateSection();
 
         expect(":iframe .test > h1 > span.o_animated_text.o_animate").toHaveText("Heading");
         expect(":iframe .test > p > span.o_animated_text.o_animate").toHaveText("Paragraph");
@@ -471,7 +495,7 @@ describe("animate text in toolbar", () => {
         expect(paragraph).toHaveClass("lead");
         expect(paragraph.style.textAlign).toBe("center");
 
-        await contains("button[title=Reset]").click();
+        await removeAnimation();
         expect(":iframe .test .o_animated_text").not.toHaveCount();
         expect(":iframe .test > h1.display-3").toHaveText("Heading");
         expect(":iframe .test > p.lead").toHaveText("Paragraph");
@@ -491,7 +515,7 @@ describe("animate text in toolbar", () => {
         selection.setBaseAndExtent(firstLine, 0, secondLine, "Next".length);
 
         await expandToolbar();
-        await contains("button[title='Animate Text']").click();
+        await openAnimateSection();
 
         expect(":iframe .test > .o_animated_text").toHaveCount(1);
         expect(":iframe .test > .o_animated_text:eq(0) > .display-4-fs").toHaveText(
@@ -512,13 +536,13 @@ describe("animate text in toolbar", () => {
 
         // animate is marked active
         await expandToolbar();
-        expect("button[title='Animate Text']").toHaveClass("active");
-        await contains("button[title='Animate Text']").click();
+        expect(".o-we-toolbar .o-select-effects").toHaveClass("active");
+        await openAnimateSection();
         expect(":iframe span:contains('bc')").not.toHaveClass("o_anim_rotate_in");
         expect(":iframe span:contains('bc')").toHaveClass("o_anim_fade_in");
 
         // "reset" removes the animation on the whole span
-        await contains("button[title=Reset]").click();
+        await removeAnimation();
         expect(":iframe span").toHaveCount(0);
         expect(":iframe .test").toHaveText("abcd");
     });
@@ -536,8 +560,8 @@ describe("animate text in toolbar", () => {
 
         // animate is marked active
         await expandToolbar();
-        expect("button[title='Animate Text']").toHaveClass("active");
-        await contains("button[title='Animate Text']").click();
+        expect(".o-we-toolbar .o-select-effects").toHaveClass("active");
+        await openAnimateSection();
         expect(":iframe span:contains('bc')").not.toHaveClass("o_anim_rotate_in");
         expect(":iframe span:contains('bc')").toHaveClass("o_anim_fade_in");
 
@@ -556,8 +580,8 @@ describe("animate text in toolbar", () => {
         await contains(":iframe span").click(); // move the selection around to make the toolbar re-appear
         selection.setBaseAndExtent(textNode, 0, textNode, 2);
         await expandToolbar();
-        await contains("button[title='Animate Text']").click();
-        await contains("button[title=Reset]").click();
+        await openAnimateSection();
+        await removeAnimation();
         expect(":iframe span").toHaveCount(0);
         expect(":iframe .test").toHaveText("abcd");
     });
@@ -575,11 +599,11 @@ describe("animate text in toolbar", () => {
 
         // animate is marked active
         await expandToolbar();
-        expect("button[title='Animate Text']").toHaveClass("active");
-        await contains("button[title='Animate Text']").click();
+        expect(".o-we-toolbar .o-select-effects").toHaveClass("active");
+        await openAnimateSection();
         expect("div[data-class-action=o_animate]").toHaveCount(1);
 
-        await contains("button[title='Animate Text']").click();
+        await openAnimateSection();
         expect("div[data-class-action=o_animate]").toHaveCount(1);
     });
 
@@ -596,8 +620,8 @@ describe("animate text in toolbar", () => {
         selection.setBaseAndExtent(test.childNodes[0], 0, span.childNodes[0], 1);
 
         await expandToolbar();
-        expect("button[title='Animate Text']").not.toHaveClass("active");
-        await contains("button[title='Animate Text']").click();
+        expect(".o-we-toolbar .o-select-effects").not.toHaveClass("active");
+        await openAnimateSection();
         expect(":iframe span:eq(0)").toHaveText("ab");
         expect(":iframe span:eq(1)").toHaveText("c");
     });
@@ -615,8 +639,8 @@ describe("animate text in toolbar", () => {
         selection.setBaseAndExtent(span.childNodes[0], 1, test.childNodes[2], 1);
 
         await expandToolbar();
-        expect("button[title='Animate Text']").not.toHaveClass("active");
-        await contains("button[title='Animate Text']").click();
+        expect(".o-we-toolbar .o-select-effects").not.toHaveClass("active");
+        await openAnimateSection();
         expect(":iframe span:eq(0)").toHaveText("b");
         expect(":iframe span:eq(1)").toHaveText("cd");
     });
@@ -633,8 +657,8 @@ describe("animate text in toolbar", () => {
         selection.setBaseAndExtent(span.childNodes[0], 1, span.childNodes[0], 2);
 
         await expandToolbar();
-        expect("button[title='Animate Text']").not.toHaveClass("active");
-        await contains("button[title='Animate Text']").click();
+        expect(".o-we-toolbar .o-select-effects").not.toHaveClass("active");
+        await openAnimateSection();
         expect(":iframe span[other-attribute]:eq(0)").toHaveText("b");
         expect(":iframe span:not([other-attribute])").toHaveText("c");
         expect(":iframe span[other-attribute]:eq(1)").toHaveText("d");
@@ -657,14 +681,14 @@ describe("animate text in toolbar", () => {
         );
 
         await expandToolbar();
-        expect("button[title='Animate Text']").not.toHaveClass("active");
-        await contains("button[title='Animate Text']").click();
+        expect(".o-we-toolbar .o-select-effects").not.toHaveClass("active");
+        await openAnimateSection();
         expect(":iframe span:eq(0)").toHaveText("b");
         expect(":iframe span:eq(1)").toHaveText("cdefgh");
         expect(":iframe span:eq(2)").toHaveText("i");
 
         // click reset to remove the selected span
-        await contains("button[title=Reset]").click();
+        await removeAnimation();
         expect(":iframe span:eq(0)").toHaveText("b");
         expect(":iframe span:eq(1)").toHaveText("i");
         expect(":iframe .test").toHaveText("abcdefghij");
@@ -677,7 +701,7 @@ describe("animate text in toolbar", () => {
         const span = queryOne(":iframe span");
         setSelection({ anchorNode: span, anchorOffset: 0, focusNode: span, focusOffset: 1 });
         await expandToolbar();
-        expect("button[title='Animate Text']").toHaveClass("active");
+        expect(".o-we-toolbar .o-select-effects").toHaveClass("active");
     });
 
     test("Applied animation from floating toolbar should not reset", async () => {
@@ -697,7 +721,8 @@ describe("animate text in toolbar", () => {
         await expandToolbar();
 
         // Apply text highlight from the floating toolbar.
-        await contains(".o-we-toolbar button[title='Apply highlight']").click();
+        await openEffectsSection("highlight");
+        await contains("#highlightPicker").click();
         await contains(".o_popover .o_text_highlight_underline").click();
 
         // Reselect all the text in the paragraph and reopen toolbar.
@@ -707,7 +732,7 @@ describe("animate text in toolbar", () => {
         await expandToolbar();
 
         // Apply the default animation to the selected text.
-        await contains(".o-we-toolbar button[title='Animate Text']").click();
+        await openAnimateSection();
 
         // Reselect all the text again and verify animate button remains active.
         await thirdClick(paragraphEl);
@@ -715,6 +740,7 @@ describe("animate text in toolbar", () => {
         await waitFor(".o-we-toolbar");
         await expandToolbar();
 
-        expect("button[title='Animate Text']").toHaveClass("active");
+        await openEffectsSection("animateText");
+        expect(animationSelect).toHaveText("On Appearance");
     });
 });
