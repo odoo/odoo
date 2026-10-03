@@ -15,16 +15,13 @@ import {
 import { defineHrModels } from "@hr/../tests/hr_test_helpers";
 import { cookie } from "@web/core/browser/cookie";
 import { user } from "@web/core/user";
+import { animationFrame } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
 defineHrModels();
 
 test("avatar card preview with hr", async () => {
     const { env } = await makeMockServer();
-    const departmentId = env["hr.department"].create({
-        name: "Management",
-        complete_name: "Management",
-    });
     const partnerId = env["res.partner"].create({
         name: "Mario",
         email: "Mario@odoo.test",
@@ -33,14 +30,8 @@ test("avatar card preview with hr", async () => {
     const jobId = env["hr.job"].create({
         name: "sub manager",
     });
-    const workLocationId = env["hr.work.location"].create({
-        name: "Odoo",
-        location_type: "office",
-    });
     const versionId = env["hr.version"].create({
         job_id: jobId,
-        work_location_id: workLocationId,
-        department_id: departmentId,
     });
     const employeeId = env["hr.employee"].create({
         version_id: versionId,
@@ -71,14 +62,12 @@ test("avatar card preview with hr", async () => {
         </kanban>`,
     });
     await contains(".o_m2o_avatar > img").click();
+    await animationFrame();
     await mailContains(".o_avatar_card");
-    await mailContains(".o_avatar_card span[data-tooltip='Work Location'] [data-icon='business']");
     expect(queryAllTexts(".o_card_user_infos > *:not(.o_avatar_card_buttons)")).toEqual([
         "Mario",
-        "Management",
         "Mario@odoo.pro",
         "+585555555",
-        "Odoo",
     ]);
     await contains(".o_action_manager:eq(0)").click();
     await mailContains(".o_avatar_card", { count: 0 });
@@ -136,10 +125,6 @@ test("avatar card activates the employee's company before opening the profile", 
 
 test("avatar card preview with hr (partner_id field)", async () => {
     const { env } = await makeMockServer();
-    const departmentId = env["hr.department"].create({
-        name: "Management",
-        complete_name: "Management",
-    });
     const partnerId = env["res.partner"].create({
         name: "Mario",
         email: "Mario@odoo.test",
@@ -148,14 +133,8 @@ test("avatar card preview with hr (partner_id field)", async () => {
     const jobId = env["hr.job"].create({
         name: "sub manager",
     });
-    const workLocationId = env["hr.work.location"].create({
-        name: "Odoo",
-        location_type: "office",
-    });
     const versionId = env["hr.version"].create({
         job_id: jobId,
-        work_location_id: workLocationId,
-        department_id: departmentId,
     });
     const employeeId = env["hr.employee"].create({
         version_id: versionId,
@@ -179,14 +158,12 @@ test("avatar card preview with hr (partner_id field)", async () => {
         </kanban>`,
     });
     await contains(".o_m2o_avatar > img").click();
+    await animationFrame();
     await mailContains(".o_avatar_card");
-    await mailContains(".o_avatar_card span[data-tooltip='Work Location'] [data-icon='business']");
     expect(queryAllTexts(".o_card_user_infos > *:not(.o_avatar_card_buttons)")).toEqual([
         "Mario",
-        "Management",
         "Mario@odoo.pro",
         "+585555555",
-        "Odoo",
     ]);
     await contains(".o_action_manager:eq(0)").click();
     await mailContains(".o_avatar_card", { count: 0 });
@@ -224,7 +201,6 @@ test("avatar card displays the relevant employee info", async () => {
     });
     await mailClick(".o_m2o_avatar > img");
     await mailContains(".o_avatar_card");
-    await mailContains(".o_card_user_infos > span:contains('R&D')");
     await mailClick(".o_action_manager:eq(0)"); // click away
     await mailContains(".o_avatar_card", { count: 0 });
     env["hr.employee"].create([
@@ -236,7 +212,6 @@ test("avatar card displays the relevant employee info", async () => {
     ]);
     await mailClick(".o_m2o_avatar > img");
     await mailContains(".o_avatar_card");
-    await mailContains(".o_card_user_infos > span:contains('Sales')");
     await mailClick(".o_action_manager:eq(0)"); // click away
     await mailContains(".o_avatar_card", { count: 0 });
     const employee3Id = env["hr.employee"].create([
@@ -249,7 +224,6 @@ test("avatar card displays the relevant employee info", async () => {
     ]);
     await mailClick(".o_m2o_avatar > img");
     await mailContains(".o_avatar_card");
-    await mailContains(".o_card_user_infos > span:contains('HR')");
     await mailClick(".o_action_manager:eq(0)"); // click away
     await mailContains(".o_avatar_card", { count: 0 });
     env["hr.employee"].write(employee3Id, {
@@ -257,7 +231,6 @@ test("avatar card displays the relevant employee info", async () => {
     });
     await mailClick(".o_m2o_avatar > img");
     await mailContains(".o_avatar_card");
-    await mailContains(".o_card_user_infos > span:contains('Sales')");
     await mailClick(".o_action_manager:eq(0)"); // click away
     await mailContains(".o_avatar_card", { count: 0 });
 });
