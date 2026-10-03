@@ -45,7 +45,7 @@ self.addEventListener("fetch", (event) => {
 // Handle notification
 self.addEventListener("message", (event) => {
     const data = event.data;
-    if (data.urlsToCache && navigator.onLine) {
+    if (data.urlsToCache) {
         for (const url of data.urlsToCache) {
             cacheResources({ request: { url } });
         }
