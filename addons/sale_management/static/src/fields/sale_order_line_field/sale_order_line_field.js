@@ -13,17 +13,24 @@ import { patch } from "@web/core/utils/patch";
 import { uuid } from "@web/core/utils/strings";
 import { getFieldsSpec } from "@web/model/relational_model/utils";
 import { useSubEnv } from "@web/owl2/utils";
+import { useSelectCreate } from "@web/views/fields/relational_utils";
 
 patch(SaleOrderLineOne2Many.prototype, {
     setup() {
         super.setup();
         this.orm = useService("orm");
         this.state = proxy({ sectionTemplates: [] });
+        this.selectSectionTemplate = useSelectCreate({
+            resModel: "sale.order.template",
+            activeActions: { create: false },
+            onSelected: (resIds) => resIds.length && this.applySectionTemplate(resIds[0]),
+        });
 
         useSubEnv({
             onSaveSectionTemplate: this.saveSectionTemplate.bind(this),
             onAddSectionTemplate: this.applySectionTemplate.bind(this),
             onDeleteSectionTemplate: this.deleteSectionTemplate.bind(this),
+            onSearchMoreSectionTemplates: this.searchMoreSectionTemplates.bind(this),
             canBeSavedAsTemplate: this.canBeSavedAsTemplate.bind(this),
             getSaveAsTemplateButtonTooltip: this.getSaveAsTemplateButtonTooltip.bind(this),
             state: this.state,
@@ -103,6 +110,21 @@ patch(SaleOrderLineOne2Many.prototype, {
         await this.loadSectionTemplates();
     },
 
+    searchMoreSectionTemplates() {
+        const companyId = this.props.record.data.company_id.id;
+        this.selectSectionTemplate({
+            domain: [
+                ["template_type", "=", "section"],
+                ["user_has_access", "=", true],
+                ["company_id", "in", [false, companyId]],
+            ],
+            context: {
+                list_view_ref: "sale_management.sale_order_template_view_tree_simplified",
+            },
+            title: _t("Search: Section Templates"),
+        });
+    },
+
     /**
      * Saves a section template from section record.
      *
@@ -149,7 +171,8 @@ patch(SaleOrderLineOne2Many.prototype, {
         // Add new template or update existing one if found in state
         let successMessage = "";
         if (templateIndex === -1) {
-            this.state.sectionTemplates.push(result);
+            this.state.sectionTemplates.unshift(result);
+            this.state.sectionTemplates.length = Math.min(this.state.sectionTemplates.length, 10);
             successMessage = _t("Section template %s created successfully", result.name);
         } else {
             this.state.sectionTemplates[templateIndex] = result;

@@ -62,7 +62,7 @@
                     </DropdownItem>
 
                     <t
-                        t-foreach="this.env.state.sectionTemplates"
+                        t-foreach="this.env.state.sectionTemplates.slice(0, 9)"
                         t-as="sectionTemplate"
                         t-key="sectionTemplate.id"
                     >
@@ -89,6 +89,14 @@
                             </div>
                         </DropdownItem>
                     </t>
+
+                    <DropdownItem
+                        t-if="this.env.state.sectionTemplates.length > 9"
+                        class="'text-action'"
+                        onSelected="() => this.env.onSearchMoreSectionTemplates()"
+                    >
+                        Search more...
+                    </DropdownItem>
                 </t>
             </Dropdown>
         </xpath>
