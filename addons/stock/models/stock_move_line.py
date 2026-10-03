@@ -1494,13 +1494,13 @@ class StockMoveLine(models.Model):
         """Extend extra conditions here"""
         return domain_list
 
-    def _is_potential_existing_wave_extra(self, wave):
+    def _is_potential_existing_wave_incompatible(self, wave):
         """Extend extra conditions here"""
-        return True
+        return False
 
-    def _is_new_potential_line_extra(self, potential_line, picking_type):
+    def _is_new_potential_line_incompatible(self, potential_line, picking_type):
         """Extend extra conditions here"""
-        return True
+        return False
 
     def _auto_wave_lines_into_existing_waves(self, nearest_parent_locations=False):
         """ Try to add move lines to existing waves if possible,
@@ -1523,9 +1523,15 @@ class StockMoveLine(models.Model):
                 else:
                     domains.append(Domain('state', '=', 'draft'))
                 if picking_type.batch_group_by_partner:
-                    domains.append(Domain('picking_ids.partner_id', 'in', lines.move_id.partner_id.ids))
+                    partner_domain = Domain('picking_ids.partner_id', 'in', lines.move_partner_id.ids)
+                    if any(not line.move_partner_id for line in lines):
+                        partner_domain |= Domain('picking_ids.partner_id', '=', False)
+                    domains.append(partner_domain)
                 if picking_type.batch_group_by_destination:
-                    domains.append(Domain('picking_ids.partner_id.country_id', 'in', lines.move_id.partner_id.country_id.ids))
+                    country_domain = Domain('picking_ids.partner_country_id', 'in', lines.move_partner_id.country_id.ids)
+                    if any(not line.move_partner_id.country_id for line in lines):
+                        country_domain |= Domain('picking_ids.partner_country_id', '=', False)
+                    domains.append(country_domain)
                 if picking_type.batch_group_by_src_loc:
                     domains.append(Domain('picking_ids.location_id', 'in', lines.location_id.ids))
                 if picking_type.batch_group_by_dest_loc:
@@ -1569,7 +1575,7 @@ class StockMoveLine(models.Model):
                         or (picking_type.wave_group_by_category and line.product_id.categ_id != wave.move_line_ids.product_id.categ_id) \
                         or (picking_type.wave_group_by_location and waves_nearest_parent_locations[wave] != nearest_parent_locations[line].id) \
                         or (picking_type.wave_group_by_date and not picking_type._validate_line_date_for_wave(line, wave)) \
-                        or not line._is_potential_existing_wave_extra(wave):
+                        or line._is_potential_existing_wave_incompatible(wave):
                             continue
 
                         wave_new_move_ids = wave_to_new_moves[wave]
@@ -1616,20 +1622,6 @@ class StockMoveLine(models.Model):
                 ('batch_id', '=', False),
                 ('batch_id.is_wave', '=', False),
             ])]
-            if picking_type.batch_group_by_partner:
-                domains.append(Domain('move_id.partner_id', 'in', lines.move_id.partner_id.ids))
-            if picking_type.batch_group_by_destination:
-                domains.append(Domain('move_id.partner_id.country_id', 'in', lines.move_id.partner_id.country_id.ids))
-            if picking_type.batch_group_by_src_loc:
-                domains.append(Domain('location_id', 'in', lines.location_id.ids))
-            if picking_type.batch_group_by_dest_loc:
-                domains.append(Domain('location_dest_id', 'in', lines.location_dest_id.ids))
-            if picking_type.wave_group_by_product:
-                domains.append(Domain('product_id', 'in', lines.product_id.ids))
-            if picking_type.wave_group_by_category:
-                domains.append(Domain('product_id.categ_id', 'in', lines.product_id.categ_id.ids))
-            if picking_type.wave_group_by_location:
-                domains.append(Domain('location_id', 'child_of', picking_type.wave_location_ids.ids))
             domains = lines._get_potential_new_waves_extra_domain(domains, picking_type)
 
             potential_lines = self.env['stock.move.line'].search(Domain.AND(domains))
@@ -1659,7 +1651,7 @@ class StockMoveLine(models.Model):
                     or (picking_type.wave_group_by_category and line.product_id.categ_id != potential_line.product_id.categ_id) \
                     or (picking_type.wave_group_by_location and lines_nearest_parent_locations[potential_line] != nearest_parent_locations[line].id)  \
                     or (picking_type.wave_group_by_date and not picking_type._validate_line_date_for_wave(line, potential_line)) \
-                    or not line._is_new_potential_line_extra(potential_line, picking_type):
+                    or line._is_new_potential_line_incompatible(potential_line, picking_type):
                         continue
 
                     line_to_lines[line].add(potential_line.id)
