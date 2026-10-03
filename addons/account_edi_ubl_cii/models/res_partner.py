@@ -243,17 +243,31 @@ class ResPartner(models.Model):
 
         return value
 
-    @api.depends('peppol_eas')
+    def _get_peppol_derived_endpoint(self):
+        """ Return the endpoint that would be derived from the partner's fields for the current EAS. """
+        self.ensure_one()
+        country_code = self._deduce_country_code()
+        field = EAS_MAPPING.get(country_code, {}).get(self.peppol_eas)
+        if not field:
+            return None
+        return self._get_peppol_endpoint_value(country_code, field)
+
+    def _get_partners_to_clear_peppol_endpoint(self, old_derived):
+        """ Return the partners whose endpoint was derived from a field that is now empty. """
+        return self.filtered(lambda p: (
+            old_derived.get(p.id)
+            and p.peppol_endpoint == old_derived[p.id]
+            and not p._get_peppol_derived_endpoint()
+        ))
+
+    @api.depends(lambda self: ['peppol_eas', *self._peppol_eas_endpoint_depends()])
     def _compute_peppol_endpoint(self):
         """ If the EAS changes and a valid endpoint is available, set it. Otherwise, keep the existing value."""
         for partner in self:
             partner.peppol_endpoint = partner.peppol_endpoint
-            country_code = partner._deduce_country_code()
-            if country_code in EAS_MAPPING:
-                field = EAS_MAPPING[country_code].get(partner.peppol_eas)
-                value = partner._get_peppol_endpoint_value(country_code, field)
-                if field and value and not partner._build_error_peppol_endpoint(partner.peppol_eas, value):
-                    partner.peppol_endpoint = value
+            value = partner._get_peppol_derived_endpoint()
+            if value and not partner._build_error_peppol_endpoint(partner.peppol_eas, value):
+                partner.peppol_endpoint = value
 
     @api.depends(lambda self: self._peppol_eas_endpoint_depends())
     def _compute_peppol_eas(self):
@@ -291,6 +305,15 @@ class ResPartner(models.Model):
                 eas for eas in dict(partner._fields['peppol_eas'].selection)
                 if eas not in DEPRECATED_PEPPOL_EAS or eas == partner.peppol_eas
             ]
+
+    def write(self, vals):
+        source_fields = {'country_id', *self._peppol_eas_endpoint_depends()}
+        check_clear = 'peppol_endpoint' not in vals and bool(source_fields & vals.keys())
+        old_derived = {p.id: p._get_peppol_derived_endpoint() for p in self} if check_clear else {}
+        res = super().write(vals)
+        if check_clear and (to_clear := self._get_partners_to_clear_peppol_endpoint(old_derived)):
+            to_clear.peppol_endpoint = False
+        return res
 
     def _build_error_peppol_endpoint(self, eas, endpoint):
         """ This function contains all the rules regarding the peppol_endpoint."""

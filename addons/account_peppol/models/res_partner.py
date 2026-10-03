@@ -226,9 +226,10 @@ class ResPartner(models.Model):
 
     def _update_peppol_state_per_company(self, vals=None):
         partners = self.env['res.partner']
+        trigger_fields = {'peppol_eas', 'peppol_endpoint', 'invoice_edi_format', *self._peppol_eas_endpoint_depends()}
         if vals is None:
             partners = self.filtered(lambda p: all([p.peppol_eas, p.peppol_endpoint, p.is_ubl_format, p.country_code in PEPPOL_LIST]))
-        elif {'peppol_eas', 'peppol_endpoint', 'invoice_edi_format'}.intersection(vals.keys()):
+        elif trigger_fields.intersection(vals.keys()):
             partners = self.filtered(lambda p: p.country_code in PEPPOL_LIST)
 
         all_companies = None
@@ -291,9 +292,12 @@ class ResPartner(models.Model):
             company = self.env.company
 
         self_partner = self.with_company(company)
-        if not self_partner.peppol_eas or not self_partner.peppol_endpoint:
-            return False
         old_value = self_partner.peppol_verification_state
+        if not self_partner.peppol_eas or not self_partner.peppol_endpoint:
+            if old_value and old_value != 'not_verified':
+                self_partner.peppol_verification_state = 'not_verified'
+                self._log_verification_state_update(company, old_value, 'not_verified')
+            return False
         new_value = self_partner._get_peppol_verification_state(
             self_partner.peppol_endpoint,
             self_partner.peppol_eas,
@@ -340,6 +344,11 @@ class ResPartner(models.Model):
         return self.env['res.company'].search([
             ('account_peppol_proxy_state', 'in', self.env['account_edi_proxy_client.user']._get_can_send_domain()),
         ]).mapped('partner_id')
+
+    def _get_partners_to_clear_peppol_endpoint(self, old_derived):
+        # EXTENDS 'account_edi_ubl_cii'
+        partners = super()._get_partners_to_clear_peppol_endpoint(old_derived)
+        return partners - self._get_partners_to_skip_peppol_computation()
 
     @api.model
     def _get_peppol_proxy_identification_info(self, peppol_eas, peppol_endpoint):
