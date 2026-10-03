@@ -20,6 +20,16 @@ export function getCell(model, xc, sheetId = model.getters.getActiveSheetId()) {
     return model.getters.getCell({ sheetId, col, row });
 }
 
+export function getComputedBorder(model, xc, sheetId = model.getters.getActiveSheetId()) {
+    const { col, row } = toCartesian(xc);
+    return model.getters.getCellComputedBorder({ sheetId, col, row });
+}
+
+export function getComputedStyle(model, xc, sheetId = model.getters.getActiveSheetId()) {
+    const { col, row } = toCartesian(xc);
+    return model.getters.getCellComputedStyle({ sheetId, col, row });
+}
+
 export function getEvaluatedCell(model, xc, sheetId = model.getters.getActiveSheetId()) {
     const { col, row } = toCartesian(xc);
     return model.getters.getEvaluatedCell({ sheetId, col, row });
