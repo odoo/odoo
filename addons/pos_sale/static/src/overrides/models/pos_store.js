@@ -100,6 +100,11 @@ patch(PosStore.prototype, {
             const converted_lines = await this.data.call("sale.order.line", "read_converted", [
                 sale_order.order_line.map((l) => l.id),
             ]);
+            const hasValuedMovePerSOL = await this.data.call(
+                "sale.order.line",
+                "has_valued_move_ids_batch",
+                [converted_lines.map((l) => l.id)]
+            );
 
             for (const line of sale_order.order_line) {
                 if (line.display_type === "line_note") {
@@ -177,6 +182,7 @@ patch(PosStore.prototype, {
                     }
                 }
 
+                converted_line.has_valued_move_ids = !!hasValuedMovePerSOL[converted_line.id];
                 newLine.setQuantityFromSOL(converted_line);
                 newLine.set_unit_price(converted_line.price_unit);
                 newLine.set_discount(line.discount);
