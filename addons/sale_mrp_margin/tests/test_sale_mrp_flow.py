@@ -279,3 +279,54 @@ class TestSaleMrpFlow(test_sale_mrp_flow.TestSaleMrpFlowCommon):
             {'product_id': self.kit_1.id, 'purchase_price': 180},
             {'product_id': self.kit_3.id, 'purchase_price': 240},
         ])
+
+    def test_avco_mto_manufacture_delivery_keeps_cost_stable(self):
+        """ Ensures that manufacturing moves are ignored when computing the sales order cost,
+            and only the outgoing delivery move is taken into account
+
+            MO move: unit value $5
+            SO move: unit value $7.5
+
+            The cost should be $7.5 and not $(7.5 + 5)/2
+        """
+        warehouse = self.company_data['default_warehouse']
+        route_mto = warehouse.mto_pull_id.route_id
+
+        self.product_category.property_cost_method = 'average'
+        component = self.component_a
+        component.categ_id = self.product_category
+        component.standard_price = 5.0
+        self.env['stock.quant']._update_available_quantity(component, warehouse.lot_stock_id, 10.0)
+
+        product_a = self._cls_create_product('Product A', self.uom_unit, routes=[route_mto])
+        product_a.categ_id = self.product_category
+        product_a.standard_price = 10.0
+        self.env['stock.quant']._update_available_quantity(product_a, warehouse.lot_stock_id, 1.0)
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product_a.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1.0})],
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product_a.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 100.0,
+            })],
+        })
+        so.action_confirm()
+
+        mo = so.mrp_production_ids
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(product_a.standard_price, 7.5)
+        self.assertEqual(so.order_line.purchase_price, 7.5)
+
+        delivery = so.picking_ids
+        delivery.button_validate()
+        self.assertEqual(delivery.state, 'done')
+        self.assertEqual(product_a.standard_price, 7.5)
+        self.assertEqual(so.order_line.purchase_price, 7.5)
