@@ -5,11 +5,28 @@ import {
 } from "@account/components/account_product_field/account_product_field";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
-import { saleProductMixin } from "../sale_product_mixin";
 import { many2OneFieldProps } from "@web/views/fields/many2one/many2one_field";
+import { Many2One, many2OneProps } from "@web/views/fields/many2one/many2one";
+import { ProductSearchMany2XAutocomplete, saleProductMixin } from "../sale_product_mixin";
+
+class ProductSearchMany2One extends Many2One {
+    static components = {
+        ...Many2One.components,
+        Many2XAutocomplete: ProductSearchMany2XAutocomplete,
+    };
+    props = useProps({ ...many2OneProps, onProductSearch: t.function().optional() });
+
+    /**
+     * @override
+     */
+    get many2XAutocompleteProps() {
+        return { ...super.many2XAutocompleteProps, onProductSearch: this.props.onProductSearch };
+    }
+}
 
 export class SaleOrderLineProductField extends AccountProductField {
     static template = "sale.SaleProductField";
+    static components = { Many2One: ProductSearchMany2One };
     props = useProps({
         ...many2OneFieldProps,
         readonlyField: t.boolean().optional(),
@@ -19,6 +36,7 @@ export class SaleOrderLineProductField extends AccountProductField {
         super.setup();
         this.isInternalUpdate = false;
         this.wasCombo = false;
+        this.lastProductSearch = "";
         let isMounted = false;
 
         useEffect(() => {
@@ -76,6 +94,9 @@ export class SaleOrderLineProductField extends AccountProductField {
         return {
             ...props,
             canOpen: this.props.canOpen && (!this.props.readonly || this.isProductClickable),
+            onProductSearch: (name) => {
+                this.lastProductSearch = name;
+            },
             update: (value) => {
                 this.isInternalUpdate = true;
                 this.wasCombo = this.isCombo;
