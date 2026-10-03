@@ -254,7 +254,7 @@ class IrCron(models.Model):
 
     @staticmethod
     def _check_modules_state(cr, jobs):
-        """ Ensure no module is installing or upgrading """
+        """ Ensure no module is marked for changes (installing or upgrading). """
         cr.execute("""
             SELECT COUNT(*)
             FROM ir_module_module
@@ -272,6 +272,11 @@ class IrCron(models.Model):
         # right after installing a module with an old 'nextcall' cron in data
         oldest = min(max(job['nextcall'], job['write_date'] or job['nextcall']) for job in jobs)
         if datetime.now() - oldest < MAX_FAIL_TIME:
+            raise BadModuleState()
+        # lock to avoid ongoing module installation
+        try:
+            cr.execute("SELECT pg_advisory_xact_lock(hashtext('registry_loading')) NOWAIT", log_exceptions=False)
+        except psycopg2.OperationalError:
             raise BadModuleState()
 
         # the cron execution failed around MAX_FAIL_TIME * 60 times (1 failure
