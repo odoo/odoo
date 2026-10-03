@@ -43,11 +43,13 @@
             ('remove', 'spreadsheet/static/src/chart/odoo_link/components/*'),
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.css',
             'spreadsheet/static/src/**/*.scss',
+            'spreadsheet/static/src/**/*.css',
             'spreadsheet/static/src/public_spreadsheet/**/*',
         ],
         'web.assets_backend': [
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.css',
             'spreadsheet/static/src/**/*.scss',
+            'spreadsheet/static/src/**/*.css',
             'spreadsheet/static/src/assets_backend/**/*',
         ],
         'web.assets_unit_tests': [

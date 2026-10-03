@@ -122,7 +122,7 @@
         ],
         "web.assets_web_dark": [
             'point_of_sale/static/src/scss/pos_dashboard.dark.scss',
-            'point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.dark.scss',
+            'point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.dark.css',
         ],
         'web.assets_tests': [
             'point_of_sale/static/tests/pos/tours/**/*',
@@ -135,7 +135,7 @@
 
             # Remove CSS files since we're not testing the UI with hoot in PoS
             # CSS files make html_editor tests fail
-            ('remove', 'point_of_sale/static/src/**/*.css'),
+            ('remove', 'point_of_sale/static/src/css/*.css'),
 
             # Adding error handler back since they are removed in the prod bundle
             'web/static/src/core/errors/error_handlers.js',
