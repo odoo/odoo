@@ -1,4 +1,4 @@
-import { computed, EventBus, proxy, toRaw, usePlugin } from "@odoo/owl";
+import { computed, EventBus, proxy, signal, toRaw, usePlugin } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
 import { makeContext } from "@web/core/context";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
@@ -216,6 +216,7 @@ export class SearchModel extends EventBus {
     query = proxy([]);
     searchItems = proxy({});
 
+    _groupByState = signal.Object({ defaultGroupBy: undefined, globalGroupBy: [] });
     _groupBy = computed(() => (this.searchMenuTypes.has("groupBy") ? this._getGroupBy() : []));
 
     constructor(env, services, args) {
@@ -499,6 +500,22 @@ export class SearchModel extends EventBus {
         return [...this.sections.values()].filter((s) => s.type === "filter");
     }
 
+    get defaultGroupBy() {
+        return this._groupByState().defaultGroupBy;
+    }
+
+    set defaultGroupBy(groupBy) {
+        this._groupByState().defaultGroupBy = groupBy;
+    }
+
+    get globalGroupBy() {
+        return this._groupByState().globalGroupBy;
+    }
+
+    set globalGroupBy(groupBy) {
+        this._groupByState().globalGroupBy = groupBy;
+    }
+
     /**
      * @returns {string[]}
      */
@@ -717,7 +734,7 @@ export class SearchModel extends EventBus {
      */
     deactivateGroup(groupId) {
         if (groupId === DEFAULT_GROUPBY_ID) {
-            delete this.defaultGroupBy;
+            this.defaultGroupBy = undefined;
             this._notify();
             return;
         }
