@@ -75,6 +75,7 @@ class TestHrSkillsSlides(TransactionCase):
         self.assertIn(self.user.partner_id, channel.partner_ids)
 
         enroll_group = self.user.group_ids
+<<<<<<< 8a27f853e891195239d7af20143580c0089995c0
 
         # add a new employee in the enrollment group
         new_user = mail_new_test_user(self.env, groups='base.group_user', login='raoul')
@@ -83,13 +84,33 @@ class TestHrSkillsSlides(TransactionCase):
             'user_id': new_user.id,
         }])
         enroll_group.all_user_ids |= new_user
+||||||| 478f06a4fbf46c04b12eba1622e0ee93be894c10
+        group_users = enroll_group.all_user_ids
+=======
+        already_enrolled = channel.partner_ids
+>>>>>>> 17036a49075a7faf0101d92f3bf6b81eb6abbda8
         with RecordCapturer(self.env['mail.message'], []) as capture:
             # self.user.partner_id is already an active 'joined' member: no enroll message.
             # The new employee is not enrolled yet: an enroll message should be posted for them.
             channel.enroll_group_ids = enroll_group
+<<<<<<< 8a27f853e891195239d7af20143580c0089995c0
         self.assertEqual(len(capture.records), 1)
         self.assertEqual(capture.records.res_id, new_employee.id)
         self.assertIn('subscribed to the course', capture.records.body)
+||||||| 478f06a4fbf46c04b12eba1622e0ee93be894c10
+        newly_enrolled_users = group_users - self.user
+        self.assertEqual(len(capture.records), 1)
+        self.assertEqual(capture.records.res_id, newly_enrolled_users.employee_id.id)
+        self.assertIn('subscribed to the course', capture.records.body)
+=======
+        newly_enrolled_users = (channel.partner_ids - already_enrolled).mapped('user_ids')
+        messages = capture.records.filtered(lambda m: m.model == 'hr.employee')
+        self.assertTrue(messages)
+        self.assertNotIn(self.user, newly_enrolled_users)
+        self.assertNotIn(self.user.employee_id.id, messages.mapped('res_id'))
+        self.assertEqual(set(messages.mapped('res_id')), set(newly_enrolled_users.mapped('employee_id.id')))
+        self.assertTrue(all('subscribed to the course' in body for body in messages.mapped('body')))
+>>>>>>> 17036a49075a7faf0101d92f3bf6b81eb6abbda8
 
     def test_remove_resume_line_no_readd(self):
         """
