@@ -140,9 +140,11 @@ export class ProductConfiguratorPopup extends Component {
         this.state = useState({
             product: this.props.product,
             payload: this.env.attribute_components,
+            renderTick: 0,
         });
         useRefListener(this.inputArea, "touchend", this.computeProductProduct.bind(this));
         useRefListener(this.inputArea, "click", this.computeProductProduct.bind(this));
+        useRefListener(this.inputArea, "input", this.computeProductProduct.bind(this));
     }
     computePayload() {
         const attribute_custom_values = [];
@@ -191,6 +193,12 @@ export class ProductConfiguratorPopup extends Component {
         }
 
         this.state.product = product;
+        this.state.renderTick++;
+    }
+    get priceExtra() {
+        // Computed on every render (not snapshotted in computeProductProduct)
+        // so it stays in sync regardless of which DOM event changed a value.
+        return this.computePayload().price_extra;
     }
     get imageUrl() {
         const product = this.props.product;

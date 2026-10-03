@@ -13,11 +13,17 @@ export class ProductInfoBanner extends Component {
     static props = {
         product: Object,
         info: { type: Object, optional: true },
+        priceExtra: { type: Number, optional: true },
     };
 
     setup() {
         this.pos = usePos();
-        this.fetchStock = useTrackedAsync((p) => this.pos.getProductInfo(p, 1), { keepLast: true });
+        this.fetchStock = useTrackedAsync(
+            (p, priceExtra) => this.pos.getProductInfo(p, 1, priceExtra),
+            {
+                keepLast: true,
+            }
+        );
         this.ui = useState(useService("ui"));
         this.state = useState({
             other_warehouses: [],
@@ -28,10 +34,10 @@ export class ProductInfoBanner extends Component {
             tax_amount: 0,
         });
 
-        const debouncedFetchStocks = debounce(async (product) => {
+        const debouncedFetchStocks = debounce(async (product, priceExtra) => {
             let result = {};
             if (!this.props.info) {
-                await this.fetchStock.call(product);
+                await this.fetchStock.call(product, priceExtra);
                 if (this.fetchStock.status === "error") {
                     throw this.fetchStock.result;
                 }
@@ -53,9 +59,9 @@ export class ProductInfoBanner extends Component {
 
         useEffect(
             () => {
-                debouncedFetchStocks(this.props.product);
+                debouncedFetchStocks(this.props.product, this.props.priceExtra || 0);
             },
-            () => [this.props.product]
+            () => [this.props.product, this.props.priceExtra]
         );
     }
 
