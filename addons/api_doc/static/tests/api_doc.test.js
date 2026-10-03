@@ -1,6 +1,6 @@
 import { DocClient } from "@api_doc/doc_client";
 import { mockDocIndex, mockDocModel } from "./doc_test_helpers";
-import { queryAll, queryAllTexts } from "@odoo/hoot-dom";
+import { queryAll, queryAllTexts, resize } from "@odoo/hoot-dom";
 import {
     animationFrame,
     expect,
@@ -41,6 +41,11 @@ function getCodeEditorDomValue(target="") {
         .map((root) => queryAllTexts(`:scope > span`, { root }).join(""))
         .join("\n");
 }
+
+const SMALL_WIDTH = 800;
+const LARGE_WIDTH = 1400;
+const toggleSidebar = () => contains("header button:has([data-icon=dock_to_right])").click();
+const toggleAside = () => contains("header button:has([data-icon=dock_to_left])").click();
 
 // ---- Tests ----
 
@@ -93,20 +98,20 @@ test("Methods are parsed properly", async () => {
 test.tags("desktop")
 test("Fields are parsed properly", async () => {
     await setupDocModel();
-    expect(".o-doc-table").toHaveCount(4, {
-        message: "There should be 4 'o-doc-table': model name + fields + 2 method parameters"
+    expect(".o-doc-table").toHaveCount(3, {
+        message: "There should be 2 'o-doc-table': fields + 2 method parameters"
     });
-    expect(".o-doc-table:eq(1) tr").toHaveCount(3);
-    expect(".o-doc-table:eq(1) tr:eq(1) td").toHaveCount(6);
+    expect(".o-doc-table:eq(0) tr").toHaveCount(3);
+    expect(".o-doc-table:eq(0) tr:eq(1) td").toHaveCount(6);
 
     const firstRow = ["field_1_M1", "string", "Field 1 M1", "optional", "", "test_module"];
     const secondRow = ["field_2_M1", "boolean", "Field 2 M1", "optional", "", "test_module"];
 
     firstRow.forEach((value, index) => {
-        expect(`.o-doc-table:eq(1) tr:eq(1) td:eq(${index})`).toHaveText(value);
+        expect(`.o-doc-table:eq(0) tr:eq(1) td:eq(${index})`).toHaveText(value);
     });
     secondRow.forEach((value, index) => {
-        expect(`.o-doc-table:eq(1) tr:eq(2) td:eq(${index})`).toHaveText(value);
+        expect(`.o-doc-table:eq(0) tr:eq(2) td:eq(${index})`).toHaveText(value);
     });
 });
 
@@ -161,8 +166,8 @@ test("Generate api key hyperlink", async () => {
     });
     await setupDocModel();
 
-    expect("header div button").toHaveCount(2);
-    await contains("header div button:eq(0)").click();
+    expect("header div button").toHaveCount(4);
+    await contains("header div button:eq(1)").click();
 
     expect(".modal a").toHaveText("Generate a new API key here");
     await contains(".modal a").click();
@@ -181,8 +186,8 @@ test("Run request and get rpc error", async () => {
     });
     await setupDocModel();
 
-    expect("header div button").toHaveCount(2);
-    await contains("header div button:eq(0)").click();
+    expect("header div button").toHaveCount(4);
+    await contains("header div button:eq(1)").click();
 
     expect(".modal a").toHaveText("Generate a new API key here");
     await contains(".modal input").edit("meow");
@@ -220,4 +225,89 @@ test("Search for model", async () => {
     await contains(".o-doc-sidebar input").edit("M2");
     expect(".o-doc-sidebar-content a").toHaveCount(1);
     expect(queryAllTexts(".o-doc-sidebar-content a", { inline: true })).toEqual(["Model_M2 M2"]);
+});
+
+// ---- Sidebar & aside ----
+
+test.tags("desktop")
+test("Sidebar and aside can be toggled from the header", async () => {
+    await setupDocModel();
+    expect(".o-doc-client-root").not.toHaveClass("o-doc-small");
+    expect(".o-doc-sidebar").toHaveCount(1);
+    expect(".o-doc-model-aside").toHaveCount(1);
+
+    await toggleSidebar();
+    expect(".o-doc-sidebar").toHaveCount(0);
+    expect(".o-doc-model-aside").toHaveCount(1);
+
+    await toggleAside();
+    expect(".o-doc-model-aside").toHaveCount(0);
+
+    await toggleSidebar();
+    await toggleAside();
+    expect(".o-doc-sidebar").toHaveCount(1);
+    expect(".o-doc-model-aside").toHaveCount(1);
+    expect(".o-doc-panel-backdrop").toHaveCount(0, {
+        message: "no backdrop on large screens",
+    });
+});
+
+test.tags("desktop")
+test("Sidebar and aside start collapsed on a small screen", async () => {
+    await resize({ width: SMALL_WIDTH });
+    setupMockModel(["M1", "M2", "M3"]);
+    await mountWithCleanup(DocClient, {});
+    await animationFrame();
+
+    expect(".o-doc-client-root").toHaveClass("o-doc-small");
+    expect(".o-doc-sidebar").toHaveCount(0);
+    expect(".o-doc-panel-backdrop").toHaveCount(0);
+});
+
+test.tags("desktop")
+test("Sidebar and aside collapse when the window becomes small", async () => {
+    await setupDocModel();
+    await resize({ width: SMALL_WIDTH });
+    await animationFrame();
+
+    expect(".o-doc-client-root").toHaveClass("o-doc-small");
+    expect(".o-doc-sidebar").toHaveCount(0);
+    expect(".o-doc-model-aside").toHaveCount(0);
+    expect(".o-doc-panel-backdrop").toHaveCount(0);
+});
+
+test.tags("desktop")
+test("Sidebar and aside open as overlays on a small screen", async () => {
+    await setupDocModel();
+    await resize({ width: SMALL_WIDTH });
+    await animationFrame();
+
+    // Opening a panel must not re-trigger the collapse
+    await toggleSidebar();
+    expect(".o-doc-sidebar").toHaveCount(1);
+    expect(".o-doc-panel-backdrop").toHaveCount(1);
+    await toggleAside();
+    expect(".o-doc-sidebar").toHaveCount(1);
+    expect(".o-doc-model-aside").toHaveCount(1);
+    expect(".o-doc-panel-backdrop").toHaveCount(1);
+
+    await contains(".o-doc-panel-backdrop").click();
+    expect(".o-doc-sidebar").toHaveCount(0);
+    expect(".o-doc-model-aside").toHaveCount(0);
+    expect(".o-doc-panel-backdrop").toHaveCount(0);
+});
+
+test.tags("desktop")
+test("Sidebar and aside reopen when the window becomes large again", async () => {
+    await setupDocModel();
+    await resize({ width: SMALL_WIDTH });
+    await animationFrame();
+    expect(".o-doc-sidebar").toHaveCount(0);
+
+    await resize({ width: LARGE_WIDTH });
+    await animationFrame();
+    expect(".o-doc-client-root").not.toHaveClass("o-doc-small");
+    expect(".o-doc-sidebar").toHaveCount(1);
+    expect(".o-doc-model-aside").toHaveCount(1);
+    expect(".o-doc-panel-backdrop").toHaveCount(0);
 });
