@@ -24,6 +24,9 @@
         'apt': {
             'phonenumbers': 'python3-phonenumbers',
         },
+        'dnf': {
+            'phonenumbers': 'python3-phonenumbers',
+        },
     },
     'data': [
         'data/cron.xml',
