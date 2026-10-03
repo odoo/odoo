@@ -121,6 +121,26 @@ class TestLangUrl(TestLangUrlCommon):
         self.assertEqual(res.status_code, 404, "Should not consider /_not_a_lang as a lang")
         self.assertURLEqual(res.url, '/_not_a_lang', "Should use /_not_a_lang as the path and not a lang")
 
+    def test_08_translation_hash_in_session_info(self):
+        """ The session info gives the hash of the translations served by
+        /website/translations, so the client doesn't need to fetch them when
+        its cached version is up to date. """
+        for url, lang in [('/contactus', 'en_US'), ('/fr/contactus', 'fr_FR')]:
+            with self.subTest(lang=lang):
+                r = self.url_open(url)
+                self.assertEqual(r.status_code, 200)
+                for line in r.text.splitlines():
+                    _, match, session_info_str = line.partition('odoo.__session_info__ = ')
+                    if match:
+                        session_info = json.loads(session_info_str[:-1])
+                        break
+                else:
+                    raise ValueError('Session info not found in web page')
+                self.assertEqual(session_info['bundle_params']['lang'], lang)
+
+                r = self.url_open('/website/translations', params={'lang': lang})
+                self.assertEqual(r.json()['hash'], session_info['translation_hash'])
+
 
 @tagged('-at_install', 'post_install')
 class TestLangRedirectBots(TestLangUrlCommon):
