@@ -17,12 +17,14 @@ class MailingTrace(models.Model):
         ('sms', 'SMS')
     ], ondelete={'sms': 'set default'})
     sms_id = fields.Many2one('sms.sms', string='SMS', store=False, compute='_compute_sms_id', compute_sql='_compute_sql_sms_id', compute_sudo=True)
-    sms_id_int = fields.Integer(
+    sms_id_int = fields.Many2oneReference(
         string='SMS ID',
         index='btree_not_null',
-        # Integer because the related sms.sms can be deleted separately from its statistics.
+        model_field='sms_id_model',
+        # Reference because the related sms.sms can be deleted separately from its statistics.
         # However, the ID is needed for several action and controllers.
     )
+    sms_id_model = fields.Char(string='SMS ID Model', compute='_compute_sms_id_model', compute_sql=lambda _self, _table: SQL('%s', 'sms.sms'), compute_sudo=True)
     sms_tracker_ids = fields.One2many('sms.tracker', 'mailing_trace_id', string='SMS Trackers')
     sms_number = fields.Char('Number')
     sms_code = fields.Char('Code')
@@ -75,6 +77,9 @@ class MailingTrace(models.Model):
             table.trace_type,
         ))
         return coalias.id
+
+    def _compute_sms_id_model(self):
+        self.sms_id_model = 'sms.sms'
 
     @api.model_create_multi
     def create(self, vals_list):
