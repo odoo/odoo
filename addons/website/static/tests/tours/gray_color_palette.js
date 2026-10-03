@@ -1,5 +1,18 @@
 import { goToTheme, registerWebsitePreviewTour, clickOnSave } from "@website/js/tours/tour_utils";
 
+function checkGray900(color) {
+    return {
+        content: `Check the preview of the gray 900 is ${color}`,
+        trigger: ".o_we_gray_preview span[variable='900']",
+        run() {
+            const backgroundColor = getComputedStyle(this.anchor).backgroundColor;
+            if (backgroundColor !== color) {
+                throw new Error(`The gray 900 preview is ${backgroundColor}`);
+            }
+        },
+    };
+}
+
 function waitForCSSReload() {
     return [
         {
@@ -32,22 +45,14 @@ registerWebsitePreviewTour(
             run: "range 100",
         },
         ...waitForCSSReload(),
-        {
-            content: "Check the preview of the gray 900 after hue change",
-            trigger:
-                ".o_we_gray_preview span[variable='900'][style='background-color: rgb(36, 41, 33) !important;']",
-        },
+        checkGray900("rgb(36, 41, 33)"),
         {
             content: "Drag the saturation slider",
             trigger: "div[data-action-param=gray-extra-saturation] input",
             run: "range 15",
         },
         ...waitForCSSReload(),
-        {
-            content: "Check the preview of the gray 900 after saturation change",
-            trigger:
-                ".o_we_gray_preview span[variable='900'][style='background-color: rgb(34, 47, 27) !important;']",
-        },
+        checkGray900("rgb(34, 47, 27)"),
         ...clickOnSave(),
         {
             content: "Check value of the gray 900 color",

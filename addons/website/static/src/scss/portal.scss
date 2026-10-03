@@ -27,7 +27,8 @@
         $-bg: if($-bg, $-bg, o-color('portal-card'));
         $-bg: if($-bg, $-bg, $body-bg);
         $-weight: if(lightness($-bg) < 35%, -15%, 15%);
+        // Printed apart (see `o-portal-card-hover-bg`).
 
-        background-color: shift-color($-bg, $-weight);
+        background-color: var(--o-portal-card-hover-bg, #{shift-color($-bg, $-weight)});
     }
 }

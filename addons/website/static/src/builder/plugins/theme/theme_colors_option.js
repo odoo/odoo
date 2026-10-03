@@ -7,14 +7,13 @@ import { ThemeColorsPreviewDialog } from "./theme_colors_preview_dialog";
 
 export class ThemeColorsOption extends BaseOptionComponent {
     static template = "website.ThemeColorsOption";
-    static dependencies = ["themeTab"];
+    static dependencies = ["customizeWebsite"];
     isThemeColorsPreviewOpen = signal(false);
 
     setup() {
         super.setup();
         this.palettes = this.getPalettes();
         this.colorPresetToShow = this.env.colorPresetToShow;
-        this.grays = this.dependencies.themeTab.getGrays();
         this.state = useDomState(() => ({
             presets: this.getPresets(),
         }));
@@ -55,7 +54,7 @@ export class ThemeColorsOption extends BaseOptionComponent {
 
     getPresets() {
         const presets = [];
-        const unquote = (string) => string.substring(1, string.length - 1);
+        const unquote = (string) => string.replace(/^'(.*)'$/, "$1");
         for (let i = 1; i <= 5; i++) {
             const preset = {
                 id: i,
@@ -103,6 +102,7 @@ export class ThemeColorsOption extends BaseOptionComponent {
             {
                 onIframeLoad: (previewDocument) => {
                     this.config.extraPreviewDocument = previewDocument;
+                    this.dependencies.customizeWebsite.updatePreviewCopies();
                 },
             },
             {

@@ -5,7 +5,7 @@
     .nav-link:focus-visible {
         // Replace "focus-visible" shadow with an inner shadow so that it's visible with container
         // that use "overflow: hidden".
-        box-shadow: inset 0 0 $focus-ring-blur $focus-ring-width $focus-ring-color;
+        box-shadow: inset 0 0 $focus-ring-blur $focus-ring-width var(--#{$prefix}focus-ring-color);
     }
 
     .nav-underline {
@@ -93,7 +93,7 @@
                     padding: map-get($spacers, 1) map-get($spacers, 3);
 
                     &.active {
-                        border-left: $border-width * 2 solid $link-color;
+                        border-left: $border-width * 2 solid var(--#{$prefix}link-color);
                         border-bottom: 0;
                     }
                 }
@@ -121,7 +121,7 @@
         .nav-pills {
             .active {
                 &:where(:focus-visible) {
-                    box-shadow: inset 0 0 $focus-ring-blur $focus-ring-width rgba($nav-pills-link-active-color, $focus-ring-opacity);
+                    box-shadow: inset 0 0 $focus-ring-blur $focus-ring-width color-mix(in srgb, #{if($nav-pills-link-active-color == $component-active-color, var(--o-component-active-color, #{$component-active-color}), $nav-pills-link-active-color)} #{$focus-ring-opacity * 100%}, transparent);
                 }
             }
         }

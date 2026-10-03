@@ -112,6 +112,94 @@ test("theme tab: a reset heading level follows the headings value", async () => 
     expect(":iframe h4").toHaveStyle({ "line-height": "40px" });
 });
 
+const PALETTE = "/website/static/src/scss/options/colors/user_color_palette.scss";
+
+async function openColorPicker(preset, label) {
+    await contains(".o-hb-theme-color-slider-btn").click();
+    await contains(`.o_cc_preview_wrapper:eq(${preset - 1})`).click();
+    await contains(
+        `.hb-sliding-panel [data-label='${label}'] button.o_we_color_preview:visible`
+    ).click();
+}
+
+test("theme tab: a preset color is previewed, the colors computed from it follow", async () => {
+    mockThemeRpcs();
+    onRpc("/website/theme_computed_colors", async (request) => {
+        const { params } = await request.json();
+        expect.step(`computed colors of o-cc2-bg ${params.colors["o-cc2-bg"]}`);
+        return { values: { "o-cc2-bg-contrast": "#FFFFFF" }, gates: {} };
+    });
+    await setupWebsiteBuilder(`<section class="o_cc o_cc2"><p>Text</p></section>`, {
+        loadIframeBundles: true,
+    });
+    await contains("#theme-tab").click();
+    await openColorPicker(2, "Background");
+    await contains(".o_popover [data-color='#0000FF']").click();
+    expect(":iframe section").toHaveStyle({ "background-color": "rgb(0, 0, 255)" });
+    // The text color isn't set: the one readable on the background.
+    expect.verifySteps(["computed colors of o-cc2-bg #0000FF"]);
+    expect(":iframe section p").toHaveStyle({ color: "rgb(255, 255, 255)" });
+
+    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    expect(":iframe section").not.toHaveStyle({ "background-color": "rgb(0, 0, 255)" });
+    expect(websiteRootStyle().getPropertyValue("--o-cc2-bg-contrast")).toBe("");
+    expect.verifySteps([]);
+    await contains(".o-snippets-top-actions button[data-icon='redo']").click();
+    expect(":iframe section").toHaveStyle({ "background-color": "rgb(0, 0, 255)" });
+    expect.verifySteps(["computed colors of o-cc2-bg #0000FF"]);
+
+    await save();
+    expect.verifySteps([
+        `${USER_VALUES} {"o-cc2-bg-gradient":"null"}`,
+        `${PALETTE} {"o-cc2-bg":"#0000FF"}`,
+    ]);
+});
+
+test("theme tab: palette and status colors are previewed where they are used", async () => {
+    mockThemeRpcs();
+    onRpc("/website/theme_computed_colors", () => ({ values: {}, gates: {} }));
+    await setupWebsiteBuilder(
+        `<a class="btn btn-primary">B</a><span class="text-success">S</span>`,
+        {
+            loadIframeBundles: true,
+        }
+    );
+    await contains("#theme-tab").click();
+    await contains(".o-hb-theme-color-slider-btn").click();
+    // Primary buttons are the first palette color's (through the primary
+    // theme color and the first color preset's buttons).
+    await contains(".hb-sliding-panel button.o_we_color_preview[title='Primary']").click();
+    // These pickers open on their custom tab.
+    await contains(".o_popover .solid-tab").click();
+    await contains(".o_popover [data-color='#FF0000']").click();
+    expect(":iframe .btn-primary").toHaveStyle({ "background-color": "rgb(255, 0, 0)" });
+    await contains(".o-hb-theme-color-slider-btn").click();
+    await contains(".hb-sliding-panel button.o_we_color_preview[title='Success']").click();
+    await contains(".o_popover .solid-tab").click();
+    await contains(".o_popover [data-color='#0000FF']").click();
+    expect(":iframe .text-success").toHaveStyle({ color: "rgb(0, 0, 255)" });
+
+    await save();
+    expect.verifySteps([
+        `${PALETTE} {"o-color-1":"#FF0000"}`,
+        `/website/static/src/scss/options/colors/user_theme_color_palette.scss {"success":"#0000FF"}`,
+    ]);
+});
+
+test("theme tab: a preset headings color applies once set", async () => {
+    mockThemeRpcs();
+    onRpc("/website/theme_computed_colors", () => ({ values: {}, gates: {} }));
+    await setupWebsiteBuilder(`<section class="o_cc o_cc1"><h2>Title</h2></section>`, {
+        loadIframeBundles: true,
+    });
+    await contains("#theme-tab").click();
+    // Not set: the headings have the text color.
+    expect(":iframe h2").not.toHaveStyle({ color: "rgb(0, 255, 0)" });
+    await openColorPicker(1, "Headings");
+    await contains(".o_popover [data-color='#00FF00']").click();
+    expect(":iframe h2").toHaveStyle({ color: "rgb(0, 255, 0)" });
+});
+
 test("theme tab: the sliders mark the theme default", async () => {
     // The defaults are printed by the compiled CSS.
     await setupWebsiteBuilder("", { loadIframeBundles: true });

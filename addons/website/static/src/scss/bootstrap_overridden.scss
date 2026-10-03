@@ -482,10 +482,421 @@ $--enable-no-overflow-of-text-columns: false !default;
 }
 
 @mixin o-after-bootstrap($part) {
-    @if $part == type {
+    @if $part == root {
+        @include o-after-bootstrap-root;
+    } @else if index((buttons, dropdown, nav, card, accordion, pagination, progress, list-group, close, modal, popover, helpers), $part) {
+        @include o-after-bootstrap-colors($part);
+    } @else if $part == type {
         @include o-after-bootstrap-type;
     } @else if $part == forms {
         @include o-after-bootstrap-forms;
+    }
+}
+
+// A color of the color system as CSS: one defined as another (by its name, or
+// a color combination's number for its background) reads that one's custom
+// property, so that it follows it when it changes at runtime. The compiled
+// color is the fallback.
+@function o-color-css($value) {
+    @if type-of($value) == 'number' {
+        @return unquote('var(--o-cc#{$value}-bg, #{o-color($value)})');
+    }
+    @if type-of($value) == 'string' {
+        @return unquote('var(--#{$value}, #{o-color($value)})');
+    }
+    @return $value;
+}
+
+// What a color of the palette is without the user's value (same merge as
+// `$o-color-palette`): the palette's, its color combination's, or the base
+// one.
+@function o-palette-default-color($name) {
+    $-palette: map-get($o-color-palettes, $o-original-color-palette-name) or ();
+    @if map-has-key($-palette, $name) {
+        @return map-get($-palette, $name);
+    }
+    @for $index from 1 through length($o-color-combinations) {
+        $-prefix: 'o-cc#{$index}-';
+        @if str-index($name, $-prefix) == 1 {
+            $-combination: map-merge($o-base-color-combination, nth($o-color-combinations, $index));
+            @return map-get($-combination, str-slice($name, str-length($-prefix) + 1));
+        }
+    }
+    @return map-get($o-base-color-palette, $name);
+}
+
+@function o-theme-default-color($name) {
+    $-palette: map-get($o-theme-color-palettes, $o-original-theme-color-palette-name) or ();
+    @return if(map-has-key($-palette, $name), map-get($-palette, $name), map-get($o-base-theme-color-palette, $name));
+}
+
+// The colors of the color system, which Bootstrap printed compiled, again as
+// references where they are defined as another color (see `o-color-css()`).
+// For the builder, what each one resets to (`--o-default-<name>`) and the
+// palette colors the user set.
+@mixin o-after-bootstrap-root {
+    :root, [data-bs-theme="light"] {
+        @each $name, $value in $o-color-palette {
+            @if map-get($colors, $name) {
+                @if index(('number', 'string'), type-of($value)) {
+                    --#{$name}: #{o-color-css($value)};
+                }
+                $-default: if(map-has-key($o-user-color-palette, $name), o-palette-default-color($name), $value);
+                @if $-default {
+                    --o-default-#{$name}: #{o-color-css($-default)};
+                }
+            }
+        }
+        $-user-keys: ();
+        @each $name in map-keys($o-user-color-palette) {
+            $-user-keys: append($-user-keys, $name, space);
+        }
+        --o-user-color-keys: "#{$-user-keys}";
+        // html_editor prints the links' colors made readable under their own
+        // names, so the colors as set are printed apart.
+        @for $index from 1 through length($o-color-combinations) {
+            $-link: map-get($o-color-palette, 'o-cc#{$index}-link');
+            @if $-link {
+                --o-cc#{$index}-link-base: #{o-color-css($-link)};
+            }
+        }
+        @include print-variable('o-min-contrast-ratio', $min-contrast-ratio);
+
+        // Primary, secondary, light and dark are palette colors.
+        $-palette-colors: (primary: 'o-color-1', secondary: 'o-color-2', light: 'o-color-3', dark: 'o-color-5');
+        @each $name, $value in $theme-colors {
+            $-raw: map-get($o-theme-color-palette, $name);
+            $-default: if(map-has-key($o-user-theme-color-palette, $name), o-theme-default-color($name), $-raw);
+            $-palette-color: map-get($-palette-colors, $name);
+            @if $-palette-color and $value == o-color($-palette-color) {
+                $-raw: $-palette-color;
+                $-default: $-palette-color;
+            }
+            @if index(('number', 'string'), type-of($-raw)) {
+                --#{$name}: #{o-color-css($-raw)};
+            }
+            // The status colors fall back to Bootstrap's (see web's
+            // `pre_variables.scss`), also after a palette switch.
+            $-base: map-get((success: $green, info: $cyan, warning: $yellow, danger: $red), $name);
+            @if $-base {
+                --o-base-theme-#{$name}: #{$-base};
+            }
+            $-default: $-default or $-base;
+            @if $-default {
+                --o-default-#{$name}: #{o-color-css($-default)};
+            }
+        }
+
+        // The colors Bootstrap derives from them, again from their variables:
+        // references and shades (`color-mix()`), each only when it gives the
+        // compiled color. The others are computed (see `color_system.py`:
+        // the `-rgb` triples, primary's emphasis and subtle background, the
+        // links' hover) and stay compiled.
+        @each $name in map-keys($grays) {
+            @include o-print-color-css('gray-#{$name}', map-get($grays, $name), o-ref($name, map-get($grays, $name)), map-get($grays, $name));
+        }
+        @include o-print-color-css('gray', $gray-600, o-ref('600', $gray-600), map-get($grays, '600'));
+        @include o-print-color-css('gray-dark', $gray-800, o-ref('800', $gray-800), map-get($grays, '800'));
+        @each $name, $value in $theme-colors {
+            $-shades: (
+                'text-emphasis': (map-get($theme-colors-text, $name), shade-color($value, 60%), 'black 60%'),
+                'bg-subtle': (map-get($theme-colors-bg-subtle, $name), tint-color($value, 80%), 'white 80%'),
+                'border-subtle': (map-get($theme-colors-border-subtle, $name), tint-color($value, 60%), 'white 60%'),
+            );
+            @each $variant, $shade in $-shades {
+                // Primary's depend on the palette (see `$primary-text-emphasis`).
+                @if $name != 'primary' or $variant == 'border-subtle' {
+                    @include o-print-color-css('#{$name}-#{$variant}', nth($shade, 1), 'color-mix(in srgb, #{o-ref($name, $value)}, #{nth($shade, 3)})', nth($shade, 2));
+                }
+            }
+        }
+        @each $name, $variants in (light: ('text-emphasis' 700, 'border-subtle' 200), dark: ('text-emphasis' 700, 'bg-subtle' 400, 'border-subtle' 500)) {
+            @each $variant, $gray in $variants {
+                $-maps: ('text-emphasis': $theme-colors-text, 'bg-subtle': $theme-colors-bg-subtle, 'border-subtle': $theme-colors-border-subtle);
+                @include o-print-color-css('#{$name}-#{$variant}', map-get(map-get($-maps, $variant), $name), o-ref('#{$gray}', map-get($grays, '#{$gray}')), map-get($grays, '#{$gray}'));
+            }
+        }
+        @include o-print-color-css('light-bg-subtle', $light-bg-subtle, 'color-mix(in srgb, #{o-ref('100', $gray-100)}, #{o-ref('white', $white)})', mix($gray-100, $white));
+        @include o-print-color-css('body-color', $body-color, o-ref('o-cc1-text', $body-color), o-color('o-cc1-text') or color-contrast(o-color('o-cc1-bg')));
+        @include o-print-color-css('body-bg', $body-bg, o-ref('o-cc1-bg', $body-bg), o-color('o-cc1-bg'));
+        @include o-print-color-css('secondary-color', $body-secondary-color, 'color-mix(in srgb, var(--body-color) 75%, transparent)', rgba($body-color, .75));
+        @include o-print-color-css('secondary-bg', $body-secondary-bg, o-ref('200', $body-secondary-bg), map-get($grays, '200'));
+        @include o-print-color-css('tertiary-color', $body-tertiary-color, 'color-mix(in srgb, var(--body-color) 50%, transparent)', rgba($body-color, .5));
+        @include o-print-color-css('tertiary-bg', $body-tertiary-bg, 'color-mix(in srgb, var(--body-bg), #{o-ref('o-cc1-bg-contrast', color-contrast($body-bg))} 10%)', mix(color-contrast($body-bg), $body-bg, 10%));
+        @include o-print-color-css('highlight-color', $mark-color, 'var(--body-color)', $body-color);
+        @include o-print-color-css('link-color', $link-color, o-ref('o-cc1-link', $link-color), auto-contrast(o-color('o-cc1-link') or o-color('primary'), $body-bg, 'o-cc1-link'));
+        @include o-print-color-css('focus-ring-color', $focus-ring-color, 'color-mix(in srgb, var(--primary) 25%, transparent)', rgba($primary, .25));
+        // The variants of the theme, gray and palette colors (utilities and
+        // buttons, see `o-print-variant-colors` and `o-button-variant-var`).
+        @each $name, $value in map-merge($theme-colors, $grays) {
+            @include o-print-variant-colors($name, $value);
+        }
+        @for $index from 1 through 5 {
+            @include o-print-variant-colors('o-color-#{$index}', o-color('o-color-#{$index}'));
+        }
+        @each $name, $value in $theme-colors {
+            $-name: 'o-btn-fill-#{$name}';
+            $-bg: map-get($o-btn-bg-colors, $name) or $value;
+            $-border: map-get($o-btn-border-colors, $name) or $-bg;
+            $-cc-name: 'o-cc1-btn-#{$name}';
+            @if map-has-key($o-btn-bg-colors, $name) and $-bg == (o-color($-cc-name) or $value) {
+                // The first color combination's buttons.
+                --#{$-name}: #{o-ref($-cc-name, $-bg)};
+                --#{$-name}-border: #{o-ref('#{$-cc-name}-border', $-border)};
+                @each $key, $color in o-button-variant-colors($-bg, $-border) {
+                    --#{$-name}-#{$key}: #{o-ref('#{$-cc-name}-#{$key}', $color)};
+                }
+            } @else if $-bg == $value and $-border == $value {
+                --#{$-name}: var(--#{$name});
+                --#{$-name}-border: var(--#{$name});
+                @include o-print-button-variant($-name, $-bg, $-border);
+            }
+            $-outline: increase-contrast($-border, $body-bg);
+            --o-btn-outline-#{$name}: #{$-outline};
+            @include o-print-button-outline-variant('o-btn-outline-#{$name}', $-outline);
+        }
+        @each $name, $value in $theme-colors {
+            --#{$name}-link-hover-rgb: #{to-rgb(o-link-hover-color($value))};
+            // The badges' (see `website.scss`).
+            --#{$name}-badge-text: #{increase-contrast($value, tint-color($value, 90%))};
+            --#{$name}-badge-contrast: #{color-contrast($value, $min-contrast-ratio: 3)};
+        }
+        // The figure captions' background (see `website.scss`).
+        $-figure-caption: rgba(map-get($theme-colors, 'dark'), $o-theme-figcaption-opacity);
+        --o-figure-caption: color-mix(in srgb, var(--dark) #{$o-theme-figcaption-opacity * 100%}, transparent);
+        @include o-print-variant-colors('o-figure-caption', $-figure-caption);
+        --o-btn-link-focus-shadow-rgb: #{to-rgb(mix(color-contrast($link-color), $link-color, 15%))};
+        $-active-bg: o-color('o-cc1-btn-primary') or $primary;
+        // The inputs' colors (`$input-bg` falls back to the body's) and the
+        // cards' body.
+        @if not o-color('input') {
+            // Not empty, as Bootstrap prints it: the fallback applies.
+            --input: initial;
+        }
+        @include o-print-color-css('o-input-bg', $input-bg, 'var(--input, var(--#{$prefix}body-bg))', o-color('input') or $body-bg);
+        --o-input-color: #{$input-color};
+        // The page background behind a boxed layout (see `website.scss`).
+        $-body: o-color('body');
+        @if $-body {
+            --o-body-fill: #{mix(change-color($-body, $alpha: 1), white, percentage(alpha($-body)))};
+        }
+        @if $card-bg == $body-bg {
+            $-card-body-bg: rgba($card-bg, $o-card-body-bg-opacity);
+            --o-card-body-bg: color-mix(in srgb, var(--#{$prefix}body-bg) #{$o-card-body-bg-opacity * 100%}, transparent);
+            @include o-print-variant-colors('o-card-body-bg', $-card-body-bg);
+        }
+        --o-dropdown-link-active-color: #{$dropdown-link-active-color};
+        // The areas (header, footer...): their custom colors' text (see
+        // `o-apply-colors`), and the colors computed from the areas'.
+        $-footer: o-color('footer-custom') or o-color('footer');
+        @each $area in ('menu', 'header-sales_one', 'header-sales_two', 'header-sales_three', 'header-sales_four', 'footer', 'copyright', 'breadcrumb', 'portal-card') {
+            $-custom: o-color('#{$area}-custom');
+            @if $-custom and alpha($-custom) > $o-yiq-min-opacity-threshold {
+                $-background: if($area == 'copyright', $-footer or rgba(0, 0, 0, 0), $body-bg);
+                --#{$area}-custom-contrast: #{color-contrast($-custom, $main-background: $-background)};
+            }
+        }
+        $-menu: o-color('menu-custom') or o-color('menu');
+        @if $-menu {
+            --o-menu-color: #{o-area-color-css('menu')};
+        }
+        @if o-website-value('footer-scrolltop') {
+            $-scrolltop: o-footer-scrolltop-colors();
+            @each $key, $value in $-scrolltop {
+                --o-footer-scrolltop-#{$key}: #{$value};
+            }
+        }
+        --o-portal-card-hover-bg: #{o-portal-card-hover-bg()};
+        @include o-print-color-css('o-component-active-bg', $component-active-bg, o-ref('o-cc1-btn-primary', $-active-bg), $-active-bg);
+        @include o-print-color-css('o-component-active-color', $component-active-color, o-ref('o-cc1-btn-primary-text', color-contrast($-active-bg)), color-contrast($-active-bg));
+        @each $state, $name, $color, $border-color in (valid success $form-valid-color $form-valid-border-color, invalid danger $form-invalid-color $form-invalid-border-color) {
+            @include o-print-color-css('form-#{$state}-color', $color, 'var(--#{$name})', map-get($theme-colors, $name));
+            @include o-print-color-css('form-#{$state}-border-color', $border-color, 'var(--#{$name})', map-get($theme-colors, $name));
+        }
+    }
+}
+
+// An area's color (`menu`, `footer`...) as CSS: its custom color, else its
+// color preset's background.
+@function o-area-color-css($area) {
+    $-custom: o-color('#{$area}-custom');
+    @if $-custom {
+        @return o-ref('#{$area}-custom', $-custom);
+    }
+    $-preset: o-related-color($area, $max-recursions: 10);
+    @return o-ref('o-cc#{$-preset}-bg', o-color($area));
+}
+
+// The footer's scroll-to-top button colors: the footer's (opaque over the
+// body), and the copyright's on hover (see `website.scss`).
+@function o-footer-scrolltop-colors() {
+    $-footer-color: o-color('footer-custom') or o-color('footer') or rgba(0, 0, 0, 0);
+    $-footer-color: mix(rgba($-footer-color, 1.0), $body-bg, percentage(alpha($-footer-color)));
+    $-copyright-color: o-color('copyright-custom') or o-color('copyright') or rgba(0, 0, 0, 0);
+    $-copyright-color: mix(rgba($-copyright-color, 1.0), $-footer-color, percentage(alpha($-copyright-color)));
+    $-contrast: color-contrast($-footer-color, $main-background: $-footer-color);
+    @return (
+        bg: $-footer-color,
+        contrast: $-contrast,
+        color: if($-footer-color == $-copyright-color, rgba(color-contrast($-footer-color), 0.5), $-contrast),
+        hover-bg: $-copyright-color,
+        hover-color: color-contrast($-copyright-color, $main-background: $-footer-color),
+    );
+}
+
+// The portal cards' hover background (see `portal.scss`).
+@function o-portal-card-hover-bg() {
+    $-bg: o-color('portal-card-custom');
+    $-bg: if($-bg, $-bg, o-color('portal-card'));
+    $-bg: if($-bg, $-bg, $body-bg);
+    @return shift-color($-bg, if(lightness($-bg) < 35%, -15%, 15%));
+}
+
+// A custom property of the color system, which html_editor prints for some
+// (bundles compiled with these helpers don't all have its prints): the
+// compiled value as fallback.
+@function o-ref($name, $fallback) {
+    @return unquote('var(--#{$name}, #{$fallback})');
+}
+
+// `$css` if that gives `$value`, the compiled color it replaces: `$css`'s own
+// result, compiled, is `$expected`. Else null, which leaves the compiled one.
+@function o-color-css-if($css, $value, $expected) {
+    @return if($value != null and $value == $expected, unquote($css), null);
+}
+
+// Bootstrap's `.link-<color>` hover color.
+@function o-link-hover-color($color) {
+    @return if(color-contrast($color) == $color-contrast-light, shade-color($color, $link-shade-percentage), tint-color($color, $link-shade-percentage));
+}
+
+// The css of the `$key` mix of `$mixes` (`(compiled value, css)`), if it gives
+// `$value`.
+@function o-mix-css($mixes, $key, $value) {
+    $-mix: map-get($mixes, $key);
+    @return if($-mix and nth($-mix, 1) == $value, unquote(nth($-mix, 2)), null);
+}
+
+// A focus ring shadow with `--focus-ring-color`, if it is `$focus-ring-box-shadow`.
+@function o-focus-ring-shadow-css($shadow) {
+    @if $shadow == $focus-ring-box-shadow and $focus-ring-color == rgba($primary, .25) {
+        @return 0 0 $focus-ring-blur $focus-ring-width var(--#{$prefix}focus-ring-color);
+    }
+    @return null;
+}
+
+// Bootstrap's components colored by the theme colors, again with the
+// variables of `o-after-bootstrap-root`, right after Bootstrap's own (see
+// `o-bootstrap-hook`): each color only where it gives the compiled one.
+@mixin o-after-bootstrap-colors($part) {
+    $-active-bg: o-color('o-cc1-btn-primary') or $primary;
+    $-active-bg-css: o-color-css-if(o-ref('o-cc1-btn-primary', $-active-bg), $component-active-bg, $-active-bg);
+    $-active-color-css: o-color-css-if(o-ref('o-cc1-btn-primary-text', color-contrast($-active-bg)), $component-active-color, color-contrast($-active-bg));
+    $-light-css: o-color-css-if('var(--light)', $light, map-get($theme-colors, 'light'));
+    $-light-contrast-css: o-color-css-if('var(--light-contrast)', color-contrast($light), color-contrast(map-get($theme-colors, 'light')));
+    $-body-bg-css: o-color-css-if('var(--#{$prefix}body-bg)', $body-bg, o-color('o-cc1-bg'));
+    @if $part == dropdown {
+        .dropdown-menu {
+            @include o-print-css('dropdown-bg', if($dropdown-bg == $body-bg, $-body-bg-css, null));
+            @include o-print-css('dropdown-header-color', o-color-css-if(o-ref('600', $gray-600), $dropdown-header-color, $gray-600));
+            @if $dropdown-link-active-bg == rgba(color-contrast($body-bg), .2) and $dropdown-bg == $body-bg {
+                --#{$prefix}dropdown-link-active-bg: color-mix(in srgb, #{o-ref('o-cc1-bg-contrast', color-contrast($body-bg))} 20%, transparent);
+                --#{$prefix}dropdown-link-active-color: var(--o-dropdown-link-active-color, #{$dropdown-link-active-color});
+            }
+        }
+    } @else if $part == card {
+        .card {
+            @include o-print-css('card-bg', if($card-bg == $body-bg, $-body-bg-css, null));
+        }
+    } @else if $part == modal {
+        .modal {
+            @include o-print-css('modal-bg', if($modal-content-bg == $body-bg, $-body-bg-css, null));
+        }
+    } @else if $part == popover {
+        .popover {
+            @include o-print-css('popover-bg', if($popover-bg == $body-bg, $-body-bg-css, null));
+        }
+    } @else if $part == buttons {
+        .btn-link {
+            --#{$prefix}btn-focus-shadow-rgb: var(--o-btn-link-focus-shadow-rgb, #{to-rgb(mix(color-contrast($link-color), $link-color, 15%))});
+            @include o-print-css('btn-disabled-color', o-color-css-if(o-ref('600', $gray-600), $btn-link-disabled-color, map-get($grays, '600')));
+        }
+    } @else if $part == nav {
+        .nav-link:focus-visible {
+            box-shadow: o-focus-ring-shadow-css($nav-link-focus-box-shadow);
+        }
+        .nav-pills {
+            @include o-print-css('nav-pills-link-active-color', if($nav-pills-link-active-color == $component-active-color, $-active-color-css, null));
+            @include o-print-css('nav-pills-link-active-bg', if($nav-pills-link-active-bg == $component-active-bg, $-active-bg-css, null));
+        }
+    } @else if $part == accordion {
+        .accordion {
+            @include o-print-css('accordion-btn-focus-box-shadow', o-focus-ring-shadow-css($accordion-button-focus-box-shadow));
+            @include o-print-css('accordion-active-color', if($accordion-button-active-color == color-contrast($light), $-light-contrast-css, null));
+            @include o-print-css('accordion-active-bg', if($accordion-button-active-bg == $light, $-light-css, null));
+        }
+    } @else if $part == pagination {
+        .pagination {
+            @include o-print-css('pagination-color', o-color-css-if(o-ref('o-cc1-bg-contrast', $pagination-color), $pagination-color, color-contrast($body-bg)));
+            @include o-print-css('pagination-hover-color', if($pagination-hover-color == color-contrast($light), $-light-contrast-css, null));
+            @include o-print-css('pagination-hover-bg', if($pagination-hover-bg == $light, $-light-css, null));
+            @include o-print-css('pagination-hover-border-color', if($pagination-hover-border-color == $light, $-light-css, null));
+            @include o-print-css('pagination-focus-color', if($pagination-focus-color == color-contrast($light), $-light-contrast-css, null));
+            @include o-print-css('pagination-focus-bg', if($pagination-focus-bg == $light, $-light-css, null));
+            @include o-print-css('pagination-focus-box-shadow', o-color-css-if('0 0 0 1px var(--light)', $pagination-focus-box-shadow, 0 0 0 1px $light));
+            @include o-print-css('pagination-active-color', if($pagination-active-color == $component-active-color, $-active-color-css, null));
+            @include o-print-css('pagination-active-bg', if($pagination-active-bg == $component-active-bg, $-active-bg-css, null));
+            @include o-print-css('pagination-active-border-color', if($pagination-active-border-color == $component-active-bg, $-active-bg-css, null));
+            @include o-print-css('pagination-bg', if($pagination-bg == $body-bg, $-body-bg-css, null));
+            @include o-print-css('pagination-disabled-bg', if($pagination-disabled-bg == $body-bg, $-body-bg-css, null));
+            @include o-print-css('pagination-disabled-color', o-color-css-if('color-mix(in srgb, #{o-ref('o-cc1-bg-contrast', color-contrast($body-bg))} 50%, transparent)', $pagination-disabled-color, rgba(color-contrast($body-bg), .5)));
+        }
+    } @else if $part == progress {
+        .progress, .progress-stacked {
+            @include o-print-css('progress-bar-bg', o-color-css-if('var(--primary)', $progress-bar-bg, $primary));
+        }
+    } @else if $part == list-group {
+        .list-group {
+            @include o-print-css('list-group-bg', if($list-group-bg == $body-bg, $-body-bg-css, null));
+            @include o-print-css('list-group-disabled-bg', if($list-group-disabled-bg == $body-bg, $-body-bg-css, null));
+            @include o-print-css('list-group-active-color', if($list-group-active-color == $component-active-color, $-active-color-css, null));
+            @include o-print-css('list-group-active-bg', if($list-group-active-bg == $component-active-bg, $-active-bg-css, null));
+            @include o-print-css('list-group-active-border-color', if($list-group-active-border-color == $component-active-bg, $-active-bg-css, null));
+        }
+    } @else if $part == close {
+        .btn-close {
+            @include o-print-css('btn-close-focus-shadow', o-focus-ring-shadow-css($btn-close-focus-shadow));
+        }
+    } @else if $part == helpers {
+        @each $color, $value in $theme-colors {
+            .text-bg-#{$color} {
+                color: var(--#{$color}-contrast, #{color-contrast($value)}) if($enable-important-utilities, !important, null);
+            }
+            @if $link-shade-percentage != 0 {
+                .link-#{$color} {
+                    &:hover, &:focus {
+                        $-rgb: var(--#{$color}-link-hover-rgb, #{to-rgb(o-link-hover-color($value))});
+                        color: RGBA(#{$-rgb}, var(--#{$prefix}link-opacity, 1)) if($enable-important-utilities, !important, null);
+                        text-decoration-color: RGBA(#{$-rgb}, var(--#{$prefix}link-underline-opacity, 1)) if($enable-important-utilities, !important, null);
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Prints Bootstrap's `--<name>`, if `$css` is not null.
+@mixin o-print-css($name, $css) {
+    @if $css != null {
+        --#{$prefix}#{$name}: #{$css};
+    }
+}
+
+// Prints `--<name>` as `$css` if that gives `$value`, the compiled color it
+// replaces: `$css`'s own result, compiled, is `$expected`.
+@mixin o-print-color-css($name, $value, $css, $expected) {
+    @if $value != null and $value == $expected {
+        --#{$name}: #{$css};
     }
 }
 
@@ -528,6 +939,9 @@ $--enable-no-overflow-of-text-columns: false !default;
     }
     .display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
         font-weight: o-font-weight-var('display-font-weight', $display-font-weight);
+    }
+    .blockquote-footer {
+        color: o-color-css-if(o-ref('600', $gray-600), $blockquote-footer-color, $gray-600);
     }
 }
 
@@ -662,6 +1076,134 @@ $--enable-no-overflow-of-text-columns: false !default;
         .input-group-lg > .form-select,
         .input-group-sm > .form-select {
             padding-right: calc(#{o-input-var('padding-x', '')} * 4);
+        }
+    }
+
+    // Colors, each only where it gives the compiled one (see
+    // `o-after-bootstrap-colors`). The inputs' background and text first.
+    $-input-bg: var(--o-input-bg, #{$input-bg});
+    $-input-color: if($input-color == color-contrast($input-bg), var(--o-input-color, #{$input-color}), null);
+    $-mix: if($-input-color, (
+        placeholder: (mix($input-bg, $input-color), 'color-mix(in srgb, #{$-input-bg}, #{$-input-color})'),
+        disabled-bg: (mix($input-color, $input-bg, 10%), 'color-mix(in srgb, #{$-input-bg}, #{$-input-color} 10%)'),
+        disabled-border: (rgba($input-color, 0.15), 'color-mix(in srgb, #{$-input-color} 15%, transparent)'),
+        select-disabled: (mix($input-color, $input-bg), 'color-mix(in srgb, #{$-input-bg}, #{$-input-color})'),
+        file-bg: (mix($input-color, $input-bg, $btn-hover-bg-shade-amount * 0.3), 'color-mix(in srgb, #{$-input-bg}, #{$-input-color} #{$btn-hover-bg-shade-amount * 0.3})'),
+        file-hover-bg: (mix($input-color, $input-bg, $btn-hover-bg-shade-amount), 'color-mix(in srgb, #{$-input-bg}, #{$-input-color} #{$btn-hover-bg-shade-amount})'),
+    ), ());
+    .form-control {
+        color: $-input-color;
+        background-color: $-input-bg;
+
+        &:focus {
+            color: if($input-focus-color == $input-color, $-input-color, null);
+            background-color: if($input-focus-bg == $input-bg, $-input-bg, null);
+        }
+        &::placeholder {
+            color: o-mix-css($-mix, placeholder, $input-placeholder-color);
+        }
+        &:disabled {
+            background-color: o-mix-css($-mix, disabled-bg, $input-disabled-bg);
+            border-color: o-mix-css($-mix, disabled-border, $input-disabled-border-color);
+        }
+        &::file-selector-button {
+            color: if($form-file-button-color == $input-color, $-input-color, null);
+            background-color: o-mix-css($-mix, file-bg, $form-file-button-bg);
+        }
+        &:hover:not(:disabled):not([readonly])::file-selector-button {
+            background-color: o-mix-css($-mix, file-hover-bg, $form-file-button-hover-bg);
+        }
+    }
+    .form-select {
+        color: if($form-select-color == $input-color, $-input-color, null);
+        background-color: if($form-select-bg == $input-bg, $-input-bg, null);
+
+        &:disabled {
+            color: o-mix-css($-mix, select-disabled, $form-select-disabled-color);
+            background-color: o-mix-css($-mix, disabled-bg, $form-select-disabled-bg);
+            border-color: o-mix-css($-mix, disabled-border, $form-select-disabled-border-color);
+        }
+    }
+    .form-check-input {
+        @include o-print-css('form-check-bg', if($form-check-input-bg == $input-bg, $-input-bg, null));
+    }
+    .input-group-text {
+        color: if($input-group-addon-color == $input-color, $-input-color, null);
+    }
+
+    // Colors, each only where it gives the compiled one (see
+    // `o-after-bootstrap-colors`).
+    $-active-bg: o-color('o-cc1-btn-primary') or $primary;
+    $-active-bg-css: o-color-css-if(o-ref('o-cc1-btn-primary', $-active-bg), $component-active-bg, $-active-bg);
+    $-focus-border: o-color-css-if('color-mix(in srgb, #{o-ref('o-cc1-btn-primary', $-active-bg)}, white 50%)', $input-focus-border-color, tint-color($-active-bg, 50%));
+    $-focus-ring: o-focus-ring-shadow-css($input-focus-box-shadow);
+    .form-control:focus {
+        border-color: $-focus-border;
+        box-shadow: $-focus-ring;
+    }
+    .form-select:focus {
+        border-color: if($form-select-focus-border-color == $input-focus-border-color, $-focus-border, null);
+        box-shadow: o-focus-ring-shadow-css($form-select-focus-box-shadow);
+    }
+    .form-check-input {
+        &:focus {
+            border-color: if($form-check-input-focus-border == $input-focus-border-color, $-focus-border, null);
+            box-shadow: o-focus-ring-shadow-css($form-check-input-focus-box-shadow);
+        }
+        &:checked {
+            background-color: if($form-check-input-checked-bg-color == $component-active-bg, $-active-bg-css, null);
+            border-color: if($form-check-input-checked-border-color == $component-active-bg, $-active-bg-css, null);
+        }
+        &[type="checkbox"]:indeterminate {
+            background-color: if($form-check-input-indeterminate-bg-color == $component-active-bg, $-active-bg-css, null);
+            border-color: if($form-check-input-indeterminate-border-color == $component-active-bg, $-active-bg-css, null);
+        }
+    }
+    $-thumb-focus: if($-focus-ring and $form-range-thumb-focus-box-shadow == (0 0 0 1px $body-bg, $input-focus-box-shadow), (0 0 0 1px var(--#{$prefix}body-bg), $-focus-ring), null);
+    $-thumb-border: if($form-range-thumb-border == ($border-width solid $primary), $border-width solid var(--#{$prefix}primary), null);
+    $-thumb-active-bg: if($form-range-thumb-active-bg == $primary, var(--#{$prefix}primary), null);
+    $-thumb-bg: if($form-range-thumb-bg == $body-bg, var(--#{$prefix}body-bg), null);
+    $-track-bg: o-mix-css($-mix, disabled-bg, $form-range-track-bg);
+    $-thumb-disabled-bg: o-mix-css($-mix, disabled-bg, $form-range-thumb-disabled-bg);
+    .form-range {
+        // Apart: a browser drops a rule with another's pseudo-element.
+        &::-webkit-slider-runnable-track {
+            background-color: $-track-bg;
+        }
+        &::-moz-range-track {
+            background-color: $-track-bg;
+        }
+        &:disabled {
+            &::-webkit-slider-thumb {
+                background-color: $-thumb-disabled-bg;
+            }
+            &::-moz-range-thumb {
+                background-color: $-thumb-disabled-bg;
+            }
+        }
+        &:focus {
+            &::-webkit-slider-thumb {
+                box-shadow: $-thumb-focus;
+            }
+            &::-moz-range-thumb {
+                box-shadow: $-thumb-focus;
+            }
+        }
+        &::-webkit-slider-thumb {
+            background-color: $-thumb-bg;
+            border: $-thumb-border;
+
+            &:active {
+                background-color: $-thumb-active-bg;
+            }
+        }
+        &::-moz-range-thumb {
+            background-color: $-thumb-bg;
+            border: $-thumb-border;
+
+            &:active {
+                background-color: $-thumb-active-bg;
+            }
         }
     }
 }

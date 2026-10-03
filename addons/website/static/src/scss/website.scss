@@ -38,9 +38,14 @@
         }
     }
 
-    // 4) The Odoo values map, $o-website-values, must be printed.
+    // 4) The Odoo values map, $o-website-values, must be printed. The color
+    // combinations' gradients unquoted: their rules read them.
     @each $key, $value in $o-website-values {
-        @include print-variable($key, $value);
+        @if $value and str-index($key, 'o-cc') == 1 and str-index($key, '-bg-gradient') {
+            --#{$key}: #{$value};
+        } @else {
+            @include print-variable($key, $value);
+        }
     }
 
     // 5) Use final value used by the theme
@@ -320,7 +325,9 @@ body {
     // transparent background color, the fallback iframe would be visible on
     // some // browsers (e.g. Chrome).
     @if o-website-value('layout') != 'full' {
-        @include force-opaque-bg-color(o-color('body'), $if-necessary: false);
+        // `force-opaque-bg-color()`, from the color's variable.
+        $-color: o-color('body');
+        background-color: var(--o-body-fill, #{mix(change-color($-color, $alpha: 1), white, percentage(alpha($-color)))});
     } @else {
         // Only if necessary as, if already opaque, the background color of the
         // body is already set by Bootstrap. We don't change $body-bg directly
@@ -362,8 +369,11 @@ body {
 // background gradients on elements take precedence over the color preset
 // gradients.
 @for $index from 1 through 5 {
-    .o_cc#{$index} {
-        @include o-add-gradient('o-cc#{$index}-bg-gradient')
+    @include o-theme-gate('o-cc#{$index}-bg-gradient') {
+        .o_cc#{$index} {
+            background-color: rgba(0, 0, 0, 0);
+            background-image: var(--o-cc#{$index}-bg-gradient);
+        }
     }
 }
 
@@ -566,8 +576,9 @@ body {
     // we may want to use a safest way when possible.
     @include o-apply-colors('menu');
     @include o-apply-colors('menu-custom');
-    $-menu-color: o-color('menu-custom') or o-color('menu');
-    @if ($-menu-color and color-contrast($-menu-color) != $color-contrast-dark) {
+    // A dark header color: `<html data-o-theme-gates>` marks it (see
+    // `font_urls_export.scss`), the builder computes it while previewing.
+    @include o-theme-gate('menu-dark') {
         --NavLinkWithBackground-bg-color: #{rgba($navbar-dark-active-color, .1)};
         --NavLinkWithBackground-bg-color--hover: #{rgba($navbar-dark-active-color, .2)};
         --NavStretch-placeholder-color: #{rgba($navbar-dark-active-color, .3)};
@@ -655,7 +666,7 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
 
             &:not(.collapsed) {
                 @if $-navbar-mobile-bg-color != null {
-                    background-color: shade-color($-navbar-mobile-bg-color, 5%);
+                    background-color: color-mix(in srgb, var(--o-menu-color, #{$-navbar-mobile-bg-color}), black 5%);
                 }
             }
 
@@ -690,7 +701,7 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
 // Apply background color to the offcanvas menu
 .o_navbar_mobile {
     height: 100dvh;
-    background-color: $-navbar-mobile-bg-color;
+    background-color: if($-navbar-mobile-bg-color, var(--o-menu-color, #{$-navbar-mobile-bg-color}), null);
 
     // Make offcanvas close btn above mega menu
     .btn-close {
@@ -981,10 +992,11 @@ font[class*='bg-'] {
     }
 }
 
-.btn-close {
-    // Most components with an integrated .btn-close (o_notification, modals,
-    // offcanvas, ...) use $body-bg by default, which is why we check it here.
-    @if lightness($body-bg) < 50 {
+// Most components with an integrated .btn-close (o_notification, modals,
+// offcanvas, ...) use $body-bg by default, which is why we check it here: a
+// dark one is marked on `<html data-o-theme-gates>`.
+@include o-theme-gate('body-dark') {
+    .btn-close {
         @include btn-close-white();
     }
 }
@@ -1000,21 +1012,22 @@ font[class*='bg-'] {
 
     // Similarly to list-group-item-x and alert-* classes, override text-bg-*
     // classes behavior when used on badges.
+    // The colors are read from their variables (see `o-after-bootstrap-root`).
     @each $-color, $-value in $theme-colors {
         &.text-bg-#{$-color} {
-            --badge-bg: #{tint-color($-value, 90%)};
-            --badge-color: #{increase-contrast($-value, tint-color($-value, 90%))};
-            --badge-color-hover: #{color-contrast($-value, $min-contrast-ratio: 3)};
-            --badge-border-color: #{$-value};
+            --badge-bg: color-mix(in srgb, var(--#{$-color}), white 90%);
+            --badge-color: var(--#{$-color}-badge-text);
+            --badge-color-hover: var(--#{$-color}-badge-contrast);
+            --badge-border-color: var(--#{$-color});
         }
 
         // Restore old badge design (needed as an exit door for some contexts)
         //(e.g cart_quantity, dropdown toggle.badge)
         &.bg-#{$-color} {
-            --badge-bg: #{$-value};
-            --badge-color: #{color-contrast($-value, $min-contrast-ratio: 3)};
-            --badge-border-color: #{$-value};
-            --badge-color-hover: #{color-contrast($-value, $min-contrast-ratio: 3)};
+            --badge-bg: var(--#{$-color});
+            --badge-color: var(--#{$-color}-badge-contrast);
+            --badge-border-color: var(--#{$-color});
+            --badge-color-hover: var(--#{$-color}-badge-contrast);
         }
     }
 
@@ -1185,7 +1198,7 @@ font[class*='bg-'] {
     width: var(--o-timeline-dot-size, 24px);
     height: var(--o-timeline-dot-size, 24px);
     left: var(--o-dot-left);
-    color: $primary;
+    color: var(--primary);
 
     &:before, &:after {
         position: absolute;
@@ -2656,25 +2669,26 @@ span.list-inline-item.o_add_language:last-child {
         }
     }
     #o_footer_scrolltop {
-        $-footer-color: o-color('footer-custom') or o-color('footer') or rgba(0, 0, 0, 0);
-        $-footer-color: mix(rgba($-footer-color, 1.0), $body-bg, percentage(alpha($-footer-color)));
-        $-copyright-color: o-color('copyright-custom') or o-color('copyright') or rgba(0, 0, 0, 0);
-        $-copyright-color: mix(rgba($-copyright-color, 1.0), $-footer-color, percentage(alpha($-copyright-color)));
-
+        // The colors are printed apart (see `o-footer-scrolltop-colors`).
+        $-colors: o-footer-scrolltop-colors();
         box-sizing: content-box;
         width: 3rem;
         height: 3rem;
         border: 0;
         padding: 0;
-        @include o-apply-colors($-footer-color, $with-extras: false, $background: $-footer-color);
+        background-image: none;
+        --background-color: var(--o-footer-scrolltop-bg, #{map-get($-colors, bg)});
+        --color: var(--o-footer-scrolltop-contrast, #{map-get($-colors, contrast)});
+        background-color: var(--o-footer-scrolltop-bg, #{map-get($-colors, bg)});
+        color: var(--o-footer-scrolltop-color, #{map-get($-colors, color)});
         text-decoration: none;
 
-        @if $-footer-color == $-copyright-color {
-            color: rgba(color-contrast($-footer-color), 0.5);
-        }
-
         &:hover, &:focus {
-            @include o-apply-colors($-copyright-color, $with-extras: false, $background: $-footer-color);
+            background-image: none;
+            --background-color: var(--o-footer-scrolltop-hover-bg, #{map-get($-colors, hover-bg)});
+            --color: var(--o-footer-scrolltop-hover-color, #{map-get($-colors, hover-color)});
+            background-color: var(--o-footer-scrolltop-hover-bg, #{map-get($-colors, hover-bg)});
+            color: var(--o-footer-scrolltop-hover-color, #{map-get($-colors, hover-color)});
             text-decoration: none;
         }
     }
@@ -2689,7 +2703,7 @@ span.list-inline-item.o_add_language:last-child {
     }
     .figure-caption {
         @include o-position-absolute(auto, 0, 0, 0);
-        @include o-bg-color(rgba(map-get($theme-colors, 'dark'), $o-theme-figcaption-opacity));
+        @include o-bg-color-var('o-figure-caption', rgba(map-get($theme-colors, 'dark'), $o-theme-figcaption-opacity));
         padding: $tooltip-padding-y $tooltip-padding-x;
         font-weight: $font-weight-bold;
         a {
@@ -2700,7 +2714,7 @@ span.list-inline-item.o_add_language:last-child {
 
 @each $color, $value in $theme-colors {
     .bg-#{$color}-light {
-        background-color: rgba($value, 0.1);
+        background-color: color-mix(in srgb, var(--#{$color}) 10%, transparent);
     }
 }
 
@@ -2860,7 +2874,7 @@ $ribbon-padding: 100px;
 
     &.o_keyboard_navigation {
         .oe_search_box:focus, .oe_search_button:focus {
-            outline: $border-width * 2 solid $primary;
+            outline: $border-width * 2 solid var(--primary);
             outline-offset: -(map-get($spacers, 2));
         }
     }
@@ -2912,7 +2926,7 @@ $ribbon-padding: 100px;
     }
 
     .o_search_result_link:focus-visible {
-        outline: $border-width * 2 solid $primary;
+        outline: $border-width * 2 solid var(--primary);
         outline-offset: -($border-width * 2);
     }
 
@@ -3944,8 +3958,8 @@ in a huge font size since it isn’t redefined for the frontend.
 
 // Specific styles for the BottomSheet component when it is used in the frontend
 body.bottom-sheet-open {
-    --BottomSheetStatusBar__entry-background--active: #{$primary-bg-subtle};
-    --BottomSheetStatusBar__entry-color--active: #{$primary-text-emphasis};
+    --BottomSheetStatusBar__entry-background--active: var(--primary-bg-subtle);
+    --BottomSheetStatusBar__entry-color--active: var(--primary-text-emphasis);
     --BottomSheetStatusBar__entry-caret--active: var(--BottomSheetStatusBar__entry-color--active);
 
     // Prevent the page from being scrollable when a bottom sheet is open.

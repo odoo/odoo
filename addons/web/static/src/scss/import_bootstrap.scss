@@ -28,6 +28,7 @@
 
 // Layout & components
 @import "root";
+@include o-bootstrap-hook(root);
 @import "reboot";
 @import "type";
 @include o-bootstrap-hook(type);
@@ -45,25 +46,36 @@ $-tmp: $theme-colors;
 $theme-colors: ();
 @import "buttons";
 $theme-colors: $-tmp;
+@include o-bootstrap-hook(buttons);
 
 @import "transitions";
 @import "dropdown";
+@include o-bootstrap-hook(dropdown);
 @import "button-group";
 @import "nav";
+@include o-bootstrap-hook(nav);
 @import "navbar";
 @import "card";
+@include o-bootstrap-hook(card);
 @import "accordion";
+@include o-bootstrap-hook(accordion);
 @import "breadcrumb";
 @import "pagination";
+@include o-bootstrap-hook(pagination);
 @import "badge";
 @import "alert";
 @import "progress";
+@include o-bootstrap-hook(progress);
 @import "list-group";
+@include o-bootstrap-hook(list-group);
 @import "close";
+@include o-bootstrap-hook(close);
 @import "toasts";
 @import "modal";
+@include o-bootstrap-hook(modal);
 @import "tooltip";
 @import "popover";
+@include o-bootstrap-hook(popover);
 @import "carousel";
 @import "spinners";
 @import "offcanvas";
@@ -71,6 +83,7 @@ $theme-colors: $-tmp;
 
 // Helpers
 @import "helpers";
+@include o-bootstrap-hook(helpers);
 
 // Utilities
 // Moved into bundle after bs_utilities_custom.scss file to allow to extend

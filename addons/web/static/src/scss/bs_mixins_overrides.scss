@@ -34,6 +34,69 @@ $enable-deprecation-messages: false !default;
     @return scale-color($color, $alpha: -30%);
 }
 
+// Bootstrap's `button-variant()` and `button-outline-variant()` (with their
+// default colors), split in two: the colors they compute are printed as
+// `--<name>-<color>` custom properties, and the variant reads them (with the
+// compiled colors as fallbacks). So the variant follows the colors when they
+// change at runtime. `--<name>` and `--<name>-border` are the background and
+// border colors, printed apart.
+@function o-button-variant-colors($background, $border) {
+    $-color: color-contrast($background);
+    $-is-light: $-color == $color-contrast-light;
+    $-hover-bg: if($-is-light, shade-color($background, $btn-hover-bg-shade-amount), tint-color($background, $btn-hover-bg-tint-amount));
+    $-active-bg: if($-is-light, shade-color($background, $btn-active-bg-shade-amount), tint-color($background, $btn-active-bg-tint-amount));
+    @return (
+        'text': $-color,
+        'hover-color': color-contrast($-hover-bg),
+        'hover-bg': $-hover-bg,
+        'hover-border-color': if($-is-light, shade-color($border, $btn-hover-border-shade-amount), tint-color($border, $btn-hover-border-tint-amount)),
+        'focus-shadow-rgb': to-rgb(mix($-color, $border, 15%)),
+        'active-color': color-contrast($-active-bg),
+        'active-bg': $-active-bg,
+        'active-border-color': if($-is-light, shade-color($border, $btn-active-border-shade-amount), tint-color($border, $btn-active-border-tint-amount)),
+    );
+}
+@mixin o-print-button-variant($name, $background, $border) {
+    @each $key, $value in o-button-variant-colors($background, $border) {
+        --#{$name}-#{$key}: #{$value};
+    }
+}
+@mixin o-button-variant-var($name, $background, $border) {
+    $-colors: o-button-variant-colors($background, $border);
+    --#{$prefix}btn-color: var(--#{$name}-text, #{map-get($-colors, 'text')});
+    --#{$prefix}btn-bg: var(--#{$name}, #{$background});
+    --#{$prefix}btn-border-color: var(--#{$name}-border, #{$border});
+    @each $key in ('hover-color', 'hover-bg', 'hover-border-color', 'focus-shadow-rgb', 'active-color', 'active-bg', 'active-border-color') {
+        --#{$prefix}btn-#{$key}: var(--#{$name}-#{$key}, #{map-get($-colors, $key)});
+    }
+    --#{$prefix}btn-active-shadow: #{$btn-active-box-shadow};
+    --#{$prefix}btn-disabled-color: var(--#{$name}-text, #{map-get($-colors, 'text')});
+    --#{$prefix}btn-disabled-bg: var(--#{$name}, #{$background});
+    --#{$prefix}btn-disabled-border-color: var(--#{$name}-border, #{$border});
+}
+@mixin o-print-button-outline-variant($name, $color) {
+    --#{$name}-contrast: #{color-contrast($color)};
+    --#{$name}-rgb: #{to-rgb($color)};
+}
+@mixin o-button-outline-variant-var($name, $color) {
+    $-color: var(--#{$name}, #{$color});
+    $-contrast: var(--#{$name}-contrast, #{color-contrast($color)});
+    --#{$prefix}btn-color: #{$-color};
+    --#{$prefix}btn-border-color: #{$-color};
+    --#{$prefix}btn-hover-color: #{$-contrast};
+    --#{$prefix}btn-hover-bg: #{$-color};
+    --#{$prefix}btn-hover-border-color: #{$-color};
+    --#{$prefix}btn-focus-shadow-rgb: var(--#{$name}-rgb, #{to-rgb($color)});
+    --#{$prefix}btn-active-color: #{$-contrast};
+    --#{$prefix}btn-active-bg: #{$-color};
+    --#{$prefix}btn-active-border-color: #{$-color};
+    --#{$prefix}btn-active-shadow: #{$btn-active-box-shadow};
+    --#{$prefix}btn-disabled-color: #{$-color};
+    --#{$prefix}btn-disabled-bg: transparent;
+    --#{$prefix}btn-disabled-border-color: #{$-color};
+    --#{$prefix}gradient: none;
+}
+
 // This placeholder regroups the rules that will apply on all elements with a
 // bg-* class (see o-bg-color, bg-variant). The optimized-css way would be to
 // have a common class for them all.
@@ -85,6 +148,62 @@ $o-color-extras-nesting-selector: '&' !default;
         &:hover, &:focus {
             @include o-bg-color(darken($color, 10%), $text-color, false);
         }
+    }
+}
+// `bg-variant()` and (frontend's) `text-emphasis-variant()`, reading the
+// colors from custom properties: `--<name>`, and the colors computed from it
+// (`--<name>-contrast`, the hover ones), with the compiled colors as
+// fallbacks.
+@mixin o-bg-color-var($name, $color, $with-extras: true, $important: true, $background: $body-bg) {
+    $-text: if(alpha($color) > $o-yiq-min-opacity-threshold, var(--#{$name}-contrast, #{color-contrast($color, $main-background: $background)}), null);
+    --background-color: var(--#{$name}, #{$color});
+    --color: #{$-text};
+    background-color: var(--#{$name}, #{$color})#{if($important, ' !important', '')};
+    color: $-text;
+    @if $with-extras and $-text {
+        #{$o-color-extras-nesting-selector} {
+            @extend %o-bg-color-component-color-reset;
+
+            .text-muted {
+                // `mute-color()`
+                color: color-mix(in srgb, #{$-text} 70%, transparent) !important;
+            }
+        }
+    }
+}
+@mixin o-bg-variant-var($parent, $name, $color) {
+    #{$parent} {
+        @include o-bg-color-var($name, $color);
+    }
+    a#{$parent},
+    button#{$parent} {
+        &:hover, &:focus {
+            @include o-bg-color-var('#{$name}-bg-hover', darken($color, 10%), false);
+        }
+    }
+}
+@mixin o-text-emphasis-variant-var($parent, $name, $color) {
+    #{$parent} {
+        color: var(--#{$name}, #{$color}) !important;
+    }
+    @if $link-shade-percentage != 0 {
+        a#{$parent} {
+            &:hover, &:focus {
+                color: var(--#{$name}-text-hover, #{darken($color, $link-shade-percentage)}) !important;
+            }
+        }
+    }
+}
+// The colors the variants above compute, for `--<name>`.
+@mixin o-print-variant-colors($name, $color) {
+    @if alpha($color) > $o-yiq-min-opacity-threshold {
+        --#{$name}-contrast: #{color-contrast($color)};
+    }
+    --#{$name}-text-hover: #{darken($color, $link-shade-percentage)};
+    $-hover: darken($color, 10%);
+    --#{$name}-bg-hover: #{$-hover};
+    @if alpha($-hover) > $o-yiq-min-opacity-threshold {
+        --#{$name}-bg-hover-contrast: #{color-contrast($-hover)};
     }
 }
 @mixin bg-gradient-variant($parent, $color, $text-color: null) {
