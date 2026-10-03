@@ -631,3 +631,43 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(po.partner_id, purchase_requisition.vendor_id, 'The partner should have been set from the purchase requisition')
         self.assertEqual(po.order_line.price_unit, purchase_requisition.line_ids.price_unit, 'The unit price should have been set from the purchase requisition')
         self.assertEqual(po.order_line.taxes_id, purchase_requisition.line_ids.product_id.supplier_taxes_id, 'The blanket order taxes should have been set')
+
+    def test_requisition_multiple_lines_same_product(self):
+        """Creating a PO from a requisition with multiple lines of the same product
+           keeps the correct price and description on each PO line and update
+           requisition line qty ordered"""
+
+        requisition = self.env['purchase.requisition'].create({
+            'vendor_id': self.res_partner_1.id,
+            'line_ids': [
+                Command.create({
+                    'product_id': self.product_09.id,
+                    'product_qty': 10.0,
+                    'price_unit': 50.0,
+                    'product_description_variants': 'First',
+                }),
+                Command.create({
+                    'product_id': self.product_09.id,
+                    'product_qty': 20.0,
+                    'price_unit': 45.0,
+                    'product_description_variants': 'Second',
+                }),
+            ],
+        })
+        requisition.action_confirm()
+        po = Form(
+            self.env['purchase.order'].with_context(
+                default_requisition_id=requisition.id
+            )
+        ).save()
+        self.assertRecordValues(po.order_line, [
+            {'price_unit': 50.0, 'name': '[E-COM10] Pedal Bin\nFirst'},
+            {'price_unit': 45.0, 'name': '[E-COM10] Pedal Bin\nSecond'}
+        ])
+        po.order_line[0].product_qty = 10
+        po.order_line[1].product_qty = 20
+        po.button_confirm()
+        self.assertRecordValues(po.requisition_id.line_ids, [
+            {'qty_ordered': 10.0},
+            {'qty_ordered': 20.0}
+        ])
