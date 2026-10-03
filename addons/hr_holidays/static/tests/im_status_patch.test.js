@@ -2,15 +2,22 @@ import { describe, test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { startServer, start, openDiscuss, contains } from "@mail/../tests/mail_test_helpers";
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
+import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
 describe.current.tags("desktop");
 defineHrHolidaysModels();
+
+const { DateTime } = luxon;
 
 test("on leave & online", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId, im_status: "online" });
-    pyEnv["hr.employee"].create({ leave_date_to: "2023-01-01", user_id: userId });
+    pyEnv["hr.employee"].create({
+        leave_date_from: serializeDateTime(DateTime.now().minus({ days: 2 })),
+        leave_date_to: serializeDate(DateTime.now().plus({ days: 3 })),
+        user_id: userId,
+    });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -29,7 +36,11 @@ test("on leave & away", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId, im_status: "away" });
-    pyEnv["hr.employee"].create({ leave_date_to: "2023-01-01", user_id: userId });
+    pyEnv["hr.employee"].create({
+        leave_date_from: serializeDateTime(DateTime.now().minus({ days: 2 })),
+        leave_date_to: serializeDate(DateTime.now().plus({ days: 3 })),
+        user_id: userId,
+    });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
@@ -48,7 +59,11 @@ test("on leave & offline", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId, im_status: "offline" });
-    pyEnv["hr.employee"].create({ leave_date_to: "2023-01-01", user_id: userId });
+    pyEnv["hr.employee"].create({
+        leave_date_from: serializeDateTime(DateTime.now().minus({ days: 2 })),
+        leave_date_to: serializeDate(DateTime.now().plus({ days: 3 })),
+        user_id: userId,
+    });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
