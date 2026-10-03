@@ -254,6 +254,8 @@ class PdpRegistration(models.TransientModel):
         })
         if error := response.get('error'):
             raise UserError(error)
+        if response.get('status') == 'fail':
+            raise UserError(self.env._("%s", response.get('message')))
 
         self.pdp_authentication_uuid = response.get('object_uuid')
 
