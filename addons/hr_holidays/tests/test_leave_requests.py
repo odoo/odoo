@@ -3499,3 +3499,44 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertTrue(resource_leave.exists(), "Resource calendar leave should still exist after employee departure")
         self.assertEqual(resource_leave.date_from.date(), date(2026, 3, 1), "Resource calendar leave start date should match the updated leave start date")
         self.assertEqual(resource_leave.date_to.date(), departure_date, "Resource calendar leave end date should match the updated leave end date")
+
+    def test_unselectable_type_hidden_from_allowed_for_non_manager(self):
+        company_country = self.employee_emp.company_id.country_id
+        selectable_type = self.env["hr.work.entry.type"].create({
+            "name": "Regular Time Off",
+            "code": "REGULAR",
+            "country_id": company_country.id,
+            "requires_allocation": False,
+            "time_off_selectable": True,
+        })
+        unselectable_type = self.env["hr.work.entry.type"].create({
+            "name": "Manager Only Time Off",
+            "code": "MANAGER_ONLY",
+            "country_id": company_country.id,
+            "requires_allocation": False,
+            "time_off_selectable": False,
+        })
+        leave = self.env["hr.leave"].create({
+            "name": "Test Leave",
+            "employee_id": self.employee_emp_id,
+            "work_entry_type_id": selectable_type.id,
+            "request_date_from": "2025-09-01",
+            "request_date_to": "2025-09-01",
+        })
+
+        self.assertEqual(unselectable_type.country_id, company_country)
+
+        manager_allowed = leave.with_user(self.user_hrmanager).allowed_work_entry_type_ids
+        self.assertIn(
+            unselectable_type,
+            manager_allowed,
+            "A holiday manager should still be able to select an unselectable time off type",
+        )
+
+        leave.invalidate_recordset(['allowed_work_entry_type_ids'])
+        employee_allowed = leave.with_user(self.user_employee).allowed_work_entry_type_ids
+        self.assertNotIn(
+            unselectable_type,
+            employee_allowed,
+            "A regular user must not be able to select an unselectable time off type",
+        )
