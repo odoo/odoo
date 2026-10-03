@@ -5,6 +5,9 @@
         <field name="model">timesheets.analysis.report</field>
         <field name="inherit_id" ref="hr_timesheet.timesheets_analysis_report_list"/>
         <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="default_group_by">timesheet_invoice_type</attribute>
+            </list>
             <xpath expr="//field[@name='task_id']" position="after">
                 <field name="so_line"
                        optional="show"
