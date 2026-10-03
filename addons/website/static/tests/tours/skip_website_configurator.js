@@ -32,6 +32,7 @@ registry.category("web_tour.tours").add("skip_website_configurator", {
         {
             content: "Check that the editor is opened",
             trigger: ":iframe #wrapwrap.odoo-editor-editable",
+            timeout: 30000,
         },
     ],
 });

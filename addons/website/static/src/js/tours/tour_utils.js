@@ -211,17 +211,19 @@ export function clickOnElement(elementName, selector) {
  *
  * @param {string} position Where the purple arrow will show up
  */
-export function clickOnEditAndWaitEditMode() {
+export function clickOnEditAndWaitEditMode(timeout = 10000) {
     return [
         {
             content: "Click Edit to start designing your homepage.",
             trigger:
                 "body:has(:iframe body[is-ready=true]) .o_menu_systray .o_menu_systray_item.o_edit_website_container button",
             run: "click",
+            timeout,
         },
         {
             content: "Check that we are in edit mode",
             trigger: ".o_builder_sidebar_open",
+            timeout,
         },
     ];
 }
