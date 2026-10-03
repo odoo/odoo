@@ -1900,22 +1900,8 @@ class HrEmployee(models.Model):
             self.version_id.write(version_vals)
 
             for employee in self:
-                multi_update_version_ids = self.env.context.get('multi_update_version_ids')
-                if multi_update_version_ids:
-                    first_version_sudo = employee.version_ids.filtered(lambda v: v.id == multi_update_version_ids[0]).sudo()
-                    last_version_sudo = employee.version_ids.filtered(lambda v: v.id == multi_update_version_ids[-1]).sudo()
-                else:
-                    first_version_sudo = employee.version_id.sudo()
-                    last_version_sudo = first_version_sudo
-                start = format_date_abbr(self.env, first_version_sudo.date_start) if first_version_sudo.date_start else False
-                end = format_date_abbr(self.env, last_version_sudo.date_end) if last_version_sudo.date_end else False
-                if start and end:
-                    msg = self.env._("As of %(start)s to %(end)s") % {'start': start, 'end': end}
-                elif start:
-                    msg = self.env._("As of %s") % (start)
-                else:
-                    msg = self.env._("As of")
-                employee._track_set_log_message(Markup("<b>%s</b>") % msg)
+                version_sudo = employee.version_id.sudo()
+                employee._track_set_log_message(employee._get_version_update_log_message(version_sudo, version_sudo))
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
             # When added to a department or changing user, subscribe to the channels auto-subscribed by department
@@ -1929,6 +1915,43 @@ class HrEmployee(models.Model):
                     resources |= employee.resource_id
             resources.write({'calendar_id': vals.get('resource_calendar_id')})
         return res
+
+    def _get_version_update_log_message(self, first_version, last_version):
+        start = format_date_abbr(self.env, first_version.date_start) if first_version.date_start else False
+        end = format_date_abbr(self.env, last_version.date_end) if last_version.date_end else False
+        if start and end:
+            msg = self.env._("As of %(start)s to %(end)s") % {'start': start, 'end': end}
+        elif start:
+            msg = self.env._("As of %s") % start
+        else:
+            msg = self.env._("As of")
+        return Markup("<b>%s</b>") % msg
+
+    def write_versions(self, version_ids, vals):
+        """ Write vals on several versions of the employee at once and log a single
+        tracking message on the employee chatter, computed on the first version. """
+        self.ensure_one()
+        versions = self.env['hr.version'].browse(version_ids).filtered(lambda v: v.employee_id == self).sorted('date_version')
+        if not versions or not vals:
+            return True
+        vals = {
+            **vals,
+            'last_modified_date': fields.Datetime.now(),
+            'last_modified_uid': self.env.uid,
+        }
+        tracked_fnames = versions._track_get_fields() & vals.keys()
+        if tracked_fnames:
+            first_version_sudo = versions[0].sudo()
+            self._track_record(
+                versions[0],
+                tracked_fnames,
+                # Explicit initial values, so that the tracking is also done for a version
+                # created in the same transaction (its tracking is discarded at creation).
+                initial_values={first_version_sudo.id: {fname: first_version_sudo[fname] for fname in tracked_fnames}},
+                body=self._get_version_update_log_message(first_version_sudo, versions[-1].sudo()),
+            )
+        versions.write(vals)
+        return True
 
     def unlink(self):
         resources = self.mapped('resource_id')
