@@ -109,11 +109,28 @@ export class SelectMenu extends Component {
         this.menuRef = useChildRef();
         this.choicesRef = useRef("choicesRef");
         this.props.menuRef?.(this.menuRef);
+<<<<<<< 4ac01465ee642ef2d2880bdb58d8a2eb8fdb37c5
         this.debouncedOnInput = useDebounced(() => {
+||||||| 8a041cc4ee3c2ee057921f06df30a99f59830a02
+        this.debouncedOnInput = useDebounced((ev) => {
+=======
+        this.debouncedOnInput = useDebounced((searchString) => {
+>>>>>>> d5c9dc0e6590b8eca2a107a10edd9a0879cf2817
             if (!this.dropdownState.isOpen) {
                 this.dropdownState.open();
             }
+<<<<<<< 4ac01465ee642ef2d2880bdb58d8a2eb8fdb37c5
             this.onInput(this.pendingValue);
+||||||| 8a041cc4ee3c2ee057921f06df30a99f59830a02
+            const searchString = ev.target.value;
+            this.state.searchValue = searchString;
+            delete this.pendingValue;
+            this.onInput(searchString);
+=======
+            this.state.searchValue = searchString;
+            delete this.pendingValue;
+            this.onInput(searchString);
+>>>>>>> d5c9dc0e6590b8eca2a107a10edd9a0879cf2817
         }, DEBOUNCED_DELAY);
         this.dropdownState = useDropdownState();
 
@@ -181,7 +198,13 @@ export class SelectMenu extends Component {
 
     handleInputDebounced(ev) {
         this.pendingValue = ev.target.value;
+<<<<<<< 4ac01465ee642ef2d2880bdb58d8a2eb8fdb37c5
         this.debouncedOnInput();
+||||||| 8a041cc4ee3c2ee057921f06df30a99f59830a02
+        this.debouncedOnInput(ev);
+=======
+        this.debouncedOnInput(this.pendingValue);
+>>>>>>> d5c9dc0e6590b8eca2a107a10edd9a0879cf2817
     }
 
     clearInputValue() {
