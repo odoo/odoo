@@ -1,7 +1,7 @@
 import io
 import logging
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 
 _logger = logging.getLogger(__name__)
@@ -41,11 +41,35 @@ class AccountMoveSend(models.AbstractModel):
                 # Also skip the invoices that another transaction is working on, otherwise they get submitted to ZATCA even as draft.
                 if not self.env['res.company']._with_locked_records(records=invoice, allow_raising=False):
                     continue
-                invoice.l10n_sa_edi_document_id._l10n_sa_post_zatca_edi(len(invoices_data.keys()) == 1)
+
+                document = invoice.l10n_sa_edi_document_id
+                document._l10n_sa_post_zatca_edi(len(invoices_data.keys()) == 1)
+                if document.state not in ('accepted', 'warning'):
+                    invoice_data['error'] = {
+                        'error_title': "ZATCA Posting Failed",  # never shown - see _hook_if_errors override
+                        'l10n_sa_edi_blocking': True,
+                    }
+
+    @api.model
+    def _hook_if_errors(self, moves_data, allow_raising=True):
+        # EXTENDS 'account'
+        # ZATCA EDI errors are handled separately through the l10n_sa_edi.log and related
+        # notifications, we do not use Odoo's generic error/chatter flow. Here we
+        # only keep the blocking error to prevent PDF/email generation for moves whose
+        # ZATCA submission failed, while ignoring any other errors raised alongside it.
+        other_errors = {
+            move: move_data
+            for move, move_data in moves_data.items()
+            if not move_data['error'].get('l10n_sa_edi_blocking')
+        }
+        if other_errors:
+            super()._hook_if_errors(other_errors, allow_raising=allow_raising)
 
     def _hook_invoice_document_after_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS account
         super()._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
+        if tools.config['test_enable']:
+            return   # since no PDF is generated in test environment.
         if 'sa_edi' not in invoice_data['extra_edis'] and 'sa_edi_test' not in invoice_data['extra_edis']:
             return
 
