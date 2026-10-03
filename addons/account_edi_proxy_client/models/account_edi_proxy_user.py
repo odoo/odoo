@@ -192,7 +192,7 @@ class AccountEdiProxyClientUser(models.Model):
             except AccountEdiProxyError as e:
                 raise UserError(e.message)
             if 'error' in response:
-                raise UserError(response['error'])
+                raise UserError(response['error']['subject'])
 
         return self.create({
             'id_client': response['id_client'],
