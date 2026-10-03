@@ -247,6 +247,7 @@ class PortalAccount(CustomerPortal):
                 'label': entry.get('label') or key,
                 'placeholder': entry.get('placeholder') or '',
                 'help': entry.get('help') or '',
+                'individual': partner._is_individual_identifier(key),
             }
             for key, entry in sorted(metadata.items(), key=lambda item: item[1].get('sequence', 100))
         }
@@ -255,6 +256,11 @@ class PortalAccount(CustomerPortal):
         rendering_values = super()._prepare_address_form_values(partner_sudo, *args, **kwargs)
         if rendering_values['is_used_as_billing']:
             metadata = self._get_checkout_additional_identifiers_metadata(rendering_values['country'])
+            mandatory_keys = request.env['res.partner']._get_mandatory_additional_identifiers(
+                rendering_values['country'], **kwargs,
+            )
+            for key, meta in metadata.items():
+                meta['required'] = key in mandatory_keys
             current_partner = partner_sudo or rendering_values['current_partner']
             rendering_values.update({
                 'additional_identifiers_metadata': metadata,
@@ -265,12 +271,18 @@ class PortalAccount(CustomerPortal):
     @http.route()
     def portal_address_country_info(self, country, address_type, **kw):
         res = super().portal_address_country_info(country, address_type, **kw)
-        res['additional_identifiers_metadata'] = self._get_checkout_additional_identifiers_metadata(country)
+        metadata = self._get_checkout_additional_identifiers_metadata(country)
+        mandatory_keys = request.env['res.partner']._get_mandatory_additional_identifiers(country, **kw)
+        for key, meta in metadata.items():
+            meta['required'] = key in mandatory_keys
+        res['additional_identifiers_metadata'] = metadata
         return res
 
-    def _validate_address_values(self, address_values, *args, **kwargs):
+    def _validate_address_values(
+        self, address_values, partner_sudo, address_type, use_delivery_as_billing, *args, **kwargs,
+    ):
         invalid_fields, missing_fields, error_messages = super()._validate_address_values(
-            address_values, *args, **kwargs
+            address_values, partner_sudo, address_type, use_delivery_as_billing, *args, **kwargs,
         )
         additional_identifiers = address_values.get('additional_identifiers') or {}
         ResPartner = request.env['res.partner']
@@ -281,4 +293,16 @@ class PortalAccount(CustomerPortal):
                 error_messages.append(request.env._(
                     "An individual identifier cannot be combined with a VAT number."
                 ))
+        if address_type == 'billing' or use_delivery_as_billing:
+            country = request.env['res.country'].browse(address_values.get('country_id'))
+            # The VAT is absent from the payload when hidden or popped as a commercial field.
+            vat = address_values.get('vat', partner_sudo.vat)
+            for key in ResPartner.sudo()._get_mandatory_additional_identifiers(country, **kwargs):
+                if vat and ResPartner._is_individual_identifier(key):
+                    continue
+                # An unchanged identifier is popped from the payload by the commercial-field block.
+                if not additional_identifiers.get(key) and not partner_sudo._get_additional_identifier(key):
+                    if not missing_fields:
+                        error_messages.append(request.env._("Some required fields are empty."))
+                    missing_fields.add(key)
         return invalid_fields, missing_fields, error_messages
