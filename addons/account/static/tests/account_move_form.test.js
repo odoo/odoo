@@ -79,13 +79,29 @@ class AccountMoveLine extends models.Model {
         string: "Journal Entry",
         relation: "account.move",
     })
+    account_id = fields.Many2one({
+        string: "Account",
+        relation: "account.account",
+    })
 }
 class Product extends models.Model {
     name = fields.Char();
     _records = [{ id: 1, name: "testProduct" }];
 }
+class AccountAccount extends models.Model {
+    _name = "account.account";
 
-defineModels({ Product, AccountMoveLine, AccountMove });
+    name = fields.Char();
+    code = fields.Char();
+
+    _records = [{ id: 1, name: "Outstanding Receipts", code: "101200" }];
+    _views = {
+        form: `<form><field name="name"/><field name="code"/></form>`,
+        kanban: `<kanban><templates><t t-name="card"><field name="name"/></t></templates></kanban>`,
+    };
+}
+
+defineModels({ Product, AccountMoveLine, AccountMove, AccountAccount });
 
 test("Update description on product line", async() => {
     const pyEnv = await startServer();
@@ -121,3 +137,62 @@ test("Update description on product line", async() => {
     const line = pyEnv["account.move.line"].browse([1])[0];
     expect(line.name).toBe("testProduct\ntestDescription");
 });
+
+test.tags("mobile");
+test("many2one in line inside dialog does not save or reload line when opening related record", async () => {
+    await startServer();
+
+    onRpc("get_formview_id", () => false);
+    onRpc("account.move.line", "web_save", () => {
+        expect.step("aml_web_save");
+    });
+    onRpc("account.move.line", "web_read", () => {
+        expect.step("aml_web_read");
+    });
+    onRpc("account.account", "web_save", () => {
+        expect.step("account_web_save");
+    });
+
+    await start();
+
+    await openFormView("account.move", 1, {
+        arch: `<form js_class="account_move_form">
+            <sheet>
+                <notebook>
+                    <page id="aml_tab" name="aml_tab" string="Journal Items">
+                        <field name="line_ids" mode="kanban" add-label="Add Journal Items">
+                            <kanban>
+                                <templates>
+                                    <t t-name="card">
+                                        <field name="account_id"/>
+                                    </t>
+                                </templates>
+                            </kanban>
+                            <form string="Create Journal Items">
+                                <field name="account_id"/>
+                                <field name="name"/>
+                            </form>
+                        </field>
+                    </page>
+                </notebook>
+            </sheet>
+        </form>`,
+    });
+
+    expect("button:contains(Add Journal Items)").toHaveCount(1);
+    await contains("button:contains(Add Journal Items)").click();
+
+    expect(".o_dialog").toHaveCount(1);
+
+    await contains(".o_dialog .o_field_widget[name=account_id] input").click();
+    await contains(".o_select_create_dialog_content .o_kanban_record").click();
+
+    expect(".o_dialog").toHaveCount(1);
+
+    expect(".o_dialog .o_field_widget[name=account_id] .o_external_button").toHaveCount(1);
+    await contains(".o_dialog .o_field_widget[name=account_id] .o_external_button").click();
+
+    expect(".o_dialog").toHaveCount(2);
+    expect.verifySteps([]);
+});
+
