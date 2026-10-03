@@ -393,14 +393,14 @@ class Registry(Mapping[str, type["BaseModel"]]):
         del self.models[model_name]
         # the custom model can inherit from mixins ('mail.thread', ...)
         for Model in self.models.values():
-            Model._inherit_children.discard(model_name)
+            Model._inherit_children__.discard(model_name)
 
     def descendants(self, model_names: Iterable[str], *kinds: typing.Literal['_inherit', '_inherits']) -> OrderedSet[str]:
         """ Return the models corresponding to ``model_names`` and all those
         that inherit/inherits from them.
         """
         assert all(kind in ('_inherit', '_inherits') for kind in kinds)
-        funcs = [attrgetter(kind + '_children') for kind in kinds]
+        funcs = [attrgetter(kind + '_children__') for kind in kinds]
 
         models: OrderedSet[str] = OrderedSet()
         queue = deque(model_names)
