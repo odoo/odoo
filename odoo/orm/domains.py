@@ -1194,6 +1194,7 @@ if typing.TYPE_CHECKING:
 _OPTIMIZATIONS_FOR: dict[OptimizationLevel, dict[str, list[ConditionOptimization]]] = {
     level: collections.defaultdict(list) for level in OptimizationLevel if level != OptimizationLevel.NONE}
 _MERGE_OPTIMIZATIONS: list[MergeOptimization] = list()
+_MERGE_CONDITION_OPTIMIZATIONS: dict[tuple[str | None, str], MergeOptimization] = {}
 
 
 def operator_optimization(operators: Collection[str], level: OptimizationLevel = OptimizationLevel.BASIC):
@@ -1275,58 +1276,72 @@ def nary_optimization(optimization: MergeOptimization):
     return optimization
 
 
+@nary_optimization
+def _nary_condition_optimization(cls, domains: list[Domain], model):
+    # trick: result remains None until an optimization is applied, after
+    # which it becomes the optimization of domains[:index]
+    result = None
+    # when not None, domains[block:index] are all conditions with the same field_expr and optimization
+    block = None
+    # current optimization for the block
+    block_optimization = None
+
+    domains_iterator = enumerate(domains)
+    stop_item = (len(domains), None)
+    while True:
+        # enumerating domains and adding the stop_item as the sentinel
+        # so that the last loop merges the domains and stops the iteration
+        index, domain = next(domains_iterator, stop_item)
+        if isinstance(domain, DomainCondition):
+            field = domain._field(model)
+            condition_optimization = _MERGE_CONDITION_OPTIMIZATIONS.get((field.type, domain.operator)) or _MERGE_CONDITION_OPTIMIZATIONS.get((None, domain.operator))
+            if condition_optimization is not None and condition_optimization is block_optimization and domain.field_expr == domains[block].field_expr:
+                continue
+        else:
+            condition_optimization = None
+
+        if block is not None:
+            # optimize domains[block:index] if necessary and "flush" them in result
+            if block < index - 1:
+                if result is None:
+                    result = domains[:block]
+                result.extend(block_optimization(cls, domains[block:index], model))
+            elif result is not None:
+                result.append(domains[block])  # block == index - 1
+            block = None
+
+        if domain is None:
+            break
+        elif condition_optimization is not None:
+            block = index
+        elif result is not None:
+            result.append(domain)
+        block_optimization = condition_optimization
+
+    # block is None
+    return domains if result is None else result
+
+
 def nary_condition_optimization(operators: Collection[str], field_types: Collection[str] | None = None):
     """Register an optimization for condition children of an nary domain.
 
     The function will take a list of domain conditions of the same field and
     returns *optimized* domains.
-
-    This is a adapter function that uses `nary_optimization`.
-
-    NOTE: if you want to merge different operators, register for
-    `operator=CONDITION_OPERATORS` and find conditions that you want to merge.
+    The chosen optimization is batched by the optimization function for matching
+    conditions. An optimization for a specific type has priority over
+    optimizations applied to all types (field_types=None).
     """
     def register(optimization: Callable[[type[DomainNary], list[DomainCondition], BaseModel], list[Domain]]):
-        @nary_optimization
-        def optimizer(cls, domains: list[Domain], model):
-            # trick: result remains None until an optimization is applied, after
-            # which it becomes the optimization of domains[:index]
-            result = None
-            # when not None, domains[block:index] are all conditions with the same field_expr
-            block = None
-
-            domains_iterator = enumerate(domains)
-            stop_item = (len(domains), None)
-            while True:
-                # enumerating domains and adding the stop_item as the sentinel
-                # so that the last loop merges the domains and stops the iteration
-                index, domain = next(domains_iterator, stop_item)
-                matching = isinstance(domain, DomainCondition) and domain.operator in operators
-
-                if block is not None and not (matching and domain.field_expr == domains[block].field_expr):
-                    # optimize domains[block:index] if necessary and "flush" them in result
-                    if block < index - 1 and (
-                        field_types is None or domains[block]._field(model).type in field_types
-                    ):
-                        if result is None:
-                            result = domains[:block]
-                        result.extend(optimization(cls, domains[block:index], model))
-                    elif result is not None:
-                        result.extend(domains[block:index])
-                    block = None
-
-                # block is None or (matching and domain.field_expr == domains[block].field_expr)
-                if domain is None:
-                    break
-                if matching:
-                    if block is None:
-                        block = index
-                elif result is not None:
-                    result.append(domain)
-
-            # block is None
-            return domains if result is None else result
-
+        if optimization in _MERGE_CONDITION_OPTIMIZATIONS.values():
+            # copy to avoid conflict with existing optimizations as batching is
+            # done by the identity of the function
+            original_optimization = optimization
+            optimization = lambda cls, conditions, model: original_optimization(cls, conditions, model)  # noqa: E731, PLW0108
+        for field_type in field_types or (None,):
+            for op in operators:
+                if (field_type, op) in _MERGE_CONDITION_OPTIMIZATIONS:
+                    _logger.error("Double nary_condition_optimization for %r and %r", field_type, op)
+                _MERGE_CONDITION_OPTIMIZATIONS[field_type, op] = optimization
         return optimization
 
     return register
@@ -2087,10 +2102,13 @@ def _optimize_merge_set_conditions_mono_value(cls: type[DomainNary], conditions,
         a in {1} or a in {2}  <=>  a in {1, 2}
         a in {1, 2} and a not in {2, 5}  =>  a in {1}
     """
-    field = conditions[0]._field(model)
-    if field.type in ('many2many', 'one2many', 'properties'):
-        return conditions
     return _merge_set_conditions(cls, conditions)
+
+
+@nary_condition_optimization(operators=('in', 'not in'), field_types=['properties'])
+def _optimize_merge_in_skip(cls, conditions, model):
+    """Just skip the generic optimization."""
+    return conditions
 
 
 @nary_condition_optimization(operators=('in',), field_types=['many2many', 'one2many'])
