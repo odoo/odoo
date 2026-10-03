@@ -171,7 +171,7 @@
                                     <label class="fw-bold" for="name" string="Title"/>
                                     <h1><field name="name" placeholder="e.g. Seniority Plan, PTO, RTT, ..." required="id"/></h1>
                                     <group>
-                                        <field name="work_entry_type_id" class="o_hr_medium_field"/>
+                                        <field name="work_entry_type_id" class="o_hr_medium_field" required="1"/>
                                         <field name="company_id"
                                             options="{'no_create': True}"
                                             groups="base.group_multi_company"
