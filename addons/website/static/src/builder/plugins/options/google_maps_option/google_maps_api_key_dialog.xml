@@ -1,6 +1,6 @@
 <t t-name="website.GoogleMapsApiKeyDialog">
     <Dialog title="this.props.title" size="'md'" modalRef="this.modalRef">
-        <p>Use Google Map on your website (Contact Us page, snippets, etc).</p>
+        <p>Use Google Maps on your website (Contact Us page, snippets, etc).</p>
         <div class="row mb-0">
             <label class="col-sm-2 col-form-label" for="pin_address">API Key</label>
             <div class="col">
@@ -15,7 +15,7 @@
                     <t t-out="this.state.apiKeyValidation.message"/>
                 </small>
                 <div class="small form-text text-muted">
-                    Hint: How to use Google Map on your website (Contact Us page and as a snippet)
+                    If you don't have an API Key yet, here's how you can create one:
                     <br/>
                     <a target="_blank" href="https://console.developers.google.com/flows/enableapi?apiid=maps-backend.googleapis.com,static-maps-backend.googleapis.com,places-backend.googleapis.com&amp;keyType=CLIENT_SIDE&amp;reusekey=true">
                         <i class="oi" data-icon="east"/>
