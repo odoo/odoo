@@ -18,6 +18,7 @@ const ACCOUNT_TYPES = [
     ["liability_non_current", _t("Non-current Liabilities")],
     ["equity", _t("Equity")],
     ["equity_unaffected", _t("Current Year Earnings")],
+    ["equity_retained", _t("Retained Earnings")],
     ["income", _t("Income")],
     ["income_other", _t("Other Income")],
     ["expense", _t("Expenses")],
