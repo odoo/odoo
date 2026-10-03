@@ -27,6 +27,13 @@ export class TimeOffCalendarModel extends CalendarModel {
         );
     }
 
+    _getCalendarContext(additionalContext = {}) {
+        return {
+            ...super._getCalendarContext(additionalContext),
+            tz: luxon.Settings.defaultZone.name,
+        };
+    }
+
     /**
      * @override
      */
@@ -139,7 +146,7 @@ export class TimeOffCalendarModel extends CalendarModel {
             this.resModel,
             "reschedule_from_calendar",
             [[record.id], serializeDateTime(record.start), serializeDateTime(end)],
-            { context: this.meta.context }
+            { context: this._getCalendarContext() }
         );
         await this.load();
     }
@@ -159,9 +166,9 @@ export class TimeOffCalendarModel extends CalendarModel {
             "get_unusual_days",
             [serializeDateTime(data.range.start), serializeDateTime(data.range.end)],
             {
-                context: {
+                context: this._getCalendarContext({
                     employee_id: this.employeeId,
-                },
+                }),
             }
         );
     }
@@ -207,7 +214,7 @@ export class TimeOffCalendarModel extends CalendarModel {
             resModel,
             this.computeDomain(data),
             [...fieldNames, ...fieldNamesToAdd],
-            { context }
+            { context: this._getCalendarContext(context) }
         );
     }
 

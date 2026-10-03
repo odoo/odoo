@@ -268,7 +268,7 @@ export class CalendarController extends Component {
             multiCreateValues: this.props.state?.multiCreateValues,
             showMultiCreateTimeRange: this.model.showMultiCreateTimeRange,
             visible: false,
-            context: this.props.context,
+            context: this.model._getCalendarContext(this.props.context),
         });
     }
 

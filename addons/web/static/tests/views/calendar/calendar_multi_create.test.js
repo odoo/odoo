@@ -26,8 +26,41 @@ import { selectDateRange } from "./calendar_test_helpers";
 import { Domain } from "@web/core/domain";
 import { range } from "@web/core/utils/numbers";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
+import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { WebClient } from "@web/webclient/webclient";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+
+test("multi-create preserves action defaults when the model overrides its context", () => {
+    const model = Object.create(CalendarModel.prototype);
+    model.meta = {
+        resModel: "event",
+        context: { active_id: 42 },
+        fieldMapping: { date_start: "datetime_start", date_stop: "datetime_end" },
+        fields: {
+            datetime_start: { type: "datetime" },
+            datetime_end: { type: "datetime" },
+        },
+    };
+    model._getCalendarContext = (additionalContext) => ({
+        ...CalendarModel.prototype._getCalendarContext.call(model, additionalContext),
+        tz: "Pacific/Kiritimati",
+    });
+    const actionContext = { default_name: "Sick", tz: "Europe/Brussels" };
+    const controller = {
+        model,
+        props: { context: actionContext },
+        cleanSquareSelection() {},
+    };
+
+    const buttons = CalendarController.prototype.prepareMultiSelectionButtonsReactive.call(controller);
+
+    expect(buttons.context).toEqual({
+        active_id: 42, default_name: "Sick", tz: "Pacific/Kiritimati",
+    });
+    expect(buttons.showMultiCreateTimeRange).toBe(true);
+    expect(actionContext).toEqual({ default_name: "Sick", tz: "Europe/Brussels" });
+    expect(model.meta.context).toEqual({ active_id: 42 });
+});
 
 class Event extends models.Model {
     name = fields.Char();

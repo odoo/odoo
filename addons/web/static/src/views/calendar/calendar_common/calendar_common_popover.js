@@ -59,7 +59,7 @@ export class CalendarCommonPopover extends Component {
             popoverNode: meta.popoverNode,
             readonly: this.readonly,
             rootClass: `o_cw_popover o_calendar_color_${typeof color === "number" ? color : 0}`,
-            context: meta.context,
+            context: this.props.model._getCalendarContext?.() ?? meta.context,
             reloadOnClose: () => this.props.model.load(),
             openRecord: this.props.openRecord,
             getDefaultPopoverBody: () => this.getDefaultPopoverBody(),
