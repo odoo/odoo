@@ -19,7 +19,8 @@ class TestUblImportBis3InvoiceBEVehicle(TestUblImportBis3InvoiceBE):
             'name': 'Test Model',
             'brand_id': brand.id,
         })
-        FleetVehicleSudo = cls.env['fleet.vehicle'].sudo()  # noqa: OLS03001
+        MAIL_OFF = {'tracking_disable': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True, 'mail_notrack': True}
+        FleetVehicleSudo = cls.env['fleet.vehicle'].sudo().with_context(**MAIL_OFF)  # noqa: OLS03001
         cls.car = FleetVehicleSudo.create({
             'model_id': model.id,
             'vin_sn': 'ABCDEF012345GHJKL',
