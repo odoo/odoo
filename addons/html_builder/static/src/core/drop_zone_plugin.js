@@ -547,10 +547,14 @@ export class DropZonePlugin extends Plugin {
                     // the iframe is inside a scrollable element which can
                     // be scrolled during the drag&drop operation.
                     const iframeRect = this.iframe.getBoundingClientRect();
+                    const scale = iframeRect.width / this.iframe.offsetWidth || 1;
                     const rect = dropzoneEl.oldGetBoundingRect();
-                    rect.x += iframeRect.x;
-                    rect.y += iframeRect.y;
-                    return rect;
+                    return new DOMRect(
+                        iframeRect.x + rect.x * scale,
+                        iframeRect.y + rect.y * scale,
+                        rect.width * scale,
+                        rect.height * scale
+                    );
                 };
             });
         }
