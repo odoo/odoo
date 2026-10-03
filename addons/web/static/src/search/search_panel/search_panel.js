@@ -2,12 +2,7 @@ import { reactive, render, useLayoutEffect, useRef, useState } from "@web/owl2/u
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useBus } from "@web/core/utils/hooks";
 
-import {
-    Component,
-    onMounted,
-    onWillStart,
-    onWillUpdateProps,
-} from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { useSetupAction } from "@web/search/action_hook";
@@ -318,6 +313,41 @@ export class SearchPanel extends Component {
             ev.preventDefault();
             this.toggleCategory(category, value);
         }
+    }
+
+    /**
+     * Expose to the hovered tree entry, its parents and their root value what
+     * the branch highlight needs, as CSS cannot select it cheaply.
+     *
+     * @param {MouseEvent} ev
+     */
+    onTreeMouseOver(ev) {
+        const entry = ev.target.closest?.(".o_treeEntry") || null;
+        if (entry === this.hoveredEntry) {
+            return;
+        }
+        this.clearTreeHover();
+        this.hoveredEntry = entry;
+        const branch = [];
+        for (let el = entry; el; el = el.parentElement.closest(".o_treeEntry")) {
+            branch.push([el, el.offsetTop - el.parentElement.firstElementChild.offsetTop]);
+        }
+        for (const [el, offset] of branch) {
+            el.style.setProperty("--treeEntry-hover-offset", `${offset}px`);
+        }
+        this.hoveredRoot = branch
+            .at(-1)?.[0]
+            .parentElement.closest(".o_search_panel_category_value");
+        this.hoveredRoot?.classList.add("o_search_panel_branch_hovered");
+    }
+
+    clearTreeHover() {
+        for (let el = this.hoveredEntry; el; el = el.parentElement.closest(".o_treeEntry")) {
+            el.style.removeProperty("--treeEntry-hover-offset");
+        }
+        this.hoveredEntry = null;
+        this.hoveredRoot?.classList.remove("o_search_panel_branch_hovered");
+        this.hoveredRoot = null;
     }
 
     toggleSidebar() {

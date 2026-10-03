@@ -128,25 +128,12 @@
     }
 }
 
-.o_search_panel:has(.o_treeEntry:hover) {
-    .o_treeEntry::before,
-    .o_treeEntry::after {
-        background-color: var(--treeEntry--beforeAfter-color, #{$border-color});
-    }
-
-    .o_search_panel_category_value_header_expanded::before {
-        background-color: $body-color;
-    }
-
-    .o_search_panel_category_value:hover > .o_search_panel_category_value_header {
-        --list-group-color: #{$black};
-    }
-
-    // Unfolded parent tree entry and hovered entry
-    .o_treeEntry:hover,
-    .o_treeEntry:has(.o_treeEntry:hover) {
+.o_search_panel {
+    // --treeEntry-hover-offset is set by the SearchPanel (see onTreeMouseOver)
+    .o_treeEntry:hover {
         &::before {
-            height: var(--treeEntry-branch-top);
+            top: calc(-1 * var(--treeEntry-hover-offset, 0px));
+            height: calc(var(--treeEntry-hover-offset, 0px) + var(--treeEntry-branch-top));
         }
 
         &::before, &::after {
@@ -154,8 +141,11 @@
         }
     }
 
-    .o_treeEntry:has(~ .o_treeEntry:hover, ~ .o_treeEntry .o_treeEntry:hover)::before {
-        background-color: $body-color;
+    .o_treeEntry:hover,
+    .o_search_panel_branch_hovered:hover {
+        > .o_search_panel_category_value_header {
+            --list-group-color: #{$black};
+        }
     }
 }
 
