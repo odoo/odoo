@@ -9,6 +9,7 @@ class ResCompany(models.Model):
     hr_presence_control_email_amount = fields.Integer(string="# emails to send")
     hr_presence_control_ip_list = fields.Char(string="Valid IP addresses")
     employee_properties_definition = fields.PropertiesDefinition('Employee Properties')
+    employee_ids = fields.One2many("hr.employee", "company_id", string="Company’s employees")
     hr_presence_control_login = fields.Boolean(string="Based on user status in system", default=True)
     hr_presence_control_email = fields.Boolean(string="Based on number of emails sent")
     hr_presence_control_ip = fields.Boolean(string="Based on IP Address")
