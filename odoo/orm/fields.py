@@ -682,7 +682,7 @@ class Field[T]:
                 # and we know how to represent it
                 and (f.store or f.compute_sql)
                 # but we don't traverse a model with heavy permission checks (such as ir.attachment)
-                and (f is field_seq[-1] or not getattr(model.pool[f.model_name], '_access_domain_heavy', False))
+                and (self.compute_sudo or f is field_seq[-1] or f.compute_sudo or not getattr(model.pool[f.model_name], '_access_domain_heavy', False))
                 for f in field_seq
             )
         ):
