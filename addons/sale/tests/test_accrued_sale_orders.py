@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from ast import literal_eval
 
 from odoo import fields
 from odoo.exceptions import UserError
@@ -11,6 +12,27 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 @freeze_time('2022-01-01')
 @tagged('post_install', '-at_install')
 class TestAccruedSaleOrders(TestSaleCommon):
+
+    def _get_selectable_accrual_accounts(self, wizard):
+        domain_str = wizard._fields['account_id'].domain
+        domain = literal_eval(domain_str.replace('account_types', str(wizard.account_types)))
+        return self.env['account.account'].search(domain)
+
+    def _assert_account_domain(self, sale_order, expected_types: set):
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'sale.order',
+            'active_ids': sale_order.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), expected_types)
+
+        # open the wizard from the po lines list view
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'sale.order.line',
+            'active_ids': sale_order.order_line.ids,
+        }).new()
+        selectable_accounts = self._get_selectable_accrual_accounts(wizard)
+        self.assertEqual(set(selectable_accounts.mapped('account_type')), expected_types)
 
     @classmethod
     def setUpClass(cls):
@@ -169,3 +191,106 @@ class TestAccruedSaleOrders(TestSaleCommon):
             {'account_id': self.alt_inc_account.id, 'debit': 0, 'credit': 1000},
             {'account_id': self.wizard.account_id.id, 'debit': 6000, 'credit': 0},
         ])
+<<<<<<< 45984cf0b9aa8b5a2f16cc2374afc204d94ef4b1
+||||||| 42b85c3320423eb44de1a7ce8cfcbbb87a1ce52c
+
+    def test_accrued_entries_with_discount(self):
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 10.0,
+                    'price_unit': 10.0,
+                    'tax_ids': False,
+                    'discount': 10,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+        sale_order.order_line.qty_delivered = 10
+        accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
+            active_model='sale.order',
+            active_ids=sale_order.ids,
+        ).create({
+            'account_id': self.account_expense.id,
+            'date': fields.Date.today(),
+        })
+        res = self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids
+        self.assertRecordValues(res, [
+            {'debit': 90.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 90.0},
+            {'debit': 0.0, 'credit': 90.0},
+            {'debit': 90.0, 'credit': 0.0},
+        ])
+=======
+
+    def test_accrued_account_types_invoice_to_be_issued(self):
+        """ When all lines are delivered ahead of invoicing, only the asset
+        account type should be proposed (invoice to be issued). """
+        self.sale_order.order_line.qty_delivered = 5
+        self._assert_account_domain(self.sale_order, {'asset_current'})
+
+    def test_accrued_account_types_deferred_revenue(self):
+        """ When all lines are invoiced ahead of delivery, only the
+        liability account type should be proposed (deferred revenue). """
+        self.sale_order.order_line.qty_delivered = 10
+        invoices = self.sale_order._create_invoices()
+        invoices.invoice_date = fields.Date.today()
+        invoices.action_post()
+        self.sale_order.order_line.qty_delivered = 0
+
+        self._assert_account_domain(self.sale_order, {'liability_current'})
+
+    def test_accrued_account_types_mixed_lines(self):
+        """ When having mixed lines, both account types should be proposed. """
+        sale_order_line_a, sale_order_line_b = self.sale_order.order_line
+        self.sale_order.order_line.qty_delivered = 10
+        invoices = self.sale_order._create_invoices()
+        invoices.invoice_date = fields.Date.today()
+        invoices.action_post()
+
+        # invoice to be issued
+        sale_order_line_a.qty_delivered = 15
+        # invoiced not delivered
+        sale_order_line_b.qty_delivered = 5
+
+        self._assert_account_domain(self.sale_order, {'asset_current', 'liability_current'})
+
+    def test_accrued_account_types_default_no_movement(self):
+        """ When nothing has been delivered nor invoiced yet, both account
+        types should be proposed by default. """
+        self._assert_account_domain(self.sale_order, {'asset_current', 'liability_current'})
+
+    def test_accrued_entries_with_discount(self):
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 10.0,
+                    'price_unit': 10.0,
+                    'tax_ids': False,
+                    'discount': 10,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+        sale_order.order_line.qty_delivered = 10
+        accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
+            active_model='sale.order',
+            active_ids=sale_order.ids,
+        ).create({
+            'account_id': self.account_expense.id,
+            'date': fields.Date.today(),
+        })
+        res = self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids
+        self.assertRecordValues(res, [
+            {'debit': 90.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 90.0},
+            {'debit': 0.0, 'credit': 90.0},
+            {'debit': 90.0, 'credit': 0.0},
+        ])
+>>>>>>> 6bd682621169048fee74ffd5c3aa6948e4709ae5
