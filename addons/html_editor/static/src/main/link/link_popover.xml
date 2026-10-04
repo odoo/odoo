@@ -76,20 +76,18 @@
                                         t-out="selectedItem.label"/>
                                 </button>
                                 <t t-set-slot="content">
-                                    <div data-prevent-closing-overlay="true">
-                                        <DropdownItem
-                                            t-if="typeData.type !== 'custom'"
-                                            t-foreach="this.buttonTypesData"
-                                            t-as="typeData"
-                                            t-key="typeData.type"
-                                            onSelected="() => this.onSelectedLinkType(typeData.type)"
-                                            t-on-pointerdown.stop.prevent="() => {}"
-                                        >
-                                            <span t-att-class="typeData.className"
-                                                t-att-style="typeData.style"
-                                                t-out="typeData.label"/>
-                                        </DropdownItem>
-                                    </div>
+                                    <DropdownItem
+                                        t-if="typeData.type !== 'custom'"
+                                        t-foreach="this.buttonTypesData"
+                                        t-as="typeData"
+                                        t-key="typeData.type"
+                                        onSelected="() => this.onSelectedLinkType(typeData.type)"
+                                        t-on-pointerdown.stop.prevent="() => {}"
+                                    >
+                                        <span t-att-class="typeData.className"
+                                            t-att-style="typeData.style"
+                                            t-out="typeData.label"/>
+                                    </DropdownItem>
                                 </t>
                             </Dropdown>
                         </div>
@@ -144,7 +142,7 @@
                 </t>
             </div>
         </div>
-            <div t-else="" class="o_we_link_preview" data-prevent-closing-overlay="true">
+            <div t-else="" class="o_we_link_preview">
                 <div class="d-flex flex-column p-2">
                     <div class="d-flex">
                         <span class="o_we_preview_favicon" style="width: 16px; height: 18px">
