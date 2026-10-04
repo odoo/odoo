@@ -3,13 +3,17 @@ import {
     onPatched,
     onWillUnmount,
     proxy,
+    shallowEqual,
+    signal,
     t,
     toRaw,
+    useEffect,
     useOnChange,
     useScope,
 } from "@odoo/owl";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { useEnv } from "@web/owl2/utils";
 
 /**
@@ -378,4 +382,83 @@ export function useBackButton(handler, shouldEnable) {
     onMounted(updateRegistration);
     onPatched(updateRegistration);
     onWillUnmount(unregister);
+}
+
+/**
+ * Handles the basic behavior of a tabs UI pattern: adds keydown listeners on
+ * tabs to handle arrow keypresses, and restricts focus on the current active
+ * tab only.
+ * @param {Object} params
+ * @param {import("@odoo/owl").Signal<HTMLElement>} params.ref the tablist ref
+ * @param {(HTMLElement) => boolean} params.isTabActive callback to determine
+ * the currently active tab.
+ * @param {(HTMLElement) => HTMLElement[]} [params.getTabEls] callback to
+ * query the tabs from the tablist parent.
+ * @param {boolean} [params.loop] if true, will loop from first to last tab and
+ * from last to first.
+ */
+export function useTabsKeyboardNavigation({
+    ref,
+    isTabActive,
+    getTabEls = (el) => el.querySelectorAll("[role=tab]:not(:disabled, [disabled], .disabled)"),
+    loop = false,
+}) {
+    const navKeys = ["arrowleft", "arrowup", "arrowright", "arrowdown", "home", "end"];
+    const tabEls = signal([], { equals: shallowEqual });
+
+    const onTabKeydown = (ev) => {
+        const hotkey = getActiveHotkey(ev);
+        if (!navKeys.includes(hotkey)) {
+            return;
+        }
+        ev.preventDefault();
+        const currentIdx = [...tabEls()].findIndex((tabEl) => tabEl === ev.currentTarget);
+        switch (hotkey) {
+            case "arrowleft":
+            case "arrowup":
+                if (currentIdx !== 0) {
+                    tabEls()[currentIdx - 1].focus();
+                } else if (loop) {
+                    tabEls()[tabEls().length - 1].focus();
+                }
+                break;
+            case "arrowright":
+            case "arrowdown":
+                if (currentIdx !== tabEls().length - 1) {
+                    tabEls()[currentIdx + 1].focus();
+                } else if (loop) {
+                    tabEls()[0].focus();
+                }
+                break;
+            case "home":
+                tabEls()[0].focus();
+                break;
+            case "end":
+                tabEls()[tabEls().length - 1].focus();
+                break;
+        }
+    };
+
+    onMounted(() => {
+        if (ref()) {
+            tabEls.set(getTabEls(ref()));
+        }
+    });
+    onPatched(() => {
+        if (ref()) {
+            tabEls.set(getTabEls(ref()));
+        }
+    });
+    useEffect(() => {
+        const tabs = tabEls();
+        for (const tabEl of tabs) {
+            tabEl.addEventListener("keydown", onTabKeydown);
+            tabEl.setAttribute("tabindex", isTabActive(tabEl) ? "0" : "-1");
+        }
+        return () => {
+            for (const tabEl of tabs) {
+                tabEl.removeEventListener("keydown", onTabKeydown);
+            }
+        };
+    });
 }

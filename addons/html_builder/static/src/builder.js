@@ -17,7 +17,7 @@ import {
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
 import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_utils";
-import { useService } from "@web/core/utils/hooks";
+import { useService, useTabsKeyboardNavigation } from "@web/core/utils/hooks";
 import { addLoadingEffect as addButtonLoadingEffect } from "@web/core/utils/ui";
 import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
 import { BlockTab } from "@html_builder/sidebar/block_tab";
@@ -69,6 +69,7 @@ export class Builder extends Component {
     overlayRef = useProps.static("overlayRef", t.signal(t.ref()));
 
     builderSidebarRef = signal.ref();
+    tabListRef = signal.ref();
 
     setup() {
         this.ThemeTab = this.props.getThemeTab?.();
@@ -90,6 +91,10 @@ export class Builder extends Component {
         useHotkey("control+z", () => this.undo());
         useHotkey("control+y", () => this.redo());
         useHotkey("control+shift+z", () => this.redo());
+        useTabsKeyboardNavigation({
+            ref: this.tabListRef,
+            isTabActive: (el) => this.state.activeTab === el.dataset.name,
+        });
         this.orm = useService("orm");
         this.ui = useService("ui");
         this.notification = useService("notification");

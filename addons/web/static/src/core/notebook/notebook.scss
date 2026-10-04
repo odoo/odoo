@@ -28,8 +28,9 @@
         margin: 0 -1px 0 0;
 
         &.disabled {
-            .nav-link {
+            .nav-link:disabled {
                 cursor: not-allowed;
+                pointer-events: auto;
                 opacity: .3;
             }
         }
