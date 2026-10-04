@@ -38,6 +38,8 @@ class PaymentProvider(models.Model):
     paypal_payments_receivable = fields.Boolean(copy=False)
     paypal_email_confirmed = fields.Boolean(copy=False)
 
+    paypal_is_3ds_required = fields.Boolean(string="Enforce 3DS", copy=False)
+
     paypal_access_token = fields.Char(
         string="PayPal Access Token",
         help="The short-lived token used to access PayPal APIs",
@@ -144,6 +146,7 @@ class PaymentProvider(models.Model):
             "paypal_email_confirmed": False,
             "paypal_access_token": None,
             "paypal_access_token_expiry": None,
+            "paypal_is_3ds_required": False,
         }
 
     def action_paypal_update_onboarding_status(self):

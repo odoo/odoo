@@ -196,7 +196,6 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         approved_capture = {
             "status": "COMPLETED",
             "id": self.order_id,
-            "txn_type": "CAPTURE",
             "reference_id": self.reference,
             "amount": {"currency_code": self.currency.name, "value": str(self.amount)},
             "payment_source": {"paypal": {"attributes": {"vault": {"status": "APPROVED"}}}},
@@ -286,6 +285,17 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         ):
             payment_source = tx._paypal_prepare_order_payload()["payment_source"]["paypal"]
         self.assertNotIn("stored_credential", payment_source)
+
+    def test_access_token_is_fetched_when_expiry_is_unset(self):
+        self.paypal.paypal_access_token_expiry = False
+        self.paypal.paypal_access_token = "old_token"
+        with patch.object(
+            self.env.registry["payment.provider"],
+            "_send_api_request",
+            return_value={"access_token": "new_token", "expires_in": 3600},
+        ):
+            access_token = self.paypal._paypal_fetch_access_token()
+        self.assertEqual(access_token, "new_token")
 
     def test_provide_shipping_address(self):
         if "sale.order" not in self.env:
