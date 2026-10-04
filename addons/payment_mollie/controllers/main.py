@@ -2,6 +2,8 @@
 
 import pprint
 
+from werkzeug.exceptions import ServiceUnavailable
+
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
@@ -48,15 +50,18 @@ class MollieController(http.Controller):
         :rtype: str
         """
         _logger.info("notification received from Mollie with data:\n%s", pprint.pformat(data))
-        self._verify_and_process(data)
+        self._verify_and_process(data, from_webhook=True)
         return ''  # Acknowledge the notification
 
     @staticmethod
-    def _verify_and_process(data):
+    def _verify_and_process(data, from_webhook=False):
         """Verify and process the payment data sent by Mollie.
 
         :param dict data: The payment data.
+        :param bool from_webhook: Whether the data were sent to the webhook.
         :return: None
+        :raise ServiceUnavailable: If the payment data could not be fetched from Mollie while
+                                   handling a webhook notification, so that Mollie retries later.
         """
         tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference('mollie', data)
         if not tx_sudo:
@@ -68,5 +73,9 @@ class MollieController(http.Controller):
             )
         except ValidationError:
             _logger.error("Unable to process the payment data")
+            if from_webhook:
+                # Don't acknowledge the notification: Mollie only retries calling the webhook when
+                # it doesn't receive a 2xx response.
+                raise ServiceUnavailable()
         else:
             tx_sudo._process('mollie', verified_data)

@@ -2,6 +2,7 @@
 
 from unittest.mock import patch
 
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -38,3 +39,46 @@ class MollieTest(MollieCommon, PaymentHttpCommon):
         ):
             self._make_http_post_request(url, data=self.payment_data)
         self.assertEqual(tx.state, 'done')
+
+    @mute_logger('odoo.addons.payment_mollie.controllers.main')
+    def test_webhook_notification_not_acknowledged_when_payment_data_unavailable(self):
+        """ Test that the webhook doesn't acknowledge the notification when the payment data can't
+        be fetched from Mollie, so that Mollie retries later. """
+        tx = self._create_transaction('redirect')
+        url = self._build_url(MollieController._webhook_url)
+        with patch(
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
+            side_effect=ValidationError("Service Unavailable"),
+        ):
+            response = self._make_http_post_request(url, data=self.payment_data)
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(tx.state, 'draft')
+
+    @mute_logger('odoo.addons.payment.models.payment_transaction')
+    def test_webhook_notification_acknowledged_for_unknown_reference(self):
+        """ Test that the webhook acknowledges the notification when no transaction matches the
+        reference, as Mollie recommends for unknown ids. """
+        url = self._build_url(MollieController._webhook_url)
+        with patch(
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
+        ) as send_api_request_mock:
+            response = self._make_http_post_request(
+                url, data=dict(self.payment_data, ref='unknown reference'),
+            )
+        self.assertEqual(response.status_code, 200)
+        send_api_request_mock.assert_not_called()
+
+    @mute_logger('odoo.addons.payment_mollie.controllers.main')
+    def test_return_redirects_to_status_page_when_payment_data_unavailable(self):
+        """ Test that the customer is redirected to the status page when the payment data can't be
+        fetched from Mollie. """
+        tx = self._create_transaction('redirect')
+        url = self._build_url(MollieController._return_url)
+        with patch(
+            'odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request',
+            side_effect=ValidationError("Service Unavailable"),
+        ):
+            response = self._make_http_get_request(url, params=self.payment_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.url.endswith('/payment/status'))
+        self.assertEqual(tx.state, 'draft')
