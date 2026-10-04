@@ -536,8 +536,8 @@ export class LinkPlugin extends Plugin {
         this.LinkPopoverState.editing = false;
         let selection = this.dependencies.selection.getEditableSelection();
         const commonAncestor = closestElement(selection.commonAncestorContainer);
-        const isNonEditableLink =
-            commonAncestor.nodeName === "A" && !commonAncestor.isContentEditable;
+        const closestLink = closestElement(selection.commonAncestorContainer, "A");
+        const isNonEditableLink = closestLink && !closestLink.isContentEditable;
         if (!this.isLinkAllowedOnSelection() && !isNonEditableLink) {
             return this.services.notification.add(
                 _t("Unable to create a link on the current selection."),
