@@ -5,6 +5,7 @@ from datetime import timedelta
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
+from odoo.tools import float_round
 from odoo import Command, fields
 
 
@@ -287,6 +288,36 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         for line in purchase_order.order_line:
             self.assertEqual(line.qty_to_invoice, 0.0)
             self.assertEqual(line.qty_invoiced, 10)
+
+    def test_qty_invoiced_not_rounded_up(self):
+        """Test that the billed quantity converted from another unit of measure is not rounded up."""
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_order.id,
+                'product_qty': 1.0,
+                'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                'tax_ids': False,
+            })],
+        })
+        purchase_order.button_confirm()
+        po_line = purchase_order.order_line
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_order.id,
+                'quantity': 7.0,
+                'product_uom_id': uom_unit.id,
+                'purchase_line_id': po_line.id,
+                'tax_ids': False,
+            })],
+        })
+        bill.action_post()
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
+        self.assertEqual(po_line.qty_invoiced, float_round(7 / 12, precision_digits=precision))
 
     def test_vendor_severals_bills_and_multicurrency(self):
         """
