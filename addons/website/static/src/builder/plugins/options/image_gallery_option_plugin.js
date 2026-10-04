@@ -140,7 +140,7 @@ class ImageGalleryOption extends Plugin {
      * @param {Array<HTMLElement>} itemEls the reordered elements
      * @param {String} optionName
      */
-    reorderGalleryItems(activeItemEl, itemEls, optionName) {
+    reorderGalleryItems(activeItemEl, itemEls, optionName, prom) {
         if (optionName === "GalleryImageList") {
             const galleryEl = activeItemEl.closest(".s_image_gallery");
 
@@ -165,6 +165,7 @@ class ImageGalleryOption extends Plugin {
                 // Activate the active image.
                 const activeImageEl = galleryEl.querySelector(".carousel-item.active img");
                 this.dependencies.builderOptions.setNextTarget(activeImageEl);
+                prom.resolve();
             }
         }
     }
