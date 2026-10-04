@@ -9,16 +9,18 @@ export class ProductAccordion extends Interaction {
     }
 
     /**
-     * Open the first accordion item by default.
+     * Open the already opened accordion item, or the first one by default.
      */
     _updateAccordionActiveItem() {
-        const firstAccordionItemEl = this.el.querySelector('.accordion-item');
-        if (!firstAccordionItemEl) return;
+        const accordionItemEl =
+            this.el.querySelector('.accordion-collapse.show')?.closest('.accordion-item')
+            || this.el.querySelector('.accordion-item');
+        const accordionItemButtonEl = accordionItemEl?.querySelector('.accordion-button');
+        if (!accordionItemButtonEl) return;
 
-        const firstAccordionItemButtonEl = firstAccordionItemEl.querySelector('.accordion-button');
-        firstAccordionItemButtonEl.classList.remove('collapsed');
-        firstAccordionItemButtonEl.setAttribute('aria-expanded', 'true');
-        firstAccordionItemEl.querySelector('.accordion-collapse').classList.add('show');
+        accordionItemButtonEl.classList.remove('collapsed');
+        accordionItemButtonEl.setAttribute('aria-expanded', 'true');
+        accordionItemEl.querySelector('.accordion-collapse').classList.add('show');
         this.el.classList.remove('o_accordion_not_initialized');
     }
 }
