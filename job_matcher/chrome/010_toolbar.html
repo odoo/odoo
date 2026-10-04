@@ -1,0 +1,17 @@
+<!-- Survey's toolbar: fixed bottom-right, progress then the two arrows, with a
+     rule between them. The progress side is hidden on screens that do not count
+     toward it; on narrow screens the bar goes and the readout stays. -->
+<div class="jm_toolbar">
+    <div class="jm_progress_wrapper jm_hide" data-role="progress_wrapper">
+        <span data-role="progress"></span>
+        <div class="jm_progress">
+            <div class="jm_progress_bar" data-role="bar"></div>
+        </div>
+    </div>
+    <div class="jm_nav">
+        <button type="button" class="jm_nav_btn" data-role="nav_back"
+                aria-label="Go to previous question">&#8249;</button>
+        <button type="button" class="jm_nav_btn" data-role="nav_next"
+                aria-label="Go to next question">&#8250;</button>
+    </div>
+</div>
