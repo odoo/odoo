@@ -5,7 +5,9 @@ import { patchDynamicContent } from "@web/public/utils";
 patch(CustomerAddress.prototype, {
     setup() {
         super.setup();
-        this.isSaCompany = this.countryCode === "SA";
+        // The SA fields are only rendered on billing addresses
+        this.isSaCompany =
+            this.countryCode === "SA" && !!this.addressForm.l10n_sa_edi_building_number;
         patchDynamicContent(this.dynamicContent, {
             'select[name="l10n_sa_edi_additional_identification_scheme"]': {
                 "t-on-change": this._onChangeL10nSaScheme.bind(this),
