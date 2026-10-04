@@ -797,6 +797,7 @@ export function useClickableBuilderComponent(props) {
 
     async function callApply(applySpecs, isPreviewing) {
         await env.selectableContext?.cleanSelectedItem(applySpecs, isPreviewing);
+        await env.selectionCustomInputContext?.customInputClean(isPreviewing);
         const cleans = inheritedActionIds
             .map((actionId) => env.dependencyManager.get(actionId).cleanSelectedItem)
             .filter(Boolean);
@@ -1041,6 +1042,9 @@ export function useInputBuilderComponent(
      */
     async function callApply(applySpecs, isPreviewing) {
         const proms = [];
+        // In some cases, an input can clear its linked selection when adding a
+        // custom value (see `BuilderNumberSelect`).
+        await env.selectableContext?.cleanSelectedItem(applySpecs, isPreviewing);
         for (const applySpec of applySpecs) {
             proms.push(
                 applySpec.action.apply({
@@ -1215,7 +1219,11 @@ export function useApplyVisibility(ref) {
  */
 export function useVisibilityObserver(contentRef, callback) {
     function applyVisibility() {
-        const hasContent = [...contentRef().childNodes].some(
+        const contentEl = contentRef();
+        if (!contentEl) {
+            return;
+        }
+        const hasContent = [...contentEl.childNodes].some(
             (el) =>
                 (isTextNode(el) && el.textContent !== "") ||
                 (isElement(el) && !el.classList.contains("d-none"))

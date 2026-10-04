@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderNumberSelect" t-inherit="html_builder.BuilderSelect">
+    <xpath expr="//Dropdown" position="attributes">
+        <attribute name="bottomSheet">false</attribute>
+    </xpath>
+
+    <xpath expr="//button" position="replace">
+        <div class="o-hb-number-select-toggle">
+            <BuilderNumberInput
+                t-if="this.customMode()"
+                t-props="this.numberInputProps"
+                action="this.numberInputProps.inputAction"
+                actionParam="this.numberInputProps.inputActionParam"
+                t-on-click.capture="this.onInputClick"
+                autofocus="this.autofocusInput"
+            />
+            <input t-else=""
+                t-on-click="this.onLabelClick"
+                t-att-value="this.currentLabel"
+                class="o-hb-input-field-number text-center"
+                type="text"/>
+        </div>
+    </xpath>
+</t>
+
+</templates>
