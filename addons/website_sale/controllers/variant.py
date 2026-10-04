@@ -46,11 +46,10 @@ class WebsiteSaleVariantController(Controller):
             "taxes",
             "currency",
             "combination",
-            # Only used in Google Merchant Center logic, not client-side.
-            "discount_start_date",
-            "discount_end_date",
+            "pricelist_rule",
+            "untaxed_price",
         ):
-            combination_info.pop(key)
+            combination_info.pop(key, None)
 
         product = self.env["product.product"].browse(combination_info["product_id"])
         if product and product.id == product_id:
@@ -74,10 +73,7 @@ class WebsiteSaleVariantController(Controller):
         if self.env.website.is_view_active("website_sale.documents"):
             combination_info["documents"] = self.env.website._render_template(
                 "website_sale.documents",
-                values={
-                    "product": product_template,
-                    "product_variant": product,
-                },
+                values={"product": product_template, "product_variant": product},
             )
 
         if self.env.website.is_view_active("website_sale.product_tags"):

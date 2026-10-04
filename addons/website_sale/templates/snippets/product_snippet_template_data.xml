@@ -93,8 +93,17 @@
                         />
                         <div class="o_wsale_product_sub justify-content-between gap-2">
                             <!-- Price(s) -->
-                            <div aria-label="Price information">
-                                <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
+                            <div
+                                name="product_price_container"
+                                t-if="not data['hide_price'] and not data.get('is_sample')"
+                                aria-label="Price information"
+                            >
+                                <t
+                                    t-call="website_sale.product_price_and_base_unit"
+                                    combination_info="data"
+                                    _price_classes.f="fw-bold"
+                                    _list_price_classes.f="small"
+                                />
                             </div>
                             <!-- Actions -->
                             <div class="oe_website_sale o_wsale_product_btn">
@@ -139,39 +148,6 @@
                         </div>
                     </div>
                 </div>
-            </t>
-        </template>
-
-        <template id="website_sale.price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
-            <t t-if="not data.get('hide_price') and not data.get('is_sample')">
-                <span t-out="data['price']"
-                      class="mb-0 fw-bold"
-                      name="product_price"
-                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                <t
-                    t-set="comparison_price"
-                    t-value="
-                        data.get('list_price') if data.get('has_discounted_price')
-                        else data.get('compare_list_price') if data.get('compare_list_price') and data.get('compare_list_price') > data.get('price')
-                        else False
-                    "
-                />
-                <del
-                    t-if="comparison_price"
-                    aria-label="Original price"
-                    t-attf-class="text-muted me-1 mb-0"
-                    style="white-space: nowrap;"
-                >
-                    <small
-                        t-out="comparison_price"
-                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-                    />
-                </del>
-                <t
-                    t-if="data.get('base_unit_price')"
-                    t-call="website_sale.base_unit_price"
-                    base_unit_price="data['base_unit_price']"
-                />
             </t>
         </template>
 

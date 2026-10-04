@@ -803,6 +803,7 @@ class ProductTemplate(models.Model):
                     taxes=taxes,
                     website=website,
                 ),
+                "currency": currency,
             }
             pricelist_item_sudo = (
                 template.env["product.pricelist.item"].sudo().browse(pricelist_rule_id)
@@ -978,7 +979,7 @@ class ProductTemplate(models.Model):
         return combination_info
 
     def _get_additional_combination_info(
-        self, product_or_template, quantity, uom, website, pricelist, fiscal_position, **_kwargs
+        self, product_or_template, quantity, uom, website, pricelist, fiscal_position, **kwargs
     ):
         """Compute additional combination info, based on given parameters.
 
@@ -992,67 +993,18 @@ class ProductTemplate(models.Model):
         :rtype: dict
         """
         pricelist = pricelist.with_context(self.env.context)
-        currency = website.currency_id.with_context(self.env.context)
 
-        # Pricelist price doesn't have to be converted
-        pricelist_price, pricelist_rule_id = pricelist._get_product_price_rule(
-            product=product_or_template, quantity=quantity, uom=uom, currency=currency
+        price_info = self._get_price_info(
+            product_or_template, quantity, uom, website, pricelist, fiscal_position, **kwargs
         )
+        pricelist_rule = price_info.get("pricelist_rule", self.env["product.pricelist.item"])
 
-        pricelist_item = self.env["product.pricelist.item"].browse(pricelist_rule_id)
-        price_before_discount = self._get_price_before_discount(
-            pricelist_item, pricelist_price, product_or_template, quantity, uom, currency
-        )
-
-        has_discounted_price = currency.compare_amounts(price_before_discount, pricelist_price) == 1
         combination_info = {
-            "list_price": max(pricelist_price, price_before_discount),
-            "price": pricelist_price,
-            "raw_pricelist_price": pricelist_price,
-            "has_discounted_price": has_discounted_price,
-            "discount_start_date": pricelist_item.date_start,
-            "discount_end_date": pricelist_item.date_end,
-            "show_extra_price": pricelist_item.compute_price != "fixed",
+            **price_info,
+            "prevent_sale": price_info["hide_price"]
+            or website._prevent_product_sale(product_or_template, False),
+            "show_extra_price": pricelist_rule.compute_price != "fixed",
         }
-
-        if (
-            not has_discounted_price
-            and product_or_template.compare_list_price
-            and self.env["res.groups"]._is_feature_enabled(
-                "website_sale.group_product_price_comparison"
-            )
-        ):
-            # TODO VCR comparison price only depends on the product template, but is shown/hidden
-            # depending on product price, should be removed from combination info in the future
-            combination_info["compare_list_price"] = product_or_template.currency_id._convert(
-                from_amount=self.compare_list_price, to_currency=currency, round=False
-            )
-
-        # Apply taxes
-        product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company()
-        taxes = self.env["account.tax"]
-        if product_taxes:
-            taxes = fiscal_position.map_tax(product_taxes)
-            # We do not apply taxes on the compare_list_price value because it's meant to be
-            # a strict value displayed as is.
-            for price_key in ("price", "list_price"):
-                combination_info[price_key] = product_or_template._apply_taxes_to_price(
-                    combination_info[price_key],
-                    currency,
-                    product_taxes=product_taxes,
-                    taxes=taxes,
-                    website=website,
-                )
-        is_zero_price = currency.is_zero(combination_info["price"])
-        prevent_sale = website._prevent_product_sale(product_or_template, is_zero_price)
-        combination_info.update({
-            "prevent_sale": prevent_sale,
-            "hide_price": prevent_sale and is_zero_price,
-            # additional info to simplify overrides
-            "currency": currency,  # displayed currency
-            "product_taxes": product_taxes,  # taxes before fpos mapping
-            "taxes": taxes,  # taxes after fpos mapping
-        })
 
         if website.show_product_reference_price:
             price_per_product_uom = uom._compute_price(
@@ -1062,11 +1014,6 @@ class ProductTemplate(models.Model):
                 "base_unit_name": product_or_template.base_unit_name,
                 "base_unit_price": product_or_template._get_base_unit_price(price_per_product_uom),
             })
-
-        if combination_info["hide_price"]:
-            # If the price should be hidden, we don't want to send any price information regarding
-            # the product
-            combination_info["compare_list_price"] = 0
 
         if product_or_template._has_multiple_uoms():
             # for packaging pricings
@@ -1166,6 +1113,100 @@ class ProductTemplate(models.Model):
             })
 
         return combination_info
+
+    def _get_price_info(
+        self, product_or_template, quantity, uom, website, pricelist, fiscal_position, **_kwargs
+    ):
+        currency = pricelist.currency_id
+
+        price, pricelist_rule_id = pricelist._get_product_price_rule(
+            product=product_or_template, quantity=quantity, uom=uom, currency=currency
+        )
+
+        is_zero_price = currency.is_zero(price)
+        if website.prevent_sale and website.prevent_sale_for == "zero_price" and is_zero_price:
+            # If the price should be hidden, we don't want to send any price information regarding
+            # the product
+            return {"hide_price": True}
+
+        pricelist_rule = self.env["product.pricelist.item"].browse(pricelist_rule_id)
+        list_price = self._get_price_before_discount(
+            pricelist_rule, price, product_or_template, quantity, uom, currency
+        )
+        if not (has_discounted_price := currency.compare_amounts(list_price, price) == 1):
+            list_price = price
+
+        untaxed_price_keys = {"price", "list_price"}
+        product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company()
+        taxes = fiscal_position.map_tax(product_taxes) if product_taxes else self.env["account.tax"]
+
+        price_info = {
+            "hide_price": False,
+            "price": price,
+            "list_price": list_price,
+            "has_discounted_price": has_discounted_price,
+            "currency": currency,
+            # Additional info to simplify overrides
+            "pricelist_rule": pricelist_rule,
+            "untaxed_price": price,
+            "product_taxes": product_taxes,  # taxes before fpos mapping
+            "taxes": taxes,  # taxes after fpos mapping
+        }
+
+        if (
+            not has_discounted_price
+            and product_or_template.compare_list_price
+            and self.env["res.groups"]._is_feature_enabled(
+                "website_sale.group_product_price_comparison"
+            )
+        ):
+            compare_list_price = product_or_template.uom_id._compute_price(
+                product_or_template.compare_list_price, uom
+            )
+            compare_list_price = product_or_template.currency_id._convert(
+                from_amount=compare_list_price, to_currency=currency, round=False
+            )
+            if has_discounted_price := currency.compare_amounts(compare_list_price, price) == 1:
+                price_info["list_price"] = compare_list_price
+                # We do not apply taxes on the compare_list_price value because it's meant to be
+                # a strict value displayed as is.
+                untaxed_price_keys.remove("list_price")
+
+        # Apply taxes
+        if product_taxes:
+            for price_key in untaxed_price_keys:
+                price_info[price_key] = product_or_template._apply_taxes_to_price(
+                    price_info[price_key],
+                    currency,
+                    product_taxes=product_taxes,
+                    taxes=taxes,
+                    website=website,
+                )
+
+        return price_info
+
+    def _get_default_price_info(
+        self,
+        *,
+        product=None,
+        quantity=1.0,
+        uom=None,
+        website=None,
+        pricelist=None,
+        fiscal_position=None,
+        **kwargs,
+    ):
+        return self._get_price_info(
+            product or self,
+            quantity,
+            uom or self._get_main_uom(),
+            website or self.env.website,
+            pricelist
+            if pricelist is not None
+            else request.pricelist.with_context(self.env.context),
+            fiscal_position or request.fiscal_position,
+            **kwargs,
+        )
 
     def _get_price_before_discount(
         self, pricelist_item, pricelist_price, product_or_template, quantity, uom, currency
