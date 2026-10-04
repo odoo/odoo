@@ -73,21 +73,3 @@ class RepairOrder(models.Model):
             'catalog_bom_product_ids': product_ids,
             'search_default_bom_parts': bool(product_ids) and child_field == 'move_ids',
         }
-
-
-class StockMove(models.Model):
-    _inherit = 'stock.move'
-
-    def _prepare_phantom_line_vals(self, bom_line, qty):
-        self.ensure_one()
-        product = bom_line.product_id
-        return {
-            'repair_id': self.repair_id.id,
-            'repair_line_type': self.repair_line_type,
-            'product_id': product.id,
-            'price_unit': self.price_unit,
-            'product_uom_qty': qty,
-            'location_id': self.location_id.id,
-            'location_dest_id': self.location_dest_id.id,
-            'state': 'draft',
-        }
