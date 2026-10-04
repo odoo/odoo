@@ -49,6 +49,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         if invoice._l10n_tr_nilvera_einvoice_check_negative_lines():
             raise UserError(self.env._("Nilvera portal cannot process negative quantity nor negative price on invoice lines"))
 
+<<<<<<< 6f9a5c8dfb0b9191cebb00a05963e75aaab9c302
         # Using _get_sequence_format_param to extract the invoice sequence components for various formats.
         # To send an invoice to Nilvera, the format needs to follow ABC2009123456789.
         _, parts = invoice._get_sequence_format_param(invoice.name)
@@ -73,6 +74,33 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'cbc:Note': {
                 '_text': html2plaintext(invoice.narration, include_references=False) if invoice.narration else None,
             },
+||||||| d422c97257d8a13cc16969fcbc2ed1b8312a2c5c
+        vals['vals'].update({
+            'id': _get_formatted_id(invoice),
+            'customization_id': 'TR1.2',
+            'profile_id': 'TEMELFATURA' if invoice.partner_id.l10n_tr_nilvera_customer_status == 'einvoice' else 'EARSIVFATURA',
+            'copy_indicator': 'false',
+            'uuid': invoice.l10n_tr_nilvera_uuid,
+            'document_type_code': 'SATIS' if invoice.move_type == 'out_invoice' else 'IADE',
+            'due_date': False,
+            'line_count_numeric': len(invoice.line_ids),
+            'order_issue_date': invoice.invoice_date,
+            'pricing_currency_code': invoice.currency_id.name.upper() if invoice.currency_id != invoice.company_id.currency_id else False,
+            'currency_dp': 2,
+=======
+        vals['vals'].update({
+            'id': _get_formatted_id(invoice),
+            'customization_id': 'TR1.2',
+            'profile_id': 'TEMELFATURA' if invoice.partner_id.l10n_tr_nilvera_customer_status == 'einvoice' else 'EARSIVFATURA',
+            'copy_indicator': 'false',
+            'uuid': invoice.l10n_tr_nilvera_uuid,
+            'document_type_code': 'SATIS' if invoice.move_type == 'out_invoice' else 'IADE',
+            'due_date': False,
+            'line_count_numeric': len(invoice.line_ids.filtered(lambda line: line.display_type == 'product')),
+            'order_issue_date': invoice.invoice_date,
+            'pricing_currency_code': invoice.currency_id.name.upper() if invoice.currency_id != invoice.company_id.currency_id else False,
+            'currency_dp': 2,
+>>>>>>> 097ec7cb21d4984fd86d667c9ffb03c0fbcaaab1
         })
 
         if invoice.invoice_line_ids._fields.get('deferred_start_date'):
