@@ -4,17 +4,19 @@ import datetime
 import re
 import time
 from collections import defaultdict
+from zoneinfo import ZoneInfo
 
 import dateutil
 import werkzeug
 from dateutil.relativedelta import relativedelta
 from lxml import etree
 
-from odoo import SUPERUSER_ID, api, fields, models, modules
+from odoo import SUPERUSER_ID, Command, api, fields, models, modules
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, config, date_utils, split_every
 from odoo.tools.image import image_data_uri
+from odoo.tools.misc import formatLang
 
 from odoo.addons.account.tools import dict_to_xml
 
@@ -22,6 +24,16 @@ from odoo.addons.account.tools import dict_to_xml
 SUBMISSION_MAX_SIZE = 100
 MAX_SUBMISSION_UPDATE = 25
 CANCELLED_STATES = {'invalid', 'cancelled'}
+# The move type of the bill created for each type of document received. Self-billed documents (11 to 14) received by a
+# company are issued by its customers on its behalf: they are sales, not bills.
+RECEIVED_DOCUMENT_MOVE_TYPES = {
+    '01': 'in_invoice',
+    '02': 'in_refund',
+    '03': 'in_invoice',
+    '04': 'in_refund',
+}
+# MyInvois throttles the searches of each taxpayer to one every 5 seconds.
+SEARCH_TAXPAYER_INTERVAL = 5
 
 
 class MyInvoisDocument(models.Model):
@@ -94,6 +106,7 @@ class MyInvoisDocument(models.Model):
             ('rejected', 'Rejected'),  # Technically not a state on MyInvois, but having it here helps with managing bills.
             ('invalid', 'Invalid'),
             ('cancelled', 'Cancelled'),
+            ('received', 'Received'),  # Valid document issued by a supplier to this company.
         ],
         copy=False,
         readonly=True,
@@ -190,6 +203,36 @@ class MyInvoisDocument(models.Model):
     is_debit_note = fields.Boolean(
         readonly=True,
     )
+    is_received_document = fields.Boolean(
+        help="Set on documents issued by a supplier to this company, synced from MyInvois into a vendor bill.",
+        copy=False,
+        readonly=True,
+    )
+    myinvois_document_type = fields.Selection(
+        string="Document Type",
+        selection=[
+            ('01', 'Invoice'),
+            ('02', 'Credit Note'),
+            ('03', 'Debit Note'),
+            ('04', 'Refund Note'),
+        ],
+        help="Type of the document on MyInvois. Only set on received documents.",
+        copy=False,
+        readonly=True,
+    )
+    myinvois_amount_total = fields.Monetary(
+        string="Received Total",
+        help="Total of the document on MyInvois. Only set on received documents.",
+        currency_field='currency_id',
+        copy=False,
+        readonly=True,
+    )
+
+    # Two syncs running at the same time cannot see the documents the other one is importing.
+    _received_document_uuid_unique = models.UniqueIndex(
+        "(myinvois_external_uuid) WHERE is_received_document",
+        "This document was already received from MyInvois.",
+    )
 
     def init(self):
         super().init()
@@ -211,7 +254,8 @@ class MyInvoisDocument(models.Model):
         If there is only one document, we should skip this computation entirely.
         """
 
-        dated_documents = self.filtered('myinvois_issuance_date')
+        # Received documents keep the number given by their supplier.
+        dated_documents = self.filtered(lambda d: d.myinvois_issuance_date and not d.is_received_document)
         for document in dated_documents.sorted(key=lambda d: (d.myinvois_issuance_date, d._origin.id)):
             document_has_name = document.name and document.name != '/'
             if document_has_name:
@@ -262,6 +306,11 @@ class MyInvoisDocument(models.Model):
     # CRUD, inherited methods
     # -----------------------
 
+    def _must_check_constrains_date_sequence(self):
+        # EXTENDS 'sequence.mixin'
+        # The number of a received document comes from the supplier, not from our sequence.
+        return not self.is_received_document and super()._must_check_constrains_date_sequence()
+
     def _get_starting_sequence(self):
         """ Defines the default sequence to use by MyInvois Documents. """
         self.ensure_one()
@@ -278,10 +327,11 @@ class MyInvoisDocument(models.Model):
         self.ensure_one()
         if not self.myinvois_issuance_date:
             return SQL("FALSE")
-        condition = SQL("journal_id = %s AND name != '/'", self.journal_id.id)
+        condition = SQL("journal_id = %s AND name != '/' AND is_received_document IS NOT TRUE", self.journal_id.id)
 
         if not relaxed:
             domain = [('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', '', False)), ('journal_id', '=', self.journal_id.id), ('is_consolidated_invoice', '=', self.is_consolidated_invoice)]
+            domain += [('is_received_document', '=', False)]
             if self.journal_id.refund_sequence:
                 refund_types = ('out_refund', 'in_refund')
                 domain += [('move_type', 'in' if self.move_type in refund_types else 'not in', refund_types)]
@@ -334,6 +384,8 @@ class MyInvoisDocument(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_check(self):
         for document in self:
+            if document.is_received_document:
+                raise UserError(document.env._("You cannot delete a received MyInvois document. Archive it instead."))
             if document.myinvois_state in ["in_progress", "valid", "rejected"]:
                 raise UserError(document.env._('You cannot delete a document that is active on MyInvois.\nYou must cancel it first.'))
 
@@ -367,10 +419,12 @@ class MyInvoisDocument(models.Model):
         Fetches the status of all the documents in self.
         Note that the endpoint reached to do so will differ based on the amount of documents in the recordset.
         """
-        if len(self) == 1:
-            self._myinvois_single_status_update()
-        else:
-            self._myinvois_submission_statuses_update()
+        # The state of received documents is updated when syncing them again.
+        documents = self.filtered(lambda d: not d.is_received_document)
+        if len(documents) == 1:
+            documents._myinvois_single_status_update()
+        elif documents:
+            documents._myinvois_submission_statuses_update()
 
     def action_generate_xml_file(self, allow_raising=True):
         """
@@ -380,6 +434,9 @@ class MyInvoisDocument(models.Model):
         new_documents_data = []
         errored_doc_messages = {}
         for document in self:
+            # The file of a received document is the supplier's; we must not build our own.
+            if document.is_received_document:
+                continue
             if document.myinvois_file_id:
                 document.myinvois_file_id.write({
                     'name': f"{document.myinvois_file_id.name} (old)",
@@ -637,6 +694,7 @@ class MyInvoisDocument(models.Model):
             ),
             "update_forbidden": self.env._("You do not have the permission to update this invoice."),
             "search_date_invalid": self.env._("The search params are invalid."),  # Should never happen
+            "search_too_frequent": self.env._("MyInvois only allows one search every 5 seconds per company. Please try again in a few seconds."),
             'document_not_found': self.env._('The document provided in the request does not exist.'),  # Should never happen
             'submission_too_large': self.env._('The submission is too large, try to send fewer invoices at once.'),
             'action_forbidden': self.env._('Permission to do this action has not been granted. Please ensure that Odoo has sufficient permissions on the MyInvois platform.'),
@@ -1432,6 +1490,181 @@ class MyInvoisDocument(models.Model):
                     time.sleep(0.3)  # There is a limit of how many calls we can do, so we spread them out a bit.
         if self._can_commit():
             self.env['ir.cron']._commit_progress(processed=processed_documents, remaining=document_count - processed_documents)
+
+    @api.model
+    def _myinvois_fetch_received_documents(self, proxy_user, date_from, date_to):
+        """
+        Fetch the data of all the documents received by the proxy user's company and issued between the two dates.
+
+        :param proxy_user: the proxy user of the company receiving the documents.
+        :param date_from: start of the issuance window, as a timezone-aware datetime.
+        :param date_to: end of the issuance window, at most 31 days after date_from.
+        :return: a list of dicts, one per document, as returned by the proxy.
+        """
+        documents_data = []
+        page = page_count = 1
+        while page <= page_count:
+            if page > 1 and self._can_commit():  # avoid the sleep in tests.
+                time.sleep(SEARCH_TAXPAYER_INTERVAL)
+            result = proxy_user._l10n_my_edi_contact_proxy(
+                endpoint='api/l10n_my_edi/1/search_received_documents',
+                params={
+                    'date_from': date_from.isoformat(),
+                    'date_to': date_to.isoformat(),
+                    'page': page,
+                },
+            )
+            if 'error' in result:
+                raise UserError(self._myinvois_map_error(result['error']))
+            documents_data += result['documents']
+            page_count = result['page_count']
+            page += 1
+        return documents_data
+
+    @api.model
+    def _myinvois_import_received_documents(self, documents_data, journal):
+        """
+        Create a draft vendor bill, linked to its received document, for each valid document of documents_data that
+        is not in Odoo yet. The documents already synced are updated instead, as the supplier may have cancelled them.
+
+        The bill holds a single line with the total of the document, to be split by the user as needed.
+
+        :param documents_data: the documents as returned by _myinvois_fetch_received_documents.
+        :param journal: the purchase journal of the new bills.
+        :return: the new bills.
+        """
+        company = journal.company_id
+        # A document can come back on two pages if MyInvois receives new ones while we page through the results.
+        documents_data = list({
+            data['uuid']: data
+            for data in documents_data
+            if data['document_type'] in RECEIVED_DOCUMENT_MOVE_TYPES
+        }.values())
+        # Branches share the TIN of their parent company, so they receive the same documents. The user may not have
+        # the other branches enabled, which must not hide the documents they already imported.
+        # Archived documents were imported all the same.
+        existing_documents = self.sudo().with_context(active_test=False).search([
+            ('is_received_document', '=', True),
+            ('myinvois_external_uuid', 'in', [data['uuid'] for data in documents_data]),
+            ('company_id', 'child_of', company.root_id.id),
+        ])
+        documents_per_uuid = existing_documents.grouped('myinvois_external_uuid')
+
+        cancelled_documents = self.env['myinvois.document']
+        new_documents_data = []
+        for data in documents_data:
+            document = documents_per_uuid.get(data['uuid'])
+            if not document:
+                if data['status'] == 'valid':
+                    new_documents_data.append(data)
+            elif document.company_id == company and document.myinvois_state == 'received' and data['status'] == 'cancelled':
+                cancelled_documents |= document.sudo(False)
+        if cancelled_documents:
+            cancelled_documents._myinvois_log_message(self.env._("The supplier cancelled this document on MyInvois."))
+            cancelled_documents.myinvois_state = 'cancelled'
+            # A posted bill may already be paid: cancelling it would silently undo its reconciliation.
+            cancelled_documents.invoice_ids.filtered(lambda bill: bill.state == 'draft').button_cancel()
+
+        if not new_documents_data:
+            return self.env['account.move']
+
+        currency = self.env.ref('base.MYR')  # MyInvois returns the amounts in MYR.
+        partners_per_tin = self._myinvois_get_received_documents_partners(new_documents_data, company)
+        malaysia_timezone = ZoneInfo('Asia/Kuala_Lumpur')
+        bills_vals = []
+        documents_vals = []
+        for data in new_documents_data:
+            issuance_date = dateutil.parser.isoparse(data['issuance_datetime']).astimezone(malaysia_timezone).date()
+            validation_time = data['validation_datetime'] and dateutil.parser.isoparse(data['validation_datetime']).replace(tzinfo=None)
+            move_type = RECEIVED_DOCUMENT_MOVE_TYPES[data['document_type']]
+            bills_vals.append({
+                'move_type': move_type,
+                'journal_id': journal.id,
+                'partner_id': partners_per_tin[data['supplier_tin']].id,
+                'ref': data['internal_id'],
+                'invoice_date': issuance_date,
+                'currency_id': currency.id,
+                'invoice_line_ids': [Command.create({
+                    'name': data['internal_id'],
+                    'quantity': 1,
+                    'price_unit': data['total'],
+                    'tax_ids': [Command.clear()],  # The total already includes the taxes.
+                })],
+            })
+            documents_vals.append({
+                'name': data['internal_id'],
+                'company_id': company.id,
+                'currency_id': currency.id,
+                'journal_id': journal.id,
+                'move_type': move_type,
+                'is_debit_note': data['document_type'] == '03',
+                'is_received_document': True,
+                'myinvois_document_type': data['document_type'],
+                'myinvois_amount_total': data['total'],
+                'myinvois_state': 'received',
+                'myinvois_issuance_date': issuance_date,
+                'myinvois_external_uuid': data['uuid'],
+                'myinvois_submission_uid': data['submission_uid'],
+                'myinvois_document_long_id': data['long_id'],
+                'myinvois_validation_time': validation_time,
+            })
+
+        bills = self.env['account.move'].create(bills_vals)
+        for document_vals, bill in zip(documents_vals, bills):
+            document_vals['invoice_ids'] = [Command.link(bill.id)]
+        documents = self.create(documents_vals)
+        documents._myinvois_log_message(bodies={
+            document.id: self.env._(
+                "Received from MyInvois with UUID %(uuid)s and submission UID %(submission_uid)s. "
+                "Supplier reference: %(reference)s, total: %(total)s.",
+                uuid=document.myinvois_external_uuid,
+                submission_uid=document.myinvois_submission_uid,
+                reference=document.name,
+                total=formatLang(self.env, data['total'], currency_obj=currency),
+            )
+            for document, data in zip(documents, new_documents_data)
+        })
+        return bills
+
+    @api.model
+    def _myinvois_get_received_documents_partners(self, documents_data, company):
+        """
+        Find the supplier of each received document by its TIN, creating the ones that are not in Odoo yet.
+
+        :return: a dict mapping each supplier TIN to its partner.
+        """
+        tins = list({data['supplier_tin'] for data in documents_data})
+        partners = self.env['res.partner'].search(
+            Domain(self.env['res.partner']._check_company_domain(company))
+            & (Domain('vat', 'in', tins) | Domain('l10n_my_edi_malaysian_tin', 'in', tins)),
+        )
+        partners_per_tin = {}
+        # The Malaysian TIN, when set, is the one used on MyInvois; the Tax ID is the fallback.
+        # Prefer the companies to their contacts.
+        partners = partners.sorted(lambda p: bool(p.parent_id))
+        for tin_field in ('l10n_my_edi_malaysian_tin', 'vat'):
+            for partner in partners:
+                if tin_field == 'vat' and partner.l10n_my_edi_malaysian_tin:
+                    continue
+                if partner[tin_field] in tins:
+                    partners_per_tin.setdefault(partner[tin_field], partner.commercial_partner_id)
+
+        names_per_missing_tin = {
+            data['supplier_tin']: data['supplier_name']
+            for data in documents_data
+            if data['supplier_tin'] not in partners_per_tin
+        }
+        new_partners = self.env['res.partner'].create([
+            {
+                'name': name,
+                'vat': tin,
+                'is_company': True,
+                'country_id': self.env.ref('base.my').id,
+            }
+            for tin, name in names_per_missing_tin.items()
+        ])
+        partners_per_tin.update(zip(names_per_missing_tin, new_partners))
+        return partners_per_tin
 
     @api.model
     def _myinvois_get_consolidated_invoice_partner_domain(self):

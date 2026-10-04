@@ -64,6 +64,7 @@ class MyInvoisConsolidateInvoiceWizard(models.TransientModel):
             journal = self.env['account.journal'].browse(journal_id)
             domain = Domain([
                 ("state", "=", "posted"),
+                ('l10n_my_edi_received_document_id', '=', False),  # Issued by the supplier, not by us.
                 ('date', '>=', self.date_from),
                 ('date', '<=', self.date_to),
                 '|',

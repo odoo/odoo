@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="myinvois_document_sync_wizard_view_form" model="ir.ui.view">
+        <field name="name">myinvois.document.sync.wizard.form</field>
+        <field name="model">myinvois.document.sync.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="month"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="journal_id"/>
+                        </group>
+                    </group>
+                    <p class="text-muted">For busy periods, select fewer days to avoid request limits. If MyInvois is busy, wait before trying again.</p>
+                </sheet>
+                <footer>
+                    <button string="Sync with MyInvois" name="button_sync" type="object" default_focus="1" class="btn-primary"/>
+                    <button string="Close" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="myinvois_document_sync_wizard_action" model="ir.actions.act_window">
+        <field name="name">Sync with MyInvois</field>
+        <field name="res_model">myinvois.document.sync.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
