@@ -3,11 +3,12 @@
     <div t-attf-class="o_font_color_selector user-select-none {{this.props.className}}"
         t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true" t-ref="this.rootRef"
         t-on-mouseenter="this.onMouseEnter">
+        <t t-set="activeTab" t-value="this.tabs.find((tab) => this.state.activeTab === tab.id)" />
         <div class="px-1 mb-1 pt-2 d-flex">
             <t t-if="this.isMobileOS">
                 <Dropdown>
                     <button class="btn btn-light d-flex justify-content-between w-100 border border-dark">
-                        <span class="px-1" t-out="this.state.activeTab"/>
+                        <span class="px-1" t-out="activeTab.name"/>
                         <i class="oi ms-2" data-icon="arrow_drop_down"/>
                     </button>
                     <t t-set-slot="content">
@@ -38,7 +39,6 @@
                     t-on-focusin="this.onColorFocusin"
                     t-on-focusout="this.onColorFocusout"/>
         </div>
-        <t t-set="activeTab" t-value="this.tabs.find((tab) => this.state.activeTab === tab.id)" />
         <t t-component="activeTab.component" t-props="{
             applyColor: this.applyColor.bind(this),
             onColorClick: this.onColorApply.bind(this),
@@ -65,6 +65,7 @@
             currentCustomColor: this.state.currentCustomColor,
             currentColorPreview: this.state.currentColorPreview,
             selectedColor: this.props.state.selectedColor,
+            close: this.props.close,
         }" />
     </div>
 </t>
