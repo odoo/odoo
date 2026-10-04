@@ -6,9 +6,9 @@ import {
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { expect, test, describe } from "@odoo/hoot";
+import { animationFrame, press } from "@odoo/hoot-dom";
 import { onError, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import { press } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 
@@ -19,6 +19,32 @@ function defaultValueWithIds(ids) {
         ...defaultValue,
         _id: id.toString(),
     }));
+}
+
+async function setupListWithThreeItems() {
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderList
+                dataAttributeAction="'list'"
+                itemShape="{ value: 'number', title: 'text' }"
+                default="${defaultValueStr}"
+            />
+        `,
+    });
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+
+    await contains(".we-bg-options-container .builder_list_add_item").click();
+    await contains(".we-bg-options-container .builder_list_add_item").click();
+    await contains(".we-bg-options-container .builder_list_add_item").click();
+}
+
+function expectOrder(ids) {
+    expect(":iframe .test-options-target").toHaveAttribute(
+        "data-list",
+        JSON.stringify(defaultValueWithIds(ids))
+    );
 }
 
 test("writes a list of numbers to a data attribute", async () => {
@@ -108,28 +134,7 @@ test("delete an item", async () => {
 });
 
 test("reorder items", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`
-            <BuilderList
-                dataAttributeAction="'list'"
-                itemShape="{ value: 'number', title: 'text' }"
-                default="${defaultValueStr}"
-            />
-        `,
-    });
-    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
-    await contains(":iframe .test-options-target").click();
-
-    await contains(".we-bg-options-container .builder_list_add_item").click();
-    await contains(".we-bg-options-container .builder_list_add_item").click();
-    await contains(".we-bg-options-container .builder_list_add_item").click();
-    function expectOrder(ids) {
-        expect(":iframe .test-options-target").toHaveAttribute(
-            "data-list",
-            JSON.stringify(defaultValueWithIds(ids))
-        );
-    }
+    await setupListWithThreeItems();
     expectOrder([0, 1, 2]);
 
     const rowSelector = (id) => `.we-bg-options-container .o_row_draggable[data-id="${id}"]`;
@@ -151,6 +156,37 @@ test("reorder items", async () => {
     expectOrder([1, 0, 2]);
 
     await contains(rowHandleSelector(0)).dragAndDrop(rowSelector(1));
+    expectOrder([0, 1, 2]);
+});
+
+test("reorder items with keyboard", async () => {
+    await setupListWithThreeItems();
+    expectOrder([0, 1, 2]);
+
+    const rowHandle = (id) =>
+        `.we-bg-options-container .o_row_draggable[data-id="${id}"] .o_handle_cell button`;
+
+    // The focus follows the moved row.
+    await contains(rowHandle(0)).click();
+    await press("ArrowDown");
+    await animationFrame();
+    expectOrder([1, 0, 2]);
+    expect(rowHandle(0)).toBeFocused();
+
+    await press("ArrowUp");
+    await animationFrame();
+    expectOrder([0, 1, 2]);
+    expect(rowHandle(0)).toBeFocused();
+
+    // The first row cannot go up.
+    await press("ArrowUp");
+    await animationFrame();
+    expectOrder([0, 1, 2]);
+
+    // The last row cannot go down.
+    await contains(rowHandle(2)).click();
+    await press("ArrowDown");
+    await animationFrame();
     expectOrder([0, 1, 2]);
 });
 
