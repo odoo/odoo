@@ -117,9 +117,7 @@ patch(PosOrder.prototype, {
         const removedCourses = [];
         const cleanedCourses = courses
             .filter((course, index) => {
-                const hasLines = this.lines.some(
-                    (line) => !line.combo_parent_id && line.course_id === course
-                );
+                const hasLines = this.lines.some((line) => line.course_id === course);
                 const shouldKeep = index <= lastFiredIndex || (hasLines && !course.isEmpty());
                 if (!shouldKeep) {
                     removedCourses.push(course);
