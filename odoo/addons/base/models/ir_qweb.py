@@ -478,6 +478,7 @@ LSTRIP_REGEXP = re.compile(r'^[ \t]*\n')
 FIRST_RSTRIP_REGEXP = re.compile(r'^(\n[ \t]*)+(\n[ \t])')
 VARNAME_REGEXP = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
 TO_VARNAME_REGEXP = re.compile(r'[^A-Za-z0-9_]+')
+RESTRICTED_REGEXP = re.compile(r'^([A-Za-z](?:_?[A-Za-z0-9])*)(?:\.([A-Za-z](?:_?[A-Za-z0-9])*))?$')
 # Attribute name used outside the context of the QWeb.
 # When importing data, the <template> generate a root <t> with the `t-name` of
 # the template (equal to the xmlid). This is deprecated. It was used when
@@ -821,7 +822,15 @@ class IrQweb(models.AbstractModel):
 
                     # Fetch the compiled function and template options
                     if not render_template:
-                        template_functions, def_name, options, _code = irQweb._compile(params.view_ref)
+                        options = {}
+                        try:
+                            template_functions, def_name, options, _code = irQweb._compile(params.view_ref)
+                        except Exception:
+                            if is_content and self.env.context['_qweb_error_path_xml'][1]:
+                                logParams = QwebCallParameters(*params[0:-1], tuple(self.env.context['_qweb_error_path_xml']))
+                                stack.append(QwebStackFrame(logParams, irQweb, [], values, options))
+                            raise
+
                         loaded_functions.update(template_functions)
                         loaded_options[params.view_ref] = options
                         render_template = template_functions[params.method or def_name]
@@ -829,10 +838,16 @@ class IrQweb(models.AbstractModel):
                         options = loaded_options[params.view_ref]
 
                     # Apply a new scope if needed
-                    if params.scope:
-                        if params.scope == 'root':
-                            values = root_values
-                        values = values.copy()
+                    scope = params.scope
+                    if params.directive == 't-call' and len(stack) > 1 and stack[-1].params.scope == 'restricted':
+                        scope = 'root'
+                    if scope:
+                        if scope == 'root':
+                            values = root_values.copy()
+                        elif scope == 'restricted':
+                            values = {}
+                        else:
+                            values = values.copy()
 
                     # Update values with default values
                     if params.values:
@@ -993,7 +1008,7 @@ class IrQweb(models.AbstractModel):
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
-        return ['lang', 'inherit_branding', 'inherit_branding_auto', 'edit_translations', 'profile', 'preserve_comments']
+        return ['lang', 'inherit_branding', 'inherit_branding_auto', 'edit_translations', 'profile', 'preserve_comments', 'restricted_expr']
 
     def _get_template_info(self, template):
         return self.env['ir.ui.view']._get_cached_template_info(template)
@@ -1150,6 +1165,9 @@ class IrQweb(models.AbstractModel):
         compile_context['root'] = element.getroottree()
         # Reference to the last node being compiled. It is mainly used for debugging and displaying error messages.
         compile_context['_qweb_error_path_xml'] = compile_context.get('_qweb_error_path_xml', [None, None, None])
+        # By default expressions are not restricted. We use `safe_eval`
+        # for restricted and unrestricted mode
+        compile_context['restricted_expr'] = bool(compile_context.get('restricted_expr'))
 
         compile_context['nsmap'] = {
             ns_prefix: str(ns_definition)
@@ -1413,6 +1431,7 @@ class IrQweb(models.AbstractModel):
             'QwebCallParameters': QwebCallParameters,
             'QwebContent': QwebContent,
             'ValueError': ValueError,
+            '_get_restricted_field': IrQweb._get_restricted_field,
             **_BUILTINS,
         }
 
@@ -1655,6 +1674,21 @@ class IrQweb(models.AbstractModel):
 
         return ''.join(code)
 
+    def _compile_expr_restricted(self, expr, raise_on_missing=False):
+        try:
+            ast.literal_eval(expr)
+            return f"({expr})"
+        except ValueError:
+            match = RESTRICTED_REGEXP.match(expr)
+            if match:
+                if not match.group(2):
+                    if raise_on_missing:
+                        return f"(values[{match.group(1)!r}])"
+                    else:
+                        return f"(values.get({match.group(1)!r}))"
+                return f"_get_restricted_field(values[{match.group(1)!r}], {match.group(2)!r}, {expr!r})"
+            raise SyntaxError(f"Only the use of literals and possibly record and non-relational public fields is allowed in restricted mode: {expr!r}") from None
+
     def _compile_expr(self, expr, compile_context, raise_on_missing=False):
         """Transform string coming into a python instruction in textual form by
         adding the namepaces for the dynamic values.
@@ -1668,15 +1702,21 @@ class IrQweb(models.AbstractModel):
             'product' value and not an 'NoneType' object has no attribute
             'price' error.
         """
-        # Parentheses are useful for compiling multi-line expressions such as
-        # conditions existing in some templates. (see test_compile_expr tests)
-        readable = io.BytesIO(f"({expr or ''})".encode('utf-8'))
-        try:
-            tokens = list(tokenize.tokenize(readable.readline))
-        except tokenize.TokenError:
-            raise ValueError(f"Can not compile expression: {expr}")
+        if not expr:
+            return "(None)"
 
-        expression = self._compile_expr_tokens(tokens, ALLOWED_KEYWORD, raise_on_missing=raise_on_missing)
+        if compile_context.get('restricted_expr'):
+            expression = self._compile_expr_restricted(expr, raise_on_missing=raise_on_missing)
+        else:
+            # Parentheses are useful for compiling multi-line expressions such as
+            # conditions existing in some templates. (see test_compile_expr tests)
+            readable = io.BytesIO(f"({expr})".encode())
+            try:
+                tokens = list(tokenize.tokenize(readable.readline))
+            except tokenize.TokenError:
+                raise ValueError(f"Can not compile expression: {expr}")
+
+            expression = self._compile_expr_tokens(tokens, ALLOWED_KEYWORD, raise_on_missing=raise_on_missing)
 
         if safe_eval.unsafe_policy():
             # Note: if the generated safe expression is evaluated using `safe_eval`,
@@ -2498,15 +2538,15 @@ class IrQweb(models.AbstractModel):
         # mark force_display as True, the tag will be inserted in the output
         # even the value of content is None and without default value)
 
-        is_slot = expr == T_CALL_SLOT and code_options != 'True'
+        code = [indent_code(f"""
+            self.env.context['_qweb_error_path_xml'][0] = template_options['ref']
+            self.env.context['_qweb_error_path_xml'][1] = {path!r}
+            self.env.context['_qweb_error_path_xml'][2] = {xml!r}
+        """, level)]
 
+        is_slot = expr == T_CALL_SLOT and code_options != 'True'
         if is_slot:
-            code = [indent_code(f"""
-                self.env.context['_qweb_error_path_xml'][0] = template_options['ref']
-                self.env.context['_qweb_error_path_xml'][1] = {path!r}
-                self.env.context['_qweb_error_path_xml'][2] = {xml!r}
-                yield values.get({T_CALL_SLOT}, '')
-            """, level)]
+            code.append(indent_code(f"yield values.get({T_CALL_SLOT}, '')", level))
         elif ttype == 't-field':
             code = []
             record, field_name = expr.rsplit('.', 1)
@@ -2521,9 +2561,13 @@ class IrQweb(models.AbstractModel):
                     """, level))
             else:
                 compile_context['qweb_attrs_created'] = True
-            code.append(indent_code("""
+            code.append(indent_code(f"""
                 if content is not None and content is not False:
-                    content = self._compile_to_str(content)
+                    if isinstance(content, QwebCallParameters):
+                        params = QwebCallParameters(*content[:6], {ttype!r}, (template_options['ref'], {path!r}, {xml!r}))
+                        content = QwebContent(self, params, process)
+                    else:
+                        content = self._compile_to_str(content)
                 """, level))
             force_display_dependent = True
         else:
@@ -2545,7 +2589,13 @@ class IrQweb(models.AbstractModel):
                         """, level))
                 else:
                     compile_context['qweb_attrs_created'] = True
-                code.append(indent_code("content = self._compile_to_str(content)", level))
+                code.append(indent_code(f"""
+                    if isinstance(content, QwebCallParameters):
+                        params = QwebCallParameters(*content[:6], {ttype!r}, (template_options['ref'], {path!r}, {xml!r}))
+                        content = QwebContent(self, params, process)
+                    else:
+                        content = self._compile_to_str(content)
+                """, level))
                 force_display_dependent = True
             else:
                 force_display_dependent = False
@@ -2665,6 +2715,7 @@ class IrQweb(models.AbstractModel):
         # options
         el.attrib.pop('t-consumed-options', None)
         code.append(indent_code("t_call_options = values.pop('__qweb_options__', {})", level))
+        code.append(indent_code("t_call_options.update(restricted_expr=False)", level))
         if nsmap:
             # update this dict with the current nsmap so that the callee know
             # if he outputting the xmlns attributes is relevenat or not
@@ -2825,6 +2876,16 @@ class IrQweb(models.AbstractModel):
         return code
 
     # methods called by the compiled function at rendering time.
+
+    @staticmethod
+    def _get_restricted_field(record, field_name, expr):
+        if (isinstance(record, models.BaseModel) and
+            field_name in record._fields and
+            record._fields[field_name] and
+            not record._fields[field_name].relational and
+            not record._fields[field_name].groups):
+            return record[field_name]
+        raise SyntaxError(f"Only the non-relational public field is allowed in restricted mode: {expr!r}") from None
 
     def _debug_trace(self, debugger, values):
         """Method called at running time to load debugger."""
