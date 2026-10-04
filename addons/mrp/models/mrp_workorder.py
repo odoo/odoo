@@ -707,10 +707,6 @@ class MrpWorkorder(models.Model):
                     wo._prepare_timeline_vals(wo.duration, fields.Datetime.now())
                 )
 
-            if wo.production_id.state != 'progress':
-                wo.production_id.with_context(force_date=True).write({
-                    'date_start': fields.Datetime.now()
-                })
             if wo.state == 'progress':
                 continue
             date_start = fields.Datetime.now()
