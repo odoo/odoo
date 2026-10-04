@@ -263,6 +263,30 @@ test("[canBeMergedWith]: Base test", async () => {
     expect(line1.qty).toBe(5);
 });
 
+test("[setUnitPrice] preserves price precision when tax data is saved", async () => {
+    const store = await setupPosEnv();
+    const models = store.models;
+
+    const currency = store.config.currency_id;
+    currency.rounding = 0.001;
+    currency.decimal_places = 3;
+
+    const data = models.loadConnectedData(getAllPricesData());
+    const orderLine = data["pos.order.line"][0];
+
+    orderLine.setUnitPrice(-2.175);
+    expect(orderLine.price_unit).toBe(-2.18);
+
+    orderLine.extra_tax_data = { price_unit: -2.175 };
+    orderLine.setUnitPrice(-2.175);
+    expect(orderLine.price_unit).toBe(-2.175);
+
+    currency.rounding = 1.0;
+    currency.decimal_places = 0;
+    orderLine.setUnitPrice(-2.175);
+    expect(orderLine.price_unit).toBe(-2.18);
+});
+
 describe("Test taxes after fiscal position", () => {
     test("Orderline containing a taxed product", async () => {
         const store = await setupPosEnv();
