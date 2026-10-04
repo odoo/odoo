@@ -87,6 +87,7 @@ class DiscussChannelRtcSession(models.Model):
                 "_store_rtc_update_fields",
                 fields_params={"removed": rtc_session},
             )
+        call_ended_channels._unpin_empty_meetings()
         # sudo - dicuss.rtc.call.history: setting the end date of the call
         # after it ends is allowed.
         domain = [("channel_id", "in", call_ended_channels.ids), ("end_dt", "=", False)]
