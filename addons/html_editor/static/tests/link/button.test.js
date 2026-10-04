@@ -15,7 +15,7 @@ import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
-import { deleteBackward, insertText } from "../_helpers/user_actions";
+import { deleteBackward, insertText, undo } from "../_helpers/user_actions";
 
 describe("button style", () => {
     test("editable button should have cursor text", async () => {
@@ -83,6 +83,47 @@ describe("button style", () => {
                     <span class="display-1-fs">a\ufeff<a href="/test" class="btn btn-primary">\ufeffb\ufeff</a>\ufeffc</span>
                 </div>
             `)
+        );
+    });
+
+    test("Button containing a font size keeps its own font size", async () => {
+        const { el, editor } = await setupEditor(
+            unformat(`
+                <p>
+                    <span class="display-1-fs"><a href="#" class="btn btn-primary"><span style="font-size: 12px;">b</span></a></span>
+                    <span class="display-1-fs"><a href="#" class="btn btn-primary"><span class="h6-fs foo">c</span></a></span>
+                </p>
+            `)
+        );
+        const [inlineButton, classButton] = el.querySelectorAll("a.btn");
+        const outerSpan = el.querySelector("span.display-1-fs");
+        for (const button of [inlineButton, classButton]) {
+            expect(button).toHaveClass("o_btn_with_font_size");
+            expect(getComputedStyle(button).fontSize).not.toBe(
+                getComputedStyle(outerSpan).fontSize
+            );
+        }
+        expect(editor.getContent()).not.toInclude("o_btn_with_font_size");
+    });
+
+    test("Font size mark follows the button content", async () => {
+        const { el, editor } = await setupEditor(
+            '<p><span class="display-1-fs"><a href="#" class="btn btn-primary">b</a></span></p>'
+        );
+        const button = el.querySelector("a.btn");
+        expect(button).not.toHaveClass("o_btn_with_font_size");
+
+        const innerSpan = editor.document.createElement("span");
+        innerSpan.className = "h6-fs";
+        innerSpan.append(...button.childNodes);
+        button.append(innerSpan);
+        editor.shared.history.addStep();
+        expect(button).toHaveClass("o_btn_with_font_size");
+
+        undo(editor);
+        expect(button).not.toHaveClass("o_btn_with_font_size");
+        expect(getComputedStyle(button).fontSize).toBe(
+            getComputedStyle(el.querySelector("span.display-1-fs")).fontSize
         );
     });
 
