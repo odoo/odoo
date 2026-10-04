@@ -617,12 +617,10 @@
                                             options="{'no_create': True}"
                                             context="{'search_view_ref': 'account.account_tax_view_search'}"
                                             readonly="qty_invoiced &gt; 0"/>
-                                        <t groups="sale.group_discount_per_so_line">
-                                            <label for="discount"/>
-                                            <div name="discount">
-                                                <field name="discount" class="oe_inline"/> %
-                                            </div>
-                                        </t>
+                                        <label for="discount"/>
+                                        <div name="discount">
+                                            <field name="discount" class="oe_inline"/> %
+                                        </div>
                                     </group>
                                     <group invisible="display_type">
                                         <label for="customer_lead"/>
@@ -864,7 +862,6 @@
                                 <field
                                     name="discount"
                                     string="Disc.%"
-                                    groups="sale.group_discount_per_so_line"
                                     width="50px"
                                     optional="show"/>
                                 <column
@@ -1005,7 +1002,6 @@
                                 name="action_open_discount_wizard"
                                 type="object"
                                 class="btn btn-secondary d-none d-md-block"
-                                groups="sale.group_discount_per_so_line"
                                 invisible="locked or state == 'cancel'"
                             />
                             <button
@@ -1013,14 +1009,12 @@
                                 name="action_open_discount_wizard"
                                 type="object"
                                 class="btn btn-secondary d-none d-md-block"
-                                groups="sale.group_discount_per_so_line"
                                 disabled="1"
                                 invisible="not (locked or state == 'cancel')"
                             />
                             <widget name="combo_menu" class="mb-0 flex-grow-1 d-md-none"/>
                             <widget
                                 name="discount_menu"
-                                groups="sale.group_discount_per_so_line"
                                 invisible="locked or state == 'cancel'"
                                 class="mb-0 flex-grow-1 d-md-none"
                             />

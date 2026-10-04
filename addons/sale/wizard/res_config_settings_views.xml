@@ -12,14 +12,6 @@
                     <block title="Product Catalog" name="catalog_setting_container">
                         <setting id="variant_options" help="Sell variants of a product using attributes (size, color, etc.)" documentation="/applications/sales/sales/products_prices/products/variants.html">
                             <field name="group_product_variant"/>
-                            <div class="content-group" invisible="not group_product_variant">
-                                <div class="mt8">
-                                    <button name="%(product.attribute_action)d" icon="east" type="action" string="Attributes" class="btn-link"/>
-                                </div>
-                            </div>
-                        </setting>
-                        <setting string="Variant Grid Entry" help="Add several variants to an order from a grid" id="product_matrix">
-                            <field name="module_sale_product_matrix"/>
                         </setting>
                         <setting id="uom_settings" help="Sell and purchase products in different units of measure or packagings">
                             <field name="group_uom"/>
@@ -31,36 +23,17 @@
                         </setting>
                     </block>
                     <block title="Pricing" id="pricing_setting_container">
-                      <setting id="discount_sale_order_lines" title="Apply manual discounts on sales order lines or display discounts computed from pricelists (option to activate in the pricelist configuration)." help="Grant discounts on sales order lines">
-                            <field name="group_discount_per_so_line"/>
-                       </setting>
                         <setting id="coupon_settings" title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products." string="Promotions, Loyalty &amp; Gift Card" help="Manage Promotions, Coupons, Loyalty cards, Gift cards &amp; eWallet">
                             <field name="module_loyalty"/>
                         </setting>
                         <setting id="pricelist_configuration" documentation="/applications/sales/sales/products_prices/prices/pricing.html" help="Set multiple prices per product, automated discounts, etc.">
                             <field name="group_product_pricelist"/>
-                            <div class="content-group" invisible="not group_product_pricelist">
-                                <div class="mt16">
-                                    <button name="%(product.product_pricelist_action2)d" icon="east" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
-                                </div>
-                            </div>
                         </setting>
                         <setting id="auth_signup_documents" title=" To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*." help="Let your customers log in to see their documents">
                             <field name="auth_signup_uninvited" class="o_light_label" widget="radio" options="{'horizontal': true}" required="True"/>
                         </setting>
                     </block>
                     <block title="Quotations &amp; Orders" name="quotation_order_setting_container">
-                        <setting
-                            id="sale_order_mandatory_product"
-                            help="Prevent selling without a linked product"
-                        >
-                            <field name="sale_order_mandatory_product"/>
-                        </setting>
-                        <setting id="online_signature" company_dependent="1"
-                                 documentation="/applications/sales/sales/send_quotations/get_signature_to_validate.html"
-                                 help="Request customers to sign quotations to validate orders. The default can be changed per order or template.">
-                            <field name="portal_confirmation_sign"/>
-                        </setting>
                         <setting id="online_payment" company_dependent="1"
                                  documentation="/applications/sales/sales/send_quotations/get_paid_to_validate.html"
                                  help="Request a payment to confirm orders, in full (100%) or partial. The default can be changed per order or template.">
@@ -130,9 +103,28 @@
                                 />
                             </div>
                         </setting>
+                        <setting
+                            string="Configure Delivery Methods"
+                            id="delivery"
+                            help="Configure delivery methods or work with delivery providers using existing integrations."
+                            documentation="/applications/inventory_and_mrp/inventory/shipping_receiving/setup_configuration.html"
+                        >
+                            <field name="module_delivery"/>
+                        </setting>
+                        <setting
+                            id="sale_order_mandatory_product"
+                            help="Prevent selling without a linked product"
+                        >
+                            <field name="sale_order_mandatory_product"/>
+                        </setting>
+                        <setting id="online_signature" company_dependent="1"
+                                 documentation="/applications/sales/sales/send_quotations/get_signature_to_validate.html"
+                                 help="Request customers to sign quotations to validate orders. The default can be changed per order or template.">
+                            <field name="portal_confirmation_sign"/>
+                        </setting>
                         <setting id="quotation_validity_days">
                             <div title="Days between quotation proposal and expiration. 0 days means automatic expiration is disabled">
-                                <label for="quotation_validity_days"/>
+                                <label for="quotation_validity_days" string="Quotation Validity"/>
                                 <field name="quotation_validity_days" class="text-center" style="width: 3rem;"/>
                                 <div class="d-inline-block">days</div>
                                 <span class="oi oi-lg p-2" data-icon="business"
@@ -142,9 +134,6 @@
                             <div class="text-muted">
                                 Default period during which the quote is valid and can still be accepted by the customer. The default can be changed per order or template.
                             </div>
-                        </setting>
-                        <setting id="order_warnings" string="Sale Warnings" help="Get warnings in orders for products or customers">
-                            <field name="group_warning_sale"/>
                         </setting>
                         <setting id="sale_pdf_quote_builder" string="PDF Quote builder" help="Make your quote attractive by adding header pages, product descriptions and footer pages to your quote.">
                             <field name="module_sale_pdf_quote_builder"/>
@@ -158,7 +147,7 @@
                         </setting>
                         <setting
                             id="display_product_images_on_so"
-                            string="Display Product Images"
+                            string="Product Images"
                             help="Show product images on your PDF and online quotes."
                             company_dependent="1"
                         >
@@ -167,18 +156,12 @@
                         <setting id="no_edit_order" help="No longer edit orders once confirmed">
                             <field name="group_auto_done_setting"/>
                         </setting>
-                        <setting id="proforma_configuration" help="Allows you to send Pro Forma Invoice to your customers">
-                            <field name="group_proforma_sales"/>
-                        </setting>
-                    </block>
-                    <block title="Shipping" name="sale_shipping_setting_container">
                         <setting
-                            string="Configure Delivery Methods"
-                            id="delivery"
-                            help="Configure delivery methods or work with delivery providers using existing integrations."
-                            documentation="/applications/inventory_and_mrp/inventory/shipping_receiving/setup_configuration.html"
+                            id="proforma_configuration"
+                            string="Pro Forma"
+                            help="Allows you to send Pro Forma Invoice to your customers"
                         >
-                            <field name="module_delivery"/>
+                            <field name="group_proforma_sales"/>
                         </setting>
                     </block>
                     <block title="Invoicing" name="invoicing_setting_container">
@@ -223,9 +206,6 @@
                                 name="gelato_credentials"
                                 invisible="not module_sale_gelato"
                             />
-                        </setting>
-                        <setting id="shopee_connector" help="Import Shopee orders and sync deliveries">
-                            <field name="module_sale_shopee" widget="upgrade_boolean"/>
                         </setting>
                     </block>
                 </app>
