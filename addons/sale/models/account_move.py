@@ -33,14 +33,11 @@ class AccountMove(models.Model):
     )
     service_line_count = fields.Integer(compute="_compute_service_line_count", compute_sudo=True)
 
-    def unlink(self):
-        downpayment_lines = self.mapped("line_ids.sale_line_ids").filtered(
-            lambda line: line.is_downpayment and line.invoice_lines <= self.mapped("line_ids")
+    def _delete_extra(self):
+        yield from super()._delete_extra()
+        yield self.line_ids.sale_line_ids.filtered(
+            lambda line: line.is_downpayment and line.invoice_lines <= self.line_ids
         )
-        res = super().unlink()
-        if downpayment_lines:
-            downpayment_lines.unlink()
-        return res
 
     @api.depends("invoice_user_id")
     def _compute_team_id(self):

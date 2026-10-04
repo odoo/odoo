@@ -84,6 +84,7 @@ class TestPartner(TransactionCase):
             "Each user of the partner gets the return date of its own employee",
         )
         self.leaves[0].action_refuse()
+        self.env.invalidate_all()  # No depends on _compute_leave_status/_compute_leave_date_to
         store_2 = Store().add(self.partner, "_store_partner_fields")
         self.assertEqual(
             store_2._build_result()["hr.employee"],

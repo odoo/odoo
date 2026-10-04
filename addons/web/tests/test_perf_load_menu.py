@@ -39,11 +39,11 @@ class TestPerfSessionInfo(common.HttpCase):
         self._prepare()
 
         # cold ormcache:
-        # - Only web: 41
-        # - bus: 42
-        # - mail: 67
-        # - All modules: 89
-        with self.assertQueryCount(89):
+        # - Only web: 37
+        # - bus: 38
+        # - mail: 61
+        # - All modules: 83
+        with self.assertQueryCount(83):
             self.url_open(
                 "/web/session/get_session_info",
                 data=json.dumps({'jsonrpc': "2.0", 'method': "call", 'id': str(uuid4())}),
@@ -51,11 +51,11 @@ class TestPerfSessionInfo(common.HttpCase):
             )
 
         # cold fields cache - warm ormcache:
-        # - Only web: 9
+        # - Only web: 7
         # - bus: 8
-        # - mail: 20
-        # - All modules: 33
-        with self.assertQueryCount(33):
+        # - mail: 16
+        # - All modules: 28
+        with self.assertQueryCount(28):
             self.url_open(
                 "/web/session/get_session_info",
                 data=json.dumps({'jsonrpc': "2.0", 'method': "call", 'id': str(uuid4())}),
@@ -64,9 +64,9 @@ class TestPerfSessionInfo(common.HttpCase):
 
     def test_load_web_menus_perf(self):
         # cold orm/fields cache:
-        # - Web only: 17
-        # - All modules 66
-        with self.assertQueryCount(66):
+        # - Web only: 15
+        # - All modules 50
+        with self.assertQueryCount(50):
             self.env['ir.ui.menu'].load_web_menus(False)
 
         # cold fields cache:
@@ -80,9 +80,9 @@ class TestPerfSessionInfo(common.HttpCase):
 
     def test_load_menus_perf(self):
         # cold orm/fields cache:
-        # - Web only: 17
-        # - All modules 66
-        with self.assertQueryCount(66):
+        # - Web only: 15
+        # - All modules 50
+        with self.assertQueryCount(50):
             self.env['ir.ui.menu'].load_menus(False)
 
         # cold fields cache:
@@ -96,9 +96,9 @@ class TestPerfSessionInfo(common.HttpCase):
 
     def test_visible_menu_ids(self):
         # cold ormcache:
-        # - Only web 16
-        # - All modules: 29
-        with self.assertQueryCount(29):
+        # - Only web 14
+        # - All modules: 27
+        with self.assertQueryCount(27):
             self.env['ir.ui.menu']._visible_menu_ids()
 
         # cold fields cache - warm orm cache (only web: 0, all module: 0)

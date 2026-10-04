@@ -38,35 +38,41 @@ class MailMessage(models.Model):
         string="Journal Entry",
         compute="_compute_account_audit_log_move_id",
         search="_search_account_audit_log_move_id",
+        compute_sudo=True,
     )
     account_audit_log_partner_id = fields.Many2one(
         comodel_name='res.partner',
         string="Partner",
         compute="_compute_account_audit_log_partner_id",
         search="_search_account_audit_log_partner_id",
+        compute_sudo=True,
     )
     account_audit_log_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Account",
         compute="_compute_account_audit_log_account_id",
         search="_search_account_audit_log_account_id",
+        compute_sudo=True,
     )
     account_audit_log_tax_id = fields.Many2one(
         comodel_name='account.tax',
         string="Tax",
         compute="_compute_account_audit_log_tax_id",
         search="_search_account_audit_log_tax_id",
+        compute_sudo=True,
     )
     account_audit_log_company_id = fields.Many2one(
         comodel_name='res.company',
         string="Company ",
         compute="_compute_account_audit_log_company_id",
         search="_search_account_audit_log_company_id",
+        compute_sudo=True,
     )
     account_audit_log_restricted = fields.Boolean(
         string="Protected by restricted Audit Logs",
         compute="_compute_account_audit_log_restricted",
         search="_search_account_audit_log_restricted",
+        compute_sudo=True,
     )
 
     def _compute_account_audit_log_move_id(self):

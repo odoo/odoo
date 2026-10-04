@@ -18,4 +18,5 @@ from . import (
     test_search,
     test_tools,
     test_unity_read,
+    test_unlink,
 )

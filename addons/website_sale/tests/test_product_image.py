@@ -383,6 +383,7 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         })
 
         self.product_red.image_1920 = False
+        self.env.invalidate_all()
 
         self.assertEqual(self.product_red.image_1920.content, self.red_image.content)
 

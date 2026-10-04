@@ -46,7 +46,8 @@ class AccountFullReconcile(models.Model):
         self.env['account.partial.reconcile']._update_matching_number(fulls.reconciled_line_ids)
         return fulls
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_update_amls(self):
         # The default `ondelete='set null'` on `account_move_line.full_reconcile_id`
         # nulls the FK in PostgreSQL when the full reconcile is removed, but
         # `account_move_line.matching_number` is a plain Char that nobody
@@ -55,8 +56,8 @@ class AccountFullReconcile(models.Model):
         # unlink path so each previously-linked line ends up with the correct
         # value (False, or 'P<n>' when partial reconciles survive as zombies).
         amls = self.reconciled_line_ids
-        res = super().unlink()
-        amls = amls.exists()
-        if amls:
-            self.env['account.partial.reconcile']._update_matching_number(amls)
-        return res
+
+        def update_amls():
+            if existing_amls := amls.exists():
+                self.env['account.partial.reconcile']._update_matching_number(existing_amls)
+        return update_amls
