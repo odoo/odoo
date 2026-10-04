@@ -476,16 +476,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if products:
             # get all products without limit
             product_query = request.env['product.template']._search(product_domain)
-            attributes_grouped = request.env['product.template.attribute.line']._read_group(
-                domain=[
+            # One LIMIT 1 existence check per visible attribute: with a constant
+            # attribute_id, Postgres can stop at the first matching line instead
+            # of joining every attribute line of every matching product.
+            ProductTemplateAttributeLine = request.env['product.template.attribute.line']
+            attributes = ProductAttribute.search([('visibility', '=', 'visible')]).filtered(
+                lambda attribute: ProductTemplateAttributeLine.search_count([
                     ('product_tmpl_id', 'in', product_query),
-                    ('attribute_id.visibility', '=', 'visible'),
-                ],
-                groupby=['attribute_id'],
-                order='attribute_id'
+                    ('attribute_id', '=', attribute.id),
+                ], limit=1)
             )
-            attribute_ids = [attribute.id for attribute, in attributes_grouped]
-            attributes = ProductAttribute.browse(attribute_ids)
         else:
             attributes = ProductAttribute.browse(attribute_ids).sorted()
 
