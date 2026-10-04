@@ -180,7 +180,15 @@ export class BuilderColorPicker extends Component {
     }
 
     getUsedCustomColors() {
-        return getAllUsedColors(this.env.editor.editable);
+        const colors = getAllUsedColors(this.env.editor.editable);
+        if (this.props.noTransparency) {
+            for (const color of colors) {
+                if (color.startsWith("#") && color.length > 7) {
+                    colors.delete(color);
+                }
+            }
+        }
+        return colors;
     }
 
     getCorrespondingColorPickerTab(selectedColor) {
