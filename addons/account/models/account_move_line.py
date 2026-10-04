@@ -3549,6 +3549,7 @@ class AccountMoveLine(models.Model):
             'tax_repartition_line_id': self.tax_repartition_line_id.id,
             'tax_ids': [Command.set(self.tax_ids.ids)] + kwargs.pop('tax_ids', []),
             'tax_tag_ids': [Command.set(self.tax_tag_ids.ids)],
+            'extra_tax_data': self.extra_tax_data,
             'group_tax_id': self.group_tax_id.id,
             'partner_id': self.partner_id.id,
             **kwargs,
