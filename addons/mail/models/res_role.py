@@ -11,13 +11,28 @@ class ResRole(models.Model):
         "Each role has a unique name and can be associated with multiple users. "
         "Roles can be mentioned in messages to notify all associated users."
     )
+    _order = "sequence, id"
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
     user_ids = fields.Many2many("res.users", relation="res_role_res_users_rel", string="Users")
     user_ids_count = fields.Integer(compute="_compute_user_ids_count")
+    # Stored as a Char instead of an Integer because the ORM couldn't distinguish between setting
+    # the color to black (0) and unsetting the value (NULL).
+    color = fields.Char(
+        help="The color in which the usernames of people with this role will be displayed. "
+        "If a user has multiple roles, the color of the first role (as determined by "
+        "the sequence field) that has a color is used."
+    )
+    sequence = fields.Integer(default=10)
 
     _unique_name = models.UniqueIndex("(name)", "A role with the same name already exists.")
+    # The color is eventually used to style the page. Ensure nothing harmful (e.g. CSS injection)
+    # can be saved to this field.
+    _valid_color_check = models.Constraint(
+        "CHECK(color IS NULL OR color ~ '^#[A-Fa-f0-9]{6}$')",
+        "The color must be a valid 6-digit hex code."
+    )
 
     @api.depends("user_ids")
     def _compute_user_ids_count(self):

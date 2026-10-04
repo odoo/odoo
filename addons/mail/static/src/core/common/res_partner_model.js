@@ -59,6 +59,16 @@ export class ResPartner extends Record {
     partner_share;
     /** @type {string} */
     phone;
+    roleIds = fields.Many("res.role", {
+        compute() {
+            // Note: user.role_ids is a RecordList, but flatMap only flattens
+            // standard arrays; hence the explicit conversion with Array.from.
+            return this.user_ids?.flatMap((user) => Array.from(user.role_ids)) ?? [];
+        },
+        sort(r1, r2) {
+            return r1.sequence - r2.sequence || r1.id - r2.id;
+        },
+    });
     /** @type {string} */
     tz;
     /** @type {import("luxon").DateTime} */

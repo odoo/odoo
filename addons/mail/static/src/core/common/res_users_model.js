@@ -21,6 +21,7 @@ export class ResUsers extends ImStatusMixin {
     notification_type;
     partner_id = fields.One("res.partner", { inverse: "user_ids" });
     res_users_settings_id = fields.One("res.users.settings");
+    role_ids = fields.Many("res.role");
     /** @type {boolean} false when the user is an internal user, true otherwise */
     share;
     /** @type {boolean} */

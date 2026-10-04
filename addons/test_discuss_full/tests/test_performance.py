@@ -141,7 +141,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - _compute_message_unread
     #       - fetch res_groups (group_ids)
     #       - fetch im_livechat_channel
-    #   23: store add message:
+    #   24: store add message:
     #       - search mail_message_reaction
     #       - search mail_message (_filter_accessible_from_query)
     #       - search mail_message (_filter_accessible_from_query, ordered)
@@ -162,11 +162,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch partner (author)
     #       - search user (author)
     #       - fetch user (author)
+    #       - search res_role_res_users_rel (author role_ids)
     #       - fetch discuss_call_history
     #       - search_fetch mail_call_artifact (_compute_recording_media)
     #       - search mail_message_schedule (last message of the needaction message)
     #   1: select the current db snapshot
-    _query_count_messaging_menu_channels = 75
+    _query_count_messaging_menu_channels = 76
 
     def setUp(self):
         super().setUp()
@@ -689,13 +690,13 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_persona(self.user_root),
             ),
             "res.users": self._filter_users_fields(
-                self._res_for_user(self.users[0]),
-                self._res_for_user(self.users[2]),
+                self._res_for_user(self.users[0], also_author=True),
+                self._res_for_user(self.users[2], also_author=True),
                 self._res_for_user(self.users[14]),
                 self._res_for_user(self.users[15]),
                 self._res_for_user(self.users[3]),
                 self._res_for_user(self.users[12]),
-                self._res_for_user(self.users[1], also_livechat=True),
+                self._res_for_user(self.users[1], also_livechat=True, also_author=True),
                 self._res_for_user(self.user_root),
             ),
             "hr.employee": [
@@ -2010,6 +2011,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "main_user_id": user.id,
                 "name": "OdooBot",
+                "user_ids": [],
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if guest:
@@ -2065,10 +2067,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {**common_data, "display_name": "Visitor Ernest Employee"}
         return {}
 
-    def _res_for_user(self, user, only_inviting=False, also_livechat=False):
+    def _res_for_user(self, user, only_inviting=False, also_livechat=False, also_author=False):
         partner = user.partner_id
         if user == self.users[0]:
-            return {
+            res = {
                 "all_employee_ids": user.employee_ids.ids,
                 "active": True,
                 "id": user.id,
@@ -2078,6 +2080,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "partner_id": partner.id,
                 "share": False,
             }
+            if also_author:
+                res["role_ids"] = []
+            return res
         if user == self.users[1]:
             res = {
                 "all_employee_ids": user.employee_ids.ids,
@@ -2090,6 +2095,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
             if also_livechat:
                 res["offline_since"] = False
+            if also_author:
+                res["role_ids"] = []
             return res
         if user == self.users[2]:
             if only_inviting:
@@ -2101,7 +2108,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "should_display_in_call_im_status": False,
                     "partner_id": partner.id,
                 }
-            return {
+            res = {
                 "active": True,
                 "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
@@ -2111,6 +2118,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "partner_id": partner.id,
                 "share": False,
             }
+            if also_author:
+                res["role_ids"] = []
+            return res
         if user == self.users[3]:
             return {
                 "active": True,
