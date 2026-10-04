@@ -1515,3 +1515,14 @@ class TestPrivateReadGroup(common.TransactionCase):
                     RelatedBase._read_group([], [fname_chain], ['__count']),
                     [('bar_a', 1), (False, 4)],
                 )
+
+    def test_sum_currency_read_group(self):
+        """ Test that sum_currency aggregate syntax is accepted in aggregates and order clauses. """
+        Model = self.env['test_read_group.aggregate.monetary']
+        groups = Model._read_group(
+            domain=[('id', '=', False)],
+            groupby=['currency_id'],
+            aggregates=['total_in_currency_id:sum_currency'],
+            order='total_in_currency_id:sum_currency ASC',
+        )
+        self.assertEqual(groups, [])
