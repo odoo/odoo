@@ -1,0 +1,43 @@
+.s_team_board{
+
+    &.o_team_layout_list {
+        .o_team_board_card {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .s_card {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            .o_card_img_wrapper {
+                width: 150px;
+                flex-shrink: 0;
+            }
+        }
+    }
+
+    &.o_compact_card {
+        .s_card {
+            .card-body {
+                padding: 0.75rem;
+            }
+
+            .card-title {
+                font-size: 1rem;
+                margin-bottom: 0.25rem;
+                line-height: 1.2;
+            }
+
+            .card-text {
+                font-size: 0.85rem;
+                margin-bottom: 0.25rem;
+                line-height: 1.3;
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}

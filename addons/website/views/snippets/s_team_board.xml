@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_team_board" name="Card Team">
+    <section class="s_team_board o_colored_level o_cc o_cc2 pt48 pb48" data-exclude=".s_my_snippet, .s_popup, .o_popup_modal, .modal, table, tr, td, th">
+        <div class="container">
+
+            <h2>Meet Our Team</h2>
+            <p>The people building the experience you rely on every day.</p>
+
+            <div class="row">
+                <div class="o_team_board_card col-6 col-lg-3" data-name="Team Member" data-status="fail">
+                    <div class="card border-0 o_cc o_cc1" data-snippet="s_card">
+                        <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
+                            <img class="card-img-top o_card_img" src="/web/image/website.set_avatars_square_md_1"/>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs">James Mitchell</h3>
+                            <h6 class="card-subtitle text-secondary mb-2">Chief Technical Officer</h6>
+                            <p class="card-text">James leads the tech strategy and innovation efforts at the company.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="o_team_board_card col-6 col-lg-3" data-name="Team Member">
+                    <div class="card border-0 o_cc o_cc1" data-snippet="s_card">
+                        <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
+                            <img class="card-img-top o_card_img" src="/web/image/website.set_avatars_square_md_4"/>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs">Sophia Benett</h3>
+                            <h6 class="card-subtitle text-secondary mb-2">Financial Analyst</h6>
+                            <p class="card-text">Sophia evaluates financial data and provides strategic insights.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="o_team_board_card col-6 col-lg-3" data-name="Team Member">
+                    <div class="card border-0 o_cc o_cc1" data-snippet="s_card">
+                        <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
+                            <img class="card-img-top o_card_img" src="/web/image/website.set_avatars_square_md_3"/>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs">Olivia Reed</h3>
+                            <h6 class="card-subtitle text-secondary mb-2">Product Manager</h6>
+                            <p class="card-text">Olivia oversees product development from concept to launch.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<asset id="website.s_team_board_000_scss" name="Image Comparison 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_team_board/000.scss</path>
+</asset>
+
+</odoo>
