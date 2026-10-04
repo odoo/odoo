@@ -19,13 +19,12 @@ export class AttendanceCalendarOverview extends Component {
         });
     }
 
-    formatHours(hours) {
-        return `${Math.floor(Math.round(hours * 60) / 60)}h`;
-    }
-
-    formatMins(hours) {
-        const m = Math.round(hours * 60) % 60;
-        return m > 0 ? `${m}m` : "";
+    formatDuration(hoursFloat) {
+        const absValue = Math.abs(hoursFloat);
+        const hours = Math.floor(absValue);
+        const minutes = Math.round((absValue - hours) * 60);
+        const sign = hoursFloat < 0 ? "-" : "";
+        return `${sign}${hours}h${minutes ? ` ${minutes}m` : ""}`;
     }
 
     async loadData() {
