@@ -125,6 +125,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         upgrade_modules: Collection[str] = (),
         reinit_modules: Collection[str] = (),
         new_db_demo: bool | None = None,
+        new_db_test_data: bool | None = None,
         lock_wait: int = 15,
     ) -> Registry:
         """Create and return a new registry for the given database name.
@@ -148,6 +149,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         :param new_db_demo: Whether to install demo data for the new database. If set to ``None``, the value will be
           determined by the ``config['with_demo']``. Defaults to ``None``
+        :param new_db_test_data: Whether to install test data for the new database. If set to ``None``, the value will be
+                  determined by the ``config['with_test_data']``. Defaults to ``None``
         :param lock_wait: How long to wait to acquire the lock on the database (in seconds).
         """
         if (registry := cls.registries.get(db_name)) and not registry.ready:
@@ -212,6 +215,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 # now load modules
                 if new_db_demo is None:
                     new_db_demo = config['with_demo']
+                if new_db_test_data is None:
+                    new_db_test_data = config['with_test_data']
+
                 if first_registry and not update_module:
                     exit_stack.enter_context(gc.disabling_gc())
                 retries = 5 if update_module else 1
@@ -228,6 +234,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                             install_modules=install_modules,
                             reinit_modules=reinit_modules,
                             new_db_demo=new_db_demo,
+                            new_db_test_data=new_db_test_data,
                         )
                         cr.commit()
                     except Exception:

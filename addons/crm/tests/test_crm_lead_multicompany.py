@@ -8,7 +8,6 @@ from odoo.tests.common import users
 
 
 @tagged('multi_company')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCRMLeadMultiCompany(TestCrmCommon):
 
     @classmethod

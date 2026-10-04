@@ -16,6 +16,7 @@ class TestThirdChecks(L10nLatamCheckTest):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.chart_template = 'ar_ri'
         cls.company_data_3 = cls.setup_other_company(name='company_3_data', country_id=cls.env.ref('base.ar').id)
         cls.bank_journal = cls.company_data_3['default_journal_bank']
         cls._setup_check_payment_methods(cls.bank_journal)

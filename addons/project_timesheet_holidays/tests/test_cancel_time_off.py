@@ -10,9 +10,7 @@ class TestCancelTimeOff(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company = cls.env['res.company'].create({
-            'name': 'Test Company',
-        })
+        cls.company = cls.env.ref('base.test_company')
         cls.global_leave = cls.env['resource.calendar.leaves'].create({
             'name': 'Test Global Leave',
             'date_from': '2020-01-08 00:00:00',

@@ -16,11 +16,7 @@ class TestHrFleetDriver(common.TransactionCase):
             'name': 'Test Employee'
         })
 
-        cls.test_user = cls.env['res.users'].create({
-            'login': 'test',
-            'name': 'The King',
-            'email': 'noop@example.com',
-        })
+        cls.test_user = cls.env.ref('base.test_user')
 
         cls.brand = cls.env["fleet.vehicle.model.brand"].create({
             "name": "Audi",

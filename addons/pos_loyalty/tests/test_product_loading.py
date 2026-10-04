@@ -85,6 +85,8 @@ class TestPOSLoyaltyProductLoading(TestPointOfSaleHttpCommon):
         gift_card = self.env.ref('loyalty.gift_card_product_50').sudo()
         gift_card.company_id = self.env.company
 
+        self.env.user.company_ids = self.env.company  # else programs from other companies leak in
+
         company_b_data = self.setup_other_company(name='Company B')
         company_b = company_b_data['company']
         payment_method = self.env['pos.payment.method'].create({

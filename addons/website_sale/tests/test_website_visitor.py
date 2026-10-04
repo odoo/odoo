@@ -73,7 +73,7 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
         """Test that a product is not displayed anymore after
         changing it company.
         """
-        new_company = self.env["res.company"].sudo().create({"name": "Test Company"})
+        new_company = self.env.ref('base.test_company')
 
         product = self.env["product.product"].create({
             "name": "Test Product",
@@ -101,7 +101,7 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
         - displayed after visiting it
         - not displayed after changing it company.
         """
-        new_company = self.env["res.company"].sudo().create({"name": "Test Company"})
+        new_company = self.env.ref('base.test_company')
         public_user = self.env.ref("base.public_user")
 
         product = self.env["product.product"].create({

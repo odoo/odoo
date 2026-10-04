@@ -166,6 +166,11 @@ class TestQwebFieldMany2Many(common.TransactionCase):
         self.assertFalse(self.value_to_html(user.group_ids))
 
     def test_many2many_with_values(self):
+        # remove group_multi_currency, auto-granted since 2+ currencies are active
+        group_user = self.env.ref('base.group_user')
+        group_mc = self.env.ref('base.group_multi_currency')
+        group_user.sudo()._remove_group(group_mc)
+
         user = self.env['res.users'].create({
             'name': 'User2',
             'login': 'user2@example.com',

@@ -6,12 +6,10 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.tools import mute_logger
 
-from odoo.tests import tagged
 
 from odoo.addons.product.tests.common import ProductCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProductCombo(ProductCommon):
 
     _test_user_groups = (

@@ -182,6 +182,9 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
+    # test_change_coa breaks with a reused company; root cause not found, needs a fresh one
+    _force_new_company = True
+
     @classmethod
     def _use_chart_template(cls, company, chart_template_ref=None):
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
@@ -330,7 +333,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             {'name': 'Tax 4'},
         ])
 
-        fiscal_position = self.env['account.fiscal.position'].search([])
+        fiscal_position = self.env['account.fiscal.position'].search([('company_id', '=', self.company.id)])
 
         self.assertEqual(fiscal_position.map_tax(tax_1), tax_2)
         self.assertEqual(fiscal_position.map_tax(tax_2), tax_4)
@@ -365,7 +368,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=False)
 
-        fiscal_position = self.env['account.fiscal.position'].search([])
+        fiscal_position = self.env['account.fiscal.position'].search([('company_id', '=', self.company.id)])
         self.assertEqual(
             fiscal_position.map_account(self.env['account.chart.template'].ref('test_account_3_template')),
             self.env['account.chart.template'].ref('test_account_4_template'),
@@ -591,7 +594,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             Tests updating after the removal of taxes and updating the fiscal position of a tax
 
         """
-        fiscal_position = self.env['account.fiscal.position'].search([])
+        fiscal_position = self.env['account.fiscal.position'].search([('company_id', '=', self.company.id)])
         self.env['account.tax'].search([('company_id', '=', self.company.id)]).unlink()
 
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
@@ -829,8 +832,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
 
     def test_branch(self):
         # Test the auto-installation of a chart template (including demo data) on a branch
-        # Create a new main company, because install_demo doesn't do anything when reloading data
-        company = self.env['res.company'].create([{'name': 'Test Company'}])
+        company = self.company
         branch = self.env['res.company'].create([{
             'name': 'Test Branch',
             'parent_id': company.id,
@@ -1197,7 +1199,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         self.assertFalse(account.code)
 
     def test_install_module_partial_data(self):
-        company = self.env['res.company'].create({'name': 'Test Company'})
+        company = self.company
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
 
