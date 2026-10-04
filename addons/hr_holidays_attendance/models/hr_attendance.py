@@ -12,6 +12,9 @@ _INVALID_STATES = frozenset({'refused', 'draft'})
 class HrAttendance(models.Model):
     _inherit = 'hr.attendance'
 
+    def _get_work_entry_type_domain(self):
+        return super()._get_work_entry_type_domain() + [('requires_allocation', '=', False)]
+
     def write(self, vals):
         to_reverse = set()
         if not self.env.context.get('skip_time_rules') and _TIME_FIELDS & vals.keys():
