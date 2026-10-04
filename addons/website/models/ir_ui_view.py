@@ -505,6 +505,9 @@ class IrUiView(models.Model):
             self.env = self.with_context(delay_translations=not disable_delay_translations).env
         super().save(value, xpath=xpath)
 
+    def _get_written_view(self):
+        return self if self.website_id or 'website_id' not in self.env.context else self.env['website'].viewref(self.key)
+
     @api.model
     def _get_allowed_root_attrs(self):
         # Related to these options:
