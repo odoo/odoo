@@ -217,6 +217,7 @@ class HrLeave(models.Model):
     duration_display = fields.Char('Requested', compute='_compute_duration_display')
     # details
     meeting_id = fields.Many2one('calendar.event', string='Meeting', copy=False)
+    employee_location_ids = fields.One2many('hr.employee.location', 'leave_id', copy=False)
     first_approver_id = fields.Many2one(
         'hr.employee', string='First Approval', readonly=True, copy=False,
         help='This area is automatically filled by the user who validate the time off')
@@ -1611,6 +1612,7 @@ class HrLeave(models.Model):
         state_invalidated = 'state' in values and values['state'] != 'validate'
         if validated_leaves and state_invalidated:
             validated_leaves._remove_resource_leave()
+            validated_leaves.sudo().employee_location_ids.unlink()
             # Preserve allocation reversal logic from existing codebase
             self.env['hr.time.rule']._reverse_allocation_credits('hr.leave', validated_leaves.ids)
 
@@ -1645,6 +1647,10 @@ class HrLeave(models.Model):
         if validated_leaves and dates_amended and not state_invalidated:
             if not self.env.context.get('skip_create_resource_leave'):
                 validated_leaves._amend_resource_leave_dates()
+            validated_leaves.sudo().employee_location_ids.unlink()
+            validated_leaves.filtered(
+                lambda leave: leave._is_home_working()
+            )._create_or_update_employee_locations()
 
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'work_entry_type_id', 'employee_id', 'state']):
             if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
@@ -1819,12 +1825,70 @@ class HrLeave(models.Model):
             if resource_leave:
                 resource_leave.write(leave._prepare_resource_leave_vals())
 
+    def _is_home_working(self):
+        hr_homeworking_code = self.env['ir.config_parameter'].sudo().get_str('hr_holidays.hr_homeworking_code') or '002.08'
+        return self.work_entry_type_id.code == hr_homeworking_code
+
+    def _create_or_update_employee_locations(self):
+        """
+        This method create or update employee locations for home-working leaves.
+
+        Set the location to `Home` for each day in the requested leave date range.
+        Update existing records for the same employee and date, or create missing ones.
+        """
+        home_location = self.env['hr.work.location'].search([('location_type', '=', 'home')], limit=1, order='id')
+        if not home_location:
+            return
+
+        EmployeeLocationSudo = self.env['hr.employee.location'].sudo()  # Time Off approvers may not have access to the employee's work locations.
+        existing_location_ids = {
+            (location.employee_id.id, location.date): location.id
+            for location in EmployeeLocationSudo.search(
+                Domain.OR(
+                    [
+                        ('employee_id', '=', leave.employee_id.id),
+                        ('date', '>=', leave.request_date_from),
+                        ('date', '<=', leave.request_date_to),
+                    ]
+                    for leave in self
+                )
+            )
+        }
+        vals_list = []
+        for leave in self:
+            vals = {
+                'work_location_id': home_location.id,
+                'leave_id': leave.id,
+            }
+            location_ids = []
+            current_date = leave.request_date_from
+            while current_date <= leave.request_date_to:
+                if location_id := existing_location_ids.get((leave.employee_id.id, current_date)):
+                    location_ids.append(location_id)
+                else:
+                    vals_list.append({
+                        **vals,
+                        'employee_id': leave.employee_id.id,
+                        'date': current_date,
+                    })
+                current_date += timedelta(days=1)
+            if location_ids:
+                EmployeeLocationSudo.browse(location_ids).write(vals)
+        if vals_list:
+            EmployeeLocationSudo.create(vals_list)
+
     def _validate_leave_request(self):
         """ Validate time off requests
         by creating a calendar event and a resource time off. """
         holidays = self.filtered("employee_id")
         holidays.sudo()._create_resource_leave()
-        meeting_holidays = holidays.filtered(lambda l: l.work_entry_type_id.create_calendar_meeting and not (l.meeting_id and l.meeting_id.active))
+        # Create home work locations for holidays that are marked as home working.
+        holidays.filtered(lambda l: l._is_home_working())._create_or_update_employee_locations()
+        meeting_holidays = holidays.filtered(lambda l: (
+            l.work_entry_type_id.create_calendar_meeting
+            and not (l.meeting_id and l.meeting_id.active)
+            and not l._is_home_working()
+        ))
         meetings = self.env['calendar.event']
         if meeting_holidays:
             Meeting = self.env['calendar.event']
@@ -2101,6 +2165,7 @@ class HrLeave(models.Model):
         (self - validated_holidays).with_context(skip_time_rules=True).write({'state': 'refuse', 'second_approver_id': current_employee.id})
         # Delete the meeting
         self.mapped('meeting_id').write({'active': False})
+        self.sudo().employee_location_ids.unlink()
         # Post a second message, more verbose than the tracking message
         for holiday in self:
             if holiday.employee_id.user_id:
@@ -2194,6 +2259,7 @@ class HrLeave(models.Model):
     def _post_leave_cancel(self):
         self.meeting_id.active = False
         self._remove_resource_leave()
+        self.sudo().employee_location_ids.unlink()
 
     def action_documents(self):
         domain = [('id', 'in', self.attachment_ids.ids)]
