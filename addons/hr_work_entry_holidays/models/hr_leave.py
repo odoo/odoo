@@ -1,5 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< 5a4e4c21d8eb968af60dcbb8511a59ceaf3ff3e7
+||||||| af38ef666da046c3cb6a89fbf74595c3a10c4f5a
+from collections import defaultdict
+=======
+import pytz
+
+from collections import defaultdict
+>>>>>>> 603b8ecbe4f786ab637358353b8fe5caa1c7c069
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
@@ -43,10 +51,24 @@ class HrLeave(models.Model):
             for contract in contracts:
                 # Generate only if it has aleady been generated
                 if leave.date_to >= contract.date_generated_from and leave.date_from <= contract.date_generated_to:
+<<<<<<< 5a4e4c21d8eb968af60dcbb8511a59ceaf3ff3e7
                     work_entries_vals_list += contracts._get_work_entries_values(
                         datetime.combine(leave.date_from, time.min),
                         datetime.combine(leave.date_to, time.max),
                     )
+||||||| af38ef666da046c3cb6a89fbf74595c3a10c4f5a
+                    work_entries_vals_list += contracts._get_work_entries_values(leave.date_from, leave.date_to)
+=======
+                    contract_tz = (contract.resource_calendar_id or contract.employee_id.resource_calendar_id or contract.employee_id).tz
+                    tz = pytz.timezone(contract_tz) if contract_tz else pytz.utc
+                    contract_start = tz.localize(fields.Datetime.to_datetime(contract.date_start)).astimezone(pytz.utc).replace(tzinfo=None)
+                    contract_stop = datetime.combine(fields.Datetime.to_datetime(contract.date_end or datetime.max.date()), time.max)
+                    if contract.date_end:
+                        contract_stop = tz.localize(contract_stop).astimezone(pytz.utc).replace(tzinfo=None)
+                    work_entry_start = max(leave.date_from, contract_start)
+                    work_entry_end = min(leave.date_to, contract_stop)
+                    work_entries_vals_list += contract._get_work_entries_values(work_entry_start, work_entry_end)
+>>>>>>> 603b8ecbe4f786ab637358353b8fe5caa1c7c069
 
         work_entries_vals_list = self.env['hr.version']._generate_work_entries_postprocess(work_entries_vals_list)
         new_leave_work_entries = self.env['hr.work.entry'].create(work_entries_vals_list)
