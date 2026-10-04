@@ -65,4 +65,38 @@ describe("PosStore - loyalty essentials", () => {
 
         expect(card.id).toBe(2);
     });
+
+    test("afterProcessServerData removes reward lines of programs no longer loaded", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        // Reward #1 is an order discount of the automatic loyalty program #1
+        const reward = models["loyalty.reward"].get(1);
+        const program = reward.program_id;
+
+        const productLine = await addProductLineToOrder(store, order);
+        const rewardLine = await addProductLineToOrder(store, order, {
+            is_reward_line: true,
+            reward_id: reward,
+            coupon_id: models["loyalty.card"].get(1),
+        });
+        expect(order.lines).toHaveLength(2);
+
+        // The program was archived on the server: the data loading drops it from the
+        // local cache while the reward, and the unsynced line using it, remain
+        program.delete();
+        expect(models["loyalty.reward"].get(1)).toBe(reward);
+        expect(rewardLine.reward_id).toBe(reward);
+        expect(reward.program_id).toBe(undefined);
+
+        await store.afterProcessServerData();
+        store.setOrder(order);
+        await store.updateOrder(order);
+
+        expect(models["pos.order"].get(order.id)).toBe(order);
+        expect(order.lines).toHaveLength(1);
+        expect(order.lines[0]).toBe(productLine);
+        expect(order.lines.some((line) => line.is_reward_line)).toBe(false);
+    });
 });
