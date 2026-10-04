@@ -22,7 +22,7 @@
                     </group>
                     <div
                         name="estimated_delivery_fields"
-                        invisible="not enable_delivery_estimate"
+                        invisible="not enable_delivery_estimate or delivery_type not in ['fixed', 'base_on_rule']"
                         class="ms-4"
                     >
                         <div>
