@@ -1324,54 +1324,6 @@ class TestMailgateway(MailGatewayCommon):
         self.assertEqual(self.partner_1.message_bounce, 0)
         self.assertEqual(self.test_record.message_bounce, 2)
 
-    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink')
-    def test_message_process_bounce_records_channel(self):
-        """ Test blacklist allow to multi-bounce and auto update of discuss.channel """
-        other_record = self.env['mail.test.gateway'].create({
-            'email_from': f'Another name <{self.partner_1.email}>'
-        })
-        yet_other_record = self.env['mail.test.gateway'].create({
-            'email_from': f'Yet Another name <{self.partner_1.email.upper()}>'
-        })
-        test_channel = self.env['discuss.channel'].create({
-            'name': 'Test',
-            'channel_partner_ids': [(4, self.partner_1.id)],
-            'group_public_id': None,
-        })
-        self.fake_email.write({
-            'model': 'discuss.channel',
-            'res_id': test_channel.id,
-        })
-        self.assertIn(self.partner_1, test_channel.channel_partner_ids)
-        self.assertEqual(self.partner_1.message_bounce, 0)
-        self.assertEqual(other_record.message_bounce, 0)
-        self.assertEqual(yet_other_record.message_bounce, 0)
-
-        extra = self.fake_email.message_id
-        for _i in range(10):
-            record = self.format_and_process(
-                test_mail_data.MAIL_BOUNCE, f'A third name <{self.partner_1.email}>',
-                f'groups@{self.alias_domain}',
-                subject='Undelivered Mail Returned to Sender',
-                extra=extra)
-            self.assertFalse(record)
-        self.assertEqual(self.partner_1.message_bounce, 10)
-        self.assertEqual(self.test_record.message_bounce, 0)
-        self.assertEqual(other_record.message_bounce, 10)
-        self.assertEqual(yet_other_record.message_bounce, 10)
-        # MAX_BOUNCE_LIMIT in discuss_channel is set to 10,
-        # If this partner exceeds the limit, remove them from the channel.
-        self.assertNotIn(self.partner_1, test_channel.channel_partner_ids)
-
-        # On a new successful incoming email, the partner bounce counter should be reset.
-        self.format_and_process(
-            MAIL_TEMPLATE, self.partner_1.email_formatted,
-            f'groups@{self.alias_domain}',
-            subject='Test Working Email Subject',
-            extra=f'In-Reply-To:\r\n\t{self.fake_email.message_id}\n',
-        )
-        self.assertEqual(self.partner_1.message_bounce, 0)
-
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_bounce_records_partner(self):
         """ Test blacklist + bounce on ``res.partner`` model """

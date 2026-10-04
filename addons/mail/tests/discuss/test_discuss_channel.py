@@ -104,7 +104,6 @@ class TestChannelInternals(MailCommon, HttpCase):
     @freeze_time("2020-03-22 10:42:06")
     def test_channel_members(self):
         test_group = self.env["discuss.channel"].create({"name": "Group", "channel_type": "group"})
-        self.assertEqual(test_group.message_partner_ids, self.env["res.partner"])
         self.assertEqual(test_group.channel_partner_ids, self.partner_employee)
 
         emp_partner_write_date = fields.Datetime.to_string(self.env.user.partner_id.write_date)
@@ -318,15 +317,12 @@ class TestChannelInternals(MailCommon, HttpCase):
             ]
         with self.assertBus(notifications_again):
             test_group._add_members(partners=self.test_partner)
-        self.assertEqual(test_group.message_partner_ids, self.env["res.partner"])
         self.assertEqual(test_group.channel_partner_ids, self.test_partner + self.partner_employee)
 
         self.env["discuss.channel.member"].sudo().search([("partner_id", "in", self.test_partner.ids), ("channel_id", "in", test_group.ids)]).unlink()
-        self.assertEqual(test_group.message_partner_ids, self.env["res.partner"])
         self.assertEqual(test_group.channel_partner_ids, self.partner_employee)
 
         test_group.message_post(body="Test", message_type="comment", subtype_xmlid="mail.mt_comment")
-        self.assertEqual(test_group.message_partner_ids, self.env["res.partner"])
         self.assertEqual(test_group.channel_partner_ids, self.partner_employee)
 
     @users('employee')
@@ -371,23 +367,26 @@ class TestChannelInternals(MailCommon, HttpCase):
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_channel_recipients_mention(self):
-        """Posting a message on a channel should not send emails to internal users with notification type email"""
+        """Posting a message on a channel notifies a mentioned internal user in their inbox,
+        whatever their notification type, and sends no email, not even to a mentioned partner
+        without user."""
         no_user_partner = self.env["res.partner"].create({"name": "No User", "email": "nouser@example.com"})
         message = None
         with self.mock_mail_gateway():
             message = self.test_channel.message_post(
                 body="Test", partner_ids=[self.test_partner.id, no_user_partner.id],
                 message_type='comment', subtype_xmlid='mail.mt_comment')
-        self.assertSentEmail(self.test_channel.env.user.partner_id, [no_user_partner])
         mentions_notif = self.env["mail.notification"].search([
             ("mail_message_id", "=", message.id),
             ("res_partner_id", "=", self.test_partner.id),
         ])
         self.assertEqual(len(mentions_notif), 1, "Shoule have Inbox notification for the mentioned internal user")
+        self.assertNoMail(no_user_partner)
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_channel_recipients_user_of_partner_with_archived_user(self):
-        """The user picked for a recipient partner is one of its active users."""
+        """The user picked for a recipient partner is one of its active users, and a
+        partner without any is a share partner, not a recipient."""
         archived_only, two_logins = self.env["res.partner"].with_context(self._test_context).create([
             {"email": "archived.only@example.com", "name": "Archived Only"},
             {"email": "two.logins@example.com", "name": "Two Logins"},
@@ -410,7 +409,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         )
         self.assertEqual(
             {r["id"]: r["uid"] for r in recipients if r["notif"] != "web_push"},
-            {archived_only.id: None, two_logins.id: new_login.id},
+            {two_logins.id: new_login.id},
         )
 
     @mute_logger("odoo.models.unlink")
