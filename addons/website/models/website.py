@@ -2335,7 +2335,13 @@ class Website(models.CachedModel):
                     search = fuzzy_term
                 else:
                     fuzzy_term = False
-        count, results = self._search_exact(search_details, search, offset, limit, order)
+        if search and options.get('sortByRelevance'):
+            count, results = self._search_by_relevance(
+                search_details, search, offset, limit,
+                per_model_limit=bool(options.get('proportionateAllocation')),
+            )
+        else:
+            count, results = self._search_exact(search_details, search, offset, limit, order)
         return count, results, fuzzy_term
 
     def _search_exact(self, search_details, search, offset, limit, order):
@@ -2364,6 +2370,163 @@ class Website(models.CachedModel):
             search_detail['results'] = results
             total_count += count
             search_detail['count'] = count
+            all_results.append(search_detail)
+        return total_count, all_results
+
+    def _search_get_relevance_keys(self, search):
+        """
+        Builds the order keys ranking rows by relevance to search, over the
+        tsvector columns 'name_vector', 'tag_vector' and 'description_vector'
+        of the row being ranked, see `_search_get_relevance_vectors`.
+
+        :param search: text against which to match results
+
+        :return: list of SQL expressions [matched_terms, match_tier, proximity, spread],
+            best match first when ordered by matched_terms DESC, match_tier ASC,
+            proximity DESC, spread DESC
+        """
+        name_vector = SQL.identifier('name_vector')
+        tag_vector = SQL.identifier('tag_vector')
+        description_vector = SQL.identifier('description_vector')
+        # Concatenating an empty tsvector is harmless, so no None filtering is needed.
+        all_vectors = SQL("%s || %s || %s", name_vector, tag_vector, description_vector)
+
+        tokens = re.findall(r'\w+', search.lower())[:8]  # bound query size for pathological searches
+        q_phrase = SQL("phraseto_tsquery('simple', %s)", search)
+        q_exact = SQL("to_tsquery('simple', %s)", ' & '.join(tokens))
+        q_prefix = SQL("to_tsquery('simple', %s)", ' & '.join(f'{token}:*' for token in tokens))
+        q_any = SQL("to_tsquery('simple', %s)", ' | '.join(f'{token}:*' for token in tokens))
+
+        matched_terms = SQL(" + ").join(
+            SQL("(CASE WHEN %s @@ to_tsquery('simple', %s) THEN 1 ELSE 0 END)", all_vectors, f'{token}:*')
+            for token in tokens
+        ) if tokens else SQL("0")
+
+        # Ranked best-match-first; the index in this list IS the tier, so
+        # match_tier sorts ASC (lower is better).
+        tiers = [
+            (name_vector, q_phrase), (name_vector, q_exact),
+            (tag_vector, q_phrase), (tag_vector, q_exact),
+            (description_vector, q_phrase), (description_vector, q_exact),
+            (name_vector, q_prefix), (tag_vector, q_prefix), (description_vector, q_prefix),
+            (all_vectors, q_prefix),
+        ]
+        match_tier = SQL("CASE %s ELSE %s END", SQL(" ").join(
+            SQL("WHEN %s @@ %s THEN %s", vector, tsquery, tier)
+            for tier, (vector, tsquery) in enumerate(tiers)
+        ), len(tiers))
+
+        # Last argument is postgres' normalization flag, not a tier number:
+        # 0 keeps the raw cover density, 4 divides it by the mean harmonic
+        # distance between extents.
+        proximity = SQL("ts_rank_cd(%s, %s, 0)", all_vectors, q_prefix)
+        # `spread` breaks ties `proximity` leaves between two results whose best
+        # cover is otherwise identical (e.g. same description, one of them also
+        # repeating some of the terms elsewhere): ts_rank_cd(..., q_any) credits
+        # every matched term occurrence instead of only the single best cover.
+        spread = SQL("ts_rank_cd(%s, %s, 4)", all_vectors, q_any)
+        return [matched_terms, match_tier, proximity, spread]
+
+    def _search_by_relevance(self, search_details, search, offset, limit, per_model_limit=False):
+        """
+        Performs a search with a search text, ranking all `search_details`'
+        results by relevance together (rather than per model) via a single
+        SQL UNION query, so that the global top results are returned instead
+        of the top results of each model taken independently.
+
+        :param search_details: see :meth:`_search_get_details`
+        :param search: text against which to match results
+        :param offset: number of results to skip globally
+        :param limit: maximum number of results globally
+        :param per_model_limit: if True, let every model contribute up to
+            `limit` of its own rank-ordered results instead of cutting to the
+            global top-`limit` (used by `proportionateAllocation`). `offset`
+            is ignored when this is set.
+
+        :return: tuple containing:
+
+            - total number of results across all involved models
+            - list of results per model made of:
+                - initial search_detail for the model
+                - count: number of results for the model
+                - results: model list equivalent to a `model.search()`
+                - ranks: global rank (0-based) of each record of `results`
+        """
+        if not search_details:
+            return 0, []
+        ranked_queries = []
+        count_queries = []
+        model_limit = limit if per_model_limit else offset + limit
+        # The per-model top-K LIMIT below is only a valid subset of the
+        # global top-K if both are ordered the same way, so this is built
+        # once and reused for both the per-model query and the outer envelope.
+        rank_order = SQL("matched_terms DESC, match_tier ASC, proximity DESC, spread DESC")
+        matched_terms, match_tier, proximity, spread = self._search_get_relevance_keys(search)
+        for model_index, search_detail in enumerate(search_details):
+            model = self.env[search_detail['model']]
+            query = model._search_get_matching_query(search_detail, search)
+            table = query.table
+            where_clause = query.where_clause or SQL("TRUE")
+            vectors = model._search_get_relevance_vectors(table, query, search_detail)
+            # The inner row_number() window keeps PostgreSQL from pulling this
+            # subquery up into the outer SELECT below, which would inline each
+            # vector expression again at every reference to it (matched_terms,
+            # match_tier, proximity and spread each reference all 3 vectors).
+            vectors_query = SQL(
+                "SELECT %(id)s AS id, row_number() OVER (ORDER BY %(order)s) AS model_order_rank,"
+                " %(name_vector)s AS name_vector, %(tag_vector)s AS tag_vector,"
+                " %(description_vector)s AS description_vector"
+                " FROM %(from_clause)s WHERE %(where_clause)s",
+                id=table.id, order=query.order or table.id,
+                name_vector=vectors['name'], tag_vector=vectors['tags'], description_vector=vectors['description'],
+                from_clause=query.from_clause, where_clause=where_clause,
+            )
+            ranked_queries.append(SQL(
+                "(SELECT %(model_index)s AS model_index, id,"
+                " %(matched_terms)s AS matched_terms, %(match_tier)s AS match_tier,"
+                " %(proximity)s AS proximity, %(spread)s AS spread, model_order_rank"
+                " FROM (%(vectors_query)s) AS vectors"
+                " ORDER BY %(rank_order)s, model_order_rank"
+                " LIMIT %(model_limit)s)",
+                model_index=model_index, vectors_query=vectors_query,
+                matched_terms=matched_terms, match_tier=match_tier, proximity=proximity, spread=spread,
+                rank_order=rank_order, model_limit=model_limit,
+            ))
+            # The exact per-model total (regardless of whether any of its rows
+            # made the global top `limit`) is cheaper computed on its own than
+            # derived from the ranked query above, and it must be known for
+            # every model, not just the ones visible on this page.
+            count_queries.append(SQL(
+                "SELECT %(model_index)s AS model_index, count(*) AS model_count FROM %(from_clause)s WHERE %(where_clause)s",
+                model_index=model_index, from_clause=query.from_clause, where_clause=where_clause,
+            ))
+
+        # `per_model_limit` needs every model's rows, not just the global
+        # top `limit` of them, so the outer envelope drops its LIMIT/OFFSET.
+        global_limit = SQL("") if per_model_limit else SQL(" LIMIT %s OFFSET %s", limit, offset)
+        rows = self.env.execute_query(SQL(
+            "WITH ranked AS (%s) SELECT model_index, id FROM ranked"
+            " ORDER BY %s, model_index, model_order_rank%s",
+            SQL(" UNION ALL ").join(ranked_queries), rank_order, global_limit,
+        ))
+        counts = dict(self.env.execute_query(SQL(" UNION ALL ").join(count_queries)))
+
+        ids_per_model = defaultdict(list)
+        ranks_per_model = defaultdict(list)
+        for rank, (model_index, record_id) in enumerate(rows):
+            ids_per_model[model_index].append(record_id)
+            ranks_per_model[model_index].append(rank)
+
+        all_results = []
+        total_count = 0
+        for model_index, search_detail in enumerate(search_details):
+            model = self.env[search_detail['model']]
+            if search_detail.get('requires_sudo'):
+                model = model.sudo()
+            search_detail['results'] = model.browse(ids_per_model[model_index]).with_context(search_term=search)
+            search_detail['count'] = counts.get(model_index, 0)
+            search_detail['ranks'] = ranks_per_model[model_index]
+            total_count += search_detail['count']
             all_results.append(search_detail)
         return total_count, all_results
 

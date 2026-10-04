@@ -1540,6 +1540,15 @@ class ProductTemplate(models.Model):
             )
         return super()._search_get_field_domain(field, search_term)
 
+    @api.model
+    def _search_get_relevance_fields(self, search_detail):
+        fields_by_category = super()._search_get_relevance_fields(search_detail)
+        # Hidden tags must not influence the order: the ranking SQL can't filter them.
+        fields_by_category["tags"] = [
+            field_path for field_path in fields_by_category["tags"] if field_path != "product_tag_ids.name"
+        ]
+        return fields_by_category
+
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         search_term = self.env.context.get("search_term", "")

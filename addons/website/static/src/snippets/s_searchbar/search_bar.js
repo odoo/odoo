@@ -62,6 +62,8 @@ export class SearchBar extends Interaction {
             allowFuzzy: !(dataset.noFuzzy && JSON.parse(dataset.noFuzzy)),
             proportionateAllocation: true,
             renderTemplate: true,
+            // The default order means no order was picked, so rank by relevance.
+            sortByRelevance: this.order === "name asc",
         };
         for (const fieldEl of form.querySelectorAll("input[type='hidden']")) {
             this.options[fieldEl.name] = fieldEl.value;
