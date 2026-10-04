@@ -764,12 +764,18 @@ class StockWarehouseOrderpoint(models.Model):
                 while orderpoints_batch:
                     procurements = []
                     for orderpoint in orderpoints_batch:
+                        orderpoint_display = "%g - %g for %s in %s" % (
+                            orderpoint.product_min_qty,
+                            orderpoint.product_max_qty,
+                            orderpoint.product_id.display_name,
+                            orderpoint.location_id.display_name,
+                        )
                         origins = orderpoint.env.context.get('origins', {}).get(orderpoint.id, False)
                         if origins:
                             origins = self.env['stock.reference'].browse(origins)
-                            origin = '%s - %s' % (orderpoint.display_name, ','.join(origins.mapped('name')))
+                            origin = '%s - %s' % (orderpoint_display, ','.join(origins.mapped('name')))
                         else:
-                            origin = orderpoint.name
+                            origin = orderpoint_display
                         if orderpoint.uom_id.compare(orderpoint.qty_to_order, 0.0) == 1:
                             date = orderpoint._get_orderpoint_procurement_date()
                             global_horizon_days = orderpoint.get_horizon_days()
