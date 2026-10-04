@@ -188,9 +188,12 @@ export class ImageField extends Component {
             const ctx = canvas.getContext("2d");
             ctx.drawImage(image, 0, 0);
 
-            info.data = canvas.toDataURL("image/webp").split(",")[1];
-            info.type = "image/webp";
-            info.name = info.name.replace(/\.[^/.]+$/, ".webp");
+            const dataUrl = canvas.toDataURL("image/webp");
+            info.data = dataUrl.split(",")[1];
+            if (dataUrl.startsWith("data:image/webp")) {
+                info.type = "image/webp";
+                info.name = info.name.replace(/\.[^/.]+$/, ".webp");
+            }
         }
         if (info.type === "image/webp") {
             // Generate alternate sizes and format for reports.
