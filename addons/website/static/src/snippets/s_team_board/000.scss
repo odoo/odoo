@@ -1,0 +1,68 @@
+.s_team_board {
+    &.s_team_board_comfortable {
+        .card-title {
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .text-muted {
+            margin-bottom: 0.75rem;
+        }
+
+        .card-text {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+    }
+
+    &.s_team_board_compact {
+        .card-title {
+            margin-top: 0.5rem;
+            margin-bottom: 0.125rem;
+            font-size: 1rem;
+        }
+
+        .text-muted {
+            margin-bottom: 0.25rem;
+            font-size: $small-font-size;
+        }
+
+        .card-text {
+            margin-bottom: 0.25rem;
+            font-size: $small-font-size;
+            line-height: 1.3;
+        }
+    }
+
+    &.s_team_board_list {
+        .row > div {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            width: 100%;
+            flex: 0 0 100%;
+            max-width: 100%;
+            text-align: start !important;
+
+            img {
+                width: 120px;
+                flex-shrink: 0;
+            }
+
+            > div {
+                flex: 1;
+            }
+        }
+    }
+}
+
+.o_team_board_modal {
+    .o_team_board_modal_img {
+        display: block;
+        width: 100%;
+        max-width: 200px;
+        aspect-ratio: 1;
+        object-fit: cover;
+        margin-inline: auto;
+    }
+}

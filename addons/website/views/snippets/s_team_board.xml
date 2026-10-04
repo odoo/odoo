@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="s_team_board" name="Team Board">
+        <section class="s_team_board s_team_board_grid s_team_board_comfortable o_cc o_cc1 pt96 pb64">
+            <div class="container">
+                <h2 class="h3-fs" style="text-align: center;">Meet Our Team</h2>
+                <div class="row">
+                    <div class="s_team_board_member col-lg-3 col-6 pb32 text-center">
+                        <img class="img-fluid rounded-4 me-auto"
+                             src="/web/image/website.set_avatars_square_md_1"
+                             alt="Mitchell"/>
+                        <div>
+                            <h3 class="card-title h5">Mitchell</h3>
+                            <p class="text-muted fw-bold">Chief Executive Officer</p>
+                            <p class="card-text">Short bio about Mitchell: his background, his passions and what she brings to the team.</p>
+                        </div>
+                    </div>
+                    <div class="s_team_board_member col-lg-3 col-6 pb32 text-center">
+                        <img class="img-fluid rounded-4 me-auto"
+                             src="/web/image/website.set_avatars_square_md_2"
+                             alt="John"/>
+                        <div>
+                            <h3 class="card-title h5">John</h3>
+                            <p class="text-muted fw-bold">Chief Technical Officer</p>
+                            <p class="card-text">Short bio about John: his background, his passions and what he brings to the team.</p>
+                        </div>
+                    </div>
+                    <div class="s_team_board_member col-lg-3 col-6 pb32 text-center">
+                        <img class="img-fluid rounded-4 me-auto"
+                             src="/web/image/website.set_avatars_square_md_3"
+                             alt="Alice"/>
+                        <div>
+                            <h3 class="card-title h5">Alice</h3>
+                            <p class="text-muted fw-bold">Marketing Manager</p>
+                            <p class="card-text">Short bio about Alice: her background, her passions and what she brings to the team.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade o_team_board_modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <button type="button" class="btn-close position-absolute top-0 end-0 m-3 z-1"
+                                data-bs-dismiss="modal" aria-label="Close"></button>
+                        <div class="row g-0 align-items-center">
+                            <div class="col-md-4 p-4 pe-md-0">
+                                <img class="o_team_board_modal_img rounded-4" src="" alt=""/>
+                                <button type="button"
+                                        class="o_team_board_member_send_message_btn btn btn-primary w-100 mt-3">
+                                    Send a message
+                                </button>
+                            </div>
+                            <div class="col-md-8 p-4 p-lg-5">
+                                <h3 class="o_team_board_modal_name h3"></h3>
+                                <p class="o_team_board_modal_role text-muted fw-bold"></p>
+                                <p class="o_team_board_modal_bio mb-0"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+    <asset id="website.s_team_board_stylesheet" name="Team board 000 scss">
+        <bundle>web.assets_frontend</bundle>
+        <path>website/static/src/snippets/s_team_board/000.scss</path>
+    </asset>
+</odoo>
