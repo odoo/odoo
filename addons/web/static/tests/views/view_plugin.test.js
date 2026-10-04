@@ -7,6 +7,8 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 
+import { ViewPlugin } from "@web/views/view_plugin";
+
 describe.current.tags("headless");
 
 class TakeFive extends models.Model {
@@ -28,7 +30,7 @@ test("stores calls in cache in success", async () => {
         expect.step("get_views");
     });
     await makeTestApp();
-    await getService("view").loadViews(
+    await getService(ViewPlugin).loadViews(
         {
             resModel: "take.five",
             views: [[99, "list"]],
@@ -36,7 +38,7 @@ test("stores calls in cache in success", async () => {
         },
         {}
     );
-    await getService("view").loadViews(
+    await getService(ViewPlugin).loadViews(
         {
             resModel: "take.five",
             views: [[99, "list"]],
@@ -55,7 +57,7 @@ test("stores calls in cache when failed", async () => {
     });
     await makeTestApp();
     await expect(
-        getService("view").loadViews(
+        getService(ViewPlugin).loadViews(
             {
                 resModel: "take.five",
                 views: [[99, "list"]],
@@ -64,7 +66,7 @@ test("stores calls in cache when failed", async () => {
         )
     ).rejects.toThrow(/my little error/);
     await expect(
-        getService("view").loadViews(
+        getService(ViewPlugin).loadViews(
             {
                 resModel: "take.five",
                 views: [[99, "list"]],
@@ -82,7 +84,7 @@ test("clear cache when updating ir.ui.view", async () => {
     });
     await makeTestApp();
     const loadView = () =>
-        getService("view").loadViews(
+        getService(ViewPlugin).loadViews(
             {
                 resModel: "take.five",
                 views: [[99, "list"]],
