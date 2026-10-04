@@ -171,13 +171,13 @@ export class SelectFilterColorAction extends StyleAction {
     static id = "selectFilterColor";
     static dependencies = ["color", "backgroundImageOption", "builderActions"];
     apply({ editingElement, value }) {
+        // No value means the filter is not being changed (e.g. the block is
+        // being selected): keep the current one, however it is defined.
+        if (value === undefined) {
+            return;
+        }
         // Find the filter element.
         let filterEl = editingElement.querySelector(":scope > .o_we_bg_filter");
-
-        // If no value is provided, use the current one if any.
-        if (filterEl && value === undefined) {
-            value = filterEl.style.backgroundImage || filterEl.style.backgroundColor;
-        }
         // If the filter would be transparent, remove it / don't create it.
         const rgba = value && convertCSSColorToRgba(value);
         if (!value || (rgba && rgba.opacity < 0.001)) {
