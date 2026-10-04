@@ -916,20 +916,66 @@ class AccountMoveLine(models.Model):
     def _compute_totals(self):
         """ Compute 'price_subtotal' / 'price_total' outside of `_sync_tax_lines` because those values must be visible for the
         user on the UI with draft moves and the dynamic lines are synchronized only when saving the record.
+
+        round_globally's whole-invoice redistribution means a line's total can change because of a
+        sibling's price_unit/quantity/... changing, not just its own, so this recomputes every
+        relevant line of the move together (via _get_rounded_base_and_tax_lines, the same base lines
+        _sync_tax_lines rounds 'balance' from) instead of one line at a time. Lines outside the
+        current @api.depends batch that turn out to need a new value are rescheduled through
+        add_to_compute so they get picked up too.
+
+        'cogs' lines are handled separately, the same way every line used to be handled before this
+        whole-invoice batching was introduced: _get_rounded_base_and_tax_lines only gathers 'product'
+        base lines (plus epd/rounding/non_deductible ones added for the whole-invoice rounding), so a
+        'cogs' line would never get visited here.
+
+        TODO remove the need of cogs lines to have a price_subtotal/price_total.
         """
         AccountTax = self.env['account.tax']
-        for line in self:
-            # TODO remove the need of cogs lines to have a price_subtotal/price_total
-            if line.display_type not in ('product', 'cogs', 'non_deductible_product', 'non_deductible_product_total') or not line.move_id:
-                line.price_total = line.price_subtotal = False
-                continue
+        relevant_types = ('product', 'cogs', 'non_deductible_product', 'non_deductible_product_total')
 
+        cogs_lines = self.filtered(lambda line: line.display_type == 'cogs' and line.move_id)
+        for line in cogs_lines:
             company = line.company_id or self.env.company
             base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
             AccountTax._add_tax_details_in_base_line(base_line, company)
             AccountTax._round_base_lines_tax_details([base_line], company)
             line.price_subtotal = base_line['tax_details']['total_excluded_currency']
             line.price_total = base_line['tax_details']['total_included_currency']
+
+        for line in self - cogs_lines:
+            if line.display_type not in relevant_types or not line.move_id:
+                line.price_total = line.price_subtotal = False
+
+        for move in (self - cogs_lines).move_id:
+            # round_from_tax_lines=False: this can run mid-write, before every line of the move has
+            # its final tax amounts, and reconciling against the move's already-posted tax lines in
+            # that state would corrupt the result.
+            base_lines, _tax_lines = move._get_rounded_base_and_tax_lines(round_from_tax_lines=False)
+            siblings_to_recompute = self.env['account.move.line']
+            for base_line in base_lines:
+                line = base_line['record']
+                # Synthetic epd/rounding/non_deductible aggregate lines aren't real records.
+                if not isinstance(line, models.BaseModel) or line.display_type not in relevant_types:
+                    continue
+                tax_details = base_line['tax_details']
+                price_subtotal = tax_details['total_excluded_currency'] + tax_details['delta_total_excluded_currency']
+                price_total = price_subtotal + sum(
+                    tax_data['tax_amount_currency'] for tax_data in tax_details['taxes_data']
+                )
+                if line in self:
+                    line.price_subtotal = price_subtotal
+                    line.price_total = price_total
+                elif (
+                    line.currency_id.compare_amounts(line.price_subtotal, price_subtotal)
+                    or line.currency_id.compare_amounts(line.price_total, price_total)
+                ):
+                    # Only reschedule a sibling when its value actually changed, otherwise two
+                    # siblings taking turns invalidating each other would loop forever.
+                    siblings_to_recompute += line
+            if siblings_to_recompute:
+                self.env.add_to_compute(self._fields['price_subtotal'], siblings_to_recompute)
+                self.env.add_to_compute(self._fields['price_total'], siblings_to_recompute)
 
     @api.depends('product_id', 'product_uom_id')
     def _compute_price_unit(self):
