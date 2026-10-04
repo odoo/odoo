@@ -6,11 +6,7 @@ export class BadgeOptionPlugin extends Plugin {
     /** @type {import("plugins").BuilderResources} */
     resources = {
         so_content_addition_selectors: [".s_badge"],
-        is_node_splittable_predicates: (node) => {
-            if (node.classList?.contains("s_badge")) {
-                return false;
-            }
-        },
+        region_properties: { is: ".s_badge", splittable: false },
     };
 }
 registry.category("builder-plugins").add(BadgeOptionPlugin.id, BadgeOptionPlugin);

@@ -3,9 +3,9 @@ import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
 
 export class ImagePlugin extends EditorImagePlugin {
     static shared = ["resetImageTransformation"];
-    toolbarNamespace = DISABLED_NAMESPACE;
     resources = {
         ...this.resources,
+        region_properties: { is: "IMG", toolbar: DISABLED_NAMESPACE },
         on_will_save_media_dialog_handlers: async (elements) => {
             for (const element of elements) {
                 if (element && element.tagName === "IMG") {

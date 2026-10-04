@@ -130,10 +130,9 @@ export class DomPlugin extends Plugin {
             return root;
         },
         clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
-        is_functional_empty_node_predicates: (node) => {
-            if (isSelfClosingElement(node) || isEditorTab(node)) {
-                return true;
-            }
+        region_properties: {
+            is: (node) => isSelfClosingElement(node) || isEditorTab(node),
+            functionalEmpty: true,
         },
     };
 
@@ -221,10 +220,7 @@ export class DomPlugin extends Plugin {
         for (const node of children) {
             if (isBlock(node)) {
                 shouldBreakLine = true;
-            } else if (
-                !visibleNodes.has(node) &&
-                (this.checkPredicates("is_node_removable_predicates", node) ?? true)
-            ) {
+            } else if (!visibleNodes.has(node) && !this.dependencies.delete.isUnremovable(node)) {
                 removeNode(node, cursors);
             } else if (node.nodeName === "BR") {
                 if (shouldBreakLine) {
