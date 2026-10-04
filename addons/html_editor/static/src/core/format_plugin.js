@@ -484,7 +484,6 @@ export class FormatPlugin extends Plugin {
     }
 
     formatSelection(formatName, { applyStyle, formatProps, commit = true } = {}) {
-        this.dependencies.selection.selectAroundNonEditable();
         const selection = this.dependencies.split.splitSelection();
         if (typeof applyStyle === "undefined") {
             applyStyle = !this.isFormatActive(formatName);

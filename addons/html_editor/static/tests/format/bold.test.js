@@ -53,7 +53,7 @@ test("should make two paragraphs not bold", async () => {
 
 test("should make qweb tag bold (1)", async () => {
     await testEditor({
-        contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
+        contentBefore: `<div>[<p t-out="'Test'" contenteditable="false">Test</p>]</div>`,
         stepFunction: bold,
         contentAfter: `<div>[<p t-out="'Test'" style="font-weight: bolder;">Test</p>]</div>`,
         config: { includePlugins: [QWebPlugin] },
@@ -62,16 +62,16 @@ test("should make qweb tag bold (1)", async () => {
 
 test("should make qweb tag bold (2)", async () => {
     await testEditor({
-        contentBefore: `<div><p t-field="record.name" contenteditable="false">[Test]</p></div>`,
+        contentBefore: `<div>[<p t-field="record.name" contenteditable="false">Test</p>]</div>`,
         stepFunction: bold,
         contentAfter: `<div>[<p t-field="record.name" style="font-weight: bolder;">Test</p>]</div>`,
         config: { includePlugins: [QWebPlugin] },
     });
 });
 
-test("should make qweb tag bold and create a commit even with partial selection inside contenteditable false", async () => {
+test("should make qweb tag bold with one commit that only changes its style", async () => {
     const { editor, el } = await setupEditor(
-        `<div><p t-out="'Test'" contenteditable="false">T[e]st</p></div>`,
+        `<div>[<p t-out="'Test'" contenteditable="false">Test</p>]</div>`,
         { config: { includePlugins: [QWebPlugin] } }
     );
     bold(editor);
