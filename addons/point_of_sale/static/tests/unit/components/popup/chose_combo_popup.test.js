@@ -23,7 +23,7 @@ describe("chose_combo_popup.js", () => {
                 const comboItems = comboChoice.combo_item_ids;
                 const line = await store.addLineToCurrentOrder({
                     product_tmpl_id: comboItems[0].product_id.product_tmpl_id,
-                    qty: comboChoice.is_upsell ? 1 : comboChoice.qty_free,
+                    qty: comboChoice.is_upsell ? 1 : comboChoice.included_qty,
                 });
                 qtyTaken[comboChoice.id] = {
                     [line.uuid]: {
@@ -52,7 +52,7 @@ describe("chose_combo_popup.js", () => {
             for (const comboChoice of comboProduct.combo_ids) {
                 expectedLines.push({
                     name: comboChoice.combo_item_ids[0].product_id.display_name,
-                    quantity: comboChoice.qty_free || 1,
+                    quantity: comboChoice.included_qty || 1,
                     upsell: false,
                     sequence: comboChoice.sequence,
                     id: comboChoice.id,

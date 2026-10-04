@@ -208,7 +208,7 @@ export function createCombo(store, config) {
         name,
         combo_item_ids: comboItems,
         base_price: basePrice,
-        qty_free: qtyFree,
+        included_qty: qtyFree,
         qty_max: qtyMax,
         is_upsell: isUpsell,
         sequence,
