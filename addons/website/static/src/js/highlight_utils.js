@@ -238,6 +238,7 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
         );
     }
 
+    const restoreAnimations = animationsAtEnd(highlightEl);
     const textNodes = descendants(highlightEl).filter((el) => el.nodeType === Node.TEXT_NODE);
     const rects = textNodes.map((node) => getTextnodeRects(node, 0, node.length)).flat();
     const finalRects = rectToBatch(rects).map((rects) => getBiggestBoxFromBoxes(rects));
@@ -259,6 +260,7 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
     const scale = inPreviewIframe ? highlightEl.offsetWidth / containerRect.width : 1;
     const rtl = window.getComputedStyle(highlightEl).direction === "rtl";
     const firstRect = highlightEl.getClientRects()[0];
+    restoreAnimations();
     const svgs = [];
     for (const rects of finalRects) {
         const svg = makeHighlightSvg(highlightID || getCurrentTextHighlight(highlightEl), {
@@ -269,7 +271,7 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
         svgs.push(svg);
         svg.style.top = `${(rects.y - firstRect.y) * scale}px`;
         svg.style.bottom = `0px`;
-        if (rtl) {  // Position from the right instead of left and mirror the SVG
+        if (rtl) { // Position from the right instead of left and mirror the SVG
             svg.style.right = `${(firstRect.right - rects.right) * scale}px`;
             svg.dataset.rtlIntendedRightPosition = rects.right;
             svg.style.transform = "scale(-1, 1)";
@@ -298,9 +300,39 @@ export function adaptHighlightPosition(highlightEl, svg) {
     // Reposition element in RTL to what was intended because
     // safari positionning work differently than other browsers
     if ("rtlIntendedRightPosition" in svg.dataset) {
+        const restoreAnimations = animationsAtEnd(highlightEl);
         const rightPositionDelta = svg.getBoundingClientRect().right - parseFloat(svg.dataset.rtlIntendedRightPosition);
+        restoreAnimations();
         svg.style.right = `${parseFloat(svg.style.right) + rightPositionDelta}px`;
     }
+}
+
+/**
+ * Moves the animations of the element to their last frame, so that it can be
+ * measured as it is displayed once animated and not in the middle of an
+ * animation (e.g. a text zooming in or flipping). Their time is restored right
+ * after: nothing is painted in between and the DOM is left untouched.
+ *
+ * @param {HTMLElement} el
+ * @returns {Function} restores the animations
+ */
+function animationsAtEnd(el) {
+    const currentTimes = new Map();
+    for (const animation of el.ownerDocument.getAnimations()) {
+        const targetEl = animation.effect?.target;
+        const endTime = animation.effect?.getComputedTiming().endTime;
+        // Only the animations moving the element, and that have a last frame.
+        if (!(targetEl?.contains(el) || el.contains(targetEl)) || !Number.isFinite(endTime)) {
+            continue;
+        }
+        currentTimes.set(animation, animation.currentTime);
+        animation.currentTime = endTime;
+    }
+    return () => {
+        for (const [animation, currentTime] of currentTimes) {
+            animation.currentTime = currentTime;
+        }
+    };
 }
 
 /**

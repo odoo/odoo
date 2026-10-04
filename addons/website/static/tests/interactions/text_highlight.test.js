@@ -85,3 +85,26 @@ test("[rtl] SVG positionned inside highlighted text", async () => {
     // in RTL with LTR content, highlight of previous line is top right
     expect(relativePosition(items[3], items[2])).toBe("beforeLeft,afterBottom");
 });
+
+test("highlight of an animated text is drawn as displayed once animated", async () => {
+    const highlightMarkup = `<span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-width: 2px;">personality</span>`;
+    await startInteractions(`
+        <p>${highlightMarkup}</p>
+        <p><span class="o_animated_text" style="display: inline-block;">${highlightMarkup}</span></p>
+    `);
+    // Zoom in the animated text, and keep it on the first frame of the
+    // animation, as when it starts on page load.
+    const animatedEl = queryFirst(".o_animated_text");
+    animatedEl
+        .animate([{ transform: "scale(0.5)" }, { transform: "none" }], {
+            duration: 10000,
+            fill: "both",
+        })
+        .pause();
+    animatedEl
+        .querySelector(".o_text_highlight")
+        .dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
+    await animationFrame();
+    const [pathEl, animatedPathEl] = queryAll(".o_text_highlight path");
+    expect(animatedPathEl.getAttribute("d")).toBe(pathEl.getAttribute("d"));
+});

@@ -60,6 +60,7 @@ export class HighlightPlugin extends Plugin {
             }
         },
         format_class_predicates: (className) => className.startsWith("o_text_highlight"),
+        system_node_selectors: ".o_text_highlight_svg",
         selectionchange_handlers: this.updateSelectedHighlight.bind(this),
         remove_all_formats_handlers: () => {
             // we rely on the normalize handler to start it again
@@ -256,6 +257,15 @@ formatsSpecs.highlight = {
         if (styledNode) {
             formatsSpecs.highlight.removeStyle(styledNode);
             node = styledNode;
+        }
+        if (node.classList.contains("o_animated_text")) {
+            // The animated text only wraps its content: the highlight is
+            // applied inside it, so that its SVGs are animated with the text
+            // and are not removed along with the animation.
+            const contentEl = node.ownerDocument.createElement("span");
+            contentEl.append(...node.childNodes);
+            node.append(contentEl);
+            node = contentEl;
         }
         node.classList.add("o_text_highlight", `o_text_highlight_${highlightId}`);
         if (colorToRestore && colorToRestore !== "currentColor") {
