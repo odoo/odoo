@@ -45,8 +45,8 @@ class PosSession(models.Model):
         pos_data_fields.append('update_stock_at_closing')
         return pos_data_fields
 
-    def close_session_from_ui(self, payment_method_closing={}):
-        result = super().close_session_from_ui(payment_method_closing)
+    def close_session_from_ui(self, payment_method_closing={}, opening_notes=None, closing_notes=None):
+        result = super().close_session_from_ui(payment_method_closing, opening_notes, closing_notes)
         if self.update_stock_at_closing:
             self._create_picking_at_end_of_session()
             self._get_closed_orders().filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing()
