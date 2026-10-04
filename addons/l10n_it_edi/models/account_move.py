@@ -2079,13 +2079,20 @@ class AccountMove(models.Model):
 
         companies = self.mapped("company_id")
         companies_partners = companies.mapped("partner_id")
-        moves_full = self.filtered(lambda m: not m._l10n_it_edi_is_simplified())
-        moves_simplified = self.filtered(lambda m: m._l10n_it_edi_is_simplified())
-        moves_simplified_errors = {
-            k: v
-            for k, v in moves_simplified._l10n_it_edi_is_simplified_checks().items()
-            if v.get('level') in ('error', 'warning')
-        }
+
+        moves_simplified = moves_full = self.env['account.move']
+        moves_simplified_errors = {}
+        for move in self:
+            checks = move._l10n_it_edi_is_simplified_checks()
+            has_blocking_issues = any(
+                check.get('level') in ('error', 'warning')
+                for check in checks.values()
+            )
+            if move.l10n_it_document_type.code == 'TD07' or not has_blocking_issues:
+                moves_simplified_errors.update(checks)
+                moves_simplified |= move
+            else:
+                moves_full |= move
 
         full = moves_full.mapped("commercial_partner_id").filtered(lambda p: p not in companies_partners)
         simplified = moves_simplified.mapped("commercial_partner_id").filtered(lambda p: p not in companies_partners | full)
@@ -2258,9 +2265,11 @@ class AccountMove(models.Model):
         ''' Create the xml file content.
             :return:    The XML content as bytestring.
         '''
-        qweb_template_name = (
-            'l10n_it_edi.account_invoice_it_FatturaPA_export' if not self._l10n_it_edi_is_simplified()
-            else 'l10n_it_edi.account_invoice_it_simplified_FatturaPA_export')
+        document_type = self._l10n_it_edi_get_document_type()
+        if self._l10n_it_edi_is_simplified_document_type(document_type):
+            qweb_template_name = 'l10n_it_edi.account_invoice_it_simplified_FatturaPA_export'
+        else:
+            qweb_template_name = 'l10n_it_edi.account_invoice_it_FatturaPA_export'
         xml_content = self.env['ir.qweb']._render(qweb_template_name, {
             **self._l10n_it_edi_get_values(pdf_values),
             **self._l10n_it_edi_get_formatters()})
