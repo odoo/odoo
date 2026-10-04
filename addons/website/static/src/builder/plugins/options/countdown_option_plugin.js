@@ -25,14 +25,14 @@ registry.category("website-options").add(CountdownOption.id, CountdownOption);
 
 export class CountdownOptionPlugin extends Plugin {
     static id = "CountdownOption";
+    static dependencies = ["selection"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         so_content_addition_selectors: [".s_countdown"],
-        before_insert_processors: (container, block) => {
-            if (block.closest(".s_countdown_metrics")) {
-                container.innerHTML = "";
+        should_bypass_insertion_predicates: (selection) => {
+            if (closestElement(selection.focusNode, ".s_countdown_metrics")) {
+                return false;
             }
-            return container;
         },
         builder_actions: {
             SetEndActionAction,

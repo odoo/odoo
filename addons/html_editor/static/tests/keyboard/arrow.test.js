@@ -547,7 +547,7 @@ describe("Selection correction when it lands at the editable root", () => {
             contentAfterEdit:
                 '<p data-selection-placeholder=""><br></p>' +
                 "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
-                `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>` +
+                `<p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>` +
                 "<table><tbody><tr><td><p>c</p><p>d</p></td></tr></tbody></table>" +
                 '<p data-selection-placeholder=""><br></p>',
             contentAfter:
@@ -567,7 +567,7 @@ describe("Selection correction when it lands at the editable root", () => {
             contentAfterEdit:
                 '<p data-selection-placeholder=""><br></p>' +
                 "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
-                `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>` +
+                `<p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>` +
                 "<table><tbody><tr><td><p>c</p><p>d</p></td></tr></tbody></table>" +
                 '<p data-selection-placeholder=""><br></p>',
             contentAfter:
@@ -616,7 +616,7 @@ describe("Selection correction when it lands at the editable root", () => {
             contentBefore: "<table><tbody><tr><td><p>[]a</p><p>b</p></td></tr></tbody></table>",
             stepFunction: keyPress("ArrowLeft"),
             contentAfterEdit:
-                `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>` +
+                `<p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>` +
                 "<table><tbody><tr><td><p>a</p><p>b</p></td></tr></tbody></table>" +
                 '<p data-selection-placeholder=""><br></p>',
         });
@@ -633,7 +633,7 @@ describe("Selection correction when it lands at the editable root", () => {
             contentAfterEdit:
                 "<p><br></p>" +
                 '<hr contenteditable="false">' +
-                `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>` +
+                `<p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>` +
                 '<hr contenteditable="false">' +
                 "<p><br></p>",
             contentAfter: "<p><br></p><hr>[]<hr><p><br></p>",
@@ -652,7 +652,7 @@ describe("Selection correction when it lands at the editable root", () => {
             contentAfterEdit:
                 "<p><br></p>" +
                 '<hr contenteditable="false">' +
-                `<p data-selection-placeholder="" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>` +
+                `<p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>` +
                 '<hr contenteditable="false">' +
                 "<p><br></p>",
             contentAfter: "<p><br></p><hr>[]<hr><p><br></p>",

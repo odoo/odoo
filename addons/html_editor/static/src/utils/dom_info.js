@@ -611,7 +611,11 @@ export const paragraphRelatedElements = ["P", "H1", "H2", "H3", "H4", "H5", "H6"
  * @returns {boolean}
  */
 export function allowsParagraphRelatedElements(node) {
-    return !isParagraphRelatedElement(node) && isBlock(node);
+    return (
+        node &&
+        !isParagraphRelatedElement(node) &&
+        (isBlock(node) || childNodes(node).some(isParagraphRelatedElement))
+    );
 }
 
 export const phrasingContent = new Set(["#text", ...phrasingTagNames]);
@@ -940,6 +944,13 @@ export function isContentEditableAncestor(node) {
         return false;
     }
     return node.isContentEditable && node.matches("[contenteditable]");
+}
+
+export function isEditionBoundary(node, editable) {
+    if (!node) {
+        return false;
+    }
+    return node === editable || isContentEditableAncestor(node);
 }
 
 export const QWEB_STYLE_ATTRS = ["t-att-class", "t-attf-class", "t-att-style", "t-attf-style"];

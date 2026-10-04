@@ -3,8 +3,11 @@ import {
     isElement,
     isEmptyTextNode,
     isParagraphRelatedElement,
+    isProtected,
+    isProtecting,
     isShrunkBlock,
     isTextNode,
+    isUnprotecting,
     isVisible,
     nextLeaf,
     previousLeaf,
@@ -130,6 +133,9 @@ export function fillShrunkPhrasingParent(el) {
 export function cleanTrailingBR(el, predicates = []) {
     const candidate = el?.lastChild;
     if (
+        !isProtecting(el) &&
+        !(isProtected(el) && !isUnprotecting(el)) &&
+        el.isContentEditable &&
         candidate?.nodeName === "BR" &&
         candidate.previousSibling?.nodeName !== "BR" &&
         !isEmptyBlock(el) &&
