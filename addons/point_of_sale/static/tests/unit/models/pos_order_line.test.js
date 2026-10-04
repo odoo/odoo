@@ -351,3 +351,16 @@ test("Test serial number requirements", async () => {
     lot_line.qty = 2;
     expect(lot_line.hasValidProductLot()).toBe(true); // One lot is enough
 });
+
+test("[setQuantity]: lot tracked lines keep their manual price", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const [lotLine1, lotLine2] = order.lines;
+    lotLine2.product_id = lotLine1.product_id; // same product, different lots
+    lotLine1.product_id.tracking = "lot";
+    lotLine2.price_type = "manual";
+    lotLine2.setUnitPrice(123);
+
+    lotLine1.setQuantity(4);
+    expect(lotLine2.price_unit).toBe(123);
+});
