@@ -212,6 +212,44 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
             },
         ])
 
+    def test_partial_import_invoice_line_fractional_gross_price_large_quantity(self):
+        # net_price = 3.021
+        # allowance_on_gross = 2.307
+        # gross_price = net_price + allowance_on_gross = 5.328 (3 decimals)
+        # basis_qty = 1
+        # billed_qty = 10368
+        # line_total_amount = 31321.73
+        # price_unit = gross_price / basis_qty = 5.328 (must not be rounded to 5.33)
+        # allowance_total = allowance_on_gross * billed_qty = 23918.976
+        # discount_percentage = (allowance_total / (price_unit * billed_qty)) * 100 = 43.2995...
+        # price_subtotal = price_unit * billed_qty - allowance_total = 31321.73 (the amount in the file)
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_fractional_gross_price_large_quantity')
+        # price_unit keeps all its decimals, so it is compared with a tolerance instead of exactly.
+        self.assertAlmostEqual(invoice.invoice_line_ids.price_unit, 5.328, places=9)
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'quantity': 10368.0,
+            'discount': 43.2995495495496,
+            'price_subtotal': 31321.73,
+        }])
+
+    def test_partial_import_invoice_line_whole_gross_price_large_quantity(self):
+        # net_price = 200
+        # allowance_on_gross = 50
+        # gross_price = 250
+        # basis_qty = 1
+        # billed_qty = 1000
+        # line_total_amount = 200000
+        # price_unit = gross_price / basis_qty = 250
+        # allowance_total = allowance_on_gross * billed_qty = 50000
+        # discount_percentage = (allowance_total / (price_unit * billed_qty)) * 100 = 20
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_whole_gross_price_large_quantity')
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'price_unit': 250.0,
+            'quantity': 1000.0,
+            'discount': 20.0,
+            'price_subtotal': 200000.0,
+        }])
+
     def test_partial_import_invoice_line_zero_line_extension_amount(self):
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_zero_line_extension_amount')
         self.assertFalse(invoice.invoice_line_ids)
