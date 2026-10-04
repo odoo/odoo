@@ -90,5 +90,5 @@ class SlideChannel(models.Model):
         return {
             '@type': 'Offer',
             'price': product_info.get('price', 0),
-            'priceCurrency': product.currency_id.name,
+            'priceCurrency': product_info['currency'].name,
         }
