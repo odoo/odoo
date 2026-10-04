@@ -377,7 +377,11 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.event_tech_presentation.write({
             'partner_ids': [Command.link(new_partner) for new_partner in new_partners]
         })
-        self.assertTrue(set(new_partners) == set(self.event_tech_presentation.videocall_channel_id.channel_partner_ids.ids), 'new partners must be invited to the channel')
+        self.assertEqual(
+            sorted(self.event_tech_presentation.videocall_channel_id.channel_member_ids.guest_id.mapped('email')),
+            ['bob@gm.co', 'jack@gm.co'],
+            'new partners without a user must be invited to the channel, as the guests of their email address',
+        )
 
     def test_search_current_attendee_status(self):
         """ Test searching for events based on the current user's attendance status. """

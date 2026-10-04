@@ -13,7 +13,7 @@ class ResPartner(models.Model):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
        to restrict usage of automatic email templates. """
     _name = 'res.partner'
-    _inherit = ['mail.thread.blacklist', 'res.partner', 'mail.activity.mixin']
+    _inherit = ['mail.thread.blacklist', 'res.partner', 'mail.activity.mixin', 'discuss.call.log.mixin']
     _explanation = "Adds communication and activity management to contacts. It enables the chatter (message history), email blacklisting, and the ability to schedule activities."
     _mail_flat_thread = False
     _mail_post_access = 'read'
@@ -56,6 +56,28 @@ class ResPartner(models.Model):
 
     def _mail_get_partners(self, introspect_fields=False):
         return dict((partner.id, partner) for partner in self)
+
+    @api.model
+    def _get_call_log_partner_domain(self, partners):
+        """ A contact is not about a partner through a field: it is that partner. """
+        return Domain('id', 'in', partners.ids)
+
+    @api.model
+    def _get_call_log_partner_tiers(self):
+        """ The tiers of partners a call was held with, closest first: whoever attended
+        it, then their commercial partners, then the other contacts of those. Void tiers
+        are left out, and nothing is returned when no call is being logged. """
+        partner_ids = self.env.context.get('log_channel_partner_ids')
+        if not partner_ids:
+            return []
+        # an archived contact still had the call: what it is about does not depend on it
+        attendees = self.with_context(active_test=False).browse(partner_ids).exists()
+        commercial_partners = attendees.commercial_partner_id - attendees
+        commercial_contacts = self.with_context(active_test=False).search(
+            [('id', 'child_of', attendees.commercial_partner_id.ids)],
+        )
+        other_contacts = commercial_contacts - attendees - commercial_partners
+        return [tier for tier in (attendees, commercial_partners, other_contacts) if tier]
 
     # ------------------------------------------------------------
     # ORM

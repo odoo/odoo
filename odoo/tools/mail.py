@@ -83,6 +83,7 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-language-id',
      'data-bs-toggle',  # support nav-tabs
      'data-icon',
+     'data-tooltip',
      ])
 
 defs.link_attrs |= {'xlink:href'}

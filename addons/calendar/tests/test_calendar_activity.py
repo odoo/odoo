@@ -170,12 +170,68 @@ class TestCalendarActivity(ActivityScheduleCase):
         })
         # Check that assignation of the activity hasn't changed, and event is having
         # correct values set in attendee and organizer related fields.
-        # The event attendees should be the current user + the "customer" (cf _mail_get_customer) of the record the activity is about
+        # The event attendees should be the current user only: a Call is not a
+        # Meeting, hence the "customer" (cf _mail_get_customer) of the record the
+        # activity is about is not invited (see
+        # `test_event_activity_invites_document_partner` for that case).
         self.assertEqual(activity.user_id, self.user_employee)
-        event_partners = activity.user_id.partner_id | self.env['res.partner'].browse(activity.res_id)
+        event_partners = activity.user_id.partner_id
         self.assertEqual(event_from_activity.partner_ids, event_partners)
         self.assertEqual(event_from_activity.attendee_ids.partner_id, event_partners)
         self.assertEqual(event_from_activity.user_id, activity.user_id)
+
+    def test_event_activity_invites_document_partner(self):
+        # Scheduling a Meeting activity from a customer's own record is expected to invite
+        # that customer to the created meeting.
+        meeting_act_type = self.env.ref('mail.mail_activity_data_meeting')
+        customer = self.env['res.partner'].create({'name': 'Acme'})
+        activity = self.env['mail.activity'].create({
+            'summary': 'Demo with Acme',
+            'activity_type_id': meeting_act_type.id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': customer.id,
+            'user_id': self.user_employee.id,
+        })
+        action_context = activity.action_create_calendar_event().get('context', {})
+        self.assertIn(
+            customer.id, action_context.get('default_partner_ids', []),
+            "the customer the meeting is scheduled from should be invited to it",
+        )
+
+    def test_event_activity_invites_document_partner_id(self):
+        # A document that is not itself a partner, but has a partner_id field (e.g. a user),
+        # should have that partner invited instead.
+        meeting_act_type = self.env.ref('mail.mail_activity_data_meeting')
+        activity = self.env['mail.activity'].create({
+            'summary': 'Onboarding meeting',
+            'activity_type_id': meeting_act_type.id,
+            'res_model_id': self.env['ir.model']._get_id('res.users'),
+            'res_id': self.user_employee.id,
+            'user_id': self.env.user.id,
+        })
+        action_context = activity.action_create_calendar_event().get('context', {})
+        self.assertIn(
+            self.user_employee.partner_id.id, action_context.get('default_partner_ids', []),
+            "the record's partner_id should be invited since res.users has a partner_id field",
+        )
+
+    def test_event_activity_does_not_invite_document_partner_for_non_meeting(self):
+        # A non-meeting activity (e.g. a call) should not add the document's partner as an
+        # attendee: only a Meeting activity implies the document should be invited.
+        activty_type = self.env['mail.activity.type'].create({
+            'name': 'Call',
+            'category': 'phonecall',
+        })
+        customer = self.env['res.partner'].create({'name': 'Acme'})
+        activity = self.env['mail.activity'].create({
+            'summary': 'Call with Acme',
+            'activity_type_id': activty_type.id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': customer.id,
+            'user_id': self.user_employee.id,
+        })
+        action_context = activity.action_create_calendar_event().get('context', {})
+        self.assertNotIn(customer.id, action_context.get('default_partner_ids', []))
 
     @users('employee')
     def test_synchronize_activity_timezone(self):

@@ -16,7 +16,7 @@ const SEARCH_RESULT_LIMIT = 100;
  * @typedef {Object} MemberCategory
  * @property {number} sequence sort key; lower is rendered first.
  * @property {(channel: import("models").DiscussChannel) => import("models").ChannelMember[]} getMembers
- * @property {TranslatedString} label
+ * @property {TranslatedString | ((channel: import("models").DiscussChannel) => TranslatedString)} label
  * @property {boolean} [showCount=true] whether to append the member count to the label.
  * @property {number} [sequenceGroup] categories sharing this key are rendered inside a common container.
  * @property {string} [icon] class of an icon shown before the section label.
@@ -28,7 +28,7 @@ const SEARCH_RESULT_LIMIT = 100;
  * are carried over (minus the source-only `getMembers`/`sequence`) and enriched
  * with the members it matched.
  *
- * @typedef {Omit<MemberCategory, "getMembers" | "sequence"> & ResolvedMembers} ComputedMemberCategory
+ * @typedef {Omit<MemberCategory, "getMembers" | "label" | "sequence"> & { label: TranslatedString } & ResolvedMembers} ComputedMemberCategory
  */
 
 /**
@@ -123,7 +123,15 @@ export class ChannelMemberList extends Component {
                     : all;
                 const filtered = term ? matching.slice(0, Math.max(0, remaining)) : matching;
                 remaining -= filtered.length;
-                return { label, matching, filtered, showCount, sequenceGroup, icon, headerClass };
+                return {
+                    label: typeof label === "function" ? label(this.props.channel) : label,
+                    matching,
+                    filtered,
+                    showCount,
+                    sequenceGroup,
+                    icon,
+                    headerClass,
+                };
             });
     }
 

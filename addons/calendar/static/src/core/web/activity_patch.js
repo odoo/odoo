@@ -38,6 +38,16 @@ patch(Activity.prototype, {
               ])
             : this.attendeeNames;
     },
+    async onClickJoinMeeting() {
+        const meeting = this.meeting;
+        const channelId = meeting.videocall_channel_id?.id;
+        const channel = channelId && (await this.store["discuss.channel"].getOrFetch(channelId));
+        if (!channel?.self_member_id) {
+            window.open(meeting.videocall_location);
+            return;
+        }
+        channel.thread.open({ focus: true });
+    },
     onClickReschedule() {
         this.activity().rescheduleMeeting();
     },
