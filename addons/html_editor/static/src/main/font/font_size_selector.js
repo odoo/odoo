@@ -6,6 +6,7 @@ import { useDebounced } from "@web/core/utils/timing";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import {
     useDropdownAutoVisibility,
+    useToolbarDropdownPreview,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
 import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
@@ -21,7 +22,7 @@ export class FontSizeSelector extends Component {
         maxFontSize: t.number().optional(MAX_FONT_SIZE),
         onBlur: t.function().optional(),
         onFontSizeInput: t.function(),
-        onSelected: t.function(),
+        previewable: t.function(),
 
         // from toolbarButtonProps
         getSelection: t.function(),
@@ -45,6 +46,10 @@ export class FontSizeSelector extends Component {
             200
         );
         useToolbarDropdownFocus(this.dropdown, this.fontSizeSelector);
+        this.preview = useToolbarDropdownPreview({
+            dropdown: this.dropdown,
+            previewable: this.props.previewable,
+        });
         const htmlStyle = getHtmlStyle(document);
         this.fontFamily = getCSSVariableValue("o-system-fonts", htmlStyle);
     }
@@ -79,6 +84,9 @@ export class FontSizeSelector extends Component {
     onCustomFontSizeInput(ev) {
         let fontSize = parseInt(ev.target.value, 10);
         if (fontSize > 0) {
+            // Revert any hovered item preview first: otherwise the typed size
+            // would be committed on top of it and reverted along with it.
+            this.preview.reset();
             fontSize = Math.min(fontSize, this.props.maxFontSize);
             if (this.state.displayName !== fontSize) {
                 this.props.onFontSizeInput(`${fontSize}px`);
@@ -111,6 +119,6 @@ export class FontSizeSelector extends Component {
     }
 
     onSelected(item) {
-        this.props.onSelected(item);
+        this.preview.commit(item);
     }
 }

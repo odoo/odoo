@@ -67,7 +67,11 @@ export class EditorOverlay extends Component {
 
         if (this.props.positionOptions?.updatePositionOnResize ?? true) {
             const resizeObserver = new ResizeObserver(() => {
-                position.unlock();
+                // A preview resizes the content without the user moving the
+                // selection. Skip repositioning so it doesn't jump.
+                if (!this.props.shared.getIsPreviewing()) {
+                    position.unlock();
+                }
             });
             useOnChange(
                 () => [this.rootRef()],

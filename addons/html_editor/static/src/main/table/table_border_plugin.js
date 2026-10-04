@@ -2,7 +2,7 @@ import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { getCSSVariableValue, getHtmlStyle, removeStyle } from "@html_editor/utils/formatting";
-import { withSequence } from "@html_editor/utils/resource";
+import { READ, withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { normalizeCSSColor } from "@web/core/utils/colors";
 import { ColorSelector } from "@html_editor/main/font/color_selector";
@@ -110,10 +110,7 @@ export class TableBorderPlugin extends Plugin {
                         this.selectedBorderWidth.displayName = this.getTableSelectedBorder("width");
                         return this.selectedBorderWidth;
                     },
-                    onSelected: (item) => {
-                        this.applyBorderCommit("width", item.value);
-                        this.selectedBorderWidth.displayName = item.value;
-                    },
+                    previewable: () => this.previewableSetBorderWidth,
                 },
             }),
             withSequence(12, {
@@ -132,13 +129,16 @@ export class TableBorderPlugin extends Plugin {
                         this.selectedBorderStyle.displayName = this.getTableSelectedBorder("style");
                         return this.selectedBorderStyle;
                     },
-                    onSelected: (item) => {
-                        this.applyBorderCommit("style", item.value);
-                        this.selectedBorderStyle.displayName = item.value;
-                    },
+                    previewable: () => this.previewableSetBorderStyle,
                 },
             }),
         ],
+
+        /** Handlers */
+        on_selectionchange_handlers: withSequence(READ, this.updateTableBorderParams.bind(this)),
+        on_history_commit_undone_handlers: this.updateTableBorderParams.bind(this),
+        on_history_commit_redone_handlers: this.updateTableBorderParams.bind(this),
+        on_savepoint_restored_handlers: this.updateTableBorderParams.bind(this),
     };
 
     setup() {
@@ -149,6 +149,25 @@ export class TableBorderPlugin extends Plugin {
         this.previewableApplyBorder = this.dependencies.history.makePreviewableOperation(
             (prop, value) => this.applyBorder(prop, value)
         );
+        this.previewableSetBorderWidth = this.dependencies.history.makePreviewableOperation(
+            (item) => {
+                this.applyBorder("width", item.value);
+                this.updateTableBorderParams();
+            }
+        );
+        this.previewableSetBorderStyle = this.dependencies.history.makePreviewableOperation(
+            (item) => {
+                this.applyBorder("style", item.value);
+                this.updateTableBorderParams();
+            }
+        );
+    }
+
+    updateTableBorderParams() {
+        this.selectedBorderWidth.displayName = this.getTableSelectedBorder("width");
+        this.selectedBorderStyle.displayName = this.getTableSelectedBorder("style");
+        this.selectedBorderColors.color =
+            this.getTableSelectedBorder("color", "default") || "transparent";
     }
 
     /**
