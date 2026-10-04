@@ -1132,6 +1132,8 @@ class HrExpense(models.Model):
                 raise UserError(_("You do not have the required permission to submit this expense."))
             if not expense.product_id:
                 raise UserError(_("You can not submit an expense without a category."))
+            if not expense.state == 'draft':
+                raise UserError(self.env._("You can not submit an expense that's not in 'draft' state."))
             if not expense.manager_id:
                 expense.sudo().manager_id = expense._get_default_responsible_for_approval()
         expenses_autovalidated = self.filtered(lambda expense: expense._can_be_autovalidated())
@@ -1148,6 +1150,7 @@ class HrExpense(models.Model):
     def action_approve(self):
         """ Approve an expense, pops a wizard if a duplicated expense is found to confirm they are all valid expenses """
         self._check_can_approve()
+        self._check_expenses_state(['submitted'])
         duplicates = self.duplicate_expense_ids.filtered(lambda exp: exp.state in {'submitted', 'approved', 'posted', 'paid', 'in_payment'})
         if duplicates:
             action = self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_approve_duplicate_action')
@@ -1158,6 +1161,7 @@ class HrExpense(models.Model):
     def action_refuse(self):
         """ Refuse an expense with a reason """
         self._check_can_refuse()
+        self._check_expenses_state(['submitted', 'approved'])
         return self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_refuse_wizard_action')
 
     def action_post(self):
@@ -1443,6 +1447,10 @@ class HrExpense(models.Model):
 
         if False in self.mapped('payment_mode'):
             raise UserError(_("Please specify if the expenses were paid by the company, or the employee."))
+
+    def _check_expenses_state(self, expected_states):
+        if any(state not in expected_states for state in self.mapped('state')):
+            raise UserError(self.env._("All expenses must be in %s state to perform this action.", ' or '.join(expected_states)))
 
     def _do_approve(self, check=True):
         expenses_to_approve = self.filtered(lambda s: s.state in {'submitted', 'draft'})
