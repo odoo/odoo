@@ -79,7 +79,7 @@ registry.category("web_tour.tours").add('website_sale_loyalty.promotions', {
         },
         {
             content: "check free product is added",
-            trigger: '#wrap:has(div h6:contains("Free Product - Small Cabinet"))',
+            trigger: '#cart_products .o_cart_product:has([data-reward-type="product"]) h6:contains("Small Cabinet")',
         },
         {
             content: "remove one cabinet from cart",
@@ -88,7 +88,7 @@ registry.category("web_tour.tours").add('website_sale_loyalty.promotions', {
         },
         {
             content: "check free product is removed",
-            trigger: '#wrap:not(:has(div h6:contains("Free Product - Small Cabinet")))',
+            trigger: '#cart_products:not(:has([data-reward-type="product"]))',
         },
         /* 4. Check /shop/payment does not break the `merged discount lines split per tax` (eg: with _compute_tax_ids) */
         {

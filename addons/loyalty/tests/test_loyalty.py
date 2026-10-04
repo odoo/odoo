@@ -299,9 +299,9 @@ class TestLoyalty(TransactionCase):
         )
         self.assertEqual(
             reward_description_product_tag,
-            "Free Product - [Test Product, Test Product 2]",
+            "[Test Product, Test Product 2]",
             "Reward description for reward with tag should be"
-            " 'Free Product - [Test Product, Test Product 2]'",
+            " '[Test Product, Test Product 2]'",
         )
 
     def test_prevent_unarchive_when_conflicting_active_program_exists(self):
