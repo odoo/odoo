@@ -70,7 +70,7 @@
                     <div t-if="data.get('is_sample')" class="oe_product_image position-relative flex-grow-0 overflow-hidden">
                         <a href="#" class="oe_product_image_link position-relative">
                             <span class="oe_product_image_img_wrapper oe_product_image_img_wrapper_primary d-flex h-100 justify-content-center align-items-center">
-                                <img t-att-src="data.get('image_512')" class="img img-fluid oe_product_image_img h-100 w-100"/>
+                                <img t-att-src="data.get('image_512')" t-att-alt="product_template.display_name" class="img img-fluid oe_product_image_img h-100 w-100"/>
                             </span>
                         </a>
                         <div class="o_ribbon_right small text-bg-primary">Sample</div>
