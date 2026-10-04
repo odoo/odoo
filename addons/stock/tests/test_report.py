@@ -2142,3 +2142,27 @@ class TestReports(TestReportsCommon):
             self.assertTrue(report.action_unassign(out_move.id, 1.0, in_move.ids))
 
         self.assertFalse(in_move.move_dest_ids)
+
+    def test_delivery_slip_product_description_with_whitespace(self):
+        """ Test that product name is not printed twice on the delivery slip when
+        the product name has leading/trailing whitespace compared to description_picking.
+        """
+        product = self.env['product.product'].create({
+            'name': '  Customizable Desk  ',
+            'is_storable': True,
+        })
+        picking_out = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_ids': [Command.create({
+                'product_id': product.id,
+                'product_uom': self.ref('uom.product_uom_unit'),
+                'product_uom_qty': 1.0,
+                'description_picking': 'Customizable Desk',
+            })],
+        })
+        picking_out.action_confirm()
+
+        html = self.env['ir.actions.report']._render_qweb_html('stock.report_deliveryslip', [picking_out.id])[0]
+        self.assertEqual(len(findall(rb'Customizable Desk', html)), 1)
