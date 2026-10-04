@@ -39,12 +39,11 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
             'uom_id': cls.uom_unit.id,
         })
 
-        cls.res_users_stock_user = cls.env['res.users'].create({
-            'name': "Inventory User",
-            'login': "su",
-            'email': "stockuser@yourcompany.com",
-            'group_ids': [(6, 0, [cls.env.ref('stock.group_stock_user').id])],
-        })
+        cls.res_users_stock_user = cls._create_new_internal_user(
+            name='Inventory User',
+            login='su',
+            groups='stock.group_stock_user',
+        )
 
     @classmethod
     def collect_company_accounting_data(cls, company):
