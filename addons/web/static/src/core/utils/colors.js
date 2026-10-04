@@ -481,3 +481,13 @@ export function blendColors(color, node) {
             .join("")
     );
 }
+
+const COLOR_KEYWORDS = ["transparent", "currentColor", "inherit", "initial", "unset", "revert"];
+
+/**
+ * @param {string} [keyword]
+ * @returns {boolean}
+ */
+export function isCSSColorKeyword(keyword) {
+    return COLOR_KEYWORDS.includes(keyword);
+}
