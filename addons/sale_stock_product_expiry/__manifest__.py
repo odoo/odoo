@@ -3,6 +3,11 @@
     'category': 'Sales/Sales',
     'description': 'Modifications to the forecast widget on SO lines to show fresh stock, i.e. ignoring stock to be removed due to expiration.',
     'depends': ['sale_stock', 'product_expiry'],
+    'data': [
+        'security/sale_stock_product_expiry_security.xml',
+        'views/report_invoice.xml',
+        'views/res_config_settings.xml',
+    ],
     'auto_install': True,
     'license': 'LGPL-3',
     'author': 'Odoo S.A.',
