@@ -1,0 +1,66 @@
+.s_product_search {
+    container: s_product_search / inline-size;
+}
+
+.o_wsale_product_search_no_tags .s_product_search_tags_wrap {
+    display: none !important;
+}
+
+.s_product_search_filter_menu {
+    max-height: 300px;
+
+    // reduce the size of the swatch images in the filter dropdowns, to match the color swatches
+    .css_attribute_image.size_small {
+        --o-wsale-css-attribute-image__height: calc(1.6rem + var(--o-wsale-css-attribute-image__outline-width));
+        border-width: $border-width * 2;
+
+        @include media-breakpoint-down(sm) {
+            --o-wsale-css-attribute-image__height: calc(2rem + var(--o-wsale-css-attribute-image__outline-width));
+        }
+    }
+}
+
+.s_product_search_filter_btn .s_product_search_filter_selected {
+    color: adjust-color-to-background(
+        $text-muted,
+        $form-select-bg,
+        mute-color($color-contrast-light),
+        mute-color($color-contrast-dark)
+    ) !important;
+}
+
+.s_product_search_search_row,
+.s_product_search_price_range,
+.s_product_search_attributes {
+    // Past 700px width, we split in two cols
+    @container s_product_search (min-width: 700px) {
+        &:not(.d-none) {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr;
+            align-items: flex-end;
+        }
+    }
+}
+
+// If no tags field, the search takes the full width
+.s_product_search_search_row:has(> .s_product_search_tags_wrap.d-none) > .s_product_search_search,
+.o_wsale_product_search_no_tags .s_product_search_search_row > .s_product_search_search {
+    @container s_product_search (min-width: 700px) {
+        grid-column: 1 / -1;
+    }
+}
+
+// If no search field, the tags take the full width
+.s_product_search_search_row:has(> .s_product_search_search.d-none) > .s_product_search_tags_wrap {
+    @container s_product_search (min-width: 700px) {
+        grid-column: 1 / -1;
+    }
+}
+
+// If an odd number of attributes, the last one takes the full width
+// We ignore the empty filters of the unavailable attributes
+.s_product_search_attributes > :nth-last-child(1 of :not(:empty)):nth-child(odd of :not(:empty)) {
+    @container s_product_search (min-width: 700px) {
+        grid-column: 1 / -1;
+    }
+}
