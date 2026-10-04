@@ -3,6 +3,7 @@
 from markupsafe import Markup
 from werkzeug.exceptions import BadRequest, NotFound
 
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.http import request
 
@@ -11,6 +12,15 @@ from odoo.addons.mail.tools.discuss import mail_route
 
 
 class LivechatChannelController(ChannelController):
+    @mail_route()
+    def discuss_channel_set_channel_member_role(self, member_id, channel_role):
+        channel_member = request.env["discuss.channel.member"].search([("id", "=", member_id)])
+        if channel_member.channel_id.channel_type == "livechat":
+            raise UserError(
+                self.env._("Live chat roles depend on the member type and cannot be modified.")
+            )
+        return super().discuss_channel_set_channel_member_role(member_id, channel_role)
+
     @mail_route("/im_livechat/session/update_note", auth="user", methods=["POST"], type="jsonrpc")
     def livechat_session_update_note(self, channel_id, note):
         """Internal users having the rights to read the session can update its note."""

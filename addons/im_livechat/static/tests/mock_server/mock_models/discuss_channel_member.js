@@ -42,6 +42,13 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
                 member.livechat_member_type = "agent";
             }
         }
+        for (const member of newMembers) {
+            const [channel] = this.env["discuss.channel"].browse(member.channel_id);
+            if (channel.channel_type === "livechat") {
+                // mock: mirror _compute_channel_role
+                member.channel_role = member.livechat_member_type === "agent" ? "owner" : false;
+            }
+        }
         return idOrIds;
     }
 

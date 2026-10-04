@@ -3,7 +3,9 @@
 from odoo import fields
 from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.exceptions import ValidationError
+from odoo.tests import JsonRpcException
 from odoo.tests.common import new_test_user
+from odoo.tools import mute_logger
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 
 
@@ -161,3 +163,41 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
         )
         self.assertEqual(og_history, john_history)
         self.assertEqual(john_member, john_history.member_id)
+
+    def test_channel_role_follows_livechat_member_type(self):
+        john = self._create_operator("fr_FR")
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "chatbot_script_id": self.chatbot_script.id,
+                "channel_id": self.livechat_channel.id,
+            },
+        )
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        bot_member = channel.channel_member_ids.filtered(lambda m: m.livechat_member_type == "bot")
+        visitor_member = channel.channel_member_ids - bot_member
+        self.assertEqual(visitor_member.livechat_member_type, "visitor")
+        self.assertFalse(bot_member.channel_role)
+        self.assertFalse(visitor_member.channel_role)
+        john_member = channel._add_members(users=john)
+        self.assertEqual(john_member.channel_role, "owner")
+        # Roles are deduced from the member type, they cannot be changed manually.
+        self.authenticate(john.login, john.login)
+        with (
+            mute_logger("odoo.http"),
+            self.assertRaisesRegex(JsonRpcException, "odoo.exceptions.UserError"),
+        ):
+            self.make_jsonrpc_request(
+                "/discuss/channel/member/set_role",
+                {"member_id": visitor_member.id, "channel_role": "admin"},
+            )
+        self.assertFalse(visitor_member.channel_role)
+        # Role is restored when joining again, as the history is reused.
+        channel.with_user(john).action_unfollow()
+        john_member = channel._add_members(users=john)
+        self.assertEqual(john_member.channel_role, "owner")
+        # Role is restored when the user is reactivated, as it depends on the member type.
+        john.action_archive()
+        self.assertFalse(john_member.channel_role)
+        john.action_unarchive()
+        self.assertEqual(john_member.channel_role, "owner")
