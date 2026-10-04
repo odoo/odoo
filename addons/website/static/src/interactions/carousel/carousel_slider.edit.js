@@ -18,8 +18,6 @@ const CarouselSliderEdit = (I) =>
         };
         // Pause carousel in edit mode.
         carouselOptions = { ride: false, pause: true, keyboard: false };
-        showClickableSlideLinks = false;
-
         setup() {
             // Do not alter the sliding options behavior in edit mode.
             patchDynamicContentEntry(this.dynamicContent, "_root", "t-att-data-bs-ride", undefined);

@@ -63,10 +63,10 @@ registerWebsitePreviewTour(
         },
         ...changeOptionInPopover("Image", "Animation", "On Hover"),
         clickOnElement("card container", ":iframe .s_title .s_card"),
-        changeOption("Card", "[data-action-id='setCardClickable'] input"),
+        changeOption("Card", "[data-action-id='setElementClickable'] input"),
         {
             content: "Enter the URL for the card link",
-            trigger: "div[data-action-id='setCardAnchorUrl'] input",
+            trigger: "div[data-action-id='setElementAnchorUrl'] input",
             run: "edit #",
         },
         {
