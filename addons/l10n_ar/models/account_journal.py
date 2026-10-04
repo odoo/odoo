@@ -7,13 +7,19 @@ from odoo.exceptions import UserError, ValidationError, RedirectWarning
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
+    _l10n_ar_afip_pos_number_unique = models.UniqueIndex(
+        "(company_id, l10n_ar_afip_pos_system, l10n_ar_afip_pos_number) WHERE l10n_ar_is_pos IS TRUE",
+        "Another journal of this company already uses this ARCA POS number with the same POS system.",
+    )
+
     l10n_ar_afip_pos_system = fields.Selection(
         selection='_get_l10n_ar_afip_pos_types_selection', string='ARCA POS System',
         compute='_compute_l10n_ar_afip_pos_system', store=True, readonly=False,
         help="Argentina: Specify which type of system will be used to create the electronic invoice. This will depend on the type of invoice to be created.",
     )
     l10n_ar_afip_pos_number = fields.Integer(
-        'ARCA POS Number', help='This is the point of sale number assigned by ARCA in order to generate invoices')
+        'ARCA POS Number', copy=False,
+        help='This is the point of sale number assigned by ARCA in order to generate invoices')
     company_partner = fields.Many2one('res.partner', related='company_id.partner_id')
     l10n_ar_afip_pos_partner_id = fields.Many2one(
         'res.partner', 'ARCA POS Address', help='This is the address used for invoice reports of this POS',
@@ -149,7 +155,7 @@ class AccountJournal(models.Model):
                 for x in journals
             ))
 
-    @api.constrains('l10n_ar_afip_pos_number')
+    @api.constrains('l10n_ar_afip_pos_number', 'l10n_ar_is_pos')
     def _check_afip_pos_number(self):
         if self.filtered(lambda j: j.l10n_ar_is_pos and j.l10n_ar_afip_pos_number == 0):
             raise ValidationError(_('Please define an ARCA POS number'))
