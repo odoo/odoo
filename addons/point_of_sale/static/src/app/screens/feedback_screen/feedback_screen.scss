@@ -1,3 +1,8 @@
+@keyframes wipe-away {
+    from { transform: translateX(0); }
+    to   { transform: translateX(100%); }
+}
+
 .feedback-screen {
     .validation {
         position: relative;
@@ -23,17 +28,10 @@
         z-index: 4;
     }
 
-    @keyframes wipe-away {
-        from { transform: translateX(0); }
-        to   { transform: translateX(100%); }
-    }
-
     button {
         min-height: 70px;
     }
 }
-
-
 
 @page {
     padding: 15px;

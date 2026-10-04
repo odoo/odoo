@@ -1,3 +1,14 @@
+@keyframes smoothZoomIn {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .feedback-summary {
     .checkmark-wrapper {
         width: clamp(80px, 15vmin, 150px);
@@ -25,16 +36,5 @@
 
     .foreign-amounts {
         font-size: clamp(2rem, 4vw, 5rem);
-    }
-
-    @keyframes smoothZoomIn {
-      0% {
-        transform: scale(0.95);
-        opacity: 0;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
     }
 }
