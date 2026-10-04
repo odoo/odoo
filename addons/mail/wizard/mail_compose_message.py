@@ -529,9 +529,11 @@ class MailComposeMessage(models.TransientModel):
                 and (not template.use_default_to or not composer.partner_ids)
             ):
                 res_ids = composer._evaluate_res_ids() or [0]
+                render_fields = composer._filter_recipient_fields_for_log_note(
+                    {'email_cc', 'email_to', 'partner_ids'})
                 rendered_values = composer._generate_template_for_composer(
                     res_ids,
-                    {'email_cc', 'email_to', 'partner_ids'},
+                    render_fields,
                     allow_suggested=composer.message_type == 'comment' and not composer.subtype_is_log,
                     find_or_create_partners=True,
                 )[res_ids[0]]
@@ -1172,15 +1174,17 @@ class MailComposeMessage(models.TransientModel):
 
         # generate template-based values
         if self.template_id:
-            template_values = self._generate_template_for_composer(
-                res_ids,
+            render_fields = self._filter_recipient_fields_for_log_note(
                 ['attachment_ids',
                  'email_to',
                  'email_cc',
                  'partner_ids',
                  'report_template_ids',
                  'scheduled_date',
-                ],
+                ])
+            template_values = self._generate_template_for_composer(
+                res_ids,
+                render_fields,
                 allow_suggested=(
                     self.composition_mode == 'comment' and not self.composition_batch and
                     self.message_type == 'comment' and not self.subtype_is_log
@@ -1416,6 +1420,23 @@ class MailComposeMessage(models.TransientModel):
         done_emails += sent_emails_mapping.keys()
 
         return mail_values_dict
+
+    def _filter_recipient_fields_for_log_note(self, render_fields):
+        """ Remove recipient fields when logging a note with a template using
+        default recipients, as those are not exposed for edition in that mode.
+
+        :param iterable render_fields: fields requested from the template, as
+          passed to ``_generate_template_for_composer``;
+
+        :return: ``render_fields`` without 'email_cc', 'email_to' and
+          'partner_ids' when ``self`` is a log note using such a template,
+          unchanged otherwise;
+        """
+        self.ensure_one()
+        if (self.message_type == 'comment' and self.subtype_is_log
+                and self.template_id.use_default_to and self.template_id.model):
+            return {fname for fname in render_fields if fname not in ('email_cc', 'email_to', 'partner_ids')}
+        return render_fields
 
     def _generate_template_for_composer(self, res_ids, render_fields,
                                         allow_suggested=False,
