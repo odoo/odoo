@@ -8,3 +8,9 @@ class ResCompany(models.Model):
         string="Thailand: VAT Registered",
         help="Check this to enable issuing Tax Invoices. Otherwise, only standard invoices or receipts can be issued.",
     )
+
+
+class BaseDocumentLayout(models.TransientModel):
+    _inherit = 'base.document.layout'
+
+    account_fiscal_country_id = fields.Many2one(related='company_id.account_fiscal_country_id', readonly=True)
