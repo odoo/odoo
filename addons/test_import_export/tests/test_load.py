@@ -198,6 +198,11 @@ class test_boolean_field(ImporterCase):
                     'message': "Unknown value '%s' for boolean field 'Value'" % v[0],
                     'moreinfo': "Use '1' for yes and '0' for no",
                     'field_name': 'Value',
+                    'value': v[0],
+                    'selection': [
+                        {'value': '1', 'display_name': 'Yes'},
+                        {'value': '0', 'display_name': 'No'},
+                    ],
                 }
                 for i, v in enumerate(trues)
                 if v[0] not in ('true', 'yes', '1')
@@ -598,13 +603,23 @@ class test_selection(ImporterCase):
         self.assertFalse(result['messages'])
 
     def test_invalid(self):
-        result = self.import_(['value'], [['Baz']])
-        self.assertIs(result['ids'], False)
-        self.assertEqual(result['messages'], [message("Value 'Baz' not found in selection field 'Value'", moreinfo="Foo Bar Qux 4".split(), field_name='Value', field_path=['value'])])
-
-        result = self.import_(['value'], [['42']])
-        self.assertIs(result['ids'], False)
-        self.assertEqual(result['messages'], [message("Value '42' not found in selection field 'Value'", moreinfo="Foo Bar Qux 4".split(), field_name='Value', field_path=['value'])])
+        selection = [
+            {'value': '1', 'display_name': 'Foo'},
+            {'value': '2', 'display_name': 'Bar'},
+            {'value': '3', 'display_name': 'Qux'},
+            {'value': '4', 'display_name': '4'},
+        ]
+        for value in ('Baz', '42'):
+            result = self.import_(['value'], [[value]])
+            self.assertIs(result['ids'], False)
+            self.assertEqual(result['messages'], [message(
+                "Value '%s' not found in selection field 'Value'" % value,
+                moreinfo="Foo Bar Qux 4".split(),
+                field_name='Value',
+                field_path=['value'],
+                value=value,
+                selection=selection,
+            )])
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -742,14 +757,34 @@ class test_m2o(ImporterCase):
         self.assertEqual(record1.display_name, record2.display_name)
 
         result = self.import_(['value'], [[record2.display_name]])
-        self.assertEqual(result['messages'], [message('Found multiple matches for value "export.integer:42" in field "Value" (2 matches)', type_='warning')])
-        self.assertEqual(len(result['ids']), 1)
-        self.assertEqual(
-            [
-                (record1.id, record1.display_name),
-            ],
-            values(self.read()),
+        self.assertEqual(result['messages'], [
+            message(
+                '"export.integer:42" matches 2 different records in field "Value"',
+                field_name='Value',
+                field_path=['value'],
+                value=record2.display_name,
+                matches=[
+                    {'id': record1.id, 'display_name': record1.display_name},
+                    {'id': record2.id, 'display_name': record2.display_name},
+                ],
+            ),
+        ])
+        self.assertIs(result['ids'], False)
+
+    def test_by_names_resolved(self):
+        """ An ambiguous name can be resolved by picking one of the matches. """
+        self.env['export.integer'].create({'value': 42})
+        record2 = self.env['export.integer'].create({'value': 42})
+
+        result = self.import_(
+            ['value'],
+            [[record2.display_name]],
+            context={'import_record_overrides': {'value': {record2.display_name: record2.id}}},
         )
+
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
+        self.assertEqual([(record2.id, record2.display_name)], values(self.read()))
 
     def test_fail_by_implicit_id(self):
         """Can't implicitly import records by id"""
@@ -1097,7 +1132,8 @@ class test_o2m(ImporterCase):
                     field_name='Value',
                     field_path=['value'],
                     field_type='name',
-                    value=s[:50],
+                    # the whole value, as it is what a correction is keyed on
+                    value=s,
                 )
             ],
         )

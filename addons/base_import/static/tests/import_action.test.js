@@ -51,7 +51,7 @@ class Partner extends models.Model {
     });
     many2many_field = fields.Many2many({
         relation: "partner",
-        comodel_name: "comodel.test",
+        comodel_name: "partner",
     });
     _records = [];
     _views = {
@@ -232,9 +232,17 @@ async function parsePreview(opts, overrides = {}) {
 // since executing a real import would be difficult, this method simply returns
 // some error messages to help testing the UI
 function executeFailingImport(field, isMultiline, field_path = "") {
-    let moreInfo = [];
+    let selection;
     if (Partner._fields[field].type === "selection") {
-        moreInfo = Partner._fields[field].selection;
+        selection = Partner._fields[field].selection.map(([value, display_name]) => ({
+            value,
+            display_name,
+        }));
+    } else if (Partner._fields[field].type === "boolean") {
+        selection = [
+            { value: "1", display_name: "Yes" },
+            { value: "0", display_name: "No" },
+        ];
     }
     return {
         ids: false,
@@ -245,52 +253,47 @@ function executeFailingImport(field, isMultiline, field_path = "") {
                       field_name: Partner._fields[field].string,
                       field_path,
                       message: "Invalid value",
-                      moreInfo,
                       record: 0,
                       rows: { from: 0, to: 0 },
                       value: "Invalid value",
-                      priority: "info",
+                      type: "info",
                   },
                   {
                       field,
                       field_name: Partner._fields[field].string,
                       field_path,
                       message: "Duplicate value",
-                      moreInfo,
                       record: 0,
                       rows: { from: 1, to: 1 },
-                      priority: "error",
+                      type: "error",
                   },
                   {
                       field,
                       field_name: Partner._fields[field].string,
                       field_path,
                       message: "Wrong values",
-                      moreInfo,
                       record: 0,
                       rows: { from: 2, to: 3 },
-                      priority: "warning",
+                      type: "warning",
                   },
                   {
                       field,
                       field_name: Partner._fields[field].string,
                       field_path,
                       message: "Bad value here",
-                      moreInfo,
                       record: 0,
                       rows: { from: 4, to: 4 },
                       value: "Bad value",
-                      priority: "warning",
+                      type: "warning",
                   },
                   {
                       field,
                       field_name: Partner._fields[field].string,
                       field_path,
                       message: "Duplicate value",
-                      moreInfo,
                       record: 0,
                       rows: { from: 5, to: 5 },
-                      priority: "error",
+                      type: "error",
                   },
               ]
             : [
@@ -299,13 +302,40 @@ function executeFailingImport(field, isMultiline, field_path = "") {
                       field_name: Partner._fields[field].string,
                       field_path,
                       message: "Incorrect value",
-                      moreInfo,
+                      selection,
                       record: 0,
                       rows: { from: 0, to: 0 },
+                      value: "Incorrect value",
                   },
               ],
         name: ["Some invalid content", "Wrong content", "Bad content"],
         nextrow: 0,
+    };
+}
+
+// an ambiguous value cannot be resolved by a column-wide rule: the matching
+// records are reported so that the user can pick the intended one
+function executeAmbiguousImport() {
+    return {
+        ids: false,
+        name: ["Acme Corporation"],
+        nextrow: 0,
+        messages: [
+            {
+                type: "error",
+                field: "many2many_field",
+                field_name: "Many2Many",
+                field_path: ["many2many_field"],
+                matches: [
+                    { id: 1, display_name: "California" },
+                    { id: 2, display_name: "Canaria" },
+                ],
+                message: '"CA" matches 2 different records in field "Many2Many"',
+                value: "CA",
+                record: 0,
+                rows: { from: 0, to: 0 },
+            },
+        ],
     };
 }
 
@@ -521,16 +551,14 @@ describe("Import view", () => {
                 date_format: "",
                 datetime_format: "",
                 encoding: "",
-                fallback_values: {},
                 float_decimal_separator: ".",
                 float_thousand_separator: ",",
                 has_headers: true,
-                import_set_empty_fields: [],
-                import_skip_records: [],
                 keep_matches: false,
                 limit: 2000,
                 name_create_enabled_fields: {},
                 quoting: '"',
+                resolutions: {},
                 separator: "",
                 sheet: "Template",
                 sheets: ["Template", "Template 2"],
@@ -647,9 +675,7 @@ describe("Import view", () => {
             "action",
         ]);
         expect(".o_list_view").toHaveCount(1);
-        expect(location.href).toBe(
-            "https://www.hoot.test/odoo/action-2/import/imported-records"
-        );
+        expect(location.href).toBe("https://www.hoot.test/odoo/action-2/import/imported-records");
     });
 
     test("context is forwarded to the imported records view", async () => {
@@ -789,15 +815,17 @@ describe("Import view", () => {
                 shouldFail = false;
                 return executeFailingImport(args[1][0]);
             }
-            expect(args[3].fallback_values).toEqual(
+            expect(args[3].resolutions).toEqual(
                 {
                     selection: {
-                        fallback_value: "item_2",
-                        field_model: "partner",
-                        field_type: "selection",
+                        "Incorrect value": {
+                            action: "set",
+                            value: "item_2",
+                            display_name: "Second item",
+                        },
                     },
                 },
-                { message: "selected fallback value has been given to the request" }
+                { message: "the chosen value has been given to the request" }
             );
         });
         await getService("action").doAction(1);
@@ -821,27 +849,23 @@ describe("Import view", () => {
         expect(".o_notification_fade").toHaveText("Import failed: see errors below", {
             message: "a notification is shown if the import was blocked",
         });
-        expect(".o_import_report p").toHaveText("Incorrect value", {
-            message: "the message is displayed in the view",
+        expect(".o_import_report p").toHaveText("Incorrect value at row 1 (Some invalid content)", {
+            message: "the message is displayed in the view, along with the offending line",
         });
-        expect(".o_import_field_selection").toHaveCount(1, {
-            message: "an action can be set when the column cannot match a field",
+        expect(".o_import_error_empty").toHaveCount(0, {
+            message: "the value cannot be left out, the field is required",
         });
-        expect(".o_import_field_selection select").toHaveText(
-            "Prevent import\nSet to: First Item\nSet to: Second item",
-            { message: "'skip' option is not available, since the field is required" }
-        );
-        expect(".o_import_field_selection select option:selected").toHaveText("Prevent import", {
-            message: "prevent option is selected by default",
+        expect(".o_import_error_set").toHaveCount(1, {
+            message: "the offending value can be replaced by one the field accepts",
         });
-        contains(".o_import_field_selection select").select("item_2");
+
+        await contains(".o_import_error_set").click();
+        await contains(".o_import_error_picker .o_select_menu").selectDropdownItem("Second item");
+        expect(".o_import_error_picker .o_select_menu_toggler").toHaveValue("Second item");
+
         await contains(".o_control_panel_main_buttons button:first-child").click();
         expect(".o_import_data_content .alert-info").toHaveText("Everything seems valid.", {
             message: "import is now successful",
-        });
-        expect(".o_import_field_selection").toHaveCount(1, {
-            message:
-                "options are still present to change the action to do when the column don't match",
         });
     });
 
@@ -854,15 +878,13 @@ describe("Import view", () => {
                 shouldFail = false;
                 return executeFailingImport(args[1][0]);
             }
-            expect(args[3].fallback_values).toEqual(
+            expect(args[3].resolutions).toEqual(
                 {
                     bar: {
-                        fallback_value: "false",
-                        field_model: "partner",
-                        field_type: "boolean",
+                        "Incorrect value": { action: "set", value: "0", display_name: "No" },
                     },
                 },
-                { message: "selected fallback value has been given to the request" }
+                { message: "the chosen value has been given to the request" }
             );
         });
         await getService("action").doAction(1);
@@ -886,10 +908,14 @@ describe("Import view", () => {
         expect(".o_notification_fade").toHaveText("Import failed: see errors below", {
             message: "a notification is shown if the import was blocked",
         });
-        expect(".o_import_field_boolean select").toHaveText(
-            "Prevent import\nSet to: False\nSet to: True\nSkip record"
-        );
-        contains(".o_import_field_boolean select").select("false");
+        expect(".o_import_error_empty").toHaveCount(1, {
+            message: "the value can be left out, the field is not required",
+        });
+
+        await contains(".o_import_error_set").click();
+        await contains(".o_import_error_picker .o_select_menu").selectDropdownItem("No");
+        expect(".o_import_error_picker .o_select_menu_toggler").toHaveValue("No");
+
         await contains(".o_control_panel_main_buttons button:first-child").click();
         expect(".o_import_data_content .alert-info").toHaveText("Everything seems valid.");
     });
@@ -898,28 +924,23 @@ describe("Import view", () => {
         let executeCount = 0;
 
         await mountWebClient();
+        // keep reporting the error, so that the chosen correction can be seen to
+        // survive a new run and be replaced by another one
         onRpc("base_import.import", "execute_import", ({ args }) => {
             expect.step("execute_import");
             executeCount++;
-            if (executeCount === 1) {
-                return executeFailingImport(args[1][0]);
-            }
             if (executeCount === 2) {
-                expect(args[3].name_create_enabled_fields).toEqual(
-                    {
-                        many2many_field: true,
-                    },
-                    { message: "selected fallback value has been given to the request" }
+                expect(args[3].resolutions).toEqual(
+                    { many2many_field: { "Incorrect value": { action: "empty" } } },
+                    { message: "the chosen correction has been given to the request" }
                 );
-            } else {
-                expect(args[3].name_create_enabled_fields).toEqual(
+            } else if (executeCount === 3) {
+                expect(args[3].resolutions).toEqual(
                     {},
-                    { message: "selected fallback value has been given to the request" }
+                    { message: "the correction taken back is no longer given to the request" }
                 );
-                expect(args[3].import_skip_records).toEqual(["many2many_field"], {
-                    message: "selected fallback value has been given to the request",
-                });
             }
+            return executeFailingImport(args[1][0]);
         });
         await getService("action").doAction(1);
 
@@ -936,28 +957,19 @@ describe("Import view", () => {
         expect(".o_notification_fade").toHaveText("Import failed: see errors below", {
             message: "a notification is shown if the import was blocked",
         });
-        expect(".o_import_field_many2many select").toHaveText(
-            "Prevent import\nSet value as empty\nSkip record\nCreate new values"
-        );
-        await contains(".o_import_field_many2many select").select("name_create_enabled_fields");
+        await contains(".o_import_error_empty").click();
         await contains(".o_control_panel_main_buttons button:first-child").click();
         expect.verifySteps(["execute_import"]);
-        expect(".o_import_data_content .alert-info:first").toHaveText("Everything seems valid.", {
-            message: "import is now successful",
+        expect(".o_import_error_empty").toHaveClass("active", {
+            message: "the correction is kept while the error is still reported",
         });
-        await contains(".o_import_field_many2many select").select("import_skip_records");
-        if (isSmall()) {
-            await contains(
-                ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
-            ).click();
-            await contains(".o-dropdown--menu button:visible").click();
-        } else {
-            await contains(".o_control_panel_main_buttons button:nth-child(2)").click();
-        }
+
+        await contains(".o_import_error_empty").click();
+        expect(".o_import_error_empty").not.toHaveClass("active", {
+            message: "picking the chosen way out again takes it back",
+        });
+        await contains(".o_control_panel_main_buttons button:first-child").click();
         expect.verifySteps(["execute_import"]);
-        expect(".o_import_data_content .alert-info:first").toHaveText("Everything seems valid.", {
-            message: "import is still successful",
-        });
     });
 
     test("import messages are grouped and sorted", async () => {
@@ -993,19 +1005,21 @@ describe("Import view", () => {
             message: "a notification is shown if the import was blocked",
         });
         // Check that errors have been sorted and grouped
-        expect(".o_import_report p").toHaveText("Multiple errors occurred in field Foo:");
-        expect(".o_import_report li:first-child").toHaveText("Duplicate value at multiple rows");
-        expect(".o_import_report li:nth-child(2)").toHaveText("Wrong values at multiple rows");
-        expect(".o_import_report li:nth-child(3)").toHaveText("Bad value at row 5");
-        expect(".o_import_report li").toHaveCount(3, {
-            message: "only 3 errors are visible by default",
+        expect(".o_import_report:nth-child(1) p").toHaveText("Duplicate value at rows 2 to 6");
+        expect(".o_import_report:nth-child(2) p").toHaveText("Wrong values at rows 3 to 4");
+        expect(".o_import_report:nth-child(3) p").toHaveText("Bad value here at row 5");
+        expect(".o_import_report").toHaveCount(3, {
+            message: "each error gets its own box, only 3 are visible by default",
         });
         expect(".o_import_report_count").toHaveText("1 more");
 
         await contains(".o_import_report_count").click();
-        expect(".o_import_report_count + li").toHaveText(
+        expect(".o_import_report_count + .o_import_report p").toHaveText(
             "Invalid value at row 1 (Some invalid content)"
         );
+        expect(".o_import_report .o_import_error_set").toHaveCount(2, {
+            message: "only the errors traced back to a value can be recovered from",
+        });
     });
 
     test("test import in batches", async () => {
@@ -1479,12 +1493,597 @@ describe("Import view", () => {
             message: "The relational field is properly mapped",
         });
 
-        expect("tr:nth-child(3) .o_import_report.alert").toHaveCount(1, {
-            message: "The relational field should have error messages on his row",
+        expect("tr:nth-child(3) .o_import_report").toHaveCount(3, {
+            message: "the errors of the relational field are reported on its row, one box each",
+        });
+    });
+
+    test.tags("desktop");
+    test("recover from an ambiguous value by picking one of the matches", async () => {
+        await mountWebClient();
+        onRpc("base_import.import", "parse_preview", ({ args }) =>
+            parsePreview(args[1], {
+                fields: [
+                    {
+                        id: "many2many_field",
+                        name: "many2many_field",
+                        string: "Many2Many",
+                        comodel_name: "partner",
+                        fields: [],
+                        type: "many2many",
+                    },
+                ],
+                headers: ["many2many_field", "foo"],
+                matches: { 0: ["many2many_field"] },
+                preview: [
+                    ["CA", "US"],
+                    ["Acme Corporation", "Azure Interior"],
+                ],
+            })
+        );
+        let shouldFail = true;
+        onRpc("base_import.import", "execute_import", ({ args }) => {
+            if (shouldFail) {
+                shouldFail = false;
+                return executeAmbiguousImport();
+            }
+            expect.step("resolved import");
+            expect(args[3].resolutions).toEqual({
+                many2many_field: { CA: { action: "set", value: 2, display_name: "Canaria" } },
+            });
+            return { ids: [1], nextrow: 0 };
+        });
+        await getService("action").doAction(1);
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+
+        expect(".o_import_report p:first").toHaveText(
+            '"CA" matches 2 different records in field "Many2Many" at row 1 (Acme Corporation)'
+        );
+        await contains(".o_import_error_set").click();
+        await contains(".o_import_error_picker input").click();
+        expect(".o-autocomplete--dropdown-item:contains(California)").toHaveCount(1, {
+            message: "the records the value matched are suggested first",
         });
 
-        expect("tr:nth-child(3) .o_import_report.alert p b").toHaveText("Many2Many / External ID", {
-            message: "The error should contain the full path of the relational field",
+        await contains(".o-autocomplete--dropdown-item:contains(Canaria)").click();
+        expect(".o_import_error_picker input").toHaveValue("Canaria");
+
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        expect.verifySteps(["resolved import"]);
+    });
+
+    test.tags("desktop");
+    test("every invalid value of an x2many cell is recovered from in one run", async () => {
+        await mountWebClient();
+        onRpc("base_import.import", "parse_preview", ({ args }) =>
+            parsePreview(args[1], {
+                fields: [
+                    {
+                        id: "many2many_field",
+                        name: "many2many_field",
+                        string: "Tags",
+                        comodel_name: "partner",
+                        fields: [],
+                        type: "many2many",
+                    },
+                ],
+                headers: ["many2many_field"],
+                matches: { 0: ["many2many_field"] },
+                preview: [["VIP,Reseller"]],
+            })
+        );
+        onRpc("partner", "web_name_search", () => [
+            { id: 2, display_name: "Picked VIP" },
+            { id: 4, display_name: "Picked Reseller" },
+        ]);
+        let shouldFail = true;
+        onRpc("base_import.import", "execute_import", ({ args }) => {
+            if (shouldFail) {
+                shouldFail = false;
+                return {
+                    ids: false,
+                    name: ["Fjord AS"],
+                    nextrow: 0,
+                    messages: ["VIP", "Reseller"].map((value) => ({
+                        type: "error",
+                        field: "many2many_field",
+                        field_name: "Tags",
+                        field_path: ["many2many_field"],
+                        message: `No matching record found for name '${value}' in field 'Tags'`,
+                        value,
+                        record: 0,
+                        rows: { from: 0, to: 0 },
+                    })),
+                };
+            }
+            expect.step("resolved import");
+            expect(args[3].resolutions).toEqual({
+                many2many_field: {
+                    VIP: { action: "set", value: 2, display_name: "Picked VIP" },
+                    Reseller: { action: "set", value: 4, display_name: "Picked Reseller" },
+                },
+            });
+            return { ids: [1], nextrow: 0 };
+        });
+        await getService("action").doAction(1);
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+
+        expect(".o_import_report").toHaveCount(2, {
+            message: "both offending values of the cell are reported on their own",
+        });
+
+        for (const [index, value] of [
+            [1, "Picked VIP"],
+            [2, "Picked Reseller"],
+        ]) {
+            await contains(`.o_import_report:nth-child(${index}) .o_import_error_set`).click();
+            await contains(
+                `.o_import_report:nth-child(${index}) .o_import_error_picker input`
+            ).edit(value, { confirm: false });
+            await runAllTimers();
+            await contains(`.o-autocomplete--dropdown-item:contains(${value})`).click();
+        }
+
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        expect.verifySteps(["resolved import"]);
+    });
+
+    test.tags("desktop");
+    test("a way out of an error is a selection: it can be replaced and taken back", async () => {
+        await mountWebClient();
+        onRpc("base_import.import", "parse_preview", ({ args }) =>
+            parsePreview(args[1], {
+                fields: [
+                    {
+                        id: "many2many_field",
+                        name: "many2many_field",
+                        string: "Many2Many",
+                        comodel_name: "partner",
+                        fields: [],
+                        type: "many2many",
+                    },
+                ],
+                headers: ["many2many_field", "foo"],
+                matches: { 0: ["many2many_field"] },
+                preview: [
+                    ["CA", "US"],
+                    ["Acme Corporation", "Azure Interior"],
+                ],
+            })
+        );
+        let shouldFail = true;
+        onRpc("base_import.import", "execute_import", ({ args }) => {
+            if (shouldFail) {
+                shouldFail = false;
+                return executeAmbiguousImport();
+            }
+            expect.step("resolved import");
+            expect(args[3].resolutions).toEqual({
+                many2many_field: { CA: { action: "empty" } },
+            });
+            return { ids: [1], nextrow: 0 };
+        });
+        await getService("action").doAction(1);
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+
+        await contains(".o_import_error_set").click();
+        expect(".o_import_error_set").toHaveClass("active");
+
+        // picking the chosen way out again takes it back
+        await contains(".o_import_error_set").click();
+        expect(".o_import_error_set").not.toHaveClass("active");
+        expect(".o_import_error_picker").toHaveCount(0);
+
+        await contains(".o_import_error_set").click();
+
+        // picking another one replaces it
+        await contains(".o_import_error_empty").click();
+        expect(".o_import_error_empty").toHaveClass("active");
+        expect(".o_import_error_set").not.toHaveClass("active");
+        expect(".o_import_error_picker").toHaveCount(0);
+
+        // and picking it again leaves the error unresolved
+        await contains(".o_import_error_empty").click();
+        expect(".o_import_error_empty").not.toHaveClass("active");
+
+        await contains(".o_import_error_empty").click();
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        expect.verifySteps(["resolved import"]);
+    });
+
+    test.tags("desktop");
+    test("an error spanning several rows stays in sight once recovered from", async () => {
+        await mountWebClient();
+        let shouldFail = true;
+        onRpc("base_import.import", "execute_import", ({ args }) => {
+            if (shouldFail) {
+                shouldFail = false;
+                // the same offending value on two rows: reported twice by the
+                // server, merged into a single error by the client
+                const error = {
+                    type: "error",
+                    field: args[1][0],
+                    field_name: "Foo",
+                    field_path: [args[1][0]],
+                    message: "Incorrect value",
+                    value: "Incorrect value",
+                };
+                return {
+                    ids: false,
+                    name: ["Some invalid content", "Wrong content"],
+                    nextrow: 0,
+                    messages: [
+                        { ...error, record: 0, rows: { from: 0, to: 0 } },
+                        { ...error, record: 1, rows: { from: 1, to: 1 } },
+                    ],
+                };
+            }
+            expect.step("resolved import");
+            return { ids: [1], nextrow: 0 };
+        });
+        await getService("action").doAction(1);
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+        expect(".o_import_report").toHaveCount(1, {
+            message: "both occurrences are reported as one error",
+        });
+        expect(".o_import_report p").toHaveText("Incorrect value at rows 1 to 2");
+
+        await contains(".o_import_error_empty").click();
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+        expect.verifySteps(["resolved import"]);
+        expect(".o_import_report").toHaveCount(1, {
+            message: "the merged error stays in sight, like any other",
+        });
+        expect(".o_import_error_empty").toHaveClass("active");
+    });
+
+    test.tags("desktop");
+    test("an error stays in sight with its correction once recovered from", async () => {
+        await mountWebClient();
+        let shouldFail = true;
+        onRpc("base_import.import", "execute_import", ({ args }) => {
+            if (shouldFail) {
+                shouldFail = false;
+                return executeFailingImport(args[1][0]);
+            }
+            // the correction worked: the server has nothing to report anymore
+            expect.step("resolved import");
+            return { ids: [1], nextrow: 0 };
+        });
+        await getService("action").doAction(1);
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+        expect(".o_import_report").toHaveCount(1);
+
+        await contains(".o_import_error_empty").click();
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+        expect.verifySteps(["resolved import"]);
+        expect(".o_import_data_content .alert-info").toHaveText("Everything seems valid.");
+        expect(".o_import_report").toHaveCount(1, {
+            message: "the error the user recovered from stays in sight",
+        });
+        expect(".o_import_error_empty").toHaveClass("active", {
+            message: "and so does what was chosen to recover from it",
+        });
+    });
+
+    test.tags("desktop");
+    test("a validation error is reported on its column even without row names", async () => {
+        await mountWebClient();
+        let shouldFail = true;
+        onRpc("base_import.import", "execute_import", ({ args }) => {
+            if (shouldFail) {
+                shouldFail = false;
+                // an error raised while pre-parsing the file is reported on its
+                // own, before any record was built: there are no rows to locate
+                // it with
+                return {
+                    messages: [
+                        {
+                            type: "error",
+                            not_matching_error: true,
+                            message: "Column foo contains incorrect values (value: not-a-number)",
+                            record: false,
+                            field_path: [args[1][0]],
+                            value: "not-a-number",
+                        },
+                    ],
+                };
+            }
+            expect.step("resolved import");
+            expect(args[3].resolutions).toEqual({
+                foo: { "not-a-number": { action: "empty" } },
+            });
+            return { ids: [1], nextrow: 0 };
+        });
+        await getService("action").doAction(1);
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+        expect(".o_import_report p").toHaveText(
+            "Column foo contains incorrect values (value: not-a-number)"
+        );
+
+        await contains(".o_import_error_empty").click();
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+        expect.verifySteps(["resolved import"]);
+    });
+
+    test.tags("desktop");
+    test("an error left untouched through another run is highlighted", async () => {
+        await mountWebClient();
+        // the error keeps being reported, whatever the user chooses
+        onRpc("base_import.import", "execute_import", ({ args }) =>
+            executeFailingImport(args[1][0])
+        );
+        await getService("action").doAction(1);
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+        expect(".o_import_report p").not.toHaveClass("text-danger", {
+            message: "an error reported for the first time is not highlighted",
+        });
+
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+        expect(".o_import_report p").toHaveClass("text-danger", {
+            message: "it stands out once it survived a run without a way out being chosen",
+        });
+
+        await contains(".o_import_error_empty").click();
+        expect(".o_import_report p").not.toHaveClass("text-danger", {
+            message: "choosing a way out clears the highlight at once",
+        });
+
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+        expect(".o_import_error_empty").toHaveClass("active", {
+            message: "the chosen way out survives the next run",
+        });
+        expect(".o_import_report p").not.toHaveClass("text-danger", {
+            message: "a handled error is not highlighted, however many runs it survives",
+        });
+    });
+
+    test.tags("desktop");
+    test("a record missing a required value is corrected on its column", async () => {
+        await mountWebClient();
+        onRpc("base_import.import", "parse_preview", ({ args }) =>
+            parsePreview(args[1], {
+                fields: [{ id: "name", name: "name", string: "Name", fields: [], type: "char" }],
+                headers: ["name"],
+                matches: { 0: ["name"] },
+                preview: [["Acme Corporation", ""]],
+            })
+        );
+        let shouldFail = true;
+        onRpc("base_import.import", "execute_import", ({ args }) => {
+            if (shouldFail) {
+                shouldFail = false;
+                return {
+                    ids: false,
+                    name: ["Acme Corporation", ""],
+                    nextrow: 0,
+                    // the error is raised on the record as a whole, and pinned
+                    // back on the column holding the offending value
+                    messages: [
+                        {
+                            type: "error",
+                            field: "name",
+                            message: "Contacts require a name",
+                            value: "",
+                            record: 1,
+                            rows: { from: 1, to: 1 },
+                        },
+                    ],
+                };
+            }
+            expect.step("resolved import");
+            expect(args[3].resolutions).toEqual({
+                name: { "": { action: "set", value: "Green Valley" } },
+            });
+            return { ids: [1], nextrow: 0 };
+        });
+        await getService("action").doAction(1);
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+
+        expect(".o_import_data_content .alert-danger").toHaveCount(0, {
+            message: "the error is reported on its column, not on its own",
+        });
+        expect(".o_import_report p").toHaveText("Contacts require a name at row 2");
+        expect(".o_import_error_empty").toHaveCount(0, {
+            message: "an empty value cannot be left out",
+        });
+
+        await contains(".o_import_error_set").click();
+        await contains(".o_import_error_picker input").edit("Green Valley");
+
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        expect.verifySteps(["resolved import"]);
+    });
+
+    test.tags("desktop");
+    test("an error that cannot be traced to a value is only reported", async () => {
+        await mountWebClient();
+        onRpc("base_import.import", "execute_import", () => ({
+            ids: false,
+            name: [],
+            nextrow: 0,
+            messages: [
+                {
+                    type: "error",
+                    message: "The VAT number does not seem to be valid",
+                    record: 2,
+                    rows: { from: 2, to: 2 },
+                },
+            ],
+        }));
+        await getService("action").doAction(1);
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+
+        expect(".o_import_data_content .alert-danger").toHaveText(
+            'Error at row 3: "The VAT number does not seem to be valid"'
+        );
+        expect(".o_import_error_resolution").toHaveCount(0, {
+            message: "without an offending value there is nothing to correct",
+        });
+    });
+
+    test.tags("desktop");
+    test("an error on no field is reported even with columns left unmapped", async () => {
+        await mountWebClient();
+        onRpc("base_import.import", "parse_preview", ({ args }) =>
+            parsePreview(args[1], { matches: { 0: ["foo"] } })
+        );
+        onRpc("base_import.import", "execute_import", () => ({
+            ids: false,
+            name: [],
+            nextrow: 0,
+            messages: [
+                {
+                    type: "error",
+                    message: "The VAT number does not seem to be valid",
+                    record: 2,
+                    rows: { from: 2, to: 2 },
+                },
+            ],
+        }));
+        await getService("action").doAction(1);
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+
+        expect(".o_import_data_content .alert-danger").toHaveText(
+            'Error at row 3: "The VAT number does not seem to be valid"',
+            { message: "the error is not taken for one of the unmapped columns" }
+        );
+    });
+
+    test.tags("desktop");
+    test("a record is picked for an unknown external id of a relation", async () => {
+        await mountWebClient();
+        onRpc("base_import.import", "parse_preview", ({ args }) =>
+            parsePreview(args[1], {
+                fields: [
+                    {
+                        id: "many2many_field",
+                        name: "many2many_field",
+                        string: "Many2Many",
+                        comodel_name: "partner",
+                        model_name: "partner",
+                        type: "many2many",
+                        fields: [
+                            {
+                                id: "id",
+                                name: "id",
+                                string: "External ID",
+                                model_name: "partner",
+                                type: "id",
+                                fields: [],
+                            },
+                        ],
+                    },
+                ],
+                headers: ["many2many_field/id"],
+                matches: { 0: ["many2many_field", "id"] },
+                preview: [["base.missing"]],
+            })
+        );
+        onRpc("base_import.import", "execute_import", () => ({
+            ids: false,
+            name: [],
+            nextrow: 0,
+            messages: [
+                {
+                    type: "error",
+                    field: "many2many_field",
+                    field_name: "Many2Many",
+                    field_path: ["many2many_field", "id"],
+                    field_type: "external id",
+                    message:
+                        "No matching record found for external id 'base.missing' in field 'Many2Many'",
+                    record: 0,
+                    rows: { from: 0, to: 0 },
+                    value: "base.missing",
+                },
+            ],
+        }));
+        await getService("action").doAction(1);
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        await animationFrame();
+
+        expect(".o_import_error_set").toHaveText("Set a record");
+        await contains(".o_import_error_set").click();
+        expect(".o_import_error_picker .o-autocomplete input").toHaveCount(1, {
+            message: "the column holds references of the relation: a record is picked",
+        });
+        expect(".o_import_error_input").toHaveCount(0, {
+            message: "typing a value in would be taken for a record id by the server",
         });
     });
 
@@ -1656,7 +2255,7 @@ describe("Import view", () => {
 
         await contains(".o_control_panel_main_buttons button:contains('Import')").click();
         await animationFrame();
-        expect(".o_import_report.alert-danger").toHaveText("Incorrect value");
+        expect(".o_import_report p").toHaveText("Incorrect value at row 1 (Some invalid content)");
         expect.verifySteps(["Import failed: see errors below"]);
     });
 
@@ -1779,7 +2378,9 @@ test("locale separators only apply to CSV, not to other formats", async () => {
 
     const xlsxFile = new File(["fake_file"], "data.xlsx", { type: "text/plain" });
     if (isSmall()) {
-        await contains(".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown").click();
+        await contains(
+            ".o_control_panel_main_buttons button.o-control-panel-adaptive-dropdown"
+        ).click();
         await contains(".o-dropdown--menu .o_file_input_trigger").click();
     } else {
         await contains(".o_control_panel_main_buttons .o_file_input button").click();
