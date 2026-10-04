@@ -455,7 +455,7 @@ test("Leaving channel does not open another conversation", async () => {
         ".o-mail-MessagingMenuItem:has(.o-mail-NotificationItem.o-active):has(:text('General'))"
     );
     await contains(".o-mail-NotificationItem.o-active");
-    await click("[title='Channel Actions']");
+    await click(".o-mail-MessagingMenuItem:has(:text('General')) [title='Channel Actions']");
     await click(".o-dropdown-item:contains('Leave Conversation')");
     await click(".o_dialog button:text('Leave Conversation')");
     await contains(".o-mail-MessagingMenuItem:has(:text('General'))", { count: 0 });
