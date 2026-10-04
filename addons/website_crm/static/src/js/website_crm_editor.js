@@ -9,6 +9,11 @@ registry.category("builder.form_editor_actions").add('create_lead', {
         domain: [['use_opportunities', '=', true]],
         string: _t('Sales Team'),
         title: _t('Assign leads/opportunities to a sales team.'),
+        dialogTitle: _t("Create a Sales Team"),
+        dialogDescription: _t(
+            "Your current changes will be saved, and you'll be redirected to the CRM app"
+        ),
+        createAction: "sales_team.crm_team_action_config",
     }, {
         name: 'user_id',
         type: 'many2one',

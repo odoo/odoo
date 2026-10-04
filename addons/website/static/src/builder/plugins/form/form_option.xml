@@ -2,6 +2,10 @@
 <templates xml:space="preserve">
 
 <t t-name="website.s_website_form_form_option">
+    <div t-if="this.missingRecord.field" class="alert alert-info mb-1">
+        <t t-if="this.missingRecord.field.noRecordMessage" t-out="this.missingRecord.field.noRecordMessage"/>
+        <t t-else="">To be able to use this model in a form, you must first create a record for it.</t>
+    </div>
     <BuilderRow t-if="!this.modelCantChange and this.state.models"
             label.translate="Action" preview="false">
         <BuilderSelect>
@@ -10,7 +14,7 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <FormActionFieldsOption activeForm="this.state.activeForm"/>
+    <FormActionFieldsOption activeForm="this.state.activeForm" onMissingRecord="this.onMissingRecord"/>
     <BuilderRow label.translate="Marked Fields" tooltip.translate="Add an icon to the labels of required or optional fields">
         <BuilderSelect id="'field_mark_select'" action="'updateLabelsMark'">
             <BuilderSelectItem classAction="''">None</BuilderSelectItem>
@@ -59,21 +63,25 @@
 
 <t t-name="website.s_website_form_form_action_fields_option">
     <t t-if="this.state.formInfo.fields">
-        <t t-foreach="this.state.formInfo.fields" t-as="field" t-key="field.name">
+        <!-- Keyed on the action too: some builder components read their props
+        only at setup, and actions may share field names (e.g. team_id). -->
+        <t t-foreach="this.state.formInfo.fields" t-as="field" t-key="this.props.activeForm.id + '-' + field.name">
+            <t t-set="isMissingRecord" t-value="this.isMissingRecord(field)"/>
             <BuilderRow t-if="field.type === 'many2one'" label="field.string" tooltip="field.help" preview="false">
-                <BuilderSelect actionParam="{ isSelect: true, fieldName: field.name }">
-                    <BuilderSelectItem t-if="!field.required" action="'addActionField'" actionValue="'0'">
-                        None
-                    </BuilderSelectItem>
-                    <BuilderSelectItem t-foreach="field.records" t-as="record" t-key="record.id"
-                        action="'addActionField'" actionValue="record.id.toString()"
-                    >
-                        <t t-out="record.display_name"/>
-                    </BuilderSelectItem>
-                </BuilderSelect>
-                <BuilderButton t-if="field.createAction" iconClass="'oi-fw'" icon="'add'"
+                <BuilderSearchSelect t-if="!isMissingRecord"
+                    action="'addActionField'" actionParam="{ isSelect: true, fieldName: field.name }"
+                    choices="this.getRecordChoices(field)"
+                />
+                <BuilderButton t-if="field.createAction and field.hasCreateAccess" iconClass="'oi-fw'" icon="'add'"
+                    type="isMissingRecord ? 'success' : 'secondary'" className="isMissingRecord ? 'w-100' : ''"
                     title.translate="Create New"
-                    action="'promptSaveRedirect'" actionParam="field.createAction"
+                    action="'promptSaveRedirect'"
+                    actionParam="{
+                        createAction: field.createAction,
+                        checkWebsiteCompanyIsActive: field.checkWebsiteCompanyIsActive,
+                        dialogTitle: field.dialogTitle,
+                        dialogDescription: field.dialogDescription,
+                    }"
                 />
             </BuilderRow>
             <BuilderRow t-if="field.type === 'char'" label="field.string" tooltip="field.help">
