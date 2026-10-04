@@ -765,6 +765,10 @@
                         class="btn btn-outline-danger"
                         data-hotkey="x"
                     />
+                    <button type="object"
+                        name="action_reprocess_time_rules"
+                        string="Reprocess Time Rules"
+                    />
                 </header>
                 <field name="employee_id" widget="many2one_avatar_employee" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
                 <field name="work_entry_type_id" widget="many2one_work_entry_type" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" options="{'no_open': true}" />
