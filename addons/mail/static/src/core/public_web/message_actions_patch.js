@@ -7,7 +7,7 @@ registerMessageAction("pin", {
         !message.pinned_at &&
         store.self_user &&
         message.thread &&
-        (!message.channel_id || message.channel_id.canSelfInteractWithChannel),
+        !message.channel_id?.isReadonlyForSelf,
     icon: "push_pin",
     name: _t("Pin"),
     onSelected: ({ action, message }) =>
@@ -21,7 +21,7 @@ registerMessageAction("unpin", {
         message.pinned_at &&
         store.self_user &&
         message.thread &&
-        (!message.channel_id || message.channel_id.canSelfInteractWithChannel),
+        !message.channel_id?.isReadonlyForSelf,
     icon: "push_pin",
     name: _t("Unpin"),
     onSelected: ({ action, message }) =>
