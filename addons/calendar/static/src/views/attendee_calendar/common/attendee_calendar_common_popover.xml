@@ -4,6 +4,9 @@
         <xpath expr="//ul[hasclass('o_cw_popover_fields_secondary')]" position="attributes">
             <attribute name="t-if">isEventDetailsVisible</attribute>
         </xpath>
+        <xpath expr="//ul[hasclass('o_cw_popover_fields_secondary')]//li/span" position="attributes">
+            <attribute name="t-att-class">{ 'align-self-start': isHtmlDescriptionWithIcon(fieldInfo, fieldType) }</attribute>
+        </xpath>
         <xpath expr="//div[hasclass('flex-grow-1')]" position="attributes">
             <attribute name="t-if">!fieldInfo.options.shouldOpenRecord</attribute>
         </xpath>
