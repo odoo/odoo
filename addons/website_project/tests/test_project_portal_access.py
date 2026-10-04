@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from re import search
 
 from odoo.tests import tagged, HttpCase
 
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.project.tests.test_project_sharing import TestProjectSharingCommon
+from odoo.addons.website_project.controllers.main import WebsiteForm
 from odoo.addons.http_routing.tests.common import MockRequest
 
 
@@ -111,3 +113,71 @@ class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
         self.assertEqual(self.partner_1.name, 'Valid Lelitre')
         # The project's partner must remain unchanged
         self.assertEqual(self.project_portal.partner_id.name, 'Valid Lelitre')
+
+    def test_task_submission_partner_phone(self):
+        """ Submitting a task via Contact Us should set the value of partner_phone ONLY IF :
+        - It creates a new partner
+        - The associated partner is the currently connected user
+        """
+        self.authenticate(None, None)
+
+        def create_users():
+            users = self.env['res.users'].create([
+                {
+                    'name': 'Jean Michel',
+                    'login': 'jean@michel.com',
+                },
+                {
+                    'name': 'Marie Dubois',
+                    'login': 'marie@dubois.com',
+                }
+            ])
+            for user in users:
+                user.partner_id.email = user.login
+            users[0].partner_id.phone = '12345'
+            return users
+        test_cases = [
+            # Public user with already existing partner's email => In description
+            (-1, 'jean@michel.com', 'description'),
+            # Partner with its own email => In partner_phone
+            (0, 'jean@michel.com', 'partner_phone'),
+            # Partner with another partner's email => In description
+            (1, 'jean@michel.com', 'description'),
+            # Public user with a new email => In partner_phone
+            (-1, 'new@email.com', 'partner_phone'),
+        ]
+        task_data = {
+            'name': 'New Task From Website',
+            'partner_name': 'Jean Michel',
+            'partner_phone': '6789',
+            'description': 'Hello',
+            'project_id': str(self.project_portal.id),
+        }
+        WebsiteFormController = WebsiteForm()
+        for user_index, email, phone_field in test_cases:
+            users = create_users()
+            user = self.user_public if user_index < 0 else users[user_index]
+            with self.subTest(user=user, email=email, phone_field=phone_field):
+                with (
+                    self.enter_registry_test_mode(),
+                    self.env.registry.cursor() as test_cr,
+                    MockRequest(self.env(cr=test_cr, user=user)) as request,
+                ):
+                    # The email_normalized of the partners don't seem to
+                    # be properly computed in the form processing if we don't do this
+                    self.env['res.partner'].sudo().search([('email_normalized', '=', 'a')])
+                    request.params = {
+                        'email_from': email,
+                        'model_name': 'project.task',
+                        **task_data
+                    }
+                    response = WebsiteFormController.website_form('project.task', **task_data)
+                    new_task = self.env['project.task'].browse(json.loads(response.data).get('id'))
+                self.assertTrue(new_task.exists())
+                if phone_field == 'partner_phone':
+                    self.assertEqual(new_task.partner_phone, '6789')
+                else:
+                    self.assertIn('phone : 6789', str(new_task.description))
+                    new_task.invalidate_recordset(['partner_phone'])
+                    self.assertEqual(new_task.partner_phone, '12345')
+            users.unlink()
