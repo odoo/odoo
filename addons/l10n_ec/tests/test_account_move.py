@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
 
@@ -14,7 +13,7 @@ class TestEcAccountMove(AccountTestInvoicingCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
-    @AccountEdiTestCommon.setup_country('ec')
+    @AccountTestInvoicingCommon.setup_country('ec')
     def setUpClass(cls):
         super().setUpClass()
 
