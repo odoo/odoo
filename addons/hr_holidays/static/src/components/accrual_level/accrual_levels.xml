@@ -10,9 +10,9 @@
             </div>
         </div>
         <t t-foreach="milestones" t-as="level" t-key="level.id">
-            <div class="o_accrual_level w-100 d-flex vertical-align-middle" t-if="level.data">
+            <div class="o_accrual_level w-100 d-flex vertical-align-middle" t-if="level.data" t-att-class="{ o_accrual_level_hovered: state.hoveredMilestoneId === level.id }">
                 <div class="time d-flex flex-column align-items-end mx-2" style="width: 150px; min-width: 150px; align-self: center;">
-                    <span class="o_accrual_bg border w-100 position-relative text-center px-3 py-1 rounded-3" role="button" t-on-click="editMilestone.bind(this, level.data.id)">
+                    <span class="o_accrual_bg border w-100 position-relative text-center px-3 py-1 rounded-3" role="button" t-on-click="editMilestone.bind(this, level.data.id)" t-on-mouseenter="() => state.hoveredMilestoneId = level.id" t-on-mouseleave="() => state.hoveredMilestoneId = false">
                         <span class="new-text position-absolute fw-bold" t-if="getNewMilestoneClass(level.data.id)">New !</span>
                         <span class="text">
                             <t t-if="level.data.milestone_date == 'creation'">
@@ -30,7 +30,7 @@
                     <span class="flex-grow-1 rounded border" style="width: 0;"/>
                     <i class="arrow down"/>
                 </span>
-                <div class="content o_accrual_bg align-self-center w-100 h-100 px-3 py-2 my-3 ms-2 border rounded-3" role="button" t-on-click="editMilestone.bind(this, level.data.id)">
+                <div class="content o_accrual_bg align-self-center w-100 h-100 px-3 py-2 my-3 ms-2 border rounded-3" role="button" t-on-click="editMilestone.bind(this, level.data.id)" t-on-mouseenter="() => state.hoveredMilestoneId = level.id" t-on-mouseleave="() => state.hoveredMilestoneId = false">
                     <span class="text">
                         <h4 class="header m-0" name="header">
                             Accrual frequency : <t t-esc="level.data.added_value"/> <t t-esc="durationTypes[level.data.added_value_type] || level.data.added_value_type"/>
