@@ -353,20 +353,23 @@ class HrLeave(models.Model):
         }
 
     @api.depends(
-        'virtual_remaining_leaves', 'number_of_days', 'number_of_hours',
+        'number_of_days', 'number_of_hours',
         'work_entry_type_id', 'employee_id', 'request_date_from', 'request_date_to',
         'work_entry_type_id.unit_of_measure'
     )
     @api.depends_context('default_is_multi_employee')
     def _compute_allocation_warning(self):
         self.allocation_display_warning = False
+        today = fields.Date.context_today(self)
         for leave in self:
             is_multi_employee = self.env.context.get('default_is_multi_employee', False)
 
             if not leave.employee_id or is_multi_employee or not leave.work_entry_type_requires_allocation or not leave.work_entry_type_id.time_off_selectable:
                 continue
 
-            remaining = leave.virtual_remaining_leaves
+            # A saved request is already deducted from the balance, don't count it twice
+            remaining, _allocated = leave.with_context(ignored_leave_ids=leave._origin.ids)._get_allocation_balance(
+                leave.request_date_from or today)[leave]
             is_hour = leave.work_entry_type_id.unit_of_measure == 'hour'
             request_amount = leave.number_of_hours if is_hour else leave.number_of_days
             max_excess = leave.work_entry_type_id.max_allowed_negative if leave.work_entry_type_id.allows_negative else 0
@@ -1325,17 +1328,30 @@ class HrLeave(models.Model):
     @api.depends('employee_id', 'work_entry_type_id')
     def _compute_leaves(self):
         date_from = fields.Date.from_string(self.env.context['default_request_date_from']) if 'default_request_date_from' in self.env.context else fields.Date.context_today(self)
-        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from)[0]
+        balance_per_leave = self._get_allocation_balance(date_from)
+        for leave in self:
+            leave.virtual_remaining_leaves, leave.max_leaves = balance_per_leave[leave]
+
+    def _get_allocation_balance(self, target_date):
+        """
+        Compute the allocated balance of each leave at target_date.
+
+        Returns:
+            dict mapping each leave to a tuple (virtual_remaining_leaves, max_leaves),
+                expressed in the unit of its work entry type
+        """
+        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, target_date)[0]
+        balance_per_leave = {}
         for leave in self:
             virtual_remaining_leaves = 0
             max_leaves = 0
             primary_unit = 'hours' if leave.work_entry_type_id.unit_of_measure == 'hour' else 'days'
             for allocation, allocation_dict in employee_days_per_allocation[leave.employee_id][leave.work_entry_type_id].items():
-                if allocation and (not allocation.date_to or allocation.date_to >= date_from):
+                if allocation and (not allocation.date_to or allocation.date_to >= target_date):
                     max_leaves += allocation_dict[f'{primary_unit}_max_leaves']
                     virtual_remaining_leaves += allocation_dict[f'{primary_unit}_virtual_remaining_leaves']
-            leave.virtual_remaining_leaves = virtual_remaining_leaves
-            leave.max_leaves = max_leaves
+            balance_per_leave[leave] = (virtual_remaining_leaves, max_leaves)
+        return balance_per_leave
 
     def _inverse_supported_attachment_ids(self):
         for holiday in self:
