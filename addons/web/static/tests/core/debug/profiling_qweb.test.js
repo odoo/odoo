@@ -57,6 +57,7 @@ beforeEach(() => {
 
 test("profiling qweb view field renders delay and query", async function (assert) {
     await mountView({
+        noMainContainer: true,
         resModel: "custom",
         type: "form",
         resId: 1,

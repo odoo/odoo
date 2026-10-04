@@ -44,6 +44,7 @@ defineModels([Partner, PartnerType, User]);
 
 test("image fields are correctly rendered", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -124,6 +125,7 @@ test("image fields in x2many list are loaded correctly", async () => {
     Partner._records[0].timmy = [12];
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -176,6 +178,7 @@ test("image fields with empty value", async () => {
     Partner._records[0].foo = false;
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -227,6 +230,7 @@ test("onchange update image fields", async () => {
 
 test("ImageUrlField with width attribute is auto when Studio is set", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `

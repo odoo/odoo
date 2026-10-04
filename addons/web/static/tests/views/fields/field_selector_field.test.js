@@ -30,6 +30,7 @@ test("readonly", async () => {
         },
     ];
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "update.record.action",
         resId: 1,

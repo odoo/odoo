@@ -33,6 +33,7 @@ onRpc("has_group", () => true);
 
 test("Many2OneReferenceIntegerField in form view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -44,6 +45,7 @@ test("Many2OneReferenceIntegerField in form view", async () => {
 
 test("Many2OneReferenceIntegerField in list view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         resId: 1,
@@ -55,6 +57,7 @@ test("Many2OneReferenceIntegerField in list view", async () => {
 
 test("Many2OneReferenceIntegerField: unset value in form view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,

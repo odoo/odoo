@@ -478,6 +478,7 @@ test("SelectionField fallback to value when option not found", async () => {
     env["partner"][0].color = "unknown_value"; // Value not in selection list
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,

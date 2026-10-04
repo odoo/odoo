@@ -230,6 +230,7 @@ beforeEach(() => {
 
 test("simple rendering", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         arch: `
             <form>
@@ -278,6 +279,7 @@ test("simple rendering", async () => {
 
 test("simple rendering in readonly", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         arch: `
             <form edit="0">
@@ -414,6 +416,7 @@ test(`Click on "?" should not trigger a focus`, async () => {
 test.tags("desktop");
 test(`privilege tooltips`, async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         arch: `
             <form>

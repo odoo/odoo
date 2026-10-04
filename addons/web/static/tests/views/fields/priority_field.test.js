@@ -53,6 +53,7 @@ defineModels([Partner, User]);
 
 test("PriorityField when not set", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,
@@ -88,6 +89,7 @@ test("PriorityField when not set", async () => {
 
 test("PriorityField tooltip", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -152,6 +154,7 @@ test.tags("desktop");
 test("PriorityField hover a star in form view", async () => {
     expect.assertions(10);
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -389,6 +392,7 @@ test.tags("desktop");
 test("PriorityField hover in editable list view", async () => {
     onRpc("has_group", () => true);
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: /* xml */ `<list editable="bottom"><field name="selection" widget="priority" /></list>`,
@@ -497,6 +501,7 @@ test('PriorityField edited by the smart action "Set priority..."', async () => {
 
 test("PriorityField readonly tooltip", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,

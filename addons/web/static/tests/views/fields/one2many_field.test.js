@@ -779,6 +779,7 @@ test("one2many wait for the onchange of the resequenced finish before save", asy
         ]);
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -859,6 +860,7 @@ test("one2many with date and datetime", async () => {
     Partner._records[0].p = [2];
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -885,6 +887,7 @@ test("one2many with date and datetime", async () => {
 test("rendering with embedded one2many", async () => {
     Partner._records[0].p = [2];
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -1042,6 +1045,7 @@ test("use the limit attribute in arch (in field o2m non inline list view)", asyn
         });
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `<form><field name="turtles" widget="one2many"/></form>`,
@@ -1062,6 +1066,7 @@ test("one2many with default_order on view not inline", async () => {
             </list>`,
     };
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -1090,6 +1095,7 @@ test.tags("desktop");
 test("embedded one2many with widget", async () => {
     Partner._records[0].p = [2];
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -1123,6 +1129,7 @@ test("embedded one2many with handle widget", async () => {
         expect.step("onchange");
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -1360,6 +1367,7 @@ test("onchange for embedded one2many with handle widget", async () => {
     };
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -2269,6 +2277,7 @@ test("embedded one2many with handle widget with minimum setValue calls", async (
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -2379,6 +2388,7 @@ test("one2many list order with handle widget", async () => {
         expect(args.kwargs.specification.p.order).toBe("int_field ASC, id ASC");
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -3628,6 +3638,7 @@ test("one2many kanban: edition", async () => {
 
 test("one2many kanban (editable): properly handle add-label node attribute", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -4702,6 +4713,7 @@ test("one2many, default_get and onchange (basic)", async () => {
         },
     }));
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -6024,6 +6036,7 @@ test("one2many without inline tree arch", async () => {
             </list>`,
     };
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         // should not call loadViews for the field with many2many_tags widget,
@@ -6556,6 +6569,7 @@ test("nested x2many default values", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -8201,6 +8215,7 @@ test("default value for nested one2manys (coming from onchange)", async () => {
         );
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -9179,6 +9194,7 @@ test("one2many list with custom control with invisible modifier", async () => {
 
 test("one2many list with custom control with invisible modifier using context", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,
@@ -9208,6 +9224,7 @@ test("one2many list with custom control with invisible modifier using context", 
 
 test("one2many kanban with custom control with invisible modifier", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,
@@ -9240,6 +9257,7 @@ test("one2many kanban with custom control with invisible modifier", async () => 
 
 test("one2many kanban with custom control with invisible modifier using context", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,
@@ -10040,6 +10058,7 @@ test("column_invisible attrs on adjacent buttons", async () => {
 
 test("field context is correctly passed to x2m subviews", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -10076,6 +10095,7 @@ test("one2many kanban with widget handle", async () => {
         });
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -10171,6 +10191,7 @@ test("many2manys inside a one2many are fetched in batch after onchange", async (
         expect.step(args.method || args.route);
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -10607,6 +10628,7 @@ test("reordering embedded one2many with handle widget starting with same sequenc
     Partner._records[0].turtles = [1, 2, 3, 4, 5, 6];
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -10704,6 +10726,7 @@ test("do not call read if name already known", async () => {
         expect.step(args.method + " on " + args.model);
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -10732,6 +10755,7 @@ test("x2many default_order multiple fields", async () => {
     Partner._records[0].p = [1, 7, 4, 5, 2, 6, 3];
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -11843,6 +11867,7 @@ test("Check onchange with two consecutive one2one", async () => {
 
 test("does not crash when you parse a tree arch containing another tree arch", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -13740,6 +13765,7 @@ test("one2many list with aggregates in first column", async () => {
     Partner._records[0].turtles = [1, 2, 3];
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
