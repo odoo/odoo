@@ -1127,6 +1127,7 @@ class AccountJournal(models.Model):
             .with_context(
                 default_journal_id=self.id,
                 skip_is_manually_modified=True,
+                einvoice_notification_author_id=self.env.user.partner_id.id,
             ) \
             ._create_records_from_attachments(attachments)
 
@@ -1288,6 +1289,13 @@ class AccountJournal(models.Model):
         invoice.ensure_one()
 
         recipients = set(email_normalize_all(self.incoming_einvoice_notification_email or ''))
+        if not recipients:
+            return
+
+        author = self.env['res.partner'].browse(self.env.context.get('einvoice_notification_author_id'))
+        partners = author | invoice.invoice_user_id.partner_id
+        recipients -= {email for partner in partners for email in email_normalize_all(partner.email or '')}
+
         if not recipients:
             return
 
