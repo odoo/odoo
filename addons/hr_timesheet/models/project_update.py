@@ -34,6 +34,6 @@ class ProjectUpdate(models.Model):
             update.write({
                 "uom_id": encode_uom,
                 "allocated_time": round(project.allocated_hours * ratio),
-                "timesheet_time": round(project.sudo().total_timesheet_time),
+                "timesheet_time": round(project.effective_hours * ratio),
             })
         return updates
