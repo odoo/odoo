@@ -77,6 +77,14 @@ export class ResourceCalendarAttendance extends models.ServerModel {
     ];
 
     _load_pos_data_fields() {
-        return ["id", "hour_from", "hour_to", "dayofweek", "day_period"];
+        return [
+            "id",
+            "hour_from",
+            "hour_to",
+            "dayofweek",
+            "day_period",
+            "week_type",
+            "display_type",
+        ];
     }
 }
