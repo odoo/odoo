@@ -218,3 +218,60 @@ class TestWebsiteIconFont(odoo.tests.HttpCase):
                     self._preloaded_icon_fonts(),
                     [f'material_symbols_{variant.lower()}'],
                 )
+
+
+@odoo.tests.common.tagged('post_install', '-at_install')
+class TestWebsiteThemeGates(odoo.tests.HttpCase):
+    """
+    Tests for `website._get_theme_gates`: the theme settings that switch CSS
+    rules on, rendered on `<html data-o-theme-gates>`.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.website = self.env['website'].browse(self.ref('base.default_website'))
+
+    def _set_values(self, values):
+        self.env['website.assets'].with_context(website_id=self.website.id).make_scss_customization(
+            '/website/static/src/scss/options/user_values.scss', values)
+
+    def _get_theme_gates(self):
+        return self.website.with_context(website_id=self.website.id)._get_theme_gates().split()
+
+    def test_theme_gates(self):
+        # The default header has a shadow, the default palette sets the
+        # headings color of two color presets.
+        default = ['menu-shadow-class', 'o-cc2-headings', 'o-cc5-headings']
+        self.assertEqual(self._get_theme_gates(), default)
+        self.assertIn(
+            f'data-o-theme-gates="{' '.join(default)}"', self.url_open('/').text.partition('<head')[0])
+
+        self._set_values({
+            'headings-font-weight-bold': '800',
+            'input-border-width': '1px',
+            'input-border-bottom-width': '3px',
+            # Same as the headings value: not set apart.
+            'display-1-margin-top': '0',
+        })
+        expected = ['headings-font-weight-bold', 'input-border-bottom-width', *default]
+        self.assertEqual(self._get_theme_gates(), expected)
+        self.assertIn(
+            f'data-o-theme-gates="{' '.join(expected)}"',
+            self.url_open('/').text.partition('<head')[0],
+        )
+
+    def test_color_gates(self):
+        self.env['website.assets'].with_context(website_id=self.website.id).make_scss_customization(
+            '/website/static/src/scss/options/colors/user_color_palette.scss', {
+                'o-cc1-headings': '#123456',
+                # A dark header.
+                'menu-custom': '#000000',
+            })
+        self._set_values({'o-cc3-bg-gradient': 'linear-gradient(#FFFFFF, #000000)'})
+        self.assertEqual(self._get_theme_gates(), [
+            'menu-shadow-class', 'menu-dark',
+            'o-cc1-headings', 'o-cc2-headings', 'o-cc3-bg-gradient', 'o-cc5-headings',
+        ])
+        # A dark palette: dark body background too.
+        self._set_values({'color-palettes-name': "'default-dark-1'"})
+        self.assertIn('body-dark', self._get_theme_gates())

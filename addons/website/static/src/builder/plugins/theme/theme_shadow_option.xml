@@ -2,52 +2,29 @@
 <templates xml:space="preserve">
 
 <t t-name="website.ThemeShadowOption">
-    <BuilderContext action="'customizeWebsiteVariable'">
-        <BuilderRow label.translate="Small" initialExpandAnim="this.env.targetRowId === 'shadow-sm'" tooltip.translate="Horizontal and Vertical offset">
-            <BuilderNumberInput actionParam="'box-shadow-sm-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
-            <BuilderNumberInput actionParam="'box-shadow-sm-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
-            <t t-set-slot="collapse">
-                <BuilderRow label.translate="Color" level="1">
-                    <BuilderColorPicker actionParam="'box-shadow-sm-color'" enabledTabs="['solid', 'custom']"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Blur" level="1">
-                    <BuilderNumberInput actionParam="'box-shadow-sm-blur-radius'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Spread" level="1">
-                    <BuilderNumberInput actionParam="'box-shadow-sm-spread-radius'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-            </t>
-        </BuilderRow>
-        <BuilderRow label.translate="Normal" initialExpandAnim="this.env.targetRowId === 'shadow'" tooltip.translate="Horizontal and Vertical offset">
-            <BuilderNumberInput actionParam="'box-shadow-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
-            <BuilderNumberInput actionParam="'box-shadow-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
-            <t t-set-slot="collapse">
-                <BuilderRow label.translate="Color" level="1">
-                    <BuilderColorPicker actionParam="'box-shadow-color'" enabledTabs="['solid', 'custom']"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Blur" level="1">
-                    <BuilderNumberInput actionParam="'box-shadow-blur-radius'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Spread" level="1">
-                    <BuilderNumberInput actionParam="'box-shadow-spread-radius'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-            </t>
-        </BuilderRow>
-        <BuilderRow label.translate="Large" initialExpandAnim="this.env.targetRowId === 'shadow-lg'" tooltip.translate="Horizontal and Vertical offset">
-            <BuilderNumberInput actionParam="'box-shadow-lg-offset-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
-            <BuilderNumberInput actionParam="'box-shadow-lg-offset-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
-            <t t-set-slot="collapse">
-                <BuilderRow label.translate="Color" level="1">
-                    <BuilderColorPicker actionParam="'box-shadow-lg-color'" enabledTabs="['solid', 'custom']"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Blur" level="1">
-                    <BuilderNumberInput actionParam="'box-shadow-lg-blur-radius'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Spread" level="1">
-                    <BuilderNumberInput actionParam="'box-shadow-lg-spread-radius'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-            </t>
-        </BuilderRow>
+    <BuilderContext action="'previewWebsiteVariable'">
+        <t t-set="small_label">Small</t>
+        <t t-set="normal_label">Normal</t>
+        <t t-set="large_label">Large</t>
+        <t t-foreach="[['box-shadow-sm', small_label, 'shadow-sm'], ['box-shadow', normal_label, 'shadow'], ['box-shadow-lg', large_label, 'shadow-lg']]" t-as="shadow" t-key="shadow[2]">
+            <BuilderRow label="shadow[1]" initialExpandAnim="this.env.targetRowId === shadow[2]" tooltip.translate="Color. Expand for the offsets, blur and spread.">
+                <BuilderColorPicker actionParam="shadow[0] + '-color'" enabledTabs="['solid', 'custom']"/>
+                <t t-set-slot="collapse">
+                    <BuilderRow label.translate="Horizontal" level="1">
+                        <BuilderRange actionParam="shadow[0] + '-offset-x'" unit="'px'" saveUnit="'rem'" min="-40" max="40" withNumberInput="true" prefixIcon="'arrow_range'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Vertical" level="1">
+                        <BuilderRange actionParam="shadow[0] + '-offset-y'" unit="'px'" saveUnit="'rem'" min="-40" max="40" withNumberInput="true" prefixIcon="'height'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Blur" level="1">
+                        <BuilderRange actionParam="shadow[0] + '-blur-radius'" unit="'px'" saveUnit="'rem'" min="0" max="80" withNumberInput="true"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Spread" level="1">
+                        <BuilderRange actionParam="shadow[0] + '-spread-radius'" unit="'px'" saveUnit="'rem'" min="-40" max="40" withNumberInput="true"/>
+                    </BuilderRow>
+                </t>
+            </BuilderRow>
+        </t>
     </BuilderContext>
 </t>
 

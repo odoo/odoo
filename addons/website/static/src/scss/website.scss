@@ -38,9 +38,14 @@
         }
     }
 
-    // 4) The Odoo values map, $o-website-values, must be printed.
+    // 4) The Odoo values map, $o-website-values, must be printed. The color
+    // combinations' gradients unquoted: their rules read them.
     @each $key, $value in $o-website-values {
-        @include print-variable($key, $value);
+        @if $value and str-index($key, 'o-cc') == 1 and str-index($key, '-bg-gradient') {
+            --#{$key}: #{$value};
+        } @else {
+            @include print-variable($key, $value);
+        }
     }
 
     // 5) Use final value used by the theme
@@ -52,6 +57,16 @@
     $i: 1;
     @each $font-name in $-font-names {
         @include print-variable('font-number-#{$i}', $font-name);
+        // To preview a font the page doesn't use: its family, and its URL,
+        // as `font_urls_export.scss` builds it (the page only loads the
+        // fonts it uses).
+        $-font-config: map-get($o-theme-font-configs, $font-name);
+        @include print-variable('font-family-#{$i}', map-get($-font-config, 'family'));
+        @if map-get($-font-config, 'url') {
+            @include print-variable('font-url-#{$i}', "https://fonts.googleapis.com/css?family=#{unquote(map-get($-font-config, 'url'))}&display=swap&subset=latin,latin-ext,vietnamese");
+        } @else if map-get($-font-config, 'attachment') {
+            @include print-variable('font-url-#{$i}', "/web/content/#{map-get($-font-config, 'attachment')}/google-font-#{unquote(map-get($-font-config, 'name'))}");
+        }
         $i: $i + 1;
     }
 
@@ -59,15 +74,21 @@
     // font-size dropdown
     @include print-variable('paragraph-margin-top', $paragraph-margin-top);
     @include print-variable('paragraph-margin-bottom', $paragraph-margin-bottom);
-    @include print-variable('h2-line-height', $h2-line-height);
-    @include print-variable('h3-line-height', $h3-line-height);
-    @include print-variable('h4-line-height', $h4-line-height);
-    @include print-variable('h5-line-height', $h5-line-height);
-    @include print-variable('h6-line-height', $h6-line-height);
-    @include print-variable('display-1-line-height', $display-1-line-height);
-    @include print-variable('display-2-line-height', $display-2-line-height);
-    @include print-variable('display-3-line-height', $display-3-line-height);
-    @include print-variable('display-4-line-height', $display-4-line-height);
+    // A heading level that isn't set apart follows the headings value, also
+    // while the builder previews it.
+    @each $property, $headings-value, $values in (
+        'line-height' $headings-line-height ('h2': $h2-line-height, 'h3': $h3-line-height, 'h4': $h4-line-height, 'h5': $h5-line-height, 'h6': $h6-line-height, 'display-1': $display-1-line-height, 'display-2': $display-2-line-height, 'display-3': $display-3-line-height, 'display-4': $display-4-line-height),
+        'margin-top' $headings-margin-top ('h2': $h2-margin-top, 'h3': $h3-margin-top, 'h4': $h4-margin-top, 'h5': $h5-margin-top, 'h6': $h6-margin-top, 'display-1': $display-1-margin-top, 'display-2': $display-2-margin-top, 'display-3': $display-3-margin-top, 'display-4': $display-4-margin-top),
+        'margin-bottom' $headings-margin-bottom ('h2': $h2-margin-bottom, 'h3': $h3-margin-bottom, 'h4': $h4-margin-bottom, 'h5': $h5-margin-bottom, 'h6': $h6-margin-bottom, 'display-1': $display-1-margin-bottom, 'display-2': $display-2-margin-bottom, 'display-3': $display-3-margin-bottom, 'display-4': $display-4-margin-bottom),
+    ) {
+        @each $level, $value in $values {
+            $-key: '#{$level}-#{$property}';
+            @if not o-website-value($-key) and $value == $headings-value {
+                $value: var(--headings-#{$property});
+            }
+            @include print-variable($-key, $value);
+        }
+    }
     // We cannot rely on $o-theme-hx-font because they contain the list of
     // fallback fonts (unicode...).
     $-headings-or-main-font: o-website-value('headings-font') or o-website-value('font');
@@ -90,29 +111,42 @@
     @include print-variable('set-display-2-font', o-get-font-info('display-2'));
     @include print-variable('set-display-3-font', o-get-font-info('display-3'));
     @include print-variable('set-display-4-font', o-get-font-info('display-4'));
+    // The font families the CSS reads (the base one is Bootstrap's
+    // `--font-sans-serif`). Unset, they follow the font they default to.
+    $-headings-family: $headings-font-family;
+    @if not o-get-font-info('headings') and $headings-font-family == $font-family-sans-serif {
+        $-headings-family: var(--#{$prefix}font-sans-serif);
+    }
+    @include print-variable('headings-font-family', $-headings-family);
+    @each $level, $family in ('h2': $h2-font-family, 'h3': $h3-font-family, 'h4': $h4-font-family, 'h5': $h5-font-family, 'h6': $h6-font-family, 'display-1': $display-1-font-family, 'display-2': $display-2-font-family, 'display-3': $display-3-font-family, 'display-4': $display-4-font-family) {
+        @if not o-get-font-info($level) and $family == $headings-font-family {
+            $family: var(--headings-font-family);
+        }
+        @include print-variable('#{$level}-font-family', $family);
+    }
     @include print-variable('headings-line-height', $headings-line-height);
     @include print-variable('headings-margin-top', $headings-margin-top);
     @include print-variable('headings-margin-bottom', $headings-margin-bottom);
-    @include print-variable('h2-margin-top', $h2-margin-top);
-    @include print-variable('h3-margin-top', $h3-margin-top);
-    @include print-variable('h4-margin-top', $h4-margin-top);
-    @include print-variable('h5-margin-top', $h5-margin-top);
-    @include print-variable('h6-margin-top', $h6-margin-top);
-    @include print-variable('display-1-margin-top', $display-1-margin-top);
-    @include print-variable('display-2-margin-top', $display-2-margin-top);
-    @include print-variable('display-3-margin-top', $display-3-margin-top);
-    @include print-variable('display-4-margin-top', $display-4-margin-top);
-    @include print-variable('h2-margin-bottom', $h2-margin-bottom);
-    @include print-variable('h3-margin-bottom', $h3-margin-bottom);
-    @include print-variable('h4-margin-bottom', $h4-margin-bottom);
-    @include print-variable('h5-margin-bottom', $h5-margin-bottom);
-    @include print-variable('h6-margin-bottom', $h6-margin-bottom);
-    @include print-variable('display-1-margin-bottom', $display-1-margin-bottom);
-    @include print-variable('display-2-margin-bottom', $display-2-margin-bottom);
-    @include print-variable('display-3-margin-bottom', $display-3-margin-bottom);
-    @include print-variable('display-4-margin-bottom', $display-4-margin-bottom);
 
     @include print-variable('set-buttons-font', o-get-font-info('buttons'));
+    @include print-variable('navbar-font-family', $o-theme-navbar-font);
+    // Keywords the CSS reads (`print-variable` quotes strings).
+    @each $key in ('menu-border-style', 'portal-card-border-style') {
+        @if o-website-value($key) {
+            --#{$key}: #{o-website-value($key)};
+        }
+    }
+    // The header's bottom (or right) border uses the first width only.
+    $-menu-border-width: o-website-value('menu-border-width');
+    @if $-menu-border-width {
+        @include print-variable('o-menu-border-bottom-width', nth($-menu-border-width, 1));
+    }
+    @include print-variable('o-menu-box-shadow', map-get((
+        'shadow': var(--box-shadow),
+        'shadow-sm': var(--box-shadow-sm),
+        'shadow-lg': var(--box-shadow-lg),
+        'o-shadow-custom': var(--menu-box-shadow-style),
+    ), o-website-value('menu-shadow-class')));
 
     @include print-variable('font-weight-normal', o-website-value('font-weight-normal'));
     @include print-variable('lead-font-weight', o-website-value('lead-font-weight'));
@@ -137,6 +171,17 @@
     @include print-variable('btn-border-radius', $btn-border-radius);
     @include print-variable('btn-border-radius-sm', $btn-border-radius-sm);
     @include print-variable('btn-border-radius-lg', $btn-border-radius-lg);
+    // Bootstrap also names the button's own variables after these values
+    // (`.btn { --btn-padding-x: ... }`): the CSS reads them under another name.
+    @include print-variable('o-btn-padding-y', $btn-padding-y);
+    @include print-variable('o-btn-padding-x', $btn-padding-x);
+    @include print-variable('o-btn-font-size', if(not o-website-value('btn-font-size') and $btn-font-size == $font-size-base, var(--font-size-base), $btn-font-size));
+    @include print-variable('o-btn-border-radius', $btn-border-radius);
+    @include print-variable('o-btn-font-weight', o-website-value('btn-font-weight'));
+    // Unset, buttons inherit their font.
+    @if $o-theme-buttons-font != $o-theme-font {
+        @include print-variable('buttons-font-family', $o-theme-buttons-font);
+    }
 
     @include print-variable('box-shadow-color', $box-shadow-color);
     @include print-variable('box-shadow-offset-x', $box-shadow-offset-x);
@@ -156,7 +201,7 @@
 
     @include print-variable('input-padding-y', $input-padding-y);
     @include print-variable('input-padding-x', $input-padding-x);
-    @include print-variable('input-font-size', $input-font-size);
+    @include print-variable('input-font-size', if(not o-website-value('input-font-size') and $input-font-size == $font-size-base, var(--font-size-base), $input-font-size));
     @include print-variable('input-padding-y-sm', $input-padding-y-sm);
     @include print-variable('input-padding-x-sm', $input-padding-x-sm);
     @include print-variable('input-font-size-sm', $input-font-size-sm);
@@ -164,13 +209,57 @@
     @include print-variable('input-padding-x-lg', $input-padding-x-lg);
     @include print-variable('input-font-size-lg', $input-font-size-lg);
     @include print-variable('input-border-width', $input-border-width);
-    @include print-variable('input-border-top-width', $input-border-top-width or $input-border-width);
-    @include print-variable('input-border-right-width', $input-border-right-width or $input-border-width);
-    @include print-variable('input-border-bottom-width', $input-border-bottom-width or $input-border-width);
-    @include print-variable('input-border-left-width', $input-border-left-width or $input-border-width);
+    // A side not set apart follows the global width.
+    @each $side, $width in (top: $input-border-top-width, right: $input-border-right-width, bottom: $input-border-bottom-width, left: $input-border-left-width) {
+        @include print-variable('input-border-#{$side}-width', if($width and $width != $input-border-width, $width, var(--input-border-width)));
+    }
     @include print-variable('input-border-radius', $input-border-radius);
     @include print-variable('input-border-radius-sm', $input-border-radius-sm);
     @include print-variable('input-border-radius-lg', $input-border-radius-lg);
+
+    // What a Theme tab value resets to, and what its slider marks: the value
+    // without the user's own. That's the theme's, else what the compile falls
+    // back to, which can be another value (a heading level follows the
+    // headings one).
+    $-fallbacks: (
+        'input-border-width': $input-btn-border-width,
+        'display-1-font-size': 5rem,
+        'display-2-font-size': 4.5rem,
+        'display-3-font-size': 4rem,
+        'display-4-font-size': 3.5rem,
+    );
+    @each $level, $multiplier in (1: $o-theme-h1-font-size-multiplier, 2: $o-theme-h2-font-size-multiplier, 3: $o-theme-h3-font-size-multiplier, 4: $o-theme-h4-font-size-multiplier, 5: $o-theme-h5-font-size-multiplier, 6: $o-theme-h6-font-size-multiplier) {
+        $-fallbacks: map-merge($-fallbacks, ('h#{$level}-font-size': $font-size-base * $multiplier));
+    }
+    @each $level in ('h2', 'h3', 'h4', 'h5', 'h6', 'display-1', 'display-2', 'display-3', 'display-4') {
+        @each $property in ('line-height', 'margin-top', 'margin-bottom') {
+            $-fallbacks: map-merge($-fallbacks, ('#{$level}-#{$property}': var(--headings-#{$property})));
+        }
+    }
+    @each $side in ('top', 'right', 'bottom', 'left') {
+        $-fallbacks: map-merge($-fallbacks, ('input-border-#{$side}-width': var(--input-border-width)));
+    }
+    // Bootstrap's own (or another module's) values: only known while the
+    // user's value doesn't replace them.
+    @each $key, $value in (
+        'btn-padding-y': $btn-padding-y, 'btn-padding-x': $btn-padding-x, 'btn-font-size': $btn-font-size, 'btn-border-radius': $btn-border-radius,
+        'btn-padding-y-sm': $btn-padding-y-sm, 'btn-padding-x-sm': $btn-padding-x-sm, 'btn-font-size-sm': $btn-font-size-sm, 'btn-border-radius-sm': $btn-border-radius-sm,
+        'btn-padding-y-lg': $btn-padding-y-lg, 'btn-padding-x-lg': $btn-padding-x-lg, 'btn-font-size-lg': $btn-font-size-lg, 'btn-border-radius-lg': $btn-border-radius-lg,
+        'input-padding-y': $input-padding-y, 'input-padding-x': $input-padding-x, 'input-font-size': $input-font-size, 'input-border-radius': $input-border-radius,
+        'input-padding-y-sm': $input-padding-y-sm, 'input-padding-x-sm': $input-padding-x-sm, 'input-font-size-sm': $input-font-size-sm, 'input-border-radius-sm': $input-border-radius-sm,
+        'input-padding-y-lg': $input-padding-y-lg, 'input-padding-x-lg': $input-padding-x-lg, 'input-font-size-lg': $input-font-size-lg, 'input-border-radius-lg': $input-border-radius-lg,
+    ) {
+        $-fallbacks: map-merge($-fallbacks, ($key: if(map-get($o-user-website-values, $key), null, $value)));
+    }
+    $-keys: ('font-size-base', 'small-font-size', 'body-line-height', 'paragraph-margin-top', 'paragraph-margin-bottom', 'headings-line-height', 'headings-margin-top', 'headings-margin-bottom', 'btn-primary-outline-border-width', 'btn-secondary-outline-border-width');
+    @each $size in ('', '-sm', '-lg') {
+        @each $property in ('offset-x', 'offset-y', 'blur-radius', 'spread-radius') {
+            $-keys: append($-keys, 'box-shadow#{$size}-#{$property}');
+        }
+    }
+    @each $key in join($-keys, map-keys($-fallbacks)) {
+        @include print-variable('o-default-#{$key}', map-get($o-default-website-values, $key) or map-get($-fallbacks, $key));
+    }
 
     @include print-variable('color-palettes-name', $o-original-color-palette-name);
 
@@ -236,7 +325,9 @@ body {
     // transparent background color, the fallback iframe would be visible on
     // some // browsers (e.g. Chrome).
     @if o-website-value('layout') != 'full' {
-        @include force-opaque-bg-color(o-color('body'), $if-necessary: false);
+        // `force-opaque-bg-color()`, from the color's variable.
+        $-color: o-color('body');
+        background-color: var(--o-body-fill, #{mix(change-color($-color, $alpha: 1), white, percentage(alpha($-color)))});
     } @else {
         // Only if necessary as, if already opaque, the background color of the
         // body is already set by Bootstrap. We don't change $body-bg directly
@@ -246,24 +337,31 @@ body {
     }
 }
 
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
-    b, strong {
-        font-weight: o-website-value('headings-font-weight-bold') !important;
+// The bold weights, when set ("Auto" has no rule).
+@include o-theme-gate('headings-font-weight-bold') {
+    h1, h2, h3, h4, h5, h6,
+    .h1, .h2, .h3, .h4, .h5, .h6 {
+        b, strong {
+            font-weight: var(--headings-font-weight-bold) !important;
+        }
     }
 }
 
 // Keep display-5/6 covered for Bootstrap/custom markup, even though the editor
 // only exposes display-1 through display-4.
-.display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
-    b, strong {
-        font-weight: o-website-value('display-font-weight-bold') !important;
+@include o-theme-gate('display-font-weight-bold') {
+    .display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+        b, strong {
+            font-weight: var(--display-font-weight-bold) !important;
+        }
     }
 }
 
-.btn {
-    b, strong {
-        font-weight: o-website-value('btn-font-weight-bold') !important;
+@include o-theme-gate('btn-font-weight-bold') {
+    .btn {
+        b, strong {
+            font-weight: var(--btn-font-weight-bold) !important;
+        }
     }
 }
 
@@ -271,8 +369,11 @@ h1, h2, h3, h4, h5, h6,
 // background gradients on elements take precedence over the color preset
 // gradients.
 @for $index from 1 through 5 {
-    .o_cc#{$index} {
-        @include o-add-gradient('o-cc#{$index}-bg-gradient')
+    @include o-theme-gate('o-cc#{$index}-bg-gradient') {
+        .o_cc#{$index} {
+            background-color: rgba(0, 0, 0, 0);
+            background-image: var(--o-cc#{$index}-bg-gradient);
+        }
     }
 }
 
@@ -461,10 +562,10 @@ h1, h2, h3, h4, h5, h6,
         }
     }
 }
-.navbar-brand, .navbar-text, .navbar .nav-link, .navbar a.js_change_lang span,
-.navbar a.o_add_language {
-    @if $o-theme-navbar-font != $o-theme-font {
-        font-family: $o-theme-navbar-font;
+@include o-theme-gate('navbar-font') {
+    .navbar-brand, .navbar-text, .navbar .nav-link, .navbar a.js_change_lang span,
+    .navbar a.o_add_language {
+        font-family: var(--navbar-font-family);
     }
 }
 
@@ -475,8 +576,9 @@ h1, h2, h3, h4, h5, h6,
     // we may want to use a safest way when possible.
     @include o-apply-colors('menu');
     @include o-apply-colors('menu-custom');
-    $-menu-color: o-color('menu-custom') or o-color('menu');
-    @if ($-menu-color and color-contrast($-menu-color) != $color-contrast-dark) {
+    // A dark header color: `<html data-o-theme-gates>` marks it (see
+    // `font_urls_export.scss`), the builder computes it while previewing.
+    @include o-theme-gate('menu-dark') {
         --NavLinkWithBackground-bg-color: #{rgba($navbar-dark-active-color, .1)};
         --NavLinkWithBackground-bg-color--hover: #{rgba($navbar-dark-active-color, .2)};
         --NavStretch-placeholder-color: #{rgba($navbar-dark-active-color, .3)};
@@ -564,7 +666,7 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
 
             &:not(.collapsed) {
                 @if $-navbar-mobile-bg-color != null {
-                    background-color: shade-color($-navbar-mobile-bg-color, 5%);
+                    background-color: color-mix(in srgb, var(--o-menu-color, #{$-navbar-mobile-bg-color}), black 5%);
                 }
             }
 
@@ -599,7 +701,7 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
 // Apply background color to the offcanvas menu
 .o_navbar_mobile {
     height: 100dvh;
-    background-color: $-navbar-mobile-bg-color;
+    background-color: if($-navbar-mobile-bg-color, var(--o-menu-color, #{$-navbar-mobile-bg-color}), null);
 
     // Make offcanvas close btn above mega menu
     .btn-close {
@@ -618,11 +720,9 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
     }
 }
 
-$-header-nav-link-height: $nav-link-height;
-@if o-website-value('header-font-size') {
-    $-header-nav-link-height: o-website-value('header-font-size') * $line-height-base + $nav-link-padding-y * 2;
+@include o-theme-gate('header-font-size') {
     header {
-        font-size: o-website-value('header-font-size');
+        font-size: var(--header-font-size);
 
         .dropdown-menu, .btn {
             font-size: inherit !important;
@@ -633,12 +733,31 @@ $-header-nav-link-height: $nav-link-height;
     // With default values, this makes it slightly bigger than standard
     // navbar-brand, which is what we want
     header .navbar-brand {
-        font-size: $o-theme-navbar-logo-height / $line-height-base;
-
-        $-logo-padding-y: max(0, $-header-nav-link-height - $o-theme-navbar-logo-height) / 2;
-        &, &.logo {
-            padding-top: $-logo-padding-y;
-            padding-bottom: $-logo-padding-y;
+        font-size: calc(var(--logo-height) / #{$line-height-base});
+    }
+    // The logo's padding centers it in a nav link's height, which depends on
+    // the header font size when set.
+    @each $gate, $nav-link-height in (
+        '': $nav-link-height,
+        'header-font-size': calc(var(--header-font-size) * #{$line-height-base} + #{$nav-link-padding-y * 2}),
+    ) {
+        $-logo-padding-y: #{"max(0px, calc((#{$nav-link-height} - var(--logo-height)) / 2))"};
+        @if $gate == '' {
+            header .navbar-brand {
+                &, &.logo {
+                    padding-top: $-logo-padding-y;
+                    padding-bottom: $-logo-padding-y;
+                }
+            }
+        } @else {
+            @include o-theme-gate($gate) {
+                header .navbar-brand {
+                    &, &.logo {
+                        padding-top: $-logo-padding-y;
+                        padding-bottom: $-logo-padding-y;
+                    }
+                }
+            }
         }
     }
 }
@@ -672,88 +791,115 @@ h6 {
     color: map-get($colors, 'o-cc1-h6');
 }
 
-$heading-font-families: () !default;
-$heading-font-families: map-merge((
-    "h2": $h2-font-family,
-    "h3": $h3-font-family,
-    "h4": $h4-font-family,
-    "h5": $h5-font-family,
-    "h6": $h6-font-family,
-    "display-1": $display-1-font-family,
-    "display-2": $display-2-font-family,
-    "display-3": $display-3-font-family,
-    "display-4": $display-4-font-family,
-), $heading-font-families);
-$heading-line-heights: () !default;
-$heading-line-heights: map-merge((
-    "h2": $h2-line-height,
-    "h3": $h3-line-height,
-    "h4": $h4-line-height,
-    "h5": $h5-line-height,
-    "h6": $h6-line-height,
-    "display-1": $display-1-line-height,
-    "display-2": $display-2-line-height,
-    "display-3": $display-3-line-height,
-    "display-4": $display-4-line-height,
-), $heading-line-heights);
-$heading-margin-tops: () !default;
-$heading-margin-tops: map-merge((
-    "h2": $h2-margin-top,
-    "h3": $h3-margin-top,
-    "h4": $h4-margin-top,
-    "h5": $h5-margin-top,
-    "h6": $h6-margin-top,
-    "display-1": $display-1-margin-top,
-    "display-2": $display-2-margin-top,
-    "display-3": $display-3-margin-top,
-    "display-4": $display-4-margin-top,
-), $heading-margin-tops);
-$heading-margin-bottoms: () !default;
-$heading-margin-bottoms: map-merge((
-    "h2": $h2-margin-bottom,
-    "h3": $h3-margin-bottom,
-    "h4": $h4-margin-bottom,
-    "h5": $h5-margin-bottom,
-    "h6": $h6-margin-bottom,
-    "display-1": $display-1-margin-bottom,
-    "display-2": $display-2-margin-bottom,
-    "display-3": $display-3-margin-bottom,
-    "display-4": $display-4-margin-bottom,
-), $heading-margin-bottoms);
-
+// The typography values are read from the CSS variables printed on `:root`
+// above, which the builder overrides to preview them (the values Bootstrap
+// compiles: see `o-after-bootstrap-type`).
 h1, h2, h3, h4, h5, h6 {
-    line-height: $headings-line-height;
-    margin-top: $headings-margin-top;
-    margin-bottom: $headings-margin-bottom;
+    line-height: var(--headings-line-height);
+    margin-top: var(--headings-margin-top);
+    margin-bottom: var(--headings-margin-bottom);
 }
-@each $selector, $map-key in
-("h2" "h2", "h3" "h3", "h4" "h4", "h5" "h5", "h6" "h6", ".display-1" "display-1",
-".display-2" "display-2", ".display-3" "display-3", ".display-4" "display-4") {
-    #{$selector} {
-        @if ($headings-font-family != map-get($heading-font-families, $map-key)) {
-            font-family: map-get($heading-font-families, $map-key);
+// h2-h6 get the headings line height and margins from the rule above: they're
+// always set, to preview each level's own. A level's font, and a display
+// level's values (the classes also go on paragraphs, which keep their own),
+// only when they differ from the headings' (see `o-theme-gate`). The fonts are
+// also set where Bootstrap sets them (`o-after-bootstrap-type`).
+@each $level in ('h2', 'h3', 'h4', 'h5', 'h6', 'display-1', 'display-2', 'display-3', 'display-4') {
+    $is-display: str-index($level, 'display') == 1;
+    $selector: if($is-display, '.#{$level}', $level);
+    @include o-theme-gate('#{$level}-font') {
+        #{$selector} {
+            font-family: var(--#{$level}-font-family);
         }
-        @if ($headings-line-height != map-get($heading-line-heights, $map-key)) {
-            line-height: map-get($heading-line-heights, $map-key);
-        }
-        @if ($headings-margin-top != map-get($heading-margin-tops, $map-key)) {
-            margin-top: map-get($heading-margin-tops, $map-key);
-        }
-        @if ($headings-margin-bottom != map-get($heading-margin-bottoms, $map-key)) {
-            margin-bottom: map-get($heading-margin-bottoms, $map-key);
+    }
+    @each $property in ('line-height', 'margin-top', 'margin-bottom') {
+        @if $is-display {
+            @include o-theme-gate('#{$level}-#{$property}') {
+                #{$selector} {
+                    #{$property}: var(--#{$level}-#{$property});
+                }
+            }
+        } @else {
+            #{$selector} {
+                #{$property}: var(--#{$level}-#{$property});
+            }
         }
     }
 }
 
 .btn {
     @if ($o-theme-buttons-font != $o-theme-font) {
-        font-family: $o-theme-buttons-font;
+        font-family: var(--buttons-font-family);
     }
 }
 
 // Texts
 p {
-    margin-top: $paragraph-margin-top;
+    margin-top: var(--paragraph-margin-top);
+    margin-bottom: var(--paragraph-margin-bottom);
+}
+
+// The html_editor rules that compile the font sizes, again with the CSS
+// variables, in their original order (they override each other).
+.o_small {
+    @include o-font-size-var(var(--small-font-size));
+}
+@for $level from 1 through 4 {
+    .display-#{$level}-fs {
+        @include o-font-size-var(var(--display-#{$level}-font-size));
+    }
+}
+@for $level from 1 through 6 {
+    .h#{$level}-fs {
+        @include o-font-size-var(var(--h#{$level}-font-size));
+    }
+}
+.base-fs {
+    @include o-font-size-var(var(--font-size-base));
+}
+.o_small-fs {
+    font-size: o-small-font-size-var();
+}
+
+// The Bootstrap rules that compile the button values, again with the CSS
+// variables, in their original order.
+$-btn-font-weight: o-website-value('btn-font-weight');
+$-btn-font-weight-fallback: $btn-font-weight;
+@if not $-btn-font-weight and $btn-font-weight == $font-weight-normal {
+    $-btn-font-weight-fallback: o-font-weight-var('font-weight-normal', $font-weight-normal);
+}
+.btn {
+    // Empty when unset, as Bootstrap compiles it: the button inherits its font.
+    @if not $btn-font-family {
+        --#{$prefix}btn-font-family: var(--buttons-font-family, );
+    }
+    --#{$prefix}btn-padding-x: var(--o-btn-padding-x);
+    --#{$prefix}btn-padding-y: var(--o-btn-padding-y);
+    @include o-font-size-var(var(--o-btn-font-size), --#{$prefix}btn-font-size);
+    // As for the other weights (see `o-font-weight-var`).
+    @if $-btn-font-weight == null or $-btn-font-weight == $btn-font-weight {
+        --#{$prefix}btn-font-weight: var(--o-btn-font-weight, #{$-btn-font-weight-fallback});
+    }
+    --#{$prefix}btn-border-radius: var(--o-btn-border-radius);
+}
+.btn-link {
+    --#{$prefix}btn-font-weight: #{o-font-weight-var('font-weight-normal', $font-weight-normal)};
+}
+@each $size in ('lg', 'sm') {
+    .btn-#{$size} {
+        --#{$prefix}btn-padding-y: var(--btn-padding-y-#{$size});
+        --#{$prefix}btn-padding-x: var(--btn-padding-x-#{$size});
+        @include o-font-size-var(var(--btn-font-size-#{$size}), --#{$prefix}btn-font-size);
+        --#{$prefix}btn-border-radius: var(--btn-border-radius-#{$size});
+    }
+}
+// The border width of the button styles set to "Outline".
+@each $color, $width in $o-btn-outline-border-width-defaults {
+    @if $width {
+        .btn-#{$color} {
+            border-width: var(--btn-#{$color}-outline-border-width);
+        }
+    }
 }
 
 font[style*='background']:not(.text-gradient),
@@ -846,10 +992,11 @@ font[class*='bg-'] {
     }
 }
 
-.btn-close {
-    // Most components with an integrated .btn-close (o_notification, modals,
-    // offcanvas, ...) use $body-bg by default, which is why we check it here.
-    @if lightness($body-bg) < 50 {
+// Most components with an integrated .btn-close (o_notification, modals,
+// offcanvas, ...) use $body-bg by default, which is why we check it here: a
+// dark one is marked on `<html data-o-theme-gates>`.
+@include o-theme-gate('body-dark') {
+    .btn-close {
         @include btn-close-white();
     }
 }
@@ -865,21 +1012,22 @@ font[class*='bg-'] {
 
     // Similarly to list-group-item-x and alert-* classes, override text-bg-*
     // classes behavior when used on badges.
+    // The colors are read from their variables (see `o-after-bootstrap-root`).
     @each $-color, $-value in $theme-colors {
         &.text-bg-#{$-color} {
-            --badge-bg: #{tint-color($-value, 90%)};
-            --badge-color: #{increase-contrast($-value, tint-color($-value, 90%))};
-            --badge-color-hover: #{color-contrast($-value, $min-contrast-ratio: 3)};
-            --badge-border-color: #{$-value};
+            --badge-bg: color-mix(in srgb, var(--#{$-color}), white 90%);
+            --badge-color: var(--#{$-color}-badge-text);
+            --badge-color-hover: var(--#{$-color}-badge-contrast);
+            --badge-border-color: var(--#{$-color});
         }
 
         // Restore old badge design (needed as an exit door for some contexts)
         //(e.g cart_quantity, dropdown toggle.badge)
         &.bg-#{$-color} {
-            --badge-bg: #{$-value};
-            --badge-color: #{color-contrast($-value, $min-contrast-ratio: 3)};
-            --badge-border-color: #{$-value};
-            --badge-color-hover: #{color-contrast($-value, $min-contrast-ratio: 3)};
+            --badge-bg: var(--#{$-color});
+            --badge-color: var(--#{$-color}-badge-contrast);
+            --badge-border-color: var(--#{$-color});
+            --badge-color-hover: var(--#{$-color}-badge-contrast);
         }
     }
 
@@ -956,7 +1104,7 @@ font[class*='bg-'] {
     --o-bg-blur-enhance: 1;
 }
 
-@if o-website-value('header-bg-blur') != 0 {
+@include o-theme-gate('header-bg-blur') {
     header {
         $-header-blur-navbar-selector: "nav.navbar";
         @if o-website-value('header-template') == 'sidebar' {
@@ -965,7 +1113,7 @@ font[class*='bg-'] {
 
         // Apply the configured header blur to the nav blur layer and mobile navbar.
         #{$-header-blur-navbar-selector}::before, .o_navbar_mobile {
-            --o-bg-blur: #{o-website-value('header-bg-blur')};
+            --o-bg-blur: var(--header-bg-blur);
         }
 
         #{$-header-blur-navbar-selector} {
@@ -990,7 +1138,7 @@ font[class*='bg-'] {
 
         &.o_header_sidebar > nav.navbar:not(.o_header_mobile) {
             @include media-breakpoint-up(lg) {
-                --o-bg-blur: #{o-website-value('header-bg-blur')};
+                --o-bg-blur: var(--header-bg-blur);
                 @include o-bg-blur-option;
             }
         }
@@ -1050,7 +1198,7 @@ font[class*='bg-'] {
     width: var(--o-timeline-dot-size, 24px);
     height: var(--o-timeline-dot-size, 24px);
     left: var(--o-dot-left);
-    color: $primary;
+    color: var(--primary);
 
     &:before, &:after {
         position: absolute;
@@ -1830,10 +1978,10 @@ $-transition-duration: 200ms;
 
     &.o_header_is_scrolled {
         .navbar-brand {
-            @include font-size($o-theme-navbar-fixed-logo-height / $line-height-base);
+            @include o-font-size-var(calc(var(--fixed-logo-height) / #{$line-height-base}));
 
             img {
-                height: $o-theme-navbar-fixed-logo-height;
+                height: var(--fixed-logo-height);
             }
         }
     }
@@ -1954,37 +2102,30 @@ header {
     }
 
     nav.navbar {
-        $-menu-border-width: o-website-value('menu-border-width');
-        @if $-menu-border-width {
+        @include o-theme-gate('menu-border-width') {
             // When the header should only have a bottom border, only take the
             // first value of the variable 'menu-border-width' to behave as if
-            // the input only accepted one number.
-            $-menu-border-bottom-width: nth($-menu-border-width, 1);
+            // the input only accepted one number (`--o-menu-border-bottom-width`).
             // When no 'menu-border-color' is set, `o-color` returns null and the
             // border color falls back to a full-opacity `currentColor`. Default
             // it instead to a faded `currentColor` (like the generic
             // `--o-border-color`), so the border stays subtle out of the box.
-            $-menu-border-color: o-color('menu-border-color') or $border-color;
-            border: o-website-value('menu-border-style') $-menu-border-color !important;
-            border-width: 0 0 $-menu-border-bottom-width 0 !important;
+            border-style: var(--menu-border-style) !important;
+            border-color: o-color('menu-border-color') or $border-color !important;
+            border-width: 0 0 var(--o-menu-border-bottom-width) 0 !important;
 
             &.o_border_right_only {
-                border-width: 0 $-menu-border-bottom-width 0 0 !important;
+                border-width: 0 var(--o-menu-border-bottom-width) 0 0 !important;
             }
             &.o_full_border {
-                border-width: $-menu-border-width !important;
+                border-width: var(--menu-border-width) !important;
             }
         }
-        border-radius: o-website-value('menu-border-radius') !important;
-
-        @if o-website-value('menu-shadow-class') == 'shadow' {
-            box-shadow: var(--box-shadow) !important;
-        } @else if o-website-value('menu-shadow-class') == 'shadow-sm' {
-            box-shadow: var(--box-shadow-sm) !important;
-        } @else if o-website-value('menu-shadow-class') == 'shadow-lg' {
-            box-shadow: var(--box-shadow-lg) !important;
-        } @else if o-website-value('menu-shadow-class') == 'o-shadow-custom' {
-            box-shadow: o-website-value('menu-box-shadow-style') !important;
+        @include o-theme-gate('menu-border-radius') {
+            border-radius: var(--menu-border-radius) !important;
+        }
+        @include o-theme-gate('menu-shadow-class') {
+            box-shadow: var(--o-menu-box-shadow) !important;
         }
 
 
@@ -2024,7 +2165,7 @@ header {
             // - The website layout template when different than 'full'
             // We need to combine both using `calc`. The `border` solution does
             // not work on Safari.
-            $padding-size: o-website-value('sidebar-width');
+            $padding-size: var(--sidebar-width);
             $-hamburger-right: o-website-value("hamburger-position") == "right";
             @if o-website-value('layout') != 'full' {
                 $padding-size: calc(#{$grid-gutter-width} * 2 + #{$padding-size});
@@ -2036,7 +2177,7 @@ header {
             }
 
             > header {
-                --Offcanvas-horizontal-width: #{o-website-value('sidebar-width')};
+                --Offcanvas-horizontal-width: var(--sidebar-width);
 
                 @if $-hamburger-right {
                     inset: 0 0 0 auto;
@@ -2046,7 +2187,7 @@ header {
                 position: fixed;
                 z-index: $zindex-fixed;
                 display: flex;
-                width: o-website-value('sidebar-width');
+                width: var(--sidebar-width);
                 transform: none !important;
 
                 .navbar {
@@ -2528,25 +2669,26 @@ span.list-inline-item.o_add_language:last-child {
         }
     }
     #o_footer_scrolltop {
-        $-footer-color: o-color('footer-custom') or o-color('footer') or rgba(0, 0, 0, 0);
-        $-footer-color: mix(rgba($-footer-color, 1.0), $body-bg, percentage(alpha($-footer-color)));
-        $-copyright-color: o-color('copyright-custom') or o-color('copyright') or rgba(0, 0, 0, 0);
-        $-copyright-color: mix(rgba($-copyright-color, 1.0), $-footer-color, percentage(alpha($-copyright-color)));
-
+        // The colors are printed apart (see `o-footer-scrolltop-colors`).
+        $-colors: o-footer-scrolltop-colors();
         box-sizing: content-box;
         width: 3rem;
         height: 3rem;
         border: 0;
         padding: 0;
-        @include o-apply-colors($-footer-color, $with-extras: false, $background: $-footer-color);
+        background-image: none;
+        --background-color: var(--o-footer-scrolltop-bg, #{map-get($-colors, bg)});
+        --color: var(--o-footer-scrolltop-contrast, #{map-get($-colors, contrast)});
+        background-color: var(--o-footer-scrolltop-bg, #{map-get($-colors, bg)});
+        color: var(--o-footer-scrolltop-color, #{map-get($-colors, color)});
         text-decoration: none;
 
-        @if $-footer-color == $-copyright-color {
-            color: rgba(color-contrast($-footer-color), 0.5);
-        }
-
         &:hover, &:focus {
-            @include o-apply-colors($-copyright-color, $with-extras: false, $background: $-footer-color);
+            background-image: none;
+            --background-color: var(--o-footer-scrolltop-hover-bg, #{map-get($-colors, hover-bg)});
+            --color: var(--o-footer-scrolltop-hover-color, #{map-get($-colors, hover-color)});
+            background-color: var(--o-footer-scrolltop-hover-bg, #{map-get($-colors, hover-bg)});
+            color: var(--o-footer-scrolltop-hover-color, #{map-get($-colors, hover-color)});
             text-decoration: none;
         }
     }
@@ -2561,7 +2703,7 @@ span.list-inline-item.o_add_language:last-child {
     }
     .figure-caption {
         @include o-position-absolute(auto, 0, 0, 0);
-        @include o-bg-color(rgba(map-get($theme-colors, 'dark'), $o-theme-figcaption-opacity));
+        @include o-bg-color-var('o-figure-caption', rgba(map-get($theme-colors, 'dark'), $o-theme-figcaption-opacity));
         padding: $tooltip-padding-y $tooltip-padding-x;
         font-weight: $font-weight-bold;
         a {
@@ -2572,7 +2714,7 @@ span.list-inline-item.o_add_language:last-child {
 
 @each $color, $value in $theme-colors {
     .bg-#{$color}-light {
-        background-color: rgba($value, 0.1);
+        background-color: color-mix(in srgb, var(--#{$color}) 10%, transparent);
     }
 }
 
@@ -2732,7 +2874,7 @@ $ribbon-padding: 100px;
 
     &.o_keyboard_navigation {
         .oe_search_box:focus, .oe_search_button:focus {
-            outline: $border-width * 2 solid $primary;
+            outline: $border-width * 2 solid var(--primary);
             outline-offset: -(map-get($spacers, 2));
         }
     }
@@ -2784,7 +2926,7 @@ $ribbon-padding: 100px;
     }
 
     .o_search_result_link:focus-visible {
-        outline: $border-width * 2 solid $primary;
+        outline: $border-width * 2 solid var(--primary);
         outline-offset: -($border-width * 2);
     }
 
@@ -3816,8 +3958,8 @@ in a huge font size since it isn’t redefined for the frontend.
 
 // Specific styles for the BottomSheet component when it is used in the frontend
 body.bottom-sheet-open {
-    --BottomSheetStatusBar__entry-background--active: #{$primary-bg-subtle};
-    --BottomSheetStatusBar__entry-color--active: #{$primary-text-emphasis};
+    --BottomSheetStatusBar__entry-background--active: var(--primary-bg-subtle);
+    --BottomSheetStatusBar__entry-color--active: var(--primary-text-emphasis);
     --BottomSheetStatusBar__entry-caret--active: var(--BottomSheetStatusBar__entry-color--active);
 
     // Prevent the page from being scrollable when a bottom sheet is open.

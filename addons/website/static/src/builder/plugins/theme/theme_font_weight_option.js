@@ -107,3 +107,25 @@ export class CustomizeWebsiteFontWeightAction extends CustomizeWebsiteVariableAc
         await this.dependencies.customizeWebsite.customizeWebsiteVariables(variables, nullValue);
     }
 }
+
+export class PreviewWebsiteFontWeightAction extends CustomizeWebsiteFontWeightAction {
+    static id = "previewWebsiteFontWeight";
+    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
+    setup() {}
+    apply({ params: { mainParam: variableNames, nullValue = "null" }, value }) {
+        const variables = {};
+        const previewValues = {};
+        for (const name of variableNames) {
+            variables[name] = value;
+            if (!value) {
+                // "Auto": the CSS falls back to the compiled weight.
+                previewValues[name] = "initial";
+            }
+        }
+        this.dependencies.customizeWebsite.previewWebsiteVariables(
+            variables,
+            nullValue,
+            previewValues
+        );
+    }
+}

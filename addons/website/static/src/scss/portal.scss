@@ -13,18 +13,22 @@
     @include o-add-gradient('portal-gradient');
     @include transition(background-color 150ms linear);
 
-    @if o-website-value('portal-card-border-width') {
-        border: o-website-value('portal-card-border-style') o-color('portal-card-border-color') !important;
-        border-width: o-website-value('portal-card-border-width') !important;
+    @include o-theme-gate('portal-card-border-width') {
+        border-style: var(--portal-card-border-style) !important;
+        border-color: o-color('portal-card-border-color') or currentColor !important;
+        border-width: var(--portal-card-border-width) !important;
     }
-    border-radius: o-website-value('portal-card-border-radius') !important;
+    @include o-theme-gate('portal-card-border-radius') {
+        border-radius: var(--portal-card-border-radius) !important;
+    }
 
     &:hover {
         $-bg: o-color('portal-card-custom');
         $-bg: if($-bg, $-bg, o-color('portal-card'));
         $-bg: if($-bg, $-bg, $body-bg);
         $-weight: if(lightness($-bg) < 35%, -15%, 15%);
+        // Printed apart (see `o-portal-card-hover-bg`).
 
-        background-color: shift-color($-bg, $-weight);
+        background-color: var(--o-portal-card-hover-bg, #{shift-color($-bg, $-weight)});
     }
 }

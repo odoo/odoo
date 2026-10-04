@@ -44,6 +44,7 @@ from odoo.addons.web.controllers.binary import Binary
 from odoo.addons.web.controllers.session import Session
 from odoo.addons.html_editor.controllers.svg_utils import get_shape_svg, make_shaped_image
 from odoo.addons.html_editor.models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
+from odoo.addons.website.color_system import compute_colors
 from odoo.addons.website.tools import adapt_dark_palette_content, get_base_domain
 
 _lt = LazyTranslate(__name__)
@@ -1921,6 +1922,14 @@ class Website(Home):
         return {
             'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', request.session.debug),
         }
+
+    @http.route(['/website/theme_computed_colors'], type='jsonrpc', auth='user', website=True, readonly=True)
+    def theme_computed_colors(self, colors, user_keys=(), min_contrast_ratio=None, areas=None):
+        """Return the colors the compile computes from the given ones, and
+        the theme gates they switch, for the builder's preview of colors (see
+        `color_system.compute_colors`)."""
+        values, gates = compute_colors(colors, user_keys, min_contrast_ratio or 2.9, areas)
+        return {'values': values, 'gates': gates}
 
     @http.route(['/website/update_footer_template'], type='jsonrpc', auth='user', website=True)
     def update_footer_template(self, template_key, possible_values):

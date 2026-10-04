@@ -99,6 +99,12 @@ function checkComputedFontSize(fontSizeClass, stage) {
     };
 }
 
+function rowLabel(fontSizeClass) {
+    return classNameInfo.get(fontSizeClass).scssVariableMainName === "h1-font-size"
+        ? "Heading 1"
+        : "Font Size";
+}
+
 function getFontSizeTestSteps(fontSizeClass) {
     return [
         ...insertSnippet({ id: "s_text_block", name: "Text", groupName: "Text" }),
@@ -120,20 +126,20 @@ function getFontSizeTestSteps(fontSizeClass) {
             content: `Open the collapse to see the font size of ${fontSizeClass}`,
             trigger: `.we-bg-options-container:has([data-action-param="${
                 classNameInfo.get(fontSizeClass).scssVariableMainName
-            }"]) [data-label="Font Size"] .o_hb_collapse_toggler`,
+            }"]) [data-label="${rowLabel(fontSizeClass)}"] .o_hb_collapse_toggler`,
             run: "click",
         },
         {
             content: `Check that the setting for ${fontSizeClass} is correct`,
             trigger:
                 `[data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]` +
-                ` input:value("${classNameInfo.get(fontSizeClass).start}")`,
+                ` input.o-hb-input-number:value("${classNameInfo.get(fontSizeClass).start}")`,
         },
         {
             content: `Change the setting value of ${fontSizeClass}`,
             trigger: `[data-action-param="${
                 classNameInfo.get(fontSizeClass).scssVariableName
-            }"] input`,
+            }"] input.o-hb-input-number`,
             // TODO: Remove "&& click body"
             run: `edit ${classNameInfo.get(fontSizeClass).end} && click body`,
         },
@@ -152,14 +158,14 @@ function getFontSizeTestSteps(fontSizeClass) {
             content: `Open the collapse to see the font size of ${fontSizeClass}`,
             trigger: `.we-bg-options-container:has([data-action-param="${
                 classNameInfo.get(fontSizeClass).scssVariableMainName
-            }"]) [data-label="Font Size"] .o_hb_collapse_toggler`,
+            }"]) [data-label="${rowLabel(fontSizeClass)}"] .o_hb_collapse_toggler`,
             run: "click",
         },
         {
             content: `Check that the setting of ${fontSizeClass} has been updated`,
             trigger:
                 `[data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]` +
-                ` input:value("${classNameInfo.get(fontSizeClass).end}")`,
+                ` input.o-hb-input-number:value("${classNameInfo.get(fontSizeClass).end}")`,
         },
         {
             trigger: `body:not(:has(.o_we_ui_loading))`,
@@ -168,7 +174,7 @@ function getFontSizeTestSteps(fontSizeClass) {
             content: `Close the collapse to hide the font size of ${fontSizeClass}`,
             trigger: `.we-bg-options-container:has([data-action-param="${
                 classNameInfo.get(fontSizeClass).scssVariableMainName
-            }"]) [data-label="Font Size"] .o_hb_collapse_toggler`,
+            }"]) [data-label="${rowLabel(fontSizeClass)}"] .o_hb_collapse_toggler`,
             run: "click",
         },
         checkComputedFontSize(fontSizeClass, "end"),

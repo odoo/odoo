@@ -67,7 +67,7 @@
                 }"/>
         </BuilderRow>
         <BuilderRow label.translate="Blur" level="2" t-if="this.domState.isBlurAvailable">
-            <BuilderRange action="'customizeWebsiteVariable'" actionParam="'header-bg-blur'" min="0" max="10" step="0.5" />
+            <BuilderRange action="'previewWebsiteVariable'" actionParam="'header-bg-blur'" min="0" max="10" step="0.5" />
         </BuilderRow>
         <t t-set="noPreviewOptionsContentWidth" t-value="[
             'header_boxed_opt',
@@ -97,7 +97,7 @@
 
         <BuilderRow t-if="this.isActiveItem('header_sidebar_opt')" label.translate="Width" level="1">
             <BuilderNumberInput
-                action="'customizeWebsiteVariable'"
+                action="'previewWebsiteVariable'"
                 actionParam="'sidebar-width'"
                 default="null"
                 unit="'px'"

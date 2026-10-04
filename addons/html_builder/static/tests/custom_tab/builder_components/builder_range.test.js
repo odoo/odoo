@@ -491,3 +491,27 @@ test("should map range from 0 to 100 scale when empty convertorRatio object is p
     expect.verifySteps(["applied -1.84", "applied -1.84"]);
     expect(".options-container input[type='number']").toHaveProperty("value", 5);
 });
+
+test("marks the action's default value", async () => {
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement }) {
+                return editingElement.textContent;
+            }
+            getDefaultValue() {
+                return "25";
+            }
+            apply({ editingElement, value }) {
+                editingElement.textContent = value;
+            }
+        },
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderRange action="'customAction'" min="0" max="50"/>`,
+    });
+    await setupHTMLBuilder(`<div class="test-options-target">10</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".o-hb-range-default").toHaveAttribute("style", "--o-hb-range-default-position: 0.5;");
+});
