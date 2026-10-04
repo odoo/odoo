@@ -16,6 +16,13 @@ export class ClickableCardOptionPlugin extends Plugin {
                 return true;
             }
         },
+        can_have_block_hover_effect_predicates: (el) => {
+            // Block hover effects rely on pointer events reaching the hovered
+            // element. A clickable card's stretched link covers its contents.
+            if (el.parentElement.closest(".s_card:has(> .stretched-link)")) {
+                return false;
+            }
+        },
     };
 }
 

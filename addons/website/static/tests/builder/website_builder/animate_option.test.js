@@ -1,6 +1,6 @@
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
-import { queryFirst, queryOne } from "@odoo/hoot-dom";
+import { queryFirst, queryOne, setInputRange } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -283,7 +283,155 @@ test("visibility of animation animation=onHover", async () => {
     await contains(".o-dropdown--menu [data-action-value='image_mirror_blur']").click();
     await waitSidebarUpdated();
     expectOnHoverOptions({ Effect: "Mirror Blur", Intensity: 1 });
+    expect(":iframe .test-options-target img").toHaveClass("o_animate_on_hover");
+    expect(":iframe .test-options-target img").not.toHaveClass("o_block_hover");
 });
+
+test("configure and clean block hover effects", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="row"><div class="test-options-target">Block</div></div>
+    `);
+    await contains(":iframe .test-options-target").click();
+    await waitSidebarUpdated();
+
+    // onHover: Overlay
+    await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='onHoverBlock']").click();
+    await waitSidebarUpdated();
+    const targetEl = queryOne(":iframe .test-options-target");
+    expect(targetEl).toHaveClass(["o_block_hover", "o_block_hover_overlay"]);
+    expect(".options-container [data-label='Effect']:visible .o-dropdown").toHaveText("Overlay");
+    expect(".options-container [data-label='Color']:visible").toHaveCount(1);
+    expect(".options-container [data-label='Direction']:visible").toHaveCount(0);
+
+    // onHover: Translate
+    targetEl.style.setProperty("--block-hover__overlay-color", "#123456");
+    await contains(".options-container [data-label='Effect']:visible .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='o_block_hover_translate']").click();
+    await waitSidebarUpdated();
+    expect(targetEl).toHaveClass("o_block_hover_translate");
+    expect(targetEl).not.toHaveClass("o_block_hover_overlay");
+    expect(targetEl).not.toHaveStyle("--block-hover__overlay-color", { inline: true });
+
+    await contains(".options-container [data-label='Direction'] button[title='Left']").click();
+    await setInputRange(".options-container [data-label='Shift'] input[type='range']", 25);
+    await waitSidebarUpdated();
+    expect(targetEl).toHaveClass("o_block_hover_translate_left");
+    expect(targetEl).toHaveStyle("--block-hover__translate-shift: 25px", { inline: true });
+
+    // onHover: Zoom In
+    await contains(".options-container [data-label='Effect']:visible .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='o_block_hover_zoom_in']").click();
+    await waitSidebarUpdated();
+    expect(targetEl).toHaveClass("o_block_hover_zoom_in");
+    expect(targetEl).not.toHaveClass(["o_block_hover_translate", "o_block_hover_translate_left"]);
+    expect(targetEl).not.toHaveStyle("--block-hover__translate-shift", { inline: true });
+
+    // onHover: Zoom Out
+    await setInputRange(".options-container [data-label='Intensity'] input[type='range']", 40);
+    await contains(".options-container [data-label='Effect']:visible .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='o_block_hover_zoom_out']").click();
+    await waitSidebarUpdated();
+    expect(targetEl).toHaveClass("o_block_hover_zoom_out");
+    expect(targetEl).not.toHaveClass("o_block_hover_zoom_in");
+    expect(targetEl).toHaveStyle("--block-hover__zoom-intensity: 40", { inline: true });
+
+    // onHover: Overlay
+    await contains(".options-container [data-label='Effect']:visible .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='o_block_hover_overlay']").click();
+    await waitSidebarUpdated();
+    expect(targetEl).toHaveClass("o_block_hover_overlay");
+    expect(targetEl).not.toHaveClass("o_block_hover_zoom_out");
+    expect(targetEl).not.toHaveStyle("--block-hover__zoom-intensity", { inline: true });
+
+    await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='']").click();
+    await waitSidebarUpdated();
+    for (const className of [
+        "o_block_hover",
+        "o_block_hover_overlay",
+        "o_block_hover_translate",
+        "o_block_hover_zoom_in",
+        "o_block_hover_zoom_out",
+        "o_block_hover_translate_left",
+    ]) {
+        expect(targetEl).not.toHaveClass(className);
+    }
+    expect(targetEl).not.toHaveStyle("--block-hover__overlay-color", { inline: true });
+    expect(targetEl).not.toHaveStyle("--block-hover__translate-shift", { inline: true });
+    expect(targetEl).not.toHaveStyle("--block-hover__zoom-intensity", { inline: true });
+});
+
+test("block hover effects are applied to nested cards and blockquotes", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <section class="s_three_columns">
+            <div class="row"><div class="card-parent"><div class="s_card">Card</div></div></div>
+        </section>
+        <section class="s_reviews_wall">
+            <div class="row">
+                <div class="blockquote-parent">
+                    <blockquote class="s_blockquote">Blockquote</blockquote>
+                </div>
+            </div>
+        </section>
+    `);
+
+    for (const [parentSelector, childSelector] of [
+        [".card-parent", ".s_card"],
+        [".blockquote-parent", ".s_blockquote"],
+    ]) {
+        await contains(`:iframe ${parentSelector}`).click();
+        await waitSidebarUpdated();
+        await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+        await contains(".o-dropdown--menu [data-action-value='onHoverBlock']").click();
+        await waitSidebarUpdated();
+        expect(`:iframe ${parentSelector}`).not.toHaveClass("o_block_hover");
+        expect(`:iframe ${parentSelector} > ${childSelector}`).toHaveClass([
+            "o_block_hover",
+            "o_block_hover_overlay",
+        ]);
+    }
+});
+
+test("block hover is unavailable behind stretched and slide links", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="s_card">
+            <a class="stretched-link" href="#"></a>
+            <div class="row"><div class="card-content">Card</div></div>
+        </div>
+        <div class="carousel-item">
+            <a class="slide-link" href="#"></a>
+            <div class="row"><div class="slide-content">Carousel</div></div>
+        </div>
+    `);
+
+    for (const selector of [".card-content", ".slide-content"]) {
+        await contains(`:iframe ${selector}`).click();
+        await waitSidebarUpdated();
+        await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+        expect(".o-dropdown--menu [data-action-value='onHoverBlock']").not.toHaveCount();
+    }
+});
+
+test("undo and redo block hover mode", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <div class="row"><div class="test-options-target">Block</div></div>
+    `);
+    await contains(":iframe .test-options-target").click();
+    await waitSidebarUpdated();
+    await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();
+    await contains(".o-dropdown--menu [data-action-value='onHoverBlock']").click();
+    await waitSidebarUpdated();
+    expect(":iframe .test-options-target").toHaveClass(["o_block_hover", "o_block_hover_overlay"]);
+
+    await contains("button[data-icon='undo']").click();
+    for (const className of ["o_block_hover", "o_block_hover_overlay"]) {
+        expect(":iframe .test-options-target").not.toHaveClass(className);
+    }
+    await contains("button[data-icon='redo']").click();
+    expect(":iframe .test-options-target").toHaveClass(["o_block_hover", "o_block_hover_overlay"]);
+});
+
 test("animation=onHover should not be visible when the image is a device shape", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="test-options-target">
