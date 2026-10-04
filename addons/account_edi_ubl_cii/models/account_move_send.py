@@ -77,12 +77,35 @@ class AccountMoveSend(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _get_invoice_extra_attachments(self, move):
+        """ The XML is already embedded in the PDF for those hybrid formats
+        (see _hook_invoice_document_after_pdf_report_render), attaching it a second time as a
+        standalone file makes some recipient systems detect two separate invoices """
         # EXTENDS 'account'
-        return super()._get_invoice_extra_attachments(move) + move.ubl_cii_xml_id
+        extra_attachments = super()._get_invoice_extra_attachments(move)
+        if (
+            not move.ubl_cii_xml_id
+            or (
+                (comm_partner := move.commercial_partner_id.with_company(move.company_id))
+                and comm_partner.invoice_edi_format in ('facturx', 'zugferd')
+            )
+        ):
+            return extra_attachments
+        return extra_attachments + move.ubl_cii_xml_id
 
     def _get_placeholder_mail_attachments_data(self, move, invoice_edi_format=None, extra_edis=None, pdf_report=None):
         # EXTENDS 'account'
+<<<<<<< fd328e07e536e686f4e60a7dcc5812dfb40db763
         results = super()._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis, pdf_report=pdf_report)
+||||||| fe561fb3d31a74b2bcf55cbe4bf8485058b3e2f4
+        results = super()._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis)
+=======
+        results = super()._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis)
+        if invoice_edi_format in ('facturx', 'zugferd'):
+            # The XML is embedded in the PDF itself and never added as a separate attachment
+            # (see _get_invoice_extra_attachments), so no placeholder for it
+            return results
+
+>>>>>>> 9cad2f831a229974209db5f08cb68571e0f7f1a3
         sending_method = self.env.context.get('sending_method')
         if move.with_context(sending_method=sending_method or {})._need_ubl_cii_xml(invoice_edi_format):
             builder = move.partner_id.commercial_partner_id._get_edi_builder(invoice_edi_format)
