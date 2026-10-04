@@ -77,6 +77,19 @@ export class MailComposerPlugin extends Plugin {
         if (sanitizedFragment.childNodes.length === 0) {
             return false;
         }
+        const createMultilineTextFragment = (text) => {
+            const fragment = document.createDocumentFragment();
+            const lines = text.split(/\r\n|\r|\n/);
+            lines.forEach((line, index) => {
+                if (index > 0) {
+                    fragment.append(document.createElement("br"));
+                }
+                if (line) {
+                    fragment.append(document.createTextNode(line));
+                }
+            });
+            return fragment;
+        };
         const removeStyle = (node) => {
             if (node.nodeType === Node.ELEMENT_NODE) {
                 const tagName = node.nodeName.toUpperCase();
@@ -86,6 +99,9 @@ export class MailComposerPlugin extends Plugin {
                 if (!ALLOWED_TAGS.includes(tagName)) {
                     node.replaceWith(document.createTextNode(node.textContent));
                     return;
+                }
+                for (const child of childNodes(node)) {
+                    child.replaceWith(createMultilineTextFragment(child.innerText || child.textContent || ""));
                 }
                 node.removeAttribute("style");
                 if (node.hasAttribute("class")) {
