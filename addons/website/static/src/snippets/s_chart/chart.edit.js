@@ -17,6 +17,7 @@ const ChartEdit = (I) =>
         getConfigurationSnapshot() {
             let snapshot = super.getConfigurationSnapshot();
             snapshot = JSON.parse(snapshot || "{}");
+            snapshot.textColor = getComputedStyle(this.el).color;
             snapshot.bgColor = getComputedStyle(this.el).backgroundColor;
             snapshot = JSON.stringify(snapshot);
             return snapshot;

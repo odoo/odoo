@@ -277,6 +277,43 @@ export function convertCSSColorToRgba(cssColor = "") {
     }
     return false;
 }
+
+/**
+ * Returns whether the given color's luminance is light.
+ * Formula adapted from APCA's simplification at
+ * https://gist.github.com/Myndex/e1025706436736166561d339fd667493#the-38-flip
+ *
+ * @param {string} color - CSS color
+ * @returns {boolean|undefined} true if the color is light, false if it is dark,
+ * undefined if the color is not recognized.
+ */
+function isRelativeLuminanceLight(color) {
+    color = convertCSSColorToRgba(color);
+    if (!color) {
+        return;
+    }
+    const { red, green, blue } = color;
+    const rgbContrastRatios = { red: 0.2126, green: 0.7152, blue: 0.0722 };
+    const channelLuminance = (channel, value) =>
+        Math.pow(value / 255, 2.2) * rgbContrastRatios[channel];
+    const luminance =
+        channelLuminance("red", red) +
+        channelLuminance("green", green) +
+        channelLuminance("blue", blue);
+    // Perceptual luminance inflection point for the human eye is 0.38, not 0.5.
+    return luminance > 0.38;
+}
+
+/**
+ * Returns the most contrasting color (pure black or white) with the given CSS color.
+ *
+ * @param {string} color - CSS color
+ * @returns {"#000000"|"#FFFFFF"}
+ */
+export function getContrastingColor(color) {
+    return isRelativeLuminanceLight(color) ? "#000000" : "#FFFFFF";
+}
+
 /**
  * Converts a CSS color (rgb(), rgba(), hexadecimal) to a normalized version
  * of the same color (@see convertRgbaToCSSColor).
