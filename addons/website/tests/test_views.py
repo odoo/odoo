@@ -1828,6 +1828,7 @@ class TestThemeViews(common.TransactionCase):
         patcher = patch('odoo.modules.Manifest.for_addon', return_value=Manifest(path='/dummy/test_theme', manifest_content=_DEFAULT_MANIFEST))
         self.startPatcher(patcher)
         test_theme_module = self.env['ir.module.module'].create({'name': 'test_theme'})
+        ThemeEngine = self.env['theme.engine']
         self.env['ir.model.data'].create({
             'module': 'base',
             'name': 'module_test_theme_module',
@@ -1847,7 +1848,7 @@ class TestThemeViews(common.TransactionCase):
             'model': 'theme.ir.ui.view',
             'res_id': theme_view.id,
         })
-        test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
+        ThemeEngine.with_context(load_all_views=True)._theme_load(test_theme_module, website_1)
 
         # 3. Ensure everything went correctly
         main_views = View.search([('key', '=', '_test.main_view')])
@@ -1860,18 +1861,18 @@ class TestThemeViews(common.TransactionCase):
         # 4. Simulate theme update. Do it 2 time to make sure it was not interpreted as a user change the first time.
         new_arch = '<xpath expr="//body" position="replace"><span>Odoo Change01</span></xpath>'
         theme_view.arch = new_arch
-        test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
+        ThemeEngine.with_context(load_all_views=True)._theme_load(test_theme_module, website_1)
         self.assertEqual(specific_main_view_children.arch, new_arch, "First time: View arch should receive theme updates.")
         self.assertFalse(specific_main_view_children.arch_updated)
         new_arch = '<xpath expr="//body" position="replace"><span>Odoo Change02</span></xpath>'
         theme_view.arch = new_arch
-        test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
+        ThemeEngine.with_context(load_all_views=True)._theme_load(test_theme_module, website_1)
         self.assertEqual(specific_main_view_children.arch, new_arch, "Second time: View arch should still receive theme updates.")
 
         # 5. Keep User arch changes
         new_arch = '<xpath expr="//body" position="replace"><span>Odoo</span></xpath>'
         specific_main_view_children.arch = new_arch
         theme_view.name = 'Test Child View modified'
-        test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
+        ThemeEngine.with_context(load_all_views=True)._theme_load(test_theme_module, website_1)
         self.assertEqual(specific_main_view_children.arch, new_arch, "View arch shouldn't have been overrided on theme update as it was modified by user.")
         self.assertEqual(specific_main_view_children.name, 'Test Child View modified', "View should receive modification on theme update.")
