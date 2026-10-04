@@ -5,7 +5,7 @@ import { mountView, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpe
 import { clickDate } from "@web/../tests/views/calendar/calendar_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { click, waitFor } from "@odoo/hoot-dom";
+import { click, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { user } from "@web/core/user";
 
 describe.current.tags("desktop");
@@ -75,11 +75,13 @@ test("Test request creator buttons", async() => {
             context: user.context
         });
     await clickDate("2024-01-09");
-    await click(".o_cw_popover_link");
+    await click(".o_calendar_popover_link");
     await waitFor("button:contains(Delete Time Off)");
     await click(".btn-close");
+    // the dialog covers the calendar
+    await waitForNone(".modal");
     await clickDate("2024-01-10");
-    await click(".o_cw_popover_link");
+    await click(".o_calendar_popover_link");
     await waitFor("button:contains(Cancel Time Off)");
 })
 

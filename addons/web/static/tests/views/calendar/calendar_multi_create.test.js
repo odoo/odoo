@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
-import { click, edit, keyDown, keyUp, queryAllTexts, queryAll } from "@odoo/hoot-dom";
+import { click, edit, keyDown, keyUp, queryAllTexts, queryAll, queryOne } from "@odoo/hoot-dom";
 import {
     advanceTime,
     animationFrame,
@@ -244,17 +244,17 @@ test("multi_create: render and basic creation (simple use case)", async () => {
         </calendar>`,
     });
 
-    expect(".fc .fc-event").toHaveCount(5, {
+    expect(".o_calendar_widget .o_calendar_event").toHaveCount(5, {
         message: "All events of this month should be visible",
     });
     expect(".o_calendar_filter_item").toHaveCount(0, {
         message: "No filters should be visible",
     });
 
-    const { drop, moveTo } = await contains(".fc-day[data-date='2019-03-04']").drag();
-    await moveTo(".fc-day[data-date='2019-03-14']");
+    const { drop, moveTo } = await contains(".o_calendar_day[data-date='2019-03-04']").drag();
+    await moveTo(".o_calendar_day[data-date='2019-03-14']");
     await animationFrame();
-    expect(".fc-day.o-highlight").toHaveCount(8);
+    expect(".o_calendar_day.o-highlight").toHaveCount(8);
     await drop();
     await animationFrame();
 
@@ -277,11 +277,11 @@ test("multi_create: render and basic creation (simple use case)", async () => {
         "Time off_2019-03-13",
         "Time off_2019-03-14",
     ]);
-    expect(".fc .fc-event").toHaveCount(13, {
+    expect(".o_calendar_widget .o_calendar_event").toHaveCount(13, {
         message: "All new events should be added",
     });
 
-    await click(".fc-event[data-event-id='12']");
+    await click(".o_calendar_event[data-event-id='12']");
     await runAllTimers();
     await animationFrame();
     expect(".o_popover").toHaveCount(1);
@@ -305,12 +305,14 @@ test("multi_create: render and basic functionalities (complex with filters use c
         context: { default_name: "Sick" },
     });
 
-    expect(".fc .fc-event").toHaveCount(4, { message: "events should be filter" });
+    expect(".o_calendar_widget .o_calendar_event").toHaveCount(4, {
+        message: "events should be filter",
+    });
 
-    const { drop, moveTo } = await contains(".fc-day[data-date='2019-03-04']").drag();
-    await moveTo(".fc-day[data-date='2019-03-14']");
+    const { drop, moveTo } = await contains(".o_calendar_day[data-date='2019-03-04']").drag();
+    await moveTo(".o_calendar_day[data-date='2019-03-14']");
     await animationFrame();
-    expect(".fc-day.o-highlight").toHaveCount(8);
+    expect(".o_calendar_day.o-highlight").toHaveCount(8);
     await drop();
     await animationFrame();
 
@@ -344,11 +346,11 @@ test("multi_create: render and basic functionalities (complex with filters use c
         "1_2019-03-14",
         "3_2019-03-14",
     ]);
-    expect(".fc .fc-event").toHaveCount(20, {
+    expect(".o_calendar_widget .o_calendar_event").toHaveCount(20, {
         message: "events should be added for the two users selected",
     });
 
-    await click(".fc-event[data-event-id='12']");
+    await click(".o_calendar_event[data-event-id='12']");
     await runAllTimers();
     await animationFrame();
     await expect(".o_popover").toHaveCount(1);
@@ -356,7 +358,7 @@ test("multi_create: render and basic functionalities (complex with filters use c
     await expect(".o_popover .o_field_widget[name='type']").toHaveText("Event Type 3");
     await expect(".o_popover .o_field_widget[name='user_id']").toHaveText("user 1");
 
-    await click(".fc-event[data-event-id='13']");
+    await click(".o_calendar_event[data-event-id='13']");
     await runAllTimers();
     await animationFrame();
     await expect(".o_popover").toHaveCount(1);
@@ -365,7 +367,9 @@ test("multi_create: render and basic functionalities (complex with filters use c
     await click(".o_calendar_filter_item[data-value='3'] input");
     await animationFrame();
     await advanceTime(CalendarModel.DEBOUNCED_LOAD_DELAY);
-    expect(".fc .fc-event").toHaveCount(10, { message: "events should be filter" });
+    expect(".o_calendar_widget .o_calendar_event").toHaveCount(10, {
+        message: "events should be filter",
+    });
 });
 
 test.tags("desktop");
@@ -395,12 +399,14 @@ test("multi_create: basic creation (datetime field)", async () => {
         `,
     });
 
-    expect(".fc .fc-event").toHaveCount(3, { message: "events should be filter" });
+    expect(".o_calendar_widget .o_calendar_event").toHaveCount(3, {
+        message: "events should be filter",
+    });
 
-    const { drop, moveTo } = await contains(".fc-day[data-date='2019-03-04']").drag();
-    await moveTo(".fc-day[data-date='2019-03-14']");
+    const { drop, moveTo } = await contains(".o_calendar_day[data-date='2019-03-04']").drag();
+    await moveTo(".o_calendar_day[data-date='2019-03-14']");
     await animationFrame();
-    expect(".fc-day.o-highlight").toHaveCount(8);
+    expect(".o_calendar_day.o-highlight").toHaveCount(8);
     await drop();
     await animationFrame();
 
@@ -449,11 +455,11 @@ test("multi_create: basic creation (datetime field)", async () => {
         "1_2019-03-14 07:00:00_2019-03-14 10:30:00",
         "3_2019-03-14 07:00:00_2019-03-14 10:30:00",
     ]);
-    expect(".fc .fc-event").toHaveCount(19, {
+    expect(".o_calendar_widget .o_calendar_event").toHaveCount(19, {
         message: "events should be added for the two users selected",
     });
 
-    await click(".fc-event[data-event-id='12']");
+    await click(".o_calendar_event[data-event-id='12']");
     await runAllTimers();
     await animationFrame();
     await expect(".o_popover").toHaveCount(1);
@@ -465,7 +471,7 @@ test("multi_create: basic creation (datetime field)", async () => {
     await expect(".o_popover .o_field_widget[name='type']").toHaveText("Event Type 3");
     await expect(".o_popover .o_field_widget[name='user_id']").toHaveText("user 1");
 
-    await click(".fc-event[data-event-id='13']");
+    await click(".o_calendar_event[data-event-id='13']");
     await runAllTimers();
     await animationFrame();
     await expect(".o_popover").toHaveCount(1);
@@ -478,7 +484,9 @@ test("multi_create: basic creation (datetime field)", async () => {
     await click(".o_calendar_filter_item[data-value='3'] input");
     await animationFrame();
     await advanceTime(CalendarModel.DEBOUNCED_LOAD_DELAY);
-    expect(".fc .fc-event").toHaveCount(10, { message: "events should be filter" });
+    expect(".o_calendar_widget .o_calendar_event").toHaveCount(10, {
+        message: "events should be filter",
+    });
 });
 
 test.tags("desktop");
@@ -511,7 +519,7 @@ test("multi_create: input validation (datetime field)", async () => {
         `,
     });
 
-    const { drop } = await contains(".fc-day[data-date='2019-03-04']").drag();
+    const { drop } = await contains(".o_calendar_day[data-date='2019-03-04']").drag();
     await animationFrame();
     await drop();
     await animationFrame();
@@ -574,7 +582,7 @@ test("multi_create: use state to keep values of inputs", async () => {
         views: [["calendar_state", "calendar"]],
     });
 
-    let { drop } = await contains(".fc-day[data-date='2019-03-04']").drag();
+    let { drop } = await contains(".o_calendar_day[data-date='2019-03-04']").drag();
     await animationFrame();
     await drop();
     await animationFrame();
@@ -612,7 +620,7 @@ test("multi_create: use state to keep values of inputs", async () => {
     await click(".breadcrumb-item");
     await animationFrame();
 
-    ({ drop } = await contains(".fc-day[data-date='2019-03-04']").drag());
+    ({ drop } = await contains(".o_calendar_day[data-date='2019-03-04']").drag());
     await animationFrame();
     await drop();
     await animationFrame();
@@ -661,13 +669,13 @@ test("multi_create: state keeps the whole x2many restricting another field", asy
     expect.verifySteps(["2019-03-04_2", "2019-03-05_2"]);
 
     // Delete the entry created on the first day of the selection.
-    await contains(".fc-day[data-date='2019-03-04']").click();
+    await contains(".o_calendar_day[data-date='2019-03-04']").click();
     await contains(".o_multi_selection_buttons .btn [data-icon='delete'].oi-filled").click();
     await contains(".o_dialog footer button:contains(Ok)").click();
 
     // Reopening the popover reuses the values kept from the previous creation:
     // they must still contain every allowed type.
-    await contains(".fc-day[data-date='2019-03-04']").click();
+    await contains(".o_calendar_day[data-date='2019-03-04']").click();
     await multiCreateClickAddButton();
 
     await contains(".o_multi_create_popover .o_form_view [name='type'] input").click();
@@ -690,7 +698,7 @@ test("multi_create: delete", async () => {
         context: { default_name: "Sick" },
     });
 
-    await click(".fc-event[data-event-id='2']");
+    await click(".o_calendar_event[data-event-id='2']");
     await runAllTimers();
     await animationFrame();
     await expect(".o_popover").toHaveCount(1);
@@ -698,8 +706,8 @@ test("multi_create: delete", async () => {
     await click(".o_calendar_header"); // Hide the popover
     await animationFrame();
 
-    const { drop } = await contains(".fc-day[data-date='2019-02-26']").drag();
-    await drop(".fc-day[data-date='2019-04-03']");
+    const { drop } = await contains(".o_calendar_day[data-date='2019-02-26']").drag();
+    await drop(".o_calendar_day[data-date='2019-04-03']");
     await animationFrame();
 
     await contains(".o_multi_selection_buttons .btn [data-icon='delete'].oi-filled").click();
@@ -711,12 +719,16 @@ test("multi_create: delete", async () => {
     await animationFrame();
 
     expect.verifySteps([[2, 3, 5]]);
-    expect(".fc .fc-event").toHaveCount(1, { message: "selected events should be deleted" });
+    expect(".o_calendar_widget .o_calendar_event").toHaveCount(1, {
+        message: "selected events should be deleted",
+    });
 
     await click(".o_calendar_filter_item[data-value='3'] input");
     await animationFrame();
     await advanceTime(CalendarModel.DEBOUNCED_LOAD_DELAY);
-    expect(".fc .fc-event").toHaveCount(0, { message: "events should be filter" });
+    expect(".o_calendar_widget .o_calendar_event").toHaveCount(0, {
+        message: "events should be filter",
+    });
 });
 
 test.tags("desktop");
@@ -727,7 +739,7 @@ test("multi_create: test onChange on form with no blur (input text)", async () =
         context: { default_name: "Sick" },
     });
 
-    await click(".fc-day[data-date='2019-03-04']");
+    await click(".o_calendar_day[data-date='2019-03-04']");
     await animationFrame();
 
     await multiCreateClickAddButton();
@@ -737,7 +749,7 @@ test("multi_create: test onChange on form with no blur (input text)", async () =
 
     await multiCreatePopoverClickAddButton();
 
-    await click(".fc-event[data-event-id='12']");
+    await click(".o_calendar_event[data-event-id='12']");
     await runAllTimers();
     await animationFrame();
     await expect(".o_popover").toHaveCount(1);
@@ -774,7 +786,7 @@ test("multi_create: test onChange on TimePicker with no blur (input text)", asyn
         `,
     });
 
-    const { drop } = await contains(".fc-day[data-date='2019-03-04']").drag();
+    const { drop } = await contains(".o_calendar_day[data-date='2019-03-04']").drag();
     await animationFrame();
     await drop();
     await animationFrame();
@@ -811,7 +823,7 @@ test("multi_create: test popover", async () => {
 
     expect(".o_popover").toHaveCount(0);
 
-    await click(".fc-event[data-event-id='2']");
+    await click(".o_calendar_event[data-event-id='2']");
     await runAllTimers();
     await animationFrame();
 
@@ -836,7 +848,7 @@ test("multi_create: avoid trigger add/del event on specific element", async () =
         type: "calendar",
     });
 
-    await click(".fc-event[data-event-id='1']");
+    await click(".o_calendar_event[data-event-id='1']");
     await runAllTimers();
     await animationFrame();
     expect(".o_popover").toHaveCount(1);
@@ -846,19 +858,21 @@ test("multi_create: avoid trigger add/del event on specific element", async () =
     await animationFrame();
     expect(".o_popover").toHaveCount(0);
 
-    await click(".fc-more-cell a");
+    // FullCalendar renders its popover in the body, outside of the test fixture
+    const body = { root: document.body };
+    await click(".o_calendar_more_link");
     await animationFrame();
-    expect(".fc-more-popover").toHaveCount(1);
+    expect(queryAll(".o_calendar_more_popover", body)).toHaveLength(1);
     expect(".o_multi_selection_buttons").toHaveCount(0);
 
-    await click(".fc-popover-title");
+    await click(queryOne(".o_calendar_more_popover .o_calendar_header_cell", body));
     await animationFrame();
-    expect(".fc-more-popover").toHaveCount(1);
+    expect(queryAll(".o_calendar_more_popover", body)).toHaveLength(1);
     expect(".o_multi_selection_buttons").toHaveCount(0);
 
-    await click(".fc-popover-close");
+    await click(queryOne(".o_calendar_more_popover_close", body));
     await animationFrame();
-    expect(".fc-more-popover").toHaveCount(0);
+    expect(queryAll(".o_calendar_more_popover", body)).toHaveLength(0);
     expect(".o_multi_selection_buttons").toHaveCount(0);
 });
 
@@ -882,7 +896,7 @@ test("multi_create: test required attribute in form", async () => {
         type: "calendar",
     });
 
-    const { drop } = await contains(".fc-day[data-date='2019-03-04']").drag();
+    const { drop } = await contains(".o_calendar_day[data-date='2019-03-04']").drag();
     await animationFrame();
     await drop();
     await animationFrame();
@@ -891,7 +905,7 @@ test("multi_create: test required attribute in form", async () => {
     expect(".o_multi_create_popover .o_form_view [name='name']").toHaveClass("o_required_modifier");
     expect.verifySteps(["Missing required fields"]);
 
-    const { drop: dropOk } = await contains(".fc-day[data-date='2019-03-04']").drag();
+    const { drop: dropOk } = await contains(".o_calendar_day[data-date='2019-03-04']").drag();
     await animationFrame();
     await dropOk();
     await animationFrame();
@@ -911,7 +925,7 @@ test(`multi_create: no button "Delete" if no record selected`, async () => {
     });
     expect("o_multi_selection_buttons").toHaveCount(0);
 
-    await contains(".fc-day[data-date='2019-03-04']").click();
+    await contains(".o_calendar_day[data-date='2019-03-04']").click();
     expect(".o_multi_selection_buttons").toHaveCount(1);
     expect(".o_multi_selection_buttons .btn [data-icon='delete'].oi-filled").toHaveCount(0);
 });
@@ -933,17 +947,19 @@ test("multi_create: selection with ctrl", async () => {
         context: { default_name: "Sick" },
     });
 
-    expect(".fc .fc-event").toHaveCount(4, { message: "events should be filter" });
+    expect(".o_calendar_widget .o_calendar_event").toHaveCount(4, {
+        message: "events should be filter",
+    });
 
     await selectDateRange("2019-03-04", "2019-03-14");
 
     await keyDown("Control");
     await selectDateRange("2019-02-26", "2019-03-27");
-    await contains(".fc-day[data-date='2019-03-20']").click();
-    await contains(".fc-day[data-date='2019-03-16']").click();
+    await contains(".o_calendar_day[data-date='2019-03-20']").click();
+    await contains(".o_calendar_day[data-date='2019-03-16']").click();
     await keyUp("Control");
 
-    expect(".fc-day.o-highlight").toHaveCount(14);
+    expect(".o_calendar_day.o-highlight").toHaveCount(14);
 
     await multiCreateClickAddButton();
 
@@ -987,7 +1003,7 @@ test("multi_create: selection with ctrl", async () => {
         "1_2019-03-16",
         "3_2019-03-16",
     ]);
-    expect(".fc .fc-event").toHaveCount(32, {
+    expect(".o_calendar_widget .o_calendar_event").toHaveCount(32, {
         message: "events should be added for the two users selected",
     });
 });
@@ -1009,15 +1025,17 @@ test("multi_create: selection with shift", async () => {
         context: { default_name: "Sick" },
     });
 
-    expect(".fc .fc-event").toHaveCount(4, { message: "events should be filter" });
+    expect(".o_calendar_widget .o_calendar_event").toHaveCount(4, {
+        message: "events should be filter",
+    });
 
     await keyDown("Shift");
-    await contains(".fc-day[data-date='2019-03-20']").click();
-    await contains(".fc-day[data-date='2019-03-16']").click();
+    await contains(".o_calendar_day[data-date='2019-03-20']").click();
+    await contains(".o_calendar_day[data-date='2019-03-16']").click();
     await keyUp("Shift");
 
     expect(".o_selection_box").toHaveText("1\nselected");
-    expect(queryAll(".fc-day.o-highlight").map((el) => el.dataset.date)).toEqual([
+    expect(queryAll(".o_calendar_day.o-highlight").map((el) => el.dataset.date)).toEqual([
         "2019-03-16",
         "2019-03-17",
         "2019-03-18",
@@ -1049,26 +1067,26 @@ test("multi_create: selection with shift", async () => {
         "1_2019-03-20",
         "3_2019-03-20",
     ]);
-    expect(".fc .fc-event").toHaveCount(14, {
+    expect(".o_calendar_widget .o_calendar_event").toHaveCount(14, {
         message: "events should be added for the two users selected",
     });
 
     await keyDown("Shift");
-    await contains(".fc-day[data-date='2019-03-16']").click();
-    await contains(".fc-day[data-date='2019-03-20']").click();
-    await contains(".fc-day[data-date='2019-03-14']").click();
+    await contains(".o_calendar_day[data-date='2019-03-16']").click();
+    await contains(".o_calendar_day[data-date='2019-03-20']").click();
+    await contains(".o_calendar_day[data-date='2019-03-14']").click();
 
     expect(".o_selection_box").toHaveText("2\nselected");
-    expect(queryAll(".fc-day.o-highlight").map((el) => el.dataset.date)).toEqual([
+    expect(queryAll(".o_calendar_day.o-highlight").map((el) => el.dataset.date)).toEqual([
         "2019-03-14",
         "2019-03-15",
         "2019-03-16",
     ]);
 
-    await contains(".fc-day[data-date='2019-03-13']").click();
+    await contains(".o_calendar_day[data-date='2019-03-13']").click();
 
     expect(".o_selection_box").toHaveText("3\nselected");
-    expect(queryAll(".fc-day.o-highlight").map((el) => el.dataset.date)).toEqual([
+    expect(queryAll(".o_calendar_day.o-highlight").map((el) => el.dataset.date)).toEqual([
         "2019-03-13",
         "2019-03-14",
         "2019-03-15",
@@ -1076,27 +1094,29 @@ test("multi_create: selection with shift", async () => {
     ]);
 
     await keyUp("Shift");
-    await contains(".fc-day[data-date='2019-03-13']").click();
+    await contains(".o_calendar_day[data-date='2019-03-13']").click();
     await keyDown("Shift");
-    await contains(".fc-day[data-date='2019-03-11']").click();
+    await contains(".o_calendar_day[data-date='2019-03-11']").click();
     await keyUp("Shift");
 
     expect(".o_selection_box").toHaveText("3\nselected");
-    expect(queryAll(".fc-day.o-highlight").map((el) => el.dataset.date)).toEqual([
+    expect(queryAll(".o_calendar_day.o-highlight").map((el) => el.dataset.date)).toEqual([
         "2019-03-11",
         "2019-03-12",
         "2019-03-13",
     ]);
 
-    await contains(".fc-day[data-date='2019-03-20']").click();
+    await contains(".o_calendar_day[data-date='2019-03-20']").click();
 
     await selectDateRange("2019-03-04", "2019-03-14");
 
     await keyUp("Shift");
-    await contains(".fc-day[data-date='2019-03-13']").click();
+    await contains(".o_calendar_day[data-date='2019-03-13']").click();
 
     expect(".o_selection_box").toHaveText("1\nselected");
-    expect(queryAll(".fc-day.o-highlight").map((el) => el.dataset.date)).toEqual(["2019-03-13"]);
+    expect(queryAll(".o_calendar_day.o-highlight").map((el) => el.dataset.date)).toEqual([
+        "2019-03-13",
+    ]);
 });
 
 test.tags("desktop");

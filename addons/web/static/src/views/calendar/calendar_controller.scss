@@ -19,16 +19,6 @@
 
     .o_calendar_wrapper {
         grid-area: 3 / 1 / 3 / 4;
-
-        &:has(.fc-popover) {
-            overflow: auto !important;
-
-            @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
-                .o_actionswiper_overflow_container {
-                    overflow: visible !important;
-                }
-            }
-        }
     }
 
     .o_actionswiper_right_swipe_area, .o_actionswiper_left_swipe_area {
@@ -44,8 +34,8 @@
 }
 
 .o_calendar_sidepanel_container {
-    --o-cw-filter-avatar-size: 20px;
-    --Avatar-size: var(--o-cw-filter-avatar-size);
+    --o-calendar-filter-avatar-size: 20px;
+    --Avatar-size: var(--o-calendar-filter-avatar-size);
 
     flex: 0 0 auto;
 
@@ -105,16 +95,12 @@
         @extend %o-html-layout-fill;
 
         .o_calendar_renderer {
-            .fc-theme-standard .fc-scrollgrid {
+            .o_calendar_fc_view {
                 border-top: 0;
             }
 
-            .o_actionswiper, .o_actionswiper_overflow_container, .o_actionswiper_target_container, .o_calendar_widget, .fc .fc-daygrid-body, .fc-daygrid-body, .fc-scrollgrid-sync-table {
+            .o_actionswiper, .o_actionswiper_overflow_container, .o_actionswiper_target_container, .o_calendar_widget {
                 height: 100% !important;
-            }
-
-            .fc-col-header, .fc-daygrid-body, .fc-scrollgrid-sync-table {
-                width: 100% !important;
             }
         }
     }

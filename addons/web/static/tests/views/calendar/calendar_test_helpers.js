@@ -8,6 +8,9 @@ import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { Field } from "@web/views/fields/field";
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
+// as in browsers, a touch held longer is a long press, which doesn't end with a click
+const LONG_PRESS_DELAY = 600;
+
 export const DEFAULT_DATE = luxon.DateTime.local(2021, 7, 16, 8, 0, 0, 0);
 
 export const FAKE_RECORDS = {
@@ -256,7 +259,7 @@ async function waitForSelection() {
  * @returns {HTMLElement}
  */
 export function findAllDaySlot(date) {
-    return queryFirst(`.fc-daygrid-body .fc-day[data-date="${date}"]`);
+    return queryFirst(`.o_calendar_day[data-date="${date}"]`);
 }
 
 /**
@@ -264,7 +267,9 @@ export function findAllDaySlot(date) {
  * @returns {HTMLElement}
  */
 export function findDateCell(date) {
-    return queryFirst(`.fc-day[data-date="${date}"]`);
+    return queryFirst(
+        `:is(.o_calendar_header_cell, .o_calendar_day, .o_calendar_lane)[data-date="${date}"]`
+    );
 }
 
 /**
@@ -280,7 +285,18 @@ export function findEvent(eventId) {
  * @returns {HTMLElement}
  */
 export function findDateColumn(date) {
-    return queryFirst(`.fc-col-header-cell.fc-day[data-date="${date}"]`);
+    return queryFirst(`.o_calendar_header_cell[data-date="${date}"]`);
+}
+
+/**
+ * @returns {HTMLElement}
+ */
+export function findTimeGridScroller() {
+    let scroller = queryFirst(`.o_calendar_time_slot`);
+    while (!["auto", "scroll"].includes(getComputedStyle(scroller).overflowY)) {
+        scroller = scroller.parentElement;
+    }
+    return scroller;
 }
 
 /**
@@ -288,7 +304,17 @@ export function findDateColumn(date) {
  * @returns {HTMLElement}
  */
 export function findTimeRow(time) {
-    return queryFirst(`.fc-timegrid-slot[data-time="${time}"]:eq(1)`);
+    return queryFirst(`.o_calendar_time_slot[data-time="${time}"]`);
+}
+
+/**
+ * The time slots are rendered below the day columns, which receive the pointer events.
+ *
+ * @param {string} date
+ * @returns {HTMLElement}
+ */
+export function findTimeGridColumn(date) {
+    return queryFirst(`.o_calendar_lane[data-date="${date}"]`);
 }
 
 /**
@@ -360,6 +386,8 @@ export async function clickDate(date) {
  * @returns {Promise<void>}
  */
 export async function clickEvent(eventId) {
+    // FullCalendar can't find the clicked date before measuring the rendered days
+    await animationFrame();
     const eventEl = findEvent(eventId);
 
     instantScrollTo(eventEl);
@@ -370,7 +398,7 @@ export async function clickEvent(eventId) {
 
 export function expandCalendarView() {
     // Expends Calendar view and FC too
-    let tmpElement = queryFirst(".fc");
+    let tmpElement = queryFirst(".o_calendar_widget");
     do {
         tmpElement = tmpElement.parentElement;
         tmpElement.classList.add("h-100");
@@ -393,27 +421,32 @@ export async function selectTimeRange(startDateTime, endDateTime) {
     const midTime = `${String(midHour).padStart(2, "0")}:00:00`;
 
     instantScrollTo(
-        queryFirst(`.fc-timegrid-slot[data-time="${midTime}"]:eq(1)`, { visible: false })
+        queryFirst(`.o_calendar_time_slot[data-time="${midTime}"]`, { visible: false })
     );
 
-    const rendererRect = queryRect(`.o_calendar_widget:first`);
-    const startColumnRect = queryRect(`.fc-col-header-cell.fc-day[data-date="${startDate}"]`);
-    const startRow = queryFirst(`.fc-timegrid-slot[data-time="${startTime}"]:eq(1)`);
-    const endColumnRect = queryRect(`.fc-col-header-cell.fc-day[data-date="${endDate}"]`);
-    const endRow = queryFirst(`.fc-timegrid-slot[data-time="${endTime}"]:eq(1)`);
+    const startColumn = findTimeGridColumn(startDate);
+    const startColumnRect = queryRect(startColumn);
+    const startRowRect = queryRect(findTimeRow(startTime));
+    const endColumn = findTimeGridColumn(endDate);
+    const endColumnRect = queryRect(endColumn);
+    const endRowRect = queryRect(findTimeRow(endTime));
     const optionStart = {
-        relative: true,
-        position: { y: 1, x: startColumnRect.left - rendererRect.left },
+        position: {
+            x: startColumnRect.x + startColumnRect.width / 2,
+            y: startRowRect.y + 1,
+        },
         pointerDownDuration: TOUCH_SELECTION_THRESHOLD,
     };
 
-    await hover(startRow, optionStart);
+    await hover(startColumn, optionStart);
     await animationFrame();
-    const { drop } = await drag(startRow, optionStart);
+    const { drop } = await drag(startColumn, optionStart);
     await waitForSelection();
-    await drop(endRow, {
-        position: { y: -1, x: endColumnRect.left - rendererRect.left },
-        relative: true,
+    await drop(endColumn, {
+        position: {
+            x: endColumnRect.x + endColumnRect.width / 2,
+            y: endRowRect.y - 1,
+        },
     });
 
     await animationFrame();
@@ -510,10 +543,9 @@ export async function moveEventToTime(eventId, dateTime) {
 
     instantScrollTo(eventEl);
 
-    const row = findTimeRow(time);
-    const rowRect = queryRect(row);
+    const rowRect = queryRect(findTimeRow(time));
 
-    const column = findDateColumn(date);
+    const column = findTimeGridColumn(date);
     const columnRect = queryRect(column);
 
     const { drop, moveTo } = await drag(eventEl, {
@@ -523,7 +555,7 @@ export async function moveEventToTime(eventId, dateTime) {
     });
     await waitForSelection();
 
-    await moveTo(row, {
+    await moveTo(column, {
         position: {
             y: rowRect.y + 0.5,
             x: columnRect.x + columnRect.width / 2,
@@ -589,10 +621,10 @@ export async function resizeEventToTime(eventId, dateTime) {
 
     instantScrollTo(eventEl);
 
-    await hover(`.fc-event-main:first`, { root: eventEl });
+    await hover(`.o_calendar_event_main:first`, { root: eventEl });
     await animationFrame();
 
-    const resizer = queryFirst(`.fc-event-resizer-end`, { root: eventEl });
+    const resizer = queryFirst(`.o_calendar_resizer_end`, { root: eventEl });
     Object.assign(resizer.style, {
         display: "block",
         height: "1px",
@@ -603,15 +635,14 @@ export async function resizeEventToTime(eventId, dateTime) {
 
     const row = findTimeRow(time);
 
-    const column = findDateColumn(date);
+    const column = findTimeGridColumn(date);
     const columnRect = queryRect(column);
-    const rendererRect = queryRect(`.o_calendar_widget:first`);
+    const rowRect = queryRect(row);
 
     if (hasTouch()) {
-        const { drop } = await drag(eventEl, {
-            pointerDownDuration: TOUCH_SELECTION_THRESHOLD,
-        });
-        await waitForSelection();
+        const { drop } = await drag(eventEl);
+        // hold the press long enough to not end with a click, which would open the popover
+        await advanceTime(LONG_PRESS_DELAY);
         await drop(eventEl);
         await waitForSelection();
     }
@@ -620,9 +651,8 @@ export async function resizeEventToTime(eventId, dateTime) {
         pointerDownDuration: TOUCH_SELECTION_THRESHOLD,
     });
     await waitForSelection();
-    await drop(row, {
-        position: { x: columnRect.x - rendererRect.x, y: -1 },
-        relative: true,
+    await drop(column, {
+        position: { x: columnRect.x + columnRect.width / 2, y: rowRect.y - 1 },
     });
     await advanceTime(500);
 }
@@ -638,11 +668,13 @@ export async function resizeEventToDate(eventId, date, fromStart = false) {
 
     instantScrollTo(eventEl);
 
-    await hover(".fc-event-main", { root: eventEl });
+    await hover(".o_calendar_event_main", { root: eventEl });
     await animationFrame();
 
     // Show the resizer
-    const resizer = queryFirst(fromStart ? ".fc-event-resizer-start" : ".fc-event-resizer-end", {
+    const resizer = queryFirst(
+        fromStart ? ".o_calendar_resizer_start" : ".o_calendar_resizer_end",
+        {
         root: eventEl,
     });
     Object.assign(resizer.style, { display: "block", height: "1px", bottom: "0" });

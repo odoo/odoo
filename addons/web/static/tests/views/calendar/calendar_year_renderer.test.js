@@ -1,12 +1,7 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAllTexts, resize } from "@odoo/hoot-dom";
-import { mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
-import {
-    mockService,
-    mountWithCleanup,
-    preloadBundle,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
+import { queryAllTexts } from "@odoo/hoot-dom";
+import { mockTimeZone } from "@odoo/hoot-mock";
+import { mockService, mountWithCleanup, preloadBundle } from "@web/../tests/web_test_helpers";
 import { FAKE_MODEL, clickDate, selectDateRange } from "./calendar_test_helpers";
 
 import { CalendarYearRenderer } from "@web/views/calendar/calendar_year/calendar_year_renderer";
@@ -29,11 +24,11 @@ preloadBundle("web.fullcalendar_lib");
 
 test(`mount a CalendarYearRenderer`, async () => {
     await start();
-    expect(`.fc-month-container`).toHaveCount(12);
+    expect(`.o_calendar_month`).toHaveCount(12);
 
     // check "title format"
-    expect(`.fc-toolbar-chunk:nth-child(2) .fc-toolbar-title`).toHaveCount(12);
-    expect(queryAllTexts`.fc-toolbar-chunk:nth-child(2) .fc-toolbar-title`).toEqual([
+    expect(`.o_calendar_month_title`).toHaveCount(12);
+    expect(queryAllTexts`.o_calendar_month_title`).toEqual([
         "January 2021",
         "February 2021",
         "March 2021",
@@ -49,8 +44,8 @@ test(`mount a CalendarYearRenderer`, async () => {
     ]);
 
     // check day header format
-    expect(`.fc-month:eq(0) .fc-col-header-cell`).toHaveCount(7);
-    expect(queryAllTexts`.fc-month:eq(0) .fc-col-header-cell`).toEqual([
+    expect(`.o_calendar_month:eq(0) .o_calendar_header_cell`).toHaveCount(7);
+    expect(queryAllTexts`.o_calendar_month:eq(0) .o_calendar_header_cell`).toEqual([
         "S",
         "M",
         "T",
@@ -61,7 +56,7 @@ test(`mount a CalendarYearRenderer`, async () => {
     ]);
 
     // check showNonCurrentDates
-    expect(`:not(.fc-day-disabled) > * > * > .fc-daygrid-day-number`).toHaveCount(365);
+    expect(`:not([aria-disabled]) > * > * > .o_calendar_day_top_number`).toHaveCount(365);
 });
 
 test.tags("desktop");
@@ -129,7 +124,7 @@ test(`display correct column header for days, independent of the timezone`, asyn
     // if the first day of the week is Sunday.
     mockTimeZone(-9);
     await start();
-    expect(queryAllTexts`.fc-month:eq(0) .fc-col-header-cell`).toEqual([
+    expect(queryAllTexts`.o_calendar_month:eq(0) .o_calendar_header_cell`).toEqual([
         "S",
         "M",
         "T",
@@ -142,18 +137,5 @@ test(`display correct column header for days, independent of the timezone`, asyn
 
 test("remove row when no day of current month", async () => {
     await start();
-    expect(".fc-day-other, .fc-day-disabled").toHaveCount(76);
-});
-
-test("resize callback is being called", async () => {
-    patchWithCleanup(CalendarYearRenderer.prototype, {
-        onWindowResize() {
-            expect.step("onWindowResize");
-        },
-    });
-    await start();
-    expect.verifySteps([]);
-    await resize({ height: 500 });
-    await runAllTimers();
-    expect.verifySteps(new Array(12).fill("onWindowResize")); // one for each FullCalendar instance
+    expect(".o_calendar_day_other, [aria-disabled]").toHaveCount(76);
 });

@@ -519,13 +519,9 @@ This module provides the core of the Odoo Web Client.
             '/web/static/lib/chartjs-adapter-luxon/chartjs-adapter-luxon.js',
         ],
         "web.fullcalendar_lib" : [
-            '/web/static/lib/fullcalendar/core/index.global.js',
-            '/web/static/lib/fullcalendar/core/locales-all.global.js',
-            '/web/static/lib/fullcalendar/interaction/index.global.js',
-            '/web/static/lib/fullcalendar/daygrid/index.global.js',
-            '/web/static/lib/fullcalendar/luxon3/index.global.js',
-            '/web/static/lib/fullcalendar/timegrid/index.global.js',
-            '/web/static/lib/fullcalendar/list/index.global.js',
+            '/web/static/lib/fullcalendar/skeleton.css',
+            '/web/static/lib/fullcalendar/fullcalendar.global.js',
+            '/web/static/lib/fullcalendar/locales-all.global.js',
         ],
         # Icons bundles: material_symbols, odoo_ui_icons and both combined. Only the
         # combination should probably be used. But it is split to allow MS
