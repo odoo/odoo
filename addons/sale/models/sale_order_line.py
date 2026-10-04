@@ -1454,10 +1454,14 @@ class SaleOrderLine(models.Model):
                 'sale_line_ids': [Command.link(self.id)],
                 **optional_values,
             }
+        product = self.product_id.with_context(
+            lang=self.order_id._get_lang(),
+            partner_id=self.order_id.partner_id.id,
+        )
         res = {
             'display_type': self.display_type or 'product',
             'sequence': self.sequence,
-            'name': self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name),
+            'name': self.env['account.move.line']._get_journal_items_full_name(self.name, product.display_name),
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
             'quantity': self.qty_to_invoice,
