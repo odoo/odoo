@@ -164,6 +164,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
                 body=self.env._("This document was created from the following attachment(s)."),
                 attachment_ids=attachment_records.ids
             )
+            record._set_invoice_pdf_file(file_data_group)
 
         # Call _extend_with_attachments at the end, because it commits the transaction.
         for record, file_data_group in zip(records, file_data_groups):
@@ -172,8 +173,12 @@ class AccountDocumentImportMixin(models.AbstractModel):
                 record.message_post(
                     body=self.env._("There was an error while importing the bill, you can find attached the incoming XML"),
                 )
-
         return records
+
+    @api.model
+    def _set_invoice_pdf_file(self, file_data):
+        """ To be overidden in the models inheriting the mixin """
+        pass
 
     @api.model
     def _create_records_from_attachments_default_create_values(self):

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+import base64
 import calendar
 from collections import Counter, defaultdict
 from collections.abc import Mapping
@@ -13,6 +14,7 @@ import logging
 from markupsafe import Markup
 import re
 import os
+from io import BytesIO
 from lxml import etree, html
 from textwrap import shorten
 
@@ -5002,6 +5004,41 @@ class AccountMove(models.Model):
         selected_file_data = self._get_selected_import_file_data(file_data_group, new=new)
         if self._should_store_import_source_attachment(selected_file_data):
             self.import_source_attachment_id = self._get_import_source_attachment(selected_file_data)
+
+    def _extract_pdfs_from_xml(self, xml_file):
+        xml_root = etree.parse(BytesIO(xml_file.get('raw'))).getroot()
+        embedded_documents = [
+            {
+                'raw': base64.b64decode(doc.text),
+                **dict(zip(doc.keys(), doc.values()))
+            } for doc in xml_root.xpath("//*[contains(local-name(), 'EmbeddedDocumentBinaryObject')]")
+        ]
+        embedded_pdfs = filter(lambda doc: doc and (doc.get('mimeCode').endswith('pdf') or doc.get('filename').endswith('.pdf')), embedded_documents)
+        for doc in embedded_pdfs:
+            self.env['ir.attachment'].create({
+                'name': doc.get('filename'),
+                'mimetype': doc.get('mimeCode'),
+                'raw': doc.get('raw'),
+                'res_model': self._name,
+                'res_id': self.id,
+                'res_field': 'invoice_pdf_report_file'
+            })
+
+    def _set_invoice_pdf_file(self, files_data):
+        for file in files_data:
+            # get imported xml/pdf and set it as the pdf report
+            if file.get('mimetype').endswith('pdf') or file.get('name').endswith('.pdf'):
+                self.env['ir.attachment'].create({
+                    'name': file.get('name'),
+                    'mimetype': file.get('mimeCode'),
+                    'raw': file.get('raw'),
+                    'res_model': self._name,
+                    'res_id': self.id,
+                    'res_field': 'invoice_pdf_report_file'
+                })
+            if file.get('mimetype').endswith('xml') or file.get('name').endswith('.xml'):
+                self._extract_pdfs_from_xml(file)
+        self._compute_linked_attachment_id('invoice_pdf_report_id', 'invoice_pdf_report_file')
 
     def _extend_with_attachments(self, files_data, new=False):
         if new:
