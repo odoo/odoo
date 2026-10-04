@@ -140,7 +140,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'l10n_hu_edi_signature_key': 'some_key',
             'l10n_hu_edi_replacement_key': 'abcdefghijklmnop',
         })
-    
+
     def _create_simple_move(self, move_type='out_invoice', currency=None, amount=None):
         journal = self.company_data['default_journal_sale'] if move_type in self.env['account.move'].get_sale_types() else self.company_data['default_journal_purchase']
 
@@ -164,15 +164,15 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
     def create_invoice_simple(self, currency=None, amount=None):
         """ Create a really basic invoice - just one line. """
         return self._create_simple_move(move_type='out_invoice', currency=currency, amount=amount)
-    
+
     def create_bill_simple(self, currency=None):
         """ Create a really basic bill - just one line. """
         return self._create_simple_move(move_type='in_invoice', currency=currency)
-    
+
     def create_credit_note_simple(self, currency=None):
         """ Create a really basic credit note - just one line. """
         return self._create_simple_move(move_type='out_refund', currency=currency)
-    
+
     def create_refund_simple(self, currency=None):
         """ Create a really basic bill refund - just one line. """
         return self._create_simple_move(move_type='in_refund', currency=currency)
@@ -254,8 +254,8 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'active_id': sale_order.id,
             'default_journal_id': self.company_data['default_journal_sale'].id,
         }).create({
-            'advance_payment_method': 'fixed',
-            'fixed_amount': 6350.0,
+            'advance_payment_method': 'downpayment',
+            'amount': 6350.0,
         })
         downpayment.create_invoices()
         return sale_order, sale_order.invoice_ids
