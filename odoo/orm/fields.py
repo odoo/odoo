@@ -1663,11 +1663,18 @@ class Field[T]:
         )
         return records.__class__(records.env, ids_to_update, records._prefetch_ids)
 
-    def _to_prefetch(self, record: ModelType) -> ModelType:
+    def _to_prefetch(self, record: ModelType, filter_access=False) -> ModelType:
         """ Return a recordset including ``record`` to prefetch the field. """
         ids = expand_ids(record.id, record._prefetch_ids)
         field_cache = self._get_cache(record.env)
         prefetch_ids = (id_ for id_ in ids if id_ not in field_cache)
+        if filter_access and not record.env.su:
+            # make sure record is in prefetch_ids (in first position)
+            prefetch_ids = (
+                rec.id
+                for index, rec in enumerate(record.browse(prefetch_ids))
+                if not index or rec.has_access('read')
+            )
         return record.browse(itertools.islice(prefetch_ids, PREFETCH_MAX))
 
     def _insert_cache(self, records: BaseModel, values: Iterable) -> None:
@@ -1815,7 +1822,10 @@ class Field[T]:
                 value = self.convert_to_cache(False, record, validate=False)
                 self._update_cache(record, value)
             else:
-                recs = record if self.recursive else self._to_prefetch(record)
+                if self.recursive:
+                    recs = record
+                else:
+                    recs = self._to_prefetch(record, filter_access=not self.compute_sudo)
                 try:
                     self.compute_value(recs)
                     fallback_single = False

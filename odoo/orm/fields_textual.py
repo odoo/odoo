@@ -264,11 +264,12 @@ class BaseString(Field[str | typing.Literal[False]]):
             records = records.with_context(prefetch_langs=False)
         return super()._cache_missing_ids(records)
 
-    def _to_prefetch(self, record):
+    def _to_prefetch(self, record, filter_access=False):
         if self.translate and record.env.context.get('prefetch_langs'):
             # we always need to fetch the current language in the cache
-            return super()._to_prefetch(record.with_context(prefetch_langs=False)).with_env(record.env)
-        return super()._to_prefetch(record)
+            record_current = record.with_context(prefetch_langs=False)
+            return super()._to_prefetch(record_current, filter_access).with_env(record.env)
+        return super()._to_prefetch(record, filter_access)
 
     def _insert_cache(self, records, values):
         if not self.translate:
