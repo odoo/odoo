@@ -15,6 +15,30 @@ test("should give a few characters a fontFamily", async () => {
     });
 });
 
+test("should change the font family inherited from a paragraph", async () => {
+    await testEditor({
+        contentBefore: `<p style="font-family: Arial, sans-serif;">ab[cde]fg</p>`,
+        stepFunction: setFontFamily("Verdana, sans-serif"),
+        contentAfter: `<p style="font-family: Arial, sans-serif;">ab<span style="font-family: Verdana, sans-serif;">[cde]</span>fg</p>`,
+    });
+});
+
+test("should change the font family inherited from an ancestor block", async () => {
+    await testEditor({
+        contentBefore: `<div style="font-family: Arial, sans-serif;"><p>ab[cde]fg</p></div>`,
+        stepFunction: setFontFamily("Verdana, sans-serif"),
+        contentAfter: `<div style="font-family: Arial, sans-serif;"><p>ab<span style="font-family: Verdana, sans-serif;">[cde]</span>fg</p></div>`,
+    });
+});
+
+test("should not add a span for the font family already inherited", async () => {
+    await testEditor({
+        contentBefore: `<p style="font-family: Arial, sans-serif;">ab[cde]fg</p>`,
+        stepFunction: setFontFamily("Arial, sans-serif"),
+        contentAfter: `<p style="font-family: Arial, sans-serif;">ab[cde]fg</p>`,
+    });
+});
+
 test("should remove the fontFamily from a few characters (set default)", async () => {
     await testEditor({
         contentBefore: `<p><span style="font-family: testFont;">ab[cde]fg</span></p>`,
