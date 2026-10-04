@@ -308,6 +308,16 @@ export default class OrderPaymentValidation {
             return false;
         }
 
+        if (!this.order.isToInvoice() && this.isInvoiceRequired()) {
+            this.pos.dialog.add(AlertDialog, {
+                title: _t("Invoice required"),
+                body: _t(
+                    "This order must be invoiced before validation because it mixes pay-later payment and cash-basis taxes."
+                ),
+            });
+            return false;
+        }
+
         if (
             (this.order.isToInvoice() || this.order.getShippingDate()) &&
             !this.order.getPartner()
@@ -418,5 +428,12 @@ export default class OrderPaymentValidation {
             }
             return false;
         }
+    }
+
+    isInvoiceRequired() {
+        const hasPayLater = this.order.payment_ids.some(
+            (p) => p.payment_method_id && p.payment_method_id.type === "pay_later"
+        );
+        return hasPayLater && this.order.hasCabaTax && this.pos.config.canInvoice;
     }
 }
