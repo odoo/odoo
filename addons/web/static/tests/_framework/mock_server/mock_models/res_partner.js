@@ -6,6 +6,7 @@ export class ResPartner extends ServerModel {
     _name = "res.partner";
 
     main_user_id = fields.Many2one({ compute: "_compute_main_user_id", relation: "res.users" });
+    company_id = fields.Many2one({ relation: "res.company" });
 
     _compute_main_user_id() {
         /** @type {import("mock_models").ResUsers} */
