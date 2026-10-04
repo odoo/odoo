@@ -521,18 +521,17 @@ import wUtils from '@website/js/utils';
         },
 
         check_error_fields: function (error_fields) {
+            if (Array.isArray(error_fields)) {
+                error_fields = Object.fromEntries(error_fields.map(name => [name, true]));
+            }
             var self = this;
             var form_valid = true;
             // Loop on all fields
             this.$el.find('.form-field, .s_website_form_field').each(function (k, field) { // !compatibility
                 var $field = $(field);
-                // FIXME that seems broken, "for" does not contain the field
-                // but this is used to retrieve errors sent from the server...
-                // need more investigation.
-                var field_name = $field.find('.col-form-label').attr('for');
-
                 // Validate inputs for this field
                 var inputs = $field.find('.s_website_form_input, .o_website_form_input').not('#editable_select'); // !compatibility
+                var field_name = inputs.attr('name');
                 var invalid_inputs = inputs.toArray().filter(function (input, k, inputs) {
                     // Special check for multiple required checkbox for same
                     // field as it seems checkValidity forces every required
