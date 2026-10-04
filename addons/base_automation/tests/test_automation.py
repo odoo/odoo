@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import fields, Command
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests import Form, tagged
 
@@ -277,3 +277,27 @@ class TestAutomation(TransactionCaseWithUserDemo):
             f.trg_date_range = 2
             self.assertEqual(f.trg_date_range_mode, 'after')
             self.assertEqual(f.trg_date_range, 2)
+
+    def test_search_time_based_automation_records_with_no_working_days(self):
+        """Test time-based automation with a calendar having no working days."""
+        calendar = self.env.ref('resource.resource_calendar_std')
+        date = fields.Datetime.to_datetime("2026-06-24 18:00:00")
+        self.env['resource.calendar.leaves'].create({
+            'name': "Long Leaves",
+            'calendar_id': calendar.id,
+            'date_from': fields.Datetime.to_datetime("2021-06-05 08:00:00"),
+            'date_to': date,
+        })
+
+        automation = self.env["base.automation"].create({
+            "name": "Test Automation",
+            "trigger": "on_time",
+            "model_id": self.env.ref("base.model_res_partner").id,
+            "trg_date_range": 1,
+            "trg_date_range_type": "day",
+            "trg_date_range_mode": "after",
+            "trg_date_id": self.env.ref("base.field_res_partner__write_date").id,
+            "trg_date_calendar_id": calendar.id,
+        })
+
+        self.assertFalse(automation._search_time_based_automation_records(until=date))
