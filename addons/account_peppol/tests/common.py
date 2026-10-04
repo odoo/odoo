@@ -52,7 +52,7 @@ class PeppolConnectorCommon(AccountTestInvoicingCommon):
             replacement_method,
         )
 
-    def _mock_connect(self, success=True, peppol_state='smp_registration', id_client='test_id_client'):
+    def _mock_connect(self, peppol_state='smp_registration', id_client='test_id_client', error_code=None, error_subject=None):
         def replacement_method(url, **kwargs):
             if peppol_state == 'rejected':
                 return {
@@ -60,14 +60,15 @@ class PeppolConnectorCommon(AccountTestInvoicingCommon):
                     'code': 201,
                     'message': 'Unable to register, please contact our support team at peppol.support@odoo.com.'
                 }
-            if success:
-                return {'id_client': id_client, 'refresh_token': 'test_refresh_token', 'peppol_state': peppol_state}
-            else:
+            if error_code or error_subject:
                 return {
                     'status_code': 401,
-                    'code': 208,
+                    'code': error_code or 208,
                     'message': 'The Authentication failed',
+                    'subject': error_subject
                 }
+            else:
+                return {'id_client': id_client, 'refresh_token': 'test_refresh_token', 'peppol_state': peppol_state}
 
         return (
             'https://peppol.test.odoo.com/api/peppol/2/connect',
