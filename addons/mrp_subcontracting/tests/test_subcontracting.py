@@ -1867,7 +1867,6 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
         receipt.move_line_ids[1].write({
             'quantity': 1,
             'expiration_date': '2025-08-10',
-            'removal_date': '2025-08-02',
             'lot_id': sn2.id,
         })
         expiry_action = receipt.button_validate()
