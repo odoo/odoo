@@ -117,7 +117,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         self.assertEqual(draft_purchase_qty, 0)
         self.assertEqual(pending_qty_in, 0)
         # Get back the different transfers.
-        receipt = po.picking_ids
+        receipt = po.order_line.move_ids.picking_id
 
         # Receives 4 products.
         receipt.button_validate()
