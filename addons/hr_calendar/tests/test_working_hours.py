@@ -506,6 +506,22 @@ class TestWorkingHoursWithVersion(TestHrContractCalendarCommon):
             expected_hours,
         )
 
+    def test_flexible_employee_without_hours_per_day(self):
+        self.env.user.company_id = self.company_A
+        self.contractD.resource_calendar_id = False
+        self.contractD.hours_per_week = 35
+        self.contractD.hours_per_day = 0
+        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+            [self.partnerD.id],
+            datetime(2023, 12, 24).isoformat(),
+            datetime(2023, 12, 30).isoformat(),
+        )
+        expected_hours = [
+            {'daysOfWeek': [i], 'startTime': '00:00', 'endTime': '23:59'}
+            for i in range(7)
+        ]
+        self.assertEqual(work_hours, expected_hours)
+
     def test_fully_flexible_employee_is_always_available(self):
         self.env.user.company_id = self.company_A
         self.contractD.resource_calendar_id = False

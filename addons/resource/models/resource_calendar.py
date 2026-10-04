@@ -332,7 +332,7 @@ class ResourceCalendar(models.Model):
                 calendar = calendar_data.get('resource_calendar_id')
                 hours_per_week = calendar_data.get('hours_per_week')
                 hours_per_day = calendar_data.get('hours_per_day')
-                is_fully_flexible = not calendar and not hours_per_week and not hours_per_day
+                is_fully_flexible = not calendar and not hours_per_day
                 is_flexible = not calendar and (hours_per_week or hours_per_day)
                 if not domain and resource and is_fully_flexible:
                     # A domain is only provided in extensions of `_work_intervals_batch` so when a domain is present,
