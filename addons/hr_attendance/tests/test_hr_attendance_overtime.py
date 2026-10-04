@@ -849,6 +849,30 @@ class TestHrAttendanceOvertime(HttpCase):
         })
         self.assertEqual(attendance.overtime_hours, 0, 'There should be no overtime for the fully flexible resource.')
 
+        # A 'non working days' rule is use to match every single day for fully flexible resource,
+        # because their working days were read from an empty schedule, so the whole attendance
+        # was turned into overtime.
+        self.env['hr.attendance.overtime.rule'].create({
+            'name': "Rule non working days",
+            'base_off': 'timing',
+            'timing_type': 'non_work_days',
+            'ruleset_id': self.ruleset.id,
+        })
+
+        # 3) on weekday
+        attendance.write({
+            'check_in': datetime(2026, 9, 1, 9, 0),
+            'check_out': datetime(2026, 9, 1, 18, 0),
+        })
+        self.assertEqual(attendance.overtime_hours, 0)
+
+        # 4) on weekend
+        attendance.write({
+            'check_in': datetime(2026, 9, 6, 9, 0),
+            'check_out': datetime(2026, 9, 6, 18, 0),
+        })
+        self.assertEqual(attendance.overtime_hours, 0)
+
     def test_overtime_flexible_non_consecutive_days(self):
         """ A flexible hours employee working exactly their weekly budget
         spread across non consecutive days must not generate overtime. """
