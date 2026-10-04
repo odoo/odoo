@@ -164,14 +164,20 @@ class StockLot(models.Model):
             else:
                 lot.partner_ids = False
 
+    def _get_available_quants(self):
+        quants = self.quant_ids.filtered(
+            lambda q: q.quantity > 0 and q.location_id.usage == "internal"
+        )
+        return quants
+
     @api.depends('quant_ids', 'quant_ids.quantity')
     def _compute_single_location(self):
         for lot in self:
-            quants = lot.quant_ids.filtered(lambda q: q.quantity > 0)
+            quants = lot._get_available_quants()
             lot.location_id = quants.location_id if len(quants.location_id) == 1 else False
 
     def _set_single_location(self):
-        quants = self.quant_ids.filtered(lambda q: q.quantity > 0)
+        quants = self._get_available_quants()
         if len(quants.location_id) == 1:
             unpack = len(quants.package_id.quant_ids) > 1
             quants.move_quants(location_dest_id=self.location_id, message=_("Lot/Serial Number Relocated"), unpack=unpack)
