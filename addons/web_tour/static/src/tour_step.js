@@ -33,15 +33,7 @@ export class TourStep {
         this.checkHasTour();
         const mode = this.tour.mode;
         const isSmall = utils.isSmall();
-        const standardKeyWords = [
-            "enterprise",
-            "community",
-            "mobile",
-            "desktop",
-            "auto",
-            "manual",
-            "robot",
-        ];
+        const standardKeyWords = ["enterprise", "community", "mobile", "desktop", "robot"];
         const isActiveArray = Array.isArray(this.isActive) ? this.isActive : [];
         if (isActiveArray.length === 0) {
             return true;
@@ -56,9 +48,6 @@ export class TourStep {
                 }
             }
         }
-        const checkMode =
-            isActiveArray.includes(mode) ||
-            (!isActiveArray.includes("manual") && !isActiveArray.includes("auto"));
         const checkRobot =
             !isActiveArray.includes("robot") || mode === "auto" || Boolean(this.tour.config?.robot);
         const edition =
@@ -72,7 +61,7 @@ export class TourStep {
             onlyForMobile ||
             onlyForDesktop ||
             (!isActiveArray.includes("mobile") && !isActiveArray.includes("desktop"));
-        return checkEdition && checkDevice && checkMode && checkRobot;
+        return checkEdition && checkDevice && checkRobot;
     }
 
     checkHasTour() {

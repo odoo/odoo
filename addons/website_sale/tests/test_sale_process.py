@@ -82,7 +82,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
     def test_01_admin_shop_tour(self):
         self.start_tour(
             self.env["website"].get_client_action_url("/shop"),
-            "website_sale.onboarding_tour",
+            "website_sale.onboarding_tour_test",
             login="admin",
         )
 

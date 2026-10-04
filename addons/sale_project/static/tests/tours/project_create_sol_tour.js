@@ -20,7 +20,6 @@ registry.category("web_tour.tours").add('project_create_sol_tour', {
         content: "Add the customer for this project",
         run: "click",
     }, {
-        isActive: ["auto"],
         trigger: ".ui-autocomplete > li > a:not(:has(i.oi))",
         content: "Select the customer in the autocomplete dropdown",
         run: "click",
