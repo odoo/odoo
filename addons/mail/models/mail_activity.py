@@ -204,18 +204,22 @@ class MailActivity(models.Model):
             records = self.env[model].browse(data["record_ids"])
             for record, activity in zip(records, data["activities"]):
                 try:
-                    phone = record.phone if "phone" in record else False
+                    phone = self._get_phone_number_from_record(record)
                     if not phone:
                         recipient = next(
                             iter(record._mail_get_partners(introspect_fields=True)[record.id]),
                             self.env["res.partner"],
                         )
-                        phone = recipient.phone
+                        phone = self._get_phone_number_from_record(recipient) if recipient else False
                 # cascade-deleted records might make this crash, be defensive
                 except MissingError:
                     phone = False
                 phone_numbers_by_activity[activity] = phone
         return phone_numbers_by_activity
+
+    def _get_phone_number_from_record(self, record):
+        """Hook for phone modules to find the phone number of ``record``."""
+        return record.phone if "phone" in record else False
 
     @api.model
     def _compute_state_from_date(self, date_deadline, tz=False):
