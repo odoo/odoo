@@ -66,6 +66,7 @@
                         <div class="d-flex align-items-center mb-3">
                             <field name="name" class="fw-bold fs-4"/>
                             <field name="printer_ip" invisible="1"/>
+                            <field name="printer_type" invisible="1"/>
                             <widget name="point_of_sale_test_epos" class="ms-auto"/>
                         </div>
                         <div class="row g-1">
@@ -96,6 +97,18 @@
                     </t>
                 </templates>
             </kanban>
+        </field>
+    </record>
+
+    <record id="view_pos_printer_search" model="ir.ui.view">
+        <field name="name">pos.printer.search</field>
+        <field name="model">pos.printer</field>
+        <field name="arch" type="xml">
+            <search string="Printers">
+                <field name="name"/>
+                <filter string="Receipt" name="receipt" domain="[('use_type', '=', 'receipt')]"/>
+                <filter string="Preparation" name="preparation" domain="[('use_type', '=', 'preparation')]"/>
+            </search>
         </field>
     </record>
 
