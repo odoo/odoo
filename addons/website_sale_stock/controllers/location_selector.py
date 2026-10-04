@@ -19,6 +19,8 @@ class LocationSelector(Delivery):
             delivery_method = self.env["delivery.carrier"].browse(delivery_method_id)
             delivery_method.check_access("read")
             delivery_method = delivery_method.sudo()
+            # Disable pickup locations company filtering
+            delivery_method = delivery_method.with_context(pickup_company=False)
             country = self.env["res.country"].browse(country_id)
         elif order_sudo := request.cart:  # From the frontend checkout
             delivery_method = order_sudo.carrier_id
