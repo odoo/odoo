@@ -1,5 +1,5 @@
 import { normalizeCSSColor } from "@web/core/utils/colors";
-import { removeClass } from "./dom";
+import { removeClass, unwrapContents } from "./dom";
 import { isBold, isItalic, isStrikeThrough, isUnderline } from "./dom_info";
 import { closestElement, closestPath, findNode } from "./dom_traversal";
 import { isBlock } from "./blocks";

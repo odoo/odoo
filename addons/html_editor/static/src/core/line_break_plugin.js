@@ -18,6 +18,11 @@ export class LineBreakPlugin extends Plugin {
     static shared = ["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"];
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),
+        is_node_editable_predicates: (node) => {
+            if (node.nodeName === "BR") {
+                return false;
+            }
+        },
     };
 
     insertLineBreak() {
