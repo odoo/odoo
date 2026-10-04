@@ -9,7 +9,15 @@ from stdnum import luhn
 from stdnum.exceptions import InvalidChecksum, InvalidFormat
 from stdnum.util import clean
 
+<<<<<<< f078719831a8fdd70ef179d57144e2a26dee2c7d
 from odoo import _, api, models, fields, tools, modules
+||||||| c2c11a3c5287f9683e68e9e6d77457f27ef7f4b4
+from odoo import api, models, fields, _, tools, modules
+from odoo.tools import LazyTranslate, hash_sign
+=======
+from odoo import api, models, fields, _, tools, modules
+from odoo.tools import LazyTranslate, frozendict, hash_sign
+>>>>>>> 9bad15045ebe0f9f2c3f0d6ecb00675e2a9c28f7
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import LazyTranslate, hash_sign
 from odoo.tools.business_data import split_vat
@@ -21,9 +29,9 @@ _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
 
 
-EU_EXTRA_VAT_CODES_INV = {v: k for k, v in EU_EXTRA_VAT_CODES.items()}
+EU_EXTRA_VAT_CODES_INV = frozendict({v: k for k, v in EU_EXTRA_VAT_CODES.items()})
 
-_ref_vat = {
+_ref_vat = frozendict({
     'al': 'ALJ91402501L',
     'ar': '20055361682',
     'at': 'ATU12345675',
@@ -86,7 +94,7 @@ _ref_vat = {
     've': 'V-12345678-1, V123456781, V-12.345.678-1',
     'xi': 'XI123456782',
     'sa': _lt('310175397400003 [Fifteen digits, first and last digits should be "3"]'),
-}
+})
 
 
 class ResPartner(models.Model):
