@@ -66,6 +66,64 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
     def test_website_form_nested_forms(self):
         self.start_tour('/my/account', 'website_form_nested_forms', login='admin')
 
+    def test_website_form_server_errors(self):
+        self.browser_js('/contactus', r"""
+            const publicWidget = odoo.loader.modules.get(
+                '@web/legacy/js/public/public_widget'
+            )[Symbol.for('default')];
+            const form = document.createElement('form');
+            form.innerHTML = `
+                <div class="s_website_form_field">
+                    <label class="col-form-label" for="generated-team-id">Team</label>
+                    <input id="generated-team-id" name="team_id" type="text"
+                           class="s_website_form_input form-control" value="invalid"/>
+                </div>
+                <div class="s_website_form_field">
+                    <input name="subject" class="s_website_form_input form-control" value="Test"/>
+                </div>
+                <div class="s_website_form_field">
+                    <label class="col-form-label" for="generated-choice-id">Choice</label>
+                    <input id="generated-choice-id" name="choice" type="radio" value="a"
+                           class="s_website_form_input form-check-input" checked="checked"/>
+                    <input name="choice" type="radio" value="b"
+                           class="s_website_form_input form-check-input"/>
+                </div>`;
+            document.body.appendChild(form);
+            const checkErrors = publicWidget.registry.s_website_form.prototype.check_error_fields.bind({
+                $el: $(form),
+            });
+            const assert = (condition, message) => {
+                if (!condition) {
+                    throw new Error(message);
+                }
+            };
+            const team = form.querySelector('[name="team_id"]');
+            const subject = form.querySelector('[name="subject"]');
+            assert(!checkErrors(['team_id']), 'Server error lists must invalidate the form');
+            assert(team.classList.contains('is-invalid'), 'Match the input name, not its generated ID');
+            assert(team.closest('.s_website_form_field').classList.contains('o_has_error'),
+                   'Highlight the rejected field');
+            assert(!subject.classList.contains('is-invalid'), 'Other fields must remain valid');
+            assert(checkErrors({}), 'The form must be valid after clearing server errors');
+            assert(!team.classList.contains('is-invalid'), 'Clear the previous highlighting');
+            assert(!checkErrors({subject: true}), 'Continue accepting error mappings');
+            assert(subject.classList.contains('is-invalid'), 'Fields without labels must be matched');
+            assert(!checkErrors(['choice']), 'Recognize server errors for radio groups');
+            assert([...form.querySelectorAll('[name="choice"]')].every(
+                input => input.classList.contains('is-invalid')
+            ), 'Highlight all inputs in the rejected group');
+            assert(!checkErrors({team_id: 'Invalid team'}), 'Continue accepting field error messages');
+            assert(document.querySelector('.popover-body').textContent === 'Invalid team',
+                   'Display the server error message');
+            $(team.closest('.s_website_form_field')).popover('dispose');
+            team.required = true;
+            team.value = '';
+            assert(!checkErrors({}), 'Browser validation must still reject required empty inputs');
+            assert(team.classList.contains('is-invalid'), 'Highlight browser-invalid inputs');
+            form.remove();
+            console.log('test successful');
+        """, ready="odoo.loader.modules.has('@website/snippets/s_website_form/000')")
+
 
 @tagged('post_install', '-at_install')
 class TestWebsiteForm(TransactionCase):
