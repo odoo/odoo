@@ -9,3 +9,5 @@ declaration.
 Signed,
 
 Cristian Zapata Cartagena 112672811+Levoisier@users.noreply.github.com https://github.com/Levoisier
+
+Additional Git author email: ing.cristian.cartagena@gmail.com
