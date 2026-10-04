@@ -36,7 +36,10 @@ export class FieldSelectorField extends Component {
     }
 
     get resModel() {
-        return this.props.record.data[this.props.model] || this.props.model;
+        if (this.props.record.fieldNames.includes(this.props.model)) {
+            return this.props.record.data[this.props.model];
+        }
+        return this.props.model;
     }
 
     get selectorProps() {
