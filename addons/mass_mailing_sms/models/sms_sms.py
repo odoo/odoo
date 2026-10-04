@@ -16,6 +16,11 @@ class SmsSms(models.Model):
     # See commit message for why this is useful.
     mailing_trace_ids = fields.One2many('mailing.trace', 'sms_id_int', string='Statistics')
 
+    def _lock_related_for_send(self):
+        # Override for deadlock mass mailing fix
+        super()._lock_related_for_send()
+        self.sms_tracker_id._lock_mailings()
+
     def _update_body_short_links(self):
         """ Override to tweak shortened URLs by adding statistics ids, allowing to
         find customer back once clicked. """
