@@ -38,32 +38,22 @@ const threadPatch = {
         );
     },
     /** @override */
-    applyScrollContextually(thread) {
-        if (thread.channel?.self_member_id && thread.scrollUnread) {
-            if (thread.firstUnreadMessage) {
-                const messageEl = this.messageRefs.get(thread.firstUnreadMessage.id)?.();
-                if (!messageEl) {
-                    return false;
-                }
-                const messageCenter =
-                    messageEl.offsetTop -
-                    this.scrollableRef().offsetHeight / 2 +
-                    messageEl.offsetHeight / 2;
-                this.setScroll(messageCenter);
-            } else {
-                const scrollTop =
-                    this.props.order === "asc"
-                        ? this.scrollableRef().scrollHeight - this.scrollableRef().clientHeight
-                        : 0;
-                this.setScroll(scrollTop);
-            }
+    get scrollTarget() {
+        if (this.channel?.self_member_id && this.props.thread.scrollUnread) {
+            const firstUnreadMessage = this.props.thread.firstUnreadMessage;
+            return firstUnreadMessage ? { key: firstUnreadMessage.id } : { end: true };
+        }
+        return super.scrollTarget;
+    },
+    /** @override */
+    onScrollTargetReached() {
+        super.onScrollTargetReached(...arguments);
+        const thread = this.props.thread;
+        if (this.channel?.self_member_id && thread.scrollUnread) {
             thread.scrollUnread = false;
             if (this.shouldMarkAsReadOnScroll(thread)) {
                 thread.markAsRead();
             }
-            return true;
-        } else {
-            return super.applyScrollContextually(...arguments);
         }
     },
     /** @override */

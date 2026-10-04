@@ -7,7 +7,8 @@ import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { mapSuggestionsToOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
 import { groupAttachments } from "@mail/utils/common/attachments";
-import { propComputed, useSelection, useVisible } from "@mail/utils/common/hooks";
+import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
+import { propComputed, useMaybePlugin, useSelection, useVisible } from "@mail/utils/common/hooks";
 import { generatePartnerMentionElement, trimEmptyBlocksAround } from "@mail/utils/common/format";
 import { getInnerHtml } from "@mail/utils/common/html";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
@@ -169,6 +170,7 @@ export class Composer extends Component {
         });
         this.rootRef = signal.ref(HTMLDivElement);
         this.notification = usePlugin(NotificationPlugin);
+        this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
         this.fullComposerRecoveryPopover = usePopover(FullComposerRecoveryPopover, {
             closeOnClickAway: false,
             closeOnEscape: false,

@@ -5,9 +5,10 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { Thread } from "@mail/core/common/thread";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { CountryFlag } from "@mail/core/common/country_flag";
+import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 import { RenameThreadPlugin } from "@mail/core/common/rename_thread_plugin";
 import { useThreadActions } from "@mail/core/common/thread_actions";
-import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
+import { useHover } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
 import {
@@ -55,8 +56,8 @@ export class ChatWindow extends Component {
             right: t.number().optional(),
         });
         useSubEnv({ inChatWindow: true });
-        this.messageHighlight = useMessageScrolling({ thread: () => this.channel?.thread });
         providePlugins([RenameThreadPlugin]);
+        providePlugins([MessageHighlightPlugin], { thread: () => this.channel?.thread });
         this.editingName = usePlugin(RenameThreadPlugin).editingName;
         this.state = proxy({
             actionsMenuOpened: false,
@@ -79,7 +80,6 @@ export class ChatWindow extends Component {
         this.isMobileOS = isMobileOS();
         this.selfGuestName = computed(() => this.store.self_guest?.name);
         this.channelDisplayName = computed(() => this.props.chatWindow.channel?.displayName);
-        useSubEnv({ messageHighlight: this.messageHighlight });
         useBackButton(() => this.close());
     }
 

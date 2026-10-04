@@ -7,14 +7,16 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { HIGHLIGHT_DURATION } from "@mail/core/common/message_highlight_plugin";
 import { UseForwardRefsToParent } from "@mail/utils/common/hooks";
-import { describe, test } from "@odoo/hoot";
-import { advanceTime, tick, waitFor } from "@odoo/hoot-dom";
+import { ScrollManager } from "@mail/utils/common/scroll";
+import { describe, expect, test } from "@odoo/hoot";
+import { advanceTime, animationFrame, tick, waitFor } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";
 import { router, routerBus } from "@web/core/browser/router";
 import { range } from "@web/core/utils/numbers";
-import { mountWebClient } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
+import { mountWebClient } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
 describe.current.tags("desktop");
@@ -75,6 +77,49 @@ test("can highlight message (slow ref registration)", async () => {
     await advanceTime(1000);
     resolveRefRegistration();
     await isInViewportOf(".o-mail-Message:contains(message 100)", ".o-mail-Thread");
+});
+
+test("no scroll to highlighted message rendered after the highlight is cleared", async () => {
+    disableAnimations();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    let middleMessageId;
+    for (let i = 0; i < 200; i++) {
+        const messageId = pyEnv["mail.message"].create({
+            body: `message ${i}`,
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+        if (i === 100) {
+            middleMessageId = messageId;
+        }
+    }
+    await pyEnv["discuss.channel"].set_message_pin(channelId, middleMessageId, true);
+    const { promise: refRegistered, resolve: resolveRefRegistration } = Promise.withResolvers();
+    patch(UseForwardRefsToParent.prototype, {
+        async registerRef(...args) {
+            await refRegistered;
+            return super.registerRef(...args);
+        },
+    });
+    patch(ScrollManager.prototype, {
+        revealItem() {
+            expect.step("reveal");
+            return super.revealItem(...arguments);
+        },
+    });
+    await start();
+    await openDiscuss(channelId);
+    await tick(); // Wait for the scroll to first unread to complete.
+    await isInViewportOf(".o-mail-Message:contains(message 199)", ".o-mail-Thread");
+    await click("a[data-oe-type='highlight']");
+    await waitFor(".o-mail-Message.o-highlighted:contains(message 100)");
+    await advanceTime(HIGHLIGHT_DURATION);
+    await contains(".o-mail-Message.o-highlighted", { count: 0 });
+    resolveRefRegistration();
+    await advanceTime(1000);
+    await animationFrame();
+    expect.verifySteps([]);
 });
 
 test("highlight scrolls to beginning of long message", async () => {

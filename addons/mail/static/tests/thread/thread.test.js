@@ -20,6 +20,7 @@ import { Store } from "@mail/../tests/mock_server/store";
 
 import { Message } from "@mail/core/common/message_model";
 import { Thread } from "@mail/core/common/thread";
+import { ScrollManager } from "@mail/utils/common/scroll";
 import { UseForwardRefsToParent } from "@mail/utils/common/hooks";
 
 import { describe, expect, test } from "@odoo/hoot";
@@ -82,9 +83,9 @@ test("messages still render when a reset strands mountedAndLoaded", async () => 
     // Regression for runbot 940032. `reset()` forces `mountedAndLoaded` false;
     // the mirror effect only re-syncs it to `isLoaded` on a patch. A reset
     // landing while `mountedAndLoaded` is already false (e.g. an out-of-render-
-    // cycle `applyScroll` from a late image load) used to schedule no patch,
+    // cycle scroll `apply` from a late image load) used to schedule no patch,
     // because `resetCount` was not reactive, stranding `mountedAndLoaded` at
-    // false so the empty phantom rendered no message. Here `applyScroll` is
+    // false so the empty phantom rendered no message. Here scroll `apply` is
     // neutralized so nothing else re-syncs, and the flag is forced false to
     // hold the strand deterministically.
     const pyEnv = await startServer();
@@ -103,7 +104,9 @@ test("messages still render when a reset strands mountedAndLoaded", async () => 
             super.setup();
             thread = this;
         },
-        applyScroll() {},
+    });
+    patch(ScrollManager.prototype, {
+        apply() {},
     });
     await start();
     await openDiscuss(channelId);
