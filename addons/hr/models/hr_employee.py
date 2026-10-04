@@ -1620,6 +1620,20 @@ class HrEmployee(models.Model):
         if not self.name:
             self.name = self.user_id.name
 
+    @api.onchange('work_email')
+    def _onchange_work_email_link_user(self):
+        # link the internal (light or regular) user of that email, unless it is already an employee of the company
+        emails = tools.mail.email_normalize_all(self.work_email)
+        if self.user_id or not emails:
+            return
+        user = self.env['res.users'].search([
+            ('share', '=', False),
+            ('company_ids', 'in', self.company_id.ids),
+            '|', ('login', '=', emails[0]), ('email_normalized', '=', emails[0]),
+        ], limit=1)
+        if user and not user.employee_ids.filtered(lambda employee: employee.company_id == self.company_id):
+            self.update(self._sync_user(user, bool(self.image_1920)))
+
     @api.onchange('company_id')
     def _onchange_timezone(self):
         if self.company_id and not self.tz:
