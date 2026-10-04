@@ -9,7 +9,7 @@ import re
 from werkzeug.exceptions import BadRequest
 
 from odoo import http, SUPERUSER_ID
-from odoo.addons.base.models.ir_qweb_fields import nl2br, nl2br_enclose
+from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.http import request
 from odoo.tools import BinaryBytes, plaintext2html
 from odoo.exceptions import AccessDenied, ValidationError, UserError
@@ -264,25 +264,34 @@ class WebsiteForm(http.Controller):
         ).create(values)
 
         if custom or meta:
-            _custom_label = "%s\n___________\n\n" % _("Other Information:")  # Title for custom fields
-            if model_name == 'mail.mail':
-                _custom_label = "%s\n___________\n\n" % _("This message has been posted on your website!")
             default_field = model_sudo.website_form_default_field_id
-            default_field_data = values.get(default_field.name, '')
-            custom_content = (default_field_data + "\n\n" if default_field_data else '') \
-                + (_custom_label + custom + "\n\n" if custom else '') \
-                + (self._meta_label + "\n________\n\n" + meta if meta else '')
-
             # If there is a default field configured for this model, use it.
             # If there isn't, put the custom data in a message instead
             if default_field.name:
+                custom_label = "%s\n___________\n\n" % _("Other Information:")
+                if model_name == 'mail.mail':
+                    custom_label = "%s\n___________\n\n" % _("This message has been posted on your website!")
+                default_field_data = values.get(default_field.name, '')
+                custom_content = (default_field_data + "\n\n" if default_field_data else '') \
+                    + (custom_label + custom + "\n\n" if custom else '') \
+                    + (self._meta_label + "\n________\n\n" + meta if meta else '')
+
                 if default_field.ttype == 'html' or model_name == 'mail.mail':
                     custom_content = nl2br(custom_content)
                 record.update({default_field.name: custom_content})
             elif hasattr(record, '_message_log'):
+                render_values = {
+                    'custom_label': _("Other Information:"),
+                    'custom': custom,
+                    'meta_label': self._meta_label,
+                    'meta': meta,
+                }
+                custom_content = request.env['ir.qweb']._render(
+                    'website.website_form_custom_log',
+                    render_values
+                )
                 record._message_log(
-                    body=nl2br_enclose(custom_content, 'p'),
-                    message_type='comment',
+                    body=custom_content,
                 )
 
         return record.id

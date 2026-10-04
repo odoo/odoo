@@ -37,9 +37,13 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         self.assertEqual(guru_applicant.partner_name, 'John Smith')
         self.assertEqual(guru_applicant.email_from, 'john@smith.com')
         self.assertEqual(guru_applicant.partner_phone, '118.218')
-        self.assertIn(
-            "Other Information:\n___________\n\nShort Introduction : ### [GURU] HR RECRUITMENT TEST DATA ###",
-            guru_applicant.message_ids.mapped(lambda m: html2plaintext(m.body))
+        self.assertTrue(
+            any(
+                'Other Information:' in body_text and
+                'Short Introduction : ### [GURU] HR RECRUITMENT TEST DATA ###' in body_text
+                for body_text in (html2plaintext(m.body) for m in guru_applicant.message_ids)
+            ),
+            "The Guru custom fields should be correctly logged in the chatter."
         )
         self.assertEqual(guru_applicant.job_id, job_guru)
 
@@ -47,9 +51,13 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         self.assertEqual(internship_applicant.partner_name, 'Jack Doe')
         self.assertEqual(internship_applicant.email_from, 'jack@doe.com')
         self.assertEqual(internship_applicant.partner_phone, '118.712')
-        self.assertIn(
-            "Other Information:\n___________\n\nShort Introduction : ### HR [INTERN] RECRUITMENT TEST DATA ###",
-            internship_applicant.message_ids.mapped(lambda m: html2plaintext(m.body))
+        self.assertTrue(
+            any(
+                'Other Information:' in body_text and
+                'Short Introduction : ### HR [INTERN] RECRUITMENT TEST DATA ###' in body_text
+                for body_text in (html2plaintext(m.body) for m in internship_applicant.message_ids)
+            ),
+            "The Internship custom fields should be correctly logged in the chatter."
         )
         self.assertEqual(internship_applicant.job_id, job_intern)
 
@@ -114,8 +122,10 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
         self.assertEqual(applicant.medium_id, self.env['utm.mixin']._utm_ref('utm.utm_medium_website'))
         self.assertTrue(
             any(
-                html2plaintext(message.body) == 'Other Information:\n___________\n\ndescription : This is a short introduction\nAdditional info : Test'
-                for message in applicant.message_ids
+                'Other Information:' in body_text and
+                'description : This is a short introduction' in body_text and
+                'Additional info : Test' in body_text
+                for body_text in (html2plaintext(message.body) for message in applicant.message_ids)
             ),
             "One message in the chatter should contain the extra information filled in by the applicant"
         )
