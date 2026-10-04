@@ -9,7 +9,7 @@
                     <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" invisible="state != 'draft'" />
                     <button name="action_pos_order_invoice" string="Invoice" type="object"
                             invisible="state not in ['paid', 'done'] or is_singly_invoiced"/>
-                    <button name="action_pos_order_receipt" string="Download Receipt" type="object" invisible="state not in ['paid', 'done']"/>
+                    <widget name="point_of_sale_print_receipt" invisible="state not in ['paid', 'done']"/>
                     <button name="refund" string="Return Products" type="object"
                         invisible="state == 'draft' or not has_refundable_lines"/>
                     <field name="state" widget="statusbar" invisible="state == 'cancel'" statusbar_visible="draft,paid,done"/>
