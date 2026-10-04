@@ -211,6 +211,24 @@ class ThemeWebsitePage(models.Model):
         return new_page
 
 
+class ThemeConfig(models.Model):
+    _name = 'theme.config'
+    _description = 'Theme Configuration'
+    _rec_name = 'key'
+    _order = 'sequence, id'
+
+    sequence = fields.Integer(default=10, required=True)
+    directive = fields.Selection(selection=[
+        ('enable_view', 'Enable View'),
+        ('disable_view', 'Disable View'),
+        ('enable_asset', 'Enable Asset'),
+        ('disable_asset', 'Disable Asset'),
+        ('set_page_option', 'Set Page Option')], required=True)
+    key = fields.Char(required=True)
+    # Only used by the 'set_page_option' directive.
+    value = fields.Json()
+
+
 class ThemeUtils(models.AbstractModel):
     _name = 'theme.utils'
     _description = 'Theme Utils'
@@ -270,12 +288,27 @@ class ThemeUtils(models.AbstractModel):
         'website.footer_no_copyright',
     ]
 
-    def _post_copy(self, mod):
-        # Call specific theme post copy
-        theme_post_copy = '_%s_post_copy' % mod.name
-        if hasattr(self, theme_post_copy):
-            _logger.info('Executing method %s' % theme_post_copy)
-            method = getattr(self, theme_post_copy)
+    def _apply_theme_config(self, mod):
+        # Apply the configuration declared by the theme in data files. This is
+        # the only way for a theme installed as a data module, which carries no
+        # Python, to configure the website it is applied on.
+        config_ids = self.env['ir.model.data'].sudo().search([
+            ('model', '=', 'theme.config'),
+            ('module', '=', mod.name),
+        ]).mapped('res_id')
+        for config in self.env['theme.config'].sudo().browse(config_ids).sorted():
+            if config.directive == 'set_page_option':
+                self.set_page_option(config.key, config.value)
+            else:
+                # The directive selection only holds names of the public
+                # methods below.
+                getattr(self, config.directive)(config.key)
+
+        # Call specific theme configuration
+        theme_apply_config = '_%s_apply_config' % mod.name
+        if hasattr(self, theme_apply_config):
+            _logger.info('Executing method %s', theme_apply_config)
+            method = getattr(self, theme_apply_config)
             return method(mod)
         return False
 
