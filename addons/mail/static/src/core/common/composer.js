@@ -385,6 +385,7 @@ export class Composer extends Component {
                     return;
                 }
                 setElementContent(this.editor.editable, composerHtml);
+                this.editor.processThrough("html_compatibility_processors", this.editor.editable);
                 this.setEditorCursorEnd();
                 this.editor.shared.history.commit();
             })

@@ -263,14 +263,11 @@ export class DomPlugin extends Plugin {
         if (typeof content === "string") {
             container.textContent = content;
         } else {
-            if (content.nodeType === Node.ELEMENT_NODE) {
-                this.normalize(content);
-            } else {
-                for (const child of children(content)) {
-                    this.normalize(child);
-                }
-            }
             container.replaceChildren(content);
+            this.processThrough("html_compatibility_processors", container);
+            for (const child of children(container)) {
+                this.normalize(child);
+            }
         }
 
         const block = closestBlock(selection.anchorNode);
