@@ -643,6 +643,23 @@ class DiscussChannel(models.Model):
                     channel_names=failing_channels.mapped("display_name"),
                 ),
             )
+        if (
+            {"name", "description", "image_128"} & set(vals)
+            and not self.env.is_admin()
+            and (
+                failing_channels := self.filtered(
+                    lambda channel: (
+                        channel.is_readonly and not channel.can_self_edit_readonly_channel
+                    ),
+                )
+            )
+        ):
+            raise UserError(
+                self.env._(
+                    "You do not have the rights to change the name, description or avatar as a regular member of these read-only channels: %(channels)s.",
+                    channels=failing_channels.mapped("display_name"),
+                ),
+            )
         if {"from_message_id", "parent_channel_id"} & set(vals):
             raise UserError(
                 _(

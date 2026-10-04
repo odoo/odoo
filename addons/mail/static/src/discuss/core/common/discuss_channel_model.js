@@ -144,7 +144,7 @@ export class DiscussChannel extends Record {
         return this.allowDescriptionTypes.includes(this.channel_type);
     }
     get allowEditDescription() {
-        return this.thread.is_editable;
+        return this.thread.is_editable && !this.isReadonlyForSelf;
     }
     get allowedToLeaveChannelTypes() {
         return ["channel", "group"];
@@ -162,7 +162,9 @@ export class DiscussChannel extends Record {
     }
     get isAllowedToRename() {
         return (
-            this.allowedToRenameChannelTypes.includes(this.channel_type) && this.thread.is_editable
+            this.allowedToRenameChannelTypes.includes(this.channel_type) &&
+            this.thread.is_editable &&
+            !this.isReadonlyForSelf
         );
     }
 
@@ -904,12 +906,14 @@ export class DiscussChannel extends Record {
             undos.push(() => this.openChatWindow(chatWindowOptions));
         }
     }
-    get canSelfInteractWithChannel() {
+    get selfHasAdminRights() {
         return (
-            !this.is_readonly ||
             ["owner", "admin"].includes(this.self_member_id?.channel_role) ||
             this.store.self_user?.is_admin
         );
+    }
+    get isReadonlyForSelf() {
+        return this.is_readonly && !this.selfHasAdminRights;
     }
 
     /** @returns {import("models").ChannelMember[]} */
@@ -917,7 +921,7 @@ export class DiscussChannel extends Record {
         return this.channel_member_ids.filter((member) => member.imStatusUI === undefined);
     }
     get composerHidden() {
-        return !this.canSelfInteractWithChannel;
+        return this.isReadonlyForSelf;
     }
     get composerHiddenText() {
         return _t("This channel is read-only.");
@@ -927,7 +931,7 @@ export class DiscussChannel extends Record {
         return (
             this.store.self_user?.share === false &&
             targetChannel.hasSubChannelFeature &&
-            targetChannel.canSelfInteractWithChannel
+            !targetChannel.isReadonlyForSelf
         );
     }
 }
