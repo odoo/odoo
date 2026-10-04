@@ -55,8 +55,9 @@ export class TodoFormController extends FormControllerWithHTMLExpander {
                     this.model.action.doAction(
                         "project_todo.project_task_action_convert_todo_to_task",
                         {
-                            props: {
-                                resId: this.model.root.resId,
+                            additionalContext: {
+                                active_id: this.model.root.resId,
+                                active_model: "project.task",
                             },
                         }
                     );

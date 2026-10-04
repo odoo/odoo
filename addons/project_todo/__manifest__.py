@@ -15,6 +15,7 @@
         'views/project_task_views.xml',
         'views/project_todo_menus.xml',
         'wizard/mail_activity_todo_create.xml',
+        'wizard/project_todo_convert_wizard.xml',
         'security/ir.access.csv',
     ],
     'application': True,
