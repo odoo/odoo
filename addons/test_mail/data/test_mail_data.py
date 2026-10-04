@@ -1407,6 +1407,27 @@ JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIg
 ------=_Part_4200734_24778174.1344608186754--
 """
 
+MAIL_ATTACHMENT_CHARSET_TEMPLATE = """\
+To: {to}
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+    boundary="----=_Part_4200734_24778174.1344608186754"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+
+------=_Part_4200734_24778174.1344608186754
+Content-Type: text/plain; charset={charset}; name="invoice.xml"
+Content-Disposition: attachment; filename="invoice.xml"
+Content-Transfer-Encoding: base64
+
+PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48cj5QZXLDrW9kbzwvcj4=
+
+------=_Part_4200734_24778174.1344608186754--
+"""
+
+XML_ATTACHMENT_PARSED = b'<?xml version="1.0" encoding="utf-8"?><r>Per\xc3\xadodo</r>'
+
 PDF_PARSED = b'''%PDF-1.1\n%\xc2\xa5\xc2\xb1\xc3\xab\n\n1 0 obj\n  << /Type /Catalog\n     /Pages 2 0 R\n  >>\nendobj\n\n2 0 obj\n  << /Type /Pages\n     /Kids [3 0 R]\n     /Count 1\n     /MediaBox [0 0 300 144]\n  >>\nendobj\n\n3 0 obj\n  <<  /Type /Page\n      /Parent 2 0 R\n      /Resources\n       << /Font\n           << /F1\n               << /Type /Font\n                  /Subtype /Type1\n                  /BaseFont /Times-Roman\n               >>\n           >>\n       >>\n      /Contents 4 0 R\n  >>\nendobj\n\n4 0 obj\n  << /Length 55 >>\nstream\n  BT\n    /F1 18 Tf\n    0 0 Td\n    (Hello World) Tj\n  ET\nendstream\nendobj\n\nxref\n0 5\n0000000000 65535 f \n0000000018 00000 n \n0000000077 00000 n \n0000000178 00000 n \n0000000457 00000 n \ntrailer\n  <<  /Root 1 0 R\n      /Size 5\n  >>\nstartxref\n565\n%%EOF\n'''
 
 THAI_EMAIL_WINDOWS_874 = '''\
