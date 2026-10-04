@@ -23,9 +23,9 @@
                         </t>
                     </button>
                     <button
-                            class="h-100 button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
+                            class="reprint-btn h-100 button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                             t-on-click="() => this.doReprintOrder.call()"
-                            t-elif="this.pos.ticketPrinter.hasPreparationPrinters and this.currentOrder.lastPrints.length"
+                            t-elif="this.pos.ticketPrinter.hasPreparationPrinters and this.currentOrder.prep_order_ids.length"
                             t-att-disabled="this.doReprintOrder.status === 'loading'">
                         <i class="oi" data-icon="restaurant" aria-hidden="true"></i>
                     </button>
