@@ -1,4 +1,5 @@
 import { models } from "@web/../tests/web_test_helpers";
+import { generateQRCodeDataUrl } from "@point_of_sale/utils";
 
 export class PosPaymentMethod extends models.ServerModel {
     _name = "pos.payment.method";
@@ -16,6 +17,10 @@ export class PosPaymentMethod extends models.ServerModel {
             "payment_method_type",
             "default_qr",
         ];
+    }
+
+    get_qr_code(amount, free_communication, structured_communication, currency, debtor_partner) {
+        return generateQRCodeDataUrl("http://localhost:4444");
     }
 
     _records = [
