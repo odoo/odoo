@@ -79,6 +79,7 @@ export const selectMenuProps = {
     disabled: t.boolean().optional(false),
     fillSearchWithSelection: t.boolean().optional(true),
     focusFirstItem: t.boolean().optional(true),
+    alternativeChoiceItemTemplate: t.string().optional(),
 };
 
 export class SelectMenu extends Component {

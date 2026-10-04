@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale_stock.locationSelector.component"
+        t-inherit="website.locationSelector.component">
+
+        <!-- Pass validateSelection function to mobile and desktop views -->
+        <xpath expr="//t[@t-component]" position="attributes">
+            <attribute name="validateSelection.bind">this.validateSelection</attribute>
+        </xpath>
+        <xpath expr="//MapContainer" position="attributes">
+            <attribute name="validateSelection.bind">this.validateSelection</attribute>
+        </xpath>
+
+        <!-- Add a validation button in mobile view -->
+        <xpath expr="." position="inside">
+            <t t-if="this.state.isSmall" t-set-slot="footer">
+                <div class="w-100 m-0 border-top p-3">
+                    <button
+                        type="button"
+                        id="submit_location_small"
+                        class="btn btn-primary w-100"
+                        t-att-disabled="!this.state.selectedLocationId"
+                        t-on-click="this.validateSelection"
+                    >
+                        Choose this location
+                    </button>
+                </div>
+            </t>
+        </xpath>
+
+        <!-- Show error message if the location list is empty -->
+        <xpath expr="//t[@t-component='this.mobileComponent']" position="after">
+            <t t-else="" t-call="website_sale_stock.locationSelector.listIsEmpty" />
+        </xpath>
+        <xpath expr="//LocationList" position="after">
+            <t t-else="" t-call="website_sale_stock.locationSelector.listIsEmpty" />
+        </xpath>
+
+        <!-- Show numerical indexes on locations -->
+        <xpath expr="//t[@t-component]" position="attributes">
+            <attribute name="showIndexes">true</attribute>
+            <attribute name="showPinIndicator">true</attribute>
+        </xpath>
+        <xpath expr="//LocationList" position="attributes">
+            <attribute name="showIndexes">true</attribute>
+            <attribute name="showPinIndicator">true</attribute>
+        </xpath>
+        <xpath expr="//MapContainer" position="attributes">
+            <attribute name="showIndexes">true</attribute>
+            <attribute name="showLocationNameOnMarkerHover">false</attribute>
+        </xpath>
+
+        <!-- Disable the "Press Control to Zoom" mechanics -->
+        <xpath expr="//MapContainer" position="attributes">
+            <attribute name="pressControlToZoom">false</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="website_sale_stock.locationSelector.listIsEmpty">
+        <p t-if="this.state.error" class="p-3 fw-bold">
+            No result
+        </p>
+        <div t-else="" class="position-absolute start-50 top-50 translate-middle">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">
+                    Loading...
+                </span>
+            </div>
+        </div>
+    </t>
+
+</templates>

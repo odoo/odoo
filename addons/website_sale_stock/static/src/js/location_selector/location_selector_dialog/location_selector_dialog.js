@@ -5,8 +5,8 @@ import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from '@web/core/utils/timing';
-import { LocationList } from '@website_sale_stock/js/location_selector/location_list/location_list';
-import { MapContainer } from '@website_sale_stock/js/location_selector/map_container/map_container';
+import { LocationList } from '@website/components/location_selector/location_list/location_list';
+import { MapContainer } from '@website/components/location_selector/map_container/map_container';
 
 export const locationSelectorDialogProps = {
     isFrontend: t.boolean().optional(),
@@ -16,6 +16,15 @@ export const locationSelectorDialogProps = {
     selectedLocationId: t.string().optional(),
     save: t.function(),
     close: t.function(), // This is the close from the env of the Dialog Component
+
+    // The following props are never set from `website_sale_stock`. They
+    // always keep their default values and are required to adapt the
+    // `LocationSelector` (`website`) to `website_sale_stock` module.
+    showDetailsTooltip: t.boolean().optional(false),
+    showDetailsTextArea: t.boolean().optional(true),
+    showSearchbar: t.boolean().optional(true),
+    showSidebar: t.boolean().optional(true),
+    mapSearchbarPlaceholder: t.string().optional(() => _t("Zip or City")),
 };
 
 export class LocationSelectorDialog extends Component {
@@ -29,7 +38,7 @@ export class LocationSelectorDialog extends Component {
             locations: [],
             error: false,
             viewMode: 'list',
-            zipCode: this.props.zipCode,
+            searchQuery: this.props.zipCode,
             // Some APIs like FedEx use strings to identify locations.
             selectedLocationId: String(this.props.selectedLocationId),
             isSmall: this.uiService.isSmall,
@@ -49,15 +58,15 @@ export class LocationSelectorDialog extends Component {
         });
         onWillUnmount(() => browser.removeEventListener('resize', this.debouncedOnResize));
 
-        // Fetch new locations when the zip code is updated.
-        let zipCode;
+        // Fetch new locations when the search query is updated.
+        let searchQuery;
         onMounted(() => {
-            zipCode = this.state.zipCode;
+            searchQuery = this.state.searchQuery;
             this._loadLocations();
         });
         onPatched(() => {
-            if (this.state.zipCode !== zipCode) {
-                zipCode = this.state.zipCode;
+            if (this.state.searchQuery !== searchQuery) {
+                searchQuery = this.state.searchQuery;
                 this.state.locations = [];
                 this._loadLocations();
             }
@@ -73,7 +82,7 @@ export class LocationSelectorDialog extends Component {
      * @return {Object} The result values.
      */
     _getLocationsParams() {
-        const params = { zip_code: this.state.zipCode };
+        const params = { zip_code: this.state.searchQuery };
         if (!this.props.isFrontend) { // The delivery method is fetched from the order for frontend
             params.delivery_method_id = this.props.deliveryMethodId;
             params.country_id = this.props.countryId;

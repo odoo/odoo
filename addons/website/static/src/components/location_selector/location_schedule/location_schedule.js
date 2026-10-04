@@ -1,10 +1,10 @@
-import { Component, t, useProps } from '@odoo/owl';
-import { _t } from '@web/core/l10n/translation';
+import { Component, t, useProps } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 export class LocationSchedule extends Component {
-    static template = 'website_sale_stock.locationSelector.schedule';
+    static template = "website.locationSelector.schedule";
     props = useProps({
-        openingHours: t.record(t.array(t.string()).optional()),
+        openingHours: t.record(t.array(t.string()).optional()).optional({}),
         wrapClass: t.string().optional(),
     });
 
