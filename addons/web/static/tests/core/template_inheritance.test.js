@@ -75,13 +75,13 @@ test("single operation: replace (debug mode)", async () => {
     }
 });
 
-test("single operation: replace root (and use a $0)", async () => {
+test("single operation: replace root (and use a odoo-inherit-replace)", async () => {
     const toTest = [
         {
             arch: `<t t-name="web.A"> <div>I was petrified</div> </t>`,
             operations: `
                 <t>
-                    <xpath expr="." position="replace"><div>At first I was afraid</div>$0</xpath>
+                    <xpath expr="." position="replace"><div>At first I was afraid</div><odoo-inherit-replace/></xpath>
                 </t>`,
             result: `<div t-translation-context="from_op" t-name="web.A">At first I was afraid</div>`,
             // in outer mode with no parent only first child of operation is kept
@@ -90,7 +90,7 @@ test("single operation: replace root (and use a $0)", async () => {
             arch: `<t t-name="web.A"> <div>I was petrified</div> </t>`,
             operations: `
                 <t>
-                    <xpath expr="." position="replace"> <div>$0</div><div>At first I was afraid</div> </xpath>
+                    <xpath expr="." position="replace"> <div><odoo-inherit-replace/></div><div>At first I was afraid</div> </xpath>
                 </t>`,
             result: `<div t-translation-context="from_op" t-name="web.A"><t t-name="web.A" t-translation-context="from_target"> <div>I was petrified</div> </t></div>`,
         },
@@ -98,7 +98,7 @@ test("single operation: replace root (and use a $0)", async () => {
             arch: `<t t-name="web.A"> <div>I was petrified</div> </t>`,
             operations: `
                 <t>
-                    <xpath expr="." position="replace"> <t><t t-if="cond"><div>At first I was afraid</div></t><t t-else="">$0</t></t> </xpath>
+                    <xpath expr="." position="replace"> <t><t t-if="cond"><div>At first I was afraid</div></t><t t-else=""><odoo-inherit-replace/></t></t> </xpath>
                 </t>`,
             result: `<t t-translation-context="from_op" t-name="web.A"><t t-if="cond"><div>At first I was afraid</div></t><t t-else=""><t t-name="web.A" t-translation-context="from_target"> <div>I was petrified</div> </t></t></t>`,
         },
