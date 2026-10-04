@@ -51,6 +51,7 @@ import freezegun
 import requests
 from lxml import etree, html
 from passlib.context import CryptContext
+from psycopg2.extensions import TRANSACTION_STATUS_INERROR
 from requests import PreparedRequest, Session
 
 import odoo.addons.base
@@ -159,7 +160,10 @@ def release_test_lock():
     finally:
         if not _registry_test_lock.acquire(timeout=60):
             tag = odoo.modules.module.current_test.canonical_tag
-            exit(f'Could not re-acquire the registry lock during {tag}, exiting...')
+            _logger.error("Could not re-acquire the registry lock during %s, waiting for it", tag)
+            odoo.tools.misc.dumpstacks(log_level=logging.ERROR)
+            _registry_test_lock.acquire()
+            raise RuntimeError(f'Could not re-acquire the registry lock in time during {tag}')
 
 
 def standalone(*tags):
@@ -1104,6 +1108,9 @@ class TransactionCase(BaseCase):
 
     def setUp(self):
         super().setUp()
+
+        if self.cr._cnx.info.transaction_status == TRANSACTION_STATUS_INERROR:
+            self.skipTest("transaction aborted by a previous test of the class")
 
         def _check_registry_lock():
             if _registry_test_lock.count == 0:
