@@ -1,0 +1,1073 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Declaración Jurada del ITBMS - Formulario 430 (DGI Panamá).
+    Basado en el "Instructivo para llenar la Declaración Jurada del I.T.B.M.S. V6" (dgi.mef.gob.pa).
+
+    Limitaciones conocidas (casillas marcadas como "manual" abajo): Odoo no puede derivar
+    automáticamente de las facturas la clasificación de una compra como destinada a
+    operaciones mixtas, a exportación o a operaciones exentas (casillas 26-37), ni el
+    transporte aéreo de pasajeros o el hospedaje como sub-categorías del 7%/10% (casillas
+    12 y 14, que comparten tarifa con las casillas 11 y 13 pero corresponden a un hecho
+    gravado distinto), ni el crédito de retención del Anexo 95 (casilla 52). Esas casillas
+    quedan como valores editables ("external") que el contribuyente completa con sus propios
+    registros, igual que haría en una hoja de cálculo. Las devoluciones y descuentos
+    (casillas 20/201/402/403) se dejan también como manuales: al usar la misma etiqueta
+    fiscal en las líneas de factura y de nota de crédito, las notas de crédito ya se netean
+    directamente dentro de las casillas 11-15/22-24, así que estas casillas de devoluciones
+    específicas no son necesarias para que el resultado final sea correcto, solo para el
+    desglose visual que pide el formulario.
+-->
+<odoo auto_sequence="1">
+    <record id="l10n_pa_tax_report" model="account.report">
+        <field name="name">ITBMS Declaration (Form 430)</field>
+        <field name="name@es_419">Declaración de ITBMS (Formulario 430)</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.pa"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_pa_tax_report_code" model="account.report.column">
+                <field name="name">Code</field>
+                <field name="name@es_419">Casilla</field>
+                <field name="expression_label">code</field>
+                <field name="figure_type">string</field>
+            </record>
+            <record id="l10n_pa_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@es_419">Monto</field>
+                <field name="expression_label">balance</field>
+                <field name="figure_type">monetary</field>
+            </record>
+        </field>
+        <field name="line_ids">
+
+            <!-- ================= DÉBITO FISCAL ================= -->
+            <record id="l10n_pa_tax_report_debito" model="account.report.line">
+                <field name="name">Operations and Services of the Period and Tax Debit</field>
+                <field name="name@es_419">Operaciones y Prestaciones de Servicios del Período y Débito Fiscal</field>
+                <field name="code">L10N_PA_DEBITO</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="children_ids">
+
+                    <record id="l10n_pa_tax_report_11" model="account.report.line">
+                        <field name="name">11. Taxed operations 7% (sales and services)</field>
+                        <field name="name@es_419">11. Operaciones gravadas del periodo 7% (ventas y prestación de servicios)</field>
+                        <field name="code">L11</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_11_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">11</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_11_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L11</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pa_tax_report_111" model="account.report.line">
+                        <field name="name">111. Tax caused 7% (sales and services)</field>
+                        <field name="name@es_419">111. Impuesto causado 7% (ventas y prestación de servicios)</field>
+                        <field name="code">L111</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_111_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">111</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_111_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L111</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_12" model="account.report.line">
+                        <field name="name">12. Taxed operations 7% (local and international air passenger transport) - manual entry</field>
+                        <field name="name@es_419">12. Operaciones gravadas del periodo 7% (transporte aéreo de pasajeros local e internacional) - entrada manual</field>
+                        <field name="code">L12</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_12_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">12</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_12_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pa_tax_report_121" model="account.report.line">
+                        <field name="name">121. Tax caused 7% (air passenger transport) - manual entry</field>
+                        <field name="name@es_419">121. Impuesto causado 7% (transporte aéreo de pasajeros) - entrada manual</field>
+                        <field name="code">L121</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_121_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">121</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_121_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_13" model="account.report.line">
+                        <field name="name">13. Taxed operations 10% (alcoholic beverages)</field>
+                        <field name="name@es_419">13. Operaciones gravadas del periodo 10% (bebidas alcohólicas)</field>
+                        <field name="code">L13</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_13_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">13</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_13_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L13</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pa_tax_report_131" model="account.report.line">
+                        <field name="name">131. Tax caused 10% (alcoholic beverages)</field>
+                        <field name="name@es_419">131. Impuesto causado 10% (bebidas alcohólicas)</field>
+                        <field name="code">L131</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_131_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">131</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_131_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L131</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_14" model="account.report.line">
+                        <field name="name">14. Taxed services 10% (lodging) - manual entry</field>
+                        <field name="name@es_419">14. Servicios gravados del periodo 10% (hospedaje o alojamiento público) - entrada manual</field>
+                        <field name="code">L14</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_14_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">14</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_14_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pa_tax_report_141" model="account.report.line">
+                        <field name="name">141. Tax caused 10% (lodging) - manual entry</field>
+                        <field name="name@es_419">141. Impuesto causado 10% (hospedaje) - entrada manual</field>
+                        <field name="code">L141</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_141_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">141</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_141_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_15" model="account.report.line">
+                        <field name="name">15. Taxed operations 15% (cigarettes)</field>
+                        <field name="name@es_419">15. Operaciones gravadas del periodo 15% (cigarrillos)</field>
+                        <field name="code">L15</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_15_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">15</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_15_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L15</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pa_tax_report_151" model="account.report.line">
+                        <field name="name">151. Tax caused 15% (cigarettes)</field>
+                        <field name="name@es_419">151. Impuesto causado 15% (cigarrillos)</field>
+                        <field name="code">L151</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_151_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">151</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_151_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L151</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_16" model="account.report.line">
+                        <field name="name">16. Export and re-export operations of taxed and non-taxed goods (sales)</field>
+                        <field name="name@es_419">16. Operaciones de exportación y reexportación de bienes gravados y no gravados (ventas)</field>
+                        <field name="code">L16</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_16_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">16</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_16_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L16</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_17" model="account.report.line">
+                        <field name="name">17. Other exempt operations (sales and services)</field>
+                        <field name="name@es_419">17. Otras operaciones exentas (ventas y prestación de servicios)</field>
+                        <field name="code">L17</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_17_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">17</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_17_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L17</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_18" model="account.report.line">
+                        <field name="name">18. Non-taxable operations (sales and services)</field>
+                        <field name="name@es_419">18. Operaciones no gravadas (ventas y prestación de servicio)</field>
+                        <field name="code">L18</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_18_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">18</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_18_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L18</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_19" model="account.report.line">
+                        <field name="name">19. Total operations of the period</field>
+                        <field name="name@es_419">19. Total de Operaciones del Período</field>
+                        <field name="code">L19</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_19_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">19</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_19_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L11.balance + L12.balance + L13.balance + L14.balance + L15.balance + L16.balance + L17.balance + L18.balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_191" model="account.report.line">
+                        <field name="name">191. Tax Caused (Tax Debit subtotal)</field>
+                        <field name="name@es_419">191. Impuesto Causado (subtotal del Débito Fiscal)</field>
+                        <field name="code">L191</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_191_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">191</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_191_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L111.balance + L121.balance + L131.balance + L141.balance + L151.balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_20" model="account.report.line">
+                        <field name="name">20. Returns and discounts on taxed sales (amount) - manual entry</field>
+                        <field name="name@es_419">20. Devoluciones y descuentos en ventas gravadas (monto) - entrada manual</field>
+                        <field name="code">L20</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_20_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">20</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_20_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pa_tax_report_201" model="account.report.line">
+                        <field name="name">201. Returns and discounts on taxed sales (tax) - manual entry</field>
+                        <field name="name@es_419">201. Devoluciones y descuentos en ventas gravadas (impuesto) - entrada manual</field>
+                        <field name="code">L201</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_201_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">201</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_201_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_211" model="account.report.line">
+                        <field name="name">211. Total Tax Debit</field>
+                        <field name="name@es_419">211. Total Débito Fiscal</field>
+                        <field name="code">L211</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_211_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">211</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_211_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L191.balance + L201.balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                </field>
+            </record>
+
+            <!-- ================= CRÉDITO FISCAL ================= -->
+            <record id="l10n_pa_tax_report_credito" model="account.report.line">
+                <field name="name">Purchases, Services, Imports and ITBMS Charged</field>
+                <field name="name@es_419">Compras o Adquisiciones, Prestaciones de Servicios, Importaciones e ITBMS Cargado</field>
+                <field name="code">L10N_PA_CREDITO</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="children_ids">
+
+                    <record id="l10n_pa_tax_report_222" model="account.report.line">
+                        <field name="name">222. Purchases/services/imports 7% directly attributable to taxed operations (amount)</field>
+                        <field name="name@es_419">222. Compras/servicios/importaciones 7% imputables directamente a operaciones gravadas (monto)</field>
+                        <field name="code">L222</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_222_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">222</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_222_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L22</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pa_tax_report_223" model="account.report.line">
+                        <field name="name">223. ITBMS charged 7% directly attributable to taxed operations</field>
+                        <field name="name@es_419">223. ITBMS cargado 7% imputable directamente a operaciones gravadas</field>
+                        <field name="code">L223</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_223_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">223</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_223_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L221</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_232" model="account.report.line">
+                        <field name="name">232. Purchases/services/imports 10% directly attributable to taxed operations (amount)</field>
+                        <field name="name@es_419">232. Compras/servicios/importaciones 10% imputables directamente a operaciones gravadas (monto)</field>
+                        <field name="code">L232</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_232_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">232</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_232_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L23</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pa_tax_report_233" model="account.report.line">
+                        <field name="name">233. ITBMS charged 10% directly attributable to taxed operations</field>
+                        <field name="name@es_419">233. ITBMS cargado 10% imputable directamente a operaciones gravadas</field>
+                        <field name="code">L233</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_233_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">233</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_233_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L231</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_242" model="account.report.line">
+                        <field name="name">242. Purchases/services/imports 15% directly attributable to taxed operations (amount)</field>
+                        <field name="name@es_419">242. Compras/servicios/importaciones 15% imputables directamente a operaciones gravadas (monto)</field>
+                        <field name="code">L242</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_242_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">242</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_242_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L24</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pa_tax_report_243" model="account.report.line">
+                        <field name="name">243. ITBMS charged 15% directly attributable to taxed operations</field>
+                        <field name="name@es_419">243. ITBMS cargado 15% imputable directamente a operaciones gravadas</field>
+                        <field name="code">L243</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_243_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">243</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_243_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">L241</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_253" model="account.report.line">
+                        <field name="name">25. Total ITBMS charged, directly attributable to taxed operations</field>
+                        <field name="name@es_419">25. Totaliza en la casilla 253 el ITBMS cargado (directo a operaciones gravadas)</field>
+                        <field name="code">L253</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_253_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">253</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_253_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L223.balance + L233.balance + L243.balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_mixtas" model="account.report.line">
+                        <field name="name">26-29. Purchases/imports attributable to mixed operations (taxed + exempt, undistinguishable) - manual entry</field>
+                        <field name="name@es_419">26 a 29. Compras/importaciones imputables a operaciones mixtas (gravadas y exentas, sin poder discriminar) - entrada manual</field>
+                        <field name="code">L293</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_mixtas_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">293</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_mixtas_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_exportacion" model="account.report.line">
+                        <field name="name">30-33. Purchases/imports attributable to export/re-export operations - manual entry</field>
+                        <field name="name@es_419">30 a 33. Compras/importaciones destinadas a operaciones de exportación y reexportación - entrada manual</field>
+                        <field name="code">L333</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_exportacion_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">333</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_exportacion_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_exentas_compras" model="account.report.line">
+                        <field name="name">34-37. Purchases/imports attributable to exempt operations - manual entry</field>
+                        <field name="name@es_419">34 a 37. Compras/importaciones destinadas directamente a operaciones exentas - entrada manual</field>
+                        <field name="code">L373</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_exentas_compras_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">373</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_exentas_compras_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_402" model="account.report.line">
+                        <field name="name">402. Returns and discounts on taxed purchases (amount) - manual entry</field>
+                        <field name="name@es_419">402. Devoluciones y descuentos en compras gravadas (monto) - entrada manual</field>
+                        <field name="code">L402</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_402_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">402</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_402_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_pa_tax_report_403" model="account.report.line">
+                        <field name="name">403. Returns and discounts on taxed purchases (ITBMS caused) - manual entry</field>
+                        <field name="name@es_419">403. Devoluciones y descuentos en compras gravadas (ITBMS causado) - entrada manual</field>
+                        <field name="code">L403</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_403_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">403</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_403_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+
+                </field>
+            </record>
+
+            <!-- ================= DETERMINACIÓN DEL CRÉDITO FISCAL ================= -->
+            <record id="l10n_pa_tax_report_determinacion" model="account.report.line">
+                <field name="name">Determination of the Tax Credit</field>
+                <field name="name@es_419">Determinación del Crédito Fiscal</field>
+                <field name="code">L10N_PA_DETERMINACION</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="children_ids">
+
+                    <record id="l10n_pa_tax_report_41" model="account.report.line">
+                        <field name="name">41. Non-deductible Tax Credit (373 + (293 x (17+18) / 19))</field>
+                        <field name="name@es_419">41. Crédito Fiscal No Deducible (373 + (293 x (17+18) / 19))</field>
+                        <field name="code">L41</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_41_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">41</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_41_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L373.balance + (L293.balance * (L17.balance + L18.balance) / L19.balance)</field>
+                                <field name="subformula">ignore_zero_division</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_42" model="account.report.line">
+                        <field name="name">42. Direct tax credit for taxed operations (= 253)</field>
+                        <field name="name@es_419">42. Crédito fiscal directo a operaciones gravadas (= 253)</field>
+                        <field name="code">L42</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_42_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">42</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_42_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L253.balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_43" model="account.report.line">
+                        <field name="name">43. Proportional tax credit for taxed operations (293 x ((11+12+13+14+15) / 19))</field>
+                        <field name="name@es_419">43. Crédito fiscal proporcional a operaciones gravadas (293 x ((11+12+13+14+15) / 19))</field>
+                        <field name="code">L43</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_43_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">43</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_43_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L293.balance * ((L11.balance + L12.balance + L13.balance + L14.balance + L15.balance) / L19.balance)</field>
+                                <field name="subformula">ignore_zero_division</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_44" model="account.report.line">
+                        <field name="name">44. Tax credit for returns and discounts on taxed sales (= 403)</field>
+                        <field name="name@es_419">44. Crédito fiscal por devoluciones y descuentos en ventas gravadas (= 403)</field>
+                        <field name="code">L44</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_44_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">44</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_44_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L403.balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_45" model="account.report.line">
+                        <field name="name">45. Deductible Tax Credit for Taxed Operations of the Period (42 + 43 + 44)</field>
+                        <field name="name@es_419">45. Crédito Fiscal Deducible por Operaciones Gravadas del Período (42 + 43 + 44)</field>
+                        <field name="code">L45</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_45_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">45</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_45_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L42.balance + L43.balance + L44.balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_46" model="account.report.line">
+                        <field name="name">46. Direct tax credit for export operations (= 333)</field>
+                        <field name="name@es_419">46. Crédito Fiscal Directo por operaciones de Exportación (= 333)</field>
+                        <field name="code">L46</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_46_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">46</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_46_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L333.balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_47" model="account.report.line">
+                        <field name="name">47. Proportional tax credit for export operations (293 x (16 / 19))</field>
+                        <field name="name@es_419">47. Crédito Fiscal Proporcional por operaciones de exportación (293 x (16 / 19))</field>
+                        <field name="code">L47</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_47_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">47</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_47_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L293.balance * (L16.balance / L19.balance)</field>
+                                <field name="subformula">ignore_zero_division</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_48" model="account.report.line">
+                        <field name="name">48. Deductible Tax Credit for Foreign Operations, subject to CPC (46 + 47)</field>
+                        <field name="name@es_419">48. Crédito Fiscal deducible por Operaciones del Exterior, Susceptible de CPC (46 + 47)</field>
+                        <field name="code">L48</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_48_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">48</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_48_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L46.balance + L47.balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                </field>
+            </record>
+
+            <!-- ================= LIQUIDACIÓN DEL IMPUESTO Y SALDO DEL PERIODO ================= -->
+            <record id="l10n_pa_tax_report_liquidacion" model="account.report.line">
+                <field name="name">Settlement of the Tax and Balance of the Period</field>
+                <field name="name@es_419">Liquidación del Impuesto y el Saldo del Período</field>
+                <field name="code">L10N_PA_LIQUIDACION</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="children_ids">
+
+                    <record id="l10n_pa_tax_report_49" model="account.report.line">
+                        <field name="name">49. Tax Debit of the Period (= 211)</field>
+                        <field name="name@es_419">49. Débito Fiscal del Período (= 211)</field>
+                        <field name="code">L49</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_49_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">49</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_49_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L211.balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_50" model="account.report.line">
+                        <field name="name">50. Deductible Tax Credit for Taxed Operations of the Period (= 45)</field>
+                        <field name="name@es_419">50. Crédito Fiscal deducible por Operaciones Gravadas del Período (= 45)</field>
+                        <field name="code">L50</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_50_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">50</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_50_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L45.balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_51" model="account.report.line">
+                        <field name="name">51. Taxpayer's balance in favor from the previous period (auto-filled from box 54 of the previous return)</field>
+                        <field name="name@es_419">51. Saldo a favor del contribuyente en el período anterior (se llena solo desde la casilla 54 de la declaración anterior)</field>
+                        <field name="code">L51</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_51_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">51</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_51_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L51._applied_carryover_balance</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_51_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_return_period</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_52" model="account.report.line">
+                        <field name="name">52. ITBMS Withholding Credit (from the withholding annex - Anexo 95) - manual entry</field>
+                        <field name="name@es_419">52. Crédito de Retención del ITBMS (del Anexo 95 de Créditos de Retención) - entrada manual</field>
+                        <field name="code">L52</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_52_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">52</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_52_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_53" model="account.report.line">
+                        <field name="name">53. Deductible Tax Credit for Foreign Operations, if used against the tax instead of requesting CPC (= 48)</field>
+                        <field name="name@es_419">53. Crédito Fiscal deducible por Operaciones al Exterior, si se opta por usarlo en la liquidación en vez del CPC (= 48)</field>
+                        <field name="code">L53</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_53_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">53</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_53_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L48.balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_54" model="account.report.line">
+                        <field name="name">54. Taxpayer's balance in favor to be carried to the following fiscal period ((50+51+52+53) - 49, if positive)</field>
+                        <field name="name@es_419">54. Saldo a favor del contribuyente que se trasladará al siguiente período fiscal ((50+51+52+53) - 49, si es positivo)</field>
+                        <field name="code">L54</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_54_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">54</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_54_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L50.balance + L51.balance + L52.balance + L53.balance - L49.balance</field>
+                                <field name="subformula">if_above(PAB(0))</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_54_carryover" model="account.report.expression">
+                                <field name="label">_carryover_balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L54.balance</field>
+                                <field name="carryover_target">L51._applied_carryover_balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_55" model="account.report.line">
+                        <field name="name">55. Tax payable (49 - (50+51+52+53), if positive)</field>
+                        <field name="name@es_419">55. Impuesto a pagar (49 - (50+51+52+53), si es positivo)</field>
+                        <field name="code">L55</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_55_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">55</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_55_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L49.balance - (L50.balance + L51.balance + L52.balance + L53.balance)</field>
+                                <field name="subformula">if_above(PAB(0))</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_56" model="account.report.line">
+                        <field name="name">56. Surcharge (10% of box 55 if filed more than 15 days late) - manual entry</field>
+                        <field name="name@es_419">56. Recargo (10% de la casilla 55 si se presenta después de 15 días) - entrada manual</field>
+                        <field name="code">L56</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_56_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">56</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_56_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_56b" model="account.report.line">
+                        <field name="name">Fine (for late filing with a balance in favor) - manual entry</field>
+                        <field name="name@es_419">Multa (por presentación fuera de término con saldo a favor) - entrada manual</field>
+                        <field name="code">L56B</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_56b_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">text</field>
+                                <field name="formula">Multa</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_56b_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_57int" model="account.report.line">
+                        <field name="name">Interest (on box 55 if paid more than 15 days late) - manual entry</field>
+                        <field name="name@es_419">Interés (sobre la casilla 55 si se paga después de 15 días) - entrada manual</field>
+                        <field name="code">L57INT</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_57int_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">text</field>
+                                <field name="formula">Interés</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_57int_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_57" model="account.report.line">
+                        <field name="name">57. Total payable (55 + surcharge + fine + interest)</field>
+                        <field name="name@es_419">57. Total a pagar (55 + recargo + multa + interés)</field>
+                        <field name="code">L57</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_57_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">57</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_57_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L55.balance + L56.balance + L56B.balance + L57INT.balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                </field>
+            </record>
+
+            <!-- ================= INFORMACIÓN ADICIONAL PARA EL CPC ================= -->
+            <record id="l10n_pa_tax_report_cpc" model="account.report.line">
+                <field name="name">Additional Information for the CPC (Certificate of Cancellation Power)</field>
+                <field name="name@es_419">Información Adicional para el CPC (Certificado de Poder Cancelatorio)</field>
+                <field name="code">L10N_PA_CPC</field>
+                <field name="hierarchy_level" eval="0"/>
+                <field name="children_ids">
+
+                    <record id="l10n_pa_tax_report_60" model="account.report.line">
+                        <field name="name">60. Tax Credit subject to CPC (= 48, if not used in box 53)</field>
+                        <field name="name@es_419">60. Crédito Fiscal susceptible de CPC (= 48, si no se usó en la casilla 53)</field>
+                        <field name="code">L60</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_60_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">60</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_60_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L48.balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_61" model="account.report.line">
+                        <field name="name">61. Accumulated Tax Credit subject to CPC (auto-filled from box 63 of the previous return)</field>
+                        <field name="name@es_419">61. Crédito Fiscal susceptible CPC acumulado (se llena solo desde la casilla 63 de la declaración anterior)</field>
+                        <field name="code">L61</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_61_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">61</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_61_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L61._applied_carryover_balance</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_61_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_return_period</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_62" model="account.report.line">
+                        <field name="name">62. Less CPC granted by Resolution - manual entry</field>
+                        <field name="name@es_419">62. Menos CPC otorgado por Resolución - entrada manual</field>
+                        <field name="code">L62</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_62_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">62</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_62_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                            </record>
+                        </field>
+                    </record>
+
+                    <record id="l10n_pa_tax_report_63" model="account.report.line">
+                        <field name="name">63. Total Tax Credit subject to CPC (60 + 61 - 62)</field>
+                        <field name="name@es_419">63. Total Crédito Fiscal susceptible CPC (60 + 61 - 62)</field>
+                        <field name="code">L63</field>
+                        <field name="expression_ids">
+                            <record id="l10n_pa_tax_report_63_code" model="account.report.expression">
+                                <field name="label">code</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">63</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_63_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L60.balance + L61.balance - L62.balance</field>
+                            </record>
+                            <record id="l10n_pa_tax_report_63_carryover" model="account.report.expression">
+                                <field name="label">_carryover_balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L63.balance</field>
+                                <field name="carryover_target">L61._applied_carryover_balance</field>
+                            </record>
+                        </field>
+                    </record>
+
+                </field>
+            </record>
+
+        </field>
+    </record>
+</odoo>
