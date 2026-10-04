@@ -2319,30 +2319,117 @@ class ProjectTask(models.Model):
                 token = token
         return super()._get_thread_with_access(thread_id, project_sharing_id=project_sharing_id, token=token, **kwargs)
 
+    def _get_project_sharing_for_suggestions(self):
+        """Return the project when sharing suggestions are allowed, otherwise ``False``."""
+        self.ensure_one()
+        project = self.project_id
+        if (
+            project
+            and project._check_project_sharing_access()
+            and project._get_thread_with_access(project.id)
+        ):
+            return project
+        return False
+
+    def _get_project_sharing_suggestion_domain(self, search, restrict_domain):
+        """Name/email search domain combined with a mention/To allow-list domain."""
+        return (
+            self.env["res.partner"]._get_mention_suggestions_domain(search)
+            & Domain(restrict_domain)
+        )
+
+    def _get_project_sharing_recipient_domain(self, project):
+        return (
+            Domain("active", "=", True)
+            & Domain("email_normalized", "!=", False)
+            & Domain("id", "!=", self.env.user.partner_id.id)
+            & Domain.OR([
+                # sudo: project.collaborator - collaborators of an accessible project may be suggested.
+                Domain("id", "in", project.sudo().collaborator_ids.partner_id.ids),
+                Domain("commercial_partner_id", "=", self.env.user.partner_id.commercial_partner_id.id),
+            ])
+        )
+
+    @api.readonly
+    def get_project_sharing_chatter_data(self, limit=100):
+        self.ensure_one()
+        if not self._get_project_sharing_for_suggestions():
+            return {}
+        # The standard follower loader does not exclude partners without email addresses.
+        # sudo: mail.followers - show recipients of an accessible task, without exposing other threads.
+        domain = (
+            Domain("res_model", "=", self._name)
+            & Domain("res_id", "=", self.id)
+            & Domain("partner_id", "!=", self.env.user.partner_id.id)
+            & Domain("partner_id.active", "=", True)
+            & Domain("partner_id.email_normalized", "!=", False)
+            & Domain("subtype_ids", "=", self.env.ref("mail.mt_comment").id)
+        )
+        Followers = self.env["mail.followers"].sudo()
+        followers = Followers.search(domain, limit=limit, order="id")
+        store = Store().add(
+            self,
+            lambda res: res.many("recipients", "_store_follower_fields", value=followers, mode="REPLACE"),
+            as_thread=True,
+        )
+        # sudo: project.task - compute defaults from the accessible task's customer and discussion.
+        recipients = [
+            recipient
+            for recipient in self.sudo()._message_get_suggested_recipients(reply_discussion=True, no_create=True)
+            if recipient["partner_id"] and recipient["email"]
+        ]
+        partners = self.env["res.partner"].browse([recipient["partner_id"] for recipient in recipients])
+        # sudo: res.partner - authorize notifications to the validated default recipients.
+        store.add(partners.sudo(), lambda res: (
+            res.extend(["name", "email"]),
+            res.from_method("_store_mention_fields"),
+        ))
+        return {
+            "store_data": store,
+            "recipients_count": Followers.search_count(domain),
+            "default_recipients": recipients,
+        }
+
     def get_mention_suggestions(self, search, limit=8):
         """Return the 'limit'-first followers of the given task or followers of its project matching
         a 'search' string.
         See similar method for all partners `get_mention_suggestions()`.
         """
-        self.ensure_one()
-        project = self.project_id
-        if not (
-            project
-            and project._check_project_sharing_access()
-            and project._get_thread_with_access(project.id)
-        ):
+        if not (project := self._get_project_sharing_for_suggestions()):
             return {}
         # sudo: mail.followers - reading message_follower_ids on accessible task/project is allowed
         followers = project.sudo().message_follower_ids | self.sudo().message_follower_ids
-        domain = (
-            Domain(self.env["res.partner"]._get_mention_suggestions_domain(search))
-            & Domain("id", "in", followers.partner_id.ids)
+        domain = self._get_project_sharing_suggestion_domain(
+            search, Domain("id", "in", followers.partner_id.ids),
         )
         return Store().add(
             self.env["res.partner"].sudo()._search_mention_suggestions(domain, limit),
             lambda res: (
                 res.extend(["email", "name"]),
                 res.from_method("_store_im_status_fields", internal=True),
+                res.from_method("_store_mention_fields"),
+            ),
+        )
+
+    @api.readonly
+    def get_recipient_suggestions(self, search, limit=8, partner_ids=None):
+        """Return partners allowed as To recipients in project sharing.
+
+        Portal users may only select project collaborators or partners linked to the
+        same commercial company as themselves.
+        """
+        if not (project := self._get_project_sharing_for_suggestions()):
+            return {}
+        domain = self._get_project_sharing_suggestion_domain(
+            search,
+            self._get_project_sharing_recipient_domain(project)
+            & Domain("id", "not in", partner_ids or []),
+        )
+        # sudo: res.partner - only expose eligible collaborators and contacts of the user's company.
+        return Store().add(
+            self.env["res.partner"].sudo()._search_mention_suggestions(domain, limit),
+            lambda res: (
+                res.extend(["email", "name", "parent_name"]),
                 res.from_method("_store_mention_fields"),
             ),
         )
