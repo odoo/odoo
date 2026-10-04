@@ -98,6 +98,28 @@ test("HtmlMail save inline html", async function () {
     await expect.waitForSteps(["web_save"]);
 });
 
+test("HtmlMail inlining does not resize the field", async function () {
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "custom.message",
+        arch: `
+        <form>
+            <field name="body" widget="html_mail"/>
+        </form>`,
+    });
+    const container = htmlEditor.editable.parentElement;
+    const height = container.getBoundingClientRect().height;
+    const el = htmlEditor.getElContent();
+    el.style.height = "500px";
+    const inlining = HtmlMailField.getInlinedEditorContent(new WeakMap(), htmlEditor, el);
+    // The clone stays in the DOM while toInline runs (e.g. waiting for images).
+    expect(el.isConnected).toBe(true);
+    expect(container.getBoundingClientRect().height).toBe(height);
+    await inlining;
+    expect(el.isConnected).toBe(false);
+});
+
 test("HtmlMail don't have access to column commands", async function () {
     await mountView({
         type: "form",
