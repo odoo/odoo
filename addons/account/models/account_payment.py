@@ -385,6 +385,9 @@ class AccountPayment(models.Model):
             'amount_currency': liquidity_amount_currency,
         })
 
+        liquidity_amount_currency = sum(line['amount_currency'] for line in liquidity_lines)
+        liquidity_balance = sum(line['balance'] for line in liquidity_lines)
+
         # Prepare counterpart lines.
         counterpart_amount_currency = -liquidity_amount_currency - write_off_amount_currency - withholding_amount_currency
         counterpart_balance = -liquidity_balance - write_off_balance - withholding_balance
