@@ -91,7 +91,8 @@ class TestOwnChecks(L10nLatamCheckTest):
             ]
         })
         payment.action_post()
-        self.assertEqual(payment.amount, 120)
+        # There should be 4 lines: 3 liquidity lines (one per check) + 1 counterpart line
+        self.assertEqual(len(payment.move_id.line_ids), 4)
 
     def test_invoice_status_after_voided_check(self):
         self.ensure_installed('l10n_ar')
