@@ -25,6 +25,17 @@
                 t-att-data-payment-tracking-info="json.dumps(payment_tracking_info)"
             />
 
+            <t t-if="show_billing_address_list">
+                <div id="shop_checkout" class="mb-4">
+                    <t t-call="website_sale.billing_address_list" addresses="billing_addresses"/>
+                    <t t-call="website_sale.edit_address_modal"/>
+                </div>
+            </t>
+            <t t-else="">
+                <div id="address_on_payment" class="mb-4">
+                    <t t-call="website_sale.address_on_checkout"/>
+                </div>
+            </t>
             <div t-if="not cart_has_blocking_alerts and website_sale_order.amount_total" name="website_sale_non_free_cart">
                 <div id="payment_method" class="o_not_editable mb-3">
                     <t t-call="payment.form"/>
@@ -33,9 +44,6 @@
             <h4 t-else="" class="mb-3">
                 Confirm order
             </h4>
-            <div id="address_on_payment">
-                <t t-call="website_sale.address_on_checkout"/>
-            </div>
         </t>
     </template>
 

@@ -30,6 +30,37 @@ class Delivery(WebsiteSale):
         """Update values used for rendering the website_sale.delivery_form template."""
         return {}
 
+    @route("/shop/checkout/update_delivery_address", type="jsonrpc", auth="public", website=True)
+    def shop_checkout_update_delivery_address(self, **address_values):
+        """Update the draft delivery address of an anonymous cart with partial data.
+
+        Called while the customer is still filling in the address form on `/shop/checkout`
+        (before submitting it), so that delivery methods depending on the address (e.g.
+        country-restricted carriers) can be computed and unlocked without waiting for the form to
+        be confirmed.
+
+        :param dict address_values: Partial address values (country_id, state_id, zip, city).
+        :return: The rendered delivery form.
+        :rtype: str
+        """
+        order_sudo = request.cart
+        if not order_sudo or not order_sudo._is_anonymous_cart():
+            return ""
+
+        address_values, _side_values = self._parse_form_data(address_values)
+        draft_name = self.env._("Draft delivery address for order %s", order_sudo.name)
+        if order_sudo.partner_shipping_id.name == draft_name:
+            order_sudo.partner_shipping_id.write(address_values)
+        else:
+            order_sudo.partner_shipping_id = self._create_new_address(
+                address_values={**address_values, "name": draft_name},
+                address_type="delivery",
+                use_delivery_as_billing=False,
+                order_sudo=order_sudo,
+            )
+
+        return self.shop_delivery_methods()
+
     @route("/shop/set_delivery_method", type="jsonrpc", auth="public", website=True)
     def shop_set_delivery_method(self, dm_id=None, **kwargs):
         """Set the delivery method on the current order and return the order summary values.

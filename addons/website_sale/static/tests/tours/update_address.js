@@ -17,7 +17,6 @@ registry.category("web_tour.tours").add("website_sale.update_billing_shipping_ad
             content: "Edit  billing address which is shipping address too",
             trigger: "a.js_edit_address",
             run: "click",
-            expectUnloadPage: true,
         },
         {
             content: "Empty the phone field",
@@ -26,7 +25,7 @@ registry.category("web_tour.tours").add("website_sale.update_billing_shipping_ad
         },
         {
             content: "Save address",
-            trigger: "a[name='website_sale_main_button']",
+            trigger: "button[name='o_wsale_edit_address_modal_save']",
             run: "click",
         },
         {

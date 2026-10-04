@@ -1144,11 +1144,20 @@ class Website(models.Model):
         return next_step_sudo.step_href
 
     def _get_checkout_breadcrumb_steps(self, order_sudo):
+        domain = self._get_breadcrumb_checkout_steps_domain(order_sudo)
+        if order_sudo and not order_sudo._has_deliverable_products():
+            # Nothing to ship and no separate delivery address to manage: don't show a dedicated
+            # breadcrumb entry for it, the billing address is handled as a section of
+            # `/shop/payment` instead. Note: this only affects what's *displayed* here; the step
+            # is kept in `_get_allowed_checkout_steps_domain` so that `/shop/checkout` remains the
+            # href used to reach checkout from the cart (`shop_checkout()` itself still redirects
+            # straight through to the next step when there's nothing left to configure).
+            domain &= Domain("step_href", "!=", "/shop/checkout")
         return (
             self
             .env["website.checkout.step"]
             .sudo()
-            .search(self._get_breadcrumb_checkout_steps_domain(order_sudo), order="sequence")
+            .search(domain, order="sequence")
         )
 
     def _get_breadcrumb_checkout_steps_domain(self, order_sudo):
