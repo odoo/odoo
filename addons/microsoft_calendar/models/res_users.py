@@ -20,7 +20,6 @@ class ResUsers(models.Model):
 
     microsoft_account_email = fields.Char(related='res_users_settings_id.microsoft_account_email', readonly=False, groups='base.group_system')
     microsoft_calendar_sync_token = fields.Char(related='res_users_settings_id.microsoft_calendar_sync_token', groups='base.group_system')
-    microsoft_synchronization_stopped = fields.Boolean(related='res_users_settings_id.microsoft_synchronization_stopped', readonly=False, groups='base.group_system')
     microsoft_last_sync_date = fields.Datetime(related='res_users_settings_id.microsoft_last_sync_date', readonly=False, groups='base.group_system')
 
     def _microsoft_calendar_authenticated(self):
@@ -71,13 +70,11 @@ class ResUsers(models.Model):
 
     def _get_microsoft_sync_status(self):
         """ Returns the calendar synchronization status (active, paused or stopped). """
-        status = "sync_active"
+        status = "sync_stopped"
         if self.env['ir.config_parameter'].sudo().get_bool("microsoft_calendar_sync_paused"):
             status = "sync_paused"
-        elif self.sudo().microsoft_calendar_token and not self.sudo().microsoft_synchronization_stopped:
+        elif self.sudo().microsoft_calendar_token:
             status = "sync_active"
-        elif self.sudo().microsoft_synchronization_stopped:
-            status = "sync_stopped"
         return status
 
     def _sync_microsoft_calendar(self):
@@ -117,7 +114,7 @@ class ResUsers(models.Model):
     @api.model
     def _sync_all_microsoft_calendar(self):
         """ Cron job """
-        users = self.env['res.users'].sudo().search([('microsoft_calendar_rtoken', '!=', False), ('microsoft_synchronization_stopped', '=', False)])
+        users = self.env['res.users'].sudo().search([('microsoft_calendar_rtoken', '!=', False)])
         for user in users:
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
             try:
@@ -129,7 +126,6 @@ class ResUsers(models.Model):
 
     @api.model
     def stop_microsoft_synchronization(self):
-        self.env.user.microsoft_synchronization_stopped = True
         self.env.user.microsoft_last_sync_date = None
         self.env.user._set_microsoft_auth_tokens(False, False, 0)
         self.env.user.sudo().write({
@@ -140,9 +136,6 @@ class ResUsers(models.Model):
     @api.model
     def restart_microsoft_synchronization(self):
         self.env.user.microsoft_last_sync_date = datetime.now()
-        self.env.user.microsoft_synchronization_stopped = False
-        self.env['calendar.recurrence']._restart_microsoft_sync()
-        self.env['calendar.event']._restart_microsoft_sync()
 
     def unpause_microsoft_synchronization(self):
         self.env['ir.config_parameter'].sudo().set_bool("microsoft_calendar_sync_paused", False)

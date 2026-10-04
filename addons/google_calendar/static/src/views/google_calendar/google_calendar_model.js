@@ -8,7 +8,6 @@ patch(AttendeeCalendarModel.prototype, {
     setup(params) {
         super.setup(...arguments);
         this.isAlive = params.isAlive;
-        this.googleSyncTimedOut = false;
         this.state = proxy({
             googlePendingSync: false,
             googleIsSync: true,
@@ -17,27 +16,55 @@ patch(AttendeeCalendarModel.prototype, {
         });
     },
 
+    /** Override
+     * This override handles the situation where the sync finishes during the initial view load.
+     * The sync process can sometimes take a while, so we launch it in the background without awaiting
+     * the result so that we don't block the UI.
+     *
+     * We cannot call 'super.updateData(data)' directly within `syncGoogleCalendar` because it could
+     * conflict with the update called from the load, leading to inconsistent data.
+     * We also cannot call `this.keepLast.add(super.updateData(data));` which would solve that issue
+     * by ensuring that only the last update call is kept. If we did so, the original promise would
+     * be discarded, and the await in model.js `_load` would never resolve - the view would not load.
+     *
+     * Instead, we postpone the second update call to the end of the load
+     */
+    async load() {
+
+        this.isLoading = true;
+        try {
+            await super.load(...arguments);
+        } finally {
+            this.isLoading = false;
+        }
+        if (this.updateAfterLoad) {
+            this.updateAfterLoad = false;
+            await this.postSyncUpdate();
+        }
+    },
+
+    async postSyncUpdate() {
+        const data = { ...this.data };
+        await this.keepLast.add(super.updateData(data));
+        this.data = data;
+        this.notify();
+    },
+
     /**
      * @override
      */
     async updateData(data) {
-        this.googleSyncTimedOut = false;
         if (this.state.googlePendingSync) {
             await super.updateData(...arguments);
             return this.updateCalendarData(data);
         }
-        try {
-            this.googleSyncTimedOut = await Promise.race([
-                new Promise(resolve => setTimeout(resolve, 1000)).then(() => true),
-                this.syncGoogleCalendar(true).then(() => false),
-            ]);
-        } catch (error) {
+        this.syncGoogleCalendar(true).catch((error) => {
             if (error.event) {
                 error.event.preventDefault();
             }
             console.error("Could not synchronize Google events now.", error);
             this.state.googlePendingSync = false;
-        }
+        })
         if (this.isAlive()) {
             await super.updateData(...arguments);
             return this.updateCalendarData(data);
@@ -53,14 +80,6 @@ patch(AttendeeCalendarModel.prototype, {
 
     async syncGoogleCalendar(silent = false) {
         this.state.googlePendingSync = true;
-        const params = new URLSearchParams(window.location.search);
-        if (params.get("auth_success")) {
-            await this.orm.call(
-                "res.users",
-                "restart_google_synchronization",
-            );
-        }
-
         const result = await rpc(
             "/google_calendar/sync_data",
             {
@@ -79,11 +98,12 @@ patch(AttendeeCalendarModel.prototype, {
         this.state.googleSyncError = result.status === "sync_failed";
         this.state.googleIsPaused = result.status === "sync_paused";
         this.state.googlePendingSync = false;
-        if (this.googleSyncTimedOut && result.status === "need_refresh") {
-            const data = { ...this.data };
-            await this.keepLast.add(super.updateData(data));
-            this.data = data;
-            this.notify();
+        if (result.status === "need_refresh") {
+            if (this.isLoading) {
+                this.updateAfterLoad = true;
+            } else {
+                await this.postSyncUpdate();
+            }
         }
         if (result.new_calendars) {
             this.notification.add(

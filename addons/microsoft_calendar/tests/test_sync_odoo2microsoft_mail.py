@@ -92,7 +92,7 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
         Test that changing organizer on a pure Odoo event (not synced with Microsoft)
         does not archive the event.
         """
-        self.organizer_user.microsoft_synchronization_stopped = True
+        self.organizer_user.microsoft_calendar_token = False
         event = self.env["calendar.event"].with_user(self.organizer_user).create({
             'name': "Pure Odoo Event",
             'start': datetime(2024, 1, 1, 10, 0),

@@ -32,10 +32,11 @@ class TestSyncGoogle(HttpCase):
         cls.google_service = GoogleCalendarService(cls.env['google.service'])
         cls.env.user.sudo().unpause_google_synchronization()
         cls.organizer_user = mail_new_test_user(cls.env, login="organizer_user")
-        cls.organizer_user.primary_calendar_id.google_id = "organizer-primary"
         cls.organizer_user.google_account_email = "o.o@example.com"
         cls.attendee_user = mail_new_test_user(cls.env, login='attendee_user')
-        cls.attendee_user.primary_calendar_id.google_id = "attendee-primary"
+        for user in [cls.attendee_user, cls.organizer_user, cls.env.user]:
+            cls.env['res.users.settings']._find_or_create_for_user(user).write({'google_calendar_rtoken': 'rtoken', 'google_calendar_token': 'token'})
+            user.primary_calendar_id.write({'google_id': f'{user.login}-primary', 'google_sync_enabled': True})
 
         cls.secondary_calendar = cls.env['calendar.calendar'].with_user(cls.organizer_user).create({
             'name': "Secondary Calendar",
@@ -59,14 +60,14 @@ class TestSyncGoogle(HttpCase):
 
         # as these are normally post-commit hooks, we don't change any state here
         def _mock_delete(model, service, calendar, google_id, **kwargs):
-            if self.env.user._get_google_sync_status() != "sync_active" or not calendar:
+            if (user_id or model.env.user)._get_google_sync_status() != "sync_active" or not calendar:
                 return
             with google_calendar_token(user_id or model.env.user.sudo()) as token:
                 if token:
                     self._gsync_deleted_ids.append(google_id)
 
         def _mock_insert(model, service, calendar, values, **kwargs):
-            if not values or self.env.user._get_google_sync_status() != "sync_active" or not calendar:
+            if not values or (user_id or model.env.user)._get_google_sync_status() != "sync_active" or not calendar:
                 return
             with google_calendar_token(user_id or model.env.user.sudo()) as token:
                 if token:
@@ -76,14 +77,14 @@ class TestSyncGoogle(HttpCase):
                     })
 
         def _mock_patch(model, service, calendar, google_id, values, **kwargs):
-            if self.env.user._get_google_sync_status() != "sync_active" or not calendar:
+            if (user_id or model.env.user)._get_google_sync_status() != "sync_active" or not calendar:
                 return
             with google_calendar_token(user_id or model.env.user.sudo()) as token:
                 if token:
                     self._gsync_patch_values[google_id].append((values, kwargs))
 
         def _mock_move(model, service, source_calendar, destination_calendar, **kwargs):
-            if self.env.user._get_google_sync_status() != "sync_active" or not source_calendar or not destination_calendar:
+            if not source_calendar or not destination_calendar:
                 return
             with (google_calendar_token(user_id or model.env.user.sudo()) as token):
                 if token:

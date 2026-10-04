@@ -22,7 +22,6 @@ class ResUsers(models.Model):
     google_calendar_token = fields.Char(related='res_users_settings_id.google_calendar_token', groups="base.group_system")
     google_calendar_token_validity = fields.Datetime(related='res_users_settings_id.google_calendar_token_validity', groups="base.group_system")
     google_calendar_sync_token = fields.Char(related='res_users_settings_id.google_calendar_sync_token', groups="base.group_system")
-    google_synchronization_stopped = fields.Boolean(related='res_users_settings_id.google_synchronization_stopped', readonly=False, groups="base.group_system")
 
     def _compute_calendar_ids(self):
         super()._compute_calendar_ids()
@@ -37,13 +36,11 @@ class ResUsers(models.Model):
 
     def _get_google_sync_status(self):
         """ Returns the calendar synchronization status (active, paused or stopped). """
-        status = "sync_active"
+        status = "sync_stopped"
         if self.env['ir.config_parameter'].sudo().get_bool("google_calendar_sync_paused"):
             status = "sync_paused"
-        elif self.sudo().google_calendar_rtoken and not self.sudo().google_synchronization_stopped:
+        elif self.sudo().google_calendar_token:
             status = "sync_active"
-        elif self.sudo().google_synchronization_stopped:
-            status = "sync_stopped"
         return status
 
     def _check_pending_odoo_records(self):
@@ -215,7 +212,7 @@ class ResUsers(models.Model):
     @api.model
     def _sync_all_google_calendar(self):
         """ Cron job """
-        domain = [('google_calendar_rtoken', '!=', False), ('google_synchronization_stopped', '=', False)]
+        domain = [('google_calendar_rtoken', '!=', False)]
         # google_calendar_token_validity is not stored on res.users
         if not self:
             users = self.env['res.users'].sudo().search(domain).sorted('google_calendar_token_validity')
@@ -231,15 +228,8 @@ class ResUsers(models.Model):
                 _logger.exception("[%s] Calendar Synchro - Exception : %s!", user, exception_to_unicode(e))
                 self.env.cr.rollback()
 
-    def is_google_calendar_synced(self):
-        """ True if Google Calendar settings are filled (Client ID / Secret) and user calendar is synced
-        meaning we can make API calls, false otherwise."""
-        self.ensure_one()
-        return self.sudo().google_calendar_token and self._get_google_sync_status() == 'sync_active'
-
     @api.model
     def stop_google_synchronization(self):
-        self.env.user.google_synchronization_stopped = True
         self.env.user.res_users_settings_id._set_google_auth_tokens(False, False, 0)
         self.env.user.res_users_settings_id.write({
             'google_calendar_sync_token': False,
@@ -250,13 +240,6 @@ class ResUsers(models.Model):
         # Unlink all calendars that have not been imported and don't belong to any other user.
         # The user may not be the owner of the pending calendars - we need sudo to remove them.
         self.env.user.calendar_ids.filtered(lambda c: c.is_import_pending and len(c.calendar_user_ids) <= 1).sudo().unlink()
-
-    @api.model
-    def restart_google_synchronization(self):
-        self.env.user.google_synchronization_stopped = False
-        self.env['calendar.calendar']._restart_google_sync()
-        self.env['calendar.recurrence']._restart_google_sync()
-        self.env['calendar.event']._restart_google_sync()
 
     def unpause_google_synchronization(self):
         self.env['ir.config_parameter'].sudo().set_bool("google_calendar_sync_paused", False)

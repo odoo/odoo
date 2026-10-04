@@ -57,7 +57,7 @@ class CalendarCalendar(models.Model):
     def write(self, vals):
         synced_fields = self._get_google_synced_fields_map().keys()
 
-        if 'need_sync' not in vals and vals.keys() & synced_fields and not self.env.user.google_synchronization_stopped:
+        if 'need_sync' not in vals and vals.keys() & synced_fields:
             vals['need_sync'] = True
 
         result = super().write(vals)

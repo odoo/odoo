@@ -21,7 +21,6 @@ class ResUsersSettings(models.Model):
     google_calendar_token = fields.Char('User token', copy=False, groups='base.group_system')
     google_calendar_token_validity = fields.Datetime('Token Validity', copy=False, groups='base.group_system')
     google_calendar_sync_token = fields.Char('Next Calendar Sync Token', copy=False, groups='base.group_system')
-    google_synchronization_stopped = fields.Boolean('Google Synchronization stopped', copy=False, groups='base.group_system')
 
     @api.model
     def _get_fields_blacklist(self):
@@ -32,7 +31,6 @@ class ResUsersSettings(models.Model):
             'google_calendar_token',
             'google_calendar_token_validity',
             'google_calendar_sync_token',
-            'google_synchronization_stopped',
         ]
         return super()._get_fields_blacklist() + google_fields_blacklist
 
