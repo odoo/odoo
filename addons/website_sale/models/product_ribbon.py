@@ -134,6 +134,9 @@ class ProductRibbon(models.Model):
         if (  # noqa: SIM103
             product
             and self.assign == "out_of_stock"
+            # An impossible combination is unavailable, not out of stock: it resolves to an
+            # archived or excluded variant, which says nothing about what can be bought.
+            and (price_data or {}).get("is_combination_possible", True)
             and product._is_sold_out()
         ):
             return True

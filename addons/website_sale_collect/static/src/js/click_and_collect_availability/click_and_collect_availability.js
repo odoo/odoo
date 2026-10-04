@@ -1,4 +1,4 @@
-import { Component, useProps, proxy, t } from '@odoo/owl';
+import { Component, markup, useProps, proxy, t } from '@odoo/owl';
 import { deserializeDate, toLocaleDateString } from '@web/core/l10n/dates';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
@@ -21,6 +21,8 @@ export class ClickAndCollectAvailability extends Component {
         isInStoreSelected: t.boolean().optional(false),
         showSelectStoreButton: t.boolean().optional(),
         countryCode: t.string().optional(),
+        hasOutOfStockMessage: t.boolean().optional(),
+        outOfStockMessage: t.string().optional(),
     });
     setup() {
         super.setup();
@@ -32,6 +34,8 @@ export class ClickAndCollectAvailability extends Component {
             deliveryData: this.props.deliveryData,
             isInStoreSelected: this.props.isInStoreSelected,
             active: this.props.active,
+            hasOutOfStockMessage: this.props.hasOutOfStockMessage,
+            outOfStockMessage: markup(this.props.outOfStockMessage || ''),
         });
         useBus(
             this.env.bus,
