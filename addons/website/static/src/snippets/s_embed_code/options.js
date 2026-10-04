@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import options from '@web_editor/js/editor/snippets.options';
 import { _t } from "@web/core/l10n/translation";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
-import { cloneContentEls } from "@website/js/utils";
+import { cloneContentEls, getEmbedCode } from "@website/js/utils";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -48,7 +48,7 @@ options.registry.EmbedCode = options.Class.extend({
     async editCode() {
         const $container = this.$target.find('.s_embed_code_embedded');
         const templateEl = this.$target[0].querySelector("template.s_embed_code_saved");
-        const embedContent = templateEl.innerHTML.trim();
+        const embedContent = getEmbedCode(templateEl).trim();
 
         await new Promise(resolve => {
             this.dialog.add(CodeEditorDialog, {
@@ -59,7 +59,9 @@ options.registry.EmbedCode = options.Class.extend({
                     // Removes scripts tags from the DOM as we don't want them
                     // to interfere during edition, but keeps them in a
                     // `<template>` that will be saved to the database.
-                    templateEl.content.replaceChildren(cloneContentEls(newValue, true));
+                    templateEl.content.replaceChildren(
+                        templateEl.ownerDocument.createTextNode(newValue)
+                    );
                     $container[0].replaceChildren(cloneContentEls(newValue));
                 }
             }, {
