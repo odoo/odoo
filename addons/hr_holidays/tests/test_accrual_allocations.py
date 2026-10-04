@@ -4180,3 +4180,34 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             ('employee_id', '=', test_employee.id),
         ])
         self.assertEqual(len(created_allocation), 2, "Another accrual allocation should be created for the employee based on their working schedule.")
+
+    def test_allocation_warning_uses_request_date_balance(self):
+        """
+        The allocation warning of a time off request must be based on the balance at the
+        request start date (including future accruals), and a saved request must not be
+        counted twice against that balance.
+        """
+        with freeze_time('2026-01-15'):
+            allocation = self._create_form_test_accrual_allocation(
+                self.work_entry_type_day,
+                '2026-01-01',
+                self.employee_emp,
+                self.accrual_plan_monthly_end,
+            )
+            allocation.action_approve()
+            self.assertEqual(allocation.number_of_days, 0)
+
+            # 2 days accrued on each of 2026-02-01, 2026-03-01 and 2026-04-01
+            with Form(self.env['hr.leave'].with_context(default_employee_id=self.employee_emp.id)) as leave_form:
+                leave_form.work_entry_type_id = self.work_entry_type_day
+                leave_form.request_date_from = date(2026, 4, 7)
+                leave_form.request_date_to = date(2026, 4, 10)
+                self.assertEqual(leave_form.number_of_days, 4)
+                self.assertFalse(leave_form.allocation_display_warning)
+            leave = leave_form.record
+            self.assertFalse(leave.allocation_display_warning)
+
+            leave_form = Form(leave)
+            leave_form.request_date_to = date(2026, 4, 15)
+            self.assertEqual(leave_form.number_of_days, 7)
+            self.assertEqual(leave_form.allocation_display_warning, "Only 6.0 day(s) available")
