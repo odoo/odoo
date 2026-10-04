@@ -1,3 +1,24 @@
+@keyframes o_barcode_scanner_intro {
+    0% {
+        opacity: 0;
+        top: 0;
+    }
+    25% {
+        opacity: 0.5;
+        top: 60%;
+    }
+    50% {
+        top: 10%;
+    }
+    75% {
+        top: 80%;
+    }
+    100% {
+        opacity: 0.5;
+        top: 50%;
+    }
+}
+
 .o_barcode_mobile_container {
     position: relative;
     display: inline-block;
@@ -31,6 +52,7 @@
 
     .o_barcode_laser {
         /* avoid dependencies to web file in pos */
+        opacity: 0;
         position: absolute;
         top: 50%;
         left: -15px;
@@ -41,23 +63,11 @@
         background: rgba(255, 0, 0, 0.6);
         box-shadow: 0 1px 10px 1px rgba(255, 0, 0, 0.8);
         animation: o_barcode_scanner_intro 1s cubic-bezier(0.6, -0.28, 0.735, 0.045) 0.4s;
-    }
-
-    @keyframes o_barcode_scanner_intro {
-        25% {
-            top: 75%;
-        }
-        50% {
-            top: 0;
-        }
-        75% {
-            top: 100%;
-        }
-        100% {
-            top: 50%;
-        }
+        animation-fill-mode: forwards;
+        pointer-events: none;
     }
 }
+
 @media screen and (max-width: 576px) {
     .o_event_barcode_bg.o_home_menu_background {
         background: white;
