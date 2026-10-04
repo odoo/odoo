@@ -12,12 +12,11 @@ export class HrEmployee extends Record {
     currency_id = fields.One("res.currency");
     department_id = fields.One("hr.department");
     employee_type_id = fields.One("hr.employee.type");
+    job_id = fields.One("hr.job");
     /** @type {string} */
     first_contract_date;
     /** @type {string} */
     hr_icon_display;
-    /** @type {string} */
-    job_title;
     /** @type {string} */
     name;
     resource_id = fields.One("resource.resource", { inverse: "employee_id" });

@@ -20,14 +20,14 @@ class HrOrgChartController(http.Controller):
         employee = Employee.browse(employee_id)
         return employee if employee.has_access('read') else Employee.browse()
 
-    def _prepare_employee_data(self, employee, new_job_title=None):
+    def _prepare_employee_data(self, employee):
         job = employee.sudo().job_id
         return dict(
             id=employee.id,
             name=employee.name,
             link='/mail/view?model=%s&res_id=%s' % ('hr.employee.public', employee.id),
             job_id=job.id,
-            job_title=new_job_title or employee.job_title or '',
+            job_title=job.name or '',
             direct_sub_count=len(employee.child_ids - employee),
             indirect_sub_count=employee.child_all_count,
             write_date=int(employee.write_date.timestamp() * 1000) if employee.write_date else 0,  # ms for js; 0 when missing
@@ -40,7 +40,7 @@ class HrOrgChartController(http.Controller):
         return 'hr.employee.public'
 
     @http.route('/hr/get_org_chart', type='jsonrpc', auth='user')
-    def get_org_chart(self, employee_id, new_parent_id=None, new_job_title=None, **kw):
+    def get_org_chart(self, employee_id, new_parent_id=None, **kw):
         employee = self._get_employee(employee_id, **kw)
         new_parent = self._get_employee(new_parent_id, **kw)
         if not employee:  # to check
@@ -63,7 +63,7 @@ class HrOrgChartController(http.Controller):
             ancestors += current
 
         values = dict(
-            self=self._prepare_employee_data(employee, new_job_title),
+            self=self._prepare_employee_data(employee),
             managers=[
                 self._prepare_employee_data(ancestor)
                 for idx, ancestor in enumerate(ancestors)
