@@ -1,225 +1,223 @@
 import { Plugin } from "@html_editor/plugin";
-import { getElementsWithOption } from "@html_builder/utils/utils";
+import { withSequence } from "@html_editor/utils/resource";
+import { InvisibleElementsPanel } from "@html_builder/sidebar/invisible_elements_panel";
+import { proxy } from "@odoo/owl";
 
 /**
  * @typedef { Object } VisibilityShared
- * @property { VisibilityPlugin['getVisibleSibling'] } getVisibleSibling
- * @property { VisibilityPlugin['toggleTargetVisibility'] } toggleTargetVisibility
- * @property { VisibilityPlugin['onOptionVisibilityUpdate'] } onOptionVisibilityUpdate
- * @property { VisibilityPlugin['hideElement'] } hideElement
+ * @property { VisibilityPlugin['invalidateVisibility'] } invalidateVisibility
+ * @property { VisibilityPlugin['isElementHidden'] } isElementHidden
  */
 
 /**
- * @typedef {((targetEl: HTMLElement) => void)[]} on_target_hidden_handlers
- * @typedef {((targetEl: HTMLElement) => void)[]} on_target_shown_handlers
+ * @typedef {import("plugins").CSSSelector} CSSSelector
+ *
+ * @typedef {Object} InvisibleItem
+ * @property {CSSSelector} selector the element listed in invisible panel
+ * @property {CSSSelector} target an element inside a match of `selector`, on
+ * which we `checkVisibility`,
+ * @property {() => boolean} isAvailable defaults to true
+ * @property {(el: HTMLElement, show: boolean) => void} toggle make the `el`
+ * visible or hidden depending on `show`,
+ * @property {boolean} showAfterClone set to `false` to prevent showing the
+ * element on (the redo of) clone (defaults to `true` if absent)
+ *
+ * @typedef {InvisibleItem[]} invisible_items
+ * @typedef {(() => void)[]} on_visibility_impacted_droppable_snippets_handlers
  */
-
-const invisibleElementsSelector =
-    ".o_snippet_invisible, .o_snippet_mobile_invisible, .o_snippet_desktop_invisible";
-const deviceInvisibleSelector = ".o_snippet_mobile_invisible, .o_snippet_desktop_invisible";
 
 export class VisibilityPlugin extends Plugin {
     static id = "visibility";
-    static dependencies = ["builderOptions", "disableSnippets", "history"];
-    static shared = [
-        "getVisibleSibling",
-        "toggleTargetVisibility",
-        "onOptionVisibilityUpdate",
-        "hideElement",
-    ];
+    static dependencies = ["builderOptions", "domObserver", "history"];
+    static shared = ["invalidateVisibility", "isElementHidden"];
+
+    invisibleElementsPanelState = proxy({ invisibleEntries: [] });
+
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_mobile_view_switched_handlers: this.onMobileViewSwitched.bind(this),
-        system_attributes: ["data-invisible"],
-        system_classes: ["o_snippet_override_invisible"],
-        clean_for_save_processors: this.cleanForSaveVisibility.bind(this),
-        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        on_will_restore_containers_handlers: (newTargetEl) => this.makeTargetVisible(newTargetEl),
-        is_element_in_invisible_panel_predicates: (el) => {
-            const invisibleSelector = `.o_snippet_invisible, ${
-                this.config.isMobileView(this.editable)
-                    ? ".o_snippet_mobile_invisible"
-                    : ".o_snippet_desktop_invisible"
-            }`;
-            return el.matches(invisibleSelector);
+        lower_panel_entries: withSequence(20, {
+            Component: InvisibleElementsPanel,
+            props: { state: this.invisibleElementsPanelState },
+        }),
+        on_editor_started_handlers: () => this.refreshInvisibleElementsPanel(),
+        pending_history_commit_data_processors: withSequence(20, (data) => {
+            if (this.dependencies.history.getIsPreviewing()) {
+                return data;
+            }
+            const optionsTarget = data.nextTarget ?? data.currentTarget;
+            if (optionsTarget && optionsTarget.isConnected && this.isElementHidden(optionsTarget)) {
+                if (!data.relatedCommit) {
+                    data.nextTarget = false;
+                }
+                this.trigger("on_visibility_impacted_droppable_snippets_handlers");
+            }
+            this.refreshInvisibleElementsPanel();
+            return data;
+        }),
+        on_snippet_dropped_handlers: ({ snippetEl }) => {
+            this.showInvisibleElement(snippetEl);
+            // The snippet is not in the dom on revert, so we use the previous
+            // or parent element to reveal the spot where the change occured
+            const parentEl = snippetEl.parentElement;
+            const prevEl = snippetEl.previousElementSibling;
+            this.dependencies.domObserver.stageCustomMutation({
+                apply: () => this.trigger("on_target_revealed_handlers", snippetEl),
+                revert: () => {
+                    this.showInvisibleElement(parentEl);
+                    let el = prevEl;
+                    while (el && this.isElementHidden(el)) {
+                        el = el.previousElementSibling;
+                    }
+                    this.trigger("on_target_revealed_handlers", el ?? parentEl);
+                },
+            });
         },
+        on_cloned_handlers: ({ cloneEl }) => {
+            // Cloned snippet do not become the target, but we usually want to
+            // show them when they are created
+            const shouldShow = this.getResource("invisible_items").some(
+                ({ selector, target, showAfterClone }) =>
+                    cloneEl.matches(selector) &&
+                    (!target || cloneEl.querySelector(target)) &&
+                    (showAfterClone ?? true)
+            );
+            if (shouldShow) {
+                this.dependencies.domObserver.applyCustomMutation({
+                    apply: () => this.showInvisibleElement(cloneEl),
+                    revert: () => {},
+                });
+            }
+        },
+        on_target_revealed_handlers: withSequence(5, (targetEl) => {
+            this.showInvisibleElement(targetEl);
+            this.refreshInvisibleElementsPanel();
+        }),
+        // The data-invisible attribute and the o_snippet_invisible class are
+        // not needed/used anymore.
+        // They were used to try to track if an element is or can be hidden.
+        // They persisted through saves, so we remove them from existing pages.
+        clean_for_save_processors: (root) => {
+            for (const el of root.querySelectorAll("[data-invisible]")) {
+                el.removeAttribute("data-invisible");
+            }
+            for (const el of root.querySelectorAll(".o_snippet_invisible")) {
+                el.classList.remove("o_snippet_invisible");
+            }
+            return root;
+        },
+        is_element_in_invisible_panel_predicates: (el) =>
+            el.matches(this.matchingItemsAndSelectorAll().selectorAll),
     };
 
-    setup() {
-        // Add the `data-invisible="1"` attribute on the elements that are
-        // really hidden, and remove it from the ones that are in fact visible,
-        // depending on if we are in mobile preview or not, so the DOM is
-        // consistent.
-        const isMobilePreview = this.config.isMobileView(this.editable);
-        this.editable.querySelectorAll(deviceInvisibleSelector).forEach((invisibleEl) => {
-            const isMobileHidden = invisibleEl.matches(".o_snippet_mobile_invisible");
-            const isDesktopHidden = invisibleEl.matches(".o_snippet_desktop_invisible");
-            if ((isMobileHidden && isMobilePreview) || (isDesktopHidden && !isMobilePreview)) {
-                invisibleEl.setAttribute("data-invisible", "1");
-            } else {
-                invisibleEl.removeAttribute("data-invisible");
-            }
-        });
+    matchingItemsAndSelectorAll() {
+        const activeItems = this.getResource("invisible_items")
+            .filter(({ isAvailable }) => !isAvailable || isAvailable())
+            .map((item) => ({
+                ...item,
+                selectorWithTarget: item.target
+                    ? `${item.selector}:has(${item.target})`
+                    : item.selector,
+            }));
+        return {
+            getMatchingItems: (el) =>
+                activeItems.filter(({ selectorWithTarget }) => el.matches(selectorWithTarget)),
+            selectorAll:
+                activeItems.map(({ selectorWithTarget }) => selectorWithTarget).join(", ") ||
+                ":not(*)",
+        };
     }
 
-    getVisibleSibling(target, direction) {
-        const systemNodeSelectors = this.getResource("system_node_selectors").join(",");
-        const siblingEls = [...target.parentNode.children];
-        const visibleSiblingEls = siblingEls.filter(
-            (el) =>
-                !el.classList.contains("o_we_no_overlay") &&
-                window.getComputedStyle(el).display !== "none" &&
-                !el.closest(systemNodeSelectors)
+    // Show an element by calling the corresponding `toggle` from the
+    // `invisible_items` on it and/or on its ancestors
+    showInvisibleElement(el) {
+        const { getMatchingItems, selectorAll } = this.matchingItemsAndSelectorAll();
+        const _show = (el) => {
+            if (!el) {
+                return;
+            }
+            if (!el.checkVisibility()) {
+                _show(el.parentElement?.closest(selectorAll));
+            }
+            for (const { toggle } of getMatchingItems(el)) {
+                toggle(el, true);
+            }
+        };
+        _show(el.closest(selectorAll));
+    }
+
+    hide(el) {
+        const { getMatchingItems } = this.matchingItemsAndSelectorAll();
+        for (const { toggle } of getMatchingItems(el)) {
+            toggle(el, false);
+        }
+    }
+
+    /**
+     * Check whether the given element is currently hidden
+     *
+     * @param {HTMLElement} el
+     */
+    isElementHidden(el) {
+        if (!el.checkVisibility()) {
+            return true;
+        }
+        // el is visible, maybe it matches an item with hidden target
+        const { getMatchingItems } = this.matchingItemsAndSelectorAll();
+        for (const { target } of getMatchingItems(el)) {
+            if (target && !el.querySelector(target).checkVisibility()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Recompute content of the "invisible elements" panel
+     */
+    invalidateVisibility() {
+        this.refreshInvisibleElementsPanel();
+        const optionsTarget = this.dependencies.builderOptions.getTarget();
+        if (optionsTarget && this.isElementHidden(optionsTarget)) {
+            this.dependencies.builderOptions.deactivateContainers();
+            this.trigger("on_visibility_impacted_droppable_snippets_handlers");
+        }
+    }
+
+    refreshInvisibleElementsPanel() {
+        this.invisibleElementsPanelState.invisibleEntries = this.getInvisibleEntries();
+    }
+
+    getInvisibleEntries() {
+        const { getMatchingItems, selectorAll } = this.matchingItemsAndSelectorAll();
+        const entries = new Map(
+            [...this.editable.querySelectorAll(selectorAll)].map((el) => {
+                const visible = getMatchingItems(el).every(({ target }) =>
+                    (target ? el.querySelector(target) : el).checkVisibility()
+                );
+                const entry = {
+                    el,
+                    toggleInvisibleEntry: () => {
+                        if (visible) {
+                            this.hide(el);
+                            this.refreshInvisibleElementsPanel();
+                            this.dependencies.builderOptions.deactivateContainers();
+                        } else {
+                            this.trigger("on_target_revealed_handlers", el);
+                            this.dependencies.builderOptions.updateContainers(el);
+                        }
+                        this.trigger("on_visibility_impacted_droppable_snippets_handlers");
+                    },
+                    visible,
+                    children: [],
+                };
+                return [el, entry];
+            })
         );
-        const targetMobileOrder = target.style.order;
-        // On mobile, if the target has a mobile order (which is independent
-        // from desktop), consider these orders instead of the DOM order.
-        if (targetMobileOrder && this.config.isMobileView(target)) {
-            visibleSiblingEls.sort((a, b) => parseInt(a.style.order) - parseInt(b.style.order));
+        const roots = [];
+        for (const [el, entry] of entries.entries()) {
+            const parent = entries.get(el.parentElement?.closest(selectorAll));
+            (parent ? parent.children : roots).push(entry);
         }
-        const targetIndex = visibleSiblingEls.indexOf(target);
-        const siblingIndex = direction === "prev" ? targetIndex - 1 : targetIndex + 1;
-        if (siblingIndex === -1 || siblingIndex === visibleSiblingEls.length) {
-            return false;
-        }
-        return visibleSiblingEls[siblingIndex];
+        return roots;
     }
-
-    /**
-     * Toggles the visibility of the given element and its ancestors if it was
-     * not visible.
-     *
-     * @param {HTMLElement} targetEl the element
-     */
-    makeTargetVisible(targetEl) {
-        let invisibleEl = targetEl.closest("[data-invisible='1']");
-        if (!invisibleEl) {
-            return;
-        }
-        while (invisibleEl) {
-            this.toggleTargetVisibility(invisibleEl, true);
-            invisibleEl = targetEl.closest("[data-invisible='1']");
-        }
-        this.config.updateInvisibleElementsPanel();
-    }
-
-    cleanForSaveVisibility(rootEl) {
-        const invisibleEls = getElementsWithOption(rootEl, invisibleElementsSelector);
-        for (const invisibleEl of invisibleEls) {
-            // Hide the invisible elements.
-            this.toggleTargetVisibility(invisibleEl, false, false, true);
-            // Remove the `data-invisible` attribute from conditionally hidden
-            // elements.
-            if (invisibleEl.matches("[data-visibility='conditional']")) {
-                invisibleEl.removeAttribute("data-invisible");
-            }
-        }
-        return rootEl;
-    }
-
-    onSnippetDropped({ snippetEl }) {
-        // Show the invisible elements.
-        const invisibleEls = getElementsWithOption(snippetEl, invisibleElementsSelector);
-        for (const invisibleEl of invisibleEls) {
-            this.toggleTargetVisibility(invisibleEl, true);
-        }
-    }
-
-    onMobileViewSwitched() {
-        const deviceInvisibleEls = this.editable.querySelectorAll(deviceInvisibleSelector);
-        const currentContainerTargetEl = this.dependencies["builderOptions"].getTarget();
-        for (const deviceInvisibleEl of [...deviceInvisibleEls]) {
-            deviceInvisibleEl.classList.remove("o_snippet_override_invisible");
-            const show = !isTargetVisible(deviceInvisibleEl);
-            const isShown = this.toggleVisibilityStatus(deviceInvisibleEl, show, true);
-            if (!isShown && deviceInvisibleEl.contains(currentContainerTargetEl)) {
-                this.dependencies.builderOptions.deactivateContainers();
-            }
-        }
-    }
-
-    /**
-     * Toggles the visibility of the given element.
-     *
-     * @param {HTMLElement} editingEl
-     * @param {Boolean} show true to show the element, false to hide it
-     * @param {Boolean} considerDeviceVisibility
-     * @param {Boolean} [isCleaning=false] true if the function is called by the
-     * clean_for_save handler.
-     * @returns {Boolean}
-     */
-    toggleTargetVisibility(editingEl, show, considerDeviceVisibility, isCleaning = false) {
-        show = this.toggleVisibilityStatus(editingEl, show, considerDeviceVisibility);
-        const resourceName = show ? "on_target_shown_handlers" : "on_target_hidden_handlers";
-        this.trigger(resourceName, editingEl);
-        return show;
-    }
-
-    /**
-     * Called when an option changed the visibility of its editing element.
-     *
-     * @param {HTMLElement} editingEl the editing element
-     * @param {Boolean} show true/false if the element was shown/hidden
-     */
-    onOptionVisibilityUpdate(editingEl, show) {
-        if (this.dependencies.history.getIsPreviewing()) {
-            return;
-        }
-        const isShown = this.toggleVisibilityStatus(editingEl, show);
-        if (!isShown) {
-            this.dependencies.builderOptions.setNextTarget(false);
-        }
-        this.config.updateInvisibleElementsPanel();
-        this.dependencies.disableSnippets.disableUndroppableSnippets();
-    }
-
-    /**
-     * Sets/removes the `data-invisible` attribute on the given element,
-     * depending on if it is considered as hidden/shown.
-     *
-     * @param {HTMLElement} editingEl the element
-     * @param {Boolean} show
-     * @param {Boolean} considerDeviceVisibility
-     * @returns {Boolean}
-     */
-    toggleVisibilityStatus(editingEl, show, considerDeviceVisibility = false) {
-        if (
-            considerDeviceVisibility &&
-            editingEl.matches(".o_snippet_mobile_invisible, .o_snippet_desktop_invisible")
-        ) {
-            const isMobilePreview = this.config.isMobileView(editingEl);
-            const isMobileHidden = editingEl.classList.contains("o_snippet_mobile_invisible");
-            show = isMobilePreview !== isMobileHidden;
-        }
-
-        if (show === undefined) {
-            show = !isTargetVisible(editingEl);
-        }
-        if (show) {
-            delete editingEl.dataset.invisible;
-        } else {
-            editingEl.dataset.invisible = "1";
-        }
-        return show;
-    }
-
-    /**
-     * Hides the given element and updates what needs to be.
-     * Note: to use only when hiding things without adding history commits:
-     * - if an action adding a history commit hides the element, it should call
-     *   `onOptionVisibilityUpdate`
-     * - if it concerns the "Invisible Element" panel, refer to its component.
-     *
-     * @param {HTMLElement} toHideEl the element to hide.
-     */
-    hideElement(toHideEl) {
-        this.toggleTargetVisibility(toHideEl, false);
-        this.dependencies.builderOptions.deactivateContainers();
-        this.config.updateInvisibleElementsPanel();
-        this.dependencies.disableSnippets.disableUndroppableSnippets();
-    }
-}
-
-export function isTargetVisible(editingEl) {
-    return editingEl.dataset.invisible !== "1";
 }
