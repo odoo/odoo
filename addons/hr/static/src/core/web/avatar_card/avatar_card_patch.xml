@@ -30,6 +30,17 @@
             <span t-if="this.employee?.department_id" class="text-muted text-truncate" data-tooltip="Department" t-att-title="this.employee.department_id.name" t-out="this.employee.department_id.name"/>
         </xpath>
 
+        <xpath expr="//div[hasclass('o_avatar_card_details')]" position="inside">
+            <div t-if="this.skillTags.length > 0">
+                <span class="fw-bold">Skills</span>
+                <div class="d-flex flex-wrap gap-1 o_employee_skills_tags mt-1 overflow-hidden">
+                    <TagsList tags="this.skillTags" tagLimit="5" t-slot-scope="tag">
+                        <BadgeTag text="tag.text" color="tag.color"/>
+                    </TagsList>
+                </div>
+            </div>
+        </xpath>
+
         <xpath expr="//button[@t-ref='this.viewProfileBtnRef']" position="after">
             <Dropdown t-if="this.canActivateEmployeeCompany" position="'bottom-start'">
                 <button class="btn btn-secondary btn-sm dropdown-toggle">View Profile<i class="oi oi-fw ms-1" data-icon="arrow_drop_down"/></button>

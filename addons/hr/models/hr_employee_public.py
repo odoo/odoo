@@ -90,6 +90,13 @@ class HrEmployeePublic(models.Model):
 
     newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
 
+    resume_line_ids = fields.One2many('hr.resume.line', 'employee_id', string="Resume lines")  # noqa: OLS03023
+    employee_skill_ids = fields.One2many('hr.employee.skill', 'employee_id', string="Skills",  # noqa: OLS03023
+        domain=[('skill_type_id.active', '=', True)])
+    current_employee_skill_ids = fields.One2many('hr.employee.skill', related='employee_id.current_employee_skill_ids')
+    certification_ids = fields.One2many('hr.employee.skill', related='employee_id.certification_ids')
+    display_certification_page = fields.Boolean(related="employee_id.display_certification_page")
+
     monday_location_id = fields.Many2one('hr.work.location', string='Monday')
     tuesday_location_id = fields.Many2one('hr.work.location', string='Tuesday')
     wednesday_location_id = fields.Many2one('hr.work.location', string='Wednesday')
