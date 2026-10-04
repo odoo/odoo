@@ -174,6 +174,71 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
             self.assert_base_lines_tax_details(document, expected_values)
             self._run_js_tests()
 
+    def test_dispatch_delta_on_net_zero_total_price_included(self):
+        """ Price-included taxes, an untaxed line making the document total exactly zero
+        (e.g. a POS order fully paid with a gift card). The delta on the tax amounts must
+        still be compensated on the base lines, otherwise the total ends up at 0.01.
+        """
+        tax_16 = self.percent_tax(16.0, price_include_override='tax_included')
+        lines_vals = [{
+            'price_unit': price,
+            'tax_ids': tax_16,
+        } for price in (62.0, 234.0, 27.0, 5.0, 10.0, 115.0, 46.0)]
+        lines_vals.append({'price_unit': -499.0})
+        document = self.populate_document(self.init_document(lines_vals))
+
+        base_expected_values = [
+        #   (total_excluded, total_included, delta_total_excluded, base_amount, tax_amount),
+            (53.45, 62.0, 0.0, 53.45, 8.55),
+            (201.72, 234.0, 0.0, 201.71, 32.29),
+            (23.28, 27.0, 0.0, 23.28, 3.72),
+            (4.31, 5.0, 0.0, 4.31, 0.69),
+            (8.62, 10.0, 0.0, 8.62, 1.38),
+            (99.14, 115.0, 0.0, 99.14, 15.86),
+            (39.66, 46.0, 0.0, 39.66, 6.34),
+        ]
+        expected_values = {
+            'base_lines_tax_details': [{
+                'delta_total_excluded': delta_total_excluded,
+                'delta_total_excluded_currency': delta_total_excluded,
+                'manual_tax_amounts': None,
+                'manual_total_excluded': None,
+                'manual_total_excluded_currency': None,
+                'taxes_data': [{
+                    'base_amount': base_amount,
+                    'base_amount_currency': base_amount,
+                    'tax_amount': tax_amount,
+                    'tax_amount_currency': tax_amount,
+                    'tax_id': tax_16.id,
+                }],
+                'total_excluded': total_excluded,
+                'total_excluded_currency': total_excluded,
+                'total_included': total_included,
+                'total_included_currency': total_included,
+            } for total_excluded, total_included, delta_total_excluded, base_amount, tax_amount in base_expected_values] + [{
+                'delta_total_excluded': -0.01,
+                'delta_total_excluded_currency': -0.01,
+                'manual_tax_amounts': None,
+                'manual_total_excluded': None,
+                'manual_total_excluded_currency': None,
+                'taxes_data': [],
+                'total_excluded': -499.0,
+                'total_excluded_currency': -499.0,
+                'total_included': -499.0,
+                'total_included_currency': -499.0,
+            }],
+        }
+        self.assert_base_lines_tax_details(document, expected_values)
+        self._run_js_tests()
+
+        # The rounded document total must be zero.
+        tax_details = [line['tax_details'] for line in document['lines']]
+        total = sum(
+            td['total_excluded'] + td['delta_total_excluded'] + sum(tax_data['tax_amount'] for tax_data in td['taxes_data'])
+            for td in tax_details
+        )
+        self.assertEqual(self.env.company.currency_id.round(total), 0.0)
+
     def test_global_discount_raw_gross_total_excluded(self):
         """ Tests to ensure expected raw_gross_total_excluded is calculated
         correctly with both line discounts and global discounts

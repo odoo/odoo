@@ -1024,9 +1024,6 @@ export const accountTaxHelpers = {
                     // Price-excluded rounding.
                     const raw_total_excluded =
                         values[`target_total_excluded${delta_currency_indicator}`];
-                    if (!raw_total_excluded) {
-                        continue;
-                    }
 
                     const rounded_raw_total_excluded = roundPrecision(
                         raw_total_excluded,
@@ -1045,9 +1042,6 @@ export const accountTaxHelpers = {
                     const raw_total_included =
                         values[`target_total_excluded${delta_currency_indicator}`] +
                         values[`target_tax_amount${delta_currency_indicator}`];
-                    if (!raw_total_included) {
-                        continue;
-                    }
                     const rounded_raw_total_included = roundPrecision(
                         raw_total_included,
                         delta_currency.rounding
