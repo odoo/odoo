@@ -122,15 +122,47 @@ class ResourceCalendarLeaves(models.Model):
         """
         resource_calendars = self._get_resource_calendars()
         work_hours_data = self._work_time_per_day(resource_calendars)
-        employees_groups = self.env['hr.employee']._read_group(
-            [('resource_calendar_id', 'in', resource_calendars.ids), ('company_id', 'in', self.company_id.ids if self.company_id else self.env.companies.ids)],
+        versions_group = self.env['hr.version']._read_group(
+            [
+                ('resource_calendar_id', 'in', resource_calendars.ids),
+                ('company_id', 'in', self.company_id.ids if self.company_id else self.env.companies.ids),
+                ('contract_date_start', '<=', max(self.mapped('date_to'))),
+                '|',
+                    ('contract_date_end', '>=', min(self.mapped('date_from'))),
+                    ('contract_date_end', '=', False),
+
+            ],
             ['resource_calendar_id'],
             ['id:recordset'])
-        mapped_employee = {
-            resource_calendar.id: employees
-            for resource_calendar, employees in employees_groups
-        }
-        employee_ids_all = [_id for __, employees in employees_groups for _id in employees._ids]
+
+        employee_ids_all = [emp_id for __, versions in versions_group for emp_id in versions.employee_id._ids]
+        employee_groups = self.env['hr.employee']._read_group(
+            [
+                ('id', 'not in', employee_ids_all),
+                ('company_id', 'in', self.company_id.ids if self.company_id else self.env.companies.ids),
+                '|',
+                ('resource_calendar_id', 'in', resource_calendars.ids),
+                '&',
+                ('is_flexible', '=', True),
+                ('is_fully_flexible', '=', False),
+            ],
+            ['resource_calendar_id'],
+            ['id:recordset'])
+        employee_ids_all.extend([
+            emp_id
+            for _, employees in employee_groups
+            for emp_id in employees.ids
+        ])
+        mapped_versions = defaultdict(lambda: self.env['hr.version'])
+        mapped_employee = defaultdict(lambda: self.env['hr.employee'])
+
+        for calendar, versions in versions_group:
+            if calendar:
+                mapped_versions[calendar.id] |= versions
+
+        for calendar, employees in employee_groups:
+            if calendar:
+                mapped_employee[calendar.id] |= employees
         min_date = max_date = None
         for values in work_hours_data.values():
             for vals in values.values():
@@ -171,15 +203,21 @@ class ResourceCalendarLeaves(models.Model):
                         )
             return vals_list
 
+        def get_leave_employees(calendar_id, leave):
+            leave_start, leave_end = leave.date_from.date(), leave.date_to.date()
+            return mapped_versions[calendar_id].filtered(
+                lambda v: v.contract_date_start <= leave_end
+                and (not v.contract_date_end or v.contract_date_end >= leave_start)
+            ).employee_id | mapped_employee[calendar_id]
+
         for leave in self:
             if not leave.calendar_id:
-                for calendar_id, calendar_employees in mapped_employee.items():
+                for calendar_id in mapped_versions.keys() | mapped_employee.keys():
                     work_hours_list = work_hours_data[calendar_id][leave.id]
-                    vals_list = get_timesheets_data(calendar_employees, work_hours_list, vals_list)
+                    vals_list = get_timesheets_data(get_leave_employees(calendar_id, leave), work_hours_list, vals_list)
             else:
-                employees = mapped_employee.get(leave.calendar_id.id, self.env['hr.employee'])
                 work_hours_list = work_hours_data[leave.calendar_id.id][leave.id]
-                vals_list = get_timesheets_data(employees, work_hours_list, vals_list)
+                vals_list = get_timesheets_data(get_leave_employees(leave.calendar_id.id, leave), work_hours_list, vals_list)
 
         return self.env['account.analytic.line'].sudo().create(vals_list)
 
