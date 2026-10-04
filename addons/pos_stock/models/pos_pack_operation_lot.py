@@ -11,6 +11,7 @@ class PosPackOperationLot(models.Model):
     order_id = fields.Many2one('pos.order', related="pos_order_line_id.order_id", readonly=False)
     lot_name = fields.Char('Lot Name')
     product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
+    expiration_date = fields.Date('Expiration Date')
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -22,4 +23,4 @@ class PosPackOperationLot(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['lot_name', 'pos_order_line_id', 'write_date']
+        return ['lot_name', 'pos_order_line_id', 'expiration_date', 'write_date']
