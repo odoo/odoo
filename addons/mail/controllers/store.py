@@ -11,7 +11,7 @@ class StoreController(http.Controller):
 
     Extend this class and decorate your own methods with `@store_handler` to add store handlers."""
 
-    @mail_route("/mail/store", methods=["POST"], type="jsonrpc", auth="public", readonly=lambda self, *_: self._is_mail_fetch_readonly())
+    @mail_route("/mail/store", methods=["POST"], type="jsonrpc", auth="public", replica=lambda self, *_: self._is_mail_fetch_readonly())
     def mail_store(self, fetch_params, context=None):
         """Returns store data for the given fetch_params."""
         context_user_id = context.get("uid") if context else None

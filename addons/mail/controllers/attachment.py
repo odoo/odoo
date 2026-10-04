@@ -167,7 +167,7 @@ class AttachmentController(ThreadController):
         "/mail/attachment/pdf_first_page/<int:attachment_id>",
         auth="public",
         methods=["GET"],
-        readonly=True,
+        replica=True,
         type="http",
     )
     @add_guest_to_context
@@ -229,7 +229,7 @@ class AttachmentController(ThreadController):
         "/mail/attachment/render_text/<int:attachment_id>",
         type="http",
         auth="public",
-        readonly=True,
+        replica=True,
     )
     def mail_attachment_render_text(self, attachment_id, access_token=None, head=False, unique=False, **kwargs):
         """Render the text content for preview and thumbnail.

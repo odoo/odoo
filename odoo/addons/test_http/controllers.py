@@ -44,25 +44,25 @@ class TestHttp(http.Controller):
     def greeting_none(self):
         return "Tek'ma'te"
 
-    @http.route('/test_http/greeting-public', type='http', auth='public', readonly=_readonly)
+    @http.route('/test_http/greeting-public', type='http', auth='public', replica=_readonly)
     def greeting_public(self, readonly=True):
         assert self.env.user, "ORM should be initialized"
         assert self.env.cr.readonly == str2bool(readonly)
         return "Tek'ma'te"
 
-    @http.route('/test_http/greeting-user', type='http', auth='user', readonly=_readonly)
+    @http.route('/test_http/greeting-user', type='http', auth='user', replica=_readonly)
     def greeting_user(self, readonly=True):
         assert self.env.user, "ORM should be initialized"
         assert self.env.cr.readonly == str2bool(readonly)
         return "Tek'ma'te"
 
-    @http.route('/test_http/greeting-bearer', type='http', auth='bearer', bearer_scope='rpc', readonly=_readonly)
+    @http.route('/test_http/greeting-bearer', type='http', auth='bearer', bearer_scope='rpc', replica=_readonly)
     def greeting_bearer(self, readonly=True):
         assert self.env.user, "ORM should be initialized"
         assert self.env.cr.readonly == str2bool(readonly)
         return f"Tek'ma'te; user={self.env.user.login}"
 
-    @http.route('/test_http/greeting-bearer-other-scope', type='http', auth='bearer', bearer_scope='other_scope', readonly=True)
+    @http.route('/test_http/greeting-bearer-other-scope', type='http', auth='bearer', bearer_scope='other_scope', replica=True)
     def greeting_bearer_other_scope(self):
         return f"Tek'ma'te; user={self.env.user.login}"
 
@@ -126,7 +126,7 @@ class TestHttp(http.Controller):
     def echo_json(self, **kwargs):
         return kwargs
 
-    @http.route('/test_http/echo-json-context', type='jsonrpc', auth='user', methods=['POST'], csrf=False, readonly=True)
+    @http.route('/test_http/echo-json-context', type='jsonrpc', auth='user', methods=['POST'], csrf=False, replica=True)
     def echo_json_context(self, **kwargs):
         return self.env.context
 
@@ -139,14 +139,14 @@ class TestHttp(http.Controller):
             raise werkzeug.exceptions.BadRequest(e) from exc
         return request.make_json_response(data)
 
-    @http.route('/test_http/echo-json-null', type='jsonrpc', auth='none', readonly=True)
+    @http.route('/test_http/echo-json-null', type='jsonrpc', auth='none', replica=True)
     def echo_json_null(self):
         return
 
     # =====================================================
     # Models
     # =====================================================
-    @http.route('/test_http/<model("test_http.galaxy"):galaxy>', auth='public', readonly=True)
+    @http.route('/test_http/<model("test_http.galaxy"):galaxy>', auth='public', replica=True)
     def galaxy(self, galaxy):
         if not galaxy.exists():
             e = "The Ancients did not settle there."
@@ -160,13 +160,13 @@ class TestHttp(http.Controller):
         })
 
     @http.route('/test_http/<model("test_http.galaxy"):galaxy>/setname',
-                methods=['GET', 'POST'], type='http', auth='user', readonly=_readonly,
+                methods=['GET', 'POST'], type='http', auth='user', replica=_readonly,
                 max_content_length=_max_content_length_1kiB)
     def galaxy_set_name(self, galaxy, name, readonly=True):
         galaxy.name = name
         return galaxy.name
 
-    @http.route('/test_http/<model("test_http.galaxy"):galaxy>/<model("test_http.stargate"):gate>', auth='user', readonly=True)
+    @http.route('/test_http/<model("test_http.galaxy"):galaxy>/<model("test_http.stargate"):gate>', auth='user', replica=True)
     def stargate(self, galaxy, gate):
         if not gate.exists():
             e = "The goauld destroyed the gate"
