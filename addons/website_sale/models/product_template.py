@@ -139,8 +139,6 @@ class ProductTemplate(models.Model):
     # Last update date of the optional, accessory and alternative products.
     suggested_products_last_update = fields.Datetime(string="Last update of suggested products")
 
-    website_size_x = fields.Integer(string="Size X", default=1)
-    website_size_y = fields.Integer(string="Size Y", default=1)
     website_ribbon_id = fields.Many2one(string="Ribbon", comodel_name="product.ribbon")
     minimum_quantity = fields.Integer(string="Minimum Quantity")
     website_sequence = fields.Integer(
