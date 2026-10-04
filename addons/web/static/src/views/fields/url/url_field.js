@@ -24,6 +24,14 @@ export class UrlField extends Component {
         return this.props.record.data[this.props.name] || "";
     }
 
+    get isReadonly() {
+        return this.props.readonly;
+    }
+
+    get readonlyText() {
+        return this.props.text || this.props.record.data[this.props.name] || "";
+    }
+
     get formattedHref() {
         let value = this.props.record.data[this.props.name];
         if (value && !this.props.websitePath) {
