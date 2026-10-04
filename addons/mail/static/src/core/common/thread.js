@@ -2,7 +2,13 @@ import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
-import { useChildRefs, useMessageSelection, useVisible } from "@mail/utils/common/hooks";
+import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
+import {
+    useChildRefs,
+    useMaybePlugin,
+    useMessageSelection,
+    useVisible,
+} from "@mail/utils/common/hooks";
 import { incrementFn } from "@mail/utils/common/signal";
 
 import {
@@ -90,14 +96,13 @@ export class Thread extends Component {
         this.lastJumpPresent = this.props.jumpPresent;
         this.orm = useService("orm");
         this.ui = useService("ui");
-        /** @type {ReturnType<import('@mail/utils/common/hooks').useMessageScrolling>|null} */
-        this.messageHighlight = this.env.messageHighlight;
+        this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
         this.scrollingToHighlight = false;
         useLayoutEffect(
             () => {
                 this.scrollToHighlighted();
             },
-            () => [this.messageHighlight?.highlightedMessageId]
+            () => [this.messageHighlight?.highlightedMessageId()]
         );
         this.present = signal.ref();
         this.jumpPresentRef = signal.ref();
@@ -447,7 +452,7 @@ export class Thread extends Component {
         } else if (this.snapshot && messagesAtBottom) {
             this.setScroll(this.snapshot.scrollTop);
         } else if (
-            !this.env.messageHighlight?.highlightedMessageId &&
+            !this.messageHighlight?.highlightedMessageId() &&
             thread.scrollTop !== undefined
         ) {
             let value;
@@ -533,7 +538,7 @@ export class Thread extends Component {
     }
 
     onClickLoadOlder() {
-        if (this.messageHighlight?.highlightedMessageId) {
+        if (this.messageHighlight?.highlightedMessageId()) {
             return;
         }
         this.props.thread.fetchMoreMessages({ routeParams: this.messageFetchRouteParams });
@@ -580,7 +585,7 @@ export class Thread extends Component {
             return;
         }
         if (targetThread.eq(this.props.thread)) {
-            this.env.messageHighlight?.highlightMessage(parentAtRender, targetThread);
+            this.messageHighlight?.highlightMessage(parentAtRender);
         } else {
             targetThread.highlightMessage = parentAtRender;
             await targetThread.open({ focus: true });
@@ -588,7 +593,8 @@ export class Thread extends Component {
     }
 
     getMessageClassName(message) {
-        return !message.isNotification && this.messageHighlight?.highlightedMessageId === message.id
+        return !message.isNotification &&
+            this.messageHighlight?.highlightedMessageId() === message.id
             ? "o-highlighted"
             : "";
     }
@@ -697,10 +703,10 @@ export class Thread extends Component {
     }
 
     async scrollToHighlighted() {
-        if (!this.messageHighlight?.highlightedMessageId || this.scrollingToHighlight) {
+        if (!this.messageHighlight?.highlightedMessageId() || this.scrollingToHighlight) {
             return;
         }
-        const el = this.messageRefs.get(this.messageHighlight.highlightedMessageId)?.();
+        const el = this.messageRefs.get(this.messageHighlight.highlightedMessageId())?.();
         if (el) {
             this.scrollingToHighlight = true;
             await this.messageHighlight.startupPromise;

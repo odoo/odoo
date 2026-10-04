@@ -1,7 +1,8 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { Message } from "@mail/core/common/message";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
-import { useVisible } from "@mail/utils/common/hooks";
+import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
+import { useMaybePlugin, useVisible } from "@mail/utils/common/hooks";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
@@ -17,6 +18,7 @@ export class MessageCardList extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
         this.props = useProps({
             emptyText: t.string().optional(),
             loadMore: t.boolean().optional(),
@@ -52,7 +54,7 @@ export class MessageCardList extends Component {
         }
         // Give the time for menus to close before scrolling to the message.
         await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
-        await this.env.messageHighlight?.highlightMessage(message);
+        await this.messageHighlight?.highlightMessage(message);
     }
 
     onClickUnpin(message) {
