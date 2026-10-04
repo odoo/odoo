@@ -60,22 +60,40 @@ export class DiscussContent extends Component {
         this.threadDescription = computed(() => this.thread?.description);
         useOnChange(
             () => [this.thread],
-            () => this.actionPanelAutoOpenFn()
+            () => this.autoOpenPanel()
         );
         this.correspondentLocalDateTimeFormatted = computed(() =>
             this.store.localTimeIn(this.thread?.channel?.correspondent?.persona?.tz)
         );
     }
 
-    actionPanelAutoOpenFn() {
+    autoOpenPanel() {
         const memberListAction = this.threadActions.actions.find((a) => a.id === "member-list");
         if (memberListAction && this.store.discuss.isMemberPanelOpenByDefault) {
-            memberListAction.actionPanelOpen();
+            memberListAction.openPanel();
         }
     }
 
     /** @type {import("@mail/core/common/action_list").GetActionComponent} */
     getActionComponent() {}
+
+    /**
+     * The small panels open in a popover on their button, the others beside the conversation.
+     *
+     * @type {import("@mail/core/common/action_list").ActionPanelContainer}
+     */
+    getPanelContainer({ action }) {
+        switch (action.id) {
+            case "invite-people":
+                return "popover";
+            case "notification-settings":
+                return { type: "popover", fixedPosition: true, position: "bottom-end" };
+            case "show-threads":
+                return this.env.inDiscussApp && !this.ui.isSmall
+                    ? { type: "popover", fixedPosition: true }
+                    : undefined;
+        }
+    }
 
     get thread() {
         return this.channel?.()?.thread || this.store.discuss.thread;

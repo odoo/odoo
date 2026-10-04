@@ -34,8 +34,6 @@ registerThreadAction("camera-call", {
     tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
 });
 registerThreadAction("call-settings", {
-    actionPanelComponent: CallSettings,
-    actionPanelComponentProps: () => ({ isCompact: true }),
     condition: ({ channel, owner, store }) =>
         channel?.allowCalls &&
         (owner.props.chatWindow?.isOpen || store.inPublicPage) &&
@@ -43,6 +41,7 @@ registerThreadAction("call-settings", {
     icon: "settings",
     iconClass: "oi-filled oi-fw",
     name: _t("Voice & Video Settings"),
+    panel: { component: CallSettings, props: () => ({ isCompact: true }) },
     sequence: 5,
     sequenceGroup: 30,
 });

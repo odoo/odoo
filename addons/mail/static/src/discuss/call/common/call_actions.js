@@ -93,13 +93,6 @@ export const quickActionSettings = {
     // Self's talking bars stand in for the chevron until hovered, as in the call menu.
     btnClass: "o-discuss-quickVoiceSettings",
     condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
-    dropdownComponent: QuickVoiceSettings,
-    dropdownMenuClass: ({ owner }) =>
-        owner.env.inMeetingView
-            ? "o-discuss-CallActionList-menu overflow-x-hidden"
-            : "p-1 overflow-x-hidden",
-    dropdownPosition: "top-end",
-    dropdownTrigger: true,
     extraContentComponent: TalkingAudioBars,
     // Only self's session in this very call: the call preview shows the button before joining.
     extraContentComponentProps: ({ channel, store }) => ({
@@ -108,6 +101,7 @@ export const quickActionSettings = {
     icon: "keyboard_arrow_up",
     iconClass: "o-discuss-quickVoiceSettings-chevron",
     name: _t("Voice Settings"),
+    panel: { component: QuickVoiceSettings },
     sequence: 15,
     sequenceGroup: 100,
 };
@@ -166,15 +160,9 @@ registerCallAction("camera-on", cameraOnAction);
 /** @type {CallActionDefinition} */
 export const quickVideoSettings = {
     condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
-    dropdownComponent: QuickVideoSettings,
-    dropdownMenuClass: ({ owner }) =>
-        owner.env.inMeetingView
-            ? "o-discuss-CallActionList-menu overflow-x-hidden"
-            : "p-1 overflow-x-hidden",
-    dropdownPosition: "top-end",
-    dropdownTrigger: true,
     icon: "keyboard_arrow_up",
     name: _t("Video Settings"),
+    panel: { component: QuickVideoSettings },
     sequence: 15,
     sequenceGroup: 120,
 };

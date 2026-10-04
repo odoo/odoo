@@ -42,6 +42,20 @@ const messagingMenuItemPatch = {
     get actionsDropdownState() {
         return this.channel ? this.channelDropdownState : super.actionsDropdownState;
     },
+    /** The sidebar has no panel: panels open in a dropdown of their action, or in a dialog. */
+    getPanelContainer(params) {
+        if (!this.channel) {
+            return super.getPanelContainer(params);
+        }
+        if (["delete-thread", "invite-people"].includes(params.action.id)) {
+            return {
+                type: "dialog",
+                contentClass: "o-discuss-ChannelActionDialog",
+                title: this.channel.displayName,
+            };
+        }
+        return "dropdown";
+    },
     hasActions() {
         return this.channel ? this.threadActions.actionsComputed().length : super.hasActions();
     },

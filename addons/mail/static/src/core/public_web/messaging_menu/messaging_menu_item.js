@@ -74,7 +74,10 @@ export class MessagingMenuItem extends Component {
         } else {
             this.rightClickMenu = useRightClickMenu(this.root, {
                 predicate: () => Boolean(this.hasActions()),
-                extraMenuProps: () => ({ actionsList: this.actionsList }),
+                extraMenuProps: () => ({
+                    actionsList: this.actionsList,
+                    panelContainer: this.getPanelContainer.bind(this),
+                }),
             });
         }
     }
@@ -105,19 +108,22 @@ export class MessagingMenuItem extends Component {
         equals: nestedShallowEqual,
     });
 
+    /** @type {import("@mail/core/common/action_list").ActionPanelContainer} */
+    getPanelContainer() {}
+
     hasActions() {
         return this.messageActions.actionsComputed().length;
     }
 
     _computeActionsPartition() {
-        const { quick, other, group, actionPanels } = this.messageActions.partition;
+        const { quick, other, group, panelActions } = this.messageActions.partition;
         const isBookmarkTab = this.activeTab().eq(this.store.messagingMenu.bookmarkTab);
         const filter = (actions) =>
             actions.filter((a) =>
                 isBookmarkTab ? BOOKMARK_TAB_ACTIONS.has(a.id) : !EXCLUDED_ACTIONS.has(a.id)
             );
         return {
-            actionPanels,
+            panelActions,
             quick: filter(quick),
             other: filter(other),
             group: group.map(filter),

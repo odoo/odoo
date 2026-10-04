@@ -76,9 +76,6 @@ registerThreadAction("close", {
     sequenceQuick: 10,
 });
 registerThreadAction("search-messages", {
-    actionPanelComponent: SearchMessagesPanel,
-    actionPanelComponentProps: ({ thread }) => ({ thread }),
-    actionPanelOuterClass: "o-mail-SearchMessagesPanel bg-inherit",
     condition: ({ owner, channel }) =>
         channel &&
         (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
@@ -86,23 +83,26 @@ registerThreadAction("search-messages", {
     hotkey: "f",
     icon: "search",
     name: ({ action }) => (action.isActive ? _t("Close Search") : _t("Search Messages")),
+    panel: {
+        class: "o-mail-SearchMessagesPanel bg-inherit",
+        component: SearchMessagesPanel,
+        props: ({ thread }) => ({ thread }),
+    },
     sequence: 20,
     sequenceGroup: 20,
     setup: ({ action }) =>
         useSubEnv({
             searchMenu: {
-                open: () => action.actionPanelOpen(),
+                open: () => action.openPanel(),
                 close: () => {
                     if (action.isActive) {
-                        action.actionPanelClose();
+                        action.closePanel();
                     }
                 },
             },
         }),
 });
 registerThreadAction("meeting-chat", {
-    actionPanelComponent: MeetingChat,
-    actionPanelOuterClass: "bg-100 border",
     badge: ({ thread }) => thread.isUnread,
     badgeIcon: ({ channel }) => !channel.importantCounter && "circle",
     badgeIconClass: ({ channel }) =>
@@ -112,6 +112,7 @@ registerThreadAction("meeting-chat", {
     condition: ({ owner }) => owner.env.inMeetingView,
     icon: "forum",
     name: _t("Chat"),
+    panel: { class: "bg-100 border", component: MeetingChat },
     sequence: 30,
     tags: ({ channel }) => {
         const tags = [];
