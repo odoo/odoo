@@ -389,7 +389,7 @@ describe("nesting", () => {
         await contains(".o_text_effect_popover .dropdown-item:contains('No Shadow')").click();
         await waitForNone(".o_text_effect_popover");
         expect(getContent(contentEl)).toBe(
-            `<p><span class="o_rfs" style="font-size: ${fontSizeProperty};">[Text]</span></p>`
+            `<p><span style="font-size: ${fontSizeProperty};" class="o_rfs">[Text]</span></p>`
         );
     });
 
@@ -428,7 +428,7 @@ describe("nesting", () => {
         await contains(".o_text_effect_popover .dropdown-item:contains('No Shadow')").click();
         await waitForNone(".o_text_effect_popover");
         expect(getContent(contentEl)).toBe(
-            `<p><span class="o_rfs" style="font-size: ${fontSizeProperty};">[Text]</span></p>`
+            `<p><span style="font-size: ${fontSizeProperty};" class="o_rfs">[Text]</span></p>`
         );
     });
 

@@ -213,6 +213,7 @@ export class Builder extends Component {
                 publicAttachments: true,
                 direction: "ltr",
                 maxFontSize: 400,
+                responsiveFontSizeFallback: true,
             },
             this.env.services
         );
