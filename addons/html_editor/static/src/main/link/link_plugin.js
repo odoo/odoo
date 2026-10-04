@@ -9,7 +9,6 @@ import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils
 import {
     isElement,
     isStylable,
-    isPhrasingContent,
     isProtected,
     isProtecting,
     isVisible,
@@ -199,6 +198,7 @@ export class LinkPlugin extends Plugin {
         "lineBreak",
         "overlay",
         "color",
+        "format",
         "baseContainer",
         "feff",
         "delete",
@@ -861,7 +861,7 @@ export class LinkPlugin extends Plugin {
                 });
                 if (!this.config.hideStylingInLinkPopover) {
                     link.removeAttribute("style");
-                    this.dependencies.color.removeAllColor();
+                    this.dependencies.format.removeSelectionFormats(["color", "backgroundColor"]);
                 }
                 // Remove the current link (linkInDocument) if it has no content
                 if (
@@ -891,26 +891,6 @@ export class LinkPlugin extends Plugin {
                 // if the link is a customized button, we don't want to change the color
                 continue;
             }
-            const { color } = anchorEl.style;
-            const childNodes = [...anchorEl.childNodes];
-            // For each anchor element, if it has an inline color style,
-            // (converted from an external style), remove it from the anchor,
-            // create a font tag inside it, and move the color to the font tag.
-            // This ensures the color is applied to the font element instead of
-            // the anchor element itself.
-            if (color && childNodes.every(isPhrasingContent)) {
-                anchorEl.style.removeProperty("color");
-                const font =
-                    anchorEl.nodeName === "FONT" ? anchorEl : anchorEl.querySelector("font");
-                if (font && cleanZWChars(anchorEl.textContent) === font.textContent) {
-                    continue;
-                }
-                const newFont = this.document.createElement("font");
-                newFont.append(...childNodes);
-                anchorEl.appendChild(newFont);
-                this.dependencies.color.colorElement(newFont, color, "color");
-            }
-
             // When a link contains unsupported element (like an iframe or a link),
             // we remove the link. Cases can happen when a image link is replaced
             // by a document or a video

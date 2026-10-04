@@ -282,14 +282,14 @@ describe("Selection collapsed", () => {
                 });
             });
 
-            test("should add two list items with a font at the end of a list within a list", async () => {
+            test("should add two list items with a span at the end of a list within a list", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                             <ul>
                                 <li><p>ab</p>
                                     <ul>
                                         <li>
-                                            <font style="color: red;">cd[]</font>
+                                            <span style="color: red;">cd[]</span>
                                         </li>
                                     </ul>
                                 </li>
@@ -304,8 +304,8 @@ describe("Selection collapsed", () => {
                             <ul>
                                 <li><p>ab</p>
                                     <ul>
-                                        <li><font style="color: red;">cd</font></li>
-                                        <li><font style="color: red;">b</font></li>
+                                        <li><span style="color: red;">cd</span></li>
+                                        <li><span style="color: red;">b</span></li>
                                         <li>[]<br></li>
                                     </ul>
                                 </li>
@@ -878,14 +878,14 @@ describe("Selection collapsed", () => {
                     });
                 });
 
-                test("should add two list items with a font at the end of a checklist within a checklist", async () => {
+                test("should add two list items with a span at the end of a checklist within a checklist", async () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li><p>ab</p>
                                     <ul class="o_checklist">
                                         <li>
-                                            <font style="color: red;">cd[]</font>
+                                            <span style="color: red;">cd[]</span>
                                         </li>
                                     </ul>
                                 </li>
@@ -900,8 +900,8 @@ describe("Selection collapsed", () => {
                             <ul class="o_checklist">
                                 <li><p>ab</p>
                                     <ul class="o_checklist">
-                                        <li><font style="color: red;">cd</font></li>
-                                        <li><font style="color: red;">0</font></li>
+                                        <li><span style="color: red;">cd</span></li>
+                                        <li><span style="color: red;">0</span></li>
                                         <li>[]<br></li>
                                     </ul>
                                 </li>
@@ -969,14 +969,14 @@ describe("Selection collapsed", () => {
                     });
                 });
 
-                test("should add two list items with a font at the end of a checklist within a checklist", async () => {
+                test("should add two list items with a span at the end of a checklist within a checklist", async () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li><p>ab</p>
                                     <ul class="o_checklist">
                                         <li class="o_checked">
-                                            <font style="color: red;">cd[]</font>
+                                            <span style="color: red;">cd[]</span>
                                         </li>
                                     </ul>
                                 </li>
@@ -991,8 +991,8 @@ describe("Selection collapsed", () => {
                             <ul class="o_checklist">
                                 <li><p>ab</p>
                                     <ul class="o_checklist">
-                                        <li class="o_checked"><font style="color: red;">cd</font></li>
-                                        <li><font style="color: red;">0</font></li>
+                                        <li class="o_checked"><span style="color: red;">cd</span></li>
+                                        <li><span style="color: red;">0</span></li>
                                         <li>[]<br></li>
                                     </ul>
                                 </li>

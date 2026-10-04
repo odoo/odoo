@@ -114,31 +114,31 @@ describe("range not collapsed", () => {
 
     test("should wrap the selected text with clones of ancestors up to a block element to keep styles (1)", async () => {
         await setupEditor(
-            '<p>[<span style="font-size: 16px;">Test</span> <span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">Test</font></span>]</p>'
+            '<p>[<span style="font-size: 16px;">Test</span> <span style="font-size: 48px;"><span style="color: rgb(255, 0, 0);">Test</span></span>]</p>'
         );
         const clipboardData = new DataTransfer();
         await press(["ctrl", "c"], { dataTransfer: clipboardData });
         expect(clipboardData.getData("text/plain")).toBe("Test Test");
         expect(clipboardData.getData("text/html")).toBe(
-            '<p><span style="font-size: 16px;">Test</span> <span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">Test</font></span></p>'
+            '<p><span style="font-size: 16px;">Test</span> <span style="font-size: 48px;"><span style="color: rgb(255, 0, 0);">Test</span></span></p>'
         );
         expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
-            '<p><span style="font-size: 16px;">Test</span> <span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">Test</font></span></p>'
+            '<p><span style="font-size: 16px;">Test</span> <span style="font-size: 48px;"><span style="color: rgb(255, 0, 0);">Test</span></span></p>'
         );
     });
 
     test("should wrap the selected text with clones of ancestors up to a block element to keep styles (2)", async () => {
         await setupEditor(
-            '<p><strong><em><u><font class="text-o-color-1">hello [there]</font></u></em></strong></p>'
+            '<p><strong><em><u><span class="text-o-color-1">hello [there]</span></u></em></strong></p>'
         );
         const clipboardData = new DataTransfer();
         await press(["ctrl", "c"], { dataTransfer: clipboardData });
         expect(clipboardData.getData("text/plain")).toBe("there");
         expect(clipboardData.getData("text/html")).toBe(
-            '<p><strong><em><u><font class="text-o-color-1">there</font></u></em></strong></p>'
+            '<p><strong><em><u><span class="text-o-color-1">there</span></u></em></strong></p>'
         );
         expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
-            '<p><strong><em><u><font class="text-o-color-1">there</font></u></em></strong></p>'
+            '<p><strong><em><u><span class="text-o-color-1">there</span></u></em></strong></p>'
         );
     });
 
@@ -162,16 +162,16 @@ describe("range not collapsed", () => {
 
     test("should copy the selection as a single list item (3)", async () => {
         await setupEditor(
-            '<ul><li><span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">[First]</font></span></li><li>Second</li></ul>'
+            '<ul><li><span style="font-size: 48px;"><span style="color: rgb(255, 0, 0);">[First]</span></span></li><li>Second</li></ul>'
         );
         const clipboardData = new DataTransfer();
         await press(["ctrl", "c"], { dataTransfer: clipboardData });
         expect(clipboardData.getData("text/plain")).toBe("First");
         expect(clipboardData.getData("text/html")).toBe(
-            '<span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">First</font></span>'
+            '<span style="font-size: 48px;"><span style="color: rgb(255, 0, 0);">First</span></span>'
         );
         expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
-            '<span style="font-size: 48px;"><font style="color: rgb(255, 0, 0);">First</font></span>'
+            '<span style="font-size: 48px;"><span style="color: rgb(255, 0, 0);">First</span></span>'
         );
     });
 

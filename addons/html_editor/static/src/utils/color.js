@@ -167,11 +167,8 @@ export function getColorOrClass(node, mode = "color") {
     if (!node) {
         return null;
     }
-    const classRegex = mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX;
-    const colorClass = [...node.classList].find((cls) => classRegex.test(cls));
-    if (colorClass) {
-        return { type: "class", value: colorClass };
-    }
+    // Checked before the classes: `text-gradient` matches TEXT_CLASSES_REGEX
+    // but is only a marker - the value lives in `background-image`.
     if (isColorGradient(node.style["background-image"])) {
         const isTextGradient = node.classList.contains("text-gradient");
         if (
@@ -180,6 +177,11 @@ export function getColorOrClass(node, mode = "color") {
         ) {
             return { type: "gradient", value: node.style["background-image"] };
         }
+    }
+    const classRegex = mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX;
+    const colorClass = [...node.classList].find((cls) => classRegex.test(cls));
+    if (colorClass) {
+        return { type: "class", value: colorClass };
     }
     if (node.style[mode] && node.style[mode] !== "inherit") {
         return { type: "style", value: node.style[mode] };
