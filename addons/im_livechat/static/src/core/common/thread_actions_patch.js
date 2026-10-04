@@ -8,6 +8,7 @@ patch(ThreadAction.prototype, {
         const visitorActions = [
             "fold-chat-window",
             "close",
+            "expand-discuss",
             "restart",
             "call-settings",
             "meeting-chat",

@@ -1,8 +1,23 @@
 import { registerThreadAction, threadActionsRegistry } from "@mail/core/common/thread_actions";
 import "@mail/discuss/call/common/thread_actions";
+import "@mail/discuss/core/common/thread_actions";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
+import { redirect } from "@web/core/utils/urls";
+
+patch(threadActionsRegistry.get("expand-discuss"), {
+    condition: ({ channel, owner, store }) =>
+        store.self_user?.share === true &&
+        channel?.channel_type === "livechat" &&
+        !channel.isTransient &&
+        channel.self_member_id &&
+        owner.props.chatWindow?.isOpen &&
+        !store.env.services.ui.isSmall,
+    onSelected({ channel }) {
+        redirect(`/discuss/channel/${channel.id}`);
+    },
+});
 
 registerThreadAction("restart", {
     condition: ({ channel, owner }) =>
