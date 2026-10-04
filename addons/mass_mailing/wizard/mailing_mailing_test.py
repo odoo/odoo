@@ -77,6 +77,8 @@ class MailingMailingTest(models.TransientModel):
                     'subject': mailing.subject,
                     'body': mailing.body_html,
                 }
+                if mailing.reply_to_mode == 'new':
+                    composer_values['reply_to'] = mailing.reply_to
                 composer = self.env['mail.compose.message'].with_context(
                     default_email_from=mailing.email_from,
                 ).new(composer_values)
