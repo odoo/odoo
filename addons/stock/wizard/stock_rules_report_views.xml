@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_stock_rules_report" model="ir.ui.view">
-        <field name="name">Stock Rules Report</field>
+        <field name="name">Inventory Rules Report</field>
         <field name="model">stock.rules.report</field>
         <field name="arch" type="xml">
             <form string="Product Routes Report">
@@ -28,7 +28,7 @@
     </record>
 
     <record id="action_stock_rules_report" model="ir.actions.act_window">
-        <field name="name">Stock Rules Report</field>
+        <field name="name">Inventory Rules Report</field>
         <field name="res_model">stock.rules.report</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_stock_rules_report"/>
