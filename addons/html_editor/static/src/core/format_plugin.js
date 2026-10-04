@@ -23,7 +23,14 @@ import {
     findFurthest,
 } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
-import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../utils/position";
+import {
+    boundariesIn,
+    boundariesOut,
+    childNodeIndex,
+    DIRECTIONS,
+    leftPos,
+    rightPos,
+} from "../utils/position";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { _t } from "@web/core/l10n/translation";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
@@ -277,31 +284,43 @@ export class FormatPlugin extends Plugin {
         }
 
         const selectedTextNodes = /** @type { Text[] } **/ (
-            this.dependencies.selection
-                .getTargetedNodes()
-                .filter(
-                    (n) =>
-                        this.dependencies.selection.areNodeContentsFullySelected(n) &&
-                        ((isTextNode(n) &&
-                            (isVisibleTextNode(n) ||
-                                isZWS(n) ||
-                                (/^\n+$/.test(n.nodeValue) && !applyStyle))) ||
-                            (n.nodeName === "BR" &&
-                                (isFakeLineBreak(n) ||
-                                    previousLeaf(n, closestBlock(n))?.nodeName === "BR"))) &&
-                        isContentEditable(n)
-                )
+            this.dependencies.selection.getTargetedNodes().filter((n) => {
+                if (!this.dependencies.selection.areNodeContentsFullySelected(n)) {
+                    return false;
+                }
+                if (n.nodeName === "T") {
+                    return true;
+                }
+                if (!isContentEditable(n)) {
+                    return false;
+                }
+
+                const isRelevantTextNode =
+                    isTextNode(n) &&
+                    (isVisibleTextNode(n) ||
+                        isZWS(n) ||
+                        (/^\n+$/.test(n.nodeValue) && !applyStyle));
+                const isFakeBr = n.nodeName === "BR" && isFakeLineBreak(n);
+                const followsBr = previousLeaf(n, closestBlock(n))?.nodeName === "BR";
+
+                return isRelevantTextNode || isFakeBr || followsBr;
+            })
         );
 
         const textNodesToFormat = selectedTextNodes.filter(
             (n) => this.checkPredicates("is_formattable_node_predicates", n) ?? true
         );
 
-        const tagetedFieldNodes = new Set(
+        const targetedFieldNodes = new Set(
             this.dependencies.selection
                 .getTargetedNodes()
                 .map((node) => closestElement(node, PROTECTED_QWEB_SELECTOR))
-                .filter((node) => node && this.dependencies.selection.isNodeEditable(node))
+                .filter(
+                    (node) =>
+                        node &&
+                        this.dependencies.selection.isNodeEditable(node) &&
+                        node.nodeName !== "T"
+                )
         );
         const formatSpec = formatsSpecs[formatName];
         for (const node of textNodesToFormat) {
@@ -375,7 +394,7 @@ export class FormatPlugin extends Plugin {
             }
         }
 
-        for (const targetedFieldNode of tagetedFieldNodes) {
+        for (const targetedFieldNode of targetedFieldNodes) {
             if (applyStyle) {
                 formatSpec.addStyle(targetedFieldNode, formatProps);
             } else {
@@ -417,24 +436,48 @@ export class FormatPlugin extends Plugin {
             const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
             let newSelection;
             if (selection.direction === DIRECTIONS.RIGHT) {
+                let anchorNode = firstNode;
+                let anchorOffset = 0;
+                let focusNode = lastNode;
+                let focusOffset = lastNode.length;
+                if (anchorNode.nodeName === "T") {
+                    anchorNode = firstNode.parentElement;
+                    anchorOffset = childNodeIndex(firstNode);
+                }
+                if (focusNode.nodeName === "T") {
+                    focusNode = focusNode.parentElement;
+                    focusOffset = childNodeIndex(firstNode) + 1;
+                }
                 newSelection = {
-                    anchorNode: firstNode,
-                    anchorOffset: 0,
-                    focusNode: lastNode,
-                    focusOffset: lastNode.length,
+                    anchorNode,
+                    anchorOffset,
+                    focusNode,
+                    focusOffset,
                 };
             } else {
+                let anchorNode = lastNode;
+                let anchorOffset = lastNode.length;
+                let focusNode = lastNode;
+                let focusOffset = lastNode.length;
+                if (anchorNode.nodeName === "T") {
+                    anchorNode = anchorNode.parentElement;
+                    anchorOffset = childNodeIndex(firstNode) + 1;
+                }
+                if (focusNode.nodeName === "T") {
+                    focusNode = focusNode.parentElement;
+                    focusOffset = childNodeIndex(firstNode);
+                }
                 newSelection = {
-                    anchorNode: lastNode,
-                    anchorOffset: lastNode.length,
-                    focusNode: firstNode,
-                    focusOffset: 0,
+                    anchorNode,
+                    anchorOffset,
+                    focusNode,
+                    focusOffset,
                 };
             }
             this.dependencies.selection.setSelection(newSelection, { normalize: false });
             return true;
         }
-        if (tagetedFieldNodes.size > 0) {
+        if (targetedFieldNodes.size > 0) {
             return true;
         }
     }
