@@ -1,6 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< cda1356a0fbc0ba5ee9a46b8b44918dcee55066a
 from odoo import _, api, fields, models
+||||||| ea9d185f2ed59c8e18568d490281c914142a5d2c
+from odoo import _, api, Command, fields, models
+from odoo.osv import expression
+=======
+from ast import literal_eval
+
+from odoo import _, api, Command, fields, models
+from odoo.osv import expression
+>>>>>>> 85bff348710682a12f59700f36e5daec1fbb1f5d
 from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 
@@ -43,7 +53,19 @@ class StockPickingType(models.Model):
             record.count_picking_batch = count.get((record.id, False), 0)
 
     def action_batch(self):
+<<<<<<< cda1356a0fbc0ba5ee9a46b8b44918dcee55066a
         action = self._get_action('stock_picking_batch.stock_picking_batch_action')
+||||||| ea9d185f2ed59c8e18568d490281c914142a5d2c
+        action = self.env['ir.actions.act_window']._for_xml_id("stock_picking_batch.stock_picking_batch_action")
+=======
+        action = self.env['ir.actions.act_window']._for_xml_id("stock_picking_batch.stock_picking_batch_action")
+        action_context = literal_eval(action['context']) if action['context'] else {}
+        action_context.update({
+            'default_picking_type_id': self.id,
+            'search_default_picking_type_id': self.id,
+        })
+        action["context"] = action_context
+>>>>>>> 85bff348710682a12f59700f36e5daec1fbb1f5d
         if self.env.context.get("view_mode"):
             del action["mobile_view_mode"]
             del action["views"]
