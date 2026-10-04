@@ -9,7 +9,7 @@
         <t t-set="textClass" t-if="Object.hasOwn(this.props.record.data, 'publish_on') and this.props.record.data.publish_on">text-warning</t>
         <t t-set="textClass" t-elif="this.props.record.data[this.props.name]">text-success</t>
         <t t-set="textClass" t-else="">text-danger</t>
-        <i class="o_button_icon oi oi-fw" data-icon="public" t-att-class="textClass"/>
+        <i class="o_button_icon oi oi-fw" data-icon="public" t-att-class="textClass" role="img" aria-hidden="true"/>
         <div class="o_stat_info">
             <span class="o_stat_text">Go to<br/>Website</span>
         </div>

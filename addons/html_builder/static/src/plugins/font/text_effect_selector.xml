@@ -65,9 +65,9 @@
                                 <BuilderColorPicker enabledTabs="['custom', 'solid']" selectedTab="'solid'"
                                                     colorPickerClassName="''" colorPickerPopoverClassName="''"/>
                             </BuilderRow>
-                            <BuilderRow label.translate="Offset" tooltip.translate="Horizontal and Vertical offset">
-                                <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetX', shadowIndex: shadowIndex }" unit="'px'" prefixIcon="'arrow_range'"/>
-                                <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetY', shadowIndex: shadowIndex }" unit="'px'" prefixIcon="'height'"/>
+                            <BuilderRow label.translate="Offset" tooltip.translate="Vertical and Horizontal offset">
+                                <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetY', shadowIndex: shadowIndex }" unit="'px'" tooltip.translate="Vertical offset" prefixIcon="'height'"/>
+                                <BuilderNumberInput actionParam="{ mainParam: 'shadowOffsetX', shadowIndex: shadowIndex }" unit="'px'" tooltip.translate="Horizontal offset" prefixIcon="'arrow_range'"/>
                             </BuilderRow>
                             <BuilderRow label.translate="Blur">
                                 <BuilderNumberInput actionParam="{ mainParam: 'shadowBlur', shadowIndex: shadowIndex }" unit="'px'" min="0"/>

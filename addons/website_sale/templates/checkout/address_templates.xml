@@ -89,7 +89,7 @@
                             data-bs-delay="0"
                         />
                         <label class="input-group-text input-group-text-subtle d-flex align-items-center invisible">
-                            <i class="oi oi-filled" data-icon="edit" role="img"/>
+                            <i class="oi oi-filled" data-icon="edit" role="img" aria-label="Edit"/>
                         </label>
                     </div>
                     <div
@@ -107,11 +107,12 @@
                             t-attf-for="o_estimated_delivery_date_{{dm.id}}"
                             class="input-group-text input-group-text-subtle d-flex align-items-center"
                             t-att-title="tooltip_title"
+                            t-att-aria-label="tooltip_title"
                             data-bs-toggle="tooltip"
                             data-bs-placement="top"
                             data-bs-delay="0"
                         >
-                            <i class="oi oi-filled cursor-pointer" data-icon="edit" role="img"/>
+                            <i class="oi oi-filled cursor-pointer" data-icon="edit" role="img" aria-hidden="true"/>
                         </label>
                     </div>
                 </t>
@@ -147,7 +148,7 @@
                     title="Add an address"
                     aria-label="Add an address"
                 >
-                    <i class="oi me-1" data-icon="add"/>Add
+                    <i class="oi me-1" data-icon="add" role="img" aria-hidden="true"/>Add
                 </a>
             </div>
             <t t-call="website_sale.address_list"
@@ -173,7 +174,7 @@
                     title="Add an address"
                     aria-label="Add an address"
                 >
-                    <i class="oi me-1" data-icon="add"/>Add
+                    <i class="oi me-1" data-icon="add" role="img" aria-hidden="true"/>Add
                 </a>
             </div>
             <div t-if="has_delivery" class="form-check form-switch mt-2">
@@ -300,14 +301,14 @@
     <template id="website_sale.address_edit_button" name="Address edit button">
         <t t-if="xmlid != 'website_sale.confirmation'">
             <a t-if="order.partner_invoice_id.country_id" class="float-end no-decoration" href="/shop/checkout">
-                <i class="oi oi-filled me-1" data-icon="edit"/>Edit
+                <i class="oi oi-filled me-1" data-icon="edit" role="img" aria-hidden="true"/>Edit
             </a>
             <a
                 t-else=""
                 class="float-end no-decoration"
                 t-attf-href="/shop/address?partner_id={{order.partner_invoice_id.id}}&amp;address_type=billing"
             >
-                <i class="oi oi-filled me-1" data-icon="edit"/>Want an invoice?
+                <i class="oi oi-filled me-1" data-icon="edit" role="img" aria-hidden="true"/>Want an invoice?
             </a>
         </t>
     </template>

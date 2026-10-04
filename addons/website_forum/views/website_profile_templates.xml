@@ -47,7 +47,7 @@
                             <div class="dropdown" id="o_wprofile_forum_activity_filter" role="tablist">
                                 <button class="btn btn-light dropdown-toggle" type="button" id="o_wprofile_forum_activity_filter_button"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="oi oi-filled" data-icon="filter_alt"/><span class="o_wprofile_forum_activity_filter_label ms-2"/>
+                                    <i class="oi oi-filled" data-icon="filter_alt" role="img" aria-hidden="true"/><span class="o_wprofile_forum_activity_filter_label ms-2"/>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="o_wprofile_forum_activity_filter_button">
                                     <li t-if="uid == user.id">
@@ -75,7 +75,7 @@
                                         placeholder="Search Questions..."/>
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                     <button type="submit" class="btn btn-light" aria-label="Search" title="Search">
-                                        <i class="oi" data-icon="search"/>
+                                        <i class="oi" data-icon="search" role="img" aria-hidden="true"/>
                                     </button>
                                 </div>
                             </form>
@@ -86,7 +86,7 @@
                                         placeholder="Search Answers..."/>
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                     <button type="submit" class="btn btn-light" aria-label="Search" title="Search">
-                                        <i class="oi" data-icon="search"/>
+                                        <i class="oi" data-icon="search" role="img" aria-hidden="true"/>
                                     </button>
                                 </div>
                             </form>
@@ -108,7 +108,7 @@
                                     <t t-else="">You have not posted any questions yet.</t>
                                     <br />
                                     <a href="/forum/" class="btn btn-link px-0">
-                                        <i class="oi d-inline-block" data-icon="east"/> Go to Forums
+                                        <i class="oi d-inline-block" data-icon="east" role="img" aria-hidden="true"/> Go to Forums
                                     </a>
                                 </div>
                                 <t t-else="">
@@ -117,7 +117,7 @@
                                         <t t-else="">This user hasn't posted any questions yet.</t>
                                         <br/>
                                         <a href="/forum/" class="btn btn-link px-0">
-                                            <i class="oi d-inline-block" data-icon="east"/> Go to Forums
+                                            <i class="oi d-inline-block" data-icon="east" role="img" aria-hidden="true"/> Go to Forums
                                         </a>
                                     </div>
                                 </t>
@@ -151,7 +151,7 @@
                                     <t t-else="">You have not answered any questions yet.</t>
                                     <br />
                                     <a href="/forum/" class="btn btn-link px-0">
-                                        <i class="oi d-inline-block" data-icon="east"/> Go to Forums
+                                        <i class="oi d-inline-block" data-icon="east" role="img" aria-hidden="true"/> Go to Forums
                                     </a>
                                 </div>
                                 <div t-else="" class="text-muted">
@@ -159,7 +159,7 @@
                                     <t t-else="">This user hasn't answered any questions yet.</t>
                                     <br/>
                                     <a href="/forum/" class="btn btn-link px-0">
-                                        <i class="oi d-inline-block" data-icon="east"/> Go to Forums
+                                        <i class="oi d-inline-block" data-icon="east" role="img" aria-hidden="true"/> Go to Forums
                                     </a>
                                 </div>
                             </div>
@@ -196,7 +196,7 @@
     <template id="forum_filter_tag" name="Filtering Forum Tag">
         <t t-if="forum_filtered">
             <span class="d-inline-flex align-items-center gap-2 rounded py-1 ps-2 pe-0 bg-200 small">
-                <i class="oi oi-filled text-muted" data-icon="filter_alt"/>
+                <i class="oi oi-filled text-muted" data-icon="filter_alt" role="img" aria-hidden="true"/>
                 <t t-out="forum_filtered"/>
                 <a t-attf-href="/profile/user/#{user.id}" class="oi btn m-n1 text-muted" data-icon="close_small"/>
             </span>
@@ -245,7 +245,7 @@
             <div t-if="my_profile" class="text-muted">
                 Help moderating the forums by upvoting and downvoting posts. <br />
                 <a href="/forum/" class="btn-link">
-                    <i class="oi" data-icon="arrow_forward"></i> Go To Forums
+                    <i class="oi" data-icon="arrow_forward" role="img" aria-hidden="true"></i> Go To Forums
                 </a>
             </div>
             <p t-else="" class="text-muted">You haven't given any votes yet.</p>

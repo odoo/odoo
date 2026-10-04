@@ -23,7 +23,7 @@ according to the enabled options.
                     <t t-else="">Articles</t>
                 </div>
                 <span t-if="search" class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
-                    <i class="oi me-2 text-muted" data-icon="search"/>
+                    <i class="oi me-2 text-muted" data-icon="search" role="img" aria-hidden="true"/>
                     <t t-out="search"/>
                     <a t-att-href="blog_url(search=False, tag=tag)" class="btn border-0 py-1 post_link">×</a>
                 </span>
@@ -37,7 +37,7 @@ according to the enabled options.
                     <t t-call="website_blog.tags_list" tags="other_tags" dismissibleBtn="True"/>
                 </t>
                 <span t-if="date_begin" class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
-                    <i class="oi me-2 text-muted" data-icon="calendar_today"/>
+                    <i class="oi me-2 text-muted" data-icon="calendar_today" role="img" aria-hidden="true"/>
                     <t t-out="date_begin" t-options="{'widget': 'date', 'format': 'MMM yyyy'}"/>
                     <a t-attf-href="#{blog_url(date_begin=False, date_end=False, tag=tag)}" class="btn border-0 py-1 post_link">×</a>
                 </span>
@@ -317,8 +317,8 @@ according to the enabled options.
 <template id="post_info">
     <div t-attf-class="d-flex flex-wrap align-items-center justify-content-between small #{_info_classes or 'flex-grow-1 my-2'}">
         <div class="px-2 d-none d-xl-block">
-            <span class="text-nowrap" title="Comments"><i class="oi oi-filled text-muted me-1" data-icon="chat_bubble"/><t t-out="len(blog_post.message_ids)"/></span>
-            <span class="text-nowrap ps-2" title="Views"><i class="oi text-muted me-1" data-icon="bar_chart"/><t t-out="blog_post.visits"/></span>
+            <span class="text-nowrap" title="Comments"><i class="oi oi-filled text-muted me-1" data-icon="chat_bubble" role="img" aria-hidden="true"/><t t-out="len(blog_post.message_ids)"/></span>
+            <span class="text-nowrap ps-2" title="Views"><i class="oi text-muted me-1" data-icon="bar_chart" role="img" aria-hidden="true"/><t t-out="blog_post.visits"/></span>
         </div>
     </div>
 </template>
@@ -359,11 +359,11 @@ according to the enabled options.
     <t t-elif="not blog_post.website_published" t-set="state" t-value="'Unpublished'"/>
     <t t-else="" t-set="state" t-value="False"/>
     <small t-if="state" t-attf-class="badge w-auto h-auto o_not_editable #{state == 'Scheduled' and 'bg-warning' or 'bg-danger'} #{is_mobile_icon and 'd-none d-lg-block'} #{_badge_classes}">
-        <i class="oi me-2" t-att-data-icon="'schedule' if state == 'Scheduled' else 'block'" role="presentation"/><t t-out="state"/>
+        <i class="oi me-2" t-att-data-icon="'schedule' if state == 'Scheduled' else 'block'" role="img" aria-hidden="true"/><t t-out="state"/>
     </small>
     <!-- Only display the icon on mobile if asked -->
     <small t-if="state and is_mobile_icon" t-attf-class="o_wblog_mobile_badge badge w-auto h-auto o_not_editable d-lg-none #{state == 'Scheduled' and 'bg-warning' or 'bg-danger'} #{_badge_classes}">
-        <i class="oi" t-att-data-icon="'schedule' if state == 'Scheduled' else 'block'" role="presentation" t-att-title="state"/>
+        <i class="oi" t-att-data-icon="'schedule' if state == 'Scheduled' else 'block'" role="img" t-att-aria-label="state" t-att-title="state"/>
     </small>
 </template>
 

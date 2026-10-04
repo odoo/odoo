@@ -20,7 +20,7 @@
                     t-on-click="() => inStoreAvailable ? this.selectPickup() : null"/>
                 <div class="small">
                     <strong>
-                        <i class="oi oi-fw me-1" data-icon="storefront"/>
+                        <i class="oi oi-fw me-1" data-icon="storefront" role="img" aria-hidden="true"/>
                         <t
                             t-if="this.state.selectedLocationData.id"
                             t-out="this.state.selectedLocationData.name"
@@ -34,12 +34,16 @@
                         class="text-primary ms-1"
                         t-att-title="this.props.showSelectStoreButton
                             ? 'Change store' : 'See the store on the map'"
+                        t-att-aria-label="this.props.showSelectStoreButton
+                            ? 'Change store' : 'See the store on the map'"
                         t-on-click.prevent.stop="() => this.openLocationSelector()"
                     >
                         <i
                             class="oi oi-fw"
                             t-att-data-icon="this.props.showSelectStoreButton
                                 ? 'edit_square' : 'location_on'"
+                            role="img"
+                            aria-hidden="true"
                         />
                     </a>
                 </div>
@@ -69,7 +73,7 @@
                     t-on-click="() => this.state.deliveryData.stock_data.in_stock ? this.selectStandardDelivery() : null"
                 />
                 <strong class="small">
-                    <i class="oi oi-fw me-1" data-icon="local_shipping"/>
+                    <i class="oi oi-fw me-1" data-icon="local_shipping" role="img" aria-hidden="true"/>
                     Shipping
                     <i
                         class="d-none d-sm-inline oi cursor-pointer ms-1"

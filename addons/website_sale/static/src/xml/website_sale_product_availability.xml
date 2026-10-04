@@ -17,7 +17,7 @@
                     />
                     <t t-elif="this.has_out_of_stock_message">
                         <div class="d-inline-flex align-items-center badge text-start text-bg-danger text-wrap">
-                            <i class="oi oi-filled me-2 text-danger" data-icon="circle"/>
+                            <i class="oi oi-filled me-2 text-danger" data-icon="circle" role="img" aria-hidden="true"/>
                             <span>
                                 <t t-out="this.out_of_stock_message"/>
                             </span>
@@ -25,7 +25,7 @@
                     </t>
                     <t t-elif="!this.allow_out_of_stock_order">
                         <div class="badge text-bg-danger">
-                            <i class="oi oi-filled me-2 text-danger" data-icon="circle"/>Out of Stock
+                            <i class="oi oi-filled me-2 text-danger" data-icon="circle" role="img" aria-hidden="true"/>Out of Stock
                         </div>
                     </t>
                 </div>
@@ -35,7 +35,7 @@
                 t-elif="this.show_availability and this.free_qty lte this.available_threshold"
                 t-attf-class="availability_message_#{this.product_template} my-3 badge text-bg-warning"
             >
-                <i class="oi oi-filled text-warning me-2" data-icon="circle" role="presentation"/>
+                <i class="oi oi-filled text-warning me-2" data-icon="circle" role="img" aria-hidden="true"/>
                 <t t-out="this.formatQuantity(this.free_qty)"/><t t-if="this.uom_name" t-out="' ' + this.uom_name"/> in stock
                 <span
                     id="already_in_cart_message"
