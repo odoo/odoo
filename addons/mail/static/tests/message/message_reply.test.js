@@ -8,15 +8,18 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { describe, expect, test } from "@odoo/hoot";
-import { queryFirst } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";
-import { getService, serverState } from "@web/../tests/web_test_helpers";
+import { contains as webContains, getService, serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 
 import { range } from "@web/core/utils/numbers";
 import { getOrigin } from "@web/core/utils/urls";
+import {
+    containsTextInComposer,
+    insertTextInComposer,
+    waitForComposerEditor,
+} from "../mail_test_helpers_composer";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -154,7 +157,8 @@ test("can reply to logged note in chatter", async () => {
     await click(".o-mail-Message:contains('Test message from B') [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
     await contains("button.active:text('Log note')");
-    await contains(".o-mail-Composer.o-focused .o-mail-Composer-input", { value: "@Partner B " });
+    await contains(".o-mail-Composer.o-focused .o-mail-Composer-html");
+    await containsTextInComposer(".o-mail-Composer", "\uFEFF@Partner B\uFEFF\u00a0");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message a.o_mail_redirect:text('@Partner B')");
     await click(".o-mail-Message:contains('@Partner B') [title='Expand']");
@@ -182,15 +186,9 @@ test("reply to logged note in chatter keeps prefilled mention in html composer",
     await click(".o-mail-Message:contains('Test message from B') [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
     await contains("button.active:text('Log note')");
-    await contains(".o-mail-Composer.o-focused .o-mail-Composer-html.odoo-editor-editable");
-    await contains(
-        ".o-mail-Composer-html.odoo-editor-editable a.o_mail_redirect:text('@Partner B')"
-    );
-    const editor = {
-        document,
-        editable: queryFirst(".o-mail-Composer-html.odoo-editor-editable"),
-    };
-    await htmlInsertText(editor, "Hello");
+    await contains(".o-mail-Composer.o-focused .o-mail-Composer-html");
+    await contains(".o-mail-Composer-html a.o_mail_redirect:text('@Partner B')");
+    await insertTextInComposer(".o-mail-Composer", "Hello");
     await contains(".o-mail-Composer-send:enabled");
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message:contains('Hello') a.o_mail_redirect:text('@Partner B')");
@@ -289,7 +287,7 @@ test("replying to a note restores focus on an already open composer", async () =
     await openFormView("res.partner", serverState.partnerId);
     await click("button:not(.active):text('Log note')");
     await contains(".o-mail-Composer.o-focused");
-    queryFirst(".o-mail-Composer-input").blur();
+    await webContains(".o_navbar").click(); // click away
     await contains(".o-mail-Composer.o-focused", { count: 0 });
     await click(".o-mail-Message-actions [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
@@ -311,16 +309,12 @@ test("Click reply to note again preserves composer content", async () => {
         },
     ]);
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Message:contains(I am Justice) [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
     await contains(".o-mail-Composer.o-focused");
-    const editor = {
-        document,
-        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
-    };
+    const editor = await waitForComposerEditor(".o-mail-Composer");
     pasteHtml(editor, "<strong>Strong Text</strong>");
     await contains(
         ".o-mail-Composer-html.odoo-editor-editable:text('@Batman Strong Text'):has(a.o_mail_redirect:text('@Batman')):has(strong:text('Strong Text'))"
@@ -335,7 +329,8 @@ test("Click reply to note again preserves composer content", async () => {
     await contains(
         ".o-mail-Composer-html.odoo-editor-editable:text('@Batman Strong Text'):has(a.o_mail_redirect:text('@Batman')):has(strong:text('Strong Text'))"
     );
-    expect(editor.editable.textContent).toBe("\uFEFF@Batman\uFEFF\u00A0Strong Text");
+    const reopenedEditor = await waitForComposerEditor(".o-mail-Composer");
+    expect(reopenedEditor.editable.textContent).toBe("\uFEFF@Batman\uFEFF\u00A0Strong Text");
 });
 
 test("preserve the link formatting for message in reply", async () => {

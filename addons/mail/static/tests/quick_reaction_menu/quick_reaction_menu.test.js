@@ -2,11 +2,14 @@ import {
     click,
     contains,
     defineMailModels,
-    insertText,
     openDiscuss,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import {
+    containsTextInComposer,
+    insertTextInComposer,
+} from "@mail/../tests/mail_test_helpers_composer";
 import { QuickReactionMenu } from "@mail/core/common/quick_reaction_menu";
 import { describe, test } from "@odoo/hoot";
 import { animationFrame, press } from "@odoo/hoot-dom";
@@ -19,7 +22,7 @@ test("can toggle reaction from quick reaction menu", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Hello world!");
+    await insertTextInComposer(".o-mail-Composer", "Hello world!");
     await press("Enter");
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button:text('👍')");
@@ -36,7 +39,7 @@ test("toggle emoji picker from quick reaction menu", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Hello world!");
+    await insertTextInComposer(".o-mail-Composer", "Hello world!");
     await press("Enter");
     await click("[title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu [title='Toggle Emoji Picker']");
@@ -50,7 +53,7 @@ test("show default emojis when no frequent emojis are available", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Hello world!");
+    await insertTextInComposer(".o-mail-Composer", "Hello world!");
     await press("Enter");
     await click("[title='Add a Reaction']");
     await contains(".o-mail-QuickReactionMenu-emoji", {
@@ -76,7 +79,7 @@ test("navigate quick reaction menu using tab key", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Hello world!");
+    await insertTextInComposer(".o-mail-Composer", "Hello world!");
     await press("Enter");
     await click("[title='Add a Reaction']");
     for (const emoji of QuickReactionMenu.DEFAULT_EMOJIS) {
@@ -91,7 +94,7 @@ test("navigate quick reaction menu using arrow keys", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Hello world!");
+    await insertTextInComposer(".o-mail-Composer", "Hello world!");
     await press("Enter");
     await click("[title='Add a Reaction']");
     for (const emoji of QuickReactionMenu.DEFAULT_EMOJIS) {
@@ -112,7 +115,7 @@ test("can quick search emoji from quick reaction", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Hello world!");
+    await insertTextInComposer(".o-mail-Composer", "Hello world!");
     await press("Enter");
     await click("[title='Add a Reaction']");
     await contains(".o-mail-QuickReactionMenu");
@@ -133,7 +136,7 @@ test("shift-clicking on an emoji keeps the emoji picker open", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Hello world!");
+    await insertTextInComposer(".o-mail-Composer", "Hello world!");
     await press("Enter");
     await click("[title='Add a Reaction']");
     const defaultEmoji = QuickReactionMenu.DEFAULT_EMOJIS[0];
@@ -160,14 +163,14 @@ test("return focus to thread composer on close", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Hello world!");
+    await insertTextInComposer(".o-mail-Composer", "Hello world!");
     await press("Enter");
-    await contains(".o-mail-Composer-input:focus");
+    await contains(".o-mail-Composer-html:focus");
     await click("[title='Add a Reaction']");
     await contains(".o-mail-QuickReactionMenu-emoji:focus:text('👍')");
     await press("Enter");
     await contains(".o-mail-MessageReaction:text('👍 1')");
-    await contains(".o-mail-Composer-input:focus");
+    await contains(".o-mail-Composer-html:focus");
 });
 
 test.tags("focus required");
@@ -176,17 +179,17 @@ test("return focus to message edition composer on close", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Hello world!");
+    await insertTextInComposer(".o-mail-Composer", "Hello world!");
     await press("Enter");
-    await contains(".o-mail-Composer-input", { value: "" });
-    await insertText(".o-mail-Composer-input", "Goodbye world!!");
+    await containsTextInComposer(".o-mail-Composer", "");
+    await insertTextInComposer(".o-mail-Composer", "Goodbye world!!");
     await press("Enter");
     await click(".o-mail-Message:last [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
-    await contains(".o-mail-Message .o-mail-Composer-input:focus");
+    await contains(".o-mail-Message .o-mail-Composer-html:focus");
     await click("[title='Add a Reaction']");
     await contains(".o-mail-QuickReactionMenu-emoji:focus:text('👍')");
     await press("Enter");
     await contains(".o-mail-MessageReaction:text('👍 1')");
-    await contains(".o-mail-Message .o-mail-Composer-input:focus");
+    await contains(".o-mail-Message .o-mail-Composer-html:focus");
 });

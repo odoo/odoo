@@ -3,7 +3,6 @@ import {
     click,
     contains,
     defineMailModels,
-    insertText,
     openDiscuss,
     openMessagingMenu,
     patchUiSize,
@@ -11,6 +10,7 @@ import {
     startServer,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, disableAnimations, expect, mockPermission, mockTouch, test } from "@odoo/hoot";
 import {
     Command,
@@ -113,7 +113,7 @@ test("channel preview ignores transient message", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "/who");
+    await insertTextInComposer(".o-mail-Composer", "/who");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o_mail_notification:text('You are alone in this channel.')");
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");

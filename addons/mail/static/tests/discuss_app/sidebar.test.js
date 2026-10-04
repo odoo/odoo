@@ -14,6 +14,7 @@ import {
     waitStoreFetch,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { animationFrame, press, rightClick } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
@@ -165,7 +166,7 @@ test("sidebar: open pinned channel", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem:has(:text('General'))");
-    await contains(".o-mail-Composer-input[placeholder='Message #General…']");
+    await contains(".o-mail-Composer [o-we-hint-text='Message #General…']");
     await contains(".o-mail-DiscussContent-threadName", { value: "General" });
 });
 
@@ -344,7 +345,9 @@ test("chat should be sorted by last activity time", async () => {
         before: [".o-mail-MessagingMenuItem:has(:text('Demo'))"],
     });
     await click(".o-mail-NotificationItem:has(:text('Demo'))");
-    await insertText(".o-mail-Composer-input[placeholder='Message Demo…']", "Blabla");
+    // post a new message on the last channel
+    await contains(".o-mail-Composer [o-we-hint-text='Message Demo…']");
+    await insertTextInComposer(".o-mail-Composer", "Blabla");
     await press("Enter");
     await contains(".o-mail-Message:has(:text('Blabla'))");
     await contains(".o-mail-MessagingMenuItem:has(:text('Demo'))", {

@@ -28,6 +28,7 @@ import { debounce } from "@web/core/utils/timing";
 export class HintPlugin extends Plugin {
     static id = "hint";
     static dependencies = ["history", "selection"];
+    static shared = ["updateHints"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */

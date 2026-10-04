@@ -10,6 +10,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, test } from "@odoo/hoot";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
@@ -260,13 +261,13 @@ test("mention suggestions in thread match channel restrictions", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-NotificationItem.o-active:has(:text('General'))");
-    await insertText(".o-mail-Composer-input", "@");
+    await insertTextInComposer(".o-mail-Composer", "@");
     await contains(".o-mail-Composer-suggestion", { count: 2 });
     await contains(".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))");
     await contains(".o-mail-Composer-suggestion:has(:text('p1'))");
     await click(".o-mail-NotificationItem:has(:text('Thread'))");
     await contains(".o-mail-NotificationItem.o-active:has(:text('Thread'))");
-    await insertText(".o-mail-Composer-input", "@");
+    await insertTextInComposer(".o-mail-Composer", "@");
     await contains(".o-mail-Composer-suggestion", { count: 2 });
     await contains(".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))");
     await contains(".o-mail-Composer-suggestion:has(:text('p1'))");
@@ -365,7 +366,7 @@ test("can mention all group chat members inside its sub-thread", async () => {
     });
     await start();
     await openDiscuss(groupSubChannelId);
-    await insertText(".o-mail-Composer-input", "@");
+    await insertTextInComposer(".o-mail-Composer", "@");
     await contains(".o-mail-Composer-suggestion", { count: 2 });
 });
 
@@ -408,7 +409,7 @@ test("should temporarily repin unpinned thread while it is being viewed", async 
     await contains(".o-mail-NotificationItem:has(:text('Sub Channel 2'))");
     await contains(".o-mail-NotificationItem.o-active:has(:text('Sub Channel 1'))");
     // Sub channel 1 is persistently pinned when posting a message
-    await insertText(".o-mail-Composer-input", "Batman");
+    await insertTextInComposer(".o-mail-Composer", "Batman");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await click(".o-mail-NotificationItem:has(:text('Sub Channel 2'))");
     await contains(".o-mail-NotificationItem:has(:text('Sub Channel 1'))");

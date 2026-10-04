@@ -2,14 +2,12 @@ import {
     click,
     contains,
     defineMailModels,
-    insertText,
     onRpcBefore,
     openDiscuss,
     openMessagingMenu,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { animationFrame, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
@@ -19,6 +17,7 @@ import { Store } from "@mail/core/common/store_plugin";
 import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
 import { rpc } from "@web/core/network/rpc";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
+import { insertTextInComposer } from "../../mail_test_helpers_composer";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -38,7 +37,6 @@ test('[text composer] receive other member typing status "is typing"', async () 
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
     await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
-    // simulate receive typing notification from demo
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
@@ -61,8 +59,7 @@ test('receive other member typing status "is typing"', async () => {
         ],
     });
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
     await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
@@ -122,8 +119,7 @@ test('receive other member typing status "is typing" then "no longer is typing"'
         ],
     });
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
     await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
@@ -185,8 +181,7 @@ test('assume other member typing status becomes "no longer is typing" after long
         ],
     });
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-discuss-Typing");
@@ -310,8 +305,7 @@ test('other member typing status "is typing" refreshes of assuming no longer typ
         expect.step("notify_typing");
     });
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-discuss-Typing");
@@ -433,8 +427,7 @@ test('receive several other members typing status "is typing"', async () => {
         ],
     });
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
     await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
@@ -486,7 +479,7 @@ test("[text composer] current partner notify is typing to other thread members",
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "a");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     testEnded = true;
 });
@@ -502,15 +495,10 @@ test("current partner notify is typing to other thread members", async () => {
         }
     });
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-html.odoo-editor-editable");
-    const editor = {
-        document,
-        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
-    };
-    await htmlInsertText(editor, "a");
+    await contains(".o-mail-Composer-html ");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     testEnded = true;
 });
@@ -527,12 +515,12 @@ test("[text composer] current partner notify is typing again to other members fo
     await start();
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
-    await insertText(".o-mail-Composer-input", "a");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     // simulate current partner typing a character for a long time.
     const elapseTickTime = SHORT_TYPING / 2;
     for (let i = 0; i <= LONG_TYPING / elapseTickTime; i++) {
-        await insertText(".o-mail-Composer-input", "a");
+        await insertTextInComposer(".o-mail-Composer", "a");
         await advanceTime(elapseTickTime);
     }
     await expect.waitForSteps(["notify_typing:true"]);
@@ -550,20 +538,15 @@ test("current partner notify is typing again to other members for long continuou
         }
     });
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-html.odoo-editor-editable");
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
-    const editor = {
-        document,
-        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
-    };
-    await htmlInsertText(editor, "a");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     const elapseTickTime = SHORT_TYPING / 2;
     for (let i = 0; i <= LONG_TYPING / elapseTickTime; i++) {
-        await htmlInsertText(editor, "a");
+        await insertTextInComposer(".o-mail-Composer", "a");
         await advanceTime(elapseTickTime);
     }
     await expect.waitForSteps(["notify_typing:true"]);
@@ -579,7 +562,7 @@ test("[text composer] current partner notify no longer is typing to thread membe
     await start();
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
-    await insertText(".o-mail-Composer-input", "a");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     await advanceTime(SHORT_TYPING);
     await expect.waitForSteps(["notify_typing:false"]);
@@ -593,15 +576,10 @@ test("current partner notify no longer is typing to thread members after 5 secon
         expect.step(`notify_typing:${args.is_typing}`)
     );
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-html.odoo-editor-editable");
-    const editor = {
-        document,
-        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
-    };
-    await htmlInsertText(editor, "a");
+    await contains(".o-mail-Composer-html");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     await advanceTime(SHORT_TYPING);
     await expect.waitForSteps(["notify_typing:false"]);
@@ -618,7 +596,7 @@ test("[text composer] current partner is typing should not translate on textual 
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "a");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     await contains(".o-discuss-Typing");
     await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
@@ -636,15 +614,10 @@ test("current partner is typing should not translate on textual typing status", 
         }
     });
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-html.odoo-editor-editable");
-    const editor = {
-        document,
-        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
-    };
-    await htmlInsertText(editor, "a");
+    await contains(".o-mail-Composer-html");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     await contains(".o-discuss-Typing");
     await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
@@ -761,8 +734,7 @@ test("chat: correspondent is typing", async () => {
         channel_type: "chat",
     });
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss();
     await contains(".o-mail-MessagingMenuItem .o-mail-ThreadIcon[data-icon='circle'].text-success");
     withUser(userId, () =>
@@ -827,8 +799,7 @@ test("chat: correspondent is typing in chat window", async () => {
         channel_type: "chat",
     });
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openMessagingMenu();
     await click(".o-mail-NotificationItem");
     await contains("[title='Demo is typing...']", { count: 0 });
@@ -870,7 +841,7 @@ test("[text composer] show typing in member list", async () => {
         })
     );
     await contains(".o-discuss-ChannelMemberList [title='Other 10 is typing...']");
-    await insertText(".o-mail-Composer-input", "HelloWorld!");
+    await insertTextInComposer(".o-mail-Composer", "HelloWorld!");
     await contains(
         `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`
     );
@@ -885,7 +856,8 @@ test("[text composer] show typing in member list", async () => {
     await contains(".o-mail-Message-content:has(:text('HelloWorld!'))");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
-    await insertText(".o-mail-Message .o-mail-Composer-input", "GoodByeWorld!");
+    await contains(".o-mail-Message .o-mail-Composer-html");
+    await insertTextInComposer(".o-mail-Message .o-mail-Composer", "GoodByeWorld!");
     await animationFrame();
     await advanceTime(SHORT_TYPING / 2);
     await withUser(userId, () =>
@@ -915,8 +887,7 @@ test("show typing in member list", async () => {
         ],
     });
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMember", { count: 2 });
     // simulate other user typing
@@ -927,13 +898,7 @@ test("show typing in member list", async () => {
         })
     );
     await contains(".o-discuss-ChannelMemberList [title='Other 10 is typing...']");
-    const threadComposerEditor = {
-        document,
-        editable: document.querySelector(
-            ".o-mail-Composer.o-discussApp .o-mail-Composer-html.odoo-editor-editable"
-        ),
-    };
-    await htmlInsertText(threadComposerEditor, "HelloWorld!");
+    await insertTextInComposer(".o-mail-Composer", "HelloWorld!");
     await contains(
         `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']`
     );
@@ -949,13 +914,7 @@ test("show typing in member list", async () => {
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer-html.odoo-editor-editable");
-    const messageComposerEditor = {
-        document,
-        editable: document.querySelector(
-            ".o-mail-Message .o-mail-Composer-html.odoo-editor-editable"
-        ),
-    };
-    await htmlInsertText(messageComposerEditor, "GoodByeWorld!");
+    await insertTextInComposer(".o-mail-Message .o-mail-Composer", "GoodByeWorld!");
     await animationFrame();
     await advanceTime(SHORT_TYPING / 2);
     await withUser(userId, () =>
@@ -989,7 +948,7 @@ test("[text composer] switching to another channel triggers notify_typing to sto
     );
     await start();
     await openDiscuss(chatId);
-    await insertText(".o-mail-Composer-input", "a");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     await click(".o-mail-MessagingMenu-tab[data-id='channel']");
     await click(".o-mail-NotificationItem:has(:text('general'))");
@@ -1014,15 +973,10 @@ test("switching to another channel triggers notify_typing to stop", async () => 
         expect.step(`notify_typing:${args.is_typing}`)
     );
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openDiscuss(chatId);
-    await contains(".o-mail-Composer-html.odoo-editor-editable");
-    const editor = {
-        document,
-        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
-    };
-    await htmlInsertText(editor, "a");
+    await contains(".o-mail-Composer-html");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     await click(".o-mail-MessagingMenu-tab[data-id='channel']");
     await click(".o-mail-NotificationItem:has(:text('general'))");

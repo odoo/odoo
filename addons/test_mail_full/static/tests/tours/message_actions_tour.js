@@ -23,8 +23,8 @@ registry.category("web_tour.tours").add("message_actions_tour", {
             trigger: "#chatterRoot:shadow .o-mail-Thread .o-mail-Message:count(1)",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Composer-input",
-            run: "edit New message",
+            trigger: "#chatterRoot:shadow .o-mail-Composer-html",
+            run: "editor New message",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Composer button:contains(Send):enabled",
@@ -54,8 +54,8 @@ registry.category("web_tour.tours").add("message_actions_tour", {
             run: "click #chatterRoot:shadow button[name='edit']",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-input",
-            run: "edit Message content changed",
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-html",
+            run: "editor Message content changed",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message button:contains(save)",
