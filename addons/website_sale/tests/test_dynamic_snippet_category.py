@@ -55,6 +55,65 @@ class TestDynamicSnippetCategory(WebsiteSaleCommon):
         category_ids = [c["id"] for c in categories]
         self.assertIn(self.category1.id, category_ids)
 
+    def test_visitor_does_not_see_categories_without_published_products(self):
+        SnippetFilter = self.env["website.snippet.filter"].with_user(self.public_user)
+        with self.mock_request(user=self.public_user, website=self.website):
+            categories = SnippetFilter._prepare_category_list_data()
+        self.assertNotIn(
+            self.category3.id,
+            [category["id"] for category in categories],
+            "A category without published products should be hidden from visitors",
+        )
+
+    def test_designer_sees_categories_without_published_products_as_unpublished(self):
+        designer = self.env.ref("base.user_admin")
+        SnippetFilter = self.env["website.snippet.filter"].with_user(designer)
+        with self.mock_request(user=designer, website=self.website):
+            categories = SnippetFilter._prepare_category_list_data()
+        self.assertTrue(
+            next(c for c in categories if c["id"] == self.category3.id)["unpublished"],
+            "A category without published products should be flagged for the designer",
+        )
+
+    def test_categories_of_other_websites_are_excluded(self):
+        other_website = self.env["website"].sudo().create({"name": "Other Website"})
+        other_category = (
+            self
+            .env["product.public.category"]
+            .sudo()
+            .create({"name": "Other Website Category", "website_id": other_website.id})
+        )
+        designer = self.env.ref("base.user_admin")
+        SnippetFilter = self.env["website.snippet.filter"].with_user(designer)
+        with self.mock_request(user=designer, website=self.website):
+            categories = SnippetFilter._prepare_category_list_data()
+        self.assertNotIn(
+            other_category.id,
+            [category["id"] for category in categories],
+            "A category bound to another website should not be listed",
+        )
+
+    def test_filtering_on_a_category_lists_it_before_its_children(self):
+        designer = self.env.ref("base.user_admin")
+        SnippetFilter = self.env["website.snippet.filter"].with_user(designer)
+        with self.mock_request(user=designer, website=self.website):
+            categories = SnippetFilter._prepare_category_list_data(parent_id=self.category1.id)
+        self.assertEqual(
+            categories[0]["id"],
+            self.category1.id,
+            "The filtered category should be listed before its children",
+        )
+
+    def test_categories_without_children_are_not_offered_as_filters(self):
+        categories = self.env["product.public.category"].get_available_snippet_categories(
+            self.website.id
+        )
+        self.assertNotIn(
+            self.category2.id,
+            [category["id"] for category in categories],
+            "A category without children cannot be used as a filter",
+        )
+
     def test_set_category_image(self):
         """Test setting a cover image via JSON-RPC route."""
         attachment = self.env["ir.attachment"].create({
