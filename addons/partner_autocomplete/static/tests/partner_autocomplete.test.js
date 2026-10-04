@@ -145,8 +145,8 @@ test("Partner autocomplete : Name search", async () => {
     ).toHaveCount(0, { message: "There should be no option when the length of the query is < 3" });
 
     await editAutocomplete("[name='name'] .dropdown input", "company");
-    // 3 options + 1 for the worldwide option
-    expect("[name='name'] .o-autocomplete .o-autocomplete--dropdown-item").toHaveCount(4);
+    // 3 options + 1 for the worldwide option + search subsidiaries & establishments
+    expect("[name='name'] .o-autocomplete .o-autocomplete--dropdown-item").toHaveCount(5);
 
     // Click on the first option - "First Company"
     await contains("[name='name'] .o-autocomplete ul li").click();
@@ -190,8 +190,8 @@ test("Partner autocomplete : VAT search", async () => {
     });
 
     await editAutocomplete("[name='vat'] .dropdown input", "BE0477472701");
-    // 3 options + 1 for the worldwide option
-    expect("[name='vat'] .o-autocomplete .o-autocomplete--dropdown-item").toHaveCount(4);
+    // 3 options + 1 for the worldwide option + search subsidiaries & establishments
+    expect("[name='vat'] .o-autocomplete .o-autocomplete--dropdown-item").toHaveCount(5);
 
     // Click on the first option - "First company"
     await contains("[name='vat'] .o-autocomplete ul li").click();
@@ -277,8 +277,8 @@ test("Display auto complete suggestion for canCreate", async () => {
         </form>`,
     });
     await editAutocomplete("[name='parent_id'] input", "blabla");
-    // create + create & edit + 3 partner suggestions + search worldwide
-    expect("[name='parent_id'] .o-autocomplete .o-autocomplete--dropdown-item").toHaveCount(6);
+    // create + create & edit + 3 partner suggestions + search worldwide + search subsidiaries & establishments
+    expect("[name='parent_id'] .o-autocomplete .o-autocomplete--dropdown-item").toHaveCount(7);
 });
 
 test("Partner autocomplete : onChange should not disturb option selection", async () => {
@@ -288,8 +288,8 @@ test("Partner autocomplete : onChange should not disturb option selection", asyn
     });
     await contains("[name='name'] .dropdown input").click();
     await editAutocomplete("[name='name'] .dropdown input", "company");
-    // 3 options + 1 for the worldwide option
-    expect("[name='name'] .o-autocomplete .o-autocomplete--dropdown-item").toHaveCount(4);
+    // 3 options + 1 for the worldwide option + search subsidiaries & establishments
+    expect("[name='name'] .o-autocomplete .o-autocomplete--dropdown-item").toHaveCount(5);
     await contains(".o-autocomplete--dropdown-item:eq(1)").click();
 
     // Check that the fields have been filled
@@ -332,7 +332,7 @@ test("Partner autocomplete: select a value, then empty the input and save", asyn
         });
 
     await editAutocomplete("[name=name] .dropdown input", "company");
-    expect("[name=name] .o-autocomplete .o-autocomplete--dropdown-item").toHaveCount(4);
+    expect("[name=name] .o-autocomplete .o-autocomplete--dropdown-item").toHaveCount(5);
     await contains("[name=name] .o-autocomplete ul li").click();
     expect("[name=name] input").toHaveValue("First Company");
     expect("[name=email] input").toHaveValue("hello@odoo.com");

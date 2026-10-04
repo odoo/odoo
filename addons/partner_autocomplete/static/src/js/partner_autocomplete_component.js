@@ -7,12 +7,13 @@ export class PartnerAutoComplete extends AutoComplete {
     setup() {
         super.setup();
         this.shouldSearchWorldwide = false;
+		this.shouldIncludeBranches = false;
 	}
 
 	// Override of AutoComplete
     loadOptions(options, request) {
         if (typeof options === "function") {
-            return options(request, this.shouldSearchWorldwide);
+            return options(request, this.shouldSearchWorldwide, this.shouldIncludeBranches);
         } else {
             return options;
         }
@@ -24,4 +25,11 @@ export class PartnerAutoComplete extends AutoComplete {
 		super.close();
 		super.open(true);
 	}
+
+    async searchIncludeBranches(ev) {
+		this.shouldIncludeBranches = true;
+		ev.preventDefault();
+		super.close();
+		super.open(true);
+    }
 }
