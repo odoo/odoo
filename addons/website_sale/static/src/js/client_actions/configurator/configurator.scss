@@ -13,6 +13,7 @@
         border: 0 !important;
         transition: all .3s ease 0s;
 
+        .theme_svg_container,
         img {
             border: var(--border-width) solid $border-color;
         }
@@ -21,9 +22,15 @@
         &:focus-within {
             box-shadow: none;
 
+            .theme_svg_container,
             img {
                 border-color: map-get($theme-colors, primary);
                 box-shadow: var(--box-shadow);
+            }
+
+            .o_configurator_theme_preview_iframe {
+                animation: none;
+                will-change: auto;
             }
         }
     }
