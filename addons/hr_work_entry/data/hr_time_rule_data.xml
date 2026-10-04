@@ -1,12 +1,303 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="hr_time_rule_employee_schedule" model="hr.time.rule">
-            <field name="name">Employee Schedule Rule</field>
-            <field name="country_id" eval="False"/>
+
+        <!-- ================================================================
+             AU - Australia
+             ================================================================ -->
+        <record id="l10n_au_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - AU</field>
+            <field name="country_id" ref="base.au"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'AU')]</field>
             <field name="calendar_source">employee</field>
             <field name="quantity_period">day</field>
-            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.generic_work_entry_type_attendance'))]"/>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.au_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             BD - Bangladesh
+             ================================================================ -->
+        <record id="l10n_bd_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - BD</field>
+            <field name="country_id" ref="base.bd"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'BD')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.bd_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             BE - Belgium
+             ================================================================ -->
+        <record id="l10n_be_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - BE</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'BE')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.be_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             CH - Switzerland
+             ================================================================ -->
+        <record id="l10n_ch_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - CH</field>
+            <field name="country_id" ref="base.ch"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'CH')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.ch_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             HK - Hong Kong
+             ================================================================ -->
+        <record id="l10n_hk_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - HK</field>
+            <field name="country_id" ref="base.hk"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'HK')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.hk_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             IN - India
+             ================================================================ -->
+        <record id="l10n_in_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - IN</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'IN')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.in_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             KE - Kenya
+             ================================================================ -->
+        <record id="l10n_ke_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - KE</field>
+            <field name="country_id" ref="base.ke"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'KE')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.ke_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             KW - Kuwait
+             ================================================================ -->
+        <record id="l10n_kw_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - KW</field>
+            <field name="country_id" ref="base.kw"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'KW')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.l10n_kw_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             LT - Lithuania
+             ================================================================ -->
+        <record id="l10n_lt_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - LT</field>
+            <field name="country_id" ref="base.lt"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'LT')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.lt_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             LU - Luxembourg
+             ================================================================ -->
+        <record id="l10n_lu_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - LU</field>
+            <field name="country_id" ref="base.lu"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'LU')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.lu_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             MA - Morocco
+             ================================================================ -->
+        <record id="l10n_ma_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - MA</field>
+            <field name="country_id" ref="base.ma"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'MA')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.ma_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             MX - Mexico
+             ================================================================ -->
+        <record id="l10n_mx_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - MX</field>
+            <field name="country_id" ref="base.mx"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'MX')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.mx_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             MY - Malaysia
+             ================================================================ -->
+        <record id="l10n_my_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - MY</field>
+            <field name="country_id" ref="base.my"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'MY')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.my_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             NL - Netherlands
+             ================================================================ -->
+        <record id="l10n_nl_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - NL</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'NL')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.nl_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             PH - Philippines
+             ================================================================ -->
+        <record id="l10n_ph_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - PH</field>
+            <field name="country_id" ref="base.ph"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'PH')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.ph_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             PK - Pakistan
+             ================================================================ -->
+        <record id="l10n_pk_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - PK</field>
+            <field name="country_id" ref="base.pk"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'PK')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.pk_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             PL - Poland
+             ================================================================ -->
+        <record id="l10n_pl_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - PL</field>
+            <field name="country_id" ref="base.pl"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'PL')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.pl_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             RO - Romania
+             ================================================================ -->
+        <record id="l10n_ro_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - RO</field>
+            <field name="country_id" ref="base.ro"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'RO')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.ro_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             SK - Slovakia
+             ================================================================ -->
+        <record id="l10n_sk_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - SK</field>
+            <field name="country_id" ref="base.sk"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'SK')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.sk_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             TK - Turkey
+             ================================================================ -->
+        <record id="l10n_tr_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - TR</field>
+            <field name="country_id" ref="base.tr"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'TR')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.tr_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             US - United States
+             ================================================================ -->
+        <record id="l10n_us_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - US</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'US')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.us_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             UZ - Uzbekistan
+             ================================================================ -->
+        <record id="l10n_uz_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - UZ</field>
+            <field name="country_id" ref="base.uz"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'UZ')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.uz_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
+
+        <!-- ================================================================
+             VN - Vietnam
+             ================================================================ -->
+        <record id="l10n_vn_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - VN</field>
+            <field name="country_id" ref="base.vn"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'VN')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.vn_work_entry_type_attendance'))]"/>
             <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
         </record>
 
@@ -16,6 +307,15 @@
              2× thereafter (>9h). Rule 2 has lower sequence so it takes
              priority when both overlap in the >9h window.
              ================================================================ -->
+        <record id="l10n_id_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - ID</field>
+            <field name="country_id" ref="base.id"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'ID')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.id_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
         <record id="hr_time_rule_l10n_id_beyond_first_hour" model="hr.time.rule">
             <field name="name">Overtime Beyond First Hour</field>
             <field name="sequence">10</field>
@@ -43,6 +343,15 @@
              SA - Saudi Arabia
              Work week: Sun-Thu  |  Rest days: Fri-Sat
              ================================================================ -->
+        <record id="l10n_sa_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - SA</field>
+            <field name="country_id" ref="base.sa"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'SA')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.sa_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
         <record id="hr_time_rule_l10n_sa_workdays" model="hr.time.rule">
             <field name="name">Workdays Overtime</field>
             <field name="sequence">10</field>
@@ -66,6 +375,15 @@
              JO - Jordan
              Work week: Sun-Thu  |  Rest days: Fri-Sat
              ================================================================ -->
+        <record id="l10n_jo_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - JO</field>
+            <field name="country_id" ref="base.jo"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'JO')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.jo_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
         <record id="hr_time_rule_l10n_jo_public_holidays" model="hr.time.rule">
             <field name="name">Public Holidays Overtime</field>
             <field name="sequence">10</field>
@@ -130,6 +448,15 @@
              EG - Egypt
              Work week: Sun-Thu  |  Rest days: Fri-Sat
              ================================================================ -->
+        <record id="l10n_eg_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - EG</field>
+            <field name="country_id" ref="base.eg"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'EG')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.eg_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
         <record id="hr_time_rule_l10n_eg_work_days_daytime" model="hr.time.rule">
             <field name="name">Week Days - Daytime</field>
             <field name="sequence">10</field>
@@ -235,6 +562,15 @@
              IQ - Iraq
              Work week: Sun-Thu  |  Rest days: Fri-Sat
              ================================================================ -->
+        <record id="l10n_iq_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - IQ</field>
+            <field name="country_id" ref="base.iq"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'IQ')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.iq_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
         <record id="hr_time_rule_l10n_iq_day_time_1" model="hr.time.rule">
             <field name="name">Day Time Overtime (Morning)</field>
             <field name="sequence">10</field>
@@ -320,6 +656,15 @@
              AE - United Arab Emirates
              Work week: Sun-Thu  |  Rest days: Fri-Sat
              ================================================================ -->
+        <record id="l10n_uae_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - UAE</field>
+            <field name="country_id" ref="base.ae"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'AE')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.uae_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
         <record id="hr_time_rule_l10n_ae_day_time" model="hr.time.rule">
             <field name="name">Day Time Overtime</field>
             <field name="sequence">10</field>
@@ -404,6 +749,15 @@
              OM - Oman
              Work week: Sun-Thu  |  Rest days: Fri-Sat
              ================================================================ -->
+        <record id="l10n_om_time_rule_employee_schedule" model="hr.time.rule">
+            <field name="name">Employee Schedule Rule - OM</field>
+            <field name="country_id" ref="base.om"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'OM')]</field>
+            <field name="calendar_source">employee</field>
+            <field name="quantity_period">day</field>
+            <field name="condition_work_entry_type_ids" eval="[(4, ref('hr_work_entry.om_work_entry_type_attendance'))]"/>
+            <field name="work_entry_type_id" ref="hr_work_entry.generic_work_entry_type_overtime"/>
+        </record>
         <record id="hr_time_rule_l10n_om_normal_workdays_daytime" model="hr.time.rule">
             <field name="name">Weekday(s) Daytime Overtime</field>
             <field name="sequence">10</field>
