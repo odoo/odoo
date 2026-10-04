@@ -31,7 +31,6 @@ class TestMrpRepairFlow(TestMrpCommon):
         product.write({
             'route_ids': [Command.set([mto_route.id, manufacturing_route.id])],
         })
-        self.env['mrp.bom'].create({'product_tmpl_id': product.product_tmpl_id.id})
 
         repair = self.env['repair.order'].create([
             {
