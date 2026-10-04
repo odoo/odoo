@@ -26,9 +26,7 @@ export class BackgroundImageOption extends BaseOptionComponent {
     showMainColorPicker() {
         const src = new URL(getBgImageURLFromEl(this.editingElement), window.location.origin);
         return (
-            src.origin === window.location.origin &&
-            (src.pathname.startsWith("/html_editor/shape/") ||
-                src.pathname.startsWith("/web_editor/shape/"))
+            src.origin === window.location.origin && src.pathname.startsWith("/html_editor/shape/")
         );
     }
     getColorPickerColorNames() {
