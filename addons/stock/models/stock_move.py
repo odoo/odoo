@@ -2419,6 +2419,13 @@ Please change the quantity done or the rounding precision in your settings.""",
         for company_id, move_dests in move_dests_per_company.items():
             move_dests.sudo().with_company(company_id)._action_assign()
 
+        for move in moves_todo:
+            if move.location_dest_usage == "transit" and move.package_ids:
+                for package_id in move.package_ids:
+                    if not package_id.package_type_id.company_id:
+                        continue
+                    if move.company_id != package_id.package_type_id.company_id:
+                        package_id.package_type_id = False
         # We don't want to create back order for scrap moves
         # Replace by a kwarg in master
         if all(self.mapped('is_scrap')):
