@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pajakio_registration_form_view" model="ir.ui.view">
+        <field name="name">l10n_id_pajakio.registration.form.form</field>
+        <field name="model">l10n_id_pajakio.registration.form</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="mode" invisible="1" />
+                    <!-- mode is kept invisible just to be used for field input visibility -->
+                    <field name="email" placeholder="name@mail.com" required="True"/>
+                    <field name="password" password="True" placeholder="password" invisible="mode != 'register_user'" required="mode == 'register_user'"/>
+                    <field name="password" password="True" placeholder="password" invisible="mode != 'sign_in'" required="mode == 'sign_in'" help="Enter the password of your existing Pajak.io account"/>
+                    <!-- user_name and phone are only needed if registering user -->
+                    <field name="user_name" invisible="mode != 'register_user'" required="mode == 'register_user'"/>
+                    <field name="phone" invisible="mode != 'register_user'" required="mode == 'register_user'" placeholder="081234567890"/>
+                    <!-- company_name, address, and city should only show if registering company  -->
+                    <field name="company_name" invisible="mode != 'register_company'" required="mode == 'register_company'"/>
+                    <field name="address" invisible="mode != 'register_company'" required="mode == 'register_company'"/>
+                    <field name="city" invisible="mode != 'register_company'" required="mode == 'register_company'"/>
+                    <!-- npwp shows when registering company or signing in -->
+                    <field name="npwp" invisible="mode not in ('register_company', 'sign_in')" required="mode in ('register_company', 'sign_in')"/>
+                    <div colspan="2" col="1" invisible="mode != 'register_company'">
+                        <h3><strong>To confirm registration, please use the password you've registered an account with</strong></h3>
+                        <div class="col-md-6">
+                            <field class="o_field_highlight" name="password" nolabel="1"
+                                password="True" placeholder="Enter your password" required="mode == 'register_company'"/>
+                        </div>
+                    </div>
+                </group>
+                <footer>
+                    <button string="Sign In" type="object" name="action_sign_in" class="btn-primary"
+                        invisible="mode != 'sign_in'"/>
+                    <button string="Register User" type="object" name="action_register_user" class="btn-primary"
+                        invisible="mode != 'register_user'"/>
+                    <button string="Register Company" type="object" name="action_register_company" class="btn-primary"
+                        invisible="mode != 'register_company'"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
