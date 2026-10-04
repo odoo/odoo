@@ -23,6 +23,8 @@ export class QuickVoiceSettings extends Component {
     }
 
     get pttKeyDisplayText() {
-        return _t("Press [%(shortcut)s]", { shortcut: this.store.settings.pushToTalkKeyText });
+        return _t("Hold %(shortcut)s to speak", {
+            shortcut: this.store.settings.pushToTalkKeyText,
+        });
     }
 }
