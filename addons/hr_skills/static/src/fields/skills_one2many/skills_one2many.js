@@ -12,7 +12,7 @@ export class SkillsListRenderer extends CommonSkillsListRenderer {
     static template = "hr_skills.SkillsListRenderer";
     setup() {
         super.setup();
-        this.orm = useService('orm');
+        this.orm = this.env.services.orm;
         this.actionService = useService("action");
 
         onWillStart(async () => {
