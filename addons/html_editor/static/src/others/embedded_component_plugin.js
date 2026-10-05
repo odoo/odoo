@@ -36,10 +36,14 @@ export class EmbeddedComponentPlugin extends Plugin {
         external_step_added_handlers: () => this.handleComponents(this.editable),
 
         before_sanitize_processors: this.preProcessSanitizedElem.bind(this),
-        after_sanitize_processors: this.postProcessSanitizedElem.bind(this),
+        after_sanitize_processors: [
+            this.postProcessSanitizedElem.bind(this),
+            this.removeUnsupportedComponents.bind(this),
+        ],
         serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
         attribute_change_processors: this.onChangeAttribute.bind(this),
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+        clipboard_content_processors: this.processClipboardContent.bind(this),
         move_node_whitelist_selectors: "[data-embedded]",
     };
 
@@ -62,6 +66,12 @@ export class EmbeddedComponentPlugin extends Plugin {
         });
         // First mount is done during history_reset_handlers which happens
         // when start_edition_handlers are called.
+    }
+
+    processClipboardContent(content) {
+        content.querySelectorAll("[data-embedded]").forEach((host) => {
+            host.setAttribute("data-require-plugins", EmbeddedComponentPlugin.id);
+        });
     }
 
     isMutationRecordSavable(record) {
@@ -349,6 +359,14 @@ export class EmbeddedComponentPlugin extends Plugin {
             }
         }
         return elem;
+    }
+
+    removeUnsupportedComponents(elem) {
+        elem.querySelectorAll("[data-embedded]").forEach((host) => {
+            if (!this.getEmbedding(host)) {
+                host.remove();
+            }
+        });
     }
 
     postProcessSanitizedElem(elem) {
