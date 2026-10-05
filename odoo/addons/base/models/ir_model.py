@@ -412,6 +412,7 @@ class IrModel(models.Model):
         manual_models.field_id.filtered(lambda f: f.state == 'manual')._prepare_update()
         (self - manual_models).field_id._prepare_update()
 
+        reset_cached_properties(self.env.registry)
         res = super().unlink()
 
         # Reload registry for normal unlink only. For module uninstall, the

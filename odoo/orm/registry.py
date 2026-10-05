@@ -592,7 +592,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         result = Collector()
         for model_cls in self.models.values():
             for field in model_cls._fields.values():
-                if field.relational:
+                if field.relational and field._module not in self.uninstalling_modules:
                     field.setup_inverses(self, result)
         return result
 
@@ -606,7 +606,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 continue
 
             for field in Model._fields.values():
-                if field.type == 'many2one' and field.store:
+                if field.type == 'many2one' and field.store and field._module not in self.uninstalling_modules:
                     result[field.comodel_name].append(field)
 
         return {
@@ -623,7 +623,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 continue
 
             for field in Model._fields.values():
-                if field.type == 'many2many' and field.store:
+                if field.type == 'many2many' and field.store and field._module not in self.uninstalling_modules:
                     result[field.comodel_name].append(field)
 
         return {
