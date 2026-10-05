@@ -41,6 +41,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             15.0,
             tax_ids=self.taxes['tax_group_7_10'].ids,
         )
+        # TODO-PARP: Remove (No use)
         self.product4 = self.create_product(
             'Product 4',
             self.categ_basic,
