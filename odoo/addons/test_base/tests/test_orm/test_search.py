@@ -2358,7 +2358,7 @@ class TestMany2oneJoin(TransactionCase):
         self.assertTrue(self.registry['test_orm.search.top_rel'].mid_rel_req_id.required)
         self.assertFalse(self.registry['test_orm.search.mid_rel'].bot_rel_id.required)
 
-        # Since `top_rel.mid_rel_req_id` is required and `mid_rel.bot_rel_req_id` is optional,
+        # Since `top_rel.mid_rel_req_id` is required and `mid_rel.bot_rel_id` is optional,
         # it should use a JOIN and then a LEFT JOIN.
         with self.assertQueries(["""
                SELECT "test_orm_search_top_rel"."id"
@@ -2377,9 +2377,11 @@ class TestMany2oneJoin(TransactionCase):
         self.assertFalse(self.registry['test_orm.search.top_rel'].mid_rel_id.required)
         self.assertTrue(self.registry['test_orm.search.mid_rel'].bot_rel_req_id.required)
 
-        # Since `top_rel.mid_rel_id` is required and `mid_rel.bot_rel_req_id` is optional,
+        # Since `top_rel.mid_rel_id` is optional and `mid_rel.bot_rel_req_id` is required,
         # it should use LEFT JOIN twice as we can not optimize the second LEFT JOIN to JOIN.
         # See commit odoo/odoo#239467
+        # Instead, NULLs are rejected on the second joined table, so that PostgreSQL
+        # can reduce it to an INNER JOIN.
         with self.assertQueries(["""
                SELECT "test_orm_search_top_rel"."id"
                  FROM "test_orm_search_top_rel"
@@ -2389,7 +2391,8 @@ class TestMany2oneJoin(TransactionCase):
                    ON ("test_orm_search_top_rel__mid_rel_id"."bot_rel_req_id" = "test_orm_search_top_rel__mid_rel_id__bot_rel_req_id"."id")
                 WHERE ("test_orm_search_top_rel"."mid_rel_id" IS NOT NULL
                   AND "test_orm_search_top_rel__mid_rel_id"."id" IS NOT NULL
-                  AND "test_orm_search_top_rel__mid_rel_id__bot_rel_req_id"."name" ILIKE %s)
+                  AND ("test_orm_search_top_rel__mid_rel_id__bot_rel_req_id"."id" IS NOT NULL
+                      AND "test_orm_search_top_rel__mid_rel_id__bot_rel_req_id"."name" ILIKE %s))
              ORDER BY "test_orm_search_top_rel"."id"
         """]):
             self.env['test_orm.search.top_rel'].search([('mid_rel_id.bot_rel_req_id.name', 'ilike', 'test')])
@@ -2439,6 +2442,39 @@ class TestMany2oneJoin(TransactionCase):
         plan = self.env.cr.fetchone()[0][0]['Plan']
         left_joins = self._walk_plan(plan, lambda node: node.get('Join Type') == 'Left')
         self.assertFalse(any(left_joins))
+
+    def test_positive_filter_promotes_left_join_to_inner_join_on_required_field(self):
+        self.assertFalse(self.registry['test_orm.search.top_rel'].mid_rel_id.required)
+        self.assertTrue(self.registry['test_orm.search.mid_rel'].bot_rel_req_id.required)
+
+        # `mid_rel.bot_rel_req_id` is required, but it is joined from a LEFT
+        # JOINed table, so it stays a LEFT JOIN. The condition on its name
+        # accepts NULLs, so rejecting NULLs on its id is necessary for
+        # PostgreSQL to reduce it to an INNER JOIN.
+        query = self.env['test_orm.search.top_rel']._search(
+            [('mid_rel_id.bot_rel_req_id.name', 'not like', 'test')],
+        ).select()
+        explain = SQL('EXPLAIN (FORMAT JSON) %s', query)
+
+        with self.assertQueries(["""
+              EXPLAIN (FORMAT JSON)
+               SELECT "test_orm_search_top_rel"."id"
+                 FROM "test_orm_search_top_rel"
+            LEFT JOIN "test_orm_search_mid_rel" AS "test_orm_search_top_rel__mid_rel_id"
+                   ON ("test_orm_search_top_rel"."mid_rel_id" = "test_orm_search_top_rel__mid_rel_id"."id")
+            LEFT JOIN "test_orm_search_bot_rel" AS "test_orm_search_top_rel__mid_rel_id__bot_rel_req_id"
+                   ON ("test_orm_search_top_rel__mid_rel_id"."bot_rel_req_id" = "test_orm_search_top_rel__mid_rel_id__bot_rel_req_id"."id")
+                WHERE ("test_orm_search_top_rel"."mid_rel_id" IS NOT NULL
+                  AND "test_orm_search_top_rel__mid_rel_id"."id" IS NOT NULL
+                  AND ("test_orm_search_top_rel__mid_rel_id__bot_rel_req_id"."id" IS NOT NULL
+                      AND ("test_orm_search_top_rel__mid_rel_id__bot_rel_req_id"."name" NOT LIKE %s
+                       OR "test_orm_search_top_rel__mid_rel_id__bot_rel_req_id"."name" IS NULL)))
+        """]):
+            self.env.cr.execute(explain)
+
+        plan = self.env.cr.fetchone()[0][0]['Plan']
+        outer_joins = self._walk_plan(plan, lambda node: node.get('Join Type') in ('Left', 'Right'))
+        self.assertFalse(any(outer_joins))
 
     def test_null_accepting_filter_no_left_join_promotion(self):
         self.assertFalse(self.registry['test_orm.search.top_rel'].mid_rel_id.required)

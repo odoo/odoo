@@ -2125,7 +2125,8 @@ class TestMany2one(TransactionCase):
             ON ("test_orm_partner__business_id"."partner_id" = "test_orm_partner__business_id__partner_id"."id")
             WHERE ("test_orm_partner"."business_id" IS NOT NULL
                 AND "test_orm_partner__business_id"."id" IS NOT NULL
-                AND "test_orm_partner__business_id__partner_id"."name" LIKE %s)
+                AND ("test_orm_partner__business_id__partner_id"."id" IS NOT NULL
+                    AND "test_orm_partner__business_id__partner_id"."name" LIKE %s))
             ORDER BY ...
         ''']):
             self.Partner.search([('business_id.partner_id.name', 'like', self.business.name)])
@@ -2272,7 +2273,8 @@ class TestMany2one(TransactionCase):
                 ("test_orm_partner__business_id"."partner_id" = "test_orm_partner__business_id__partner_id"."id")
             WHERE ("test_orm_partner"."business_id" IS NOT NULL
                 AND "test_orm_partner__business_id"."id" IS NOT NULL
-                AND "test_orm_partner__business_id__partner_id"."name" LIKE %s)
+                AND ("test_orm_partner__business_id__partner_id"."id" IS NOT NULL
+                    AND "test_orm_partner__business_id__partner_id"."name" LIKE %s))
             ORDER BY ...
         ''']):
             self.Partner.search([('business_id.partner_id.name', 'like', self.business.name)])
@@ -2303,7 +2305,8 @@ class TestMany2one(TransactionCase):
                 ("test_orm_partner__business_id"."partner_id" = "test_orm_partner__business_id__partner_id"."id")
             WHERE ("test_orm_partner"."business_id" IS NOT NULL
                 AND "test_orm_partner__business_id"."id" IS NOT NULL
-                AND "test_orm_partner__business_id__partner_id"."name" LIKE %s)
+                AND ("test_orm_partner__business_id__partner_id"."id" IS NOT NULL
+                    AND "test_orm_partner__business_id__partner_id"."name" LIKE %s))
             ORDER BY ...
         ''']):
             self.Partner.search([('business_id.partner_id.name', 'like', self.business.name)])
@@ -2322,7 +2325,8 @@ class TestMany2one(TransactionCase):
                 ("test_orm_partner__business_id"."partner_id" = "test_orm_partner__business_id__partner_id"."id")
             WHERE ("test_orm_partner"."business_id" IS NOT NULL
                 AND "test_orm_partner__business_id"."id" IS NOT NULL
-                AND "test_orm_partner__business_id__partner_id"."name" LIKE %s)
+                AND ("test_orm_partner__business_id__partner_id"."id" IS NOT NULL
+                    AND "test_orm_partner__business_id__partner_id"."name" LIKE %s))
             ORDER BY ...
         ''']):
             self.Partner.search([('business_id.partner_id.name', 'like', self.business.name)])
@@ -2592,7 +2596,8 @@ class TestOne2many(TransactionCase):
                     AND "test_orm_domain_expression_partner"."parent_id" IS NOT NULL
                     AND ("test_orm_domain_expression_partner"."state_id" IS NOT NULL
                         AND "test_orm_domain_expression_partner__state_id"."id" IS NOT NULL
-                        AND "test_orm_domain_expression_partner__state_id__country_id"."code" LIKE %s)
+                        AND ("test_orm_domain_expression_partner__state_id__country_id"."id" IS NOT NULL
+                            AND "test_orm_domain_expression_partner__state_id__country_id"."code" LIKE %s))
                 )
             ) AS __sub WHERE __inverse = "test_orm_domain_expression_partner"."id")
             ORDER BY ...
