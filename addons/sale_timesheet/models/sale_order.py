@@ -48,23 +48,13 @@ class SaleOrder(models.Model):
             sale_order.timesheet_total_duration = round(total_time)
 
     def _compute_field_value(self, field):
-        if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
+        if field.name != 'invoice_status':
             return super()._compute_field_value(field)
-
-        # Get SOs which can have upsellable lines and if at least a SOL has warning prepaid service upsell set to True and the warning has not already been displayed
-        upsellable_orders = self.filtered(lambda so:
-            so.state == 'sale'
-            and so.id
-            and (so.user_id or so.partner_id.user_id)  # salesperson needed to assign upsell activity
-        )
-        super(SaleOrder, upsellable_orders.with_context(mail_activity_automation_skip=True))._compute_field_value(field)
-        for order in upsellable_orders:
-            upsellable_lines = order._get_prepaid_service_lines_to_upsell()
-            if upsellable_lines:
-                order._create_upsell_activity()
-                # We want to display only one time the warning for each SOL
-                upsellable_lines.write({'has_displayed_warning_upsell': True})
-        super(SaleOrder, self - upsellable_orders)._compute_field_value(field)
+        # Compute the pending delivered quantities before skipping the activities,
+        # otherwise the upsell check of sale.order.line would be skipped too
+        self.order_line._recompute_recordset(['qty_delivered'])
+        # Skip the upsell activity of sale, it is created by sale.order.line when more time is delivered
+        super(SaleOrder, self.with_context(mail_activity_automation_skip=True))._compute_field_value(field)
 
     def _compute_show_hours_recorded_button(self):
         show_button_ids = self._get_order_with_valid_service_product()
@@ -102,7 +92,6 @@ class SaleOrder(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit')
         return self.order_line.filtered(lambda sol:
             sol.is_service
-            and sol.invoice_status != "invoiced"
             and not sol.has_displayed_warning_upsell  # we don't want to display many times the warning each time we timesheet on the SOL
             and sol.product_id.service_policy == 'ordered_prepaid'
             and float_compare(
@@ -146,14 +135,3 @@ class SaleOrder(models.Model):
         })
 
         return action
-
-    def _reset_has_displayed_warning_upsell_order_lines(self):
-        precision = self.env['decimal.precision'].precision_get('Product Unit')
-        for line in self.order_line:
-            if line.has_displayed_warning_upsell and line.product_uom_id and float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 0:
-                line.has_displayed_warning_upsell = False
-
-    def _create_invoices(self, *args, **kwargs):
-        moves = super()._create_invoices(*args, **kwargs)
-        self._reset_has_displayed_warning_upsell_order_lines()
-        return moves

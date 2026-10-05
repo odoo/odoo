@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
+from odoo.tools import float_compare
 
 
 class SaleOrderLine(models.Model):
@@ -86,6 +87,37 @@ class SaleOrderLine(models.Model):
         from non timesheet AALs (e.g. Services and Materials)"""
         domain = super()._get_delivered_quantity_by_analytic_domain()
         return Domain.AND([domain, Domain('project_id', '=', False)])
+
+    def _compute_field_value(self, field):
+        if field.name != 'qty_delivered' or self.env.context.get('mail_activity_automation_skip'):
+            return super()._compute_field_value(field)
+        previous_qty_delivered = {line.id: line.qty_delivered for line in self if line.id}
+        super()._compute_field_value(field)
+        # Only newly delivered time can trigger the upsell activity
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
+        newly_delivered_lines = self.filtered(lambda sol:
+            sol.id
+            and float_compare(sol.qty_delivered, previous_qty_delivered[sol.id], precision_digits=precision) > 0
+        )
+        upsellable_orders = newly_delivered_lines.order_id.filtered(lambda so:
+            so.state == 'sale'
+            and (so.user_id or so.partner_id.user_id)  # salesperson needed to assign upsell activity
+        )
+        for order in upsellable_orders:
+            upsellable_lines = order._get_prepaid_service_lines_to_upsell() & newly_delivered_lines
+            if upsellable_lines:
+                order._create_upsell_activity()
+                # We want to display only one time the warning for each SOL
+                upsellable_lines.write({'has_displayed_warning_upsell': True})
+
+    def write(self, vals):
+        if 'product_uom_qty' in vals:
+            precision = self.env['decimal.precision'].precision_get('Product Unit')
+            self.filtered(lambda sol:
+                sol.has_displayed_warning_upsell
+                and float_compare(vals['product_uom_qty'], sol.product_uom_qty, precision_digits=precision) > 0
+            ).write({'has_displayed_warning_upsell': False})
+        return super().write(vals)
 
     ###########################################
     # Service : Project and task generation
