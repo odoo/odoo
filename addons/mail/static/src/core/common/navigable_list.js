@@ -44,6 +44,7 @@ export class NavigableList extends Component {
             class: t.string().optional(),
             closeOnSelect: t.boolean().optional(true),
             isLoading: t.boolean().optional(false),
+            onClose: t.function([]).optional(),
             onSelect: t.function([t.instanceOf(Event), option]),
             options: t.array(option),
             optionTemplate: t.string().optional(),
@@ -114,6 +115,9 @@ export class NavigableList extends Component {
         if (this.props.closeOnSelect) {
             this.state.open = false;
             this.state.activeIndex = null;
+            if (this.props.options.length) {
+                this.props.onClose?.();
+            }
         }
     }
 
