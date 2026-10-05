@@ -1098,9 +1098,10 @@ class AccountMove(models.Model):
         need to depend on account_edi_ubl_cii for the FatturaPA import flow.
         """
         logs = []
+        has_vat = vat and vat not in ('/', 'na', 'NA')
         partner = self.env['res.partner'] \
             .with_company(company_id) \
-            ._retrieve_partner(name=name, phone=phone, email=email, vat=vat)
+            ._retrieve_partner(name=name, phone=phone, email=email, vat=vat if has_vat else False)
         if not partner and name and vat:
             partner_vals = {
                 'name': name, 'email': email, 'phone': phone,
