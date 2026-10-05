@@ -593,7 +593,9 @@
                 <t name="Debug" t-name="website.snippets_debug_page_view">
                     <t t-call="website.layout">
                         <style>
-                            #snippets_menu, #o_scroll > .o_panel > .o_panel_header {
+                            #snippets_menu, #o_scroll > .o_panel > .o_panel_header,
+                            [data-o-snippet-group],
+                            [data-oe-type="snippet"]:has(.dynamic_snippet_template:empty) {
                                 display: none !important;
                             }
                             [data-oe-type="snippet"]:not([data-module-id])::before {
