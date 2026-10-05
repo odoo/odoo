@@ -39,6 +39,14 @@ class TestImportModule(odoo.tests.TransactionCase):
     def import_zipfile(self, files):
         return self.env['ir.module.module']._import_zipfile(self.archive(files))
 
+    def test_missing_module_type_is_set_to_official(self):
+        module = self.env['ir.module.module'].search([], limit=1)
+        module.module_type = False
+
+        self.env['ir.module.module']._set_missing_module_type()
+
+        self.assertEqual(module.module_type, 'official')
+
     def test_import_zip(self):
         """Assert the behaviors expected by the module import feature using a ZIP archive"""
         files = [
