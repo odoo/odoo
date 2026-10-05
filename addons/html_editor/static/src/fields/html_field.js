@@ -4,6 +4,7 @@ import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { stripVersion } from "@html_editor/html_migrations/html_migrations_utils";
 import { HtmlUpgradeManager } from "@html_editor/html_migrations/html_upgrade_manager";
+import { extractUnmappedAttachmentsIds } from "@html_editor/main/media/media_plugin";
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
 import {
     MAIN_EMBEDDINGS,
@@ -256,10 +257,11 @@ export class HtmlField extends Component {
                 await this.updateValue(this.editor.getContent());
             }
             const changeId = this.lastChangeId;
+            const editable = this.editor.editable;
             const el = await this.getEditorContent();
             this.pendingAttachmentsService.addPendingAttachments(
                 this.props.record?.resId,
-                this.editor?.shared?.media?.extractUnmappedAttachmentsIds(this.editor.editable)
+                extractUnmappedAttachmentsIds(editable)
             );
             const content = el.innerHTML;
             this.clearElementToCompare(el);
@@ -342,7 +344,7 @@ export class HtmlField extends Component {
             getPendingAttachmentsIds: () => {
                 this.pendingAttachmentsService.addPendingAttachments(
                     this.props.record?.resId,
-                    this.editor?.shared?.media?.extractUnmappedAttachmentsIds(this.editor.editable)
+                    extractUnmappedAttachmentsIds(this.editor.editable)
                 );
                 return this.pendingAttachmentsService.pendingAttachmentIds[
                     this.props.record?.resId
