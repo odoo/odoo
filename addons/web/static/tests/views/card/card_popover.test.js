@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
+import { click, queryOne } from "@odoo/hoot-dom";
 import { Component, t, useProps, xml } from "@odoo/owl";
 import { defineModels, fields, models, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -211,4 +211,12 @@ test("template in arch get favors vs card_id attribute", async () => {
     expect(`.o_popover_body .o_inline_body`).toHaveCount(1);
     expect(`.o_popover_body .o_custom_card_body`).toHaveCount(0);
     expect(`.o_popover_body`).toHaveText("Jean Michel");
+});
+
+test("card record in popover has min-width set to --Card-min-width", async () => {
+    await mountCardPopover();
+    const cardRecord = queryOne(`.o_popover_body .o_card_record`);
+    const cardMinWidth = getComputedStyle(cardRecord).getPropertyValue("--Card-min-width").trim();
+    expect(cardMinWidth).not.toBe("");
+    expect(cardRecord).toHaveStyle({ minWidth: cardMinWidth });
 });
