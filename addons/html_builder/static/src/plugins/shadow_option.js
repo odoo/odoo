@@ -1,4 +1,5 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { _t } from "@web/core/l10n/translation";
 
 export class ShadowOption extends BaseOptionComponent {
     static template = "html_builder.ShadowOption";
@@ -13,7 +14,10 @@ export class ShadowOption extends BaseOptionComponent {
         setShadowStyleAction: "setShadowStyle",
     };
 
-    getOnClick(shadowClass) {
-        return () => this.env.editShadow(shadowClass);
+    getEditAction(shadowClass) {
+        return {
+            title: _t("Edit"),
+            onClick: () => this.env.editShadow(shadowClass),
+        };
     }
 }
