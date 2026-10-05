@@ -62,6 +62,7 @@
         'views/resource_calendar_views.xml',
         'views/hr_headcount_views.xml',
         'data/hr_data.xml',
+        'data/hr_export_template_data.xml',
         'data/ir_cron_data.xml',
         'data/hr_employee_type_data.xml',
         'data/hr_resume_data.xml',
