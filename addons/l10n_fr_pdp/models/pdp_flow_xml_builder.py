@@ -335,6 +335,18 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
 
     @api.model
     def _invoice_add_referenced_documents(self, invoice, move):
+        # Flux 10 G1.01 rejects TypeCode 262. A 381 credit note still needs TT-30/TT-31
+        # (G1.32). A standalone 262 note has no preceding invoice: the contract reference
+        # fills TT-30 and the invoicing-period start fills TT-31.
+        if move._l10n_fr_pdp_is_document_type_262():
+            contract = (move._l10n_fr_pdp_get_contract_reference() or '')[:35]
+            start, _end = move._l10n_fr_pdp_get_invoicing_period()
+            if contract and start:
+                invoice['ReferencedDocument'] = [{
+                    'ID': {'_text': contract},
+                    'IssueDate': {'_text': self._format_date(start)},
+                }]
+                return
         invoice['ReferencedDocument'] = [{
             'ID': {'_text': ref_doc.name},
             'IssueDate': {'_text': self._format_date(ref_doc.date)}
@@ -385,6 +397,15 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
 
     @api.model
     def _invoice_add_invoice_period(self, invoice, move, flow):
+        # BG-14 on a standalone 262 note is TT-42/TT-43. G6.25 requires EndDate > StartDate.
+        if move._l10n_fr_pdp_is_document_type_262():
+            start, end = move._l10n_fr_pdp_get_invoicing_period()
+            if start and end and end > start:
+                invoice['InvoicePeriod'] = {
+                    'StartDate': {'_text': self._format_date(start)},
+                    'EndDate': {'_text': self._format_date(end)},
+                }
+            return
         invoice['InvoicePeriod'] = {
             'StartDate': {'_text': self._format_date(flow.period_start or move.date)},
             'EndDate': {'_text': self._format_date(flow.period_end or move.invoice_date_due or move.date)},
