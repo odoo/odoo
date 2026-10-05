@@ -54,6 +54,44 @@ class TestL10nFrPdpXmlCii(TestL10nFrPdpCommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_narration_early_payment_discount')
 
+    def test_export_invoice_partner_fr_tax_unit(self):
+        """
+        Under French Single Taxpayer Group rules (Assujetti Unique, CGI art. 256 C):
+        - BT-29 (Seller identifier): The Single Taxpayer Group's 9-digit SIREN must appear
+          under ram:GlobalID with schemeID "0231" (BR-FR-32).
+        - BT-21/BT-22: Mandatory note #TXD#MEMBRE_ASSUJETTI_UNIQUE must appear (BR-FR-CO-14).
+        - BG-11 (Tax Representative): ram:SellerTaxRepresentativeTradeParty must be present and contain
+          the Single Taxpayer Group's VAT under BT-63 (BR-FR-CO-15), along with name (BT-62)
+          and postal address (BG-12).
+        - BT-31: The member company's own VAT remains under ram:SellerTradeParty.
+        """
+        self.ensure_installed('account_reports')
+        other_company = self.env['res.company'].create({
+            'name': 'Company 2',
+            'country_id': self.env.ref('base.fr').id,
+            'currency_id': self.env.company.currency_id.id,
+        })
+        self.env['account.tax.unit'].create({  # noqa: OLS03001
+            'name': 'company_1_data',
+            'country_id': self.env.ref('base.fr').id,
+            'vat': 'FR05677404089',
+            'company_ids': [Command.set((self.env.company + other_company).ids)],
+            'main_company_id': self.env.company.id,
+        })
+
+        tax_20 = self.percent_tax(20.0)
+        invoice = self._create_invoice_one_line(
+            partner_id=self.partner_a,
+            product_id=self.product,
+            tax_ids=tax_20,
+            partner_bank_id=self.recipient_bank,
+            narration="Test narration",
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'facturx_fr_out_invoice_tax_unit')
+
     def test_invoice_profile_id(self):
         tax_goods = self.percent_tax(20.0, tax_scope='consu')
         tax_services = self.percent_tax(20.0, tax_scope='service')

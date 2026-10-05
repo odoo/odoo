@@ -526,10 +526,10 @@ class AccountEdiCii(models.AbstractModel):
         if (vat := partner_values.get('partner_tax_registration', '')) and not self._cii_is_vat_void(vat):
             tax_registrations.insert(0, {'scheme': 'VA', 'value': vat})
         return {
-            'ram:GlobalID': {
+            'ram:GlobalID': [{
                 'schemeID': '0088',
                 '_text': partner_values['gln'],
-            } if partner_values['gln'] else None,
+            }] if partner_values['gln'] else [],
             'ram:Name': {'_text': partner_values['name']},
             'ram:SpecifiedLegalOrganization': {
                 'ram:ID': {
