@@ -240,8 +240,9 @@ class TestWebsiteThemeGates(odoo.tests.HttpCase):
 
     def test_theme_gates(self):
         # The default header has a shadow, the default palette sets the
-        # headings color of two color presets.
-        default = ['menu-shadow-class', 'o-cc2-headings', 'o-cc5-headings']
+        # headings color of two color presets, the buttons are filled, the
+        # layout is full.
+        default = ['menu-shadow-class', 'o-cc2-headings', 'o-cc5-headings', 'btn-primary-fill', 'btn-secondary-fill', 'layout-full']
         self.assertEqual(self._get_theme_gates(), default)
         self.assertIn(
             f'data-o-theme-gates="{' '.join(default)}"', self.url_open('/').text.partition('<head')[0])
@@ -271,7 +272,32 @@ class TestWebsiteThemeGates(odoo.tests.HttpCase):
         self.assertEqual(self._get_theme_gates(), [
             'menu-shadow-class', 'menu-dark',
             'o-cc1-headings', 'o-cc2-headings', 'o-cc3-bg-gradient', 'o-cc5-headings',
+            'btn-primary-fill', 'btn-secondary-fill', 'menu-custom', 'layout-full',
         ])
         # A dark palette: dark body background too.
         self._set_values({'color-palettes-name': "'default-dark-1'"})
         self.assertIn('body-dark', self._get_theme_gates())
+
+    def test_style_gates(self):
+        self._set_values({
+            'btn-primary-flat': 'true',
+            'btn-secondary-outline': 'true',
+            'link-underline': "'always'",
+            'layout': "'postcard'",
+        })
+        self.assertEqual(self._get_theme_gates()[3:], [
+            'btn-primary-fill', 'btn-primary-flat', 'btn-secondary-outline',
+            'link-underline-always', 'layout-boxed', 'layout-postcard',
+        ])
+
+    def test_area_classes(self):
+        # The header and footer color presets are rendered as classes (the
+        # CSS doesn't compile them in for those elements).
+        classes = self.website.with_context(website_id=self.website.id)._get_theme_area_classes()
+        self.assertEqual((classes['menu'], classes['footer']), ('o_cc1', 'o_cc2'))
+        page = self.url_open('/').text
+        self.assertRegex(page, r'<nav data-name="Navbar"[^>]*class="[^"]* o_cc1 [^"]*" data-o-cc-area="menu"')
+        self.assertRegex(page, r'<footer [^>]*class="[^"]* o_cc2 [^"]*" data-o-cc-area="footer"')
+        self.env['website.assets'].with_context(website_id=self.website.id).make_scss_customization(
+            '/website/static/src/scss/options/colors/user_color_palette.scss', {'menu': '4'})
+        self.assertRegex(self.url_open('/').text, r'<nav data-name="Navbar"[^>]*class="[^"]* o_cc4 [^"]*" data-o-cc-area="menu"')

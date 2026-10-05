@@ -4,7 +4,7 @@
 <t t-name="website.ThemeButtonOption">
     <BuilderContext preview="false">
         <BuilderRow label.translate="Primary Style">
-            <BuilderSelect action="'customizeButtonStyle'" actionParam="'primary'">
+            <BuilderSelect action="'previewButtonStyle'" actionParam="'primary'" preview="true">
                 <BuilderSelectItem actionValue="'fill'">Fill</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'outline'" id="'btn_primary_outline_opt'">Outline</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'flat'">Flat</BuilderSelectItem>
@@ -17,7 +17,7 @@
             <BuilderRange actionParam="'btn-primary-outline-border-width'" unit="'px'" saveUnit="'rem'" min="0" max="10" withNumberInput="true"/>
         </BuilderRow>
         <BuilderRow label.translate="Secondary Style">
-            <BuilderSelect action="'customizeButtonStyle'" actionParam="'secondary'">
+            <BuilderSelect action="'previewButtonStyle'" actionParam="'secondary'" preview="true">
                 <BuilderSelectItem actionValue="'fill'">Fill</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'outline'" id="'btn_secondary_outline_opt'">Outline</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'flat'">Flat</BuilderSelectItem>

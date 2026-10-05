@@ -7,19 +7,6 @@ import {
     waitForEditMode,
 } from "@website/js/tours/tour_utils";
 
-function waitForWebsiteColorOperation() {
-    return [
-        {
-            content: "Wait for website color operation to start",
-            trigger: ":iframe .o_loading_screen",
-        },
-        {
-            content: "Wait for website color operation to complete",
-            trigger: ":iframe body:not(:has(.o_loading_screen))",
-        },
-    ];
-}
-
 registry.category("web_tour.tours").add("website_page_options", {
     steps: () => [
         waitForEditMode,
@@ -205,7 +192,6 @@ registry.category("web_tour.tours").add("website_page_breadcrumb", {
             trigger: ".o_cc_preview_wrapper button[data-color='o_cc4']",
             run: "click",
         },
-        ...waitForWebsiteColorOperation(),
         ...clickOnSave(),
         {
             content: "Verify that the breadcrumb background color matches Preset 4",
@@ -232,7 +218,6 @@ registry.category("web_tour.tours").add("website_page_breadcrumb", {
             trigger: ".popover button[data-color='600']",
             run: "click",
         },
-        ...waitForWebsiteColorOperation(),
         ...clickOnSave(),
         {
             content: "Verify that the breadcrumb background color is black-600",
@@ -257,7 +242,6 @@ registry.category("web_tour.tours").add("website_page_breadcrumb", {
                 await click();
             },
         },
-        ...waitForWebsiteColorOperation(),
         {
             content: "Verify that the breadcrumb background gradient is applied correctly",
             trigger: ":iframe nav[aria-label='breadcrumb']",

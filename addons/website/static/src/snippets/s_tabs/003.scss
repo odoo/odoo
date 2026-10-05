@@ -121,7 +121,7 @@
         .nav-pills {
             .active {
                 &:where(:focus-visible) {
-                    box-shadow: inset 0 0 $focus-ring-blur $focus-ring-width color-mix(in srgb, #{if($nav-pills-link-active-color == $component-active-color, var(--o-component-active-color, #{$component-active-color}), $nav-pills-link-active-color)} #{$focus-ring-opacity * 100%}, transparent);
+                    @include o-color-mix(box-shadow, 'inset 0 0 #{$focus-ring-blur} #{$focus-ring-width} color-mix(in srgb, #{if($nav-pills-link-active-color == $component-active-color, var(--o-component-active-color, #{$component-active-color}), $nav-pills-link-active-color)} #{$focus-ring-opacity * 100%}, transparent)', inset 0 0 $focus-ring-blur $focus-ring-width rgba($nav-pills-link-active-color, $focus-ring-opacity));
                 }
             }
         }

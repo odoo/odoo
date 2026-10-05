@@ -88,7 +88,10 @@ $o-btn-outline-defaults: () !default;
 $o-btn-outline-border-width-defaults: () !default;
 @each $color, $value in $theme-colors {
     .btn-#{$color} {
-        @if index($o-btn-outline-defaults, $color) {
+        @if mixin-exists(o-button-style) {
+            // A module that switches the styles at runtime (website).
+            @include o-button-style($color);
+        } @else if index($o-btn-outline-defaults, $color) {
             @extend .btn-outline-#{$color};
             border-width: map-get($o-btn-outline-border-width-defaults, $color);
         } @else {
@@ -105,7 +108,7 @@ $o-btn-outline-border-width-defaults: () !default;
 .btn-group .btn-light.active {
     box-shadow: inset 0 0 0 $border-width o-component-active-bg-var($component-active-bg);
     border-color: transparent;
-    background-color: color-mix(in srgb, var(--#{$prefix}light, #{$light}), #{o-component-active-bg-var($component-active-bg)} 10%);
+    @include o-color-mix(background-color, 'color-mix(in srgb, var(--#{$prefix}light, #{$light}), #{o-component-active-bg-var($component-active-bg)} 10%)', mix($component-active-bg, $light, 10%));
 }
 
 // Compensate navbar brand padding if no visible border
@@ -339,12 +342,20 @@ $-input-bg: var(--o-input-bg, #{$input-bg});
 $-input-color: var(--o-input-color, #{$input-color});
 .form-control {
     &:disabled, &[readonly] {
-        color: if($form-select-disabled-color == mix($input-color, $input-bg), color-mix(in srgb, #{$-input-bg}, #{$-input-color}), $form-select-disabled-color);
+        @if $form-select-disabled-color == mix($input-color, $input-bg) {
+            @include o-color-mix(color, 'color-mix(in srgb, #{$-input-bg}, #{$-input-color})', $form-select-disabled-color);
+        } @else {
+            color: $form-select-disabled-color;
+        }
     }
 }
 
 .form-check-input:disabled:not(:checked) {
-    background-color: if($input-disabled-bg == mix($input-color, $input-bg, 10%), color-mix(in srgb, #{$-input-bg}, #{$-input-color} 10%), $input-disabled-bg);
+    @if $input-disabled-bg == mix($input-color, $input-bg, 10%) {
+        @include o-color-mix(background-color, 'color-mix(in srgb, #{$-input-bg}, #{$-input-color} 10%)', $input-disabled-bg);
+    } @else {
+        background-color: $input-disabled-bg;
+    }
 
     .form-switch & {
         background-image: escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-select-disabled-color}'/></svg>"));

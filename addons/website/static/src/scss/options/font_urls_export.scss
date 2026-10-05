@@ -99,5 +99,47 @@ $black: o-color('black') !default;
             $-gates: append($-gates, 'o-cc#{$index}-bg-gradient');
         }
     }
+    // The primary and secondary buttons' style (see `o-button-style`).
+    @each $color in ('primary', 'secondary') {
+        @if o-website-value('btn-#{$color}-flat') or not o-website-value('btn-#{$color}-outline') {
+            $-gates: append($-gates, 'btn-#{$color}-fill');
+        } @else {
+            $-gates: append($-gates, 'btn-#{$color}-outline');
+        }
+        @if o-website-value('btn-#{$color}-flat') {
+            $-gates: append($-gates, 'btn-#{$color}-flat');
+        }
+    }
+    // Links always underlined (see web's `bootstrap_review.scss`).
+    @if o-website-value('link-underline') == 'always' {
+        $-gates: append($-gates, 'link-underline-always');
+    }
+    // The areas' custom colors and gradients (see `o-area-colors`).
+    @each $area in ('menu', 'header-sales_one', 'header-sales_two', 'header-sales_three', 'header-sales_four', 'footer', 'copyright', 'breadcrumb', 'portal-card') {
+        @if o-color('#{$area}-custom') {
+            $-gates: append($-gates, '#{$area}-custom');
+        }
+    }
+    @each $key in ('menu-gradient', 'menu-secondary-gradient', 'footer-gradient', 'copyright-gradient', 'breadcrumb-gradient', 'portal-gradient') {
+        @if o-website-value($key) {
+            $-gates: append($-gates, $key);
+        }
+    }
+    // The page layout (see `website.scss`).
+    $-layout: o-website-value('layout');
+    $-gates: append($-gates, if($-layout == 'full', 'layout-full', 'layout-boxed'));
+    @if index(('framed', 'postcard'), $-layout) {
+        $-gates: append($-gates, 'layout-#{$-layout}');
+    }
     --o-theme-gates: "#{$-gates}";
+    // The color presets of the areas the templates render as a class (see
+    // `o-area-colors`).
+    $-presets: ();
+    @each $area in ('menu', 'footer', 'breadcrumb') {
+        $-preset: o-related-color($area, $max-recursions: 10);
+        @if type-of($-preset) == 'number' {
+            $-presets: append($-presets, '#{$area}:#{$-preset}');
+        }
+    }
+    --o-theme-area-presets: "#{$-presets}";
 }
