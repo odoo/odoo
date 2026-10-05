@@ -382,7 +382,7 @@ class TestTestCursor(common.TransactionCase):
     def check(self, record, value):
         # make sure to fetch the field from the database
         record.invalidate_recordset()
-        self.assertEqual(record.read(['email'])[0]['email'], value)
+        self.assertEqual(record.email, value)
 
     def test_single_cursor(self):
         """ Check the behavior of a single test cursor. """

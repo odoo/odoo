@@ -506,7 +506,7 @@ class StockWarehouseOrderpoint(models.Model):
         # there is already something to resupply base on lead times.
         if self.uom_id.compare(self.qty_forecast, self.product_min_qty) < 0:
             product_context = self._get_product_context()
-            qty_forecast_with_visibility = self.product_id.with_context(product_context).read(['virtual_available'])[0]['virtual_available'] + qty_in_progress
+            qty_forecast_with_visibility = self.product_id.with_context(product_context).virtual_available + qty_in_progress
             qty_to_order = max(self.product_min_qty, self.product_max_qty) - qty_forecast_with_visibility
             qty_to_order = self._get_multiple_rounded_qty(qty_to_order)
         return qty_to_order

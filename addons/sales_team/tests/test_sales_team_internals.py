@@ -75,15 +75,15 @@ class TestSecurity(TestSalesMC):
     def test_team_access(self):
         sales_team = self.sales_team_1.with_user(self.env.user)
 
-        sales_team.read(['name'])
+        sales_team.fetch(['name'])
         for member in sales_team.member_ids:
-            member.read(['name'])
+            member.fetch(['name'])
 
         with self.assertRaises(exceptions.AccessError):
             sales_team.write({'name': 'Trolling'})
 
         for membership in sales_team.crm_team_member_ids:
-            membership.read(['name'])
+            membership.fetch(['name'])
             with self.assertRaises(exceptions.AccessError):
                 membership.write({'active': False})
 
@@ -92,6 +92,6 @@ class TestSecurity(TestSalesMC):
 
     @users('user_sales_leads')
     def test_team_multi_company(self):
-        self.sales_team_1.with_user(self.env.user).read(['name'])
+        self.sales_team_1.with_user(self.env.user).fetch(['name'])
         with self.assertRaises(exceptions.AccessError):
-            self.team_c2.with_user(self.env.user).read(['name'])
+            self.team_c2.with_user(self.env.user).fetch(['name'])

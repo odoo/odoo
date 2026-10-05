@@ -214,7 +214,7 @@ class TestActivityRights(TestActivityCommon):
 
         # cannot read activities if no access to the document
         with self.assertRaises(exceptions.AccessError):
-            test_activity.with_user(self.user_employee).read(['summary'])
+            test_activity.with_user(self.user_employee).fetch(['summary'])
 
         # cannot search_read activities if no access to the document
         result = self.env['mail.activity'].with_user(self.user_employee).search_read(
@@ -245,7 +245,7 @@ class TestActivityRights(TestActivityCommon):
         found = self.env['mail.activity'].with_user(self.user_employee).search(
             [('id', '=', test_activity.id)])
         self.assertEqual(found, test_activity)
-        found.read(['summary'])
+        found.fetch(['summary'])
 
         # user can read_group activities assigned to him even if he has no access to the document
         read_group_result = self.env['mail.activity'].with_user(self.user_employee).formatted_read_group(

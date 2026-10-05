@@ -235,8 +235,8 @@ class ForumPost(models.Model):
 
     @api.depends_context('uid')
     def _compute_user_vote(self):
-        votes = self.env['forum.post.vote'].sudo().search_read([('post_id', 'in', self._ids), ('user_id', '=', self.env.uid)], ['vote', 'post_id'])
-        mapped_vote = {v['post_id'][0]: v['vote'] for v in votes}
+        votes = self.env['forum.post.vote'].sudo().search_fetch([('post_id', 'in', self._ids), ('user_id', '=', self.env.uid)], ['vote', 'post_id'])
+        mapped_vote = {v.post_id.id: v.vote for v in votes}
         for vote in self:
             vote.user_vote = mapped_vote.get(vote.id, 0)
 

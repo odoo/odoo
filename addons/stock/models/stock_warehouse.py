@@ -336,7 +336,7 @@ class StockWarehouse(models.Model):
         PickingType = self.env['stock.picking.type']
 
         # choose the next available color for the operation types of this warehouse
-        all_used_colors = [res['color'] for res in PickingType.search_read([('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')]
+        all_used_colors = {r[0] for r in PickingType._read_group([('warehouse_id', '!=', False), ('color', '!=', False)], ['color'])}
         available_colors = [zef for zef in range(0, 12) if zef not in all_used_colors]
         color = available_colors[0] if available_colors else 0
 

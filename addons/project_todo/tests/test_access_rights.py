@@ -20,4 +20,4 @@ class TestAccessRightsTodo(TestAccessRights):
             self.private_task.with_user(self.env.user).unlink()
 
         with self.assertRaises(AccessError):
-            self.private_task.with_user(self.env.user).read(['name'])
+            self.private_task.with_user(self.env.user).fetch(['name'])

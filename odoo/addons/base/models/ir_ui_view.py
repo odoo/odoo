@@ -312,9 +312,9 @@ actual arch.
         for view in self:
             view.model_data_id = False
         domain = [('model', '=', 'ir.ui.view'), ('res_id', 'in', self.ids)]
-        for data in self.env['ir.model.data'].sudo().search_read(domain, ['res_id'], order='id desc'):
-            view = self.browse(data['res_id'])
-            view.model_data_id = data['id']
+        for data in self.env['ir.model.data'].sudo().search_fetch(domain, ['res_id'], order='id desc'):
+            view = self.browse(data.res_id)
+            view.model_data_id = data.id
 
     def _search_model_data_id(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
@@ -411,8 +411,8 @@ actual arch.
     def _compute_xml_id(self):
         xml_ids = collections.defaultdict(list)
         domain = [('model', '=', 'ir.ui.view'), ('res_id', 'in', self.ids)]
-        for data in self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name', 'res_id']):
-            xml_ids[data['res_id']].append("%s.%s" % (data['module'], data['name']))
+        for data in self.env['ir.model.data'].sudo().search_fetch(domain, ['module', 'name', 'res_id']):
+            xml_ids[data.res_id].append("%s.%s" % (data.module, data.name))
         for view in self:
             view.xml_id = xml_ids.get(view.id, [''])[0]
 

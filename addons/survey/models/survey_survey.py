@@ -995,13 +995,13 @@ class SurveySurvey(models.Model):
         if leaderboard and self.session_state == 'in_progress' and \
            any(answer.answer_score for answer in self.session_question_id.suggested_answer_ids):
             question_scores = {}
-            input_lines = self.env['survey.user_input.line'].search_read(
+            input_lines = self.env['survey.user_input.line'].search_fetch(
                     [('user_input_id', 'in', [score['id'] for score in leaderboard]),
                         ('question_id', '=', self.session_question_id.id)],
                     ['user_input_id', 'answer_score'])
             for input_line in input_lines:
-                question_scores[input_line['user_input_id'][0]] = \
-                    question_scores.get(input_line['user_input_id'][0], 0) + input_line['answer_score']
+                question_scores[input_line.user_input_id.id] = \
+                    question_scores.get(input_line.user_input_id.id, 0) + input_line.answer_score
 
             score_position = 0
             max_question_score = sum(
@@ -1306,11 +1306,11 @@ class SurveySurvey(models.Model):
 
         session_codes = set()
         excluded_codes = excluded_codes or set()
-        existing_codes = self.sudo().search_read(
+        existing_codes = self.sudo().search_fetch(
             [('session_code', '!=', False)],
             ['session_code']
         )
-        unavailable_codes = excluded_codes | {existing_code['session_code'] for existing_code in existing_codes}
+        unavailable_codes = excluded_codes | {existing_code.session_code for existing_code in existing_codes}
         for digits_count in range(4, 10):
             range_lower_bound = 10 ** (digits_count - 1)
             range_upper_bound = (range_lower_bound * 10) - 1
