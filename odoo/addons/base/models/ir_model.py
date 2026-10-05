@@ -412,19 +412,6 @@ class IrModel(models.Model):
         manual_models.field_id.filtered(lambda f: f.state == 'manual')._prepare_update()
         (self - manual_models).field_id._prepare_update()
 
-        # delete fields whose comodel is being removed
-        self.env['ir.model.fields'].search([('relation', 'in', self.mapped('model'))]).unlink()
-
-        # delete ir_crons created by user
-        crons = self.env['ir.cron'].with_context(active_test=False).search([('model_id', 'in', self.ids)])
-        if crons:
-            crons.unlink()
-
-        # delete related ir_model_data
-        model_data = self.env['ir.model.data'].search([('model', 'in', self.mapped('model'))])
-        if model_data:
-            model_data.unlink()
-
         res = super().unlink()
 
         # Reload registry for normal unlink only. For module uninstall, the
@@ -435,6 +422,22 @@ class IrModel(models.Model):
             self.pool._setup_models__(self.env.cr)
 
         return res
+
+    def _delete_extra(self):
+        yield from super()._delete_extra()
+
+        # delete fields whose comodel is being removed
+        yield self.env['ir.model.fields'].search([('relation', 'in', self.mapped('model'))])
+
+        # delete related ir_model_data
+        yield self.env['ir.model.data'].search([('model', 'in', self.mapped('model'))])
+
+    @api.ondelete(at_uninstall=True)
+    def _delete_remove_cron(self):
+        # delete ir_crons created by user, they are ondelete='restrict'
+        cron = self.env['ir.cron'].search([('model_id', 'in', self.ids)])
+        if cron:
+            cron.unlink()
 
     def write(self, vals):
         for unmodifiable_field in ('model', 'state', 'abstract', 'transient'):
@@ -2033,7 +2036,7 @@ class IrModelFieldsSelection(models.Model):
                 # nothing to do, the selection does not come from a field extension
                 continue
 
-            companies = self.env.companies if self.field_id.company_dependent else [self.env.company]
+            companies = self.env.companies if selection.field_id.company_dependent else [self.env.company]
             for company in companies:
                 # make a company-specific env for the Model and selection
                 Model = Model.with_company(company.id)
