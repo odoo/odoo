@@ -191,8 +191,8 @@ class StockMove(models.Model):
         res = super().write(vals)
         if recompute_date:
             impacted_moves._set_value(recompute_date=recompute_date)
-        if vals.get('value'):
-            self.cogs_aml_ids._set_cogs()
+        if 'value' in vals:
+            self._get_cogs_invoice_lines()._set_cogs()
         return res
 
     def _read_group_select(self, table, aggregate_spec):
@@ -252,7 +252,7 @@ class StockMove(models.Model):
         moves_in = moves.filtered(lambda m: m.is_in or m.is_dropship)
         moves_out._set_value()
         moves_in._set_value()
-        moves.cogs_aml_ids._set_cogs()
+        moves._get_cogs_invoice_lines()._set_cogs()
         moves._create_account_move()
         (moves_in | moves_out).sudo()._create_analytic_move()
         return moves
@@ -317,6 +317,10 @@ class StockMove(models.Model):
 
     def _get_analytic_distribution(self):
         return {}
+
+    def _get_cogs_invoice_lines(self):
+        """Find invoice lines through their existing COGS journal items."""
+        return self.sudo().cogs_aml_ids.cogs_origin_id
 
     def _get_price_unit(self, product=None, include_consigned=False, include_consumable=False):
         """ Returns the unit price to value this stock move.

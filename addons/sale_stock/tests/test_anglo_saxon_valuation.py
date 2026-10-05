@@ -1386,6 +1386,39 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
             {'account_id': self.account_expense.id, 'debit': 5.0, 'credit': 0.0},
         ])
 
+    def test_fifo_cogs_replay_from_zero_cost(self):
+        """Create missing COGS on replay, then update the same pair."""
+        product = self.product_fifo_auto
+        product.invoice_policy = 'delivery'
+        product.standard_price = 0
+        receipt = self._make_in_move(product, 1)
+        sale_order = self._so_deliver(product, 1, 100)
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        cogs_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'cogs')
+        self.assertFalse(cogs_lines)
+        self.assertFalse(sale_order.picking_ids.move_ids.cogs_aml_ids)
+        receipt._set_value()
+        self.assertFalse(invoice.line_ids.filtered(lambda line: line.display_type == 'cogs'))
+
+        for value in (15, 20, 0, 5):
+            receipt.value_manual = value
+            receipt._set_value()
+
+            self.assertEqual(sale_order.picking_ids.move_ids.value, -value)
+            self.assertEqual(invoice.state, 'posted')
+            updated_cogs = invoice.line_ids.filtered(lambda line: line.display_type == 'cogs')
+            if cogs_lines:
+                self.assertEqual(updated_cogs, cogs_lines)
+            else:
+                cogs_lines = updated_cogs
+            self.assertRecordValues(cogs_lines.sorted('balance'), [
+                {'account_id': self.account_stock_valuation.id, 'balance': -value},
+                {'account_id': self.account_expense.id, 'balance': value},
+            ])
+            self.assertEqual(sum(invoice.line_ids.mapped('balance')), 0)
+
     def test_fifo_several_invoices_reset_repost(self):
         self.product_fifo_auto.invoice_policy = 'delivery'
 
