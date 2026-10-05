@@ -363,7 +363,7 @@ test("should be able to unlink an icon", async () => {
     );
     await waitFor(".o-we-toolbar");
     await click('[name="unlink"]');
-    expect(".my_link").toHaveCount(0);
+    expect("a.my_link").toHaveCount(0);
 });
 
 test("icon toolbar when only an icon is selected", async () => {
