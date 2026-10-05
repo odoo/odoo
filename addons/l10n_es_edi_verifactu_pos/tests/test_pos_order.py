@@ -36,6 +36,17 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
             cash_pm.id: 0,
         })
 
+    def _refund_simplified_order(self, order):
+        with self._mock_zeep_registration_operation_certificate_issue():
+            refund = self.env['pos.order'].browse(order.refund()['res_id'])
+            refund.l10n_es_invoice_type = 'R5'
+            payment_context = {'active_ids': refund.ids, 'active_id': refund.id}
+            self.env['pos.make.payment'].with_context(**payment_context).create({
+                'amount': refund.amount_total,
+                'payment_method_id': self.bank_pm1.id,
+            }).check()
+        return refund
+
     def _create_order(self, data):
         date_order = data.pop('date_order', None)
         name = data.pop('name', None)
@@ -145,7 +156,7 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
 
         self.assertRecordValues(order, [{
             'l10n_es_edi_verifactu_state': 'accepted',
-            'l10n_es_edi_verifactu_qr_code': f'/report/barcode/?barcode_type=QR&value=https%3A%2F%2Fprewww2.aeat.es%2Fwlpl%2FTIKE-CONT%2FValidarQR%3Fnif%3DA39200019%26numserie%3D{self.basic_config.id}%252F000001%26fecha%3D30-12-2024%26importe%3D121.00&barLevel=M&width=180&height=180',
+            'l10n_es_edi_verifactu_qr_code': f'https://prewww2.aeat.es/wlpl/TIKE-CONT/ValidarQR?nif=A39200019&numserie={self.basic_config.id}%2F000001&fecha=30-12-2024&importe=121.00',
         }])
 
         order_document = order.l10n_es_edi_verifactu_document_ids
@@ -178,6 +189,62 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
         json_contents['RegistroAlta']['IDFactura']['NumSerieFactura'] = str(self.basic_config.id) + '/000002'
         json_contents['RegistroAlta']['FacturasRectificadas'][0]['IDFacturaRectificada']['NumSerieFactura'] = invoice_number
         self.assertEqual(refund_document._get_document_dict(), json_contents)
+
+    def test_refund_simplified_order_after_session_closed(self):
+        """Closing the session links its global move to the order; name and refund must still use the order's document."""
+        with self.with_pos_session():
+            with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json',
+                                                        name=f"{self.config.id}/000001"):
+                order = self._create_order({
+                    'pos_order_lines_ui_args': [(self.product, 1.0)],
+                    'payments': [(self.bank_pm1, 121.0)],
+                    'date_order': '2024-12-30 00:00:00',
+                })
+        self.assertTrue(order.is_globally_invoiced)
+        self.assertEqual(order.l10n_es_edi_verifactu_get_invoice_name(), f"{self.config.id}/000001")
+
+        with self.with_pos_session():
+            refund = self._refund_simplified_order(order)
+
+        record = refund.l10n_es_edi_verifactu_document_ids._get_document_dict()['RegistroAlta']
+        self.assertEqual(
+            record['FacturasRectificadas'][0]['IDFacturaRectificada']['NumSerieFactura'],
+            f"{self.config.id}/000001",
+        )
+
+    def test_order_with_validation_errors_creates_invalid_document(self):
+        self.env.company.partner_id.sudo().vat = False
+        with self.with_pos_session():
+            order = self._create_order({
+                'pos_order_lines_ui_args': [(self.product, 1.0)],
+                'payments': [(self.bank_pm1, 121.0)],
+            })
+
+        self.assertRecordValues(order.l10n_es_edi_verifactu_document_ids, [{
+            'state': 'invalid',
+            'obligado_partner_id': self.env.company.partner_id.id,
+        }])
+
+    def test_refund_two_orders_from_closed_session(self):
+        with self.with_pos_session():
+            with self._mock_zeep_registration_operation('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json'):
+                order_1 = self._create_order({
+                    'pos_order_lines_ui_args': [(self.product, 1.0)],
+                    'payments': [(self.bank_pm1, 121.0)],
+                })
+                order_2 = self._create_order({
+                    'pos_order_lines_ui_args': [(self.product, 1.0)],
+                    'payments': [(self.bank_pm1, 121.0)],
+                })
+
+        with self.with_pos_session():
+            refund_1 = self._refund_simplified_order(order_1)
+            refund_2 = self._refund_simplified_order(order_2)
+
+        self.assertRecordValues(
+            (refund_1 + refund_2).l10n_es_edi_verifactu_document_ids,
+            [{'state': False}, {'state': False}],
+        )
 
     def test_order_invoiced_simplified(self):
         with self.with_pos_session():
@@ -237,9 +304,13 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
         # The Veri*Factu document was created for the invoice and not the document
         self.assertEqual(order.sequence_number, 0)
         invoice = order.account_move
+        invoice_document = invoice.l10n_es_edi_verifactu_document_ids._get_last('submission')
         self.assertRecordValues(order, [{
             'l10n_es_edi_verifactu_document_ids': [],
-            'l10n_es_edi_verifactu_qr_code': invoice.l10n_es_edi_verifactu_qr_code,
+            # The order's QR code must be the raw AEAT URL (re-encoded into a new QR on the
+            # receipt), not invoice.l10n_es_edi_verifactu_qr_code (the `/report/barcode` image
+            # proxy URL used as an `<img src>` on the invoice PDF).
+            'l10n_es_edi_verifactu_qr_code': invoice_document._get_qr_code_url(),
         }])
 
         # Test receipt generation
