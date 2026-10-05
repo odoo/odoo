@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import colorsys
 import re
+from urllib.parse import urlsplit
 
 import werkzeug.urls
 from lxml import etree, html
@@ -162,8 +163,9 @@ def images_from_html(html_fragment, base_url):
     if not html_fragment or not html_fragment.strip():
         return []
     tree = html.fromstring(html_fragment)
+    # urljoin only accepts URLs of base_url, but images may be hosted elsewhere
     seen = dict.fromkeys(
-        urljoin(base_url, src)
+        src if urlsplit(src).netloc else urljoin(base_url, src)
         for img in tree.xpath('//img[@src]')
         if (src := img.get('src')) and not src.startswith('data:')
     )
