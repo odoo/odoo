@@ -120,7 +120,9 @@ def upgrade(file_manager: FileManager):
     created_groups_xmlids = set()
 
     for i, coa in enumerate(COA_TO_MIGRATE, 1):
-        gfile = group_files[coa_to_groups_coa(coa)]
+        gfile = group_files.get(coa_to_groups_coa(coa))
+        if not gfile:
+            continue
         afile = account_files[coa]
         gcsv = csv.DictReader(gfile.content.splitlines())
         acsv = csv.DictReader(afile.content.splitlines())
