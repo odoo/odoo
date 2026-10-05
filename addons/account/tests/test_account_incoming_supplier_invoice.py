@@ -486,7 +486,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
 
     def test_einvoice_notification(self):
         purchase_journal = self.company_data['default_journal_purchase']
-        purchase_journal.incoming_einvoice_notification_email = 'oops_another_bill@example.com'
+        purchase_journal.journal_notification_emails = 'oops_another_bill@example.com'
 
         with self.mock_mail_gateway():
             self.assert_attachment_import(

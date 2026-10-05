@@ -265,7 +265,7 @@
             <field name="name">New eInvoices Notification</field>
             <field name="subject">New Electronic Invoices Received</field>
             <field name="email_from">{{ object.company_id.email_formatted }}</field>
-            <field name="email_to">{{ object.incoming_einvoice_notification_email }}</field>
+            <field name="email_to">{{ object.journal_notification_emails }}</field>
             <field name="use_default_to" eval="False"/>
             <field name="model_id" ref="account.model_account_journal"/>
             <field name="auto_delete" eval="True"/>

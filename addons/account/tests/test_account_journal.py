@@ -194,7 +194,7 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
 
     def test_journal_notifications_unsubscribe(self):
         journal = self.company_data['default_journal_purchase']
-        journal.incoming_einvoice_notification_email = 'test@example.com'
+        journal.journal_notification_emails = 'test@example.com'
 
         self.authenticate(self.env.user.login, self.env.user.login)
         res = self.url_open(
@@ -204,12 +204,12 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
         )
         res.raise_for_status()
 
-        self.assertFalse(journal.incoming_einvoice_notification_email)
+        self.assertFalse(journal.journal_notification_emails)
 
     def test_journal_notifications_unsubscribe_success(self):
         journal = self.company_data['default_journal_purchase']
         email = 'test@example.com'
-        journal.incoming_einvoice_notification_email = email
+        journal.journal_notification_emails = email
 
         self.authenticate(None, None)
         token = hash_sign(
@@ -225,7 +225,7 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
         )
         res.raise_for_status()
 
-        self.assertFalse(journal.incoming_einvoice_notification_email)
+        self.assertFalse(journal.journal_notification_emails)
 
     def test_journal_notifications_unsubscribe_errors(self):
         journal = self.company_data['default_journal_purchase']
@@ -248,24 +248,24 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
             )
 
         with self.subTest('invalid_token'):
-            journal.incoming_einvoice_notification_email = email
+            journal.journal_notification_emails = email
             res = _unsubscribe('invalid_token')
             self.assertEqual(res.status_code, 403)
-            self.assertEqual(journal.incoming_einvoice_notification_email, email)
+            self.assertEqual(journal.journal_notification_emails, email)
 
         with self.subTest('already_unsubscribed'):
-            journal.incoming_einvoice_notification_email = email
+            journal.journal_notification_emails = email
             first_unsubscribe = _unsubscribe(valid_token)
             first_unsubscribe.raise_for_status()
-            self.assertFalse(journal.incoming_einvoice_notification_email)
+            self.assertFalse(journal.journal_notification_emails)
             second_unsubscribe = _unsubscribe(valid_token)
             self.assertEqual(second_unsubscribe.status_code, 404)
 
         with self.subTest('wrong_journal_id'):
-            journal.incoming_einvoice_notification_email = email
+            journal.journal_notification_emails = email
             res = _unsubscribe(valid_token, journal_id=journal.id + 1)
             self.assertEqual(res.status_code, 403)
-            self.assertEqual(journal.incoming_einvoice_notification_email, email)
+            self.assertEqual(journal.journal_notification_emails, email)
 
 
 @tagged('post_install', '-at_install', 'mail_alias')
