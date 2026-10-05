@@ -96,9 +96,9 @@ class ReportController(Controller):
 
         return request.make_response(barcode, headers)
 
-    @route(['/report/download'], type='http', auth="user")
+    @route(['/report/download'], type='http', auth="user", readonly=True)
     # pylint: disable=unused-argument
-    def report_download(self, data, context=None, token=None, readonly=True):
+    def report_download(self, data, context=None, token=None):
         """This function is used by 'action_manager_report.js' in order to trigger the download of
         a pdf/controller report.
 
