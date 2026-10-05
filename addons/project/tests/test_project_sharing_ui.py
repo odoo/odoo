@@ -1,6 +1,8 @@
 from odoo import Command
 from odoo.tests import HttpCase, tagged
 
+from odoo.addons.mail.tests.common import mail_new_test_user
+
 @tagged('post_install', '-at_install')
 class TestProjectSharingUi(HttpCase):
 
@@ -171,4 +173,6 @@ class TestProjectSharingUi(HttpCase):
                 "project_id": self.project_portal.id,
             }
         )
+        user_employee = mail_new_test_user(self.env, "alice", name="Alice")
+        self.project_portal.message_subscribe(partner_ids=user_employee.partner_id.ids)
         self.start_tour("/my/projects", "portal_project_sharing_chatter_mention_users", login="georges1")
