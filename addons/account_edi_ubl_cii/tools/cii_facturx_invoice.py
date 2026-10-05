@@ -120,12 +120,20 @@ BuyerParty = {
     },
 }
 
+TaxRepresentativeParty = {
+    **PartnerParty,
+    'ram:SpecifiedTaxRegistration': {
+        'ram:ID': {},
+    },
+}
+
 SupplyChainTrade = {
     'ram:IncludedSupplyChainTradeLineItem': LineItem,
     'ram:ApplicableHeaderTradeAgreement': {
         'ram:BuyerReference': {},
         'ram:SellerTradeParty': SellerParty,
         'ram:BuyerTradeParty': BuyerParty,
+        'ram:SellerTaxRepresentativeTradeParty': TaxRepresentativeParty,
         'ram:BuyerOrderReferencedDocument': {
             'ram:IssuerAssignedID': {},
         },
