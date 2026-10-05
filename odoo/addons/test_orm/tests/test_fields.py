@@ -2106,9 +2106,11 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             {'discussion': discussion.id, 'body': f"Message {i}", 'important': i % 3 == 0}
             for i in range(100)
         ])
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
+            'name': 'test_orm.message restriction',
             'model_id': self.env['ir.model']._get('test_orm.message').id,
-            'domain_force': "[('important', '=', False)]",
+            'operation': 'crud',
+            'domain': "[('important', '=', False)]",
         })
         self.env.invalidate_all()
 
