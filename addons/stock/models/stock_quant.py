@@ -44,6 +44,9 @@ class StockQuant(models.Model):
                 " [('is_storable', '=', True)]")
         return "[]"
 
+    def _domain_user_id(self):
+        return [('all_group_ids', 'in', self.env.ref('stock.group_stock_user').id)]
+
     product_id = fields.Many2one(
         'product.product', 'Product',
         domain=lambda self: self._domain_product_id(),
@@ -116,7 +119,7 @@ class StockQuant(models.Model):
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated', search='_search_is_outdated')
     user_id = fields.Many2one(
         'res.users', 'Assigned To', help="User assigned to do product count.",
-        domain=lambda self: [('all_group_ids', 'in', self.env.ref('stock.group_stock_user').id)])
+        domain=lambda self: self._domain_user_id())
 
     @api.depends('quantity', 'reserved_quantity')
     def _compute_available_quantity(self):
@@ -284,8 +287,8 @@ class StockQuant(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """ Override to handle the "inventory mode" and create a quant as
-        superuser the conditions are met.
+        """ Override to handle the "inventory mode" and create a quant if
+        the conditions are met.
         """
         def _add_to_cache(quant):
             if 'quants_cache' in self.env.context:
@@ -323,9 +326,9 @@ class StockQuant(models.Model):
                         vals['lot_id'] = lot_id.id
                     quant = quant.filtered(lambda q: q.lot_id)
                 if quant:
-                    quant = quant[0].sudo()
+                    quant = quant[0]
                 else:
-                    quant = self.sudo().create(vals)
+                    quant = self.create(vals)
                     _add_to_cache(quant)
                 if auto_apply:
                     quant.write({'inventory_quantity_auto_apply': inventory_quantity})
