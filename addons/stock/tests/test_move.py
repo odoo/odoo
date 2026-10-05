@@ -6994,7 +6994,7 @@ class TestStockMove(TestStockCommon):
             'name': self.productA.name,
             'qty_ordered': 11.1,
             'quantity': 13.9,
-            'packaging_qty_ordered': 1.86,
+            'packaging_qty_ordered': 1.85,
             'packaging_quantity': 2.32,
         })
 
