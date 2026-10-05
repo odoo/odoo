@@ -33,6 +33,9 @@ patch(Thread.prototype, {
         if (this.channel?.channel_type !== "livechat") {
             return super.computeComposerDisabled(...arguments);
         }
+        // REVIEW [2/5, correctness]: `livechat_end_dt` is a `discuss.channel` field; the moved
+        // code was `this.channel.livechat_end_dt`. On `Thread` it is always undefined, so ended
+        // sessions with an agent now always return "not disabled" and skip the chatbot-step logic.
         if (this.channel?.livechat_agent_history_ids.length && !this.livechat_end_dt) {
             return false;
         }

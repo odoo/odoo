@@ -76,6 +76,21 @@ const discussChannelPatch = {
         });
         /** @type {import("@web/core/network/rpc").RPCError|import("@web/core/network/rpc").ConnectionLostError|import("@web/core/network/rpc").ConnectionAbortedError|undefined} */
         this.chatbotTriggerFailedError = undefined;
+        // REVIEW [4/5, correctness]: moved from embed to core without a visitor guard. The server
+        // sends `chatbot` for every livechat channel to every reader, so this now runs
+        // `chatbot.start()` in the backend for operators/managers too.
+        //
+        // Scenario: a visitor closes the tab mid-script (current step is a text step, or they
+        // answered and left). A livechat manager opens the session from Sessions.
+        // `start()` → `_runUntilUserInputStep()` → `/chatbot/step/trigger` (only needs channel
+        // access) advances the visitor's script server-side: it posts bot messages, can run
+        // `forward_operator` (assigning an agent to an abandoned visitor), or sets
+        // `livechat_end_dt`. The new `isLastCommentFromVisitor` (persona-based instead of
+        // `isSelfAuthored`) is also true on the manager's client, so `processAnswer` runs there too.
+        //
+        // Fix direction: only drive the chatbot for `isTransient ||
+        // self_member_id?.livechat_member_type === "visitor"` (same for `Thread.post` /
+        // `computeComposerDisabled`).
         this.onChange(
             () => [this.hasActiveChatbot],
             function onChangeHasActiveChatbot(hasActiveChatbot) {
@@ -111,6 +126,11 @@ const discussChannelPatch = {
             let bestScore = -1;
             let bestMemberHistory;
             // Agents are preferred over bots, current members over former members, and higher IDs over lower IDs
+            // REVIEW [2/5, correctness]: the `[...]` copy from the embed version was dropped.
+            // `RecordList.sort` is a store update (`MAKE_UPDATE` + `data.set`), so this getter now
+            // reorders the shared relational field during render whenever new history records
+            // arrive. Other readers (e.g. `livechat_service` `.find(agent)`) then see an order that
+            // depends on whether the avatar was rendered. Restore `[...this.livechat_channel_member_history_ids]`.
             for (const memberHistory of this.livechat_channel_member_history_ids.sort(
                 (a, b) => b.id - a.id
             )) {

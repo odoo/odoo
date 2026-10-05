@@ -1,3 +1,5 @@
+// REVIEW [1/5, maintainability]: file renamed from `message_patch.js` to `massage_patch.js` (typo);
+// keep `message_patch.js` next to `message_patch.xml`.
 import { Message } from "@mail/core/common/message";
 
 import { useProps, t } from "@odoo/owl";

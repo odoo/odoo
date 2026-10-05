@@ -41,6 +41,15 @@ const chatWindowPatch = {
         ) {
             return canClose;
         }
+        // REVIEW [3/5, correctness]: the embed version required
+        // `self_member_id?.livechat_member_type === "visitor"` before taking the visitor path. Now
+        // anyone not *proven* to differ from the visitor falls through: if `livechatVisitorMember`
+        // is undefined (e.g. the portal/internal visitor used the allowed "leave" action in the
+        // backend, so their member is gone), the agent closing the window calls
+        // `/im_livechat/visitor_leave_session` (`_close_livechat_session`) and gets the visitor
+        // rating panel instead of closing.
+        //
+        // Fix direction: branch explicitly on the self member type for the visitor flow.
         if (this.channel.livechatVisitorMember?.persona?.notEq(this.store.self)) {
             await this.channel.leaveChannelRpc();
             return canClose;
