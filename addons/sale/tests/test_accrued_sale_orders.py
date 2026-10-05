@@ -181,6 +181,56 @@ class TestAccruedSaleOrders(TestSaleCommon):
             ],
         )
 
+    def test_create_entries_posts_message_on_order(self):
+        """ The order(s) the accrual was computed from get a chatter note about it. """
+        self.sale_order.order_line.qty_delivered = 5
+        self.assertFalse(self.sale_order.message_ids.filtered(lambda m: 'Accrual entry created' in (m.body or '')))
+        self.wizard.create_entries()
+        self.assertTrue(self.sale_order.message_ids.filtered(lambda m: 'Accrual entry created' in (m.body or '')))
+
+    def test_accrued_order_lines_from_multiple_orders_are_merged(self):
+        """ Selecting individual order lines (not whole orders) across several sale
+        orders still merges their accrued counterpart ("Accrued total") lines landing on
+        the same account/currency into a single line, instead of one per order. """
+        other_order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "order_line": [Command.create({
+                "name": self.product_a.name,
+                "product_id": self.product_a.id,
+                "product_uom_qty": 10.0,
+                "price_unit": self.product_a.list_price,
+                "tax_ids": False,
+            })],
+        })
+        other_order.action_confirm()
+        other_order.order_line.qty_delivered = 5
+        self.sale_order.order_line[0].qty_delivered = 5
+
+        invoices_to_issue_account = self.env.company.account_invoices_to_issue_id
+        wizard = (
+            self.env["account.accrued.orders.wizard"]
+            .with_context({
+                "active_model": "sale.order.line",
+                "active_ids": (self.sale_order.order_line[0] | other_order.order_line).ids,
+                "default_accrual_type": "invoice_to_be_issued",
+            })
+            .create({"account_id": False, "date": fields.Date.today()})
+        )
+        move_lines = self.env["account.move"].search(wizard.create_entries()["domain"]).line_ids
+        entry_lines = move_lines.filtered(lambda l: l.move_id.state == "posted")
+        reversal_lines = move_lines.filtered(lambda l: l.move_id.state == "draft")
+
+        self.assertRecordValues(entry_lines.filtered(lambda l: l.account_id == self.account_revenue).sorted("id"), [
+            {"debit": 0.0, "credit": 5000.0},
+            {"debit": 0.0, "credit": 5000.0},
+        ])
+        self.assertRecordValues(entry_lines.filtered(lambda l: l.account_id == invoices_to_issue_account), [
+            {"debit": 10000.0, "credit": 0.0},
+        ])
+        self.assertRecordValues(reversal_lines.filtered(lambda l: l.account_id == invoices_to_issue_account), [
+            {"debit": 0.0, "credit": 10000.0},
+        ])
+
     def test_product_name_in_accrued_revenue_entry(self):
         self.sale_order.order_line.qty_delivered = 5
 
