@@ -88,6 +88,7 @@ class DiscussCallHistory(models.Model):
             call_history.has_recording = call_history.has_audio or call_history.has_video
 
     def _broadcast_recording_availability(self):
+        # REVIEW [1/5 maintainability]: DB write hidden in a "broadcast" helper; call it explicitly from the callers (cloud_storage / ai controllers).
         self._rerender_activity_done_message()
         for call_history in self:
             Store(call_history.channel_id).add(

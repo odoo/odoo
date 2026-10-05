@@ -1665,6 +1665,7 @@ class CalendarEvent(models.Model):
         record = self.env[self.res_model].browse(self.res_id).exists()
         if not record:
             return self.env['mail.activity']
+        # REVIEW [1/5 correctness]: by sequence a generic type may win over a model-specific one; order res_model first or prefer mail.mail_activity_data_meeting.
         activity_type = self.env['mail.activity.type'].search(
             [('category', '=', 'meeting'), ('res_model', 'in', (False, self.res_model))], limit=1,
         )
@@ -1677,6 +1678,7 @@ class CalendarEvent(models.Model):
             date_deadline=self._get_activity_deadline_from_start(self.start, self.allday),
             note=self.description,
             summary=self.name,
+            # REVIEW [2/5 correctness]: event without organizer -> falsy, activity_schedule falls back to env.uid = whoever started the call (public user for a guest, via sudo). Fall back to OdooBot/False explicitly.
             user_id=self.user_id.id,
         )
 

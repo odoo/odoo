@@ -432,6 +432,7 @@
             <field name="auto_delete" eval="True"/>
         </record>
 
+        <!-- REVIEW [2/5 consistency]: this template (and the ICS) still use the plain videocall_location, so external attendees join as strangers instead of their guest; use attendee._get_videocall_location() where possible. -->
         <record id="calendar_template_meeting_update" model="mail.template">
             <field name="name">Calendar: Event Update</field>
             <field name="model_id" ref="calendar.model_calendar_event"/>

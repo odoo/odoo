@@ -83,6 +83,7 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-language-id',
      'data-bs-toggle',  # support nav-tabs
      'data-icon',
+     # REVIEW [1/5 scope]: global sanitizer whitelist change in a feature commit; fine (text only) but deserves its own commit / mention.
      'data-tooltip',
      ])
 

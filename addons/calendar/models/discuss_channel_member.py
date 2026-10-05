@@ -11,6 +11,7 @@ class DiscussChannelMember(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         members = super().create(vals_list)
+        # REVIEW [1/5 performance]: runs on every member create of every channel (hot path) and reads calendar_event_ids; members created already seen (last_seen_dt) are pushed as invited too.
         members._broadcast_meeting_invitation("ADD")
         return members
 

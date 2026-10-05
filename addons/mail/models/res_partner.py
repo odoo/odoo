@@ -73,6 +73,7 @@ class ResPartner(models.Model):
         # an archived contact still had the call: what it is about does not depend on it
         attendees = self.with_context(active_test=False).browse(partner_ids).exists()
         commercial_partners = attendees.commercial_partner_id - attendees
+        # REVIEW [2/5 performance]: run on every name_search keystroke; this tier can be thousands of ids, inlined as IN lists in the CASE for each partner field. Prefer subquery domains (child_of / any) over materialized ids.
         commercial_contacts = self.with_context(active_test=False).search(
             [('id', 'child_of', attendees.commercial_partner_id.ids)],
         )

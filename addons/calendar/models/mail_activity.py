@@ -39,6 +39,7 @@ class MailActivity(models.Model):
         # the activity related record "customer" (aka main partner), the document a
         # meeting is being scheduled from being expected to attend it too
         default_partners = self.user_id.partner_id
+        # REVIEW [2/5 scope]: unrelated behavior change (non-meeting activities no longer invite the document customer), not in commit msg. Separate commit or justify.
         if self.activity_type_id.category == 'meeting' and self.res_model and self.res_id:
             record = self.env[self.res_model].browse(self.res_id).exists()
             if record and record.has_access('read'):

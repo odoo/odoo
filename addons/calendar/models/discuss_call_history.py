@@ -13,6 +13,7 @@ class DiscussCallHistory(models.Model):
         if activity := super()._get_activity_to_link():
             return activity
         meeting = self._get_meeting()
+        # REVIEW [4/5 correctness]: done activities are archived, so meeting_activity_ids (active_test) drops them -> any later call in this channel (rejoin, follow-up call) creates a new activity + another "Meeting done" message. Skip when the meeting already has a done one (active_test=False / call_history_ids).
         activities = meeting.meeting_activity_ids
         pending = next(
             (activity for activity in activities if not activity.date_done),
@@ -32,6 +33,7 @@ class DiscussCallHistory(models.Model):
         # an organizer logging their own meeting is not who it was held with
         if contact := super()._get_log_contact():
             return contact
+        # REVIEW [2/5 product]: for an attendee, defaults the contact to the organizer (usually an internal colleague), overriding the attendee ranking that would pick the customer.
         return self._get_meeting().user_id.partner_id - self.env.user.partner_id
 
     def _get_meeting(self):

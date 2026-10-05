@@ -45,6 +45,7 @@ class CalendarEventFormRecord extends Record {
      *
      * @override
      */
+    // REVIEW [3/5 product]: also adds a Discuss link to existing meetings on attendee edit (contradicts load() comment), which then creates a channel + mail.guest per external attendee. Undisclosed behavior change; confirm with PO / mention in commit msg.
     async _update(changes, options) {
         await super._update(changes, options);
         if ("partner_ids" in changes && this.needsDiscussLocation) {
@@ -74,6 +75,7 @@ export class CalendarEventFormModel extends RelationalModel {
      * meeting only ever gets one, so adding it is instant whenever it is needed.
      */
     fetchDiscussVideocallLocation() {
+        // REVIEW [4/5 correctness]: cached per form model, which is reused by New / Save & New / pager; now auto-applied on load(), so a 2nd new meeting gets the same access_token -> unique(access_token) violation on save. Cache per record.
         this.discussVideocallLocation ??= this.orm.call(
             "calendar.event",
             "get_discuss_videocall_location"
