@@ -3,8 +3,8 @@ import { SuggestionService } from "@mail/core/common/suggestion_service";
 import { patch } from "@web/core/utils/patch";
 
 patch(SuggestionService.prototype, {
-    async fetchPartnersRoles(term, thread, { abortSignal } = {}) {
-        if (thread.model === "project.task") {
+    async fetchPartnersRoles(term, { abortSignal, thread } = {}) {
+        if (thread?.model === "project.task") {
             this.store.insert(
                 await this.makeOrmCall(
                     "project.task",

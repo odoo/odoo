@@ -1,5 +1,5 @@
 from odoo import Command
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, new_test_user, tagged
 
 @tagged('post_install', '-at_install')
 class TestProjectSharingUi(HttpCase):
@@ -183,4 +183,6 @@ class TestProjectSharingUi(HttpCase):
                 "project_id": self.project_portal.id,
             }
         )
+        internal_user = new_test_user(self.env, login="marc", groups="base.group_user", name="Marc")
+        self.project_portal.message_subscribe(partner_ids=internal_user.partner_id.ids)
         self.start_tour("/my/projects", "portal_project_sharing_chatter_mention_users", login="georges1")
