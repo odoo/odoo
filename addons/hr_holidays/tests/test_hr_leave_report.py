@@ -205,3 +205,41 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         # 20 total allocated - 13 taken = 7 remaining
         self.assertEqual(sum(left_records.mapped('number_of_days')), 7)
         self.assertEqual(sum(taken_records.mapped('number_of_days')), 13)
+
+    def test_open_ended_allocation_not_affected_by_earlier_leave(self):
+        """
+        Scenario:
+            - Allocation A: 2024-2025 (10 days)
+            - Allocation B: 2025-2026 (10 days)
+            - Allocation C: 2027-01-01, no end date (20 days)
+            - Leave: 2025 (1 day)
+        """
+        self.env['hr.leave.allocation'].create({
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.leave_type.id,
+            'date_from': '2027-01-01',
+            'number_of_days': 20,
+        }).action_approve()
+
+        self.env['hr.leave'].create([
+            {
+                'employee_id': self.employee_emp.id,
+                'work_entry_type_id': self.leave_type.id,
+                'request_date_from': '2025-06-02',
+                'request_date_to': '2025-06-02',
+            },
+        ]).action_approve()
+
+        domain = [
+            ('employee_id', '=', self.employee_emp.id),
+            ('work_entry_type_id', '=', self.leave_type.id),
+        ]
+        leave_balance = self.env['hr.leave.employee.type.report'].search(domain)
+        left_records = leave_balance.filtered(lambda l: l.holiday_status == 'left')
+        left_2024 = left_records.filtered(lambda l: l.date_from.year == 2024)
+        left_2027 = left_records.filtered(lambda l: l.date_from.year == 2027)
+
+        # Allocation A: 10 - 1 = 9
+        self.assertEqual(sum(left_2024.mapped('number_of_days')), 9)
+        # Allocation C (no end date): untouched at 20
+        self.assertEqual(sum(left_2027.mapped('number_of_days')), 20)
