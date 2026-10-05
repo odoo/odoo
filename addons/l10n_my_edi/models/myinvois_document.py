@@ -540,6 +540,20 @@ class MyInvoisDocument(models.Model):
             'type': 'ir.actions.act_window',
         }
 
+    def action_open_document_sync_wizard(self):
+        """ Open the wizard, with the journal of the list it is opened from. """
+        return {
+            'name': self.env._('Sync with MyInvois'),
+            'res_model': 'myinvois.document.sync.wizard',
+            'view_mode': 'form',
+            'views': [[False, 'form']],
+            'target': 'new',
+            'context': {
+                'default_journal_id': self.env.context.get('journal_id'),
+            },
+            'type': 'ir.actions.act_window',
+        }
+
     def action_show_myinvois_documents(self):
         """ Open the documents in self in the correct view based on the amount of records. """
         consolidated_invoices = all(document.is_consolidated_invoice for document in self)
