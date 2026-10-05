@@ -389,20 +389,22 @@ export class LinkPlugin extends Plugin {
                         anchorNode: clickedEl,
                         anchorOffset: 1,
                     });
+                    this.dependencies.selection.focusEditable();
                 }
             } else if (!clickedEl.closest("a") && link) {
                 // This handles the case of clicking outside the link that is
                 // at the start/end of paragraph
-                ev.preventDefault();
                 const anchorFeff =
                     nodeSize(caretPosition.offsetNode) === caretPosition.offset
                         ? link.nextSibling
                         : link.previousSibling;
                 if (anchorFeff && isZwnbsp(anchorFeff)) {
+                    ev.preventDefault();
                     this.dependencies.selection.setSelection({
                         anchorNode: anchorFeff,
                         anchorOffset: 1,
                     });
+                    this.dependencies.selection.focusEditable();
                 }
             }
         });
