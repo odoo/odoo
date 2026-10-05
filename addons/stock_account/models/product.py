@@ -765,7 +765,7 @@ class ProductCategory(models.Model):
         check_company=True,
         help="""With perpetual valuation, this account will hold the price difference between the standard price and the bill price.""")
     account_stock_variation_id = fields.Many2one(
-        'account.account', string="Stock Variation Account", readonly=False,
+        'account.account', string="Stock Variation Account", readonly=False, groups="account.group_account_manager",
         related="property_stock_valuation_account_id.account_stock_variation_id")
 
     @api.depends_context('company')
