@@ -64,7 +64,7 @@
                 <list string="MyInvois Documents" create="false" sample="0" decoration-muted="myinvois_state == 'cancelled'">
                     <header>
                         <button name="action_open_consolidate_invoice_wizard" string="Consolidate Invoices" type="object" display="always" class="btn-primary" invisible="not context.get('display_consolidate_invoice_button', False)" context="{'default_consolidation_type': 'invoice'}"/>
-                        <button name="%(l10n_my_edi.myinvois_document_sync_wizard_action)d" string="Sync MyInvois" type="action" display="always" invisible="not context.get('l10n_my_edi_display_sync_button', False)" context="{'default_journal_id': context.get('journal_id')}"/>
+                        <button name="action_open_document_sync_wizard" string="Sync MyInvois" type="object" display="always" invisible="not context.get('l10n_my_edi_display_sync_button', False)"/>
                         <button name="action_submit_to_myinvois" string="Submit To MyInvois" type="object" class="btn-primary"/>
                         <button name="action_update_submission_status" string="Fetch Status From MyInvois" type="object"/>
                     </header>
