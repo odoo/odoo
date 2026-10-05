@@ -1,5 +1,6 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
+from odoo.fields import Command
 
 @tagged('post_install', '-at_install')
 class TestAccountMoveDuplicate(AccountTestInvoicingCommon):
@@ -144,3 +145,33 @@ class TestAccountMoveDuplicate(AccountTestInvoicingCommon):
         bill2.update({'ref': "bill2 ref"})
         self.assertIn(bill1, bill2.duplicated_ref_ids)
         self.assertIn(bill2, bill1.duplicated_ref_ids)
+
+    def test_out_invoice_duplicate_with_mixed_epd_onchange(self):
+        """ Changing the invoice date in the form so that a posted invoice with a mixed early payment
+        discount becomes a duplicate should not crash when computing the duplicate's display name."""
+        early_pay_mixed = self.env['account.payment.term'].create({
+            'name': '2% discount if paid within 10 days',
+            'early_discount': True,
+            'discount_percentage': 2,
+            'discount_days': 10,
+            'early_pay_discount_computation': 'mixed',
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'nb_days': 0,
+                'value_amount': 100,
+            })],
+        })
+        invoice_1 = self.init_invoice('out_invoice', products=self.product_a, invoice_date='2023-01-01')
+        invoice_1.invoice_payment_term_id = early_pay_mixed
+        invoice_1.action_post()
+        invoice_2 = invoice_1.copy(default={'invoice_date': '2023-01-02'})
+        self.assertRecordValues(invoice_2, [{'duplicated_ref_ids': []}])
+
+        # Same spec as the web client: the duplicates are displayed with their amount total.
+        fields_spec = {
+            'invoice_date': {},
+            'invoice_line_ids': {'fields': {'product_id': {}, 'price_unit': {}, 'tax_ids': {}}},
+            'duplicated_ref_ids': {'context': {'name_as_amount_total': True}, 'fields': {'display_name': {}}},
+        }
+        result = invoice_2.onchange({'invoice_date': '2023-01-01'}, ['invoice_date'], fields_spec)
+        self.assertEqual({command[1] for command in result['value']['duplicated_ref_ids']}, set(invoice_1.ids))
