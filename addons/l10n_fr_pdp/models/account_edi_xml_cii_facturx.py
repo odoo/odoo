@@ -66,6 +66,41 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         return node
 
+    def _cii_get_seller_trade_party_node(self, vals):
+        # EXTENDS account.edi.xml.cii
+        # [CGI art. 256 C] [BR-FR-32] For Single Taxpayer Groups, report the group SIREN (BT-29) with scheme 0231
+        node = super()._cii_get_seller_trade_party_node(vals)
+        if tax_unit := self._l10n_fr_pdp_get_company_tax_unit(vals['company']):
+            node['ram:GlobalID'].append({
+                '_text': self._l10n_fr_pdp_get_siren_from_vat(tax_unit.vat),
+                'schemeID': '0231',
+            })
+        return node
+
+    def _cii_get_applicable_header_trade_agreement_node(self, vals):
+        # EXTENDS account.edi.xml.cii
+        # [BR-FR-CO-15] For Single Taxpayer Groups, report the group in ram:SellerTaxRepresentativeTradeParty (BG-11)
+        agreement_node = super()._cii_get_applicable_header_trade_agreement_node(vals)
+        if tax_unit := self._l10n_fr_pdp_get_company_tax_unit(vals['company']):
+            main_partner = tax_unit.main_company_id.partner_id
+            agreement_node['ram:SellerTaxRepresentativeTradeParty'] = {
+                'ram:Name': {'_text': tax_unit.name},
+                'ram:PostalTradeAddress': self._cii_get_postal_trade_address_node(vals, {
+                    'postcode': main_partner.zip,
+                    'line_one': main_partner.street,
+                    'line_two': main_partner.street2,
+                    'city': main_partner.city,
+                    'country_code': main_partner.country_id.code,
+                }),
+                'ram:SpecifiedTaxRegistration': [{
+                    'ram:ID': {
+                        '_text': tax_unit.vat,
+                        'schemeID': 'VA',
+                    },
+                }],
+            }
+        return agreement_node
+
     # -------------------------------------------------------------------------
     # IMPORT
     # -------------------------------------------------------------------------
