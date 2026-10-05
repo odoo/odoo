@@ -93,8 +93,34 @@ class PosController(PortalAccount):
         if not pos_config or not pos_config.active or pos_config.current_session_id and not pos_session:
             return request.redirect('/odoo/action-point_of_sale.action_client_pos_menu')
 
+<<<<<<< 85262c324ce6806e7923e7ad8492c3c0dda6cd42
         if not pos_config.current_session_id:
             pos_config.open_session_if_not_opened()  # Create a session after doing the necessary checks.
+||||||| ac3a3264631f9b6acb16e6213d763e79bb0c369d
+        if not pos_config.has_active_session:
+            # Acquire an row-level lock on the pos_config record to prevent race conditions
+            # This prevents multiple concurrent processes from creating duplicate POS sessions
+            request.env.cr.execute(
+                "SELECT id FROM pos_config WHERE id = %s FOR UPDATE NOWAIT",
+                (pos_config.id,)
+            )
+            pos_config.open_ui()
+=======
+        if not pos_config.has_active_session:
+            # Acquire an row-level lock on the pos_config record to prevent race conditions
+            # This prevents multiple concurrent processes from creating duplicate POS sessions
+            request.env.cr.execute(
+                "SELECT id FROM pos_config WHERE id = %s FOR UPDATE NOWAIT",
+                (pos_config.id,)
+            )
+            try:
+                pos_config.open_ui()
+            except UserError:
+                # Enable frontend error rendering so this backend route displays an Odoo error page.
+                request.is_frontend = True
+                request.lang = request.env['res.lang']._get_data(code=request.env.lang)
+                raise
+>>>>>>> 1af509f4ef9c53505cec84004bf2b0de6a056766
             pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
 
         # The POS only works in one company, so we enforce the one of the session in the context
