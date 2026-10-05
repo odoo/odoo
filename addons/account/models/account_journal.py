@@ -121,7 +121,7 @@ class AccountJournal(models.Model):
         compute='_compute_suspense_account_id',
         help="Bank statements transactions will be posted on the suspense account until the final reconciliation "
              "allowing finding the right account.", string='Suspense Account',
-        domain="[('account_type', '=', 'asset_current')]",
+        ui_domain="[('account_type', '=', 'asset_current')]",
     )
     suspense_account_active = fields.Boolean(related='suspense_account_id.active', string="Suspense Account Active")
     non_deductible_account_id = fields.Many2one(
@@ -180,7 +180,7 @@ class AccountJournal(models.Model):
     invoice_template_pdf_report_id = fields.Many2one(
         string="Invoice report",
         comodel_name='ir.actions.report',
-        domain="[('id', 'in', available_invoice_template_pdf_report_ids)]",
+        ui_domain="[('id', 'in', available_invoice_template_pdf_report_ids)]",
         readonly=False,
     )
     available_invoice_template_pdf_report_ids = fields.One2many(
@@ -227,13 +227,13 @@ class AccountJournal(models.Model):
         comodel_name='account.account', check_company=True, index='btree_not_null',
         help="Used to register a profit when the ending balance of a cash register differs from what the system computes",
         string='Profit Account',
-        domain="[('account_type', 'in', ('income', 'income_other'))]")
+        ui_domain="[('account_type', 'in', ('income', 'income_other'))]")
     profit_account_active = fields.Boolean(related='profit_account_id.active', string="Profit Account Active")
     loss_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, index='btree_not_null',
         help="Used to register a loss when the ending balance of a cash register differs from what the system computes",
         string='Loss Account',
-        domain="[('account_type', '=', 'expense')]")
+        ui_domain="[('account_type', '=', 'expense')]")
     loss_account_active = fields.Boolean(related='loss_account_id.active', string="Loss Account Active")
 
     # Bank journals fields
@@ -243,7 +243,7 @@ class AccountJournal(models.Model):
         ondelete='restrict', copy=False,
         index='btree_not_null',
         check_company=True,
-        domain="[('partner_id','=', company_partner_id)]")
+        ui_domain="[('partner_id','=', company_partner_id)]")
     bank_statements_source = fields.Selection(selection='_get_bank_statements_available_sources', string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")
     bank_name = fields.Char(related='bank_account_id.bank_name', readonly=False)
     bank_account_number = fields.Char(related='bank_account_id.account_number', readonly=False)

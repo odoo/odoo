@@ -34,7 +34,7 @@ class ProjectTask(models.Model):
     def _get_portal_timesheet_domain(self):
         return Domain('project_id', '!=', False)
 
-    project_id = fields.Many2one(domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id), ('is_internal_project', '=', False), ('is_template', 'in', [is_template, False])]")
+    project_id = fields.Many2one(ui_domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id), ('is_internal_project', '=', False), ('is_template', 'in', [is_template, False])]")
     analytic_account_active = fields.Boolean("Active Analytic Account", related='project_id.analytic_account_active', export_string_translation=False)
     allow_timesheets = fields.Boolean(
         "Allow timesheets",

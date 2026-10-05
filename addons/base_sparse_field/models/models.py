@@ -20,7 +20,7 @@ class IrModelFields(models.Model):
         ('serialized', 'serialized'),
     ], ondelete={'serialized': 'cascade'})
     serialization_field_id = fields.Many2one('ir.model.fields', string='Serialization Field',
-        ondelete='cascade', domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]",
+        ondelete='cascade', ui_domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]",
         help="If set, this field will be stored in the sparse structure of the "
              "serialization field, instead of having its own database column. "
              "This cannot be changed after creation.",

@@ -28,7 +28,7 @@ class AccountAutomaticEntryWizard(models.TransientModel):
     total_amount = fields.Monetary(compute='_compute_total_amount', store=True, readonly=False, currency_field='company_currency_id', help="Total amount impacted by the automatic entry.")
     journal_id = fields.Many2one('account.journal', required=True, readonly=False, string="Journal",
         check_company=True,
-        domain="[('type', '=', 'general')]",
+        ui_domain="[('type', '=', 'general')]",
         compute="_compute_journal_id",
         inverse="_inverse_journal_id",
         help="Journal where to create the entry.")
@@ -37,13 +37,13 @@ class AccountAutomaticEntryWizard(models.TransientModel):
     account_type = fields.Selection([('income', 'Revenue'), ('expense', 'Expense')], compute='_compute_account_type', store=True)
     expense_accrual_account = fields.Many2one('account.account', readonly=False,
         check_company=True,
-        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
+        ui_domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         compute="_compute_expense_accrual_account",
         inverse="_inverse_expense_accrual_account",
     )
     revenue_accrual_account = fields.Many2one('account.account', readonly=False,
         check_company=True,
-        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
+        ui_domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         compute="_compute_revenue_accrual_account",
         inverse="_inverse_revenue_accrual_account",
     )

@@ -32,7 +32,7 @@ class AccountTax(models.Model):
         comodel_name='res.country.state',
         string="Jurisdiction",
         ondelete='restrict',
-        domain="[('country_id', '=?', country_id)]",
+        ui_domain="[('country_id', '=?', country_id)]",
         tracking=True,
     )
     l10n_ar_scale_id = fields.Many2one(

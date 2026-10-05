@@ -15,7 +15,7 @@ class ProjectProject(models.Model):
         default=True)
     account_id = fields.Many2one(
         # note: replaces ['|', ('company_id', '=', False), ('company_id', '=', company_id)]
-        domain="""[
+        ui_domain="""[
             '|', ('company_id', '=', False), ('company_id', '=?', company_id),
             ('partner_id', '=?', partner_id),
         ]"""

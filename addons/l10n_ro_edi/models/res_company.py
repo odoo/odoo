@@ -24,7 +24,7 @@ class ResCompany(models.Model):
     l10n_ro_edi_anaf_imported_inv_journal_id = fields.Many2one(
         comodel_name='account.journal',
         string="Select journal for SPV imported bills",
-        domain="[('type', '=', 'purchase')]",
+        ui_domain="[('type', '=', 'purchase')]",
         compute="_compute_l10n_ro_edi_anaf_imported_inv_journal",
         store=True,
         readonly=False,
