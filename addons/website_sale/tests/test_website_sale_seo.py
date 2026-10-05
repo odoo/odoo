@@ -54,8 +54,11 @@ class WebsiteSaleSEO(HttpCase, WebsiteSaleCommon):
         canonical = root.xpath('//link[@rel="canonical"]')[0].attrib["href"]
         self.assertEqual(canonical, self.base_url() + self.product.website_url)
 
-        res = self.url_open(f"/fr{categ_product_path}")
+        # The prefix may be 'fr' or 'fr_FR' depending on whether another version
+        # of French has already been installed.
+        fr_prefix = "/" + lang_fr.url_code
+        res = self.url_open(f"{fr_prefix}{categ_product_path}")
         res.raise_for_status()
         root = html.fromstring(res.content)
         canonical = root.xpath('//link[@rel="canonical"]')[0].attrib["href"]
-        self.assertEqual(canonical, self.base_url() + "/fr" + self.product.website_url)
+        self.assertEqual(canonical, self.base_url() + fr_prefix + self.product.website_url)
