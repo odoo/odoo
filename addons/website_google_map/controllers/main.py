@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
+import json
 
 from odoo import http
 from odoo.http import request
-from odoo.tools.json import scriptsafe
 
 
 class GoogleMap(http.Controller):
@@ -68,7 +68,7 @@ class GoogleMap(http.Controller):
         google_maps_api_key = self.env.website.google_maps_api_key
         values = {
             'partner_url': partner_url,
-            'partner_data': scriptsafe.dumps(partner_data),
+            'partner_data': json.dumps(partner_data),
             'google_maps_api_key': google_maps_api_key,
         }
         return request.render("website_google_map.google_map", values)

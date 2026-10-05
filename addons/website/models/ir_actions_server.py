@@ -3,7 +3,7 @@
 from odoo import api, fields, models
 from odoo.http import request
 from odoo.tools import urls
-from odoo.tools.json import scriptsafe as json_scriptsafe
+from odoo.tools.json import simple as json_simple
 
 
 class IrActionsServer(models.Model):
@@ -47,7 +47,7 @@ class IrActionsServer(models.Model):
         eval_context = super()._get_eval_context(action)
         if action.state == 'code':
             eval_context['request'] = request
-            eval_context['json'] = json_scriptsafe
+            eval_context['json'] = json_simple
         return eval_context
 
     @api.model

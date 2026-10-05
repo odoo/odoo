@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import json
+
 import odoo.tests
 from odoo.tests.common import HttpCase
-from odoo.tools.json import scriptsafe as json_safe
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -27,7 +28,7 @@ class TestModifyImageNoData(HttpCase):
         response = self.url_open(
             f'/html_editor/modify_image/{attachment.id}',
             headers={'Content-Type': 'application/json'},
-            data=json_safe.dumps({'params': {
+            data=json.dumps({'params': {
                 'res_model': 'ir.ui.view',
                 'res_id': 0,
                 'name': 'modified_image.gif',
