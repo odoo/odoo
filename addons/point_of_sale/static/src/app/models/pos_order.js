@@ -984,7 +984,8 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     get remainingDueAmount() {
-        return this.orderCurrency.convert(this.hasRemainingDue ? this.remainingDue : this.change);
+        const amount = this.hasRemainingDue ? this.remainingDue : this.change;
+        return this.convertAmountToCurrency(amount, this.orderCurrency);
     }
 
     get remainingDueLabel() {
