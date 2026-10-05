@@ -137,6 +137,9 @@ export class ClipboardPlugin extends Plugin {
         "lineBreak",
     ];
     static shared = ["pasteText"];
+    resources = {
+        before_sanitize_processors: this.filterSupportedPlugins.bind(this),
+    };
 
     setup() {
         this.addDomListener(this.editable, "copy", this.onCopy);
@@ -360,6 +363,22 @@ export class ClipboardPlugin extends Plugin {
             }
             textIndex++;
         }
+    }
+
+    filterSupportedPlugins(content) {
+        if (
+            content?.nodeType !== Node.ELEMENT_NODE &&
+            content?.nodeType !== Node.DOCUMENT_FRAGMENT_NODE
+        ) {
+            return content;
+        }
+        const pluginSet = new Set((this.config?.Plugins || []).map((p) => p.id));
+        content.querySelectorAll("[data-require-plugins]").forEach((element) => {
+            if (!pluginSet.has(element.getAttribute("data-require-plugins"))) {
+                element.remove();
+            }
+        });
+        return content;
     }
 
     /**

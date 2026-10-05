@@ -17,7 +17,7 @@ import {
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { parseHTML } from "@html_editor/utils/html";
 import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
-import { click, queryFirst, waitFor } from "@odoo/hoot-dom";
+import { click, press, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import {
     App,
@@ -35,7 +35,14 @@ import { EmbeddedComponentPlugin } from "../src/others/embedded_component_plugin
 import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { getContent, setSelection } from "./_helpers/selection";
-import { addStep, deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
+import {
+    addStep,
+    deleteBackward,
+    deleteForward,
+    pasteOdooEditorHtml,
+    redo,
+    undo,
+} from "./_helpers/user_actions";
 import { makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@web/core/utils/concurrency";
 import { Plugin } from "@html_editor/plugin";
@@ -1785,5 +1792,74 @@ describe("Embedded state", () => {
         expect(getContent(el)).toBe(
             `<p>a[]<span data-embedded="counter" data-embedded-props='{"name":"customName","value":2}' data-oe-protected="true" contenteditable="false" data-embedded-state='{"stateChangeId":1,"previous":{"baseValue":3,"value":1},"next":{"baseValue":5,"value":2}}'><span class="counter">customName:5</span></span></p>`
         );
+    });
+});
+
+describe("Clipboard", () => {
+    test("copy embedded component should add attribute data-require-plugins", async () => {
+        await setupEditor(`<p>[<span data-embedded="counter"></span>]</p>`, {
+            config: getConfig([embedding("counter", Counter)]),
+        });
+        await animationFrame();
+
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+
+        const html = clipboardData.getData("application/vnd.odoo.odoo-editor");
+        const fragment = document.createRange().createContextualFragment(html);
+        const host = fragment.querySelector("[data-embedded='counter']");
+        expect(host.getAttribute("data-require-plugins")).toBe(EmbeddedComponentPlugin.id);
+    });
+
+    test("paste should keep element if plugin id in data-require-plugins is loaded", async () => {
+        const { editor } = await setupEditor(`<p>[]<br></p>`, {
+            config: getConfig([embedding("counter", Counter)]),
+        });
+
+        pasteOdooEditorHtml(
+            editor,
+            `<p><span data-embedded="counter" data-require-plugins="${EmbeddedComponentPlugin.id}"></span></p>`
+        );
+        await animationFrame();
+
+        expect("[data-embedded='counter']").toHaveCount(1);
+    });
+
+    test("paste should delete element if plugin id in data-require-plugins is not loaded", async () => {
+        const { editor } = await setupEditor(`<p>[]<br></p>`, {
+            config: {
+                Plugins: MAIN_PLUGINS.filter((p) => p.id !== EmbeddedComponentPlugin.id),
+            },
+        });
+
+        pasteOdooEditorHtml(
+            editor,
+            `<p><span data-embedded="counter" data-require-plugins="${EmbeddedComponentPlugin.id}"></span></p>`
+        );
+        await animationFrame();
+
+        expect("[data-embedded='counter']").toHaveCount(0);
+    });
+
+    test("paste should keep element if component id in data-embedded is loaded", async () => {
+        const { editor } = await setupEditor(`<p>[]<br></p>`, {
+            config: getConfig([embedding("counter", Counter)]),
+        });
+
+        pasteOdooEditorHtml(editor, `<p><span data-embedded="counter"></span></p>`);
+        await animationFrame();
+
+        expect("[data-embedded='counter']").toHaveCount(1);
+    });
+
+    test("paste should delete element if component id in data-embedded is not loaded", async () => {
+        const { editor } = await setupEditor(`<p>[]<br></p>`, {
+            config: getConfig([]),
+        });
+
+        pasteOdooEditorHtml(editor, `<p>before<span data-embedded="counter"></span>after</p>`);
+        await animationFrame();
+
+        expect("[data-embedded='counter']").toHaveCount(0);
     });
 });
