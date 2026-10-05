@@ -1,3 +1,4 @@
+import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
@@ -36,7 +37,7 @@ import { childNodeIndex, nodeSize } from "@html_editor/utils/position";
 import { _t } from "@web/core/l10n/translation";
 import { compareListTypes, createList, insertListAfter, isListItem } from "./utils";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
-import { withSequence } from "@html_editor/utils/resource";
+import { READ, withSequence } from "@html_editor/utils/resource";
 import { getFontSizeOrClass, getHtmlStyle } from "@html_editor/utils/formatting";
 import { TEXT_CLASSES_REGEX, getColorOrClass } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
@@ -151,6 +152,7 @@ export class ListPlugin extends Plugin {
                 props: {
                     getButtons: () => this.listSelectorButtons,
                     getListMode: this.getListMode.bind(this),
+                    getDisplay: () => this.listDisplay,
                 },
                 isAvailable: this.canToggleList.bind(this),
             }),
@@ -179,6 +181,10 @@ export class ListPlugin extends Plugin {
         hints: [{ selector: `LI, LI > ${baseContainerGlobalSelector}`, text: _t("List") }],
 
         /** Handlers */
+        on_selectionchange_handlers: withSequence(READ, this.updateListDisplay.bind(this)),
+        on_committed_to_history_handlers: this.updateListDisplay.bind(this),
+        on_history_commit_undone_handlers: this.updateListDisplay.bind(this),
+        on_history_commit_redone_handlers: this.updateListDisplay.bind(this),
         on_deleted_handlers: this.adjustListPaddingOnDelete.bind(this),
         on_will_insert_separator_handlers: this.exitList.bind(this),
         on_format_applied_handlers: this.postFormatAppliedOnList.bind(this),
@@ -247,10 +253,20 @@ export class ListPlugin extends Plugin {
         this.addDomListener(this.editable, "touchstart", this.onPointerdown);
         this.addDomListener(this.editable, "mousedown", this.onPointerdown);
         this.listSelectorButtons = this.getListSelectorButtons();
+        // Icon of the list button: the type of the list of the selection.
+        this.listDisplay = proxy({ icon: "format_list_bulleted" });
         this.canToggleListMemoized = weakMemoize(
             (selection) =>
                 isHtmlContentSupported(selection) && this.getBlocksToToggleList().length > 0
         );
+    }
+
+    updateListDisplay() {
+        const { anchorNode } = this.dependencies.selection.getEditableSelection();
+        const li = anchorNode && closestElement(anchorNode, "LI");
+        const mode = li && this.getListMode(li.parentElement);
+        const button = mode && this.listSelectorButtons.find((button) => button.mode === mode);
+        this.listDisplay.icon = button?.icon || "format_list_bulleted";
     }
 
     toggleListCommand({ mode, listStyle } = {}) {

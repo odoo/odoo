@@ -1,4 +1,4 @@
-import { Component, signal, t, useProps } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { toolbarButtonProps } from "../toolbar/toolbar";
 import { closestElement } from "@html_editor/utils/dom_traversal";
@@ -15,12 +15,14 @@ export class ListSelector extends Component {
         ...toolbarButtonProps,
         getButtons: t.function(),
         getListMode: t.function(),
+        getDisplay: t.function(),
     });
     static components = { Dropdown, DropdownItem };
 
     listSelector = signal.ref();
 
     setup() {
+        this.state = proxy(this.props.getDisplay());
         this.menuRef = signal.ref();
         this.dropdown = useDropdownState();
         useToolbarDropdownFocus(this.dropdown, this.listSelector);
