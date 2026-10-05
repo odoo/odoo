@@ -10,7 +10,7 @@ class QuotationDocument(models.Model):
     _description = "Quotation's Headers & Footers"
     _inherits = {"ir.attachment": "ir_attachment_id"}
     _check_inherits_access = False
-    _order = "document_type desc, sequence, name"
+    _order = "position desc, sequence, name"
     _check_company_auto = True
 
     ir_attachment_id = fields.Many2one(
@@ -20,15 +20,14 @@ class QuotationDocument(models.Model):
         required=True,
         index=True,
     )
-    document_type = fields.Selection(
-        string="Document Type",
-        selection=[("header", "Header"), ("footer", "Footer")],
+    position = fields.Selection(
+        string="Position",
+        selection=[("header", "Before quote"), ("footer", "After quote")],
         required=True,
         default="header",
     )
     active = fields.Boolean(
-        help="If unchecked, it will allow you to hide the header or footer without removing it.",
-        default=True,
+        help="If unchecked, it will allow you to hide the page without removing it.", default=True
     )
     sequence = fields.Integer(default=10)
     quotation_template_ids = fields.Many2many(
@@ -53,7 +52,7 @@ class QuotationDocument(models.Model):
     )
 
     def _access_domain(self, operation):
-        if not self.env['ir.attachment'].has_access(operation):
+        if not self.env["ir.attachment"].has_access(operation):
             return Domain.FALSE
         return super()._access_domain(operation)
 

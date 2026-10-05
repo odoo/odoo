@@ -24,7 +24,7 @@ class SaleOrder(models.Model):
         compute="_compute_is_pdf_quote_builder_available"
     )
     quotation_document_ids = fields.Many2many(
-        string="Headers/Footers",
+        string="Additional Pages",
         comodel_name="quotation.document",
         default=_default_quotation_document_ids,
         readonly=False,
@@ -86,17 +86,17 @@ class SaleOrder(models.Model):
 
     def get_update_included_pdf_params(self):
         if not self:
-            return {"headers": {}, "files": {}, "footers": {}}
+            return {"before_quote_docs": {}, "files": {}, "after_quote_docs": {}}
         self.ensure_one()
         existing_mapping = (
             self.customizable_pdf_form_fields and json.loads(self.customizable_pdf_form_fields)
         ) or {}
 
         available_docs = self.available_quotation_document_ids | self.quotation_document_ids
-        headers_available = available_docs.filtered(lambda doc: doc.document_type == "header")
-        footers_available = available_docs.filtered(lambda doc: doc.document_type == "footer")
+        headers_available = available_docs.filtered(lambda doc: doc.position == "header")
+        footers_available = available_docs.filtered(lambda doc: doc.position == "footer")
         selected_documents = self.quotation_document_ids
-        selected_headers = selected_documents.filtered(lambda doc: doc.document_type == "header")
+        selected_headers = selected_documents.filtered(lambda doc: doc.position == "header")
         selected_footers = selected_documents - selected_headers
         lines_params = [
             {
@@ -130,8 +130,8 @@ class SaleOrder(models.Model):
             if line.available_product_document_ids
         ]
         return {
-            "headers": {
-                "name": self.env._("Header"),
+            "before_quote_docs": {
+                "name": self.env._("Before quote"),
                 "files": [
                     {
                         "id": header.id,
@@ -155,8 +155,8 @@ class SaleOrder(models.Model):
                 ],
             },
             "lines": lines_params,
-            "footers": {
-                "name": self.env._("Footer"),
+            "after_quote_docs": {
+                "name": self.env._("After quote"),
                 "files": [
                     {
                         "id": footer.id,

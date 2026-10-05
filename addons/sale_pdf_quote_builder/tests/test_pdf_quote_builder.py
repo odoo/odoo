@@ -46,8 +46,8 @@ class TestPDFQuoteBuilder(SaleManagementCommon, HttpCase):
             {"name": "Product Document", "raw": forms_pdf_data},
         ])
         cls.header, cls.footer = cls.env["quotation.document"].create([
-            {"name": "Header", "ir_attachment_id": att_header.id, "document_type": "header"},
-            {"name": "Footer", "ir_attachment_id": att_footer.id, "document_type": "footer"},
+            {"name": "Header", "ir_attachment_id": att_header.id, "position": "header"},
+            {"name": "Footer", "ir_attachment_id": att_footer.id, "position": "footer"},
         ])
         cls.product_document = cls.env["product.document"].create({
             "name": "Product Document",
@@ -160,7 +160,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon, HttpCase):
             self.internal_user.id
         ).get_update_included_pdf_params()
         # should return all document data regardless of access
-        self.assertEqual("Header", dialog_param["headers"]["files"][0]["name"])
+        self.assertEqual("Header", dialog_param["before_quote_docs"]["files"][0]["name"])
         self.assertEqual("Test Product", dialog_param["lines"][0]["name"])
 
     def test_quotation_document_is_removed_on_template_change(self):
