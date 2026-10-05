@@ -13,10 +13,10 @@ class PurchaseRequisition(models.Model):
             self.env['stock.warehouse']._warehouse_redirect_warning()
         return picking_type
 
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', domain="[('company_id', '=', company_id)]")
+    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse', ui_domain="[('company_id', '=', company_id)]")
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', required=True, default=_default_picking_type_id,
-        domain="['|',('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]")
+        ui_domain="['|',('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]")
 
 
 class PurchaseRequisitionLine(models.Model):

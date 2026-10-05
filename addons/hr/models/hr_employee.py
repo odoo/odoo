@@ -110,7 +110,7 @@ class HrEmployee(models.Model):
         inherited=True,
         index=False,
         store=False,
-        domain="['|', ('company_id', '=', False), ('company_id.id', 'parent_of', company_id)]")
+        ui_domain="['|', ('company_id', '=', False), ('company_id.id', 'parent_of', company_id)]")
     user_id = fields.Many2one(
         'res.users', 'User',
         related='resource_id.user_id',
@@ -206,7 +206,7 @@ class HrEmployee(models.Model):
         relation='employee_bank_account_rel',
         column1='employee_id',
         column2='bank_account_id',
-        domain="[('partner_id', '=', work_contact_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        ui_domain="[('partner_id', '=', work_contact_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         groups="hr.group_hr_user",
         copy=False,
         tracking=True,
@@ -284,7 +284,7 @@ class HrEmployee(models.Model):
     )
     # Direct subordinates
     parent_id = fields.Many2one('hr.employee', 'Manager', tracking=True, index=True,
-                                domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
+                                ui_domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates', domain=[('active', '=', True)])
     child_count = fields.Integer('Direct Subordinates Count', compute='_compute_child_count',
         recursive=True, compute_sudo=True)
@@ -299,7 +299,7 @@ class HrEmployee(models.Model):
 
     coach_id = fields.Many2one(
         'hr.employee', 'Coach', compute='_compute_coach', store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]",
+        ui_domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]",
         help='Select the "Employee" who is the coach of this employee.\n'
              'The "Coach" has no specific rights or responsibilities by default.')
     category_ids = fields.Many2many(

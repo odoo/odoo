@@ -24,7 +24,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
         ('nonofficial', 'Non-official FEC report (posted and unposted entries)'),
     ], string='Export Type', required=True, default='official')
     excluded_journal_ids = fields.Many2many('account.journal', string="Excluded Journals",
-                                            domain="[('company_id', 'parent_of', current_company_id)]")
+                                            ui_domain="[('company_id', 'parent_of', current_company_id)]")
 
     @api.onchange('test_file')
     def _onchange_export_file(self):

@@ -43,7 +43,7 @@ class Data_RecycleModel(models.Model):
     domain = fields.Char(string="Filter", compute='_compute_domain', readonly=False, store=True)
     time_field_id = fields.Many2one(
         'ir.model.fields', string='Time Field',
-        domain="[('model_id', '=', res_model_id), ('ttype', 'in', ('date', 'datetime')), ('store', '=', True)]",
+        ui_domain="[('model_id', '=', res_model_id), ('ttype', 'in', ('date', 'datetime')), ('store', '=', True)]",
         ondelete='cascade')
     time_field_delta = fields.Integer(string='Delta', default=1)
     time_field_delta_unit = fields.Selection([

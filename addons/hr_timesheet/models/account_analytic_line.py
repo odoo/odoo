@@ -62,7 +62,7 @@ class AccountAnalyticLine(models.Model):
         # The task_id is set to False when there is no project_id on the line,
         # but at installation, no line is associated with a project
         init_storage=lambda model: None,
-        domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id), ('has_template_ancestor', '=', False)]")
+        ui_domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id), ('has_template_ancestor', '=', False)]")
     parent_task_id = fields.Many2one('project.task', related='task_id.parent_id', store=True, index='btree_not_null', init_storage=lambda model: None)
     project_id = fields.Many2one(
         'project.project', 'Project', domain=_domain_project_id, index=True,

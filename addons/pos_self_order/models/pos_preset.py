@@ -65,7 +65,7 @@ class PosPreset(models.Model):
     mail_template_id = fields.Many2one(
         string="Email Confirmation",
         comodel_name='mail.template',
-        domain="[('model', '=', 'pos.order')]",
+        ui_domain="[('model', '=', 'pos.order')]",
     )
 
     def _get_delivery_from_address_parts(self):

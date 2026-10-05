@@ -20,19 +20,19 @@ class AccountTax(models.Model):
         comodel_name='res.country.state',
         string="State",
         copy=False,
-        domain="[('country_id.code', '=', 'US')]",
+        ui_domain="[('country_id.code', '=', 'US')]",
     )
     l10n_us_county_id = fields.Many2one(
         comodel_name='l10n_us.res.county',
         string="County",
         copy=False,
-        domain="[('state_id', '=', l10n_us_state_id)]",
+        ui_domain="[('state_id', '=', l10n_us_state_id)]",
     )
     l10n_us_city_id = fields.Many2one(
         comodel_name='res.city',
         string="City",
         copy=False,
-        domain="[('state_id', '=', l10n_us_state_id)]",
+        ui_domain="[('state_id', '=', l10n_us_state_id)]",
     )
     l10n_us_exempt_tax_ids = fields.One2many(
         comodel_name='account.tax',

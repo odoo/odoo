@@ -61,7 +61,7 @@ class ResPartnerBank(models.Model):
     street2 = fields.Char()
     zip = fields.Char()
     city = fields.Char()
-    state_id = fields.Many2one(comodel_name='res.country.state', string="Fed. State", domain="[('country_id', '=?', country_id)]")
+    state_id = fields.Many2one(comodel_name='res.country.state', string="Fed. State", ui_domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one(comodel_name='res.country', compute='_compute_country_id', precompute=True, store=True, readonly=False, index='btree_not_null')
     country_code = fields.Char(related='country_id.code')
     bank_bic = fields.Char(

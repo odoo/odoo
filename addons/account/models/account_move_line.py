@@ -109,7 +109,7 @@ class AccountMoveLine(models.Model):
         index=False,  # covered by _account_id_date_idx
         bypass_search_access=True,
         ondelete="restrict",
-        domain="[('account_type', '!=', 'off_balance')]",
+        ui_domain="[('account_type', '!=', 'off_balance')]",
         check_company=True,
         tracking=True,
     )
@@ -429,7 +429,7 @@ class AccountMoveLine(models.Model):
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
         string='Unit',
-        domain="[('id', 'in', allowed_uom_ids)] if allowed_uom_ids else []",
+        ui_domain="[('id', 'in', allowed_uom_ids)] if allowed_uom_ids else []",
         compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
         ondelete="restrict",
     )

@@ -50,7 +50,7 @@ class HrVersion(models.Model):
         'hr.employee',
         string='Employee',
         tracking=1,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        ui_domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         index=True,
         ondelete='cascade')
     name = fields.Char(tracking=1)
@@ -84,7 +84,7 @@ class HrVersion(models.Model):
     allowed_country_state_ids = fields.Many2many("res.country.state", compute='_compute_allowed_country_state_ids', groups="hr.group_hr_user")
     private_state_id = fields.Many2one(
         "res.country.state", string="Private State",
-        domain="[('id', 'in', allowed_country_state_ids)]",
+        ui_domain="[('id', 'in', allowed_country_state_ids)]",
         groups="hr.group_hr_user", tracking=1)
     private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_user", tracking=1)
     private_country_id = fields.Many2one("res.country", string="Private Country", index='btree_not_null',
@@ -128,7 +128,7 @@ class HrVersion(models.Model):
         tracking=1)
     work_location_id = fields.Many2one('hr.work.location', 'Work Location', compute='_compute_work_location_id',
                                        store=True, readonly=False,
-                                       domain="[('address_id', '=', address_id), ('location_type', '=', 'office')]", index=True, tracking=1)
+                                       ui_domain="[('address_id', '=', address_id), ('location_type', '=', 'office')]", index=True, tracking=1)
 
     departure_id = fields.Many2one('hr.employee.departure', string="Departure", copy=False, index='btree_not_null')
     departure_reason_id = fields.Many2one(related='departure_id.departure_reason_id', readonly=False, groups="hr.group_hr_user", tracking=1)
@@ -141,7 +141,7 @@ class HrVersion(models.Model):
 
     resource_calendar_id = fields.Many2one(
         'resource.calendar', required=True, default=lambda self: self.env.company.resource_calendar_id, inverse='_inverse_resource_calendar_id', string="Working Hours", index='btree_not_null', tracking=1,
-        domain="['|', ('company_id', '=', False), ('company_id.id', 'parent_of', company_id)]")
+        ui_domain="['|', ('company_id', '=', False), ('company_id.id', 'parent_of', company_id)]")
     tz = fields.Selection(_tz_get, string='Timezone', required=True, default=lambda self: self.env.context.get('tz') or self.env.user.tz or 'UTC')
 
     # Contract Information
@@ -161,7 +161,7 @@ class HrVersion(models.Model):
 
     contract_template_id = fields.Many2one(
         'hr.version', string="Contract Template", groups="hr.group_hr_user",
-        domain="[('company_id', '=', company_id), ('employee_id', '=', False)]", tracking=1,
+        ui_domain="[('company_id', '=', company_id), ('employee_id', '=', False)]", tracking=1,
         help="Select a contract template to auto-fill the contract form with predefined values. You can still edit the fields as needed after applying the template.")
     structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type",
                                         compute="_compute_structure_type_id", readonly=False, store=True, index='btree_not_null', tracking=1,

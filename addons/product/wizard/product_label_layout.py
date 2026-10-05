@@ -41,7 +41,7 @@ class ProductLabelLayout(models.TransientModel):
     packaging_id = fields.Many2one(
         'uom.uom',
         string='Packaging',
-        domain="[('id', 'in', available_packaging_ids)]",
+        ui_domain="[('id', 'in', available_packaging_ids)]",
     )
     extra_html = fields.Html('Extra Content', default='')
     rows = fields.Integer(compute='_compute_dimensions')

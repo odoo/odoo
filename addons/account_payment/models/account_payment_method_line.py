@@ -13,7 +13,7 @@ class AccountPaymentMethodLine(models.Model):
         store=True,
         index=True,
         readonly=False,
-        domain="[('code', '=', code)]",
+        ui_domain="[('code', '=', code)]",
     )
 
     @api.depends('payment_provider_id.name')

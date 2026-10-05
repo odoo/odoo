@@ -27,7 +27,7 @@ class ProductPricelist(models.Model):
         comodel_name="website",
         ondelete="restrict",
         default=_default_website,
-        domain="[('company_id', '=?', company_id)]",
+        ui_domain="[('company_id', '=?', company_id)]",
         tracking=20,
         help="If you want a pricelist to be available on a website,"
         "you must fill in this field or make it selectable."

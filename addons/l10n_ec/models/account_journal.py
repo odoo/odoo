@@ -23,7 +23,7 @@ class AccountJournal(models.Model):
     l10n_ec_emission_address_id = fields.Many2one(
         comodel_name="res.partner",
         string="Emission address",
-        domain="['|', ('id', '=', company_partner_id), '&', ('id', 'child_of', company_partner_id), ('type', '!=', 'contact')]",
+        ui_domain="['|', ('id', '=', company_partner_id), '&', ('id', 'child_of', company_partner_id), ('type', '!=', 'contact')]",
         help="Ecuador: Address for electronic invoicing.",
     )
 

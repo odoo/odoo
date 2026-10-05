@@ -14,5 +14,5 @@ class ResCompany(models.Model):
         comodel_name='l10n_vn.symbol',
         string="Default Delivery Symbol",
         groups='base.group_system',
-        domain="[('company_id', '=', id), ('usage', '=', 'delivery_document')]",
+        ui_domain="[('company_id', '=', id), ('usage', '=', 'delivery_document')]",
     )

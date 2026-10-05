@@ -88,7 +88,7 @@ class StockWarehouseOrderpoint(models.Model):
     allowed_replenishment_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_replenishment_uom_ids')
     replenishment_uom_id = fields.Many2one(
         'uom.uom', 'Multiple',
-        domain="[('id', 'in', allowed_replenishment_uom_ids)]", help="The procurement quantity will be rounded up to a multiple of this unit/packaging. If it is not set, it is not rounded.")
+        ui_domain="[('id', 'in', allowed_replenishment_uom_ids)]", help="The procurement quantity will be rounded up to a multiple of this unit/packaging. If it is not set, it is not rounded.")
     replenishment_uom_id_placeholder = fields.Char(compute='_compute_replenishment_uom_id_placeholder')
     company_id = fields.Many2one(
         'res.company', 'Company', required=True, index=True,
@@ -100,7 +100,7 @@ class StockWarehouseOrderpoint(models.Model):
     lead_days = fields.Float(compute='_compute_lead_days')
     route_id = fields.Many2one(
         'stock.route', string='Route',
-        domain="['|', ('product_selectable', '=', True), ('rule_ids.action', 'in', ['buy', 'manufacture'])]",
+        ui_domain="['|', ('product_selectable', '=', True), ('rule_ids.action', 'in', ['buy', 'manufacture'])]",
         inverse='_inverse_route_id')
     route_id_placeholder = fields.Char(compute='_compute_route_id_placeholder')
     effective_route_id = fields.Many2one(

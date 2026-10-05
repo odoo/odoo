@@ -105,13 +105,13 @@ class ProjectProject(models.Model):
     description = fields.Html(help="Description to provide more information and context about this project")
     active = fields.Boolean(default=True, copy=False, export_string_translation=False)
     sequence = fields.Integer(default=10, export_string_translation=False)
-    partner_id = fields.Many2one('res.partner', string='Customer', bypass_search_access=True, tracking=True, domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", index='btree_not_null')
+    partner_id = fields.Many2one('res.partner', string='Customer', bypass_search_access=True, tracking=True, ui_domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", index='btree_not_null')
     partner_phone = fields.Char(related='partner_id.phone', readonly=False, export_string_translation=False)
     partner_email = fields.Char(related='partner_id.email', readonly=False, export_string_translation=False)
     company_id = fields.Many2one('res.company', string='Company', compute="_compute_company_id", inverse="_inverse_company_id", store=True, readonly=False)
     currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", compute_sql="_compute_sql_currency_id", compute_sudo=True, string="Currency", readonly=True, export_string_translation=False)
     analytic_account_balance = fields.Monetary(related="account_id.balance")
-    account_id = fields.Many2one('account.analytic.account', copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=?', company_id)]", ondelete='set null')
+    account_id = fields.Many2one('account.analytic.account', copy=False, ui_domain="['|', ('company_id', '=', False), ('company_id', '=?', company_id)]", ondelete='set null')
 
     favorite_user_ids = fields.Many2many(
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
@@ -128,10 +128,10 @@ class ProjectProject(models.Model):
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count", export_string_translation=False)
     open_task_count = fields.Integer(compute='_compute_open_task_count', string="Open Task Count", export_string_translation=False)
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks', export_string_translation=False,
-                               domain="[('is_closed', '=', False)]")
+                               ui_domain="[('is_closed', '=', False)]")
     color = fields.Integer(string='Color Index', export_string_translation=False)
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True, falsy_value_label=_lt("👤 Unassigned"),
-        domain="[('share', '=', False), '|', ('company_id', '=?', company_id), ('company_ids', 'in', company_id)]")
+        ui_domain="[('share', '=', False), '|', ('company_id', '=?', company_id), ('company_ids', 'in', company_id)]")
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
                                     "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([

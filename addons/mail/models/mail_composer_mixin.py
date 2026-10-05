@@ -31,7 +31,7 @@ class MailComposerMixin(models.AbstractModel):
         'Body content is the same as the template',
         compute='_compute_body_has_template_value',
     )
-    template_id = fields.Many2one('mail.template', 'Mail Template', domain="[('model', '=', render_model)]")
+    template_id = fields.Many2one('mail.template', 'Mail Template', ui_domain="[('model', '=', render_model)]")
     # Language: override mail.render.mixin field, copy template value
     lang = fields.Char(compute='_compute_lang', precompute=True, readonly=False, store=True, compute_sudo=False)
     # Access

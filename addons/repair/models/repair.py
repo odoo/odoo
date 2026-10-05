@@ -81,19 +81,19 @@ class RepairOrder(models.Model):
         copy=False, readonly=True, check_company=True)
     product_id = fields.Many2one(
         'product.product', string='Product to Repair',
-        domain="[('type', '=', 'consu'), '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('id', 'in', picking_product_ids), ('id', '=?', picking_product_id)]",
+        ui_domain="[('type', '=', 'consu'), '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('id', 'in', picking_product_ids), ('id', '=?', picking_product_id)]",
         check_company=True, index='btree_not_null')
     product_qty = fields.Float(
         'Product Quantity', compute='_compute_product_qty', readonly=False, store=True,
         default=1.0, digits='Product Unit')
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     uom_id = fields.Many2one(
-        'uom.uom', 'Unit', domain="[('id', 'in', allowed_uom_ids)]",
+        'uom.uom', 'Unit', ui_domain="[('id', 'in', allowed_uom_ids)]",
         compute='_compute_uom_id', store=True, precompute=True, readonly=False)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
         compute="_compute_lot_id", store=True, index='btree_not_null',
-        domain="[('id', 'in', allowed_lot_ids)]", check_company=True,
+        ui_domain="[('id', 'in', allowed_lot_ids)]", check_company=True,
         help="Products repaired are all belonging to this lot")
     tracking = fields.Selection(string='Product Tracking', related="product_id.tracking", readonly=False)
 
@@ -102,7 +102,7 @@ class RepairOrder(models.Model):
         'stock.picking.type', 'Operation Type', copy=True, readonly=False,
         compute='_compute_picking_type_id', store=True,
         default=_default_picking_type_id,
-        domain="[('code', '=', 'repair_operation'), ('company_id', '=', company_id)]",
+        ui_domain="[('code', '=', 'repair_operation'), ('company_id', '=', company_id)]",
         required=True, precompute=True, check_company=True, index=True)
     reference_ids = fields.Many2many(
         'stock.reference', 'stock_reference_repair_rel',
@@ -181,7 +181,7 @@ class RepairOrder(models.Model):
     # Return Binding
     picking_id = fields.Many2one(
         'stock.picking', 'Transfer', check_company=True, index='btree_not_null',
-        domain="[('product_id', '=?', product_id)]",
+        ui_domain="[('product_id', '=?', product_id)]",
         copy=False, help="Transfer from which the product to be repaired is picked")
     picking_product_ids = fields.One2many('product.product', compute='_compute_picking_product_ids')
     picking_product_id = fields.Many2one(related="picking_id.product_id")

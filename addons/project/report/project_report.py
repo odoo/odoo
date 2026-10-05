@@ -63,7 +63,7 @@ class ReportProjectTaskUser(models.Model):
     message_is_follower = fields.Boolean(related='task_id.message_is_follower')
     dependent_ids = fields.Many2many('project.task', relation='task_dependencies_rel', column1='depends_on_id',
         column2='task_id', string='Block', readonly=True,
-        domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
+        ui_domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
     description = fields.Text(readonly=True)
     # We exclude template tasks, but we still need the field for the views
     is_template = fields.Boolean(readonly=True)
