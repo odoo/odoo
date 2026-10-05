@@ -1620,6 +1620,21 @@ class HrEmployee(models.Model):
         if not self.name:
             self.name = self.user_id.name
 
+    @api.onchange('work_email')
+    def _onchange_work_email(self):
+        if not self.user_id and self.work_email:
+            email = tools.email_normalize(self.work_email)
+            if not email:
+                return
+            company = self.company_id or self.env.company
+            user = self.env['res.users'].sudo().search([
+                ('share', '=', False),
+                ('company_ids', 'in', company.id),
+                ('email_normalized', '=', email),
+            ], limit=1)
+            if user and not user.with_context(active_test=False).employee_ids.filtered(lambda e: e.company_id == company):
+                self.user_id = user.sudo(False)
+
     @api.onchange('company_id')
     def _onchange_timezone(self):
         if self.company_id and not self.tz:
@@ -1638,7 +1653,7 @@ class HrEmployee(models.Model):
 
     def _sync_user(self, user, employee_has_image=False):
         vals = dict(
-            work_contact_id=user.partner_id.id if user else self.work_contact_id.id,
+            work_contact_id=user.partner_id.id if user else False,
             user_id=user.id,
         )
         if not employee_has_image:
@@ -1856,13 +1871,14 @@ class HrEmployee(models.Model):
         return employees
 
     def write(self, vals):
-        if 'work_contact_id' in vals:
-            self.message_unsubscribe(self.work_contact_id.ids)
         if 'user_id' in vals:
             # Update the profile pictures with user, except if provided
             user = self.env['res.users'].browse(vals['user_id'])
             vals.update(self._sync_user(user, (bool(all(emp.image_1920 for emp in self)))))
-            self._remove_work_contact_id(user, vals.get('company_id'))
+            if user:
+                self._remove_work_contact_id(user, vals.get('company_id'))
+        if 'work_contact_id' in vals:
+            self.message_unsubscribe(self.work_contact_id.ids)
         if 'work_permit_expiration_date' in vals:
             vals['work_permit_scheduled_activity'] = False
         if vals.get('tz'):

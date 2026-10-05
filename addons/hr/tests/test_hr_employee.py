@@ -401,10 +401,10 @@ class TestHrEmployee(TestHrCommon):
         with Form(test_employee) as employee_form:
             employee_form.user_id = test_user
 
-    def test_change_user_on_employee_keep_partner(self):
+    def test_change_user_on_employee_clear_partner(self):
         """
-            Check that removing user from employee keeps the link in
-            work_contact_id until the user is assigned to another employee.
+            Check that removing user from employee also clears
+            work_contact_id.
         """
         user = self.env['res.users'].create({
             'name': 'Test User',
@@ -416,13 +416,13 @@ class TestHrEmployee(TestHrCommon):
         })
         # remove user
         employee.user_id = None
-        self.assertEqual(employee.work_contact_id, user.partner_id)
+        self.assertFalse(employee.work_contact_id)
         self.assertFalse(employee.user_id)
         # create new employee from user
         user._compute_company_employee()
         user.action_create_employee()
         self.assertTrue(len(user.employee_ids) == 1, "Test user should have exactly one employee associated with it")
-        # previous employee shouldn't have a work_contact_id anymore, as the partner is reassigned
+        # previous employee still doesn't have a work_contact_id
         self.assertFalse(employee.work_contact_id)
         # the new employee should be associated to both the user and its partner
         new_employee = user.employee_ids
@@ -431,10 +431,10 @@ class TestHrEmployee(TestHrCommon):
 
     def test_change_user_on_employee_multi_company(self):
         """
-            Removing user from employee keeps the link in work_contact_id in the correct company until the user
-            is assigned to another employee, and does not affect employees in other companies. When the unique
+            Removing user from employee removes work_contact_id in that company,
+            and does not affect employees in other companies. When the unique
             constraint of one employee per user in one company is triggered, the work_contact_id for the
-            existing employee is nor removed, and employees in other companies are not affected.
+            existing employee is not removed, and employees in other companies are not affected.
         """
         company_A = self.env['res.company'].create({'name': 'company_A'})
         company_B = self.env['res.company'].create({'name': 'company_B'})
@@ -463,9 +463,9 @@ class TestHrEmployee(TestHrCommon):
         employee_A.user_id = None
         self.assertEqual(user.with_company(company_A).employee_id.ids, [])
         self.assertEqual(user.with_company(company_B).employee_id, employee_B)
-        # Partner still linked to both employees
+        # Partner is now only linked to employee in company B
         partner.with_company(company_A).with_company(company_B)._compute_employees_count()
-        self.assertEqual(partner.employees_count, 2)
+        self.assertEqual(partner.employees_count, 1)
         # Creating a new employee for a user in company A does not affect link user-employee in the other company
         new_employee_A = self.env['hr.employee'].create({
             'name': 'new_employee_A',
@@ -703,6 +703,56 @@ class TestHrEmployee(TestHrCommon):
         no_email_emp = self.env['hr.employee'].create({'name': 'No Email'})
         with self.assertRaises(ValidationError):
             no_email_emp.user_id = no_email_emp._get_or_create_light_user()
+
+    def test_user_autofill_on_email_onchange(self):
+        user = self.env['res.users'].create({
+            'name': 'Ada Lovelace',
+            'login': 'ada@example.com',
+            'email': 'ada@example.com',
+            'group_ids': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+        with Form(self.env['hr.employee']) as form:
+            form.work_email = 'ada@example.com'
+            self.assertEqual(form.user_id, user, "Existing user should be auto-linked")
+            self.assertEqual(form.name, 'Ada Lovelace', "Employee name should be auto-filled from user")
+
+        self.env['res.users'].create({
+            'name': 'Login Only User',
+            'login': 'login_match@example.com',
+            'email': 'different_email@example.com',
+            'group_ids': [(6, 0, [self.env.ref('base.group_user').id])],
+        })
+        with Form(self.env['hr.employee']) as form:
+            form.name = 'Login Match Emp'
+            form.work_email = 'login_match@example.com'
+            self.assertFalse(form.user_id, "User matching only on login should not be auto-linked")
+
+        with Form(self.env['hr.employee']) as form:
+            form.name = 'Invalid Email Emp'
+            form.work_email = 'not-an-email'
+            self.assertFalse(form.user_id, "Unnormalizable email should not auto-link")
+
+        new_test_user(self.env, login='portal_user', groups='base.group_portal', name='Portal User', email='portal@example.com')
+        with Form(self.env['hr.employee']) as form:
+            form.name = 'Portal Emp'
+            form.work_email = 'portal@example.com'
+            self.assertFalse(form.user_id, "Portal user should not be auto-linked")
+
+        with Form(self.env['hr.employee']) as form:
+            form.name = 'Duplicate Emp'
+            form.work_email = 'ada@example.com'
+            self.assertFalse(form.user_id, "User already linked to an employee should not be auto-linked")
+
+        ada_emp = user.employee_ids
+        ada_emp.user_id = False
+        ada_emp.work_email = False
+        self.assertEqual(user.email, 'ada@example.com', "Removing work email when user is not explicitly linked must not erase user email")
+
+        ada_emp.user_id = user
+        ada_emp.work_email = 'ada@example.com'
+        self.assertEqual(user.email, 'ada@example.com')
+        ada_emp.work_email = False
+        self.assertFalse(user.email, "Removing work email when user is explicitly linked should clear user email")
 
     def test_user_contact_phone_sync(self):
         partner = self.env['res.partner'].create({'name': 'Partner Test'})
