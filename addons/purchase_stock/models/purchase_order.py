@@ -327,6 +327,11 @@ class PurchaseOrder(models.Model):
     def _get_destination_location(self):
         self.ensure_one()
         if self.dest_address_id and self.picking_type_id.code == "dropship":
+            if not self.dest_address_id.property_stock_customer:
+                raise UserError(self.env._(
+                    "You must set a Customer Location for partner %(partner_name)s",
+                    partner_name=self.dest_address_id.display_name,
+                ))
             return self.dest_address_id.property_stock_customer.id
         return self.picking_type_id.default_location_dest_id.id
 
