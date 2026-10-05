@@ -10,10 +10,10 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_ve_template_data(self):
         return {
             'code_digits': '7',
-            'property_account_receivable_id': 'account_activa_account_1122001',
-            'property_account_payable_id': 'account_activa_account_2122001',
-            'property_account_expense_categ_id': 'account_activa_account_7151001',
-            'property_account_income_categ_id': 'account_activa_account_5111001',
+            'property_account_receivable_id': 'account_account_1101001',
+            'property_account_payable_id': 'account_account_2101001',
+            'property_account_expense_categ_id': 'account_account_5101001',
+            'property_account_income_categ_id': 'account_account_4101001',
         }
 
     @template('ve', 'res.company')
@@ -21,13 +21,21 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.ve',
-                'bank_account_code_prefix': '1113',
-                'cash_account_code_prefix': '1111',
-                'transfer_account_code_prefix': '1129003',
-                'account_default_pos_receivable_account_id': 'account_activa_account_1122003',
-                'income_currency_exchange_account_id': 'account_activa_account_9212003',
-                'expense_currency_exchange_account_id': 'account_activa_account_9113006',
-                'account_sale_tax_id': 'tax3sale',
-                'account_purchase_tax_id': 'tax3purchase',
+                'bank_account_code_prefix': '1014',
+                'cash_account_code_prefix': '1015',
+                'transfer_account_code_prefix': '1013',
+                'transfer_account_id': 'account_account_1013001',
+                'account_default_pos_receivable_account_id': 'account_account_1101002',
+                'income_currency_exchange_account_id': 'account_account_4301001',
+                'expense_currency_exchange_account_id': 'account_account_6501004',
+                'account_journal_suspense_account_id': 'account_account_1012001',
+                'account_journal_payment_debit_account_id': 'account_account_1012002',
+                'account_journal_payment_credit_account_id': 'account_account_1012003',
+                'account_journal_early_pay_discount_gain_account_id': 'account_account_4301004',
+                'account_journal_early_pay_discount_loss_account_id': 'account_account_6501006',
+                'default_cash_difference_income_account_id': 'account_account_4301003',
+                'default_cash_difference_expense_account_id': 'account_account_6501005',
+                'account_sale_tax_id': 'tax1sale',
+                'account_purchase_tax_id': 'tax1purchase',
             },
         }
