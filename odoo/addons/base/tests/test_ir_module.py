@@ -1,5 +1,6 @@
 from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged, TransactionCase
+from odoo.modules.module import Manifest
 from odoo.tools import mute_logger
 
 
@@ -49,6 +50,34 @@ class IrModuleCase(TransactionCase):
         self.assertEqual(module.state, "installed")
         module.module_uninstall()
         self.assertEqual(module.state, "uninstalled")
+
+    def test_activate_lang_keeps_en_us_of_uninstalled_modules(self):
+        """ Activating a language must not overwrite the en_US terms of uninstalled modules. """
+        Module = self.env['ir.module.module']
+        lang_code = 'fr_FR'
+        module = source_name = None
+        for candidate in Module.search([('state', '!=', 'installed')]):
+            manifest = Manifest.for_addon(candidate.name, display_warning=False)
+            if not manifest:
+                continue
+            translated = (manifest.get_translations([lang_code]).get('shortdesc') or {}).get(lang_code)
+            name = Module.get_values_from_terp(manifest)['shortdesc']
+            if translated and translated != name:
+                module, source_name = candidate, name
+                break
+        if not module:
+            self.skipTest("no uninstalled module with a translated name to check")
+
+        lang = self.env['res.lang'].with_context(active_test=False).search([('code', '=', lang_code)])
+        lang.active = True
+        # en_US only becomes inactive once nothing refers to it anymore
+        self.env['res.users'].with_context(active_test=False).search([]).lang = lang_code
+        self.env['res.partner'].with_context(active_test=False).search([('lang', '=', 'en_US')]).lang = lang_code
+        self.env.ref('base.lang_en').active = False
+
+        Module._load_non_installed_modules_manifest_terms([lang_code])
+
+        self.assertEqual(module.with_context(lang='en_US').shortdesc, source_name)
 
 
 @tagged('at_install', '-post_install')
