@@ -4,11 +4,11 @@
     'category': 'Productivity/Dashboard',
     'summary': 'Spreadsheet',
     'description': 'Spreadsheet',
-    'depends': ['spreadsheet_dashboard', 'pos_hr'],
+    'depends': ['spreadsheet_dashboard', 'point_of_sale'],
     'data': [
         "data/dashboards.xml",
     ],
-    'auto_install': ['pos_hr'],
+    'auto_install': ['point_of_sale'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
