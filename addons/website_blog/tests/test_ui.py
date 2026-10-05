@@ -20,15 +20,13 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             "cover_properties": """{"background-image": "url('/website_blog/static/src/img/blog_1.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}""",
         })
 
-        blog_tag = cls.env.ref('website_blog.blog_tag_2', raise_if_not_found=False)
-        if not blog_tag:
-            blog_tag = cls.env['blog.tag'].create({'name': 'adventure'})
+        cls.blog_tags = cls.env['blog.tag'].create([{'name': "Tour Tag 1"}, {'name': "Tour Tag 2"}])
         cls.blog_post = cls.env['blog.post'].create({
             "name": "Post Test",
             "subtitle": "Subtitle Test",
             "blog_id": blog.id,
             "author_id": cls.env.user.partner_id.id,
-            "tag_ids": [(4, blog_tag.id)],
+            "tag_ids": [(4, cls.blog_tags[0].id)],
             "is_published": True,
             "cover_properties": """{"background-image": "url('/website_blog/static/src/img/cover_1.webp')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0"}""",
         })
@@ -128,11 +126,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.env.ref("website_blog.opt_blog_post_tags_display").active = True
         self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_sidebar_with_date_and_tag", login="admin")
 
-        blog_tag = self.env.ref('website_blog.blog_tag_5', raise_if_not_found=False)
-        if not blog_tag:
-            blog_tag = self.env['blog.tag'].create({'name': "discovery"})
-        blog_post_1.write({'tag_ids': [(4, blog_tag.id)]})
-        blog_post_2.write({'tag_ids': [(4, blog_tag.id)]})
+        (blog_post_1 | blog_post_2).tag_ids = self.blog_tags
 
         # Activate tags in sidebar for blog_tags_with_date tour
         self.env.ref("website_blog.opt_sidebar_blog_index_tags").active = True

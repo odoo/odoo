@@ -10,22 +10,22 @@ registerWebsitePreviewTour("blog_tags_with_date", {}, () => [
         trigger: ":iframe #o_wblog_sidebar",
     },
     {
-        content: "Click on 'adventure' tag",
-        trigger: ":iframe #o_wblog_sidebar a.o_post_link_js_loaded:contains('adventure')",
+        content: "Click on 'Tour Tag 1'",
+        trigger: ":iframe #o_wblog_sidebar a.o_post_link_js_loaded:contains('Tour Tag 1')",
         run: "click",
     },
     {
-        content: "Check 'adventure' tag has been added",
-        trigger: ":iframe #o_wblog_posts_loop span:contains('adventure')",
+        content: "Check 'Tour Tag 1' has been added",
+        trigger: ":iframe #o_wblog_posts_loop .o_filter_tag:contains('Tour Tag 1')",
     },
     {
-        content: "Click on 'discovery' tag",
-        trigger: ":iframe #o_wblog_sidebar a.o_post_link_js_loaded:contains('discovery')",
+        content: "Click on 'Tour Tag 2'",
+        trigger: ":iframe #o_wblog_sidebar a.o_post_link_js_loaded:contains('Tour Tag 2')",
         run: "click",
     },
     {
-        content: "Check 'discovery' tag has been added",
-        trigger: ":iframe #o_wblog_posts_loop span:contains('discovery')",
+        content: "Check 'Tour Tag 2' has been added",
+        trigger: ":iframe #o_wblog_posts_loop .o_filter_tag:contains('Tour Tag 2')",
     },
     {
         content: "Check archive select is loaded with month options",
@@ -44,13 +44,13 @@ registerWebsitePreviewTour("blog_tags_with_date", {}, () => [
         trigger: ":iframe #o_wblog_posts_loop span>i[data-icon='calendar_today']",
     },
     {
-        content: "Check 'adventure' and 'discovery' tag is present after addition of date filter",
+        content: "Check both tags are present after addition of date filter",
         trigger:
-            ":iframe #o_wblog_posts_loop:has(span:contains('adventure'), span:contains('discovery'))",
+            ":iframe #o_wblog_posts_loop:has(i[data-icon='calendar_today']):has(.o_filter_tag:contains('Tour Tag 1')):has(.o_filter_tag:contains('Tour Tag 2'))",
     },
     {
         content: "Remove the date filter",
-        trigger: ":iframe #o_wblog_posts_loop span:has(i[data-icon='calendar_today']) a",
+        trigger: ":iframe #o_wblog_posts_loop span:has(i[data-icon='calendar_today']) a.o_post_link_js_loaded",
         run: "click",
     },
     {
@@ -58,8 +58,8 @@ registerWebsitePreviewTour("blog_tags_with_date", {}, () => [
         trigger: ":iframe #o_wblog_posts_loop span:not(:has(i[data-icon='calendar_today']))",
     },
     {
-        content: "Check 'adventure' and 'discovery' tag is present after removal of date filter",
+        content: "Check both tags are present after removal of date filter",
         trigger:
-            ":iframe #o_wblog_posts_loop:has(span:contains('adventure'), span:contains('discovery'))",
+            ":iframe #o_wblog_posts_loop:not(:has(i[data-icon='calendar_today'])):has(.o_filter_tag:contains('Tour Tag 1')):has(.o_filter_tag:contains('Tour Tag 2'))",
     },
 ]);

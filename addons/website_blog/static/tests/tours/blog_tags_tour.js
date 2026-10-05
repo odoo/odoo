@@ -73,13 +73,13 @@ registry.category("web_tour.tours").add("blog_tags", {
             trigger: ":iframe html[data-view-xmlid='website_blog.blog_post_short']",
         },
         {
-            content: "Click on the adventure tag",
-            trigger: ":iframe a[href^='/blog/tag/adventure'].o_post_link_js_loaded",
+            content: "Click on 'Tour Tag 1'",
+            trigger: ":iframe a[href^='/blog/tag/tour-tag-1-'].o_post_link_js_loaded",
             run: "click",
         },
         {
             content: "Verify we are still on the backend",
-            trigger: ":iframe span:contains(adventure) i[data-icon='sell']",
+            trigger: ":iframe .o_filter_tag:contains('Tour Tag 1') i[data-icon='sell']",
         },
     ],
 });
