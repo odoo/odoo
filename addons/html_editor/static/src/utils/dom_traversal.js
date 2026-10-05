@@ -245,18 +245,21 @@ export function createDOMPathGenerator(
  * @param {Node} node
  * @param {Object} [options = {}]
  * @param {Function} [options.stopTraverseFunction]
- * @param {Function} [options.skipFunction]
+ * @param {Function} [options.predicate]
  * @returns {Node}
  */
-export function lastLeaf(node, { stopTraverseFunction, skipFunction } = {}) {
-    const startNode = node;
+export function lastLeaf(node, { stopTraverseFunction, predicate } = {}) {
     while (node && node.lastChild && !(stopTraverseFunction && stopTraverseFunction(node))) {
-        node = node.lastChild;
-        while (node && skipFunction?.(node)) {
-            node = node.previousSibling;
+        let next = node.lastChild;
+        while (next && predicate && !predicate(next)) {
+            next = next.previousSibling;
+            if (!next) {
+                return node;
+            }
         }
+        node = next;
     }
-    return node || startNode;
+    return node;
 }
 /**
  * Returns the deepest child in first position.
@@ -264,18 +267,21 @@ export function lastLeaf(node, { stopTraverseFunction, skipFunction } = {}) {
  * @param {Node} node
  * @param {Object} [options = {}]
  * @param {Function} [options.stopTraverseFunction]
- * @param {Function} [options.skipFunction]
+ * @param {Function} [options.predicate]
  * @returns {Node}
  */
-export function firstLeaf(node, { stopTraverseFunction, skipFunction } = {}) {
-    const startNode = node;
+export function firstLeaf(node, { stopTraverseFunction, predicate } = {}) {
     while (node && node.firstChild && !(stopTraverseFunction && stopTraverseFunction(node))) {
-        node = node.firstChild;
-        while (node && skipFunction?.(node)) {
-            node = node.nextSibling;
+        let next = node.firstChild;
+        while (next && predicate && !predicate(next)) {
+            next = next.nextSibling;
+            if (!next) {
+                return node;
+            }
         }
+        node = next;
     }
-    return node || startNode;
+    return node;
 }
 
 /**
