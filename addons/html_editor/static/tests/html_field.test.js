@@ -2691,6 +2691,87 @@ describe("save image", () => {
 
         expect.verifySteps(["add_data-start: partner 1", "add_data-end: partner 1"]);
     });
+
+    test("Hiding an HtmlField while its images are being saved keeps the change", async () => {
+        Partner._fields.hide = fields.Boolean();
+        Partner._records = [{ id: 1, txt: "<p class='test_target'><br></p>" }];
+        const addData = Promise.withResolvers();
+        onRpc("/html_editor/attachment/add_data", async () => {
+            await addData.promise;
+            return { image_src: "/test_image_url.png", access_token: "1234", public: false };
+        });
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+            <form>
+                <field name="hide"/>
+                <field name="txt" widget="html" invisible="hide"/>
+            </form>`,
+        });
+        setSelectionInHtmlField(".test_target");
+        pasteFile(
+            htmlEditor,
+            createBase64ImageFile(
+                "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
+            )
+        );
+        await waitFor("img");
+        await contains(".o_field_widget[name='hide'] input").check();
+        await expectElementCount(".o_field_html", 0);
+        addData.resolve();
+        await contains(".o_field_widget[name='hide'] input").uncheck();
+        await expectElementCount(
+            ".odoo-editor-editable img[src='/test_image_url.png?access_token=1234']",
+            1
+        );
+    });
+
+    test("Hiding the HtmlField of a new record while its images are being saved links them", async () => {
+        Partner._fields.hide = fields.Boolean();
+        Partner._fields.txt = fields.Html({ default: "<p class='test_target'><br></p>" });
+        const addData = Promise.withResolvers();
+        onRpc("/html_editor/attachment/add_data", async () => {
+            await addData.promise;
+            return {
+                id: 42,
+                image_src: "/test_image_url.png",
+                access_token: "1234",
+                public: false,
+            };
+        });
+        onRpc("partner", "web_save", ({ kwargs }) => {
+            expect.step(`web_save: ${JSON.stringify(kwargs.context.pending_attachment_ids)}`);
+        });
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
+            <form>
+                <field name="hide"/>
+                <field name="txt" widget="html" invisible="hide"/>
+            </form>`,
+        });
+        setSelectionInHtmlField(".test_target");
+        pasteFile(
+            htmlEditor,
+            createBase64ImageFile(
+                "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
+            )
+        );
+        await waitFor("img");
+        await contains(".o_field_widget[name='hide'] input").check();
+        await expectElementCount(".o_field_html", 0);
+        addData.resolve();
+        await contains(".o_field_widget[name='hide'] input").uncheck();
+        await expectElementCount(
+            ".odoo-editor-editable img[src='/test_image_url.png?access_token=1234']",
+            1
+        );
+        await contains(".o_form_button_save").click();
+        expect.verifySteps(["web_save: [42]"]);
+    });
 });
 
 describe("translatable", () => {
