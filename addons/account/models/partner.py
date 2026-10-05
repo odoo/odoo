@@ -913,7 +913,7 @@ class ResPartner(models.Model):
     @api.model
     def _import_retrieve_customer_from_vat(self, customer_values):
         vat = customer_values.get('vat')
-        if not vat:
+        if self._is_vat_void(vat):
             return
 
         # Sometimes, the vat is specified with some whitespaces or dots.
