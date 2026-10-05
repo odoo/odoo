@@ -3,7 +3,7 @@
 from json import loads
 
 from odoo.fields import Command, Domain
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged, Form, TransactionCase
 
 
@@ -170,6 +170,23 @@ class TestMultiCompany(TransactionCase):
                 'product_id': product.id,
                 'inventory_quantity': 10
         })
+
+    def test_inventory_3(self):
+        """A user of Company A only can't count a product in a location of Company B."""
+        user = self.env['res.users'].create({
+            'name': 'user of company a only',
+            'login': 'user a only',
+            'group_ids': [Command.set([self.env.ref('stock.group_stock_user').id])],
+            'company_id': self.company_a.id,
+            'company_ids': [Command.set(self.company_a.ids)],
+        })
+        product = self.env['product.product'].create({'name': 'Product', 'is_storable': True})
+        with self.assertRaises(AccessError):
+            self.env['stock.quant'].with_user(user).with_context(inventory_mode=True).create({
+                'location_id': self.stock_location_b.id,
+                'product_id': product.id,
+                'inventory_quantity': 10,
+            })
 
     def test_picking_1(self):
         """As a user of Company A, create a picking and use a picking type of Company B, check the
