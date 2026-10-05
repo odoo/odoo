@@ -96,7 +96,6 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
     _buildDisplayPayload(order) {
         const { models, GeneratePrinterData, getQrData } = this.context;
         const generator = new GeneratePrinterData({ models, order });
-        const _formatCurrency = (amount) => formatCurrency(amount, order.currency.id);
 
         const orderData = generator.generateReceiptData();
         const scale = this.context.scale;
@@ -105,9 +104,10 @@ export class CustomerDisplayTerminalPlugin extends Plugin {
             ...orderData,
             qrData: getQrData?.() || null,
             displayScreenSaver: false,
+            paymentAmountInCurrency: order.paymentAmountInCurrency,
             amountSettlements: order.remainingDueAmount !== order.totalDue && {
                 label: order.remainingDueLabel,
-                amount: _formatCurrency(Math.abs(order.remainingDueAmount)),
+                amount: formatCurrency(Math.abs(order.remainingDueAmount), order.orderCurrency.id),
             },
             selectedLineUuid: order.uiState?.selected_orderline_uuid,
             displayTheme: getColorScheme(),
