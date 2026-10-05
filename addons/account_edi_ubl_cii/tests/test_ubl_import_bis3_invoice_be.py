@@ -1,4 +1,5 @@
 from unittest.mock import patch
+from odoo import fields
 
 from freezegun import freeze_time
 
@@ -194,3 +195,16 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
         self.assertEqual(bill.message_main_attachment_id.mimetype, "application/pdf", "The main attachment should be a pdf")
         self.assertEqual(bill.message_main_attachment_id.res_id, bill.id, "The main attachment res_id should be the invoice id")
         self.assertEqual(len(bill.message_ids.mapped('attachment_ids')), 4, "All nested attachments should be attached to a chatter message")
+
+    def test_import_credit_note_payment_due_date(self):
+        """ Test that the due date are imported correctly from the credit note """
+        credit_note = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_credit_note_payment_due_date',
+            journal=self.company_data['default_journal_purchase'],
+        )
+        self.assertRecordValues(credit_note, [{
+            'move_type': 'in_refund',
+            'partner_id': self.partner_be.id,
+            'invoice_date': fields.Date.from_string('2027-01-01'),
+            'invoice_date_due': fields.Date.from_string('2027-01-31'),
+        }])
