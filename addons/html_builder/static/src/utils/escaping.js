@@ -21,6 +21,6 @@ export function escapeTextNodes(el) {
     let node;
     while ((node = walker.nextNode())) {
         escaper.textContent = node.nodeValue;
-        node.nodeValue = escaper.innerHTML;
+        node.nodeValue = escaper.innerHTML.replaceAll("$0", "&#x24;0");
     }
 }
