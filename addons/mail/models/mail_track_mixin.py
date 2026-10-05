@@ -81,8 +81,11 @@ class MailTrackMixin(models.AbstractModel):
         :param Iterable[str] field_names: field names to potentially track, to be
             checked against model-based tracked fields
         """
-        tracked_fnames = self._track_get_fields().intersection(field_names)
-        if not self or not tracked_fnames:
+        fnames = set(field_names)
+        if not self or not fnames:
+            return
+        tracked_fnames = self._track_get_fields().intersection(fnames)
+        if not tracked_fnames:
             return
         self.env.cr.precommit.add(self._track_finalize)
 
@@ -145,7 +148,7 @@ class MailTrackMixin(models.AbstractModel):
 
         # tracked fields to check are those at model level as well as those
         # manually put in initial values
-        fnames = self._track_get_fields() | {fname for record_values in initial_values.values() if record_values for fname in record_values}
+        fnames = self.browse(ids)._track_get_fields() | {fname for record_values in initial_values.values() if record_values for fname in record_values}
         if not fnames:
             return
 
@@ -201,33 +204,42 @@ class MailTrackMixin(models.AbstractModel):
         self._track_clear()
         return records_su, initial_values, trackings
 
-    @api.ormcache('self.env.uid', 'self.env.su')
     def _track_get_fields(self) -> set[str]:
         """ Return the set of tracked fields names for the current model. """
+        model_fnames, properties_fnames = self._track_get_field_names_model()
+        tracked_fnames = set(model_fnames)
+
+        # track properties if any property definition contains a tracking = True
+        for fname in properties_fnames:
+            f = self._fields[fname]
+            properties = self.sudo()[f.definition_record].mapped(f.definition_record_field)
+            tracking_properties = [any(x.get('tracking') for x in p) for p in properties]
+            if any(tracking_properties):
+                tracked_fnames.add(fname)
+
+        return tracked_fnames
+
+    @api.ormcache('self.env.uid', 'self.env.su')
+    def _track_get_field_names_model(self) -> tuple[frozenset[str], frozenset[str]]:
+        """ Return the accessible field names tracked at model level, and the
+        accessible properties field names whose tracking depends on their definition. """
         model_fields = {
             name
             for name, field in self._fields.items()
             if getattr(field, 'tracking', None)
         }
-
-        # track properties if any property definition contains a tracking = True
+        properties_fields = set()
         for fname, f in self._fields.items():
-            if f.type == "properties":
-                properties = self.sudo()[f.definition_record].mapped(f.definition_record_field)
-                tracking_properties = [any(x.get('tracking') for x in p) for p in properties]
-                if any(tracking_properties):
-                    model_fields.add(fname)
-
-        # track the properties changes if the parent changed
-        model_fields |= {
-            fname for fname, f in self._fields.items()
-            if f.type == "properties"
-            and fname not in model_fields
-            and f.definition_record in model_fields
-            and getattr(f, "tracking", None) is not False
-        }
-
-        return model_fields and set(self.fields_get(model_fields, attributes=()))
+            if f.type != "properties" or fname in model_fields:
+                continue
+            # track the properties changes if the parent changed
+            if f.definition_record in model_fields and getattr(f, "tracking", None) is not False:
+                model_fields.add(fname)
+            else:
+                properties_fields.add(fname)
+        all_fields = model_fields | properties_fields
+        accessible_fields = all_fields and set(self.fields_get(all_fields, attributes=()))
+        return frozenset(model_fields & accessible_fields), frozenset(properties_fields & accessible_fields)
 
     def _track_get_fields_info(self, tracked_fields: Iterable[str]) -> ValuesType:
         tracked_fields_get = self.fields_get(
