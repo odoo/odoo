@@ -135,6 +135,8 @@ class TestAccountMoveImport(AccountTestInvoicingCommon):
             'parent_id': self.partner_open_wood.id,
         })
 
+        self.purchase_order.order_line.qty_received = 1.0
+
         bill = self._create_bill_from_xml('ubl_bis3_PO.xml')
         self.assertRecordValues(bill, expected_parent)
 
