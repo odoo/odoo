@@ -248,8 +248,8 @@ def load_module_graph(
             module._update_translations(overwrite=overwrite)
 
         if not package.test_data and tools.config['test_enable'] and not tools.config['upgrade_path'] and all(p.test_data for p in package.depends):
-            _logger.warning('No test data loaded in module %s, tests mays not work properly. '
-                            'Install the database using the flag --with-test-data if you plan to run tests', package.name)
+            _logger.warning('No test data loaded in module %s, tests may not work properly. '
+                            'Install the database using the --with-test-data flag if you plan to run tests', package.name)
 
         if package.name is not None:
             registry._init_modules.add(package.name)
