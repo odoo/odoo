@@ -1125,6 +1125,7 @@ SERVICES_MAPPING = {
     "effect": ['EffectPlugin', '@web/core/effects/effect_plugin'],
     "frequent_emoji": ['FrequentEmojiPlugin', '@web/core/emoji_picker/frequent_emoji_plugin'],
     "hotkey": ['HotkeyPlugin', '@web/core/hotkeys/hotkey_plugin'],
+    "iapNotification": ['IapNotificationPlugin', '@iap_mail/js/services/iap_notification_plugin'],
     "lazy_session": ['LazySessionPlugin', '@web/webclient/lazy_session_plugin'],
     "mail.sound_effects": ['SoundEffectsPlugin', '@mail/core/common/sound_effects_plugin'],
     "mail.store": ['StorePlugin', '@mail/core/common/store_plugin'],
