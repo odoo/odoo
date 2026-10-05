@@ -16,13 +16,6 @@ class MyInvoisDocumentSyncWizard(models.TransientModel):
     _name = 'myinvois.document.sync.wizard'
     _description = 'Sync Received Documents Wizard'
 
-    @api.model
-    def _default_journal_id(self):
-        return self.env['account.journal'].search([
-            *self.env['account.journal']._check_company_domain(self.env.company),
-            ('type', '=', 'purchase'),
-        ], limit=1)
-
     # ------------------
     # Fields declaration
     # ------------------
@@ -43,7 +36,6 @@ class MyInvoisDocumentSyncWizard(models.TransientModel):
              'The documents received by the company of this journal are synced.',
         domain="[('type', '=', 'purchase')]",
         required=True,
-        default=lambda self: self._default_journal_id(),
     )
 
     # -----------------
