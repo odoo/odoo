@@ -4205,6 +4205,37 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.uom_id = self.uom_dozen
         self.assertEqual(mo.workorder_ids.duration_expected, 720, "Workorder duration should be 720 minutes after changing the MO UoM.")
 
+    def test_workorder_duration_with_bom_quantity_in_a_smaller_uom(self):
+        """Check that a work order lasts the full number of cycles when the BoM quantity
+        is expressed in a smaller unit than the order.
+        """
+        self.workcenter_2.capacity_ids.unlink()
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+            'uom_id': self.uom_dozen.id,
+            'product_qty': 2.0,
+        })
+        # 2 Dozens is 24 Units, which needs 24 cycles of 1 Unit at 60 minutes each.
+        self.assertEqual(mo.workorder_ids.duration_expected, 1440)
+
+    def test_workorder_duration_with_capacity_in_a_smaller_uom(self):
+        """Check that a work order lasts the full number of cycles when the work center
+        capacity is expressed in a smaller unit than the order.
+        """
+        self.workcenter_2.capacity_ids.unlink()
+        self.env['mrp.workcenter.capacity'].create({
+            'workcenter_id': self.workcenter_2.id,
+            'uom_id': self.uom_unit.id,
+            'capacity': 2.0,
+        })
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+            'uom_id': self.uom_dozen.id,
+            'product_qty': 10.0,
+        })
+        # 10 Dozens is 120 Units, which needs 60 cycles of 2 Units at 60 minutes each.
+        self.assertEqual(mo.workorder_ids.duration_expected, 3600)
+
     def test_multi_edit_start_date_wo(self):
         """
         Test setting the start date for multiple workorders, checking if the finish date

@@ -435,7 +435,7 @@ class MrpWorkcenter(models.Model):
         return res
 
     def _get_capacity(self, product, unit, bom):
-        default_capacity = bom.uom_id._compute_quantity(bom.product_qty, unit) or 1
+        default_capacity = bom.uom_id._compute_quantity(bom.product_qty, unit, round=False) or 1
         capacity = self.capacity_ids.sorted(lambda c: (
             not (c.product_id == product and c.uom_id == product.uom_id),
             not (not c.product_id and c.uom_id == unit),
@@ -444,7 +444,7 @@ class MrpWorkcenter(models.Model):
         if capacity and capacity.product_id in [product, self.env['product.product']] and capacity.uom_id in [product.uom_id, unit]:
             if float_is_zero(capacity.capacity, 0):
                 return (default_capacity, capacity.time_start, capacity.time_stop)
-            return (capacity.uom_id._compute_quantity(capacity.capacity, unit), capacity.time_start, capacity.time_stop)
+            return (capacity.uom_id._compute_quantity(capacity.capacity, unit, round=False), capacity.time_start, capacity.time_stop)
         return (default_capacity, self.time_start, self.time_stop)
 
 
