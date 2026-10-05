@@ -48,7 +48,8 @@ class PrinterInterface(Interface):
             model_is_valid = printer["device-make-and-model"] != "Unknown"
 
             if (url_is_supported and model_is_valid) or printer.get("is_usb"):
-                discovered_devices.update({identifier: printer})
+                printer["already-configured"] = discovered_devices.get(identifier, {}).get("already-configured", False)
+                discovered_devices[identifier] = printer
 
         # Let get_devices be called again every 20 seconds (get_devices of PrinterInterface
         # takes between 4 and 15 seconds) but increase the delay to 2 minutes if it has been
