@@ -274,3 +274,65 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
 
         # Verify the new description was appended correctly
         self.assertEqual(initial_service.description, 'line, Oil change')
+
+    def test_service_bill_change_vehicle_on_one_line(self):
+        """Test that changing the vehicle on an invoice line removes only that
+        line from its service. The service keeps its other lines, and the
+        changed line gets a service for its new vehicle."""
+
+        other_line = self.env['account.move.line'].create({
+            'name': 'Oil change',
+            'price_unit': 80.0,
+            'vehicle_id': self.car_1.id,
+            'move_id': self.bill.id,
+        })
+        self.bill.action_post()
+
+        service_car_1 = self.car_1.log_services
+        self.assertEqual(service_car_1.account_move_line_ids, self.service_line + other_line)
+        self.assertEqual(service_car_1.amount, 130.0)
+
+        self.bill.button_draft()
+        other_line.vehicle_id = self.car_2
+
+        # The service of car 1 is kept with its remaining line
+        self.assertEqual(self.car_1.log_services, service_car_1)
+        self.assertEqual(service_car_1.account_move_line_ids, self.service_line)
+        self.assertEqual(service_car_1.amount, 50.0)
+        self.assertFalse(other_line.vehicle_log_service_id)
+
+        self.bill.action_post()
+
+        # The moved line gets its own service on car 2
+        service_car_2 = self.car_2.log_services
+        self.assertEqual(len(service_car_2), 1)
+        self.assertEqual(service_car_2.account_move_line_ids, other_line)
+        self.assertEqual(service_car_2.amount, 80.0)
+        self.assertEqual(service_car_1.account_move_line_ids, self.service_line)
+        self.assertEqual(self.bill.service_count, 2)
+
+    def test_service_bill_remove_one_line(self):
+        """Test that deleting an invoice line keeps its service as long as the
+        service is still linked to other invoice lines."""
+
+        other_line = self.env['account.move.line'].create({
+            'name': 'Oil change',
+            'price_unit': 80.0,
+            'vehicle_id': self.car_1.id,
+            'move_id': self.bill.id,
+        })
+        self.bill.action_post()
+        service = self.car_1.log_services
+        self.assertEqual(service.amount, 130.0)
+
+        self.bill.button_draft()
+        other_line.unlink()
+
+        self.assertEqual(self.car_1.log_services, service)
+        self.assertEqual(service.account_move_line_ids, self.service_line)
+        self.assertEqual(service.amount, 50.0)
+
+        self.service_line.unlink()
+
+        self.assertFalse(service.exists())
+        self.assertFalse(self.car_1.log_services)

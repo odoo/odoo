@@ -97,11 +97,11 @@ class AccountMoveLine(models.Model):
     # used to decide whether the vehicle_id field is editable
     need_vehicle = fields.Boolean(compute='_compute_need_vehicle')
     vehicle_log_service_id = fields.Many2one(
-            comodel_name='fleet.vehicle.log.services',
-            string='Fleet Service',
-            copy=False,
-            index='btree_not_null',
-        )
+        comodel_name='fleet.vehicle.log.services',
+        string='Fleet Service',
+        copy=False,
+        index='btree_not_null',
+    )
 
     @api.depends("account_id")
     def _compute_need_vehicle(self):
@@ -130,25 +130,27 @@ class AccountMoveLine(models.Model):
                 raise ValidationError(self.env._("The vehicle on the invoice line must match the vehicle on the linked fleet service."))
 
     def _cleanup_empty_fleet_services(self, services_to_check):
+        """Delete the given services that are no longer linked to any invoice line."""
         empty_services = services_to_check.filtered(lambda s: not s.account_move_line_ids)
         if empty_services:
             empty_services.sudo().with_context(ignore_linked_bill_constraint=True).unlink()
 
     def write(self, vals):
-        # Check if the vehicle field is being updated (cleared OR changed)
-        vehicle_changed = 'vehicle_id' in vals
+        if 'vehicle_id' not in vals:
+            return super().write(vals)
 
-        # Unlink the service from the line if the vehicle changes
-        if vehicle_changed:
-            vals['vehicle_log_service_id'] = False
-
-        services_to_check = self.vehicle_log_service_id
+        # Remove the link to the fleet service on the lines whose vehicle is changed or cleared.
+        new_vehicle_id = vals['vehicle_id'] or False
+        lines_to_unlink = self.filtered(
+            lambda line: line.vehicle_log_service_id and line.vehicle_id.id != new_vehicle_id,
+        )
+        services_to_check = lines_to_unlink.vehicle_log_service_id
+        lines_to_unlink.vehicle_log_service_id = False
 
         res = super().write(vals)
 
-        # Delete empty services
-        if vehicle_changed:
-            self._cleanup_empty_fleet_services(services_to_check)
+        # Delete the fleet services that lost their last invoice line above
+        self._cleanup_empty_fleet_services(services_to_check)
 
         return res
 

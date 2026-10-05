@@ -53,7 +53,9 @@ class FleetVehicleLogServices(models.Model):
             if service.account_move_line_ids:
                 vehicles = service.account_move_line_ids.vehicle_id
                 if len(vehicles) > 1 or (vehicles and vehicles != service.vehicle_id):
-                    raise ValidationError(self.env._("All invoice lines linked to a fleet service must belong to the same vehicle."))
+                    raise ValidationError(self.env._(
+                        "The vehicle of a service linked to a bill must be the one set on its invoice lines.",
+                    ))
 
     def action_open_account_move(self):
         self.ensure_one()
