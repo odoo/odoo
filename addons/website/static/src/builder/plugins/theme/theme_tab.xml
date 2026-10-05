@@ -28,7 +28,7 @@
             <BuilderButton action="'addLanguage'">Add a Language</BuilderButton>
         </BuilderRow>
         <BuilderRow label.translate="Page Layout">
-            <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'layout'">
+            <BuilderSelect action="'previewWebsiteVariable'" actionParam="'layout'" preview="true">
                 <BuilderSelectItem actionValue="'full'" id="'layout_full_opt'" label.translate="Full">
                     <Image attrs="{ style: 'margin-top: 10px !important;' }"
                          src="'/website/static/src/img/snippets_options/page_layout_full.svg'"/>
@@ -142,7 +142,7 @@
 <t t-name="website.ThemeLinkOption">
     <BuilderContext preview="false">
         <BuilderRow label.translate="Link Style">
-            <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'link-underline'">
+            <BuilderSelect action="'previewLinkStyle'" actionParam="'link-underline'" preview="true">
                 <BuilderSelectItem actionValue="'never'">No Underline</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'hover'">Underline On Hover</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'always'">Always Underline</BuilderSelectItem>

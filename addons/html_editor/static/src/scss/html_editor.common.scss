@@ -636,7 +636,7 @@ pre {
 
                     .text-muted {
                         // `mute-color()`
-                        color: color-mix(in srgb, #{$-text-var} 70%, transparent) !important;
+                        @include o-color-mix(color, 'color-mix(in srgb, #{$-text-var} 70%, transparent)', mute-color($-text-color), $important: true);
                     }
                 }
             }

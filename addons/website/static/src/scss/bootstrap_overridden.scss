@@ -436,9 +436,11 @@ $--enable-no-overflow-of-text-columns: false !default;
 
 // Theme settings that switch rules on: the server marks them on
 // `<html data-o-theme-gates>` (see `font_urls_export.scss`), the builder while
-// previewing. `:where()` keeps the rules' specificity.
-@mixin o-theme-gate($gate) {
-    $-gate: ':where(html[data-o-theme-gates~="#{$gate}"])';
+// previewing. `:where()` keeps the rules' specificity. With `$default`, the
+// rules also apply to a page without the attribute (not rendered by website's
+// layout), as they're compiled on.
+@mixin o-theme-gate($gate, $default: false) {
+    $-gate: ':where(html[data-o-theme-gates~="#{$gate}"]#{if($default, ', html:not([data-o-theme-gates])', '')})';
     @if & {
         #{$-gate} & {
             @content;
@@ -447,6 +449,58 @@ $--enable-no-overflow-of-text-columns: false !default;
         #{$-gate} {
             @content;
         }
+    }
+}
+
+// An area's colors (header, footer...). Its color preset: the server renders
+// it as a class (`o_cc<N>`) on the elements it marks with `data-o-cc-area`
+// (see `website._get_theme_area_classes`), which the builder swaps while
+// previewing; the other elements of the area's selector get it compiled in.
+// Its custom color: a theme gate, compiled even when not set, so that it
+// previews from there.
+@mixin o-area-colors($area, $background: $body-bg) {
+    &:where(:not([data-o-cc-area])) {
+        @include o-apply-colors($area, $background: $background);
+    }
+    $-custom: o-color('#{$area}-custom');
+    @include o-theme-gate('#{$area}-custom', $-custom != null) {
+        @if $-custom {
+            @include o-apply-colors('#{$area}-custom', $background: $background);
+        } @else {
+            // As `o-apply-colors`, with a color for when it's previewed.
+            background-image: none;
+            @include o-bg-color-var('#{$area}-custom', o-color(o-color($area)) or $background, $important: false, $background: $background);
+        }
+    }
+}
+
+// An area's gradient (see `o-area-colors`): a theme gate.
+@mixin o-area-gradient($key) {
+    $-gradient: o-website-value($key);
+    @include o-theme-gate($key, $-gradient != null) {
+        background-color: rgba(0, 0, 0, 0);
+        background-image: var(--#{$key}, #{$-gradient or none});
+    }
+}
+
+// The primary and secondary buttons' style, Fill, Outline or Flat (see web's
+// `bootstrap_review_frontend.scss`): each one is compiled, behind a theme
+// gate, so that the builder previews it. The other colors are filled.
+@mixin o-button-style($color) {
+    @if index(('primary', 'secondary'), $color) {
+        $-outline: index($o-btn-outline-defaults, $color) != null;
+        @include o-theme-gate('btn-#{$color}-outline', $-outline) {
+            @extend .btn-outline-#{$color};
+            border-width: o-website-value('btn-#{$color}-outline-border-width');
+        }
+        @include o-theme-gate('btn-#{$color}-fill', not $-outline) {
+            @extend .btn-fill-#{$color};
+        }
+        @include o-theme-gate('btn-#{$color}-flat', index($o-btn-flat-defaults, $color) != null) {
+            @extend .btn.flat !optional;
+        }
+    } @else {
+        @extend .btn-fill-#{$color};
     }
 }
 
@@ -474,14 +528,71 @@ $--enable-no-overflow-of-text-columns: false !default;
 }
 
 // The small size is a ratio of the base one, in `em` (see `$small-font-size`).
-@function o-small-font-size-var() {
+// Browsers without trigonometric functions keep the compiled size declared
+// before (see `o-font-size-var`).
+@mixin o-small-font-size-var() {
     @if $small-font-size != ($o-small-font-size / $font-size-base) * 1em {
-        @return $small-font-size;
+        font-size: $small-font-size;
+    } @else {
+        @supports (width: calc(tan(atan2(1px, 1px)) * 1px)) {
+            font-size: calc(tan(atan2(var(--small-font-size, #{$o-small-font-size}), var(--font-size-base, #{$font-size-base}))) * 1em);
+        }
     }
-    @return calc(tan(atan2(var(--small-font-size, #{$o-small-font-size}), var(--font-size-base, #{$font-size-base}))) * 1em);
+}
+
+// Bootstrap's link underlines, again with the variables its root prints
+// (`--link-decoration`, `--link-hover-decoration`), so that the builder
+// previews the link style. The components that drop the links' underline
+// always do: Bootstrap does it only where links are underlined, which gives
+// the same result whatever the style.
+@mixin o-after-bootstrap-links($part) {
+    $-decoration: var(--#{$prefix}link-decoration, #{$link-decoration});
+    $-hover-decoration: var(--#{$prefix}link-hover-decoration, #{$link-hover-decoration});
+    @if $part == reboot {
+        a {
+            text-decoration: $-decoration;
+
+            &:hover {
+                text-decoration: $-hover-decoration;
+            }
+        }
+    } @else if $part == buttons {
+        .btn {
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
+        .btn-link {
+            text-decoration: $-decoration;
+
+            &:hover, &:focus-visible {
+                text-decoration: $-hover-decoration;
+            }
+        }
+    } @else if $part == card {
+        .card-link:hover {
+            text-decoration: none;
+        }
+    } @else if index((dropdown, nav, navbar, pagination), $part) {
+        $-selector: map-get((dropdown: '.dropdown-item', nav: '.nav-link', navbar: '.navbar-brand', pagination: '.page-link'), $part);
+        #{$-selector} {
+            text-decoration: none;
+
+            &:hover, &:focus {
+                text-decoration: none;
+            }
+        }
+    } @else if $part == list-group {
+        .list-group-item {
+            text-decoration: none;
+        }
+    }
 }
 
 @mixin o-after-bootstrap($part) {
+    @include o-after-bootstrap-links($part);
     @if $part == root {
         @include o-after-bootstrap-root;
     } @else if index((buttons, dropdown, nav, card, accordion, pagination, progress, list-group, close, modal, popover, helpers), $part) {
@@ -663,7 +774,7 @@ $--enable-no-overflow-of-text-columns: false !default;
         }
         // The figure captions' background (see `website.scss`).
         $-figure-caption: rgba(map-get($theme-colors, 'dark'), $o-theme-figcaption-opacity);
-        --o-figure-caption: color-mix(in srgb, var(--dark) #{$o-theme-figcaption-opacity * 100%}, transparent);
+        @include o-color-mix(--o-figure-caption, 'color-mix(in srgb, var(--dark) #{$o-theme-figcaption-opacity * 100%}, transparent)', $-figure-caption);
         @include o-print-variant-colors('o-figure-caption', $-figure-caption);
         --o-btn-link-focus-shadow-rgb: #{to-rgb(mix(color-contrast($link-color), $link-color, 15%))};
         $-active-bg: o-color('o-cc1-btn-primary') or $primary;
@@ -682,7 +793,7 @@ $--enable-no-overflow-of-text-columns: false !default;
         }
         @if $card-bg == $body-bg {
             $-card-body-bg: rgba($card-bg, $o-card-body-bg-opacity);
-            --o-card-body-bg: color-mix(in srgb, var(--#{$prefix}body-bg) #{$o-card-body-bg-opacity * 100%}, transparent);
+            @include o-color-mix(--o-card-body-bg, 'color-mix(in srgb, var(--#{$prefix}body-bg) #{$o-card-body-bg-opacity * 100%}, transparent)', $-card-body-bg);
             @include o-print-variant-colors('o-card-body-bg', $-card-body-bg);
         }
         --o-dropdown-link-active-color: #{$dropdown-link-active-color};
@@ -800,7 +911,7 @@ $--enable-no-overflow-of-text-columns: false !default;
             @include o-print-css('dropdown-bg', if($dropdown-bg == $body-bg, $-body-bg-css, null));
             @include o-print-css('dropdown-header-color', o-color-css-if(o-ref('600', $gray-600), $dropdown-header-color, $gray-600));
             @if $dropdown-link-active-bg == rgba(color-contrast($body-bg), .2) and $dropdown-bg == $body-bg {
-                --#{$prefix}dropdown-link-active-bg: color-mix(in srgb, #{o-ref('o-cc1-bg-contrast', color-contrast($body-bg))} 20%, transparent);
+                @include o-color-mix(--#{$prefix}dropdown-link-active-bg, 'color-mix(in srgb, #{o-ref('o-cc1-bg-contrast', color-contrast($body-bg))} 20%, transparent)', $dropdown-link-active-bg);
                 --#{$prefix}dropdown-link-active-color: var(--o-dropdown-link-active-color, #{$dropdown-link-active-color});
             }
         }
@@ -849,7 +960,7 @@ $--enable-no-overflow-of-text-columns: false !default;
             @include o-print-css('pagination-active-border-color', if($pagination-active-border-color == $component-active-bg, $-active-bg-css, null));
             @include o-print-css('pagination-bg', if($pagination-bg == $body-bg, $-body-bg-css, null));
             @include o-print-css('pagination-disabled-bg', if($pagination-disabled-bg == $body-bg, $-body-bg-css, null));
-            @include o-print-css('pagination-disabled-color', o-color-css-if('color-mix(in srgb, #{o-ref('o-cc1-bg-contrast', color-contrast($body-bg))} 50%, transparent)', $pagination-disabled-color, rgba(color-contrast($body-bg), .5)));
+            @include o-color-mix(--#{$prefix}pagination-disabled-color, o-color-css-if('color-mix(in srgb, #{o-ref('o-cc1-bg-contrast', color-contrast($body-bg))} 50%, transparent)', $pagination-disabled-color, rgba(color-contrast($body-bg), .5)), $pagination-disabled-color);
         }
     } @else if $part == progress {
         .progress, .progress-stacked {
@@ -896,7 +1007,11 @@ $--enable-no-overflow-of-text-columns: false !default;
 // replaces: `$css`'s own result, compiled, is `$expected`.
 @mixin o-print-color-css($name, $value, $css, $expected) {
     @if $value != null and $value == $expected {
-        --#{$name}: #{$css};
+        @if str-index('#{$css}', 'color-mix(') {
+            @include o-color-mix(--#{$name}, $css, $value);
+        } @else {
+            --#{$name}: #{$css};
+        }
     }
 }
 
@@ -923,7 +1038,7 @@ $--enable-no-overflow-of-text-columns: false !default;
         font-weight: o-font-weight-var('font-weight-bolder', $font-weight-bolder);
     }
     small, .small {
-        font-size: o-small-font-size-var();
+        @include o-small-font-size-var();
     }
     .lead {
         @if $lead-font-size == $font-size-base * $o-lead-ratio {
@@ -1100,18 +1215,18 @@ $--enable-no-overflow-of-text-columns: false !default;
             background-color: if($input-focus-bg == $input-bg, $-input-bg, null);
         }
         &::placeholder {
-            color: o-mix-css($-mix, placeholder, $input-placeholder-color);
+            @include o-color-mix(color, o-mix-css($-mix, placeholder, $input-placeholder-color), $input-placeholder-color);
         }
         &:disabled {
-            background-color: o-mix-css($-mix, disabled-bg, $input-disabled-bg);
-            border-color: o-mix-css($-mix, disabled-border, $input-disabled-border-color);
+            @include o-color-mix(background-color, o-mix-css($-mix, disabled-bg, $input-disabled-bg), $input-disabled-bg);
+            @include o-color-mix(border-color, o-mix-css($-mix, disabled-border, $input-disabled-border-color), $input-disabled-border-color);
         }
         &::file-selector-button {
             color: if($form-file-button-color == $input-color, $-input-color, null);
-            background-color: o-mix-css($-mix, file-bg, $form-file-button-bg);
+            @include o-color-mix(background-color, o-mix-css($-mix, file-bg, $form-file-button-bg), $form-file-button-bg);
         }
         &:hover:not(:disabled):not([readonly])::file-selector-button {
-            background-color: o-mix-css($-mix, file-hover-bg, $form-file-button-hover-bg);
+            @include o-color-mix(background-color, o-mix-css($-mix, file-hover-bg, $form-file-button-hover-bg), $form-file-button-hover-bg);
         }
     }
     .form-select {
@@ -1119,9 +1234,9 @@ $--enable-no-overflow-of-text-columns: false !default;
         background-color: if($form-select-bg == $input-bg, $-input-bg, null);
 
         &:disabled {
-            color: o-mix-css($-mix, select-disabled, $form-select-disabled-color);
-            background-color: o-mix-css($-mix, disabled-bg, $form-select-disabled-bg);
-            border-color: o-mix-css($-mix, disabled-border, $form-select-disabled-border-color);
+            @include o-color-mix(color, o-mix-css($-mix, select-disabled, $form-select-disabled-color), $form-select-disabled-color);
+            @include o-color-mix(background-color, o-mix-css($-mix, disabled-bg, $form-select-disabled-bg), $form-select-disabled-bg);
+            @include o-color-mix(border-color, o-mix-css($-mix, disabled-border, $form-select-disabled-border-color), $form-select-disabled-border-color);
         }
     }
     .form-check-input {
@@ -1138,16 +1253,16 @@ $--enable-no-overflow-of-text-columns: false !default;
     $-focus-border: o-color-css-if('color-mix(in srgb, #{o-ref('o-cc1-btn-primary', $-active-bg)}, white 50%)', $input-focus-border-color, tint-color($-active-bg, 50%));
     $-focus-ring: o-focus-ring-shadow-css($input-focus-box-shadow);
     .form-control:focus {
-        border-color: $-focus-border;
+        @include o-color-mix(border-color, $-focus-border, $input-focus-border-color);
         box-shadow: $-focus-ring;
     }
     .form-select:focus {
-        border-color: if($form-select-focus-border-color == $input-focus-border-color, $-focus-border, null);
+        @include o-color-mix(border-color, if($form-select-focus-border-color == $input-focus-border-color, $-focus-border, null), $form-select-focus-border-color);
         box-shadow: o-focus-ring-shadow-css($form-select-focus-box-shadow);
     }
     .form-check-input {
         &:focus {
-            border-color: if($form-check-input-focus-border == $input-focus-border-color, $-focus-border, null);
+            @include o-color-mix(border-color, if($form-check-input-focus-border == $input-focus-border-color, $-focus-border, null), $form-check-input-focus-border);
             box-shadow: o-focus-ring-shadow-css($form-check-input-focus-box-shadow);
         }
         &:checked {
@@ -1168,17 +1283,17 @@ $--enable-no-overflow-of-text-columns: false !default;
     .form-range {
         // Apart: a browser drops a rule with another's pseudo-element.
         &::-webkit-slider-runnable-track {
-            background-color: $-track-bg;
+            @include o-color-mix(background-color, $-track-bg, $form-range-track-bg);
         }
         &::-moz-range-track {
-            background-color: $-track-bg;
+            @include o-color-mix(background-color, $-track-bg, $form-range-track-bg);
         }
         &:disabled {
             &::-webkit-slider-thumb {
-                background-color: $-thumb-disabled-bg;
+                @include o-color-mix(background-color, $-thumb-disabled-bg, $form-range-thumb-disabled-bg);
             }
             &::-moz-range-thumb {
-                background-color: $-thumb-disabled-bg;
+                @include o-color-mix(background-color, $-thumb-disabled-bg, $form-range-thumb-disabled-bg);
             }
         }
         &:focus {

@@ -237,7 +237,8 @@
     <xpath expr="//footer" position="attributes">
         <attribute name="data-name">Footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
-        <attribute name="t-attf-class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
+        <attribute name="t-attf-class" add="o_colored_level o_cc #{website._get_theme_area_classes().get('footer', '')}" remove="bg-light" separator=" "/>
+        <attribute name="t-att-data-o-cc-area">website._get_theme_area_classes().get('footer') and 'footer'</attribute>
     </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
         <attribute name="data-name">Copyright</attribute>
@@ -320,7 +321,8 @@
                 t-attf-style="#{breadcrumb_bg_color_style and ('background-color: %s;' % breadcrumb_bg_color_style)} #{breadcrumb_text_color_style and ('color: %s;' % breadcrumb_text_color_style)}"
                 t-att-data-invisible="'1' if 'breadcrumb_visible' in main_object and not main_object.sudo().breadcrumb_visible else None"
             >
-                <nav aria-label="breadcrumb">
+                <t t-set="_breadcrumb_cc" t-value="website._get_theme_area_classes().get('breadcrumb')"/>
+                <nav aria-label="breadcrumb" t-att-class="_breadcrumb_cc" t-att-data-o-cc-area="_breadcrumb_cc and 'breadcrumb'">
                     <ol class="breadcrumb container p-2 mb-0">
                         <t t-set="ancestors" t-value="main_object.sudo().parent_ids"/>
                         <!-- Grand Parent -->
@@ -486,7 +488,8 @@
 
 <template id="navbar" name="Navbar">
     <t t-set="_navbar_expand_class" t-value="_navbar_expand_class is None and 'navbar-expand-lg' or _navbar_expand_class"/>
-    <nav data-name="Navbar" t-attf-aria-label="#{_navbar_name if _navbar_name else 'Main'}" t-attf-class="navbar #{_navbar_expand_class} navbar-light o_colored_level o_cc #{_navbar_classes} #{_extra_navbar_classes}">
+    <t t-set="_menu_cc" t-value="website._get_theme_area_classes().get('menu')"/>
+    <nav data-name="Navbar" t-attf-aria-label="#{_navbar_name if _navbar_name else 'Main'}" t-attf-class="navbar #{_navbar_expand_class} navbar-light o_colored_level o_cc #{_menu_cc or ''} #{_navbar_classes} #{_extra_navbar_classes}" t-att-data-o-cc-area="_menu_cc and 'menu'">
         <t t-out="0"/>
     </nav>
 </template>

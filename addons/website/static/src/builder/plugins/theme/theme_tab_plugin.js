@@ -355,6 +355,24 @@ export class CustomizeGrayAction extends BuilderAction {
         this.dependencies.customizeWebsite.previewWebsiteColors(grays, { colorType: "gray" });
     }
 }
+/**
+ * @param {Object} dialog the dialog service
+ * @returns {Promise<boolean>} whether the user confirms a palette change that
+ *          resets their color customizations
+ */
+function confirmPaletteChange(dialog) {
+    return new Promise((resolve) => {
+        dialog.add(ConfirmationDialog, {
+            body: _t(
+                "Changing the color palette will reset all your color customizations, are you sure you want to proceed?"
+            ),
+            confirmLabel: _t("Apply New Palette"),
+            confirm: () => resolve(true),
+            cancel: () => resolve(false),
+        });
+    });
+}
+
 export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
     static id = "changeColorPalette";
     static dependencies = ["customizeWebsite"];
@@ -366,16 +384,7 @@ export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
         const style = this.window.getComputedStyle(this.document.body);
         const hasCustomizedColors = getCSSVariableValue("has-customized-colors", style);
         if (hasCustomizedColors && hasCustomizedColors !== "false") {
-            return new Promise((resolve) => {
-                this.services.dialog.add(ConfirmationDialog, {
-                    body: _t(
-                        "Changing the color palette will reset all your color customizations, are you sure you want to proceed?"
-                    ),
-                    confirmLabel: _t("Apply New Palette"),
-                    confirm: () => resolve(true),
-                    cancel: () => resolve(false),
-                });
-            });
+            return confirmPaletteChange(this.services.dialog);
         }
         return true;
     }
@@ -394,19 +403,30 @@ export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
 }
 
 /**
- * Same as `changeColorPalette`, but previewed and only written on save.
+ * Same as `changeColorPalette`, but previewed (also on hover) and only written
+ * on save. The confirmation is asked on click, not on hover (a `load()` can't
+ * tell them apart), and only when colors would be lost.
  */
-export class PreviewColorPaletteAction extends ChangeColorPaletteAction {
+export class PreviewColorPaletteAction extends CustomizeWebsiteVariableAction {
     static id = "previewColorPalette";
-    // Still not previewed on hover: it may ask for a confirmation first.
+    // Drop the parent's `preview = false` and blocking `withCustomHistory`; it
+    // may wait for the confirmation.
     setup() {
-        this.preview = false;
+        this.canTimeout = false;
     }
-    async apply({ loadResult, value }) {
-        if (!loadResult) {
+    async apply({ isPreviewing, value }) {
+        const customizeWebsite = this.dependencies.customizeWebsite;
+        if (
+            !isPreviewing &&
+            customizeWebsite.hasCustomizedColors() &&
+            !(await confirmPaletteChange(this.services.dialog))
+        ) {
             return;
         }
-        this.dependencies.customizeWebsite.previewColorPalette(value.replace(/^'(.*)'$/, "$1"));
+        customizeWebsite.previewColorPalette(value.replace(/^'(.*)'$/, "$1"));
+        if (isPreviewing) {
+            return;
+        }
         await Promise.allSettled(
             this.getResource("on_website_color_updated_handlers").map((handler) =>
                 handler(["o-color-1", "o-color-2", "o-color-3", "o-color-4", "o-color-5"])

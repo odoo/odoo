@@ -8,9 +8,8 @@
 }
 
 .o_portal_index_card > a:not(.alert) {
-    @include o-apply-colors('portal-card');
-    @include o-apply-colors('portal-card-custom');
-    @include o-add-gradient('portal-gradient');
+    @include o-area-colors('portal-card');
+    @include o-area-gradient('portal-gradient');
     @include transition(background-color 150ms linear);
 
     @include o-theme-gate('portal-card-border-width') {

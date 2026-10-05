@@ -368,3 +368,68 @@ test("should mark default color as selected when it is selected", async () => {
     });
     expect(".o_color_button[data-color='900']").toHaveClass("selected");
 });
+
+test.tags("desktop");
+test("previewing a theme color in its own picker does not move the colors", async () => {
+    // As a theme color's picker: the preview changes the color it is looked up
+    // in, and the revert happens later.
+    defineStyle(`:root { --o-color-1: #714B67; --600: #6C757D; }`);
+    const rootStyle = document.documentElement.style;
+    let revertPreview;
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "#714B67",
+                defaultTab: "custom",
+            },
+            applyColor() {},
+            applyColorPreview(color) {
+                rootStyle.setProperty("--o-color-1", `var(--${color})`);
+            },
+            applyColorResetPreview() {
+                revertPreview = () => rootStyle.removeProperty("--o-color-1");
+            },
+        },
+    });
+    const customColorsSelector = ".o_font_color_selector .o_colorpicker_section:first-child button";
+    expect(customColorsSelector).toHaveCount(0);
+
+    await hover(".o_colorpicker_section button[data-color='600']");
+    await hover(".o_font_color_selector .o_color_pick_area");
+    await animationFrame();
+    // The revert is pending: the previewed color is still the gray.
+    expect(rootStyle.getPropertyValue("--o-color-1")).toBe("var(--600)");
+    expect(customColorsSelector).toHaveCount(0);
+    revertPreview();
+});
+
+test("re-entering the picker previews the custom color again", async () => {
+    const previews = [];
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: { selectedColor: "", defaultTab: "custom" },
+            applyColor() {},
+            applyColorPreview: (color) => previews.push(color),
+        },
+    });
+    // Selecting the current tab again drops the tab's own re-preview.
+    await click(".o_font_color_selector .custom-tab");
+    const hexInputEl = await getIframeInput(
+        ".o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    hexInputEl.value = "#123456";
+    manuallyDispatchProgrammaticEvent(hexInputEl, "input");
+    await animationFrame();
+    expect(previews.at(-1)).toBe("#123456");
+
+    // The previews may have been reverted from outside the picker meanwhile.
+    const count = previews.length;
+    for (let i = 0; i < 2; i++) {
+        manuallyDispatchProgrammaticEvent(queryOne(".o_font_color_selector"), "mouseenter", {
+            relatedTarget: document.body,
+        });
+        await animationFrame();
+    }
+    expect(previews.slice(count)).toEqual(["#123456", "#123456"]);
+});

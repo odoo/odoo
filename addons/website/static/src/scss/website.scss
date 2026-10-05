@@ -39,9 +39,9 @@
     }
 
     // 4) The Odoo values map, $o-website-values, must be printed. The color
-    // combinations' gradients unquoted: their rules read them.
+    // combinations' and areas' gradients unquoted: their rules read them.
     @each $key, $value in $o-website-values {
-        @if $value and str-index($key, 'o-cc') == 1 and str-index($key, '-bg-gradient') {
+        @if $value and ((str-index($key, 'o-cc') == 1 and str-index($key, '-bg-gradient')) or index(('menu-gradient', 'menu-secondary-gradient', 'footer-gradient', 'copyright-gradient', 'breadcrumb-gradient', 'portal-gradient'), $key)) {
             --#{$key}: #{$value};
         } @else {
             @include print-variable($key, $value);
@@ -324,11 +324,13 @@ body {
     // /website/iframefallback route). Indeed, if the website <body> uses a
     // transparent background color, the fallback iframe would be visible on
     // some // browsers (e.g. Chrome).
-    @if o-website-value('layout') != 'full' {
+    // The page layouts are theme gates, so that the builder previews them.
+    @include o-theme-gate('layout-boxed', not (o-website-value('layout') == 'full')) {
         // `force-opaque-bg-color()`, from the color's variable.
         $-color: o-color('body');
         background-color: var(--o-body-fill, #{mix(change-color($-color, $alpha: 1), white, percentage(alpha($-color)))});
-    } @else {
+    }
+    @include o-theme-gate('layout-full', o-website-value('layout') == 'full') {
         // Only if necessary as, if already opaque, the background color of the
         // body is already set by Bootstrap. We don't change $body-bg directly
         // as it would impact other Bootstrap components that could take profit
@@ -385,9 +387,8 @@ body {
     > main:not(.o_breadcrumb_overlay) {
         div.o_page_breadcrumb {
             nav {
-                @include o-apply-colors('breadcrumb');
-                @include o-apply-colors('breadcrumb-custom');
-                @include o-add-gradient('breadcrumb-gradient');
+                @include o-area-colors('breadcrumb');
+                @include o-area-gradient('breadcrumb-gradient');
             }
             a, .breadcrumb-item, li::before {
                 color: inherit !important;
@@ -419,7 +420,7 @@ body {
         }
     }
 
-    @if o-website-value('layout') != 'full' {
+    @include o-theme-gate('layout-boxed', not (o-website-value('layout') == 'full')) {
         > main {
             // The color behind the boxed layout is forced by Odoo. The box
             // background color uses the `$body-bg` variable.
@@ -475,40 +476,40 @@ body {
                 }
             }
         }
-
-        @if o-website-value('layout') == 'framed' {
-            @include media-breakpoint-up(md) {
-                padding-top: $grid-gutter-width;
-                padding-bottom: $grid-gutter-width * 1.5;
+    }
+    @include o-theme-gate('layout-framed', o-website-value('layout') == 'framed') {
+        @include media-breakpoint-up(md) {
+            padding-top: $grid-gutter-width;
+            padding-bottom: $grid-gutter-width * 1.5;
+        }
+    }
+    @include o-theme-gate('layout-postcard', o-website-value('layout') == 'postcard') {
+        @include media-breakpoint-up(md) {
+            $-border-radius: $border-radius-lg;
+            // Don't know why (browser rounding mistake?) but the inner
+            // border radius must be 1px lower for this to be visually ok
+            // (despite the fact there is no border or any space)
+            $-inner-border-radius: $-border-radius - 0.0625rem;
+            > * {
+                margin-bottom: $spacer * 2;
             }
-        } @else if o-website-value('layout') == 'postcard' {
-            @include media-breakpoint-up(md) {
-                $-border-radius: $border-radius-lg;
-                // Don't know why (browser rounding mistake?) but the inner
-                // border radius must be 1px lower for this to be visually ok
-                // (despite the fact there is no border or any space)
-                $-inner-border-radius: $-border-radius - 0.0625rem;
-                > * {
-                    margin-bottom: $spacer * 2;
-                }
-                > header {
-                    &, &.o_header_affix {
-                        .navbar {
-                            @include border-bottom-radius($-border-radius);
-                        }
+            > header {
+                &, &.o_header_affix {
+                    .navbar {
+                        @include border-bottom-radius($-border-radius);
                     }
                 }
-                > main, > footer {
-                    @include border-radius($-border-radius);
+            }
+            > main, > footer {
+                @include border-radius($-border-radius);
 
-                    .oe_structure > :first-child {
-                        @include border-top-radius($-inner-border-radius);
-                    }
+                .oe_structure > :first-child {
+                    @include border-top-radius($-inner-border-radius);
                 }
-                > main .oe_structure > :last-child,
-                .o_footer_copyright {
-                    @include border-bottom-radius($-inner-border-radius);
-                }
+            }
+            > main .oe_structure > :last-child,
+            .o_footer_copyright {
+                @include border-bottom-radius($-inner-border-radius);
             }
         }
     }
@@ -574,8 +575,7 @@ body {
     // anyway. Automatically mimic navbar-dark if the user's menu color is dark.
     // Note: this only works because navbar-light is defined before navbar-dark,
     // we may want to use a safest way when possible.
-    @include o-apply-colors('menu');
-    @include o-apply-colors('menu-custom');
+    @include o-area-colors('menu');
     // A dark header color: `<html data-o-theme-gates>` marks it (see
     // `font_urls_export.scss`), the builder computes it while previewing.
     @include o-theme-gate('menu-dark') {
@@ -590,7 +590,7 @@ body {
             filter: $btn-close-white-filter;
         }
     }
-    @include o-add-gradient('menu-gradient');
+    @include o-area-gradient('menu-gradient');
 
     a.nav-link {
         color: var(--#{$variable-prefix}nav-link-color);
@@ -601,7 +601,7 @@ body {
 }
 
 .navbar-light .o_navbar_mobile {
-    @include o-add-gradient('menu-gradient');
+    @include o-area-gradient('menu-gradient');
 }
 
 @function format-color($color) {
@@ -666,7 +666,7 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
 
             &:not(.collapsed) {
                 @if $-navbar-mobile-bg-color != null {
-                    background-color: color-mix(in srgb, var(--o-menu-color, #{$-navbar-mobile-bg-color}), black 5%);
+                    @include o-color-mix(background-color, 'color-mix(in srgb, var(--o-menu-color, #{$-navbar-mobile-bg-color}), black 5%)', shade-color($-navbar-mobile-bg-color, 5%));
                 }
             }
 
@@ -763,15 +763,13 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
 }
 
 .o_footer {
-    @include o-apply-colors('footer');
-    @include o-apply-colors('footer-custom');
-    @include o-add-gradient('footer-gradient');
+    @include o-area-colors('footer');
+    @include o-area-gradient('footer-gradient');
 
     .o_footer_copyright {
         $-footer-color: o-color('footer-custom') or o-color('footer') or rgba(0, 0, 0, 0);
-        @include o-apply-colors('copyright', $background: $-footer-color);
-        @include o-apply-colors('copyright-custom', $background: $-footer-color);
-        @include o-add-gradient('copyright-gradient');
+        @include o-area-colors('copyright', $background: $-footer-color);
+        @include o-area-gradient('copyright-gradient');
     }
 }
 
@@ -858,7 +856,7 @@ p {
     @include o-font-size-var(var(--font-size-base));
 }
 .o_small-fs {
-    font-size: o-small-font-size-var();
+    @include o-small-font-size-var();
 }
 
 // The Bootstrap rules that compile the button values, again with the CSS
@@ -893,11 +891,15 @@ $-btn-font-weight-fallback: $btn-font-weight;
         --#{$prefix}btn-border-radius: var(--btn-border-radius-#{$size});
     }
 }
-// The border width of the button styles set to "Outline".
-@each $color, $width in $o-btn-outline-border-width-defaults {
-    @if $width {
-        .btn-#{$color} {
-            border-width: var(--btn-#{$color}-outline-border-width);
+// The border width of the button styles set to "Outline" (see
+// `o-button-style`).
+@each $color in ('primary', 'secondary') {
+    $-width: o-website-value('btn-#{$color}-outline-border-width');
+    @if $-width {
+        @include o-theme-gate('btn-#{$color}-outline', index($o-btn-outline-defaults, $color) != null) {
+            .btn-#{$color} {
+                border-width: var(--btn-#{$color}-outline-border-width, #{$-width});
+            }
         }
     }
 }
@@ -1015,7 +1017,7 @@ font[class*='bg-'] {
     // The colors are read from their variables (see `o-after-bootstrap-root`).
     @each $-color, $-value in $theme-colors {
         &.text-bg-#{$-color} {
-            --badge-bg: color-mix(in srgb, var(--#{$-color}), white 90%);
+            @include o-color-mix(--badge-bg, 'color-mix(in srgb, var(--#{$-color}), white 90%)', tint-color($-value, 90%));
             --badge-color: var(--#{$-color}-badge-text);
             --badge-color-hover: var(--#{$-color}-badge-contrast);
             --badge-border-color: var(--#{$-color});
@@ -1978,6 +1980,8 @@ $-transition-duration: 200ms;
 
     &.o_header_is_scrolled {
         .navbar-brand {
+            // Compiled first, for the browsers without `o-font-size-var`.
+            @include font-size($o-theme-navbar-fixed-logo-height / $line-height-base);
             @include o-font-size-var(calc(var(--fixed-logo-height) / #{$line-height-base}));
 
             img {
@@ -2165,15 +2169,13 @@ header {
             // - The website layout template when different than 'full'
             // We need to combine both using `calc`. The `border` solution does
             // not work on Safari.
-            $padding-size: var(--sidebar-width);
             $-hamburger-right: o-website-value("hamburger-position") == "right";
-            @if o-website-value('layout') != 'full' {
-                $padding-size: calc(#{$grid-gutter-width} * 2 + #{$padding-size});
+            $-side: if($-hamburger-right, right, left);
+            @include o-theme-gate('layout-full', o-website-value('layout') == 'full') {
+                padding-#{$-side}: var(--sidebar-width);
             }
-            @if $-hamburger-right {
-                padding-right: $padding-size;
-            } @else {
-                padding-left: $padding-size;
+            @include o-theme-gate('layout-boxed', not (o-website-value('layout') == 'full')) {
+                padding-#{$-side}: calc(#{$grid-gutter-width} * 2 + var(--sidebar-width));
             }
 
             > header {
@@ -2238,21 +2240,18 @@ header {
     }
 } @else if o-website-value('header-template') == 'sales_one' {
     #wrapwrap .o_header_sales_one_bot {
-        @include o-apply-colors('header-sales_one');
-        @include o-apply-colors('header-sales_one-custom');
-        @include o-add-gradient('menu-secondary-gradient');
+        @include o-area-colors('header-sales_one');
+        @include o-area-gradient('menu-secondary-gradient');
     }
 } @else if o-website-value('header-template') == 'sales_two' {
     #wrapwrap .o_header_sales_two_top {
-        @include o-apply-colors('header-sales_two');
-        @include o-apply-colors('header-sales_two-custom');
-        @include o-add-gradient('menu-secondary-gradient');
+        @include o-area-colors('header-sales_two');
+        @include o-area-gradient('menu-secondary-gradient');
     }
 } @else if o-website-value('header-template') == 'sales_three' {
     #wrapwrap .o_header_sales_three_top {
-        @include o-apply-colors('header-sales_three');
-        @include o-apply-colors('header-sales_three-custom');
-        @include o-add-gradient('menu-secondary-gradient');
+        @include o-area-colors('header-sales_three');
+        @include o-area-gradient('menu-secondary-gradient');
     }
     #wrapwrap header {
         .o_header_sales_three_small_links {
@@ -2266,9 +2265,8 @@ header {
     }
 } @else if o-website-value('header-template') == 'sales_four' {
     #wrapwrap .o_header_sales_four_bot {
-        @include o-apply-colors('header-sales_four');
-        @include o-apply-colors('header-sales_four-custom');
-        @include o-add-gradient('menu-secondary-gradient');
+        @include o-area-colors('header-sales_four');
+        @include o-area-gradient('menu-secondary-gradient');
     }
 }
 
@@ -2613,7 +2611,7 @@ header {
     @include media-breakpoint-up(lg) {
         #wrapwrap.o_footer_effect_enable {
             > main {
-                @if o-website-value('layout') == 'full' {
+                @include o-theme-gate('layout-full', o-website-value('layout') == 'full') {
                     // Ensure a transparent snippet at the end of the content
                     // still appears with the same background when hovering the
                     // footer during the scroll effect.
@@ -2714,7 +2712,7 @@ span.list-inline-item.o_add_language:last-child {
 
 @each $color, $value in $theme-colors {
     .bg-#{$color}-light {
-        background-color: color-mix(in srgb, var(--#{$color}) 10%, transparent);
+        @include o-color-mix(background-color, 'color-mix(in srgb, var(--#{$color}) 10%, transparent)', rgba($value, 0.1));
     }
 }
 

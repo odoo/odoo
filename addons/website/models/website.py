@@ -1372,6 +1372,17 @@ class Website(models.CachedModel):
         """Return the list of font URLs to emit as <link> tags in <head>."""
         return re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', self._get_scss_exports())
 
+    def _get_theme_area_classes(self):
+        """Return the color preset class (`o_cc<N>`) of the areas whose
+        templates render it ('menu', 'footer', 'breadcrumb'), by area: the
+        website's CSS doesn't compile it in for them, so that the builder
+        previews it."""
+        match = re.search(r'--o-theme-area-presets:\s*"([^"]*)"', self._get_scss_exports())
+        return {
+            area: f'o_cc{preset}'
+            for area, preset in (item.split(':') for item in (match[1] if match else '').split())
+        }
+
     def _get_theme_gates(self):
         """Return the theme settings that switch CSS rules on, separated by
         spaces, for `<html data-o-theme-gates>`: the website's CSS gates those

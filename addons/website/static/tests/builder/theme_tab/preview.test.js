@@ -165,6 +165,8 @@ test("theme tab: palette and status colors are previewed where they are used", a
         }
     );
     await contains("#theme-tab").click();
+    // The gates the server renders on a website page (the test page has none).
+    queryFirst(":iframe html").dataset.oThemeGates = "btn-primary-fill btn-secondary-fill";
     await contains(".o-hb-theme-color-slider-btn").click();
     // Primary buttons are the first palette color's (through the primary
     // theme color and the first color preset's buttons).
@@ -173,7 +175,6 @@ test("theme tab: palette and status colors are previewed where they are used", a
     await contains(".o_popover .solid-tab").click();
     await contains(".o_popover [data-color='#FF0000']").click();
     expect(":iframe .btn-primary").toHaveStyle({ "background-color": "rgb(255, 0, 0)" });
-    await contains(".o-hb-theme-color-slider-btn").click();
     await contains(".hb-sliding-panel button.o_we_color_preview[title='Success']").click();
     await contains(".o_popover .solid-tab").click();
     await contains(".o_popover [data-color='#0000FF']").click();
@@ -271,6 +272,10 @@ const PREVIEWED_VALUES = [
     { option: "input-border-width", value: "3", input: `${INPUTS} [data-label='Border Width'] input.o-hb-input-number`, element: INPUT, property: "border-top-width", expected: "3px" },
     { option: "input-border-radius", value: "12", element: INPUT, property: "border-top-left-radius", expected: "12px" },
     { option: "input-border-radius-lg", value: "20", expand: "input-border-radius", element: ".form-control-lg", property: "border-top-left-radius", expected: "20px" },
+    { option: "btn-primary-outline", value: "outline", select: `${BUTTONS} [data-label='Primary Style']`, element: ".btn:not(.btn-lg, .btn-sm)", property: "background-color", expected: "rgba(0, 0, 0, 0)" },
+    { option: "btn-primary-flat", value: "flat", select: `${BUTTONS} [data-label='Primary Style']`, element: ".btn:not(.btn-lg, .btn-sm)", property: "text-transform", expected: "uppercase" },
+    { option: "link-underline", value: "always", select: "[data-label='Link Style']", element: ".o_test_link", property: "text-decoration-line", expected: "underline" },
+    { option: "layout", value: "boxed", select: "[data-label='Page Layout']", element: "#wrapwrap", property: "padding-left", expected: "60px" },
 ];
 
 // prettier-ignore
@@ -284,6 +289,7 @@ for (const { option, value, expand, select, input, element, property, expected }
             <div class="display-1">Display 1</div>
             <div class="display-2" style="font-size: 20px">Display 2</div>
             <div class="shadow">Shadow</div>
+            <a href="#" class="o_test_link">Link</a>
             <a class="btn btn-primary">Button</a>
             <a class="btn btn-primary btn-lg">Large</a>
             <a class="btn btn-primary btn-sm">Small</a>

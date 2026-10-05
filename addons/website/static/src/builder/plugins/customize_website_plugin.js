@@ -26,6 +26,7 @@ import { loadImage } from "@html_editor/utils/image_processing";
  * @property { CustomizeWebsitePlugin['previewWebsiteVariables'] } previewWebsiteVariables
  * @property { CustomizeWebsitePlugin['previewWebsiteColors'] } previewWebsiteColors
  * @property { CustomizeWebsitePlugin['previewColorPalette'] } previewColorPalette
+ * @property { CustomizeWebsitePlugin['hasCustomizedColors'] } hasCustomizedColors
  * @property { CustomizeWebsitePlugin['loadTemplateKey'] } loadTemplateKey
  * @property { CustomizeWebsitePlugin['makeSCSSCusto'] } makeSCSSCusto
  * @property { CustomizeWebsitePlugin['toggleTemplate'] } toggleTemplate
@@ -109,12 +110,53 @@ for (const key of [
 }
 THEME_GATES["header-bg-blur"] = { set: "header-bg-blur", isOn: (value) => value !== "0" };
 THEME_GATES["navbar-font"] = { apart: ["navbar-font", "font"] };
+// The button styles: Fill (also under Flat), Outline, Flat.
+for (const which of ["primary", "secondary"]) {
+    THEME_GATES[`btn-${which}-fill`] = {
+        set: `btn-${which}-outline`,
+        isOn: (value) => value !== "true",
+    };
+    THEME_GATES[`btn-${which}-outline`] = {
+        set: `btn-${which}-outline`,
+        isOn: (value) => value === "true",
+    };
+    THEME_GATES[`btn-${which}-flat`] = {
+        set: `btn-${which}-flat`,
+        isOn: (value) => value === "true",
+    };
+}
+const unquote = (value) => value.replace(/^'(.*)'$/, "$1");
+THEME_GATES["link-underline-always"] = {
+    set: "link-underline",
+    isOn: (value) => unquote(value) === "always",
+};
+// The page layouts: Full, or Boxed and its variants Framed and Postcard.
+THEME_GATES["layout-full"] = { set: "layout", isOn: (value) => unquote(value) === "full" };
+THEME_GATES["layout-boxed"] = { set: "layout", isOn: (value) => unquote(value) !== "full" };
+for (const layout of ["framed", "postcard"]) {
+    THEME_GATES[`layout-${layout}`] = { set: "layout", isOn: (value) => unquote(value) === layout };
+}
+// The areas' custom colors and gradients (their presets are classes, see
+// `updateAreaClasses`).
+for (const area of [
+    ...["menu", "header-sales_one", "header-sales_two", "header-sales_three"],
+    ...["header-sales_four", "footer", "copyright", "breadcrumb", "portal-card"],
+]) {
+    THEME_GATES[`${area}-custom`] = { color: `${area}-custom` };
+}
+for (const gradient of [
+    ...["menu-gradient", "menu-secondary-gradient", "footer-gradient"],
+    ...["copyright-gradient", "breadcrumb-gradient", "portal-gradient"],
+]) {
+    THEME_GATES[gradient] = { set: gradient };
+}
 const COLOR_FILES_URL = "/website/static/src/scss/options/colors/";
 const PALETTE_URL = `${COLOR_FILES_URL}user_color_palette.scss`;
+const THEME_PALETTE_URL = `${COLOR_FILES_URL}user_theme_color_palette.scss`;
 // Saved after the user values (a palette switch resets them), in this order.
 const COLOR_FILE_URLS = [
     PALETTE_URL,
-    `${COLOR_FILES_URL}user_theme_color_palette.scss`,
+    THEME_PALETTE_URL,
     `${COLOR_FILES_URL}user_gray_color_palette.scss`,
 ];
 for (let i = 1; i <= 5; i++) {
@@ -160,6 +202,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "previewWebsiteVariables",
         "previewWebsiteColors",
         "previewColorPalette",
+        "hasCustomizedColors",
         "loadTemplateKey",
         "makeSCSSCusto",
         "toggleTemplate",
@@ -190,6 +233,9 @@ export class CustomizeWebsitePlugin extends Plugin {
             SwitchThemeAction,
             AddLanguageAction,
             CustomizeButtonStyleAction,
+            PreviewButtonStyleAction,
+            PreviewLinkStyleAction,
+            PreviewAreaColorAction,
             WebsiteConfigAction,
             PreviewableWebsiteConfigAction,
             TemplatePreviewableWebsiteConfigAction,
@@ -517,11 +563,10 @@ export class CustomizeWebsitePlugin extends Plugin {
                 value ? `var(--o-default-${key})` : getColorFallback(key)
             );
         }
-        const themeURL = `${COLOR_FILES_URL}user_theme_color_palette.scss`;
         for (const key of ["success", "info", "warning", "danger"]) {
             const value = toCSS(getPaletteValue(key)) || `var(--o-base-theme-${key})`;
-            add(`o-default-${key}`, themeURL, undefined, value);
-            add(key, themeURL, undefined, `var(--o-default-${key})`);
+            add(`o-default-${key}`, THEME_PALETTE_URL, undefined, value);
+            add(key, THEME_PALETTE_URL, undefined, `var(--o-default-${key})`);
         }
         const grayURL = `${COLOR_FILES_URL}user_gray_color_palette.scss`;
         for (let i = 100; i <= 900; i += 100) {
@@ -532,11 +577,38 @@ export class CustomizeWebsitePlugin extends Plugin {
         this.pendingPreviewSteps.push(step);
     }
     /**
+     * Whether a palette switch would reset color customizations (palette
+     * colors and status colors, as `$o-has-customized-colors`): the saved
+     * ones, unless a palette switch is pending (it resets them already), and
+     * the pending ones.
+     *
+     * @returns {boolean}
+     */
+    hasCustomizedColors() {
+        const isSet = (value) => value !== undefined && !NULL_VALUES.includes(value);
+        const savedValue = getCSSVariableValue(
+            "has-customized-colors",
+            getComputedStyle(this.document.body)
+        );
+        const statusColors = this.getPendingValues(THEME_PALETTE_URL);
+        return (
+            (!("color-palettes-name" in this.pendingVariables) &&
+                !!savedValue &&
+                savedValue !== "false") ||
+            Object.values(this.getPendingValues(PALETTE_URL)).some(isSet) ||
+            ["success", "info", "warning", "danger"].some((key) => isSet(statusColors[key]))
+        );
+    }
+    /**
      * @param {string} color a color, a color's name or a CSS variable
      * @returns {string} the color as written in a colors file: a name is
      *          quoted, a CSS variable is its value
      */
     getSCSSColorValue(color) {
+        if (/^\d+$/.test(color)) {
+            // A color preset's number.
+            return color;
+        }
         if (isCSSVariable(color)) {
             return this.getWebsiteVariableValue(color.match(/var\(--(.+?)\)/)[1]);
         }
@@ -569,8 +641,25 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }
         this.updateThemeGates();
+        this.updateAreaClasses();
         this.updatePreviewCopies();
         this.updateComputedColors();
+    }
+    /**
+     * Sets the areas' color preset classes (`o_cc<N>`, rendered by the server
+     * on the elements marked `data-o-cc-area`) to their previewed presets.
+     * Not edits of the page: not recorded.
+     */
+    updateAreaClasses() {
+        this.dependencies.domObserver.ignore(() => {
+            for (const el of this.document.querySelectorAll("[data-o-cc-area]")) {
+                const preset = this.getWebsiteVariableValue(el.dataset.oCcArea);
+                if (/^[1-5]$/.test(preset)) {
+                    el.classList.remove("o_cc1", "o_cc2", "o_cc3", "o_cc4", "o_cc5");
+                    el.classList.add(`o_cc${preset}`);
+                }
+            }
+        });
     }
     /**
      * Turns the theme gates of the previewed settings on or off (the others
@@ -1746,6 +1835,56 @@ export class CustomizeButtonStyleAction extends BuilderAction {
             },
             nullValue
         );
+    }
+}
+
+export class PreviewButtonStyleAction extends CustomizeButtonStyleAction {
+    static id = "previewButtonStyle";
+    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
+    setup() {}
+    apply({ params: { mainParam: which }, value }) {
+        this.dependencies.customizeWebsite.previewWebsiteVariables({
+            [`btn-${which}-outline`]: value === "outline" ? "true" : "false",
+            [`btn-${which}-flat`]: value === "flat" ? "true" : "false",
+        });
+    }
+}
+
+/**
+ * Same as `customizeWebsiteColor` for an area (header, footer...: a color
+ * preset, a custom color or a gradient), previewed and written on save.
+ */
+export class PreviewAreaColorAction extends CustomizeWebsiteColorAction {
+    static id = "previewAreaColor";
+    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
+    setup() {}
+    apply({ params: { mainParam: color, gradientColor, combinationColor, nullValue }, value }) {
+        const preset = value.match(/^o_cc([1-5])$/)?.[1];
+        const gradient = isColorGradient(value) ? value : "";
+        const colors = { [color]: preset || gradient ? "" : value };
+        if (preset || !value) {
+            colors[combinationColor] = preset || "";
+        }
+        this.dependencies.customizeWebsite.previewWebsiteColors(colors, { nullValue });
+        this.dependencies.customizeWebsite.previewWebsiteVariables(
+            { [gradientColor]: gradient || nullValue },
+            nullValue
+        );
+    }
+}
+
+/**
+ * The link style (`link-underline`), previewed with Bootstrap's link
+ * decorations it gives, which the CSS reads.
+ */
+export class PreviewLinkStyleAction extends PreviewWebsiteVariableAction {
+    static id = "previewLinkStyle";
+    apply({ params: { mainParam: variable }, value }) {
+        const style = value.replace(/^'(.*)'$/, "$1");
+        this.dependencies.customizeWebsite.previewWebsiteVariables({ [variable]: value }, "null", {
+            "link-decoration": style === "always" ? "underline" : "none",
+            "link-hover-decoration": style === "never" ? "none" : "underline",
+        });
     }
 }
 

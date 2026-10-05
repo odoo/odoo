@@ -88,12 +88,20 @@
 }
 
 // Review $link-decoration behavior
-@if $link-decoration and $link-decoration != none {
+@mixin o-no-link-decoration {
     .btn:not(.btn-link), .nav-link, .dropdown-item, .page-link, .breadcrumb-item > a, .badge, .oi {
         &, &:hover, &:focus {
             text-decoration: none;
         }
     }
+}
+@if mixin-exists(o-theme-gate) {
+    // The website switches it with its link style (a theme gate).
+    @include o-theme-gate('link-underline-always', $link-decoration and $link-decoration != none) {
+        @include o-no-link-decoration;
+    }
+} @else if $link-decoration and $link-decoration != none {
+    @include o-no-link-decoration;
 }
 
 // Disable markers when using Carousel's indicators on list

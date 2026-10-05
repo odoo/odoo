@@ -366,11 +366,11 @@ describe("operations", () => {
             customAction: class extends BuilderAction {
                 static id = "customAction";
                 getValue({ editingElement }) {
-                    return editingElement.innerHTML;
+                    return editingElement.textContent;
                 }
                 apply({ editingElement, value }) {
                     expect.step(`customAction ${value}`);
-                    editingElement.innerHTML = value;
+                    editingElement.textContent = value;
                 }
             },
         });

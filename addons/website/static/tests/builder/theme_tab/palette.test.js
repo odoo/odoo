@@ -36,9 +36,23 @@ function mockThemeRpcs() {
     onRpc("/website/theme_computed_colors", () => ({ values: {}, gates: {} }));
 }
 
-async function switchPalette() {
+async function switchPalette(name = "default-light-1") {
     await contains(".o_theme_tab [data-icon='palette']").click();
-    await contains(`[data-action-value="'default-light-1'"] .o-color-palette-card span`).click();
+    await contains(`[data-action-value="'${name}'"] .o-color-palette-card span`).click();
+}
+
+async function openColors(options) {
+    await setupWebsiteBuilder("", options);
+    await contains(".o-snippets-tabs button[data-name=theme]").click();
+    await contains(".o-tab-content .o-hb-theme-color-slider-btn").click();
+}
+
+const CUSTOMIZED_COLORS = { styleContent: 'body { --has-customized-colors: "true"; }' };
+
+function getPaletteColor(name) {
+    return getComputedStyle(document.documentElement)
+        .getPropertyValue(`--o-palette-${name}-o-color-1`)
+        .trim();
 }
 
 async function save() {
@@ -80,4 +94,35 @@ test("theme tab: no warning on palette change, the palette is previewed", async 
     expect.verifySteps([]);
     await save();
     expect.verifySteps([PALETTE_SAVED]);
+});
+
+test("theme tab: hovering a palette previews it, without asking", async () => {
+    mockThemeRpcs();
+    await openColors(CUSTOMIZED_COLORS);
+    await contains(".o_theme_tab [data-icon='palette']").click();
+    const rootStyle = queryFirst(":iframe html").style;
+    await contains(`.o-dropdown-item[data-action-value="'default-light-2'"]`).hover();
+    expect(".o_dialog").toHaveCount(0);
+    expect(rootStyle.getPropertyValue("--o-default-o-color-1")).toBe(
+        getPaletteColor("default-light-2")
+    );
+    await contains(".o-snippets-tabs").hover();
+    expect(rootStyle.getPropertyValue("--o-default-o-color-1")).toBe("");
+    expect.verifySteps([]);
+});
+
+test("theme tab: after a palette switch, only colors changed since make it ask", async () => {
+    mockThemeRpcs();
+    await openColors(CUSTOMIZED_COLORS);
+    await switchPalette("default-light-1");
+    expect(".o_dialog").toHaveCount(1);
+    await contains(".o_dialog .btn-primary").click();
+    // The switch resets the customizations: nothing left to lose.
+    await switchPalette("default-light-2");
+    expect(".o_dialog").toHaveCount(0);
+    await contains(".hb-sliding-panel button.o_we_color_preview[title='Primary']").click();
+    await contains(".o_popover .solid-tab").click();
+    await contains(".o_popover [data-color='#FF0000']").click();
+    await switchPalette("default-light-1");
+    expect(".o_dialog").toHaveCount(1);
 });

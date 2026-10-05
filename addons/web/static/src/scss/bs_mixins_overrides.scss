@@ -34,6 +34,21 @@ $enable-deprecation-messages: false !default;
     @return scale-color($color, $alpha: -30%);
 }
 
+// `$property: $css`, a `color-mix()` (nothing if `$css` is null), with
+// `$compiled`, the same color compiled, for the browsers without `color-mix()`
+// (before Chrome 111, Safari 16.2, Firefox 113). The mix goes in `@supports`:
+// a declaration with `var()` is only checked where it's used, so such a
+// browser would keep it over `$compiled`, then drop it.
+@mixin o-color-mix($property, $css, $compiled, $important: false) {
+    @if $css != null {
+        $-important: if($important, ' !important', '');
+        #{$property}: #{$compiled}#{$-important};
+        @supports (color: color-mix(in srgb, red, blue)) {
+            #{$property}: #{$css}#{$-important};
+        }
+    }
+}
+
 // Bootstrap's `button-variant()` and `button-outline-variant()` (with their
 // default colors), split in two: the colors they compute are printed as
 // `--<name>-<color>` custom properties, and the variant reads them (with the
@@ -166,7 +181,7 @@ $o-color-extras-nesting-selector: '&' !default;
 
             .text-muted {
                 // `mute-color()`
-                color: color-mix(in srgb, #{$-text} 70%, transparent) !important;
+                @include o-color-mix(color, 'color-mix(in srgb, #{$-text} 70%, transparent)', mute-color(color-contrast($color, $main-background: $background)), $important: true);
             }
         }
     }
