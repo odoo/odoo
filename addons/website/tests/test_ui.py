@@ -532,9 +532,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_20_snippet_editor_panel_options(self):
         self.start_tour(self.env["website"].get_client_action_url('/', True), 'snippet_editor_panel_options', login='admin')
 
-    def test_21_website_start_cloned_snippet(self):
-        self.start_tour(self.env["website"].get_client_action_url('', True), 'website_start_cloned_snippet', login='admin')
-
     def test_22_website_gray_color_palette(self):
         self.start_tour(self.env["website"].get_client_action_url('/', True), 'website_gray_color_palette', login='admin')
 

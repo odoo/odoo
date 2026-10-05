@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryFirst, waitFor } from "@odoo/hoot-dom";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, getService } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilderWithSnippet,
@@ -49,4 +49,18 @@ test("save end message when switching layouts, forget when switching snippets", 
     expect(":iframe .s_countdown:nth-child(2) .s_countdown_end_message").not.toHaveInnerHTML(
         "test"
     );
+});
+
+test("cloned countdown starts its interaction", async () => {
+    await setupWebsiteBuilderWithSnippet("s_countdown", { interactions: ["website.countdown"] });
+    await contains(":iframe .s_countdown").click();
+    await contains(".oe_snippet_clone").click();
+    await waitFor(":iframe .s_countdown:eq(1) canvas");
+    expect(getService("public.interactions").interactions).toHaveLength(2);
+    expect(queryFirst(":iframe .s_countdown:eq(1) canvas")
+        .getContext("2d")
+        .getImageData(0, 0, 1000, 1000)
+        .data).toInclude(1, {
+            message: "The cloned snippet should have been started"
+        });
 });
