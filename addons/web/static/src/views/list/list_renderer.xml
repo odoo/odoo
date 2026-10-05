@@ -343,7 +343,7 @@
                         </t>
                     </td>
                 </t>
-                <t t-if="column.type === 'column_group'">
+                <t t-if="column.type === 'column_group'" name="column_group_cell">
                     <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
                         class="o_data_cell cursor-pointer"
                         t-att-class="this.getCellClass(column, record)"
@@ -352,18 +352,22 @@
                         t-att-colspan="column.colspan"
                         t-custom-click="(ev, isMiddleClick) => this.onCellClicked(record, column, ev, isMiddleClick)"
                         tabindex="-1">
-                        <t t-foreach="column.fields" t-as="fieldInfo" t-key="fieldInfo.id">
-                            <t t-set="subIsInvisible" t-value="!this.isColumnGroupFieldVisible(column, fieldInfo, record)"/>
-                            <div t-if="!subIsInvisible" class="o_column_group_field" t-att-class="this.getColumnGroupFieldClasses(fieldInfo, record)" t-att-data-field-name="fieldInfo.name">
-                                <t t-if="this.canUseFormatter(fieldInfo, record)" t-out="this.getFormattedValue(fieldInfo, record)"/>
-                                <Field t-else=""
-                                    name="fieldInfo.name"
-                                    record="record"
-                                    type="fieldInfo.widget"
-                                    class="this.getFieldClass(fieldInfo)"
-                                    fieldInfo="fieldInfo"
-                                    t-props="this.getFieldProps(record, fieldInfo)"/>
-                            </div>
+                        <t t-foreach="column.elements" t-as="element" t-key="element.id" t-if="element.isVisible(record)" name="column_group_loop">
+                            <t t-if="element.type === 'field'">
+                                <div class="o_column_group_field" t-att-class="element.classes(record)" t-att-data-field-name="element.fieldName">
+                                    <t t-if="element.canUseFormatter(record)" t-out="element.formattedValue(record)"/>
+                                    <t t-else="">
+                                        <t t-set="fieldInfo" t-value="element.fieldInfo"/>
+                                        <Field
+                                            name="fieldInfo.name"
+                                            record="record"
+                                            type="fieldInfo.widget"
+                                            class="this.getFieldClass(fieldInfo)"
+                                            fieldInfo="fieldInfo"
+                                            t-props="this.getFieldProps(record, fieldInfo)"/>
+                                    </t>
+                                </div>
+                            </t>
                         </t>
                     </td>
                 </t>

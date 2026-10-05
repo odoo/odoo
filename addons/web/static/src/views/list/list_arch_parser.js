@@ -55,6 +55,44 @@ export class ListArchParser {
         };
     }
 
+    parseColumnTag(node, columnFields) {
+        const labelAttr = node.getAttribute("string");
+        const widthAttr = node.getAttribute("width");
+        const nameAttr = node.getAttribute("name");
+        return {
+            id: `column_${this.nextId()}`,
+            name: nameAttr || columnFields[0].name,
+            type: "column_group",
+            label: labelAttr !== null ? labelAttr : columnFields[0].label,
+            hasLabel: true,
+            optional: false,
+            column_invisible: node.getAttribute("column_invisible"),
+            fields: columnFields,
+            ...(widthAttr ? { attrs: { width: widthAttr } } : {}),
+        };
+    }
+
+    parseColumnTagChildren(nodeList, models, modelName, fieldNextIds, fieldNodes) {
+        const columnFields = [];
+        for (const child of nodeList) {
+            if (child.tagName === "field") {
+                const fieldDescriptor = this.parseFieldNode(
+                    child,
+                    models,
+                    modelName,
+                    fieldNextIds,
+                    fieldNodes
+                );
+                columnFields.push({
+                    ...fieldDescriptor,
+                    id: `field_${this.nextId()}`,
+                    hasLabel: false,
+                });
+            }
+        }
+        return columnFields;
+    }
+
     parseWidgetNode(node, models, modelName) {
         return Widget.parseWidgetNode(node);
     }
@@ -81,6 +119,9 @@ export class ListArchParser {
         let handleField = null;
         const treeAttr = {};
         let nextId = 0;
+        if (!this.nextId) {
+            this.nextId = () => nextId++;
+        }
         const fieldNextIds = {};
         visitXML(xmlDoc, (node) => {
             if (node.tagName !== "button") {
@@ -156,40 +197,17 @@ export class ListArchParser {
                     type: "widget",
                 });
             } else if (node.tagName === "column") {
-                const columnFields = [];
-                for (const child of node.children) {
-                    if (child.tagName === "field") {
-                        const fieldDescriptor = this.parseFieldNode(
-                            child,
-                            models,
-                            modelName,
-                            fieldNextIds,
-                            fieldNodes
-                        );
-                        columnFields.push({
-                            ...fieldDescriptor,
-                            id: `field_${nextId++}`,
-                            hasLabel: false,
-                        });
-                    }
-                }
+                const columnFields = this.parseColumnTagChildren(
+                    node.children,
+                    models,
+                    modelName,
+                    fieldNextIds,
+                    fieldNodes
+                );
                 if (!columnFields.length) {
                     return false;
                 }
-                const labelAttr = node.getAttribute("string");
-                const widthAttr = node.getAttribute("width");
-                const nameAttr = node.getAttribute("name");
-                columns.push({
-                    id: `column_${nextId++}`,
-                    name: nameAttr || columnFields[0].name,
-                    type: "column_group",
-                    label: labelAttr !== null ? labelAttr : columnFields[0].label,
-                    hasLabel: true,
-                    optional: false,
-                    column_invisible: node.getAttribute("column_invisible"),
-                    fields: columnFields,
-                    ...(widthAttr ? { attrs: { width: widthAttr } } : {}),
-                });
+                columns.push(this.parseColumnTag(node, columnFields));
                 return false;
             } else if (node.tagName === "groupby" && node.getAttribute("name")) {
                 const fieldName = node.getAttribute("name");

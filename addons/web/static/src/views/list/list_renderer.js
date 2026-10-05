@@ -485,10 +485,27 @@ export class ListRenderer extends Component {
         return allColumns.flatMap((column) => {
             if (column.type === "field" && list.fields[column.name].type === "properties") {
                 return this.getPropertyFieldColumns(column, list);
+            } else if (column.type === "column_group") {
+                const col = this.processColumnGroup(column);
+                return [col];
             } else {
                 return [column];
             }
         });
+    }
+
+    processColumnGroup(col) {
+        const elements = col.fields.map((fieldInfo) => ({
+            id: fieldInfo.id,
+            type: "field",
+            fieldName: fieldInfo.name,
+            fieldInfo,
+            isVisible: (record) => this.isColumnGroupFieldVisible(col, fieldInfo, record),
+            classes: (record) => this.getColumnGroupFieldClasses(fieldInfo, record),
+            formattedValue: (record) => this.getFormattedValue(fieldInfo, record),
+            canUseFormatter: (record) => this.canUseFormatter(fieldInfo, record),
+        }));
+        return { ...col, elements };
     }
 
     /**
