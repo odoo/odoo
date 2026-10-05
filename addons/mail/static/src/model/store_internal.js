@@ -48,18 +48,6 @@ export class StoreInternal extends RecordInternal {
     isUpdateInProgress = computed(() => this.updateDepth() > 0);
     /** See {@link Store#MAKE_UPDATE}. */
     isDrainingQueues = signal(false);
-    /**
-     * Current version context used in the current store insert operation.
-     *
-     * The version data is provided by the server. If no version is provided,
-     * each field falls back to its last known version.
-     *
-     * @type {{
-     *    written_fields_by_record: import("@mail/model/field_version").WrittenFieldsByRecord,
-     *    snapshot: import("@mail/model/field_version").PgSnapshot
-     * }}
-     */
-    currentInsertVersion = null;
 
     constructor() {
         super(...arguments);
@@ -157,46 +145,55 @@ export class StoreInternal extends RecordInternal {
     }
     /**
      * @param {Record} record
-     * @param {Object} vals
+     * @param {Object} vals `vals.__version__` is this record's default version, applied
+     *   to any field with none of its own. `vals.__field_versions__`, if present, maps a
+     *   field name to its own version, overriding the default for that field only (e.g.
+     *   a value whose real clock isn't this record's own write_date).
      * @param {Object} [options={}]
-     * @param {boolean} [options.forceApply=true] Apply the values even when the
-     * current insert version is out of order. Only versioned server data turns
-     * it off.
+     * @param {boolean} [options.forceApply=true] Apply the values even when their
+     * write date is out of order. Only versioned server data turns it off.
      */
     updateFields(record, vals, { forceApply = true } = {}) {
-        const fieldEntries = Object.entries(vals).concat(
-            Object.getOwnPropertySymbols(vals).map((sym) => [sym, vals[sym]])
+        const incomingWriteDate = vals.__version__;
+        const fieldVersions = vals.__field_versions__;
+        const filteredEntries = Object.entries(vals).filter(
+            ([name]) => name !== "__version__" && name !== "__field_versions__"
         );
-        for (const [fieldName, value] of fieldEntries) {
+        for (const [fieldName, value] of filteredEntries) {
             let version = record._.fieldsVersion.get(fieldName);
             if (!version) {
                 version = isMany(record.Model, fieldName)
-                    ? new ManyFieldVersion(record.Model)
+                    ? new ManyFieldVersion(
+                          record.Model.store[record.Model._.fieldsTargetModel.get(fieldName)]
+                      )
                     : new SingleFieldVersion();
                 record._.fieldsVersion.set(fieldName, version);
             }
-            // Always use the server version if provided, the last known version for the
-            // field otherwise.
-            const revision = this.currentInsertVersion
-                ? {
-                      snapshot: this.currentInsertVersion.snapshot,
-                      isWrite:
-                          this.currentInsertVersion.written_fields_by_record?.[
-                              record.Model.getName()
-                          ]?.[record.id]?.includes(fieldName),
-                  }
-                : version.lastRevision;
-            const normalized = isMany(record.Model, fieldName)
-                ? normalizeManyCommands(value)
-                : value;
+            const isManyField = isMany(record.Model, fieldName);
+            const normalized = isManyField ? normalizeManyCommands(value) : value;
+            // A many is versioned per command (see ManyFieldVersion). A one is versioned as
+            // a whole, but still reads a command's version when given one, since that's how
+            // a many's version propagates to the one side of its inverse.
+            const commandVersion =
+                !isManyField && isCommandList(normalized) ? normalized.at(-1)[2] : undefined;
             // ".noinv" commands only come from inverse echoes: they are
             // client-generated even when found inside server data to insert.
-            const toApply = version.resolveApply(normalized, revision, {
+            const options = {
                 forceApply:
                     forceApply ||
                     (isCommandList(normalized) &&
                         normalized.every(([mode]) => mode.endsWith(".noinv"))),
-            });
+            };
+            const toApply = isManyField
+                ? version.resolveApply(normalized, options)
+                : version.resolveApply(
+                      value,
+                      commandVersion ??
+                          fieldVersions?.[fieldName] ??
+                          incomingWriteDate ??
+                          version.lastWriteDate,
+                      options
+                  );
             if (toApply === SKIP_REVISION) {
                 continue;
             }
@@ -226,9 +223,9 @@ export class StoreInternal extends RecordInternal {
      * @param {any} value
      */
     updateRelationMany(recordList, value) {
-        for (const [cmd, cmdData] of value) {
+        for (const [cmd, cmdData, cmdOptions] of value) {
             if (cmd === "REPLACE") {
-                recordList._.assign(cmdData);
+                recordList._.assign(cmdData, cmdOptions);
                 continue;
             }
             for (const item of cmdData) {

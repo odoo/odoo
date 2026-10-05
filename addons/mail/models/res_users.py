@@ -444,6 +444,15 @@ class ResUsers(models.Model):
         self.ensure_one()
         return limited_field_access_token(self, "im_status", scope="mail.presence")
 
+    def _get_im_status_version(self):
+        """Version of `im_status`, which depends on both `manual_im_status` (this row) and
+        presence (`presence_ids.last_poll`): the latest of the two.
+        """
+        self.ensure_one()
+        # sudo: mail.presence - can read own presence (0 or 1 record, unique per user)
+        presence_version = self.sudo().presence_ids.last_poll
+        return max(filter(None, [self.write_date, presence_version]), default=None)
+
     def _store_init_global_fields(self, res: Store.FieldList):
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
         # sudo: res.partner - exposing OdooBot data is considered acceptable
@@ -488,9 +497,13 @@ class ResUsers(models.Model):
         res.extend(["active", "partner_id", "share"])
 
     def _store_im_status_fields(self, res: Store.FieldList):
-        res.attr("im_status")
+        res.attr("im_status", version=lambda u: u._get_im_status_version())
         res.attr("im_status_access_token", lambda p: p._get_im_status_access_token())
-        res.one("partner_id", "_store_im_status_fields")
+        res.one(
+            "partner_id",
+            "_store_im_status_fields",
+            version=lambda u: u._get_im_status_version(),
+        )
 
     def _store_manual_im_status_fields(self, res: Store.FieldList):
         res.attr("im_status")
