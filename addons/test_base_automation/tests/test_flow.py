@@ -439,6 +439,27 @@ else:
         self.assertTrue(lead.stage_id)
         self.assertEqual(send_mail_count, 1)
 
+    def test_015_recompute_existing_record_on_create(self):
+        """Creating a record must not skip automations on other pending computations."""
+        lead = self.create_lead(state='open')
+        lead.flush_recordset()
+        stage_field = self.env.ref('test_base_automation.field_base_automation_lead_test__stage_id')
+        create_automation(
+            self,
+            model_id=self.lead_model.id,
+            trigger='on_create_or_write',
+            trigger_field_ids=[Command.link(stage_field.id)],
+            _actions={'state': 'code', 'code': "records.write({'is_assigned_to_admin': True})"},
+        )
+
+        # The pending stage computation can be batched with the new lead's.
+        lead.write({'state': 'draft'})
+        new_lead = self.create_lead()
+        self.env.flush_all()
+        self.assertTrue(lead.stage_id)
+        self.assertTrue(lead.is_assigned_to_admin)
+        self.assertTrue(new_lead.is_assigned_to_admin)
+
     def test_020_recursive(self):
         """ Check that a rule is executed recursively by a secondary change. """
         create_automation(
@@ -1460,6 +1481,27 @@ class TestCompute(common.TransactionCase):
         )
         r.parent_id = company2
         self.assertEqual(r.display_name, 'Awiclo, Bob')
+
+    def test_non_stored_dependent_in_pre_domain(self):
+        """A pre-filter must not leave non-stored dependents cached with old values."""
+        company1, company2 = self.env['res.partner'].create([
+            {'name': 'Gorofy', 'is_company': True},
+            {'name': 'Awiclo', 'is_company': True},
+        ])
+        partner = self.env['res.partner'].create({
+            'name': 'Bob',
+            'parent_id': company1.id,
+        })
+        self.assertEqual(partner.display_name, 'Gorofy, Bob')
+        create_automation(
+            self,
+            model_id=self.env.ref('base.model_res_partner').id,
+            trigger='on_create_or_write',
+            filter_pre_domain="[('display_name', '!=', False)]",
+        )
+
+        partner.parent_id = company2
+        self.assertEqual(partner.display_name, 'Awiclo, Bob')
 
     def test_computation_sequence(self):
         """ This test ensure sequential computation is done and all fields are correctly set
