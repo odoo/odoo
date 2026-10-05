@@ -50,18 +50,21 @@ class CalendarEvent(models.Model):
 
     @api.model
     def _restart_google_sync(self):
-        self.env['calendar.event'].search(self._get_sync_domain()).write({
-            'need_sync': True,
-        })
+        events = self.env['calendar.event'].search(self._get_sync_domain())
+        events.write({'need_sync': True})
+        events._check_alarm_ids_sync_limit()
 
     @api.model_create_multi
     def create(self, vals_list):
         description_context = self.env.context.get('skip_contact_description', False)
         notify_context = self.env.context.get('dont_notify', False)
-        return super(CalendarEvent, self.with_context(dont_notify=notify_context, skip_contact_description=description_context)).create([
+        events = super(CalendarEvent, self.with_context(dont_notify=notify_context, skip_contact_description=description_context)).create([
             dict(vals, need_sync=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
+        if any('alarm_ids' in vals for vals in vals_list):
+            events._check_alarm_ids_sync_limit()
+        return events
 
     @api.model
     def _check_values_to_sync(self, values):
@@ -95,10 +98,25 @@ class CalendarEvent(models.Model):
         notify_context = self.env.context.get('dont_notify', False)
         if not notify_context and ([self.env.user.id != record.user_id.id for record in self]):
             self._check_modify_event_permission(vals)
+        previous_alarms_per_event = {event.id: event.alarm_ids for event in self} if 'alarm_ids' in vals else {}
         res = super(CalendarEvent, self.with_context(dont_notify=notify_context)).write(vals)
+        if previous_alarms_per_event:
+            # Only check events whose alarms actually changed (Google -> Odoo sync only logs on Google alarms update).
+            events_to_check = self.filtered(lambda event: event.alarm_ids != previous_alarms_per_event[event.id])
+            events_to_check._check_alarm_ids_sync_limit()
         if recurrence_update_setting == 'all_events' and len(self) == 1 and vals.keys() & self._get_google_synced_fields():
             self.recurrence_id.need_sync = True
         return res
+
+    def _check_alarm_ids_sync_limit(self):
+        """ Google Calendar only accepts up to 5 reminders per event.
+        Log a message on every synced event in self that exceeds this limit.
+        """
+        synced_events_over_limit = self.filtered(
+            lambda event: len(event.alarm_ids) > 5 and event._get_event_user().is_google_calendar_synced())
+        if synced_events_over_limit:
+            body = _("This event has more than 5 reminders, only the first 5 will be synced to Google Calendar.")
+            synced_events_over_limit._message_log_batch(bodies={event.id: body for event in synced_events_over_limit})
 
     def _check_modify_event_permission(self, values):
         """ Check if event modification attempt by attendee is valid to avoid duplicate events creation. """
@@ -315,10 +333,11 @@ class CalendarEvent(models.Model):
             # Otherwise, if both 'date' and 'dateTime' are set, Google may not recognize it as a timed event
             start['dateTime'] = self.start.replace(tzinfo=datetime.UTC).isoformat()
             end['dateTime'] = self.stop.replace(tzinfo=datetime.UTC).isoformat()
+        # The Google Calendar API only accepts up to 5 reminders per event.
         reminders = [{
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes
-        } for alarm in self.alarm_ids]
+        } for alarm in self.alarm_ids.sorted('id')[:5]]
 
         attendees = self.attendee_ids
         attendee_values = [{
