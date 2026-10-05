@@ -19,9 +19,11 @@
                 <search>
                     <field name="code"/>
                     <field name="description"/>
-                    <filter string="Exempted" domain="[('tax_rate','=','E')]" name="type_exempted"/>
+                    <filter string="Exempt" domain="[('tax_rate','=','A')]" name="type_exempted"/>
+                    <filter string="Taxable at 16%" domain="[('tax_rate','=','B')]" name="type_sixteen_rated"/>
                     <filter string="Zero Rated" domain="[('tax_rate','=','C')]" name="type_zero_rated"/>
-                    <filter string="Taxable at 8%" domain="[('tax_rate','=','B')]" name="type_eight_rated"/>
+                    <filter string="Non-VAT" domain="[('tax_rate','=','D')]" name="type_non_vat"/>
+                    <filter string="Taxable at 8%" domain="[('tax_rate','=','E')]" name="type_eight_rated"/>
                     <filter name="group_by_tax_rate" string="By Tax Rate" context="{'group_by': 'tax_rate'}"/>
                 </search>
             </field>
