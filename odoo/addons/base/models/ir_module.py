@@ -1010,6 +1010,11 @@ class IrModuleModule(models.Model):
             translations_by_field = manifest.get_translations(langs)
             if not translations_by_field:
                 continue
+            # the manifest also holds the en_US terms: writing only the translations
+            # would let the ORM fill en_US from one of them when en_US is inactive
+            source_terms = self.get_values_from_terp(manifest)
+            for field_name, translations in translations_by_field.items():
+                translations['en_US'] = source_terms[field_name]
             module.write(translations_by_field)
 
     @api.model
