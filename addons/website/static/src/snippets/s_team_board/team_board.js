@@ -37,7 +37,6 @@ export class TeamBoard extends Interaction {
         this.modalFooter = this.modalEl.querySelector(".modal-footer");
 
         this._renderActionButtons();
-        console.log(this.modalEl, this.modalImg);
 
         onWillDestroy(() => {
             this.modalInstance.hide();
@@ -83,13 +82,12 @@ export class TeamBoard extends Interaction {
                     await actionItem.action({
                         notification: this.notification,
                         modalInstance: this.modalInstance,
-                        cardData: this.currentCardData,
                     })
                 ) {
                     this.modalInstance.hide();
                 }
-            } catch {
-                // error should be handeld by action but prevent hiding modal if action fail
+            } catch (error) {
+                console.error(_t("Modal action failed :"), error);
             } finally {
                 btn.disabled = false;
                 btn.textContent = originalText;
