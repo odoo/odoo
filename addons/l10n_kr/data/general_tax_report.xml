@@ -354,14 +354,14 @@
                                                     model="account.report.expression">
                                                 <field name="label">balance</field>
                                                 <field name="engine">domain</field>
-                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', '[매입] 공급가액 - 고정자산 10%')]"/>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', ('[매입] 공급가액 - 고정자산 10%', '[매입] 공급가액 - 고정자산 불공제 10%'))]"/>
                                                 <field name="subformula">sum</field>
                                             </record>
                                             <record id="l10n_kr_general_tp_vat_itpfa_tax"
                                                     model="account.report.expression">
                                                 <field name="label">tax</field>
                                                 <field name="engine">domain</field>
-                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', '[매입] 세액 - 고정자산 10%')]"/>
+                                                <field name="formula" eval="[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', ('[매입] 세액 - 고정자산 10%', '[매입] 세액 - 고정자산 불공제 10%'))]"/>
                                                 <field name="subformula">sum</field>
                                             </record>
                                         </field>
@@ -1330,13 +1330,13 @@
                                     <record id="l10n_kr_general_tp_vat_ndit_balance" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">domain</field>
-                                        <field name="formula">[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', '[매입] 공급가액 - 불공제 10%')]</field>
+                                        <field name="formula">[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', ('[매입] 공급가액 - 불공제 10%', '[매입] 공급가액 - 고정자산 불공제 10%'))]</field>
                                         <field name="subformula">sum</field>
                                     </record>
                                     <record id="l10n_kr_general_tp_vat_ndit_tax" model="account.report.expression">
                                         <field name="label">tax</field>
                                         <field name="engine">domain</field>
-                                        <field name="formula">[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', '[매입] 세액 - 불공제 10%')]</field>
+                                        <field name="formula">[('move_id.l10n_kr_issuance_type', '=', 'tax_invoice'), ('tax_tag_ids', 'in', ('[매입] 세액 - 불공제 10%', '[매입] 세액 - 고정자산 불공제 10%'))]</field>
                                         <field name="subformula">sum</field>
                                     </record>
                                 </field>
