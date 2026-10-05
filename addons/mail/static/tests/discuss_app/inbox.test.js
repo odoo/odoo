@@ -11,7 +11,8 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { fields, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { animationFrame } from "@odoo/hoot-mock";
+import { fields, mockService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 import { range } from "@web/core/utils/numbers";
@@ -65,6 +66,11 @@ test("reply: discard on pressing escape", async () => {
         notification_type: "inbox",
         res_partner_id: serverState.partnerId,
     });
+    const { promise: fetchHeld, resolve: releaseFetch } = Promise.withResolvers();
+    onRpc("res.partner", "get_mention_suggestions", async () => {
+        expect.step("get_mention_suggestions");
+        await fetchHeld;
+    });
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
@@ -79,12 +85,12 @@ test("reply: discard on pressing escape", async () => {
     await contains(".o-mail-Composer");
     // Escape on suggestion prompt does not stop replying
     await insertText(".o-mail-Composer-input", "@");
-    // wait for the fetched suggestions
-    await contains(
-        ".o-mail-Composer-suggestionList .o-open .o-mail-Composer-suggestion:has(:text('TestPartner'))"
-    );
+    await expect.waitForSteps(["get_mention_suggestions"]);
+    await contains(".o-mail-Composer-suggestionList .o-open .o-mail-NavigableList-item");
     triggerHotkey("Escape");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    releaseFetch();
+    await animationFrame(); // a re-open would show up on the next render
     await contains(".o-mail-Composer");
     await click(".o-mail-Composer-input").catch(() => {});
     await contains(".o-mail-Composer.o-focused");

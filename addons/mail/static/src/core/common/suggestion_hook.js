@@ -85,6 +85,11 @@ export class UseSuggestion {
     }
     /** @type {import("@mail/core/common/composer").Composer} */
     comp;
+    /**
+     * Whether the user closed the suggestion list. Only the answer of an ongoing fetch is
+     * dropped: a new user input searches and opens the list again.
+     */
+    isDismissed = false;
     get composer() {
         return this.comp.props.composer;
     }
@@ -103,7 +108,11 @@ export class UseSuggestion {
         });
         this.search.reset();
     }
+    dismiss() {
+        this.isDismissed = true;
+    }
     detect() {
+        this.isDismissed = false;
         let start = 0;
         let end = 0;
         let text = "";
@@ -243,6 +252,9 @@ export class UseSuggestion {
     update() {
         if (!this.detection.delimiter) {
             return undefined;
+        }
+        if (this.isDismissed) {
+            return this.search.results;
         }
         const { type, suggestions } = this.suggestionService.searchSuggestions(this.detection, {
             composerType: this.comp.props.type,
