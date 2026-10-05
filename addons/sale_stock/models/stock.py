@@ -173,6 +173,10 @@ class StockMove(models.Model):
         self.ensure_one()
         return (self + self.browse(self._rollup_move_origs() | self._rollup_move_dests())).sale_line_id
 
+    def _get_cogs_invoice_lines(self):
+        moves = self.sudo().filtered('is_valued')
+        return super()._get_cogs_invoice_lines() | moves.sale_line_id.invoice_lines
+
     def _assign_picking_post_process(self, new=False):
         super(StockMove, self)._assign_picking_post_process(new=new)
         if new:
