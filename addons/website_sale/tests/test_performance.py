@@ -63,6 +63,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "account_account_tag": 2,
             "account_tax": 2,
             "account_tax_repartition_line": 2,
+            "ir_attachment": 2,
             "ir_ui_view": 2,
             "product_attribute": 1,
             "product_attribute_value": 3,
@@ -74,6 +75,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_tag": 1,
             "product_template": 2,
             "product_template_attribute_line": 2,
+            "product_template_attribute_value": 1,
             "res_company": 1,
             "res_currency": 1,
             "res_partner": 2,
@@ -245,8 +247,6 @@ class TestWebsiteSalePerformanceWithPricelist(TestWebsiteSalePerformanceWithPric
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
         res["product_pricelist_item"] += 1
-        # FIXME VFE find where this one is coming from
-        res["product_product"] += 1
         return res
 
     def test_shop_page_generation(self):

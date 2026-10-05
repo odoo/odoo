@@ -75,11 +75,8 @@ registry.category("web_tour.tours").add('website_sale.wishlist_updates', {
             content: "add last item to cart",
             trigger: 'button[name="add_to_cart"]:eq(1)',
             run: "click",
-        },
-        {
-            content: "Clicking on Add to cart",
-            trigger: "button[name='website_sale_product_configurator_continue_button']",
-            run: "click",
+            // A configured variant quick-adds, and removing the last wishlist
+            // item redirects to /shop/cart (WishlistPage.removeProduct).
             expectUnloadPage: true,
         },
         {

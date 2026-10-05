@@ -22,11 +22,11 @@
             expr='//div[hasclass("product_price")]//t[@name="product_base_price"]'
             position="after"
         >
-            <small t-if='template_price_vals.get("l10n_ar_price_tax_excluded")' class='d-block text-muted'>
+            <small t-if='shop_price_vals.get("l10n_ar_price_tax_excluded")' class='d-block text-muted'>
                 Precio s/Imp. Nac.
                 <span
                     class='o_l10n_ar_price_tax_excluded'
-                    t-out='template_price_vals["l10n_ar_price_tax_excluded"]'
+                    t-out='shop_price_vals["l10n_ar_price_tax_excluded"]'
                     t-options='{
                         "widget": "monetary",
                         "display_currency": website.currency_id,
