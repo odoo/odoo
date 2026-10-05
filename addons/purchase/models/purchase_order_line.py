@@ -556,6 +556,7 @@ class PurchaseOrderLine(models.Model):
                 product_ctx = {'lang': get_lang(line.env, line.partner_id.lang).code}
                 line.name = line._get_product_purchase_description(line.product_id.with_context(product_ctx))
 
+            supplier_taxes = line.product_id.supplier_taxes_id._filter_taxes_by_company(line.company_id)
             # If no seller, use the standard price. It needs a proper currency conversion.
             if not seller_info:
                 if line.price_unit and line.uom_id == line._origin.uom_id and line.partner_id == line._origin.partner_id \
@@ -567,7 +568,7 @@ class PurchaseOrderLine(models.Model):
                 po_line_uom = line.uom_id or line.product_id.uom_id
                 price_unit = line.env['account.tax']._fix_tax_included_price_company(
                     line.product_id.uom_id._compute_price(line.product_id.standard_price, po_line_uom),
-                    line.product_id.supplier_taxes_id,
+                    supplier_taxes,
                     line.tax_ids,
                     line.company_id,
                     document_tax_mode=line.document_tax_mode,
@@ -581,18 +582,18 @@ class PurchaseOrderLine(models.Model):
                 )
                 line._reset_price_unit(line.product_id._adapt_price_unit_to_document_tax_mode(
                     price_unit,
-                    line.product_id.supplier_taxes_id,
+                    supplier_taxes,
                     line.uom_id,
                     line.document_tax_mode,
                     ),
                 )
 
             else:
-                price_unit = line.env['account.tax']._fix_tax_included_price_company(seller_info['price'], line.product_id.supplier_taxes_id, line.tax_ids, line.company_id, document_tax_mode=line.document_tax_mode)
+                price_unit = line.env['account.tax']._fix_tax_included_price_company(seller_info['price'], supplier_taxes, line.tax_ids, line.company_id, document_tax_mode=line.document_tax_mode)
                 price_unit = seller_info['currency_id']._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
                 line.price_unit = line.technical_price_unit = line.product_id._adapt_price_unit_to_document_tax_mode(
                     seller_info['uom_id']._compute_price(price_unit, line.uom_id),
-                    line.product_id.supplier_taxes_id,
+                    supplier_taxes,
                     line.uom_id,
                     line.document_tax_mode,
                 )
