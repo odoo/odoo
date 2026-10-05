@@ -59,6 +59,7 @@ Invoice = {
     'cac:AccountingCustomerParty': cac.CustomerParty,
     'cac:BuyerCustomerParty': cac.CustomerParty,
     'cac:SellerSupplierParty': cac.SupplierParty,
+    'cac:TaxRepresentativeParty': cac.Party,
     'cac:Delivery': cac.Delivery,
     'cac:PaymentMeans': cac.PaymentMeans,
     'cac:PaymentTerms': cac.PaymentTerms,
