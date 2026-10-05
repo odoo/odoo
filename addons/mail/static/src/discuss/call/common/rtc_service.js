@@ -393,6 +393,7 @@ export class Rtc extends Record {
     /** @type {"granted" | "denied" | "prompt" | undefined} */
     microphonePermission;
     isMicrophonePermissionWarningDismissed = false;
+    isFullscreenHintDismissed = false;
     /** Whether a media permission dialog is currently shown, it already conveys the permission warning. */
     isCallPermissionDialogOpen = false;
     /** @type {"granted" | "denied" | "prompt" | undefined} */
@@ -506,16 +507,35 @@ export class Rtc extends Record {
         return Boolean(audio || transcription || video);
     }
 
+    // REVIEW [3/5, correctness]: the fullscreen hint now hides both microphone warnings (permission
+    // and silent track: mute button badge, disabled state and warning popover), and the hint stays
+    // until dismissed or fullscreen is entered.
+    //
+    // Scenario: in a chat window call, a remote participant turns their camera on while the mic
+    // permission is denied, or the OS mutes the mic track: the user keeps talking without being
+    // heard and gets no warning.
+    //
+    // A tip should not outrank functional warnings: hide the hint while a mic warning is active
+    // (check the warnings in `showFullscreenHint`) instead of the other way around.
     get showMicrophonePermissionWarning() {
         return (
             !this.isCallPermissionDialogOpen &&
             !this.isMicrophonePermissionWarningDismissed &&
-            this.microphonePermission !== "granted"
+            this.microphonePermission !== "granted" &&
+            !this.showFullscreenHint
         );
     }
 
     get showMicrophoneSilentWarning() {
-        return !this.selfSession?.isMute && this.isMicAudioTrackMuted;
+        return !this.selfSession?.isMute && this.isMicAudioTrackMuted && !this.showFullscreenHint;
+    }
+
+    get showFullscreenHint() {
+        return (
+            !this.isFullscreenHintDismissed &&
+            !this.isFullscreen &&
+            this.channel?.promoteFullscreen === "ACTIVE"
+        );
     }
 
     callActions = this.computed(() => {
@@ -967,6 +987,7 @@ export class Rtc extends Record {
      */
     async enterFullscreen(props, { browserFullscreen = false } = {}) {
         const Meeting = registry.category("discuss.call/components").get("Meeting");
+        this.isFullscreenHintDismissed = true;
         this.viewToRestore =
             browserFullscreen && this.isFullscreen && !this.isBrowserFullscreen
                 ? VIEW_TO_RESTORE.FULLSCREEN
@@ -2274,6 +2295,7 @@ export class Rtc extends Record {
             isMicAudioTrackMuted: false,
             isCallPermissionDialogOpen: false,
             isMicrophonePermissionWarningDismissed: false,
+            isFullscreenHintDismissed: false,
             localChannel: undefined,
             localSession: undefined,
             micAudioTrack: undefined,

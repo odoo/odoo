@@ -37,6 +37,24 @@ const DiscussChannelPatch = {
         this.videoCount = this.computed(
             () => this.rtc_session_ids.filter((s) => s.hasVideo).length
         );
+        // REVIEW [1/5, maintainability]: a two-state "ACTIVE"/"INACTIVE" string kept in sync by
+        // `onChange` is a boolean computed in disguise; `this.computed(() => this.videoCountNotSelf > 0
+        // && Boolean(this.chatWindow?.isOpen))` is simpler and cannot drift.
+        this.promoteFullscreen = "INACTIVE";
+        this.videoCountNotSelf = this.computed(
+            () =>
+                this.rtc_session_ids.filter(
+                    (s) => s.hasVideo && s.notEq(this.store.rtc.selfSession)
+                ).length
+        );
+        this.onChange(
+            () => [this.videoCountNotSelf, this.chatWindow?.isOpen],
+            function onChangePromoteFullscreen() {
+                this.promoteFullscreen =
+                    this.videoCountNotSelf > 0 && this.chatWindow?.isOpen ? "ACTIVE" : "INACTIVE";
+            },
+            { immediate: true }
+        );
         this.focusStack = fields.Many("discuss.channel.rtc.session");
         /**
          * Remote participants talking, or stopped less than {@link SPEAKER_WINDOW} ago, in the
