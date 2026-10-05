@@ -686,7 +686,6 @@ export class Thread extends Record {
                 message.notIn(this.messages)
             );
             this.messages.push(...missingMessages);
-            this.messages.sort((m1, m2) => m1.id - m2.id);
         }
     }
 
