@@ -14,6 +14,12 @@
             <BuilderSelectItem classAction="'o_compact_card'">Compact</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
+    <BuilderRow label.translate="Sort">
+        <BuilderButton action="'teamBoardAlphabeticSort'" label.translate="Sort Alphabetically"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Add Member">
+        <BuilderButton action="'teamBoardAddMember'" label.translate="Add"/>
+    </BuilderRow>
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
@@ -21,4 +27,6 @@
         <team_board_option template="website.TeamBoardOption" selector=".s_team_board"/>
     </xpath>
 </t>
+
+
 </templates>
